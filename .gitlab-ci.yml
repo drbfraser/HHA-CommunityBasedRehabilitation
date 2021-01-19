@@ -1,0 +1,47 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  MASTER_BRANCH: "master"
+
+build client:
+  stage: build
+  image: node:14
+  tags:
+    - docker
+  rules:
+    # build on merge requests if there are changes
+    - if: '$CI_MERGE_REQUEST_ID != null'
+      changes:
+        - client/**/*
+      when: always
+    # build on deployments
+    - if: '$CI_COMMIT_BRANCH == $MASTER_BRANCH'
+      when: always
+  before_script:
+    - cd client
+    - npm install
+  script:
+    - CI=false npm run build
+  after_script:
+    - tar -czvf client_build.tar.gz client/build
+  artifacts:
+    paths:
+      - client_build.tar.gz
+  
+deploy:
+  stage: deploy
+  tags:
+    - shell
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $MASTER_BRANCH'
+      when: on_success
+  script:
+    - cp /var/cbr/.env ./.env
+    - tar -xvf client_build.tar.gz
+    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
+    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
+    # wait for Postgres to start so we can run database migrations
+    - docker exec cbr_django timeout 60 bash -c "while ! bash -c 'echo > /dev/tcp/postgres/5432'; do sleep 1; done" &>-
+    - docker exec cbr_django python manage.py migrate

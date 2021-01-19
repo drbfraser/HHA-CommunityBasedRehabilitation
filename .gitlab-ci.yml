@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
   - deploy
 
 variables:
@@ -29,6 +30,30 @@ build client:
   artifacts:
     paths:
       - client_build.tar.gz
+
+test server:
+  stage: test
+  image: python:3.9.1-buster
+  tags:
+    - docker
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID != null'
+      changes:
+        - server/**/*
+      when: always
+    - if: '$CI_COMMIT_BRANCH == $MASTER_BRANCH'
+      when: always
+  variables:
+      DOMAIN: "example.com"
+      SECRET_KEY: "test"
+      POSTGRES_DB: "cbr"
+      POSTGRES_USER: "test"
+      POSTGRES_PASSWORD: "test"
+  before_script:
+    - cd server
+  script:
+    - pip install -r requirements.txt
+    - python manage.py check
   
 deploy:
   stage: deploy

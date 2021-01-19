@@ -3,6 +3,9 @@ services:
     django:
         restart: always
         command: gunicorn cbr.wsgi --bind 0:8000
+        user: ${GITLAB_RUNNER_UID_GID}
+        environment: 
+            DOMAIN: ${DOMAIN}
     postgres:
         restart: always
     caddy:
@@ -17,7 +20,7 @@ services:
             - 80:80
             - 443:443
         environment: 
-            CADDY_DOMAIN: ${CADDY_DOMAIN}
+            DOMAIN: ${DOMAIN}
 
 volumes:
     cbr_caddy:

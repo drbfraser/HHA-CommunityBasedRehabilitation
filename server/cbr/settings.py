@@ -31,7 +31,7 @@ if os.environ.get("DEBUG", "") == "yes":
 else:
     DEBUG = False
     ALLOWED_HOSTS = [os.environ["DOMAIN"]]
-    CORS_ALLOWED_ORIGINS = [os.environ["DOMAIN"]]
+    CORS_ALLOWED_ORIGINS = []
 
 
 # Application definition

@@ -27,9 +27,11 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 if os.environ.get("DEBUG", "") == "yes":
     DEBUG = True
     ALLOWED_HOSTS = []
+    CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 else:
     DEBUG = False
     ALLOWED_HOSTS = [os.environ["DOMAIN"]]
+    CORS_ALLOWED_ORIGINS = [os.environ["DOMAIN"]]
 
 
 # Application definition
@@ -41,9 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

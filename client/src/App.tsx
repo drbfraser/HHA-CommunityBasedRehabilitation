@@ -1,16 +1,10 @@
 import React from 'react';
-import Alert from 'react-bootstrap/esm/Alert';
-import './App.css';
+import ConnectionTest from './ConnectionTest/ConnectionTest';
 
-function App() {
-  return (
+const App = () => (
     <div className="App">
-      <h1>CBR Manager</h1>
-      <Alert variant="success">
-        <i className="fa fa-check"></i> You're successfully running the CBR Manager client.
-      </Alert>
+        <ConnectionTest />
     </div>
-  );
-}
+)
 
 export default App;

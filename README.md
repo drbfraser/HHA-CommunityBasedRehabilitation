@@ -7,7 +7,7 @@
 You'll need to install Docker and NodeJS + NPM.
 
 Follow this guide to install Docker: https://docs.docker.com/get-docker/
-  - If on Windows 10 Home, follow this guide: https://docs.docker.com/docker-for-windows/install-windows-home/
+  - If on Windows 10 Home, you'll need to first [enable WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and then follow this guide: https://docs.docker.com/docker-for-windows/install-windows-home/
 
 Install NodeJS 14 LTS from here: https://nodejs.org/en/
 

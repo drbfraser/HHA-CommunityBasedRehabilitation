@@ -11,6 +11,7 @@ build client:
   image: node:14
   tags:
     - docker
+  needs: []
   rules:
     # build on merge requests if there are changes
     - if: '$CI_MERGE_REQUEST_ID != null'
@@ -36,6 +37,7 @@ test server:
   image: python:3.9.1-buster
   tags:
     - docker
+  needs: []
   rules:
     - if: '$CI_MERGE_REQUEST_ID != null'
       changes:

@@ -26,12 +26,12 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.environ.get("DEBUG", "") == "yes":
     DEBUG = True
-    ALLOWED_HOSTS = []
-    CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+    ALLOWED_HOSTS = ['*']
+    CORS_ALLOW_ALL_ORIGINS = True
 else:
     DEBUG = False
     ALLOWED_HOSTS = [os.environ["DOMAIN"]]
-    CORS_ALLOWED_ORIGINS = []
+    CORS_ALLOW_ALL_ORIGINS = False
 
 
 # Application definition
@@ -130,4 +130,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/api/static/'

@@ -25,6 +25,7 @@ build client:
     - cd client
     - npm install
   script:
+    - npx prettier --check .
     - CI=false npm run build
   after_script:
     - tar -czvf client_build.tar.gz client/build

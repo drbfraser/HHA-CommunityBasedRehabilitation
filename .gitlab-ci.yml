@@ -1,6 +1,5 @@
 stages:
   - build
-  - test
   - deploy
 
 variables:
@@ -33,8 +32,8 @@ build client:
     paths:
       - client_build.tar.gz
 
-test server:
-  stage: test
+build server:
+  stage: build
   image: python:3.9.1-buster
   tags:
     - docker
@@ -56,6 +55,7 @@ test server:
     - cd server
   script:
     - pip install -r requirements.txt
+    - python -m black --check . 
     - python manage.py check
   
 deploy:

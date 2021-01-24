@@ -1,6 +1,5 @@
 stages:
   - build
-  - test
   - deploy
 
 variables:
@@ -25,6 +24,7 @@ build client:
     - cd client
     - npm install
   script:
+    - npx prettier --check .
     - CI=false npm run build
   after_script:
     - tar -czvf client_build.tar.gz client/build
@@ -32,8 +32,8 @@ build client:
     paths:
       - client_build.tar.gz
 
-test server:
-  stage: test
+build server:
+  stage: build
   image: python:3.9.1-buster
   tags:
     - docker
@@ -55,6 +55,7 @@ test server:
     - cd server
   script:
     - pip install -r requirements.txt
+    - python -m black --check . 
     - python manage.py check
   
 deploy:

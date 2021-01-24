@@ -5,7 +5,7 @@
 - [Contribution Guide](#contribution-guide)
 - [Style Guide](#style-guide)
 
-## Development Setup
+# Development Setup
 
 ### 1. Install Required Programs
 
@@ -46,7 +46,7 @@ Once both Django and Postgres are running, run `docker exec cbr_django python ma
 
 
 
-## Running Locally
+# Running Locally
 
 ### 1. Start Docker Containers
 
@@ -68,7 +68,7 @@ That's it! The frontend is now running on http://localhost:3000 and the backend 
 
 
 
-## Contribution Guide
+# Contribution Guide
 
 Overall, it is best to create small issues and merge often.
 
@@ -100,7 +100,7 @@ From within the `client` directory, run `npx prettier --write .`
 
 **Backend:**
 
-With the Django Docker container running, run `docker exec cbr_django python -m black --check .`
+With the Django Docker container running, run `docker exec cbr_django python -m black .`
 
 ### 5. Submit a Merge Request
 
@@ -122,7 +122,7 @@ Once at least one other developer has approved your merge request, all discussio
 
 
 
-## Style Guide
+# Style Guide
 
 Code style is enforced as part of our CI/CD pipelines and all code must adhere to the proper style prior to it being able to merge.
 

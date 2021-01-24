@@ -1,6 +1,5 @@
-# CMPT 373
+# CMPT 373: CBR Manager
 
-Contents:
 - [Development Setup](#development-setup)
 - [Running Locally](#running-locally)
 - [Contribution Guide](#contribution-guide)
@@ -61,7 +60,7 @@ If database models have changed since you last ran the project, you may need to 
 
 In the `client` directory, run `npm start`.
 
-If dependencies have been added since you last ran the project, you may need to run `npm install` first.
+If dependencies have been added since you last ran the project, you may need to run `npm install` first (from within the `client` directory as well).
 
 ### 3. Start Developing!
 
@@ -75,7 +74,7 @@ Overall, it is best to create small issues and merge often.
 
 ### 0. Create Issue in GitLab (if necessary)
 
-If an issue has not yet been filed in GitLab, make sure to create to create one and assign it to yourself first.
+If an issue has not yet been filed in GitLab, make sure to create one and assign it to yourself first.
 
 ### 1. Create New Branch
 
@@ -105,14 +104,32 @@ With the Django Docker container running, run `docker exec cbr_django python -m 
 
 ### 5. Submit a Merge Request
 
-First, make sure you've committed all changes and pushed your branch. Then submit a merge request from within Gitlab. If you've recently pushed your branch, on the merge requests page you'll see a blue "Create merge request" button.
+First, make sure you've committed all changes and pushed your branch and then submit a merge request from within Gitlab. If you've recently pushed your branch, on the merge requests page you'll see a blue "Create merge request" button.
 
 Your merge request will automatically run our CI/CD pipelines to test your branch. If any pipelines fail, you can click on the red `X` icon and then click on the job that failed to see more details and fix the problem.
 
-Once at least one other team member has approved your merge request and all discussions are resolved, you can merge when ready. Note that it is best practice for the person who *made* the merge request to merge it. If you are reviewing the request, don't merge it once you approve it - the original author may still want to make a few changes or other team members might be in the process of reviewing it.
+### 6. Code Review
+
+In-depth code reviews are good! They help everyone write better code, keep our code base clean and help to ensure we create great software.
+
+During the code review process, you'll likely receive a few suggestions for things to improve or fix. Once all necessary changes have been made, other developers will approve the merge request.
+
+### 7. Merge
+
+Once at least one other developer has approved your merge request, all discussions are resolved and the CI/CD pipelines pass, you can merge when ready.
+
+**Note:** it is best practice for the person who made the merge request to merge it. If you are reviewing a merge request, don't merge it after approving it - the original author may still want to make a few changes or other team members might be in the process of reviewing it.
 
 
 
 ## Style Guide
 
-TODO
+Code style is enforced as part of our CI/CD pipelines and all code must adhere to the proper style prior to it being able to merge.
+
+### Frontend
+
+Our frontend code is *automatically* formatted using [Prettier](https://prettier.io/). Some (not all) of Prettier's styling decisions are explained [here](https://prettier.io/docs/en/rationale.html).
+
+### Backend
+
+Our backend code is *automatically* formatted using [Black](https://github.com/psf/black). For style-specific information, please see [Black's style guide](https://github.com/psf/black/blob/master/docs/the_black_code_style.md).

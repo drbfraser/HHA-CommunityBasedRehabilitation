@@ -12,7 +12,7 @@ const SideNavCircle = ({ page, active }: IProps) => {
     return (
         <Link to={page.path}>
             <div className={styles.circle + (active ? ` ${styles.active}` : "")}>
-                <i className={`fa fa-${page.icon}`}></i>
+                <i className={`fa fa-fw fa-${page.icon}`}></i>
             </div>
         </Link>
     );

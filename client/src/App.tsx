@@ -12,7 +12,7 @@ const App = () => (
                     {pages
                         .filter((page) => page.showInNav)
                         .map((page) => (
-                            <Route exact path={page.path}>
+                            <Route key={page.path} exact path={page.path}>
                                 <h1 className="appPageTitle">{page.name}</h1>
                                 <div className="appPageContainer">
                                     <page.Component />

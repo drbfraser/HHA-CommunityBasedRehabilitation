@@ -11,7 +11,7 @@ const SideNav = () => {
         <div className={styles.container}>
             <img src="/images/hha_icon_bw.png" alt="" className={styles.hhaIcon} />
             {pages.map((page) => (
-                <SideNavCircle page={page} active={page.path === pathname} />
+                <SideNavCircle key={page.path} page={page} active={page.path === pathname} />
             ))}
         </div>
     );

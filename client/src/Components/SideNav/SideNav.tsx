@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
-import { Nav, Navbar } from 'react-bootstrap';
-
+import React, { Component } from "react";
+import { NavLink } from "react-router-dom";
+import { Nav, Navbar } from "react-bootstrap";
 
 class SideNav extends Component {
     render() {

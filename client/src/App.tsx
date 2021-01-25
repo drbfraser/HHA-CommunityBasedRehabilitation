@@ -1,21 +1,18 @@
-import React from 'react';
-import { 
-    BrowserRouter as Router,
-    Route, 
-} from 'react-router-dom';
-import SideNav from './Components/SideNav/SideNav';
-import Dashboard from './Components/Dashboard/Dashboard';
-import ConnectionTest from './Components/ConnectionTest/ConnectionTest';
+import React from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import SideNav from "./Components/SideNav/SideNav";
+import Dashboard from "./Components/Dashboard/Dashboard";
+import ConnectionTest from "./Components/ConnectionTest/ConnectionTest";
 
 const App = () => (
     <div className="App">
         <Router>
-            <SideNav/>
+            <SideNav />
             <Route exact path="/">
-                <Dashboard/>
+                <Dashboard />
             </Route>
             <Route exact path="/test">
-                <ConnectionTest/>
+                <ConnectionTest />
             </Route>
         </Router>
     </div>

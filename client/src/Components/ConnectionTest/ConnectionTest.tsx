@@ -1,12 +1,6 @@
-<<<<<<< HEAD:client/src/Components/ConnectionTest/ConnectionTest.tsx
-import React, { useEffect, useState } from 'react';
-import Alert from 'react-bootstrap/esm/Alert';
-import { API_EXAMPLE } from '../../endpoints';
-=======
 import React, { useEffect, useState } from "react";
 import Alert from "react-bootstrap/esm/Alert";
-import { API_EXAMPLE } from "../endpoints";
->>>>>>> master:client/src/ConnectionTest/ConnectionTest.tsx
+import { API_EXAMPLE } from "../../endpoints";
 
 enum reqState {
     LOADING,

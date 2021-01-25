@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Alert from "react-bootstrap/esm/Alert";
-import { API_EXAMPLE } from "../../endpoints";
+import { API_EXAMPLE } from "util/endpoints";
 
 enum reqState {
     LOADING,
@@ -28,7 +28,7 @@ const reqMessage = {
     ),
 };
 
-const ConnectionTest = () => {
+const ToDo = () => {
     const [reqStatus, setReqStatus] = useState(reqState.LOADING);
 
     useEffect(() => {
@@ -51,7 +51,7 @@ const ConnectionTest = () => {
 
     return (
         <div>
-            <h1>CBR Manager</h1>
+            <p>Page not yet written. In the mean time, have a test page :)</p>
             <Alert variant="success">
                 <i className="fa fa-check"></i> You're successfully running the CBR Manager client.
             </Alert>
@@ -60,4 +60,4 @@ const ConnectionTest = () => {
     );
 };
 
-export default ConnectionTest;
+export default ToDo;

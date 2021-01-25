@@ -1,0 +1,24 @@
+.container {
+    color: #fff;
+    width: 100px;
+}
+
+.circle {
+    margin: 10px auto;
+    text-align: center;
+    height: 55px;
+    width: 55px;
+    border-radius: 100%;
+    font-size: 35px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.circle:hover {
+    background-color: #fdbe6344;
+}
+
+.active,
+.active:hover {
+    background-color: #fdbe63;
+}

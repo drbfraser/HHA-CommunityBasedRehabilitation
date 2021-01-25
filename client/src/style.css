@@ -1,15 +1,50 @@
+/* This file contains global styles. It is recommended
+  to put all component /page styles in their respective
+  .module.css files */
+
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
         "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #413144;
+    color: #eee;
 }
 
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+html,
+body,
+#root,
+.appContainer,
+.appContent {
+    height: 100%;
 }
 
-.App {
-    padding: 10px;
+h1 {
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.appContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.appContent {
+    background-color: #794b60;
+    width: 100%;
+    height: 100%;
+    border-radius: 50px 0 0 50px;
+    padding: 20px;
+}
+
+.appPageTitle {
+    margin-left: 50px;
+}
+
+.appPageContainer {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 30px;
+    background-color: #413144;
 }

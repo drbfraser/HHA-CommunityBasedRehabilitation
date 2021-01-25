@@ -22,3 +22,9 @@
 .active:hover {
     background-color: #fdbe63;
 }
+
+.hhaIcon {
+    display: block;
+    margin: 10px auto 30px auto;
+    width: 60%;
+}

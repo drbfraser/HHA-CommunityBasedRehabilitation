@@ -3,24 +3,20 @@ import {
     BrowserRouter as Router,
     Route, 
 } from 'react-router-dom';
-import Header from './Components/Header/Header';
+import SideNav from './Components/SideNav/SideNav';
 import Dashboard from './Components/Dashboard/Dashboard';
 import ConnectionTest from './Components/ConnectionTest/ConnectionTest';
 
 const App = () => (
     <div className="App">
         <Router>
-            <Header/>
-            <Route
-                exact
-                path="/"
-                render={() => <Dashboard/>}
-            />
-            <Route
-                exact
-                path="/test"
-                render={() => <ConnectionTest/>}
-            />
+            <SideNav/>
+            <Route exact path="/">
+                <Dashboard/>
+            </Route>
+            <Route exact path="/test">
+                <ConnectionTest/>
+            </Route>
         </Router>
     </div>
 )

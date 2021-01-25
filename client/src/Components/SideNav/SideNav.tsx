@@ -3,8 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
 
 
-class Header extends Component {
-
+class SideNav extends Component {
     render() {
         return (
             <Navbar bg="light">
@@ -21,4 +20,4 @@ class Header extends Component {
     }
 }
 
-export default Header;
+export default SideNav;

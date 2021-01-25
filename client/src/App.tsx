@@ -19,6 +19,6 @@ const App = () => (
             </Route>
         </Router>
     </div>
-)
+);
 
 export default App;

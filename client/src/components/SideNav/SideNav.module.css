@@ -1,0 +1,51 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+    color: #fff;
+}
+
+.icon,
+.hhaIcon {
+    margin: 10px auto;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.icon {
+    height: 55px;
+    width: 55px;
+    font-size: 35px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.icon:hover {
+    background-color: #6b778d;
+}
+
+.active,
+.active:hover {
+    background-color: #ff6768;
+}
+
+.hhaIcon {
+    display: block;
+    background-color: #ffffff11;
+    height: 70px;
+    width: 70px;
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+@media screen and (max-width: 800px) {
+    .container {
+        flex-direction: row;
+        justify-content: space-evenly;
+        width: 100%;
+    }
+
+    .hhaIcon {
+        display: none;
+    }
+}

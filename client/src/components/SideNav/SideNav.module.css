@@ -5,39 +5,43 @@
     color: #fff;
 }
 
-.circle,
+.icon,
 .hhaIcon {
     margin: 10px auto;
+    border-radius: 20px;
     text-align: center;
-    height: 55px;
-    width: 55px;
 }
 
-.circle {
-    border-radius: 100%;
+.icon {
+    height: 55px;
+    width: 55px;
     font-size: 35px;
     cursor: pointer;
     color: #fff;
 }
 
-.circle:hover {
-    background-color: #fdbe6344;
+.icon:hover {
+    background-color: #6b778d;
 }
 
 .active,
 .active:hover {
-    background-color: #fdbe63;
+    background-color: #ff6768;
 }
 
 .hhaIcon {
     display: block;
+    background-color: #ffffff11;
+    height: 70px;
+    width: 70px;
+    padding: 10px;
     margin-bottom: 30px;
 }
 
 @media screen and (max-width: 800px) {
     .container {
         flex-direction: row;
-        justify-content: center;
+        justify-content: space-evenly;
         width: 100%;
     }
 

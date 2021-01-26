@@ -10,8 +10,8 @@ interface IProps {
     active: boolean;
 }
 
-const SideNavCircle = ({ page, active }: IProps) => {
-    const CircleTooltip = (props: OverlayInjectedProps) => (
+const SideNavIcon = ({ page, active }: IProps) => {
+    const NavTooltip = (props: OverlayInjectedProps) => (
         <Tooltip id="sidenav-tooltip" {...props} className={props.show ? "show" : ""}>
             {page.name}
         </Tooltip>
@@ -19,7 +19,7 @@ const SideNavCircle = ({ page, active }: IProps) => {
 
     return (
         <Link to={page.path}>
-            <OverlayTrigger transition={false} placement="right" overlay={CircleTooltip}>
+            <OverlayTrigger transition={false} placement="top" overlay={NavTooltip}>
                 {
                     /* Have to use this in function form to avoid bad rerenders
                     (https://github.com/react-bootstrap/react-bootstrap/issues/5519) */
@@ -27,7 +27,7 @@ const SideNavCircle = ({ page, active }: IProps) => {
                         <div
                             ref={ref}
                             {...triggerHandler}
-                            className={styles.circle + (active ? ` ${styles.active}` : "")}
+                            className={styles.icon + (active ? ` ${styles.active}` : "")}
                         >
                             <i className={`fa fa-fw fa-${page.icon}`}></i>
                         </div>
@@ -38,4 +38,4 @@ const SideNavCircle = ({ page, active }: IProps) => {
     );
 };
 
-export default SideNavCircle;
+export default SideNavIcon;

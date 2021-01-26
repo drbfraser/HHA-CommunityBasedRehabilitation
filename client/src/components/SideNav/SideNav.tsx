@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { pages } from "../../util/pages";
 import styles from "./SideNav.module.css";
-import SideNavCircle from "./SideNavCircle";
+import SideNavIcon from "./SideNavIcon";
 
 const SideNav = () => {
     const { pathname } = useLocation();
@@ -11,7 +11,7 @@ const SideNav = () => {
         <div className={styles.container}>
             <img src="/images/hha_icon_bw.png" alt="" className={styles.hhaIcon} />
             {pages.map((page) => (
-                <SideNavCircle key={page.path} page={page} active={page.path === pathname} />
+                <SideNavIcon key={page.path} page={page} active={page.path === pathname} />
             ))}
         </div>
     );

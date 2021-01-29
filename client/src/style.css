@@ -21,12 +21,11 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #273364;
-    color: #222;
+    color: #fff;
 }
 
-h1 {
+h1, h2, h3 {
     font-weight: 400;
-    text-transform: uppercase;
 }
 
 .appWrapper {
@@ -37,13 +36,15 @@ h1 {
 .appPageContainer {
     width: 100%;
     padding: 20px;
-    background-color: #e3e8f4;
     border-radius: 50px 0 0 50px;
     box-shadow: -5px 0px 10px #33333344;
+    background-color: #e3e8f4;
+    color: #222;
 }
 
 .appPageTitle {
     margin-left: 50px;
+    text-transform: uppercase;
 }
 
 .appPageContent {

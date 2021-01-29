@@ -9,7 +9,7 @@ const SideNav = () => {
 
     return (
         <div className={styles.container}>
-            <img src="/images/hha_icon_bw.png" alt="" className={styles.hhaIcon} />
+            <img src="/images/hha_icon_white.png" alt="" className={styles.hhaIcon} />
             {pages.map((page) => (
                 <SideNavIcon key={page.path} page={page} active={page.path === pathname} />
             ))}

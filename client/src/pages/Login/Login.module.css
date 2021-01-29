@@ -1,22 +1,20 @@
 .container {
     height: 100%;
     background-repeat: no-repeat;
-    background-image: url('background.svg');
+    background-image: url("background.svg");
     background-size: 100% auto;
 }
 
 .logo {
     display: block;
-    padding: 20px;
     width: 100%;
-    max-width: 500px;
 }
 
 .formContainer {
     max-width: 350px;
     position: absolute;
+    top: 15%;
     right: 8%;
-    top: 30%;
 }
 
 .formContainer input {
@@ -29,17 +27,20 @@
     background-color: rgb(255, 199, 120) !important;
 }
 
-.formContainer button:hover, .formContainer button:focus, .formContainer button:active {
+.formContainer button:hover,
+.formContainer button:focus,
+.formContainer button:active {
     background-color: rgb(240, 160, 80) !important;
 }
 
-@media screen and (max-width: 700px) {
-    .logo {
-        margin: 0 auto;
+@media screen and (max-width: 600px) {
+    .container {
+        background-image: url("backgroundMobile.svg");
     }
 
     .formContainer {
         margin: 0 auto;
+        top: 25%;
         left: 0;
         right: 0;
     }

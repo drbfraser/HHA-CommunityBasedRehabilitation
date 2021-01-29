@@ -25,7 +25,7 @@
 
 .active,
 .active:hover {
-    background-color: #ffa768;
+    background-color: rgb(255, 199, 120);
 }
 
 .hhaIcon {

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { Redirect } from "react-router-dom";
 
-const Logout = () => <Redirect to="/" />
+const Logout = () => <Redirect to="/" />;
 
 export default Logout;

@@ -5,16 +5,16 @@ import { pages } from "util/pages";
 
 const App = () => (
     <Router>
-        <div className="appContainer">
+        <div className="appWrapper">
             <SideNav />
-            <div className="appContent">
+            <div className="appPageContainer">
                 <Switch>
                     {pages
                         .filter((page) => page.showInNav)
                         .map((page) => (
                             <Route key={page.path} exact path={page.path}>
                                 <h1 className="appPageTitle">{page.name}</h1>
-                                <div className="appPageContainer">
+                                <div className="appPageContent">
                                     <page.Component />
                                 </div>
                             </Route>

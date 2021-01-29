@@ -9,23 +9,19 @@ body,
 }
 
 #root,
-.appContainer {
+.appWrapper {
     min-height: 100%;
 }
 
 body {
     margin: 0;
+    min-width: 360px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
         "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #eee;
-    min-width: 360px;
-}
-
-body,
-.appPageContainer {
-    background-color: #17223b;
+    background-color: #273364;
+    color: #222;
 }
 
 h1 {
@@ -33,39 +29,42 @@ h1 {
     text-transform: uppercase;
 }
 
-.appContainer {
+.appWrapper {
     display: flex;
     flex-direction: row;
 }
 
-.appContent {
-    background-color: #263859;
+.appPageContainer {
     width: 100%;
-    border-radius: 50px 0 0 50px;
     padding: 20px;
+    background-color: #e3e8f4;
+    border-radius: 50px 0 0 50px;
+    box-shadow: -5px 0px 10px #33333344;
 }
 
 .appPageTitle {
     margin-left: 50px;
 }
 
-.appPageContainer {
+.appPageContent {
     margin-top: 20px;
     padding: 20px;
     border-radius: 30px;
+    background-color: #fff;
 }
 
 @media screen and (max-width: 800px) {
-    .appContainer {
+    .appWrapper {
         flex-direction: column-reverse;
         height: 100%;
     }
 
-    .appContent {
-        border-radius: 0 0 30px 30px;
+    .appPageContainer {
         height: 100%;
         overflow-x: auto;
         overflow-y: auto;
+        border-radius: 0 0 30px 30px;
+        box-shadow: 0px 5px 10px #33333344;
     }
 
     .appPageTitle {

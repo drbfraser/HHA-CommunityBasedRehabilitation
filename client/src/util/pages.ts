@@ -1,4 +1,5 @@
 import ToDo from "pages/ToDo/ToDo";
+import NewClient from "pages/Client/NewClient";
 
 export interface IPage {
     path: string;
@@ -21,7 +22,7 @@ export const pages: IPage[] = [
         icon: "plus-circle",
         name: "New Client",
         showInNav: true,
-        Component: ToDo,
+        Component: NewClient,
     },
     {
         path: "/clients",

@@ -1,0 +1,35 @@
+/* body{
+  font-weight: bold;
+} */
+
+.customFileUpload {
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    padding: 6px;
+    cursor: pointer;
+    background: linear-gradient(270deg, #3954af, #79f1a4);
+    margin-bottom: 25px;
+}
+
+.checkbox {
+    height: 15px;
+    width: 15px;
+    margin-left: 1rem;
+}
+
+hr {
+    border: 1px;
+    border-top: 1px solid white;
+}
+
+.submitBtn {
+    background: #ff6768;
+    color: white;
+    margin-left: 1rem;
+}
+
+.submitBtn:hover {
+    background: #f74a4a;
+    color: white;
+}

@@ -1,6 +1,7 @@
 import Logout from "pages/Logout/Logout";
 import ToDo from "pages/ToDo/ToDo";
-
+import UserProfile from "pages/User/UserProfile";
+import UserEdit from "pages/User/UserEdit";
 export interface IPage {
     path: string;
     icon: string;
@@ -36,7 +37,7 @@ export const pages: IPage[] = [
         icon: "user",
         name: "Profile",
         showInNav: true,
-        Component: ToDo,
+        Component: UserProfile,
     },
     {
         path: "/admin",

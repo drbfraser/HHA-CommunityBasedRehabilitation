@@ -1,0 +1,47 @@
+.container {
+    height: 100%;
+    background-repeat: no-repeat;
+    background-image: url("background.svg");
+    background-size: 100% auto;
+}
+
+.logo {
+    display: block;
+    width: 100%;
+}
+
+.formContainer {
+    max-width: 350px;
+    position: absolute;
+    top: 15%;
+    right: 8%;
+}
+
+.formContainer input {
+    background-color: rgb(245, 250, 255);
+}
+
+.formContainer button {
+    color: #222 !important;
+    border: none !important;
+    background-color: rgb(255, 199, 120) !important;
+}
+
+.formContainer button:hover,
+.formContainer button:focus,
+.formContainer button:active {
+    background-color: rgb(240, 160, 80) !important;
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        background-image: url("backgroundMobile.svg");
+    }
+
+    .formContainer {
+        margin: 0 auto;
+        top: 25%;
+        left: 0;
+        right: 0;
+    }
+}

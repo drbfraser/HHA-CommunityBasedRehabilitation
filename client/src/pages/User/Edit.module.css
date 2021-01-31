@@ -1,0 +1,44 @@
+.container {
+    background-color: #273364;
+    color: #fff;
+    /* width: 120%; */
+    margin: auto;
+    overflow: hidden;
+    padding: 60px;
+    border-radius: 2.5ch;
+}
+
+.btn {
+    background-color: #273364; /* Blue background */
+    color: white; /* Remove borders */
+    border: 2px solid #e3e8f4; /* White text */
+    float: right;
+    margin:10px;
+    border-radius:1.5ch;
+    padding: 12px 16px; /* Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+    background-color: #e3e8f4;
+    color:  #273364;
+    
+    
+}
+
+.box{
+    background-color: #273364;
+    border-radius: 1ch;
+    color:#fff;
+    width: 400px;
+    height: 30px;
+    border: 2px solid #e3e8f4;
+    margin-bottom: 10px;
+}
+
+.form{
+    margin-bottom: 10px;
+    position: relative;
+}

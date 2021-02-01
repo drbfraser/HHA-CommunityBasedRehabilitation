@@ -1,3 +1,4 @@
+import Logout from "pages/Logout/Logout";
 import ToDo from "pages/ToDo/ToDo";
 import NewClient from "pages/Client/NewClient";
 
@@ -50,6 +51,6 @@ export const pages: IPage[] = [
         icon: "sign-out",
         name: "Log out",
         showInNav: true,
-        Component: ToDo,
+        Component: Logout,
     },
 ];

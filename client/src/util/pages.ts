@@ -38,6 +38,13 @@ export const pages: IPage[] = [
         icon: "user",
         name: "Profile",
         showInNav: true,
+        Component: UserProfile,
+    },
+    {
+        path: "/user/edit",
+        icon: "user",
+        name: "Profile Edit",
+        showInNav: false,
         Component: UserEdit,
     },
     {

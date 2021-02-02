@@ -24,6 +24,12 @@ export const useStyles = makeStyles({
             backgroundColor: "rgb(255, 199, 120)",
         },
     },
+    tooltip: {
+        fontSize: 14,
+        "&, & .MuiTooltip-arrow:before": {
+            backgroundColor: "black",
+        },
+    },
     hhaIcon: {
         margin: "10px auto 30px auto",
         borderRadius: 20,

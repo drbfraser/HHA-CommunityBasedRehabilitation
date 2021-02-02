@@ -1,4 +1,3 @@
-import { withStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -13,19 +12,22 @@ interface IProps {
 const SideNavIcon = ({ page, active }: IProps) => {
     const styles = useStyles();
 
-    const NavTooltip = withStyles({
-        tooltip: {
-            fontSize: 16,
-        },
-    })(Tooltip);
+    // fix issue with findDOMNode in strict mode
+    const NoTransition = ({ children }: any) => children;
 
     return (
         <Link to={page.path}>
-            <NavTooltip title={page.name} placement="top">
+            <Tooltip
+                title={page.name}
+                placement="top"
+                arrow
+                classes={{ tooltip: styles.tooltip }}
+                TransitionComponent={NoTransition}
+            >
                 <div className={styles.icon + (active ? ` ${styles.active}` : "")}>
                     {page.Icon && <page.Icon fontSize="large" />}
                 </div>
-            </NavTooltip>
+            </Tooltip>
         </Link>
     );
 };

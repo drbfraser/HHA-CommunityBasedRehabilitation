@@ -12,7 +12,7 @@ export const useStyles = makeStyles({
         width: 55,
         borderRadius: 20,
         textAlign: "center",
-        fontSize: 40,
+        fontSize: 42,
         cursor: "pointer",
         color: "white",
         "&:hover": {

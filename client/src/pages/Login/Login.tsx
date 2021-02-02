@@ -1,5 +1,5 @@
+import TextField from "@material-ui/core/TextField";
 import React from "react";
-import { Button, Form } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import styles from "./Login.module.css";
 
@@ -18,20 +18,11 @@ const Login = () => {
                 <br />
                 <br />
                 <h2>Login</h2>
-                <Form>
-                    <Form.Group>
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control htmlSize={50} type="text" />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control htmlSize={50} type="password" />
-                    </Form.Group>
-                    <br />
-                    <Button onClick={handleLogin} block>
-                        Login
-                    </Button>
-                </Form>
+                <form>
+                    <TextField label="Username" />
+                    <TextField label="Password" />
+                    <button onClick={handleLogin}>Login</button>
+                </form>
             </div>
         </div>
     );

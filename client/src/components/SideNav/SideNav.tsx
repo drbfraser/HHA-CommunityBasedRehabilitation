@@ -1,10 +1,11 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { pages } from "../../util/pages";
-import styles from "./SideNav.module.css";
+import { useStyles } from "./SideNav.styles";
 import SideNavIcon from "./SideNavIcon";
 
 const SideNav = () => {
+    const styles = useStyles();
     const { pathname } = useLocation();
 
     return (

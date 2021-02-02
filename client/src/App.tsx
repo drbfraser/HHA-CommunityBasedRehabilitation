@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import SideNav from "./components/SideNav/SideNav";
 import { pages } from "util/pages";
 import Login from "pages/Login/Login";
+import Typography from "@material-ui/core/Typography";
 
 const App = () => (
     <Router>
@@ -17,7 +18,9 @@ const App = () => (
                         <Switch>
                             {pages.map((page) => (
                                 <Route key={page.path} exact path={page.path}>
-                                    <h1 className="appPageTitle">{page.name}</h1>
+                                    <Typography variant="h2" component="h1">
+                                        {page.name}
+                                    </Typography>
                                     <div className="appPageContent">
                                         <page.Component />
                                     </div>

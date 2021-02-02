@@ -65,6 +65,7 @@ h3 {
 
     .appPageContainer {
         height: 100%;
+        width: auto;
         overflow-x: auto;
         overflow-y: auto;
         border-radius: 0 0 30px 30px;

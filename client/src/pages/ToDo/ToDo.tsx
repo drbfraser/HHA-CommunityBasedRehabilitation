@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Alert from "react-bootstrap/esm/Alert";
+import Alert from "@material-ui/lab/Alert";
 import { API_EXAMPLE } from "util/endpoints";
+import { Typography } from "@material-ui/core";
 
 enum reqState {
     LOADING,
@@ -8,24 +9,26 @@ enum reqState {
     ERROR,
 }
 
-const reqAlertClass = {
-    [reqState.LOADING]: "primary",
-    [reqState.SUCCESS]: "success",
-    [reqState.ERROR]: "danger",
-};
+interface IReqDisplay {
+    [key: string]: {
+        alertSeverity: "info" | "success" | "warning" | "error";
+        message: string;
+    };
+}
 
-const reqMessage = {
-    [reqState.LOADING]: "Trying to connect to the API...",
-    [reqState.SUCCESS]: (
-        <>
-            <i className="fa fa-check"></i> Client successfully connected to the CBR Manager API.
-        </>
-    ),
-    [reqState.ERROR]: (
-        <>
-            <i className="fa fa-exclamation-triangle"></i> Failed to connect to the CBR Manager API.
-        </>
-    ),
+const reqDisplay: IReqDisplay = {
+    [reqState.LOADING]: {
+        alertSeverity: "info",
+        message: "Trying to connect to the API...",
+    },
+    [reqState.SUCCESS]: {
+        alertSeverity: "success",
+        message: "Client successfully connected to the CBR Manager API.",
+    },
+    [reqState.ERROR]: {
+        alertSeverity: "error",
+        message: "Failed to connect to the CBR Manager API.",
+    },
 };
 
 const ToDo = () => {
@@ -51,11 +54,17 @@ const ToDo = () => {
 
     return (
         <div>
-            <p>Page not yet written. In the mean time, have a test page :)</p>
-            <Alert variant="success">
-                <i className="fa fa-check"></i> You're successfully running the CBR Manager client.
+            <Typography variant="body1">
+                Page not yet written. In the mean time, have a test page :)
+            </Typography>
+            <br />
+            <Alert variant="filled" severity="success">
+                You're successfully running the CBR Manager client.
             </Alert>
-            <Alert variant={reqAlertClass[reqStatus]}>{reqMessage[reqStatus]}</Alert>
+            <br />
+            <Alert variant="filled" severity={reqDisplay[reqStatus].alertSeverity}>
+                {reqDisplay[reqStatus].message}
+            </Alert>
         </div>
     );
 };

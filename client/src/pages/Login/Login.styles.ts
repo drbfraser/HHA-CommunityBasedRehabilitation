@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
-import BackgroundImage from './background.svg';
-import BackgroundImageMobile from './backgroundMobile.svg';
+import BackgroundImage from "./background.svg";
+import BackgroundImageMobile from "./backgroundMobile.svg";
 
 export const useStyles = makeStyles({
     container: {
@@ -12,14 +12,14 @@ export const useStyles = makeStyles({
     logo: {
         display: "block",
         width: "100%",
-    },  
+    },
     formContainer: {
         maxWidth: 350,
         position: "absolute",
         top: "15%",
         right: "8%",
         color: "white",
-        "& .MuiInputLabel-root": {
+        "& .MuiInputLabel-root, & .MuiInput-input": {
             color: "white",
         },
         "& .MuiInput-underline": {
@@ -36,7 +36,7 @@ export const useStyles = makeStyles({
             backgroundColor: "rgb(255, 199, 120) !important",
             "&:hover, &:focus, &:active": {
                 backgroundColor: "rgb(240, 160, 80) !important",
-            }
+            },
         },
     },
     "@media (max-width: 600px)": {
@@ -49,5 +49,5 @@ export const useStyles = makeStyles({
             left: 0,
             right: 0,
         },
-    }
+    },
 });

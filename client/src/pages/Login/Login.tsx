@@ -24,15 +24,12 @@ const Login = () => {
                     Login
                 </Typography>
                 <form>
-                    <TextField
-                        label="Username"
-                        fullWidth
-                    />
-                    <br /><br />
-                    <TextField
-                        label="Password"
-                        fullWidth />
-                    <br /><br />
+                    <TextField label="Username" fullWidth />
+                    <br />
+                    <br />
+                    <TextField label="Password" fullWidth />
+                    <br />
+                    <br />
                     <Button onClick={handleLogin} fullWidth>
                         Login
                     </Button>

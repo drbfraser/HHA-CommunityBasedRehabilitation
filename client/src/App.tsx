@@ -4,7 +4,7 @@ import SideNav from "./components/SideNav/SideNav";
 import { pages } from "util/pages";
 import Login from "pages/Login/Login";
 import Typography from "@material-ui/core/Typography";
-import { useStyles } from 'App.styles';
+import { useStyles } from "App.styles";
 
 const App = () => {
     const styles = useStyles();
@@ -37,6 +37,6 @@ const App = () => {
             </Switch>
         </Router>
     );
-}
+};
 
 export default App;

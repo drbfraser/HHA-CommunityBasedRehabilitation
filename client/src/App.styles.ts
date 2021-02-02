@@ -32,6 +32,6 @@ export const useStyles = makeStyles({
             overflowY: "auto",
             borderRadius: "0 0 30px 30px",
             boxShadow: "0px 5px 10px #33333344",
-        }
-    }
+        },
+    },
 });

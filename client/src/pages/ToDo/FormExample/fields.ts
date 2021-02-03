@@ -56,8 +56,7 @@ export const validationSchema = () =>
             .label(fieldLabels[FormField.numericInput])
             .integer()
             .min(10)
-            .max(100)
-            .label("Numeric Input"),
+            .max(100),
         [FormField.dropdown]: Yup.string().label(fieldLabels[FormField.dropdown]),
         [FormField.checkbox]: Yup.boolean().label(fieldLabels[FormField.checkbox]),
         [FormField.multiLineInput]: Yup.string().label(fieldLabels[FormField.multiLineInput]),

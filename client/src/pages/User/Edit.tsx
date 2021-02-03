@@ -1,7 +1,14 @@
 import React, { useState } from "react";
-import styles from "./Edit.module.css";
+import { useStyles } from "./Edit.styles";
+// import { Field, Form, Formik } from "formik";
+// import { TextField } from "formik-material-ui";
+// import Grid from "@material-ui/core/Grid";
+// import { fieldLabels, FormField, initialValues, validationSchema } from "./fields";
+// import Button from "@material-ui/core/Button";
 
 const Edit = (props: any) => {
+    const styles = useStyles();
+
     const [state, setState] = useState({
         userName: "User Name",
         id: "11111111",
@@ -35,7 +42,7 @@ const Edit = (props: any) => {
 
     return (
         <div className={styles.container}>
-            <p className={styles.p}> {state.userName} </p>
+            <h1 className={styles.head}> {state.userName} </h1>
             <form className={styles.form}>
                 <label htmlFor="ID">ID</label>
                 <p> {state.id} </p>
@@ -78,8 +85,7 @@ const Edit = (props: any) => {
                     />
                 </label>
             </form>
-
-            <div className={styles.edit}>
+            <div>
                 <br></br>
                 <button className={styles.btn} type="submit" value="Submit" onClick={handleSubmit}>
                     Save
@@ -94,3 +100,64 @@ const Edit = (props: any) => {
 };
 
 export default Edit;
+
+{
+    // Forms from Ethan's form example
+    /* <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+    >
+        <div className={styles.container}>
+            <h1 className={styles.head}> {state.userName} </h1>
+            <br></br>
+            <label htmlFor="ID">ID</label>
+                <p> {state.id} </p>
+            <br></br>  
+            
+            <Form className={styles.form}>
+                <Grid container spacing={2}>
+                    <Grid item md={6} xs={12}>
+                        <Field
+                            component={TextField}
+                            fullWidth
+                            required
+                            variant="outlined"
+                            label={fieldLabels[FormField.addressInput]}
+                            name={FormField.addressInput}
+                        />
+                    </Grid>
+                </Grid>   
+            </Form>
+
+            <br></br>
+            <Form className={styles.form}>
+                <Grid container spacing={2}>
+                    <Grid item md={6} xs={12}>
+                        <Field
+                            component={TextField}
+                            fullWidth
+                            required
+                            variant="outlined"
+                            label={fieldLabels[FormField.telephoneInput]}
+                            name={FormField.telephoneInput}
+                        />
+                    </Grid>
+                </Grid>   
+            </Form>
+            <br></br>
+            <Form className={styles.form}>
+                <Grid container spacing={2}>
+                    <Grid item md={6} xs={12}>
+                        <Field
+                            component={TextField}
+                            fullWidth
+                            required
+                            variant="outlined"
+                            label={fieldLabels[FormField.emailInput]}
+                            name={FormField.emailInput}
+                        />
+                    </Grid>
+                </Grid>   
+</Form></Formik>} */
+}

@@ -5,7 +5,7 @@ import Edit from "pages/User/Edit";
 const User = () => {
     const [toggleView, setToggleView] = useState(true);
     const switchComponent = () => {
-        setToggleView(toggleView);
+        setToggleView(!toggleView);
     };
 
     return (

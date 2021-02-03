@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import styles from "./View.module.css";
+import EditIcon from "@material-ui/icons/Edit";
+import { useStyles } from "./View.styles";
 
 // User profile view Component
 const Profile = (props: any) => {
     const handleEdit = () => props.setProps(true);
+    const styles = useStyles();
     // Read From Server
     const [state] = useState({
         userName: "User Name",
@@ -19,10 +21,13 @@ const Profile = (props: any) => {
                 <h1 className={styles.head}> {state.userName} </h1>
                 <div className={styles.edit}>
                     <button className={styles.btn} onClick={handleEdit}>
-                        <i className="fa fa-edit fa-lg"></i>Edit
+                        <EditIcon></EditIcon>Edit
                     </button>
                 </div>
-                <label htmlFor="ID">ID</label>
+                <br></br>
+                <label htmlFor="ID" className={styles.label}>
+                    ID
+                </label>
                 <p> {state.id} </p>
                 <label htmlFor="Location">Location</label>
                 <p> {state.location} </p>

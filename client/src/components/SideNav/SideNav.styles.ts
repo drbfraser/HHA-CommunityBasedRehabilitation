@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { themeColors } from "theme.styles";
 
 export const useStyles = makeStyles({
     container: {
@@ -16,12 +17,12 @@ export const useStyles = makeStyles({
         cursor: "pointer",
         color: "white",
         "&:hover": {
-            backgroundColor: "#eeeeee44",
+            backgroundColor: "rgba(255, 255, 255, 0.3)",
         },
     },
     active: {
         "&, &:hover": {
-            backgroundColor: "rgb(255, 199, 120)",
+            backgroundColor: themeColors.yellow,
         },
     },
     tooltip: {
@@ -33,10 +34,10 @@ export const useStyles = makeStyles({
     hhaIcon: {
         margin: "10px auto 30px auto",
         borderRadius: 20,
-        height: 55,
-        width: 55,
+        height: 75,
+        width: 75,
         padding: 10,
-        backgroundColor: "#ffffff11",
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
     },
     "@media (max-width: 800px)": {
         container: {

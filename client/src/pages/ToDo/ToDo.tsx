@@ -15,7 +15,9 @@ const ToDo = () => {
             <Divider />
             <br />
             <Typography variant="body1">
-                Here is an example form using Material UI + Formik + Yup for validation:
+                Here is an example form using Material UI + Formik + Yup for validation. It also
+                uses the Grid component to resize nicely for different screen sizes - take a look at
+                what happens if you resize your browser window:
             </Typography>
             <br />
             <FormExample />

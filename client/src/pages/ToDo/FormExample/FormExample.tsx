@@ -18,7 +18,7 @@ const FormExample = () => (
         {({ values, isSubmitting }) => (
             <Form>
                 <Grid container spacing={2}>
-                    <Grid item md={6}>
+                    <Grid item md={6} xs={12}>
                         <Field
                             component={TextField}
                             fullWidth
@@ -28,7 +28,7 @@ const FormExample = () => (
                             name={FormField.textInputRequired}
                         />
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item md={6} xs={12}>
                         <Field
                             component={TextField}
                             fullWidth
@@ -37,7 +37,7 @@ const FormExample = () => (
                             name={FormField.textInputOptional}
                         />
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item md={6} xs={12}>
                         <Field
                             component={TextField}
                             fullWidth
@@ -46,7 +46,7 @@ const FormExample = () => (
                             name={FormField.textInputPrefilled}
                         />
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item md={6} xs={12}>
                         <Field
                             component={TextField}
                             type="number"
@@ -56,7 +56,7 @@ const FormExample = () => (
                             name={FormField.numericInput}
                         />
                     </Grid>
-                    <Grid item md={12}>
+                    <Grid item md={12} xs={12}>
                         <FormControl fullWidth variant="outlined">
                             <InputLabel>{fieldLabels[FormField.dropdown]}</InputLabel>
                             <Field
@@ -73,7 +73,7 @@ const FormExample = () => (
                             </Field>
                         </FormControl>
                     </Grid>
-                    <Grid item md={12}>
+                    <Grid item md={12} xs={12}>
                         <Field
                             component={CheckboxWithLabel}
                             type="checkbox"

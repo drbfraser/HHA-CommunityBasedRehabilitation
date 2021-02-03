@@ -22,7 +22,7 @@ const App = () => {
                             <Switch>
                                 {pages.map((page) => (
                                     <Route key={page.path} exact path={page.path}>
-                                        <Typography variant="h2" component="h1">
+                                        <Typography variant="h1" className={styles.pageTitle}>
                                             {page.name}
                                         </Typography>
                                         <div className={styles.pageContent}>

@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { themeColors } from "theme.styles";
 import BackgroundImage from "./background.svg";
 import BackgroundImageMobile from "./backgroundMobile.svg";
 
@@ -31,11 +32,9 @@ export const useStyles = makeStyles({
             borderBottomColor: "white",
         },
         "& button": {
-            color: "#222 !important",
-            border: "none !important",
-            backgroundColor: "rgb(255, 199, 120) !important",
+            backgroundColor: themeColors.yellow,
             "&:hover, &:focus, &:active": {
-                backgroundColor: "rgb(240, 160, 80) !important",
+                backgroundColor: themeColors.yellowDark,
             },
         },
     },

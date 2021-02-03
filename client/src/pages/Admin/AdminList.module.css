@@ -1,0 +1,15 @@
+.container {
+    background-color: #fff;
+    color: #000000;
+    /* width: 120%; */
+    margin: auto;
+    overflow: hidden;
+    padding: 40px;
+    border-radius: 2.5ch;
+}
+.line {
+    border: 1px solid grey;
+}
+.searchBox {
+    width: 1%;
+}

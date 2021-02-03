@@ -1,5 +1,6 @@
 import Logout from "pages/Logout/Logout";
 import ToDo from "pages/ToDo/ToDo";
+import AdminList from "pages/Admin/AdminList"
 
 export interface IPage {
     path: string;
@@ -43,7 +44,7 @@ export const pages: IPage[] = [
         icon: "cog",
         name: "Admin",
         showInNav: true,
-        Component: ToDo,
+        Component: AdminList,
     },
     {
         path: "/logout",

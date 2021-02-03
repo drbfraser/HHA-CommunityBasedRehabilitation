@@ -1,9 +1,12 @@
+import { Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 import React from "react";
-import { Button, Form } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import styles from "./Login.module.css";
+import { useStyles } from "./Login.styles";
 
 const Login = () => {
+    const styles = useStyles();
     const history = useHistory();
     const handleLogin = () => history.push("/dashboard");
 
@@ -17,21 +20,20 @@ const Login = () => {
                 />
                 <br />
                 <br />
-                <h2>Login</h2>
-                <Form>
-                    <Form.Group>
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control htmlSize={50} type="text" />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control htmlSize={50} type="password" />
-                    </Form.Group>
+                <Typography variant="h4" gutterBottom>
+                    Login
+                </Typography>
+                <form>
+                    <TextField label="Username" fullWidth />
                     <br />
-                    <Button onClick={handleLogin} block>
+                    <br />
+                    <TextField label="Password" fullWidth />
+                    <br />
+                    <br />
+                    <Button onClick={handleLogin} fullWidth>
                         Login
                     </Button>
-                </Form>
+                </form>
             </div>
         </div>
     );

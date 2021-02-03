@@ -1,9 +1,8 @@
+import Tooltip from "@material-ui/core/Tooltip";
 import React from "react";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 import { Link } from "react-router-dom";
 import { IPage } from "util/pages";
-import styles from "./SideNav.module.css";
+import { useStyles } from "./SideNav.styles";
 
 interface IProps {
     page: IPage;
@@ -11,29 +10,24 @@ interface IProps {
 }
 
 const SideNavIcon = ({ page, active }: IProps) => {
-    const NavTooltip = (props: OverlayInjectedProps) => (
-        <Tooltip id="sidenav-tooltip" {...props} className={props.show ? "show" : ""}>
-            {page.name}
-        </Tooltip>
-    );
+    const styles = useStyles();
+
+    // fix issue with findDOMNode in strict mode
+    const NoTransition = ({ children }: any) => children;
 
     return (
         <Link to={page.path}>
-            <OverlayTrigger transition={false} placement="top" overlay={NavTooltip}>
-                {
-                    /* Have to use this in function form to avoid bad rerenders
-                    (https://github.com/react-bootstrap/react-bootstrap/issues/5519) */
-                    ({ ref, ...triggerHandler }) => (
-                        <div
-                            ref={ref}
-                            {...triggerHandler}
-                            className={styles.icon + (active ? ` ${styles.active}` : "")}
-                        >
-                            <i className={`fa fa-fw fa-${page.icon}`}></i>
-                        </div>
-                    )
-                }
-            </OverlayTrigger>
+            <Tooltip
+                title={page.name}
+                placement="top"
+                arrow
+                classes={{ tooltip: styles.tooltip }}
+                TransitionComponent={NoTransition}
+            >
+                <div className={styles.icon + (active ? ` ${styles.active}` : "")}>
+                    {page.Icon && <page.Icon fontSize="large" />}
+                </div>
+            </Tooltip>
         </Link>
     );
 };

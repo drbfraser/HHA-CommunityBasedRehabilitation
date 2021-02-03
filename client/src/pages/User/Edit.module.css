@@ -1,66 +1,61 @@
 .container {
-    background-color: #273364;
-    color: #fff;
-    /* width: 120%; */
+    background-color: #fff;
     margin: auto;
     overflow: hidden;
     padding: 60px;
     border-radius: 2.5ch;
 }
-.p{
+.p {
     font-size: 25px;
     font-style: bold;
 }
 .btn {
-    background-color: #273364; /* Blue background */
-    color: white; /* Remove borders */
-    border: 2px solid #e3e8f4; /* White text */
+    background-color: #273364;
+    color: #fff;
+    border: 2px solid #e3e8f4;
     float: right;
-    margin:10px;
+    margin: 10px;
     width: 100px;
-    border-radius:1.5ch;
-    padding: 12px 16px; /* Some padding */
-    font-size: 16px; /* Set a font size */
-    cursor: pointer; /* Mouse pointer on hover */
+    border-radius: 1.5ch;
+    padding: 12px 16px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
-/* Darker background on mouse-over */
 .btn:hover {
     background-color: #e3e8f4;
-    color:  #273364;
-    
-    
+    color: #273364;
 }
 
-.box{
-    background-color: #273364;
+.box {
+    background-color: #e3e8f4;
     border-radius: 1ch;
-    color:#fff;
     width: 100%;
     height: 35px;
-    /* position: relative; */
     border: 2px solid #e3e8f4;
     margin-bottom: 10px;
 }
 
-.form{
+.form {
     margin-bottom: 10px;
     position: relative;
     border-radius: 5px;
 }
-.form input[type="text"], .form textarea{
+.form input[type="text"],
+.form textarea {
     height: 1px;
     padding: 15px;
     width: 150%;
 }
-.form input[type="tel"], .form textarea{
+.form input[type="tel"],
+.form textarea {
     height: 1px;
     padding: 15px;
     width: 150%;
 }
-.form input[type="email"], .form textarea{
+.form input[type="email"],
+.form textarea {
     height: 1px;
     padding: 15px;
     width: 150%;
 }
-

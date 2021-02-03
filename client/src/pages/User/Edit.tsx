@@ -1,39 +1,37 @@
 import React, { useState } from "react";
 import styles from "./Edit.module.css";
-import { useHistory } from "react-router-dom";
 
-const UserEdit = () => {
-    const history = useHistory();
-    const handleCancel = () => history.push("/user");
-    const handleSubmit = () => {
-        alert("A name was submitted: " + state.emailAddress + state.location + state.phoneNumber);
-    };
+const Edit = (props: any) => {
+    const [state, setState] = useState({
+        userName: "User Name",
+        id: "11111111",
+        location: "British Columbia, Canada",
+        phoneNumber: "(XXX) XXX-XXXX",
+        emailAddress: "XXXXXX@XXX.com",
+    });
+
+    const handleCancel = () => props.setProps(false);
     // https://www.pluralsight.com/guides/handling-multiple-inputs-with-single-onchange-handler-react
-    function handleChange(evt:any){
-        // console.log("new value", evt.target.value);
+    function handleChange(evt: any) {
         const value = evt.target.value;
         setState({
             ...state,
-            [evt.target.name]: value
+            [evt.target.id]: value,
         });
     }
-    // const handleChange = (event)=> this.setState({value: event.target.value});
-    const [state, setState] = React.useState({
-        userName: "User Name",
-        id: "11111111",
-        location: "",
-        phoneNumber: "",
-        emailAddress: "",
-    });
-    // handleChange= (event)=> {
-    //     setState({value: event.target.value});
-    // }
-    // let userName = "User Name";
-    // let id = "11111111";
-    // let location = "British Columbia, Canada";
-    // let phoneNumber = "(XXX) XXX-XXXX";
-    // let emailAddress = "XXXXXX@XXX.com";
-    
+
+    // Todo: Submit using alter right now, after connecting with database,
+    // change it use post to update the database.
+    const handleSubmit = () => {
+        alert(
+            "As submitted: location:" +
+                state.location +
+                " emailAddress: " +
+                state.emailAddress +
+                " phoneNumber: " +
+                state.phoneNumber
+        );
+    };
 
     return (
         <div className={styles.container}>
@@ -49,11 +47,12 @@ const UserEdit = () => {
                         type="text"
                         id="location"
                         className={styles.box}
-                        // value={state.location}
+                        placeholder={state.location}
                         onChange={handleChange}
                     />
                 </label>
                 <br></br>
+
                 <label htmlFor="Phone Number">
                     Phone Number
                     <br></br>
@@ -61,7 +60,7 @@ const UserEdit = () => {
                         type="tel"
                         id="phoneNumber"
                         className={styles.box}
-                        // value={state.phoneNumber}
+                        placeholder={state.phoneNumber}
                         onChange={handleChange}
                     />
                 </label>
@@ -74,14 +73,13 @@ const UserEdit = () => {
                         type="email"
                         id="emailAddress"
                         className={styles.box}
-                        // value={state.emailAddress}
-                        // onChange={handleChange}
+                        placeholder={state.emailAddress}
+                        onChange={handleChange}
                     />
                 </label>
             </form>
 
             <div className={styles.edit}>
-                {/* <p>Edit</p> */}
                 <br></br>
                 <button className={styles.btn} type="submit" value="Submit" onClick={handleSubmit}>
                     Save
@@ -89,11 +87,10 @@ const UserEdit = () => {
                 <button className={styles.btn} onClick={handleCancel}>
                     Cancel
                 </button>
-
                 <br></br>
             </div>
         </div>
     );
 };
 
-export default UserEdit;
+export default Edit;

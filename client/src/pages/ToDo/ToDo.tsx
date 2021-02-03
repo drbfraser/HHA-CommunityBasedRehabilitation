@@ -1,61 +1,26 @@
-import React, { useEffect, useState } from "react";
-import Alert from "react-bootstrap/esm/Alert";
-import { API_EXAMPLE } from "util/endpoints";
-
-enum reqState {
-    LOADING,
-    SUCCESS,
-    ERROR,
-}
-
-const reqAlertClass = {
-    [reqState.LOADING]: "primary",
-    [reqState.SUCCESS]: "success",
-    [reqState.ERROR]: "danger",
-};
-
-const reqMessage = {
-    [reqState.LOADING]: "Trying to connect to the API...",
-    [reqState.SUCCESS]: (
-        <>
-            <i className="fa fa-check"></i> Client successfully connected to the CBR Manager API.
-        </>
-    ),
-    [reqState.ERROR]: (
-        <>
-            <i className="fa fa-exclamation-triangle"></i> Failed to connect to the CBR Manager API.
-        </>
-    ),
-};
+import React from "react";
+import { Divider, Typography } from "@material-ui/core";
+import ConnectionTest from "./ConnectionTest";
+import FormExample from "./FormExample/FormExample";
 
 const ToDo = () => {
-    const [reqStatus, setReqStatus] = useState(reqState.LOADING);
-
-    useEffect(() => {
-        const testAPIConnection = async () => {
-            try {
-                const resp = await fetch(API_EXAMPLE);
-
-                if (!resp.ok) {
-                    throw new Error("Response not ok");
-                }
-
-                setReqStatus(reqState.SUCCESS);
-            } catch (e) {
-                setReqStatus(reqState.ERROR);
-            }
-        };
-
-        testAPIConnection();
-    }, []);
-
     return (
         <div>
-            <p>Page not yet written. In the mean time, have a test page :)</p>
-            <Alert variant="success">
-                <i className="fa fa-check"></i> You're successfully running the CBR Manager client.
-            </Alert>
-            <Alert variant={reqAlertClass[reqStatus]}>{reqMessage[reqStatus]}</Alert>
+            <Typography variant="body1">
+                Page not yet written. In the mean time, have a test page :)
+            </Typography>
+            <br />
+            <ConnectionTest />
+            <br />
+            <Divider />
+            <br />
+            <Typography variant="body1">
+                Here is an example form using Material UI + Formik + Yup for validation. It also
+                uses the Grid component to resize nicely for different screen sizes - take a look at
+                what happens if you resize your browser window:
+            </Typography>
+            <br />
+            <FormExample />
         </div>
     );
 };

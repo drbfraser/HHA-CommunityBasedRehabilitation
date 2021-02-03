@@ -6,6 +6,15 @@ class AdminList extends Component{
         return (
             <>
                 <div className = {styles.container}>
+                    <form>
+                        <input 
+                            className = {styles.searchBox} 
+                            type = "text" 
+                            placeholder = "Search"
+                        />
+                    </form>
+                    <br />
+                    <br />
                     <div className="row">
                         <div className="col">
                             <b>Name</b>

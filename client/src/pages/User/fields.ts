@@ -23,7 +23,7 @@ export const fieldLabels = {
 export const initialValues = {
     [UserField.userName]: "User name",
     [UserField.userID]: "11111111",
-    [UserField.zoneNumber]: "British Columbia, Canada",
+    [UserField.zoneNumber]: "1",
     [UserField.email]: "XXXXXX@XXX.com",
     [UserField.phoneNumber]: "(XXX) XXX-XXXX",
 };

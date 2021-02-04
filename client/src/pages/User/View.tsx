@@ -22,7 +22,7 @@ const View = (props: any) => {
                 </label>
                 <p> {initialValues.id} </p>
                 <label htmlFor="Zone" className={styles.label}>
-                    Location
+                    Zone
                 </label>
                 <p> {initialValues.zoneNumber} </p>
                 <label htmlFor="Phone Number" className={styles.label}>

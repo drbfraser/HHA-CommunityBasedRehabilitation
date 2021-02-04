@@ -7,7 +7,7 @@ const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z
 export enum UserField {
     userName = "userName",
     userID = "id",
-    address = "address",
+    zoneNumber = "zoneNumber",
     email = "emailAddress",
     phoneNumber = "phoneNumber",
 }
@@ -15,7 +15,7 @@ export enum UserField {
 export const fieldLabels = {
     [UserField.userName]: "User Name",
     [UserField.userID]: "ID",
-    [UserField.address]: "Location",
+    [UserField.zoneNumber]: "Zone",
     [UserField.email]: "Email",
     [UserField.phoneNumber]: "Phone Number",
 };
@@ -23,7 +23,7 @@ export const fieldLabels = {
 export const initialValues = {
     [UserField.userName]: "User name",
     [UserField.userID]: "11111111",
-    [UserField.address]: "British Columbia, Canada",
+    [UserField.zoneNumber]: "British Columbia, Canada",
     [UserField.email]: "XXXXXX@XXX.com",
     [UserField.phoneNumber]: "(XXX) XXX-XXXX",
 };
@@ -32,7 +32,7 @@ export type TFormValues = typeof initialValues;
 
 export const validationSchema = () =>
     Yup.object().shape({
-        [UserField.address]: Yup.string().label(fieldLabels[UserField.address]).required(),
+        [UserField.zoneNumber]: Yup.string().label(fieldLabels[UserField.zoneNumber]).required(),
         [UserField.email]: Yup.string()
             .matches(emailRegExp, "Email address is not valid")
             .label(fieldLabels[UserField.email])

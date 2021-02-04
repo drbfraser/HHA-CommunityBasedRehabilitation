@@ -40,8 +40,8 @@ const Edit = (props: any) => {
                                     fullWidth
                                     required
                                     variant="outlined"
-                                    label={fieldLabels[UserField.address]}
-                                    name={UserField.address}
+                                    label={fieldLabels[UserField.zoneNumber]}
+                                    name={UserField.zoneNumber}
                                 />
                             </Grid>
                         </Grid>

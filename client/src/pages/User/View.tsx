@@ -21,10 +21,10 @@ const View = (props: any) => {
                     ID
                 </label>
                 <p> {initialValues.id} </p>
-                <label htmlFor="Location" className={styles.label}>
+                <label htmlFor="Zone" className={styles.label}>
                     Location
                 </label>
-                <p> {initialValues.address} </p>
+                <p> {initialValues.zoneNumber} </p>
                 <label htmlFor="Phone Number" className={styles.label}>
                     Phone Number
                 </label>

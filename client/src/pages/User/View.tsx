@@ -1,24 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import { useStyles } from "./View.styles";
+import { initialValues } from "./fields";
 
-// User profile view Component
-const Profile = (props: any) => {
+const View = (props: any) => {
     const handleEdit = () => props.setProps(true);
     const styles = useStyles();
-    // Read From Server
-    const [state] = useState({
-        userName: "User Name",
-        id: "11111111",
-        location: "British Columbia, Canada",
-        phoneNumber: "(XXX) XXX-XXXX",
-        emailAddress: "XXXXXX@XXX.com",
-    });
-
+    // Read From initialValues field further from Server
     return (
         <div className={styles.container}>
             <header>
-                <h1 className={styles.head}> {state.userName} </h1>
+                <h1 className={styles.head}> {initialValues.userName} </h1>
                 <div className={styles.edit}>
                     <button className={styles.btn} onClick={handleEdit}>
                         <EditIcon></EditIcon>Edit
@@ -28,16 +20,22 @@ const Profile = (props: any) => {
                 <label htmlFor="ID" className={styles.label}>
                     ID
                 </label>
-                <p> {state.id} </p>
-                <label htmlFor="Location">Location</label>
-                <p> {state.location} </p>
-                <label htmlFor="Phone Number">Phone Number</label>
-                <p> {state.phoneNumber} </p>
-                <label htmlFor="Email Address">Email Address</label>
-                <p> {state.emailAddress} </p>
+                <p> {initialValues.id} </p>
+                <label htmlFor="Location" className={styles.label}>
+                    Location
+                </label>
+                <p> {initialValues.address} </p>
+                <label htmlFor="Phone Number" className={styles.label}>
+                    Phone Number
+                </label>
+                <p> {initialValues.phoneNumber} </p>
+                <label htmlFor="Email Address" className={styles.label}>
+                    Email
+                </label>
+                <p> {initialValues.emailAddress} </p>
             </header>
         </div>
     );
 };
 
-export default Profile;
+export default View;

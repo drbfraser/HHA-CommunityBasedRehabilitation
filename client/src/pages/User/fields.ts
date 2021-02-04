@@ -1,32 +1,44 @@
 import * as Yup from "yup";
+// https://www.codegrepper.com/code-examples/whatever/phone+number+validation+using+formik
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-export enum FormField {
-    addressInput = "Address",
-    emailInput = "emailInput",
-    telephoneInput = "telephoneInput",
+// Field for data get and post connected with database
+export enum UserField {
+    userName = "userName",
+    userID = "id",
+    address = "address",
+    email = "emailAddress",
+    phoneNumber = "phoneNumber",
 }
 
 export const fieldLabels = {
-    [FormField.addressInput]: "Address (Required)",
-    [FormField.emailInput]: "Email Address(Required)",
-    [FormField.telephoneInput]: "Telephone(Required)",
+    [UserField.userName]: "User Name",
+    [UserField.userID]: "ID",
+    [UserField.address]: "Location",
+    [UserField.email]: "Email",
+    [UserField.phoneNumber]: "Phone Number",
 };
 
 export const initialValues = {
-    [FormField.addressInput]: "British Columbia, Canada",
-    [FormField.emailInput]: "XXXXXX@XXX.com",
-    [FormField.telephoneInput]: "(XXX) XXX-XXXX",
+    [UserField.userName]: "User name",
+    [UserField.userID]: "11111111",
+    [UserField.address]: "British Columbia, Canada",
+    [UserField.email]: "XXXXXX@XXX.com",
+    [UserField.phoneNumber]: "(XXX) XXX-XXXX",
 };
 
 export type TFormValues = typeof initialValues;
 
 export const validationSchema = () =>
     Yup.object().shape({
-        [FormField.addressInput]: Yup.string()
-            .label(fieldLabels[FormField.addressInput])
+        [UserField.address]: Yup.string().label(fieldLabels[UserField.address]).required(),
+        [UserField.email]: Yup.string()
+            .matches(emailRegExp, "Email address is not valid")
+            .label(fieldLabels[UserField.email])
             .required(),
-        [FormField.emailInput]: Yup.string().label(fieldLabels[FormField.emailInput]).required(),
-        [FormField.telephoneInput]: Yup.string()
-            .label(fieldLabels[FormField.telephoneInput])
+        [UserField.phoneNumber]: Yup.string()
+            .matches(phoneRegExp, "Phone number is not valid")
+            .label(fieldLabels[UserField.phoneNumber])
             .required(),
     });

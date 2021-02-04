@@ -11,10 +11,10 @@ export const useStyles = makeStyles(
             borderRadius: "2.5ch",
         },
         head: {
-            marginBottom: 2,
+            marginBottom: 0,
         },
         label: {
-            fontStyle: "bold",
+            fontWeight: "bold",
         },
         btn: {
             backgroundColor: "white",

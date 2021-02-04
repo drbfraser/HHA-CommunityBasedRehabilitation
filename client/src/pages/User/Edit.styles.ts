@@ -31,6 +31,9 @@ export const useStyles = makeStyles(
                 color: themeColors.blueBgDark,
             },
         },
+        label: {
+            fontWeight: "bold",
+        },
         box: {
             backgroundColor: themeColors.blueBgLight,
             borderRadius: "1ch",

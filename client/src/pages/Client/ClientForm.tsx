@@ -3,8 +3,12 @@ import React from "react";
 import { Field, Form, Formik } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 
+import { useStyles } from "./ClientForm.styles";
+
 import Button from "@material-ui/core/Button";
-import Avatar from "@material-ui/core/Avatar";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+// import Avatar from "@material-ui/core/Avatar";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -12,6 +16,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 import {
     fieldLabels,
@@ -24,11 +29,9 @@ import {
 } from "./ClientFormFields";
 import { handleSubmit } from "./ClientFormHandler";
 
-const test = (e: any) => {
-    alert("Test");
-};
-
 const ClientForm = () => {
+    const styles = useStyles();
+
     return (
         <Formik
             initialValues={initialValues}
@@ -38,11 +41,19 @@ const ClientForm = () => {
             {({ values, isSubmitting }) => (
                 <Grid container direction="row" justify="flex-start">
                     <Grid item md={2} xs={12}>
-                        <Avatar
-                            style={{ width: "250px", height: "250px" }}
-                            alt="Remy Sharp"
-                            src={initialValues.profilePicture}
-                        />
+                        <Card className={styles.profileImgContainer}>
+                            <CardContent>
+                                {/* TODO: Change image src based on whether the client exists or not */}
+                                <img
+                                    className={styles.profilePicture}
+                                    src="https://res.cloudinary.com/time2hack/image/upload/fa-user.png"
+                                    alt="user-icon"
+                                />
+                                <div className={styles.uploadIcon}>
+                                    <CloudUploadIcon />
+                                </div>
+                            </CardContent>
+                        </Card>
                     </Grid>
                     <Grid item md={10} xs={12}>
                         <Form>
@@ -165,10 +176,10 @@ const ClientForm = () => {
                                                 Caregiver Details:
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                                <Avatar
+                                                {/* <Avatar
                                                     alt="caregiver-image"
                                                     onClick={test.bind("e")}
-                                                />
+                                                /> */}
                                                 <Field
                                                     style={{ background: "white" }}
                                                     component={TextField}

@@ -7,10 +7,12 @@ import { fieldLabels, UserField, initialValues, validationSchema } from "./field
 import Button from "@material-ui/core/Button";
 import { FormikHelpers } from "formik";
 import { TFormValues } from "./fields";
+import { useHistory } from "react-router-dom";
 
-const Edit = (props: any) => {
+const Edit = () => {
     const styles = useStyles();
-    const handleCancel = () => props.setProps(false);
+    const history = useHistory();
+    const handleCancel = () => history.push("/user");
     const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
         // Submit the values to the server
         setTimeout(() => {
@@ -27,11 +29,10 @@ const Edit = (props: any) => {
         >
             {({ isSubmitting }) => (
                 <div className={styles.container}>
-                    <h1 className={styles.head}> {initialValues.userName} </h1>
-                    <label htmlFor="ID" className={styles.label}>
-                        ID
-                    </label>
-                    <p> {initialValues.id} </p>
+                    <h1>{initialValues.userName}</h1>
+                    <label className={styles.label}>ID</label>
+                    <p>{initialValues.id}</p>
+
                     <Form className={styles.form}>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>
@@ -45,10 +46,8 @@ const Edit = (props: any) => {
                                 />
                             </Grid>
                         </Grid>
-                    </Form>
-                    <br></br>
+                        <br></br>
 
-                    <Form className={styles.form}>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>
                                 <Field
@@ -61,10 +60,8 @@ const Edit = (props: any) => {
                                 />
                             </Grid>
                         </Grid>
-                    </Form>
-                    <br></br>
+                        <br></br>
 
-                    <Form className={styles.form}>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>
                                 <Field

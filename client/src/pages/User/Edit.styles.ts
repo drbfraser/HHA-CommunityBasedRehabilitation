@@ -10,11 +10,6 @@ export const useStyles = makeStyles(
             padding: 60,
             borderRadius: "2.5ch",
         },
-        p: {
-            fontSize: 25,
-            fontStyle: "bold",
-        },
-        head: {},
         btn: {
             backgroundColor: themeColors.blueBgDark,
             color: "white",
@@ -33,15 +28,6 @@ export const useStyles = makeStyles(
         },
         label: {
             fontWeight: "bold",
-        },
-        box: {
-            backgroundColor: themeColors.blueBgLight,
-            borderRadius: "1ch",
-            width: "100%",
-            height: 35,
-            border: "2px solid #e3e8f4",
-            marginBottom: 10,
-            marginTop: 10,
         },
         form: {
             marginBottom: 10,

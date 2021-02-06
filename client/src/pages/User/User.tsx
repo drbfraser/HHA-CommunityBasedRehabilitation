@@ -1,16 +1,16 @@
-import React, { useState } from "react";
 import View from "pages/User/View";
 import Edit from "pages/User/Edit";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const User = () => {
-    const [toggleView, setToggleView] = useState(true);
-    const switchComponent = () => {
-        setToggleView(!toggleView);
-    };
-
     return (
         <div>
-            {toggleView ? <View setProps={switchComponent} /> : <Edit setProps={switchComponent} />}
+            <Router>
+                <Switch>
+                    <Route path="/user/edit"  component={Edit} />
+                    <Route path="/user"  component={View} />
+                </Switch>
+            </Router>
         </div>
     );
 };

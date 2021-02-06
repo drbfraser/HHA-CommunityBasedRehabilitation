@@ -10,9 +10,6 @@ export const useStyles = makeStyles(
             padding: 60,
             borderRadius: "2.5ch",
         },
-        head: {
-            marginBottom: 0,
-        },
         label: {
             fontWeight: "bold",
         },

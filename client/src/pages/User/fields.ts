@@ -1,7 +1,4 @@
 import * as Yup from "yup";
-// https://www.codegrepper.com/code-examples/whatever/phone+number+validation+using+formik
-const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 // Field for data get and post connected with database
 export enum UserField {
@@ -20,6 +17,9 @@ export const fieldLabels = {
     [UserField.phoneNumber]: "Phone Number",
 };
 
+// https://www.codegrepper.com/code-examples/whatever/phone+number+validation+using+formik
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 export const initialValues = {
     [UserField.userName]: "User name",
     [UserField.userID]: "11111111",

@@ -37,8 +37,8 @@ class Client(models.Model):
     phone_number = models.CharField(
         max_length=50, blank=True
     )  # if contact info available
-    longitude = models.DecimalField(max_digits=22, decimal_places=16)
-    latitude = models.DecimalField(max_digits=22, decimal_places=16)
+    longitude = models.DecimalField(max_digits=12, decimal_places=6)
+    latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     village = models.CharField(max_length=50)
     picture = models.ImageField(upload_to="images/", blank=True)  # if picture available

@@ -13,7 +13,7 @@ import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
 import RiskChip from "components/RiskChip/RiskChip";
 
-const initializeColumns = (setColumns: Function) => {    
+const initializeColumns = (setColumns: Function) => {
     setColumns([
         { field: "id", headerName: "ID", flex: 0.5 },
         { field: "name", headerName: "Name", flex: 1 },

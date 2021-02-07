@@ -8,6 +8,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Logout from "pages/Logout/Logout";
 import ToDo from "pages/ToDo/ToDo";
+import ClientList from "pages/ClientList/ClientList";
 
 export interface IPage {
     path: string;
@@ -35,7 +36,7 @@ export const pages: IPage[] = [
     {
         path: "/clients",
         name: "Client List",
-        Component: ToDo,
+        Component: ClientList,
         showInNav: true,
         Icon: FormatListBulletedIcon,
     },

@@ -13,9 +13,7 @@ import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
 import RiskChip from "components/RiskChip/RiskChip";
 
-const initializeColumns = (setColumns: Function) => {
-    console.log("col");
-
+const initializeColumns = (setColumns: Function) => {    
     setColumns([
         { field: "id", headerName: "ID", flex: 0.5 },
         { field: "name", headerName: "Name", flex: 1 },
@@ -27,7 +25,6 @@ const initializeColumns = (setColumns: Function) => {
 };
 
 const requestClientList = async (setRows: Function, setLoading: Function) => {
-    console.log("row");
     setLoading(true);
 
     // TODO: add API call to get client list here when its completed

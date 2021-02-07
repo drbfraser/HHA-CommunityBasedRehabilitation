@@ -134,15 +134,19 @@ const ClientList = () => {
     useEffect(() => {
         const initializeRows = async () => {
             await requestClientList(setRows, setLoading);
-        }
+        };
         initializeRows();
     }, [rows, loading]);
-    
+
     return (
         <div className={styles.root}>
             <div className={styles.inlineBlock}>
                 <Grid component="label" container alignItems="center" spacing={1}>
-                    <Typography color={myClientsMode ? "textSecondary" : "textPrimary"} component={'span'} variant={'body2'}>
+                    <Typography
+                        color={myClientsMode ? "textSecondary" : "textPrimary"}
+                        component={"span"}
+                        variant={"body2"}
+                    >
                         <Grid item>My Clients</Grid>
                     </Typography>
                     <Grid item>
@@ -151,7 +155,11 @@ const ClientList = () => {
                             onChange={(event) => setMyClientsMode(event.target.checked)}
                         />
                     </Grid>
-                    <Typography color={myClientsMode ? "textPrimary" : "textSecondary"} component={'span'} variant={'body2'}>
+                    <Typography
+                        color={myClientsMode ? "textPrimary" : "textSecondary"}
+                        component={"span"}
+                        variant={"body2"}
+                    >
                         <Grid item>All Clients</Grid>
                     </Typography>
                 </Grid>

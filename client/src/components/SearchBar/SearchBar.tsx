@@ -2,7 +2,7 @@ import { InputBase, InputBaseProps, useTheme } from "@material-ui/core";
 import { SearchIcon } from "@material-ui/data-grid";
 import { useStyles } from "./SearchBar.styles";
 
-const SearchBar = (props : InputBaseProps) => {
+const SearchBar = (props: InputBaseProps) => {
     const theme = useTheme();
     const styles = useStyles(theme);
 

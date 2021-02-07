@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 export const useStyles = makeStyles({
     root: {
         height: 700,
-        padding: "5px 2px 50px 2px"
+        padding: "5px 2px 50px 2px",
     },
     inlineBlock: {
         display: "inline-block",

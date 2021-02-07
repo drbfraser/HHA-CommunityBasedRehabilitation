@@ -2,6 +2,7 @@ from django.test import TestCase
 from cbr_api import models
 from django.contrib.auth.models import User
 
+
 class ModelsTestCase(TestCase):
     numClients = 0
     superuser = None
@@ -32,21 +33,27 @@ class ModelsTestCase(TestCase):
 
     def setUp(self):
         self.superuser = self.quickCreateSuperuser()
-        
+
         zone1 = models.Zone.objects.create(zone_name="Zone 1")
-        
+
         jane = self.quickCreateClient("Jane", "Smith", "F", "604-555-7676", zone1)
         john = self.quickCreateClient("John", "Smith", "M", "604-555-4242", zone1)
-        
+
         amputee = models.Disability.objects.create(disability_type="Amputee")
-        
-        junction1 = models.DisabilityJunction.objects.create(disability=amputee, client=jane)
-        junction2 = models.DisabilityJunction.objects.create(disability=amputee, client=john)
+
+        junction1 = models.DisabilityJunction.objects.create(
+            disability=amputee, 
+            client=jane
+        )
+        junction2 = models.DisabilityJunction.objects.create(
+            disability=amputee, 
+            client=john
+        )
 
     def test(self):
         jane = models.Client.objects.get(first_name="Jane")
         john = models.Client.objects.get(first_name="John")
-        
+
         jane_dis = models.DisabilityJunction.objects.get(client=jane)
         john_dis = models.DisabilityJunction.objects.get(client=john)
 
@@ -56,5 +63,5 @@ class ModelsTestCase(TestCase):
         self.assertEqual(jane.last_name, john.last_name)
         self.assertEqual(jane.created_by_user_id, john.created_by_user_id)
         self.assertEqual(jane.zone, john.zone)
-        
+
         self.assertEqual(jane_dis.disability, john_dis.disability)

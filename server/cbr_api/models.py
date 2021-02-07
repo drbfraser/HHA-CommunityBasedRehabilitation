@@ -44,14 +44,11 @@ class Client(models.Model):
     picture = models.ImageField(upload_to="images/", blank=True)  # if picture available
     caregiver_present = models.BooleanField(default=False)
     # ------if caregiver present-----
-    caregiver_phone = models.CharField(
-        max_length=50, blank=True
-    )
-    caregiver_email = models.CharField(
-        max_length=50, blank=True
-    )
+    caregiver_phone = models.CharField(max_length=50, blank=True)
+    caregiver_email = models.CharField(max_length=50, blank=True)
     caregiver_picture = models.ImageField(upload_to="images/", blank=True)
     # ------if caregiver present-----
+
 
 class ClientRisk(models.Model):
     class RiskLevel(models.TextChoices):

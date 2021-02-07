@@ -27,7 +27,7 @@ class Client(models.Model):
         MALE = "M", _("Male")
         FEMALE = "F", _("Female")
 
-    created_by_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by_user_id = models.ForeignKey(User, on_delete=models.PROTECT)
     client_id = models.PositiveIntegerField(primary_key=True)
     birth_date = models.BigIntegerField()
     first_name = models.CharField(max_length=50)
@@ -84,7 +84,7 @@ class Visit(models.Model):
 
     visit_id = models.PositiveIntegerField(primary_key=True)
     client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.PROTECT)
     date_visited = models.BigIntegerField()
     purpose = models.CharField(max_length=3, choices=Purpose.choices)
     longitude = models.DecimalField(max_digits=22, decimal_places=16)

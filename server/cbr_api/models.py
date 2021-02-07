@@ -27,6 +27,7 @@ class Client(models.Model):
         MALE = "M", _("Male")
         FEMALE = "F", _("Female")
 
+    created_by_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     client_id = models.PositiveIntegerField(primary_key=True)
     birth_date = models.BigIntegerField()
     first_name = models.CharField(max_length=50)
@@ -42,14 +43,15 @@ class Client(models.Model):
     village = models.CharField(max_length=50)
     picture = models.ImageField(upload_to="images/", blank=True)  # if picture available
     caregiver_present = models.BooleanField(default=False)
+    # ------if caregiver present-----
     caregiver_phone = models.CharField(
         max_length=50, blank=True
-    )  # if caregiver present
+    )
     caregiver_email = models.CharField(
         max_length=50, blank=True
-    )  # if caregiver present
+    )
     caregiver_picture = models.ImageField(upload_to="images/", blank=True)
-
+    # ------if caregiver present-----
 
 class ClientRisk(models.Model):
     class RiskLevel(models.TextChoices):

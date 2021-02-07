@@ -14,6 +14,8 @@ import SearchBar from "components/SearchBar/SearchBar";
 import RiskChip from "components/RiskChip/RiskChip";
 
 const initializeColumns = (setColumns: Function) => {
+    console.log("col");
+
     setColumns([
         { field: "id", headerName: "ID", flex: 0.5 },
         { field: "name", headerName: "Name", flex: 1 },
@@ -25,6 +27,7 @@ const initializeColumns = (setColumns: Function) => {
 };
 
 const requestClientList = async (setRows: Function, setLoading: Function) => {
+    console.log("row");
     setLoading(true);
 
     // TODO: add API call to get client list here when its completed
@@ -120,7 +123,7 @@ const renderBadge = (params: ValueFormatterParams) => {
 };
 
 const ClientList = () => {
-    const [myClientsMode, setMyClientsMode] = useState<boolean>(true);
+    const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
     const [searchOption, setSearchOption] = useState<string>("ID");
     const [columns, setColumns] = useState<Columns>([]);
@@ -130,20 +133,20 @@ const ClientList = () => {
     const history = useHistory();
     const onRowClick = () => history.push("/clients/new");
 
-    useEffect(() => initializeColumns(setColumns), [columns]);
+    useEffect(() => initializeColumns(setColumns), []);
     useEffect(() => {
         const initializeRows = async () => {
             await requestClientList(setRows, setLoading);
         };
         initializeRows();
-    }, [rows, loading]);
+    }, []);
 
     return (
         <div className={styles.root}>
             <div className={styles.inlineBlock}>
                 <Grid component="label" container alignItems="center" spacing={1}>
                     <Typography
-                        color={myClientsMode ? "textSecondary" : "textPrimary"}
+                        color={allClientsMode ? "textSecondary" : "textPrimary"}
                         component={"span"}
                         variant={"body2"}
                     >
@@ -151,12 +154,12 @@ const ClientList = () => {
                     </Typography>
                     <Grid item>
                         <IOSSwitch
-                            checked={myClientsMode}
-                            onChange={(event) => setMyClientsMode(event.target.checked)}
+                            checked={allClientsMode}
+                            onChange={(event) => setAllClientsMode(event.target.checked)}
                         />
                     </Grid>
                     <Typography
-                        color={myClientsMode ? "textPrimary" : "textSecondary"}
+                        color={allClientsMode ? "textPrimary" : "textSecondary"}
                         component={"span"}
                         variant={"body2"}
                     >

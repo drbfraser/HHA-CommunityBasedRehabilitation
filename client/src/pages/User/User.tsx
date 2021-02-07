@@ -7,8 +7,8 @@ const User = () => {
         <div>
             <Router>
                 <Switch>
-                    <Route path="/user/edit"  component={Edit} />
-                    <Route path="/user"  component={View} />
+                    <Route path="/user/edit" component={Edit} />
+                    <Route path="/user" component={View} />
                 </Switch>
             </Router>
         </div>

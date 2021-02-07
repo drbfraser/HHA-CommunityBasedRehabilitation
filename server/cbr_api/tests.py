@@ -42,12 +42,10 @@ class ModelsTestCase(TestCase):
         amputee = models.Disability.objects.create(disability_type="Amputee")
 
         junction1 = models.DisabilityJunction.objects.create(
-            disability=amputee, 
-            client=jane
+            disability=amputee, client=jane
         )
         junction2 = models.DisabilityJunction.objects.create(
-            disability=amputee, 
-            client=john
+            disability=amputee, client=john
         )
 
     def test(self):

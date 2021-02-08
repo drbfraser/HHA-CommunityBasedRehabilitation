@@ -60,8 +60,9 @@ export const initialValues = {
     [FormField.disability]: "",
     [FormField.healthRisk]: "",
     [FormField.healthRequirements]: "",
-    [FormField.healthRisk]: "",
+    [FormField.healthGoals]: "",
     [FormField.educationRisk]: "",
+    [FormField.educationRequirements]: "",
     [FormField.educationGoals]: "",
     [FormField.socialRisk]: "",
     [FormField.socialRequirements]: "",
@@ -73,11 +74,11 @@ export type TFormValues = typeof initialValues;
 export const genderOptions = [
     {
         name: "Female",
-        value: "female",
+        value: "F",
     },
     {
         name: "Male",
-        value: "male",
+        value: "M",
     },
 ];
 
@@ -115,18 +116,25 @@ export const riskOptions = [
     },
 ];
 
-const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
+const phoneRegex = RegExp(/([0-9\s\-]{7,})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/);
 
 export const validationSchema = () =>
     Yup.object().shape({
-        [FormField.firstName]: Yup.string().label(fieldLabels[FormField.firstName]).required(),
-        [FormField.lastName]: Yup.string().label(fieldLabels[FormField.lastName]).required(),
+        [FormField.firstName]: Yup.string()
+            .label(fieldLabels[FormField.firstName])
+            .required()
+            .max(50),
+        [FormField.lastName]: Yup.string()
+            .label(fieldLabels[FormField.lastName])
+            .required()
+            .max(50),
         [FormField.birthDate]: Yup.date()
             .label(fieldLabels[FormField.birthDate])
             .max(new Date(), "Birthdate cannot be in the future")
             .required(),
         [FormField.phoneNumber]: Yup.string()
             .label(fieldLabels[FormField.phoneNumber])
+            .max(50)
             .matches(phoneRegex, "Phone number is not valid."),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.villageNo]: Yup.number()

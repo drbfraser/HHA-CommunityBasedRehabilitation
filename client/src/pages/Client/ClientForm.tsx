@@ -8,7 +8,6 @@ import { useStyles } from "./ClientForm.styles";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-// import Avatar from "@material-ui/core/Avatar";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -174,10 +173,6 @@ const ClientForm = () => {
                                                 Caregiver Details:
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                                {/* <Avatar
-                                                    alt="caregiver-image"
-                                                    onClick={test.bind("e")}
-                                                /> */}
                                                 <Field
                                                     style={{ background: "white" }}
                                                     component={TextField}

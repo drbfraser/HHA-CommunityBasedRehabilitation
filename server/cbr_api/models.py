@@ -27,6 +27,7 @@ class Client(models.Model):
         MALE = "M", _("Male")
         FEMALE = "F", _("Female")
 
+    created_by_user_id = models.ForeignKey(User, on_delete=models.PROTECT)
     client_id = models.PositiveIntegerField(primary_key=True)
     birth_date = models.BigIntegerField()
     first_name = models.CharField(max_length=50)
@@ -36,19 +37,17 @@ class Client(models.Model):
     phone_number = models.CharField(
         max_length=50, blank=True
     )  # if contact info available
-    longitude = models.DecimalField(max_digits=22, decimal_places=16)
-    latitude = models.DecimalField(max_digits=22, decimal_places=16)
+    longitude = models.DecimalField(max_digits=12, decimal_places=6)
+    latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     village = models.CharField(max_length=50)
     picture = models.ImageField(upload_to="images/", blank=True)  # if picture available
     caregiver_present = models.BooleanField(default=False)
-    caregiver_phone = models.CharField(
-        max_length=50, blank=True
-    )  # if caregiver present
-    caregiver_email = models.CharField(
-        max_length=50, blank=True
-    )  # if caregiver present
+    # ------if caregiver present-----
+    caregiver_phone = models.CharField(max_length=50, blank=True)
+    caregiver_email = models.CharField(max_length=50, blank=True)
     caregiver_picture = models.ImageField(upload_to="images/", blank=True)
+    # ------if caregiver present-----
 
 
 class ClientRisk(models.Model):
@@ -85,7 +84,7 @@ class Visit(models.Model):
 
     visit_id = models.PositiveIntegerField(primary_key=True)
     client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.PROTECT)
     date_visited = models.BigIntegerField()
     purpose = models.CharField(max_length=3, choices=Purpose.choices)
     longitude = models.DecimalField(max_digits=22, decimal_places=16)

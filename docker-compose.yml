@@ -4,19 +4,20 @@ services:
         container_name: cbr_django
         build:
             context: ./server
-        environment: 
+        environment:
             - POSTGRES_DB=cbr
             - POSTGRES_USER=${POSTGRES_USER}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
             - SECRET_KEY=${SECRET_KEY}
         volumes:
             - ./server:/code
-        depends_on: 
+            - django_uploads:/uploads
+        depends_on:
             - postgres
     postgres:
         container_name: cbr_postgres
         image: postgres:13.1-alpine
-        environment: 
+        environment:
             - POSTGRES_DB=cbr
             - POSTGRES_USER=${POSTGRES_USER}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -25,3 +26,4 @@ services:
 
 volumes:
     postgres_data:
+    django_uploads:

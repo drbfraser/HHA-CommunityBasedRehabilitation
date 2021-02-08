@@ -26,8 +26,8 @@ import {
     zoneOptions,
     riskOptions,
     validationSchema,
-} from "./ClientFormFields";
-import { handleSubmit } from "./ClientFormHandler";
+} from "./formFields";
+import { handleSubmit } from "./formHandler";
 
 const ClientForm = () => {
     const styles = useStyles();
@@ -85,7 +85,7 @@ const ClientForm = () => {
                                         required
                                         type="date"
                                         variant="outlined"
-                                        InputLabelProps={{ shrink: "true" }}
+                                        InputLabelProps={{ shrink: true }}
                                         label={fieldLabels[FormField.birthDate]}
                                         name={FormField.birthDate}
                                     />
@@ -142,9 +142,9 @@ const ClientForm = () => {
                                 <Grid item md={6} xs={12}>
                                     <Field
                                         component={TextField}
-                                        name={FormField.contact}
+                                        name={FormField.phoneNumber}
                                         variant="outlined"
-                                        label={fieldLabels[FormField.contact]}
+                                        label={fieldLabels[FormField.phoneNumber]}
                                         fullWidth
                                     />
                                 </Grid>
@@ -152,7 +152,6 @@ const ClientForm = () => {
                                     <Field
                                         component={CheckboxWithLabel}
                                         type="checkbox"
-                                        fullWidth
                                         name={FormField.interviewConsent}
                                         Label={{ label: fieldLabels[FormField.interviewConsent] }}
                                     />
@@ -161,12 +160,11 @@ const ClientForm = () => {
                                     <Field
                                         component={CheckboxWithLabel}
                                         type="checkbox"
-                                        fullWidth
-                                        name={FormField.hasCaregiver}
-                                        Label={{ label: fieldLabels[FormField.hasCaregiver] }}
+                                        name={FormField.caregiverPresent}
+                                        Label={{ label: fieldLabels[FormField.caregiverPresent] }}
                                     />
                                 </Grid>
-                                {values.hasCaregiver ? (
+                                {values.caregiverPresent ? (
                                     <Grid item md={8} xs={12}>
                                         <Accordion
                                             style={{ background: "#e3e8f4" }}

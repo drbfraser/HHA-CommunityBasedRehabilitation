@@ -7,9 +7,9 @@ export enum FormField {
     gender = "gender",
     villageNo = "villageNo",
     zone = "zone",
-    contact = "contact",
+    phoneNumber = "phoneNumber",
     interviewConsent = "interviewConsent",
-    hasCaregiver = "hasCaregiver",
+    caregiverPresent = "caregiverPresent",
     caregiverContact = "caregiverContact",
     disability = "disability",
     healthRisk = "healthRisk",
@@ -30,9 +30,9 @@ export const fieldLabels = {
     [FormField.villageNo]: "Village Number",
     [FormField.gender]: "Gender",
     [FormField.zone]: "Zone",
-    [FormField.contact]: "Contact",
+    [FormField.phoneNumber]: "Phone Number",
     [FormField.interviewConsent]: "Consent to Interview? *",
-    [FormField.hasCaregiver]: "Caregiver Present? *",
+    [FormField.caregiverPresent]: "Caregiver Present? *",
     [FormField.caregiverContact]: "Caregiver Contact",
     [FormField.disability]: "Type of Disability",
     [FormField.healthRisk]: "Health Risk",
@@ -49,13 +49,13 @@ export const fieldLabels = {
 export const initialValues = {
     [FormField.firstName]: "",
     [FormField.lastName]: "",
-    [FormField.birthDate]: null,
+    [FormField.birthDate]: "",
     [FormField.gender]: "",
-    [FormField.villageNo]: null,
+    [FormField.villageNo]: "",
     [FormField.zone]: "",
-    [FormField.contact]: "",
+    [FormField.phoneNumber]: "",
     [FormField.interviewConsent]: false,
-    [FormField.hasCaregiver]: false,
+    [FormField.caregiverPresent]: false,
     [FormField.caregiverContact]: "",
     [FormField.disability]: "",
     [FormField.healthRisk]: "",
@@ -119,35 +119,39 @@ const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 
 export const validationSchema = () =>
     Yup.object().shape({
-        [FormField.firstName]: Yup.string()
-            .label("First name")
-            .matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field ")
-            .required(),
-        [FormField.lastName]: Yup.string()
-            .label("Last name")
-            .matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field ")
-            .required(),
+        [FormField.firstName]: Yup.string().label(fieldLabels[FormField.firstName]).required(),
+        [FormField.lastName]: Yup.string().label(fieldLabels[FormField.lastName]).required(),
         [FormField.birthDate]: Yup.date()
-            .label("Birthdate")
+            .label(fieldLabels[FormField.birthDate])
             .max(new Date(), "Birthdate cannot be in the future")
             .required(),
-        [FormField.contact]: Yup.string()
-            .label("Phone Number")
+        [FormField.phoneNumber]: Yup.string()
+            .label(fieldLabels[FormField.phoneNumber])
             .matches(phoneRegex, "Phone number is not valid."),
-        [FormField.gender]: Yup.string().label("Gender").required(),
+        [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.villageNo]: Yup.number()
-            .label("Village number")
+            .label(fieldLabels[FormField.villageNo])
             .typeError("Village number must be a number.")
             .positive("Vilalge number must be greater than zero.")
             .required(),
-        [FormField.zone]: Yup.string().label("Zone").required(),
-        [FormField.healthRisk]: Yup.string().label("Health risk").required(),
-        [FormField.healthRequirements]: Yup.string().label("Health requirements").required(),
-        [FormField.healthGoals]: Yup.string().label("Health goals").required(),
-        [FormField.educationRisk]: Yup.string().label("Education status").required(),
-        [FormField.educationRequirements]: Yup.string().label("Education requirements").required(),
-        [FormField.educationGoals]: Yup.string().label("Education goals").required(),
-        [FormField.socialRisk]: Yup.string().label("Social status").required(),
-        [FormField.socialRequirements]: Yup.string().label("Social requirements").required(),
-        [FormField.socialGoals]: Yup.string().label("Social goals").required(),
+        [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),
+        [FormField.healthRisk]: Yup.string().label(fieldLabels[FormField.healthRisk]).required(),
+        [FormField.healthRequirements]: Yup.string()
+            .label(fieldLabels[FormField.healthRequirements])
+            .required(),
+        [FormField.healthGoals]: Yup.string().label(fieldLabels[FormField.healthGoals]).required(),
+        [FormField.educationRisk]: Yup.string()
+            .label(fieldLabels[FormField.educationRisk])
+            .required(),
+        [FormField.educationRequirements]: Yup.string()
+            .label(fieldLabels[FormField.educationRequirements])
+            .required(),
+        [FormField.educationGoals]: Yup.string()
+            .label(fieldLabels[FormField.educationGoals])
+            .required(),
+        [FormField.socialRisk]: Yup.string().label(fieldLabels[FormField.socialRisk]).required(),
+        [FormField.socialRequirements]: Yup.string()
+            .label(fieldLabels[FormField.socialRequirements])
+            .required(),
+        [FormField.socialGoals]: Yup.string().label(fieldLabels[FormField.socialGoals]).required(),
     });

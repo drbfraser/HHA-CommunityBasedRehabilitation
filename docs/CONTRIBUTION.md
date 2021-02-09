@@ -24,6 +24,8 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 That's it! The frontend is now running on http://localhost:3000 and the backend is running on http://localhost:8000. Both the frontend and the backend should support hot reloading.
 
+You can also access auto-generating Swagger API documentation at http://localhost:8000/docs
+
 
 # How to Contribute
 

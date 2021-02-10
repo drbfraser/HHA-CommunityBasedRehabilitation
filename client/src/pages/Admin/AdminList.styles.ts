@@ -27,8 +27,4 @@ export const useStyles = makeStyles({
         display: "flex",
         float: "right",
     },
-    search: {
-        float: "right",
-        display: "inline-block",
-    },
 });

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from cbr_api import models
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
+import time
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -35,14 +36,14 @@ class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Client
         fields = [
-            "client_id",
-            "created_by_user_id",
-            "birth_date",
+            "id",
             "first_name",
             "last_name",
+            "birth_date",
             "gender",
-            "register_date",
             "phone_number",
+            "created_by_user",
+            "created_date",
             "longitude",
             "latitude",
             "zone",
@@ -54,19 +55,32 @@ class ClientSerializer(serializers.ModelSerializer):
             "caregiver_picture",
         ]
 
+        read_only_fields = ["created_by_user", "created_date"]
+
+    def create(self, validated_data):
+        validated_data["created_by_user"] = self.context["request"].user
+        validated_data["created_date"] = int(time.time())
+        client = models.Client.objects.create(**validated_data)
+        client.save()
+
+        return client
+
 
 class ZoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Zone
         fields = [
+            "id",
             "zone_name",
         ]
+
 
 class RiskSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ClientRisk
         fields = [
-            "client_id",
+            "id",
+            "client",
             "timestamp",
             "risk_type",
             "risk_level",

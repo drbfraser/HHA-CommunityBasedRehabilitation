@@ -27,16 +27,15 @@ class Client(models.Model):
         MALE = "M", _("Male")
         FEMALE = "F", _("Female")
 
-    created_by_user_id = models.ForeignKey(User, on_delete=models.PROTECT)
-    client_id = models.PositiveIntegerField(primary_key=True)
-    birth_date = models.BigIntegerField()
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    birth_date = models.BigIntegerField()
     gender = models.CharField(max_length=1, choices=Gender.choices)
-    register_date = models.BigIntegerField()
     phone_number = models.CharField(
         max_length=50, blank=True
     )  # if contact info available
+    created_by_user = models.ForeignKey(User, on_delete=models.PROTECT)
+    created_date = models.BigIntegerField()
     longitude = models.DecimalField(max_digits=12, decimal_places=6)
     latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
@@ -57,7 +56,7 @@ class ClientRisk(models.Model):
         HIGH = "HI", _("High")
         CRITICAL = "CR", _("Critical")
 
-    client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
     timestamp = models.BigIntegerField()
     risk_type = RiskType.getField()
     risk_level = models.CharField(max_length=2, choices=RiskLevel.choices)
@@ -71,7 +70,7 @@ class DisabilityJunction(models.Model):
 
 
 class UserCBR(models.Model):
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     phone_number = models.CharField(max_length=50)
 
@@ -82,9 +81,8 @@ class Visit(models.Model):
         REFERRAL = "REF", _("Disability Centre Referral")
         FOLLOWUP = "FOL", _("Referral Follow-Up")
 
-    visit_id = models.PositiveIntegerField(primary_key=True)
-    client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.PROTECT)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
     date_visited = models.BigIntegerField()
     purpose = models.CharField(max_length=3, choices=Purpose.choices)
     longitude = models.DecimalField(max_digits=22, decimal_places=16)

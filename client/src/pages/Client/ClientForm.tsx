@@ -26,14 +26,10 @@ import {
     riskOptions,
     validationSchema,
 } from "./formFields";
-import { handleSubmit } from "./formHandler";
+import { handleSubmit, handleReset } from "./formHandler";
 
 const ClientForm = () => {
     const styles = useStyles();
-
-    const resetForm = () => {
-        return window.confirm("Are you sure you want to clear the form?");
-    };
 
     return (
         <Formik
@@ -41,7 +37,7 @@ const ClientForm = () => {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
         >
-            {({ values, isSubmitting }) => (
+            {({ values, isSubmitting, resetForm }) => (
                 <Grid container direction="row" justify="flex-start">
                     <Grid item md={2} xs={12}>
                         <Card className={styles.profileImgContainer}>
@@ -348,8 +344,7 @@ const ClientForm = () => {
                                     <Button
                                         variant="outlined"
                                         color="primary"
-                                        type="reset"
-                                        onClick={resetForm}
+                                        onClick={() => handleReset(resetForm)}
                                         disabled={isSubmitting}
                                     >
                                         Clear

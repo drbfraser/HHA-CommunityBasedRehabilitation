@@ -8,3 +8,9 @@ export const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormVa
         helpers.setSubmitting(false);
     }, 1000);
 };
+
+export const handleReset = (resetForm: () => void) => {
+    if (window.confirm("Are you sure you want to clear the form?")) {
+        resetForm();
+    }
+};

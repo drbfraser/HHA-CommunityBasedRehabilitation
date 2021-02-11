@@ -61,3 +61,15 @@ class ZoneSerializer(serializers.ModelSerializer):
         fields = [
             "zone_name",
         ]
+
+class RiskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ClientRisk
+        fields = [
+            "client_id",
+            "timestamp",
+            "risk_type",
+            "risk_level",
+            "requirement",
+            "goal",
+        ]

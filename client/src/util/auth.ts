@@ -70,7 +70,7 @@ const refreshTokens = async () => {
         refresh: getRefreshToken(),
     });
 
-    return requestTokens(Endpoint.LOGIN, postBody);
+    return requestTokens(Endpoint.LOGIN_REFRESH, postBody);
 };
 
 export const doLogin = async (username: string, password: string) => {
@@ -85,23 +85,21 @@ export const doLogin = async (username: string, password: string) => {
 export const doLogout = () => {
     setAccessToken("");
     setRefreshToken("");
+    history.push("/");
 };
 
 export const isLoggedIn = () => isTokenValid(getRefreshToken());
-export const redirectToLogin = () => history.push("/");
 
 export const getAuthToken = async () => {
     if (!isLoggedIn()) {
-        console.log("getAuthToken: !isLoggedIn");
         doLogout();
-        redirectToLogin();
     }
 
     if (!isTokenValid(getAccessToken())) {
-        if (!(await refreshTokens())) {
-            console.log("getAuthToken: refresh token failed");
+        const refreshSuccess = await refreshTokens();
+
+        if (!refreshSuccess) {
             doLogout();
-            redirectToLogin();
         }
     }
 

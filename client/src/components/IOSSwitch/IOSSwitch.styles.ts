@@ -6,6 +6,8 @@ export const useStyles = makeStyles({
         width: 42,
         height: 26,
         padding: 0,
+        marginLeft: 5,
+        marginRight: 5,
     },
     switchBase: {
         padding: 1,

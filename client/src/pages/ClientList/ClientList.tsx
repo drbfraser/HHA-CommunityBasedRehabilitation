@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
 import {
-    Columns,
     DataGrid,
     DensityTypes,
     RowsProp,
     ValueFormatterParams,
 } from "@material-ui/data-grid";
 import { useStyles } from "./ClientList.styles";
-import { Grid, MenuItem, Select, Typography } from "@material-ui/core";
+import { MenuItem, Select, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
 import RiskChip from "components/RiskChip/RiskChip";
 
-const initializeColumns = (setColumns: Function) => {
-    setColumns([
+const getColumns = () => {
+    return([
         { field: "id", headerName: "ID", flex: 0.5 },
         { field: "name", headerName: "Name", flex: 1 },
         { field: "zone", headerName: "Zone", flex: 1 },
@@ -123,14 +122,13 @@ const ClientList = () => {
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
     const [searchOption, setSearchOption] = useState<string>("ID");
-    const [columns, setColumns] = useState<Columns>([]);
     const [rows, setRows] = useState<RowsProp>([]);
 
     const styles = useStyles();
     const history = useHistory();
     const onRowClick = () => history.push("/clients/new");
 
-    useEffect(() => initializeColumns(setColumns), []);
+    const columns = getColumns();
     useEffect(() => {
         const initializeRows = async () => {
             await requestClientList(setRows, setLoading);
@@ -140,46 +138,42 @@ const ClientList = () => {
 
     return (
         <div className={styles.root}>
-            <div className={styles.inlineBlock}>
-                <Grid component="label" container alignItems="center" spacing={1}>
-                    <Typography
-                        color={allClientsMode ? "textSecondary" : "textPrimary"}
-                        component={"span"}
-                        variant={"body2"}
-                    >
-                        <Grid item>My Clients</Grid>
-                    </Typography>
-                    <Grid item>
-                        <IOSSwitch
-                            checked={allClientsMode}
-                            onChange={(event) => setAllClientsMode(event.target.checked)}
-                        />
-                    </Grid>
-                    <Typography
-                        color={allClientsMode ? "textPrimary" : "textSecondary"}
-                        component={"span"}
-                        variant={"body2"}
-                    >
-                        <Grid item>All Clients</Grid>
-                    </Typography>
-                </Grid>
+            <div className={styles.switch}>
+                <Typography
+                    color={allClientsMode ? "textSecondary" : "textPrimary"}
+                    component={"span"}
+                    variant={"body2"}
+                >
+                    My Clients
+                </Typography>
+                <IOSSwitch
+                    checked={allClientsMode}
+                    onChange={(event) => setAllClientsMode(event.target.checked)}
+                />
+                <Typography
+                    color={allClientsMode ? "textPrimary" : "textSecondary"}
+                    component={"span"}
+                    variant={"body2"}
+                >
+                    All Clients
+                </Typography>
             </div>
             <div className={styles.search}>
+                <div className={styles.searchOptions}>
+                    <Select
+                        color={"primary"}
+                        defaultValue={"ID"}
+                        value={searchOption}
+                        onChange={(event) => {
+                            setSearchOption(String(event.target.value));
+                        }}
+                    >
+                        <MenuItem value={"ID"}>ID</MenuItem>
+                        <MenuItem value={"Name"}>Name</MenuItem>
+                        <MenuItem value={"Zone"}>Zone</MenuItem>
+                    </Select>
+                </div>
                 <SearchBar />
-            </div>
-            <div className={styles.searchOptions}>
-                <Select
-                    color={"primary"}
-                    defaultValue={"ID"}
-                    value={searchOption}
-                    onChange={(event) => {
-                        setSearchOption(String(event.target.value));
-                    }}
-                >
-                    <MenuItem value={"ID"}>ID</MenuItem>
-                    <MenuItem value={"Name"}>Name</MenuItem>
-                    <MenuItem value={"Zone"}>Zone</MenuItem>
-                </Select>
             </div>
             <DataGrid
                 className={styles.datagrid}
@@ -188,7 +182,7 @@ const ClientList = () => {
                 loading={loading}
                 density={DensityTypes.Comfortable}
                 onRowClick={onRowClick}
-                hideFooter
+                pagination
             />
         </div>
     );

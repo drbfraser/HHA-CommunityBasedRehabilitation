@@ -2,11 +2,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles({
     root: {
-        height: 700,
-        padding: "5px 2px 50px 2px",
-    },
-    inlineBlock: {
-        display: "inline-block",
+        height: "calc(100vh - 175px)",
+        minHeight: 400,
+        padding: "5px 0px 50px 0px",
     },
     datagrid: {
         marginTop: 10,
@@ -17,7 +15,9 @@ export const useStyles = makeStyles({
             display: "none",
         },
         "& .MuiDataGrid-colCell, .MuiDataGrid-cell": {
-            padding: "0px 1px",
+            whiteSpace: 'normal',
+            wordWrap: 'break-word',
+            padding: "1px 1px 1px 1px",
         },
         "& .MuiDataGrid-row	": {
             cursor: "pointer",
@@ -26,17 +26,38 @@ export const useStyles = makeStyles({
             outline: "none",
         },
     },
-    inputRoot: {
-        color: "inherit",
+    switch: {
+        display: "inline-block",
     },
     search: {
         float: "right",
-        display: "inline-block",
-    },
+        display: "flex"
+    }, 
     searchOptions: {
         verticalAlign: "top",
         float: "right",
         display: "inline-block",
-        minWidth: 80,
+        paddingRight: 2,
+        "& .MuiSelect-root": {
+            minWidth: 43
+        }
     },
+    // mobile width
+    "@media (max-width: 800px)": {
+        root: {
+            height: "calc(100vh - 250px)",
+        },
+    },
+    // The width where the DataGrid gets too tight
+    "@media (max-width: 700px)": {
+        switch: {
+            display: "block",
+            textAlign: "center",
+            paddingBottom: "5px",
+        },
+        search: {
+            float: "none",
+            justifyContent: "center"
+        }
+    }
 });

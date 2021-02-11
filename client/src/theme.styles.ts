@@ -24,6 +24,9 @@ export const themeMui = createMuiTheme({
         background: {
             default: themeColors.blueBgDark,
         },
+        primary: {
+            main: themeColors.blueBgDark,
+        },
     },
     typography: {
         h1: {

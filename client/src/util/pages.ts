@@ -8,6 +8,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Logout from "pages/Logout/Logout";
 import ToDo from "pages/ToDo/ToDo";
+import ClientForm from "pages/Client/ClientForm";
 import NotFound from "pages/NotFound/NotFound";
 
 export interface IPage {
@@ -30,8 +31,8 @@ export const pages: IPage[] = [
     {
         path: "/clients/new",
         name: "New Client",
-        Component: ToDo,
         showInNav: true,
+        Component: ClientForm,
         Icon: AddCircleIcon,
     },
     {

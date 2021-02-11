@@ -1,7 +1,14 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { themeColors } from "theme.styles";
 
 export const useStyles = makeStyles(
     {
+        caregiverAccordion: {
+            backgroundColor: themeColors.blueBgLight,
+        },
+        caregiverInputField: {
+            backgroundColor: "#ffffff",
+        },
         profileImgContainer: {
             position: "relative",
             display: "block",

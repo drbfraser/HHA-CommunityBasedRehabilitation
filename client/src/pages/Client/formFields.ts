@@ -38,10 +38,10 @@ export const fieldLabels = {
     [FormField.healthRisk]: "Health Risk",
     [FormField.healthRequirements]: "Health Requirement(s)",
     [FormField.healthGoals]: "Health Goal(s)",
-    [FormField.educationRisk]: "Education Status",
+    [FormField.educationRisk]: "Education Risk",
     [FormField.educationRequirements]: "Education Requirement(s)",
     [FormField.educationGoals]: "Education Goal(s)",
-    [FormField.socialRisk]: "Social Status",
+    [FormField.socialRisk]: "Social Risk",
     [FormField.socialRequirements]: "Social Requirement(s)",
     [FormField.socialGoals]: "Social Goal(s)",
 };
@@ -116,7 +116,7 @@ export const riskOptions = [
     },
 ];
 
-const phoneRegex = RegExp(/([0-9\s\-]{7,})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/);
+const phoneRegex = RegExp(/([0-9\s\-?]{7,})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/);
 
 export const validationSchema = () =>
     Yup.object().shape({

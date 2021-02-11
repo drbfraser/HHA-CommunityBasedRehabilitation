@@ -31,6 +31,10 @@ import { handleSubmit } from "./formHandler";
 const ClientForm = () => {
     const styles = useStyles();
 
+    const resetForm = () => {
+        return window.confirm("Are you sure you want to clear the form?");
+    };
+
     return (
         <Formik
             initialValues={initialValues}
@@ -166,7 +170,7 @@ const ClientForm = () => {
                                 {values.caregiverPresent ? (
                                     <Grid item md={8} xs={12}>
                                         <Accordion
-                                            style={{ background: "#e3e8f4" }}
+                                            className={styles.caregiverAccordion}
                                             defaultExpanded
                                         >
                                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -174,7 +178,7 @@ const ClientForm = () => {
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <Field
-                                                    style={{ background: "white" }}
+                                                    className={styles.caregiverInputField}
                                                     component={TextField}
                                                     name={FormField.caregiverContact}
                                                     variant="outlined"
@@ -337,7 +341,7 @@ const ClientForm = () => {
                                         type="submit"
                                         disabled={isSubmitting}
                                     >
-                                        Submit
+                                        Create
                                     </Button>
                                 </Grid>
                                 <Grid item>
@@ -345,6 +349,7 @@ const ClientForm = () => {
                                         variant="outlined"
                                         color="primary"
                                         type="reset"
+                                        onClick={resetForm}
                                         disabled={isSubmitting}
                                     >
                                         Clear

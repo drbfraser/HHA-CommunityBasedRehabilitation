@@ -30,7 +30,7 @@ const isTokenValid = (token: string) => {
 };
 
 const requestTokens = async (endpoint: Endpoint, postBody: string) => {
-    const headers: RequestInit = {
+    const init: RequestInit = {
         method: "POST",
         body: postBody,
         headers: {
@@ -39,7 +39,7 @@ const requestTokens = async (endpoint: Endpoint, postBody: string) => {
     };
 
     try {
-        const resp = await fetch(API_URL + endpoint, headers);
+        const resp = await fetch(API_URL + endpoint, init);
 
         if (!resp.ok) {
             throw new Error(

@@ -22,7 +22,9 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [status, setStatus] = useState(LoginStatus.INITIAL);
 
-    const handleLogin = async () => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
         if (!username.length || !password.length) {
             return;
         }
@@ -73,7 +75,7 @@ const Login = () => {
                 </Typography>
                 <LoginAlert />
                 <br />
-                <form>
+                <form onSubmit={(e) => handleLogin(e)}>
                     <TextField
                         label="Username"
                         fullWidth
@@ -91,11 +93,7 @@ const Login = () => {
                     />
                     <br />
                     <br />
-                    <Button
-                        onClick={handleLogin}
-                        fullWidth
-                        disabled={status === LoginStatus.SUBMITTING}
-                    >
+                    <Button type="submit" fullWidth disabled={status === LoginStatus.SUBMITTING}>
                         Login
                     </Button>
                 </form>

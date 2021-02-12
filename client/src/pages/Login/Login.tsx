@@ -1,14 +1,64 @@
 import { Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import React from "react";
+import Alert from "@material-ui/lab/Alert";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { doLogin } from "util/auth";
+import { defaultPage } from "util/pages";
 import { useStyles } from "./Login.styles";
+
+enum LoginStatus {
+    INITIAL,
+    SUBMITTING,
+    FAILED,
+}
 
 const Login = () => {
     const styles = useStyles();
     const history = useHistory();
-    const handleLogin = () => history.push("/dashboard");
+
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [status, setStatus] = useState(LoginStatus.INITIAL);
+
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (!username.length || !password.length) {
+            return;
+        }
+
+        setStatus(LoginStatus.SUBMITTING);
+
+        const loginSucceeded = await doLogin(username, password);
+
+        if (loginSucceeded) {
+            history.push(defaultPage.path);
+        } else {
+            setStatus(LoginStatus.FAILED);
+        }
+    };
+
+    const LoginAlert = () => {
+        if (status === LoginStatus.SUBMITTING) {
+            return (
+                <Alert variant="filled" color="info">
+                    Logging in...
+                </Alert>
+            );
+        }
+
+        if (status === LoginStatus.FAILED) {
+            return (
+                <Alert variant="filled" color="error">
+                    Login failed. Please try again.
+                </Alert>
+            );
+        }
+
+        return <></>;
+    };
 
     return (
         <div className={styles.container}>
@@ -23,14 +73,27 @@ const Login = () => {
                 <Typography variant="h4" gutterBottom>
                     Login
                 </Typography>
-                <form>
-                    <TextField label="Username" fullWidth />
+                <LoginAlert />
+                <br />
+                <form onSubmit={(e) => handleLogin(e)}>
+                    <TextField
+                        label="Username"
+                        fullWidth
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
                     <br />
                     <br />
-                    <TextField label="Password" fullWidth />
+                    <TextField
+                        label="Password"
+                        type="password"
+                        fullWidth
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
                     <br />
                     <br />
-                    <Button onClick={handleLogin} fullWidth>
+                    <Button type="submit" fullWidth disabled={status === LoginStatus.SUBMITTING}>
                         Login
                     </Button>
                 </form>

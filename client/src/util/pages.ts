@@ -72,3 +72,5 @@ export const pages: IPage[] = [
         showInNav: false,
     },
 ];
+
+export const defaultPage = pages[0];

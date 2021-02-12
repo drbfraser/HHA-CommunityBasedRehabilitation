@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Alert from "@material-ui/lab/Alert";
-import { API_EXAMPLE } from "util/endpoints";
+import { apiFetch, Endpoint } from "util/endpoints";
 
 enum reqState {
     LOADING,
@@ -36,12 +36,7 @@ const ConnectionTest = () => {
     useEffect(() => {
         const testAPIConnection = async () => {
             try {
-                const resp = await fetch(API_EXAMPLE);
-
-                if (!resp.ok) {
-                    throw new Error("Response not ok");
-                }
-
+                await apiFetch(Endpoint.CLIENTS);
                 setReqStatus(reqState.SUCCESS);
             } catch (e) {
                 setReqStatus(reqState.ERROR);

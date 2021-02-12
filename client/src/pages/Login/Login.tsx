@@ -98,7 +98,13 @@ const Login = () => {
                     />
                     <br />
                     <br />
-                    <Button type="submit" fullWidth disabled={status === LoginStatus.SUBMITTING}>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="secondary"
+                        fullWidth
+                        disabled={status === LoginStatus.SUBMITTING}
+                    >
                         Login
                     </Button>
                 </form>

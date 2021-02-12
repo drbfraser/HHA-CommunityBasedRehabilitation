@@ -22,7 +22,6 @@ const UserView = (props: any) => {
                     <EditIcon></EditIcon>Edit
                 </Button>
             </div>
-            <br></br>
             <b>ID</b>
             <p> {initialValues.id} </p>
             <b>Zone</b>

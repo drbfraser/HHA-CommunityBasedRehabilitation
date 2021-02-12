@@ -29,3 +29,13 @@ class ZoneList(generics.ListCreateAPIView):
 class ZoneDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Zone.objects.all()
     serializer_class = serializers.ZoneSerializer
+
+
+class RiskList(generics.ListCreateAPIView):
+    queryset = models.ClientRisk.objects.all()
+    serializer_class = serializers.RiskSerializer
+
+
+class RiskDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.ClientRisk.objects.all()
+    serializer_class = serializers.RiskSerializer

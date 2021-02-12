@@ -1,5 +1,5 @@
 import React from "react";
-import { useStyles } from "./Edit.styles";
+import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
@@ -9,7 +9,7 @@ import { FormikHelpers } from "formik";
 import { TFormValues } from "./fields";
 import { useHistory } from "react-router-dom";
 
-const Edit = () => {
+const UserEdit = () => {
     const styles = useStyles();
     const history = useHistory();
     const handleCancel = () => history.push("/user");
@@ -30,12 +30,12 @@ const Edit = () => {
             {({ isSubmitting }) => (
                 <div className={styles.container}>
                     <h1>{initialValues.userName}</h1>
-                    <label className={styles.label}>ID</label>
+                    <b>ID</b>
                     <p>{initialValues.id}</p>
 
-                    <Form className={styles.form}>
+                    <Form>
                         <Grid container spacing={2}>
-                            <Grid item md={6} xs={12}>
+                            <Grid item md={7} xs={12}>
                                 <Field
                                     component={TextField}
                                     fullWidth
@@ -45,11 +45,9 @@ const Edit = () => {
                                     name={UserField.zoneNumber}
                                 />
                             </Grid>
-                        </Grid>
-                        <br></br>
+                            <br></br>
 
-                        <Grid container spacing={2}>
-                            <Grid item md={6} xs={12}>
+                            <Grid item md={7} xs={12}>
                                 <Field
                                     component={TextField}
                                     fullWidth
@@ -59,11 +57,9 @@ const Edit = () => {
                                     name={UserField.phoneNumber}
                                 />
                             </Grid>
-                        </Grid>
-                        <br></br>
+                            <br></br>
 
-                        <Grid container spacing={2}>
-                            <Grid item md={6} xs={12}>
+                            <Grid item md={7} xs={12}>
                                 <Field
                                     component={TextField}
                                     fullWidth
@@ -73,21 +69,34 @@ const Edit = () => {
                                     name={UserField.email}
                                 />
                             </Grid>
+                            <br></br>
                         </Grid>
                         <br></br>
-
-                        <Button className={styles.btn} onClick={handleCancel}>
-                            Cancel
-                        </Button>
-                        <Button
-                            className={styles.btn}
-                            variant="contained"
-                            type="submit"
-                            disabled={isSubmitting}
-                        >
-                            Save
-                        </Button>
                         <br></br>
+                        <div className={styles.editContainer}>
+                            <Grid justify="flex-end" container spacing={2}>
+                                <Grid item>
+                                    <Button
+                                        color="primary"
+                                        variant="contained"
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                    >
+                                        Save
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        color="primary"
+                                        variant="outlined"
+                                        onClick={handleCancel}
+                                    >
+                                        Back
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                            <br></br>
+                        </div>
                     </Form>
                 </div>
             )}
@@ -95,4 +104,4 @@ const Edit = () => {
     );
 };
 
-export default Edit;
+export default UserEdit;

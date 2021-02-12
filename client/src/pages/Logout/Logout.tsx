@@ -1,6 +1,9 @@
-import React from "react";
-import { Redirect } from "react-router-dom";
+import React, { useEffect } from "react";
+import { doLogout } from "util/auth";
 
-const Logout = () => <Redirect to="/" />;
+const Logout = () => {
+    useEffect(() => doLogout());
+    return <></>;
+};
 
 export default Logout;

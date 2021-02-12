@@ -43,7 +43,7 @@ const Login = () => {
     const LoginAlert = () => {
         if (status === LoginStatus.SUBMITTING) {
             return (
-                <Alert variant="filled" color="info">
+                <Alert variant="filled" severity="info">
                     Logging in...
                 </Alert>
             );
@@ -51,7 +51,7 @@ const Login = () => {
 
         if (status === LoginStatus.FAILED) {
             return (
-                <Alert variant="filled" color="error">
+                <Alert variant="filled" severity="error">
                     Login failed. Please try again.
                 </Alert>
             );
@@ -79,6 +79,9 @@ const Login = () => {
                     <TextField
                         label="Username"
                         fullWidth
+                        inputProps={{ autoCapitalize: "off" }}
+                        required
+                        InputLabelProps={{ required: false }}
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
@@ -88,6 +91,8 @@ const Login = () => {
                         label="Password"
                         type="password"
                         fullWidth
+                        required
+                        InputLabelProps={{ required: false }}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />

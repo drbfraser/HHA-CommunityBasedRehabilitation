@@ -7,21 +7,19 @@ const SearchBar = (props: InputBaseProps) => {
     const styles = useStyles(theme);
 
     return (
-        <div>
-            <div className={styles.search}>
-                <div className={styles.searchIcon}>
-                    <SearchIcon />
-                </div>
-                <InputBase
-                    placeholder="Search…"
-                    classes={{
-                        root: styles.inputRoot,
-                        input: styles.inputInput,
-                    }}
-                    inputProps={{ "aria-label": "search" }}
-                    {...props}
-                />
+        <div className={styles.search}>
+            <div className={styles.searchIcon}>
+                <SearchIcon />
             </div>
+            <InputBase
+                placeholder="Search…"
+                classes={{
+                    root: styles.inputRoot,
+                    input: styles.inputInput,
+                }}
+                inputProps={{ "aria-label": "search" }}
+                {...props}
+            />
         </div>
     );
 };

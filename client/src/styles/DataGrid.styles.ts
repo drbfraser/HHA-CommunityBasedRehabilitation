@@ -15,6 +15,7 @@ export const useStyles = makeStyles({
             padding: "1px 1px 1px 1px",
         },
         "& .MuiDataGrid-colCellTitle": {
+            userSelect: "none",
             textOverflow: "clip",
         },
         "& .MuiIconButton-sizeSmall": {

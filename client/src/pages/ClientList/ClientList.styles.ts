@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { mediaMobile } from "theme.styles";
 
 export const useStyles = makeStyles({
     root: {
@@ -23,7 +24,7 @@ export const useStyles = makeStyles({
         },
     },
     // mobile width
-    "@media (max-width: 800px)": {
+    [mediaMobile]: {
         root: {
             height: "calc(100vh - 250px)",
         },

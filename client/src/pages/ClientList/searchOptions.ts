@@ -1,5 +1,5 @@
-export const ID = "ID";
-export const NAME = "Name";
-export const ZONE = "Zone";
-
-export const searchOptions = [ID, NAME, ZONE];
+export enum SearchOption {
+    ID = "ID",
+    NAME = "Name",
+    ZONE = "Zone",
+}

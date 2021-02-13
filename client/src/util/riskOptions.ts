@@ -1,31 +1,40 @@
-export interface Risk {
+export interface IRisk {
     name: string;
     value: string;
     color: string;
+    level: number;
 }
 
-export const criticalRisk: Risk = {
-    name: "Critical",
-    value: "critical",
-    color: "black",
-};
+export enum RiskType {
+    LOW = "LOW",
+    MEDIUM = "MEDIUM",
+    HIGH = "HIGH",
+    CRITICAL = "CRITICAL",
+}
 
-export const highRisk: Risk = {
-    name: "High",
-    value: "high",
-    color: "crimson",
+export const riskOptions: { [key: string]: IRisk } = {
+    [RiskType.LOW]: {
+        level: 0,
+        name: "Low",
+        value: "low",
+        color: "gray",
+    },
+    [RiskType.MEDIUM]: {
+        level: 1,
+        name: "Medium",
+        value: "medium",
+        color: "darkorange",
+    },
+    [RiskType.HIGH]: {
+        level: 2,
+        name: "High",
+        value: "high",
+        color: "crimson",
+    },
+    [RiskType.CRITICAL]: {
+        level: 3,
+        name: "Critical",
+        value: "critical",
+        color: "black",
+    },
 };
-
-export const mediumRisk: Risk = {
-    name: "Medium",
-    value: "medium",
-    color: "darkorange",
-};
-
-export const lowRisk: Risk = {
-    name: "Low",
-    value: "low",
-    color: "gray",
-};
-
-export const riskOptions = [criticalRisk, highRisk, mediumRisk, lowRisk];

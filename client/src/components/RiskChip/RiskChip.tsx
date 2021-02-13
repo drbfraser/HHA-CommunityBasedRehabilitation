@@ -1,16 +1,19 @@
 import { Chip, ChipProps } from "@material-ui/core";
-import { Risk } from "util/riskOptions";
+import { IRisk } from "util/riskOptions";
+import { useStyles } from "./RiskChip.styles";
 
 interface RiskChipProps extends ChipProps {
-    risk: Risk | undefined;
+    risk: IRisk;
 }
 
 const RiskChip = (props: RiskChipProps) => {
+    const styles = useStyles();
+
     return (
         <Chip
-            label={props.risk?.value}
-            style={{ backgroundColor: props.risk?.color }}
-            color={"primary"}
+            className={styles.chip}
+            label={props.risk.value}
+            style={{ backgroundColor: props.risk.color }}
             {...props}
         />
     );

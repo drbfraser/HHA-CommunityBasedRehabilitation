@@ -1,5 +1,7 @@
 import { createMuiTheme } from "@material-ui/core";
 
+export const mediaMobile = "@media (max-width: 800px)";
+
 export const themeColors = {
     blueBgLight: "#e3e8f4",
     blueBgDark: "#273364",

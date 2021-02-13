@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DataGrid, DensityTypes, RowsProp, ValueFormatterParams } from "@material-ui/data-grid";
+import { CellParams, CellValue, DataGrid, DensityTypes, RowsProp, ValueFormatterParams } from "@material-ui/data-grid";
 import { useStyles } from "./ClientList.styles";
 import { useStyles as useDataGridStyles } from "styles/DataGrid.styles";
 import { MenuItem, Select, Typography } from "@material-ui/core";
@@ -7,21 +7,30 @@ import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
 import RiskChip from "components/RiskChip/RiskChip";
-import { criticalRisk, highRisk, mediumRisk, lowRisk, Risk } from "util/riskOptions";
-import { ID, NAME, ZONE, searchOptions } from "./searchOptions";
+import { IRisk, RiskType, riskOptions } from "util/riskOptions";
+import { SearchOption } from "./searchOptions";
+
+const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
+    const risk1: IRisk = Object(params1.value);
+    const risk2: IRisk = Object(params2.value);
+    return risk1.level - risk2.level;
+}
 
 const getColumns = () => {
     return [
-        { field: "id", headerName: ID, flex: 0.5, renderCell: renderText },
-        { field: "name", headerName: NAME, flex: 1, renderCell: renderText },
-        { field: "zone", headerName: ZONE, flex: 1, renderCell: renderText },
-        { field: "healthRisk", headerName: "Health", flex: 0.5, renderCell: renderBadge },
-        { field: "educationRisk", headerName: "Education", flex: 0.5, renderCell: renderBadge },
-        { field: "socialRisk", headerName: "Social", flex: 0.5, renderCell: renderBadge },
+        { field: "id", headerName: SearchOption.ID, flex: 0.5, renderCell: renderText },
+        { field: "name", headerName: SearchOption.NAME, flex: 1, renderCell: renderText },
+        { field: "zone", headerName: SearchOption.ZONE, flex: 1, renderCell: renderText },
+        { field: "healthRisk", headerName: "Health", flex: 0.5, renderCell: renderBadge, sortComparator: riskComparator },
+        { field: "educationRisk", headerName: "Education", flex: 0.5, renderCell: renderBadge, sortComparator: riskComparator },
+        { field: "socialRisk", headerName: "Social", flex: 0.5, renderCell: renderBadge, sortComparator: riskComparator },
     ];
 };
 
-const requestClientList = async (setRows: Function, setLoading: Function) => {
+const requestClientList = async (
+    setRows: (rows: RowsProp) => void,
+    setLoading: (loading: boolean) => void
+) => {
     setLoading(true);
 
     // TODO: add API call to get client list here when its completed
@@ -31,81 +40,83 @@ const requestClientList = async (setRows: Function, setLoading: Function) => {
             id: 1,
             name: "Ali",
             zone: "A",
-            healthRisk: mediumRisk,
-            educationRisk: highRisk,
-            socialRisk: highRisk,
+            healthRisk: riskOptions[RiskType.MEDIUM],
+            educationRisk: riskOptions[RiskType.HIGH],
+            socialRisk: riskOptions[RiskType.HIGH],
         },
         {
             id: 2,
             name: "Eric",
             zone: "B",
-            healthRisk: lowRisk,
-            educationRisk: lowRisk,
-            socialRisk: highRisk,
+            healthRisk: riskOptions[RiskType.LOW],
+            educationRisk: riskOptions[RiskType.MEDIUM],
+            socialRisk: riskOptions[RiskType.LOW],
         },
         {
+            key: 3,
             id: 3,
             name: "Ethan",
             zone: "C",
-            healthRisk: highRisk,
-            educationRisk: highRisk,
-            socialRisk: mediumRisk,
+            healthRisk: riskOptions[RiskType.HIGH],
+            educationRisk: riskOptions[RiskType.HIGH],
+            socialRisk: riskOptions[RiskType.MEDIUM],
         },
         {
             id: 4,
             name: "Ahmad Mahmood",
             zone: "Saudi Arabia",
-            healthRisk: criticalRisk,
-            educationRisk: criticalRisk,
-            socialRisk: criticalRisk,
+            healthRisk: riskOptions[RiskType.CRITICAL],
+            educationRisk: riskOptions[RiskType.CRITICAL],
+            socialRisk: riskOptions[RiskType.CRITICAL],
         },
         {
             id: 5,
             name: "Sam",
             zone: "D",
-            healthRisk: lowRisk,
-            educationRisk: highRisk,
-            socialRisk: highRisk,
+            healthRisk: riskOptions[RiskType.HIGH],
+            educationRisk: riskOptions[RiskType.LOW],
+            socialRisk: riskOptions[RiskType.HIGH],
         },
         {
+            key: 6,
             id: 6,
             name: "Henry",
             zone: "E",
-            healthRisk: highRisk,
-            educationRisk: mediumRisk,
-            socialRisk: mediumRisk,
+            healthRisk: riskOptions[RiskType.LOW],
+            educationRisk: riskOptions[RiskType.LOW],
+            socialRisk: riskOptions[RiskType.MEDIUM],
         },
         {
             id: 7,
             name: "Griffin",
             zone: "E",
-            healthRisk: lowRisk,
-            educationRisk: highRisk,
-            socialRisk: highRisk,
+            healthRisk: riskOptions[RiskType.HIGH],
+            educationRisk: riskOptions[RiskType.HIGH],
+            socialRisk: riskOptions[RiskType.HIGH],
         },
         {
             id: 8,
             name: "Argus",
             zone: "A",
-            healthRisk: highRisk,
-            educationRisk: highRisk,
-            socialRisk: mediumRisk,
+            healthRisk: riskOptions[RiskType.LOW],
+            educationRisk: riskOptions[RiskType.HIGH],
+            socialRisk: riskOptions[RiskType.MEDIUM],
         },
         {
             id: 9,
             name: "Roger",
             zone: "C",
-            healthRisk: mediumRisk,
-            educationRisk: lowRisk,
-            socialRisk: highRisk,
+            healthRisk: riskOptions[RiskType.MEDIUM],
+            educationRisk: riskOptions[RiskType.HIGH],
+            socialRisk: riskOptions[RiskType.HIGH],
         },
         {
             id: 10,
             name: "Roger-Surface",
             zone: "C",
-            healthRisk: mediumRisk,
-            educationRisk: highRisk,
-            socialRisk: highRisk,
+            healthRisk: riskOptions[RiskType.MEDIUM],
+            educationRisk: riskOptions[RiskType.HIGH],
+            socialRisk: riskOptions[RiskType.LOW],
         },
     ];
     setRows(rows);
@@ -117,14 +128,14 @@ const renderText = (params: ValueFormatterParams) => {
 };
 
 const renderBadge = (params: ValueFormatterParams) => {
-    const risk: Risk = Object(params.value);
+    const risk: IRisk = Object(params.value);
     return <RiskChip clickable risk={risk} />;
 };
 
 const ClientList = () => {
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
-    const [searchOption, setSearchOption] = useState<string>("ID");
+    const [searchOption, setSearchOption] = useState<string>(SearchOption.ID);
     const [rows, setRows] = useState<RowsProp>([]);
 
     const styles = useStyles();
@@ -168,14 +179,14 @@ const ClientList = () => {
                 <div className={styles.searchOptions}>
                     <Select
                         color={"primary"}
-                        defaultValue={ID}
+                        defaultValue={SearchOption.ID}
                         value={searchOption}
                         onChange={(event) => {
                             setSearchOption(String(event.target.value));
                         }}
                     >
-                        {searchOptions.map((searchOption) => (
-                            <MenuItem value={searchOption}>{searchOption}</MenuItem>
+                        {Object.values(SearchOption).map((option) => (
+                            <MenuItem key={option} value={option}>{option}</MenuItem>
                         ))}
                     </Select>
                 </div>
@@ -186,6 +197,7 @@ const ClientList = () => {
                 columns={columns}
                 rows={rows}
                 loading={loading}
+                
                 density={DensityTypes.Comfortable}
                 onRowClick={onRowClick}
                 pagination

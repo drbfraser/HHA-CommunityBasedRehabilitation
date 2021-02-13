@@ -9,9 +9,12 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Logout from "pages/Logout/Logout";
 import ToDo from "pages/ToDo/ToDo";
 import ClientList from "pages/ClientList/ClientList";
+import ClientForm from "pages/Client/ClientForm";
+import NotFound from "pages/NotFound/NotFound";
 
 export interface IPage {
     path: string;
+    exact?: boolean;
     name: string;
     Component: React.ComponentType<any>;
     showInNav: boolean;
@@ -29,8 +32,8 @@ export const pages: IPage[] = [
     {
         path: "/clients/new",
         name: "New Client",
-        Component: ToDo,
         showInNav: true,
+        Component: ClientForm,
         Icon: AddCircleIcon,
     },
     {
@@ -60,5 +63,13 @@ export const pages: IPage[] = [
         Component: Logout,
         showInNav: true,
         Icon: ExitToAppIcon,
+    },
+    // must be at the bottom
+    {
+        path: "/",
+        exact: false,
+        name: "Not Found",
+        Component: NotFound,
+        showInNav: false,
     },
 ];

@@ -1,26 +1,24 @@
 import { useEffect, useState } from "react";
-import {
-    DataGrid,
-    DensityTypes,
-    RowsProp,
-    ValueFormatterParams,
-} from "@material-ui/data-grid";
+import { DataGrid, DensityTypes, RowsProp, ValueFormatterParams } from "@material-ui/data-grid";
 import { useStyles } from "./ClientList.styles";
+import { useStyles as useDataGridStyles } from "styles/DataGrid.styles";
 import { MenuItem, Select, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
 import RiskChip from "components/RiskChip/RiskChip";
+import { criticalRisk, highRisk, mediumRisk, lowRisk, Risk } from "util/riskOptions";
+import { ID, NAME, ZONE, searchOptions } from "./searchOptions";
 
 const getColumns = () => {
-    return([
-        { field: "id", headerName: "ID", flex: 0.5 },
-        { field: "name", headerName: "Name", flex: 1 },
-        { field: "zone", headerName: "Zone", flex: 1 },
+    return [
+        { field: "id", headerName: ID, flex: 0.5, renderCell: renderText },
+        { field: "name", headerName: NAME, flex: 1, renderCell: renderText },
+        { field: "zone", headerName: ZONE, flex: 1, renderCell: renderText },
         { field: "healthRisk", headerName: "Health", flex: 0.5, renderCell: renderBadge },
         { field: "educationRisk", headerName: "Education", flex: 0.5, renderCell: renderBadge },
         { field: "socialRisk", headerName: "Social", flex: 0.5, renderCell: renderBadge },
-    ]);
+    ];
 };
 
 const requestClientList = async (setRows: Function, setLoading: Function) => {
@@ -33,89 +31,94 @@ const requestClientList = async (setRows: Function, setLoading: Function) => {
             id: 1,
             name: "Ali",
             zone: "A",
-            healthRisk: "medium",
-            educationRisk: "high",
-            socialRisk: "high",
+            healthRisk: mediumRisk,
+            educationRisk: highRisk,
+            socialRisk: highRisk,
         },
         {
             id: 2,
             name: "Eric",
             zone: "B",
-            healthRisk: "low",
-            educationRisk: "low",
-            socialRisk: "high",
+            healthRisk: lowRisk,
+            educationRisk: lowRisk,
+            socialRisk: highRisk,
         },
         {
             id: 3,
             name: "Ethan",
             zone: "C",
-            healthRisk: "high",
-            educationRisk: "high",
-            socialRisk: "medium",
+            healthRisk: highRisk,
+            educationRisk: highRisk,
+            socialRisk: mediumRisk,
         },
         {
             id: 4,
             name: "Ahmad Mahmood",
             zone: "Saudi Arabia",
-            healthRisk: "critical",
-            educationRisk: "critical",
-            socialRisk: "critical",
+            healthRisk: criticalRisk,
+            educationRisk: criticalRisk,
+            socialRisk: criticalRisk,
         },
         {
             id: 5,
             name: "Sam",
             zone: "D",
-            healthRisk: "low",
-            educationRisk: "high",
-            socialRisk: "high",
+            healthRisk: lowRisk,
+            educationRisk: highRisk,
+            socialRisk: highRisk,
         },
         {
             id: 6,
             name: "Henry",
             zone: "E",
-            healthRisk: "high",
-            educationRisk: "medium",
-            socialRisk: "medium",
+            healthRisk: highRisk,
+            educationRisk: mediumRisk,
+            socialRisk: mediumRisk,
         },
         {
             id: 7,
             name: "Griffin",
             zone: "E",
-            healthRisk: "low",
-            educationRisk: "high",
-            socialRisk: "high",
+            healthRisk: lowRisk,
+            educationRisk: highRisk,
+            socialRisk: highRisk,
         },
         {
             id: 8,
             name: "Argus",
             zone: "A",
-            healthRisk: "high",
-            educationRisk: "high",
-            socialRisk: "medium",
+            healthRisk: highRisk,
+            educationRisk: highRisk,
+            socialRisk: mediumRisk,
         },
         {
             id: 9,
             name: "Roger",
             zone: "C",
-            healthRisk: "medium",
-            educationRisk: "low",
-            socialRisk: "high",
+            healthRisk: mediumRisk,
+            educationRisk: lowRisk,
+            socialRisk: highRisk,
         },
         {
             id: 10,
             name: "Roger-Surface",
             zone: "C",
-            healthRisk: "medium",
-            educationRisk: "high",
-            socialRisk: "high",
+            healthRisk: mediumRisk,
+            educationRisk: highRisk,
+            socialRisk: highRisk,
         },
     ];
     setRows(rows);
     setLoading(false);
 };
 
+const renderText = (params: ValueFormatterParams) => {
+    return <Typography variant={"body2"}>{params.value}</Typography>;
+};
+
 const renderBadge = (params: ValueFormatterParams) => {
-    return <RiskChip clickable label={params.value} />;
+    const risk: Risk = Object(params.value);
+    return <RiskChip clickable risk={risk} />;
 };
 
 const ClientList = () => {
@@ -125,7 +128,10 @@ const ClientList = () => {
     const [rows, setRows] = useState<RowsProp>([]);
 
     const styles = useStyles();
+    const dataGridStyle = useDataGridStyles();
     const history = useHistory();
+
+    // TODO: update path to be wherever client details will be
     const onRowClick = () => history.push("/clients/new");
 
     const columns = getColumns();
@@ -162,21 +168,21 @@ const ClientList = () => {
                 <div className={styles.searchOptions}>
                     <Select
                         color={"primary"}
-                        defaultValue={"ID"}
+                        defaultValue={ID}
                         value={searchOption}
                         onChange={(event) => {
                             setSearchOption(String(event.target.value));
                         }}
                     >
-                        <MenuItem value={"ID"}>ID</MenuItem>
-                        <MenuItem value={"Name"}>Name</MenuItem>
-                        <MenuItem value={"Zone"}>Zone</MenuItem>
+                        {searchOptions.map((searchOption) => (
+                            <MenuItem value={searchOption}>{searchOption}</MenuItem>
+                        ))}
                     </Select>
                 </div>
                 <SearchBar />
             </div>
             <DataGrid
-                className={styles.datagrid}
+                className={dataGridStyle.datagrid}
                 columns={columns}
                 rows={rows}
                 loading={loading}

@@ -6,41 +6,21 @@ export const useStyles = makeStyles({
         minHeight: 400,
         padding: "5px 0px 50px 0px",
     },
-    datagrid: {
-        marginTop: 10,
-        border: 0,
-        WebkitFontSmoothing: "auto",
-        letterSpacing: "normal",
-        "& .MuiDataGrid-menuIcon, .MuiDataGrid-iconSeparator": {
-            display: "none",
-        },
-        "& .MuiDataGrid-colCell, .MuiDataGrid-cell": {
-            whiteSpace: 'normal',
-            wordWrap: 'break-word',
-            padding: "1px 1px 1px 1px",
-        },
-        "& .MuiDataGrid-row	": {
-            cursor: "pointer",
-        },
-        "& .MuiDataGrid-colCell:focus, .MuiDataGrid-cell:focus": {
-            outline: "none",
-        },
-    },
     switch: {
         display: "inline-block",
     },
     search: {
         float: "right",
-        display: "flex"
-    }, 
+        display: "flex",
+    },
     searchOptions: {
         verticalAlign: "top",
         float: "right",
         display: "inline-block",
         paddingRight: 2,
         "& .MuiSelect-root": {
-            minWidth: 43
-        }
+            minWidth: 43,
+        },
     },
     // mobile width
     "@media (max-width: 800px)": {
@@ -57,7 +37,7 @@ export const useStyles = makeStyles({
         },
         search: {
             float: "none",
-            justifyContent: "center"
-        }
-    }
+            justifyContent: "center",
+        },
+    },
 });

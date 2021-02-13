@@ -1,26 +1,19 @@
 import { Chip, ChipProps } from "@material-ui/core";
+import { Risk } from "util/riskOptions";
 
-const RiskChip = (props: ChipProps) => {
-    let backgroundColor: string;
+interface RiskChipProps extends ChipProps {
+    risk: Risk | undefined;
+}
 
-    switch (props.label) {
-        case "critical":
-            backgroundColor = "black";
-            break;
-        case "high":
-            backgroundColor = "crimson";
-            break;
-        case "medium":
-            backgroundColor = "darkorange";
-            break;
-        case "low":
-            backgroundColor = "gray";
-            break;
-        default:
-            throw new Error("Invalid Chip Label");
-    }
-
-    return <Chip {...props} color={"primary"} style={{ backgroundColor: backgroundColor }} />;
+const RiskChip = (props: RiskChipProps) => {
+    return (
+        <Chip
+            label={props.risk?.value}
+            style={{ backgroundColor: props.risk?.color }}
+            color={"primary"}
+            {...props}
+        />
+    );
 };
 
 export default RiskChip;

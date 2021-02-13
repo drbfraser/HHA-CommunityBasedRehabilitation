@@ -60,6 +60,7 @@ build server:
     - pip install -r requirements.txt
     - python -m black --check . 
     - python manage.py check
+    - python manage.py makemigrations --check
     - python manage.py test
   
 deploy:

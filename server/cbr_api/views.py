@@ -1,8 +1,14 @@
-from django.http import JsonResponse
-from django.views.generic.list import ListView
 from cbr_api import models
 from cbr_api import serializers
 from rest_framework import generics
+from django.contrib.auth.models import User
+
+
+class UserCreate(generics.CreateAPIView):
+    queryset = User.objects.all()
+    # TODO: remove once we have a seed script that adds a default user (i.e. require authentication)
+    permission_classes = []
+    serializer_class = serializers.UserSerializer
 
 
 class ClientList(generics.ListCreateAPIView):

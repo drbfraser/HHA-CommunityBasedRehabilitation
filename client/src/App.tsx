@@ -21,7 +21,11 @@ const App = () => {
                         <div className={styles.pageContainer}>
                             <Switch>
                                 {pages.map((page) => (
-                                    <Route key={page.path} exact path={page.path}>
+                                    <Route
+                                        key={page.path}
+                                        exact={page.exact ?? true}
+                                        path={page.path}
+                                    >
                                         <Typography variant="h1" className={styles.pageTitle}>
                                             {page.name}
                                         </Typography>

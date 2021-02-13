@@ -1,3 +1,7 @@
+import { SvgIconTypeMap } from "@material-ui/core";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
+import { LocalHospital, RecordVoiceOver, School } from "@material-ui/icons";
+
 export interface IRisk {
     name: string;
     value: string;
@@ -36,5 +40,31 @@ export const riskOptions: { [key: string]: IRisk } = {
         name: "Critical",
         value: "critical",
         color: "black",
+    },
+};
+
+export interface IRiskCategory {
+    value: string;
+    Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
+}
+
+export enum RiskCategory {
+    HEALTH = "Health",
+    EDUCATION = "Education",
+    SOCIAL = "Social",
+}
+
+export const riskCategories: { [key: string]: IRiskCategory } = {
+    [RiskCategory.HEALTH]: {
+        value: RiskCategory.HEALTH,
+        Icon: LocalHospital,
+    },
+    [RiskCategory.EDUCATION]: {
+        value: RiskCategory.EDUCATION,
+        Icon: School,
+    },
+    [RiskCategory.SOCIAL]: {
+        value: RiskCategory.SOCIAL,
+        Icon: RecordVoiceOver,
     },
 };

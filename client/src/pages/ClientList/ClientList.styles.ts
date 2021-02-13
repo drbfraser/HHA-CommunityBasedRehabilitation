@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { mediaCompressedDataGrid } from "styles/DataGrid.styles";
 import { mediaMobile } from "theme.styles";
 
 export const useStyles = makeStyles({
@@ -30,7 +31,7 @@ export const useStyles = makeStyles({
         },
     },
     // The width where the DataGrid gets too tight
-    "@media (max-width: 700px)": {
+    [mediaCompressedDataGrid]: {
         switch: {
             display: "block",
             textAlign: "center",

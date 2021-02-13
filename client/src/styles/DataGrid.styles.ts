@@ -1,5 +1,8 @@
 import { makeStyles } from "@material-ui/core/styles";
 
+export const compressedDataGridWidth = 700;
+export const mediaCompressedDataGrid = "@media (max-width: " + compressedDataGridWidth + "px)";
+
 export const useStyles = makeStyles({
     datagrid: {
         marginTop: 10,
@@ -17,6 +20,9 @@ export const useStyles = makeStyles({
         "& .MuiDataGrid-colCellTitle": {
             userSelect: "none",
             textOverflow: "clip",
+        },
+        "& .MuiSvgIcon-root": {
+            verticalAlign: "middle",
         },
         "& .MuiIconButton-sizeSmall": {
             padding: "0 0 0 0",

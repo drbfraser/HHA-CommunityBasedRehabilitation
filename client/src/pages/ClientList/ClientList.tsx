@@ -2,25 +2,48 @@ import { useEffect, useState } from "react";
 import {
     CellParams,
     CellValue,
+    ColParams,
     DataGrid,
     DensityTypes,
     RowsProp,
     ValueFormatterParams,
 } from "@material-ui/data-grid";
 import { useStyles } from "./ClientList.styles";
-import { useStyles as useDataGridStyles } from "styles/DataGrid.styles";
+import { compressedDataGridWidth, useStyles as useDataGridStyles } from "styles/DataGrid.styles";
 import { MenuItem, Select, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
 import RiskChip from "components/RiskChip/RiskChip";
-import { IRisk, RiskType, riskOptions } from "util/riskOptions";
+import {
+    IRisk,
+    RiskType,
+    riskOptions,
+    riskCategories,
+    RiskCategory,
+    IRiskCategory,
+} from "util/riskOptions";
 import { SearchOption } from "./searchOptions";
+import { FiberManualRecord } from "@material-ui/icons";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
     const risk1: IRisk = Object(params1.value);
     const risk2: IRisk = Object(params2.value);
     return risk1.level - risk2.level;
+};
+
+const renderRiskHeader = (params: ColParams): JSX.Element => {
+    const riskCategory: IRiskCategory = riskCategories[params.field];
+
+    return (
+        <div>
+            {window.innerWidth >= compressedDataGridWidth ? (
+                <Typography variant={"body2"}>{params.field}</Typography>
+            ) : (
+                <riskCategory.Icon />
+            )}
+        </div>
+    );
 };
 
 const renderText = (params: ValueFormatterParams) => {
@@ -29,7 +52,12 @@ const renderText = (params: ValueFormatterParams) => {
 
 const renderBadge = (params: ValueFormatterParams) => {
     const risk: IRisk = Object(params.value);
-    return <RiskChip clickable risk={risk} />;
+
+    return window.innerWidth >= compressedDataGridWidth ? (
+        <RiskChip clickable risk={risk} />
+    ) : (
+        <FiberManualRecord style={{ color: risk.color }} />
+    );
 };
 
 const requestClientList = async (
@@ -45,83 +73,83 @@ const requestClientList = async (
             id: 1,
             name: "Ali",
             zone: "A",
-            healthRisk: riskOptions[RiskType.MEDIUM],
-            educationRisk: riskOptions[RiskType.HIGH],
-            socialRisk: riskOptions[RiskType.HIGH],
+            [RiskCategory.HEALTH]: riskOptions[RiskType.MEDIUM],
+            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
+            [RiskCategory.SOCIAL]: riskOptions[RiskType.HIGH],
         },
         {
             id: 2,
             name: "Eric",
             zone: "B",
-            healthRisk: riskOptions[RiskType.LOW],
-            educationRisk: riskOptions[RiskType.MEDIUM],
-            socialRisk: riskOptions[RiskType.LOW],
+            [RiskCategory.HEALTH]: riskOptions[RiskType.LOW],
+            [RiskCategory.EDUCATION]: riskOptions[RiskType.MEDIUM],
+            [RiskCategory.SOCIAL]: riskOptions[RiskType.LOW],
         },
         {
             key: 3,
             id: 3,
             name: "Ethan",
             zone: "C",
-            healthRisk: riskOptions[RiskType.HIGH],
-            educationRisk: riskOptions[RiskType.HIGH],
-            socialRisk: riskOptions[RiskType.MEDIUM],
+            [RiskCategory.HEALTH]: riskOptions[RiskType.HIGH],
+            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
+            [RiskCategory.SOCIAL]: riskOptions[RiskType.MEDIUM],
         },
         {
             id: 4,
             name: "Ahmad Mahmood",
             zone: "Saudi Arabia",
-            healthRisk: riskOptions[RiskType.CRITICAL],
-            educationRisk: riskOptions[RiskType.CRITICAL],
-            socialRisk: riskOptions[RiskType.CRITICAL],
+            [RiskCategory.HEALTH]: riskOptions[RiskType.CRITICAL],
+            [RiskCategory.EDUCATION]: riskOptions[RiskType.CRITICAL],
+            [RiskCategory.SOCIAL]: riskOptions[RiskType.CRITICAL],
         },
         {
             id: 5,
             name: "Sam",
             zone: "D",
-            healthRisk: riskOptions[RiskType.HIGH],
-            educationRisk: riskOptions[RiskType.LOW],
-            socialRisk: riskOptions[RiskType.HIGH],
+            [RiskCategory.HEALTH]: riskOptions[RiskType.HIGH],
+            [RiskCategory.EDUCATION]: riskOptions[RiskType.LOW],
+            [RiskCategory.SOCIAL]: riskOptions[RiskType.HIGH],
         },
         {
             key: 6,
             id: 6,
             name: "Henry",
             zone: "E",
-            healthRisk: riskOptions[RiskType.LOW],
-            educationRisk: riskOptions[RiskType.LOW],
-            socialRisk: riskOptions[RiskType.MEDIUM],
+            [RiskCategory.HEALTH]: riskOptions[RiskType.LOW],
+            [RiskCategory.EDUCATION]: riskOptions[RiskType.LOW],
+            [RiskCategory.SOCIAL]: riskOptions[RiskType.MEDIUM],
         },
         {
             id: 7,
             name: "Griffin",
             zone: "E",
-            healthRisk: riskOptions[RiskType.HIGH],
-            educationRisk: riskOptions[RiskType.HIGH],
-            socialRisk: riskOptions[RiskType.HIGH],
+            [RiskCategory.HEALTH]: riskOptions[RiskType.HIGH],
+            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
+            [RiskCategory.SOCIAL]: riskOptions[RiskType.HIGH],
         },
         {
             id: 8,
             name: "Argus",
             zone: "A",
-            healthRisk: riskOptions[RiskType.LOW],
-            educationRisk: riskOptions[RiskType.HIGH],
-            socialRisk: riskOptions[RiskType.MEDIUM],
+            [RiskCategory.HEALTH]: riskOptions[RiskType.LOW],
+            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
+            [RiskCategory.SOCIAL]: riskOptions[RiskType.MEDIUM],
         },
         {
             id: 9,
             name: "Roger",
             zone: "C",
-            healthRisk: riskOptions[RiskType.MEDIUM],
-            educationRisk: riskOptions[RiskType.HIGH],
-            socialRisk: riskOptions[RiskType.HIGH],
+            [RiskCategory.HEALTH]: riskOptions[RiskType.MEDIUM],
+            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
+            [RiskCategory.SOCIAL]: riskOptions[RiskType.HIGH],
         },
         {
             id: 10,
             name: "Roger-Surface",
             zone: "C",
-            healthRisk: riskOptions[RiskType.MEDIUM],
-            educationRisk: riskOptions[RiskType.HIGH],
-            socialRisk: riskOptions[RiskType.LOW],
+            [RiskCategory.HEALTH]: riskOptions[RiskType.MEDIUM],
+            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
+            [RiskCategory.SOCIAL]: riskOptions[RiskType.LOW],
         },
     ];
     setRows(rows);
@@ -133,23 +161,26 @@ const columns = [
     { field: "name", headerName: SearchOption.NAME, flex: 1, renderCell: renderText },
     { field: "zone", headerName: SearchOption.ZONE, flex: 1, renderCell: renderText },
     {
-        field: "healthRisk",
-        headerName: "Health",
+        field: RiskCategory.HEALTH,
+        headerName: RiskCategory.HEALTH,
         flex: 0.5,
+        renderHeader: renderRiskHeader,
         renderCell: renderBadge,
         sortComparator: riskComparator,
     },
     {
-        field: "educationRisk",
-        headerName: "Education",
+        field: RiskCategory.EDUCATION,
+        headerName: RiskCategory.EDUCATION,
         flex: 0.5,
+        renderHeader: renderRiskHeader,
         renderCell: renderBadge,
         sortComparator: riskComparator,
     },
     {
-        field: "socialRisk",
-        headerName: "Social",
+        field: RiskCategory.SOCIAL,
+        headerName: RiskCategory.SOCIAL,
         flex: 0.5,
+        renderHeader: renderRiskHeader,
         renderCell: renderBadge,
         sortComparator: riskComparator,
     },

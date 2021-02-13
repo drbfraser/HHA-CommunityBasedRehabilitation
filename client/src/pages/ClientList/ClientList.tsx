@@ -23,33 +23,13 @@ const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, param
     return risk1.level - risk2.level;
 };
 
-const getColumns = () => {
-    return [
-        { field: "id", headerName: SearchOption.ID, flex: 0.5, renderCell: renderText },
-        { field: "name", headerName: SearchOption.NAME, flex: 1, renderCell: renderText },
-        { field: "zone", headerName: SearchOption.ZONE, flex: 1, renderCell: renderText },
-        {
-            field: "healthRisk",
-            headerName: "Health",
-            flex: 0.5,
-            renderCell: renderBadge,
-            sortComparator: riskComparator,
-        },
-        {
-            field: "educationRisk",
-            headerName: "Education",
-            flex: 0.5,
-            renderCell: renderBadge,
-            sortComparator: riskComparator,
-        },
-        {
-            field: "socialRisk",
-            headerName: "Social",
-            flex: 0.5,
-            renderCell: renderBadge,
-            sortComparator: riskComparator,
-        },
-    ];
+const renderText = (params: ValueFormatterParams) => {
+    return <Typography variant={"body2"}>{params.value}</Typography>;
+};
+
+const renderBadge = (params: ValueFormatterParams) => {
+    const risk: IRisk = Object(params.value);
+    return <RiskChip clickable risk={risk} />;
 };
 
 const requestClientList = async (
@@ -148,14 +128,32 @@ const requestClientList = async (
     setLoading(false);
 };
 
-const renderText = (params: ValueFormatterParams) => {
-    return <Typography variant={"body2"}>{params.value}</Typography>;
-};
-
-const renderBadge = (params: ValueFormatterParams) => {
-    const risk: IRisk = Object(params.value);
-    return <RiskChip clickable risk={risk} />;
-};
+const columns = [
+    { field: "id", headerName: SearchOption.ID, flex: 0.5, renderCell: renderText },
+    { field: "name", headerName: SearchOption.NAME, flex: 1, renderCell: renderText },
+    { field: "zone", headerName: SearchOption.ZONE, flex: 1, renderCell: renderText },
+    {
+        field: "healthRisk",
+        headerName: "Health",
+        flex: 0.5,
+        renderCell: renderBadge,
+        sortComparator: riskComparator,
+    },
+    {
+        field: "educationRisk",
+        headerName: "Education",
+        flex: 0.5,
+        renderCell: renderBadge,
+        sortComparator: riskComparator,
+    },
+    {
+        field: "socialRisk",
+        headerName: "Social",
+        flex: 0.5,
+        renderCell: renderBadge,
+        sortComparator: riskComparator,
+    },
+];
 
 const ClientList = () => {
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
@@ -170,12 +168,8 @@ const ClientList = () => {
     // TODO: update path to be wherever client details will be
     const onRowClick = () => history.push("/clients/new");
 
-    const columns = getColumns();
     useEffect(() => {
-        const initializeRows = async () => {
-            await requestClientList(setRows, setLoading);
-        };
-        initializeRows();
+        requestClientList(setRows, setLoading);
     }, []);
 
     return (

@@ -4,6 +4,6 @@ export const useStyles = makeStyles({
     chip: {
         "& .MuiChip-label": {
             color: "white",
-        }
-    }
+        },
+    },
 });

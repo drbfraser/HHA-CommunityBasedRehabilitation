@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { CellParams, CellValue, DataGrid, DensityTypes, RowsProp, ValueFormatterParams } from "@material-ui/data-grid";
+import {
+    CellParams,
+    CellValue,
+    DataGrid,
+    DensityTypes,
+    RowsProp,
+    ValueFormatterParams,
+} from "@material-ui/data-grid";
 import { useStyles } from "./ClientList.styles";
 import { useStyles as useDataGridStyles } from "styles/DataGrid.styles";
 import { MenuItem, Select, Typography } from "@material-ui/core";
@@ -14,16 +21,34 @@ const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, param
     const risk1: IRisk = Object(params1.value);
     const risk2: IRisk = Object(params2.value);
     return risk1.level - risk2.level;
-}
+};
 
 const getColumns = () => {
     return [
         { field: "id", headerName: SearchOption.ID, flex: 0.5, renderCell: renderText },
         { field: "name", headerName: SearchOption.NAME, flex: 1, renderCell: renderText },
         { field: "zone", headerName: SearchOption.ZONE, flex: 1, renderCell: renderText },
-        { field: "healthRisk", headerName: "Health", flex: 0.5, renderCell: renderBadge, sortComparator: riskComparator },
-        { field: "educationRisk", headerName: "Education", flex: 0.5, renderCell: renderBadge, sortComparator: riskComparator },
-        { field: "socialRisk", headerName: "Social", flex: 0.5, renderCell: renderBadge, sortComparator: riskComparator },
+        {
+            field: "healthRisk",
+            headerName: "Health",
+            flex: 0.5,
+            renderCell: renderBadge,
+            sortComparator: riskComparator,
+        },
+        {
+            field: "educationRisk",
+            headerName: "Education",
+            flex: 0.5,
+            renderCell: renderBadge,
+            sortComparator: riskComparator,
+        },
+        {
+            field: "socialRisk",
+            headerName: "Social",
+            flex: 0.5,
+            renderCell: renderBadge,
+            sortComparator: riskComparator,
+        },
     ];
 };
 
@@ -186,7 +211,9 @@ const ClientList = () => {
                         }}
                     >
                         {Object.values(SearchOption).map((option) => (
-                            <MenuItem key={option} value={option}>{option}</MenuItem>
+                            <MenuItem key={option} value={option}>
+                                {option}
+                            </MenuItem>
                         ))}
                     </Select>
                 </div>
@@ -197,7 +224,6 @@ const ClientList = () => {
                 columns={columns}
                 rows={rows}
                 loading={loading}
-                
                 density={DensityTypes.Comfortable}
                 onRowClick={onRowClick}
                 pagination

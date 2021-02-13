@@ -43,7 +43,7 @@ const requestTokens = async (endpoint: Endpoint, postBody: string) => {
 
         if (!resp.ok) {
             console.log(resp.text());
-            
+
             throw new Error(
                 `Request token failure: request failed with HTTP status ${resp.status}.`
             );

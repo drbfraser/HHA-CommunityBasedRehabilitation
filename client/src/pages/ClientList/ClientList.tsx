@@ -157,13 +157,13 @@ const requestClientList = async (
 };
 
 const columns = [
-    { field: "id", headerName: SearchOption.ID, flex: 0.5, renderCell: renderText },
+    { field: "id", headerName: SearchOption.ID, flex: 0.55, renderCell: renderText },
     { field: "name", headerName: SearchOption.NAME, flex: 1, renderCell: renderText },
     { field: "zone", headerName: SearchOption.ZONE, flex: 1, renderCell: renderText },
     {
         field: RiskCategory.HEALTH,
         headerName: RiskCategory.HEALTH,
-        flex: 0.5,
+        flex: 0.7,
         renderHeader: renderRiskHeader,
         renderCell: renderBadge,
         sortComparator: riskComparator,
@@ -171,7 +171,7 @@ const columns = [
     {
         field: RiskCategory.EDUCATION,
         headerName: RiskCategory.EDUCATION,
-        flex: 0.5,
+        flex: 0.7,
         renderHeader: renderRiskHeader,
         renderCell: renderBadge,
         sortComparator: riskComparator,
@@ -179,7 +179,7 @@ const columns = [
     {
         field: RiskCategory.SOCIAL,
         headerName: RiskCategory.SOCIAL,
-        flex: 0.5,
+        flex: 0.7,
         renderHeader: renderRiskHeader,
         renderCell: renderBadge,
         sortComparator: riskComparator,

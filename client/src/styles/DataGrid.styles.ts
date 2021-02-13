@@ -13,9 +13,14 @@ export const useStyles = makeStyles({
             display: "none",
         },
         "& .MuiDataGrid-colCell, .MuiDataGrid-cell": {
-            whiteSpace: "normal",
-            wordWrap: "break-word",
             padding: "1px 1px 1px 1px",
+        },
+        "& .MuiDataGrid-cell": {
+            whiteSpace: "normal",
+            wordBreak: "break-word",
+            hyphens: "auto",
+            WebkitHyphens: "auto",
+            msHyphens: "auto",
         },
         "& .MuiDataGrid-colCellTitle": {
             userSelect: "none",

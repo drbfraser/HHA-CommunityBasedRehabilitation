@@ -158,7 +158,7 @@ const columns = [
     { field: "zone", headerName: "Zone", flex: 1, renderCell: RenderText },
     {
         field: RiskCategory.HEALTH,
-        headerName: RiskCategory.HEALTH,
+        headerName: riskCategories[RiskCategory.HEALTH].name,
         flex: 0.7,
         renderHeader: RenderRiskHeader,
         renderCell: RenderBadge,
@@ -166,7 +166,7 @@ const columns = [
     },
     {
         field: RiskCategory.EDUCATION,
-        headerName: RiskCategory.EDUCATION,
+        headerName: riskCategories[RiskCategory.EDUCATION].name,
         flex: 0.7,
         renderHeader: RenderRiskHeader,
         renderCell: RenderBadge,
@@ -174,7 +174,7 @@ const columns = [
     },
     {
         field: RiskCategory.SOCIAL,
-        headerName: RiskCategory.SOCIAL,
+        headerName: riskCategories[RiskCategory.SOCIAL].name,
         flex: 0.7,
         renderHeader: RenderRiskHeader,
         renderCell: RenderBadge,

@@ -4,67 +4,62 @@ import { LocalHospital, RecordVoiceOver, School } from "@material-ui/icons";
 
 export interface IRisk {
     name: string;
-    value: string;
     color: string;
     level: number;
 }
 
 export enum RiskType {
-    LOW = "LOW",
-    MEDIUM = "MEDIUM",
-    HIGH = "HIGH",
-    CRITICAL = "CRITICAL",
+    LOW = "LO",
+    MEDIUM = "ME",
+    HIGH = "HI",
+    CRITICAL = "CR",
 }
 
 export const riskOptions: { [key: string]: IRisk } = {
     [RiskType.LOW]: {
         level: 0,
         name: "Low",
-        value: "LO",
-        color: "gray",
+        color: "#81C784",
     },
     [RiskType.MEDIUM]: {
         level: 1,
         name: "Medium",
-        value: "ME",
-        color: "darkorange",
+        color: "#f0aa50",
     },
     [RiskType.HIGH]: {
         level: 2,
         name: "High",
-        value: "HI",
-        color: "crimson",
+        color: "#ef5350",
     },
     [RiskType.CRITICAL]: {
         level: 3,
         name: "Critical",
-        value: "CR",
-        color: "black",
+        color: "#424242",
     },
 };
 
 export interface IRiskCategory {
-    value: string;
+    name: string;
     Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
 }
 
 export enum RiskCategory {
-    HEALTH = "Health",
-    EDUCATION = "Education",
-    SOCIAL = "Social",
+    HEALTH = "HEALTH",
+    EDUCATION = "EDUCAT",
+    SOCIAL = "SOCIAL",
 }
 
 export const riskCategories: { [key: string]: IRiskCategory } = {
     [RiskCategory.HEALTH]: {
-        value: RiskCategory.HEALTH,
+        name: "Health",
         Icon: LocalHospital,
     },
     [RiskCategory.EDUCATION]: {
-        value: RiskCategory.EDUCATION,
+        name: "Edcuation",
         Icon: School,
     },
     [RiskCategory.SOCIAL]: {
-        value: RiskCategory.SOCIAL,
+        name: "Social",
         Icon: RecordVoiceOver,
     },
 };

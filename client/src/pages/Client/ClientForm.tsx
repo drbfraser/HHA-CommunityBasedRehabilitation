@@ -202,9 +202,9 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.healthRisk]}
                                             name={FormField.healthRisk}
                                         >
-                                            {Object.values(riskOptions).map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.name}
+                                            {Object.entries(riskOptions).map(([value, {name}]) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {name}
                                                 </MenuItem>
                                             ))}
                                         </Field>
@@ -247,9 +247,9 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.educationRisk]}
                                             name={FormField.educationRisk}
                                         >
-                                            {Object.values(riskOptions).map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.name}
+                                            {Object.entries(riskOptions).map(([value, {name}]) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {name}
                                                 </MenuItem>
                                             ))}
                                         </Field>
@@ -292,9 +292,9 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.socialRisk]}
                                             name={FormField.socialRisk}
                                         >
-                                            {Object.values(riskOptions).map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.name}
+                                            {Object.entries(riskOptions).map(([value, {name}]) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {name}
                                                 </MenuItem>
                                             ))}
                                         </Field>

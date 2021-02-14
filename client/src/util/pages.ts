@@ -8,6 +8,8 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Logout from "pages/Logout/Logout";
 import ToDo from "pages/ToDo/ToDo";
+import UserView from "pages/User/UserView";
+import UserEdit from "pages/User/UserEdit";
 import ClientForm from "pages/Client/ClientForm";
 import NotFound from "pages/NotFound/NotFound";
 
@@ -45,9 +47,15 @@ export const pages: IPage[] = [
     {
         path: "/user",
         name: "Profile",
-        Component: ToDo,
+        Component: UserView,
         showInNav: true,
         Icon: PersonIcon,
+    },
+    {
+        path: "/user/edit",
+        name: "Edit Profile",
+        Component: UserEdit,
+        showInNav: false,
     },
     {
         path: "/admin",

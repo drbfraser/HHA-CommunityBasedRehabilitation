@@ -202,11 +202,13 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.healthRisk]}
                                             name={FormField.healthRisk}
                                         >
-                                            {Object.entries(riskOptions).map(([value, {name}]) => (
-                                                <MenuItem key={value} value={value}>
-                                                    {name}
-                                                </MenuItem>
-                                            ))}
+                                            {Object.entries(riskOptions).map(
+                                                ([value, { name }]) => (
+                                                    <MenuItem key={value} value={value}>
+                                                        {name}
+                                                    </MenuItem>
+                                                )
+                                            )}
                                         </Field>
                                     </FormControl>
                                 </Grid>
@@ -247,11 +249,13 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.educationRisk]}
                                             name={FormField.educationRisk}
                                         >
-                                            {Object.entries(riskOptions).map(([value, {name}]) => (
-                                                <MenuItem key={value} value={value}>
-                                                    {name}
-                                                </MenuItem>
-                                            ))}
+                                            {Object.entries(riskOptions).map(
+                                                ([value, { name }]) => (
+                                                    <MenuItem key={value} value={value}>
+                                                        {name}
+                                                    </MenuItem>
+                                                )
+                                            )}
                                         </Field>
                                     </FormControl>
                                 </Grid>
@@ -292,11 +296,13 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.socialRisk]}
                                             name={FormField.socialRisk}
                                         >
-                                            {Object.entries(riskOptions).map(([value, {name}]) => (
-                                                <MenuItem key={value} value={value}>
-                                                    {name}
-                                                </MenuItem>
-                                            ))}
+                                            {Object.entries(riskOptions).map(
+                                                ([value, { name }]) => (
+                                                    <MenuItem key={value} value={value}>
+                                                        {name}
+                                                    </MenuItem>
+                                                )
+                                            )}
                                         </Field>
                                     </FormControl>
                                 </Grid>

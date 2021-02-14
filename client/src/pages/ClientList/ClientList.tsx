@@ -156,31 +156,17 @@ const columns = [
     { field: "id", headerName: "ID", flex: 0.55, renderCell: RenderText },
     { field: "name", headerName: "Name", flex: 1, renderCell: RenderText },
     { field: "zone", headerName: "Zone", flex: 1, renderCell: RenderText },
-    {
-        field: RiskCategory.HEALTH,
-        headerName: riskCategories[RiskCategory.HEALTH].name,
+    ...Object.entries(riskCategories).map(([value, { name }]) => ({
+        field: value,
+        headerName: name,
         flex: 0.7,
         renderHeader: RenderRiskHeader,
         renderCell: RenderBadge,
         sortComparator: riskComparator,
-    },
-    {
-        field: RiskCategory.EDUCATION,
-        headerName: riskCategories[RiskCategory.EDUCATION].name,
-        flex: 0.7,
-        renderHeader: RenderRiskHeader,
-        renderCell: RenderBadge,
-        sortComparator: riskComparator,
-    },
-    {
-        field: RiskCategory.SOCIAL,
-        headerName: riskCategories[RiskCategory.SOCIAL].name,
-        flex: 0.7,
-        renderHeader: RenderRiskHeader,
-        renderCell: RenderBadge,
-        sortComparator: riskComparator,
-    },
+    })),
 ];
+
+console.log(columns);
 
 const ClientList = () => {
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);

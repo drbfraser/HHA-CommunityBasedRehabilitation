@@ -38,5 +38,12 @@ export const useStyles = makeStyles({
         "& .MuiDataGrid-colCell:focus, .MuiDataGrid-cell:focus": {
             outline: "none",
         },
+        // Hide scrollbars on Windows
+        "& .MuiDataGrid-window::-webkit-scrollbar": {
+            display: "none;", // Chrome, Safari, Opera
+        },
+        "& .MuiDataGrid-window": {
+            scrollbarWidth: "none", // Firefox
+        },
     },
 });

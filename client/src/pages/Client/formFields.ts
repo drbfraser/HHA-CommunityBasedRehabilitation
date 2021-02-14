@@ -98,25 +98,6 @@ export const zoneOptions = [
     },
 ];
 
-export const riskOptions = [
-    {
-        name: "Critical",
-        value: "critical",
-    },
-    {
-        name: "High",
-        value: "high",
-    },
-    {
-        name: "Medium",
-        value: "medium",
-    },
-    {
-        name: "Low",
-        value: "low",
-    },
-];
-
 export const validationSchema = () =>
     Yup.object().shape({
         [FormField.firstName]: Yup.string()

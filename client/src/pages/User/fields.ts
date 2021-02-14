@@ -1,30 +1,30 @@
 import * as Yup from "yup";
-
+import { Validation } from "util/validations";
 // Field for data get and post connected with database
 export enum UserField {
-    userName = "userName",
+    username = "username",
     userID = "id",
-    zoneNumber = "zoneNumber",
-    email = "emailAddress",
+    firstName = "firstName",
+    lastName = "lastName",
+    zone = "zone",
     phoneNumber = "phoneNumber",
 }
 
 export const fieldLabels = {
-    [UserField.userName]: "User Name",
+    [UserField.username]: "Username",
+    [UserField.firstName]: "First Name",
+    [UserField.lastName]: "Last Name",
     [UserField.userID]: "ID",
-    [UserField.zoneNumber]: "Zone",
-    [UserField.email]: "Email",
+    [UserField.zone]: "Zone",
     [UserField.phoneNumber]: "Phone Number",
 };
 
-// https://www.codegrepper.com/code-examples/whatever/phone+number+validation+using+formik
-const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 export const initialValues = {
-    [UserField.userName]: "User name",
+    [UserField.username]: "Username",
     [UserField.userID]: "11111111",
-    [UserField.zoneNumber]: "1",
-    [UserField.email]: "XXXXXX@XXX.com",
+    [UserField.firstName]: "First Name",
+    [UserField.lastName]: "Last Name",
+    [UserField.zone]: "1",
     [UserField.phoneNumber]: "(XXX) XXX-XXXX",
 };
 
@@ -32,13 +32,9 @@ export type TFormValues = typeof initialValues;
 
 export const validationSchema = () =>
     Yup.object().shape({
-        [UserField.zoneNumber]: Yup.string().label(fieldLabels[UserField.zoneNumber]).required(),
-        [UserField.email]: Yup.string()
-            .matches(emailRegExp, "Email address is not valid")
-            .label(fieldLabels[UserField.email])
-            .required(),
+        [UserField.zone]: Yup.string().label(fieldLabels[UserField.zone]).required(),
         [UserField.phoneNumber]: Yup.string()
-            .matches(phoneRegExp, "Phone number is not valid")
+            .matches(Validation.phoneRegExp, "Phone number is not valid")
             .label(fieldLabels[UserField.phoneNumber])
             .required(),
     });

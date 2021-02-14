@@ -42,8 +42,6 @@ const requestTokens = async (endpoint: Endpoint, postBody: string) => {
         const resp = await fetch(API_URL + endpoint, init);
 
         if (!resp.ok) {
-            console.log(resp.text());
-
             throw new Error(
                 `Request token failure: request failed with HTTP status ${resp.status}.`
             );

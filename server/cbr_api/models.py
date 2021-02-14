@@ -14,12 +14,22 @@ class Disability(models.Model):
 class RiskType(models.TextChoices):
     HEALTH = "HEALTH", _("Health")
     SOCIAL = "SOCIAL", _("Social")
-    EDUCATION = "EDUCAT", _("Education")
+    EDUCAT = "EDUCAT", _("Education")
 
     def getField():
         return models.CharField(
             max_length=6, choices=RiskType.choices, default="HEALTH"
         )
+
+
+class RiskLevel(models.TextChoices):
+    LOW = "LO", _("Low")
+    MEDIUM = "ME", _("Medium")
+    HIGH = "HI", _("High")
+    CRITICAL = "CR", _("Critical")
+
+    def getField():
+        return models.CharField(max_length=2, choices=RiskLevel.choices, default="LO")
 
 
 class Client(models.Model):
@@ -47,19 +57,16 @@ class Client(models.Model):
     caregiver_email = models.CharField(max_length=50, blank=True)
     caregiver_picture = models.ImageField(upload_to="images/", blank=True)
     # ------if caregiver present-----
+    health_risk_level = RiskLevel.getField()
+    social_risk_level = RiskLevel.getField()
+    educat_risk_level = RiskLevel.getField()
 
 
 class ClientRisk(models.Model):
-    class RiskLevel(models.TextChoices):
-        LOW = "LO", _("Low")
-        MEDIUM = "ME", _("Medium")
-        HIGH = "HI", _("High")
-        CRITICAL = "CR", _("Critical")
-
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, related_name="risks", on_delete=models.CASCADE)
     timestamp = models.BigIntegerField()
     risk_type = RiskType.getField()
-    risk_level = models.CharField(max_length=2, choices=RiskLevel.choices)
+    risk_level = RiskLevel.getField()
     requirement = models.TextField()
     goal = models.TextField()
 

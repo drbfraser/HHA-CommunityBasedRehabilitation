@@ -9,7 +9,7 @@ import {
     ValueFormatterParams,
 } from "@material-ui/data-grid";
 import { useStyles } from "./ClientList.styles";
-import { compressedDataGridWidth, useStyles as useDataGridStyles } from "styles/DataGrid.styles";
+import { compressedDataGridWidth, useDataGridStyles } from "styles/DataGrid.styles";
 import { MenuItem, Select, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
@@ -32,25 +32,21 @@ const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, param
     return risk1.level - risk2.level;
 };
 
-const renderRiskHeader = (params: ColParams): JSX.Element => {
+const RenderRiskHeader = (params: ColParams): JSX.Element => {
     const riskCategory: IRiskCategory = riskCategories[params.field];
 
     return (
-        <div>
-            {window.innerWidth >= compressedDataGridWidth ? (
-                <Typography variant={"body2"}>{params.field}</Typography>
-            ) : (
-                <riskCategory.Icon />
-            )}
+        <div className="MuiDataGrid-colCellTitle">
+            {window.innerWidth >= compressedDataGridWidth ? params.field : <riskCategory.Icon />}
         </div>
     );
 };
 
-const renderText = (params: ValueFormatterParams) => {
+const RenderText = (params: ValueFormatterParams) => {
     return <Typography variant={"body2"}>{params.value}</Typography>;
 };
 
-const renderBadge = (params: ValueFormatterParams) => {
+const RenderBadge = (params: ValueFormatterParams) => {
     const risk: IRisk = Object(params.value);
 
     return window.innerWidth >= compressedDataGridWidth ? (
@@ -157,31 +153,31 @@ const requestClientList = async (
 };
 
 const columns = [
-    { field: "id", headerName: SearchOption.ID, flex: 0.55, renderCell: renderText },
-    { field: "name", headerName: SearchOption.NAME, flex: 1, renderCell: renderText },
-    { field: "zone", headerName: SearchOption.ZONE, flex: 1, renderCell: renderText },
+    { field: "id", headerName: "ID", flex: 0.55, renderCell: RenderText },
+    { field: "name", headerName: "Name", flex: 1, renderCell: RenderText },
+    { field: "zone", headerName: "Zone", flex: 1, renderCell: RenderText },
     {
         field: RiskCategory.HEALTH,
         headerName: RiskCategory.HEALTH,
         flex: 0.7,
-        renderHeader: renderRiskHeader,
-        renderCell: renderBadge,
+        renderHeader: RenderRiskHeader,
+        renderCell: RenderBadge,
         sortComparator: riskComparator,
     },
     {
         field: RiskCategory.EDUCATION,
         headerName: RiskCategory.EDUCATION,
         flex: 0.7,
-        renderHeader: renderRiskHeader,
-        renderCell: renderBadge,
+        renderHeader: RenderRiskHeader,
+        renderCell: RenderBadge,
         sortComparator: riskComparator,
     },
     {
         field: RiskCategory.SOCIAL,
         headerName: RiskCategory.SOCIAL,
         flex: 0.7,
-        renderHeader: renderRiskHeader,
-        renderCell: renderBadge,
+        renderHeader: RenderRiskHeader,
+        renderCell: RenderBadge,
         sortComparator: riskComparator,
     },
 ];

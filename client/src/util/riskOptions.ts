@@ -20,25 +20,25 @@ export const riskOptions: { [key: string]: IRisk } = {
     [RiskType.LOW]: {
         level: 0,
         name: "Low",
-        value: "low",
+        value: "LO",
         color: "gray",
     },
     [RiskType.MEDIUM]: {
         level: 1,
         name: "Medium",
-        value: "medium",
+        value: "ME",
         color: "darkorange",
     },
     [RiskType.HIGH]: {
         level: 2,
         name: "High",
-        value: "high",
+        value: "HI",
         color: "crimson",
     },
     [RiskType.CRITICAL]: {
         level: 3,
         name: "Critical",
-        value: "critical",
+        value: "CR",
         color: "black",
     },
 };

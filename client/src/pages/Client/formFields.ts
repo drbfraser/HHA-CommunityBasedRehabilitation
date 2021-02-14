@@ -98,8 +98,6 @@ export const zoneOptions = [
     },
 ];
 
-const phoneRegex = RegExp(/([0-9\s\-?]{7,})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/);
-
 export const validationSchema = () =>
     Yup.object().shape({
         [FormField.firstName]: Yup.string()

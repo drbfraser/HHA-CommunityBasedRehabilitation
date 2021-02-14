@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 export const compressedDataGridWidth = 700;
 export const mediaCompressedDataGrid = "@media (max-width: " + compressedDataGridWidth + "px)";
 
-export const useStyles = makeStyles({
+export const useDataGridStyles = makeStyles({
     datagrid: {
         marginTop: 10,
         border: 0,

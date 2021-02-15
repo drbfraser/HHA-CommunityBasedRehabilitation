@@ -162,11 +162,10 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             data["risk_type"] = type
             risk = models.ClientRisk.objects.create(**data)
             risk.save()
-            return risk
 
-        health = create_risk(health_data, models.RiskType.HEALTH)
-        social = create_risk(social_data, models.RiskType.SOCIAL)
-        educat = create_risk(educat_data, models.RiskType.EDUCAT)
+        create_risk(health_data, models.RiskType.HEALTH)
+        create_risk(social_data, models.RiskType.SOCIAL)
+        create_risk(educat_data, models.RiskType.EDUCAT)
 
         return client
 

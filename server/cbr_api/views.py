@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django.contrib.auth.models import User
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 
 
 class UserCreate(generics.CreateAPIView):
@@ -14,14 +15,33 @@ class UserCreate(generics.CreateAPIView):
 
 class ClientList(generics.ListCreateAPIView):
     queryset = models.Client.objects.all()
-    serializer_class = serializers.ClientSerializer
+
+    @extend_schema(
+        request=serializers.ClientListSerializer,
+        responses=serializers.ClientListSerializer,
+    )
+    def get(self, request):
+        return super().get(request)
+
+    @extend_schema(
+        request=serializers.ClientCreateSerializer,
+        responses=serializers.ClientDetailSerializer,
+    )
+    def post(self, request):
+        return super().post(request)
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return serializers.ClientListSerializer
+        elif self.request.method == "POST":
+            return serializers.ClientCreateSerializer
 
     filter_backends = (DjangoFilterBackend, )
     filterset_class = filters.ClientFilter
 
 class ClientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Client.objects.all()
-    serializer_class = serializers.ClientSerializer
+    serializer_class = serializers.ClientDetailSerializer
 
 
 class ZoneList(generics.ListCreateAPIView):

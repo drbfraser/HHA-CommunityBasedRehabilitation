@@ -5,7 +5,7 @@ class ClientFilter(django_filters.FilterSet):
     
     class Meta:
         model = models.Client
-        fields = ['first_name', 'zone', 'id']
+        fields = ['first_name', 'last_name','zone', 'id', 'health_risk_level', 'social_risk_level', 'educat_risk_level']
         filter_overrides = {
             django.db.models.CharField: {
                  'filter_class': django_filters.CharFilter,

@@ -1,5 +1,4 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { themeColors } from "theme.styles";
 import BackgroundImage from "./background.svg";
 import BackgroundImageMobile from "./backgroundMobile.svg";
 
@@ -31,12 +30,6 @@ export const useStyles = makeStyles(
             },
             "& .MuiInput-underline:after": {
                 borderBottomColor: "white",
-            },
-            "& button": {
-                backgroundColor: themeColors.yellow,
-                "&:hover, &:focus, &:active": {
-                    backgroundColor: themeColors.yellowDark,
-                },
             },
         },
         "@media (max-width: 600px)": {

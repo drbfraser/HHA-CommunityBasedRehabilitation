@@ -41,7 +41,23 @@ class ZoneSerializer(serializers.ModelSerializer):
         ]
 
 
-class RiskSerializer(serializers.ModelSerializer):
+class ClientCreationRiskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ClientRisk
+        fields = [
+            "id",
+            "client",
+            "timestamp",
+            "risk_type",
+            "risk_level",
+            "requirement",
+            "goal",
+        ]
+
+        read_only_fields = ["client", "timestamp", "risk_type"]
+
+
+class NormalRiskSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ClientRisk
         fields = [
@@ -92,9 +108,9 @@ class ClientListSerializer(serializers.ModelSerializer):
 
 
 class ClientCreateSerializer(serializers.ModelSerializer):
-    health_risk = RiskSerializer(many=False, write_only=True)
-    social_risk = RiskSerializer(many=False, write_only=True)
-    educat_risk = RiskSerializer(many=False, write_only=True)
+    health_risk = ClientCreationRiskSerializer(many=False, write_only=True)
+    social_risk = ClientCreationRiskSerializer(many=False, write_only=True)
+    educat_risk = ClientCreationRiskSerializer(many=False, write_only=True)
 
     class Meta:
         model = models.Client
@@ -156,7 +172,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
 
 
 class ClientDetailSerializer(serializers.ModelSerializer):
-    risks = RiskSerializer(many=True, read_only=True)
+    risks = ClientCreationRiskSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Client

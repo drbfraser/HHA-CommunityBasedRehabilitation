@@ -8,10 +8,16 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Logout from "pages/Logout/Logout";
 import ToDo from "pages/ToDo/ToDo";
-import AdminList from "pages/Admin/AdminList";
+import AdminList from "pages/AdminList/AdminList";
+import ClientList from "pages/ClientList/ClientList";
+import UserView from "pages/User/UserView";
+import UserEdit from "pages/User/UserEdit";
+import ClientForm from "pages/Client/ClientForm";
+import NotFound from "pages/NotFound/NotFound";
 
 export interface IPage {
     path: string;
+    exact?: boolean;
     name: string;
     Component: React.ComponentType<any>;
     showInNav: boolean;
@@ -29,23 +35,29 @@ export const pages: IPage[] = [
     {
         path: "/clients/new",
         name: "New Client",
-        Component: ToDo,
         showInNav: true,
+        Component: ClientForm,
         Icon: AddCircleIcon,
     },
     {
         path: "/clients",
         name: "Client List",
-        Component: ToDo,
+        Component: ClientList,
         showInNav: true,
         Icon: FormatListBulletedIcon,
     },
     {
         path: "/user",
         name: "Profile",
-        Component: ToDo,
+        Component: UserView,
         showInNav: true,
         Icon: PersonIcon,
+    },
+    {
+        path: "/user/edit",
+        name: "Edit Profile",
+        Component: UserEdit,
+        showInNav: false,
     },
     {
         path: "/admin",
@@ -61,4 +73,14 @@ export const pages: IPage[] = [
         showInNav: true,
         Icon: ExitToAppIcon,
     },
+    // must be at the bottom
+    {
+        path: "/",
+        exact: false,
+        name: "Not Found",
+        Component: NotFound,
+        showInNav: false,
+    },
 ];
+
+export const defaultPage = pages[0];

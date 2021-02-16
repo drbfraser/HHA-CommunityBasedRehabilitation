@@ -1,10 +1,12 @@
 import { createMuiTheme } from "@material-ui/core";
 
+export const mediaMobile = "@media (max-width: 800px)";
+
 export const themeColors = {
     blueBgLight: "#e3e8f4",
     blueBgDark: "#273364",
-    yellow: "rgb(255, 199, 120)",
-    yellowDark: "rgb(240, 160, 80)",
+    yellow: "rgb(250, 195, 90)",
+    yellowDark: "rgb(240, 170, 80)",
 };
 
 export const themeMui = createMuiTheme({
@@ -23,6 +25,13 @@ export const themeMui = createMuiTheme({
     palette: {
         background: {
             default: themeColors.blueBgDark,
+        },
+        primary: {
+            main: themeColors.blueBgDark,
+        },
+        secondary: {
+            main: themeColors.yellow,
+            dark: themeColors.yellowDark,
         },
     },
     typography: {

@@ -33,6 +33,7 @@ const AdminList = () => {
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
     
+    // TODO: update paths once they're implemented
     const onRowClick = () => history.push("/clients/new");
     const onAddClick = () => history.push("/clients/new");
     
@@ -45,6 +46,7 @@ const AdminList = () => {
                     </IconButton>
                     <SearchBar />
                 </div>
+                <br/>
                 <br/>
                     <DataGrid 
                         className={dataGridStyle.datagrid}

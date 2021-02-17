@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { themeColors } from "theme.styles";
+import { mediaMobile, themeColors } from "theme.styles";
 
 export const useStyles = makeStyles(
     {
@@ -25,7 +25,7 @@ export const useStyles = makeStyles(
         pageTitle: {
             marginLeft: 20,
         },
-        "@media (max-width: 800px)": {
+        [mediaMobile]: {
             container: {
                 flexDirection: "column-reverse",
                 height: "100%",

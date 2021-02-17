@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { Validation } from "util/validations";
 
 export enum FormField {
     firstName = "firstName",
@@ -97,27 +98,6 @@ export const zoneOptions = [
     },
 ];
 
-export const riskOptions = [
-    {
-        name: "Critical",
-        value: "critical",
-    },
-    {
-        name: "High",
-        value: "high",
-    },
-    {
-        name: "Medium",
-        value: "medium",
-    },
-    {
-        name: "Low",
-        value: "low",
-    },
-];
-
-const phoneRegex = RegExp(/([0-9\s\-?]{7,})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/);
-
 export const validationSchema = () =>
     Yup.object().shape({
         [FormField.firstName]: Yup.string()
@@ -135,7 +115,7 @@ export const validationSchema = () =>
         [FormField.phoneNumber]: Yup.string()
             .label(fieldLabels[FormField.phoneNumber])
             .max(50)
-            .matches(phoneRegex, "Phone number is not valid."),
+            .matches(Validation.phoneRegExp, "Phone number is not valid."),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.villageNo]: Yup.number()
             .label(fieldLabels[FormField.villageNo])

@@ -14,7 +14,7 @@ class Disability(models.Model):
 class RiskType(models.TextChoices):
     HEALTH = "HEALTH", _("Health")
     SOCIAL = "SOCIAL", _("Social")
-    EDUCATION = "EDUCAT", _("Education")
+    EDUCAT = "EDUCAT", _("Education")
 
     def getField():
         return models.CharField(
@@ -22,21 +22,30 @@ class RiskType(models.TextChoices):
         )
 
 
+class RiskLevel(models.TextChoices):
+    LOW = "LO", _("Low")
+    MEDIUM = "ME", _("Medium")
+    HIGH = "HI", _("High")
+    CRITICAL = "CR", _("Critical")
+
+    def getField():
+        return models.CharField(max_length=2, choices=RiskLevel.choices, default="LO")
+
+
 class Client(models.Model):
     class Gender(models.TextChoices):
         MALE = "M", _("Male")
         FEMALE = "F", _("Female")
 
-    created_by_user_id = models.ForeignKey(User, on_delete=models.PROTECT)
-    client_id = models.PositiveIntegerField(primary_key=True)
-    birth_date = models.BigIntegerField()
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    birth_date = models.BigIntegerField()
     gender = models.CharField(max_length=1, choices=Gender.choices)
-    register_date = models.BigIntegerField()
     phone_number = models.CharField(
         max_length=50, blank=True
     )  # if contact info available
+    created_by_user = models.ForeignKey(User, on_delete=models.PROTECT)
+    created_date = models.BigIntegerField()
     longitude = models.DecimalField(max_digits=12, decimal_places=6)
     latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
@@ -48,19 +57,16 @@ class Client(models.Model):
     caregiver_email = models.CharField(max_length=50, blank=True)
     caregiver_picture = models.ImageField(upload_to="images/", blank=True)
     # ------if caregiver present-----
+    health_risk_level = RiskLevel.getField()
+    social_risk_level = RiskLevel.getField()
+    educat_risk_level = RiskLevel.getField()
 
 
 class ClientRisk(models.Model):
-    class RiskLevel(models.TextChoices):
-        LOW = "LO", _("Low")
-        MEDIUM = "ME", _("Medium")
-        HIGH = "HI", _("High")
-        CRITICAL = "CR", _("Critical")
-
-    client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, related_name="risks", on_delete=models.CASCADE)
     timestamp = models.BigIntegerField()
     risk_type = RiskType.getField()
-    risk_level = models.CharField(max_length=2, choices=RiskLevel.choices)
+    risk_level = RiskLevel.getField()
     requirement = models.TextField()
     goal = models.TextField()
 
@@ -71,7 +77,7 @@ class DisabilityJunction(models.Model):
 
 
 class UserCBR(models.Model):
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     phone_number = models.CharField(max_length=50)
 
@@ -82,9 +88,8 @@ class Visit(models.Model):
         REFERRAL = "REF", _("Disability Centre Referral")
         FOLLOWUP = "FOL", _("Referral Follow-Up")
 
-    visit_id = models.PositiveIntegerField(primary_key=True)
-    client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.PROTECT)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
     date_visited = models.BigIntegerField()
     purpose = models.CharField(max_length=3, choices=Purpose.choices)
     longitude = models.DecimalField(max_digits=22, decimal_places=16)

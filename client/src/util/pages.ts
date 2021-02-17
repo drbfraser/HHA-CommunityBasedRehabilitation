@@ -11,8 +11,11 @@ import ToDo from "pages/ToDo/ToDo";
 import ClientList from "pages/ClientList/ClientList";
 import UserView from "pages/User/UserView";
 import UserEdit from "pages/User/UserEdit";
+import AdminView from "pages/Admin/AdminView";
+import AdminEdit from "pages/Admin/AdminEdit";
 import ClientForm from "pages/Client/ClientForm";
 import NotFound from "pages/NotFound/NotFound";
+import AdminNew from "pages/Admin/AdminNew";
 
 export interface IPage {
     path: string;
@@ -64,6 +67,24 @@ export const pages: IPage[] = [
         Component: ToDo,
         showInNav: true,
         Icon: SettingsIcon,
+    },
+    {
+        path: "/admin/new",
+        name: "New Admin",
+        Component: AdminNew,
+        showInNav: false,
+    },
+    {
+        path: "/admin/view",
+        name: "Admin Profile",
+        Component: AdminView,
+        showInNav: false,
+    },
+    {
+        path: "/admin/edit",
+        name: "Edit Admin",
+        Component: AdminEdit,
+        showInNav: false,
     },
     {
         path: "/logout",

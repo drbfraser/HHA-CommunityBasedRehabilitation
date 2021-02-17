@@ -10,12 +10,12 @@ export const useStyles = makeStyles({
     icon: {
         padding: "0px 10px 0px 0px",
     },
-    wrapper: {
+    topContainer: {
         float: "right",
         display: "flex",
     },
     [mediaCompressedDataGrid]: {
-        wrapper: {
+        topContainer: {
             float: "none",
             justifyContent: "center",
         },

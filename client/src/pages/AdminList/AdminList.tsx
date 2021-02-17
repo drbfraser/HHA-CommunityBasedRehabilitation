@@ -40,13 +40,12 @@ const AdminList = () => {
     return (
         <>
             <div className={styles.container}>
-                <div className={styles.wrapper}>
+                <div className={styles.topContainer}>
                     <IconButton onClick={onAddClick} className={styles.icon}>
                         <PersonAddIcon />
                     </IconButton>
                     <SearchBar />
                 </div>
-                <br />
                 <br />
                 <DataGrid
                     className={dataGridStyle.datagrid}

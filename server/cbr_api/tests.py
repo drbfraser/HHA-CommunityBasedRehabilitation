@@ -17,14 +17,14 @@ class ModelsTestCase(TestCase):
     def quickCreateClient(self, First, Last, Gender, Contact, Zone):
         self.numClients += 1
         return models.Client.objects.create(
-            client_id=self.numClients,
-            created_by_user_id=self.superuser,
+            id=self.numClients,
+            created_by_user=self.superuser,
+            created_date=0,
             first_name=First,
             last_name=Last,
             phone_number=Contact,
             zone=Zone,
             gender=Gender,
-            register_date=0,
             birth_date=0,
             longitude=0.0,
             latitude=0.0,

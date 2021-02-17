@@ -13,4 +13,6 @@ urlpatterns = [
     path("client/<int:pk>", views.ClientDetail.as_view(), name="client-detail"),
     path("zones", views.ZoneList.as_view(), name="zone-list"),
     path("zone/<int:pk>", views.ZoneDetail.as_view(), name="zone-detail"),
+    path("risks", views.RiskList.as_view(), name="risk-list"),
+    path("risk/<int:pk>", views.RiskDetail.as_view(), name="risk-detail"),
 ]

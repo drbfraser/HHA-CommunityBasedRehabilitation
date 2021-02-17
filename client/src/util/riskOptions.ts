@@ -55,7 +55,7 @@ export const riskCategories: { [key: string]: IRiskCategory } = {
         Icon: LocalHospital,
     },
     [RiskCategory.EDUCATION]: {
-        name: "Edcuation",
+        name: "Education",
         Icon: School,
     },
     [RiskCategory.SOCIAL]: {

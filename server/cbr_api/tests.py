@@ -1,23 +1,19 @@
 from django.test import TestCase
 from cbr_api import models
-from django.contrib.auth.models import User
 
 
 class ModelsTestCase(TestCase):
-    numClients = 0
     superuser = None
 
     def quickCreateSuperuser(self):
-        return User.objects.create(
+        return models.UserCBR.objects.create(
             username="root",
             password="root",
             is_superuser=True,
         )
 
     def quickCreateClient(self, First, Last, Gender, Contact, Zone):
-        self.numClients += 1
         return models.Client.objects.create(
-            id=self.numClients,
             created_by_user=self.superuser,
             created_date=0,
             first_name=First,

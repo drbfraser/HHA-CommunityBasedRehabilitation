@@ -16,16 +16,13 @@ class UserCreate(generics.CreateAPIView):
 class ClientList(generics.ListCreateAPIView):
     queryset = models.Client.objects.all()
 
-    @extend_schema(
-        request=serializers.ClientListSerializer,
-        responses=serializers.ClientListSerializer,
-    )
+    @extend_schema(responses=serializers.ClientListSerializer)
     def get(self, request):
         return super().get(request)
 
     @extend_schema(
         request=serializers.ClientCreateSerializer,
-        responses=serializers.ClientDetailSerializer,
+        responses=serializers.ClientCreateSerializer,
     )
     def post(self, request):
         return super().post(request)
@@ -56,9 +53,9 @@ class ZoneDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class RiskList(generics.ListCreateAPIView):
     queryset = models.ClientRisk.objects.all()
-    serializer_class = serializers.RiskSerializer
+    serializer_class = serializers.NormalRiskSerializer
 
 
 class RiskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.ClientRisk.objects.all()
-    serializer_class = serializers.RiskSerializer
+    serializer_class = serializers.NormalRiskSerializer

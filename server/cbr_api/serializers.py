@@ -41,7 +41,23 @@ class ZoneSerializer(serializers.ModelSerializer):
         ]
 
 
-class RiskSerializer(serializers.ModelSerializer):
+class ClientCreationRiskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ClientRisk
+        fields = [
+            "id",
+            "client",
+            "timestamp",
+            "risk_type",
+            "risk_level",
+            "requirement",
+            "goal",
+        ]
+
+        read_only_fields = ["client", "timestamp", "risk_type"]
+
+
+class NormalRiskSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ClientRisk
         fields = [
@@ -92,9 +108,9 @@ class ClientListSerializer(serializers.ModelSerializer):
 
 
 class ClientCreateSerializer(serializers.ModelSerializer):
-    health_risk = RiskSerializer(many=False, write_only=True)
-    social_risk = RiskSerializer(many=False, write_only=True)
-    educat_risk = RiskSerializer(many=False, write_only=True)
+    health_risk = ClientCreationRiskSerializer(many=False, write_only=True)
+    social_risk = ClientCreationRiskSerializer(many=False, write_only=True)
+    educat_risk = ClientCreationRiskSerializer(many=False, write_only=True)
 
     class Meta:
         model = models.Client
@@ -146,17 +162,16 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             data["risk_type"] = type
             risk = models.ClientRisk.objects.create(**data)
             risk.save()
-            return risk
 
-        health = create_risk(health_data, models.RiskType.HEALTH)
-        social = create_risk(social_data, models.RiskType.SOCIAL)
-        educat = create_risk(educat_data, models.RiskType.EDUCAT)
+        create_risk(health_data, models.RiskType.HEALTH)
+        create_risk(social_data, models.RiskType.SOCIAL)
+        create_risk(educat_data, models.RiskType.EDUCAT)
 
         return client
 
 
 class ClientDetailSerializer(serializers.ModelSerializer):
-    risks = RiskSerializer(many=True, read_only=True)
+    risks = ClientCreationRiskSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Client

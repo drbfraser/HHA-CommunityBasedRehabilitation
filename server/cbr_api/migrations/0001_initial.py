@@ -13,136 +13,429 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
+        ("auth", "0012_alter_user_first_name_max_length"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='UserCBR',
+            name="UserCBR",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
-                ('username', models.CharField(max_length=50, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')),
-                ('full_name', models.CharField(max_length=100, verbose_name='full name')),
-                ('phone_number', models.CharField(blank=True, max_length=50)),
-                ('is_active', models.BooleanField(default=True, verbose_name='active')),
-                ('created_date', models.BigIntegerField(default=time.time, verbose_name='date created')),
-                ('email', models.EmailField(blank=True, max_length=254, verbose_name='email address')),
-                ('is_staff', models.BooleanField(default=False, verbose_name='staff status')),
-                ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups')),
-                ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.Permission', verbose_name='user permissions')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "last_login",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="last login"
+                    ),
+                ),
+                (
+                    "is_superuser",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates that this user has all permissions without explicitly assigning them.",
+                        verbose_name="superuser status",
+                    ),
+                ),
+                (
+                    "username",
+                    models.CharField(
+                        max_length=50,
+                        unique=True,
+                        validators=[
+                            django.contrib.auth.validators.UnicodeUsernameValidator()
+                        ],
+                        verbose_name="username",
+                    ),
+                ),
+                (
+                    "full_name",
+                    models.CharField(max_length=100, verbose_name="full name"),
+                ),
+                ("phone_number", models.CharField(blank=True, max_length=50)),
+                ("is_active", models.BooleanField(default=True, verbose_name="active")),
+                (
+                    "created_date",
+                    models.BigIntegerField(
+                        default=time.time, verbose_name="date created"
+                    ),
+                ),
+                (
+                    "email",
+                    models.EmailField(
+                        blank=True, max_length=254, verbose_name="email address"
+                    ),
+                ),
+                (
+                    "is_staff",
+                    models.BooleanField(default=False, verbose_name="staff status"),
+                ),
+                (
+                    "groups",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="The groups this user belongs to. A user will get all permissions granted to each of their groups.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.Group",
+                        verbose_name="groups",
+                    ),
+                ),
+                (
+                    "user_permissions",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="Specific permissions for this user.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.Permission",
+                        verbose_name="user permissions",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'user',
-                'verbose_name_plural': 'users',
-                'swappable': 'AUTH_USER_MODEL',
+                "verbose_name": "user",
+                "verbose_name_plural": "users",
+                "swappable": "AUTH_USER_MODEL",
             },
             managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
+                ("objects", django.contrib.auth.models.UserManager()),
             ],
         ),
         migrations.CreateModel(
-            name='Client',
+            name="Client",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(max_length=50)),
-                ('last_name', models.CharField(max_length=50)),
-                ('birth_date', models.BigIntegerField()),
-                ('gender', models.CharField(choices=[('M', 'Male'), ('F', 'Female')], max_length=1)),
-                ('phone_number', models.CharField(blank=True, max_length=50)),
-                ('created_date', models.BigIntegerField()),
-                ('longitude', models.DecimalField(decimal_places=6, max_digits=12)),
-                ('latitude', models.DecimalField(decimal_places=6, max_digits=12)),
-                ('village', models.CharField(max_length=50)),
-                ('picture', models.ImageField(blank=True, upload_to='images/')),
-                ('caregiver_present', models.BooleanField(default=False)),
-                ('caregiver_phone', models.CharField(blank=True, max_length=50)),
-                ('caregiver_email', models.CharField(blank=True, max_length=50)),
-                ('caregiver_picture', models.ImageField(blank=True, upload_to='images/')),
-                ('health_risk_level', models.CharField(choices=[('LO', 'Low'), ('ME', 'Medium'), ('HI', 'High'), ('CR', 'Critical')], default='LO', max_length=2)),
-                ('social_risk_level', models.CharField(choices=[('LO', 'Low'), ('ME', 'Medium'), ('HI', 'High'), ('CR', 'Critical')], default='LO', max_length=2)),
-                ('educat_risk_level', models.CharField(choices=[('LO', 'Low'), ('ME', 'Medium'), ('HI', 'High'), ('CR', 'Critical')], default='LO', max_length=2)),
-                ('created_by_user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("first_name", models.CharField(max_length=50)),
+                ("last_name", models.CharField(max_length=50)),
+                ("birth_date", models.BigIntegerField()),
+                (
+                    "gender",
+                    models.CharField(
+                        choices=[("M", "Male"), ("F", "Female")], max_length=1
+                    ),
+                ),
+                ("phone_number", models.CharField(blank=True, max_length=50)),
+                ("created_date", models.BigIntegerField()),
+                ("longitude", models.DecimalField(decimal_places=6, max_digits=12)),
+                ("latitude", models.DecimalField(decimal_places=6, max_digits=12)),
+                ("village", models.CharField(max_length=50)),
+                ("picture", models.ImageField(blank=True, upload_to="images/")),
+                ("caregiver_present", models.BooleanField(default=False)),
+                ("caregiver_phone", models.CharField(blank=True, max_length=50)),
+                ("caregiver_email", models.CharField(blank=True, max_length=50)),
+                (
+                    "caregiver_picture",
+                    models.ImageField(blank=True, upload_to="images/"),
+                ),
+                (
+                    "health_risk_level",
+                    models.CharField(
+                        choices=[
+                            ("LO", "Low"),
+                            ("ME", "Medium"),
+                            ("HI", "High"),
+                            ("CR", "Critical"),
+                        ],
+                        default="LO",
+                        max_length=2,
+                    ),
+                ),
+                (
+                    "social_risk_level",
+                    models.CharField(
+                        choices=[
+                            ("LO", "Low"),
+                            ("ME", "Medium"),
+                            ("HI", "High"),
+                            ("CR", "Critical"),
+                        ],
+                        default="LO",
+                        max_length=2,
+                    ),
+                ),
+                (
+                    "educat_risk_level",
+                    models.CharField(
+                        choices=[
+                            ("LO", "Low"),
+                            ("ME", "Medium"),
+                            ("HI", "High"),
+                            ("CR", "Critical"),
+                        ],
+                        default="LO",
+                        max_length=2,
+                    ),
+                ),
+                (
+                    "created_by_user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Disability',
+            name="Disability",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('disability_type', models.CharField(max_length=50)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("disability_type", models.CharField(max_length=50)),
             ],
         ),
         migrations.CreateModel(
-            name='Zone',
+            name="Zone",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('zone_name', models.CharField(max_length=50)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("zone_name", models.CharField(max_length=50)),
             ],
         ),
         migrations.CreateModel(
-            name='Visit',
+            name="Visit",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date_visited', models.BigIntegerField()),
-                ('purpose', models.CharField(choices=[('CBR', 'Community Based Rehabilitation'), ('REF', 'Disability Centre Referral'), ('FOL', 'Referral Follow-Up')], max_length=3)),
-                ('longitude', models.DecimalField(decimal_places=16, max_digits=22)),
-                ('latitude', models.DecimalField(decimal_places=16, max_digits=22)),
-                ('village', models.CharField(max_length=50)),
-                ('client', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cbr_api.client')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
-                ('zone', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='cbr_api.zone')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date_visited", models.BigIntegerField()),
+                (
+                    "purpose",
+                    models.CharField(
+                        choices=[
+                            ("CBR", "Community Based Rehabilitation"),
+                            ("REF", "Disability Centre Referral"),
+                            ("FOL", "Referral Follow-Up"),
+                        ],
+                        max_length=3,
+                    ),
+                ),
+                ("longitude", models.DecimalField(decimal_places=16, max_digits=22)),
+                ("latitude", models.DecimalField(decimal_places=16, max_digits=22)),
+                ("village", models.CharField(max_length=50)),
+                (
+                    "client",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="cbr_api.client"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "zone",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="cbr_api.zone"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Outcome',
+            name="Outcome",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('risk_type', models.CharField(choices=[('HEALTH', 'Health'), ('SOCIAL', 'Social'), ('EDUCAT', 'Education')], default='HEALTH', max_length=6)),
-                ('goal_met', models.CharField(choices=[('CAN', 'Cancelled'), ('GO', 'Ongoing'), ('CON', 'Concluded')], max_length=3)),
-                ('outcome', models.TextField(blank=True)),
-                ('visit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cbr_api.visit')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "risk_type",
+                    models.CharField(
+                        choices=[
+                            ("HEALTH", "Health"),
+                            ("SOCIAL", "Social"),
+                            ("EDUCAT", "Education"),
+                        ],
+                        default="HEALTH",
+                        max_length=6,
+                    ),
+                ),
+                (
+                    "goal_met",
+                    models.CharField(
+                        choices=[
+                            ("CAN", "Cancelled"),
+                            ("GO", "Ongoing"),
+                            ("CON", "Concluded"),
+                        ],
+                        max_length=3,
+                    ),
+                ),
+                ("outcome", models.TextField(blank=True)),
+                (
+                    "visit",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="cbr_api.visit"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Improvement',
+            name="Improvement",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('risk_type', models.CharField(choices=[('HEALTH', 'Health'), ('SOCIAL', 'Social'), ('EDUCAT', 'Education')], default='HEALTH', max_length=6)),
-                ('provided', models.CharField(max_length=50)),
-                ('desc', models.TextField()),
-                ('visit', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cbr_api.visit')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "risk_type",
+                    models.CharField(
+                        choices=[
+                            ("HEALTH", "Health"),
+                            ("SOCIAL", "Social"),
+                            ("EDUCAT", "Education"),
+                        ],
+                        default="HEALTH",
+                        max_length=6,
+                    ),
+                ),
+                ("provided", models.CharField(max_length=50)),
+                ("desc", models.TextField()),
+                (
+                    "visit",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="cbr_api.visit"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='DisabilityJunction',
+            name="DisabilityJunction",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('client', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cbr_api.client')),
-                ('disability', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cbr_api.disability')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "client",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="cbr_api.client"
+                    ),
+                ),
+                (
+                    "disability",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="cbr_api.disability",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ClientRisk',
+            name="ClientRisk",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('timestamp', models.BigIntegerField()),
-                ('risk_type', models.CharField(choices=[('HEALTH', 'Health'), ('SOCIAL', 'Social'), ('EDUCAT', 'Education')], default='HEALTH', max_length=6)),
-                ('risk_level', models.CharField(choices=[('LO', 'Low'), ('ME', 'Medium'), ('HI', 'High'), ('CR', 'Critical')], default='LO', max_length=2)),
-                ('requirement', models.TextField()),
-                ('goal', models.TextField()),
-                ('client', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='risks', to='cbr_api.client')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("timestamp", models.BigIntegerField()),
+                (
+                    "risk_type",
+                    models.CharField(
+                        choices=[
+                            ("HEALTH", "Health"),
+                            ("SOCIAL", "Social"),
+                            ("EDUCAT", "Education"),
+                        ],
+                        default="HEALTH",
+                        max_length=6,
+                    ),
+                ),
+                (
+                    "risk_level",
+                    models.CharField(
+                        choices=[
+                            ("LO", "Low"),
+                            ("ME", "Medium"),
+                            ("HI", "High"),
+                            ("CR", "Critical"),
+                        ],
+                        default="LO",
+                        max_length=2,
+                    ),
+                ),
+                ("requirement", models.TextField()),
+                ("goal", models.TextField()),
+                (
+                    "client",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="risks",
+                        to="cbr_api.client",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='client',
-            name='zone',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='cbr_api.zone'),
+            model_name="client",
+            name="zone",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="cbr_api.zone"
+            ),
         ),
         migrations.AddField(
-            model_name='usercbr',
-            name='zone',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='cbr_api.zone'),
+            model_name="usercbr",
+            name="zone",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="cbr_api.zone"
+            ),
         ),
     ]

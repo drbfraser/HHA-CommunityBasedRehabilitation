@@ -4,14 +4,15 @@ from rest_framework import generics
 from drf_spectacular.utils import extend_schema
 
 
-
 class UserList(generics.ListCreateAPIView):
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRSerializer
 
+
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRSerializer
+
 
 class ClientList(generics.ListCreateAPIView):
     queryset = models.Client.objects.all()

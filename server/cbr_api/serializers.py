@@ -17,20 +17,7 @@ class UserCBRSerializer(serializers.ModelSerializer):
             "full_name": {"required": True},
             "zone": {"required": True},
         }
-'''
-    def create(self, validated_data):
-        user = models.UserCBR.objects.create(
-            username=validated_data["username"],
-            full_name=validated_data["full_name"],
-            zone=validated_data["zone"],
-            phone_number=validated_data["phone_number"],
-        )
 
-        user.set_password(validated_data["password"])
-        user.save()
-
-        return user
-'''
 
 class ZoneSerializer(serializers.ModelSerializer):
     class Meta:

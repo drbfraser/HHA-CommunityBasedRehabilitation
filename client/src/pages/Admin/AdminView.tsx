@@ -7,6 +7,7 @@ import { Button } from "@material-ui/core";
 import { Form, Formik } from "formik";
 import Grid from "@material-ui/core/Grid";
 import { handleSubmit } from "pages/Admin/handler";
+import UserView from "pages/User/UserView";
 const AdminView = (props: any) => {
     const styles = useStyles();
     const history = useHistory();
@@ -19,30 +20,28 @@ const AdminView = (props: any) => {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
         >
-            {({ isSubmitting }) => (
+            {({ isSubmitting }) => ( 
                 <div className={styles.container}>
-                    <div className={styles.container}>
-                        <h1>
-                            {initialValues.firstName} {initialValues.lastName}
-                        </h1>
-                        <div className={styles.floatRight}>
-                            <Button color="primary" onClick={handleEdit}>
-                                <EditIcon></EditIcon>Edit
-                            </Button>
-                        </div>
-                        <b>Username</b>
-                        <p>{initialValues.username}</p>
-                        <b>ID</b>
-                        <p> {initialValues.id} </p>
-                        <b>Zone</b>
-                        <p> {initialValues.zone} </p>
-                        <b>Phone Number</b>
-                        <p> {initialValues.phoneNumber} </p>
-                        <b>Type</b>
-                        <p> {initialValues.type} </p>
-                        <b>Status</b>
-                        <p> {initialValues.status} </p>
+                    <h1>
+                        {initialValues.firstName} {initialValues.lastName}
+                    </h1>
+                    <div className={styles.floatRight}>
+                        <Button color="primary" onClick={handleEdit}>
+                            <EditIcon></EditIcon>Edit
+                        </Button>
                     </div>
+                    <b>Username</b>
+                    <p>{initialValues.username}</p>
+                    <b>ID</b>
+                    <p> {initialValues.id} </p>
+                    <b>Zone</b>
+                    <p> {initialValues.zone} </p>
+                    <b>Phone Number</b>
+                    <p> {initialValues.phoneNumber} </p>
+                    <b>Type</b>
+                    <p> {initialValues.type} </p>
+                    <b>Status</b>
+                    <p> {initialValues.status} </p>
                     <Form>
                         <div>
                             <Grid container justify="flex-end" spacing={2}>

@@ -70,19 +70,19 @@ export const pages: IPage[] = [
     },
     {
         path: "/admin/new",
-        name: "New Admin",
+        name: "New User",
         Component: AdminNew,
         showInNav: false,
     },
     {
         path: "/admin/view",
-        name: "Admin Profile",
+        name: "View User",
         Component: AdminView,
         showInNav: false,
     },
     {
         path: "/admin/edit",
-        name: "Edit Admin",
+        name: "Edit User",
         Component: AdminEdit,
         showInNav: false,
     },

@@ -9,22 +9,10 @@ import { FormikHelpers } from "formik";
 import { TFormValues } from "./fields";
 import { useHistory } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
-import { useState } from "react";
 
-const buttonData = [
-    {
-        name: "Active",
-        value: "active",
-    },
-    {
-        name: "Disable",
-        value: "disable",
-    },
-];
 const AdminEdit = () => {
     const styles = useStyles();
     const history = useHistory();
-    const [activeButton, setActiveButton] = useState(buttonData[0].name);
     const handleCancel = () => history.push("/admin/view");
     const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
         setTimeout(() => {
@@ -123,7 +111,11 @@ const AdminEdit = () => {
                                 <Button
                                     variant="contained"
                                     type="reset"
-                                    className={styles.disablebtn}
+                                    className={
+                                        initialValues.buttonDisable === "Disable"
+                                            ? styles["disablebtn"]
+                                            : styles["activebtn"]
+                                    }
                                     disabled={isSubmitting}
                                     onClick={handleDisable}
                                 >
@@ -139,7 +131,7 @@ const AdminEdit = () => {
                                     >
                                         Save
                                     </Button>
-                                    
+
                                     <Button
                                         color="primary"
                                         variant="outlined"

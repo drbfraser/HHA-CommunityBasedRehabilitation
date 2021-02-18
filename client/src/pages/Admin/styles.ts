@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { themeColors } from "theme.styles";
 
 export const useStyles = makeStyles(
     {
@@ -9,7 +10,10 @@ export const useStyles = makeStyles(
             float: "right",
         },
         disablebtn: {
-            backgroundColor: "#ef5350",
+            backgroundColor: themeColors.red,
+        },
+        activebtn: {
+            backgroundColor: themeColors.green,
         },
         btn: {
             marginRight: 8,

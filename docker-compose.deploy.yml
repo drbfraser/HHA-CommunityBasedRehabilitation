@@ -13,7 +13,7 @@ services:
         restart: always
     caddy:
         container_name: ${COMPOSE_PROJECT_NAME}_caddy
-        image: caddy:2.0.0
+        image: caddy:2.3.0
         restart: always
         volumes:
             - ./caddy:/etc/caddy

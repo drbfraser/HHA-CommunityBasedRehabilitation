@@ -2,7 +2,7 @@ import { useStyles } from "./AdminList.styles";
 import SearchBar from "components/SearchBar/SearchBar";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { DataGrid, ColDef, DensityTypes } from "@material-ui/data-grid";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import React from "react";
@@ -31,11 +31,12 @@ const rows = [
 const AdminList = () => {
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
-    const history = useHistory();
+    // const history = useHistory();
 
-    // TODO: update paths once they're implemented
-    const onRowClick = () => history.push("/clients/new");
-    const onAddClick = () => history.push("/clients/new");
+    // TODO: update path to go to user clicked profile page
+    const onRowClick = () => alert("Functionality not yet implemented");
+    // TODO: update path to create user page
+    const onAddClick = () => alert("Functionality not yet implemented");
 
     return (
         <>

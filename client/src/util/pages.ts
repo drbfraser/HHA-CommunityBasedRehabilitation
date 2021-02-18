@@ -83,4 +83,5 @@ export const pages: IPage[] = [
     },
 ];
 
-export const defaultPage = pages[0];
+// TODO: change back to pages[0] once dashboard is finished
+export const defaultPage = pages[2];

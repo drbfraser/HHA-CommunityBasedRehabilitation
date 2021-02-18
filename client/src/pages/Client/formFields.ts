@@ -6,7 +6,7 @@ export enum FormField {
     lastName = "lastName",
     birthDate = "birthDate",
     gender = "gender",
-    villageNo = "villageNo",
+    village = "village",
     zone = "zone",
     phoneNumber = "phoneNumber",
     interviewConsent = "interviewConsent",
@@ -28,7 +28,7 @@ export const fieldLabels = {
     [FormField.firstName]: "First Name",
     [FormField.lastName]: "Last Name",
     [FormField.birthDate]: "Birthdate",
-    [FormField.villageNo]: "Village Number",
+    [FormField.village]: "Village",
     [FormField.gender]: "Gender",
     [FormField.zone]: "Zone",
     [FormField.phoneNumber]: "Phone Number",
@@ -52,7 +52,7 @@ export const initialValues = {
     [FormField.lastName]: "",
     [FormField.birthDate]: "",
     [FormField.gender]: "",
-    [FormField.villageNo]: "",
+    [FormField.village]: "",
     [FormField.zone]: "",
     [FormField.phoneNumber]: "",
     [FormField.interviewConsent]: false,
@@ -83,21 +83,6 @@ export const genderOptions = [
     },
 ];
 
-export const zoneOptions = [
-    {
-        name: "BidiBidi #1",
-        value: "bidibidi1",
-    },
-    {
-        name: "BIdiBidi #2",
-        value: "bidibidi2",
-    },
-    {
-        name: "BidiBidi #3",
-        value: "bidibidi3",
-    },
-];
-
 export const validationSchema = () =>
     Yup.object().shape({
         [FormField.firstName]: Yup.string()
@@ -117,11 +102,7 @@ export const validationSchema = () =>
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
-        [FormField.villageNo]: Yup.number()
-            .label(fieldLabels[FormField.villageNo])
-            .typeError("Village number must be a number.")
-            .positive("Vilalge number must be greater than zero.")
-            .required(),
+        [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),
         [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),
         [FormField.healthRisk]: Yup.string().label(fieldLabels[FormField.healthRisk]).required(),
         [FormField.healthRequirements]: Yup.string()

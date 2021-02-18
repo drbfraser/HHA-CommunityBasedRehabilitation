@@ -9,14 +9,14 @@ export enum Endpoint {
     LOGIN = "login/",
     LOGIN_REFRESH = "login/refresh/",
     CLIENTS = "clients",
+    ZONES = "zones",
 }
 
 export const apiFetch = async (
     endpoint: Endpoint,
-    urlParams: string = "",
     customInit: RequestInit = {}
 ): Promise<Response> => {
-    const url = API_URL + endpoint + urlParams;
+    const url = API_URL + endpoint;
     const authToken = await getAuthToken();
 
     const init = {

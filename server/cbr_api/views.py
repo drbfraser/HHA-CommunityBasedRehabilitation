@@ -33,8 +33,9 @@ class ClientList(generics.ListCreateAPIView):
         elif self.request.method == "POST":
             return serializers.ClientCreateSerializer
 
-    filter_backends = (DjangoFilterBackend, )
+    filter_backends = (DjangoFilterBackend,)
     filterset_class = filters.ClientFilter
+
 
 class ClientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Client.objects.all()

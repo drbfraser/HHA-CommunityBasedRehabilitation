@@ -1,10 +1,12 @@
-import { FormikHelpers } from "formik";
 import { TFormValues } from "./formFields";
 
 import { addClient } from "../../util/clients";
 
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
-export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
+export const handleSubmit = async (
+    values: TFormValues,
+    setSubmitting: (isSubmitting: boolean) => void
+) => {
     const newClient = JSON.stringify({
         birth_date: parseInt(values.birthDate.replace(/-/g, "")),
         first_name: values.firstName,
@@ -13,10 +15,10 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         phone_number: values.phoneNumber,
         longitude: 0.0,
         latitude: 0.0,
-        zone: 1,
-        village: "bidibidi #1",
+        zone: values.zone,
+        village: values.village,
         caregiver_present: values.caregiverPresent,
-        // TODO: split caregiver contact to email + phone
+        // TODO: split caregiver co1ntact to email + phone
         caregiver_phone: values.caregiverContact,
         health_risk: {
             risk_level: values.healthRisk,
@@ -35,10 +37,10 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         },
     });
 
-    await addClient(newClient);
-    helpers.setSubmitting(false);
+    setSubmitting(false);
 
-    // TODO: Direct to newly-created client's details page
+    const client = await addClient(newClient);
+    return client.id;
 };
 
 export const handleReset = (resetForm: () => void) => {

@@ -24,13 +24,17 @@ import {
     initialValues,
     genderOptions,
     validationSchema,
+    TFormValues,
 } from "./formFields";
 import { riskOptions } from "util/riskOptions";
 import { handleSubmit, handleReset } from "./formHandler";
 
+import { useHistory } from "react-router-dom";
+
 const ClientForm = () => {
     const styles = useStyles();
     const [zoneOptions, setZoneOptions] = useState<any[]>([]);
+    const history = useHistory();
 
     useEffect(() => {
         const fetchAllZones = async () => {
@@ -40,11 +44,21 @@ const ClientForm = () => {
         fetchAllZones();
     }, []);
 
+    const fetchIdAndRedirectToDetails = async (
+        values: TFormValues,
+        setSubmitting: (isSubmitting: boolean) => void
+    ) => {
+        const clientId = await handleSubmit(values, setSubmitting);
+        history.push(`/client/${clientId}`);
+    };
+
     return (
         <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}
+            onSubmit={(values, { setSubmitting }) => {
+                fetchIdAndRedirectToDetails(values, setSubmitting);
+            }}
         >
             {({ values, isSubmitting, resetForm }) => (
                 <Grid container direction="row" justify="flex-start">

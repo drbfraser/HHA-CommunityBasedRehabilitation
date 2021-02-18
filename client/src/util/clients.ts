@@ -6,5 +6,11 @@ export const addClient = async (clientInfo: string) => {
         body: clientInfo,
     };
 
-    return await apiFetch(Endpoint.CLIENTS, init);
+    return await apiFetch(Endpoint.CLIENTS, init)
+        .then((res) => {
+            return res.json();
+        })
+        .then((res) => {
+            return res;
+        });
 };

@@ -1,31 +1,22 @@
-# Reference: this config was written by Ethan for CRADLE
-{$DOMAIN} {
+# Serve over HTTP because CBR instances are behind a reverse proxy
+http://{$DOMAIN}:80 {
     encode gzip
 
     header {
-        # Don't identify ourselves
         -Server
-
-        # HSTS: ensure HTTPS is used for subsequent requests, prevent downgrade attacks
         Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-
-        # ask browsers to respect the Content Types we send
         X-Content-Type-Options "nosniff"
     }
 
     handle /api/* {
-        # Route API requests to Django
-        reverse_proxy cbr_django:8000
+        reverse_proxy {$API_HOSTNAME}:8000
     }
 
     handle {
-        # Serve static files from this directory
+        file_server
         root * /var/www
 
-        # Enable static file server
-        file_server
-
-        # If there is a 404, serve index.html
+        # If there is a 404, serve index.html (required for React)
         try_files {path} index.html
     }
 }

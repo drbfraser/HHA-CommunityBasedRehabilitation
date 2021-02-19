@@ -3,7 +3,8 @@ stages:
   - deploy
 
 variables:
-  MASTER_BRANCH: "master"
+  STAGING_BRANCH: "master"
+  PROD_BRANCH: "prod"
 
 build client:
   stage: build
@@ -18,14 +19,14 @@ build client:
         - client/**/*
       when: always
     # build on deployments
-    - if: '$CI_COMMIT_BRANCH == $MASTER_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH'
       when: always
   before_script:
     - cd client
     - npm install
   script:
     - npx prettier --check .
-    - CI=false npm run build
+    - GENERATE_SOURCEMAP=false npm run build
   after_script:
     - tar -czvf client_build.tar.gz client/build
   artifacts:
@@ -37,7 +38,7 @@ build server:
   image: python:3.9.1-buster
   services:
     - name: postgres:13.1-alpine
-      alias: cbr_postgres
+      alias: test_postgres
   tags:
     - docker
   needs: []
@@ -46,7 +47,7 @@ build server:
       changes:
         - server/**/*
       when: always
-    - if: '$CI_COMMIT_BRANCH == $MASTER_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH'
       when: always
   variables:
       DOMAIN: "example.com"
@@ -54,6 +55,7 @@ build server:
       POSTGRES_DB: "cbr"
       POSTGRES_USER: "test"
       POSTGRES_PASSWORD: "test"
+      POSTGRES_HOST: "test_postgres"
   before_script:
     - cd server
   script:
@@ -63,18 +65,34 @@ build server:
     - python manage.py makemigrations --check
     - python manage.py test
   
-deploy:
+deploy staging:
   stage: deploy
   tags:
     - shell
   rules:
-    - if: '$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $MASTER_BRANCH'
+    - if: '$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $STAGING_BRANCH'
       when: on_success
   script:
-    - cp /var/cbr/.env ./.env
-    - tar -xvf client_build.tar.gz
+    - cp /var/cbr/staging.env ./.env
+    - source ./.env
     - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
+    - tar -xvf client_build.tar.gz
     - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
-    # wait for Postgres to start so we can run database migrations
-    - docker exec cbr_django timeout 60 bash -c "while ! bash -c 'echo > /dev/tcp/postgres/5432'; do sleep 1; done" &>-
-    - docker exec cbr_django python manage.py migrate
+    - bash -c 'sleep 10'
+    - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+
+deploy prod:
+  stage: deploy
+  tags:
+    - shell-prod
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $PROD_BRANCH'
+      when: manual
+  script:
+    - cp /var/cbr/prod.env ./.env
+    - source ./.env
+    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
+    - tar -xvf client_build.tar.gz
+    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
+    - bash -c 'sleep 10'
+    - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate

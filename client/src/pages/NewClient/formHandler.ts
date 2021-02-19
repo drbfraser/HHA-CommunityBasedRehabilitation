@@ -2,7 +2,6 @@ import { FormikHelpers } from "formik";
 import { TFormValues } from "./formFields";
 import { Endpoint, apiFetch } from "../../util/endpoints";
 import history from "../../util/history";
-import { FormikHelpers } from "formik";
 
 const addClient = async (clientInfo: string) => {
     const init: RequestInit = {

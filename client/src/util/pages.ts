@@ -46,12 +46,6 @@ export const pages: IPage[] = [
         Icon: FormatListBulletedIcon,
     },
     {
-        path: "/client/:client_id",
-        name: "Client Details",
-        showInNav: false,
-        Component: ToDo,
-    },
-    {
         path: "/user",
         name: "Profile",
         Component: UserView,

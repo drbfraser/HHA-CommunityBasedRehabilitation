@@ -1,3 +1,4 @@
+import { FormikHelpers } from "formik";
 import { TFormValues } from "./formFields";
 import { Endpoint, apiFetch } from "../../util/endpoints";
 import history from "../../util/history";
@@ -28,10 +29,10 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         phone_number: values.phoneNumber,
         longitude: 0.0,
         latitude: 0.0,
-        zone: values.zone,
-        village: values.village,
+        zone: 1,
+        village: "bidibidi #1",
         caregiver_present: values.caregiverPresent,
-        // TODO: split caregiver co1ntact to email + phone
+        // TODO: split caregiver contact to email + phone
         caregiver_phone: values.caregiverContact,
         health_risk: {
             risk_level: values.healthRisk,

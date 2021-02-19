@@ -24,7 +24,6 @@ import {
     initialValues,
     genderOptions,
     validationSchema,
-    TFormValues,
 } from "./formFields";
 import { riskOptions } from "util/riskOptions";
 import { handleSubmit, handleReset } from "./formHandler";

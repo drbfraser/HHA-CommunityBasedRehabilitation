@@ -20,22 +20,22 @@ export const riskOptions: { [key: string]: IRisk } = {
     [RiskType.LOW]: {
         level: 0,
         name: "Low",
-        color:  themeColors.green,
+        color: themeColors.riskGreen,
     },
     [RiskType.MEDIUM]: {
         level: 1,
         name: "Medium",
-        color: "#f0aa50",
+        color: themeColors.riskYellow,
     },
     [RiskType.HIGH]: {
         level: 2,
         name: "High",
-        color: themeColors.red,
+        color: themeColors.riskRed,
     },
     [RiskType.CRITICAL]: {
         level: 3,
         name: "Critical",
-        color: "#424242",
+        color: themeColors.riskBlack,
     },
 };
 

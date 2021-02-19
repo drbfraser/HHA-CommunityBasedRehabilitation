@@ -2,10 +2,10 @@ import { useStyles } from "./AdminList.styles";
 import SearchBar from "components/SearchBar/SearchBar";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { DataGrid, ColDef, DensityTypes } from "@material-ui/data-grid";
-// import { useHistory } from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 const columns: ColDef[] = [
     { field: "id", headerName: "ID", flex: 0.55 },
@@ -31,12 +31,14 @@ const rows = [
 const AdminList = () => {
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
-    // const history = useHistory();
+    const history = useHistory();
 
     // TODO: update path to go to user clicked profile page
-    const onRowClick = () => alert("Functionality not yet implemented");
+    const onRowClick = (row: any) => {
+        history.push("/admin/view");
+    };
     // TODO: update path to create user page
-    const onAddClick = () => alert("Functionality not yet implemented");
+    const onAddClick = () => history.push("/admin/new");
 
     return (
         <>

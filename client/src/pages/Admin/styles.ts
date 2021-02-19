@@ -10,10 +10,10 @@ export const useStyles = makeStyles(
             float: "right",
         },
         disablebtn: {
-            backgroundColor: themeColors.red,
+            backgroundColor: themeColors.riskRed,
         },
         activebtn: {
-            backgroundColor: themeColors.green,
+            backgroundColor: themeColors.riskGreen,
         },
         btn: {
             marginRight: 8,

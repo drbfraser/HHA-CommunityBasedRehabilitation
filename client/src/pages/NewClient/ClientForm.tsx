@@ -28,9 +28,14 @@ import {
 import { riskOptions } from "util/riskOptions";
 import { handleSubmit, handleReset } from "./formHandler";
 
+interface IZone {
+    id: number;
+    zone_name: string;
+}
+
 const ClientForm = () => {
     const styles = useStyles();
-    const [zoneOptions, setZoneOptions] = useState<any[]>([]);
+    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
 
     useEffect(() => {
         const fetchAllZones = async () => {

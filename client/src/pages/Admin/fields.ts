@@ -14,16 +14,12 @@ export enum AdminField {
 }
 export const workerOptions = [
     {
-        name: "User",
+        name: "Admin",
         value: "1",
     },
     {
-        name: "Admin",
-        value: "2",
-    },
-    {
         name: "Worker",
-        value: "3",
+        value: "2",
     },
 ];
 export const fieldLabels = {

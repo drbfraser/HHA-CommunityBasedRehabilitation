@@ -11,7 +11,7 @@ import ToDo from "pages/ToDo/ToDo";
 import ClientList from "pages/ClientList/ClientList";
 import UserView from "pages/User/UserView";
 import UserEdit from "pages/User/UserEdit";
-import ClientForm from "pages/Client/ClientForm";
+import ClientForm from "pages/NewClient/ClientForm";
 import NotFound from "pages/NotFound/NotFound";
 
 export interface IPage {

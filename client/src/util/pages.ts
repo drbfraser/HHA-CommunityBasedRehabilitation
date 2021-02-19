@@ -8,6 +8,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Logout from "pages/Logout/Logout";
 import ToDo from "pages/ToDo/ToDo";
+import AdminList from "pages/AdminList/AdminList";
 import ClientList from "pages/ClientList/ClientList";
 import UserView from "pages/User/UserView";
 import UserEdit from "pages/User/UserEdit";
@@ -61,7 +62,7 @@ export const pages: IPage[] = [
     {
         path: "/admin",
         name: "Admin",
-        Component: ToDo,
+        Component: AdminList,
         showInNav: true,
         Icon: SettingsIcon,
     },
@@ -82,4 +83,5 @@ export const pages: IPage[] = [
     },
 ];
 
-export const defaultPage = pages[0];
+// TODO: change back to pages[0] once dashboard is finished
+export const defaultPage = pages[2];

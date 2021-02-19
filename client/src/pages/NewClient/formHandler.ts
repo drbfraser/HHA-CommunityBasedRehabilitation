@@ -28,8 +28,8 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         phone_number: values.phoneNumber,
         longitude: 0.0,
         latitude: 0.0,
-        zone: 1,
-        village: "bidibidi #1",
+        zone: values.zone,
+        village: values.village,
         caregiver_present: values.caregiverPresent,
         // TODO: split caregiver contact to email + phone
         caregiver_phone: values.caregiverContact,

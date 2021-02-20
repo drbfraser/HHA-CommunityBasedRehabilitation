@@ -9,11 +9,13 @@ export const useStyles = makeStyles(
         floatRight: {
             float: "right",
         },
-        disablebtn: {
+        disableBtn: {
             backgroundColor: themeColors.riskRed,
+            color: "white",
         },
-        activebtn: {
+        activeBtn: {
             backgroundColor: themeColors.riskGreen,
+            color: "white",
         },
         btn: {
             marginRight: 8,

@@ -32,12 +32,10 @@ const AdminList = () => {
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
-
-    // TODO: update path to go to user clicked profile page
     const onRowClick = (row: any) => {
-        history.push("/admin/view");
+        const user = row.row;
+        history.push("/admin/view/" + user.id, user.id);
     };
-    // TODO: update path to create user page
     const onAddClick = () => history.push("/admin/new");
 
     return (

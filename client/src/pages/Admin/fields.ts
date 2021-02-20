@@ -10,16 +10,15 @@ export enum AdminField {
     phoneNumber = "phoneNumber",
     type = "type",
     status = "status",
-    buttonDisable = "buttonDisable",
 }
 export const workerOptions = [
     {
         name: "Admin",
-        value: "1",
+        value: "A",
     },
     {
         name: "Worker",
-        value: "2",
+        value: "W",
     },
 ];
 export const fieldLabels = {
@@ -31,7 +30,6 @@ export const fieldLabels = {
     [AdminField.type]: "Type",
     [AdminField.phoneNumber]: "Phone Number",
     [AdminField.status]: "Status",
-    [AdminField.buttonDisable]: "Disable Btton",
 };
 
 export const initialValues = {
@@ -40,10 +38,9 @@ export const initialValues = {
     [AdminField.firstName]: "First Name",
     [AdminField.lastName]: "Last Name",
     [AdminField.zone]: "1",
-    [AdminField.type]: "Worker",
+    [AdminField.type]: workerOptions[1].value,
     [AdminField.status]: "Active",
     [AdminField.phoneNumber]: "(XXX) XXX-XXXX",
-    [AdminField.buttonDisable]: "Disable",
 };
 
 export type TFormValues = typeof initialValues;
@@ -56,6 +53,6 @@ export const validationSchema = () =>
             .label(fieldLabels[AdminField.phoneNumber])
             .max(50)
             .required(),
-        [AdminField.type]: Yup.string().label(fieldLabels[AdminField.zone]).required(),
-        [AdminField.status]: Yup.string().label(fieldLabels[AdminField.zone]).required(),
+        [AdminField.type]: Yup.string().label(fieldLabels[AdminField.type]).required(),
+        [AdminField.status]: Yup.string().label(fieldLabels[AdminField.status]).required(),
     });

@@ -10,10 +10,17 @@ import { TFormValues } from "./fields";
 import { useHistory } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
 
+export enum UserActive {
+    disable = "Disable",
+    active = "Active",
+}
 const AdminEdit = () => {
     const styles = useStyles();
     const history = useHistory();
-    const handleCancel = () => history.push("/admin/view");
+    const handleCancel = () => history.goBack();
+    let isUserActive = initialValues.status === UserActive.active;
+    let btnLabel = isUserActive ? UserActive.disable : UserActive.active;
+    const userId = history.location.state as number;
     const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
         setTimeout(() => {
             console.log(values);
@@ -21,13 +28,14 @@ const AdminEdit = () => {
         }, 1000);
     };
     const handleDisable = () => {
-        if (initialValues.buttonDisable === "Active") {
-            initialValues.status = "Active";
-            initialValues.buttonDisable = "Disable";
+        if (isUserActive) {
+            initialValues.status = UserActive.disable;
+            btnLabel = UserActive.active;
         } else {
-            initialValues.status = "Disable";
-            initialValues.buttonDisable = "Active";
+            initialValues.status = UserActive.active;
+            btnLabel = UserActive.disable;
         }
+        isUserActive = !isUserActive;
     };
 
     return (
@@ -39,7 +47,7 @@ const AdminEdit = () => {
             {({ isSubmitting }) => (
                 <div className={styles.container}>
                     <b>ID</b>
-                    <p>{initialValues.id}</p>
+                    <p>{userId}</p>
                     <Form>
                         <b>Username </b>
                         <br />
@@ -112,14 +120,12 @@ const AdminEdit = () => {
                                     variant="contained"
                                     type="reset"
                                     className={
-                                        initialValues.buttonDisable === "Disable"
-                                            ? styles["disablebtn"]
-                                            : styles["activebtn"]
+                                        isUserActive ? styles["disableBtn"] : styles["activeBtn"]
                                     }
                                     disabled={isSubmitting}
                                     onClick={handleDisable}
                                 >
-                                    {initialValues.buttonDisable}
+                                    {btnLabel}
                                 </Button>
                                 <Grid item>
                                     <Button
@@ -137,7 +143,7 @@ const AdminEdit = () => {
                                         variant="outlined"
                                         onClick={handleCancel}
                                     >
-                                        Back
+                                        Cancel
                                     </Button>
                                 </Grid>
                             </Grid>

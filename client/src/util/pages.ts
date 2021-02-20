@@ -76,13 +76,13 @@ export const pages: IPage[] = [
         showInNav: false,
     },
     {
-        path: "/admin/view",
+        path: "/admin/view/:userId",
         name: "View User",
         Component: AdminView,
         showInNav: false,
     },
     {
-        path: "/admin/edit",
+        path: "/admin/edit/:userId",
         name: "Edit User",
         Component: AdminEdit,
         showInNav: false,

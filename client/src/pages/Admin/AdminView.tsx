@@ -8,10 +8,12 @@ import { Form, Formik } from "formik";
 import Grid from "@material-ui/core/Grid";
 import { handleSubmit } from "pages/Admin/handler";
 
-const AdminView = (props: any) => {
+const AdminView = () => {
     const styles = useStyles();
     const history = useHistory();
-    const handleEdit = () => history.push("/admin/edit");
+    const userId = history.location.state as number;
+
+    const handleEdit = () => history.push("/admin/edit/" + userId, userId);
     const handleCancel = () => history.push("/admin");
     // Read From initialValues field further from Server
     return (
@@ -30,16 +32,17 @@ const AdminView = (props: any) => {
                             <EditIcon></EditIcon>Edit
                         </Button>
                     </div>
+
                     <b>Username</b>
                     <p>{initialValues.username}</p>
                     <b>ID</b>
-                    <p> {initialValues.id} </p>
+                    <p> {userId} </p>
                     <b>Zone</b>
                     <p> {initialValues.zone} </p>
                     <b>Phone Number</b>
                     <p> {initialValues.phoneNumber} </p>
                     <b>Type</b>
-                    <p> {initialValues.type} </p>
+                    <p> {initialValues.type === "W" ? "Worker" : "Admin"} </p>
                     <b>Status</b>
                     <p> {initialValues.status} </p>
                     <Form>
@@ -51,7 +54,7 @@ const AdminView = (props: any) => {
                                         variant="outlined"
                                         onClick={handleCancel}
                                     >
-                                        Back
+                                        Cancel
                                     </Button>
                                 </Grid>
                             </Grid>

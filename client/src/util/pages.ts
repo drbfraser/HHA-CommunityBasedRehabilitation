@@ -12,7 +12,7 @@ import AdminList from "pages/AdminList/AdminList";
 import ClientList from "pages/ClientList/ClientList";
 import UserView from "pages/User/UserView";
 import UserEdit from "pages/User/UserEdit";
-import ClientForm from "pages/Client/ClientForm";
+import ClientForm from "pages/NewClient/ClientForm";
 import NotFound from "pages/NotFound/NotFound";
 
 export interface IPage {
@@ -45,6 +45,12 @@ export const pages: IPage[] = [
         Component: ClientList,
         showInNav: true,
         Icon: FormatListBulletedIcon,
+    },
+    {
+        path: "/client/:client_id",
+        name: "Client Details",
+        Component: ToDo,
+        showInNav: false,
     },
     {
         path: "/user",

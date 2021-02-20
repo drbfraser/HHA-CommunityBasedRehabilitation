@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { apiFetch, Endpoint } from "../../util/endpoints";
 
 import { Field, Form, Formik } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
@@ -22,14 +23,27 @@ import {
     FormField,
     initialValues,
     genderOptions,
-    zoneOptions,
     validationSchema,
 } from "./formFields";
 import { riskOptions } from "util/riskOptions";
 import { handleSubmit, handleReset } from "./formHandler";
 
+interface IZone {
+    id: number;
+    zone_name: string;
+}
+
 const ClientForm = () => {
     const styles = useStyles();
+    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+
+    useEffect(() => {
+        const fetchAllZones = async () => {
+            const zones = await (await apiFetch(Endpoint.ZONES)).json();
+            setZoneOptions(zones);
+        };
+        fetchAllZones();
+    }, []);
 
     return (
         <Formik
@@ -111,10 +125,9 @@ const ClientForm = () => {
                                 <Grid item md={6} xs={12}>
                                     <Field
                                         component={TextField}
-                                        type="number"
                                         variant="outlined"
-                                        name={FormField.villageNo}
-                                        label={fieldLabels[FormField.villageNo]}
+                                        name={FormField.village}
+                                        label={fieldLabels[FormField.village]}
                                         required
                                         fullWidth
                                     />
@@ -131,8 +144,8 @@ const ClientForm = () => {
                                             name={FormField.zone}
                                         >
                                             {zoneOptions.map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.name}
+                                                <MenuItem key={option.id} value={option.id}>
+                                                    {option.zone_name}
                                                 </MenuItem>
                                             ))}
                                         </Field>

@@ -56,7 +56,7 @@ export const useDataGridStyles = makeStyles(
         },
         noRowsIcon: {
             fontSize: "65px",
-        }
+        },
     },
     { index: 1 }
 );

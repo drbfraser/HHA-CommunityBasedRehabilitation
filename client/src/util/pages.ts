@@ -14,6 +14,9 @@ import UserView from "pages/User/UserView";
 import UserEdit from "pages/User/UserEdit";
 import ClientForm from "pages/NewClient/ClientForm";
 import NotFound from "pages/NotFound/NotFound";
+import AdminNew from "pages/Admin/AdminNew";
+import AdminView from "pages/Admin/AdminView";
+import AdminEdit from "pages/Admin/AdminEdit";
 
 export interface IPage {
     path: string;
@@ -71,6 +74,24 @@ export const pages: IPage[] = [
         Component: AdminList,
         showInNav: true,
         Icon: SettingsIcon,
+    },
+    {
+        path: "/admin/new",
+        name: "New User",
+        Component: AdminNew,
+        showInNav: false,
+    },
+    {
+        path: "/admin/view/:userId",
+        name: "View User",
+        Component: AdminView,
+        showInNav: false,
+    },
+    {
+        path: "/admin/edit/:userId",
+        name: "Edit User",
+        Component: AdminEdit,
+        showInNav: false,
     },
     {
         path: "/logout",

@@ -1,6 +1,7 @@
 import { SvgIconTypeMap } from "@material-ui/core";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { LocalHospital, RecordVoiceOver, School } from "@material-ui/icons";
+import { themeColors } from "theme.styles";
 
 export interface IRisk {
     name: string;
@@ -19,22 +20,22 @@ export const riskOptions: { [key: string]: IRisk } = {
     [RiskType.LOW]: {
         level: 0,
         name: "Low",
-        color: "#81C784",
+        color: themeColors.riskGreen,
     },
     [RiskType.MEDIUM]: {
         level: 1,
         name: "Medium",
-        color: "#f0aa50",
+        color: themeColors.riskYellow,
     },
     [RiskType.HIGH]: {
         level: 2,
         name: "High",
-        color: "#ef5350",
+        color: themeColors.riskRed,
     },
     [RiskType.CRITICAL]: {
         level: 3,
         name: "Critical",
-        color: "#424242",
+        color: themeColors.riskBlack,
     },
 };
 

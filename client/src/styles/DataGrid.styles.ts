@@ -46,7 +46,17 @@ export const useDataGridStyles = makeStyles(
             "& .MuiDataGrid-window": {
                 scrollbarWidth: "none", // Firefox
             },
+            "& .MuiDataGrid-overlay": {
+                backgroundColor: "white",
+            },
         },
+        noRows: {
+            display: "flex",
+            flexDirection: "column",
+        },
+        noRowsIcon: {
+            fontSize: "65px",
+        }
     },
     { index: 1 }
 );

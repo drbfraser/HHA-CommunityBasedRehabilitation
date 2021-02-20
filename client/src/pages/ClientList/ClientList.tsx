@@ -5,12 +5,13 @@ import {
     ColParams,
     DataGrid,
     DensityTypes,
+    GridOverlay,
     RowsProp,
     ValueFormatterParams,
 } from "@material-ui/data-grid";
 import { useStyles } from "./ClientList.styles";
 import { compressedDataGridWidth, useDataGridStyles } from "styles/DataGrid.styles";
-import { MenuItem, Select, Typography } from "@material-ui/core";
+import { LinearProgress, MenuItem, Select, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
@@ -18,22 +19,11 @@ import RiskChip from "components/RiskChip/RiskChip";
 import {
     IRisk,
     riskCategories,
-    RiskCategory,
     IRiskCategory,
 } from "util/riskOptions";
 import { SearchOption } from "./searchOptions";
-import { FiberManualRecord } from "@material-ui/icons";
-import { apiFetch, Endpoint } from "util/endpoints";
-
-interface ResponseRows {
-    id: number;
-    first_name: string;
-    last_name: string;
-    zone: number;
-    [RiskCategory.HEALTH]: string;
-    [RiskCategory.SOCIAL]: string;
-    [RiskCategory.EDUCATION]: string;
-}
+import { Cancel, FiberManualRecord } from "@material-ui/icons";
+import requestClientRows from "./requestClientRows";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
     const risk1: IRisk = Object(params1.value);
@@ -62,34 +52,33 @@ const RenderText = (params: ValueFormatterParams) => {
 const RenderBadge = (params: ValueFormatterParams) => {
     const risk: IRisk = Object(params.value);
 
-    return window.innerWidth >= compressedDataGridWidth ? (
+    return (window.innerWidth >= compressedDataGridWidth ? (
         <RiskChip clickable risk={risk} />
     ) : (
         <FiberManualRecord style={{ color: risk.color }} />
+    ));
+};
+
+const RenderLoadingOverlay = () => {
+    return (
+        <GridOverlay>
+            <div style={{ position: 'absolute', top: 0, width: '100%' }}>
+                <LinearProgress />
+            </div>
+        </GridOverlay>
     );
-};
+}
 
-const requestClientList = async (
-    setRows: (rows: RowsProp) => void,
-    setLoading: (loading: boolean) => void
-) => {
-    setLoading(true);
+const RenderNoRowsOverlay = () => {
+    const styles = useDataGridStyles();
 
-    const responseRows: ResponseRows[] = await(await apiFetch(Endpoint.CLIENTS)).json();
-    const rows: RowsProp = responseRows.map((responseRow) => {
-        return ({
-            id: responseRow.id,
-            name: responseRow.first_name + " " + responseRow.last_name,
-            zone: responseRow.zone,
-            [RiskCategory.HEALTH]: responseRow[RiskCategory.HEALTH],
-            [RiskCategory.EDUCATION]: responseRow[RiskCategory.EDUCATION],
-            [RiskCategory.SOCIAL]: responseRow[RiskCategory.SOCIAL],
-        });
-    });
-    
-    setRows(rows);
-    setLoading(false);
-};
+    return (
+        <GridOverlay className={styles.noRows}>
+            <Cancel color="primary" className={styles.noRowsIcon} />
+            <Typography color="primary" >No Clients Found</Typography>
+        </GridOverlay>
+    );
+}
 
 const columns = [
     { field: "id", headerName: "ID", flex: 0.55, renderCell: RenderText },
@@ -108,6 +97,7 @@ const columns = [
 const ClientList = () => {
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
+    const [searchField, setSearchField] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.ID);
     const [rows, setRows] = useState<RowsProp>([]);
 
@@ -118,9 +108,18 @@ const ClientList = () => {
     // TODO: update path to be wherever client details will be
     const onRowClick = () => history.push("/clients/new");
 
+    // debounce search input
+    let delayTimer: NodeJS.Timeout;
+    const onSearch = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        clearTimeout(delayTimer);
+        delayTimer = setTimeout(function() {
+            setSearchField(event.target.value.trim())
+        }, 1000); 
+    };
+
     useEffect(() => {
-        requestClientList(setRows, setLoading);
-    }, []);
+        requestClientRows(setRows, setLoading, searchField, searchOption);
+    }, [searchField, searchOption]);
 
     return (
         <div className={styles.root}>
@@ -161,13 +160,17 @@ const ClientList = () => {
                         ))}
                     </Select>
                 </div>
-                <SearchBar />
+                <SearchBar onChange={onSearch}/>
             </div>
             <DataGrid
                 className={dataGridStyle.datagrid}
                 columns={columns}
                 rows={rows}
                 loading={loading}
+                components={{
+                    LoadingOverlay: RenderLoadingOverlay,
+                    NoRowsOverlay: RenderNoRowsOverlay,
+                  }}
                 density={DensityTypes.Comfortable}
                 onRowClick={onRowClick}
                 pagination

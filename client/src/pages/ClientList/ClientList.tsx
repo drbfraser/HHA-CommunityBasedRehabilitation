@@ -114,11 +114,11 @@ const ClientList = () => {
     // debounce search input
     let delayTimer: NodeJS.Timeout;
     const onSearch = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const field: string = event.target.value.trim();
+        let searchField: string = event.target.value.trim()
         clearTimeout(delayTimer);
         delayTimer = setTimeout(function () {
-            setSearchField(field);
-        }, 0);
+            setSearchField(searchField);
+        }, 1000);
     };
     const onZoneSelect = (
         event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>
@@ -265,7 +265,7 @@ const ClientList = () => {
                     </Select>
                 </div>
                 {searchOption === SearchOption.ZONE ? (
-                    <Select color={"primary"} defaultValue={""} onChange={onZoneSelect}>
+                    <Select className={styles.zoneOptions} color={"primary"} defaultValue={""} onChange={onZoneSelect}>
                         {zones.map((zone) => (
                             <MenuItem key={zone.id} value={zone.id}>
                                 {zone.zone_name}
@@ -273,7 +273,7 @@ const ClientList = () => {
                         ))}
                     </Select>
                 ) : (
-                    <SearchBar value={searchField} onChange={onSearch} />
+                    <SearchBar onChange={onSearch} />
                 )}
             </div>
             <DataGrid

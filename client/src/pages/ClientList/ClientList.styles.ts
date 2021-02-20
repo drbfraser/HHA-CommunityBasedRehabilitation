@@ -39,6 +39,9 @@ export const useStyles = makeStyles({
         alignItems: "center",
         width: "100%",
     },
+    zoneOptions: {
+        minWidth: 60,
+    },
     // mobile width
     [mediaMobile]: {
         root: {

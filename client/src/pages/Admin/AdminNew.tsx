@@ -5,21 +5,14 @@ import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
 import { fieldLabels, AdminField, initialValues, validationSchema, workerOptions } from "./fields";
 import Button from "@material-ui/core/Button";
-import { FormikHelpers } from "formik";
-import { TFormValues } from "./fields";
 import { useHistory } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
+import { handleSubmit } from "./handler";
 
 const AdminNew = () => {
     const styles = useStyles();
     const history = useHistory();
     const handleCancel = () => history.goBack();
-    const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
-        setTimeout(() => {
-            console.log(values);
-            helpers.setSubmitting(false);
-        }, 1000);
-    };
 
     return (
         <Formik

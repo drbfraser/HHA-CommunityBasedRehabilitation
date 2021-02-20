@@ -5,28 +5,25 @@ import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
 import { fieldLabels, AdminField, initialValues, validationSchema, workerOptions } from "./fields";
 import Button from "@material-ui/core/Button";
-import { FormikHelpers } from "formik";
-import { TFormValues, IRouteParams } from "./fields";
+import { IRouteParams } from "./fields";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
 import { useState } from "react";
+import { handleSubmit } from "./handler";
+
 export enum UserActive {
     disable = "Disable",
     active = "Active",
 }
+
 const AdminEdit = () => {
     const styles = useStyles();
     const history = useHistory();
-    const handleCancel = () => history.goBack();
     const [isUserActive, setIsUserActive] = useState(initialValues.status === UserActive.active);
     const [status, setStatus] = useState(initialValues.status);
     const { userId } = useRouteMatch<IRouteParams>().params;
-    const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
-        setTimeout(() => {
-            console.log(values);
-            helpers.setSubmitting(false);
-        }, 1000);
-    };
+
+    const handleCancel = () => history.goBack();
     const handleDisable = () => {
         setStatus(isUserActive ? UserActive.disable : UserActive.active);
         setIsUserActive(!isUserActive);

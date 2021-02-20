@@ -17,14 +17,23 @@ import SearchBar from "components/SearchBar/SearchBar";
 import RiskChip from "components/RiskChip/RiskChip";
 import {
     IRisk,
-    RiskType,
-    riskOptions,
     riskCategories,
     RiskCategory,
     IRiskCategory,
 } from "util/riskOptions";
 import { SearchOption } from "./searchOptions";
 import { FiberManualRecord } from "@material-ui/icons";
+import { apiFetch, Endpoint } from "util/endpoints";
+
+interface ResponseRows {
+    id: number;
+    first_name: string;
+    last_name: string;
+    zone: number;
+    [RiskCategory.HEALTH]: string;
+    [RiskCategory.SOCIAL]: string;
+    [RiskCategory.EDUCATION]: string;
+}
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
     const risk1: IRisk = Object(params1.value);
@@ -66,92 +75,18 @@ const requestClientList = async (
 ) => {
     setLoading(true);
 
-    // TODO: add API call to get client list here when its completed
-
-    const rows = [
-        {
-            id: 1,
-            name: "Ali",
-            zone: "A",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.MEDIUM],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.HIGH],
-        },
-        {
-            id: 2,
-            name: "Eric",
-            zone: "B",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.LOW],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.MEDIUM],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.LOW],
-        },
-        {
-            key: 3,
-            id: 3,
-            name: "Ethan",
-            zone: "C",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.HIGH],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.MEDIUM],
-        },
-        {
-            id: 4,
-            name: "Ahmad Mahmood",
-            zone: "Saudi Arabia",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.CRITICAL],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.CRITICAL],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.CRITICAL],
-        },
-        {
-            id: 5,
-            name: "Sam",
-            zone: "D",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.HIGH],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.LOW],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.HIGH],
-        },
-        {
-            key: 6,
-            id: 6,
-            name: "Henry",
-            zone: "E",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.LOW],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.LOW],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.MEDIUM],
-        },
-        {
-            id: 7,
-            name: "Griffin",
-            zone: "E",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.HIGH],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.HIGH],
-        },
-        {
-            id: 8,
-            name: "Argus",
-            zone: "A",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.LOW],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.MEDIUM],
-        },
-        {
-            id: 9,
-            name: "Roger",
-            zone: "C",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.MEDIUM],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.HIGH],
-        },
-        {
-            id: 10,
-            name: "Roger-Surface",
-            zone: "C",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.MEDIUM],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.LOW],
-        },
-    ];
+    const responseRows: ResponseRows[] = await(await apiFetch(Endpoint.CLIENTS)).json();
+    const rows: RowsProp = responseRows.map((responseRow) => {
+        return ({
+            id: responseRow.id,
+            name: responseRow.first_name + " " + responseRow.last_name,
+            zone: responseRow.zone,
+            [RiskCategory.HEALTH]: responseRow[RiskCategory.HEALTH],
+            [RiskCategory.EDUCATION]: responseRow[RiskCategory.EDUCATION],
+            [RiskCategory.SOCIAL]: responseRow[RiskCategory.SOCIAL],
+        });
+    });
+    
     setRows(rows);
     setLoading(false);
 };

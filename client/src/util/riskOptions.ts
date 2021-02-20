@@ -44,9 +44,9 @@ export interface IRiskCategory {
 }
 
 export enum RiskCategory {
-    HEALTH = "HEALTH",
-    EDUCATION = "EDUCAT",
-    SOCIAL = "SOCIAL",
+    HEALTH = "health_risk_level",
+    EDUCATION = "educat_risk_level",
+    SOCIAL = "social_risk_level",
 }
 
 export const riskCategories: { [key: string]: IRiskCategory } = {

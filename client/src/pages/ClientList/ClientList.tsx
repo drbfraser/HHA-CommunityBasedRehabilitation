@@ -29,6 +29,7 @@ import { IRisk, riskCategories, IRiskCategory, RiskCategory } from "util/riskOpt
 import { SearchOption } from "./searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
 import requestClientRows from "./requestClientRows";
+import { getAllZones, IZone } from "util/cache";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
     const risk1: IRisk = Object(params1.value);
@@ -97,6 +98,7 @@ const ClientList = () => {
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const [searchField, setSearchField] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.ID);
+    const [zones, setZones] = useState<IZone[]>([]);
     const [rows, setRows] = useState<RowsProp>([]);
 
     const styles = useStyles();
@@ -117,6 +119,9 @@ const ClientList = () => {
             setSearchField(event.target.value.trim());
         }, 1000);
     };
+    const onZoneSelect = (
+        event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>
+    ) => setSearchField(String(event.target.value));
 
     const riskColumnStates: {
         [key: string]: { hide: boolean; hideFunction: (isHidden: boolean) => void };
@@ -175,6 +180,14 @@ const ClientList = () => {
     useEffect(() => {
         requestClientRows(setRows, setLoading, searchField, searchOption);
     }, [searchField, searchOption]);
+    useEffect(() => {
+        const fetchAllZones = async () => {
+            setLoading(true);
+            setZones(await getAllZones());
+            setLoading(false);
+        };
+        fetchAllZones();
+    }, []);
 
     return (
         <div className={styles.root}>
@@ -249,7 +262,17 @@ const ClientList = () => {
                         ))}
                     </Select>
                 </div>
-                <SearchBar onChange={onSearch} />
+                {searchOption === SearchOption.ZONE ? (
+                    <Select color={"primary"} defaultValue={""} onChange={onZoneSelect}>
+                        {zones.map((zone) => (
+                            <MenuItem key={zone.id} value={zone.id}>
+                                {zone.zone_name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                ) : (
+                    <SearchBar onChange={onSearch} />
+                )}
             </div>
             <DataGrid
                 className={dataGridStyle.datagrid}

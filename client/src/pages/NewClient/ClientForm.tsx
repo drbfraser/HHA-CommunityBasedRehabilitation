@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { apiFetch, Endpoint } from "../../util/endpoints";
-
 import { Field, Form, Formik } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 
@@ -27,11 +25,7 @@ import {
 } from "./formFields";
 import { riskOptions } from "util/riskOptions";
 import { handleSubmit, handleReset } from "./formHandler";
-
-interface IZone {
-    id: number;
-    zone_name: string;
-}
+import { getAllZones, IZone } from "util/cache";
 
 const ClientForm = () => {
     const styles = useStyles();
@@ -39,7 +33,7 @@ const ClientForm = () => {
 
     useEffect(() => {
         const fetchAllZones = async () => {
-            const zones = await (await apiFetch(Endpoint.ZONES)).json();
+            const zones = await getAllZones();
             setZoneOptions(zones);
         };
         fetchAllZones();

@@ -34,7 +34,7 @@ const AdminList = () => {
     const history = useHistory();
     const onRowClick = (row: any) => {
         const user = row.row;
-        history.push("/admin/view/" + user.id, user.id);
+        history.push("/admin/view/" + user.id);
     };
     const onAddClick = () => history.push("/admin/new");
 

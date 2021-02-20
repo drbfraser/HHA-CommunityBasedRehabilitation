@@ -13,7 +13,7 @@ import { FormControl, MenuItem } from "@material-ui/core";
 const AdminNew = () => {
     const styles = useStyles();
     const history = useHistory();
-    const handleCancel = () => history.push("/admin");
+    const handleCancel = () => history.goBack();
     const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
         setTimeout(() => {
             console.log(values);
@@ -53,7 +53,7 @@ const AdminNew = () => {
                                     fullWidth
                                 />
                             </Grid>
-                            <Grid item md={7} xs={12}>
+                            <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
                                     fullWidth
@@ -65,7 +65,7 @@ const AdminNew = () => {
                                 />
                             </Grid>
 
-                            <Grid item md={7} xs={12}>
+                            <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
                                     fullWidth
@@ -75,7 +75,7 @@ const AdminNew = () => {
                                     name={AdminField.phoneNumber}
                                 />
                             </Grid>
-                            <Grid item md={7} xs={12}>
+                            <Grid item md={6} xs={12}>
                                 <FormControl fullWidth variant="outlined">
                                     <Field
                                         component={TextField}
@@ -115,7 +115,7 @@ const AdminNew = () => {
                                         variant="outlined"
                                         onClick={handleCancel}
                                     >
-                                        Back
+                                        Cancel
                                     </Button>
                                 </Grid>
                             </Grid>

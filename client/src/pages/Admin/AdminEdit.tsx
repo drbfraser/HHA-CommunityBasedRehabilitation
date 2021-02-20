@@ -6,10 +6,10 @@ import Grid from "@material-ui/core/Grid";
 import { fieldLabels, AdminField, initialValues, validationSchema, workerOptions } from "./fields";
 import Button from "@material-ui/core/Button";
 import { FormikHelpers } from "formik";
-import { TFormValues } from "./fields";
-import { useHistory } from "react-router-dom";
+import { TFormValues, IRouteParams } from "./fields";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
-
+import { useState } from "react";
 export enum UserActive {
     disable = "Disable",
     active = "Active",
@@ -18,9 +18,9 @@ const AdminEdit = () => {
     const styles = useStyles();
     const history = useHistory();
     const handleCancel = () => history.goBack();
-    let isUserActive = initialValues.status === UserActive.active;
-    let btnLabel = isUserActive ? UserActive.disable : UserActive.active;
-    const userId = history.location.state as number;
+    const [isUserActive, setIsUserActive] = useState(initialValues.status === UserActive.active);
+    const [status, setStatus] = useState(initialValues.status);
+    const { userId } = useRouteMatch<IRouteParams>().params;
     const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
         setTimeout(() => {
             console.log(values);
@@ -28,14 +28,8 @@ const AdminEdit = () => {
         }, 1000);
     };
     const handleDisable = () => {
-        if (isUserActive) {
-            initialValues.status = UserActive.disable;
-            btnLabel = UserActive.active;
-        } else {
-            initialValues.status = UserActive.active;
-            btnLabel = UserActive.disable;
-        }
-        isUserActive = !isUserActive;
+        setStatus(isUserActive ? UserActive.disable : UserActive.active);
+        setIsUserActive(!isUserActive);
     };
 
     return (
@@ -105,7 +99,7 @@ const AdminEdit = () => {
                         </Grid>
                         <br />
                         <b>Status</b>
-                        <p>{initialValues.status}</p>
+                        <p>{status}</p>
                         <br />
 
                         <div>
@@ -125,7 +119,7 @@ const AdminEdit = () => {
                                     disabled={isSubmitting}
                                     onClick={handleDisable}
                                 >
-                                    {btnLabel}
+                                    {isUserActive ? "Disable" : "Enable"}
                                 </Button>
                                 <Grid item>
                                     <Button

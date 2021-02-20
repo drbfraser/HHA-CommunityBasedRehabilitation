@@ -1,6 +1,10 @@
 import * as Yup from "yup";
 import { Validation } from "util/validations";
-// Field for data get and post connected with database
+
+export interface IRouteParams {
+    userId: string;
+}
+
 export enum AdminField {
     username = "username",
     userID = "id",

@@ -1,21 +1,19 @@
 import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import { useStyles } from "./styles";
-import { initialValues, validationSchema } from "./fields";
-import { useHistory } from "react-router-dom";
+import { IRouteParams, initialValues, validationSchema } from "./fields";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { Form, Formik } from "formik";
-import Grid from "@material-ui/core/Grid";
+// import Grid from "@material-ui/core/Grid";
 import { handleSubmit } from "pages/Admin/handler";
 
 const AdminView = () => {
     const styles = useStyles();
     const history = useHistory();
-    const userId = history.location.state as number;
-
-    const handleEdit = () => history.push("/admin/edit/" + userId, userId);
-    const handleCancel = () => history.push("/admin");
-    // Read From initialValues field further from Server
+    const { userId } = useRouteMatch<IRouteParams>().params;
+    const handleEdit = () => history.push("/admin/edit/" + userId);
+    // const handleCancel = () => history.push("/admin");
     return (
         <Formik
             initialValues={initialValues}
@@ -45,7 +43,7 @@ const AdminView = () => {
                     <p> {initialValues.type === "W" ? "Worker" : "Admin"} </p>
                     <b>Status</b>
                     <p> {initialValues.status} </p>
-                    <Form>
+                    {/* <Form>
                         <div>
                             <Grid container justify="flex-end" spacing={2}>
                                 <Grid item>
@@ -60,7 +58,7 @@ const AdminView = () => {
                             </Grid>
                             <br></br>
                         </div>
-                    </Form>
+                    </Form> */}
                 </div>
             )}
         </Formik>

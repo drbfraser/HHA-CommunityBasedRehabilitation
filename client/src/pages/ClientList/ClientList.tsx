@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
     CellParams,
     CellValue,
@@ -20,6 +20,7 @@ import {
     Select,
     Switch,
     Typography,
+    debounce,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
@@ -96,7 +97,7 @@ const ClientList = () => {
     const [isEducationHidden, setEducationHidden] = useState<boolean>(false);
     const [isSocialHidden, setSocialHidden] = useState<boolean>(false);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
-    const [searchField, setSearchField] = useState<string>("");
+    const [searchValue, setSearchValue] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.ID);
     const [zones, setZones] = useState<IZone[]>([]);
     const [rows, setRows] = useState<RowsProp>([]);
@@ -111,18 +112,6 @@ const ClientList = () => {
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
         setOptionsAnchorEl(event.currentTarget);
     const onOptionsClose = () => setOptionsAnchorEl(null);
-    // debounce search input
-    let delayTimer: NodeJS.Timeout;
-    const onSearch = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        let searchField: string = event.target.value.trim()
-        clearTimeout(delayTimer);
-        delayTimer = setTimeout(function () {
-            setSearchField(searchField);
-        }, 1000);
-    };
-    const onZoneSelect = (
-        event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>
-    ) => setSearchField(String(event.target.value));
 
     const riskColumnStates: {
         [key: string]: { hide: boolean; hideFunction: (isHidden: boolean) => void };
@@ -178,9 +167,13 @@ const ClientList = () => {
         })),
     ];
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const requestClientRowsDebounced = useCallback(debounce(requestClientRows, 500), []);
+
     useEffect(() => {
-        requestClientRows(setRows, setLoading, searchField, searchOption);
-    }, [searchField, searchOption]);
+        requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption);
+    }, [searchValue, searchOption, requestClientRowsDebounced]);
+
     useEffect(() => {
         const fetchAllZones = async () => {
             setLoading(true);
@@ -253,7 +246,7 @@ const ClientList = () => {
                         defaultValue={SearchOption.ID}
                         value={searchOption}
                         onChange={(event) => {
-                            setSearchField("");
+                            setSearchValue("");
                             setSearchOption(String(event.target.value));
                         }}
                     >
@@ -265,7 +258,12 @@ const ClientList = () => {
                     </Select>
                 </div>
                 {searchOption === SearchOption.ZONE ? (
-                    <Select className={styles.zoneOptions} color={"primary"} defaultValue={""} onChange={onZoneSelect}>
+                    <Select
+                        className={styles.zoneOptions}
+                        color={"primary"}
+                        defaultValue={""}
+                        onChange={(e) => setSearchValue(String(e.target.value))}
+                    >
                         {zones.map((zone) => (
                             <MenuItem key={zone.id} value={zone.id}>
                                 {zone.zone_name}
@@ -273,7 +271,10 @@ const ClientList = () => {
                         ))}
                     </Select>
                 ) : (
-                    <SearchBar onChange={onSearch} />
+                    <SearchBar
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                    />
                 )}
             </div>
             <DataGrid

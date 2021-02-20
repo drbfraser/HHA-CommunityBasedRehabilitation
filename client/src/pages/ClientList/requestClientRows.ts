@@ -17,10 +17,12 @@ interface IResponseRow {
 const requestClientRows = async (
     setRows: (rows: RowsProp) => void,
     setLoading: (loading: boolean) => void,
-    searchField: string,
+    searchValue: string,
     searchOption: string
 ) => {
     setLoading(true);
+
+    searchValue = searchValue.trim();
 
     // TODO: remove when backend will accept just one parameter for name
     if (searchOption === SearchOption.NAME) {
@@ -28,7 +30,7 @@ const requestClientRows = async (
     }
 
     let urlParams: string =
-        searchField !== "" ? `?${searchOption.toLowerCase()}=${searchField}` : "";
+        searchValue !== "" ? `?${searchOption.toLowerCase()}=${searchValue}` : "";
 
     apiFetch(Endpoint.CLIENTS, urlParams)
         .then(async (response: Response) => {

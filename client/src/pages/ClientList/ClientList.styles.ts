@@ -40,7 +40,7 @@ export const useStyles = makeStyles({
         width: "100%",
     },
     zoneOptions: {
-        minWidth: 60,
+        minWidth: 175,
     },
     // mobile width
     [mediaMobile]: {

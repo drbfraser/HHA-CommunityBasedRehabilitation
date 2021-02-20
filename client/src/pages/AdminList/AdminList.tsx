@@ -32,7 +32,7 @@ const AdminList = () => {
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
-    
+
     const onRowClick = (row: any) => {
         const user = row.row;
         history.push("/admin/view/" + user.id);

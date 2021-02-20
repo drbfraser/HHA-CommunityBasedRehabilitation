@@ -165,7 +165,7 @@ const ClientList = () => {
     const [isHealthHidden, setHealthHidden] = useState<boolean>(false);
     const [isEducationHidden, setEducationHidden] = useState<boolean>(false);
     const [isSocialHidden, setSocialHidden] = useState<boolean>(false);
-    const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+    const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const [searchOption, setSearchOption] = useState<string>(SearchOption.ID);
     const [rows, setRows] = useState<RowsProp>([]);
 
@@ -173,13 +173,13 @@ const ClientList = () => {
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
 
-    const open = Boolean(anchorEl);
+    const isOptionsOpen = Boolean(optionsAnchorEl);
 
     // TODO: update path to be wherever client details will be
     const onRowClick = () => history.push("/clients/new");
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-        setAnchorEl(event.currentTarget);
-    const onOptionsClose = () => setAnchorEl(null);
+        setOptionsAnchorEl(event.currentTarget);
+    const onOptionsClose = () => setOptionsAnchorEl(null);
 
     const riskColumnStates: {
         [key: string]: { hide: boolean; hideFunction: (isHidden: boolean) => void };
@@ -245,8 +245,8 @@ const ClientList = () => {
                 <MoreVert />
             </IconButton>
             <Popover
-                open={open}
-                anchorEl={anchorEl}
+                open={isOptionsOpen}
+                anchorEl={optionsAnchorEl}
                 onClose={onOptionsClose}
                 anchorOrigin={{
                     vertical: "bottom",
@@ -261,16 +261,14 @@ const ClientList = () => {
                     {columns.map(
                         (column): JSX.Element => {
                             return (
-                                <div>
-                                    <div className={styles.optionsRow}>
-                                        <Typography component={"span"} variant={"body2"}>
-                                            {column.headerName}
-                                        </Typography>
-                                        <Switch
-                                            checked={!column.hide}
-                                            onClick={() => column.hideFunction(!column.hide)}
-                                        />
-                                    </div>
+                                <div key={column.field} className={styles.optionsRow}>
+                                    <Typography component={"span"} variant={"body2"}>
+                                        {column.headerName}
+                                    </Typography>
+                                    <Switch
+                                        checked={!column.hide}
+                                        onClick={() => column.hideFunction(!column.hide)}
+                                    />
                                 </div>
                             );
                         }

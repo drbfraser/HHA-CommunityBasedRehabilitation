@@ -1,4 +1,5 @@
 import { RowsProp } from "@material-ui/data-grid";
+import { getZoneMap } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { RiskCategory, riskOptions } from "util/riskOptions";
 import { SearchOption } from "./searchOptions";
@@ -32,19 +33,17 @@ const requestClientRows = async (
     apiFetch(Endpoint.CLIENTS, urlParams)
         .then(async (response: Response) => {
             const responseRows: IResponseRow[] = await response.json();
+            const zoneMap = await getZoneMap();
             const rows: RowsProp = responseRows.map((responseRow) => {
                 return {
                     id: responseRow.id,
                     name: responseRow.first_name + " " + responseRow.last_name,
-                    zone: responseRow.zone,
+                    zone: zoneMap.get(responseRow.zone) ?? "",
                     [RiskCategory.HEALTH]: riskOptions[responseRow[RiskCategory.HEALTH]],
                     [RiskCategory.EDUCATION]: riskOptions[responseRow[RiskCategory.EDUCATION]],
                     [RiskCategory.SOCIAL]: riskOptions[responseRow[RiskCategory.SOCIAL]],
                 };
             });
-
-            console.log(urlParams);
-            console.log(rows);
 
             setRows(rows);
         })

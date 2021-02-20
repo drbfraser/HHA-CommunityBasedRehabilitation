@@ -6,6 +6,7 @@ export interface IZone {
 }
 
 let zones: IZone[] | undefined = undefined;
+let zoneMap: Map<number, string> | undefined = undefined;
 
 export const getAllZones = async (): Promise<IZone[]> => {
     if (zones === undefined) {
@@ -14,4 +15,14 @@ export const getAllZones = async (): Promise<IZone[]> => {
             .catch(() => []);
     }
     return zones!;
+};
+
+export const getZoneMap = async (): Promise<Map<number, string>> => {
+    if (zoneMap === undefined) {
+        let zones = await getAllZones();
+        zoneMap = new Map(
+            zones.map<[number, string]>((zone) => [zone.id, zone.zone_name])
+        );
+    }
+    return zoneMap;
 };

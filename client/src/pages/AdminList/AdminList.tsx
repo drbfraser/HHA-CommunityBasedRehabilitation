@@ -47,15 +47,16 @@ const AdminList = () => {
                     </IconButton>
                     <SearchBar />
                 </div>
-                <br />
-                <DataGrid
-                    className={dataGridStyle.datagrid}
-                    rows={rows}
-                    columns={columns}
-                    density={DensityTypes.Comfortable}
-                    onRowClick={onRowClick}
-                    pagination
-                />
+                <div className={styles.dataGridWrapper}>
+                    <DataGrid
+                        className={dataGridStyle.datagrid}
+                        rows={rows}
+                        columns={columns}
+                        density={DensityTypes.Comfortable}
+                        onRowClick={onRowClick}
+                        pagination
+                    />
+                </div>
             </div>
         </>
     );

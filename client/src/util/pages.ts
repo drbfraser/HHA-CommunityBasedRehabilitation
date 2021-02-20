@@ -12,11 +12,11 @@ import AdminList from "pages/AdminList/AdminList";
 import ClientList from "pages/ClientList/ClientList";
 import UserView from "pages/User/UserView";
 import UserEdit from "pages/User/UserEdit";
-import AdminView from "pages/Admin/AdminView";
-import AdminEdit from "pages/Admin/AdminEdit";
-import ClientForm from "pages/Client/ClientForm";
+import ClientForm from "pages/NewClient/ClientForm";
 import NotFound from "pages/NotFound/NotFound";
 import AdminNew from "pages/Admin/AdminNew";
+import AdminView from "pages/Admin/AdminView";
+import AdminEdit from "pages/Admin/AdminEdit";
 
 export interface IPage {
     path: string;
@@ -48,6 +48,12 @@ export const pages: IPage[] = [
         Component: ClientList,
         showInNav: true,
         Icon: FormatListBulletedIcon,
+    },
+    {
+        path: "/client/:client_id",
+        name: "Client Details",
+        Component: ToDo,
+        showInNav: false,
     },
     {
         path: "/user",

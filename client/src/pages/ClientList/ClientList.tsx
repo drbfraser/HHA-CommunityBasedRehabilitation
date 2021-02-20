@@ -1,30 +1,36 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
     CellParams,
     CellValue,
     ColParams,
     DataGrid,
     DensityTypes,
+    GridOverlay,
+    RowParams,
     RowsProp,
     ValueFormatterParams,
 } from "@material-ui/data-grid";
 import { useStyles } from "./ClientList.styles";
 import { compressedDataGridWidth, useDataGridStyles } from "styles/DataGrid.styles";
-import { IconButton, MenuItem, Popover, Select, Switch, Typography } from "@material-ui/core";
+import {
+    LinearProgress,
+    IconButton,
+    MenuItem,
+    Popover,
+    Select,
+    Switch,
+    Typography,
+    debounce,
+} from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
 import RiskChip from "components/RiskChip/RiskChip";
-import {
-    IRisk,
-    RiskType,
-    riskOptions,
-    riskCategories,
-    RiskCategory,
-    IRiskCategory,
-} from "util/riskOptions";
+import { IRisk, riskCategories, IRiskCategory, RiskCategory } from "util/riskOptions";
 import { SearchOption } from "./searchOptions";
-import { FiberManualRecord, MoreVert } from "@material-ui/icons";
+import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
+import requestClientRows from "./requestClientRows";
+import { getAllZones, IZone } from "util/cache";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
     const risk1: IRisk = Object(params1.value);
@@ -60,100 +66,25 @@ const RenderBadge = (params: ValueFormatterParams) => {
     );
 };
 
-const requestClientList = async (
-    setRows: (rows: RowsProp) => void,
-    setLoading: (loading: boolean) => void
-) => {
-    setLoading(true);
+const RenderLoadingOverlay = () => {
+    return (
+        <GridOverlay>
+            <div style={{ position: "absolute", top: 0, width: "100%" }}>
+                <LinearProgress />
+            </div>
+        </GridOverlay>
+    );
+};
 
-    // TODO: add API call to get client list here when its completed
+const RenderNoRowsOverlay = () => {
+    const styles = useDataGridStyles();
 
-    const rows = [
-        {
-            id: 1,
-            name: "Ali",
-            zone: "A",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.MEDIUM],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.HIGH],
-        },
-        {
-            id: 2,
-            name: "Eric",
-            zone: "B",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.LOW],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.MEDIUM],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.LOW],
-        },
-        {
-            key: 3,
-            id: 3,
-            name: "Ethan",
-            zone: "C",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.HIGH],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.MEDIUM],
-        },
-        {
-            id: 4,
-            name: "Ahmad Mahmood",
-            zone: "Saudi Arabia",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.CRITICAL],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.CRITICAL],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.CRITICAL],
-        },
-        {
-            id: 5,
-            name: "Sam",
-            zone: "D",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.HIGH],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.LOW],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.HIGH],
-        },
-        {
-            key: 6,
-            id: 6,
-            name: "Henry",
-            zone: "E",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.LOW],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.LOW],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.MEDIUM],
-        },
-        {
-            id: 7,
-            name: "Griffin",
-            zone: "E",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.HIGH],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.HIGH],
-        },
-        {
-            id: 8,
-            name: "Argus",
-            zone: "A",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.LOW],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.MEDIUM],
-        },
-        {
-            id: 9,
-            name: "Roger",
-            zone: "C",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.MEDIUM],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.HIGH],
-        },
-        {
-            id: 10,
-            name: "Roger-Surface",
-            zone: "C",
-            [RiskCategory.HEALTH]: riskOptions[RiskType.MEDIUM],
-            [RiskCategory.EDUCATION]: riskOptions[RiskType.HIGH],
-            [RiskCategory.SOCIAL]: riskOptions[RiskType.LOW],
-        },
-    ];
-    setRows(rows);
-    setLoading(false);
+    return (
+        <GridOverlay className={styles.noRows}>
+            <Cancel color="primary" className={styles.noRowsIcon} />
+            <Typography color="primary">No Clients Found</Typography>
+        </GridOverlay>
+    );
 };
 
 const ClientList = () => {
@@ -166,7 +97,9 @@ const ClientList = () => {
     const [isEducationHidden, setEducationHidden] = useState<boolean>(false);
     const [isSocialHidden, setSocialHidden] = useState<boolean>(false);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
+    const [searchValue, setSearchValue] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.ID);
+    const [zones, setZones] = useState<IZone[]>([]);
     const [rows, setRows] = useState<RowsProp>([]);
 
     const styles = useStyles();
@@ -175,8 +108,7 @@ const ClientList = () => {
 
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
-    // TODO: update path to be wherever client details will be
-    const onRowClick = () => history.push("/clients/new");
+    const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
         setOptionsAnchorEl(event.currentTarget);
     const onOptionsClose = () => setOptionsAnchorEl(null);
@@ -235,8 +167,20 @@ const ClientList = () => {
         })),
     ];
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const requestClientRowsDebounced = useCallback(debounce(requestClientRows, 500), []);
+
     useEffect(() => {
-        requestClientList(setRows, setLoading);
+        requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption);
+    }, [searchValue, searchOption, requestClientRowsDebounced]);
+
+    useEffect(() => {
+        const fetchAllZones = async () => {
+            setLoading(true);
+            setZones(await getAllZones());
+            setLoading(false);
+        };
+        fetchAllZones();
     }, []);
 
     return (
@@ -302,6 +246,7 @@ const ClientList = () => {
                         defaultValue={SearchOption.ID}
                         value={searchOption}
                         onChange={(event) => {
+                            setSearchValue("");
                             setSearchOption(String(event.target.value));
                         }}
                     >
@@ -312,13 +257,35 @@ const ClientList = () => {
                         ))}
                     </Select>
                 </div>
-                <SearchBar />
+                {searchOption === SearchOption.ZONE ? (
+                    <Select
+                        className={styles.zoneOptions}
+                        color={"primary"}
+                        defaultValue={""}
+                        onChange={(e) => setSearchValue(String(e.target.value))}
+                    >
+                        {zones.map((zone) => (
+                            <MenuItem key={zone.id} value={zone.id}>
+                                {zone.zone_name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                ) : (
+                    <SearchBar
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                    />
+                )}
             </div>
             <DataGrid
                 className={dataGridStyle.datagrid}
                 columns={columns}
                 rows={rows}
                 loading={loading}
+                components={{
+                    LoadingOverlay: RenderLoadingOverlay,
+                    NoRowsOverlay: RenderNoRowsOverlay,
+                }}
                 density={DensityTypes.Comfortable}
                 onRowClick={onRowClick}
                 pagination

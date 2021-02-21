@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import {
     CellParams,
     CellValue,
@@ -167,21 +167,30 @@ const ClientList = () => {
         })),
     ];
 
+    const initialDataLoaded = useRef(false);
+
+    useEffect(() => {
+        const loadInitialData = async () => {
+            setLoading(true);
+            setZones(await getAllZones());
+            await requestClientRows(setRows, setLoading, "", "");
+            setLoading(false);
+            initialDataLoaded.current = true;
+        };
+
+        loadInitialData();
+    }, []);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const requestClientRowsDebounced = useCallback(debounce(requestClientRows, 500), []);
 
     useEffect(() => {
+        if (!initialDataLoaded.current) {
+            return;
+        }
+
         requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption);
     }, [searchValue, searchOption, requestClientRowsDebounced]);
-
-    useEffect(() => {
-        const fetchAllZones = async () => {
-            setLoading(true);
-            setZones(await getAllZones());
-            setLoading(false);
-        };
-        fetchAllZones();
-    }, []);
 
     return (
         <div className={styles.root}>

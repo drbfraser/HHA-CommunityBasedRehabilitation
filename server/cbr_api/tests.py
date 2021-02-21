@@ -5,11 +5,12 @@ from cbr_api import models
 class ModelsTestCase(TestCase):
     superuser = None
 
-    def quickCreateSuperuser(self):
+    def quickCreateSuperuser(self, Zone):
         return models.UserCBR.objects.create(
             username="root",
             password="root",
             is_superuser=True,
+            zone=Zone,
         )
 
     def quickCreateClient(self, First, Last, Gender, Contact, Zone):
@@ -28,12 +29,11 @@ class ModelsTestCase(TestCase):
         )
 
     def setUp(self):
-        self.superuser = self.quickCreateSuperuser()
-
         zone1 = models.Zone.objects.create(zone_name="Zone 1")
+        self.superuser = self.quickCreateSuperuser(zone1)
 
-        jane = self.quickCreateClient("Jane", "Smith", "F", "604-555-7676", 1)
-        john = self.quickCreateClient("John", "Smith", "M", "604-555-4242", 1)
+        jane = self.quickCreateClient("Jane", "Smith", "F", "604-555-7676", zone1)
+        john = self.quickCreateClient("John", "Smith", "M", "604-555-4242", zone1)
 
         amputee = models.Disability.objects.create(disability_type="Amputee")
 

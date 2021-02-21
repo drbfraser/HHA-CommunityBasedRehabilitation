@@ -24,17 +24,7 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 *Temporary section until a seed script is created.*
 
-You'll need an account to log in to the frontend and access most APIs. Note that this account is created in your local database and thus will not be present on other developer's machines or in our deployment (even after merging your branch). To create an account:
-
-1. Go to http://localhost:8000/docs
-
-2. Scroll down to `/api/users/create`
-
-3. Click the "Try it out" button
-
-4. Fill out a username and password and press "Execute"
-
-5. You should expect a `201` response back if the account was successfully created. If the request was not successful, fix any errors and try again.
+You'll need an account to log in to the frontend and access most APIs. Note that this account is created in your local database and thus will not be present on other developer's machines or in our deployment (even after merging your branch). To create an account, run `docker exec -it cbr_django python manage.py createsuperuser` and follow the prompts (feel free to leave email blank).
 
 ### 4. Start Developing!
 

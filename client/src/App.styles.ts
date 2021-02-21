@@ -33,13 +33,19 @@ export const useStyles = makeStyles(
             pageContainer: {
                 height: "100%",
                 width: "auto",
+                padding: 0,
                 overflowX: "auto",
                 overflowY: "auto",
                 borderRadius: "0 0 30px 30px",
                 boxShadow: "0px 5px 10px rgba(25, 25, 25, 0.2)",
             },
+            pageContent: {
+                marginTop: 10,
+            },
             pageTitle: {
+                marginTop: 10,
                 marginLeft: 0,
+                fontSize: "40px",
                 textAlign: "center",
             },
         },

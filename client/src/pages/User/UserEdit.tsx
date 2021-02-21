@@ -78,7 +78,7 @@ const UserEdit = () => {
                                         variant="outlined"
                                         onClick={handleCancel}
                                     >
-                                        Back
+                                        Cancel
                                     </Button>
                                 </Grid>
                             </Grid>

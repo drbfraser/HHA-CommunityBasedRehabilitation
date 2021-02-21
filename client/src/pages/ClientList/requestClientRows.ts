@@ -32,25 +32,28 @@ const requestClientRows = async (
     let urlParams: string =
         searchValue !== "" ? `?${searchOption.toLowerCase()}=${searchValue}` : "";
 
-    apiFetch(Endpoint.CLIENTS, urlParams)
-        .then(async (response: Response) => {
-            const responseRows: IResponseRow[] = await response.json();
-            const zoneMap = await getZoneMap();
-            const rows: RowsProp = responseRows.map((responseRow) => {
-                return {
-                    id: responseRow.id,
-                    name: responseRow.first_name + " " + responseRow.last_name,
-                    zone: zoneMap.get(responseRow.zone) ?? "",
-                    [RiskCategory.HEALTH]: riskOptions[responseRow[RiskCategory.HEALTH]],
-                    [RiskCategory.EDUCATION]: riskOptions[responseRow[RiskCategory.EDUCATION]],
-                    [RiskCategory.SOCIAL]: riskOptions[responseRow[RiskCategory.SOCIAL]],
-                };
-            });
+    try {
+        const resp = await apiFetch(Endpoint.CLIENTS, urlParams);
 
-            setRows(rows);
-        })
-        .catch(() => setRows([]))
-        .finally(() => setLoading(false));
+        const responseRows: IResponseRow[] = await resp.json();
+        const zoneMap = await getZoneMap();
+        const rows: RowsProp = responseRows.map((responseRow) => {
+            return {
+                id: responseRow.id,
+                name: responseRow.first_name + " " + responseRow.last_name,
+                zone: zoneMap.get(responseRow.zone) ?? "",
+                [RiskCategory.HEALTH]: riskOptions[responseRow[RiskCategory.HEALTH]],
+                [RiskCategory.EDUCATION]: riskOptions[responseRow[RiskCategory.EDUCATION]],
+                [RiskCategory.SOCIAL]: riskOptions[responseRow[RiskCategory.SOCIAL]],
+            };
+        });
+
+        setRows(rows);
+    } catch (e) {
+        setRows([]);
+    }
+
+    setLoading(false);
 };
 
 export default requestClientRows;

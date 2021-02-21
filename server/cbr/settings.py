@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "django_filters",
     "drf_spectacular",
     "corsheaders",
     "cbr_api.apps.CbrApiConfig",
@@ -96,7 +97,7 @@ DATABASES = {
         "NAME": os.environ["POSTGRES_DB"],
         "USER": os.environ["POSTGRES_USER"],
         "PASSWORD": os.environ["POSTGRES_PASSWORD"],
-        "HOST": "cbr_postgres",
+        "HOST": os.environ["POSTGRES_HOST"],
         "PORT": 5432,
     }
 }

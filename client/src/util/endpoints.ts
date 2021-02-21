@@ -9,6 +9,7 @@ export enum Endpoint {
     LOGIN = "login",
     LOGIN_REFRESH = "login/refresh",
     CLIENTS = "clients",
+    ZONES = "zones",
 }
 
 export const apiFetch = async (

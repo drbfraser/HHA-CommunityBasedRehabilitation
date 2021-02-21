@@ -1,6 +1,7 @@
-from cbr_api import models
-from cbr_api import serializers
+from cbr_api import models, serializers, filters
 from rest_framework import generics
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 
 
@@ -33,6 +34,9 @@ class ClientList(generics.ListCreateAPIView):
             return serializers.ClientListSerializer
         elif self.request.method == "POST":
             return serializers.ClientCreateSerializer
+
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = filters.ClientFilter
 
 
 class ClientDetail(generics.RetrieveUpdateDestroyAPIView):

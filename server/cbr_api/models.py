@@ -1,6 +1,10 @@
+import time
+from cbr import settings
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.utils.translation import gettext_lazy as _
+
+from django.contrib.auth.validators import UnicodeUsernameValidator
 
 
 class Zone(models.Model):
@@ -9,6 +13,47 @@ class Zone(models.Model):
 
 class Disability(models.Model):
     disability_type = models.CharField(max_length=50)
+
+
+class UserCBR(AbstractBaseUser, PermissionsMixin):
+    username_validator = UnicodeUsernameValidator()
+
+    username = models.CharField(
+        _("username"),
+        max_length=50,
+        unique=True,
+        validators=[username_validator],
+    )
+    full_name = models.CharField(_("full name"), max_length=100)
+    zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
+    phone_number = models.CharField(max_length=50, blank=True)
+    is_active = models.BooleanField(
+        _("active"),
+        default=True,
+    )
+    created_date = models.BigIntegerField(_("date created"), default=time.time)
+
+    # Required by UserManager, but will not be used
+    email = models.EmailField(_("email address"), blank=True)
+    is_staff = models.BooleanField(
+        _("staff status"),
+        default=False,
+    )
+    #
+
+    objects = UserManager()
+
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = [
+        "full_name",
+        "zone",
+        "phone_number",
+    ]
+
+    class Meta:
+        verbose_name = _("user")
+        verbose_name_plural = _("users")
+        swappable = "AUTH_USER_MODEL"
 
 
 class RiskType(models.TextChoices):
@@ -44,7 +89,9 @@ class Client(models.Model):
     phone_number = models.CharField(
         max_length=50, blank=True
     )  # if contact info available
-    created_by_user = models.ForeignKey(User, on_delete=models.PROTECT)
+    created_by_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT
+    )
     created_date = models.BigIntegerField()
     longitude = models.DecimalField(max_digits=12, decimal_places=6)
     latitude = models.DecimalField(max_digits=12, decimal_places=6)
@@ -76,12 +123,6 @@ class DisabilityJunction(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
 
-class UserCBR(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
-    phone_number = models.CharField(max_length=50)
-
-
 class Visit(models.Model):
     class Purpose(models.TextChoices):
         CBR = "CBR", _("Community Based Rehabilitation")
@@ -89,7 +130,7 @@ class Visit(models.Model):
         FOLLOWUP = "FOL", _("Referral Follow-Up")
 
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_visited = models.BigIntegerField()
     purpose = models.CharField(max_length=3, choices=Purpose.choices)
     longitude = models.DecimalField(max_digits=22, decimal_places=16)

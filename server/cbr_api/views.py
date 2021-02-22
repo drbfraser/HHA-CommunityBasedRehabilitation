@@ -1,16 +1,18 @@
 from cbr_api import models, serializers, filters
 from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
-from django.contrib.auth.models import User
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 
 
-class UserCreate(generics.CreateAPIView):
-    queryset = User.objects.all()
-    # TODO: remove once we have a seed script that adds a default user (i.e. require authentication)
-    permission_classes = []
-    serializer_class = serializers.UserSerializer
+class UserList(generics.ListCreateAPIView):
+    queryset = models.UserCBR.objects.all()
+    serializer_class = serializers.UserCBRSerializer
+
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.UserCBR.objects.all()
+    serializer_class = serializers.UserCBRSerializer
 
 
 class ClientList(generics.ListCreateAPIView):

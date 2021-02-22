@@ -6,8 +6,8 @@ export const API_URL =
         : "/api/";
 
 export enum Endpoint {
-    LOGIN = "login/",
-    LOGIN_REFRESH = "login/refresh/",
+    LOGIN = "login",
+    LOGIN_REFRESH = "login/refresh",
     CLIENTS = "clients",
     ZONES = "zones",
 }

@@ -5,26 +5,29 @@ from django.contrib.auth.password_validation import validate_password
 import time
 
 
-class UserSerializer(serializers.ModelSerializer):
-    # username = serializers.CharField(required=True)
+class UserCBRSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
     )
 
     class Meta:
-        model = models.User
-        fields = ("username", "password", "first_name", "last_name")
+        model = models.UserCBR
+        fields = ("id", "username", "password", "full_name", "zone", "phone_number")
         extra_kwargs = {
-            "first_name": {"required": True},
-            "last_name": {"required": True},
+            "full_name": {"required": True},
+            "zone": {"required": True},
         }
 
     def create(self, validated_data):
-        user = models.User.objects.create(
-            username=validated_data["username"],
-            first_name=validated_data["first_name"],
-            last_name=validated_data["last_name"],
-        )
+        user = super().create(validated_data)
+
+        user.set_password(validated_data["password"])
+        user.save()
+
+        return user
+
+    def update(self, instance, validated_data):
+        user = super().update(instance, validated_data)
 
         user.set_password(validated_data["password"])
         user.save()

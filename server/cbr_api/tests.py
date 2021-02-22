@@ -1,23 +1,20 @@
 from django.test import TestCase
 from cbr_api import models
-from django.contrib.auth.models import User
 
 
 class ModelsTestCase(TestCase):
-    numClients = 0
     superuser = None
 
-    def quickCreateSuperuser(self):
-        return User.objects.create(
+    def quickCreateSuperuser(self, Zone):
+        return models.UserCBR.objects.create(
             username="root",
             password="root",
             is_superuser=True,
+            zone=Zone,
         )
 
     def quickCreateClient(self, First, Last, Gender, Contact, Zone):
-        self.numClients += 1
         return models.Client.objects.create(
-            id=self.numClients,
             created_by_user=self.superuser,
             created_date=0,
             first_name=First,
@@ -32,9 +29,8 @@ class ModelsTestCase(TestCase):
         )
 
     def setUp(self):
-        self.superuser = self.quickCreateSuperuser()
-
         zone1 = models.Zone.objects.create(zone_name="Zone 1")
+        self.superuser = self.quickCreateSuperuser(zone1)
 
         jane = self.quickCreateClient("Jane", "Smith", "F", "604-555-7676", zone1)
         john = self.quickCreateClient("John", "Smith", "M", "604-555-4242", zone1)

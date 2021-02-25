@@ -17,3 +17,5 @@ class Command(BaseCommand):
         models.Zone.objects.create(zone_name="Palorinya Zone 1")
         models.Zone.objects.create(zone_name="Palorinya Zone 2")
         models.Zone.objects.create(zone_name="Palorinya Zone 3")
+
+        self.stdout.write(self.style.SUCCESS("Zones successfully created!"))

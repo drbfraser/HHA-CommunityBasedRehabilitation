@@ -40,7 +40,8 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
         unique=True,
         validators=[username_validator],
     )
-    full_name = models.CharField(_("full name"), max_length=100)
+    first_name = models.CharField(_("first name"), max_length=50)
+    last_name = models.CharField(_("last name"), max_length=50)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     phone_number = models.CharField(max_length=50, blank=True)
     is_active = models.BooleanField(
@@ -53,9 +54,9 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = [
-        "full_name",
+        "first_name",
+        "last_name",
         "zone",
-        "phone_number",
     ]
 
     class Meta:

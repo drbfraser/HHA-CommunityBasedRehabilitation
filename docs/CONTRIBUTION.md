@@ -20,13 +20,19 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 3. Run `npm start`
 
-### 3. Create an Account
+### 3. Seed Some Data
+
+You'll likely want to seed some data for development purposes. *Hint:* you will need zones in order to create a user.
+
+- Zones: `docker exec cbr_django python manage.py seedzones`
+
+### 4. Create an Account
 
 *Temporary section until a seed script is created.*
 
-You'll need an account to log in to the frontend and access most APIs. Note that this account is created in your local database and thus will not be present on other developer's machines or in our deployment (even after merging your branch). To create an account, run `docker exec -it cbr_django python manage.py createsuperuser` and follow the prompts (feel free to leave email blank).
+You'll need an account to log in to the frontend and access most APIs. Note that this account is created in your local database and thus will not be present on other developer's machines or in our deployment (even after merging your branch). To create an account, run `docker exec -it cbr_django python manage.py createsuperuser` and follow the prompts. Use `1` when prompted for a zone (assuming you have followed the seeding instructions in the previous step).
 
-### 4. Start Developing!
+### 5. Start Developing!
 
 That's it! The frontend is now running on http://localhost:3000 and the backend is running on http://localhost:8000. Both the frontend and the backend should support hot reloading.
 

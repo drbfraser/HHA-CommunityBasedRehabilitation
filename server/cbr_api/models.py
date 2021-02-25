@@ -1,4 +1,6 @@
 import time
+
+from django.contrib.auth.base_user import BaseUserManager
 from cbr import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
@@ -15,6 +17,20 @@ class Disability(models.Model):
     disability_type = models.CharField(max_length=50)
 
 
+class UserCBRManager(BaseUserManager):
+    def create_user(self, username, password, **extra_fields):
+        extra_fields["zone"] = Zone.objects.get(id=extra_fields["zone"])
+
+        user = self.model(username=username, **extra_fields)
+        user.set_password(password)
+        user.save()
+
+        return user
+
+    def create_superuser(self, username, password, **extra_fields):
+        self.create_user(username, password, **extra_fields)
+
+
 class UserCBR(AbstractBaseUser, PermissionsMixin):
     username_validator = UnicodeUsernameValidator()
 
@@ -24,7 +40,8 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
         unique=True,
         validators=[username_validator],
     )
-    full_name = models.CharField(_("full name"), max_length=100)
+    first_name = models.CharField(_("first name"), max_length=50)
+    last_name = models.CharField(_("last name"), max_length=50)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     phone_number = models.CharField(max_length=50, blank=True)
     is_active = models.BooleanField(
@@ -33,21 +50,13 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
     )
     created_date = models.BigIntegerField(_("date created"), default=time.time)
 
-    # Required by UserManager, but will not be used
-    email = models.EmailField(_("email address"), blank=True)
-    is_staff = models.BooleanField(
-        _("staff status"),
-        default=False,
-    )
-    #
-
-    objects = UserManager()
+    objects = UserCBRManager()
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = [
-        "full_name",
+        "first_name",
+        "last_name",
         "zone",
-        "phone_number",
     ]
 
     class Meta:

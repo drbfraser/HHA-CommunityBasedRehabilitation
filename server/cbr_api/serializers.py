@@ -12,9 +12,18 @@ class UserCBRSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserCBR
-        fields = ("id", "username", "password", "full_name", "zone", "phone_number")
+        fields = (
+            "id",
+            "username",
+            "password",
+            "first_name",
+            "last_name",
+            "zone",
+            "phone_number",
+        )
         extra_kwargs = {
-            "full_name": {"required": True},
+            "first_name": {"required": True},
+            "last_name": {"required": True},
             "zone": {"required": True},
         }
 

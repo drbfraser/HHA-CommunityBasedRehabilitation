@@ -65,9 +65,9 @@ const RiskHistoryCharts = ({ risks, dateFormatter }: IProps) => {
     const allData = risksToChartData(risks.slice());
 
     const RiskChart = ({ riskType }: { riskType: RiskType }) => (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={300} className={styles.chartContainer}>
             <LineChart>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="6" vertical={false} />
                 <Legend />
                 <XAxis
                     dataKey="timestamp"
@@ -79,6 +79,10 @@ const RiskHistoryCharts = ({ risks, dateFormatter }: IProps) => {
                     type="category"
                     domain={Object.keys(riskLevels)}
                     tickFormatter={(level) => riskLevels[level].name}
+                    padding={{
+                        top: 25,
+                        bottom: 25,
+                    }}
                 />
                 <Tooltip
                     labelFormatter={dateFormatter}
@@ -90,7 +94,7 @@ const RiskHistoryCharts = ({ risks, dateFormatter }: IProps) => {
                     data={allData[riskType]}
                     dataKey="level"
                     stroke={riskLevels[allData[riskType].slice(-1)[0].level].color}
-                    strokeWidth={3}
+                    strokeWidth={6}
                     dot={false}
                 />
             </LineChart>

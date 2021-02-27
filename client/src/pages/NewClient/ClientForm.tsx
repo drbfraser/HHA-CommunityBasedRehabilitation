@@ -16,12 +16,7 @@ import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
-import {
-    fieldLabels,
-    FormField,
-    initialValues,
-    validationSchema,
-} from "./formFields";
+import { fieldLabels, FormField, initialValues, validationSchema } from "./formFields";
 
 import { riskLevels } from "util/risks";
 import { handleSubmit, handleReset } from "./formHandler";
@@ -210,13 +205,11 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.healthRisk]}
                                             name={FormField.healthRisk}
                                         >
-                                            {Object.entries(riskLevels).map(
-                                                ([value, { name }]) => (
-                                                    <MenuItem key={value} value={value}>
-                                                        {name}
-                                                    </MenuItem>
-                                                )
-                                            )}
+                                            {Object.entries(riskLevels).map(([value, { name }]) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {name}
+                                                </MenuItem>
+                                            ))}
                                         </Field>
                                     </FormControl>
                                 </Grid>
@@ -257,13 +250,11 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.educationRisk]}
                                             name={FormField.educationRisk}
                                         >
-                                            {Object.entries(riskLevels).map(
-                                                ([value, { name }]) => (
-                                                    <MenuItem key={value} value={value}>
-                                                        {name}
-                                                    </MenuItem>
-                                                )
-                                            )}
+                                            {Object.entries(riskLevels).map(([value, { name }]) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {name}
+                                                </MenuItem>
+                                            ))}
                                         </Field>
                                     </FormControl>
                                 </Grid>
@@ -304,13 +295,11 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.socialRisk]}
                                             name={FormField.socialRisk}
                                         >
-                                            {Object.entries(riskLevels).map(
-                                                ([value, { name }]) => (
-                                                    <MenuItem key={value} value={value}>
-                                                        {name}
-                                                    </MenuItem>
-                                                )
-                                            )}
+                                            {Object.entries(riskLevels).map(([value, { name }]) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {name}
+                                                </MenuItem>
+                                            ))}
                                         </Field>
                                     </FormControl>
                                 </Grid>

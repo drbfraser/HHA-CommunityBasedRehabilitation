@@ -43,11 +43,7 @@ const RenderRiskHeader = (params: ColParams): JSX.Element => {
 
     return (
         <div className="MuiDataGrid-colCellTitle">
-            {window.innerWidth >= compressedDataGridWidth ? (
-                riskType.name
-            ) : (
-                <riskType.Icon />
-            )}
+            {window.innerWidth >= compressedDataGridWidth ? riskType.name : <riskType.Icon />}
         </div>
     );
 };

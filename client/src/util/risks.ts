@@ -4,13 +4,13 @@ import { LocalHospital, RecordVoiceOver, School } from "@material-ui/icons";
 import { themeColors } from "theme.styles";
 
 export interface IRisk {
-    id: number,
-    client: number,
-    timestamp: number,
-    risk_type: RiskType,
-    risk_level: RiskLevel,
-    requirement: string,
-    goal: string,
+    id: number;
+    client: number;
+    timestamp: number;
+    risk_type: RiskType;
+    risk_level: RiskLevel;
+    requirement: string;
+    goal: string;
 }
 
 export enum RiskType {

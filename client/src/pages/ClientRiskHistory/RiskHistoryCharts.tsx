@@ -7,7 +7,6 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    Legend,
     ResponsiveContainer,
 } from "recharts";
 import { IRisk, RiskLevel, riskLevels, RiskType, riskTypes } from "util/risks";
@@ -68,7 +67,6 @@ const RiskHistoryCharts = ({ risks, dateFormatter }: IProps) => {
         <ResponsiveContainer width="100%" height={300} className={styles.chartContainer}>
             <LineChart>
                 <CartesianGrid strokeDasharray="6" vertical={false} />
-                <Legend />
                 <XAxis
                     dataKey="timestamp"
                     type="number"

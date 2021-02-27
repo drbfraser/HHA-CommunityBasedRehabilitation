@@ -9,6 +9,7 @@ export enum Endpoint {
     LOGIN = "login",
     LOGIN_REFRESH = "login/refresh",
     CLIENTS = "clients",
+    CLIENT = "client",
     ZONES = "zones",
 }
 

@@ -1,17 +1,23 @@
 import { RowsProp } from "@material-ui/data-grid";
 import { getZoneMap } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";
-import { RiskCategory, riskOptions } from "util/riskOptions";
+import { RiskType } from "util/risks";
 import { SearchOption } from "./searchOptions";
+
+enum RiskTypeAPIColumn {
+    HEALTH = "health_risk_level",
+    EDUCATION = "educat_risk_level",
+    SOCIAL = "social_risk_level",
+}
 
 interface IResponseRow {
     id: number;
     first_name: string;
     last_name: string;
     zone: number;
-    [RiskCategory.HEALTH]: string;
-    [RiskCategory.SOCIAL]: string;
-    [RiskCategory.EDUCATION]: string;
+    [RiskTypeAPIColumn.HEALTH]: string;
+    [RiskTypeAPIColumn.EDUCATION]: string;
+    [RiskTypeAPIColumn.SOCIAL]: string;
 }
 
 const requestClientRows = async (
@@ -42,9 +48,9 @@ const requestClientRows = async (
                 id: responseRow.id,
                 name: responseRow.first_name + " " + responseRow.last_name,
                 zone: zoneMap.get(responseRow.zone) ?? "",
-                [RiskCategory.HEALTH]: riskOptions[responseRow[RiskCategory.HEALTH]],
-                [RiskCategory.EDUCATION]: riskOptions[responseRow[RiskCategory.EDUCATION]],
-                [RiskCategory.SOCIAL]: riskOptions[responseRow[RiskCategory.SOCIAL]],
+                [RiskType.HEALTH]: responseRow[RiskTypeAPIColumn.HEALTH],
+                [RiskType.EDUCATION]: responseRow[RiskTypeAPIColumn.EDUCATION],
+                [RiskType.SOCIAL]: responseRow[RiskTypeAPIColumn.SOCIAL],
             };
         });
 

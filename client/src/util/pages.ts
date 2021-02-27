@@ -17,6 +17,7 @@ import NotFound from "pages/NotFound/NotFound";
 import AdminNew from "pages/Admin/AdminNew";
 import AdminView from "pages/Admin/AdminView";
 import AdminEdit from "pages/Admin/AdminEdit";
+import ClientRiskHistory from "pages/ClientRiskHistory/ClientRiskHistory";
 
 export interface IPage {
     path: string;
@@ -50,9 +51,15 @@ export const pages: IPage[] = [
         Icon: FormatListBulletedIcon,
     },
     {
-        path: "/client/:client_id",
+        path: "/client/:clientId",
         name: "Client Details",
         Component: ToDo,
+        showInNav: false,
+    },
+    {
+        path: "/client/:clientId/risks",
+        name: "Client Risk History",
+        Component: ClientRiskHistory,
         showInNav: false,
     },
     {

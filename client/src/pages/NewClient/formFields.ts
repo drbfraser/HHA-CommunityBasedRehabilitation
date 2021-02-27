@@ -72,17 +72,6 @@ export const initialValues = {
 
 export type TFormValues = typeof initialValues;
 
-export const genderOptions = [
-    {
-        name: "Female",
-        value: "F",
-    },
-    {
-        name: "Male",
-        value: "M",
-    },
-];
-
 export const validationSchema = () =>
     Yup.object().shape({
         [FormField.firstName]: Yup.string()

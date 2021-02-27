@@ -20,12 +20,13 @@ import {
     fieldLabels,
     FormField,
     initialValues,
-    genderOptions,
     validationSchema,
 } from "./formFields";
-import { riskOptions } from "util/riskOptions";
+
+import { riskLevels } from "util/risks";
 import { handleSubmit, handleReset } from "./formHandler";
 import { getAllZones, IZone } from "util/cache";
+import { genders } from "util/clients";
 
 const ClientForm = () => {
     const styles = useStyles();
@@ -108,9 +109,9 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.gender]}
                                             name={FormField.gender}
                                         >
-                                            {genderOptions.map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.name}
+                                            {Object.entries(genders).map(([value, name]) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {name}
                                                 </MenuItem>
                                             ))}
                                         </Field>
@@ -209,7 +210,7 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.healthRisk]}
                                             name={FormField.healthRisk}
                                         >
-                                            {Object.entries(riskOptions).map(
+                                            {Object.entries(riskLevels).map(
                                                 ([value, { name }]) => (
                                                     <MenuItem key={value} value={value}>
                                                         {name}
@@ -256,7 +257,7 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.educationRisk]}
                                             name={FormField.educationRisk}
                                         >
-                                            {Object.entries(riskOptions).map(
+                                            {Object.entries(riskLevels).map(
                                                 ([value, { name }]) => (
                                                     <MenuItem key={value} value={value}>
                                                         {name}
@@ -303,7 +304,7 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.socialRisk]}
                                             name={FormField.socialRisk}
                                         >
-                                            {Object.entries(riskOptions).map(
+                                            {Object.entries(riskLevels).map(
                                                 ([value, { name }]) => (
                                                     <MenuItem key={value} value={value}>
                                                         {name}

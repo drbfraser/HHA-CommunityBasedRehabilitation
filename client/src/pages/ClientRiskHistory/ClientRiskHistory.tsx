@@ -3,7 +3,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Typography from "@material-ui/core/Typography";
 import { ArrowBack } from "@material-ui/icons";
 import Alert from "@material-ui/lab/Alert";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { IClient } from "util/clients";
 import { apiFetch, Endpoint } from "util/endpoints";
@@ -43,6 +43,27 @@ const ClientRiskHistory = () => {
         getClient();
     }, [clientId]);
 
+    // change date format depending on how long ago the client was created
+    // this makes the graphs and timeline look better
+    const dateFormatter = useCallback(
+        (timestamp: number) => {
+            const oneWeek = 60 * 60 * 24 * 7;
+            const currentTimestamp = Date.now() / 1000;
+            const date = new Date(timestamp * 1000);
+
+            if (client && client.created_date - currentTimestamp < oneWeek) {
+                return date.toLocaleString([], {
+                    weekday: "short",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                });
+            }
+
+            return date.toLocaleDateString();
+        },
+        [client]
+    );
+
     return (
         <>
             <Button onClick={history.goBack}>
@@ -60,8 +81,8 @@ const ClientRiskHistory = () => {
                         {client.first_name} {client.last_name}
                     </Typography>
                     <br />
-                    <RiskHistoryCharts risks={client.risks} />
-                    <RiskHistoryTimeline client={client} />
+                    <RiskHistoryCharts risks={client.risks} dateFormatter={dateFormatter} />
+                    <RiskHistoryTimeline client={client} dateFormatter={dateFormatter} />
                 </>
             )}
         </>

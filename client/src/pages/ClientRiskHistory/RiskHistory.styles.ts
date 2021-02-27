@@ -27,6 +27,7 @@ export const useStyles = makeStyles(
             alignSelf: "center",
             flex: 0,
             paddingLeft: 0,
+            whiteSpace: "nowrap",
         },
         hidden: {
             visibility: "hidden",

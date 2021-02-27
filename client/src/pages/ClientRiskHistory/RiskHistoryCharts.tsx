@@ -15,11 +15,10 @@ import { Grid, Typography } from "@material-ui/core";
 
 interface IProps {
     risks: IRisk[];
+    dateFormatter: (timestamp: number) => string;
 }
 
 interface IChartData {
-    minTimestamp: number;
-    maxTimestamp: number;
     [RiskType.HEALTH]: IDataPoint[];
     [RiskType.EDUCATION]: IDataPoint[];
     [RiskType.SOCIAL]: IDataPoint[];
@@ -33,12 +32,7 @@ interface IDataPoint {
 const risksToChartData = (risks: IRisk[]) => {
     risks.sort((a, b) => a.timestamp - b.timestamp);
 
-    const currentTimestamp = Date.now() / 1000;
-    const minTimestamp = risks.length ? risks[0].timestamp : currentTimestamp;
-
     const dataObj: IChartData = {
-        minTimestamp: minTimestamp,
-        maxTimestamp: currentTimestamp,
         [RiskType.HEALTH]: [],
         [RiskType.EDUCATION]: [],
         [RiskType.SOCIAL]: [],
@@ -57,7 +51,7 @@ const risksToChartData = (risks: IRisk[]) => {
 
         if (riskArray.length) {
             riskArray.push({
-                timestamp: currentTimestamp,
+                timestamp: Date.now() / 1000,
                 level: riskArray[riskArray.length - 1].level,
             });
         }
@@ -66,25 +60,9 @@ const risksToChartData = (risks: IRisk[]) => {
     return dataObj;
 };
 
-const RiskHistoryCharts = ({ risks }: IProps) => {
+const RiskHistoryCharts = ({ risks, dateFormatter }: IProps) => {
     const styles = useStyles();
     const allData = risksToChartData(risks.slice());
-
-    const dateFormatter = (timestamp: number) => {
-        const oneWeek = 60 * 60 * 24 * 7;
-        const date = new Date(timestamp * 1000);
-        const dataTimeSpan = allData.maxTimestamp - allData.minTimestamp;
-
-        if (dataTimeSpan < oneWeek) {
-            return date.toLocaleString([], {
-                weekday: "short",
-                hour: "2-digit",
-                minute: "2-digit",
-            });
-        }
-
-        return date.toLocaleDateString();
-    };
 
     const RiskChart = ({ riskType }: { riskType: RiskType }) => (
         <ResponsiveContainer width="100%" height={300}>

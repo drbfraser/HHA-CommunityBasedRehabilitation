@@ -14,73 +14,72 @@ import { IClient } from "util/clients";
 import { IRisk, riskTypes } from "util/risks";
 import { useStyles } from "./RiskHistory.styles";
 
-interface IEntryProps {
-    risk: IRisk;
-    isInitial: boolean;
-}
-
-const RiskEntry = ({ risk, isInitial }: IEntryProps) => {
-    const styles = useStyles();
-    const [expanded, setExpanded] = useState(false);
-    const riskType = riskTypes[risk.risk_type];
-    const date = new Date(risk.timestamp * 1000);
-
-    const Summary = ({ clickable }: { clickable?: boolean }) => (
-        <>
-            <b>{riskType.name}</b> risk {isInitial ? "set" : "changed"} to{" "}
-            <RiskChip risk={risk.risk_level} clickable={clickable ?? false} />
-        </>
-    );
-
-    return (
-        <>
-            <TimelineItem key={risk.id}>
-                <TimelineOppositeContent className={styles.timelineDate}>
-                    {date.toLocaleDateString()}
-                </TimelineOppositeContent>
-                <TimelineSeparator>
-                    <TimelineConnector />
-                    <TimelineDot />
-                    <TimelineConnector />
-                </TimelineSeparator>
-                <TimelineContent>
-                    <div
-                        className={`${styles.timelineEntry} ${styles.riskEntry}`}
-                        onClick={() => setExpanded(true)}
-                    >
-                        <Summary clickable={true} />
-                    </div>
-                </TimelineContent>
-            </TimelineItem>
-            <Dialog fullWidth maxWidth="sm" open={expanded} onClose={() => setExpanded(false)}>
-                <DialogTitle>
-                    <Summary />
-                </DialogTitle>
-                <DialogContent>
-                    <b>Time:</b> {date.toLocaleString()}
-                </DialogContent>
-                <DialogContent>
-                    <b>Requirements:</b> {risk.requirement}
-                </DialogContent>
-                <DialogContent>
-                    <b>Goals:</b> {risk.goal}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setExpanded(false)} color="primary">
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
-};
-
 interface IProps {
     client: IClient;
+    dateFormatter: (timestamp: number) => string;
 }
 
-const RiskHistoryTimeline = ({ client }: IProps) => {
+const RiskHistoryTimeline = ({ client, dateFormatter }: IProps) => {
     const styles = useStyles();
+
+    interface IEntryProps {
+        risk: IRisk;
+        isInitial: boolean;
+    }
+
+    const RiskEntry = ({ risk, isInitial }: IEntryProps) => {
+        const [expanded, setExpanded] = useState(false);
+        const riskType = riskTypes[risk.risk_type];
+
+        const Summary = ({ clickable }: { clickable?: boolean }) => (
+            <>
+                <b>{riskType.name}</b> risk {isInitial ? "set" : "changed"} to{" "}
+                <RiskChip risk={risk.risk_level} clickable={clickable ?? false} />
+            </>
+        );
+
+        return (
+            <>
+                <TimelineItem key={risk.id}>
+                    <TimelineOppositeContent className={styles.timelineDate}>
+                        {dateFormatter(risk.timestamp)}
+                    </TimelineOppositeContent>
+                    <TimelineSeparator>
+                        <TimelineConnector />
+                        <TimelineDot />
+                        <TimelineConnector />
+                    </TimelineSeparator>
+                    <TimelineContent>
+                        <div
+                            className={`${styles.timelineEntry} ${styles.riskEntry}`}
+                            onClick={() => setExpanded(true)}
+                        >
+                            <Summary clickable={true} />
+                        </div>
+                    </TimelineContent>
+                </TimelineItem>
+                <Dialog fullWidth maxWidth="sm" open={expanded} onClose={() => setExpanded(false)}>
+                    <DialogTitle>
+                        <Summary />
+                    </DialogTitle>
+                    <DialogContent>
+                        <b>When:</b> {new Date(risk.timestamp * 1000).toLocaleString()}
+                    </DialogContent>
+                    <DialogContent>
+                        <b>Requirements:</b> {risk.requirement}
+                    </DialogContent>
+                    <DialogContent>
+                        <b>Goals:</b> {risk.goal}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setExpanded(false)} color="primary">
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </>
+        );
+    };
 
     const riskSort = (a: IRisk, b: IRisk) => {
         if (a.timestamp === b.timestamp) {
@@ -104,7 +103,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
                 ))}
             <TimelineItem>
                 <TimelineOppositeContent className={styles.timelineDate}>
-                    {new Date(client.created_date * 1000).toLocaleDateString()}
+                    {dateFormatter(client.created_date)}
                 </TimelineOppositeContent>
                 <TimelineSeparator>
                     <TimelineConnector />

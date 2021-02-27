@@ -78,9 +78,9 @@ const ClientRiskHistory = () => {
             {status === ReqStatus.LOADED && client && (
                 <>
                     <Typography variant="h3">
-                        Overview for {client.first_name} {client.last_name}
+                        {client.first_name} {client.last_name}
                     </Typography>
-                    <Timeline>
+                    <Timeline className={styles.timeline}>
                         {client.risks.map((risk) => (
                             <RiskHistoryEntry
                                 key={risk.id}

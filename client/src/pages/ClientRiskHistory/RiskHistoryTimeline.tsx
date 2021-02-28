@@ -7,6 +7,7 @@ import {
     TimelineConnector,
     TimelineDot,
     TimelineContent,
+    Skeleton,
 } from "@material-ui/lab";
 import RiskChip from "components/RiskChip/RiskChip";
 import React, { useState } from "react";
@@ -15,7 +16,7 @@ import { IRisk, riskTypes } from "util/risks";
 import { useStyles } from "./RiskHistory.styles";
 
 interface IProps {
-    client: IClient;
+    client?: IClient;
     dateFormatter: (timestamp: number) => string;
 }
 
@@ -81,6 +82,40 @@ const RiskHistoryTimeline = ({ client, dateFormatter }: IProps) => {
         );
     };
 
+    const ClientCreatedEntry = () => (
+        <TimelineItem>
+            <TimelineOppositeContent className={styles.timelineDate}>
+                {dateFormatter(client!.created_date)}
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+                <TimelineConnector />
+                <TimelineDot />
+                <TimelineConnector className={styles.hidden} />
+            </TimelineSeparator>
+            <TimelineContent>
+                <div className={styles.timelineEntry}>Client created</div>
+            </TimelineContent>
+        </TimelineItem>
+    );
+
+    const SkeletonEntry = () => (
+        <TimelineItem>
+            <TimelineOppositeContent className={styles.timelineDate}>
+                <Skeleton variant="text" />
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+                <TimelineConnector />
+                <TimelineDot />
+                <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>
+                <div className={styles.timelineEntry}>
+                    <Skeleton variant="text" />
+                </div>
+            </TimelineContent>
+        </TimelineItem>
+    );
+
     const riskSort = (a: IRisk, b: IRisk) => {
         if (a.timestamp === b.timestamp) {
             return b.risk_type.localeCompare(a.risk_type);
@@ -91,29 +126,23 @@ const RiskHistoryTimeline = ({ client, dateFormatter }: IProps) => {
 
     return (
         <Timeline className={styles.timeline}>
-            {client.risks
-                .slice()
-                .sort(riskSort)
-                .map((risk) => (
-                    <RiskEntry
-                        key={risk.id}
-                        risk={risk}
-                        isInitial={risk.timestamp === client.created_date}
-                    />
-                ))}
-            <TimelineItem>
-                <TimelineOppositeContent className={styles.timelineDate}>
-                    {dateFormatter(client.created_date)}
-                </TimelineOppositeContent>
-                <TimelineSeparator>
-                    <TimelineConnector />
-                    <TimelineDot />
-                    <TimelineConnector className={styles.hidden} />
-                </TimelineSeparator>
-                <TimelineContent>
-                    <div className={styles.timelineEntry}>Client created</div>
-                </TimelineContent>
-            </TimelineItem>
+            {client ? (
+                <>
+                    {client.risks
+                        .slice()
+                        .sort(riskSort)
+                        .map((risk) => (
+                            <RiskEntry
+                                key={risk.id}
+                                risk={risk}
+                                isInitial={risk.timestamp === client.created_date}
+                            />
+                        ))}
+                    <ClientCreatedEntry />
+                </>
+            ) : (
+                [1, 2, 3, 4].map((i) => <SkeletonEntry key={i} />)
+            )}
         </Timeline>
     );
 };

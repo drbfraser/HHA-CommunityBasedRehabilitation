@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useStyles } from "./RiskHistory.styles";
 import {
     LineChart,
@@ -11,9 +11,10 @@ import {
 } from "recharts";
 import { IRisk, RiskLevel, riskLevels, RiskType, riskTypes } from "util/risks";
 import { Grid, Typography } from "@material-ui/core";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 interface IProps {
-    risks: IRisk[];
+    risks?: IRisk[];
     dateFormatter: (timestamp: number) => string;
 }
 
@@ -29,13 +30,13 @@ interface IDataPoint {
 }
 
 const risksToChartData = (risks: IRisk[]) => {
-    risks.sort((a, b) => a.timestamp - b.timestamp);
-
     const dataObj: IChartData = {
         [RiskType.HEALTH]: [],
         [RiskType.EDUCATION]: [],
         [RiskType.SOCIAL]: [],
     };
+
+    risks.sort((a, b) => a.timestamp - b.timestamp);
 
     risks.forEach((risk) => {
         dataObj[risk.risk_type].push({
@@ -61,19 +62,23 @@ const risksToChartData = (risks: IRisk[]) => {
 
 const RiskHistoryCharts = ({ risks, dateFormatter }: IProps) => {
     const styles = useStyles();
-    const allData = risksToChartData(risks.slice());
+    const chartHeight = 300;
+    const [chartData, setChartData] = useState<IChartData>();
 
-    const RiskChart = ({ riskType }: { riskType: RiskType }) => (
-        <ResponsiveContainer width="100%" height={300} className={styles.chartContainer}>
+    useEffect(() => {
+        if (risks) {
+            setChartData(risksToChartData(risks.slice()));
+        }
+    }, [risks]);
+
+    const RiskChart = ({ riskType, data }: { riskType: RiskType; data: IDataPoint[] }) => (
+        <ResponsiveContainer width="100%" height={chartHeight} className={styles.chartContainer}>
             <LineChart>
                 <CartesianGrid strokeDasharray="6" vertical={false} />
                 <XAxis
                     dataKey="timestamp"
                     type="number"
-                    domain={[
-                        allData[riskType][0].timestamp,
-                        allData[riskType].slice(-1)[0].timestamp,
-                    ]}
+                    domain={[data[0].timestamp, data.slice(-1)[0].timestamp]}
                     tickFormatter={dateFormatter}
                 />
                 <YAxis
@@ -92,11 +97,10 @@ const RiskHistoryCharts = ({ risks, dateFormatter }: IProps) => {
                 <Line
                     type="stepAfter"
                     name={`${riskTypes[riskType].name} Risk`}
-                    data={allData[riskType]}
+                    data={data}
                     dataKey="level"
-                    stroke={riskLevels[allData[riskType].slice(-1)[0].level].color}
+                    stroke={riskLevels[data.slice(-1)[0].level].color}
                     strokeWidth={6}
-                    dot={false}
                 />
             </LineChart>
         </ResponsiveContainer>
@@ -109,10 +113,15 @@ const RiskHistoryCharts = ({ risks, dateFormatter }: IProps) => {
                     <Typography variant="h5" className={styles.textCenter}>
                         {riskTypes[riskType].name} Risk
                     </Typography>
-                    {allData[riskType].length ? (
-                        <RiskChart riskType={riskType} />
+
+                    {chartData && chartData[riskType].length ? (
+                        <RiskChart riskType={riskType} data={chartData[riskType]} />
                     ) : (
-                        <p>No data available.</p>
+                        <Skeleton
+                            variant="rect"
+                            height={chartHeight}
+                            className={styles.chartSkeleton}
+                        />
                     )}
                 </Grid>
             ))}

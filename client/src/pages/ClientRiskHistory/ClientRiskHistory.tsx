@@ -1,8 +1,8 @@
 import Button from "@material-ui/core/Button";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import Typography from "@material-ui/core/Typography";
 import { ArrowBack } from "@material-ui/icons";
 import Alert from "@material-ui/lab/Alert";
+import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { IClient } from "util/clients";
@@ -14,16 +14,10 @@ interface IRouteParams {
     clientId: string;
 }
 
-enum ReqStatus {
-    LOADING,
-    LOADED,
-    ERROR,
-}
-
 const ClientRiskHistory = () => {
     const history = useHistory();
     const { clientId } = useRouteMatch<IRouteParams>().params;
-    const [status, setStatus] = useState(ReqStatus.LOADING);
+    const [loadingError, setLoadingError] = useState(false);
     const [client, setClient] = useState<IClient>();
 
     useEffect(() => {
@@ -34,9 +28,8 @@ const ClientRiskHistory = () => {
                 ).json();
 
                 setClient(theClient);
-                setStatus(ReqStatus.LOADED);
             } catch (e) {
-                setStatus(ReqStatus.ERROR);
+                setLoadingError(true);
             }
         };
 
@@ -71,17 +64,21 @@ const ClientRiskHistory = () => {
             </Button>
             <br />
             <br />
-            {status === ReqStatus.LOADING && <LinearProgress />}
-            {status === ReqStatus.ERROR && (
+            {loadingError ? (
                 <Alert severity="error">Something went wrong. Please go back and try again.</Alert>
-            )}
-            {status === ReqStatus.LOADED && client && (
+            ) : (
                 <>
                     <Typography variant="h3">
-                        {client.first_name} {client.last_name}
+                        {client ? (
+                            <>
+                                {client.first_name} {client.last_name}
+                            </>
+                        ) : (
+                            <Skeleton variant="text" />
+                        )}
                     </Typography>
                     <br />
-                    <RiskHistoryCharts risks={client.risks} dateFormatter={dateFormatter} />
+                    <RiskHistoryCharts risks={client?.risks} dateFormatter={dateFormatter} />
                     <RiskHistoryTimeline client={client} dateFormatter={dateFormatter} />
                 </>
             )}

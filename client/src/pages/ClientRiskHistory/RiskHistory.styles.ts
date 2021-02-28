@@ -1,5 +1,4 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { mediaMobile } from "theme.styles";
 import { riskLevels } from "util/risks";
 
 // remove all lines from the cartesian grid
@@ -20,10 +19,8 @@ Object.values(riskLevels).forEach(({ color }, i) => {
 export const useStyles = makeStyles(
     {
         timeline: {
-            [mediaMobile]: {
-                paddingLeft: 0,
-                paddingRight: 0,
-            },
+            paddingLeft: 0,
+            paddingRight: 0,
         },
         timelineEntry: {
             margin: 10,
@@ -41,7 +38,8 @@ export const useStyles = makeStyles(
         },
         timelineDate: {
             alignSelf: "center",
-            flex: 0,
+            flex: "none",
+            width: 105,
             paddingLeft: 0,
             whiteSpace: "nowrap",
         },
@@ -52,6 +50,10 @@ export const useStyles = makeStyles(
             textAlign: "center",
         },
         chartContainer: chartContainer,
+        chartSkeleton: {
+            width: "90% !important",
+            margin: "0 auto",
+        },
     },
     { index: 1 }
 );

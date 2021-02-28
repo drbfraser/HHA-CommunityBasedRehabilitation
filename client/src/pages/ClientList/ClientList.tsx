@@ -26,28 +26,24 @@ import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
 import RiskChip from "components/RiskChip/RiskChip";
-import { IRisk, riskCategories, IRiskCategory, RiskCategory } from "util/riskOptions";
+import { RiskLevel, IRiskLevel, riskLevels, RiskType, IRiskType, riskTypes } from "util/risks";
 import { SearchOption } from "./searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
 import requestClientRows from "./requestClientRows";
 import { getAllZones, IZone } from "util/cache";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
-    const risk1: IRisk = Object(params1.value);
-    const risk2: IRisk = Object(params2.value);
+    const risk1: IRiskLevel = Object(params1.value);
+    const risk2: IRiskLevel = Object(params2.value);
     return risk1.level - risk2.level;
 };
 
 const RenderRiskHeader = (params: ColParams): JSX.Element => {
-    const riskCategory: IRiskCategory = riskCategories[params.field];
+    const riskType: IRiskType = riskTypes[params.field];
 
     return (
         <div className="MuiDataGrid-colCellTitle">
-            {window.innerWidth >= compressedDataGridWidth ? (
-                riskCategory.name
-            ) : (
-                <riskCategory.Icon />
-            )}
+            {window.innerWidth >= compressedDataGridWidth ? riskType.name : <riskType.Icon />}
         </div>
     );
 };
@@ -57,12 +53,12 @@ const RenderText = (params: ValueFormatterParams) => {
 };
 
 const RenderBadge = (params: ValueFormatterParams) => {
-    const risk: IRisk = Object(params.value);
+    const risk: RiskLevel = Object(params.value);
 
     return window.innerWidth >= compressedDataGridWidth ? (
         <RiskChip clickable risk={risk} />
     ) : (
-        <FiberManualRecord style={{ color: risk.color }} />
+        <FiberManualRecord style={{ color: riskLevels[risk].color }} />
     );
 };
 
@@ -108,7 +104,7 @@ const ClientList = () => {
 
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
-    const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
+    const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}/risks`);
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
         setOptionsAnchorEl(event.currentTarget);
     const onOptionsClose = () => setOptionsAnchorEl(null);
@@ -116,15 +112,15 @@ const ClientList = () => {
     const riskColumnStates: {
         [key: string]: { hide: boolean; hideFunction: (isHidden: boolean) => void };
     } = {
-        [RiskCategory.HEALTH]: {
+        [RiskType.HEALTH]: {
             hide: isHealthHidden,
             hideFunction: setHealthHidden,
         },
-        [RiskCategory.EDUCATION]: {
+        [RiskType.EDUCATION]: {
             hide: isEducationHidden,
             hideFunction: setEducationHidden,
         },
-        [RiskCategory.SOCIAL]: {
+        [RiskType.SOCIAL]: {
             hide: isSocialHidden,
             hideFunction: setSocialHidden,
         },
@@ -155,7 +151,7 @@ const ClientList = () => {
             hide: isZoneHidden,
             hideFunction: setZoneHidden,
         },
-        ...Object.entries(riskCategories).map(([value, { name }]) => ({
+        ...Object.entries(riskTypes).map(([value, { name }]) => ({
             field: value,
             headerName: name,
             flex: 0.7,

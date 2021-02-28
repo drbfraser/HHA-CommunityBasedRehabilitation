@@ -70,7 +70,10 @@ const RiskHistoryCharts = ({ risks, dateFormatter }: IProps) => {
                 <XAxis
                     dataKey="timestamp"
                     type="number"
-                    domain={["auto", "auto"]}
+                    domain={[
+                        allData[riskType][0].timestamp,
+                        allData[riskType].slice(-1)[0].timestamp,
+                    ]}
                     tickFormatter={dateFormatter}
                 />
                 <YAxis
@@ -87,7 +90,7 @@ const RiskHistoryCharts = ({ risks, dateFormatter }: IProps) => {
                     formatter={(level: RiskLevel) => riskLevels[level].name}
                 />
                 <Line
-                    type="linear"
+                    type="stepAfter"
                     name={`${riskTypes[riskType].name} Risk`}
                     data={allData[riskType]}
                     dataKey="level"

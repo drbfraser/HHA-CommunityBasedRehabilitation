@@ -11,7 +11,6 @@ import ToDo from "pages/ToDo/ToDo";
 import AdminList from "pages/AdminList/AdminList";
 import ClientList from "pages/ClientList/ClientList";
 import UserView from "pages/User/UserView";
-import UserEdit from "pages/User/UserEdit";
 import ClientForm from "pages/NewClient/ClientForm";
 import NotFound from "pages/NotFound/NotFound";
 import AdminNew from "pages/Admin/AdminNew";
@@ -61,12 +60,6 @@ export const pages: IPage[] = [
         Component: UserView,
         showInNav: true,
         Icon: PersonIcon,
-    },
-    {
-        path: "/user/edit",
-        name: "Edit Profile",
-        Component: UserEdit,
-        showInNav: false,
     },
     {
         path: "/admin",

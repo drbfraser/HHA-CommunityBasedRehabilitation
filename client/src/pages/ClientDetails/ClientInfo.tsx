@@ -56,6 +56,7 @@ const ClientInfo = (props: any) => {
                             <Grid container spacing={2}>
                                 <Grid item md={6} xs={12}>
                                     <Field
+                                        className={styles.textField}
                                         component={TextField}
                                         name={FormField.first_name}
                                         variant="outlined"
@@ -68,6 +69,7 @@ const ClientInfo = (props: any) => {
                                 <Grid item md={6} xs={12}>
                                     <Field
                                         component={TextField}
+                                        className={styles.textField}
                                         name={FormField.last_name}
                                         variant="outlined"
                                         disabled={!isEditing}
@@ -82,6 +84,7 @@ const ClientInfo = (props: any) => {
                                         fullWidth
                                         required
                                         type="date"
+                                        className={styles.textField}
                                         disabled={!isEditing}
                                         variant="outlined"
                                         InputLabelProps={{ shrink: true }}
@@ -90,7 +93,11 @@ const ClientInfo = (props: any) => {
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
-                                    <FormControl fullWidth variant="outlined">
+                                    <FormControl
+                                        className={styles.textField}
+                                        fullWidth
+                                        variant="outlined"
+                                    >
                                         <Field
                                             component={TextField}
                                             fullWidth
@@ -114,6 +121,7 @@ const ClientInfo = (props: any) => {
                                         component={TextField}
                                         variant="outlined"
                                         disabled={!isEditing}
+                                        className={styles.textField}
                                         name={FormField.village}
                                         label={fieldLabels[FormField.village]}
                                         required
@@ -127,6 +135,7 @@ const ClientInfo = (props: any) => {
                                             fullWidth
                                             disabled={!isEditing}
                                             select
+                                            className={styles.textField}
                                             variant="outlined"
                                             required
                                             label={fieldLabels[FormField.zone]}
@@ -144,6 +153,7 @@ const ClientInfo = (props: any) => {
                                     <Field
                                         component={TextField}
                                         disabled={!isEditing}
+                                        className={styles.textField}
                                         name={FormField.phone_number}
                                         variant="outlined"
                                         label={fieldLabels[FormField.phone_number]}
@@ -155,6 +165,7 @@ const ClientInfo = (props: any) => {
                                         component={CheckboxWithLabel}
                                         type="checkbox"
                                         disabled={!isEditing}
+                                        className={styles.textField}
                                         name={FormField.caregiver_present}
                                         Label={{ label: fieldLabels[FormField.caregiver_present] }}
                                     />
@@ -171,7 +182,7 @@ const ClientInfo = (props: any) => {
                                             <AccordionDetails>
                                                 <Field
                                                     disabled={!isEditing}
-                                                    className={styles.caregiverInputField}
+                                                    className={`${styles.caregiverInputField} ${styles.textField}`}
                                                     component={TextField}
                                                     name={FormField.caregiver_phone}
                                                     variant="outlined"
@@ -192,25 +203,25 @@ const ClientInfo = (props: any) => {
                                     <>
                                         <Grid item>
                                             <Button
+                                                variant="outlined"
+                                                type="reset"
+                                                color="primary"
+                                                onClick={() => {
+                                                    handleCancel(resetForm, setIsEditing);
+                                                }}
+                                                disabled={isSubmitting}
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button
                                                 color="primary"
                                                 variant="contained"
                                                 type="submit"
                                                 disabled={isSubmitting}
                                             >
                                                 Save
-                                            </Button>
-                                        </Grid>
-                                        <Grid item>
-                                            <Button
-                                                variant="outlined"
-                                                color="primary"
-                                                onClick={() => {
-                                                    handleCancel(resetForm, setIsEditing);
-                                                }}
-                                                type="reset"
-                                                disabled={isSubmitting}
-                                            >
-                                                Cancel
                                             </Button>
                                         </Grid>
                                     </>

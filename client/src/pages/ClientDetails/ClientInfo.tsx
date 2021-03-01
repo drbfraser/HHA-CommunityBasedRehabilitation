@@ -24,32 +24,32 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { handleSubmit, handleCancel } from "./formHandler";
 
 export interface ClientBasicInfo {
-    id: number,
-    first_name: string,
-    last_name: string,
-    gender: string,
-    birth_date: number,
-    latitude: number,
-    longitude: number,
-    zone: number,
-    village: string,
-    phone_number: string,
-    picture: string,
-    caregiver_present: boolean,
-    caregiver_email: string,
-    caregiver_phone: string,
-    caregiver_picture: string,
+    id: number;
+    first_name: string;
+    last_name: string;
+    gender: string;
+    birth_date: number;
+    latitude: number;
+    longitude: number;
+    zone: number;
+    village: string;
+    phone_number: string;
+    picture: string;
+    caregiver_present: boolean;
+    caregiver_email: string;
+    caregiver_phone: string;
+    caregiver_picture: string;
 }
 
-interface InfoAndZoneOptions{
-    clientInfo: ClientBasicInfo,
-    zoneOptions: IZone[]
+interface InfoAndZoneOptions {
+    clientInfo: ClientBasicInfo;
+    zoneOptions: IZone[];
 }
 
 const ClientInfo = (props: InfoAndZoneOptions) => {
     const styles = useStyles();
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    
+
     console.log(props);
     return (
         <Formik

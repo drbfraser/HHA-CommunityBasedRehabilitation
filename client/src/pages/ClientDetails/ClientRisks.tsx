@@ -24,7 +24,7 @@ import { fieldLabels, FormField, validationSchema } from "./riskFormFields";
 
 import { handleSubmit } from "./riskFormFieldHandler";
 
-interface RiskInterface {
+export interface ClientRiskInterface {
     risk_level: string;
     risk_type: string;
     requirement: string;
@@ -33,7 +33,7 @@ interface RiskInterface {
 
 const ClientRisks = (props: any) => {
     const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
-    const [currentViewingRisk, setCurrentViewingRisk] = useState<RiskInterface>();
+    const [currentViewingRisk, setCurrentViewingRisk] = useState<ClientRiskInterface>();
 
     const [healthRiskChip, setHealthRiskChip] = useState<IRisk>();
     const [socialRiskChip, setSocialRiskChip] = useState<IRisk>();

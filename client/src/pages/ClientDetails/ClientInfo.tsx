@@ -23,16 +23,41 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 import { handleSubmit, handleCancel } from "./formHandler";
 
-const ClientInfo = (props: any) => {
+export interface ClientBasicInfo {
+    id: number,
+    first_name: string,
+    last_name: string,
+    gender: string,
+    birth_date: number,
+    latitude: number,
+    longitude: number,
+    zone: number,
+    village: string,
+    phone_number: string,
+    picture: string,
+    caregiver_present: boolean,
+    caregiver_email: string,
+    caregiver_phone: string,
+    caregiver_picture: string,
+}
+
+interface InfoAndZoneOptions{
+    clientInfo: ClientBasicInfo,
+    zoneOptions: IZone[]
+}
+
+const ClientInfo = (props: InfoAndZoneOptions) => {
     const styles = useStyles();
-
     const [isEditing, setIsEditing] = useState<boolean>(false);
-
+    
+    console.log(props);
     return (
         <Formik
             initialValues={props.clientInfo}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}
+            onSubmit={(values, setSubmitting) => {
+                handleSubmit(values, setSubmitting, setIsEditing);
+            }}
         >
             {({ values, isSubmitting, resetForm }) => (
                 <Grid container direction="row" justify="flex-start">
@@ -203,8 +228,17 @@ const ClientInfo = (props: any) => {
                                     <>
                                         <Grid item>
                                             <Button
+                                                color="primary"
+                                                variant="contained"
+                                                type="submit"
+                                                disabled={isSubmitting}
+                                            >
+                                                Save
+                                            </Button>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button
                                                 variant="outlined"
-                                                type="reset"
                                                 color="primary"
                                                 onClick={() => {
                                                     handleCancel(resetForm, setIsEditing);
@@ -214,19 +248,10 @@ const ClientInfo = (props: any) => {
                                                 Cancel
                                             </Button>
                                         </Grid>
-                                        <Grid item>
-                                            <Button
-                                                color="primary"
-                                                variant="contained"
-                                                type="submit"
-                                                disabled={isSubmitting}
-                                            >
-                                                Save
-                                            </Button>
-                                        </Grid>
                                     </>
                                 ) : (
                                     <Grid item>
+                                        <></>
                                         <Button
                                             variant="contained"
                                             color="primary"

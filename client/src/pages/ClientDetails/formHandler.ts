@@ -1,13 +1,13 @@
 import { FormikHelpers } from "formik";
 import { Endpoint, apiFetch } from "../../util/endpoints";
-import { ClientBasicInfo } from "./ClientInfo";
+import { IClient } from "util/clients";
 
 const updateClient = async (clientInfo: string, clientId: number) => {
     const init: RequestInit = {
         method: "PUT",
         body: clientInfo,
     };
-    return await apiFetch(Endpoint.CLIENT, `/${clientId}`, init)
+    return await apiFetch(Endpoint.CLIENT, `${clientId}`, init)
         .then((res) => {
             return res.json();
         })
@@ -17,14 +17,14 @@ const updateClient = async (clientInfo: string, clientId: number) => {
 };
 
 export const handleSubmit = async (
-    values: ClientBasicInfo,
-    helpers: FormikHelpers<ClientBasicInfo>,
+    values: IClient,
+    helpers: FormikHelpers<IClient>,
     setIsEditing: (isEditing: boolean) => void
 ) => {
     values = Object.entries(values).reduce((a: any, [k, v]) => (v ? ((a[k] = v), a) : a), {});
     values.birth_date = new Date(values.birth_date).getTime() / 1000;
 
-    const { id, ...updatedInfo } = values;
+    const { id, created_by_user, created_date, risks, ...updatedInfo } = values;
     const updatedClient = JSON.stringify(updatedInfo);
 
     try {

@@ -22,35 +22,17 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 import { handleSubmit, handleCancel } from "./formHandler";
+import { IClient } from "util/clients";
 
-export interface ClientBasicInfo {
-    id: number;
-    first_name: string;
-    last_name: string;
-    gender: string;
-    birth_date: number;
-    latitude: number;
-    longitude: number;
-    zone: number;
-    village: string;
-    phone_number: string;
-    picture: string;
-    caregiver_present: boolean;
-    caregiver_email: string;
-    caregiver_phone: string;
-    caregiver_picture: string;
-}
-
-interface InfoAndZoneOptions {
-    clientInfo: ClientBasicInfo;
+interface IProps {
+    clientInfo: IClient;
     zoneOptions: IZone[];
 }
 
-const ClientInfo = (props: InfoAndZoneOptions) => {
+const ClientInfo = (props: IProps) => {
     const styles = useStyles();
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
-    console.log(props);
     return (
         <Formik
             initialValues={props.clientInfo}
@@ -81,7 +63,7 @@ const ClientInfo = (props: InfoAndZoneOptions) => {
                             <Grid container spacing={2}>
                                 <Grid item md={6} xs={12}>
                                     <Field
-                                        className={styles.textField}
+                                        className={styles.disabledTextField}
                                         component={TextField}
                                         name={FormField.first_name}
                                         variant="outlined"
@@ -94,7 +76,7 @@ const ClientInfo = (props: InfoAndZoneOptions) => {
                                 <Grid item md={6} xs={12}>
                                     <Field
                                         component={TextField}
-                                        className={styles.textField}
+                                        className={styles.disabledTextField}
                                         name={FormField.last_name}
                                         variant="outlined"
                                         disabled={!isEditing}
@@ -109,7 +91,7 @@ const ClientInfo = (props: InfoAndZoneOptions) => {
                                         fullWidth
                                         required
                                         type="date"
-                                        className={styles.textField}
+                                        className={styles.disabledTextField}
                                         disabled={!isEditing}
                                         variant="outlined"
                                         InputLabelProps={{ shrink: true }}
@@ -119,7 +101,7 @@ const ClientInfo = (props: InfoAndZoneOptions) => {
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <FormControl
-                                        className={styles.textField}
+                                        className={styles.disabledTextField}
                                         fullWidth
                                         variant="outlined"
                                     >
@@ -146,7 +128,7 @@ const ClientInfo = (props: InfoAndZoneOptions) => {
                                         component={TextField}
                                         variant="outlined"
                                         disabled={!isEditing}
-                                        className={styles.textField}
+                                        className={styles.disabledTextField}
                                         name={FormField.village}
                                         label={fieldLabels[FormField.village]}
                                         required
@@ -160,7 +142,7 @@ const ClientInfo = (props: InfoAndZoneOptions) => {
                                             fullWidth
                                             disabled={!isEditing}
                                             select
-                                            className={styles.textField}
+                                            className={styles.disabledTextField}
                                             variant="outlined"
                                             required
                                             label={fieldLabels[FormField.zone]}
@@ -178,7 +160,7 @@ const ClientInfo = (props: InfoAndZoneOptions) => {
                                     <Field
                                         component={TextField}
                                         disabled={!isEditing}
-                                        className={styles.textField}
+                                        className={styles.disabledTextField}
                                         name={FormField.phone_number}
                                         variant="outlined"
                                         label={fieldLabels[FormField.phone_number]}
@@ -190,7 +172,7 @@ const ClientInfo = (props: InfoAndZoneOptions) => {
                                         component={CheckboxWithLabel}
                                         type="checkbox"
                                         disabled={!isEditing}
-                                        className={styles.textField}
+                                        className={styles.disabledTextField}
                                         name={FormField.caregiver_present}
                                         Label={{ label: fieldLabels[FormField.caregiver_present] }}
                                     />
@@ -207,7 +189,7 @@ const ClientInfo = (props: InfoAndZoneOptions) => {
                                             <AccordionDetails>
                                                 <Field
                                                     disabled={!isEditing}
-                                                    className={`${styles.caregiverInputField} ${styles.textField}`}
+                                                    className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
                                                     component={TextField}
                                                     name={FormField.caregiver_phone}
                                                     variant="outlined"

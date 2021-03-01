@@ -1,8 +1,5 @@
-// import { FormikHelpers } from "formik";
-// import { Endpoint, apiFetch } from "../../util/endpoints";
-// import history from "../../util/history";
-
-// TODO: adding new risk to clients
+// TODO: edit risk for clients
+// TODO: if client doesn't edit anything and press save, don't make an api call- just close the modal.
 export const handleSubmit = async () => {
-    console.log("SUBMITTED");
+    console.log("Testing");
 };

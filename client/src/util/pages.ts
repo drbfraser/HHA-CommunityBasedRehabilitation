@@ -57,12 +57,6 @@ export const pages: IPage[] = [
         showInNav: false,
     },
     {
-        path: "/client/:client_id/risk-history",
-        name: "Client Details",
-        Component: ToDo,
-        showInNav: false,
-    },
-    {
         path: "/client/:clientId/risks",
         name: "Client Risk History",
         Component: ClientRiskHistory,

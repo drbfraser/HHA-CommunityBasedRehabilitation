@@ -6,53 +6,40 @@ import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 
 import { apiFetch, Endpoint } from "../../util/endpoints";
 
-import ClientInfo, { ClientBasicInfo } from "./ClientInfo";
-import ClientRisks, { ClientRiskInterface } from "./ClientRisks";
+import ClientInfo from "./ClientInfo";
+import { IClient } from "util/clients";
+import ClientRisks from "./ClientRisks";
+import { IRisk } from "util/risks";
 import { getAllZones, IZone } from "util/cache";
 import { useHistory } from "react-router-dom";
 
-interface ParamType {
-    client_id: string;
-}
-
-interface RiskInterface {
-    risk_level: string;
-    risk_type: string;
-    requirement: string;
-    goal: string;
+interface IUrlParam {
+    clientId: string;
 }
 
 const ClientDetails = () => {
-    const { client_id } = useParams<ParamType>();
+    const { clientId } = useParams<IUrlParam>();
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
-    const [clientInfo, setClientInfo] = useState<ClientBasicInfo>();
-    const [clientHealthRisk, setClientHealthRisk] = useState<RiskInterface>();
-    const [clientSocialRisk, setClientSocialRisk] = useState<RiskInterface>();
-    const [clientEducationRisk, setClientEducationRisk] = useState<RiskInterface>();
+    const [clientInfo, setClientInfo] = useState<IClient>();
+    const [clientHealthRisk, setClientHealthRisk] = useState<IRisk>();
+    const [clientSocialRisk, setClientSocialRisk] = useState<IRisk>();
+    const [clientEducationRisk, setClientEducationRisk] = useState<IRisk>();
 
     const history = useHistory();
 
     useEffect(() => {
         const fetchClientInfo = async () => {
-            const clientInfo = await await (
-                await apiFetch(Endpoint.CLIENT, `/${client_id}`)
-            ).json();
+            const clientInfo = await await (await apiFetch(Endpoint.CLIENT, `${clientId}`)).json();
             const tempDate = new Date(clientInfo.birth_date * 1000).toISOString();
             clientInfo.birth_date = tempDate.substring(0, 10);
             setClientHealthRisk(
-                clientInfo.risks.filter(
-                    (risk: ClientRiskInterface) => risk.risk_type === "HEALTH"
-                )[0]
+                clientInfo.risks.filter((risk: IRisk) => risk.risk_type === "HEALTH")[0]
             );
             setClientSocialRisk(
-                clientInfo.risks.filter(
-                    (risk: ClientRiskInterface) => risk.risk_type === "SOCIAL"
-                )[0]
+                clientInfo.risks.filter((risk: IRisk) => risk.risk_type === "SOCIAL")[0]
             );
             setClientEducationRisk(
-                clientInfo.risks.filter(
-                    (risk: ClientRiskInterface) => risk.risk_type === "EDUCAT"
-                )[0]
+                clientInfo.risks.filter((risk: IRisk) => risk.risk_type === "EDUCAT")[0]
             );
 
             setClientInfo(clientInfo);
@@ -64,7 +51,7 @@ const ClientDetails = () => {
 
         fetchAllZones();
         fetchClientInfo();
-    }, [client_id]);
+    }, [clientId]);
 
     return clientInfo ? (
         !!clientInfo.first_name && zoneOptions.length ? (
@@ -87,7 +74,7 @@ const ClientDetails = () => {
                             size="small"
                             style={{ float: "right" }}
                             onClick={() => {
-                                history.push(`/client/${client_id}/risk-history`);
+                                history.push(`/client/${clientId}/risks`);
                             }}
                         >
                             See Risk History
@@ -114,9 +101,10 @@ const ClientDetails = () => {
                         <Button
                             size="small"
                             style={{ float: "right" }}
-                            onClick={() => {
-                                history.push(`/client/${client_id}/risk-history`);
-                            }}
+                            // TODO: add visits history path once visits history page is implemented.
+                            // onClick={() => {
+                            //     history.push(`/client/${client_id}/`);
+                            // }}
                         >
                             See Visit History
                             <ArrowForwardIcon fontSize="small" />

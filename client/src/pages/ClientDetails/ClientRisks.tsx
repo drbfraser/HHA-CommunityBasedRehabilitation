@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useStyles } from "./ClientRisks.styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
@@ -17,35 +17,18 @@ import {
     MenuItem,
     FormControl,
 } from "@material-ui/core";
-import { IRisk, riskOptions } from "util/riskOptions";
+import { IRisk, riskLevels } from "util/risks";
 import RiskChip from "components/RiskChip/RiskChip";
 
 import { fieldLabels, FormField, validationSchema } from "./riskFormFields";
 
 import { handleSubmit } from "./riskFormFieldHandler";
 
-export interface ClientRiskInterface {
-    risk_level: string;
-    risk_type: string;
-    requirement: string;
-    goal: string;
-}
-
 const ClientRisks = (props: any) => {
     const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
-    const [currentViewingRisk, setCurrentViewingRisk] = useState<ClientRiskInterface>();
-
-    const [healthRiskChip, setHealthRiskChip] = useState<IRisk>();
-    const [socialRiskChip, setSocialRiskChip] = useState<IRisk>();
-    const [educatRiskChip, setEducatRiskChip] = useState<IRisk>();
+    const [currentViewingRisk, setCurrentViewingRisk] = useState<IRisk>();
 
     const styles = useStyles();
-
-    useEffect(() => {
-        setHealthRiskChip(riskOptions[props.healthRisk.risk_level]);
-        setSocialRiskChip(riskOptions[props.socialRisk.risk_level]);
-        setEducatRiskChip(riskOptions[props.educatRisk.risk_level]);
-    }, [props]);
 
     const FormModal = () => {
         return currentViewingRisk ? (
@@ -81,13 +64,11 @@ const ClientRisks = (props: any) => {
                                             label={fieldLabels[FormField.risk_level]}
                                             name={FormField.risk_level}
                                         >
-                                            {Object.entries(riskOptions).map(
-                                                ([value, { name }]) => (
-                                                    <MenuItem key={value} value={value}>
-                                                        {name}
-                                                    </MenuItem>
-                                                )
-                                            )}
+                                            {Object.entries(riskLevels).map(([value, { name }]) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {name}
+                                                </MenuItem>
+                                            ))}
                                         </Field>
                                     </FormControl>
                                     <Field
@@ -144,7 +125,7 @@ const ClientRisks = (props: any) => {
         );
     };
 
-    const renderRiskCard = (riskInfo: any, riskChip: IRisk) => {
+    const renderRiskCard = (riskInfo: IRisk) => {
         return (
             <Card variant="outlined">
                 <CardContent>
@@ -157,7 +138,7 @@ const ClientRisks = (props: any) => {
                         <Grid item md={6}>
                             <div className={styles.riskCardBadge}>
                                 {" "}
-                                <RiskChip risk={riskChip} />
+                                <RiskChip risk={riskInfo.risk_level} />
                             </div>
                         </Grid>
                     </Grid>
@@ -198,25 +179,13 @@ const ClientRisks = (props: any) => {
             <FormModal />
             <Grid container spacing={5} direction="row" justify="flex-start">
                 <Grid item md={4} xs={12}>
-                    {props.healthRisk && healthRiskChip ? (
-                        renderRiskCard(props.healthRisk, healthRiskChip)
-                    ) : (
-                        <></>
-                    )}
+                    {renderRiskCard(props.healthRisk)}
                 </Grid>
                 <Grid item md={4} xs={12}>
-                    {props.educatRisk && educatRiskChip ? (
-                        renderRiskCard(props.educatRisk, educatRiskChip)
-                    ) : (
-                        <></>
-                    )}
+                    {renderRiskCard(props.educatRisk)}
                 </Grid>
                 <Grid item md={4} xs={12}>
-                    {props.socialRisk && socialRiskChip ? (
-                        renderRiskCard(props.socialRisk, socialRiskChip)
-                    ) : (
-                        <></>
-                    )}
+                    {renderRiskCard(props.socialRisk)}
                 </Grid>
             </Grid>
         </>

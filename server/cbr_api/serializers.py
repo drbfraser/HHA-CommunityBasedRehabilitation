@@ -110,8 +110,6 @@ class ClientListSerializer(serializers.ModelSerializer):
         model = models.Client
         fields = [
             "id",
-            "first_name",
-            "last_name",
             "full_name",
             "zone",
             "health_risk_level",
@@ -212,3 +210,10 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = ["created_by_user", "created_date"]
+
+    def update(self, instance, validated_data):
+        validated_data["full_name"] = (
+            validated_data["first_name"] + " " + validated_data["last_name"]
+        )
+        super().update(instance, validated_data)
+        return instance

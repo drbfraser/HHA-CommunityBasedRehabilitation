@@ -9,6 +9,7 @@ class ClientFilter(django_filters.FilterSet):
         fields = [
             "first_name",
             "last_name",
+            "full_name",
             "zone",
             "id",
             "health_risk_level",

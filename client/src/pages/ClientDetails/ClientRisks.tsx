@@ -136,7 +136,7 @@ const ClientRisks = (props: any) => {
                             </Typography>
                         </Grid>
                         <Grid item md={6}>
-                            <div className={styles.riskCardBadge}>
+                            <div className={styles.riskCardButtonAndBadge}>
                                 {" "}
                                 <RiskChip risk={riskInfo.risk_level} />
                             </div>
@@ -157,7 +157,7 @@ const ClientRisks = (props: any) => {
                         {riskInfo.goal}
                     </Typography>
                 </CardContent>
-                <CardActions className={styles.riskCardButton}>
+                <CardActions className={styles.riskCardButtonAndBadge}>
                     <Button
                         variant="contained"
                         color="primary"

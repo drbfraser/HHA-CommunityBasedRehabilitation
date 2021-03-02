@@ -29,7 +29,9 @@ const requestClientRows = async (
                 id: responseRow.id,
                 name: responseRow.first_name + " " + responseRow.last_name,
                 zone: zoneMap.get(responseRow.zone) ?? "",
+                // TODO: Change type to actual type once backend supports it
                 type: "Worker",
+                // TODO: Change status to actual status once backend supports it
                 status: "Active",
             };
         });

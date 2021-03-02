@@ -17,6 +17,7 @@ import AdminNew from "pages/Admin/AdminNew";
 import AdminView from "pages/Admin/AdminView";
 import AdminEdit from "pages/Admin/AdminEdit";
 import ClientRiskHistory from "pages/ClientRiskHistory/ClientRiskHistory";
+import NewVisit from "pages/NewVisit/NewVisit";
 
 export interface IPage {
     path: string;
@@ -59,6 +60,12 @@ export const pages: IPage[] = [
         path: "/client/:clientId/risks",
         name: "Client Risk History",
         Component: ClientRiskHistory,
+        showInNav: false,
+    },
+    {
+        path: "/client/:clientId/visits/new",
+        name: "Add a Visit",
+        Component: NewVisit,
         showInNav: false,
     },
     {

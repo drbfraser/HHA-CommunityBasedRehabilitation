@@ -55,44 +55,54 @@ const ClientRisks = (props: any) => {
                                     Update {riskTypes[currentViewingRisk.risk_type].name} Risk
                                 </DialogTitle>
                                 <DialogContent>
-                                    <FormControl fullWidth variant="outlined">
-                                        <Field
-                                            component={TextField}
-                                            select
-                                            required
-                                            variant="outlined"
-                                            label={fieldLabels[FormField.risk_level]}
-                                            name={FormField.risk_level}
-                                        >
-                                            {Object.entries(riskLevels).map(([value, { name }]) => (
-                                                <MenuItem key={value} value={value}>
-                                                    {name}
-                                                </MenuItem>
-                                            ))}
-                                        </Field>
-                                    </FormControl>
-                                    <Field
-                                        component={TextField}
-                                        fullWidth
-                                        multiline
-                                        required
-                                        rows={4}
-                                        variant="outlined"
-                                        margin="dense"
-                                        label={fieldLabels[FormField.requirement]}
-                                        name={FormField.requirement}
-                                    />
-                                    <Field
-                                        component={TextField}
-                                        fullWidth
-                                        margin="dense"
-                                        multiline
-                                        required
-                                        rows={4}
-                                        variant="outlined"
-                                        label={fieldLabels[FormField.goal]}
-                                        name={FormField.goal}
-                                    />
+                                    <Grid container direction="column" spacing={1}>
+                                        <Grid item>
+                                            <FormControl fullWidth variant="outlined">
+                                                <Field
+                                                    component={TextField}
+                                                    select
+                                                    required
+                                                    variant="outlined"
+                                                    label={fieldLabels[FormField.risk_level]}
+                                                    name={FormField.risk_level}
+                                                >
+                                                    {Object.entries(riskLevels).map(
+                                                        ([value, { name }]) => (
+                                                            <MenuItem key={value} value={value}>
+                                                                {name}
+                                                            </MenuItem>
+                                                        )
+                                                    )}
+                                                </Field>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item>
+                                            <Field
+                                                component={TextField}
+                                                fullWidth
+                                                multiline
+                                                required
+                                                rows={4}
+                                                variant="outlined"
+                                                margin="dense"
+                                                label={fieldLabels[FormField.requirement]}
+                                                name={FormField.requirement}
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <Field
+                                                component={TextField}
+                                                fullWidth
+                                                margin="dense"
+                                                multiline
+                                                required
+                                                rows={4}
+                                                variant="outlined"
+                                                label={fieldLabels[FormField.goal]}
+                                                name={FormField.goal}
+                                            />
+                                        </Grid>
+                                    </Grid>
                                 </DialogContent>
                                 <DialogActions>
                                     <Button

@@ -46,7 +46,7 @@ const AdminList = () => {
     const history = useHistory();
     const [loading, setLoading] = useState<boolean>(true);
     // Will use "zones" once searching is implemented and remove next comment
-    // eslint-disable-next-line 
+    // eslint-disable-next-line
     const [zones, setZones] = useState<IZone[]>([]);
     const [rows, setRows] = useState<RowsProp>([]);
 

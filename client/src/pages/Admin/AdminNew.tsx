@@ -8,12 +8,21 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
 import { handleSubmit } from "./handler";
+import { useState, useEffect } from "react";
+import { getAllZones, IZone } from "util/cache";
 
 const AdminNew = () => {
     const styles = useStyles();
     const history = useHistory();
     const handleCancel = () => history.goBack();
-
+    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+    useEffect(() => {
+        const fetchAllZones = async () => {
+            const zones = await getAllZones();
+            setZoneOptions(zones);
+        };
+        fetchAllZones();
+    }, []);
     return (
         <Formik
             initialValues={initialValues}
@@ -47,15 +56,23 @@ const AdminNew = () => {
                                 />
                             </Grid>
                             <Grid item md={6} xs={12}>
-                                <Field
-                                    component={TextField}
-                                    fullWidth
-                                    required
-                                    variant="outlined"
-                                    type="number"
-                                    label={fieldLabels[AdminField.zone]}
-                                    name={AdminField.zone}
-                                />
+                                <FormControl fullWidth variant="outlined">
+                                    <Field
+                                        component={TextField}
+                                        fullWidth
+                                        select
+                                        variant="outlined"
+                                        required
+                                        label={fieldLabels[AdminField.zone]}
+                                        name={AdminField.zone}
+                                    >
+                                        {zoneOptions.map((option) => (
+                                            <MenuItem key={option.id} value={option.id}>
+                                                {option.zone_name}
+                                            </MenuItem>
+                                        ))}
+                                    </Field>
+                                </FormControl>
                             </Grid>
 
                             <Grid item md={6} xs={12}>

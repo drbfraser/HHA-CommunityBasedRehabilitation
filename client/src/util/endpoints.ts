@@ -11,6 +11,8 @@ export enum Endpoint {
     CLIENT = "client/",
     CLIENTS = "clients",
     ZONES = "zones",
+    USER = "user",
+    USERS = "users"
 }
 
 export const apiFetch = async (

@@ -1,12 +1,38 @@
 import { FormikHelpers } from "formik";
+import { apiFetch, Endpoint } from "util/endpoints";
 import { TFormValues } from "./fields";
+import history from "util/history";
 
-export const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
-    // here is where you would submit the values to the server
-    setTimeout(() => {
-        console.log(values);
+const addUser = async (userInfo: string) => {
+    const init: RequestInit = {
+        method: "POST",
+        body: userInfo,
+    };
+
+    return await apiFetch(Endpoint.USERS, "", init)
+        .then((res) => {
+            return res.json();
+        })
+        .then((res) => {
+            return res;
+        });
+};
+
+export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
+    const newUser = JSON.stringify({
+        first_name: values.firstName,
+        last_name: values.lastName,
+        phone_number: values.phoneNumber,
+        zone: values.zone,
+        type: values.type,
+    });
+
+    try {
+        const user = await addUser(newUser);
+        history.push(`/admin/${user.id}`);
+    } catch (e) {
         helpers.setSubmitting(false);
-    }, 1000);
+    }
 };
 
 export const handleReset = (resetForm: () => void) => {

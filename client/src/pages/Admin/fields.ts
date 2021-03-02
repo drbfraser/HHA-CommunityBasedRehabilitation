@@ -4,7 +4,16 @@ import { Validation } from "util/validations";
 export interface IRouteParams {
     userId: string;
 }
-
+export interface IUser {
+    id: number;
+    zone: number;
+    first_name: string;
+    last_name: string;
+    username: string;
+    phone_number: string;
+    is_active: boolean;
+    // type: string;
+}
 export enum AdminField {
     username = "username",
     userID = "id",
@@ -35,7 +44,6 @@ export const fieldLabels = {
     [AdminField.phoneNumber]: "Phone Number",
     [AdminField.status]: "Status",
 };
-
 export const initialValues = {
     [AdminField.username]: "Username",
     [AdminField.userID]: "11111111",

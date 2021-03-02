@@ -13,7 +13,7 @@ interface IResponseRow {
 
 const requestClientRows = async (
     setRows: (rows: RowsProp) => void,
-    setLoading: (loading: boolean) => void,
+    setLoading: (loading: boolean) => void
 ) => {
     setLoading(true);
 

@@ -212,8 +212,9 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ["created_by_user", "created_date"]
 
     def update(self, instance, validated_data):
-        validated_data["full_name"] = (
-            validated_data["first_name"] + " " + validated_data["last_name"]
-        )
         super().update(instance, validated_data)
+
+        instance.full_name = instance.first_name + " " + instance.last_name
+        instance.save()
+
         return instance

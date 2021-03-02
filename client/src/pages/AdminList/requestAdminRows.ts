@@ -8,10 +8,10 @@ interface IResponseRow {
     last_name: string;
     zone: number;
     type: string;
-    status: string;
+    is_active: string;
 }
 
-const requestClientRows = async (
+const requestUserRows = async (
     setRows: (rows: RowsProp) => void,
     setLoading: (loading: boolean) => void
 ) => {
@@ -44,4 +44,4 @@ const requestClientRows = async (
     setLoading(false);
 };
 
-export default requestClientRows;
+export default requestUserRows;

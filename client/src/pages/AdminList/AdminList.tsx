@@ -28,7 +28,7 @@ const RenderNoRowsOverlay = () => {
     return (
         <GridOverlay className={styles.noRows}>
             <Cancel color="primary" className={styles.noRowsIcon} />
-            <Typography color="primary">No Clients Found</Typography>
+            <Typography color="primary">No Users Found</Typography>
         </GridOverlay>
     );
 };
@@ -71,15 +71,15 @@ const AdminList = () => {
     }, []);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const requestClientRowsDebounced = useCallback(debounce(requestAdminRows, 500), []);
+    const requestUserRowsDebounced = useCallback(debounce(requestAdminRows, 500), []);
 
     useEffect(() => {
         if (!initialDataLoaded.current) {
             return;
         }
 
-        requestClientRowsDebounced(setRows, setLoading);
-    }, [requestClientRowsDebounced]);
+        requestUserRowsDebounced(setRows, setLoading);
+    }, [requestUserRowsDebounced]);
 
     return (
         <>

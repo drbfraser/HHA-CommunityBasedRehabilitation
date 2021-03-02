@@ -4,7 +4,7 @@ export const useStyles = makeStyles(
     {
         riskCardButtonAndBadge: {
             float: "right",
-        }
+        },
     },
     { index: 1 }
 );

@@ -133,15 +133,12 @@ class DisabilityJunction(models.Model):
 
 
 class Visit(models.Model):
-    class Purpose(models.TextChoices):
-        CBR = "CBR", _("Community Based Rehabilitation")
-        REFERRAL = "REF", _("Disability Centre Referral")
-        FOLLOWUP = "FOL", _("Referral Follow-Up")
-
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_visited = models.BigIntegerField()
-    purpose = models.CharField(max_length=3, choices=Purpose.choices)
+    health_visit = models.BooleanField(default=False)
+    educat_visit = models.BooleanField(default=False)
+    social_visit = models.BooleanField(default=False)
     longitude = models.DecimalField(max_digits=22, decimal_places=16)
     latitude = models.DecimalField(max_digits=22, decimal_places=16)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
@@ -154,14 +151,16 @@ class Outcome(models.Model):
         ONGOING = "GO", _("Ongoing")
         CONCLUDED = "CON", _("Concluded")
 
-    visit = models.ForeignKey(Visit, on_delete=models.CASCADE)
+    visit = models.ForeignKey(Visit, related_name="outcomes", on_delete=models.CASCADE)
     risk_type = RiskType.getField()
     goal_met = models.CharField(max_length=3, choices=Goal.choices)
     outcome = models.TextField(blank=True)
 
 
 class Improvement(models.Model):
-    visit = models.ForeignKey(Visit, on_delete=models.CASCADE)
+    visit = models.ForeignKey(
+        Visit, related_name="improvements", on_delete=models.CASCADE
+    )
     risk_type = RiskType.getField()
     provided = models.CharField(max_length=50)
     desc = models.TextField()

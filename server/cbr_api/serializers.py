@@ -105,6 +105,106 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         return risk
 
 
+class ImprovementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Improvement
+        fields = [
+            "id",
+            "visit",
+            "risk_type",
+            "provided",
+            "desc",
+        ]
+
+        read_only_fields = ["visit"]
+
+
+class OutcomeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Outcome
+        fields = [
+            "id",
+            "visit",
+            "risk_type",
+            "goal_met",
+            "outcome",
+        ]
+
+        read_only_fields = ["visit"]
+
+
+class DetailedVisitSerializer(serializers.ModelSerializer):
+    improvements = ImprovementSerializer(many=True)
+    outcomes = OutcomeSerializer(many=True)
+
+    class Meta:
+        model = models.Visit
+        fields = [
+            "id",
+            "user",
+            "client",
+            "date_visited",
+            "health_visit",
+            "educat_visit",
+            "social_visit",
+            "longitude",
+            "latitude",
+            "zone",
+            "village",
+            "improvements",
+            "outcomes",
+        ]
+
+        read_only_fields = ["user", "date_visited"]
+
+    def create(self, validated_data):
+        current_time = int(time.time())
+
+        improvement_dataset = validated_data.pop("improvements")
+        outcome_dataset = validated_data.pop("outcomes")
+
+        validated_data["user"] = self.context["request"].user
+        validated_data["date_visited"] = current_time
+        visit = models.Visit.objects.create(**validated_data)
+        visit.save()
+
+        def create_improvement(data):
+            data["visit"] = visit
+            improvement = models.Improvement.objects.create(**data)
+            improvement.save()
+
+        def create_outcome(data):
+            data["visit"] = visit
+            outcome = models.Outcome.objects.create(**data)
+            outcome.save()
+
+        for improvement_data in improvement_dataset:
+            create_improvement(improvement_data)
+
+        for outcome_data in outcome_dataset:
+            create_outcome(outcome_data)
+
+        return visit
+
+
+class SummaryVisitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Visit
+        fields = [
+            "id",
+            "user",
+            "client",
+            "date_visited",
+            "health_visit",
+            "educat_visit",
+            "social_visit",
+            "longitude",
+            "latitude",
+            "zone",
+            "village",
+        ]
+
+
 class ClientListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Client
@@ -184,6 +284,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
 
 class ClientDetailSerializer(serializers.ModelSerializer):
     risks = ClientCreationRiskSerializer(many=True, read_only=True)
+    visits = SummaryVisitSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Client
@@ -206,6 +307,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "caregiver_email",
             "caregiver_picture",
             "risks",
+            "visits",
         ]
 
         read_only_fields = ["created_by_user", "created_date"]

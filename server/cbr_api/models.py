@@ -133,7 +133,7 @@ class DisabilityJunction(models.Model):
 
 
 class Visit(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, related_name="visits", on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_visited = models.BigIntegerField()
     health_visit = models.BooleanField(default=False)

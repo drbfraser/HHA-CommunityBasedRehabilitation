@@ -21,24 +21,27 @@ export const handleSubmit = async (
     helpers: FormikHelpers<IClient>,
     setIsEditing: (isEditing: boolean) => void
 ) => {
-    let updatedValues = Object.entries(values).reduce(
-        (a: any, [k, v]) => (v ? ((a[k] = v), a) : a),
-        {}
-    );
-    updatedValues.birth_date = new Date(values.birth_date).getTime() / 1000;
-
-    updatedValues.caregiver_present = values.caregiver_present;
-
-    const { id, created_by_user, created_date, risks, ...updatedInfo } = updatedValues;
-    const updatedClient = JSON.stringify(updatedInfo);
+    const updatedValues = JSON.stringify({
+        first_name: values.first_name,
+        last_name: values.last_name,
+        birth_date: new Date(values.birth_date).getTime() / 1000,
+        gender: values.gender,
+        phone_number: values.phone_number,
+        zone: values.zone,
+        village: values.village,
+        caregiver_present: values.caregiver_present,
+        caregiver_phone: values.caregiver_phone,
+        longitude: values.longitude,
+        latitude: values.latitude,
+    });
 
     try {
-        await updateClient(updatedClient, values.id);
+        await updateClient(updatedValues, values.id);
         setIsEditing(false);
-        helpers.setSubmitting(false);
     } catch (e) {
         alert("Encountered an error while trying to edit the client!");
     }
+    helpers.setSubmitting(false);
 };
 
 export const handleCancel = (resetForm: () => void, setIsEditing: (isEditing: boolean) => void) => {

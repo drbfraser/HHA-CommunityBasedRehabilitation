@@ -49,7 +49,7 @@ const ClientForm = () => {
                                 {/* TODO: Change image src based on whether the client exists or not */}
                                 <img
                                     className={styles.profilePicture}
-                                    src="https://res.cloudinary.com/time2hack/image/upload/fa-user.png"
+                                    src={`${process.env.PUBLIC_URL}/images/profile_pic_icon.png`}
                                     alt="user-icon"
                                 />
                                 <div className={styles.uploadIcon}>

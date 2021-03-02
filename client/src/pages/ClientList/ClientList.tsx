@@ -104,7 +104,7 @@ const ClientList = () => {
 
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
-    const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}/risks`);
+    const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
         setOptionsAnchorEl(event.currentTarget);
     const onOptionsClose = () => setOptionsAnchorEl(null);

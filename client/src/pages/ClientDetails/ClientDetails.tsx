@@ -29,7 +29,7 @@ const ClientDetails = () => {
 
     useEffect(() => {
         const fetchClientInfo = async () => {
-            const clientInfo = await await (await apiFetch(Endpoint.CLIENT, `${clientId}`)).json();
+            const clientInfo = await (await apiFetch(Endpoint.CLIENT, `${clientId}`)).json();
             const tempDate = new Date(clientInfo.birth_date * 1000).toISOString();
             clientInfo.birth_date = tempDate.substring(0, 10);
             setClientHealthRisk(
@@ -53,68 +53,64 @@ const ClientDetails = () => {
         fetchClientInfo();
     }, [clientId]);
 
-    return clientInfo ? (
-        !!clientInfo.first_name && zoneOptions.length ? (
-            <Grid container spacing={2} direction="row" justify="flex-start">
-                <Grid item>
-                    <ClientInfo clientInfo={clientInfo} zoneOptions={zoneOptions} />
+    return clientInfo && zoneOptions.length ? (
+        <Grid container spacing={2} direction="row" justify="flex-start">
+            <Grid item>
+                <ClientInfo clientInfo={clientInfo} zoneOptions={zoneOptions} />
+            </Grid>
+            <Grid item md={12} xs={12}>
+                <hr />
+            </Grid>
+            <Grid container justify="space-between" direction="row">
+                <Grid item md={6} xs={6}>
+                    <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
+                        <b>Risk Levels</b>
+                    </Typography>
+                    <br />
                 </Grid>
-                <Grid item md={12} xs={12}>
-                    <hr />
-                </Grid>
-                <Grid container justify="space-between" direction="row">
-                    <Grid item md={6} xs={6}>
-                        <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
-                            <b>Risk Levels</b>
-                        </Typography>
-                        <br />
-                    </Grid>
-                    <Grid item md={6} xs={6}>
-                        <Button
-                            size="small"
-                            style={{ float: "right" }}
-                            onClick={() => {
-                                history.push(`/client/${clientId}/risks`);
-                            }}
-                        >
-                            See Risk History
-                            <ArrowForwardIcon fontSize="small" />
-                        </Button>
-                    </Grid>
-                </Grid>
-                <ClientRisks
-                    healthRisk={clientHealthRisk}
-                    socialRisk={clientSocialRisk}
-                    educatRisk={clientEducationRisk}
-                />
-                <Grid item md={12} xs={12}>
-                    <hr />
-                </Grid>
-                <Grid container justify="space-between" direction="row">
-                    <Grid item md={6} xs={6}>
-                        <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
-                            <b>Recent Visits</b>
-                        </Typography>
-                        <br />
-                    </Grid>
-                    <Grid item md={6} xs={6}>
-                        <Button
-                            size="small"
-                            style={{ float: "right" }}
-                            // TODO: add visits history path once visits history page is implemented.
-                            // onClick={() => {
-                            //     history.push(`/client/${client_id}/`);
-                            // }}
-                        >
-                            See Visit History
-                            <ArrowForwardIcon fontSize="small" />
-                        </Button>
-                    </Grid>
+                <Grid item md={6} xs={6}>
+                    <Button
+                        size="small"
+                        style={{ float: "right" }}
+                        onClick={() => {
+                            history.push(`/client/${clientId}/risks`);
+                        }}
+                    >
+                        See Risk History
+                        <ArrowForwardIcon fontSize="small" />
+                    </Button>
                 </Grid>
             </Grid>
-        ) : (
-            <CircularProgress />
-        )
+            <ClientRisks
+                healthRisk={clientHealthRisk}
+                socialRisk={clientSocialRisk}
+                educatRisk={clientEducationRisk}
+            />
+            <Grid item md={12} xs={12}>
+                <hr />
+            </Grid>
+            <Grid container justify="space-between" direction="row">
+                <Grid item md={6} xs={6}>
+                    <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
+                        <b>Recent Visits</b>
+                    </Typography>
+                    <br />
+                </Grid>
+                <Grid item md={6} xs={6}>
+                    <Button
+                        size="small"
+                        style={{ float: "right" }}
+                        // TODO: add visits history path once visits history page is implemented.
+                        // onClick={() => {
+                        //     history.push(`/client/${client_id}/`);
+                        // }}
+                    >
+                        See Visit History
+                        <ArrowForwardIcon fontSize="small" />
+                    </Button>
+                </Grid>
+            </Grid>
+        </Grid>
     ) : (
         <CircularProgress />
     );

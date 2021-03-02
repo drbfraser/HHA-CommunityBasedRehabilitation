@@ -27,17 +27,6 @@ export const fieldLabels = {
     // [FormField.disability]: "Type of Disability"
 };
 
-export const genderOptions = [
-    {
-        name: "Female",
-        value: "F",
-    },
-    {
-        name: "Male",
-        value: "M",
-    },
-];
-
 export const validationSchema = () =>
     Yup.object().shape({
         [FormField.first_name]: Yup.string()

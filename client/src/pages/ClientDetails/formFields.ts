@@ -48,4 +48,12 @@ export const validationSchema = () =>
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),
         [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),
+        [FormField.caregiver_phone]: Yup.string()
+            .label(fieldLabels[FormField.caregiver_phone])
+            .max(50)
+            .matches(Validation.phoneRegExp, "Phone number is not valid")
+            .notOneOf(
+                [Yup.ref("phone_number")],
+                "Caregiver's phone number should not be the same as the client's phone number."
+            ),
     });

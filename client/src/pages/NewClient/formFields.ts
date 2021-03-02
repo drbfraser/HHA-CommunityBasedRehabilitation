@@ -112,4 +112,12 @@ export const validationSchema = () =>
             .label(fieldLabels[FormField.socialRequirements])
             .required(),
         [FormField.socialGoals]: Yup.string().label(fieldLabels[FormField.socialGoals]).required(),
+        [FormField.caregiverContact]: Yup.string()
+            .label(fieldLabels[FormField.caregiverContact])
+            .max(50)
+            .matches(Validation.phoneRegExp, "Phone number is not valid")
+            .notOneOf(
+                [Yup.ref("phone_number")],
+                "Caregiver's phone number should not be the same as the client's phone number."
+            ),
     });

@@ -32,6 +32,7 @@ const ClientDetails = () => {
             const clientInfo = await (await apiFetch(Endpoint.CLIENT, `${clientId}`)).json();
             const tempDate = new Date(clientInfo.birth_date * 1000).toISOString();
             clientInfo.birth_date = tempDate.substring(0, 10);
+            clientInfo.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
             setClientHealthRisk(
                 clientInfo.risks.filter((risk: IRisk) => risk.risk_type === "HEALTH")[0]
             );

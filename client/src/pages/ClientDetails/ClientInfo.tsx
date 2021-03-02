@@ -49,7 +49,7 @@ const ClientInfo = (props: IProps) => {
                                 {/* TODO: Change image src based on whether the client exists or not */}
                                 <img
                                     className={styles.profilePicture}
-                                    src={`${process.env.PUBLIC_URL}/images/profile_pic_icon.png`}
+                                    src={`/images/profile_pic_icon.png`}
                                     alt="user-icon"
                                 />
                                 <div className={styles.uploadIcon}>

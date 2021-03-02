@@ -17,7 +17,7 @@ import {
     MenuItem,
     FormControl,
 } from "@material-ui/core";
-import { IRisk, riskLevels } from "util/risks";
+import { IRisk, riskLevels, riskTypes } from "util/risks";
 import RiskChip from "components/RiskChip/RiskChip";
 
 import { fieldLabels, FormField, validationSchema } from "./riskFormFields";
@@ -52,7 +52,7 @@ const ClientRisks = (props: any) => {
                         >
                             <Form>
                                 <DialogTitle id="form-dialog-title">
-                                    Update {currentViewingRisk.risk_type} Risk
+                                    Update {riskTypes[currentViewingRisk.risk_type].name} Risk
                                 </DialogTitle>
                                 <DialogContent>
                                     <FormControl fullWidth variant="outlined">
@@ -132,7 +132,7 @@ const ClientRisks = (props: any) => {
                     <Grid container direction="row" justify="space-between">
                         <Grid item md={6}>
                             <Typography variant="h5" component="h1">
-                                {riskInfo.risk_type === "EDUCAT" ? "EDUCATION" : riskInfo.risk_type}
+                                {riskTypes[riskInfo.risk_type].name}
                             </Typography>
                         </Grid>
                         <Grid item md={6}>

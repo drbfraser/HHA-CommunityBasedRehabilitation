@@ -21,10 +21,15 @@ export const handleSubmit = async (
     helpers: FormikHelpers<IClient>,
     setIsEditing: (isEditing: boolean) => void
 ) => {
-    values = Object.entries(values).reduce((a: any, [k, v]) => (v ? ((a[k] = v), a) : a), {});
-    values.birth_date = new Date(values.birth_date).getTime() / 1000;
+    let updatedValues = Object.entries(values).reduce(
+        (a: any, [k, v]) => (v ? ((a[k] = v), a) : a),
+        {}
+    );
+    updatedValues.birth_date = new Date(values.birth_date).getTime() / 1000;
 
-    const { id, created_by_user, created_date, risks, ...updatedInfo } = values;
+    updatedValues.caregiver_present = values.caregiver_present;
+
+    const { id, created_by_user, created_date, risks, ...updatedInfo } = updatedValues;
     const updatedClient = JSON.stringify(updatedInfo);
 
     try {

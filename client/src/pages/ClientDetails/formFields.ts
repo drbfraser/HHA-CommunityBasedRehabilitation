@@ -22,7 +22,7 @@ export const fieldLabels = {
     [FormField.gender]: "Gender",
     [FormField.zone]: "Zone",
     [FormField.phone_number]: "Phone Number",
-    [FormField.caregiver_present]: "Caregiver Present? *",
+    [FormField.caregiver_present]: "Caregiver Present?",
     [FormField.caregiver_phone]: "Caregiver Contact",
     // [FormField.disability]: "Type of Disability"
 };

@@ -27,7 +27,11 @@ export enum UserActive {
     active = "Active",
 }
 
-const AdminEdit = () => {
+interface IProps {
+    userInfo: IUser;
+}
+
+const AdminEdit = (props: IProps) => {
     const styles = useStyles();
     const history = useHistory();
     const [isUserActive, setIsUserActive] = useState(initialValues.status === UserActive.active);
@@ -36,11 +40,13 @@ const AdminEdit = () => {
     const [user, setUser] = useState<IUser>();
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
     const [loadingError, setLoadingError] = useState(false);
+
     const handleCancel = () => history.goBack();
     const handleDisable = () => {
         setStatus(isUserActive ? UserActive.disable : UserActive.active);
         setIsUserActive(!isUserActive);
     };
+
     useEffect(() => {
         const getUser = async () => {
             try {
@@ -62,6 +68,7 @@ const AdminEdit = () => {
 
     return (
         <Formik
+            // initialValues={props.userInfo}
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}

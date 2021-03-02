@@ -5,14 +5,14 @@ export interface IRouteParams {
     userId: string;
 }
 export interface IUser {
+    username: string;
     id: number;
     zone: number;
     first_name: string;
     last_name: string;
-    username: string;
     phone_number: string;
     is_active: boolean;
-    // type: string;
+    type: string;
 }
 export enum AdminField {
     username = "username",
@@ -45,14 +45,14 @@ export const fieldLabels = {
     [AdminField.status]: "Status",
 };
 export const initialValues = {
-    [AdminField.username]: "Username",
-    [AdminField.userID]: "11111111",
-    [AdminField.firstName]: "First Name",
-    [AdminField.lastName]: "Last Name",
-    [AdminField.zone]: "1",
+    [AdminField.username]: "",
+    [AdminField.userID]: "",
+    [AdminField.firstName]: "",
+    [AdminField.lastName]: "",
+    [AdminField.zone]: "",
     [AdminField.type]: workerOptions[1].value,
     [AdminField.status]: "Active",
-    [AdminField.phoneNumber]: "(XXX) XXX-XXXX",
+    [AdminField.phoneNumber]: "",
 };
 
 export type TFormValues = typeof initialValues;

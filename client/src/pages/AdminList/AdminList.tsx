@@ -2,14 +2,9 @@ import { useStyles } from "./AdminList.styles";
 import SearchBar from "components/SearchBar/SearchBar";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { DataGrid, ColDef, DensityTypes, RowsProp, GridOverlay } from "@material-ui/data-grid";
-import {
-    LinearProgress,
-    IconButton,
-    debounce,
-    Typography,
-} from "@material-ui/core";
+import { LinearProgress, IconButton, debounce, Typography } from "@material-ui/core";
 import { useDataGridStyles } from "styles/DataGrid.styles";
-import { useRef, useCallback }from "react";
+import { useRef, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAllZones, IZone } from "util/cache";
@@ -45,7 +40,6 @@ const columns: ColDef[] = [
     { field: "status", headerName: "Status", flex: 1 },
 ];
 
-
 const AdminList = () => {
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
@@ -53,7 +47,7 @@ const AdminList = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [zones, setZones] = useState<IZone[]>([]);
     const [rows, setRows] = useState<RowsProp>([]);
-    
+
     const onRowClick = (row: any) => {
         const user = row.row;
         history.push("/admin/view/" + user.id);
@@ -97,7 +91,7 @@ const AdminList = () => {
                 <div className={styles.dataGridWrapper}>
                     <DataGrid
                         className={dataGridStyle.datagrid}
-                        loading = {loading}
+                        loading={loading}
                         components={{
                             LoadingOverlay: RenderLoadingOverlay,
                             NoRowsOverlay: RenderNoRowsOverlay,

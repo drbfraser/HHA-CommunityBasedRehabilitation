@@ -49,7 +49,7 @@ const ClientForm = () => {
                                 {/* TODO: Change image src based on whether the client exists or not */}
                                 <img
                                     className={styles.profilePicture}
-                                    src="https://res.cloudinary.com/time2hack/image/upload/fa-user.png"
+                                    src={`/images/profile_pic_icon.png`}
                                     alt="user-icon"
                                 />
                                 <div className={styles.uploadIcon}>
@@ -167,7 +167,7 @@ const ClientForm = () => {
                                     />
                                 </Grid>
                                 {values.caregiverPresent ? (
-                                    <Grid item md={8} xs={12}>
+                                    <Grid item md={7} xs={12}>
                                         <Accordion
                                             className={styles.caregiverAccordion}
                                             defaultExpanded
@@ -176,14 +176,34 @@ const ClientForm = () => {
                                                 Caregiver Details:
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                                <Field
-                                                    className={styles.caregiverInputField}
-                                                    component={TextField}
-                                                    name={FormField.caregiverContact}
-                                                    variant="outlined"
-                                                    label={fieldLabels[FormField.caregiverContact]}
-                                                    fullWidth
-                                                />
+                                                <Grid container direction="column" spacing={1}>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={styles.caregiverInputField}
+                                                            component={TextField}
+                                                            name={FormField.caregiverName}
+                                                            variant="outlined"
+                                                            label={
+                                                                fieldLabels[FormField.caregiverName]
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={styles.caregiverInputField}
+                                                            component={TextField}
+                                                            name={FormField.caregiverPhone}
+                                                            variant="outlined"
+                                                            label={
+                                                                fieldLabels[
+                                                                    FormField.caregiverPhone
+                                                                ]
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                </Grid>
                                             </AccordionDetails>
                                         </Accordion>
                                     </Grid>

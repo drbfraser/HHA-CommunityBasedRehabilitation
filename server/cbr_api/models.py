@@ -93,6 +93,8 @@ class Client(models.Model):
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    full_name = models.CharField(max_length=101, default="")
+
     birth_date = models.BigIntegerField()
     gender = models.CharField(max_length=1, choices=Gender.choices)
     phone_number = models.CharField(

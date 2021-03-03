@@ -204,8 +204,7 @@ class ClientListSerializer(serializers.ModelSerializer):
         model = models.Client
         fields = [
             "id",
-            "first_name",
-            "last_name",
+            "full_name",
             "zone",
             "health_risk_level",
             "social_risk_level",
@@ -243,7 +242,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "educat_risk",
         ]
 
-        read_only_fields = ["created_by_user", "created_date"]
+        read_only_fields = ["created_by_user", "created_date", "full_name"]
 
     def create(self, validated_data):
         current_time = int(time.time())
@@ -256,7 +255,9 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         validated_data["health_risk_level"] = health_data["risk_level"]
         validated_data["social_risk_level"] = social_data["risk_level"]
         validated_data["educat_risk_level"] = educat_data["risk_level"]
-
+        validated_data["full_name"] = (
+            validated_data["first_name"] + " " + validated_data["last_name"]
+        )
         validated_data["created_by_user"] = self.context["request"].user
         validated_data["created_date"] = current_time
         client = models.Client.objects.create(**validated_data)
@@ -305,3 +306,11 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = ["created_by_user", "created_date"]
+
+    def update(self, instance, validated_data):
+        super().update(instance, validated_data)
+
+        instance.full_name = instance.first_name + " " + instance.last_name
+        instance.save()
+
+        return instance

@@ -190,8 +190,9 @@ const ClientInfo = (props: IProps) => {
                                                 <Grid container direction="column" spacing={1}>
                                                     <Grid item md={8} xs={12}>
                                                         <Field
-                                                            className={styles.caregiverInputField}
+                                                            className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
                                                             component={TextField}
+                                                            disabled={!isEditing}
                                                             name={FormField.caregiver_name}
                                                             variant="outlined"
                                                             label={
@@ -204,9 +205,10 @@ const ClientInfo = (props: IProps) => {
                                                     </Grid>
                                                     <Grid item md={8} xs={12}>
                                                         <Field
-                                                            className={styles.caregiverInputField}
+                                                            className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
                                                             component={TextField}
                                                             name={FormField.caregiver_phone}
+                                                            disabled={!isEditing}
                                                             variant="outlined"
                                                             label={
                                                                 fieldLabels[

@@ -187,14 +187,18 @@ const ClientInfo = (props: IProps) => {
                                                 Caregiver Details:
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                            <Grid container direction="column" spacing={1}>
+                                                <Grid container direction="column" spacing={1}>
                                                     <Grid item md={8} xs={12}>
                                                         <Field
                                                             className={styles.caregiverInputField}
                                                             component={TextField}
                                                             name={FormField.caregiver_name}
                                                             variant="outlined"
-                                                            label={fieldLabels[FormField.caregiver_name]}
+                                                            label={
+                                                                fieldLabels[
+                                                                    FormField.caregiver_name
+                                                                ]
+                                                            }
                                                             fullWidth
                                                         />
                                                     </Grid>
@@ -204,7 +208,11 @@ const ClientInfo = (props: IProps) => {
                                                             component={TextField}
                                                             name={FormField.caregiver_phone}
                                                             variant="outlined"
-                                                            label={fieldLabels[FormField.caregiver_phone]}
+                                                            label={
+                                                                fieldLabels[
+                                                                    FormField.caregiver_phone
+                                                                ]
+                                                            }
                                                             fullWidth
                                                         />
                                                     </Grid>

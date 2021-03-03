@@ -183,7 +183,9 @@ const ClientForm = () => {
                                                             component={TextField}
                                                             name={FormField.caregiverName}
                                                             variant="outlined"
-                                                            label={fieldLabels[FormField.caregiverName]}
+                                                            label={
+                                                                fieldLabels[FormField.caregiverName]
+                                                            }
                                                             fullWidth
                                                         />
                                                     </Grid>
@@ -193,7 +195,11 @@ const ClientForm = () => {
                                                             component={TextField}
                                                             name={FormField.caregiverPhone}
                                                             variant="outlined"
-                                                            label={fieldLabels[FormField.caregiverPhone]}
+                                                            label={
+                                                                fieldLabels[
+                                                                    FormField.caregiverPhone
+                                                                ]
+                                                            }
                                                             fullWidth
                                                         />
                                                     </Grid>

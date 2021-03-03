@@ -31,8 +31,6 @@ const AdminNew = () => {
         >
             {({ isSubmitting }) => (
                 <div className={styles.container}>
-                    <b>ID</b>
-                    <p>{initialValues.id}</p>
                     <Form>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>

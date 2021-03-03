@@ -10,6 +10,7 @@ import Logout from "pages/Logout/Logout";
 import ToDo from "pages/ToDo/ToDo";
 import AdminList from "pages/AdminList/AdminList";
 import ClientList from "pages/ClientList/ClientList";
+import ClientDetails from "pages/ClientDetails/ClientDetails";
 import UserView from "pages/User/UserView";
 import ClientForm from "pages/NewClient/ClientForm";
 import NotFound from "pages/NotFound/NotFound";
@@ -52,7 +53,7 @@ export const pages: IPage[] = [
     {
         path: "/client/:clientId",
         name: "Client Details",
-        Component: ToDo,
+        Component: ClientDetails,
         showInNav: false,
     },
     {

@@ -8,7 +8,7 @@ import { useRef, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAllZones, IZone } from "util/cache";
-import requestAdminRows from "./requestAdminRows";
+import requestUserRows from "./requestUserRows";
 import React from "react";
 import { Cancel } from "@material-ui/icons";
 
@@ -62,7 +62,7 @@ const AdminList = () => {
         const loadInitialData = async () => {
             setLoading(true);
             setZones(await getAllZones());
-            await requestAdminRows(setRows, setLoading);
+            await requestUserRows(setRows, setLoading);
             setLoading(false);
             initialDataLoaded.current = true;
         };
@@ -71,7 +71,7 @@ const AdminList = () => {
     }, []);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const requestUserRowsDebounced = useCallback(debounce(requestAdminRows, 500), []);
+    const requestUserRowsDebounced = useCallback(debounce(requestUserRows, 500), []);
 
     useEffect(() => {
         if (!initialDataLoaded.current) {

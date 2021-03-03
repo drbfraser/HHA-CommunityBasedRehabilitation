@@ -6,8 +6,7 @@ import { SearchOption } from "./searchOptions";
 
 interface IResponseRow {
     id: number;
-    first_name: string;
-    last_name: string;
+    full_name: string;
     zone: number;
     [RiskCategory.HEALTH]: string;
     [RiskCategory.SOCIAL]: string;
@@ -24,9 +23,8 @@ const requestClientRows = async (
 
     searchValue = searchValue.trim();
 
-    // TODO: remove when backend will accept just one parameter for name
     if (searchOption === SearchOption.NAME) {
-        searchOption = "first_name";
+        searchOption = "full_name";
     }
 
     let urlParams: string =
@@ -40,7 +38,7 @@ const requestClientRows = async (
         const rows: RowsProp = responseRows.map((responseRow) => {
             return {
                 id: responseRow.id,
-                name: responseRow.first_name + " " + responseRow.last_name,
+                name: responseRow.full_name,
                 zone: zoneMap.get(responseRow.zone) ?? "",
                 [RiskCategory.HEALTH]: riskOptions[responseRow[RiskCategory.HEALTH]],
                 [RiskCategory.EDUCATION]: riskOptions[responseRow[RiskCategory.EDUCATION]],

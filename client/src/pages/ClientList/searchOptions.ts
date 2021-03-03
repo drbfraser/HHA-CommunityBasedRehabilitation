@@ -1,5 +1,5 @@
 export enum SearchOption {
-    ID = "ID",
     NAME = "Name",
+    ID = "ID",
     ZONE = "Zone",
 }

@@ -16,7 +16,7 @@ import { IRouteParams } from "./fields";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
 import { useState } from "react";
-import { handleSubmit } from "./handler";
+import { handleEditSubmit } from "./handler";
 import { useEffect } from "react";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { getAllZones, IZone } from "util/cache";
@@ -29,9 +29,12 @@ export enum UserActive {
 
 interface IProps {
     userInfo: IUser;
+    zoneOptions: IZone[];
 }
 
 const AdminEdit = (props: IProps) => {
+
+    console.log(props.userInfo);
     const styles = useStyles();
     const history = useHistory();
     const [isUserActive, setIsUserActive] = useState(initialValues.status === UserActive.active);
@@ -51,8 +54,8 @@ const AdminEdit = (props: IProps) => {
         const getUser = async () => {
             try {
                 // After we can get the id from the list it could work
-                const theUser: IUser = await (await apiFetch(Endpoint.USER, `${"/2"}`)).json();
-                setUser(theUser);
+                const userInfo: IUser = await (await apiFetch(Endpoint.USER, `${"/5"}`)).json();
+                setUser(userInfo);
             } catch (e) {
                 setLoadingError(true);
             }
@@ -68,10 +71,9 @@ const AdminEdit = (props: IProps) => {
 
     return (
         <Formik
-            // initialValues={props.userInfo}
-            initialValues={initialValues}
+            initialValues={props.userInfo}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}
+            onSubmit={handleEditSubmit}
         >
             {({ isSubmitting }) => (
                 <div className={styles.container}>
@@ -87,15 +89,14 @@ const AdminEdit = (props: IProps) => {
                                     <p>{userId}</p>
                                     <Form>
                                         <b>Username </b>
-                                        <br />
-                                        <br />
+                                        <p>{user.username}</p>
                                         <Grid container spacing={2}>
                                             <Grid item md={6} xs={12}>
                                                 <Field
                                                     component={TextField}
-                                                    name={AdminField.firstName}
+                                                    name={AdminField.first_name}
                                                     variant="outlined"
-                                                    label={fieldLabels[AdminField.firstName]}
+                                                    label={fieldLabels[AdminField.first_name]}
                                                     required
                                                     fullWidth
                                                 />
@@ -104,13 +105,23 @@ const AdminEdit = (props: IProps) => {
                                                 <Field
                                                     component={TextField}
                                                     required
-                                                    name={AdminField.lastName}
+                                                    name={AdminField.last_name}
                                                     variant="outlined"
-                                                    label={fieldLabels[AdminField.lastName]}
+                                                    label={fieldLabels[AdminField.last_name]}
                                                     fullWidth
                                                 />
                                             </Grid>
-                                            <Grid item md={7} xs={12}>
+                                            <Grid item md={6} xs={12}>
+                                                <Field
+                                                    component={TextField}
+                                                    required
+                                                    name={AdminField.phone_number}
+                                                    variant="outlined"
+                                                    label={fieldLabels[AdminField.phone_number]}
+                                                    fullWidth
+                                                />
+                                            </Grid>
+                                            <Grid item md={6} xs={12}>
                                                 <FormControl fullWidth variant="outlined">
                                                     <Field
                                                         component={TextField}
@@ -132,7 +143,8 @@ const AdminEdit = (props: IProps) => {
                                                     </Field>
                                                 </FormControl>
                                             </Grid>
-                                            <Grid item md={7} xs={12}>
+
+                                            <Grid item md={6} xs={12}>
                                                 <FormControl fullWidth variant="outlined">
                                                     <Field
                                                         component={TextField}

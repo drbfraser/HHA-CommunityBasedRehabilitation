@@ -1,6 +1,6 @@
 import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "util/endpoints";
-import { TFormValues } from "./fields";
+import { IUser, TFormValues } from "./fields";
 import history from "util/history";
 
 const addUser = async (userInfo: string) => {
@@ -18,23 +18,58 @@ const addUser = async (userInfo: string) => {
         });
 };
 
-export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
+const updateUser = async (userInfo: string, userId: number) => {
+    const init: RequestInit = {
+        method: "PUT",
+        body: userInfo,
+    };
+    return await apiFetch(Endpoint.USERS, `${userId}`, init)
+        .then((res) => {
+            return res.json();
+        })
+        .then((res) => {
+            return res;
+        });
+};
+
+export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
     const newUser = JSON.stringify({
-        first_name: values.firstName,
-        last_name: values.lastName,
-        phone_number: values.phoneNumber,
+        // id: values.id,
+        username: values.username,
+        password: values.password,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        phone_number: values.phone_number,
         zone: values.zone,
-        type: values.type,
+        // type: values.type,
+        // is_active: values.status
     });
 
     try {
         const user = await addUser(newUser);
-        history.push(`/admin/${user.id}`);
+        history.push(`/admin`);
     } catch (e) {
         helpers.setSubmitting(false);
     }
 };
 
+export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUser>) => {
+    const editUser = JSON.stringify({
+        first_name: values.first_name,
+        last_name: values.last_name,
+        phone_number: values.phone_number,
+        zone: values.zone,
+        // type: values.type,
+        // is_active: values.is_active,
+    });
+
+    try {
+        await updateUser(editUser, values.id);
+    } catch (e) {
+        alert("Sorry, there is an error while trying to edit the user!");
+        helpers.setSubmitting(false);
+    }
+};
 export const handleReset = (resetForm: () => void) => {
     if (window.confirm("Are you sure you want to clear the form?")) {
         resetForm();

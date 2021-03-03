@@ -5,15 +5,11 @@ import { IRouteParams, initialValues, validationSchema, IUser } from "./fields";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { Button, MenuItem, Select } from "@material-ui/core";
 import { Formik } from "formik";
-import { handleSubmit } from "./handler";
+import { handleNewSubmit } from "./handler";
 import { useEffect, useState } from "react";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { Alert, Skeleton } from "@material-ui/lab";
-import { getAllZones, getZoneMap, IZone } from "util/cache";
-import { SearchOption } from "pages/ClientList/searchOptions";
-// import { Select } from "formik-material-ui";
-import SearchBar from "components/SearchBar/SearchBar";
-// import { Select } from "formik-material-ui/dist/Select";
+import { getZoneMap } from "util/cache";
 
 const AdminView = () => {
     const styles = useStyles();
@@ -23,14 +19,15 @@ const AdminView = () => {
     const [zone, setZone] = useState<string>();
     const { userId } = useRouteMatch<IRouteParams>().params;
     const handleEdit = () => {
-        return history.push("/admin/edit/" + userId);
+        return history.push("/admin/edit/" + userId, user);
     };
 
     useEffect(() => {
         const getUser = async () => {
             try {
-                // After we can get the id from the list it could work
-                const theUser: IUser = await (await apiFetch(Endpoint.USER, `${"/2"}`)).json();
+                // After we can get the user id from the list it could work
+                // const theUser: IUser = await (await apiFetch(Endpoint.USER, `${userId}`)).json();
+                const theUser: IUser = await (await apiFetch(Endpoint.USER, `${"/5"}`)).json();
                 setUser(theUser);
                 const zoneMap = await getZoneMap();
                 setZone(zoneMap.get(theUser.id - 1));
@@ -45,7 +42,7 @@ const AdminView = () => {
         <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}
+            onSubmit={handleNewSubmit}
         >
             {({ isSubmitting }) => (
                 <div className={styles.container}>
@@ -80,7 +77,7 @@ const AdminView = () => {
                                     <p>{"Worker"}</p>
                                     {/* <p> {user.type === "W" ? "Worker" : "Admin"} </p> */}
                                     <b>Status</b>
-                                    <p> {user.is_active ? "Active" : "Disable"} </p>
+                                    <p> {user.is_active === undefined ? "Active" : "Disable"} </p>
                                 </>
                             ) : (
                                 <Skeleton variant="text" />

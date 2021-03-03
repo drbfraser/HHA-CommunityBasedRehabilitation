@@ -7,7 +7,7 @@ import { fieldLabels, AdminField, initialValues, validationSchema, workerOptions
 import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
-import { handleSubmit } from "./handler";
+import { handleNewSubmit } from "./handler";
 import { useState, useEffect } from "react";
 import { getAllZones, IZone } from "util/cache";
 
@@ -27,7 +27,7 @@ const AdminNew = () => {
         <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}
+            onSubmit={handleNewSubmit}
         >
             {({ isSubmitting }) => (
                 <div className={styles.container}>
@@ -38,9 +38,9 @@ const AdminNew = () => {
                             <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
-                                    name={AdminField.firstName}
+                                    name={AdminField.username}
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.firstName]}
+                                    label={fieldLabels[AdminField.username]}
                                     required
                                     fullWidth
                                 />
@@ -48,9 +48,29 @@ const AdminNew = () => {
                             <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
-                                    name={AdminField.lastName}
+                                    name={AdminField.password}
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.lastName]}
+                                    label={fieldLabels[AdminField.password]}
+                                    required
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Field
+                                    component={TextField}
+                                    name={AdminField.first_name}
+                                    variant="outlined"
+                                    label={fieldLabels[AdminField.first_name]}
+                                    required
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Field
+                                    component={TextField}
+                                    name={AdminField.last_name}
+                                    variant="outlined"
+                                    label={fieldLabels[AdminField.last_name]}
                                     required
                                     fullWidth
                                 />
@@ -81,8 +101,8 @@ const AdminNew = () => {
                                     fullWidth
                                     required
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.phoneNumber]}
-                                    name={AdminField.phoneNumber}
+                                    label={fieldLabels[AdminField.phone_number]}
+                                    name={AdminField.phone_number}
                                 />
                             </Grid>
                             <Grid item md={6} xs={12}>
@@ -115,7 +135,7 @@ const AdminNew = () => {
                                         type="submit"
                                         disabled={isSubmitting}
                                     >
-                                        Save
+                                        CREATE
                                     </Button>
                                 </Grid>
 

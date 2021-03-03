@@ -55,7 +55,7 @@ const ClientRisks = (props: any) => {
                                     Update {riskTypes[currentViewingRisk.risk_type].name} Risk
                                 </DialogTitle>
                                 <DialogContent>
-                                    <Grid container direction="column" spacing={1}>
+                                    <Grid container direction="column" spacing={2}>
                                         <Grid item>
                                             <FormControl fullWidth variant="outlined">
                                                 <Field
@@ -187,17 +187,19 @@ const ClientRisks = (props: any) => {
     return (
         <>
             <FormModal />
-            <Grid container spacing={5} direction="row" justify="flex-start">
-                <Grid item md={4} xs={12}>
-                    {renderRiskCard(props.healthRisk)}
+            <div className={styles.riskCardDiv}>
+                <Grid container spacing={5} direction="row" justify="flex-start">
+                    <Grid item md={4} xs={12}>
+                        {renderRiskCard(props.healthRisk)}
+                    </Grid>
+                    <Grid item md={4} xs={12}>
+                        {renderRiskCard(props.educatRisk)}
+                    </Grid>
+                    <Grid item md={4} xs={12}>
+                        {renderRiskCard(props.socialRisk)}
+                    </Grid>
                 </Grid>
-                <Grid item md={4} xs={12}>
-                    {renderRiskCard(props.educatRisk)}
-                </Grid>
-                <Grid item md={4} xs={12}>
-                    {renderRiskCard(props.socialRisk)}
-                </Grid>
-            </Grid>
+            </div>
         </>
     );
 };

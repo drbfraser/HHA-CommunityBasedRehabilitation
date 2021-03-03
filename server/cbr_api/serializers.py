@@ -68,6 +68,13 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
 
         read_only_fields = ["client", "timestamp", "risk_type"]
 
+class DisabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Disability
+        fields = [
+            "id",
+            "disability_type",
+        ]
 
 class NormalRiskSerializer(serializers.ModelSerializer):
     class Meta:

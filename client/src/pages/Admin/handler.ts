@@ -47,7 +47,7 @@ export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelper
 
     try {
         const user = await addUser(newUser);
-        history.push(`/admin`);
+        history.push(`/admin/view/${user.id}`);
     } catch (e) {
         helpers.setSubmitting(false);
     }

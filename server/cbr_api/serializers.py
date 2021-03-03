@@ -168,21 +168,15 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         visit = models.Visit.objects.create(**validated_data)
         visit.save()
 
-        def create_improvement(data):
-            data["visit"] = visit
-            improvement = models.Improvement.objects.create(**data)
+        for improvement_data in improvement_dataset:
+            improvement_data["visit"] = visit
+            improvement = models.Improvement.objects.create(**improvement_data)
             improvement.save()
 
-        def create_outcome(data):
-            data["visit"] = visit
-            outcome = models.Outcome.objects.create(**data)
-            outcome.save()
-
-        for improvement_data in improvement_dataset:
-            create_improvement(improvement_data)
-
         for outcome_data in outcome_dataset:
-            create_outcome(outcome_data)
+            outcome_data["visit"] = visit
+            outcome = models.Outcome.objects.create(**outcome_data)
+            outcome.save()
 
         return visit
 

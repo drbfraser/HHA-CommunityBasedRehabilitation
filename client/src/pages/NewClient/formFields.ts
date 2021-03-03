@@ -11,7 +11,8 @@ export enum FormField {
     phoneNumber = "phoneNumber",
     interviewConsent = "interviewConsent",
     caregiverPresent = "caregiverPresent",
-    caregiverContact = "caregiverContact",
+    caregiverPhone = "caregiverPhone",
+    caregiverName = "caregiverName",
     disability = "disability",
     healthRisk = "healthRisk",
     healthRequirements = "healthRequirements",
@@ -34,7 +35,8 @@ export const fieldLabels = {
     [FormField.phoneNumber]: "Phone Number",
     [FormField.interviewConsent]: "Consent to Interview? *",
     [FormField.caregiverPresent]: "Caregiver Present? *",
-    [FormField.caregiverContact]: "Caregiver Contact",
+    [FormField.caregiverPhone]: "Caregiver Phone Number",
+    [FormField.caregiverName]: "Caregiver Name",
     [FormField.disability]: "Type of Disability",
     [FormField.healthRisk]: "Health Risk",
     [FormField.healthRequirements]: "Health Requirement(s)",
@@ -57,7 +59,8 @@ export const initialValues = {
     [FormField.phoneNumber]: "",
     [FormField.interviewConsent]: false,
     [FormField.caregiverPresent]: false,
-    [FormField.caregiverContact]: "",
+    [FormField.caregiverPhone]: "",
+    [FormField.caregiverName]: "",
     [FormField.disability]: "",
     [FormField.healthRisk]: "",
     [FormField.healthRequirements]: "",
@@ -112,12 +115,8 @@ export const validationSchema = () =>
             .label(fieldLabels[FormField.socialRequirements])
             .required(),
         [FormField.socialGoals]: Yup.string().label(fieldLabels[FormField.socialGoals]).required(),
-        [FormField.caregiverContact]: Yup.string()
-            .label(fieldLabels[FormField.caregiverContact])
+        [FormField.caregiverPhone]: Yup.string()
+            .label(fieldLabels[FormField.caregiverPhone])
             .max(50)
-            .matches(Validation.phoneRegExp, "Phone number is not valid")
-            .notOneOf(
-                [Yup.ref("phone_number")],
-                "Caregiver's phone number should not be the same as the client's phone number."
-            ),
+            .matches(Validation.phoneRegExp, "Phone number is not valid"),
     });

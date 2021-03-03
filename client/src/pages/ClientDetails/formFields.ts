@@ -11,6 +11,8 @@ export enum FormField {
     phone_number = "phone_number",
     caregiver_present = "caregiver_present",
     caregiver_phone = "caregiver_phone",
+    // TODO: add caregiver_name and disability once implemented on backend.
+    caregiver_name = "caregiver_name",
     // disability = "disability"
 }
 
@@ -23,7 +25,9 @@ export const fieldLabels = {
     [FormField.zone]: "Zone",
     [FormField.phone_number]: "Phone Number",
     [FormField.caregiver_present]: "Caregiver Present?",
-    [FormField.caregiver_phone]: "Caregiver Contact",
+    [FormField.caregiver_phone]: "Caregiver Phone Number",
+    // TODO: add caregiver_name and disability once implemented on backend.
+    [FormField.caregiver_name]: "Caregiver Name",
     // [FormField.disability]: "Type of Disability"
 };
 
@@ -51,9 +55,5 @@ export const validationSchema = () =>
         [FormField.caregiver_phone]: Yup.string()
             .label(fieldLabels[FormField.caregiver_phone])
             .max(50)
-            .matches(Validation.phoneRegExp, "Phone number is not valid")
-            .notOneOf(
-                [Yup.ref("phone_number")],
-                "Caregiver's phone number should not be the same as the client's phone number."
-            ),
+            .matches(Validation.phoneRegExp, "Phone number is not valid"),
     });

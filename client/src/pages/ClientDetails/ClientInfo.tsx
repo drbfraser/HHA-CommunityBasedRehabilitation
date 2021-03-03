@@ -178,7 +178,7 @@ const ClientInfo = (props: IProps) => {
                                     />
                                 </Grid>
                                 {values.caregiver_present ? (
-                                    <Grid item md={8} xs={12}>
+                                    <Grid item md={7} xs={12}>
                                         <Accordion
                                             className={styles.caregiverAccordion}
                                             defaultExpanded
@@ -187,15 +187,28 @@ const ClientInfo = (props: IProps) => {
                                                 Caregiver Details:
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                                <Field
-                                                    disabled={!isEditing}
-                                                    className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
-                                                    component={TextField}
-                                                    name={FormField.caregiver_phone}
-                                                    variant="outlined"
-                                                    label={fieldLabels[FormField.caregiver_phone]}
-                                                    fullWidth
-                                                />
+                                            <Grid container direction="column" spacing={1}>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={styles.caregiverInputField}
+                                                            component={TextField}
+                                                            name={FormField.caregiver_name}
+                                                            variant="outlined"
+                                                            label={fieldLabels[FormField.caregiver_name]}
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={styles.caregiverInputField}
+                                                            component={TextField}
+                                                            name={FormField.caregiver_phone}
+                                                            variant="outlined"
+                                                            label={fieldLabels[FormField.caregiver_phone]}
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                </Grid>
                                             </AccordionDetails>
                                         </Accordion>
                                     </Grid>

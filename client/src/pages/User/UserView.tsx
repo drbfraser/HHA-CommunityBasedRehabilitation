@@ -4,28 +4,29 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { Alert, Skeleton } from "@material-ui/lab";
-// import { useRouteMatch } from "react-router-dom";
-// import { IRouteParams } from "pages/Admin/fields";
+import { getZoneMap } from "util/cache";
 
 const UserView = () => {
     const styles = useStyles();
     const [loadingError, setLoadingError] = useState(false);
     const [user, setUser] = useState<IUser>();
-    // const { userId } = useRouteMatch<IRouteParams>().params;
-    const userId = "/2"
+    const [zone, setZone] = useState<string>();
+    // Get the userId after the backend support
+    const userId = "/5";
     useEffect(() => {
         const getUser = async () => {
             try {
-                const theUser: IUser = await (
-                    await apiFetch(Endpoint.USER, `${userId}`)
-                ).json();
+                // After we can get the user id from the list it could work
+                const theUser: IUser = await (await apiFetch(Endpoint.USER, `${userId}`)).json();
                 setUser(theUser);
+                const zoneMap = await getZoneMap();
+                setZone(zoneMap.get(theUser.id - 1));
             } catch (e) {
                 setLoadingError(true);
             }
         };
         getUser();
-    },[userId]);
+    }, [userId]);
 
     // Read From initialValues field further from Server
     return (
@@ -44,7 +45,7 @@ const UserView = () => {
                             <b>ID</b>
                             <p> {user.id} </p>
                             <b>Zone</b>
-                            <p> {user.zone} </p>
+                            <p> {zone} </p>
                             <b>Phone Number</b>
                             <p> {user.phone_number} </p>
                         </>

@@ -22,4 +22,6 @@ urlpatterns = [
         views.DisabilityDetail.as_view(),
         name="disability-detail",
     ),
+    path("visits", views.VisitList.as_view(), name="visit-list"),
+    path("visit/<int:pk>", views.VisitDetail.as_view(), name="visit-detail"),
 ]

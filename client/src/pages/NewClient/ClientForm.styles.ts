@@ -9,6 +9,14 @@ export const useStyles = makeStyles(
         caregiverInputField: {
             backgroundColor: "#ffffff",
         },
+        disabledTextField: {
+            "& div": {
+                color: "black",
+            },
+            "& input:disabled": {
+                color: "black",
+            },
+        },
         profileImgContainer: {
             position: "relative",
             display: "block",

@@ -25,9 +25,7 @@ const AdminView = () => {
     useEffect(() => {
         const getUser = async () => {
             try {
-                // After we can get the user id from the list it could work
-                // const theUser: IUser = await (await apiFetch(Endpoint.USER, `${userId}`)).json();
-                const theUser: IUser = await (await apiFetch(Endpoint.USER, `${"/5"}`)).json();
+                const theUser: IUser = await (await apiFetch(Endpoint.USER, `${userId}`)).json();
                 setUser(theUser);
                 const zoneMap = await getZoneMap();
                 setZone(zoneMap.get(theUser.id - 1));

@@ -23,7 +23,7 @@ const updateUser = async (userInfo: string, userId: number) => {
         method: "PUT",
         body: userInfo,
     };
-    return await apiFetch(Endpoint.USERS, `${userId}`, init)
+    return await apiFetch(Endpoint.USER, `${userId}`, init)
         .then((res) => {
             return res.json();
         })
@@ -54,9 +54,11 @@ export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelper
 };
 
 export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUser>) => {
+    console.log(values);
     const editUser = JSON.stringify({
         first_name: values.first_name,
         last_name: values.last_name,
+        // password: values.password,
         phone_number: values.phone_number,
         zone: values.zone,
         // type: values.type,
@@ -65,6 +67,7 @@ export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUs
 
     try {
         await updateUser(editUser, values.id);
+        history.push(`/admin/view/${values.id}`);
     } catch (e) {
         alert("Sorry, there is an error while trying to edit the user!");
         helpers.setSubmitting(false);

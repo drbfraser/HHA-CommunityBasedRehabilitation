@@ -16,16 +16,14 @@ export interface IUser {
     type: string;
 }
 
-export const workerOptions = [
-    {
-        name: "Admin",
-        value: "A",
-    },
-    {
-        name: "Worker",
-        value: "W",
-    },
-];
+export enum Type {
+    ADMIN = "A",
+    WORKER = "W",
+}
+export const workerOptions = {
+    [Type.ADMIN]: "Admin",
+    [Type.WORKER]: "Worker",
+};
 
 export enum AdminField {
     username = "username",
@@ -36,7 +34,7 @@ export enum AdminField {
     zone = "zone",
     phone_number = "phone_number",
     type = "type",
-    status = "status",
+    is_active = "is_active",
 }
 export const fieldLabels = {
     [AdminField.username]: "Username",
@@ -47,7 +45,7 @@ export const fieldLabels = {
     [AdminField.zone]: "Zone",
     [AdminField.type]: "Type",
     [AdminField.phone_number]: "Phone Number",
-    [AdminField.status]: "Status",
+    [AdminField.is_active]: "Status",
 };
 export const initialValues = {
     [AdminField.username]: "",
@@ -56,8 +54,8 @@ export const initialValues = {
     [AdminField.first_name]: "",
     [AdminField.last_name]: "",
     [AdminField.zone]: "",
-    [AdminField.type]: workerOptions[1].value,
-    [AdminField.status]: "Active",
+    [AdminField.type]: "",
+    [AdminField.is_active]: "Active",
     [AdminField.phone_number]: "",
 };
 
@@ -88,5 +86,5 @@ export const validationSchema = () =>
             .max(50)
             .required(),
         [AdminField.type]: Yup.string().label(fieldLabels[AdminField.type]).required(),
-        [AdminField.status]: Yup.string().label(fieldLabels[AdminField.status]).required(),
+        [AdminField.is_active]: Yup.string().label(fieldLabels[AdminField.is_active]).required(),
     });

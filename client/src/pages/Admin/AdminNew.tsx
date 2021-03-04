@@ -113,9 +113,9 @@ const AdminNew = () => {
                                         label={fieldLabels[AdminField.type]}
                                         name={AdminField.type}
                                     >
-                                        {workerOptions.map((option) => (
-                                            <MenuItem key={option.value} value={option.value}>
-                                                {option.name}
+                                        {Object.entries(workerOptions).map(([value, name]) => (
+                                            <MenuItem key={value} value={value}>
+                                                {name}
                                             </MenuItem>
                                         ))}
                                     </Field>

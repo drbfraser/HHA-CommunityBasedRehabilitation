@@ -62,3 +62,13 @@ class RiskList(generics.ListCreateAPIView):
 class RiskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.ClientRisk.objects.all()
     serializer_class = serializers.NormalRiskSerializer
+
+
+class VisitList(generics.CreateAPIView):
+    queryset = models.Visit.objects.all()
+    serializer_class = serializers.DetailedVisitSerializer
+
+
+class VisitDetail(generics.RetrieveAPIView):
+    queryset = models.Visit.objects.all()
+    serializer_class = serializers.DetailedVisitSerializer

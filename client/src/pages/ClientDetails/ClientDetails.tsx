@@ -44,7 +44,6 @@ const ClientDetails = () => {
             );
 
             setClientInfo(clientInfo);
-            console.log(clientInfo);
         };
         const fetchAllZones = async () => {
             const zones = await getAllZones();

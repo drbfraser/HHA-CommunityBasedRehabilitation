@@ -10,11 +10,11 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 
 
 class Zone(models.Model):
-    zone_name = models.CharField(max_length=50)
+    zone_name = models.CharField(max_length=50, unique=True)
 
 
 class Disability(models.Model):
-    disability_type = models.CharField(max_length=50)
+    disability_type = models.CharField(max_length=50, unique=True)
 
 
 class UserCBRManager(BaseUserManager):

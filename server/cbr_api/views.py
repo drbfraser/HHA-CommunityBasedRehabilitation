@@ -43,6 +43,7 @@ class ClientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Client.objects.all()
     serializer_class = serializers.ClientDetailSerializer
 
+
 class DisabilityList(generics.ListCreateAPIView):
     queryset = models.Disability.objects.all()
     serializer_class = serializers.DisabilitySerializer

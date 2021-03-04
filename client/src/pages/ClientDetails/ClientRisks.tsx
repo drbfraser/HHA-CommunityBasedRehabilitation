@@ -24,9 +24,19 @@ import { fieldLabels, FormField, validationSchema } from "./riskFormFields";
 
 import { handleSubmit } from "./riskFormFieldHandler";
 
-const ClientRisks = (props: any) => {
+interface IProps {
+    healthRisk: IRisk;
+    socialRisk: IRisk;
+    educatRisk: IRisk;
+}
+
+const ClientRisks = (props: IProps) => {
     const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
     const [currentViewingRisk, setCurrentViewingRisk] = useState<IRisk>();
+
+    const [clientHealthRisk, setClientHealthRisk] = useState<IRisk>(props.healthRisk);
+    const [clientSocialRisk, setClientSocialRisk] = useState<IRisk>(props.socialRisk);
+    const [clientEducatRisk, setClientEducatRisk] = useState<IRisk>(props.educatRisk);
 
     const styles = useStyles();
 
@@ -34,8 +44,14 @@ const ClientRisks = (props: any) => {
         return currentViewingRisk ? (
             <>
                 <Formik
-                    onSubmit={() => {
-                        handleSubmit();
+                    onSubmit={(values) => {
+                        handleSubmit(
+                            values,
+                            currentViewingRisk,
+                            setClientHealthRisk,
+                            setClientEducatRisk,
+                            setClientSocialRisk
+                        );
                         setIsFormOpen(false);
                     }}
                     initialValues={currentViewingRisk}
@@ -190,13 +206,13 @@ const ClientRisks = (props: any) => {
             <div className={styles.riskCardDiv}>
                 <Grid container spacing={5} direction="row" justify="flex-start">
                     <Grid item md={4} xs={12}>
-                        {renderRiskCard(props.healthRisk)}
+                        {renderRiskCard(clientHealthRisk)}
                     </Grid>
                     <Grid item md={4} xs={12}>
-                        {renderRiskCard(props.educatRisk)}
+                        {renderRiskCard(clientEducatRisk)}
                     </Grid>
                     <Grid item md={4} xs={12}>
-                        {renderRiskCard(props.socialRisk)}
+                        {renderRiskCard(clientSocialRisk)}
                     </Grid>
                 </Grid>
             </div>

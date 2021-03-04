@@ -233,6 +233,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "zone",
             "village",
             "picture",
+            "caregiver_name",
             "caregiver_present",
             "caregiver_phone",
             "caregiver_email",
@@ -297,6 +298,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "zone",
             "village",
             "picture",
+            "caregiver_name",
             "caregiver_present",
             "caregiver_phone",
             "caregiver_email",
@@ -309,8 +311,6 @@ class ClientDetailSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         super().update(instance, validated_data)
-
         instance.full_name = instance.first_name + " " + instance.last_name
         instance.save()
-
         return instance

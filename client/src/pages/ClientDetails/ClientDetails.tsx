@@ -82,11 +82,16 @@ const ClientDetails = () => {
                     </Button>
                 </Grid>
             </Grid>
-            <ClientRisks
-                healthRisk={clientHealthRisk}
-                socialRisk={clientSocialRisk}
-                educatRisk={clientEducationRisk}
-            />
+            {clientHealthRisk && clientSocialRisk && clientEducationRisk ? (
+                <ClientRisks
+                    healthRisk={clientHealthRisk}
+                    socialRisk={clientSocialRisk}
+                    educatRisk={clientEducationRisk}
+                />
+            ) : (
+                <></>
+            )}
+
             <Grid item md={12} xs={12}>
                 <hr />
             </Grid>

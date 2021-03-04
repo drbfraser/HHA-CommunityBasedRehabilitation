@@ -98,6 +98,7 @@ class Client(models.Model):
     phone_number = models.CharField(
         max_length=50, blank=True
     )  # if contact info available
+    disability = models.ManyToManyField(Disability)
     created_by_user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT
     )
@@ -125,11 +126,6 @@ class ClientRisk(models.Model):
     risk_level = RiskLevel.getField()
     requirement = models.TextField()
     goal = models.TextField()
-
-
-class DisabilityJunction(models.Model):
-    disability = models.ForeignKey(Disability, on_delete=models.CASCADE)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
 
 class Visit(models.Model):

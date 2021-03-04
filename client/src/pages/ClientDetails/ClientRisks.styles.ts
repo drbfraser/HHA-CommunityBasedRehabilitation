@@ -5,7 +5,7 @@ export const useStyles = makeStyles(
         riskCardButtonAndBadge: {
             float: "right",
         },
-        riskCardDiv: {
+        riskCardContainer: {
             marginLeft: "10px",
             marginRight: "10px",
             width: "100%",

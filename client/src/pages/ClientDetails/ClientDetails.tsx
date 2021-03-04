@@ -44,6 +44,7 @@ const ClientDetails = () => {
             );
 
             setClientInfo(clientInfo);
+            console.log(clientInfo);
         };
         const fetchAllZones = async () => {
             const zones = await getAllZones();
@@ -83,11 +84,7 @@ const ClientDetails = () => {
                 </Grid>
             </Grid>
             {clientHealthRisk && clientSocialRisk && clientEducationRisk ? (
-                <ClientRisks
-                    healthRisk={clientHealthRisk}
-                    socialRisk={clientSocialRisk}
-                    educatRisk={clientEducationRisk}
-                />
+                <ClientRisks clientInfo={clientInfo} />
             ) : (
                 <></>
             )}

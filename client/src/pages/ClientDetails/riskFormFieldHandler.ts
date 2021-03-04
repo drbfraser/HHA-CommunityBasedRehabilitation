@@ -19,9 +19,7 @@ const updateRisk = async (updatedRisk: string) => {
 export const handleSubmit = async (
     values: IRisk,
     initialValues: IRisk,
-    setClientHealthRisk: (clientHealthRisk: IRisk) => void,
-    setClientSocialRisk: (setClientSocialRisk: IRisk) => void,
-    setClientEducatRisk: (setClientEducatRisk: IRisk) => void
+    setRisk: (risk: IRisk) => void
 ) => {
     if (values === initialValues) return;
 
@@ -33,17 +31,9 @@ export const handleSubmit = async (
         requirement: values.requirement,
     });
 
-    console.log(values.risk_type);
     try {
         const risk = await updateRisk(updatedRisk);
-
-        if (values.risk_type === "HEALTH") {
-            setClientHealthRisk(risk);
-        } else if (values.risk_type === "EDUCAT") {
-            setClientEducatRisk(risk);
-        } else {
-            setClientSocialRisk(risk);
-        }
+        setRisk(risk);
     } catch (e) {
         alert("Encountered an error while trying to update the client's risk");
     }

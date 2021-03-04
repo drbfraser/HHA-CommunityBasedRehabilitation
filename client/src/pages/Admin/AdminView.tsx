@@ -1,11 +1,11 @@
 import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import { useStyles } from "./styles";
-import { IRouteParams, initialValues, validationSchema, IUser } from "./fields";
+import { IRouteParams, initialValues, IUser, validationNewSchema } from "./fields";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { Button, MenuItem, Select } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { Formik } from "formik";
-import { handleNewSubmit } from "./handler";
+import { handleSubmit } from "./handler";
 import { useEffect, useState } from "react";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { Alert, Skeleton } from "@material-ui/lab";
@@ -35,14 +35,13 @@ const AdminView = () => {
         };
         getUser();
     }, [userId]);
-
     return (
         <Formik
             initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleNewSubmit}
+            validationSchema={validationNewSchema}
+            onSubmit={handleSubmit}
         >
-            {({ isSubmitting }) => (
+            {({}) => (
                 <div className={styles.container}>
                     {loadingError ? (
                         <Alert severity="error">
@@ -67,13 +66,10 @@ const AdminView = () => {
                                     <p> {userId} </p>
                                     <b>Zone</b>
                                     <p> {zone} </p>
-                                    {/* <p> {zoneMap.get(user.zone)} </p> */}
                                     <b>Phone Number</b>
                                     <p> {user.phone_number} </p>
-                                    {/* after update the endpoint change both */}
                                     <b>Type</b>
                                     <p>{"Worker"}</p>
-                                    {/* <p> {user.type === "W" ? "Worker" : "Admin"} </p> */}
                                     <b>Status</b>
                                     <p> {user.is_active === undefined ? "Active" : "Disable"} </p>
                                 </>

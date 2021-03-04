@@ -23,6 +23,7 @@ const updateUser = async (userInfo: string, userId: number) => {
         method: "PUT",
         body: userInfo,
     };
+
     return await apiFetch(Endpoint.USER, `${userId}`, init)
         .then((res) => {
             return res.json();
@@ -41,28 +42,36 @@ export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelper
         last_name: values.last_name,
         phone_number: values.phone_number,
         zone: values.zone,
-        // type: values.type,
-        // is_active: values.status
+        type: values.type,
+        is_active: values.is_active,
     });
 
     try {
         const user = await addUser(newUser);
         history.push(`/admin/view/${user.id}`);
     } catch (e) {
+        alert(`Sorry, the username: ${values.username} exist, please try another one !`);
         helpers.setSubmitting(false);
     }
 };
 
+export const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
+    setTimeout(() => {
+        helpers.setSubmitting(false);
+    }, 1000);
+};
+// TODO: Add type and is_active and change the password
 export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUser>) => {
-    console.log(values);
     const editUser = JSON.stringify({
+        username: values.username,
         first_name: values.first_name,
         last_name: values.last_name,
-        // password: values.password,
+        // Might need to get the password from the user or delete that attribute when we use PUT
+        password: "needPassword",
         phone_number: values.phone_number,
         zone: values.zone,
-        // type: values.type,
-        // is_active: values.is_active,
+        type: values.type,
+        is_active: values.is_active,
     });
 
     try {

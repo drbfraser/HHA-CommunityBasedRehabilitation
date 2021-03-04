@@ -50,7 +50,7 @@ export const fieldLabels = {
 export const initialValues = {
     [AdminField.username]: "",
     [AdminField.password]: "",
-    [AdminField.userID]: "10",
+    [AdminField.userID]: "",
     [AdminField.first_name]: "",
     [AdminField.last_name]: "",
     [AdminField.zone]: "",
@@ -60,8 +60,8 @@ export const initialValues = {
 };
 
 export type TFormValues = typeof initialValues;
-
-export const validationSchema = () =>
+// We need to separate the schema for new and edit
+export const validationNewSchema = () =>
     Yup.object().shape({
         [AdminField.first_name]: Yup.string()
             .label(fieldLabels[AdminField.first_name])
@@ -77,8 +77,8 @@ export const validationSchema = () =>
             .max(50),
         [AdminField.password]: Yup.string()
             .label(fieldLabels[AdminField.password])
-            .required()
-            .min(8),
+            .min(8)
+            .required(),
         [AdminField.zone]: Yup.string().label(fieldLabels[AdminField.zone]).required(),
         [AdminField.phone_number]: Yup.string()
             .matches(Validation.phoneRegExp, "Phone number is not valid")
@@ -87,4 +87,25 @@ export const validationSchema = () =>
             .required(),
         [AdminField.type]: Yup.string().label(fieldLabels[AdminField.type]).required(),
         [AdminField.is_active]: Yup.string().label(fieldLabels[AdminField.is_active]).required(),
+    });
+
+export const validationEditSchema = () =>
+    Yup.object().shape({
+        [AdminField.first_name]: Yup.string()
+            .label(fieldLabels[AdminField.first_name])
+            .required()
+            .max(50),
+        [AdminField.last_name]: Yup.string()
+            .label(fieldLabels[AdminField.last_name])
+            .required()
+            .max(50),
+        [AdminField.username]: Yup.string().label(fieldLabels[AdminField.username]).max(50),
+        [AdminField.zone]: Yup.string().label(fieldLabels[AdminField.zone]).required(),
+        [AdminField.phone_number]: Yup.string()
+            .matches(Validation.phoneRegExp, "Phone number is not valid")
+            .label(fieldLabels[AdminField.phone_number])
+            .max(50)
+            .required(),
+        // [AdminField.type]: Yup.string().label(fieldLabels[AdminField.type]),
+        // [AdminField.is_active]: Yup.string().label(fieldLabels[AdminField.is_active]),
     });

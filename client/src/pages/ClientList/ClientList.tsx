@@ -94,7 +94,7 @@ const ClientList = () => {
     const [isSocialHidden, setSocialHidden] = useState<boolean>(false);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const [searchValue, setSearchValue] = useState<string>("");
-    const [searchOption, setSearchOption] = useState<string>(SearchOption.ID);
+    const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
     const [zones, setZones] = useState<IZone[]>([]);
     const [rows, setRows] = useState<RowsProp>([]);
 
@@ -104,7 +104,7 @@ const ClientList = () => {
 
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
-    const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}/risks`);
+    const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
         setOptionsAnchorEl(event.currentTarget);
     const onOptionsClose = () => setOptionsAnchorEl(null);
@@ -248,7 +248,7 @@ const ClientList = () => {
                 <div className={styles.searchOptions}>
                     <Select
                         color={"primary"}
-                        defaultValue={SearchOption.ID}
+                        defaultValue={SearchOption.NAME}
                         value={searchOption}
                         onChange={(event) => {
                             setSearchValue("");

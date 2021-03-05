@@ -12,8 +12,7 @@ enum RiskTypeAPIColumn {
 
 interface IResponseRow {
     id: number;
-    first_name: string;
-    last_name: string;
+    full_name: string;
     zone: number;
     [RiskTypeAPIColumn.HEALTH]: string;
     [RiskTypeAPIColumn.EDUCATION]: string;
@@ -30,9 +29,8 @@ const requestClientRows = async (
 
     searchValue = searchValue.trim();
 
-    // TODO: remove when backend will accept just one parameter for name
     if (searchOption === SearchOption.NAME) {
-        searchOption = "first_name";
+        searchOption = "full_name";
     }
 
     let urlParams: string =
@@ -46,7 +44,7 @@ const requestClientRows = async (
         const rows: RowsProp = responseRows.map((responseRow) => {
             return {
                 id: responseRow.id,
-                name: responseRow.first_name + " " + responseRow.last_name,
+                name: responseRow.full_name,
                 zone: zoneMap.get(responseRow.zone) ?? "",
                 [RiskType.HEALTH]: responseRow[RiskTypeAPIColumn.HEALTH],
                 [RiskType.EDUCATION]: responseRow[RiskTypeAPIColumn.EDUCATION],

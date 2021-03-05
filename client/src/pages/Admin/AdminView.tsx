@@ -41,7 +41,7 @@ const AdminView = () => {
             validationSchema={validationNewSchema}
             onSubmit={handleSubmit}
         >
-            {({}) => (
+            {({ isSubmitting }) => (
                 <div className={styles.container}>
                     {loadingError ? (
                         <Alert severity="error">
@@ -71,7 +71,8 @@ const AdminView = () => {
                                     <b>Type</b>
                                     <p>{"Worker"}</p>
                                     <b>Status</b>
-                                    <p> {user.is_active === undefined ? "Active" : "Disable"} </p>
+                                    <p>{"Active"} </p>
+                                    {/* <p> {user.is_active === undefined ? "Active" : "Disable"} </p> */}
                                 </>
                             ) : (
                                 <Skeleton variant="text" />

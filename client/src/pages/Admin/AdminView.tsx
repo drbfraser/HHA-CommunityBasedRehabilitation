@@ -1,4 +1,3 @@
-import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import { useStyles } from "./styles";
 import { IRouteParams, IUser } from "./fields";

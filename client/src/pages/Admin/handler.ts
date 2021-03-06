@@ -34,7 +34,6 @@ const updateUser = async (userInfo: string, userId: number) => {
 };
 
 export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
-    console.log(values.zone);
     const newUser = JSON.stringify({
         username: values.username,
         password: values.password,

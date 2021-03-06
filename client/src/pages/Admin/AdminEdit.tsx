@@ -14,10 +14,6 @@ import { getAllZones, IZone } from "util/cache";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { apiFetch, Endpoint } from "util/endpoints";
 
-export enum UserActive {
-    disable = "Disable",
-    active = "Active",
-}
 const AdminEdit = () => {
     const styles = useStyles();
     const history = useHistory();
@@ -54,7 +50,8 @@ const AdminEdit = () => {
                 <div className={styles.container}>
                     {loadingError ? (
                         <Alert severity="error">
-                            The user might not exist. Please go back and try again.
+                            The user might not exist, so you cannot view. Please go back and try
+                            again.
                         </Alert>
                     ) : (
                         <>
@@ -154,7 +151,6 @@ const AdminEdit = () => {
                                         >
                                             <Button
                                                 variant="contained"
-                                                type="reset"
                                                 className={
                                                     user.is_active
                                                         ? styles["disableBtn"]
@@ -163,7 +159,7 @@ const AdminEdit = () => {
                                                 disabled={isSubmitting}
                                                 onClick={handleDisable}
                                             >
-                                                {user.is_active ? "Disable" : "Active"}
+                                                {user.is_active ? "Disable" : "Activate"}
                                             </Button>
                                             <Grid item>
                                                 <Button

@@ -56,12 +56,6 @@ export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelper
     }
 };
 
-export const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
-    setTimeout(() => {
-        helpers.setSubmitting(false);
-    }, 1000);
-};
-
 // TODO: Add type and is_active and change the password
 export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUser>) => {
     console.log(values.zone);

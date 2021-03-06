@@ -35,12 +35,12 @@ const AdminView = () => {
         };
         getUser();
     }, [userId]);
-
+    console.log(user);
     return (
         <div className={styles.container}>
             {loadingError ? (
                 <Alert severity="error">
-                    The user might not exist. Please go back and try again.
+                    The user might not exist, so you cannot view. Please go back and try again.
                 </Alert>
             ) : (
                 <>

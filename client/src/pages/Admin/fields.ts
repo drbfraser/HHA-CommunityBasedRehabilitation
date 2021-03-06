@@ -16,13 +16,14 @@ export interface IUser {
     type: string;
 }
 
-export enum Type {
+export enum UserType {
     ADMIN = "A",
     WORKER = "W",
 }
+
 export const workerOptions = {
-    [Type.ADMIN]: "Admin",
-    [Type.WORKER]: "Worker",
+    [UserType.ADMIN]: "Admin",
+    [UserType.WORKER]: "Worker",
 };
 
 export enum AdminField {
@@ -36,6 +37,7 @@ export enum AdminField {
     type = "type",
     is_active = "is_active",
 }
+
 export const fieldLabels = {
     [AdminField.username]: "Username",
     [AdminField.password]: "Password",
@@ -47,6 +49,7 @@ export const fieldLabels = {
     [AdminField.phone_number]: "Phone Number",
     [AdminField.is_active]: "Status",
 };
+
 export const initialValues = {
     [AdminField.username]: "",
     [AdminField.password]: "",
@@ -60,6 +63,7 @@ export const initialValues = {
 };
 
 export type TFormValues = typeof initialValues;
+
 // We need to separate the schema for new and edit
 export const validationNewSchema = () =>
     Yup.object().shape({

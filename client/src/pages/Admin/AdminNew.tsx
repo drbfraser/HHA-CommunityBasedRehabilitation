@@ -11,17 +11,15 @@ import {
     validationNewSchema,
 } from "./fields";
 import Button from "@material-ui/core/Button";
-import { useHistory } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
-import { handleNewSubmit } from "./handler";
+import { handleCancel, handleNewSubmit } from "./handler";
 import { useState, useEffect } from "react";
 import { getAllZones, IZone } from "util/cache";
 
 const AdminNew = () => {
     const styles = useStyles();
-    const history = useHistory();
-    const handleCancel = () => history.goBack();
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+
     useEffect(() => {
         const fetchAllZones = async () => {
             const zones = await getAllZones();
@@ -29,6 +27,7 @@ const AdminNew = () => {
         };
         fetchAllZones();
     }, []);
+
     return (
         <Formik
             initialValues={initialValues}
@@ -139,7 +138,7 @@ const AdminNew = () => {
                                         type="submit"
                                         disabled={isSubmitting}
                                     >
-                                        CREATE
+                                        Create
                                     </Button>
                                 </Grid>
 

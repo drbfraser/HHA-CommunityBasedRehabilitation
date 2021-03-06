@@ -34,8 +34,8 @@ const updateUser = async (userInfo: string, userId: number) => {
 };
 
 export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
+    console.log(values.zone);
     const newUser = JSON.stringify({
-        // id: values.id,
         username: values.username,
         password: values.password,
         first_name: values.first_name,
@@ -50,7 +50,9 @@ export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelper
         const user = await addUser(newUser);
         history.push(`/admin/view/${user.id}`);
     } catch (e) {
-        alert(`Sorry, the username: ${values.username} exist, please try another one !`);
+        alert(
+            `Sorry, a user with the username: ${values.username} already exists. Please select a different one.`
+        );
         helpers.setSubmitting(false);
     }
 };
@@ -60,8 +62,10 @@ export const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormVa
         helpers.setSubmitting(false);
     }, 1000);
 };
+
 // TODO: Add type and is_active and change the password
 export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUser>) => {
+    console.log(values.zone);
     const editUser = JSON.stringify({
         username: values.username,
         first_name: values.first_name,
@@ -82,8 +86,5 @@ export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUs
         helpers.setSubmitting(false);
     }
 };
-export const handleReset = (resetForm: () => void) => {
-    if (window.confirm("Are you sure you want to clear the form?")) {
-        resetForm();
-    }
-};
+
+export const handleCancel = () => history.goBack();

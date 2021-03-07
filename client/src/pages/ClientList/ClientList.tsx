@@ -32,6 +32,7 @@ import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
 import requestClientRows from "./requestClientRows";
 import { getAllZones, IZone } from "util/cache";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
+import { useHideColumnsStyles } from "styles/HideColumns.styles";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
     const risk1: IRiskLevel = Object(params1.value);
@@ -102,6 +103,7 @@ const ClientList = () => {
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
     const searchOptionsStyle = useSearchOptionsStyles();
+    const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
 
     const isOptionsOpen = Boolean(optionsAnchorEl);
@@ -192,7 +194,7 @@ const ClientList = () => {
 
     return (
         <div className={styles.root}>
-            <IconButton className={styles.optionsButton} onClick={onOptionsClick}>
+            <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
                 <MoreVert />
             </IconButton>
             <Popover
@@ -208,11 +210,11 @@ const ClientList = () => {
                     horizontal: "center",
                 }}
             >
-                <div className={styles.optionsContainer}>
+                <div className={hideColumnsStyle.optionsContainer}>
                     {columns.map(
                         (column): JSX.Element => {
                             return (
-                                <div key={column.field} className={styles.optionsRow}>
+                                <div key={column.field} className={hideColumnsStyle.optionsRow}>
                                     <Typography component={"span"} variant={"body2"}>
                                         {column.headerName}
                                     </Typography>

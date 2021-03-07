@@ -5,6 +5,7 @@ import { DataGrid, DensityTypes, RowsProp, GridOverlay } from "@material-ui/data
 import { LinearProgress, IconButton, debounce, Typography, Select, MenuItem, Popover, Switch } from "@material-ui/core";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
+import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import { useRef, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -39,6 +40,7 @@ const AdminList = () => {
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
     const searchOptionsStyle = useSearchOptionsStyles();
+    const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
     const [loading, setLoading] = useState<boolean>(true);
     const [isIdHidden, setIdHidden] = useState<boolean>(false);
@@ -114,7 +116,7 @@ const AdminList = () => {
                         </Select>
                     </div>
                     <SearchBar />
-                    <IconButton className={styles.optionsButton} onClick={onOptionsClick}>
+                    <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
                         <MoreVert />
                     </IconButton>
                     <Popover
@@ -130,11 +132,11 @@ const AdminList = () => {
                             horizontal: "center",
                         }}
                     >
-                        <div className={styles.optionsContainer}>
+                        <div className={hideColumnsStyle.optionsContainer}>
                             {columns.map(
                                 (column): JSX.Element => {
                                     return (
-                                        <div key={column.field} className={styles.optionsRow}>
+                                        <div key={column.field} className={hideColumnsStyle.optionsRow}>
                                             <Typography component={"span"} variant={"body2"}>
                                                 {column.headerName}
                                             </Typography>

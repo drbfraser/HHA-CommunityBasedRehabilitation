@@ -2,8 +2,9 @@ import { useStyles } from "./AdminList.styles";
 import SearchBar from "components/SearchBar/SearchBar";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { DataGrid, ColDef, DensityTypes, RowsProp, GridOverlay } from "@material-ui/data-grid";
-import { LinearProgress, IconButton, debounce, Typography } from "@material-ui/core";
+import { LinearProgress, IconButton, debounce, Typography, Select, MenuItem } from "@material-ui/core";
 import { useDataGridStyles } from "styles/DataGrid.styles";
+import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useRef, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -11,6 +12,7 @@ import { getAllZones, IZone } from "util/cache";
 import requestUserRows from "./requestUserRows";
 import React from "react";
 import { Cancel } from "@material-ui/icons";
+import { SearchOption } from "./searchOptions";
 
 const RenderLoadingOverlay = () => {
     return (
@@ -43,6 +45,7 @@ const columns: ColDef[] = [
 const AdminList = () => {
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
+    const searchOptionsStyle = useSearchOptionsStyles();
     const history = useHistory();
     const [loading, setLoading] = useState<boolean>(true);
     // Will use "zones" once searching is implemented and remove next comment
@@ -88,6 +91,18 @@ const AdminList = () => {
                     <IconButton onClick={onAddClick} className={styles.icon}>
                         <PersonAddIcon />
                     </IconButton>
+                    <div className={searchOptionsStyle.searchOptions}>
+                        <Select
+                            color={"primary"}
+                            defaultValue={SearchOption.NAME}
+                        >
+                            {Object.values(SearchOption).map((option) => (
+                                <MenuItem key={option} value={option}>
+                                    {option}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </div>
                     <SearchBar />
                 </div>
                 <div className={styles.dataGridWrapper}>

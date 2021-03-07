@@ -31,6 +31,7 @@ import { SearchOption } from "./searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
 import requestClientRows from "./requestClientRows";
 import { getAllZones, IZone } from "util/cache";
+import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
     const risk1: IRiskLevel = Object(params1.value);
@@ -100,6 +101,7 @@ const ClientList = () => {
 
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
+    const searchOptionsStyle = useSearchOptionsStyles();
     const history = useHistory();
 
     const isOptionsOpen = Boolean(optionsAnchorEl);
@@ -245,7 +247,7 @@ const ClientList = () => {
                 </Typography>
             </div>
             <div className={styles.search}>
-                <div className={styles.searchOptions}>
+                <div className={searchOptionsStyle.searchOptions}>
                     <Select
                         color={"primary"}
                         defaultValue={SearchOption.NAME}

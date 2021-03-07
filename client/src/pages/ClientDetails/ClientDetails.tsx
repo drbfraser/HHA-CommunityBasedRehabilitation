@@ -21,9 +21,6 @@ const ClientDetails = () => {
     const { clientId } = useParams<IUrlParam>();
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
     const [clientInfo, setClientInfo] = useState<IClient>();
-    const [clientHealthRisk, setClientHealthRisk] = useState<IRisk>();
-    const [clientSocialRisk, setClientSocialRisk] = useState<IRisk>();
-    const [clientEducationRisk, setClientEducationRisk] = useState<IRisk>();
 
     const history = useHistory();
 
@@ -33,15 +30,6 @@ const ClientDetails = () => {
             const tempDate = new Date(clientInfo.birth_date * 1000).toISOString();
             clientInfo.birth_date = tempDate.substring(0, 10);
             clientInfo.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
-            setClientHealthRisk(
-                clientInfo.risks.filter((risk: IRisk) => risk.risk_type === "HEALTH")[0]
-            );
-            setClientSocialRisk(
-                clientInfo.risks.filter((risk: IRisk) => risk.risk_type === "SOCIAL")[0]
-            );
-            setClientEducationRisk(
-                clientInfo.risks.filter((risk: IRisk) => risk.risk_type === "EDUCAT")[0]
-            );
 
             setClientInfo(clientInfo);
         };
@@ -82,11 +70,8 @@ const ClientDetails = () => {
                     </Button>
                 </Grid>
             </Grid>
-            <ClientRisks
-                healthRisk={clientHealthRisk}
-                socialRisk={clientSocialRisk}
-                educatRisk={clientEducationRisk}
-            />
+            <ClientRisks clientInfo={clientInfo} />
+
             <Grid item md={12} xs={12}>
                 <hr />
             </Grid>

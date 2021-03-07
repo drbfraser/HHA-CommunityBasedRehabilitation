@@ -1,8 +1,8 @@
 import { useStyles } from "./AdminList.styles";
 import SearchBar from "components/SearchBar/SearchBar";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import { DataGrid, ColDef, DensityTypes, RowsProp, GridOverlay } from "@material-ui/data-grid";
-import { LinearProgress, IconButton, debounce, Typography, Select, MenuItem } from "@material-ui/core";
+import { DataGrid, DensityTypes, RowsProp, GridOverlay } from "@material-ui/data-grid";
+import { LinearProgress, IconButton, debounce, Typography, Select, MenuItem, Popover, Switch } from "@material-ui/core";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useRef, useCallback } from "react";
@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { getAllZones, IZone } from "util/cache";
 import requestUserRows from "./requestUserRows";
 import React from "react";
-import { Cancel } from "@material-ui/icons";
+import { Cancel, MoreVert } from "@material-ui/icons";
 import { SearchOption } from "./searchOptions";
 
 const RenderLoadingOverlay = () => {
@@ -35,29 +35,39 @@ const RenderNoRowsOverlay = () => {
     );
 };
 
-const columns: ColDef[] = [
-    { field: "id", headerName: "ID", flex: 0.55 },
-    { field: "name", headerName: "Name", flex: 1 },
-    { field: "type", headerName: "Type", flex: 1 },
-    { field: "status", headerName: "Status", flex: 1 },
-];
-
 const AdminList = () => {
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
     const searchOptionsStyle = useSearchOptionsStyles();
     const history = useHistory();
     const [loading, setLoading] = useState<boolean>(true);
+    const [isIdHidden, setIdHidden] = useState<boolean>(false);
+    const [isNameHidden, setNameHidden] = useState<boolean>(false);
+    const [isTypeHidden, setTypeHidden] = useState<boolean>(false);
+    const [isStatusHidden, setStatusHidden] = useState<boolean>(false);
     // Will use "zones" once searching is implemented and remove next comment
     // eslint-disable-next-line
     const [zones, setZones] = useState<IZone[]>([]);
     const [rows, setRows] = useState<RowsProp>([]);
+    const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
+
+    const isOptionsOpen = Boolean(optionsAnchorEl);
 
     const onRowClick = (row: any) => {
         const user = row.row;
         history.push("/admin/view/" + user.id);
     };
     const onAddClick = () => history.push("/admin/new");
+    const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+    setOptionsAnchorEl(event.currentTarget);
+    const onOptionsClose = () => setOptionsAnchorEl(null);
+
+    const columns = [
+        { field: "id", headerName: "ID", flex: 0.55, hide: isIdHidden, hideFunction: setIdHidden },
+        { field: "name", headerName: "Name", flex: 1, hide: isNameHidden, hideFunction: setNameHidden},
+        { field: "type", headerName: "Type", flex: 1, hide: isTypeHidden, hideFunction: setTypeHidden },
+        { field: "status", headerName: "Status", flex: 1, hide: isStatusHidden, hideFunction: setStatusHidden },
+    ];
 
     const initialDataLoaded = useRef(false);
 
@@ -104,6 +114,40 @@ const AdminList = () => {
                         </Select>
                     </div>
                     <SearchBar />
+                    <IconButton className={styles.optionsButton} onClick={onOptionsClick}>
+                        <MoreVert />
+                    </IconButton>
+                    <Popover
+                        open={isOptionsOpen}
+                        anchorEl={optionsAnchorEl}
+                        onClose={onOptionsClose}
+                        anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                        }}
+                        transformOrigin={{
+                            vertical: "top",
+                            horizontal: "center",
+                        }}
+                    >
+                        <div className={styles.optionsContainer}>
+                            {columns.map(
+                                (column): JSX.Element => {
+                                    return (
+                                        <div key={column.field} className={styles.optionsRow}>
+                                            <Typography component={"span"} variant={"body2"}>
+                                                {column.headerName}
+                                            </Typography>
+                                            <Switch
+                                                checked={!column.hide}
+                                                onClick={() => column.hideFunction(!column.hide)}
+                                            />
+                                        </div>
+                                    );
+                                }
+                            )}
+                        </div>
+                    </Popover>
                 </div>
                 <div className={styles.dataGridWrapper}>
                     <DataGrid

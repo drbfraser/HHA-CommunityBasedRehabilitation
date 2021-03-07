@@ -14,6 +14,21 @@ export const useStyles = makeStyles({
         float: "right",
         display: "flex",
     },
+    optionsContainer: {
+        padding: "5px",
+    },
+    optionsButton: {
+        padding: "6px",
+        float: "right",
+        verticalAlign: "middle",
+    },
+    optionsRow: {
+        padding: "2px 0px 2px 0px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "100%",
+    },
     dataGridWrapper: {
         height: "100%",
         width: "100%",

@@ -44,6 +44,16 @@ class ClientDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ClientDetailSerializer
 
 
+class DisabilityList(generics.ListCreateAPIView):
+    queryset = models.Disability.objects.all()
+    serializer_class = serializers.DisabilitySerializer
+
+
+class DisabilityDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.Disability.objects.all()
+    serializer_class = serializers.DisabilitySerializer
+
+
 class ZoneList(generics.ListCreateAPIView):
     queryset = models.Zone.objects.all()
     serializer_class = serializers.ZoneSerializer

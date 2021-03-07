@@ -22,9 +22,10 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 ### 3. Seed Some Data
 
-You'll likely want to seed some data for development purposes. *Hint:* you will need zones in order to create a user.
+You'll likely want to seed some data for development purposes. *Hint:* you will need zones in order to create a user. *Hint2:* you will need disabilities in order to create a client (in the future).
 
 - Zones: `docker exec cbr_django python manage.py seedzones`
+- Disabilities: `docker exec cbr_django python manage.py seeddisabilities`
 
 ### 4. Create an Account
 

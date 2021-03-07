@@ -53,6 +53,15 @@ class ZoneSerializer(serializers.ModelSerializer):
         ]
 
 
+class DisabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Disability
+        fields = [
+            "id",
+            "disability_type",
+        ]
+
+
 class ClientCreationRiskSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ClientRisk
@@ -226,6 +235,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "birth_date",
             "gender",
             "phone_number",
+            "disability",
             "created_by_user",
             "created_date",
             "longitude",
@@ -261,8 +271,8 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         )
         validated_data["created_by_user"] = self.context["request"].user
         validated_data["created_date"] = current_time
-        client = models.Client.objects.create(**validated_data)
-        client.save()
+
+        client = super().create(validated_data)
 
         def create_risk(data, type):
             data["client"] = client
@@ -291,6 +301,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "birth_date",
             "gender",
             "phone_number",
+            "disability",
             "created_by_user",
             "created_date",
             "longitude",

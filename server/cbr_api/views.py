@@ -7,12 +7,20 @@ from drf_spectacular.utils import extend_schema
 
 class UserList(generics.ListCreateAPIView):
     queryset = models.UserCBR.objects.all()
-    serializer_class = serializers.UserCBRSerializer
+    serializer_class = serializers.UserCBRCreationSerializer
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRSerializer
+
+
+class UserCurrent(generics.RetrieveAPIView):
+    queryset = models.UserCBR.objects.all()
+    serializer_class = serializers.UserCBRSerializer
+
+    def get_object(self):
+        return generics.get_object_or_404(self.queryset, id=self.request.user.id)
 
 
 class ClientList(generics.ListCreateAPIView):

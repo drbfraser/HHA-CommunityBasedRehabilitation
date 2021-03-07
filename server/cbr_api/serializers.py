@@ -44,6 +44,44 @@ class UserCBRSerializer(serializers.ModelSerializer):
         )
 
 
+class UserPasswordSerializer(serializers.ModelSerializer):
+    new_password = serializers.CharField(
+        write_only=True, required=True, validators=[validate_password]
+    )
+
+    class Meta:
+        model = models.UserCBR
+        fields = ("new_password",)
+
+    def update(self, user, validated_data):
+        user.set_password(validated_data["new_password"])
+        user.save()
+
+        return user
+
+
+class UserCurrentPasswordSerializer(serializers.ModelSerializer):
+    current_password = serializers.CharField(write_only=True, required=True)
+    new_password = serializers.CharField(
+        write_only=True, required=True, validators=[validate_password]
+    )
+
+    class Meta:
+        model = models.UserCBR
+        fields = ("current_password", "new_password")
+
+    def update(self, user, validated_data):
+        if not user.check_password(validated_data["current_password"]):
+            raise serializers.ValidationError(
+                {"detail": "Current password is incorrect"}
+            )
+
+        user.set_password(validated_data["new_password"])
+        user.save()
+
+        return user
+
+
 class ZoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Zone

@@ -23,6 +23,21 @@ class UserCurrent(generics.RetrieveAPIView):
         return generics.get_object_or_404(self.queryset, id=self.request.user.id)
 
 
+class UserPassword(generics.UpdateAPIView):
+    queryset = models.UserCBR.objects.all()
+    serializer_class = serializers.UserPasswordSerializer
+    http_method_names = ["put"]
+
+
+class UserCurrentPassword(generics.UpdateAPIView):
+    queryset = models.UserCBR.objects.all()
+    serializer_class = serializers.UserCurrentPasswordSerializer
+    http_method_names = ["put"]
+
+    def get_object(self):
+        return generics.get_object_or_404(self.queryset, id=self.request.user.id)
+
+
 class ClientList(generics.ListCreateAPIView):
     queryset = models.Client.objects.all()
 

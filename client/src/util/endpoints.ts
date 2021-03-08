@@ -24,7 +24,6 @@ export const apiFetch = async (
 ): Promise<Response> => {
     const url = API_URL + endpoint + urlParams;
     const authToken = await getAuthToken();
-    console.log(url, authToken);
     const init = {
         ...customInit,
         headers: {

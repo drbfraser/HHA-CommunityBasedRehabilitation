@@ -7,11 +7,3 @@ export interface IUser {
     username: string;
     phone_number: string;
 }
-export enum UserField {
-    username = "username",
-    userID = "id",
-    firstName = "firstName",
-    lastName = "lastName",
-    zone = "zone",
-    phoneNumber = "phoneNumber",
-}

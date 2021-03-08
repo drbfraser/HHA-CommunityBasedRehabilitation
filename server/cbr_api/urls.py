@@ -10,6 +10,13 @@ urlpatterns = [
     path("login/refresh", TokenRefreshView.as_view(), name="token-refresh"),
     path("users", views.UserList.as_view(), name="user-list"),
     path("user/<int:pk>", views.UserDetail.as_view(), name="user-detail"),
+    path("user/<int:pk>/password", views.UserPassword.as_view(), name="user-password"),
+    path("user/current", views.UserCurrent.as_view(), name="user-current"),
+    path(
+        "user/current/password",
+        views.UserCurrentPassword.as_view(),
+        name="user-current-password",
+    ),
     path("clients", views.ClientList.as_view(), name="client-list"),
     path("client/<int:pk>", views.ClientDetail.as_view(), name="client-detail"),
     path("zones", views.ZoneList.as_view(), name="zone-list"),

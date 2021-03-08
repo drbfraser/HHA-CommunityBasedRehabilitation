@@ -5,7 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 import time
 
 
-class UserCBRSerializer(serializers.ModelSerializer):
+class UserCBRCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
     )
@@ -21,11 +21,6 @@ class UserCBRSerializer(serializers.ModelSerializer):
             "zone",
             "phone_number",
         )
-        extra_kwargs = {
-            "first_name": {"required": True},
-            "last_name": {"required": True},
-            "zone": {"required": True},
-        }
 
     def create(self, validated_data):
         user = super().create(validated_data)
@@ -35,10 +30,53 @@ class UserCBRSerializer(serializers.ModelSerializer):
 
         return user
 
-    def update(self, instance, validated_data):
-        user = super().update(instance, validated_data)
 
-        user.set_password(validated_data["password"])
+class UserCBRSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserCBR
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "zone",
+            "phone_number",
+        )
+
+
+class UserPasswordSerializer(serializers.ModelSerializer):
+    new_password = serializers.CharField(
+        write_only=True, required=True, validators=[validate_password]
+    )
+
+    class Meta:
+        model = models.UserCBR
+        fields = ("new_password",)
+
+    def update(self, user, validated_data):
+        user.set_password(validated_data["new_password"])
+        user.save()
+
+        return user
+
+
+class UserCurrentPasswordSerializer(serializers.ModelSerializer):
+    current_password = serializers.CharField(write_only=True, required=True)
+    new_password = serializers.CharField(
+        write_only=True, required=True, validators=[validate_password]
+    )
+
+    class Meta:
+        model = models.UserCBR
+        fields = ("current_password", "new_password")
+
+    def update(self, user, validated_data):
+        if not user.check_password(validated_data["current_password"]):
+            raise serializers.ValidationError(
+                {"detail": "Current password is incorrect"}
+            )
+
+        user.set_password(validated_data["new_password"])
         user.save()
 
         return user

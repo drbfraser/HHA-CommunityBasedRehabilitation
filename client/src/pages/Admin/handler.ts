@@ -46,8 +46,8 @@ export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelper
     });
 
     try {
-        const user = await addUser(newUser);
-        history.push(`/admin/view/${user.id}`);
+        await addUser(newUser);
+        history.replace(`/admin/`);
     } catch (e) {
         alert(
             `Sorry, a user with the username: ${values.username} already exists. Please select a different one.`
@@ -69,7 +69,7 @@ export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUs
 
     try {
         await updateUser(editUser, values.id);
-        history.push(`/admin/view/${values.id}`);
+        history.goBack();
     } catch (e) {
         alert("Sorry, there is an error while trying to edit the user!");
         helpers.setSubmitting(false);

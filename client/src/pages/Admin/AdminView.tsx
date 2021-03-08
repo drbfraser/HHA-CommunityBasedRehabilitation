@@ -72,7 +72,7 @@ const AdminView = () => {
                             {/* <p> {user.is_active ? "Active" : "Disable"} </p> */}
                         </>
                     ) : (
-                        <Skeleton variant="text" />
+                        <Skeleton variant="rect" height={500} />
                     )}
                 </>
             )}

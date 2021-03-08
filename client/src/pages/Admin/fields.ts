@@ -64,8 +64,8 @@ export const initialValues = {
 
 export type TFormValues = typeof initialValues;
 
-export const validationNewSchema = () =>
-    Yup.object().shape({
+export const validationSchema = (newUser: boolean) => {
+    let yupShape = {
         [AdminField.first_name]: Yup.string()
             .label(fieldLabels[AdminField.first_name])
             .required()
@@ -78,37 +78,32 @@ export const validationNewSchema = () =>
             .label(fieldLabels[AdminField.username])
             .required()
             .max(50),
-        [AdminField.password]: Yup.string()
-            .label(fieldLabels[AdminField.password])
-            .min(8)
-            .required(),
         [AdminField.zone]: Yup.string().label(fieldLabels[AdminField.zone]).required(),
         [AdminField.phone_number]: Yup.string()
             .matches(Validation.phoneRegExp, "Phone number is not valid")
             .label(fieldLabels[AdminField.phone_number])
             .max(50)
             .required(),
-        [AdminField.type]: Yup.string().label(fieldLabels[AdminField.type]).required(),
-        [AdminField.is_active]: Yup.string().label(fieldLabels[AdminField.is_active]).required(),
-    });
+    } as any;
 
-export const validationEditSchema = () =>
-    Yup.object().shape({
-        [AdminField.first_name]: Yup.string()
-            .label(fieldLabels[AdminField.first_name])
-            .required()
-            .max(50),
-        [AdminField.last_name]: Yup.string()
-            .label(fieldLabels[AdminField.last_name])
-            .required()
-            .max(50),
-        [AdminField.username]: Yup.string().label(fieldLabels[AdminField.username]).max(50),
-        [AdminField.zone]: Yup.string().label(fieldLabels[AdminField.zone]).required(),
-        [AdminField.phone_number]: Yup.string()
-            .matches(Validation.phoneRegExp, "Phone number is not valid")
-            .label(fieldLabels[AdminField.phone_number])
-            .max(50)
-            .required(),
-        // [AdminField.type]: Yup.string().label(fieldLabels[AdminField.type]).required(),
-        // [AdminField.is_active]: Yup.string().label(fieldLabels[AdminField.is_active]).required(),
-    });
+    // TODO: After the type and is_active connect to the endpoint, we need to
+    // change the AdminField.type and AdminField.is_active
+    if (newUser) {
+        yupShape = {
+            ...yupShape,
+            [AdminField.password]: Yup.string()
+                .label(fieldLabels[AdminField.password])
+                .min(8)
+                .required(),
+            [AdminField.type]: Yup.string().label(fieldLabels[AdminField.type]).required(),
+            [AdminField.is_active]: Yup.string()
+                .label(fieldLabels[AdminField.is_active])
+                .required(),
+        };
+    }
+
+    return Yup.object().shape(yupShape);
+};
+
+export const validationEditSchema = validationSchema(false);
+export const validationNewSchema = validationSchema(true);

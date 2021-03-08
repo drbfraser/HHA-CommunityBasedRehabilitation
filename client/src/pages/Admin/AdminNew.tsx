@@ -52,6 +52,7 @@ const AdminNew = () => {
                                     component={TextField}
                                     name={AdminField.password}
                                     variant="outlined"
+                                    type="password"
                                     label={fieldLabels[AdminField.password]}
                                     required
                                     fullWidth

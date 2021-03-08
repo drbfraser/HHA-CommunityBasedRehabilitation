@@ -35,7 +35,8 @@ const AdminView = () => {
         };
         getUser();
     }, [userId]);
-    console.log(user);
+
+    // TODO: update type and status
     return (
         <div className={styles.container}>
             {loadingError ? (
@@ -65,6 +66,7 @@ const AdminView = () => {
                             <p> {user.phone_number} </p>
                             <b>Type</b>
                             <p>{"Worker"}</p>
+                            {/* <p> {user.type} </p> */}
                             <b>Status</b>
                             <p>{"Active"} </p>
                             {/* <p> {user.is_active ? "Active" : "Disable"} </p> */}

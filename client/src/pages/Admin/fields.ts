@@ -64,7 +64,6 @@ export const initialValues = {
 
 export type TFormValues = typeof initialValues;
 
-// We need to separate the schema for new and edit
 export const validationNewSchema = () =>
     Yup.object().shape({
         [AdminField.first_name]: Yup.string()
@@ -110,6 +109,6 @@ export const validationEditSchema = () =>
             .label(fieldLabels[AdminField.phone_number])
             .max(50)
             .required(),
-        // [AdminField.type]: Yup.string().label(fieldLabels[AdminField.type]),
-        // [AdminField.is_active]: Yup.string().label(fieldLabels[AdminField.is_active]),
+        // [AdminField.type]: Yup.string().label(fieldLabels[AdminField.type]).required(),
+        // [AdminField.is_active]: Yup.string().label(fieldLabels[AdminField.is_active]).required(),
     });

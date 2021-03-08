@@ -56,15 +56,11 @@ export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelper
     }
 };
 
-// TODO: Add type and is_active and change the password
 export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUser>) => {
-    console.log(values.zone);
     const editUser = JSON.stringify({
         username: values.username,
         first_name: values.first_name,
         last_name: values.last_name,
-        // Might need to get the password from the user or delete that attribute when we use PUT
-        password: "needPassword",
         phone_number: values.phone_number,
         zone: values.zone,
         type: values.type,

@@ -17,7 +17,7 @@ const AdminView = () => {
     const { userId } = useRouteMatch<IRouteParams>().params;
 
     const handleEdit = () => {
-        return history.push("/admin/edit/" + userId, user);
+        return history.push("/admin/edit/" + userId);
     };
 
     useEffect(() => {
@@ -41,7 +41,7 @@ const AdminView = () => {
         <div className={styles.container}>
             {loadingError ? (
                 <Alert severity="error">
-                    The user might not exist, so you cannot view. Please go back and try again.
+                    Something went wrong trying to load that user. Please go back and try again.
                 </Alert>
             ) : (
                 <>

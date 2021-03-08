@@ -1,6 +1,5 @@
 import { useStyles } from "./styles";
 import { IUser } from "./fields";
-import React from "react";
 import { useEffect, useState } from "react";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { Alert, Skeleton } from "@material-ui/lab";
@@ -11,24 +10,21 @@ const UserView = () => {
     const [loadingError, setLoadingError] = useState(false);
     const [user, setUser] = useState<IUser>();
     const [zone, setZone] = useState<string>();
-    // Get the userId after the backend support
-    const userId = "/5";
+
     useEffect(() => {
         const getUser = async () => {
             try {
-                // After we can get the user id from the list it could work
-                const theUser: IUser = await (await apiFetch(Endpoint.USER, `${userId}`)).json();
+                const theUser: IUser = await (await apiFetch(Endpoint.USER_CURRENT)).json();
                 setUser(theUser);
                 const zoneMap = await getZoneMap();
-                setZone(zoneMap.get(theUser.id - 1));
+                setZone(zoneMap.get(theUser.zone));
             } catch (e) {
                 setLoadingError(true);
             }
         };
         getUser();
-    }, [userId]);
+    }, []);
 
-    // Read From initialValues field further from Server
     return (
         <div className={styles.container}>
             {loadingError ? (

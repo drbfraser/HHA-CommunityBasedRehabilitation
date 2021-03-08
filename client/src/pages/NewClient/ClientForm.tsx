@@ -20,20 +20,28 @@ import { fieldLabels, FormField, initialValues, validationSchema } from "./formF
 
 import { riskLevels } from "util/risks";
 import { handleSubmit, handleReset } from "./formHandler";
-import { getAllZones, IZone } from "util/cache";
+import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache";
 import { genders } from "util/clients";
+
 
 const ClientForm = () => {
     const styles = useStyles();
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+    const [disabilityOptions, setDisabilityOptions] = useState<IDisability[]>([]);
 
     useEffect(() => {
         const fetchAllZones = async () => {
             const zones = await getAllZones();
             setZoneOptions(zones);
         };
+        const fetchAllDisabilities = async () => {
+            let disabilities = await getAllDisabilities();
+            setDisabilityOptions(disabilities);
+        }
         fetchAllZones();
+        fetchAllDisabilities();
     }, []);
+
 
     return (
         <Formik
@@ -149,6 +157,9 @@ const ClientForm = () => {
                                         label={fieldLabels[FormField.phoneNumber]}
                                         fullWidth
                                     />
+                                </Grid>
+                                <Grid item md={6} xs={12}>
+                                    {/* TODO: Add Disability */}
                                 </Grid>
                                 <Grid item md={12} xs={12} style={{ marginBottom: "-20px" }}>
                                     <Field

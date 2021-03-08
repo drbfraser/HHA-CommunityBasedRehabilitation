@@ -13,6 +13,7 @@ export enum Endpoint {
     USERS = "users",
     ZONES = "zones",
     RISKS = "risks",
+    DISABILITIES = "disabilities",
 }
 
 export const apiFetch = async (

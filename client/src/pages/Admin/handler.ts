@@ -47,7 +47,7 @@ export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelper
 
     try {
         await addUser(newUser);
-        history.replace(`/admin/`);
+        history.replace(`/admin/view/${values.id}`);
     } catch (e) {
         alert(
             `Sorry, a user with the username: ${values.username} already exists. Please select a different one.`

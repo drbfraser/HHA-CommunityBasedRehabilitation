@@ -256,6 +256,7 @@ class ClientListSerializer(serializers.ModelSerializer):
             "health_risk_level",
             "social_risk_level",
             "educat_risk_level",
+            "created_by_user",
         ]
 
 

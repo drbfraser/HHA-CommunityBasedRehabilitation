@@ -23,4 +23,3 @@ class ClientFilter(django_filters.FilterSet):
                 },
             }
         }
-

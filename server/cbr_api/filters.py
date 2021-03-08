@@ -13,6 +13,7 @@ class ClientFilter(django_filters.FilterSet):
             "health_risk_level",
             "social_risk_level",
             "educat_risk_level",
+            "created_by_user",
         ]
         filter_overrides = {
             django.db.models.CharField: {
@@ -22,3 +23,4 @@ class ClientFilter(django_filters.FilterSet):
                 },
             }
         }
+

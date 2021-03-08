@@ -193,10 +193,11 @@ const AdminEdit = () => {
             </Formik>
         </>
     ) : (
-        <Alert severity="error">
-            Something went wrong trying to load that user. The user might not exist, Please go back
-            and try again.
-        </Alert>
+        <>
+            <Alert severity="error">
+                Something went wrong trying to load that user. Please go back and try again.
+            </Alert>
+        </>
     );
 };
 

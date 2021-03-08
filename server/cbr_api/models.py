@@ -10,11 +10,11 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 
 
 class Zone(models.Model):
-    zone_name = models.CharField(max_length=50)
+    zone_name = models.CharField(max_length=50, unique=True)
 
 
 class Disability(models.Model):
-    disability_type = models.CharField(max_length=50)
+    disability_type = models.CharField(max_length=50, unique=True)
 
 
 class UserCBRManager(BaseUserManager):
@@ -100,6 +100,7 @@ class Client(models.Model):
     phone_number = models.CharField(
         max_length=50, blank=True
     )  # if contact info available
+    disability = models.ManyToManyField(Disability)
     created_by_user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT
     )
@@ -111,6 +112,7 @@ class Client(models.Model):
     picture = models.ImageField(upload_to="images/", blank=True)  # if picture available
     caregiver_present = models.BooleanField(default=False)
     # ------if caregiver present-----
+    caregiver_name = models.CharField(max_length=101, blank=True)
     caregiver_phone = models.CharField(max_length=50, blank=True)
     caregiver_email = models.CharField(max_length=50, blank=True)
     caregiver_picture = models.ImageField(upload_to="images/", blank=True)
@@ -127,11 +129,6 @@ class ClientRisk(models.Model):
     risk_level = RiskLevel.getField()
     requirement = models.TextField()
     goal = models.TextField()
-
-
-class DisabilityJunction(models.Model):
-    disability = models.ForeignKey(Disability, on_delete=models.CASCADE)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
 
 class Visit(models.Model):

@@ -61,7 +61,7 @@ export const initialValues = {
     [FormField.caregiverPresent]: false,
     [FormField.caregiverPhone]: "",
     [FormField.caregiverName]: "",
-    [FormField.disability]: "",
+    [FormField.disability]: [],
     [FormField.healthRisk]: "",
     [FormField.healthRequirements]: "",
     [FormField.healthGoals]: "",
@@ -93,6 +93,7 @@ export const validationSchema = () =>
             .label(fieldLabels[FormField.phoneNumber])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
+        [FormField.disability]: Yup.array().label(fieldLabels[FormField.disability]).required(),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),
         [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),

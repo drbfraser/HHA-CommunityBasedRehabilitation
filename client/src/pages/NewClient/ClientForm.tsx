@@ -23,7 +23,6 @@ import { handleSubmit, handleReset } from "./formHandler";
 import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache";
 import { genders } from "util/clients";
 
-
 const ClientForm = () => {
     const styles = useStyles();
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
@@ -35,13 +34,12 @@ const ClientForm = () => {
             setZoneOptions(zones);
         };
         const fetchAllDisabilities = async () => {
-            let disabilities = await getAllDisabilities();
+            const disabilities = await getAllDisabilities();
             setDisabilityOptions(disabilities);
-        }
+        };
         fetchAllZones();
         fetchAllDisabilities();
     }, []);
-
 
     return (
         <Formik
@@ -159,7 +157,24 @@ const ClientForm = () => {
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
-                                    {/* TODO: Add Disability */}
+                                    <Field
+                                        component={TextField}
+                                        fullWidth
+                                        select
+                                        SelectProps={{
+                                            multiple: true,
+                                        }}
+                                        label={fieldLabels[FormField.disability]}
+                                        required
+                                        name={FormField.disability}
+                                        variant="outlined"
+                                    >
+                                        {disabilityOptions.map((option) => (
+                                            <MenuItem key={option.id} value={option.id}>
+                                                {option.disability_type}
+                                            </MenuItem>
+                                        ))}
+                                    </Field>
                                 </Grid>
                                 <Grid item md={12} xs={12} style={{ marginBottom: "-20px" }}>
                                     <Field

@@ -176,6 +176,7 @@ const ClientInfo = (props: IProps) => {
                                         SelectProps={{
                                             multiple: true,
                                         }}
+                                        className={styles.disabledTextField}
                                         disabled={!isEditing}
                                         label={fieldLabels[FormField.disability]}
                                         required

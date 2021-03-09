@@ -35,21 +35,24 @@ export const getZoneMap = async (): Promise<Map<number, string>> => {
     return zoneMap;
 };
 
-export const getAllDisabilities = async(): Promise<IDisability[]> => {
+export const getAllDisabilities = async (): Promise<IDisability[]> => {
     if (disabilities === undefined) {
         disabilities = await apiFetch(Endpoint.DISABILITIES)
-            .then(async (response:Response) => await response.json())
-            .catch(()=> []);
+            .then(async (response: Response) => await response.json())
+            .catch(() => []);
     }
     return disabilities!;
-}
+};
 
-export const getDisabilitiesMap = async (): Promise<Map<number,string>> => {
+export const getDisabilitiesMap = async (): Promise<Map<number, string>> => {
     if (disabilityMap === undefined) {
         let disabilities = await getAllDisabilities();
         disabilityMap = new Map(
-            disabilities.map<[number, string]>((disabilities) => [disabilities.id, disabilities.disability_type])
+            disabilities.map<[number, string]>((disabilities) => [
+                disabilities.id,
+                disabilities.disability_type,
+            ])
         );
     }
     return disabilityMap;
-}
+};

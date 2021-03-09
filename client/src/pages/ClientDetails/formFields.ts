@@ -26,9 +26,8 @@ export const fieldLabels = {
     [FormField.phone_number]: "Phone Number",
     [FormField.caregiver_present]: "Caregiver Present?",
     [FormField.caregiver_phone]: "Caregiver Phone Number",
-    // TODO: add caregiver_name and disability once implemented on backend.
     [FormField.caregiver_name]: "Caregiver Name",
-    [FormField.disability]: "Type of Disability",
+    [FormField.disability]: "Disabilities",
 };
 
 export const validationSchema = () =>

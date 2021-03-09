@@ -37,7 +37,7 @@ export const fieldLabels = {
     [FormField.caregiverPresent]: "Caregiver Present? *",
     [FormField.caregiverPhone]: "Caregiver Phone Number",
     [FormField.caregiverName]: "Caregiver Name",
-    [FormField.disability]: "Type of Disability",
+    [FormField.disability]: "Disabilities",
     [FormField.healthRisk]: "Health Risk",
     [FormField.healthRequirements]: "Health Requirement(s)",
     [FormField.healthGoals]: "Health Goal(s)",

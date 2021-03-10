@@ -241,6 +241,21 @@ const ClientInfo = (props: IProps) => {
                                                             fullWidth
                                                         />
                                                     </Grid>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
+                                                            component={TextField}
+                                                            name={FormField.caregiver_email}
+                                                            disabled={!isEditing}
+                                                            variant="outlined"
+                                                            label={
+                                                                fieldLabels[
+                                                                    FormField.caregiver_email
+                                                                ]
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
                                                 </Grid>
                                             </AccordionDetails>
                                         </Accordion>

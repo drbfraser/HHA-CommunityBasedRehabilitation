@@ -31,6 +31,8 @@ export const handleSubmit = async (
         zone: values.zone,
         village: values.village,
         caregiver_present: values.caregiver_present,
+        caregiver_name: values.caregiver_name,
+        caregiver_email: values.caregiver_email,
         caregiver_phone: values.caregiver_phone,
         longitude: values.longitude,
         latitude: values.latitude,

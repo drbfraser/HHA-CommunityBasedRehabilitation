@@ -10,7 +10,7 @@ import ClientInfo from "./ClientInfo";
 import { IClient } from "util/clients";
 import ClientRisks from "./ClientRisks";
 import { IRisk } from "util/risks";
-import { getAllZones, IZone } from "util/cache";
+import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache";
 import { useHistory } from "react-router-dom";
 
 interface IUrlParam {
@@ -20,6 +20,7 @@ interface IUrlParam {
 const ClientDetails = () => {
     const { clientId } = useParams<IUrlParam>();
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+    const [disabilityOptions, setDisabilityOptions] = useState<IDisability[]>([]);
     const [clientInfo, setClientInfo] = useState<IClient>();
 
     const history = useHistory();
@@ -37,15 +38,24 @@ const ClientDetails = () => {
             const zones = await getAllZones();
             setZoneOptions(zones);
         };
+        const fetchAllDisabilities = async () => {
+            const disabilities = await getAllDisabilities();
+            setDisabilityOptions(disabilities);
+        };
 
         fetchAllZones();
+        fetchAllDisabilities();
         fetchClientInfo();
     }, [clientId]);
 
     return clientInfo && zoneOptions.length ? (
         <Grid container spacing={2} direction="row" justify="flex-start">
             <Grid item>
-                <ClientInfo clientInfo={clientInfo} zoneOptions={zoneOptions} />
+                <ClientInfo
+                    clientInfo={clientInfo}
+                    zoneOptions={zoneOptions}
+                    disabilityOptions={disabilityOptions}
+                />
             </Grid>
             <Grid item md={12} xs={12}>
                 <hr />

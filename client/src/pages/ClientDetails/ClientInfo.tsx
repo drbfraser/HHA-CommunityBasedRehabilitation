@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useStyles } from "../NewClient/ClientForm.styles";
 
-import { IZone } from "util/cache";
+import { IZone, IDisability } from "util/cache";
 import { Field, Form, Formik } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 
@@ -27,6 +27,7 @@ import { IClient, genders } from "util/clients";
 interface IProps {
     clientInfo: IClient;
     zoneOptions: IZone[];
+    disabilityOptions: IDisability[];
 }
 
 const ClientInfo = (props: IProps) => {
@@ -166,6 +167,28 @@ const ClientInfo = (props: IProps) => {
                                         label={fieldLabels[FormField.phone_number]}
                                         fullWidth
                                     />
+                                </Grid>
+                                <Grid item md={6} xs={12}>
+                                    <Field
+                                        component={TextField}
+                                        fullWidth
+                                        select
+                                        SelectProps={{
+                                            multiple: true,
+                                        }}
+                                        className={styles.disabledTextField}
+                                        disabled={!isEditing}
+                                        label={fieldLabels[FormField.disability]}
+                                        required
+                                        name={FormField.disability}
+                                        variant="outlined"
+                                    >
+                                        {props.disabilityOptions.map((option) => (
+                                            <MenuItem key={option.id} value={option.id}>
+                                                {option.disability_type}
+                                            </MenuItem>
+                                        ))}
+                                    </Field>
                                 </Grid>
                                 <Grid item md={12} xs={12}>
                                     <Field

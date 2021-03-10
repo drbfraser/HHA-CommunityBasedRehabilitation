@@ -19,6 +19,7 @@ export interface IClient {
     caregiver_email: string;
     caregiver_picture: unknown;
     risks: IRisk[];
+    disability: number[];
 }
 
 export enum Gender {

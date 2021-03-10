@@ -13,7 +13,7 @@ export enum FormField {
     caregiver_phone = "caregiver_phone",
     // TODO: add caregiver_name and disability once implemented on backend.
     caregiver_name = "caregiver_name",
-    // disability = "disability"
+    disability = "disability",
 }
 
 export const fieldLabels = {
@@ -26,9 +26,8 @@ export const fieldLabels = {
     [FormField.phone_number]: "Phone Number",
     [FormField.caregiver_present]: "Caregiver Present?",
     [FormField.caregiver_phone]: "Caregiver Phone Number",
-    // TODO: add caregiver_name and disability once implemented on backend.
     [FormField.caregiver_name]: "Caregiver Name",
-    // [FormField.disability]: "Type of Disability"
+    [FormField.disability]: "Disabilities",
 };
 
 export const validationSchema = () =>
@@ -49,6 +48,7 @@ export const validationSchema = () =>
             .label(fieldLabels[FormField.phone_number])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
+        [FormField.disability]: Yup.array().label(fieldLabels[FormField.disability]).required(),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),
         [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),

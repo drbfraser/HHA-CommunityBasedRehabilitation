@@ -9,7 +9,6 @@ import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import { useRef, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAllZones, IZone } from "util/cache";
 import requestUserRows from "./requestUserRows";
 import React from "react";
 import { Cancel, MoreVert } from "@material-ui/icons";
@@ -47,9 +46,6 @@ const AdminList = () => {
     const [isNameHidden, setNameHidden] = useState<boolean>(false);
     const [isTypeHidden, setTypeHidden] = useState<boolean>(false);
     const [isStatusHidden, setStatusHidden] = useState<boolean>(false);
-    // Will use "zones" once searching is implemented and remove next comment
-    // eslint-disable-next-line
-    const [zones, setZones] = useState<IZone[]>([]);
     const [rows, setRows] = useState<RowsProp>([]);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
 
@@ -76,7 +72,6 @@ const AdminList = () => {
     useEffect(() => {
         const loadInitialData = async () => {
             setLoading(true);
-            setZones(await getAllZones());
             await requestUserRows(setRows, setLoading);
             setLoading(false);
             initialDataLoaded.current = true;

@@ -16,7 +16,6 @@ const updateClient = async (clientInfo: string, clientId: number) => {
         });
 };
 
-// TODO: Add caregiver name once they are implemented on the back-end.
 export const handleSubmit = async (
     values: IClient,
     helpers: FormikHelpers<IClient>,

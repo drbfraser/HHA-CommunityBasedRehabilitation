@@ -144,6 +144,43 @@ class Visit(models.Model):
     village = models.CharField(max_length=50)
 
 
+class Referral(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    date_referred = models.BigIntegerField()
+    date_resolved = models.BigIntegerField()
+    resolved = models.BooleanField(default=False)
+    outcome = models.CharField(max_length=100)
+
+    client = models.ForeignKey(Client, related_name="referrals", on_delete=models.CASCADE)
+    picture = models.ImageField(upload_to="images/", blank=True)
+
+    class Experience(models.TextChoices):
+        BASIC = "BAS", _("Basic")
+        INTERMEDIATE = "INT", _("Intermediate")
+    
+    wheelchair = models.BooleanField(default=False)
+    wheelchair_experience = models.CharField(max_length=3, choices=Experience.choices)
+
+    hip_width = models.IntegerField()
+    wheelchair_owned = models.BooleanField(default=False)
+    wheelchair_repairable = models.BooleanField(default=False)
+
+    physiotherapy = models.BooleanField(default=False)
+    condition  = models.CharField(max_length=100)
+
+    class InjuryLocation(models.TextChoices):
+        BELOW = "BEL", _("Below")
+        ABOVE = "ABO", _("Above")
+
+    prosthetic = models.BooleanField(default=False)
+    prosthetic_injury_location = models.CharField(max_length=3, choices=InjuryLocation.choices)
+
+    orthotic = models.BooleanField(default=False)
+    orthotic_injury_location = models.CharField(max_length=3, choices=InjuryLocation.choices)
+    
+    services_other = models.CharField(max_length=100)
+
+
 class Outcome(models.Model):
     class Goal(models.TextChoices):
         CANCELLED = "CAN", _("Cancelled")

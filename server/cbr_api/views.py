@@ -105,3 +105,13 @@ class VisitList(generics.CreateAPIView):
 class VisitDetail(generics.RetrieveAPIView):
     queryset = models.Visit.objects.all()
     serializer_class = serializers.DetailedVisitSerializer
+
+
+class ReferralList(generics.CreateAPIView):
+    queryset = models.Referral.objects.all()
+    serializer_class = serializers.DetailedReferralSerializer
+
+
+class ReferralDetail(generics.RetrieveAPIView):
+    queryset = models.Referral.objects.all()
+    serializer_class = serializers.DetailedReferralSerializer

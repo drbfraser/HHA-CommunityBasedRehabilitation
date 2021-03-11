@@ -96,10 +96,9 @@ const ClientDetails = () => {
                     <Button
                         size="small"
                         style={{ float: "right" }}
-                        // TODO: add visits history path once visits history page is implemented.
-                        // onClick={() => {
-                        //     history.push(`/client/${client_id}/`);
-                        // }}
+                        onClick={() => {
+                            history.push(`/client/${clientId}/visits`);
+                        }}
                     >
                         See Visit History
                         <ArrowForwardIcon fontSize="small" />

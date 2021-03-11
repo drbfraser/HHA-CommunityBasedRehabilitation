@@ -217,20 +217,6 @@ const ClientForm = () => {
                                                     </Grid>
                                                     <Grid item md={8} xs={12}>
                                                         <Field
-                                                            className={styles.caregiverInputField}
-                                                            component={TextField}
-                                                            name={FormField.caregiverPhone}
-                                                            variant="outlined"
-                                                            label={
-                                                                fieldLabels[
-                                                                    FormField.caregiverPhone
-                                                                ]
-                                                            }
-                                                            fullWidth
-                                                        />
-                                                    </Grid>
-                                                    <Grid item md={8} xs={12}>
-                                                        <Field
                                                             className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
                                                             component={TextField}
                                                             name={FormField.caregiverEmail}
@@ -238,6 +224,20 @@ const ClientForm = () => {
                                                             label={
                                                                 fieldLabels[
                                                                     FormField.caregiverEmail
+                                                                ]
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={styles.caregiverInputField}
+                                                            component={TextField}
+                                                            name={FormField.caregiverPhone}
+                                                            variant="outlined"
+                                                            label={
+                                                                fieldLabels[
+                                                                    FormField.caregiverPhone
                                                                 ]
                                                             }
                                                             fullWidth

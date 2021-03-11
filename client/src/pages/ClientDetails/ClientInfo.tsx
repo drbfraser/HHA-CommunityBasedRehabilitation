@@ -230,12 +230,12 @@ const ClientInfo = (props: IProps) => {
                                                         <Field
                                                             className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
                                                             component={TextField}
-                                                            name={FormField.caregiver_phone}
+                                                            name={FormField.caregiver_email}
                                                             disabled={!isEditing}
                                                             variant="outlined"
                                                             label={
                                                                 fieldLabels[
-                                                                    FormField.caregiver_phone
+                                                                    FormField.caregiver_email
                                                                 ]
                                                             }
                                                             fullWidth
@@ -245,12 +245,12 @@ const ClientInfo = (props: IProps) => {
                                                         <Field
                                                             className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
                                                             component={TextField}
-                                                            name={FormField.caregiver_email}
+                                                            name={FormField.caregiver_phone}
                                                             disabled={!isEditing}
                                                             variant="outlined"
                                                             label={
                                                                 fieldLabels[
-                                                                    FormField.caregiver_email
+                                                                    FormField.caregiver_phone
                                                                 ]
                                                             }
                                                             fullWidth

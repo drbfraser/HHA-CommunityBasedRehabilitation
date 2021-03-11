@@ -12,16 +12,17 @@ import {
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import React, { useState } from "react";
 import { IClient } from "util/clients";
+import { timestampToDateFromReference } from "util/dates";
 import { IRisk, riskTypes } from "util/risks";
 import { useStyles } from "./RiskHistory.styles";
 
 interface IProps {
     client?: IClient;
-    dateFormatter: (timestamp: number) => string;
 }
 
-const RiskHistoryTimeline = ({ client, dateFormatter }: IProps) => {
+const RiskHistoryTimeline = ({ client }: IProps) => {
     const styles = useStyles();
+    const dateFormatter = timestampToDateFromReference(client?.created_date);
 
     interface IEntryProps {
         risk: IRisk;

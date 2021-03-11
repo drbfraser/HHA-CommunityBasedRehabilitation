@@ -12,10 +12,11 @@ import {
 import { IRisk, RiskLevel, riskLevels, RiskType, riskTypes } from "util/risks";
 import { Grid, Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { timestampToDateFromReference } from "util/dates";
+import { IClient } from "util/clients";
 
 interface IProps {
-    risks?: IRisk[];
-    dateFormatter: (timestamp: number) => string;
+    client?: IClient;
 }
 
 interface IChartData {
@@ -60,16 +61,17 @@ const risksToChartData = (risks: IRisk[]) => {
     return dataObj;
 };
 
-const RiskHistoryCharts = ({ risks, dateFormatter }: IProps) => {
+const RiskHistoryCharts = ({ client }: IProps) => {
     const styles = useStyles();
     const chartHeight = 300;
     const [chartData, setChartData] = useState<IChartData>();
+    const dateFormatter = timestampToDateFromReference(client?.created_date);
 
     useEffect(() => {
-        if (risks) {
-            setChartData(risksToChartData(risks.slice()));
+        if (client) {
+            setChartData(risksToChartData(client.risks.slice()));
         }
-    }, [risks]);
+    }, [client]);
 
     const RiskChart = ({ riskType, data }: { riskType: RiskType; data: IDataPoint[] }) => (
         <ResponsiveContainer width="100%" height={chartHeight} className={styles.chartContainer}>

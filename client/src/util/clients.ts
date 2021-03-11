@@ -1,4 +1,5 @@
 import { IRisk } from "./risks";
+import { IVisitSummary } from "./visits";
 
 export interface IClient {
     id: number;
@@ -7,6 +8,7 @@ export interface IClient {
     birth_date: number;
     gender: Gender;
     phone_number: string;
+    disability: number[];
     created_by_user: number;
     created_date: number;
     longitude: string;
@@ -19,7 +21,7 @@ export interface IClient {
     caregiver_email: string;
     caregiver_picture: unknown;
     risks: IRisk[];
-    disability: number[];
+    visits: IVisitSummary[];
 }
 
 export enum Gender {

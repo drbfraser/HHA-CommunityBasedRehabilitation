@@ -123,7 +123,6 @@ class ReferralDetail(generics.RetrieveUpdateAPIView):
             return serializers.UpdateReferralSerializer
 
     @extend_schema(
-        request=serializers.UpdateReferralSerializer,
         responses=serializers.DetailedReferralSerializer,
     )
     def get(self, request, pk):

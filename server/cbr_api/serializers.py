@@ -247,33 +247,6 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
         return referrals
 
 
-class SummaryReferralSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Referral
-        fields = [
-            "id",
-            "user",
-            "client",
-            "date_referred",
-            "date_resolved",
-            "resolved",
-            "outcome",
-            "picture",
-            "wheelchair",
-            "wheelchair_experience",
-            "hip_width",
-            "wheelchair_owned",
-            "wheelchair_repairable",
-            "physiotherapy",
-            "condition",
-            "prosthetic",
-            "prosthetic_injury_location",
-            "orthotic",
-            "orthotic_injury_location",
-            "services_other",
-        ]
-
-
 class DetailedVisitSerializer(serializers.ModelSerializer):
     improvements = ImprovementSerializer(many=True)
     outcomes = OutcomeSerializer(many=True)
@@ -423,7 +396,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
 class ClientDetailSerializer(serializers.ModelSerializer):
     risks = ClientCreationRiskSerializer(many=True, read_only=True)
     visits = SummaryVisitSerializer(many=True, read_only=True)
-    referrals = SummaryReferralSerializer(many=True, read_only=True)
+    referrals = DetailedReferralSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Client

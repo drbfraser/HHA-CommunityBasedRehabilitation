@@ -9,7 +9,7 @@ import {
     TimelineContent,
     Skeleton,
 } from "@material-ui/lab";
-import RiskChip from "components/RiskChip/RiskChip";
+import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import React, { useState } from "react";
 import { IClient } from "util/clients";
 import { IRisk, riskTypes } from "util/risks";
@@ -35,7 +35,7 @@ const RiskHistoryTimeline = ({ client, dateFormatter }: IProps) => {
         const Summary = ({ clickable }: { clickable?: boolean }) => (
             <>
                 <b>{riskType.name}</b> risk {isInitial ? "set" : "changed"} to{" "}
-                <RiskChip risk={risk.risk_level} clickable={clickable ?? false} />
+                <RiskLevelChip risk={risk.risk_level} clickable={clickable ?? false} />
             </>
         );
 

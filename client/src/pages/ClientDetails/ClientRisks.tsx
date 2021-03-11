@@ -19,7 +19,7 @@ import {
 } from "@material-ui/core";
 import { IRisk, riskLevels, riskTypes } from "util/risks";
 import { IClient } from "util/clients";
-import RiskChip from "components/RiskChip/RiskChip";
+import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 
 import { fieldLabels, FormField, validationSchema } from "./riskFormFields";
 
@@ -156,7 +156,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                             <Grid item md={6}>
                                 <div className={styles.riskCardButtonAndBadge}>
                                     {" "}
-                                    <RiskChip risk={risk.risk_level} />
+                                    <RiskLevelChip risk={risk.risk_level} />
                                 </div>
                             </Grid>
                         </Grid>
@@ -196,7 +196,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
         <div className={styles.riskCardContainer}>
             <Grid container spacing={5} direction="row" justify="flex-start">
                 {Object.keys(riskTypes).map((type) => (
-                    <Grid item md={4} xs={12}>
+                    <Grid item md={4} xs={12} key={type}>
                         <RiskCard risk={risks.filter((r) => r.risk_type === type)[0]} />
                     </Grid>
                 ))}

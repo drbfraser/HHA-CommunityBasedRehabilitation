@@ -25,7 +25,7 @@ import {
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
-import RiskChip from "components/RiskChip/RiskChip";
+import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { RiskLevel, IRiskLevel, riskLevels, RiskType, IRiskType, riskTypes } from "util/risks";
 import { SearchOption } from "./searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
@@ -56,7 +56,7 @@ const RenderBadge = (params: ValueFormatterParams) => {
     const risk: RiskLevel = Object(params.value);
 
     return window.innerWidth >= compressedDataGridWidth ? (
-        <RiskChip clickable risk={risk} />
+        <RiskLevelChip clickable risk={risk} />
     ) : (
         <FiberManualRecord style={{ color: riskLevels[risk].color }} />
     );

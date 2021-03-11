@@ -180,6 +180,30 @@ class OutcomeSerializer(serializers.ModelSerializer):
         read_only_fields = ["visit"]
 
 
+class UpdateReferralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Referral
+        fields = [
+            "date_resolved",
+            "resolved",
+            "outcome",
+        ]
+
+        read_only_fields = ["date_resolved"]
+
+    def update(self, referral, validated_data):
+        super().update(referral, validated_data)
+        referral.resolved = validated_data["resolved"]
+        if validated_data["resolved"] == True:
+            current_time = int(time.time())
+            referral.date_resolved = current_time
+        else:
+            referral.date_resolved = 0
+        referral.outcome = validated_data["outcome"]
+        referral.save()
+        return referral
+
+
 class DetailedReferralSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Referral
@@ -204,9 +228,15 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
             "orthotic",
             "orthotic_injury_location",
             "services_other",
-            ]
+        ]
 
-        read_only_fields = ["user", "date_referred"]
+        read_only_fields = [
+            "user",
+            "outcome",
+            "date_referred",
+            "date_resolved",
+            "resolved",
+        ]
 
     def create(self, validated_data):
         current_time = int(time.time())
@@ -227,7 +257,7 @@ class SummaryReferralSerializer(serializers.ModelSerializer):
             "date_referred",
             "date_resolved",
             "resolved",
-            "client",
+            "outcome",
             "picture",
             "wheelchair",
             "wheelchair_experience",
@@ -242,6 +272,7 @@ class SummaryReferralSerializer(serializers.ModelSerializer):
             "orthotic_injury_location",
             "services_other",
         ]
+
 
 class DetailedVisitSerializer(serializers.ModelSerializer):
     improvements = ImprovementSerializer(many=True)
@@ -289,6 +320,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             outcome.save()
 
         return visit
+
 
 class SummaryVisitSerializer(serializers.ModelSerializer):
     class Meta:

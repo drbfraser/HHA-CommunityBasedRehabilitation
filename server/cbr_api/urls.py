@@ -31,6 +31,6 @@ urlpatterns = [
     ),
     path("visits", views.VisitList.as_view(), name="visit-list"),
     path("visit/<int:pk>", views.VisitDetail.as_view(), name="visit-detail"),
-    path("referrals", views.ReferralList.as_view(), name="referral-list"),
     path("referral/<int:pk>", views.ReferralDetail.as_view(), name="referral-detail"),
+    path("referrals", views.ReferralList.as_view(), name="referral-list"),
 ]

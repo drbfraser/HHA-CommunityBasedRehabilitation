@@ -2,11 +2,19 @@ import { useStyles } from "./AdminList.styles";
 import SearchBar from "components/SearchBar/SearchBar";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { DataGrid, DensityTypes, RowsProp, GridOverlay } from "@material-ui/data-grid";
-import { LinearProgress, IconButton, debounce, Typography, Select, MenuItem, Popover, Switch } from "@material-ui/core";
+import {
+    LinearProgress,
+    IconButton,
+    Typography,
+    Select,
+    MenuItem,
+    Popover,
+    Switch,
+} from "@material-ui/core";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
-import { useRef, useCallback } from "react";
+import { useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import requestUserRows from "./requestUserRows";
@@ -41,14 +49,16 @@ const AdminList = () => {
     const searchOptionsStyle = useSearchOptionsStyles();
     const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
+    const [searchValue, setSearchValue] = useState<string>("");
+    const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
     const [loading, setLoading] = useState<boolean>(true);
     const [isIdHidden, setIdHidden] = useState<boolean>(false);
     const [isNameHidden, setNameHidden] = useState<boolean>(false);
     const [isTypeHidden, setTypeHidden] = useState<boolean>(false);
     const [isStatusHidden, setStatusHidden] = useState<boolean>(false);
-    const [rows, setRows] = useState<RowsProp>([]);
+    const [filteredRows, setFilteredRows] = useState<RowsProp>([]);
+    const [serverRows, setServerRows] = useState<RowsProp>([]);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
-
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
     const onRowClick = (row: any) => {
@@ -57,14 +67,38 @@ const AdminList = () => {
     };
     const onAddClick = () => history.push("/admin/new");
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-    setOptionsAnchorEl(event.currentTarget);
+        setOptionsAnchorEl(event.currentTarget);
     const onOptionsClose = () => setOptionsAnchorEl(null);
 
     const columns = [
-        { field: "id", headerName: "ID", flex: 0.55, hide: isIdHidden, hideFunction: setIdHidden },
-        { field: "name", headerName: "Name", flex: 1, hide: isNameHidden, hideFunction: setNameHidden},
-        { field: "type", headerName: "Type", flex: 1, hide: isTypeHidden, hideFunction: setTypeHidden },
-        { field: "status", headerName: "Status", flex: 1, hide: isStatusHidden, hideFunction: setStatusHidden },
+        {
+            field: "id",
+            headerName: "ID",
+            flex: 0.55,
+            hide: isIdHidden,
+            hideFunction: setIdHidden,
+        },
+        {
+            field: "name",
+            headerName: "Name",
+            flex: 1,
+            hide: isNameHidden,
+            hideFunction: setNameHidden,
+        },
+        {
+            field: "type",
+            headerName: "Type",
+            flex: 1,
+            hide: isTypeHidden,
+            hideFunction: setTypeHidden,
+        },
+        {
+            field: "status",
+            headerName: "Status",
+            flex: 1,
+            hide: isStatusHidden,
+            hideFunction: setStatusHidden,
+        },
     ];
 
     const initialDataLoaded = useRef(false);
@@ -72,24 +106,24 @@ const AdminList = () => {
     useEffect(() => {
         const loadInitialData = async () => {
             setLoading(true);
-            await requestUserRows(setRows, setLoading);
+            await requestUserRows(setFilteredRows, setServerRows, setLoading);
             setLoading(false);
             initialDataLoaded.current = true;
         };
-
         loadInitialData();
     }, []);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const requestUserRowsDebounced = useCallback(debounce(requestUserRows, 500), []);
 
     useEffect(() => {
         if (!initialDataLoaded.current) {
             return;
         }
-
-        requestUserRowsDebounced(setRows, setLoading);
-    }, [requestUserRowsDebounced]);
+        if (searchOption === SearchOption.NAME) {
+            const filteredRows: RowsProp = serverRows.filter((r) =>
+                r.name.toLowerCase().startsWith(searchValue)
+            );
+            setFilteredRows(filteredRows);
+        }
+    }, [searchValue, searchOption, serverRows]);
 
     return (
         <>
@@ -102,6 +136,11 @@ const AdminList = () => {
                         <Select
                             color={"primary"}
                             defaultValue={SearchOption.NAME}
+                            value={searchOption}
+                            onChange={(event) => {
+                                setSearchValue("");
+                                setSearchOption(String(event.target.value));
+                            }}
                         >
                             {Object.values(SearchOption).map((option) => (
                                 <MenuItem key={option} value={option}>
@@ -110,7 +149,10 @@ const AdminList = () => {
                             ))}
                         </Select>
                     </div>
-                    <SearchBar />
+                    <SearchBar
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                    />
                     <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
                         <MoreVert />
                     </IconButton>
@@ -131,7 +173,10 @@ const AdminList = () => {
                             {columns.map(
                                 (column): JSX.Element => {
                                     return (
-                                        <div key={column.field} className={hideColumnsStyle.optionsRow}>
+                                        <div
+                                            key={column.field}
+                                            className={hideColumnsStyle.optionsRow}
+                                        >
                                             <Typography component={"span"} variant={"body2"}>
                                                 {column.headerName}
                                             </Typography>
@@ -154,7 +199,7 @@ const AdminList = () => {
                             LoadingOverlay: RenderLoadingOverlay,
                             NoRowsOverlay: RenderNoRowsOverlay,
                         }}
-                        rows={rows}
+                        rows={filteredRows}
                         columns={columns}
                         density={DensityTypes.Comfortable}
                         onRowClick={onRowClick}

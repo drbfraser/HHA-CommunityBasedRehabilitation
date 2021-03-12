@@ -1,5 +1,4 @@
 import { RowsProp } from "@material-ui/data-grid";
-import { getZoneMap } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";
 
 interface IResponseRow {
@@ -12,7 +11,8 @@ interface IResponseRow {
 }
 
 const requestUserRows = async (
-    setRows: (rows: RowsProp) => void,
+    setFilteredRows: (rows: RowsProp) => void,
+    setServerRows: (rows: RowsProp) => void,
     setLoading: (loading: boolean) => void
 ) => {
     setLoading(true);
@@ -23,12 +23,12 @@ const requestUserRows = async (
         const resp = await apiFetch(Endpoint.USERS, urlParams);
 
         const responseRows: IResponseRow[] = await resp.json();
-        const zoneMap = await getZoneMap();
         const rows: RowsProp = responseRows.map((responseRow) => {
             return {
                 id: responseRow.id,
+                first_name: responseRow.first_name,
+                last_name: responseRow.last_name,
                 name: responseRow.first_name + " " + responseRow.last_name,
-                zone: zoneMap.get(responseRow.zone) ?? "",
                 // TODO: Change type to actual type once backend supports it
                 type: "Worker",
                 // TODO: Change status to actual status once backend supports it
@@ -36,9 +36,10 @@ const requestUserRows = async (
             };
         });
 
-        setRows(rows);
+        setFilteredRows(rows);
+        setServerRows(rows);
     } catch (e) {
-        setRows([]);
+        setFilteredRows([]);
     }
 
     setLoading(false);

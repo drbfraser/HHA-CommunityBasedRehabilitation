@@ -13,14 +13,14 @@ import React, { useState } from "react";
 import { IClient } from "util/clients";
 import { timestampToDateTime, timestampToDateFromReference } from "util/dates";
 import { IVisitSummary } from "util/visits";
-import { useStyles } from "./VisitHistory.styles";
-import { IZoneMap } from "util/cache";
+import { useStyles } from "./ClientVisitTimeline.styles";
 import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import { RiskType } from "util/risks";
+import { IZone } from "util/cache";
 
 interface IProps {
     client?: IClient;
-    zones?: IZoneMap;
+    zones?: IZone[];
 }
 
 const VisitHistoryTimeline = ({ client, zones }: IProps) => {
@@ -33,10 +33,11 @@ const VisitHistoryTimeline = ({ client, zones }: IProps) => {
 
     const VisitEntry = ({ visit }: IEntryProps) => {
         const [expanded, setExpanded] = useState(false);
+        const zone = zones?.find((z) => z.id === visit.zone);
 
         const Summary = ({ clickable }: { clickable?: boolean }) => (
             <>
-                Visit in {zones?.get(visit.zone)} &nbsp;
+                Visit in {zone?.zone_name} &nbsp;
                 {visit.health_visit && <RiskTypeChip risk={RiskType.HEALTH} />}{" "}
                 {visit.educat_visit && <RiskTypeChip risk={RiskType.EDUCATION} />}{" "}
                 {visit.social_visit && <RiskTypeChip risk={RiskType.SOCIAL} />}{" "}

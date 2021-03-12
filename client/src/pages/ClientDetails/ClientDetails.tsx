@@ -12,6 +12,7 @@ import ClientRisks from "./Risks/ClientRisks";
 import { IRisk } from "util/risks";
 import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache";
 import { useHistory } from "react-router-dom";
+import ClientVisitTimeline from "./VisitTimeline/ClientVisitTimeline";
 
 interface IUrlParam {
     clientId: string;
@@ -82,28 +83,17 @@ const ClientDetails = () => {
             </Grid>
             <ClientRisks clientInfo={clientInfo} />
 
-            <Grid item md={12} xs={12}>
+            <Grid item xs={12}>
                 <hr />
             </Grid>
-            <Grid container justify="space-between" direction="row">
-                <Grid item md={6} xs={6}>
-                    <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
-                        <b>Recent Visits</b>
-                    </Typography>
-                    <br />
-                </Grid>
-                <Grid item md={6} xs={6}>
-                    <Button
-                        size="small"
-                        style={{ float: "right" }}
-                        onClick={() => {
-                            history.push(`/client/${clientId}/visits`);
-                        }}
-                    >
-                        See Visit History
-                        <ArrowForwardIcon fontSize="small" />
-                    </Button>
-                </Grid>
+
+            <Grid item xs={12}>
+                <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
+                    <b>Visits Timeline</b>
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <ClientVisitTimeline client={clientInfo} zones={zoneOptions} />
             </Grid>
         </Grid>
     ) : (

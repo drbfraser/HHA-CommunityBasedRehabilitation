@@ -105,3 +105,32 @@ class VisitList(generics.CreateAPIView):
 class VisitDetail(generics.RetrieveAPIView):
     queryset = models.Visit.objects.all()
     serializer_class = serializers.DetailedVisitSerializer
+
+
+class ReferralList(generics.CreateAPIView):
+    queryset = models.Referral.objects.all()
+    serializer_class = serializers.DetailedReferralSerializer
+
+
+class ReferralDetail(generics.RetrieveUpdateAPIView):
+    queryset = models.Referral.objects.all()
+    http_method_names = ["get", "put"]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return serializers.DetailedReferralSerializer
+        elif self.request.method == "PUT":
+            return serializers.UpdateReferralSerializer
+
+    @extend_schema(
+        responses=serializers.DetailedReferralSerializer,
+    )
+    def get(self, request, pk):
+        return super().get(request)
+
+    @extend_schema(
+        request=serializers.UpdateReferralSerializer,
+        responses=serializers.UpdateReferralSerializer,
+    )
+    def put(self, request, pk):
+        return super().put(request)

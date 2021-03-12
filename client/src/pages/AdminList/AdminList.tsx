@@ -123,6 +123,12 @@ const AdminList = () => {
             );
             setFilteredRows(filteredRows);
         }
+        else if (searchOption === SearchOption.ID) {
+            const filteredRows: RowsProp = serverRows.filter((r) =>
+                r.id.toString().startsWith(searchValue)
+            );
+            setFilteredRows(filteredRows);
+        }
     }, [searchValue, searchOption, serverRows]);
 
     return (

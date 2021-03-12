@@ -174,7 +174,7 @@ const ClientList = () => {
         };
 
         loadInitialData();
-    }, []);
+    }, [allClientsMode]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const requestClientRowsDebounced = useCallback(debounce(requestClientRows, 500), []);

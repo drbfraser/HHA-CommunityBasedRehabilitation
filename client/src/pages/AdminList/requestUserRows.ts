@@ -39,6 +39,7 @@ const requestUserRows = async (
         setServerRows(rows);
     } catch (e) {
         setFilteredRows([]);
+        setServerRows([]);
     }
 
     setLoading(false);

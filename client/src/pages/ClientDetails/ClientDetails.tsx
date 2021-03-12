@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 
-import { Grid, CircularProgress, Typography, Button } from "@material-ui/core";
+import { Grid, Typography, Button } from "@material-ui/core";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 
 import { apiFetch, Endpoint } from "../../util/endpoints";
@@ -14,6 +14,7 @@ import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache"
 import { useHistory } from "react-router-dom";
 import ClientVisitTimeline from "./VisitTimeline/ClientVisitTimeline";
 import { timestampToFormDate } from "util/dates";
+import { Alert, Skeleton } from "@material-ui/lab";
 
 interface IUrlParam {
     clientId: string;
@@ -24,18 +25,18 @@ const ClientDetails = () => {
     const [clientInfo, setClientInfo] = useState<IClient>();
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
     const [disabilityOptions, setDisabilityOptions] = useState<IDisability[]>([]);
+    const [loadingError, setLoadingError] = useState(false);
 
     const history = useHistory();
 
     useEffect(() => {
         const getClient = () => {
             return apiFetch(Endpoint.CLIENT, `${clientId}`)
-            .then(resp => resp.json())
-            .then(resp => resp as IClient)
-        }
+                .then((resp) => resp.json())
+                .then((resp) => resp as IClient);
+        };
 
-        Promise
-            .all([getClient(), getAllZones(), getAllDisabilities()])
+        Promise.all([getClient(), getAllZones(), getAllDisabilities()])
             .then(([client, zones, disabilities]) => {
                 client.birth_date = timestampToFormDate(client.birth_date as number);
                 client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
@@ -44,28 +45,37 @@ const ClientDetails = () => {
                 setZoneOptions(zones);
                 setDisabilityOptions(disabilities);
             })
+            .catch(() => {
+                setLoadingError(true);
+            });
     }, [clientId]);
 
-    return clientInfo && zoneOptions.length ? (
+    return loadingError ? (
+        <Alert severity="error">Something went wrong loading that client. Please try again.</Alert>
+    ) : (
         <Grid container spacing={2} direction="row" justify="flex-start">
-            <Grid item>
-                <ClientInfoForm
-                    clientInfo={clientInfo}
-                    zoneOptions={zoneOptions}
-                    disabilityOptions={disabilityOptions}
-                />
+            <Grid item xs={12}>
+                {clientInfo ? (
+                    <ClientInfoForm
+                        clientInfo={clientInfo}
+                        zoneOptions={zoneOptions}
+                        disabilityOptions={disabilityOptions}
+                    />
+                ) : (
+                    <Skeleton variant="rect" height={500} />
+                )}
             </Grid>
-            <Grid item md={12} xs={12}>
+            <Grid item xs={12}>
                 <hr />
             </Grid>
             <Grid container justify="space-between" direction="row">
-                <Grid item md={6} xs={6}>
+                <Grid item xs={6}>
                     <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
                         <b>Risk Levels</b>
                     </Typography>
                     <br />
                 </Grid>
-                <Grid item md={6} xs={6}>
+                <Grid item xs={6}>
                     <Button
                         size="small"
                         style={{ float: "right" }}
@@ -78,6 +88,7 @@ const ClientDetails = () => {
                     </Button>
                 </Grid>
             </Grid>
+
             <ClientRisks clientInfo={clientInfo} />
 
             <Grid item xs={12}>
@@ -93,8 +104,6 @@ const ClientDetails = () => {
                 <ClientVisitTimeline client={clientInfo} zones={zoneOptions} />
             </Grid>
         </Grid>
-    ) : (
-        <CircularProgress />
     );
 };
 

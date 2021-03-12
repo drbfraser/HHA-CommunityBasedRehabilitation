@@ -5,7 +5,7 @@ export interface IClient {
     id: number;
     first_name: string;
     last_name: string;
-    birth_date: number;
+    birth_date: number | string;
     gender: Gender;
     phone_number: string;
     disability: number[];

@@ -13,6 +13,7 @@ import { IRisk } from "util/risks";
 import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache";
 import { useHistory } from "react-router-dom";
 import ClientVisitTimeline from "./VisitTimeline/ClientVisitTimeline";
+import { timestampToFormDate } from "util/dates";
 
 interface IUrlParam {
     clientId: string;
@@ -20,33 +21,29 @@ interface IUrlParam {
 
 const ClientDetails = () => {
     const { clientId } = useParams<IUrlParam>();
+    const [clientInfo, setClientInfo] = useState<IClient>();
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
     const [disabilityOptions, setDisabilityOptions] = useState<IDisability[]>([]);
-    const [clientInfo, setClientInfo] = useState<IClient>();
 
     const history = useHistory();
 
     useEffect(() => {
-        const fetchClientInfo = async () => {
-            const clientInfo = await (await apiFetch(Endpoint.CLIENT, `${clientId}`)).json();
-            const tempDate = new Date(clientInfo.birth_date * 1000).toISOString();
-            clientInfo.birth_date = tempDate.substring(0, 10);
-            clientInfo.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
+        const getClient = () => {
+            return apiFetch(Endpoint.CLIENT, `${clientId}`)
+            .then(resp => resp.json())
+            .then(resp => resp as IClient)
+        }
 
-            setClientInfo(clientInfo);
-        };
-        const fetchAllZones = async () => {
-            const zones = await getAllZones();
-            setZoneOptions(zones);
-        };
-        const fetchAllDisabilities = async () => {
-            const disabilities = await getAllDisabilities();
-            setDisabilityOptions(disabilities);
-        };
+        Promise
+            .all([getClient(), getAllZones(), getAllDisabilities()])
+            .then(([client, zones, disabilities]) => {
+                client.birth_date = timestampToFormDate(client.birth_date as number);
+                client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
 
-        fetchAllZones();
-        fetchAllDisabilities();
-        fetchClientInfo();
+                setClientInfo(client);
+                setZoneOptions(zones);
+                setDisabilityOptions(disabilities);
+            })
     }, [clientId]);
 
     return clientInfo && zoneOptions.length ? (

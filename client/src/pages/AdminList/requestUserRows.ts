@@ -5,7 +5,6 @@ interface IResponseRow {
     id: number;
     first_name: string;
     last_name: string;
-    zone: number;
     type: string;
     is_active: string;
 }

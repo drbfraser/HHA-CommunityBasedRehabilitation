@@ -1,4 +1,5 @@
 import { RowsProp } from "@material-ui/data-grid";
+import { IUser } from "pages/User/fields";
 import { getZoneMap } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { RiskType } from "util/risks";
@@ -23,7 +24,8 @@ const requestClientRows = async (
     setRows: (rows: RowsProp) => void,
     setLoading: (loading: boolean) => void,
     searchValue: string,
-    searchOption: string
+    searchOption: string,
+    allClientsMode: boolean
 ) => {
     setLoading(true);
 
@@ -37,8 +39,16 @@ const requestClientRows = async (
         searchValue !== "" ? `?${searchOption.toLowerCase()}=${searchValue}` : "";
 
     try {
-        const resp = await apiFetch(Endpoint.CLIENTS, urlParams);
+        const theUser: IUser = await (await apiFetch(Endpoint.USER_CURRENT)).json();
+        const userId: string = theUser.id.toString();
 
+        if (urlParams !== "") {
+            urlParams = allClientsMode ? urlParams : urlParams + `&created_by_user=${userId}`;
+        } else {
+            urlParams = allClientsMode ? urlParams : `?created_by_user=${userId}`;
+        }
+
+        const resp = await apiFetch(Endpoint.CLIENTS, urlParams);
         const responseRows: IResponseRow[] = await resp.json();
         const zoneMap = await getZoneMap();
         const rows: RowsProp = responseRows.map((responseRow) => {

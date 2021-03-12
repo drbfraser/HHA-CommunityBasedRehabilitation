@@ -6,9 +6,9 @@ import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 
 import { apiFetch, Endpoint } from "../../util/endpoints";
 
-import ClientInfo from "./ClientInfo";
+import ClientInfoForm from "./ClientInfoForm";
 import { IClient } from "util/clients";
-import ClientRisks from "./ClientRisks";
+import ClientRisks from "./Risks/ClientRisks";
 import { IRisk } from "util/risks";
 import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache";
 import { useHistory } from "react-router-dom";
@@ -51,7 +51,7 @@ const ClientDetails = () => {
     return clientInfo && zoneOptions.length ? (
         <Grid container spacing={2} direction="row" justify="flex-start">
             <Grid item>
-                <ClientInfo
+                <ClientInfoForm
                     clientInfo={clientInfo}
                     zoneOptions={zoneOptions}
                     disabilityOptions={disabilityOptions}

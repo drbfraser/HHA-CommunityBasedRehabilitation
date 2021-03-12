@@ -30,7 +30,7 @@ interface IProps {
     disabilityOptions: IDisability[];
 }
 
-const ClientInfo = (props: IProps) => {
+const ClientInfoForm = (props: IProps) => {
     const styles = useStyles();
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -300,4 +300,4 @@ const ClientInfo = (props: IProps) => {
     );
 };
 
-export default ClientInfo;
+export default ClientInfoForm;

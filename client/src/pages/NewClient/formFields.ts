@@ -11,7 +11,9 @@ export enum FormField {
     phoneNumber = "phoneNumber",
     interviewConsent = "interviewConsent",
     caregiverPresent = "caregiverPresent",
-    caregiverContact = "caregiverContact",
+    caregiverPhone = "caregiverPhone",
+    caregiverName = "caregiverName",
+    caregiverEmail = "caregiverEmail",
     disability = "disability",
     healthRisk = "healthRisk",
     healthRequirements = "healthRequirements",
@@ -34,8 +36,10 @@ export const fieldLabels = {
     [FormField.phoneNumber]: "Phone Number",
     [FormField.interviewConsent]: "Consent to Interview? *",
     [FormField.caregiverPresent]: "Caregiver Present? *",
-    [FormField.caregiverContact]: "Caregiver Contact",
-    [FormField.disability]: "Type of Disability",
+    [FormField.caregiverPhone]: "Caregiver Phone Number",
+    [FormField.caregiverName]: "Caregiver Name",
+    [FormField.caregiverEmail]: "Caregiver Email",
+    [FormField.disability]: "Disabilities",
     [FormField.healthRisk]: "Health Risk",
     [FormField.healthRequirements]: "Health Requirement(s)",
     [FormField.healthGoals]: "Health Goal(s)",
@@ -57,8 +61,10 @@ export const initialValues = {
     [FormField.phoneNumber]: "",
     [FormField.interviewConsent]: false,
     [FormField.caregiverPresent]: false,
-    [FormField.caregiverContact]: "",
-    [FormField.disability]: "",
+    [FormField.caregiverPhone]: "",
+    [FormField.caregiverName]: "",
+    [FormField.caregiverEmail]: "",
+    [FormField.disability]: [],
     [FormField.healthRisk]: "",
     [FormField.healthRequirements]: "",
     [FormField.healthGoals]: "",
@@ -90,6 +96,7 @@ export const validationSchema = () =>
             .label(fieldLabels[FormField.phoneNumber])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
+        [FormField.disability]: Yup.array().label(fieldLabels[FormField.disability]).required(),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),
         [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),
@@ -112,4 +119,15 @@ export const validationSchema = () =>
             .label(fieldLabels[FormField.socialRequirements])
             .required(),
         [FormField.socialGoals]: Yup.string().label(fieldLabels[FormField.socialGoals]).required(),
+        [FormField.caregiverPhone]: Yup.string()
+            .label(fieldLabels[FormField.caregiverPhone])
+            .max(50)
+            .matches(Validation.phoneRegExp, "Phone number is not valid"),
+        [FormField.caregiverName]: Yup.string()
+            .label(fieldLabels[FormField.caregiverName])
+            .max(101),
+        [FormField.caregiverEmail]: Yup.string()
+            .label(fieldLabels[FormField.caregiverEmail])
+            .max(50)
+            .matches(Validation.emailRegExp, "Email Address is not valid"),
     });

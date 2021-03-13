@@ -1,37 +1,48 @@
-import React from "react";
 import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
-import { fieldLabels, AdminField, initialValues, validationSchema, workerOptions } from "./fields";
+import {
+    fieldLabels,
+    AdminField,
+    initialValues,
+    workerOptions,
+    validationNewSchema,
+} from "./fields";
 import Button from "@material-ui/core/Button";
-import { useHistory } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
-import { handleSubmit } from "./handler";
+import { handleCancel, handleNewSubmit } from "./handler";
+import { useState, useEffect } from "react";
+import { getAllZones, IZone } from "util/cache";
 
 const AdminNew = () => {
     const styles = useStyles();
-    const history = useHistory();
-    const handleCancel = () => history.goBack();
+    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+
+    useEffect(() => {
+        const fetchAllZones = async () => {
+            const zones = await getAllZones();
+            setZoneOptions(zones);
+        };
+        fetchAllZones();
+    }, []);
 
     return (
         <Formik
             initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
+            validationSchema={validationNewSchema}
+            onSubmit={handleNewSubmit}
         >
             {({ isSubmitting }) => (
                 <div className={styles.container}>
-                    <b>ID</b>
-                    <p>{initialValues.id}</p>
                     <Form>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
-                                    name={AdminField.firstName}
+                                    name={AdminField.username}
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.firstName]}
+                                    label={fieldLabels[AdminField.username]}
                                     required
                                     fullWidth
                                 />
@@ -39,9 +50,10 @@ const AdminNew = () => {
                             <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
-                                    name={AdminField.lastName}
+                                    name={AdminField.password}
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.lastName]}
+                                    type="password"
+                                    label={fieldLabels[AdminField.password]}
                                     required
                                     fullWidth
                                 />
@@ -49,13 +61,41 @@ const AdminNew = () => {
                             <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
-                                    fullWidth
-                                    required
+                                    name={AdminField.first_name}
                                     variant="outlined"
-                                    type="number"
-                                    label={fieldLabels[AdminField.zone]}
-                                    name={AdminField.zone}
+                                    label={fieldLabels[AdminField.first_name]}
+                                    required
+                                    fullWidth
                                 />
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Field
+                                    component={TextField}
+                                    name={AdminField.last_name}
+                                    variant="outlined"
+                                    label={fieldLabels[AdminField.last_name]}
+                                    required
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <FormControl fullWidth variant="outlined">
+                                    <Field
+                                        component={TextField}
+                                        fullWidth
+                                        select
+                                        variant="outlined"
+                                        required
+                                        label={fieldLabels[AdminField.zone]}
+                                        name={AdminField.zone}
+                                    >
+                                        {zoneOptions.map((option) => (
+                                            <MenuItem key={option.id} value={option.id}>
+                                                {option.zone_name}
+                                            </MenuItem>
+                                        ))}
+                                    </Field>
+                                </FormControl>
                             </Grid>
 
                             <Grid item md={6} xs={12}>
@@ -64,8 +104,8 @@ const AdminNew = () => {
                                     fullWidth
                                     required
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.phoneNumber]}
-                                    name={AdminField.phoneNumber}
+                                    label={fieldLabels[AdminField.phone_number]}
+                                    name={AdminField.phone_number}
                                 />
                             </Grid>
                             <Grid item md={6} xs={12}>
@@ -78,9 +118,9 @@ const AdminNew = () => {
                                         label={fieldLabels[AdminField.type]}
                                         name={AdminField.type}
                                     >
-                                        {workerOptions.map((option) => (
-                                            <MenuItem key={option.value} value={option.value}>
-                                                {option.name}
+                                        {Object.entries(workerOptions).map(([value, name]) => (
+                                            <MenuItem key={value} value={value}>
+                                                {name}
                                             </MenuItem>
                                         ))}
                                     </Field>
@@ -98,7 +138,7 @@ const AdminNew = () => {
                                         type="submit"
                                         disabled={isSubmitting}
                                     >
-                                        Save
+                                        Create
                                     </Button>
                                 </Grid>
 

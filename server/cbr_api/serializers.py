@@ -5,7 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 import time
 
 
-class UserCBRSerializer(serializers.ModelSerializer):
+class UserCBRCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
     )
@@ -21,11 +21,6 @@ class UserCBRSerializer(serializers.ModelSerializer):
             "zone",
             "phone_number",
         )
-        extra_kwargs = {
-            "first_name": {"required": True},
-            "last_name": {"required": True},
-            "zone": {"required": True},
-        }
 
     def create(self, validated_data):
         user = super().create(validated_data)
@@ -35,10 +30,53 @@ class UserCBRSerializer(serializers.ModelSerializer):
 
         return user
 
-    def update(self, instance, validated_data):
-        user = super().update(instance, validated_data)
 
-        user.set_password(validated_data["password"])
+class UserCBRSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserCBR
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "zone",
+            "phone_number",
+        )
+
+
+class UserPasswordSerializer(serializers.ModelSerializer):
+    new_password = serializers.CharField(
+        write_only=True, required=True, validators=[validate_password]
+    )
+
+    class Meta:
+        model = models.UserCBR
+        fields = ("new_password",)
+
+    def update(self, user, validated_data):
+        user.set_password(validated_data["new_password"])
+        user.save()
+
+        return user
+
+
+class UserCurrentPasswordSerializer(serializers.ModelSerializer):
+    current_password = serializers.CharField(write_only=True, required=True)
+    new_password = serializers.CharField(
+        write_only=True, required=True, validators=[validate_password]
+    )
+
+    class Meta:
+        model = models.UserCBR
+        fields = ("current_password", "new_password")
+
+    def update(self, user, validated_data):
+        if not user.check_password(validated_data["current_password"]):
+            raise serializers.ValidationError(
+                {"detail": "Current password is incorrect"}
+            )
+
+        user.set_password(validated_data["new_password"])
         user.save()
 
         return user
@@ -50,6 +88,15 @@ class ZoneSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "zone_name",
+        ]
+
+
+class DisabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Disability
+        fields = [
+            "id",
+            "disability_type",
         ]
 
 
@@ -105,17 +152,178 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         return risk
 
 
+class ImprovementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Improvement
+        fields = [
+            "id",
+            "visit",
+            "risk_type",
+            "provided",
+            "desc",
+        ]
+
+        read_only_fields = ["visit"]
+
+
+class OutcomeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Outcome
+        fields = [
+            "id",
+            "visit",
+            "risk_type",
+            "goal_met",
+            "outcome",
+        ]
+
+        read_only_fields = ["visit"]
+
+
+class UpdateReferralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Referral
+        fields = [
+            "date_resolved",
+            "resolved",
+            "outcome",
+        ]
+
+        read_only_fields = ["date_resolved"]
+
+    def update(self, referral, validated_data):
+        super().update(referral, validated_data)
+        referral.resolved = validated_data["resolved"]
+        if validated_data["resolved"] == True:
+            current_time = int(time.time())
+            referral.date_resolved = current_time
+        else:
+            referral.date_resolved = 0
+        referral.outcome = validated_data["outcome"]
+        referral.save()
+        return referral
+
+
+class DetailedReferralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Referral
+        fields = [
+            "id",
+            "user",
+            "client",
+            "date_referred",
+            "date_resolved",
+            "resolved",
+            "outcome",
+            "picture",
+            "wheelchair",
+            "wheelchair_experience",
+            "hip_width",
+            "wheelchair_owned",
+            "wheelchair_repairable",
+            "physiotherapy",
+            "condition",
+            "prosthetic",
+            "prosthetic_injury_location",
+            "orthotic",
+            "orthotic_injury_location",
+            "services_other",
+        ]
+
+        read_only_fields = [
+            "user",
+            "outcome",
+            "date_referred",
+            "date_resolved",
+            "resolved",
+        ]
+
+    def create(self, validated_data):
+        current_time = int(time.time())
+        validated_data["date_referred"] = current_time
+        validated_data["user"] = self.context["request"].user
+        referrals = models.Referral.objects.create(**validated_data)
+        referrals.save()
+        return referrals
+
+
+class DetailedVisitSerializer(serializers.ModelSerializer):
+    improvements = ImprovementSerializer(many=True)
+    outcomes = OutcomeSerializer(many=True)
+
+    class Meta:
+        model = models.Visit
+        fields = [
+            "id",
+            "user",
+            "client",
+            "date_visited",
+            "health_visit",
+            "educat_visit",
+            "social_visit",
+            "longitude",
+            "latitude",
+            "zone",
+            "village",
+            "improvements",
+            "outcomes",
+        ]
+
+        read_only_fields = ["user", "date_visited"]
+
+    def create(self, validated_data):
+        current_time = int(time.time())
+
+        improvement_dataset = validated_data.pop("improvements")
+        outcome_dataset = validated_data.pop("outcomes")
+
+        validated_data["user"] = self.context["request"].user
+        validated_data["date_visited"] = current_time
+        visit = models.Visit.objects.create(**validated_data)
+        visit.save()
+
+        for improvement_data in improvement_dataset:
+            improvement_data["visit"] = visit
+            improvement = models.Improvement.objects.create(**improvement_data)
+            improvement.save()
+
+        for outcome_data in outcome_dataset:
+            outcome_data["visit"] = visit
+            outcome = models.Outcome.objects.create(**outcome_data)
+            outcome.save()
+
+        return visit
+
+
+class SummaryVisitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Visit
+        fields = [
+            "id",
+            "user",
+            "client",
+            "date_visited",
+            "health_visit",
+            "educat_visit",
+            "social_visit",
+            "longitude",
+            "latitude",
+            "zone",
+            "village",
+        ]
+
+
 class ClientListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Client
         fields = [
             "id",
-            "first_name",
-            "last_name",
+            "full_name",
             "zone",
             "health_risk_level",
             "social_risk_level",
             "educat_risk_level",
+            "created_by_user",
         ]
 
 
@@ -133,6 +341,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "birth_date",
             "gender",
             "phone_number",
+            "disability",
             "created_by_user",
             "created_date",
             "longitude",
@@ -140,6 +349,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "zone",
             "village",
             "picture",
+            "caregiver_name",
             "caregiver_present",
             "caregiver_phone",
             "caregiver_email",
@@ -149,7 +359,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "educat_risk",
         ]
 
-        read_only_fields = ["created_by_user", "created_date"]
+        read_only_fields = ["created_by_user", "created_date", "full_name"]
 
     def create(self, validated_data):
         current_time = int(time.time())
@@ -162,11 +372,13 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         validated_data["health_risk_level"] = health_data["risk_level"]
         validated_data["social_risk_level"] = social_data["risk_level"]
         validated_data["educat_risk_level"] = educat_data["risk_level"]
-
+        validated_data["full_name"] = (
+            validated_data["first_name"] + " " + validated_data["last_name"]
+        )
         validated_data["created_by_user"] = self.context["request"].user
         validated_data["created_date"] = current_time
-        client = models.Client.objects.create(**validated_data)
-        client.save()
+
+        client = super().create(validated_data)
 
         def create_risk(data, type):
             data["client"] = client
@@ -184,6 +396,8 @@ class ClientCreateSerializer(serializers.ModelSerializer):
 
 class ClientDetailSerializer(serializers.ModelSerializer):
     risks = ClientCreationRiskSerializer(many=True, read_only=True)
+    visits = SummaryVisitSerializer(many=True, read_only=True)
+    referrals = DetailedReferralSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Client
@@ -194,6 +408,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "birth_date",
             "gender",
             "phone_number",
+            "disability",
             "created_by_user",
             "created_date",
             "longitude",
@@ -201,11 +416,20 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "zone",
             "village",
             "picture",
+            "caregiver_name",
             "caregiver_present",
             "caregiver_phone",
             "caregiver_email",
             "caregiver_picture",
             "risks",
+            "visits",
+            "referrals",
         ]
 
         read_only_fields = ["created_by_user", "created_date"]
+
+    def update(self, instance, validated_data):
+        super().update(instance, validated_data)
+        instance.full_name = instance.first_name + " " + instance.last_name
+        instance.save()
+        return instance

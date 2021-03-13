@@ -11,6 +11,11 @@ export enum Endpoint {
     CLIENT = "client/",
     CLIENTS = "clients",
     ZONES = "zones",
+    USERS = "users",
+    USER = "user/",
+    USER_CURRENT = "user/current",
+    RISKS = "risks",
+    DISABILITIES = "disabilities",
 }
 
 export const apiFetch = async (
@@ -20,7 +25,6 @@ export const apiFetch = async (
 ): Promise<Response> => {
     const url = API_URL + endpoint + urlParams;
     const authToken = await getAuthToken();
-
     const init = {
         ...customInit,
         headers: {

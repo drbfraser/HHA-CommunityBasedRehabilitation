@@ -20,19 +20,25 @@ import { fieldLabels, FormField, initialValues, validationSchema } from "./formF
 
 import { riskLevels } from "util/risks";
 import { handleSubmit, handleReset } from "./formHandler";
-import { getAllZones, IZone } from "util/cache";
+import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache";
 import { genders } from "util/clients";
 
 const ClientForm = () => {
     const styles = useStyles();
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+    const [disabilityOptions, setDisabilityOptions] = useState<IDisability[]>([]);
 
     useEffect(() => {
         const fetchAllZones = async () => {
             const zones = await getAllZones();
             setZoneOptions(zones);
         };
+        const fetchAllDisabilities = async () => {
+            const disabilities = await getAllDisabilities();
+            setDisabilityOptions(disabilities);
+        };
         fetchAllZones();
+        fetchAllDisabilities();
     }, []);
 
     return (
@@ -49,7 +55,7 @@ const ClientForm = () => {
                                 {/* TODO: Change image src based on whether the client exists or not */}
                                 <img
                                     className={styles.profilePicture}
-                                    src="https://res.cloudinary.com/time2hack/image/upload/fa-user.png"
+                                    src={`/images/profile_pic_icon.png`}
                                     alt="user-icon"
                                 />
                                 <div className={styles.uploadIcon}>
@@ -150,6 +156,26 @@ const ClientForm = () => {
                                         fullWidth
                                     />
                                 </Grid>
+                                <Grid item md={6} xs={12}>
+                                    <Field
+                                        component={TextField}
+                                        fullWidth
+                                        select
+                                        SelectProps={{
+                                            multiple: true,
+                                        }}
+                                        label={fieldLabels[FormField.disability]}
+                                        required
+                                        name={FormField.disability}
+                                        variant="outlined"
+                                    >
+                                        {disabilityOptions.map((option) => (
+                                            <MenuItem key={option.id} value={option.id}>
+                                                {option.disability_type}
+                                            </MenuItem>
+                                        ))}
+                                    </Field>
+                                </Grid>
                                 <Grid item md={12} xs={12} style={{ marginBottom: "-20px" }}>
                                     <Field
                                         component={CheckboxWithLabel}
@@ -167,7 +193,7 @@ const ClientForm = () => {
                                     />
                                 </Grid>
                                 {values.caregiverPresent ? (
-                                    <Grid item md={8} xs={12}>
+                                    <Grid item md={7} xs={12}>
                                         <Accordion
                                             className={styles.caregiverAccordion}
                                             defaultExpanded
@@ -176,14 +202,48 @@ const ClientForm = () => {
                                                 Caregiver Details:
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                                <Field
-                                                    className={styles.caregiverInputField}
-                                                    component={TextField}
-                                                    name={FormField.caregiverContact}
-                                                    variant="outlined"
-                                                    label={fieldLabels[FormField.caregiverContact]}
-                                                    fullWidth
-                                                />
+                                                <Grid container direction="column" spacing={1}>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={styles.caregiverInputField}
+                                                            component={TextField}
+                                                            name={FormField.caregiverName}
+                                                            variant="outlined"
+                                                            label={
+                                                                fieldLabels[FormField.caregiverName]
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
+                                                            component={TextField}
+                                                            name={FormField.caregiverEmail}
+                                                            variant="outlined"
+                                                            label={
+                                                                fieldLabels[
+                                                                    FormField.caregiverEmail
+                                                                ]
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={styles.caregiverInputField}
+                                                            component={TextField}
+                                                            name={FormField.caregiverPhone}
+                                                            variant="outlined"
+                                                            label={
+                                                                fieldLabels[
+                                                                    FormField.caregiverPhone
+                                                                ]
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                </Grid>
                                             </AccordionDetails>
                                         </Accordion>
                                     </Grid>

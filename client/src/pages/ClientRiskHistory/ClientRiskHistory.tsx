@@ -44,7 +44,7 @@ const ClientRiskHistory = () => {
             const currentTimestamp = Date.now() / 1000;
             const date = new Date(timestamp * 1000);
 
-            if (client && client.created_date - currentTimestamp < oneWeek) {
+            if (client && currentTimestamp - client.created_date < oneWeek) {
                 return date.toLocaleString([], {
                     weekday: "short",
                     hour: "2-digit",

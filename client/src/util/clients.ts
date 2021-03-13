@@ -14,11 +14,13 @@ export interface IClient {
     zone: number;
     village: string;
     picture: unknown;
-    careggiver_present: boolean;
+    caregiver_present: boolean;
+    caregiver_name: string;
     caregiver_phone: string;
     caregiver_email: string;
     caregiver_picture: unknown;
     risks: IRisk[];
+    disability: number[];
 }
 
 export enum Gender {

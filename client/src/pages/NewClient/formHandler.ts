@@ -22,6 +22,7 @@ const addClient = async (clientInfo: string) => {
 export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
     const newClient = JSON.stringify({
         birth_date: new Date(values.birthDate).getTime() / 1000,
+        disability: values.disability,
         first_name: values.firstName,
         last_name: values.lastName,
         gender: values.gender,
@@ -31,8 +32,9 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         zone: values.zone,
         village: values.village,
         caregiver_present: values.caregiverPresent,
-        // TODO: split caregiver contact to email + phone
-        caregiver_phone: values.caregiverContact,
+        caregiver_name: values.caregiverName,
+        caregiver_phone: values.caregiverPhone,
+        caregiver_email: values.caregiverEmail,
         health_risk: {
             risk_level: values.healthRisk,
             requirement: values.healthRequirements,

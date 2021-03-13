@@ -94,17 +94,16 @@ const ClientList = () => {
     const [isSocialHidden, setSocialHidden] = useState<boolean>(false);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const [searchValue, setSearchValue] = useState<string>("");
-    const [searchOption, setSearchOption] = useState<string>(SearchOption.ID);
+    const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
     const [zones, setZones] = useState<IZone[]>([]);
     const [rows, setRows] = useState<RowsProp>([]);
 
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
-
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
-    const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}/risks`);
+    const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
         setOptionsAnchorEl(event.currentTarget);
     const onOptionsClose = () => setOptionsAnchorEl(null);
@@ -169,7 +168,7 @@ const ClientList = () => {
         const loadInitialData = async () => {
             setLoading(true);
             setZones(await getAllZones());
-            await requestClientRows(setRows, setLoading, "", "");
+            await requestClientRows(setRows, setLoading, "", "", true);
             setLoading(false);
             initialDataLoaded.current = true;
         };
@@ -185,8 +184,8 @@ const ClientList = () => {
             return;
         }
 
-        requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption);
-    }, [searchValue, searchOption, requestClientRowsDebounced]);
+        requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption, allClientsMode);
+    }, [searchValue, searchOption, allClientsMode, requestClientRowsDebounced]);
 
     return (
         <div className={styles.root}>
@@ -248,7 +247,7 @@ const ClientList = () => {
                 <div className={styles.searchOptions}>
                     <Select
                         color={"primary"}
-                        defaultValue={SearchOption.ID}
+                        defaultValue={SearchOption.NAME}
                         value={searchOption}
                         onChange={(event) => {
                             setSearchValue("");
@@ -294,6 +293,12 @@ const ClientList = () => {
                 density={DensityTypes.Comfortable}
                 onRowClick={onRowClick}
                 pagination
+                sortModel={[
+                    {
+                        field: "name",
+                        sort: "asc",
+                    },
+                ]}
             />
         </div>
     );

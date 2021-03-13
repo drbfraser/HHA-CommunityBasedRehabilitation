@@ -123,6 +123,9 @@ export const validationSchema = () =>
             .label(fieldLabels[FormField.caregiverPhone])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid"),
+        [FormField.caregiverName]: Yup.string()
+            .label(fieldLabels[FormField.caregiverName])
+            .max(101),
         [FormField.caregiverEmail]: Yup.string()
             .label(fieldLabels[FormField.caregiverEmail])
             .max(50)

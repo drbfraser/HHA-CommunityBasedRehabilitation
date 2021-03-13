@@ -53,7 +53,9 @@ export const validationSchema = () =>
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),
         [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),
-        [FormField.caregiver_name]: Yup.string().label(fieldLabels[FormField.caregiver_name]),
+        [FormField.caregiver_name]: Yup.string()
+            .label(fieldLabels[FormField.caregiver_name])
+            .max(101),
         [FormField.caregiver_phone]: Yup.string()
             .label(fieldLabels[FormField.caregiver_phone])
             .max(50)

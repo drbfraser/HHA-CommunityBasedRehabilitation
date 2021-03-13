@@ -13,6 +13,7 @@ export enum FormField {
     caregiverPresent = "caregiverPresent",
     caregiverPhone = "caregiverPhone",
     caregiverName = "caregiverName",
+    caregiverEmail = "caregiverEmail",
     disability = "disability",
     healthRisk = "healthRisk",
     healthRequirements = "healthRequirements",
@@ -37,6 +38,7 @@ export const fieldLabels = {
     [FormField.caregiverPresent]: "Caregiver Present? *",
     [FormField.caregiverPhone]: "Caregiver Phone Number",
     [FormField.caregiverName]: "Caregiver Name",
+    [FormField.caregiverEmail]: "Caregiver Email",
     [FormField.disability]: "Disabilities",
     [FormField.healthRisk]: "Health Risk",
     [FormField.healthRequirements]: "Health Requirement(s)",
@@ -61,6 +63,7 @@ export const initialValues = {
     [FormField.caregiverPresent]: false,
     [FormField.caregiverPhone]: "",
     [FormField.caregiverName]: "",
+    [FormField.caregiverEmail]: "",
     [FormField.disability]: [],
     [FormField.healthRisk]: "",
     [FormField.healthRequirements]: "",
@@ -120,4 +123,11 @@ export const validationSchema = () =>
             .label(fieldLabels[FormField.caregiverPhone])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid"),
+        [FormField.caregiverName]: Yup.string()
+            .label(fieldLabels[FormField.caregiverName])
+            .max(101),
+        [FormField.caregiverEmail]: Yup.string()
+            .label(fieldLabels[FormField.caregiverEmail])
+            .max(50)
+            .matches(Validation.emailRegExp, "Email Address is not valid"),
     });

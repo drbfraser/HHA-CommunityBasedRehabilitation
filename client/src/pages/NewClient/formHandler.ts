@@ -20,7 +20,6 @@ const addClient = async (clientInfo: string) => {
 };
 
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
-// TODO: Add caregiver name once they are implemented on the back-end.
 export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
     const newClient = JSON.stringify({
         birth_date: timestampFromFormDate(values.birthDate),
@@ -34,8 +33,9 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         zone: values.zone,
         village: values.village,
         caregiver_present: values.caregiverPresent,
-        // TODO: split caregiver contact to email + phone
+        caregiver_name: values.caregiverName,
         caregiver_phone: values.caregiverPhone,
+        caregiver_email: values.caregiverEmail,
         health_risk: {
             risk_level: values.healthRisk,
             requirement: values.healthRequirements,

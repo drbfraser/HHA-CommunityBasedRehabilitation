@@ -6,7 +6,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if models.Disability.objects.all().count() > 0:
             self.stdout.write(
-                self.style.ERROR("Disabilities have already been created")
+                self.style.ERROR("Disabilities have already been created!")
             )
             return
 

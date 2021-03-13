@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { themeColors } from "theme.styles";
 
 export const useStyles = makeStyles(
     {
@@ -34,6 +35,9 @@ export const useStyles = makeStyles(
             textAlign: "center",
         },
         impOutcomeAccordion: {
+            "&.MuiAccordion-root": {
+                backgroundColor: themeColors.blueBgLight,
+            },
             "& .MuiAccordionDetails-root": {
                 display: "block",
             },

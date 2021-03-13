@@ -111,7 +111,7 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
 
             const DataCard = ({ data }: IDataCardProps) => (
                 <>
-                    <Card variant="outlined">
+                    <Card>
                         <CardContent>
                             {data.map((d, i) => (
                                 <p key={i}>

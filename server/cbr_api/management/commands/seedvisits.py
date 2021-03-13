@@ -36,7 +36,9 @@ class Command(BaseCommand):
             visit = models.Visit.objects.create(
                 user=random.choice(users),
                 client=random.choice(clients),
-                date_visited=random.randint(getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)),
+                date_visited=random.randint(
+                    getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)
+                ),
                 longitude=0.0,
                 latitude=0.0,
                 zone=random.choice(zones),

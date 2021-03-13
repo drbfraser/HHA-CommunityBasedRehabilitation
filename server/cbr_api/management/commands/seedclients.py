@@ -14,6 +14,20 @@ class Command(BaseCommand):
         def getYearTimestamp(self, year):
             return (year - 1970) * (60 * 60 * 24 * 365)
 
+        def getDifferentRisk(self, client_risk_level):
+            diff_risks = ["LO", "ME", "HI", "CR"]
+
+            if client_risk_level == "LO":
+                diff_risks.pop(0)
+            elif client_risk_level == "ME":
+                diff_risks.pop(1)
+            elif client_risk_level == "HI":
+                diff_risks.pop(2)
+            elif client_risk_level == "CR":
+                diff_risks.pop(3)
+
+            return diff_risks
+
         def createRisk(self, client, type, level, time):
             risk = models.ClientRisk.objects.create(
                 client=client,
@@ -24,6 +38,17 @@ class Command(BaseCommand):
                 goal="",
             )
             client.risks.add(risk)
+
+            if type == "HEALTH":
+                client.health_risk_level = level
+            elif type == "SOCIAL":
+                client.social_risk_level = level
+            elif type == "EDUCAT":
+                client.educat_risk_level = level
+
+            risk.save()
+            client.save()
+
             return risk
 
         def createClient(self, first, last, gender, village, phone):
@@ -33,6 +58,7 @@ class Command(BaseCommand):
             creation_date = random.randint(
                 getYearTimestamp(self, 2018), getYearTimestamp(self, 2019)
             )
+
             client = models.Client.objects.create(
                 created_by_user=random.choice(users),
                 created_date=creation_date,
@@ -51,9 +77,13 @@ class Command(BaseCommand):
                 educat_risk_level=educat_risk,
             )
             client.disability.add(random.choice(disabilities))
+
             createRisk(self, client, "HEALTH", health_risk, creation_date)
             createRisk(self, client, "SOCIAL", social_risk, creation_date)
             createRisk(self, client, "EDUCAT", educat_risk, creation_date)
+
+            client.save()
+
             return client
 
         if models.Client.objects.all().count() > 0:
@@ -89,67 +119,78 @@ class Command(BaseCommand):
 
         clients = models.Client.objects.all()
 
+        client = random.choice(clients)
         createRisk(
             self,
-            random.choice(clients),
+            client,
             "HEALTH",
-            random.choice(risks),
+            random.choice(getDifferentRisk(self, client.health_risk_level)),
             random.randint(getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)),
         )
+        client = random.choice(clients)
         createRisk(
             self,
-            random.choice(clients),
+            client,
             "HEALTH",
-            random.choice(risks),
+            random.choice(getDifferentRisk(self, client.health_risk_level)),
             random.randint(getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)),
         )
+        client = random.choice(clients)
         createRisk(
             self,
-            random.choice(clients),
+            client,
             "HEALTH",
-            random.choice(risks),
+            random.choice(getDifferentRisk(self, client.health_risk_level)),
             random.randint(getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)),
         )
+
+        client = random.choice(clients)
         createRisk(
             self,
             random.choice(clients),
             "SOCIAL",
-            random.choice(risks),
+            random.choice(getDifferentRisk(self, client.social_risk_level)),
             random.randint(getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)),
         )
+        client = random.choice(clients)
         createRisk(
             self,
             random.choice(clients),
             "SOCIAL",
-            random.choice(risks),
+            random.choice(getDifferentRisk(self, client.social_risk_level)),
             random.randint(getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)),
         )
+        client = random.choice(clients)
         createRisk(
             self,
             random.choice(clients),
             "SOCIAL",
-            random.choice(risks),
+            random.choice(getDifferentRisk(self, client.social_risk_level)),
             random.randint(getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)),
         )
+
+        client = random.choice(clients)
         createRisk(
             self,
             random.choice(clients),
             "EDUCAT",
-            random.choice(risks),
+            random.choice(getDifferentRisk(self, client.educat_risk_level)),
             random.randint(getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)),
         )
+        client = random.choice(clients)
         createRisk(
             self,
             random.choice(clients),
             "EDUCAT",
-            random.choice(risks),
+            random.choice(getDifferentRisk(self, client.educat_risk_level)),
             random.randint(getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)),
         )
+        client = random.choice(clients)
         createRisk(
             self,
             random.choice(clients),
             "EDUCAT",
-            random.choice(risks),
+            random.choice(getDifferentRisk(self, client.educat_risk_level)),
             random.randint(getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)),
         )
 

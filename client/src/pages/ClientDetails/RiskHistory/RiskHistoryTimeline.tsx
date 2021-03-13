@@ -3,7 +3,7 @@ import { Timeline } from "@material-ui/lab";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import React, { useState } from "react";
 import { IClient } from "util/clients";
-import { timestampToDateFromReference } from "util/dates";
+import { timestampToDateFromReference, timestampToDateTime } from "util/dates";
 import { IRisk, riskTypes } from "util/risks";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
@@ -46,7 +46,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
                         <Summary />
                     </DialogTitle>
                     <DialogContent>
-                        <b>When:</b> {new Date(risk.timestamp * 1000).toLocaleString()}
+                        <b>When:</b> {timestampToDateTime(risk.timestamp)}
                     </DialogContent>
                     <DialogContent>
                         <b>Requirements:</b> {risk.requirement}

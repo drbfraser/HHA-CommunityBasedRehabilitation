@@ -38,7 +38,7 @@ export const timestampToDateFromReference = (referenceTimestamp?: number) => {
 };
 
 export const timestampToFormDate = (timestamp: number) => {
-    return new Date(timestamp * 1000).toISOString().substring(0, 10);
+    return timestampToDateObj(timestamp).toISOString().substring(0, 10);
 };
 
 export const timestampFromFormDate = (formDate: string) => {

@@ -2,6 +2,7 @@ import { FormikHelpers } from "formik";
 import { TFormValues } from "./formFields";
 import { Endpoint, apiFetch } from "../../util/endpoints";
 import history from "../../util/history";
+import { timestampFromFormDate } from "util/dates";
 
 const addClient = async (clientInfo: string) => {
     const init: RequestInit = {
@@ -22,7 +23,7 @@ const addClient = async (clientInfo: string) => {
 // TODO: Add caregiver name once they are implemented on the back-end.
 export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
     const newClient = JSON.stringify({
-        birth_date: new Date(values.birthDate).getTime() / 1000,
+        birth_date: timestampFromFormDate(values.birthDate),
         disability: values.disability,
         first_name: values.firstName,
         last_name: values.lastName,

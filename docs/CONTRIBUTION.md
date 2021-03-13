@@ -22,15 +22,17 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 ### 3. Seed Some Data
 
-You'll likely want to seed some data for development purposes. This can be done with a single command, or done individually by data type.
+You'll likely want to seed some data for development purposes. This can be done with a single command, or done individually by data type. Use `docker exec cbr_django python manage.py _______` by replacing the `_______` with one of the keywords below.
 
-- Complete Database: `docker exec cbr_django python manage.py seeddatabase`
+- Complete Database: `seeddatabase`
 
-- Zones: `docker exec cbr_django python manage.py seedzones`
-- Disabilities: `docker exec cbr_django python manage.py seeddisabilities`
-- Users: `docker exec cbr_django python manage.py seedusers`
-- Clients: `docker exec cbr_django python manage.py seedclients`
-- Visits: `docker exec cbr_django python manage.py seedvisits`
+- Zones: `seedzones`
+- Disabilities: `seeddisabilities`
+- Users: `seedusers`
+- Clients: `seedclients`
+- Visits: `seedvisits`
+
+If at some point during development you want to re-seed the database with the example data again, you'll need to delete everything first. Use `docker exec cbr_django python manage.py flush` to clear the database, then run the seeding commands again.
 
 ### 4. Start Developing!
 

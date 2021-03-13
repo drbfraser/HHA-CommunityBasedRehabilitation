@@ -11,33 +11,33 @@ class Command(BaseCommand):
         users = models.UserCBR.objects.all()
         disabilities = models.Disability.objects.all()
 
-        def createRisk(self, Client, Type, Level):
+        def createRisk(self, client, type, level):
             return models.ClientRisk.objects.create(
-                client=Client,
+                client=client,
                 timestamp=int(time.time()),
-                risk_type=Type,
-                risk_level=Level,
+                risk_type=type,
+                risk_level=level,
                 requirement="",
                 goal="",
             )
 
-        def createClient(self, First, Last, Gender, Birth, Village, Phone):
+        def createClient(self, first, last, gender, birth, village, phone):
             health_risk = random.choice(risks)
             social_risk = random.choice(risks)
             educat_risk = random.choice(risks)
             client = models.Client.objects.create(
                 created_by_user=random.choice(users),
                 created_date=int(time.time()),
-                first_name=First,
-                last_name=Last,
-                full_name=First+" "+Last,
-                phone_number=Phone,
+                first_name=first,
+                last_name=last,
+                full_name=first + " " + last,
+                phone_number=phone,
                 zone=random.choice(zones),
-                gender=Gender,
-                birth_date=(Birth - 1970) * (60 * 60 * 24 * 365),
+                gender=gender,
+                birth_date=(birth - 1970) * (60 * 60 * 24 * 365),
                 longitude=0.0,
                 latitude=0.0,
-                village=Village,
+                village=village,
                 health_risk_level=health_risk,
                 social_risk_level=social_risk,
                 educat_risk_level=educat_risk,
@@ -69,7 +69,7 @@ class Command(BaseCommand):
             )
             return
 
-        createClient(self, "Dan", "Nylah", "M", 1992, "#1", "555-0001")
+        createClient(self, "Dan", "Nylah", "M", 1995, "#1", "555-0001")
         createClient(self, "Blaise", "Georg", "F", 1995, "#2", "555-0002")
         createClient(self, "Carol", "Yaumuna", "F", 1995, "#3", "555-0003")
         createClient(self, "Aravind", "Bartolome", "M", 1995, "#4", "555-0004")

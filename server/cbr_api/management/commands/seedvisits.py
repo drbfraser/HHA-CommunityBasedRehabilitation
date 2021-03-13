@@ -13,23 +13,23 @@ class Command(BaseCommand):
         clients = models.Client.objects.all()
         disabilities = models.Disability.objects.all()
 
-        def createImprovement(self, Visit, Type):
+        def createImprovement(self, visit, type):
             return models.Improvement.objects.create(
-                visit=Visit,
-                risk_type=Type,
+                visit=visit,
+                risk_type=type,
                 provided="",
                 desc="",
             )
 
-        def createOutcome(self, Visit, Type):
+        def createOutcome(self, visit, type):
             return models.Outcome.objects.create(
-                visit=Visit,
-                risk_type=Type,
+                visit=visit,
+                risk_type=type,
                 goal_met=random.choice(outcomes),
                 outcome="",
             )
 
-        def createVisit(self, Health, Social, Educat, Type, Village):
+        def createVisit(self, health, social, educat, type, village):
             visit = models.Visit.objects.create(
                 user=random.choice(users),
                 client=random.choice(clients),
@@ -37,13 +37,13 @@ class Command(BaseCommand):
                 longitude=0.0,
                 latitude=0.0,
                 zone=random.choice(zones),
-                village=Village,
-                health_visit=Health,
-                educat_visit=Social,
-                social_visit=Educat,
+                village=village,
+                health_visit=health,
+                educat_visit=social,
+                social_visit=educat,
             )
-            visit.improvements.add(createImprovement(self, visit, Type))
-            visit.outcomes.add(createOutcome(self, visit, Type))
+            visit.improvements.add(createImprovement(self, visit, type))
+            visit.outcomes.add(createOutcome(self, visit, type))
             return visit
 
         if models.Visit.objects.all().count() > 0:

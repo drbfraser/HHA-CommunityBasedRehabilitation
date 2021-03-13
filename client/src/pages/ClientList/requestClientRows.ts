@@ -1,6 +1,5 @@
 import { RowsProp } from "@material-ui/data-grid";
-import { IUser } from "pages/User/fields";
-import { getZoneMap } from "util/cache";
+import { getCurrentUserId, getZoneMap } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { RiskType } from "util/risks";
 import { SearchOption } from "./searchOptions";
@@ -35,20 +34,18 @@ const requestClientRows = async (
         searchOption = "full_name";
     }
 
-    let urlParams: string =
-        searchValue !== "" ? `?${searchOption.toLowerCase()}=${searchValue}` : "";
-
     try {
-        const theUser: IUser = await (await apiFetch(Endpoint.USER_CURRENT)).json();
-        const userId: string = theUser.id.toString();
+        const userId = getCurrentUserId();
+        const urlParams = new URLSearchParams();
 
-        if (urlParams !== "") {
-            urlParams = allClientsMode ? urlParams : urlParams + `&created_by_user=${userId}`;
-        } else {
-            urlParams = allClientsMode ? urlParams : `?created_by_user=${userId}`;
+        if (searchValue) {
+            urlParams.append(searchOption.toLowerCase(), searchValue);
+        }
+        if (!allClientsMode) {
+            urlParams.append("created_by_user", await userId);
         }
 
-        const resp = await apiFetch(Endpoint.CLIENTS, urlParams);
+        const resp = await apiFetch(Endpoint.CLIENTS, "?" + urlParams.toString());
         const responseRows: IResponseRow[] = await resp.json();
         const zoneMap = await getZoneMap();
         const rows: RowsProp = responseRows.map((responseRow) => {

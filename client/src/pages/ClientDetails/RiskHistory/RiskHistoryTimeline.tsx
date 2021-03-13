@@ -7,21 +7,22 @@ import {
     TimelineConnector,
     TimelineDot,
     TimelineContent,
-    Skeleton,
 } from "@material-ui/lab";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import React, { useState } from "react";
 import { IClient } from "util/clients";
 import { timestampToDateFromReference } from "util/dates";
 import { IRisk, riskTypes } from "util/risks";
-import { useStyles } from "./RiskHistory.styles";
+import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
+import SkeletonEntry from "../Timeline/SkeletonEntry";
+import { useTimelineStyles } from "../Timeline/timelines.styles";
 
 interface IProps {
     client?: IClient;
 }
 
 const RiskHistoryTimeline = ({ client }: IProps) => {
-    const styles = useStyles();
+    const timelineStyles = useTimelineStyles();
     const dateFormatter = timestampToDateFromReference(client?.created_date);
 
     interface IEntryProps {
@@ -43,7 +44,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
         return (
             <>
                 <TimelineItem key={risk.id}>
-                    <TimelineOppositeContent className={styles.timelineDate}>
+                    <TimelineOppositeContent className={timelineStyles.date}>
                         {dateFormatter(risk.timestamp)}
                     </TimelineOppositeContent>
                     <TimelineSeparator>
@@ -53,7 +54,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
                     </TimelineSeparator>
                     <TimelineContent>
                         <div
-                            className={`${styles.timelineEntry} ${styles.riskEntry}`}
+                            className={`${timelineStyles.entry} ${timelineStyles.clickable}`}
                             onClick={() => setExpanded(true)}
                         >
                             <Summary clickable={true} />
@@ -83,40 +84,6 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
         );
     };
 
-    const ClientCreatedEntry = () => (
-        <TimelineItem>
-            <TimelineOppositeContent className={styles.timelineDate}>
-                {dateFormatter(client!.created_date)}
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-                <TimelineConnector />
-                <TimelineDot />
-                <TimelineConnector className={styles.hidden} />
-            </TimelineSeparator>
-            <TimelineContent>
-                <div className={styles.timelineEntry}>Client created</div>
-            </TimelineContent>
-        </TimelineItem>
-    );
-
-    const SkeletonEntry = () => (
-        <TimelineItem>
-            <TimelineOppositeContent className={styles.timelineDate}>
-                <Skeleton variant="text" />
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-                <TimelineConnector />
-                <TimelineDot />
-                <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>
-                <div className={styles.timelineEntry}>
-                    <Skeleton variant="text" />
-                </div>
-            </TimelineContent>
-        </TimelineItem>
-    );
-
     const riskSort = (a: IRisk, b: IRisk) => {
         if (a.timestamp === b.timestamp) {
             return b.risk_type.localeCompare(a.risk_type);
@@ -126,7 +93,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
     };
 
     return (
-        <Timeline className={styles.timeline}>
+        <Timeline className={timelineStyles.timeline}>
             {client ? (
                 <>
                     {client.risks
@@ -139,7 +106,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
                                 isInitial={risk.timestamp === client.created_date}
                             />
                         ))}
-                    <ClientCreatedEntry />
+                    <ClientCreatedEntry createdDate={dateFormatter(client.created_date)} />
                 </>
             ) : (
                 [1, 2, 3, 4].map((i) => <SkeletonEntry key={i} />)

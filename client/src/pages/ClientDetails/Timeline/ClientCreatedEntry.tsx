@@ -7,30 +7,30 @@ import {
     TimelineDot,
     TimelineContent,
 } from "@material-ui/lab";
-import { useStyles } from "./ClientVisitTimeline.styles";
+import { useTimelineStyles } from "./timelines.styles";
 
 interface IProps {
     createdDate: string;
 }
 
-const CreatedEntry = ({ createdDate }: IProps) => {
-    const styles = useStyles();
+const ClientCreatedEntry = ({ createdDate }: IProps) => {
+    const timelineStyles = useTimelineStyles();
 
     return (
         <TimelineItem>
-            <TimelineOppositeContent className={styles.timelineDate}>
+            <TimelineOppositeContent className={timelineStyles.date}>
                 {createdDate}
             </TimelineOppositeContent>
             <TimelineSeparator>
                 <TimelineConnector />
                 <TimelineDot />
-                <TimelineConnector className={styles.hidden} />
+                <TimelineConnector className={timelineStyles.hidden} />
             </TimelineSeparator>
             <TimelineContent>
-                <div className={styles.timelineEntry}>Client created</div>
+                <div className={timelineStyles.entry}>Client created</div>
             </TimelineContent>
         </TimelineItem>
     );
 };
 
-export default CreatedEntry;
+export default ClientCreatedEntry;

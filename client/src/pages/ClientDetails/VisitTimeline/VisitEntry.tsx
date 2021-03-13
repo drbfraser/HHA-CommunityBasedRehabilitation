@@ -25,11 +25,12 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { timestampToDateTime } from "util/dates";
 import { IVisit, IVisitSummary, outcomeGoalMets } from "util/visits";
-import { useStyles } from "./ClientVisitTimeline.styles";
+import { useStyles } from "./VisitEntry.styles";
 import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import { IZone } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { RiskType, riskTypes } from "util/risks";
+import { useTimelineStyles } from "../Timeline/timelines.styles";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -42,6 +43,7 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
     const [visit, setVisit] = useState<IVisit>();
     const [loadingError, setLoadingError] = useState(false);
     const styles = useStyles();
+    const timelineStyles = useTimelineStyles();
 
     const onOpen = () => {
         setOpen(true);
@@ -171,7 +173,7 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
     return (
         <>
             <TimelineItem>
-                <TimelineOppositeContent className={styles.timelineDate}>
+                <TimelineOppositeContent className={timelineStyles.date}>
                     {dateFormatter(visitSummary.date_visited)}
                 </TimelineOppositeContent>
                 <TimelineSeparator>
@@ -181,7 +183,7 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
                 </TimelineSeparator>
                 <TimelineContent>
                     <div
-                        className={`${styles.timelineEntry} ${styles.visitEntry}`}
+                        className={`${timelineStyles.entry} ${timelineStyles.clickable}`}
                         onClick={onOpen}
                     >
                         <Summary clickable={true} />

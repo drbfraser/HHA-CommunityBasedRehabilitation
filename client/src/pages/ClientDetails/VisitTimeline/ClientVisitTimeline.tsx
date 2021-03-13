@@ -3,11 +3,11 @@ import { Timeline } from "@material-ui/lab";
 import { IClient } from "util/clients";
 import { timestampToDateFromReference } from "util/dates";
 import { IVisitSummary } from "util/visits";
-import { useStyles } from "./ClientVisitTimeline.styles";
 import { IZone } from "util/cache";
-import SkeletonEntry from "./SkeletonEntry";
-import CreatedEntry from "./CreatedEntry";
+import SkeletonEntry from "../Timeline/SkeletonEntry";
+import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import VisitEntry from "./VisitEntry";
+import { useTimelineStyles } from "../Timeline/timelines.styles";
 
 interface IProps {
     client?: IClient;
@@ -15,7 +15,7 @@ interface IProps {
 }
 
 const VisitHistoryTimeline = ({ client, zones }: IProps) => {
-    const styles = useStyles();
+    const timelineStyles = useTimelineStyles();
     const dateFormatter = timestampToDateFromReference(client?.created_date);
 
     const visitSort = (a: IVisitSummary, b: IVisitSummary) => {
@@ -23,7 +23,7 @@ const VisitHistoryTimeline = ({ client, zones }: IProps) => {
     };
 
     return (
-        <Timeline className={styles.timeline}>
+        <Timeline className={timelineStyles.timeline}>
             {client ? (
                 <>
                     {client.visits
@@ -37,7 +37,7 @@ const VisitHistoryTimeline = ({ client, zones }: IProps) => {
                                 dateFormatter={dateFormatter}
                             />
                         ))}
-                    <CreatedEntry createdDate={dateFormatter(client.created_date)} />
+                    <ClientCreatedEntry createdDate={dateFormatter(client.created_date)} />
                 </>
             ) : (
                 [1, 2, 3, 4].map((i) => <SkeletonEntry key={i} />)

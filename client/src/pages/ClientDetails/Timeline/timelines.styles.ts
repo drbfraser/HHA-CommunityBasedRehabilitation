@@ -1,13 +1,12 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { themeColors } from "theme.styles";
 
-export const useStyles = makeStyles(
+export const useTimelineStyles = makeStyles(
     {
         timeline: {
             paddingLeft: 0,
             paddingRight: 0,
         },
-        timelineEntry: {
+        entry: {
             margin: 10,
             marginRight: 0,
             padding: 10,
@@ -15,13 +14,13 @@ export const useStyles = makeStyles(
             borderRadius: 5,
             fontSize: "120%",
         },
-        visitEntry: {
+        clickable: {
             cursor: "pointer",
             "&:hover": {
                 backgroundColor: "#eee",
             },
         },
-        timelineDate: {
+        date: {
             alignSelf: "center",
             flex: "none",
             width: 105,
@@ -30,20 +29,6 @@ export const useStyles = makeStyles(
         },
         hidden: {
             visibility: "hidden",
-        },
-        textCenter: {
-            textAlign: "center",
-        },
-        impOutcomeAccordion: {
-            "&.MuiAccordion-root": {
-                backgroundColor: themeColors.blueBgLight,
-            },
-            "& .MuiAccordionDetails-root": {
-                display: "block",
-            },
-            "& .MuiCardContent-root": {
-                padding: "8px 16px",
-            },
         },
     },
     { index: 1 }

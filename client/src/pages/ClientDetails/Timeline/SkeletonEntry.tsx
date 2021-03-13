@@ -8,14 +8,14 @@ import {
     TimelineContent,
 } from "@material-ui/lab";
 import React from "react";
-import { useStyles } from "./ClientVisitTimeline.styles";
+import { useTimelineStyles } from "./timelines.styles";
 
 const SkeletonEntry = () => {
-    const styles = useStyles();
+    const timelineStyles = useTimelineStyles();
 
     return (
         <TimelineItem>
-            <TimelineOppositeContent className={styles.timelineDate}>
+            <TimelineOppositeContent className={timelineStyles.date}>
                 <Skeleton variant="text" />
             </TimelineOppositeContent>
             <TimelineSeparator>
@@ -24,7 +24,7 @@ const SkeletonEntry = () => {
                 <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
-                <div className={styles.timelineEntry}>
+                <div className={timelineStyles.entry}>
                     <Skeleton variant="text" />
                 </div>
             </TimelineContent>

@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    CardContent,
+    Card,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Typography,
+} from "@material-ui/core";
 import {
     TimelineItem,
     TimelineOppositeContent,
@@ -10,13 +22,14 @@ import {
     Skeleton,
     Alert,
 } from "@material-ui/lab";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { timestampToDateTime } from "util/dates";
-import { IVisit, IVisitSummary } from "util/visits";
+import { IVisit, IVisitSummary, outcomeGoalMets } from "util/visits";
 import { useStyles } from "./ClientVisitTimeline.styles";
 import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import { IZone } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";
-import { RiskType } from "util/risks";
+import { RiskType, riskTypes } from "util/risks";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -65,6 +78,96 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
         );
     };
 
+    const Details = () => {
+        if (!visit) {
+            return <Skeleton variant="rect" height={200} />;
+        }
+
+        const DetailAccordion = ({ type }: { type: RiskType }) => {
+            const improvements = visit.improvements
+                .filter((i) => i.risk_type === type)
+                .map((i) => ({
+                    title: i.provided,
+                    desc: i.desc,
+                }));
+
+            const outcomes = visit.outcomes
+                .filter((o) => o.risk_type === type)
+                .map((o) => ({
+                    title: outcomeGoalMets[o.goal_met].name,
+                    desc: o.outcome,
+                }));
+
+            if (!improvements.length && !outcomes.length) {
+                return <React.Fragment key={type} />;
+            }
+
+            interface IDataCardProps {
+                data: {
+                    title: string;
+                    desc: string;
+                }[];
+            }
+
+            const DataCard = ({ data }: IDataCardProps) => (
+                <>
+                    <Card variant="outlined">
+                        <CardContent>
+                            {data.map((d, i) => (
+                                <p key={i}>
+                                    <b>{d.title}:</b> {d.desc}
+                                </p>
+                            ))}
+                        </CardContent>
+                    </Card>
+                    <br />
+                </>
+            );
+
+            let titleDescArr = [];
+
+            if (improvements.length) {
+                titleDescArr.push("Improvements");
+            }
+
+            if (outcomes.length) {
+                titleDescArr.push("Outcomes");
+            }
+
+            return (
+                <Accordion key={type} className={styles.impOutcomeAccordion}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography>
+                            <b>{riskTypes[type].name}</b> ({titleDescArr.join(" & ")})
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <div>
+                            {Boolean(improvements.length) && <DataCard data={improvements} />}
+                            {Boolean(outcomes.length) && <DataCard data={outcomes} />}
+                        </div>
+                    </AccordionDetails>
+                </Accordion>
+            );
+        };
+
+        return (
+            <>
+                <Card variant="outlined">
+                    <CardContent>
+                        <b>When:</b> {timestampToDateTime(visit.date_visited)}
+                        <br />
+                        <b>Village:</b> {visit.village}
+                    </CardContent>
+                </Card>
+                <br />
+                {Object.values(RiskType).map((type) => (
+                    <DetailAccordion key={type} type={type} />
+                ))}
+            </>
+        );
+    };
+
     return (
         <>
             <TimelineItem>
@@ -93,15 +196,7 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
                     {loadingError ? (
                         <Alert severity="error">Something went wrong. Please try again.</Alert>
                     ) : (
-                        <>
-                            {visit ? (
-                                <>
-                                    <b>When:</b> {timestampToDateTime(visit?.date_visited ?? 0)}
-                                </>
-                            ) : (
-                                <Skeleton variant="rect" height={200} />
-                            )}
-                        </>
+                        <Details />
                     )}
                 </DialogContent>
                 <DialogActions>

@@ -33,6 +33,14 @@ export const useStyles = makeStyles(
         textCenter: {
             textAlign: "center",
         },
+        impOutcomeAccordion: {
+            "& .MuiAccordionDetails-root": {
+                display: "block",
+            },
+            "& .MuiCardContent-root": {
+                padding: "8px 16px",
+            },
+        },
     },
     { index: 1 }
 );

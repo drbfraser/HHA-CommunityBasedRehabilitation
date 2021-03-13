@@ -51,3 +51,15 @@ export enum OutcomeGoalMet {
     ONGOING = "GO",
     CONCLUDED = "CON",
 }
+
+export const outcomeGoalMets = {
+    [OutcomeGoalMet.CANCELLED]: {
+        name: "Cancelled",
+    },
+    [OutcomeGoalMet.ONGOING]: {
+        name: "Ongoing",
+    },
+    [OutcomeGoalMet.CONCLUDED]: {
+        name: "Concluded",
+    },
+};

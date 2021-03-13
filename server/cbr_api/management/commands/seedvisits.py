@@ -13,6 +13,9 @@ class Command(BaseCommand):
         clients = models.Client.objects.all()
         disabilities = models.Disability.objects.all()
 
+        def getYearTimestamp(self, year):
+            return (year - 1970) * (60 * 60 * 24 * 365)
+
         def createImprovement(self, visit, type):
             return models.Improvement.objects.create(
                 visit=visit,
@@ -33,7 +36,7 @@ class Command(BaseCommand):
             visit = models.Visit.objects.create(
                 user=random.choice(users),
                 client=random.choice(clients),
-                date_visited=int(time.time()),
+                date_visited=random.randint(getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)),
                 longitude=0.0,
                 latitude=0.0,
                 zone=random.choice(zones),

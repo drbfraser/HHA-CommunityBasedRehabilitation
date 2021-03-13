@@ -8,6 +8,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         zones = models.Zone.objects.all()
 
+        def getYearTimestamp(self, year):
+            return (year - 1970) * (60 * 60 * 24 * 365)
+            
         def createUser(self, username, password, first, last, phone):
             user = models.UserCBR.objects.create(
                 username=username,
@@ -16,7 +19,7 @@ class Command(BaseCommand):
                 last_name=last,
                 zone=random.choice(zones),
                 phone_number=phone,
-                created_date=int(time.time()),
+                created_date=random.randint(getYearTimestamp(self, 2017), getYearTimestamp(self, 2018)),
                 is_active=True,
             )
             user.set_password(password)
@@ -31,7 +34,7 @@ class Command(BaseCommand):
                 last_name=last,
                 zone=random.choice(zones),
                 phone_number=phone,
-                created_date=int(time.time()),
+                created_date=random.randint(getYearTimestamp(self, 2016), getYearTimestamp(self, 2017)),
                 is_active=True,
                 is_superuser=True,
             )

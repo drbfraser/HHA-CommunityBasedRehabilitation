@@ -15,6 +15,7 @@ export interface IClient {
     village: string;
     picture: unknown;
     caregiver_present: boolean;
+    caregiver_name: string;
     caregiver_phone: string;
     caregiver_email: string;
     caregiver_picture: unknown;

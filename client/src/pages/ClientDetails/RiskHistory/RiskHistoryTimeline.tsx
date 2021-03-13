@@ -1,13 +1,5 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
-import {
-    Timeline,
-    TimelineItem,
-    TimelineOppositeContent,
-    TimelineSeparator,
-    TimelineConnector,
-    TimelineDot,
-    TimelineContent,
-} from "@material-ui/lab";
+import { Timeline } from "@material-ui/lab";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import React, { useState } from "react";
 import { IClient } from "util/clients";
@@ -15,6 +7,7 @@ import { timestampToDateFromReference } from "util/dates";
 import { IRisk, riskTypes } from "util/risks";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
+import TimelineEntry from "../Timeline/TimelineEntry";
 import { useTimelineStyles } from "../Timeline/timelines.styles";
 
 interface IProps {
@@ -43,24 +36,11 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
 
         return (
             <>
-                <TimelineItem key={risk.id}>
-                    <TimelineOppositeContent className={timelineStyles.date}>
-                        {dateFormatter(risk.timestamp)}
-                    </TimelineOppositeContent>
-                    <TimelineSeparator>
-                        <TimelineConnector />
-                        <TimelineDot />
-                        <TimelineConnector />
-                    </TimelineSeparator>
-                    <TimelineContent>
-                        <div
-                            className={`${timelineStyles.entry} ${timelineStyles.clickable}`}
-                            onClick={() => setExpanded(true)}
-                        >
-                            <Summary clickable={true} />
-                        </div>
-                    </TimelineContent>
-                </TimelineItem>
+                <TimelineEntry
+                    date={dateFormatter(risk.timestamp)}
+                    content={<Summary clickable={true} />}
+                    onClick={() => setExpanded(true)}
+                />
                 <Dialog fullWidth maxWidth="sm" open={expanded} onClose={() => setExpanded(false)}>
                     <DialogTitle>
                         <Summary />

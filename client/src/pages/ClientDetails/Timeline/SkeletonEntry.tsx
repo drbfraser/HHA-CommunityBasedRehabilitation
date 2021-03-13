@@ -1,35 +1,9 @@
-import {
-    TimelineItem,
-    TimelineOppositeContent,
-    Skeleton,
-    TimelineSeparator,
-    TimelineConnector,
-    TimelineDot,
-    TimelineContent,
-} from "@material-ui/lab";
 import React from "react";
-import { useTimelineStyles } from "./timelines.styles";
+import { Skeleton } from "@material-ui/lab";
+import TimelineEntry from "./TimelineEntry";
 
-const SkeletonEntry = () => {
-    const timelineStyles = useTimelineStyles();
-
-    return (
-        <TimelineItem>
-            <TimelineOppositeContent className={timelineStyles.date}>
-                <Skeleton variant="text" />
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-                <TimelineConnector />
-                <TimelineDot />
-                <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>
-                <div className={timelineStyles.entry}>
-                    <Skeleton variant="text" />
-                </div>
-            </TimelineContent>
-        </TimelineItem>
-    );
-};
+const SkeletonEntry = () => (
+    <TimelineEntry date={<Skeleton variant="text" />} content={<Skeleton variant="text" />} />
+);
 
 export default SkeletonEntry;

@@ -12,16 +12,7 @@ import {
     AccordionDetails,
     Typography,
 } from "@material-ui/core";
-import {
-    TimelineItem,
-    TimelineOppositeContent,
-    TimelineSeparator,
-    TimelineConnector,
-    TimelineDot,
-    TimelineContent,
-    Skeleton,
-    Alert,
-} from "@material-ui/lab";
+import { Skeleton, Alert } from "@material-ui/lab";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { timestampToDateTime } from "util/dates";
 import { IVisit, IVisitSummary, outcomeGoalMets } from "util/visits";
@@ -30,7 +21,7 @@ import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import { IZone } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { RiskType, riskTypes } from "util/risks";
-import { useTimelineStyles } from "../Timeline/timelines.styles";
+import TimelineEntry from "../Timeline/TimelineEntry";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -43,7 +34,6 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
     const [visit, setVisit] = useState<IVisit>();
     const [loadingError, setLoadingError] = useState(false);
     const styles = useStyles();
-    const timelineStyles = useTimelineStyles();
 
     const onOpen = () => {
         setOpen(true);
@@ -172,24 +162,11 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
 
     return (
         <>
-            <TimelineItem>
-                <TimelineOppositeContent className={timelineStyles.date}>
-                    {dateFormatter(visitSummary.date_visited)}
-                </TimelineOppositeContent>
-                <TimelineSeparator>
-                    <TimelineConnector />
-                    <TimelineDot />
-                    <TimelineConnector />
-                </TimelineSeparator>
-                <TimelineContent>
-                    <div
-                        className={`${timelineStyles.entry} ${timelineStyles.clickable}`}
-                        onClick={onOpen}
-                    >
-                        <Summary clickable={true} />
-                    </div>
-                </TimelineContent>
-            </TimelineItem>
+            <TimelineEntry
+                date={dateFormatter(visitSummary.date_visited)}
+                content={<Summary clickable={true} />}
+                onClick={onOpen}
+            />
             <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
                 <DialogTitle>
                     <Summary clickable={false} />

@@ -44,8 +44,8 @@ class Command(BaseCommand):
                 zone=random.choice(zones),
                 village=village,
                 health_visit=health,
-                educat_visit=social,
-                social_visit=educat,
+                social_visit=social,
+                educat_visit=educat,
             )
             visit.improvements.add(createImprovement(self, visit, type))
             visit.outcomes.add(createOutcome(self, visit, type))

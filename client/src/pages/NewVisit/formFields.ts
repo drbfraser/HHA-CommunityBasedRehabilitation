@@ -1,53 +1,80 @@
+import * as Yup from "yup";
 
+export enum GoalStatus {
+    CANCELLED = "cancelled",
+    ONGOING = "ongoing",
+    CONCLUDED = "concluded",
+}
 
 export enum FormField {
-    firstName = "firstame",
-    lastName = "lastName",
-    birthDate = "birthDate",
-    gender = "gender",
     village = "village",
     zone = "zone",
-    phoneNumber = "phoneNumber",
-    interviewConsent = "interviewConsent",
-    caregiverPresent = "caregiverPresent",
-    caregiverContact = "caregiverContact",
-    disability = "disability",
-    healthRisk = "healthRisk",
-    healthRequirements = "healthRequirements",
-    healthGoals = "healthGoals",
-    educationRisk = "educationRisk",
-    educationRequirements = "educationRequirements",
-    educationGoals = "educationGoals",
-    socialRisk = "socialRisk",
-    socialRequirements = "socialRequirements",
-    socialGoals = "socialGoals",
+    health = "health",
+    education = "educat",
+    social = "social",
+    outcomes = "outcomes",
+    improvements = "improvements",
+}
+
+export enum OutcomeField {
+    goalStatus = "goal_met",
+    outcome = "outcome",
+}
+
+export enum ImprovementField {
+    provided = "provided",
+    description = "desc",
 }
 
 export const fieldLabels = {
-    [FormField.firstName]: "First Name",
-    [FormField.lastName]: "Last Name",
-    [FormField.birthDate]: "Birthdate",
     [FormField.village]: "Village",
-    [FormField.gender]: "Gender",
     [FormField.zone]: "Zone",
-    [FormField.phoneNumber]: "Phone Number",
-    [FormField.interviewConsent]: "Consent to Interview? *",
-    [FormField.caregiverPresent]: "Caregiver Present? *",
-    [FormField.caregiverContact]: "Caregiver Contact",
-    [FormField.disability]: "Type of Disability",
-    [FormField.healthRisk]: "Health Risk",
-    [FormField.healthRequirements]: "Health Requirement(s)",
-    [FormField.healthGoals]: "Health Goal(s)",
-    [FormField.educationRisk]: "Education Risk",
-    [FormField.educationRequirements]: "Education Requirement(s)",
-    [FormField.educationGoals]: "Education Goal(s)",
-    [FormField.socialRisk]: "Social Risk",
-    [FormField.socialRequirements]: "Social Requirement(s)",
-    [FormField.socialGoals]: "Social Goal(s)",
+    [FormField.health]: "Health",
+    [FormField.education]: "Education",
+    [FormField.social]: "Social",
+    [FormField.outcomes]: "Outcome",
+    [FormField.improvements]: "Description",
+
 };
 
-export const initialValues = {};
+export const initialValues = {
+    [FormField.village]: "",
+    [FormField.zone]: "",
+    [FormField.health]: false,
+    [FormField.education]: false,
+    [FormField.social]: false,
+    [FormField.outcomes]: {
+        [FormField.health]: [],
+        [FormField.education]: [],
+        [FormField.social]: [],
+    },
+    [FormField.improvements]: {
+        [FormField.health]: [],
+        [FormField.education]: [],
+        [FormField.social]: [],
+    },
+};
+
+export const provisionals: { [key: string]: string[] } = {
+    [FormField.health]: [
+        "Advice",
+        "Advocacy",
+        "Encouragement",
+        "Orthotic",
+        "Prosthetic",
+        "Referral to Health Centre",
+        "Wheelchair",
+        "Wheelchair Repair",
+    ],
+    [FormField.education]: [
+        "Advice",
+        "Advocacy",
+        "Encouragement",
+        "Referral to Other Organization",
+    ],
+    [FormField.social]: ["Advice", "Advocacy", "Encouragement", "Referral to Other Organization"],
+};
 
 export type TFormValues = typeof initialValues;
 
-export const validationSchema = () => {};
+export const validationSchema = () => Yup.object().shape({});

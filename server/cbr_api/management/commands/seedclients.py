@@ -7,6 +7,23 @@ import random
 class Command(BaseCommand):
     def handle(self, *args, **options):
         risks = ["LO", "ME", "HI", "CR"]
+        goals = [
+            "Full Recovery",
+            "Additional Mobility",
+            "Pain Relief",
+            "Improved Learning",
+            "Sport Participation",
+        ]
+        requirements = [
+            "Referral",
+            "Counseling",
+            "Wheelchair",
+            "Wheelchair Repair",
+            "Physiotherapy",
+            "Prosthetic",
+            "Orthotic",
+            "Other",
+        ]
         zones = models.Zone.objects.all()
         users = models.UserCBR.objects.all()
         disabilities = models.Disability.objects.all()
@@ -34,8 +51,8 @@ class Command(BaseCommand):
                 timestamp=time,
                 risk_type=type,
                 risk_level=level,
-                requirement="",
-                goal="",
+                requirement=random.choice(requirements),
+                goal=random.choice(goals),
             )
             client.risks.add(risk)
 

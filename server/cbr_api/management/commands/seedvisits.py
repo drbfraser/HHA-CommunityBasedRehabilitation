@@ -6,8 +6,24 @@ import random
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        outcomes = ["CAN", "GO", "CON"]
+        results = ["CAN", "GO", "CON"]
         risks = ["LO", "ME", "HI", "CR"]
+        outcomes = [
+            "Full Recovery",
+            "Partial Recovery",
+            "No Improvement",
+            "Worsening Condition",
+        ]
+        provides = [
+            "Referral",
+            "Counseling",
+            "Wheelchair",
+            "Wheelchair Repair",
+            "Physiotherapy",
+            "Prosthetic",
+            "Orthotic",
+            "Other",
+        ]
         zones = models.Zone.objects.all()
         users = models.UserCBR.objects.all()
         clients = models.Client.objects.all()
@@ -20,16 +36,16 @@ class Command(BaseCommand):
             return models.Improvement.objects.create(
                 visit=visit,
                 risk_type=type,
-                provided="",
-                desc="",
+                provided=random.choice(provides),
+                desc="Provided the client with additional services and assistance to improve their health, social, and educational conditions.",
             )
 
         def createOutcome(self, visit, type):
             return models.Outcome.objects.create(
                 visit=visit,
                 risk_type=type,
-                goal_met=random.choice(outcomes),
-                outcome="",
+                goal_met=random.choice(results),
+                outcome=random.choice(outcomes),
             )
 
         def createVisit(self, health, social, educat, type, village):

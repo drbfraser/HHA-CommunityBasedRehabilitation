@@ -101,7 +101,6 @@ const ClientList = () => {
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
-
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
     const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
@@ -169,7 +168,7 @@ const ClientList = () => {
         const loadInitialData = async () => {
             setLoading(true);
             setZones(await getAllZones());
-            await requestClientRows(setRows, setLoading, "", "");
+            await requestClientRows(setRows, setLoading, "", "", true);
             setLoading(false);
             initialDataLoaded.current = true;
         };
@@ -185,8 +184,8 @@ const ClientList = () => {
             return;
         }
 
-        requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption);
-    }, [searchValue, searchOption, requestClientRowsDebounced]);
+        requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption, allClientsMode);
+    }, [searchValue, searchOption, allClientsMode, requestClientRowsDebounced]);
 
     return (
         <div className={styles.root}>

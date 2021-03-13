@@ -55,7 +55,7 @@ class Command(BaseCommand):
             )
             return
 
-        createAdmin(self, "bfraser", "hhaLogin", "Brian", "Fraser", "555-8080")
+        createAdmin(self, "venus", "hhaLogin", "Venus", "Admin", "555-4242")
 
         createUser(self, "eruska", "hhaLogin", "Eliza", "Ruska", "555-1010")
         createUser(self, "rfatimah", "hhaLogin", "Robert", "Fatimah", "555-2020")

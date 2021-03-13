@@ -1,9 +1,33 @@
 from django.core.management.base import BaseCommand
 from cbr_api import models
+import time
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        def createUser(self, Username, First, Last, Phone, Zone):
+            return models.UserCBR.objects.create(
+                username=Username,
+                password=Username,
+                first_name=First,
+                last_name=Last,
+                zone=Zone,
+                phone_number=Phone,
+                created_date=int(time.time()),
+            )
+            
+        def createAdmin(self, Username, Password, First, Last, Phone, Zone):
+            return models.UserCBR.objects.create(
+                username=Username,
+                password=Password,
+                first_name=First,
+                last_name=Last,
+                zone=Zone,
+                phone_number=Phone,
+                created_date=int(time.time()),
+                is_superuser=True,
+            )
+
         zone0 = models.Zone.objects.get(zone_name="Palorinya Basecamp")
         zone1 = models.Zone.objects.get(zone_name="BidiBidi Zone 1")
         zone2 = models.Zone.objects.get(zone_name="BidiBidi Zone 2")
@@ -24,8 +48,31 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR("Disabilities have not been seeded yet!"))
             return
             
+        try:
+            admin = models.UserCBR.objects.get(username="venus")
+        except models.UserCBR.DoesNotExist:
+            admin = createAdmin(self, "venus", "hhaLogin", "Brian", "Fraser", "555-8080", zone0)
             
-        # create users
+        try:
+            user1 = models.UserCBR.objects.get(username="eruska")
+        except models.UserCBR.DoesNotExist:
+            user1 = createUser(self, "eruska", "Eliza", "Ruska", "555-1010", zone1)
+        try:
+            user2 = models.UserCBR.objects.get(username="rfatimah")
+        except models.UserCBR.DoesNotExist:
+            user2 = createUser(self, "rfatimah", "Robert", "Fatimah", "555-2020", zone2)
+        try:
+            user3 = models.UserCBR.objects.get(username="gnye")
+        except models.UserCBR.DoesNotExist:
+            user3 = createUser(self, "gnye", "Guo", "Nye", "555-3030", zone3)
+        try:
+            user4 = models.UserCBR.objects.get(username="jherry")
+        except models.UserCBR.DoesNotExist:
+            user4 = createUser(self, "jherry", "Julia", "Herry", "555-4040", zone4)
+        try:
+            user5 = models.UserCBR.objects.get(username="tjames")
+        except models.UserCBR.DoesNotExist:
+            user5 = createUser(self, "tjames", "Toby", "James", "555-5050", zone5)
         
         # create clients
         

@@ -55,7 +55,7 @@ const ClientDetails = () => {
     ) : (
         <Grid container spacing={2} direction="row" justify="flex-start">
             <Grid item xs={12}>
-                {clientInfo ? (
+                {clientInfo && zoneOptions.length && disabilityOptions.length ? (
                     <ClientInfoForm
                         clientInfo={clientInfo}
                         zoneOptions={zoneOptions}

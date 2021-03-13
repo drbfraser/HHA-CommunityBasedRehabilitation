@@ -1,119 +1,22 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
-import {
-    Timeline,
-    TimelineItem,
-    TimelineOppositeContent,
-    TimelineSeparator,
-    TimelineConnector,
-    TimelineDot,
-    TimelineContent,
-    Skeleton,
-} from "@material-ui/lab";
-import React, { useState } from "react";
+import React from "react";
+import { Timeline } from "@material-ui/lab";
 import { IClient } from "util/clients";
-import { timestampToDateTime, timestampToDateFromReference } from "util/dates";
+import { timestampToDateFromReference } from "util/dates";
 import { IVisitSummary } from "util/visits";
 import { useStyles } from "./ClientVisitTimeline.styles";
-import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
-import { RiskType } from "util/risks";
 import { IZone } from "util/cache";
+import SkeletonEntry from "./SkeletonEntry";
+import CreatedEntry from "./CreatedEntry";
+import VisitEntry from "./VisitEntry";
 
 interface IProps {
     client?: IClient;
-    zones?: IZone[];
+    zones: IZone[];
 }
 
 const VisitHistoryTimeline = ({ client, zones }: IProps) => {
     const styles = useStyles();
     const dateFormatter = timestampToDateFromReference(client?.created_date);
-
-    interface IEntryProps {
-        visit: IVisitSummary;
-    }
-
-    const VisitEntry = ({ visit }: IEntryProps) => {
-        const [expanded, setExpanded] = useState(false);
-        const zone = zones?.find((z) => z.id === visit.zone);
-
-        const Summary = ({ clickable }: { clickable?: boolean }) => (
-            <>
-                Visit in {zone?.zone_name} &nbsp;
-                {visit.health_visit && <RiskTypeChip risk={RiskType.HEALTH} />}{" "}
-                {visit.educat_visit && <RiskTypeChip risk={RiskType.EDUCATION} />}{" "}
-                {visit.social_visit && <RiskTypeChip risk={RiskType.SOCIAL} />}{" "}
-            </>
-        );
-
-        return (
-            <>
-                <TimelineItem key={visit.id}>
-                    <TimelineOppositeContent className={styles.timelineDate}>
-                        {dateFormatter(visit.date_visited)}
-                    </TimelineOppositeContent>
-                    <TimelineSeparator>
-                        <TimelineConnector />
-                        <TimelineDot />
-                        <TimelineConnector />
-                    </TimelineSeparator>
-                    <TimelineContent>
-                        <div
-                            className={`${styles.timelineEntry} ${styles.visitEntry}`}
-                            onClick={() => setExpanded(true)}
-                        >
-                            <Summary clickable={true} />
-                        </div>
-                    </TimelineContent>
-                </TimelineItem>
-                <Dialog fullWidth maxWidth="sm" open={expanded} onClose={() => setExpanded(false)}>
-                    <DialogTitle>
-                        <Summary />
-                    </DialogTitle>
-                    <DialogContent>
-                        <b>When:</b> {timestampToDateTime(visit.date_visited)}
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setExpanded(false)} color="primary">
-                            Close
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </>
-        );
-    };
-
-    const ClientCreatedEntry = () => (
-        <TimelineItem>
-            <TimelineOppositeContent className={styles.timelineDate}>
-                {dateFormatter(client!.created_date)}
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-                <TimelineConnector />
-                <TimelineDot />
-                <TimelineConnector className={styles.hidden} />
-            </TimelineSeparator>
-            <TimelineContent>
-                <div className={styles.timelineEntry}>Client created</div>
-            </TimelineContent>
-        </TimelineItem>
-    );
-
-    const SkeletonEntry = () => (
-        <TimelineItem>
-            <TimelineOppositeContent className={styles.timelineDate}>
-                <Skeleton variant="text" />
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-                <TimelineConnector />
-                <TimelineDot />
-                <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>
-                <div className={styles.timelineEntry}>
-                    <Skeleton variant="text" />
-                </div>
-            </TimelineContent>
-        </TimelineItem>
-    );
 
     const visitSort = (a: IVisitSummary, b: IVisitSummary) => {
         return b.date_visited - a.date_visited;
@@ -127,9 +30,14 @@ const VisitHistoryTimeline = ({ client, zones }: IProps) => {
                         .slice()
                         .sort(visitSort)
                         .map((visit) => (
-                            <VisitEntry key={visit.id} visit={visit} />
+                            <VisitEntry
+                                key={visit.id}
+                                visitSummary={visit}
+                                zones={zones}
+                                dateFormatter={dateFormatter}
+                            />
                         ))}
-                    <ClientCreatedEntry />
+                    <CreatedEntry createdDate={dateFormatter(client.created_date)} />
                 </>
             ) : (
                 [1, 2, 3, 4].map((i) => <SkeletonEntry key={i} />)

@@ -293,6 +293,12 @@ const ClientList = () => {
                 density={DensityTypes.Comfortable}
                 onRowClick={onRowClick}
                 pagination
+                sortModel={[
+                    {
+                        field: "name",
+                        sort: "asc",
+                    },
+                ]}
             />
         </div>
     );

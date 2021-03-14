@@ -3,7 +3,6 @@ from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
-from django.contrib.auth.decorators import user_passes_test
 
 
 class UserList(generics.ListCreateAPIView):

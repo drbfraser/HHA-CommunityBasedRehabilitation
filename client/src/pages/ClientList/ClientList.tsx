@@ -25,7 +25,7 @@ import {
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
-import RiskChip from "components/RiskChip/RiskChip";
+import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { RiskLevel, IRiskLevel, riskLevels, RiskType, IRiskType, riskTypes } from "util/risks";
 import { SearchOption } from "./searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
@@ -58,7 +58,7 @@ const RenderBadge = (params: ValueFormatterParams) => {
     const risk: RiskLevel = Object(params.value);
 
     return window.innerWidth >= compressedDataGridWidth ? (
-        <RiskChip clickable risk={risk} />
+        <RiskLevelChip clickable risk={risk} />
     ) : (
         <FiberManualRecord style={{ color: riskLevels[risk].color }} />
     );
@@ -105,7 +105,6 @@ const ClientList = () => {
     const searchOptionsStyle = useSearchOptionsStyles();
     const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
-
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
     const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
@@ -173,7 +172,7 @@ const ClientList = () => {
         const loadInitialData = async () => {
             setLoading(true);
             setZones(await getAllZones());
-            await requestClientRows(setRows, setLoading, "", "");
+            await requestClientRows(setRows, setLoading, "", "", true);
             setLoading(false);
             initialDataLoaded.current = true;
         };
@@ -189,8 +188,8 @@ const ClientList = () => {
             return;
         }
 
-        requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption);
-    }, [searchValue, searchOption, requestClientRowsDebounced]);
+        requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption, allClientsMode);
+    }, [searchValue, searchOption, allClientsMode, requestClientRowsDebounced]);
 
     return (
         <div className={styles.root}>
@@ -298,6 +297,12 @@ const ClientList = () => {
                 density={DensityTypes.Comfortable}
                 onRowClick={onRowClick}
                 pagination
+                sortModel={[
+                    {
+                        field: "name",
+                        sort: "asc",
+                    },
+                ]}
             />
         </div>
     );

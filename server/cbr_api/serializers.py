@@ -4,7 +4,7 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 import time
 
-
+# create and list
 class UserCBRCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
@@ -18,8 +18,10 @@ class UserCBRCreationSerializer(serializers.ModelSerializer):
             "password",
             "first_name",
             "last_name",
+            "role",
             "zone",
             "phone_number",
+            "is_active",
         )
 
     def create(self, validated_data):
@@ -39,8 +41,10 @@ class UserCBRSerializer(serializers.ModelSerializer):
             "username",
             "first_name",
             "last_name",
+            "role",
             "zone",
             "phone_number",
+            "is_active",
         )
 
 
@@ -178,6 +182,73 @@ class OutcomeSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = ["visit"]
+
+
+class UpdateReferralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Referral
+        fields = [
+            "date_resolved",
+            "resolved",
+            "outcome",
+        ]
+
+        read_only_fields = ["date_resolved"]
+
+    def update(self, referral, validated_data):
+        super().update(referral, validated_data)
+        referral.resolved = validated_data["resolved"]
+        if validated_data["resolved"] == True:
+            current_time = int(time.time())
+            referral.date_resolved = current_time
+        else:
+            referral.date_resolved = 0
+        referral.outcome = validated_data["outcome"]
+        referral.save()
+        return referral
+
+
+class DetailedReferralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Referral
+        fields = [
+            "id",
+            "user",
+            "client",
+            "date_referred",
+            "date_resolved",
+            "resolved",
+            "outcome",
+            "picture",
+            "wheelchair",
+            "wheelchair_experience",
+            "hip_width",
+            "wheelchair_owned",
+            "wheelchair_repairable",
+            "physiotherapy",
+            "condition",
+            "prosthetic",
+            "prosthetic_injury_location",
+            "orthotic",
+            "orthotic_injury_location",
+            "services_other",
+        ]
+
+        read_only_fields = [
+            "user",
+            "outcome",
+            "date_referred",
+            "date_resolved",
+            "resolved",
+        ]
+
+    def create(self, validated_data):
+        current_time = int(time.time())
+        validated_data["date_referred"] = current_time
+        validated_data["user"] = self.context["request"].user
+        referrals = models.Referral.objects.create(**validated_data)
+        referrals.save()
+        return referrals
 
 
 class DetailedVisitSerializer(serializers.ModelSerializer):
@@ -330,6 +401,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
 class ClientDetailSerializer(serializers.ModelSerializer):
     risks = ClientCreationRiskSerializer(many=True, read_only=True)
     visits = SummaryVisitSerializer(many=True, read_only=True)
+    referrals = DetailedReferralSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Client
@@ -355,6 +427,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "caregiver_picture",
             "risks",
             "visits",
+            "referrals",
         ]
 
         read_only_fields = ["created_by_user", "created_date"]

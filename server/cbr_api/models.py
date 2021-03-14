@@ -32,6 +32,11 @@ class UserCBRManager(BaseUserManager):
 
 
 class UserCBR(AbstractBaseUser, PermissionsMixin):
+    class Role(models.TextChoices):
+        ADMIN = "ADM", _("Admin")
+        WORKER = "WRK", _("CBR Worker")
+        CLINICIAN = "CLN", _("Clinician")
+
     username_validator = UnicodeUsernameValidator()
 
     username = models.CharField(
@@ -44,6 +49,7 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(_("last name"), max_length=50)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     phone_number = models.CharField(max_length=50, blank=True)
+    role = models.CharField(max_length=3, choices=Role.choices, default=Role.WORKER)
     is_active = models.BooleanField(
         _("active"),
         default=True,
@@ -57,6 +63,7 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
         "first_name",
         "last_name",
         "zone",
+        "role",
     ]
 
     class Meta:
@@ -142,6 +149,48 @@ class Visit(models.Model):
     latitude = models.DecimalField(max_digits=22, decimal_places=16)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     village = models.CharField(max_length=50)
+
+
+class Referral(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    date_referred = models.BigIntegerField()
+    date_resolved = models.BigIntegerField(default=0)
+    resolved = models.BooleanField(default=False)
+    outcome = models.CharField(max_length=100)
+
+    client = models.ForeignKey(
+        Client, related_name="referrals", on_delete=models.CASCADE
+    )
+    picture = models.ImageField(upload_to="images/", blank=True)
+
+    class Experience(models.TextChoices):
+        BASIC = "BAS", _("Basic")
+        INTERMEDIATE = "INT", _("Intermediate")
+
+    wheelchair = models.BooleanField(default=False)
+    wheelchair_experience = models.CharField(max_length=3, choices=Experience.choices)
+    hip_width = models.IntegerField()
+    wheelchair_owned = models.BooleanField(default=False)
+    wheelchair_repairable = models.BooleanField(default=False)
+
+    physiotherapy = models.BooleanField(default=False)
+    condition = models.CharField(max_length=100)
+
+    class InjuryLocation(models.TextChoices):
+        BELOW = "BEL", _("Below")
+        ABOVE = "ABO", _("Above")
+
+    prosthetic = models.BooleanField(default=False)
+    prosthetic_injury_location = models.CharField(
+        max_length=3, choices=InjuryLocation.choices
+    )
+
+    orthotic = models.BooleanField(default=False)
+    orthotic_injury_location = models.CharField(
+        max_length=3, choices=InjuryLocation.choices
+    )
+
+    services_other = models.CharField(max_length=100)
 
 
 class Outcome(models.Model):

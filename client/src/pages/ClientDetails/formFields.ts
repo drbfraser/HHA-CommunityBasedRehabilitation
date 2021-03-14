@@ -11,7 +11,7 @@ export enum FormField {
     phone_number = "phone_number",
     caregiver_present = "caregiver_present",
     caregiver_phone = "caregiver_phone",
-    // TODO: add caregiver_name and disability once implemented on backend.
+    caregiver_email = "caregiver_email",
     caregiver_name = "caregiver_name",
     disability = "disability",
 }
@@ -25,8 +25,9 @@ export const fieldLabels = {
     [FormField.zone]: "Zone",
     [FormField.phone_number]: "Phone Number",
     [FormField.caregiver_present]: "Caregiver Present?",
-    [FormField.caregiver_phone]: "Caregiver Phone Number",
     [FormField.caregiver_name]: "Caregiver Name",
+    [FormField.caregiver_phone]: "Caregiver Phone Number",
+    [FormField.caregiver_email]: "Caregiver Email",
     [FormField.disability]: "Disabilities",
 };
 
@@ -52,8 +53,15 @@ export const validationSchema = () =>
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),
         [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),
+        [FormField.caregiver_name]: Yup.string()
+            .label(fieldLabels[FormField.caregiver_name])
+            .max(101),
         [FormField.caregiver_phone]: Yup.string()
             .label(fieldLabels[FormField.caregiver_phone])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid"),
+        [FormField.caregiver_email]: Yup.string()
+            .label(fieldLabels[FormField.caregiver_email])
+            .max(50)
+            .matches(Validation.emailRegExp, "Email Address is not valid"),
     });

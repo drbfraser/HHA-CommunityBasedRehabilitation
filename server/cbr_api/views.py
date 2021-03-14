@@ -1,4 +1,4 @@
-from cbr_api import models, serializers, filters
+from cbr_api import models, serializers, filters, permissions
 from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
@@ -6,11 +6,13 @@ from drf_spectacular.utils import extend_schema
 
 
 class UserList(generics.ListCreateAPIView):
+    permission_classes = [permissions.AdminAll]
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRCreationSerializer
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AdminAll]
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRSerializer
 
@@ -24,6 +26,7 @@ class UserCurrent(generics.RetrieveAPIView):
 
 
 class UserPassword(generics.UpdateAPIView):
+    permission_classes = [permissions.AdminAll]
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserPasswordSerializer
     http_method_names = ["put"]
@@ -78,11 +81,13 @@ class DisabilityDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ZoneList(generics.ListCreateAPIView):
+    permission_classes = [permissions.AdminCreateUpdateDestroy]
     queryset = models.Zone.objects.all()
     serializer_class = serializers.ZoneSerializer
 
 
 class ZoneDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AdminCreateUpdateDestroy]
     queryset = models.Zone.objects.all()
     serializer_class = serializers.ZoneSerializer
 
@@ -105,3 +110,32 @@ class VisitList(generics.CreateAPIView):
 class VisitDetail(generics.RetrieveAPIView):
     queryset = models.Visit.objects.all()
     serializer_class = serializers.DetailedVisitSerializer
+
+
+class ReferralList(generics.CreateAPIView):
+    queryset = models.Referral.objects.all()
+    serializer_class = serializers.DetailedReferralSerializer
+
+
+class ReferralDetail(generics.RetrieveUpdateAPIView):
+    queryset = models.Referral.objects.all()
+    http_method_names = ["get", "put"]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return serializers.DetailedReferralSerializer
+        elif self.request.method == "PUT":
+            return serializers.UpdateReferralSerializer
+
+    @extend_schema(
+        responses=serializers.DetailedReferralSerializer,
+    )
+    def get(self, request, pk):
+        return super().get(request)
+
+    @extend_schema(
+        request=serializers.UpdateReferralSerializer,
+        responses=serializers.UpdateReferralSerializer,
+    )
+    def put(self, request, pk):
+        return super().put(request)

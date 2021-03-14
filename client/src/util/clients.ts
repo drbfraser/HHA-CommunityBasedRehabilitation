@@ -1,12 +1,14 @@
 import { IRisk } from "./risks";
+import { IVisitSummary } from "./visits";
 
 export interface IClient {
     id: number;
     first_name: string;
     last_name: string;
-    birth_date: number;
+    birth_date: number | string;
     gender: Gender;
     phone_number: string;
+    disability: number[];
     created_by_user: number;
     created_date: number;
     longitude: string;
@@ -15,11 +17,12 @@ export interface IClient {
     village: string;
     picture: unknown;
     caregiver_present: boolean;
+    caregiver_name: string;
     caregiver_phone: string;
     caregiver_email: string;
     caregiver_picture: unknown;
     risks: IRisk[];
-    disability: number[];
+    visits: IVisitSummary[];
 }
 
 export enum Gender {

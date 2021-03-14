@@ -30,7 +30,7 @@ interface IProps {
     disabilityOptions: IDisability[];
 }
 
-const ClientInfo = (props: IProps) => {
+const ClientInfoForm = (props: IProps) => {
     const styles = useStyles();
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -230,6 +230,21 @@ const ClientInfo = (props: IProps) => {
                                                         <Field
                                                             className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
                                                             component={TextField}
+                                                            name={FormField.caregiver_email}
+                                                            disabled={!isEditing}
+                                                            variant="outlined"
+                                                            label={
+                                                                fieldLabels[
+                                                                    FormField.caregiver_email
+                                                                ]
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
+                                                            component={TextField}
                                                             name={FormField.caregiver_phone}
                                                             disabled={!isEditing}
                                                             variant="outlined"
@@ -300,4 +315,4 @@ const ClientInfo = (props: IProps) => {
     );
 };
 
-export default ClientInfo;
+export default ClientInfoForm;

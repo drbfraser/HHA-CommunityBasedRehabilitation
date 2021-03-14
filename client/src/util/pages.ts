@@ -7,7 +7,6 @@ import PersonIcon from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Logout from "pages/Logout/Logout";
-import ToDo from "pages/ToDo/ToDo";
 import AdminList from "pages/AdminList/AdminList";
 import ClientList from "pages/ClientList/ClientList";
 import ClientDetails from "pages/ClientDetails/ClientDetails";
@@ -17,7 +16,8 @@ import NotFound from "pages/NotFound/NotFound";
 import AdminNew from "pages/Admin/AdminNew";
 import AdminView from "pages/Admin/AdminView";
 import AdminEdit from "pages/Admin/AdminEdit";
-import ClientRiskHistory from "pages/ClientRiskHistory/ClientRiskHistory";
+import ClientRiskHistory from "pages/ClientDetails/RiskHistory/ClientRiskHistory";
+import Dashboard from "pages/Dashboard/Dashboard";
 
 export interface IPage {
     path: string;
@@ -32,7 +32,7 @@ export const pages: IPage[] = [
     {
         path: "/dashboard",
         name: "Dashboard",
-        Component: ToDo,
+        Component: Dashboard,
         showInNav: true,
         Icon: HomeIcon,
     },
@@ -96,7 +96,7 @@ export const pages: IPage[] = [
     },
     {
         path: "/logout",
-        name: "Log out",
+        name: "Logout",
         Component: Logout,
         showInNav: true,
         Icon: ExitToAppIcon,

@@ -1,5 +1,4 @@
 import jwt_decode from "jwt-decode";
-import history from "./history";
 import { API_URL, Endpoint } from "./endpoints";
 
 const ACCESS_TOKEN_KEY = "api_accessToken";
@@ -85,7 +84,7 @@ export const doLogin = async (username: string, password: string) => {
 export const doLogout = () => {
     setAccessToken("");
     setRefreshToken("");
-    history.push("/");
+    window.location.replace("/");
 };
 
 export const isLoggedIn = () => isTokenValid(getRefreshToken());

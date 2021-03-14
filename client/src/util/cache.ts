@@ -1,3 +1,4 @@
+import { IUser } from "pages/User/fields";
 import { apiFetch, Endpoint } from "./endpoints";
 
 export interface IZone {
@@ -10,11 +11,17 @@ export interface IDisability {
     disability_type: string;
 }
 
+export type IZoneMap = Map<number, string>;
+
 let zones: IZone[] | undefined = undefined;
-let zoneMap: Map<number, string> | undefined = undefined;
+let zoneMap: IZoneMap | undefined = undefined;
+
+export type IDisabilityMap = Map<number, string>;
 
 let disabilities: IDisability[] | undefined = undefined;
-let disabilityMap: Map<number, string> | undefined = undefined;
+let disabilityMap: IDisabilityMap | undefined = undefined;
+
+let user: IUser | undefined = undefined;
 
 export const getAllZones = async (): Promise<IZone[]> => {
     if (zones === undefined) {
@@ -55,4 +62,11 @@ export const getDisabilitiesMap = async (): Promise<Map<number, string>> => {
         );
     }
     return disabilityMap;
+};
+
+export const getCurrentUserId = async (): Promise<string> => {
+    if (user === undefined) {
+        user = (await (await apiFetch(Endpoint.USER_CURRENT)).json()) as IUser;
+    }
+    return user.id.toString();
 };

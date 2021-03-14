@@ -5,7 +5,7 @@ from cbr_api import models
 class Command(BaseCommand):
     def handle(self, *args, **options):
         if models.Zone.objects.all().count() > 0:
-            self.stdout.write(self.style.ERROR("Zones have already been created"))
+            self.stdout.write(self.style.ERROR("Zones have already been created!"))
             return
 
         models.Zone.objects.create(zone_name="BidiBidi Zone 1")

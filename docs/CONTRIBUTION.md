@@ -22,20 +22,23 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 ### 3. Seed Some Data
 
-You'll likely want to seed some data for development purposes. *Hint:* you will need zones in order to create a user. *Hint2:* you will need disabilities in order to create a client (in the future).
+You'll likely want to seed some data for development purposes. This can be done with a single command, or done individually by data type. Use `docker exec cbr_django python manage.py _______` by replacing the `_______` with one of the keywords below.
 
-- Zones: `docker exec cbr_django python manage.py seedzones`
-- Disabilities: `docker exec cbr_django python manage.py seeddisabilities`
+- Complete Database: `seeddatabase`
 
-### 4. Create an Account
+- Zones: `seedzones`
+- Disabilities: `seeddisabilities`
+- Users: `seedusers`
+- Clients: `seedclients`
+- Visits: `seedvisits`
 
-*Temporary section until a seed script is created.*
+If at some point during development you want to re-seed the database with the example data again, you'll need to delete everything first. Use `docker exec -it cbr_django python manage.py flush` to clear the database, then run the seeding commands again.
 
-You'll need an account to log in to the frontend and access most APIs. Note that this account is created in your local database and thus will not be present on other developer's machines or in our deployment (even after merging your branch). To create an account, run `docker exec -it cbr_django python manage.py createsuperuser` and follow the prompts. Use `1` when prompted for a zone (assuming you have followed the seeding instructions in the previous step).
-
-### 5. Start Developing!
+### 4. Start Developing!
 
 That's it! The frontend is now running on http://localhost:3000 and the backend is running on http://localhost:8000. Both the frontend and the backend should support hot reloading.
+
+If you seeded users in the previous step, you already have an account in the system. Use the username `venus` and password `hhaLogin` to log in, and from there you can create another user if you wish to change the username and password you use.
 
 You can also access auto-generating Swagger API documentation at http://localhost:8000/docs
 

@@ -120,9 +120,8 @@ const AdminList = () => {
         if (searchOption === SearchOption.NAME) {
             const filteredRows: RowsProp = serverRows.filter(
                 (r) =>
-                    r.first_name.toLowerCase().startsWith(searchValue) ||
-                    r.last_name.toLowerCase().startsWith(searchValue) ||
-                    r.name.toLowerCase().startsWith(searchValue)
+                    r.name.toLowerCase().startsWith(searchValue) ||
+                    r.last_name.toLowerCase().startsWith(searchValue)
             );
             setFilteredRows(filteredRows);
         } else if (searchOption === SearchOption.ID) {

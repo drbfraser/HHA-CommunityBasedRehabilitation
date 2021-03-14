@@ -2,6 +2,7 @@ import { TFormValues } from "./formFields";
 import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "util/endpoints";
 import history from "../../util/history";
+import { FormField } from "./formFields";
 
 const addVisit = async (visitInfo: string) => {
     const init: RequestInit = {
@@ -21,25 +22,25 @@ const addVisit = async (visitInfo: string) => {
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
 export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
     const newVisit = JSON.stringify({
-        client: values.client,
-        health_visit: values.health,
-        educat_visit: values.educat,
-        social_visit: values.social,
-        zone: values.zone,
-        village: values.village,
+        client: values[FormField.client],
+        health_visit: values[FormField.health],
+        educat_visit: values[FormField.education],
+        social_visit: values[FormField.social],
+        zone: values[FormField.zone],
+        village: values[FormField.village],
         longitude: 0.0,
         latitude: 0.0,
-        improvements: Object.values(values.improvements)
+        improvements: Object.values(values[FormField.improvements])
             .reduce((improvements, typedImprovement) => improvements.concat(typedImprovement))
             .filter((improvement) => improvement !== undefined),
-        outcomes: Object.values(values.outcomes)
-            .map((outcome) => outcome)
-            .filter((outcome) => outcome !== undefined),
+        outcomes: Object.values(values[FormField.outcomes]).filter(
+            (outcome) => outcome !== undefined
+        ),
     });
 
     try {
         await addVisit(newVisit);
-        history.push(`/client/${values.client}`);
+        history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);
     }

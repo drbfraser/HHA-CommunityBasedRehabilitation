@@ -10,21 +10,21 @@ export enum FormField {
     client = "client",
     village = "village",
     zone = "zone",
-    health = "health",
-    education = "educat",
-    social = "social",
+    health = "HEALTH",
+    education = "EDUCAT",
+    social = "SOCIAL",
     outcomes = "outcomes",
     improvements = "improvements",
 }
 
 export enum OutcomeFormField {
-    riskType = "riskType",
+    riskType = "risk_type",
     outcome = "outcome",
     goalStatus = "goal_met",
 }
 
 export enum ImprovementFormField {
-    riskType = "riskType",
+    riskType = "risk_type",
     provided = "provided",
     description = "desc",
 }

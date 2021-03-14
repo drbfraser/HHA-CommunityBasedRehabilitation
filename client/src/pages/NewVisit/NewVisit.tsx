@@ -11,6 +11,7 @@ import {
     StepLabel,
     Stepper,
 } from "@material-ui/core";
+import { ArrowBack } from "@material-ui/icons";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 import React, { useEffect, useState } from "react";
@@ -29,6 +30,7 @@ import {
 } from "./formFields";
 import { handleSubmit } from "./formHandler";
 import { useStyles } from "./NewVisit.styles";
+import history from "../../util/history";
 
 const visitTypes: FormField[] = [FormField.health, FormField.education, FormField.social];
 
@@ -87,12 +89,12 @@ const ImprovementField = (props: {
     );
 };
 
-const OutcomeField = (props: { visitType: string }) => {
+const OutcomeField = (props: { visitType: FormField }) => {
     const fieldName = `${FormField.outcomes}.${props.visitType}`;
 
     return (
         <div>
-            <FormLabel>Client's {props.visitType} Goal Status</FormLabel>
+            <FormLabel>Client's {fieldLabels[props.visitType]} Goal Status</FormLabel>
             <br />
             <Field
                 component={TextField}
@@ -296,11 +298,15 @@ const NewVisit = () => {
     return (
         <Formik
             initialValues={initialValues}
-            validationSchema={visitSteps[activeStep].validationSchema}
+            // TODO: Yup validation broken, need to be fixed. thumbs.gfycat.com/AchingForkedAgouti-small.gif
+            //validationSchema={visitSteps[activeStep].validationSchema}
             onSubmit={nextStep}
         >
             {(formikProps) => (
                 <Form>
+                    <Button onClick={history.goBack}>
+                        <ArrowBack /> Go back
+                    </Button>
                     <Stepper activeStep={activeStep} orientation="vertical">
                         {visitSteps.map((visitStep, index) => (
                             <Step key={index}>

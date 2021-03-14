@@ -217,6 +217,20 @@ const ClientForm = () => {
                                                     </Grid>
                                                     <Grid item md={8} xs={12}>
                                                         <Field
+                                                            className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
+                                                            component={TextField}
+                                                            name={FormField.caregiverEmail}
+                                                            variant="outlined"
+                                                            label={
+                                                                fieldLabels[
+                                                                    FormField.caregiverEmail
+                                                                ]
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
                                                             className={styles.caregiverInputField}
                                                             component={TextField}
                                                             name={FormField.caregiverPhone}

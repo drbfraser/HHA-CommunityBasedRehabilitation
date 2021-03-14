@@ -1,4 +1,4 @@
-from cbr_api import models, serializers, filters
+from cbr_api import models, serializers, filters, permissions
 from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
@@ -6,11 +6,13 @@ from drf_spectacular.utils import extend_schema
 
 
 class UserList(generics.ListCreateAPIView):
+    permission_classes = [permissions.AdminAll]
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRCreationSerializer
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AdminAll]
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRSerializer
 
@@ -24,6 +26,7 @@ class UserCurrent(generics.RetrieveAPIView):
 
 
 class UserPassword(generics.UpdateAPIView):
+    permission_classes = [permissions.AdminAll]
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserPasswordSerializer
     http_method_names = ["put"]
@@ -78,11 +81,13 @@ class DisabilityDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ZoneList(generics.ListCreateAPIView):
+    permission_classes = [permissions.AdminCreateUpdateDestroy]
     queryset = models.Zone.objects.all()
     serializer_class = serializers.ZoneSerializer
 
 
 class ZoneDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AdminCreateUpdateDestroy]
     queryset = models.Zone.objects.all()
     serializer_class = serializers.ZoneSerializer
 

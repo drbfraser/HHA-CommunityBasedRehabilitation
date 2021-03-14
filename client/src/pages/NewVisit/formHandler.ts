@@ -1,34 +1,47 @@
 import { TFormValues } from "./formFields";
 import { FormikHelpers } from "formik";
-import {} from "util/risks";
+import { apiFetch, Endpoint } from "util/endpoints";
+import history from "../../util/history";
 
+const addVisit = async (visitInfo: string) => {
+    const init: RequestInit = {
+        method: "POST",
+        body: visitInfo,
+    };
+
+    return await apiFetch(Endpoint.VISITS, "", init)
+        .then((res) => {
+            return res.json();
+        })
+        .then((res) => {
+            return res;
+        });
+};
+
+// TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
 export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
-    //const improvements = [];
+    const newVisit = JSON.stringify({
+        client: values.client,
+        health_visit: values.health,
+        educat_visit: values.educat,
+        social_visit: values.social,
+        zone: values.zone,
+        village: values.village,
+        longitude: 0.0,
+        latitude: 0.0,
+        improvements: Object.values(values.improvements)
+            .reduce((improvements, typedImprovement) => improvements.concat(typedImprovement))
+            .filter((improvement) => improvement !== undefined),
+        outcomes: Object.values(values.outcomes)
+            .map((outcome) => outcome)
+            .filter((outcome) => outcome !== undefined),
+    });
 
-    // if (values.healthRisk) {
-    //     outcomes.push({
-    //         risk_type: RiskType.HEALTH,
-    //         goal_met: values.healthGoalStatus,
-    //         outcome: values.healthOutcome,
-    //     });
-    //     //values.healthProvided;
-    // }
-    // if (values.healthRisk) {
-    // }
-    // if (values.healthRisk) {
-    // }
-
-    // const newClient = JSON.stringify({
-    //     health: values.healthRisk,
-    //     educat: values.educationRisk,
-    //     social: values.socialRisk,
-    //     outcomes: outcomes,
-    //     //improvments: improvements,
-    // });
+    console.log(newVisit);
 
     try {
-        //const client = await addClient(newClient);
-        //history.push(`/client/${client.id}`);
+        await addVisit(newVisit);
+        history.push(`/client/${values.client}`);
     } catch (e) {
         helpers.setSubmitting(false);
     }

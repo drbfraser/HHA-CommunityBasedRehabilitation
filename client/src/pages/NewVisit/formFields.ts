@@ -1,12 +1,13 @@
 import * as Yup from "yup";
 
 export enum GoalStatus {
-    CAN = "Cancelled",
-    GO = "Ongoing",
-    CON = "Concluded",
+    cancelled = "CAN",
+    ongoing = "GO",
+    concluded = "CON",
 }
 
 export enum FormField {
+    client = "client",
     village = "village",
     zone = "zone",
     health = "health",
@@ -29,25 +30,32 @@ export enum ImprovementFormField {
 }
 
 export const fieldLabels = {
+    [FormField.client]: "Client",
     [FormField.village]: "Village",
     [FormField.zone]: "Zone",
     [FormField.health]: "Health",
     [FormField.education]: "Education",
     [FormField.social]: "Social",
+    [FormField.improvements]: "Improvements",
     [FormField.outcomes]: "Outcomes",
-    [FormField.improvements]: "Description",
+    [ImprovementFormField.description]: "Description",
+    [OutcomeFormField.outcome]: "Outcome",
+    [GoalStatus.cancelled]: "Cancelled",
+    [GoalStatus.ongoing]: "Ongoing",
+    [GoalStatus.concluded]: "Concluded",
 };
 
 export const initialValues = {
+    [FormField.client]: "",
     [FormField.village]: "",
     [FormField.zone]: "",
     [FormField.health]: false,
     [FormField.education]: false,
     [FormField.social]: false,
     [FormField.outcomes]: {
-        [FormField.health]: {},
-        [FormField.education]: {},
-        [FormField.social]: {},
+        [FormField.health]: undefined,
+        [FormField.education]: undefined,
+        [FormField.social]: undefined,
     },
     [FormField.improvements]: {
         [FormField.health]: [],
@@ -78,56 +86,34 @@ export const provisionals: { [key: string]: string[] } = {
 
 export type TFormValues = typeof initialValues;
 
-const initialValidationSchema = () =>
-    Yup.object()
-        .shape({
-            [FormField.health]: Yup.boolean().label(fieldLabels[FormField.health]),
-            [FormField.education]: Yup.boolean().label(fieldLabels[FormField.education]),
-            [FormField.social]: Yup.boolean().label(fieldLabels[FormField.social]),
-        })
-        .test(
-            "atLeastOneVisitTypeTest",
-            "This is an error to display (except that its not displaying rn lol)",
-            (object) => {
-                if (
-                    object[FormField.health] ||
-                    object[FormField.education] ||
-                    object[FormField.social]
-                ) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        );
-
-const visitTypeValidationSchema = (visitType: FormField) =>
+export const initialValidationSchema = () =>
     Yup.object().shape({
-        [FormField.improvements]: Yup.array().of(
-            Yup.object().shape({
-                [visitType]: Yup.array().of(
-                    Yup.object().shape({
-                        [ImprovementFormField.description]: Yup.string()
-                            .label("Description")
-                            .required(),
-                    })
-                ),
-            })
-        ),
-        [FormField.outcomes]: Yup.array().of(
-            Yup.object().shape({
-                [visitType]: Yup.array().of(
-                    Yup.object().shape({
-                        [OutcomeFormField.outcome]: Yup.string().required(),
-                    })
-                ),
-            })
-        ),
+        [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),
+        [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),
+        [FormField.health]: Yup.boolean().label(fieldLabels[FormField.health]),
+        [FormField.education]: Yup.boolean().label(fieldLabels[FormField.education]),
+        [FormField.social]: Yup.boolean().label(fieldLabels[FormField.social]),
     });
 
-export const validationSchemas = [
-    initialValidationSchema,
-    () => visitTypeValidationSchema(FormField.health),
-    () => visitTypeValidationSchema(FormField.education),
-    () => visitTypeValidationSchema(FormField.social),
-];
+// TODO: The error messages for improvement.description does not consistently display properly
+export const visitTypeValidationSchema = (visitType: FormField) =>
+    Yup.object().shape({
+        [FormField.improvements]: Yup.object().shape({
+            [visitType]: Yup.array()
+                .of(
+                    Yup.object().shape({
+                        [ImprovementFormField.description]: Yup.string()
+                            .label(fieldLabels[ImprovementFormField.description])
+                            .required(),
+                    })
+                )
+                .compact((improvement) => improvement === undefined),
+        }),
+        [FormField.outcomes]: Yup.object().shape({
+            [visitType]: Yup.object().shape({
+                [OutcomeFormField.outcome]: Yup.string()
+                    .label(fieldLabels[OutcomeFormField.outcome])
+                    .required(),
+            }),
+        }),
+    });

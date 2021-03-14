@@ -11,9 +11,11 @@ import {
     StepLabel,
     Stepper,
 } from "@material-ui/core";
-import { Field, FieldArray, Form, Formik, FormikProps } from "formik";
+import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { getAllZones, IZone } from "util/cache";
 import {
     fieldLabels,
     FormField,
@@ -21,18 +23,14 @@ import {
     OutcomeFormField,
     initialValues,
     provisionals,
-    validationSchemas,
+    initialValidationSchema,
+    visitTypeValidationSchema,
     GoalStatus,
 } from "./formFields";
 import { handleSubmit } from "./formHandler";
+import { useStyles } from "./NewVisit.styles";
 
-interface IVisitStep {
-    label: string;
-    enabled: boolean;
-    form: JSX.Element;
-}
-
-const visitsTypes: FormField[] = [FormField.health, FormField.education, FormField.social];
+const visitTypes: FormField[] = [FormField.health, FormField.education, FormField.social];
 
 const ImprovementField = (props: {
     formikProps: FormikProps<any>;
@@ -41,7 +39,7 @@ const ImprovementField = (props: {
     index: number;
 }) => {
     const [isFieldVisible, setFieldVisibility] = useState<boolean>(
-        props.formikProps.values.improvements[props.visitType][props.index]
+        props.formikProps.values.improvements[props.visitType][props.index] !== undefined
     );
 
     const fieldName = `${FormField.improvements}.${props.visitType}.${props.index}`;
@@ -79,7 +77,7 @@ const ImprovementField = (props: {
                     component={TextField}
                     variant="outlined"
                     name={`${fieldName}.${ImprovementFormField.description}`}
-                    label={fieldLabels[FormField.improvements]}
+                    label={fieldLabels[ImprovementFormField.description]}
                     required
                     fullWidth
                     multiline
@@ -105,7 +103,7 @@ const OutcomeField = (props: { visitType: string }) => {
             >
                 {Object.values(GoalStatus).map((status) => (
                     <MenuItem key={status} value={status}>
-                        {status[0].toUpperCase() + status.substr(1).toLowerCase()}
+                        {fieldLabels[status]}
                     </MenuItem>
                 ))}
             </Field>
@@ -114,12 +112,11 @@ const OutcomeField = (props: { visitType: string }) => {
             <div>
                 <FormLabel>What is the Outcome of the Goal?</FormLabel>
                 <Field
-                    key={`${props.visitType}${OutcomeFormField.outcome}`}
                     type="text"
                     component={TextField}
                     variant="outlined"
                     name={`${fieldName}.${OutcomeFormField.outcome}`}
-                    label={fieldLabels[FormField.outcomes]}
+                    label={fieldLabels[OutcomeFormField.outcome]}
                     required
                     fullWidth
                     multiline
@@ -130,71 +127,170 @@ const OutcomeField = (props: { visitType: string }) => {
     );
 };
 
-const VisitTypeStep = (visitType: FormField, formikProps: FormikProps<any>) => {
-    return (
-        <FormControl>
-            <FormLabel>Select an Improvement</FormLabel>
-            <FieldArray
-                name={FormField.improvements}
-                render={() =>
-                    provisionals[visitType].map((provided, index) => (
-                        <ImprovementField
-                            key={index}
-                            formikProps={formikProps}
-                            visitType={visitType}
-                            provided={provided}
-                            index={index}
-                        />
-                    ))
-                }
-            />
-            <br />
-            <OutcomeField visitType={visitType} />
-        </FormControl>
-    );
+interface IStepProps {
+    formikProps: FormikProps<any>;
+}
+
+const VisitTypeStep = (visitType: FormField) => {
+    return ({ formikProps }: IStepProps) => {
+        return (
+            <FormControl>
+                <FormLabel>Select an Improvement</FormLabel>
+                <FieldArray
+                    name={FormField.improvements}
+                    render={() =>
+                        provisionals[visitType].map((provided, index) => (
+                            <ImprovementField
+                                key={index}
+                                formikProps={formikProps}
+                                visitType={visitType}
+                                provided={provided}
+                                index={index}
+                            />
+                        ))
+                    }
+                />
+                <br />
+                <OutcomeField visitType={visitType} />
+            </FormControl>
+        );
+    };
 };
 
-const VisitReasonStep = (formikProps: FormikProps<any>) => {
+const visitReasonStepCallBack = (
+    setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>,
+    zoneOptions: IZone[]
+) => ({ formikProps }: IStepProps) => VisitReasonStep(formikProps, setEnabledSteps, zoneOptions);
+
+const VisitReasonStep = (
+    formikProps: FormikProps<any>,
+    setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>,
+    zoneOptions: IZone[]
+) => {
+    const styles = useStyles();
+
+    console.log(formikProps.values);
+
     const onCheckboxChange = (checked: boolean, visitType: string) => {
+        // We can't fully rely on formikProps.values[type] here because it might not be updated yet
+        setEnabledSteps(
+            visitTypes.filter(
+                (type) =>
+                    (formikProps.values[type] && type !== visitType) ||
+                    (checked && type === visitType)
+            )
+        );
+
         if (checked) {
             formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, {
                 [OutcomeFormField.riskType]: visitType,
-                [OutcomeFormField.goalStatus]: GoalStatus.GO,
+                [OutcomeFormField.goalStatus]: GoalStatus.ongoing,
                 [OutcomeFormField.outcome]: "",
             });
+            formikProps.setFieldTouched(`${FormField.outcomes}.${visitType}`, false);
         } else {
             formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, undefined);
         }
     };
 
     return (
-        <FormControl component="fieldset">
-            <FormLabel>Select the Reasons for the Visit</FormLabel>
-            <FormGroup>
-                {visitsTypes.map((visitType) => (
-                    <Field
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        key={visitType}
-                        name={visitType}
-                        Label={{ label: fieldLabels[visitType] }}
-                        onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                            formikProps.handleChange(event);
-                            onCheckboxChange(event.currentTarget.checked, visitType);
-                        }}
-                    />
-                ))}
-            </FormGroup>
-        </FormControl>
+        <>
+            <FormLabel>Where was the Visit?</FormLabel>
+            <FormControl
+                className={styles.visitLocationContainer}
+                fullWidth
+                required
+                variant="outlined"
+            >
+                <Field
+                    className={styles.visitLocation}
+                    component={TextField}
+                    name={FormField.village}
+                    label={fieldLabels[FormField.village]}
+                    variant="outlined"
+                    fullWidth
+                    required
+                />
+                <Field
+                    className={styles.visitLocation}
+                    component={TextField}
+                    select
+                    label={fieldLabels[FormField.zone]}
+                    name={FormField.zone}
+                    variant="outlined"
+                    required
+                >
+                    {zoneOptions.map((option) => (
+                        <MenuItem key={option.id} value={option.id}>
+                            {option.zone_name}
+                        </MenuItem>
+                    ))}
+                </Field>
+            </FormControl>
+            <br />
+            <FormControl component="fieldset">
+                <FormLabel>Select the Reasons for the Visit</FormLabel>
+                <FormGroup>
+                    {visitTypes.map((visitType) => (
+                        <Field
+                            component={CheckboxWithLabel}
+                            type="checkbox"
+                            key={visitType}
+                            name={visitType}
+                            Label={{ label: fieldLabels[visitType] }}
+                            onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                                formikProps.handleChange(event);
+                                onCheckboxChange(event.currentTarget.checked, visitType);
+                            }}
+                        />
+                    ))}
+                </FormGroup>
+            </FormControl>
+        </>
     );
 };
 
 const NewVisit = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
+    const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
+    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+    const { clientId } = useParams<{ clientId: string }>();
 
-    const nextStep = (formikProps: FormikProps<any>) => {
-        // formikProps.validateForm().then(() => setActiveStep(activeStep + 1));
-        setActiveStep(activeStep + 1);
+    console.log(clientId);
+
+    useEffect(() => {
+        const fetchAllZones = async () => {
+            const zones = await getAllZones();
+            setZoneOptions(zones);
+        };
+        fetchAllZones();
+    }, []);
+
+    const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
+
+    const visitSteps = [
+        {
+            label: "Visit Focus",
+            Form: visitReasonStepCallBack(setEnabledSteps, zoneOptions),
+            validationSchema: initialValidationSchema,
+        },
+        ...enabledSteps.map((visitType) => ({
+            label: `${fieldLabels[visitType]} Visit`,
+            Form: VisitTypeStep(visitType),
+            validationSchema: visitTypeValidationSchema(visitType),
+        })),
+    ];
+
+    const nextStep = (values: any, helpers: FormikHelpers<any>) => {
+        if (isFinalStep) {
+            handleSubmit(values, helpers);
+        } else {
+            if (activeStep === 0) {
+                helpers.setFieldValue(`${[FormField.client]}`, clientId);
+            }
+            setActiveStep(activeStep + 1);
+            helpers.setSubmitting(false);
+        }
     };
 
     const prevStep = () => {
@@ -204,59 +300,51 @@ const NewVisit = () => {
     return (
         <Formik
             initialValues={initialValues}
-            validationSchema={validationSchemas[activeStep]}
-            onSubmit={handleSubmit}
+            validationSchema={visitSteps[activeStep].validationSchema}
+            onSubmit={nextStep}
         >
-            {(formikProps) => {
-                console.log(formikProps.values);
-
-                const visitSteps: IVisitStep[] = [
-                    {
-                        label: "Visit Focus",
-                        enabled: true,
-                        form: VisitReasonStep(formikProps),
-                    },
-                    ...visitsTypes.map((visitType) => ({
-                        label: `${fieldLabels[visitType]} Visit`,
-                        enabled: formikProps.values[visitType] as boolean,
-                        form: VisitTypeStep(visitType, formikProps),
-                    })),
-                ];
-
-                return (
-                    <Form>
-                        <Stepper activeStep={activeStep} orientation="vertical">
-                            {visitSteps.map((visitStep, index) => {
-                                return visitStep.enabled ? (
-                                    <Step key={index}>
-                                        <StepLabel>{visitStep.label}</StepLabel>
-                                        <StepContent>
-                                            {visitStep.form}
-                                            <br />
-                                            <br />
-                                            <Button
-                                                style={{ marginRight: "5px" }}
-                                                variant="outlined"
-                                                color="primary"
-                                                onClick={prevStep}
-                                            >
-                                                Prev Step
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                onClick={() => nextStep(formikProps)}
-                                            >
-                                                Next Step
-                                            </Button>
-                                        </StepContent>
-                                    </Step>
-                                ) : null;
-                            })}
-                        </Stepper>
-                    </Form>
-                );
-            }}
+            {(formikProps) => (
+                <Form>
+                    <Stepper activeStep={activeStep} orientation="vertical">
+                        {visitSteps.map((visitStep, index) => (
+                            <Step key={index}>
+                                <StepLabel>{visitStep.label}</StepLabel>
+                                <StepContent>
+                                    <visitStep.Form formikProps={formikProps} />
+                                    <br />
+                                    <br />
+                                    {activeStep !== 0 && (
+                                        <Button
+                                            style={{ marginRight: "5px" }}
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={prevStep}
+                                        >
+                                            Prev Step
+                                        </Button>
+                                    )}
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        disabled={Boolean(
+                                            !(
+                                                formikProps.values[FormField.health] ||
+                                                formikProps.values[FormField.education] ||
+                                                formikProps.values[FormField.social]
+                                            )
+                                        )}
+                                    >
+                                        {isFinalStep && index === activeStep
+                                            ? "Submit"
+                                            : "Next Step"}
+                                    </Button>
+                                </StepContent>
+                            </Step>
+                        ))}
+                    </Stepper>
+                </Form>
+            )}
         </Formik>
     );
 };

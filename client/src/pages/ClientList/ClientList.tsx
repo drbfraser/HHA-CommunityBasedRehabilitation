@@ -35,8 +35,8 @@ import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
-    const risk1: IRiskLevel = Object(params1.value);
-    const risk2: IRiskLevel = Object(params2.value);
+    const risk1: IRiskLevel = riskLevels[String(params1.value)];
+    const risk2: IRiskLevel = riskLevels[String(params2.value)];
     return risk1.level - risk2.level;
 };
 

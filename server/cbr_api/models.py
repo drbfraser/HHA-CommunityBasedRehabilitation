@@ -32,6 +32,11 @@ class UserCBRManager(BaseUserManager):
 
 
 class UserCBR(AbstractBaseUser, PermissionsMixin):
+    class Role(models.TextChoices):
+        ADMIN = "ADM", _("Admin")
+        WORKER = "WRK", _("CBR Worker")
+        CLINICIAN = "CLN", _("Clinician")
+
     username_validator = UnicodeUsernameValidator()
 
     username = models.CharField(
@@ -44,6 +49,7 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(_("last name"), max_length=50)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     phone_number = models.CharField(max_length=50, blank=True)
+    role = models.CharField(max_length=3, choices=Role.choices, default = Role.WORKER)
     is_active = models.BooleanField(
         _("active"),
         default=True,
@@ -57,6 +63,7 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
         "first_name",
         "last_name",
         "zone",
+        "role",
     ]
 
     class Meta:

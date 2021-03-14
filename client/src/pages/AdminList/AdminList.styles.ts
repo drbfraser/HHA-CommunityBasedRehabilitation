@@ -9,7 +9,7 @@ export const useStyles = makeStyles(
             padding: "5px 0px 25px 0px",
         },
         icon: {
-            padding: "0px 10px 0px 0px",
+            padding: "0px 15px 0px 0px",
         },
         topContainer: {
             float: "right",

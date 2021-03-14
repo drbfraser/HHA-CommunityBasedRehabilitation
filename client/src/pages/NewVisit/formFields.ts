@@ -1,9 +1,9 @@
 import * as Yup from "yup";
 
 export enum GoalStatus {
-    CANCELLED = "cancelled",
-    ONGOING = "ongoing",
-    CONCLUDED = "concluded",
+    CAN = "Cancelled",
+    GO = "Ongoing",
+    CON = "Concluded",
 }
 
 export enum FormField {
@@ -16,12 +16,14 @@ export enum FormField {
     improvements = "improvements",
 }
 
-export enum OutcomeField {
-    goalStatus = "goal_met",
+export enum OutcomeFormField {
+    riskType = "riskType",
     outcome = "outcome",
+    goalStatus = "goal_met",
 }
 
-export enum ImprovementField {
+export enum ImprovementFormField {
+    riskType = "riskType",
     provided = "provided",
     description = "desc",
 }
@@ -32,9 +34,8 @@ export const fieldLabels = {
     [FormField.health]: "Health",
     [FormField.education]: "Education",
     [FormField.social]: "Social",
-    [FormField.outcomes]: "Outcome",
+    [FormField.outcomes]: "Outcomes",
     [FormField.improvements]: "Description",
-
 };
 
 export const initialValues = {
@@ -44,9 +45,9 @@ export const initialValues = {
     [FormField.education]: false,
     [FormField.social]: false,
     [FormField.outcomes]: {
-        [FormField.health]: [],
-        [FormField.education]: [],
-        [FormField.social]: [],
+        [FormField.health]: {},
+        [FormField.education]: {},
+        [FormField.social]: {},
     },
     [FormField.improvements]: {
         [FormField.health]: [],
@@ -77,4 +78,56 @@ export const provisionals: { [key: string]: string[] } = {
 
 export type TFormValues = typeof initialValues;
 
-export const validationSchema = () => Yup.object().shape({});
+const initialValidationSchema = () =>
+    Yup.object()
+        .shape({
+            [FormField.health]: Yup.boolean().label(fieldLabels[FormField.health]),
+            [FormField.education]: Yup.boolean().label(fieldLabels[FormField.education]),
+            [FormField.social]: Yup.boolean().label(fieldLabels[FormField.social]),
+        })
+        .test(
+            "atLeastOneVisitTypeTest",
+            "This is an error to display (except that its not displaying rn lol)",
+            (object) => {
+                if (
+                    object[FormField.health] ||
+                    object[FormField.education] ||
+                    object[FormField.social]
+                ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        );
+
+const visitTypeValidationSchema = (visitType: FormField) =>
+    Yup.object().shape({
+        [FormField.improvements]: Yup.array().of(
+            Yup.object().shape({
+                [visitType]: Yup.array().of(
+                    Yup.object().shape({
+                        [ImprovementFormField.description]: Yup.string()
+                            .label("Description")
+                            .required(),
+                    })
+                ),
+            })
+        ),
+        [FormField.outcomes]: Yup.array().of(
+            Yup.object().shape({
+                [visitType]: Yup.array().of(
+                    Yup.object().shape({
+                        [OutcomeFormField.outcome]: Yup.string().required(),
+                    })
+                ),
+            })
+        ),
+    });
+
+export const validationSchemas = [
+    initialValidationSchema,
+    () => visitTypeValidationSchema(FormField.health),
+    () => visitTypeValidationSchema(FormField.education),
+    () => visitTypeValidationSchema(FormField.social),
+];

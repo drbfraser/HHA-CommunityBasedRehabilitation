@@ -6,7 +6,6 @@ import {
     FormGroup,
     FormLabel,
     MenuItem,
-    Select,
     Step,
     StepContent,
     StepLabel,
@@ -14,13 +13,15 @@ import {
 } from "@material-ui/core";
 import { Field, FieldArray, Form, Formik, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
     fieldLabels,
     FormField,
+    ImprovementFormField,
+    OutcomeFormField,
     initialValues,
     provisionals,
-    validationSchema,
+    validationSchemas,
     GoalStatus,
 } from "./formFields";
 import { handleSubmit } from "./formHandler";
@@ -34,19 +35,25 @@ interface IVisitStep {
 const visitsTypes: FormField[] = [FormField.health, FormField.education, FormField.social];
 
 const ImprovementField = (props: {
-    formikProps: FormikProps<any>
+    formikProps: FormikProps<any>;
     visitType: string;
     provided: string;
     index: number;
 }) => {
-    const [isFieldVisible, setFieldVisibility] = useState<boolean>(props.formikProps.values.improvements[props.visitType][props.index]);
+    const [isFieldVisible, setFieldVisibility] = useState<boolean>(
+        props.formikProps.values.improvements[props.visitType][props.index]
+    );
 
     const fieldName = `${FormField.improvements}.${props.visitType}.${props.index}`;
 
     const onCheckboxChange = (checked: boolean) => {
         setFieldVisibility(checked);
         if (checked) {
-            props.formikProps.setFieldValue(`${fieldName}`, { risk_type: props.visitType, provided: props.provided, desc: "" })
+            props.formikProps.setFieldValue(`${fieldName}`, {
+                [ImprovementFormField.riskType]: props.visitType,
+                [ImprovementFormField.provided]: props.provided,
+                [ImprovementFormField.description]: "",
+            });
         } else {
             props.formikProps.setFieldValue(`${fieldName}`, undefined);
         }
@@ -56,24 +63,23 @@ const ImprovementField = (props: {
         <div key={props.index}>
             <FormControlLabel
                 control={
-                <Checkbox
-                    checked={isFieldVisible}
-                    onChange={(event => onCheckboxChange(event.currentTarget.checked))}
-                    name={props.provided}
-                />
+                    <Checkbox
+                        checked={isFieldVisible}
+                        onChange={(event) => onCheckboxChange(event.currentTarget.checked)}
+                        name={props.provided}
+                    />
                 }
                 label={props.provided}
             />
-
             <br />
             {isFieldVisible && (
                 <Field
-                    key={`${props.provided}Desc`}
+                    key={`${props.provided}${ImprovementFormField.description}`}
                     type="text"
                     component={TextField}
                     variant="outlined"
-                    name={`${fieldName}.desc`}
-                    label="Description"
+                    name={`${fieldName}.${ImprovementFormField.description}`}
+                    label={fieldLabels[FormField.improvements]}
                     required
                     fullWidth
                     multiline
@@ -84,47 +90,42 @@ const ImprovementField = (props: {
 };
 
 const OutcomeField = (props: { visitType: string }) => {
-    const [goalStatus, setGoalStatus] = useState<string>(GoalStatus.ONGOING);
-
     const fieldName = `${FormField.outcomes}.${props.visitType}`;
-
 
     return (
         <div>
             <FormLabel>Client's {props.visitType} Goal Status</FormLabel>
             <br />
-            <Select
+            <Field
+                component={TextField}
+                select
+                required
                 variant="outlined"
-                defaultValue={GoalStatus.ONGOING}
-                value={goalStatus}
-                onChange={(event) => setGoalStatus(String(event.target.value))}
+                name={`${fieldName}.${OutcomeFormField.goalStatus}`}
             >
                 {Object.values(GoalStatus).map((status) => (
                     <MenuItem key={status} value={status}>
-                        {status[0].toUpperCase() + status.slice(1)}
+                        {status[0].toUpperCase() + status.substr(1).toLowerCase()}
                     </MenuItem>
                 ))}
-            </Select>
-
+            </Field>
             <br />
             <br />
-            {goalStatus !== GoalStatus.ONGOING && (
-                <div>
-                    <FormLabel>What is the Outcome of the Goal?</FormLabel>
-                    <Field
-                        key={`${props.visitType}Outcome`}
-                        type="text"
-                        component={TextField}
-                        variant="outlined"
-                        name={`${fieldName}.outcome`}
-                        label={fieldLabels[FormField.outcomes]}
-                        required
-                        fullWidth
-                        multiline
-                    />
-                    <br />
-                </div>
-            )}
+            <div>
+                <FormLabel>What is the Outcome of the Goal?</FormLabel>
+                <Field
+                    key={`${props.visitType}${OutcomeFormField.outcome}`}
+                    type="text"
+                    component={TextField}
+                    variant="outlined"
+                    name={`${fieldName}.${OutcomeFormField.outcome}`}
+                    label={fieldLabels[FormField.outcomes]}
+                    required
+                    fullWidth
+                    multiline
+                />
+                <br />
+            </div>
         </div>
     );
 };
@@ -153,7 +154,19 @@ const VisitTypeStep = (visitType: FormField, formikProps: FormikProps<any>) => {
     );
 };
 
-const VisitReasonStep = () => {
+const VisitReasonStep = (formikProps: FormikProps<any>) => {
+    const onCheckboxChange = (checked: boolean, visitType: string) => {
+        if (checked) {
+            formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, {
+                [OutcomeFormField.riskType]: visitType,
+                [OutcomeFormField.goalStatus]: GoalStatus.GO,
+                [OutcomeFormField.outcome]: "",
+            });
+        } else {
+            formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, undefined);
+        }
+    };
+
     return (
         <FormControl component="fieldset">
             <FormLabel>Select the Reasons for the Visit</FormLabel>
@@ -165,6 +178,10 @@ const VisitReasonStep = () => {
                         key={visitType}
                         name={visitType}
                         Label={{ label: fieldLabels[visitType] }}
+                        onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                            formikProps.handleChange(event);
+                            onCheckboxChange(event.currentTarget.checked, visitType);
+                        }}
                     />
                 ))}
             </FormGroup>
@@ -175,7 +192,8 @@ const VisitReasonStep = () => {
 const NewVisit = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
 
-    const nextStep = () => {
+    const nextStep = (formikProps: FormikProps<any>) => {
+        // formikProps.validateForm().then(() => setActiveStep(activeStep + 1));
         setActiveStep(activeStep + 1);
     };
 
@@ -186,18 +204,17 @@ const NewVisit = () => {
     return (
         <Formik
             initialValues={initialValues}
-            validationSchema={validationSchema}
+            validationSchema={validationSchemas[activeStep]}
             onSubmit={handleSubmit}
         >
             {(formikProps) => {
                 console.log(formikProps.values);
-                
 
                 const visitSteps: IVisitStep[] = [
                     {
                         label: "Visit Focus",
                         enabled: true,
-                        form: VisitReasonStep(),
+                        form: VisitReasonStep(formikProps),
                     },
                     ...visitsTypes.map((visitType) => ({
                         label: `${fieldLabels[visitType]} Visit`,
@@ -216,6 +233,7 @@ const NewVisit = () => {
                                         <StepContent>
                                             {visitStep.form}
                                             <br />
+                                            <br />
                                             <Button
                                                 style={{ marginRight: "5px" }}
                                                 variant="outlined"
@@ -227,7 +245,7 @@ const NewVisit = () => {
                                             <Button
                                                 variant="contained"
                                                 color="primary"
-                                                onClick={nextStep}
+                                                onClick={() => nextStep(formikProps)}
                                             >
                                                 Next Step
                                             </Button>

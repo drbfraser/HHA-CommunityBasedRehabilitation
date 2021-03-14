@@ -1,6 +1,7 @@
 import { FormikHelpers } from "formik";
 import { Endpoint, apiFetch } from "../../util/endpoints";
 import { IClient } from "util/clients";
+import { timestampFromFormDate } from "util/dates";
 
 const updateClient = async (clientInfo: string, clientId: number) => {
     const init: RequestInit = {
@@ -24,7 +25,7 @@ export const handleSubmit = async (
     const updatedValues = JSON.stringify({
         first_name: values.first_name,
         last_name: values.last_name,
-        birth_date: new Date(values.birth_date).getTime() / 1000,
+        birth_date: timestampFromFormDate(values.birth_date as string),
         gender: values.gender,
         phone_number: values.phone_number,
         zone: values.zone,

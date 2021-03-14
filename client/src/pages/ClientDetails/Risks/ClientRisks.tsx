@@ -19,19 +19,19 @@ import {
 } from "@material-ui/core";
 import { IRisk, riskLevels, riskTypes } from "util/risks";
 import { IClient } from "util/clients";
-import RiskChip from "components/RiskChip/RiskChip";
+import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 
 import { fieldLabels, FormField, validationSchema } from "./riskFormFields";
 
 import { handleSubmit } from "./riskFormFieldHandler";
+import { Skeleton } from "@material-ui/lab";
 
 interface IProps {
-    clientInfo: IClient;
+    clientInfo?: IClient;
 }
 
 const ClientRisks = ({ clientInfo }: IProps) => {
     const styles = useStyles();
-    const [risks] = useState<IRisk[]>(clientInfo.risks);
 
     interface IModalProps {
         risk: IRisk;
@@ -156,7 +156,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                             <Grid item md={6}>
                                 <div className={styles.riskCardButtonAndBadge}>
                                     {" "}
-                                    <RiskChip risk={risk.risk_level} />
+                                    <RiskLevelChip risk={risk.risk_level} />
                                 </div>
                             </Grid>
                         </Grid>
@@ -192,18 +192,22 @@ const ClientRisks = ({ clientInfo }: IProps) => {
         );
     };
 
-    return risks ? (
+    const SkeletonRiskCard = () => <Skeleton variant="rect" height={300} />;
+
+    return (
         <div className={styles.riskCardContainer}>
             <Grid container spacing={5} direction="row" justify="flex-start">
-                {Object.keys(riskTypes).map((type) => (
-                    <Grid item md={4} xs={12}>
-                        <RiskCard risk={risks.filter((r) => r.risk_type === type)[0]} />
-                    </Grid>
-                ))}
+                {Object.keys(riskTypes).map((type) => {
+                    const risk = clientInfo?.risks.find((r) => r.risk_type === type);
+
+                    return (
+                        <Grid item md={4} xs={12} key={type}>
+                            {risk ? <RiskCard risk={risk} /> : <SkeletonRiskCard />}
+                        </Grid>
+                    );
+                })}
             </Grid>
         </div>
-    ) : (
-        <></>
     );
 };
 

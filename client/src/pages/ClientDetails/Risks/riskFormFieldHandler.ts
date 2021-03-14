@@ -1,5 +1,5 @@
 import { IRisk } from "util/risks";
-import { Endpoint, apiFetch } from "../../util/endpoints";
+import { Endpoint, apiFetch } from "../../../util/endpoints";
 
 const updateRisk = async (updatedRisk: string) => {
     const init: RequestInit = {

@@ -17,6 +17,7 @@ export enum Endpoint {
     USER_CURRENT = "user/current",
     RISKS = "risks",
     DISABILITIES = "disabilities",
+    VISIT = "visit/",
 }
 
 export const apiFetch = async (

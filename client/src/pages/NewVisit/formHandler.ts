@@ -37,8 +37,6 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
             .filter((outcome) => outcome !== undefined),
     });
 
-    console.log(newVisit);
-
     try {
         await addVisit(newVisit);
         history.push(`/client/${values.client}`);

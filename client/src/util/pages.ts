@@ -16,9 +16,9 @@ import NotFound from "pages/NotFound/NotFound";
 import AdminNew from "pages/Admin/AdminNew";
 import AdminView from "pages/Admin/AdminView";
 import AdminEdit from "pages/Admin/AdminEdit";
-import ClientRiskHistory from "pages/ClientRiskHistory/ClientRiskHistory";
-import NewVisit from "pages/NewVisit/NewVisit";
+import ClientRiskHistory from "pages/ClientDetails/RiskHistory/ClientRiskHistory";
 import Dashboard from "pages/Dashboard/Dashboard";
+import NewVisit from "pages/NewVisit/NewVisit";
 
 export interface IPage {
     path: string;

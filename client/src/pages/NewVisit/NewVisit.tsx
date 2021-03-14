@@ -169,8 +169,6 @@ const VisitReasonStep = (
 ) => {
     const styles = useStyles();
 
-    console.log(formikProps.values);
-
     const onCheckboxChange = (checked: boolean, visitType: string) => {
         // We can't fully rely on formikProps.values[type] here because it might not be updated yet
         setEnabledSteps(
@@ -255,8 +253,6 @@ const NewVisit = () => {
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
     const { clientId } = useParams<{ clientId: string }>();
-
-    console.log(clientId);
 
     useEffect(() => {
         const fetchAllZones = async () => {

@@ -1,12 +1,12 @@
 import { Chip, ChipProps } from "@material-ui/core";
 import { RiskLevel, riskLevels } from "util/risks";
-import { useStyles } from "./RiskChip.styles";
+import { useStyles } from "./RiskLevelChip.styles";
 
 interface RiskChipProps extends ChipProps {
     risk: RiskLevel;
 }
 
-const RiskChip = (props: RiskChipProps) => {
+const RiskLevelChip = (props: RiskChipProps) => {
     const styles = useStyles();
     const riskLevel = riskLevels[props.risk];
 
@@ -20,4 +20,4 @@ const RiskChip = (props: RiskChipProps) => {
     );
 };
 
-export default RiskChip;
+export default RiskLevelChip;

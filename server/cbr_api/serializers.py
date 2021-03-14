@@ -4,7 +4,7 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 import time
 
-#create and list
+# create and list
 class UserCBRCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
@@ -437,4 +437,3 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         instance.full_name = instance.first_name + " " + instance.last_name
         instance.save()
         return instance
-

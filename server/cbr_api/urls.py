@@ -4,10 +4,6 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from rest_framework.routers import SimpleRouter
-router = SimpleRouter()
-router.register(r'zones', views.ZoneListViewSet, basename="zone-list")
-
 
 urlpatterns = [
     path("login", TokenObtainPairView.as_view(), name="token-obtain-pair"),
@@ -23,6 +19,7 @@ urlpatterns = [
     ),
     path("clients", views.ClientList.as_view(), name="client-list"),
     path("client/<int:pk>", views.ClientDetail.as_view(), name="client-detail"),
+    path("zones", views.ZoneList.as_view(), name="zone-list"),
     path("zone/<int:pk>", views.ZoneDetail.as_view(), name="zone-detail"),
     path("risks", views.RiskList.as_view(), name="risk-list"),
     path("risk/<int:pk>", views.RiskDetail.as_view(), name="risk-detail"),
@@ -37,5 +34,3 @@ urlpatterns = [
     path("referral/<int:pk>", views.ReferralDetail.as_view(), name="referral-detail"),
     path("referrals", views.ReferralList.as_view(), name="referral-list"),
 ]
-
-urlpatterns += router.urls

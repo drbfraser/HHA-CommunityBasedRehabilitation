@@ -1,27 +1,24 @@
 from cbr_api import models, serializers, filters, permissions
-from rest_framework import generics, viewsets
+from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from django.contrib.auth.decorators import user_passes_test
 
 
-
 class UserList(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAdmin]
+    permission_classes = [permissions.AdminAll]
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRCreationSerializer
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAdmin]
+    permission_classes = [permissions.AdminAll]
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRSerializer
 
 
 class UserCurrent(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAdmin]
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRSerializer
 
@@ -30,7 +27,7 @@ class UserCurrent(generics.RetrieveAPIView):
 
 
 class UserPassword(generics.UpdateAPIView):
-    permission_classes = [permissions.IsAdmin]
+    permission_classes = [permissions.AdminAll]
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserPasswordSerializer
     http_method_names = ["put"]
@@ -84,23 +81,14 @@ class DisabilityDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.DisabilitySerializer
 
 
-class ZoneListViewSet(viewsets.ModelViewSet):
+class ZoneList(generics.ListCreateAPIView):
+    permission_classes = [permissions.AdminCreateUpdateDestroy]
     queryset = models.Zone.objects.all()
-
-    def get_permissions(self):
-        """
-        Instantiates and returns the list of permissions that this view requires.
-        """
-        if self.action == 'list':
-            permission_classes = [IsAuthenticated]
-        else:
-            permission_classes = [permissions.IsAdmin]
-        serializer_class = serializers.ZoneSerializer
-        return [permission() for permission in permission_classes]
-
+    serializer_class = serializers.ZoneSerializer
 
 
 class ZoneDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AdminCreateUpdateDestroy]
     queryset = models.Zone.objects.all()
     serializer_class = serializers.ZoneSerializer
 

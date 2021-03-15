@@ -1,5 +1,5 @@
-import { IUser } from "pages/User/fields";
 import { apiFetch, Endpoint } from "./endpoints";
+import { IUser } from "./users";
 
 export interface IZone {
     id: number;

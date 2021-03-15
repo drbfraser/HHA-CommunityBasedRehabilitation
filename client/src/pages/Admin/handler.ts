@@ -1,7 +1,8 @@
 import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "util/endpoints";
-import { IUser, TFormValues } from "./fields";
+import { TNewUserValues } from "./fields";
 import history from "util/history";
+import { IUser } from "util/users";
 
 const addUser = async (userInfo: string) => {
     const init: RequestInit = {
@@ -14,7 +15,7 @@ const addUser = async (userInfo: string) => {
             return res.json();
         })
         .then((res) => {
-            return res;
+            return res as IUser;
         });
 };
 
@@ -29,11 +30,14 @@ const updateUser = async (userInfo: string, userId: number) => {
             return res.json();
         })
         .then((res) => {
-            return res;
+            return res as IUser;
         });
 };
 
-export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
+export const handleNewSubmit = async (
+    values: TNewUserValues,
+    helpers: FormikHelpers<TNewUserValues>
+) => {
     const newUser = JSON.stringify({
         username: values.username,
         password: values.password,
@@ -41,7 +45,7 @@ export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelper
         last_name: values.last_name,
         phone_number: values.phone_number,
         zone: values.zone,
-        type: values.type,
+        role: values.role,
         is_active: values.is_active,
     });
 
@@ -50,7 +54,7 @@ export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelper
         history.replace(`/admin/view/${user.id}`);
     } catch (e) {
         alert(
-            `Sorry, a user with the username: ${values.username} already exists. Please select a different one.`
+            `Either a user with that username already exists or that password is too weak. Please try again.`
         );
         helpers.setSubmitting(false);
     }
@@ -63,7 +67,7 @@ export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUs
         last_name: values.last_name,
         phone_number: values.phone_number,
         zone: values.zone,
-        type: values.type,
+        role: values.role,
         is_active: values.is_active,
     });
 
@@ -71,7 +75,7 @@ export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUs
         await updateUser(editUser, values.id);
         history.goBack();
     } catch (e) {
-        alert("Sorry, there is an error while trying to edit the user!");
+        alert("Sorry, something went wrong trying to edit that user. Please try again.");
         helpers.setSubmitting(false);
     }
 };

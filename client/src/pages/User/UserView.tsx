@@ -1,9 +1,9 @@
 import { useStyles } from "./styles";
-import { IUser } from "./fields";
 import { useEffect, useState } from "react";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { getZoneMap } from "util/cache";
+import { IUser } from "util/users";
 
 const UserView = () => {
     const styles = useStyles();

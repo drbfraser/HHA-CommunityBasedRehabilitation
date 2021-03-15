@@ -1,51 +1,29 @@
 import * as Yup from "yup";
 import { Validation } from "util/validations";
+import { UserRole } from "util/users";
 
 export interface IRouteParams {
     userId: string;
 }
-export interface IUser {
-    username: string;
-    password: string;
-    id: number;
-    zone: number;
-    first_name: string;
-    last_name: string;
-    phone_number: string;
-    is_active: boolean;
-    type: string;
-}
-
-export enum UserType {
-    ADMIN = "A",
-    WORKER = "W",
-}
-
-export const workerOptions = {
-    [UserType.ADMIN]: "Admin",
-    [UserType.WORKER]: "Worker",
-};
 
 export enum AdminField {
     username = "username",
     password = "password",
-    userID = "id",
     first_name = "first_name",
     last_name = "last_name",
+    role = "role",
     zone = "zone",
     phone_number = "phone_number",
-    type = "type",
     is_active = "is_active",
 }
 
 export const fieldLabels = {
     [AdminField.username]: "Username",
     [AdminField.password]: "Password",
-    [AdminField.userID]: "ID",
     [AdminField.first_name]: "First Name",
     [AdminField.last_name]: "Last Name",
+    [AdminField.role]: "Role",
     [AdminField.zone]: "Zone",
-    [AdminField.type]: "Type",
     [AdminField.phone_number]: "Phone Number",
     [AdminField.is_active]: "Status",
 };
@@ -53,16 +31,15 @@ export const fieldLabels = {
 export const initialValues = {
     [AdminField.username]: "",
     [AdminField.password]: "",
-    [AdminField.userID]: "",
     [AdminField.first_name]: "",
     [AdminField.last_name]: "",
+    [AdminField.role]: UserRole.WORKER,
     [AdminField.zone]: "",
-    [AdminField.type]: "",
-    [AdminField.is_active]: "Active",
     [AdminField.phone_number]: "",
+    [AdminField.is_active]: true,
 };
 
-export type TFormValues = typeof initialValues;
+export type TNewUserValues = typeof initialValues;
 
 export const validationSchema = (newUser: boolean) => {
     let yupShape = {
@@ -84,20 +61,16 @@ export const validationSchema = (newUser: boolean) => {
             .label(fieldLabels[AdminField.phone_number])
             .max(50)
             .required(),
+        [AdminField.role]: Yup.string().label(fieldLabels[AdminField.role]).required(),
+        [AdminField.is_active]: Yup.boolean().label(fieldLabels[AdminField.is_active]).required(),
     } as any;
 
-    // TODO: After the type and is_active connect to the endpoint, we need to
-    // change the AdminField.type and AdminField.is_active
     if (newUser) {
         yupShape = {
             ...yupShape,
             [AdminField.password]: Yup.string()
                 .label(fieldLabels[AdminField.password])
                 .min(8)
-                .required(),
-            [AdminField.type]: Yup.string().label(fieldLabels[AdminField.type]).required(),
-            [AdminField.is_active]: Yup.string()
-                .label(fieldLabels[AdminField.is_active])
                 .required(),
         };
     }

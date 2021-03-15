@@ -54,7 +54,7 @@ const AdminList = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [isIdHidden, setIdHidden] = useState<boolean>(false);
     const [isNameHidden, setNameHidden] = useState<boolean>(false);
-    const [isTypeHidden, setTypeHidden] = useState<boolean>(false);
+    const [isRoleHidden, setRoleHidden] = useState<boolean>(false);
     const [isStatusHidden, setStatusHidden] = useState<boolean>(false);
     const [filteredRows, setFilteredRows] = useState<RowsProp>([]);
     const [serverRows, setServerRows] = useState<RowsProp>([]);
@@ -86,11 +86,11 @@ const AdminList = () => {
             hideFunction: setNameHidden,
         },
         {
-            field: "type",
-            headerName: "Type",
+            field: "role",
+            headerName: "Role",
             flex: 1,
-            hide: isTypeHidden,
-            hideFunction: setTypeHidden,
+            hide: isRoleHidden,
+            hideFunction: setRoleHidden,
         },
         {
             field: "status",

@@ -1,12 +1,13 @@
 import { RowsProp } from "@material-ui/data-grid";
 import { apiFetch, Endpoint } from "util/endpoints";
+import { UserRole, userRoles } from "util/users";
 
 interface IResponseRow {
     id: number;
     first_name: string;
     last_name: string;
-    type: string;
-    is_active: string;
+    role: UserRole;
+    is_active: boolean;
 }
 
 const requestUserRows = async (
@@ -28,10 +29,8 @@ const requestUserRows = async (
                 first_name: responseRow.first_name,
                 last_name: responseRow.last_name,
                 name: responseRow.first_name + " " + responseRow.last_name,
-                // TODO: Change type to actual type once backend supports it
-                type: "Worker",
-                // TODO: Change status to actual status once backend supports it
-                status: "Active",
+                role: userRoles[responseRow.role].name,
+                status: responseRow.is_active ? "Active" : "Disabled",
             };
         });
 

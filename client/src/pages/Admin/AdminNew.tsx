@@ -2,18 +2,13 @@ import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
-import {
-    fieldLabels,
-    AdminField,
-    initialValues,
-    workerOptions,
-    validationNewSchema,
-} from "./fields";
+import { fieldLabels, AdminField, initialValues, validationNewSchema } from "./fields";
 import Button from "@material-ui/core/Button";
 import { FormControl, MenuItem } from "@material-ui/core";
 import { handleCancel, handleNewSubmit } from "./handler";
 import { useState, useEffect } from "react";
 import { getAllZones, IZone } from "util/cache";
+import { userRoles } from "util/users";
 
 const AdminNew = () => {
     const styles = useStyles();
@@ -115,10 +110,10 @@ const AdminNew = () => {
                                         select
                                         required
                                         variant="outlined"
-                                        label={fieldLabels[AdminField.type]}
-                                        name={AdminField.type}
+                                        label={fieldLabels[AdminField.role]}
+                                        name={AdminField.role}
                                     >
-                                        {Object.entries(workerOptions).map(([value, name]) => (
+                                        {Object.entries(userRoles).map(([value, { name }]) => (
                                             <MenuItem key={value} value={value}>
                                                 {name}
                                             </MenuItem>

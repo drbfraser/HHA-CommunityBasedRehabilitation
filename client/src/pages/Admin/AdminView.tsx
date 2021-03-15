@@ -1,12 +1,13 @@
 import EditIcon from "@material-ui/icons/Edit";
 import { useStyles } from "./styles";
-import { IRouteParams, IUser } from "./fields";
+import { IRouteParams } from "./fields";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { getZoneMap } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";
+import { IUser, userRoles } from "util/users";
 
 const AdminView = () => {
     const styles = useStyles();
@@ -65,11 +66,9 @@ const AdminView = () => {
                             <b>Phone Number</b>
                             <p> {user.phone_number} </p>
                             <b>Type</b>
-                            <p>{"Worker"}</p>
-                            {/* <p> {user.type} </p> */}
+                            <p> {userRoles[user.role].name} </p>
                             <b>Status</b>
-                            <p>{"Active"} </p>
-                            {/* <p> {user.is_active ? "Active" : "Disable"} </p> */}
+                            <p> {user.is_active ? "Active" : "Disabled"} </p>
                         </>
                     ) : (
                         <Skeleton variant="rect" height={500} />

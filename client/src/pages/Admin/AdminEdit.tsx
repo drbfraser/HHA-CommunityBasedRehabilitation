@@ -2,14 +2,7 @@ import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
-import {
-    fieldLabels,
-    AdminField,
-    workerOptions,
-    IUser,
-    validationEditSchema,
-    IRouteParams,
-} from "./fields";
+import { fieldLabels, AdminField, validationEditSchema, IRouteParams } from "./fields";
 import Button from "@material-ui/core/Button";
 import { useRouteMatch } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
@@ -18,6 +11,7 @@ import { handleCancel, handleEditSubmit } from "./handler";
 import { getAllZones, IZone } from "util/cache";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { apiFetch, Endpoint } from "util/endpoints";
+import { IUser, userRoles } from "util/users";
 
 const AdminEdit = () => {
     const styles = useStyles();
@@ -42,15 +36,6 @@ const AdminEdit = () => {
         getInfo();
     }, [userId]);
 
-    const toggleIsActive = () => {
-        if (user) {
-            setUser({
-                ...user,
-                is_active: !user.is_active,
-            });
-        }
-    };
-
     return loadingError ? (
         <Alert severity="error">
             Something went wrong trying to load that user. Please go back and try again.
@@ -61,7 +46,7 @@ const AdminEdit = () => {
             validationSchema={validationEditSchema}
             onSubmit={handleEditSubmit}
         >
-            {({ isSubmitting }) => (
+            {({ values, setFieldValue, isSubmitting }) => (
                 <div className={styles.container}>
                     <b>ID</b>
                     <p>{userId}</p>
@@ -126,10 +111,10 @@ const AdminEdit = () => {
                                         select
                                         required
                                         variant="outlined"
-                                        label={fieldLabels[AdminField.type]}
-                                        name={AdminField.type}
+                                        label={fieldLabels[AdminField.role]}
+                                        name={AdminField.role}
                                     >
-                                        {Object.entries(workerOptions).map(([value, name]) => (
+                                        {Object.entries(userRoles).map(([value, { name }]) => (
                                             <MenuItem key={value} value={value}>
                                                 {name}
                                             </MenuItem>
@@ -141,7 +126,7 @@ const AdminEdit = () => {
 
                         <br />
                         <b>Status</b>
-                        <p>{user.is_active ? "Active" : "Disabled"}</p>
+                        <p>{values.is_active ? "Active" : "Disabled"}</p>
                         <br />
                         <Grid
                             container
@@ -153,12 +138,14 @@ const AdminEdit = () => {
                             <Button
                                 variant="contained"
                                 className={
-                                    user.is_active ? styles["disableBtn"] : styles["activeBtn"]
+                                    values.is_active ? styles["disableBtn"] : styles["activeBtn"]
                                 }
                                 disabled={isSubmitting}
-                                onClick={toggleIsActive}
+                                onClick={() =>
+                                    setFieldValue(AdminField.is_active, !values.is_active)
+                                }
                             >
-                                {user.is_active ? "Disable" : "Activate"}
+                                {values.is_active ? "Disable" : "Activate"}
                             </Button>
                             <Grid item>
                                 <Button

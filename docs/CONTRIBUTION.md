@@ -20,25 +20,25 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 3. Run `npm start`
 
-### 3. Create an Account
+### 3. Seed Some Data
 
-*Temporary section until a seed script is created.*
+You'll likely want to seed some data for development purposes. This can be done with a single command, or done individually by data type. Use `docker exec cbr_django python manage.py _______` by replacing the `_______` with one of the keywords below.
 
-You'll need an account to log in to the frontend and access most APIs. Note that this account is created in your local database and thus will not be present on other developer's machines or in our deployment (even after merging your branch). To create an account:
+- Complete Database: `seeddatabase`
 
-1. Go to http://localhost:8000/docs
+- Zones: `seedzones`
+- Disabilities: `seeddisabilities`
+- Users: `seedusers`
+- Clients: `seedclients`
+- Visits: `seedvisits`
 
-2. Scroll down to `/api/users/create`
-
-3. Click the "Try it out" button
-
-4. Fill out a username and password and press "Execute"
-
-5. You should expect a `201` response back if the account was successfully created. If the request was not successful, fix any errors and try again.
+If at some point during development you want to re-seed the database with the example data again, you'll need to delete everything first. Use `docker exec -it cbr_django python manage.py flush` to clear the database, then run the seeding commands again.
 
 ### 4. Start Developing!
 
 That's it! The frontend is now running on http://localhost:3000 and the backend is running on http://localhost:8000. Both the frontend and the backend should support hot reloading.
+
+If you seeded users in the previous step, you already have an account in the system. Use the username `venus` and password `hhaLogin` to log in, and from there you can create another user if you wish to change the username and password you use.
 
 You can also access auto-generating Swagger API documentation at http://localhost:8000/docs
 

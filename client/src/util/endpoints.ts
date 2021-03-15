@@ -6,10 +6,18 @@ export const API_URL =
         : "/api/";
 
 export enum Endpoint {
-    LOGIN = "login/",
-    LOGIN_REFRESH = "login/refresh/",
+    LOGIN = "login",
+    LOGIN_REFRESH = "login/refresh",
+    CLIENT = "client/",
     CLIENTS = "clients",
+    VISITS = "visits",
     ZONES = "zones",
+    USERS = "users",
+    USER = "user/",
+    USER_CURRENT = "user/current",
+    RISKS = "risks",
+    DISABILITIES = "disabilities",
+    VISIT = "visit/",
 }
 
 export const apiFetch = async (
@@ -19,7 +27,6 @@ export const apiFetch = async (
 ): Promise<Response> => {
     const url = API_URL + endpoint + urlParams;
     const authToken = await getAuthToken();
-
     const init = {
         ...customInit,
         headers: {

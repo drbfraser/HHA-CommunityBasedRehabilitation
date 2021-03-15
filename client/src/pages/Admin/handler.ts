@@ -1,16 +1,79 @@
 import { FormikHelpers } from "formik";
-import { TFormValues } from "./fields";
+import { apiFetch, Endpoint } from "util/endpoints";
+import { IUser, TFormValues } from "./fields";
+import history from "util/history";
 
-export const handleSubmit = (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
-    // here is where you would submit the values to the server
-    setTimeout(() => {
-        console.log(values);
-        helpers.setSubmitting(false);
-    }, 1000);
+const addUser = async (userInfo: string) => {
+    const init: RequestInit = {
+        method: "POST",
+        body: userInfo,
+    };
+
+    return await apiFetch(Endpoint.USERS, "", init)
+        .then((res) => {
+            return res.json();
+        })
+        .then((res) => {
+            return res;
+        });
 };
 
-export const handleReset = (resetForm: () => void) => {
-    if (window.confirm("Are you sure you want to clear the form?")) {
-        resetForm();
+const updateUser = async (userInfo: string, userId: number) => {
+    const init: RequestInit = {
+        method: "PUT",
+        body: userInfo,
+    };
+
+    return await apiFetch(Endpoint.USER, `${userId}`, init)
+        .then((res) => {
+            return res.json();
+        })
+        .then((res) => {
+            return res;
+        });
+};
+
+export const handleNewSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
+    const newUser = JSON.stringify({
+        username: values.username,
+        password: values.password,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        phone_number: values.phone_number,
+        zone: values.zone,
+        type: values.type,
+        is_active: values.is_active,
+    });
+
+    try {
+        const user = await addUser(newUser);
+        history.replace(`/admin/view/${user.id}`);
+    } catch (e) {
+        alert(
+            `Sorry, a user with the username: ${values.username} already exists. Please select a different one.`
+        );
+        helpers.setSubmitting(false);
     }
 };
+
+export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUser>) => {
+    const editUser = JSON.stringify({
+        username: values.username,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        phone_number: values.phone_number,
+        zone: values.zone,
+        type: values.type,
+        is_active: values.is_active,
+    });
+
+    try {
+        await updateUser(editUser, values.id);
+        history.goBack();
+    } catch (e) {
+        alert("Sorry, there is an error while trying to edit the user!");
+        helpers.setSubmitting(false);
+    }
+};
+
+export const handleCancel = () => history.goBack();

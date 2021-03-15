@@ -25,29 +25,27 @@ import {
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
-import RiskChip from "components/RiskChip/RiskChip";
-import { IRisk, riskCategories, IRiskCategory, RiskCategory } from "util/riskOptions";
+import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
+import { RiskLevel, IRiskLevel, riskLevels, RiskType, IRiskType, riskTypes } from "util/risks";
 import { SearchOption } from "./searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
 import requestClientRows from "./requestClientRows";
 import { getAllZones, IZone } from "util/cache";
+import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
+import { useHideColumnsStyles } from "styles/HideColumns.styles";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
-    const risk1: IRisk = Object(params1.value);
-    const risk2: IRisk = Object(params2.value);
+    const risk1: IRiskLevel = riskLevels[String(params1.value)];
+    const risk2: IRiskLevel = riskLevels[String(params2.value)];
     return risk1.level - risk2.level;
 };
 
 const RenderRiskHeader = (params: ColParams): JSX.Element => {
-    const riskCategory: IRiskCategory = riskCategories[params.field];
+    const riskType: IRiskType = riskTypes[params.field];
 
     return (
         <div className="MuiDataGrid-colCellTitle">
-            {window.innerWidth >= compressedDataGridWidth ? (
-                riskCategory.name
-            ) : (
-                <riskCategory.Icon />
-            )}
+            {window.innerWidth >= compressedDataGridWidth ? riskType.name : <riskType.Icon />}
         </div>
     );
 };
@@ -57,12 +55,12 @@ const RenderText = (params: ValueFormatterParams) => {
 };
 
 const RenderBadge = (params: ValueFormatterParams) => {
-    const risk: IRisk = Object(params.value);
+    const risk: RiskLevel = Object(params.value);
 
     return window.innerWidth >= compressedDataGridWidth ? (
-        <RiskChip clickable risk={risk} />
+        <RiskLevelChip clickable risk={risk} />
     ) : (
-        <FiberManualRecord style={{ color: risk.color }} />
+        <FiberManualRecord style={{ color: riskLevels[risk].color }} />
     );
 };
 
@@ -98,14 +96,15 @@ const ClientList = () => {
     const [isSocialHidden, setSocialHidden] = useState<boolean>(false);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const [searchValue, setSearchValue] = useState<string>("");
-    const [searchOption, setSearchOption] = useState<string>(SearchOption.ID);
+    const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
     const [zones, setZones] = useState<IZone[]>([]);
     const [rows, setRows] = useState<RowsProp>([]);
 
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
+    const searchOptionsStyle = useSearchOptionsStyles();
+    const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
-
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
     const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
@@ -116,15 +115,15 @@ const ClientList = () => {
     const riskColumnStates: {
         [key: string]: { hide: boolean; hideFunction: (isHidden: boolean) => void };
     } = {
-        [RiskCategory.HEALTH]: {
+        [RiskType.HEALTH]: {
             hide: isHealthHidden,
             hideFunction: setHealthHidden,
         },
-        [RiskCategory.EDUCATION]: {
+        [RiskType.EDUCATION]: {
             hide: isEducationHidden,
             hideFunction: setEducationHidden,
         },
-        [RiskCategory.SOCIAL]: {
+        [RiskType.SOCIAL]: {
             hide: isSocialHidden,
             hideFunction: setSocialHidden,
         },
@@ -155,7 +154,7 @@ const ClientList = () => {
             hide: isZoneHidden,
             hideFunction: setZoneHidden,
         },
-        ...Object.entries(riskCategories).map(([value, { name }]) => ({
+        ...Object.entries(riskTypes).map(([value, { name }]) => ({
             field: value,
             headerName: name,
             flex: 0.7,
@@ -173,7 +172,7 @@ const ClientList = () => {
         const loadInitialData = async () => {
             setLoading(true);
             setZones(await getAllZones());
-            await requestClientRows(setRows, setLoading, "", "");
+            await requestClientRows(setRows, setLoading, "", "", true);
             setLoading(false);
             initialDataLoaded.current = true;
         };
@@ -189,12 +188,12 @@ const ClientList = () => {
             return;
         }
 
-        requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption);
-    }, [searchValue, searchOption, requestClientRowsDebounced]);
+        requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption, allClientsMode);
+    }, [searchValue, searchOption, allClientsMode, requestClientRowsDebounced]);
 
     return (
         <div className={styles.root}>
-            <IconButton className={styles.optionsButton} onClick={onOptionsClick}>
+            <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
                 <MoreVert />
             </IconButton>
             <Popover
@@ -210,11 +209,11 @@ const ClientList = () => {
                     horizontal: "center",
                 }}
             >
-                <div className={styles.optionsContainer}>
+                <div className={hideColumnsStyle.optionsContainer}>
                     {columns.map(
                         (column): JSX.Element => {
                             return (
-                                <div key={column.field} className={styles.optionsRow}>
+                                <div key={column.field} className={hideColumnsStyle.optionsRow}>
                                     <Typography component={"span"} variant={"body2"}>
                                         {column.headerName}
                                     </Typography>
@@ -249,10 +248,10 @@ const ClientList = () => {
                 </Typography>
             </div>
             <div className={styles.search}>
-                <div className={styles.searchOptions}>
+                <div className={searchOptionsStyle.searchOptions}>
                     <Select
                         color={"primary"}
-                        defaultValue={SearchOption.ID}
+                        defaultValue={SearchOption.NAME}
                         value={searchOption}
                         onChange={(event) => {
                             setSearchValue("");
@@ -298,6 +297,12 @@ const ClientList = () => {
                 density={DensityTypes.Comfortable}
                 onRowClick={onRowClick}
                 pagination
+                sortModel={[
+                    {
+                        field: "name",
+                        sort: "asc",
+                    },
+                ]}
             />
         </div>
     );

@@ -4,59 +4,106 @@ import { Validation } from "util/validations";
 export interface IRouteParams {
     userId: string;
 }
+export interface IUser {
+    username: string;
+    password: string;
+    id: number;
+    zone: number;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    is_active: boolean;
+    type: string;
+}
+
+export enum UserType {
+    ADMIN = "A",
+    WORKER = "W",
+}
+
+export const workerOptions = {
+    [UserType.ADMIN]: "Admin",
+    [UserType.WORKER]: "Worker",
+};
 
 export enum AdminField {
     username = "username",
+    password = "password",
     userID = "id",
-    firstName = "firstName",
-    lastName = "lastName",
+    first_name = "first_name",
+    last_name = "last_name",
     zone = "zone",
-    phoneNumber = "phoneNumber",
+    phone_number = "phone_number",
     type = "type",
-    status = "status",
+    is_active = "is_active",
 }
-export const workerOptions = [
-    {
-        name: "Admin",
-        value: "A",
-    },
-    {
-        name: "Worker",
-        value: "W",
-    },
-];
+
 export const fieldLabels = {
     [AdminField.username]: "Username",
+    [AdminField.password]: "Password",
     [AdminField.userID]: "ID",
-    [AdminField.firstName]: "First Name",
-    [AdminField.lastName]: "Last Name",
+    [AdminField.first_name]: "First Name",
+    [AdminField.last_name]: "Last Name",
     [AdminField.zone]: "Zone",
     [AdminField.type]: "Type",
-    [AdminField.phoneNumber]: "Phone Number",
-    [AdminField.status]: "Status",
+    [AdminField.phone_number]: "Phone Number",
+    [AdminField.is_active]: "Status",
 };
 
 export const initialValues = {
-    [AdminField.username]: "Username",
-    [AdminField.userID]: "11111111",
-    [AdminField.firstName]: "First Name",
-    [AdminField.lastName]: "Last Name",
-    [AdminField.zone]: "1",
-    [AdminField.type]: workerOptions[1].value,
-    [AdminField.status]: "Active",
-    [AdminField.phoneNumber]: "(XXX) XXX-XXXX",
+    [AdminField.username]: "",
+    [AdminField.password]: "",
+    [AdminField.userID]: "",
+    [AdminField.first_name]: "",
+    [AdminField.last_name]: "",
+    [AdminField.zone]: "",
+    [AdminField.type]: "",
+    [AdminField.is_active]: "Active",
+    [AdminField.phone_number]: "",
 };
 
 export type TFormValues = typeof initialValues;
 
-export const validationSchema = () =>
-    Yup.object().shape({
+export const validationSchema = (newUser: boolean) => {
+    let yupShape = {
+        [AdminField.first_name]: Yup.string()
+            .label(fieldLabels[AdminField.first_name])
+            .required()
+            .max(50),
+        [AdminField.last_name]: Yup.string()
+            .label(fieldLabels[AdminField.last_name])
+            .required()
+            .max(50),
+        [AdminField.username]: Yup.string()
+            .label(fieldLabels[AdminField.username])
+            .required()
+            .max(50),
         [AdminField.zone]: Yup.string().label(fieldLabels[AdminField.zone]).required(),
-        [AdminField.phoneNumber]: Yup.string()
+        [AdminField.phone_number]: Yup.string()
             .matches(Validation.phoneRegExp, "Phone number is not valid")
-            .label(fieldLabels[AdminField.phoneNumber])
+            .label(fieldLabels[AdminField.phone_number])
             .max(50)
             .required(),
-        [AdminField.type]: Yup.string().label(fieldLabels[AdminField.type]).required(),
-        [AdminField.status]: Yup.string().label(fieldLabels[AdminField.status]).required(),
-    });
+    } as any;
+
+    // TODO: After the type and is_active connect to the endpoint, we need to
+    // change the AdminField.type and AdminField.is_active
+    if (newUser) {
+        yupShape = {
+            ...yupShape,
+            [AdminField.password]: Yup.string()
+                .label(fieldLabels[AdminField.password])
+                .min(8)
+                .required(),
+            [AdminField.type]: Yup.string().label(fieldLabels[AdminField.type]).required(),
+            [AdminField.is_active]: Yup.string()
+                .label(fieldLabels[AdminField.is_active])
+                .required(),
+        };
+    }
+
+    return Yup.object().shape(yupShape);
+};
+
+export const validationEditSchema = validationSchema(false);
+export const validationNewSchema = validationSchema(true);

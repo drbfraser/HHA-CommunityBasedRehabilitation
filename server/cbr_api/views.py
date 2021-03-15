@@ -1,16 +1,44 @@
-from cbr_api import models, serializers, filters
+from cbr_api import models, serializers, filters, permissions
 from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
-from django.contrib.auth.models import User
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 
 
-class UserCreate(generics.CreateAPIView):
-    queryset = User.objects.all()
-    # TODO: remove once we have a seed script that adds a default user (i.e. require authentication)
-    permission_classes = []
-    serializer_class = serializers.UserSerializer
+class UserList(generics.ListCreateAPIView):
+    permission_classes = [permissions.AdminAll]
+    queryset = models.UserCBR.objects.all()
+    serializer_class = serializers.UserCBRCreationSerializer
+
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AdminAll]
+    queryset = models.UserCBR.objects.all()
+    serializer_class = serializers.UserCBRSerializer
+
+
+class UserCurrent(generics.RetrieveAPIView):
+    queryset = models.UserCBR.objects.all()
+    serializer_class = serializers.UserCBRSerializer
+
+    def get_object(self):
+        return generics.get_object_or_404(self.queryset, id=self.request.user.id)
+
+
+class UserPassword(generics.UpdateAPIView):
+    permission_classes = [permissions.AdminAll]
+    queryset = models.UserCBR.objects.all()
+    serializer_class = serializers.UserPasswordSerializer
+    http_method_names = ["put"]
+
+
+class UserCurrentPassword(generics.UpdateAPIView):
+    queryset = models.UserCBR.objects.all()
+    serializer_class = serializers.UserCurrentPasswordSerializer
+    http_method_names = ["put"]
+
+    def get_object(self):
+        return generics.get_object_or_404(self.queryset, id=self.request.user.id)
 
 
 class ClientList(generics.ListCreateAPIView):
@@ -42,12 +70,24 @@ class ClientDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ClientDetailSerializer
 
 
+class DisabilityList(generics.ListCreateAPIView):
+    queryset = models.Disability.objects.all()
+    serializer_class = serializers.DisabilitySerializer
+
+
+class DisabilityDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.Disability.objects.all()
+    serializer_class = serializers.DisabilitySerializer
+
+
 class ZoneList(generics.ListCreateAPIView):
+    permission_classes = [permissions.AdminCreateUpdateDestroy]
     queryset = models.Zone.objects.all()
     serializer_class = serializers.ZoneSerializer
 
 
 class ZoneDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AdminCreateUpdateDestroy]
     queryset = models.Zone.objects.all()
     serializer_class = serializers.ZoneSerializer
 
@@ -60,3 +100,42 @@ class RiskList(generics.ListCreateAPIView):
 class RiskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.ClientRisk.objects.all()
     serializer_class = serializers.NormalRiskSerializer
+
+
+class VisitList(generics.CreateAPIView):
+    queryset = models.Visit.objects.all()
+    serializer_class = serializers.DetailedVisitSerializer
+
+
+class VisitDetail(generics.RetrieveAPIView):
+    queryset = models.Visit.objects.all()
+    serializer_class = serializers.DetailedVisitSerializer
+
+
+class ReferralList(generics.CreateAPIView):
+    queryset = models.Referral.objects.all()
+    serializer_class = serializers.DetailedReferralSerializer
+
+
+class ReferralDetail(generics.RetrieveUpdateAPIView):
+    queryset = models.Referral.objects.all()
+    http_method_names = ["get", "put"]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return serializers.DetailedReferralSerializer
+        elif self.request.method == "PUT":
+            return serializers.UpdateReferralSerializer
+
+    @extend_schema(
+        responses=serializers.DetailedReferralSerializer,
+    )
+    def get(self, request, pk):
+        return super().get(request)
+
+    @extend_schema(
+        request=serializers.UpdateReferralSerializer,
+        responses=serializers.UpdateReferralSerializer,
+    )
+    def put(self, request, pk):
+        return super().put(request)

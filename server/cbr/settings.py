@@ -103,6 +103,9 @@ DATABASES = {
 }
 
 
+AUTH_USER_MODEL = "cbr_api.UserCBR"
+
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -121,12 +124,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+default_renderer_classes = ["rest_framework.renderers.JSONRenderer"]
+
+if DEBUG:
+    default_renderer_classes.append("rest_framework.renderers.BrowsableAPIRenderer")
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_RENDERER_CLASSES": default_renderer_classes,
 }
 
 SPECTACULAR_SETTINGS = {

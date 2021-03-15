@@ -7,16 +7,18 @@ import PersonIcon from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Logout from "pages/Logout/Logout";
-import ToDo from "pages/ToDo/ToDo";
 import AdminList from "pages/AdminList/AdminList";
 import ClientList from "pages/ClientList/ClientList";
+import ClientDetails from "pages/ClientDetails/ClientDetails";
 import UserView from "pages/User/UserView";
-import UserEdit from "pages/User/UserEdit";
 import ClientForm from "pages/NewClient/ClientForm";
 import NotFound from "pages/NotFound/NotFound";
 import AdminNew from "pages/Admin/AdminNew";
 import AdminView from "pages/Admin/AdminView";
 import AdminEdit from "pages/Admin/AdminEdit";
+import ClientRiskHistory from "pages/ClientDetails/RiskHistory/ClientRiskHistory";
+import Dashboard from "pages/Dashboard/Dashboard";
+import NewVisit from "pages/NewVisit/NewVisit";
 
 export interface IPage {
     path: string;
@@ -31,7 +33,7 @@ export const pages: IPage[] = [
     {
         path: "/dashboard",
         name: "Dashboard",
-        Component: ToDo,
+        Component: Dashboard,
         showInNav: true,
         Icon: HomeIcon,
     },
@@ -50,9 +52,21 @@ export const pages: IPage[] = [
         Icon: FormatListBulletedIcon,
     },
     {
-        path: "/client/:client_id",
+        path: "/client/:clientId",
         name: "Client Details",
-        Component: ToDo,
+        Component: ClientDetails,
+        showInNav: false,
+    },
+    {
+        path: "/client/:clientId/risks",
+        name: "Client Risk History",
+        Component: ClientRiskHistory,
+        showInNav: false,
+    },
+    {
+        path: "/client/:clientId/visits/new",
+        name: "Add a Visit",
+        Component: NewVisit,
         showInNav: false,
     },
     {
@@ -61,12 +75,6 @@ export const pages: IPage[] = [
         Component: UserView,
         showInNav: true,
         Icon: PersonIcon,
-    },
-    {
-        path: "/user/edit",
-        name: "Edit Profile",
-        Component: UserEdit,
-        showInNav: false,
     },
     {
         path: "/admin",
@@ -95,7 +103,7 @@ export const pages: IPage[] = [
     },
     {
         path: "/logout",
-        name: "Log out",
+        name: "Logout",
         Component: Logout,
         showInNav: true,
         Icon: ExitToAppIcon,

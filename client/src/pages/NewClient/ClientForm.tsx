@@ -16,27 +16,29 @@ import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
-import {
-    fieldLabels,
-    FormField,
-    initialValues,
-    genderOptions,
-    validationSchema,
-} from "./formFields";
-import { riskOptions } from "util/riskOptions";
+import { fieldLabels, FormField, initialValues, validationSchema } from "./formFields";
+
+import { riskLevels } from "util/risks";
 import { handleSubmit, handleReset } from "./formHandler";
-import { getAllZones, IZone } from "util/cache";
+import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache";
+import { genders } from "util/clients";
 
 const ClientForm = () => {
     const styles = useStyles();
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+    const [disabilityOptions, setDisabilityOptions] = useState<IDisability[]>([]);
 
     useEffect(() => {
         const fetchAllZones = async () => {
             const zones = await getAllZones();
             setZoneOptions(zones);
         };
+        const fetchAllDisabilities = async () => {
+            const disabilities = await getAllDisabilities();
+            setDisabilityOptions(disabilities);
+        };
         fetchAllZones();
+        fetchAllDisabilities();
     }, []);
 
     return (
@@ -53,7 +55,7 @@ const ClientForm = () => {
                                 {/* TODO: Change image src based on whether the client exists or not */}
                                 <img
                                     className={styles.profilePicture}
-                                    src="https://res.cloudinary.com/time2hack/image/upload/fa-user.png"
+                                    src={`/images/profile_pic_icon.png`}
                                     alt="user-icon"
                                 />
                                 <div className={styles.uploadIcon}>
@@ -108,9 +110,9 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.gender]}
                                             name={FormField.gender}
                                         >
-                                            {genderOptions.map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.name}
+                                            {Object.entries(genders).map(([value, name]) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {name}
                                                 </MenuItem>
                                             ))}
                                         </Field>
@@ -154,6 +156,26 @@ const ClientForm = () => {
                                         fullWidth
                                     />
                                 </Grid>
+                                <Grid item md={6} xs={12}>
+                                    <Field
+                                        component={TextField}
+                                        fullWidth
+                                        select
+                                        SelectProps={{
+                                            multiple: true,
+                                        }}
+                                        label={fieldLabels[FormField.disability]}
+                                        required
+                                        name={FormField.disability}
+                                        variant="outlined"
+                                    >
+                                        {disabilityOptions.map((option) => (
+                                            <MenuItem key={option.id} value={option.id}>
+                                                {option.disability_type}
+                                            </MenuItem>
+                                        ))}
+                                    </Field>
+                                </Grid>
                                 <Grid item md={12} xs={12} style={{ marginBottom: "-20px" }}>
                                     <Field
                                         component={CheckboxWithLabel}
@@ -171,7 +193,7 @@ const ClientForm = () => {
                                     />
                                 </Grid>
                                 {values.caregiverPresent ? (
-                                    <Grid item md={8} xs={12}>
+                                    <Grid item md={7} xs={12}>
                                         <Accordion
                                             className={styles.caregiverAccordion}
                                             defaultExpanded
@@ -180,14 +202,48 @@ const ClientForm = () => {
                                                 Caregiver Details:
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                                <Field
-                                                    className={styles.caregiverInputField}
-                                                    component={TextField}
-                                                    name={FormField.caregiverContact}
-                                                    variant="outlined"
-                                                    label={fieldLabels[FormField.caregiverContact]}
-                                                    fullWidth
-                                                />
+                                                <Grid container direction="column" spacing={1}>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={styles.caregiverInputField}
+                                                            component={TextField}
+                                                            name={FormField.caregiverName}
+                                                            variant="outlined"
+                                                            label={
+                                                                fieldLabels[FormField.caregiverName]
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
+                                                            component={TextField}
+                                                            name={FormField.caregiverEmail}
+                                                            variant="outlined"
+                                                            label={
+                                                                fieldLabels[
+                                                                    FormField.caregiverEmail
+                                                                ]
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                    <Grid item md={8} xs={12}>
+                                                        <Field
+                                                            className={styles.caregiverInputField}
+                                                            component={TextField}
+                                                            name={FormField.caregiverPhone}
+                                                            variant="outlined"
+                                                            label={
+                                                                fieldLabels[
+                                                                    FormField.caregiverPhone
+                                                                ]
+                                                            }
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                </Grid>
                                             </AccordionDetails>
                                         </Accordion>
                                     </Grid>
@@ -209,13 +265,11 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.healthRisk]}
                                             name={FormField.healthRisk}
                                         >
-                                            {Object.entries(riskOptions).map(
-                                                ([value, { name }]) => (
-                                                    <MenuItem key={value} value={value}>
-                                                        {name}
-                                                    </MenuItem>
-                                                )
-                                            )}
+                                            {Object.entries(riskLevels).map(([value, { name }]) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {name}
+                                                </MenuItem>
+                                            ))}
                                         </Field>
                                     </FormControl>
                                 </Grid>
@@ -256,13 +310,11 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.educationRisk]}
                                             name={FormField.educationRisk}
                                         >
-                                            {Object.entries(riskOptions).map(
-                                                ([value, { name }]) => (
-                                                    <MenuItem key={value} value={value}>
-                                                        {name}
-                                                    </MenuItem>
-                                                )
-                                            )}
+                                            {Object.entries(riskLevels).map(([value, { name }]) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {name}
+                                                </MenuItem>
+                                            ))}
                                         </Field>
                                     </FormControl>
                                 </Grid>
@@ -303,13 +355,11 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.socialRisk]}
                                             name={FormField.socialRisk}
                                         >
-                                            {Object.entries(riskOptions).map(
-                                                ([value, { name }]) => (
-                                                    <MenuItem key={value} value={value}>
-                                                        {name}
-                                                    </MenuItem>
-                                                )
-                                            )}
+                                            {Object.entries(riskLevels).map(([value, { name }]) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {name}
+                                                </MenuItem>
+                                            ))}
                                         </Field>
                                     </FormControl>
                                 </Grid>

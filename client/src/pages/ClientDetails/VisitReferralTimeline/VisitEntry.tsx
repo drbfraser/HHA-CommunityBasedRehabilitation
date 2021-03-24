@@ -16,7 +16,7 @@ import { Skeleton, Alert } from "@material-ui/lab";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { timestampToDateTime } from "util/dates";
 import { IVisit, IVisitSummary, outcomeGoalMets } from "util/visits";
-import { useStyles } from "./VisitEntry.styles";
+import { useStyles } from "./Entry.styles";
 import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import { IZone } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";

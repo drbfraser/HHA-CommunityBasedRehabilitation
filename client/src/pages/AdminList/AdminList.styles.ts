@@ -23,8 +23,8 @@ export const useStyles = makeStyles(
         },
         [mediaMobile]: {
             container: {
-                height: "calc(100vh - 181px)",
-                paddingBottom: "31px",
+                height: "calc(100vh - 150px)",
+                paddingBottom: "50px",
             },
         },
         [mediaCompressedDataGrid]: {

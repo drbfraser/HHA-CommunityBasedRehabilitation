@@ -98,7 +98,7 @@ const ClientDetails = () => {
             <Grid container justify="space-between" direction="row">
                 <Grid item xs={6}>
                     <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
-                        <b>Visits &amp; Referrals Timeline</b>
+                        <b>Visits &amp; Referrals</b>
                     </Typography>
                 </Grid>
                 <Grid item xs={6}>

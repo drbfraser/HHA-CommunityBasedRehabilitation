@@ -29,3 +29,18 @@ export enum WheelchairExperience {
     BASIC = "BAS",
     INTERMEDIATE = "INT",
 }
+
+export const prostheticInjuryLocations = {
+    [InjuryLocation.BELOW]: "Below the knee",
+    [InjuryLocation.ABOVE]: "Above the knee",
+};
+
+export const orthoticInjuryLocations = {
+    [InjuryLocation.BELOW]: "Below the elbow",
+    [InjuryLocation.ABOVE]: "Above the elbow",
+};
+
+export const wheelchairExperiences = {
+    [WheelchairExperience.BASIC]: "Basic",
+    [WheelchairExperience.INTERMEDIATE]: "Intermediate",
+};

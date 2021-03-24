@@ -1,10 +1,17 @@
-import { Chip } from "@material-ui/core";
+import { Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import React, { useState } from "react";
-import { IReferral } from "util/referrals";
+import {
+    IReferral,
+    orthoticInjuryLocations,
+    prostheticInjuryLocations,
+    wheelchairExperiences,
+} from "util/referrals";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ScheduleIcon from "@material-ui/icons/Schedule";
 import { useStyles } from "./Entry.styles";
+import { timestampToDateTime } from "util/dates";
+import NearMeIcon from "@material-ui/icons/NearMe";
 
 interface IEntryProps {
     referral: IReferral;
@@ -12,7 +19,7 @@ interface IEntryProps {
 }
 
 const ReferralEntry = ({ referral, dateFormatter }: IEntryProps) => {
-    const [, setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
     const styles = useStyles();
 
     const Summary = ({ clickable }: { clickable: boolean }) => {
@@ -23,16 +30,11 @@ const ReferralEntry = ({ referral, dateFormatter }: IEntryProps) => {
         return (
             <>
                 {referral.resolved ? (
-                    <>
-                        <CheckCircleIcon fontSize="small" className={styles.completeIcon} />{" "}
-                        Referral Complete
-                    </>
+                    <CheckCircleIcon fontSize="small" className={styles.completeIcon} />
                 ) : (
-                    <>
-                        <ScheduleIcon fontSize="small" className={styles.pendingIcon} /> Pending
-                        Referral
-                    </>
+                    <ScheduleIcon fontSize="small" className={styles.pendingIcon} />
                 )}{" "}
+                Referral {referral.resolved ? "Complete" : "Pending"}{" "}
                 {referral.wheelchair && <ReasonChip label="Wheelchair" />}{" "}
                 {referral.physiotherapy && <ReasonChip label="Physiotherapy" />}{" "}
                 {referral.prosthetic && <ReasonChip label="Prosthetic" />}{" "}
@@ -41,13 +43,89 @@ const ReferralEntry = ({ referral, dateFormatter }: IEntryProps) => {
         );
     };
 
+    const ReferralDialog = () => {
+        return (
+            <Dialog fullWidth maxWidth="sm" open={open} onClose={() => setOpen(false)}>
+                <DialogTitle>
+                    <Summary clickable={false} />
+                </DialogTitle>
+                <DialogContent>
+                    <b>Referred:</b> {timestampToDateTime(referral.date_referred)}
+                    <br />
+                    <br />
+                    {referral.resolved && (
+                        <>
+                            <b>Resolved:</b> {timestampToDateTime(referral.date_resolved)}
+                            <br />
+                            <b>Outcome:</b> {referral.outcome}
+                            <br />
+                            <br />
+                        </>
+                    )}
+                    {referral.wheelchair && (
+                        <>
+                            <b>Wheelchair Experience: </b>
+                            {wheelchairExperiences[referral.wheelchair_experience]}
+                            <br />
+                            <b>Hip Width:</b> {referral.hip_width}
+                            <br />
+                            <b>Wheelchair Owned?</b> {referral.wheelchair_owned ? "Yes" : "No"}
+                            <br />
+                            <b>Wheelchair Repairable?</b>{" "}
+                            {referral.wheelchair_repairable ? "Yes" : "No"}
+                            <br />
+                            <br />
+                        </>
+                    )}
+                    {referral.physiotherapy && (
+                        <>
+                            <b>Physiotherapy Condition:</b> {referral.condition}
+                            <br />
+                            <br />
+                        </>
+                    )}
+                    {referral.prosthetic && (
+                        <>
+                            <b>Prosthetic Injury Location: </b>
+                            {prostheticInjuryLocations[referral.prosthetic_injury_location]}
+                            <br />
+                            <br />
+                        </>
+                    )}
+                    {referral.orthotic && (
+                        <>
+                            <b>Orthotic Injury Location: </b>
+                            {orthoticInjuryLocations[referral.orthotic_injury_location]}
+                            <br />
+                            <br />
+                        </>
+                    )}
+                    {Boolean(referral.services_other.trim().length) && (
+                        <>
+                            <b>Other Services Required:</b> {referral.services_other}
+                            <br />
+                            <br />
+                        </>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    };
+
     return (
         <>
             <TimelineEntry
                 date={dateFormatter(referral.date_referred)}
                 content={<Summary clickable={true} />}
+                DotIcon={NearMeIcon}
                 onClick={() => setOpen(true)}
             />
+            <ReferralDialog />
         </>
     );
 };

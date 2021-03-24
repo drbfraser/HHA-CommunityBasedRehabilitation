@@ -22,6 +22,7 @@ import { IZone } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { RiskType, riskTypes } from "util/risks";
 import TimelineEntry from "../Timeline/TimelineEntry";
+import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -165,6 +166,7 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
             <TimelineEntry
                 date={dateFormatter(visitSummary.date_visited)}
                 content={<Summary clickable={true} />}
+                DotIcon={EmojiPeopleIcon}
                 onClick={onOpen}
             />
             <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>

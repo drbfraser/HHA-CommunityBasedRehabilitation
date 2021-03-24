@@ -16,11 +16,11 @@ export const useStyles = makeStyles(
         },
         completeIcon: {
             color: themeColors.riskGreen,
-            verticalAlign: "text-bottom",
+            verticalAlign: "text-top",
         },
         pendingIcon: {
             color: themeColors.riskRed,
-            verticalAlign: "text-bottom",
+            verticalAlign: "text-top",
         },
     },
     { index: 1 }

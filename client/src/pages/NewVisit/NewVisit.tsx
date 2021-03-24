@@ -1,8 +1,6 @@
 import {
     Button,
-    Checkbox,
     FormControl,
-    FormControlLabel,
     FormGroup,
     FormLabel,
     MenuItem,
@@ -40,39 +38,34 @@ const ImprovementField = (props: {
     provided: string;
     index: number;
 }) => {
-    const [isFieldVisible, setFieldVisibility] = useState<boolean>(
-        props.formikProps.values.improvements[props.visitType][props.index] !== undefined
-    );
-
     const fieldName = `${FormField.improvements}.${props.visitType}.${props.index}`;
+    const isImprovementEnabled =
+        props.formikProps.values[FormField.improvements][props.visitType][props.index]?.[
+            ImprovementFormField.enabled
+        ] === true;
 
-    const onCheckboxChange = (checked: boolean) => {
-        setFieldVisibility(checked);
-        if (checked) {
-            props.formikProps.setFieldValue(`${fieldName}`, {
-                [ImprovementFormField.riskType]: props.visitType,
-                [ImprovementFormField.provided]: props.provided,
-                [ImprovementFormField.description]: "",
-            });
-        } else {
-            props.formikProps.setFieldValue(`${fieldName}`, undefined);
-        }
-    };
+    if (
+        props.formikProps.values[FormField.improvements][props.visitType][props.index] === undefined
+    ) {
+        // Since this component is dynamically generated we need to set its initial values
+        props.formikProps.setFieldValue(`${fieldName}`, {
+            [ImprovementFormField.enabled]: false,
+            [ImprovementFormField.description]: "",
+            [ImprovementFormField.riskType]: props.visitType,
+            [ImprovementFormField.provided]: props.provided,
+        });
+    }
 
     return (
         <div key={props.index}>
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={isFieldVisible}
-                        onChange={(event) => onCheckboxChange(event.currentTarget.checked)}
-                        name={props.provided}
-                    />
-                }
-                label={props.provided}
+            <Field
+                component={CheckboxWithLabel}
+                type="checkbox"
+                name={`${fieldName}.${ImprovementFormField.enabled}`}
+                Label={{ label: props.provided }}
             />
             <br />
-            {isFieldVisible && (
+            {isImprovementEnabled && (
                 <Field
                     key={`${props.provided}${ImprovementFormField.description}`}
                     type="text"
@@ -187,12 +180,10 @@ const VisitReasonStep = (
                 [OutcomeFormField.goalStatus]: GoalStatus.ongoing,
                 [OutcomeFormField.outcome]: "",
             });
-            formikProps.setFieldTouched(`${FormField.outcomes}.${visitType}`, false);
         } else {
             formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, undefined);
         }
     };
-
     return (
         <>
             <FormLabel>Where was the Visit?</FormLabel>
@@ -288,6 +279,7 @@ const NewVisit = () => {
             }
             setActiveStep(activeStep + 1);
             helpers.setSubmitting(false);
+            helpers.setTouched({});
         }
     };
 
@@ -298,8 +290,7 @@ const NewVisit = () => {
     return (
         <Formik
             initialValues={initialValues}
-            // TODO: Yup validation broken, need to be fixed. thumbs.gfycat.com/AchingForkedAgouti-small.gif
-            //validationSchema={visitSteps[activeStep].validationSchema}
+            validationSchema={visitSteps[activeStep].validationSchema}
             onSubmit={nextStep}
         >
             {(formikProps) => (

@@ -50,12 +50,12 @@ const ReferralEntry = ({ referral, dateFormatter }: IEntryProps) => {
                     <Summary clickable={false} />
                 </DialogTitle>
                 <DialogContent>
-                    <b>Referred:</b> {timestampToDateTime(referral.date_referred)}
+                    <b>Referral Date:</b> {timestampToDateTime(referral.date_referred)}
                     <br />
                     <br />
                     {referral.resolved && (
                         <>
-                            <b>Resolved:</b> {timestampToDateTime(referral.date_resolved)}
+                            <b>Resolution Date:</b> {timestampToDateTime(referral.date_resolved)}
                             <br />
                             <b>Outcome:</b> {referral.outcome}
                             <br />
@@ -67,7 +67,7 @@ const ReferralEntry = ({ referral, dateFormatter }: IEntryProps) => {
                             <b>Wheelchair Experience: </b>
                             {wheelchairExperiences[referral.wheelchair_experience]}
                             <br />
-                            <b>Hip Width:</b> {referral.hip_width}
+                            <b>Hip Width:</b> {referral.hip_width} inches
                             <br />
                             <b>Wheelchair Owned?</b> {referral.wheelchair_owned ? "Yes" : "No"}
                             <br />

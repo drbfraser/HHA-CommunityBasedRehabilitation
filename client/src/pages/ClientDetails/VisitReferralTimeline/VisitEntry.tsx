@@ -148,7 +148,7 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
             <>
                 <Card variant="outlined">
                     <CardContent>
-                        <b>When:</b> {timestampToDateTime(visit.date_visited)}
+                        <b>Visit Date:</b> {timestampToDateTime(visit.date_visited)}
                         <br />
                         <b>Village:</b> {visit.village}
                     </CardContent>

@@ -16,9 +16,6 @@ export const useStyles = makeStyles(
             float: "right",
             display: "flex",
         },
-        zoneOptions: {
-            minWidth: 175,
-        },
         // mobile width
         [mediaMobile]: {
             root: {

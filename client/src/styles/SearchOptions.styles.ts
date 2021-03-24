@@ -11,6 +11,9 @@ export const useSearchOptionsStyles = makeStyles(
                 minWidth: 43,
             },
         },
+        zoneOptions: {
+            minWidth: 175,
+        },
     },
     { index: 1 }
 );

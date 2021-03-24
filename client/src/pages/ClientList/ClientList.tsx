@@ -267,7 +267,7 @@ const ClientList = () => {
                 </div>
                 {searchOption === SearchOption.ZONE ? (
                     <Select
-                        className={styles.zoneOptions}
+                        className={searchOptionsStyle.zoneOptions}
                         color={"primary"}
                         defaultValue={""}
                         onChange={(e) => setSearchValue(String(e.target.value))}

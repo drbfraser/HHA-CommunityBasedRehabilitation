@@ -20,7 +20,8 @@ import { useEffect, useState } from "react";
 import requestUserRows from "./requestUserRows";
 import React from "react";
 import { Cancel, MoreVert } from "@material-ui/icons";
-import { SearchOption } from "./searchOptions";
+import { SearchOption } from "../ClientList/searchOptions";
+import { getAllZones, IZone } from "util/cache";
 
 const RenderLoadingOverlay = () => {
     return (
@@ -55,9 +56,11 @@ const AdminList = () => {
     const [isIdHidden, setIdHidden] = useState<boolean>(false);
     const [isNameHidden, setNameHidden] = useState<boolean>(false);
     const [isRoleHidden, setRoleHidden] = useState<boolean>(false);
+    const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
     const [isStatusHidden, setStatusHidden] = useState<boolean>(false);
     const [filteredRows, setFilteredRows] = useState<RowsProp>([]);
     const [serverRows, setServerRows] = useState<RowsProp>([]);
+    const [zones, setZones] = useState<IZone[]>([]);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
@@ -86,6 +89,13 @@ const AdminList = () => {
             hideFunction: setNameHidden,
         },
         {
+            field: "zone",
+            headerName: "Zone",
+            flex: 1,
+            hide: isZoneHidden,
+            hideFunction: setZoneHidden,
+        },
+        {
             field: "role",
             headerName: "Role",
             flex: 1,
@@ -106,6 +116,7 @@ const AdminList = () => {
     useEffect(() => {
         const loadInitialData = async () => {
             setLoading(true);
+            setZones(await getAllZones());
             await requestUserRows(setFilteredRows, setServerRows, setLoading);
             setLoading(false);
             initialDataLoaded.current = true;
@@ -127,6 +138,11 @@ const AdminList = () => {
         } else if (searchOption === SearchOption.ID) {
             const filteredRows: RowsProp = serverRows.filter((r) =>
                 r.id.toString().startsWith(searchValue)
+            );
+            setFilteredRows(filteredRows);
+        } else if (searchOption === SearchOption.ZONE) {
+            const filteredRows: RowsProp = serverRows.filter((r) =>
+                r.zone.startsWith(searchValue)
             );
             setFilteredRows(filteredRows);
         }
@@ -156,10 +172,25 @@ const AdminList = () => {
                             ))}
                         </Select>
                     </div>
-                    <SearchBar
-                        value={searchValue}
-                        onChange={(e) => setSearchValue(e.target.value)}
-                    />
+                    {searchOption === SearchOption.ZONE ? (
+                        <Select
+                            className={searchOptionsStyle.zoneOptions}
+                            color={"primary"}
+                            defaultValue={""}
+                            onChange={(event) => setSearchValue(String(event.target.value))}
+                        >
+                            {zones.map((zone) => (
+                                <MenuItem key={zone.id} value={zone.zone_name}>
+                                    {zone.zone_name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    ) : (
+                        <SearchBar
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                        />
+                    )}
                     <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
                         <MoreVert />
                     </IconButton>

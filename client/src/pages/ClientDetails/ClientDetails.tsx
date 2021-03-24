@@ -94,25 +94,10 @@ const ClientDetails = () => {
             <Grid item xs={12}>
                 <hr />
             </Grid>
-
-            <Grid container justify="space-between" direction="row">
-                <Grid item xs={6}>
-                    <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
-                        <b>Visits Timeline</b>
-                    </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                    <Button
-                        size="small"
-                        style={{ float: "right" }}
-                        onClick={() => {
-                            history.push(`/client/${clientId}/visits/new`);
-                        }}
-                    >
-                        New Visit
-                        <ArrowForwardIcon fontSize="small" />
-                    </Button>
-                </Grid>
+            <Grid item xs={6}>
+                <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
+                    <b>Visits Timeline</b>
+                </Typography>
             </Grid>
             <Grid item xs={12}>
                 <ClientVisitTimeline client={clientInfo} zones={zoneOptions} />

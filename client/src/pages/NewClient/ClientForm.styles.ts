@@ -34,6 +34,13 @@ export const useStyles = makeStyles(
                 },
             },
         },
+        pictureColumn: {
+            flex: 1,
+        },
+        sideFormButton: {
+            minWidth: "100%",
+            alignItems: "center",
+        },
         profilePicture: {
             maxWidth: "100%",
             maxHeight: "100%",
@@ -75,6 +82,10 @@ export const useStyles = makeStyles(
             },
             uploadIcon: {
                 top: "7%",
+            },
+            sideFormButton: {
+                flex: 1,
+                minWidth: "auto",
             },
         },
     },

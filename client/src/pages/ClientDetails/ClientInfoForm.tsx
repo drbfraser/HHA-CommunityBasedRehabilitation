@@ -23,6 +23,8 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 import { handleSubmit, handleCancel } from "./formHandler";
 import { IClient, genders } from "util/clients";
+import history from "util/history";
+import { useParams } from "react-router-dom";
 
 interface IProps {
     clientInfo: IClient;
@@ -32,6 +34,7 @@ interface IProps {
 
 const ClientInfoForm = (props: IProps) => {
     const styles = useStyles();
+    const { clientId } = useParams<{ clientId: string }>();
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     return (
@@ -43,7 +46,7 @@ const ClientInfoForm = (props: IProps) => {
             }}
         >
             {({ values, isSubmitting, resetForm }) => (
-                <Grid container direction="row" justify="flex-start">
+                <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
                         <Card className={styles.profileImgContainer}>
                             <CardContent>
@@ -58,6 +61,34 @@ const ClientInfoForm = (props: IProps) => {
                                 </div>
                             </CardContent>
                         </Card>
+                        <Grid
+                            className={styles.sideFormButton}
+                            container
+                            direction="row"
+                            spacing={1}
+                        >
+                            <Grid className={styles.sideFormButton} item md={10} xs={12}>
+                                <Button
+                                    color="primary"
+                                    variant="contained"
+                                    fullWidth
+                                    onClick={() => history.push(`/client/${clientId}/visits/new`)}
+                                    disabled={isSubmitting}
+                                >
+                                    New Visits
+                                </Button>
+                            </Grid>
+                            <Grid className={styles.sideFormButton} item md={10} xs={12}>
+                                <Button
+                                    color="primary"
+                                    variant="contained"
+                                    fullWidth
+                                    disabled={isSubmitting}
+                                >
+                                    New Referrals
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item md={10} xs={12}>
                         <Form>
@@ -296,7 +327,7 @@ const ClientInfoForm = (props: IProps) => {
                                     <Grid item>
                                         <></>
                                         <Button
-                                            variant="contained"
+                                            variant="outlined"
                                             color="primary"
                                             onClick={() => {
                                                 setIsEditing(true);

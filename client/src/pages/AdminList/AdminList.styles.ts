@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { mediaCompressedDataGrid } from "styles/DataGrid.styles";
 import { mediaMobile } from "theme.styles";
 
 export const useStyles = makeStyles(
@@ -7,9 +8,6 @@ export const useStyles = makeStyles(
             height: "calc(100vh - 175px)",
             minHeight: 400,
             padding: "5px 0px 25px 0px",
-        },
-        icon: {
-            padding: "0px 15px 0px 0px",
         },
         topContainer: {
             float: "right",
@@ -20,10 +18,18 @@ export const useStyles = makeStyles(
             width: "100%",
             marginTop: "36px",
         },
+        icon: {
+            padding: "0px 15px 0px 0px",
+        },
         [mediaMobile]: {
             container: {
                 height: "calc(100vh - 181px)",
-                paddingBottom: "40px",
+                paddingBottom: "31px",
+            },
+        },
+        [mediaCompressedDataGrid]: {
+            container: {
+                paddingBottom: "71px",
             },
             topContainer: {
                 float: "none",

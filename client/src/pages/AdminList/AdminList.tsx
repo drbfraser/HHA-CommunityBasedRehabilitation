@@ -1,7 +1,13 @@
 import { useStyles } from "./AdminList.styles";
 import SearchBar from "components/SearchBar/SearchBar";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import { DataGrid, DensityTypes, RowsProp, GridOverlay } from "@material-ui/data-grid";
+import {
+    DataGrid,
+    DensityTypes,
+    RowsProp,
+    GridOverlay,
+    ValueFormatterParams,
+} from "@material-ui/data-grid";
 import {
     LinearProgress,
     IconButton,
@@ -22,6 +28,10 @@ import React from "react";
 import { Cancel, MoreVert } from "@material-ui/icons";
 import { SearchOption } from "../ClientList/searchOptions";
 import { getAllZones, IZone } from "util/cache";
+
+const RenderText = (params: ValueFormatterParams) => {
+    return <Typography variant={"body2"}>{params.value}</Typography>;
+};
 
 const RenderLoadingOverlay = () => {
     return (
@@ -78,6 +88,7 @@ const AdminList = () => {
             field: "id",
             headerName: "ID",
             flex: 0.55,
+            renderCell: RenderText,
             hide: isIdHidden,
             hideFunction: setIdHidden,
         },
@@ -85,6 +96,7 @@ const AdminList = () => {
             field: "name",
             headerName: "Name",
             flex: 1,
+            renderCell: RenderText,
             hide: isNameHidden,
             hideFunction: setNameHidden,
         },
@@ -92,6 +104,7 @@ const AdminList = () => {
             field: "zone",
             headerName: "Zone",
             flex: 1,
+            renderCell: RenderText,
             hide: isZoneHidden,
             hideFunction: setZoneHidden,
         },
@@ -99,6 +112,7 @@ const AdminList = () => {
             field: "role",
             headerName: "Role",
             flex: 1,
+            renderCell: RenderText,
             hide: isRoleHidden,
             hideFunction: setRoleHidden,
         },
@@ -106,6 +120,7 @@ const AdminList = () => {
             field: "status",
             headerName: "Status",
             flex: 1,
+            renderCell: RenderText,
             hide: isStatusHidden,
             hideFunction: setStatusHidden,
         },

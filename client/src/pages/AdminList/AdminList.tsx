@@ -141,9 +141,7 @@ const AdminList = () => {
             );
             setFilteredRows(filteredRows);
         } else if (searchOption === SearchOption.ZONE) {
-            const filteredRows: RowsProp = serverRows.filter((r) =>
-                r.zone.startsWith(searchValue)
-            );
+            const filteredRows: RowsProp = serverRows.filter((r) => r.zone.startsWith(searchValue));
             setFilteredRows(filteredRows);
         }
     }, [searchValue, searchOption, serverRows]);
@@ -151,6 +149,40 @@ const AdminList = () => {
     return (
         <>
             <div className={styles.container}>
+                <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
+                    <MoreVert />
+                </IconButton>
+                <Popover
+                    open={isOptionsOpen}
+                    anchorEl={optionsAnchorEl}
+                    onClose={onOptionsClose}
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                    }}
+                >
+                    <div className={hideColumnsStyle.optionsContainer}>
+                        {columns.map(
+                            (column): JSX.Element => {
+                                return (
+                                    <div key={column.field} className={hideColumnsStyle.optionsRow}>
+                                        <Typography component={"span"} variant={"body2"}>
+                                            {column.headerName}
+                                        </Typography>
+                                        <Switch
+                                            checked={!column.hide}
+                                            onClick={() => column.hideFunction(!column.hide)}
+                                        />
+                                    </div>
+                                );
+                            }
+                        )}
+                    </div>
+                </Popover>
                 <div className={styles.topContainer}>
                     <IconButton onClick={onAddClick} className={styles.icon}>
                         <PersonAddIcon />
@@ -191,43 +223,6 @@ const AdminList = () => {
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
                     )}
-                    <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
-                        <MoreVert />
-                    </IconButton>
-                    <Popover
-                        open={isOptionsOpen}
-                        anchorEl={optionsAnchorEl}
-                        onClose={onOptionsClose}
-                        anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                        }}
-                        transformOrigin={{
-                            vertical: "top",
-                            horizontal: "center",
-                        }}
-                    >
-                        <div className={hideColumnsStyle.optionsContainer}>
-                            {columns.map(
-                                (column): JSX.Element => {
-                                    return (
-                                        <div
-                                            key={column.field}
-                                            className={hideColumnsStyle.optionsRow}
-                                        >
-                                            <Typography component={"span"} variant={"body2"}>
-                                                {column.headerName}
-                                            </Typography>
-                                            <Switch
-                                                checked={!column.hide}
-                                                onClick={() => column.hideFunction(!column.hide)}
-                                            />
-                                        </div>
-                                    );
-                                }
-                            )}
-                        </div>
-                    </Popover>
                 </div>
                 <div className={styles.dataGridWrapper}>
                     <DataGrid

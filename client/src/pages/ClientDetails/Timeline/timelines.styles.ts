@@ -9,10 +9,13 @@ export const useTimelineStyles = makeStyles(
         entry: {
             margin: 10,
             marginRight: 0,
-            padding: 10,
+            padding: "8px 10px",
             border: "1px solid #aaa",
             borderRadius: 5,
             fontSize: "120%",
+            "& .MuiChip-root": {
+                margin: "2px 0",
+            },
         },
         clickable: {
             cursor: "pointer",

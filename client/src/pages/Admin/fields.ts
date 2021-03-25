@@ -9,6 +9,7 @@ export interface IRouteParams {
 export enum AdminField {
     username = "username",
     password = "password",
+    confirm = "confirm",
     first_name = "first_name",
     last_name = "last_name",
     role = "role",
@@ -19,7 +20,8 @@ export enum AdminField {
 
 export const fieldLabels = {
     [AdminField.username]: "Username",
-    [AdminField.password]: "Password",
+    [AdminField.password]: "Enter Password",
+    [AdminField.confirm]: "Confirm Password",
     [AdminField.first_name]: "First Name",
     [AdminField.last_name]: "Last Name",
     [AdminField.role]: "Role",
@@ -31,6 +33,7 @@ export const fieldLabels = {
 export const initialValues = {
     [AdminField.username]: "",
     [AdminField.password]: "",
+    [AdminField.confirm]: "",
     [AdminField.first_name]: "",
     [AdminField.last_name]: "",
     [AdminField.role]: UserRole.WORKER,
@@ -70,6 +73,10 @@ export const validationSchema = (newUser: boolean) => {
             ...yupShape,
             [AdminField.password]: Yup.string()
                 .label(fieldLabels[AdminField.password])
+                .min(8)
+                .required(),
+            [AdminField.confirm]: Yup.string()
+                .label(fieldLabels[AdminField.confirm])
                 .min(8)
                 .required(),
         };

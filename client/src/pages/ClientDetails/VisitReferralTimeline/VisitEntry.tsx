@@ -57,7 +57,7 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
 
         return (
             <>
-                Visit in {zone?.zone_name} &nbsp;
+                <b>Visit</b> in {zone?.zone_name} &nbsp;
                 {visitSummary.health_visit && (
                     <RiskTypeChip risk={RiskType.HEALTH} clickable={clickable} />
                 )}{" "}

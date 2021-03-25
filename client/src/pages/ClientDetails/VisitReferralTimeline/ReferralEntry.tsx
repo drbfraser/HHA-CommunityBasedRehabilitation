@@ -34,7 +34,7 @@ const ReferralEntry = ({ referral, dateFormatter }: IEntryProps) => {
                 ) : (
                     <ScheduleIcon fontSize="small" className={styles.pendingIcon} />
                 )}{" "}
-                Referral {referral.resolved ? "Complete" : "Pending"}{" "}
+                <b>Referral</b> {referral.resolved ? "Complete" : "Pending"}{" "}
                 {referral.wheelchair && <ReasonChip label="Wheelchair" />}{" "}
                 {referral.physiotherapy && <ReasonChip label="Physiotherapy" />}{" "}
                 {referral.prosthetic && <ReasonChip label="Prosthetic" />}{" "}

@@ -24,7 +24,6 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { handleSubmit, handleCancel } from "./formHandler";
 import { IClient, genders } from "util/clients";
 import history from "util/history";
-import { useParams } from "react-router-dom";
 
 interface IProps {
     clientInfo: IClient;
@@ -34,7 +33,6 @@ interface IProps {
 
 const ClientInfoForm = (props: IProps) => {
     const styles = useStyles();
-    const { clientId } = useParams<{ clientId: string }>();
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     return (
@@ -68,7 +66,9 @@ const ClientInfoForm = (props: IProps) => {
                                     color="primary"
                                     variant="contained"
                                     fullWidth
-                                    onClick={() => history.push(`/client/${clientId}/visits/new`)}
+                                    onClick={() =>
+                                        history.push(`/client/${props.clientInfo.id}/visits/new`)
+                                    }
                                     disabled={isSubmitting}
                                 >
                                     New Visit

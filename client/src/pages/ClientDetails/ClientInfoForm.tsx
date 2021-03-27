@@ -61,31 +61,28 @@ const ClientInfoForm = (props: IProps) => {
                                 </div>
                             </CardContent>
                         </Card>
-                        <Grid
-                            className={styles.sideFormButton}
-                            container
-                            direction="row"
-                            spacing={1}
-                        >
-                            <Grid className={styles.sideFormButton} item md={10} xs={12}>
+                        <Grid container direction="row" spacing={1}>
+                            <Grid className={styles.sideFormButtonWrapper} item md={10} xs={12}>
                                 <Button
+                                    className={styles.sideFormButton}
                                     color="primary"
                                     variant="contained"
                                     fullWidth
                                     onClick={() => history.push(`/client/${clientId}/visits/new`)}
                                     disabled={isSubmitting}
                                 >
-                                    New Visits
+                                    New Visit
                                 </Button>
                             </Grid>
-                            <Grid className={styles.sideFormButton} item md={10} xs={12}>
+                            <Grid className={styles.sideFormButtonWrapper} item md={10} xs={12}>
                                 <Button
+                                    className={styles.sideFormButton}
                                     color="primary"
                                     variant="contained"
                                     fullWidth
                                     disabled={isSubmitting}
                                 >
-                                    New Referrals
+                                    New Referral
                                 </Button>
                             </Grid>
                         </Grid>

@@ -1,3 +1,4 @@
+import { IReferral } from "./referrals";
 import { IRisk } from "./risks";
 import { IVisitSummary } from "./visits";
 
@@ -23,6 +24,7 @@ export interface IClient {
     caregiver_picture: unknown;
     risks: IRisk[];
     visits: IVisitSummary[];
+    referrals: IReferral[];
 }
 
 export enum Gender {

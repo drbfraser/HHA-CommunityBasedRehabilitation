@@ -7,9 +7,17 @@ export const timestampToDate = (timestamp: number) => {
     return timestampToDateObj(timestamp).toLocaleDateString();
 };
 
-// in format "2/27/2021 10:13:12 AM" (depending on user's locale)
+// in format "Mar 27, 2021, 10:13 AM" (depending on user's locale)
 export const timestampToDateTime = (timestamp: number) => {
-    return timestampToDateObj(timestamp).toLocaleString();
+    const date = timestampToDateObj(timestamp);
+
+    return date.toLocaleString([], {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+    });
 };
 
 // in format of "Fri 10:13 AM" (depending on user's locale)
@@ -18,7 +26,7 @@ export const timestampToWeekdayTime = (timestamp: number) => {
 
     return date.toLocaleString([], {
         weekday: "short",
-        hour: "2-digit",
+        hour: "numeric",
         minute: "2-digit",
     });
 };

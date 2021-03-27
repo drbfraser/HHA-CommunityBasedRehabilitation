@@ -9,6 +9,7 @@ import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import { useTimelineStyles } from "../Timeline/timelines.styles";
+import UpdateIcon from "@material-ui/icons/Update";
 
 interface IProps {
     client?: IClient;
@@ -39,6 +40,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
                 <TimelineEntry
                     date={dateFormatter(risk.timestamp)}
                     content={<Summary clickable={true} />}
+                    DotIcon={UpdateIcon}
                     onClick={() => setExpanded(true)}
                 />
                 <Dialog fullWidth maxWidth="sm" open={expanded} onClose={() => setExpanded(false)}>

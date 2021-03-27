@@ -50,6 +50,9 @@ export const useDataGridStyles = makeStyles(
                 backgroundColor: "white",
             },
         },
+        dashboardTables: {
+            height: 400,
+        },
         noRows: {
             display: "flex",
             flexDirection: "column",

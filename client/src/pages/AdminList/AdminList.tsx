@@ -162,8 +162,47 @@ const AdminList = () => {
     }, [searchValue, searchOption, serverRows]);
 
     return (
-        <>
-            <div className={styles.container}>
+        <div className={styles.container}>
+            <div className={styles.topContainer}>
+                <IconButton onClick={onAddClick} className={styles.icon}>
+                    <PersonAddIcon />
+                </IconButton>
+                <div className={searchOptionsStyle.searchOptions}>
+                    <Select
+                        color={"primary"}
+                        defaultValue={SearchOption.NAME}
+                        value={searchOption}
+                        onChange={(event) => {
+                            setSearchValue("");
+                            setSearchOption(String(event.target.value));
+                        }}
+                    >
+                        {Object.values(SearchOption).map((option) => (
+                            <MenuItem key={option} value={option}>
+                                {option}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </div>
+                {searchOption === SearchOption.ZONE ? (
+                    <Select
+                        className={searchOptionsStyle.zoneOptions}
+                        color={"primary"}
+                        defaultValue={""}
+                        onChange={(event) => setSearchValue(String(event.target.value))}
+                    >
+                        {zones.map((zone) => (
+                            <MenuItem key={zone.id} value={zone.zone_name}>
+                                {zone.zone_name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                ) : (
+                    <SearchBar
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                    />
+                )}
                 <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
                     <MoreVert />
                 </IconButton>
@@ -198,70 +237,29 @@ const AdminList = () => {
                         )}
                     </div>
                 </Popover>
-                <div className={styles.topContainer}>
-                    <IconButton onClick={onAddClick} className={styles.icon}>
-                        <PersonAddIcon />
-                    </IconButton>
-                    <div className={searchOptionsStyle.searchOptions}>
-                        <Select
-                            color={"primary"}
-                            defaultValue={SearchOption.NAME}
-                            value={searchOption}
-                            onChange={(event) => {
-                                setSearchValue("");
-                                setSearchOption(String(event.target.value));
-                            }}
-                        >
-                            {Object.values(SearchOption).map((option) => (
-                                <MenuItem key={option} value={option}>
-                                    {option}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </div>
-                    {searchOption === SearchOption.ZONE ? (
-                        <Select
-                            className={searchOptionsStyle.zoneOptions}
-                            color={"primary"}
-                            defaultValue={""}
-                            onChange={(event) => setSearchValue(String(event.target.value))}
-                        >
-                            {zones.map((zone) => (
-                                <MenuItem key={zone.id} value={zone.zone_name}>
-                                    {zone.zone_name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    ) : (
-                        <SearchBar
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                        />
-                    )}
-                </div>
-                <div className={styles.dataGridWrapper}>
-                    <DataGrid
-                        className={dataGridStyle.datagrid}
-                        loading={loading}
-                        components={{
-                            LoadingOverlay: RenderLoadingOverlay,
-                            NoRowsOverlay: RenderNoRowsOverlay,
-                        }}
-                        rows={filteredRows}
-                        columns={columns}
-                        density={DensityTypes.Comfortable}
-                        onRowClick={onRowClick}
-                        pagination
-                        sortModel={[
-                            {
-                                field: "name",
-                                sort: "asc",
-                            },
-                        ]}
-                    />
-                </div>
             </div>
-        </>
+            <div className={styles.dataGridWrapper}>
+                <DataGrid
+                    className={dataGridStyle.datagrid}
+                    loading={loading}
+                    components={{
+                        LoadingOverlay: RenderLoadingOverlay,
+                        NoRowsOverlay: RenderNoRowsOverlay,
+                    }}
+                    rows={filteredRows}
+                    columns={columns}
+                    density={DensityTypes.Comfortable}
+                    onRowClick={onRowClick}
+                    pagination
+                    sortModel={[
+                        {
+                            field: "name",
+                            sort: "asc",
+                        },
+                    ]}
+                />
+            </div>
+        </div>
     );
 };
 

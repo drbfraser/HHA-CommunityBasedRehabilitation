@@ -10,13 +10,12 @@ export const useStyles = makeStyles(
             padding: "5px 0px 25px 0px",
         },
         topContainer: {
-            float: "right",
+            justifyContent: "flex-end",
             display: "flex",
         },
         dataGridWrapper: {
             height: "100%",
             width: "100%",
-            marginTop: "36px",
         },
         icon: {
             padding: "0px 15px 0px 0px",
@@ -32,7 +31,7 @@ export const useStyles = makeStyles(
                 paddingBottom: "71px",
             },
             topContainer: {
-                float: "none",
+                flexGrow: 1,
                 justifyContent: "center",
             },
             dataGridWrapper: {

@@ -12,7 +12,7 @@ import ClientRisks from "./Risks/ClientRisks";
 import { IRisk } from "util/risks";
 import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache";
 import { useHistory } from "react-router-dom";
-import ClientVisitTimeline from "./VisitTimeline/ClientVisitTimeline";
+import VisitReferralTimeline from "./VisitReferralTimeline/VisitReferralTimeline";
 import { timestampToFormDate } from "util/dates";
 import { Alert, Skeleton } from "@material-ui/lab";
 
@@ -94,28 +94,13 @@ const ClientDetails = () => {
             <Grid item xs={12}>
                 <hr />
             </Grid>
-
-            <Grid container justify="space-between" direction="row">
-                <Grid item xs={6}>
-                    <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
-                        <b>Visits Timeline</b>
-                    </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                    <Button
-                        size="small"
-                        style={{ float: "right" }}
-                        onClick={() => {
-                            history.push(`/client/${clientId}/visits/new`);
-                        }}
-                    >
-                        New Visit
-                        <ArrowForwardIcon fontSize="small" />
-                    </Button>
-                </Grid>
+            <Grid item xs={6}>
+                <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
+                    <b>Visits &amp; Referrals</b>
+                </Typography>
             </Grid>
             <Grid item xs={12}>
-                <ClientVisitTimeline client={clientInfo} zones={zoneOptions} />
+                <VisitReferralTimeline client={clientInfo} zones={zoneOptions} />
             </Grid>
         </Grid>
     );

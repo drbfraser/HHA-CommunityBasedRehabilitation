@@ -8,16 +8,21 @@ import {
     TimelineContent,
 } from "@material-ui/lab";
 import { useTimelineStyles } from "./timelines.styles";
+import BlankIcon from "@material-ui/core/SvgIcon";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
+import { SvgIconTypeMap } from "@material-ui/core";
 
 interface IProps {
     date: string | JSX.Element;
     content: string | JSX.Element;
-    bottomEntry?: boolean;
+    DotIcon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
+    isBottomEntry?: boolean;
     onClick?: () => void;
 }
 
-const TimelineEntry = ({ date, content, onClick, bottomEntry }: IProps) => {
+const TimelineEntry = ({ date, content, DotIcon, isBottomEntry, onClick }: IProps) => {
     const timelineStyles = useTimelineStyles();
+    const Icon = DotIcon ?? BlankIcon;
 
     return (
         <TimelineItem>
@@ -26,8 +31,10 @@ const TimelineEntry = ({ date, content, onClick, bottomEntry }: IProps) => {
             </TimelineOppositeContent>
             <TimelineSeparator>
                 <TimelineConnector />
-                <TimelineDot />
-                <TimelineConnector className={bottomEntry ? timelineStyles.hidden : ""} />
+                <TimelineDot color="grey" variant="outlined">
+                    <Icon color="primary" fontSize="small" />
+                </TimelineDot>
+                <TimelineConnector className={isBottomEntry ? timelineStyles.hidden : ""} />
             </TimelineSeparator>
             <TimelineContent>
                 <div

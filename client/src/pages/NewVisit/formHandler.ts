@@ -1,4 +1,4 @@
-import { TFormValues } from "./formFields";
+import { ImprovementFormField, TFormValues } from "./formFields";
 import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "util/endpoints";
 import history from "../../util/history";
@@ -32,7 +32,10 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         latitude: 0.0,
         improvements: Object.values(values[FormField.improvements])
             .reduce((improvements, typedImprovement) => improvements.concat(typedImprovement))
-            .filter((improvement) => improvement !== undefined),
+            .filter(
+                (improvement) =>
+                    improvement !== undefined && improvement[ImprovementFormField.enabled]
+            ),
         outcomes: Object.values(values[FormField.outcomes]).filter(
             (outcome) => outcome !== undefined
         ),

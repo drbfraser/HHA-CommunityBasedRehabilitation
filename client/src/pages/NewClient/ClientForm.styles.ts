@@ -22,8 +22,6 @@ export const useStyles = makeStyles(
             display: "block",
             marginBottom: 15,
             overflow: "hidden",
-            height: "15rem",
-            width: "15rem",
             marginLeft: "auto",
             marginRight: "auto",
             cursor: "pointer",
@@ -33,6 +31,16 @@ export const useStyles = makeStyles(
                     opacity: 1,
                 },
             },
+        },
+        pictureColumn: {
+            flex: 1,
+        },
+        sideFormButtonWrapper: {
+            alignItems: "center",
+            minWidth: "100%",
+        },
+        sideFormButton: {
+            height: "100%",
         },
         profilePicture: {
             maxWidth: "100%",
@@ -49,32 +57,17 @@ export const useStyles = makeStyles(
             left: 0,
             right: 0,
             opacity: 0,
-            top: "30%",
+            top: "50%",
             bottom: 0,
             textAlign: "center",
         },
-        "@media (max-width: 1600px)": {
+        "@media (max-width: 960px)": {
             profileImgContainer: {
                 width: "13rem",
-                height: "13rem",
             },
-        },
-        "@media (max-width: 1400px)": {
-            profileImgContainer: {
-                width: "10rem",
-                height: "10rem",
-            },
-            uploadIcon: {
-                top: "20%",
-            },
-        },
-        "@media (max-width: 1100px)": {
-            profileImgContainer: {
-                width: "7rem",
-                height: "7rem",
-            },
-            uploadIcon: {
-                top: "7%",
+            sideFormButtonWrapper: {
+                flex: 1,
+                minWidth: "auto",
             },
         },
     },

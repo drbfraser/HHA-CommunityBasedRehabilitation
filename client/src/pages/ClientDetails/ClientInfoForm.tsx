@@ -24,6 +24,7 @@ import { handleSubmit, handleCancel } from "./formHandler";
 import { IClient, genders } from "util/clients";
 import { useZones } from "util/hooks/zones";
 import { useDisabilities } from "util/hooks/disabilities";
+import history from "util/history";
 
 interface IProps {
     clientInfo: IClient;
@@ -44,7 +45,7 @@ const ClientInfoForm = (props: IProps) => {
             }}
         >
             {({ values, isSubmitting, resetForm }) => (
-                <Grid container direction="row" justify="flex-start">
+                <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
                         <Card className={styles.profileImgContainer}>
                             <CardContent>
@@ -59,6 +60,33 @@ const ClientInfoForm = (props: IProps) => {
                                 </div>
                             </CardContent>
                         </Card>
+                        <Grid container direction="row" spacing={1}>
+                            <Grid className={styles.sideFormButtonWrapper} item md={10} xs={12}>
+                                <Button
+                                    className={styles.sideFormButton}
+                                    color="primary"
+                                    variant="contained"
+                                    fullWidth
+                                    onClick={() =>
+                                        history.push(`/client/${props.clientInfo.id}/visits/new`)
+                                    }
+                                    disabled={isSubmitting}
+                                >
+                                    New Visit
+                                </Button>
+                            </Grid>
+                            <Grid className={styles.sideFormButtonWrapper} item md={10} xs={12}>
+                                <Button
+                                    className={styles.sideFormButton}
+                                    color="primary"
+                                    variant="contained"
+                                    fullWidth
+                                    disabled={isSubmitting}
+                                >
+                                    New Referral
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item md={10} xs={12}>
                         <Form>
@@ -297,7 +325,7 @@ const ClientInfoForm = (props: IProps) => {
                                     <Grid item>
                                         <></>
                                         <Button
-                                            variant="contained"
+                                            variant="outlined"
                                             color="primary"
                                             onClick={() => {
                                                 setIsEditing(true);

@@ -24,6 +24,7 @@ export enum OutcomeFormField {
 }
 
 export enum ImprovementFormField {
+    enabled = "enabled",
     riskType = "risk_type",
     provided = "provided",
     description = "desc",
@@ -95,19 +96,19 @@ export const initialValidationSchema = () =>
         [FormField.social]: Yup.boolean().label(fieldLabels[FormField.social]),
     });
 
-// TODO: The error messages for improvement.description does not consistently display properly
 export const visitTypeValidationSchema = (visitType: FormField) =>
     Yup.object().shape({
         [FormField.improvements]: Yup.object().shape({
-            [visitType]: Yup.array()
-                .of(
-                    Yup.object().shape({
-                        [ImprovementFormField.description]: Yup.string()
-                            .label(fieldLabels[ImprovementFormField.description])
-                            .required(),
-                    })
-                )
-                .compact((improvement) => improvement === undefined),
+            [visitType]: Yup.array().of(
+                Yup.object().shape({
+                    [ImprovementFormField.description]: Yup.string().test(
+                        "Required-If-Enabled",
+                        `${fieldLabels[ImprovementFormField.description]} is a required field`,
+                        (description, context) =>
+                            context.parent.enabled ? description !== undefined : true
+                    ),
+                })
+            ),
         }),
         [FormField.outcomes]: Yup.object().shape({
             [visitType]: Yup.object().shape({

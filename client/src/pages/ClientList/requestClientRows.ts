@@ -1,6 +1,6 @@
 import { RowsProp } from "@material-ui/data-grid";
 import { apiFetch, APILoadError, Endpoint } from "util/endpoints";
-import { getUser } from "util/hooks/user";
+import { getCurrentUser } from "util/hooks/currentUser";
 import { getZones } from "util/hooks/zones";
 import { RiskType } from "util/risks";
 import { SearchOption } from "./searchOptions";
@@ -42,7 +42,7 @@ const requestClientRows = async (
             urlParams.append(searchOption.toLowerCase(), searchValue);
         }
         if (!allClientsMode) {
-            const user = await getUser();
+            const user = await getCurrentUser();
             if (user !== APILoadError) {
                 urlParams.append("created_by_user", String(user.id));
             }

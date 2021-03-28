@@ -1,12 +1,12 @@
 import { useStyles } from "./styles";
 import { Alert, Skeleton } from "@material-ui/lab";
-import { useUser } from "util/hooks/user";
+import { useCurrentUser } from "util/hooks/currentUser";
 import { APILoadError } from "util/endpoints";
 import { useZones } from "util/hooks/zones";
 
 const UserView = () => {
     const styles = useStyles();
-    const user = useUser();
+    const user = useCurrentUser();
     const zones = useZones();
 
     return (

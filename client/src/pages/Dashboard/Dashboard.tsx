@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormControl, Divider, MenuItem, Select, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { useZones } from "util/hooks/zones";
@@ -6,6 +6,12 @@ import { useZones } from "util/hooks/zones";
 const Dashboard = () => {
     const zones = useZones();
     const [zoneSelected, setZoneSelected] = useState<string | number>("");
+
+    useEffect(() => {
+        if (zones.size > 0) {
+            setZoneSelected(zones.keys().next().value);
+        }
+    }, [zones]);
 
     return (
         <>

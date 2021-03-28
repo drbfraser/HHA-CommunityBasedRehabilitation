@@ -36,7 +36,7 @@ const ClientForm = () => {
             onSubmit={handleSubmit}
         >
             {({ values, isSubmitting, resetForm }) => (
-                <Grid container direction="row" justify="flex-start">
+                <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
                         <Card className={styles.profileImgContainer}>
                             <CardContent>

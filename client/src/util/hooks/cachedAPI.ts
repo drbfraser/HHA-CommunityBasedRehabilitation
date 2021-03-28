@@ -37,7 +37,7 @@ export function cachedAPIHook<TValue, TLoading, TError>(
 
         useEffect(() => {
             if (!value) {
-                cachedAPIGet(cache).then((v: TValue | TError) => setValue(v));
+                cachedAPIGet(cache).then((v) => setValue(v));
             }
         }, [value]);
 

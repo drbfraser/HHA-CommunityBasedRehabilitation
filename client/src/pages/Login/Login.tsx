@@ -5,7 +5,7 @@ import Alert from "@material-ui/lab/Alert";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { doLogin } from "util/auth";
-import { defaultPage } from "util/pages";
+import { defaultPagePath } from "util/pages";
 import { useStyles } from "./Login.styles";
 
 enum LoginStatus {
@@ -34,7 +34,7 @@ const Login = () => {
         const loginSucceeded = await doLogin(username, password);
 
         if (loginSucceeded) {
-            history.push(defaultPage.path);
+            history.push(defaultPagePath);
         } else {
             setStatus(LoginStatus.FAILED);
         }

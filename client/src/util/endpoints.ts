@@ -20,6 +20,9 @@ export enum Endpoint {
     VISIT = "visit/",
 }
 
+export const APILoadError = "APILoadError";
+export type TAPILoadError = typeof APILoadError;
+
 export const apiFetch = async (
     endpoint: Endpoint,
     urlParams: string = "",

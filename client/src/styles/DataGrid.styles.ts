@@ -26,6 +26,8 @@ export const useDataGridStyles = makeStyles(
             "& .MuiDataGrid-colCellTitle": {
                 userSelect: "none",
                 textOverflow: "clip",
+                whiteSpace: "pre-line",
+                lineHeight: "normal",
             },
             "& .MuiSvgIcon-root": {
                 verticalAlign: "middle",
@@ -51,7 +53,7 @@ export const useDataGridStyles = makeStyles(
             },
         },
         dashboardTables: {
-            height: 400,
+            height: 500,
         },
         noRows: {
             display: "flex",

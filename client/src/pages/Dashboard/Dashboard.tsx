@@ -18,34 +18,124 @@ import {
     GridOverlay,
 } from "@material-ui/data-grid";
 
-const RenderBadge = (params: ValueFormatterParams) => {
-    const risk: RiskLevel = Object(params.value);
-    return <FiberManualRecord style={{ color: riskLevels[risk].color }} />;
-};
+const dummyClients = [
+    {
+        id: 1,
+        EDUCAT: "CR",
+        HEALTH: "CR",
+        SOCIAL: "CR",
+        name: "Priority Client 1",
+        zone: "Palorinya Zone 2",
+        lastVisit: "03-27-2021",
+    },
+    {
+        id: 2,
+        EDUCAT: "CR",
+        HEALTH: "CR",
+        SOCIAL: "CR",
+        name: "Priority Client 2",
+        zone: "Palorinya Zone 2",
+        lastVisit: "03-28-2021",
+    },
+    {
+        id: 3,
+        EDUCAT: "HI",
+        HEALTH: "CR",
+        SOCIAL: "CR",
+        name: "Priority Client 3",
+        zone: "Palorinya Zone 2",
+        lastVisit: "03-29-2021",
+    },
+    {
+        id: 4,
+        EDUCAT: "CR",
+        HEALTH: "CR",
+        SOCIAL: "HI",
+        name: "Priority Client 4",
+        zone: "Palorinya Zone 2",
+        lastVisit: "03-30-2021",
+    },
+    {
+        id: 5,
+        EDUCAT: "HI",
+        HEALTH: "CR",
+        SOCIAL: "HI",
+        name: "Priority Client 5",
+        zone: "Palorinya Zone 2",
+        lastVisit: "03-31-2021",
+    },
+];
 
-const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
-    const risk1: IRiskLevel = riskLevels[String(params1.value)];
-    const risk2: IRiskLevel = riskLevels[String(params2.value)];
-    return risk1.level - risk2.level;
-};
-
-const RenderRiskHeader = (params: ColParams): JSX.Element => {
-    const riskType: IRiskType = riskTypes[params.field];
-
-    return (
-        <div className="MuiDataGrid-colCellTitle">
-            <riskType.Icon />
-        </div>
-    );
-};
+const dummyReferrals = [
+    {
+        id: 1,
+        type: "Wheelchair",
+        name: "Referral Client 1",
+        zone: "Palorinya Zone 2",
+        lastReferral: "03-27-2021",
+    },
+    {
+        id: 2,
+        type: "Orthotics",
+        zone: "Palorinya Zone 2",
+        name: "Referral Client 2",
+        lastReferral: "03-27-2021",
+    },
+    {
+        id: 3,
+        type: "Prosthetic",
+        zone: "Palorinya Zone 2",
+        name: "Referral Client 3",
+        lastReferral: "03-27-2021",
+    },
+    {
+        id: 4,
+        type: "Physiotherapy",
+        zone: "Palorinya Zone 2",
+        name: "Referral Client 4",
+        lastReferral: "03-27-2021",
+    },
+    {
+        id: 5,
+        type: "Prosthetic",
+        zone: "Palorinya Zone 2",
+        name: "Referral Client 5",
+        lastReferral: "03-27-2021",
+    },
+];
 
 // TODO: Connecting API endpoints
 // TODO: Loading data animation
-// TODO : column header wrap text
 
 const Dashboard = () => {
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
+
+    const RenderBadge = (params: ValueFormatterParams) => {
+        const risk: RiskLevel = Object(params.value);
+        return <FiberManualRecord style={{ color: riskLevels[risk].color }} />;
+    };
+
+    const riskComparator = (
+        v1: CellValue,
+        v2: CellValue,
+        params1: CellParams,
+        params2: CellParams
+    ) => {
+        const risk1: IRiskLevel = riskLevels[String(params1.value)];
+        const risk2: IRiskLevel = riskLevels[String(params2.value)];
+        return risk1.level - risk2.level;
+    };
+
+    const RenderRiskHeader = (params: ColParams): JSX.Element => {
+        const riskType: IRiskType = riskTypes[params.field];
+
+        return (
+            <div className="MuiDataGrid-colCellTitle">
+                <riskType.Icon />
+            </div>
+        );
+    };
 
     const RenderText = (params: ValueFormatterParams) => {
         return <Typography variant={"body2"}>{params.value}</Typography>;
@@ -71,92 +161,6 @@ const Dashboard = () => {
 
     const handleRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
 
-    const dummyClients = [
-        {
-            id: 1,
-            EDUCAT: "CR",
-            HEALTH: "CR",
-            SOCIAL: "CR",
-            name: "Priority Client 1",
-            zone: "Palorinya Zone 2",
-            lastVisit: "03-27-2021",
-        },
-        {
-            id: 2,
-            EDUCAT: "CR",
-            HEALTH: "CR",
-            SOCIAL: "CR",
-            name: "Priority Client 2",
-            zone: "Palorinya Zone 2",
-            lastVisit: "03-28-2021",
-        },
-        {
-            id: 3,
-            EDUCAT: "HI",
-            HEALTH: "CR",
-            SOCIAL: "CR",
-            name: "Priority Client 3",
-            zone: "Palorinya Zone 2",
-            lastVisit: "03-29-2021",
-        },
-        {
-            id: 4,
-            EDUCAT: "CR",
-            HEALTH: "CR",
-            SOCIAL: "HI",
-            name: "Priority Client 4",
-            zone: "Palorinya Zone 2",
-            lastVisit: "03-30-2021",
-        },
-        {
-            id: 5,
-            EDUCAT: "HI",
-            HEALTH: "CR",
-            SOCIAL: "HI",
-            name: "Priority Client 5",
-            zone: "Palorinya Zone 2",
-            lastVisit: "03-31-2021",
-        },
-    ];
-
-    const dummyReferrals = [
-        {
-            id: 1,
-            type: "Wheelchair",
-            name: "Referral Client 1",
-            zone: "Palorinya Zone 2",
-            lastReferral: "03-27-2021",
-        },
-        {
-            id: 2,
-            type: "Orthotics",
-            zone: "Palorinya Zone 2",
-            name: "Referral Client 2",
-            lastReferral: "03-27-2021",
-        },
-        {
-            id: 3,
-            type: "Prosthetic",
-            zone: "Palorinya Zone 2",
-            name: "Referral Client 3",
-            lastReferral: "03-27-2021",
-        },
-        {
-            id: 4,
-            type: "Physiotherapy",
-            zone: "Palorinya Zone 2",
-            name: "Referral Client 4",
-            lastReferral: "03-27-2021",
-        },
-        {
-            id: 5,
-            type: "Prosthetic",
-            zone: "Palorinya Zone 2",
-            name: "Referral Client 5",
-            lastReferral: "03-27-2021",
-        },
-    ];
-
     const priorityClientsColumns = [
         {
             field: "name",
@@ -175,7 +179,7 @@ const Dashboard = () => {
         {
             field: "zone",
             headerName: "Zone",
-            flex: 1,
+            flex: 1.2,
             renderCell: RenderText,
         },
         {

@@ -8,6 +8,7 @@ import {
     StepContent,
     StepLabel,
     Stepper,
+    Typography,
 } from "@material-ui/core";
 import { ArrowBack } from "@material-ui/icons";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
@@ -29,6 +30,10 @@ import {
 import { handleSubmit } from "./formHandler";
 import { useStyles } from "./NewVisit.styles";
 import history from "../../util/history";
+import { IRisk } from "util/risks";
+import { apiFetch, Endpoint } from "util/endpoints";
+import { IClient } from "util/clients";
+import { Alert } from "@material-ui/lab";
 
 const visitTypes: FormField[] = [FormField.health, FormField.education, FormField.social];
 
@@ -82,11 +87,17 @@ const ImprovementField = (props: {
     );
 };
 
-const OutcomeField = (props: { visitType: FormField }) => {
+const OutcomeField = (props: { visitType: FormField; risks: IRisk[] }) => {
     const fieldName = `${FormField.outcomes}.${props.visitType}`;
 
     return (
         <div>
+            <FormLabel>Client's {fieldLabels[props.visitType]} Goal</FormLabel>
+            <Typography variant={"body1"}>
+                {props.risks.find((r) => r.risk_type === (props.visitType as string))?.goal}
+            </Typography>
+            <br />
+
             <FormLabel>Client's {fieldLabels[props.visitType]} Goal Status</FormLabel>
             <br />
             <Field
@@ -104,6 +115,7 @@ const OutcomeField = (props: { visitType: FormField }) => {
             </Field>
             <br />
             <br />
+
             <div>
                 <FormLabel>What is the Outcome of the Goal?</FormLabel>
                 <Field
@@ -126,7 +138,7 @@ interface IStepProps {
     formikProps: FormikProps<any>;
 }
 
-const VisitTypeStep = (visitType: FormField) => {
+const VisitTypeStep = (visitType: FormField, risks: IRisk[]) => {
     return ({ formikProps }: IStepProps) => {
         return (
             <FormControl>
@@ -146,7 +158,7 @@ const VisitTypeStep = (visitType: FormField) => {
                     }
                 />
                 <br />
-                <OutcomeField visitType={visitType} />
+                <OutcomeField visitType={visitType} risks={risks} />
             </FormControl>
         );
     };
@@ -245,15 +257,29 @@ const NewVisit = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
     const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+    const [risks, setRisks] = useState<IRisk[]>([]);
+    const [loadingError, setLoadingError] = useState(false);
     const { clientId } = useParams<{ clientId: string }>();
 
     useEffect(() => {
-        const fetchAllZones = async () => {
-            const zones = await getAllZones();
-            setZoneOptions(zones);
+        const getClient = () => {
+            return apiFetch(Endpoint.CLIENT, `${clientId}`)
+                .then((resp) => resp.json())
+                .then((resp) => resp as IClient);
         };
-        fetchAllZones();
-    }, []);
+
+        Promise.all([getClient(), getAllZones()])
+            .then(([client, zones]) => {
+                if (client) {
+                    client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
+                    setRisks(client.risks.slice());
+                }
+                setZoneOptions(zones);
+            })
+            .catch(() => {
+                setLoadingError(true);
+            });
+    }, [clientId]);
 
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 
@@ -265,7 +291,7 @@ const NewVisit = () => {
         },
         ...enabledSteps.map((visitType) => ({
             label: `${fieldLabels[visitType]} Visit`,
-            Form: VisitTypeStep(visitType),
+            Form: VisitTypeStep(visitType, risks),
             validationSchema: visitTypeValidationSchema(visitType),
         })),
     ];
@@ -287,7 +313,9 @@ const NewVisit = () => {
         setActiveStep(activeStep - 1);
     };
 
-    return (
+    return loadingError ? (
+        <Alert severity="error">Something went wrong loading the client. Please try again.</Alert>
+    ) : (
         <Formik
             initialValues={initialValues}
             validationSchema={visitSteps[activeStep].validationSchema}

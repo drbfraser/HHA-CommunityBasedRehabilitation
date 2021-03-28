@@ -14,9 +14,8 @@ import {
 import { ArrowBack } from "@material-ui/icons";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router";
-import { getAllZones, IZone } from "util/cache";
 import {
     fieldLabels,
     FormField,
@@ -31,6 +30,7 @@ import {
 import { handleSubmit } from "./formHandler";
 import { useStyles } from "./NewVisit.styles";
 import history from "../../util/history";
+import { TZoneMap, useZones } from "util/hooks/zones";
 
 const visitTypes: FormField[] = [FormField.health, FormField.education, FormField.social];
 
@@ -161,13 +161,13 @@ const VisitTypeStep = (visitType: FormField) => {
 
 const visitReasonStepCallBack = (
     setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>,
-    zoneOptions: IZone[]
-) => ({ formikProps }: IStepProps) => VisitReasonStep(formikProps, setEnabledSteps, zoneOptions);
+    zones: TZoneMap
+) => ({ formikProps }: IStepProps) => VisitReasonStep(formikProps, setEnabledSteps, zones);
 
 const VisitReasonStep = (
     formikProps: FormikProps<any>,
     setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>,
-    zoneOptions: IZone[]
+    zones: TZoneMap
 ) => {
     const styles = useStyles();
 
@@ -220,9 +220,9 @@ const VisitReasonStep = (
                     variant="outlined"
                     required
                 >
-                    {zoneOptions.map((option) => (
-                        <MenuItem key={option.id} value={option.id}>
-                            {option.zone_name}
+                    {Array.from(zones).map(([id, name]) => (
+                        <MenuItem key={id} value={id}>
+                            {name}
                         </MenuItem>
                     ))}
                 </Field>
@@ -253,23 +253,15 @@ const VisitReasonStep = (
 const NewVisit = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
-    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+    const zones = useZones();
     const { clientId } = useParams<{ clientId: string }>();
-
-    useEffect(() => {
-        const fetchAllZones = async () => {
-            const zones = await getAllZones();
-            setZoneOptions(zones);
-        };
-        fetchAllZones();
-    }, []);
 
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 
     const visitSteps = [
         {
             label: "Visit Focus",
-            Form: visitReasonStepCallBack(setEnabledSteps, zoneOptions),
+            Form: visitReasonStepCallBack(setEnabledSteps, zones),
             validationSchema: initialValidationSchema,
         },
         ...enabledSteps.map((visitType) => ({

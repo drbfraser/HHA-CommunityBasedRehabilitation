@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useStyles } from "../NewClient/ClientForm.styles";
 
-import { IZone, IDisability } from "util/cache";
 import { Field, Form, Formik } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 
@@ -23,15 +22,17 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 import { handleSubmit, handleCancel } from "./formHandler";
 import { IClient, genders } from "util/clients";
+import { useZones } from "util/hooks/zones";
+import { useDisabilities } from "util/hooks/disabilities";
 
 interface IProps {
     clientInfo: IClient;
-    zoneOptions: IZone[];
-    disabilityOptions: IDisability[];
 }
 
 const ClientInfoForm = (props: IProps) => {
     const styles = useStyles();
+    const zones = useZones();
+    const disabilities = useDisabilities();
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     return (
@@ -149,9 +150,9 @@ const ClientInfoForm = (props: IProps) => {
                                             label={fieldLabels[FormField.zone]}
                                             name={FormField.zone}
                                         >
-                                            {props.zoneOptions.map((option: IZone) => (
-                                                <MenuItem key={option.id} value={option.id}>
-                                                    {option.zone_name}
+                                            {Array.from(zones).map(([id, name]) => (
+                                                <MenuItem key={id} value={id}>
+                                                    {name}
                                                 </MenuItem>
                                             ))}
                                         </Field>
@@ -183,9 +184,9 @@ const ClientInfoForm = (props: IProps) => {
                                         name={FormField.disability}
                                         variant="outlined"
                                     >
-                                        {props.disabilityOptions.map((option) => (
-                                            <MenuItem key={option.id} value={option.id}>
-                                                {option.disability_type}
+                                        {Array.from(disabilities).map(([id, name]) => (
+                                            <MenuItem key={id} value={id}>
+                                                {name}
                                             </MenuItem>
                                         ))}
                                     </Field>

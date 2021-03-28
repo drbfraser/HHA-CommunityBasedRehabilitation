@@ -18,22 +18,22 @@ import { timestampToDateTime } from "util/dates";
 import { IVisit, IVisitSummary, outcomeGoalMets } from "util/visits";
 import { useStyles } from "./Entry.styles";
 import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
-import { IZone } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { RiskType, riskTypes } from "util/risks";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
+import { useZones } from "util/hooks/zones";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
-    zones: IZone[];
     dateFormatter: (timestamp: number) => string;
 }
 
-const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
+const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
     const [open, setOpen] = useState(false);
     const [visit, setVisit] = useState<IVisit>();
     const [loadingError, setLoadingError] = useState(false);
+    const zones = useZones();
     const styles = useStyles();
 
     const onOpen = () => {
@@ -53,11 +53,11 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
     };
 
     const Summary = ({ clickable }: { clickable: boolean }) => {
-        const zone = zones.find((z) => z.id === visitSummary.zone);
+        const zone = zones.get(visitSummary.zone) ?? "Unknown";
 
         return (
             <>
-                <b>Visit</b> in {zone?.zone_name} &nbsp;
+                <b>Visit</b> in {zone} &nbsp;
                 {visitSummary.health_visit && (
                     <RiskTypeChip risk={RiskType.HEALTH} clickable={clickable} />
                 )}{" "}

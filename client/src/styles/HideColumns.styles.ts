@@ -7,7 +7,6 @@ export const useHideColumnsStyles = makeStyles(
         },
         optionsButton: {
             padding: "6px",
-            float: "right",
             verticalAlign: "middle",
         },
         optionsRow: {

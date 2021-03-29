@@ -192,40 +192,6 @@ const ClientList = () => {
 
     return (
         <div className={styles.root}>
-            <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
-                <MoreVert />
-            </IconButton>
-            <Popover
-                open={isOptionsOpen}
-                anchorEl={optionsAnchorEl}
-                onClose={onOptionsClose}
-                anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                }}
-                transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                }}
-            >
-                <div className={hideColumnsStyle.optionsContainer}>
-                    {columns.map(
-                        (column): JSX.Element => {
-                            return (
-                                <div key={column.field} className={hideColumnsStyle.optionsRow}>
-                                    <Typography component={"span"} variant={"body2"}>
-                                        {column.headerName}
-                                    </Typography>
-                                    <Switch
-                                        checked={!column.hide}
-                                        onClick={() => column.hideFunction(!column.hide)}
-                                    />
-                                </div>
-                            );
-                        }
-                    )}
-                </div>
-            </Popover>
             <div className={styles.switch}>
                 <Typography
                     color={allClientsMode ? "textSecondary" : "textPrimary"}
@@ -265,24 +231,60 @@ const ClientList = () => {
                     </Select>
                 </div>
                 {searchOption === SearchOption.ZONE ? (
-                    <Select
-                        className={styles.zoneOptions}
-                        color={"primary"}
-                        defaultValue={""}
-                        onChange={(e) => setSearchValue(String(e.target.value))}
-                    >
-                        {Array.from(zones).map(([id, name]) => (
-                            <MenuItem key={id} value={id}>
-                                {name}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                    <div>
+                        <Select
+                            className={searchOptionsStyle.zoneOptions}
+                            color={"primary"}
+                            defaultValue={""}
+                            onChange={(e) => setSearchValue(String(e.target.value))}
+                        >
+                            {Array.from(zones).map(([id, name]) => (
+                                <MenuItem key={id} value={id}>
+                                    {name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </div>
                 ) : (
                     <SearchBar
                         value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
                     />
                 )}
+                <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
+                    <MoreVert />
+                </IconButton>
+                <Popover
+                    open={isOptionsOpen}
+                    anchorEl={optionsAnchorEl}
+                    onClose={onOptionsClose}
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                    }}
+                >
+                    <div className={hideColumnsStyle.optionsContainer}>
+                        {columns.map(
+                            (column): JSX.Element => {
+                                return (
+                                    <div key={column.field} className={hideColumnsStyle.optionsRow}>
+                                        <Typography component={"span"} variant={"body2"}>
+                                            {column.headerName}
+                                        </Typography>
+                                        <Switch
+                                            checked={!column.hide}
+                                            onClick={() => column.hideFunction(!column.hide)}
+                                        />
+                                    </div>
+                                );
+                            }
+                        )}
+                    </div>
+                </Popover>
             </div>
             <DataGrid
                 className={dataGridStyle.datagrid}

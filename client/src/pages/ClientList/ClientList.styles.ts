@@ -10,14 +10,12 @@ export const useStyles = makeStyles(
             padding: "5px 0px 25px 0px",
         },
         switch: {
+            float: "left",
             display: "inline-block",
         },
         search: {
-            float: "right",
+            justifyContent: "flex-end",
             display: "flex",
-        },
-        zoneOptions: {
-            minWidth: 175,
         },
         // mobile width
         [mediaMobile]: {
@@ -33,11 +31,12 @@ export const useStyles = makeStyles(
             },
             switch: {
                 display: "block",
+                float: "none",
                 textAlign: "center",
                 paddingBottom: "5px",
             },
             search: {
-                float: "none",
+                flexGrow: 1,
                 justifyContent: "center",
             },
         },

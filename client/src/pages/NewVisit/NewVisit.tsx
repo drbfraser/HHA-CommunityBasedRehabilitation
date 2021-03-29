@@ -262,18 +262,11 @@ const NewVisit = () => {
     const { clientId } = useParams<{ clientId: string }>();
 
     useEffect(() => {
-        const getClient = () => {
-            return apiFetch(Endpoint.CLIENT, `${clientId}`)
-                .then((resp) => resp.json())
-                .then((resp) => resp as IClient);
-        };
-
-        Promise.all([getClient()])
-            .then(([client]) => {
-                if (client) {
-                    client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
-                    setRisks(client.risks.slice());
-                }
+        apiFetch(Endpoint.CLIENT, `${clientId}`)
+            .then((resp) => resp.json())
+            .then((client: IClient) => {
+                client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
+                setRisks(client.risks);
             })
             .catch(() => {
                 setLoadingError(true);

@@ -30,9 +30,9 @@ import { RiskLevel, IRiskLevel, riskLevels, RiskType, IRiskType, riskTypes } fro
 import { SearchOption } from "./searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
 import requestClientRows from "./requestClientRows";
-import { getAllZones, IZone } from "util/cache";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
+import { useZones } from "util/hooks/zones";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
     const risk1: IRiskLevel = riskLevels[String(params1.value)];
@@ -97,9 +97,9 @@ const ClientList = () => {
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
-    const [zones, setZones] = useState<IZone[]>([]);
     const [rows, setRows] = useState<RowsProp>([]);
 
+    const zones = useZones();
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
     const searchOptionsStyle = useSearchOptionsStyles();
@@ -171,7 +171,6 @@ const ClientList = () => {
     useEffect(() => {
         const loadInitialData = async () => {
             setLoading(true);
-            setZones(await getAllZones());
             await requestClientRows(setRows, setLoading, "", "", true);
             setLoading(false);
             initialDataLoaded.current = true;
@@ -238,9 +237,9 @@ const ClientList = () => {
                         defaultValue={""}
                         onChange={(e) => setSearchValue(String(e.target.value))}
                     >
-                        {zones.map((zone) => (
-                            <MenuItem key={zone.id} value={zone.id}>
-                                {zone.zone_name}
+                        {Array.from(zones).map(([id, name]) => (
+                            <MenuItem key={id} value={id}>
+                                {name}
                             </MenuItem>
                         ))}
                     </Select>

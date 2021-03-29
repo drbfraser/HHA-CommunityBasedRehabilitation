@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Field, Form, Formik } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 
@@ -20,26 +20,14 @@ import { fieldLabels, FormField, initialValues, validationSchema } from "./formF
 
 import { riskLevels } from "util/risks";
 import { handleSubmit, handleReset } from "./formHandler";
-import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache";
 import { genders } from "util/clients";
+import { useDisabilities } from "util/hooks/disabilities";
+import { useZones } from "util/hooks/zones";
 
 const ClientForm = () => {
     const styles = useStyles();
-    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
-    const [disabilityOptions, setDisabilityOptions] = useState<IDisability[]>([]);
-
-    useEffect(() => {
-        const fetchAllZones = async () => {
-            const zones = await getAllZones();
-            setZoneOptions(zones);
-        };
-        const fetchAllDisabilities = async () => {
-            const disabilities = await getAllDisabilities();
-            setDisabilityOptions(disabilities);
-        };
-        fetchAllZones();
-        fetchAllDisabilities();
-    }, []);
+    const zones = useZones();
+    const disabilities = useDisabilities();
 
     return (
         <Formik
@@ -48,7 +36,7 @@ const ClientForm = () => {
             onSubmit={handleSubmit}
         >
             {({ values, isSubmitting, resetForm }) => (
-                <Grid container direction="row" justify="flex-start">
+                <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
                         <Card className={styles.profileImgContainer}>
                             <CardContent>
@@ -139,9 +127,9 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.zone]}
                                             name={FormField.zone}
                                         >
-                                            {zoneOptions.map((option) => (
-                                                <MenuItem key={option.id} value={option.id}>
-                                                    {option.zone_name}
+                                            {Array.from(zones).map(([id, name]) => (
+                                                <MenuItem key={id} value={id}>
+                                                    {name}
                                                 </MenuItem>
                                             ))}
                                         </Field>
@@ -169,9 +157,9 @@ const ClientForm = () => {
                                         name={FormField.disability}
                                         variant="outlined"
                                     >
-                                        {disabilityOptions.map((option) => (
-                                            <MenuItem key={option.id} value={option.id}>
-                                                {option.disability_type}
+                                        {Array.from(disabilities).map(([id, name]) => (
+                                            <MenuItem key={id} value={id}>
+                                                {name}
                                             </MenuItem>
                                         ))}
                                     </Field>

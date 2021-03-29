@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { FormControl, Divider, MenuItem, Select, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { getAllZones, IZone } from "util/cache";
+import { useZones } from "util/hooks/zones";
 
 const Dashboard = () => {
-    const [zones, setZones] = useState<IZone[]>([]);
+    const zones = useZones();
     const [zoneSelected, setZoneSelected] = useState<string | number>("");
 
     useEffect(() => {
-        getAllZones().then((zones) => {
-            setZones(zones);
-
-            if (zones.length) {
-                setZoneSelected(zones[0].id);
-            }
-        });
-    }, []);
+        if (zones.size > 0) {
+            setZoneSelected(zones.keys().next().value);
+        }
+    }, [zones]);
 
     return (
         <>
@@ -45,9 +41,9 @@ const Dashboard = () => {
                         value={zoneSelected}
                         onChange={(e) => setZoneSelected(e.target.value as number)}
                     >
-                        {zones.map((zone) => (
-                            <MenuItem key={zone.id} value={zone.id}>
-                                {zone.zone_name}
+                        {Array.from(zones).map(([id, name]) => (
+                            <MenuItem key={id} value={id}>
+                                {name}
                             </MenuItem>
                         ))}
                     </Select>

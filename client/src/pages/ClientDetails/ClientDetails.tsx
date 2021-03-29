@@ -10,12 +10,10 @@ import ClientInfoForm from "./ClientInfoForm";
 import { IClient } from "util/clients";
 import ClientRisks from "./Risks/ClientRisks";
 import { IRisk } from "util/risks";
-import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache";
 import { useHistory } from "react-router-dom";
 import VisitReferralTimeline from "./VisitReferralTimeline/VisitReferralTimeline";
 import { timestampToFormDate } from "util/dates";
 import { Alert, Skeleton } from "@material-ui/lab";
-
 interface IUrlParam {
     clientId: string;
 }
@@ -23,31 +21,27 @@ interface IUrlParam {
 const ClientDetails = () => {
     const { clientId } = useParams<IUrlParam>();
     const [clientInfo, setClientInfo] = useState<IClient>();
-    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
-    const [disabilityOptions, setDisabilityOptions] = useState<IDisability[]>([]);
     const [loadingError, setLoadingError] = useState(false);
 
     const history = useHistory();
 
     useEffect(() => {
-        const getClient = () => {
-            return apiFetch(Endpoint.CLIENT, `${clientId}`)
-                .then((resp) => resp.json())
-                .then((resp) => resp as IClient);
-        };
+        const getClient = async () => {
+            try {
+                const client = (await (
+                    await apiFetch(Endpoint.CLIENT, `${clientId}`)
+                ).json()) as IClient;
 
-        Promise.all([getClient(), getAllZones(), getAllDisabilities()])
-            .then(([client, zones, disabilities]) => {
                 client.birth_date = timestampToFormDate(client.birth_date as number);
                 client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
 
                 setClientInfo(client);
-                setZoneOptions(zones);
-                setDisabilityOptions(disabilities);
-            })
-            .catch(() => {
+            } catch (e) {
                 setLoadingError(true);
-            });
+            }
+        };
+
+        getClient();
     }, [clientId]);
 
     return loadingError ? (
@@ -55,12 +49,8 @@ const ClientDetails = () => {
     ) : (
         <Grid container spacing={2} direction="row" justify="flex-start">
             <Grid item xs={12}>
-                {clientInfo && zoneOptions.length && disabilityOptions.length ? (
-                    <ClientInfoForm
-                        clientInfo={clientInfo}
-                        zoneOptions={zoneOptions}
-                        disabilityOptions={disabilityOptions}
-                    />
+                {clientInfo ? (
+                    <ClientInfoForm clientInfo={clientInfo} />
                 ) : (
                     <Skeleton variant="rect" height={500} />
                 )}
@@ -100,7 +90,7 @@ const ClientDetails = () => {
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <VisitReferralTimeline client={clientInfo} zones={zoneOptions} />
+                <VisitReferralTimeline client={clientInfo} />
             </Grid>
         </Grid>
     );

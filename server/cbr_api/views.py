@@ -3,7 +3,7 @@ from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
-
+import json
 
 class UserList(generics.ListCreateAPIView):
     permission_classes = [permissions.AdminAll]
@@ -16,6 +16,69 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRSerializer
 
+
+class AdminStats(generics.RetrieveAPIView):
+    permission_classes = [permissions.AdminAll]
+    serializer_class = serializers.AdminStatsSerializer
+
+    def get_object(self):
+        def getVisitStats():
+            from django.db import connection
+        
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT zone_id,
+                    COUNT(*) as total,
+                    COUNT(*) filter(where health_visit) as health_count,
+                    COUNT(*) filter(where educat_visit) as educat_count,
+                    COUNT(*) filter(where social_visit) as social_count
+                    FROM cbr_api_visit GROUP BY zone_id
+                """)
+
+                columns = [col[0] for col in cursor.description]
+                return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+        def getReferralStats():
+            try:
+                user_id = json.loads(self.request.body)["user_id"]
+            except:
+                user_id = -1
+            
+            if (user_id == -1):
+                sql = """
+                    SELECT resolved,
+                    COUNT(*) as total,
+                    COUNT(*) filter(where wheelchair) as wheelchair_count,
+                    COUNT(*) filter(where physiotherapy) as physiotherapy_count,
+                    COUNT(*) filter(where prosthetic) as prosthetic_count,
+                    COUNT(*) filter(where orthotic) as orthotic_count,
+                    COUNT(*) filter(where services_other != '') as other_count
+                    FROM cbr_api_referral GROUP BY resolved ORDER BY resolved DESC
+                    """
+            else:
+                sql = """
+                    SELECT resolved,
+                    COUNT(*) as total,
+                    COUNT(*) filter(where wheelchair) as wheelchair_count,
+                    COUNT(*) filter(where physiotherapy) as physiotherapy_count,
+                    COUNT(*) filter(where prosthetic) as prosthetic_count,
+                    COUNT(*) filter(where orthotic) as orthotic_count,
+                    COUNT(*) filter(where services_other != '') as other_count
+                    FROM cbr_api_referral WHERE user_id=%s
+                    GROUP BY resolved ORDER BY resolved DESC
+                    """
+            from django.db import connection
+        
+            with connection.cursor() as cursor:
+                cursor.execute(sql, [user_id],)
+
+                columns = [col[0] for col in cursor.description]
+                return [dict(zip(columns, row)) for row in cursor.fetchall()]
+                
+        return {
+            "visits": getVisitStats(),
+            "referrals": getReferralStats(),
+        }
 
 class UserCurrent(generics.RetrieveAPIView):
     queryset = models.UserCBR.objects.all()

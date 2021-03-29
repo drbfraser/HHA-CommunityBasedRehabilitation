@@ -140,7 +140,7 @@ class ClientRisk(models.Model):
 
 class Visit(models.Model):
     client = models.ForeignKey(Client, related_name="visits", on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="visits", on_delete=models.PROTECT)
     date_visited = models.BigIntegerField()
     health_visit = models.BooleanField(default=False)
     educat_visit = models.BooleanField(default=False)

@@ -317,6 +317,29 @@ class SummaryVisitSerializer(serializers.ModelSerializer):
         ]
 
 
+class AdminStatsVisitsSerializer(serializers.Serializer):
+    zone_id = serializers.IntegerField()
+    total = serializers.IntegerField()
+    health_count = serializers.IntegerField()
+    educat_count = serializers.IntegerField()
+    social_count = serializers.IntegerField()
+
+
+class AdminStatsReferralSerializer(serializers.Serializer):
+    resolved = serializers.BooleanField()
+    total = serializers.IntegerField()
+    wheelchair_count = serializers.IntegerField()
+    physiotherapy_count = serializers.IntegerField()
+    prosthetic_count = serializers.IntegerField()
+    orthotic_count = serializers.IntegerField()
+    other_count = serializers.IntegerField()
+    #user_id = serializers.IntegerField()
+
+class AdminStatsSerializer(serializers.Serializer):
+    visits = AdminStatsVisitsSerializer(many=True, read_only=True)
+    referrals = AdminStatsReferralSerializer(many=True, read_only=True)
+
+
 class ClientListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Client

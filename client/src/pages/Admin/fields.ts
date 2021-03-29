@@ -73,12 +73,21 @@ export const validationSchema = (newUser: boolean) => {
             ...yupShape,
             [AdminField.password]: Yup.string()
                 .label(fieldLabels[AdminField.password])
-                .min(8)
+                .min(8, `Password must be at least 8 characters`)
                 .required(),
             [AdminField.confirm]: Yup.string()
                 .label(fieldLabels[AdminField.confirm])
-                .min(8)
-                .required(),
+                .min(8, `Password must be at least 8 characters`)
+                .required()
+                .test({
+                    name: "match",
+                    exclusive: false,
+                    params: {},
+                    message: "Passwords must match",
+                    test: function (value) {
+                        return value === this.parent.password;
+                    },
+                }),
         };
     }
 

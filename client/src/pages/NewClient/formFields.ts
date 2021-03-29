@@ -82,12 +82,15 @@ export const validationSchema = () =>
     Yup.object().shape({
         [FormField.firstName]: Yup.string()
             .label(fieldLabels[FormField.firstName])
+            .trim()
             .required()
             .max(50),
         [FormField.lastName]: Yup.string()
             .label(fieldLabels[FormField.lastName])
+            .trim()
             .required()
-            .max(50),
+            .max(50)
+            .trim(),
         [FormField.birthDate]: Yup.date()
             .label(fieldLabels[FormField.birthDate])
             .max(new Date(), "Birthdate cannot be in the future")
@@ -98,27 +101,37 @@ export const validationSchema = () =>
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
         [FormField.disability]: Yup.array().label(fieldLabels[FormField.disability]).required(),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
-        [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),
+        [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).trim().required(),
         [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),
         [FormField.healthRisk]: Yup.string().label(fieldLabels[FormField.healthRisk]).required(),
         [FormField.healthRequirements]: Yup.string()
             .label(fieldLabels[FormField.healthRequirements])
+            .trim()
             .required(),
-        [FormField.healthGoals]: Yup.string().label(fieldLabels[FormField.healthGoals]).required(),
+        [FormField.healthGoals]: Yup.string()
+            .label(fieldLabels[FormField.healthGoals])
+            .trim()
+            .required(),
         [FormField.educationRisk]: Yup.string()
             .label(fieldLabels[FormField.educationRisk])
             .required(),
         [FormField.educationRequirements]: Yup.string()
             .label(fieldLabels[FormField.educationRequirements])
+            .trim()
             .required(),
         [FormField.educationGoals]: Yup.string()
             .label(fieldLabels[FormField.educationGoals])
+            .trim()
             .required(),
         [FormField.socialRisk]: Yup.string().label(fieldLabels[FormField.socialRisk]).required(),
         [FormField.socialRequirements]: Yup.string()
             .label(fieldLabels[FormField.socialRequirements])
+            .trim()
             .required(),
-        [FormField.socialGoals]: Yup.string().label(fieldLabels[FormField.socialGoals]).required(),
+        [FormField.socialGoals]: Yup.string()
+            .label(fieldLabels[FormField.socialGoals])
+            .trim()
+            .required(),
         [FormField.caregiverPhone]: Yup.string()
             .label(fieldLabels[FormField.caregiverPhone])
             .max(50)

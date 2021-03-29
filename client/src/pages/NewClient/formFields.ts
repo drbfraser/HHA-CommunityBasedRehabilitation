@@ -89,8 +89,7 @@ export const validationSchema = () =>
             .label(fieldLabels[FormField.lastName])
             .trim()
             .required()
-            .max(50)
-            .trim(),
+            .max(50),
         [FormField.birthDate]: Yup.date()
             .label(fieldLabels[FormField.birthDate])
             .max(new Date(), "Birthdate cannot be in the future")

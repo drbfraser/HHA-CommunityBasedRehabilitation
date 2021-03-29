@@ -1,5 +1,5 @@
 import { RowsProp } from "@material-ui/data-grid";
-import { getZoneMap } from "util/cache";
+import { getZones } from "util/hooks/zones";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { UserRole, userRoles } from "util/users";
 
@@ -25,7 +25,7 @@ const requestUserRows = async (
         const resp = await apiFetch(Endpoint.USERS, urlParams);
 
         const responseRows: IResponseRow[] = await resp.json();
-        const zoneMap = await getZoneMap();
+        const zoneMap = await getZones();
         const rows: RowsProp = responseRows.map((responseRow) => {
             return {
                 id: responseRow.id,

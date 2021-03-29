@@ -231,18 +231,20 @@ const ClientList = () => {
                     </Select>
                 </div>
                 {searchOption === SearchOption.ZONE ? (
-                    <Select
-                        className={searchOptionsStyle.zoneOptions}
-                        color={"primary"}
-                        defaultValue={""}
-                        onChange={(e) => setSearchValue(String(e.target.value))}
-                    >
-                        {Array.from(zones).map(([id, name]) => (
-                            <MenuItem key={id} value={id}>
-                                {name}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                    <div>
+                        <Select
+                            className={searchOptionsStyle.zoneOptions}
+                            color={"primary"}
+                            defaultValue={""}
+                            onChange={(e) => setSearchValue(String(e.target.value))}
+                        >
+                            {Array.from(zones).map(([id, name]) => (
+                                <MenuItem key={id} value={id}>
+                                    {name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </div>
                 ) : (
                     <SearchBar
                         value={searchValue}

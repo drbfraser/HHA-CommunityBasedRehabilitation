@@ -27,7 +27,7 @@ import requestUserRows from "./requestUserRows";
 import React from "react";
 import { Cancel, MoreVert } from "@material-ui/icons";
 import { SearchOption } from "../ClientList/searchOptions";
-import { getAllZones, IZone } from "util/cache";
+import { useZones } from "util/hooks/zones";
 
 const RenderText = (params: ValueFormatterParams) => {
     return <Typography variant={"body2"}>{params.value}</Typography>;
@@ -55,11 +55,6 @@ const RenderNoRowsOverlay = () => {
 };
 
 const AdminList = () => {
-    const styles = useStyles();
-    const dataGridStyle = useDataGridStyles();
-    const searchOptionsStyle = useSearchOptionsStyles();
-    const hideColumnsStyle = useHideColumnsStyles();
-    const history = useHistory();
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
     const [loading, setLoading] = useState<boolean>(true);
@@ -70,9 +65,15 @@ const AdminList = () => {
     const [isStatusHidden, setStatusHidden] = useState<boolean>(false);
     const [filteredRows, setFilteredRows] = useState<RowsProp>([]);
     const [serverRows, setServerRows] = useState<RowsProp>([]);
-    const [zones, setZones] = useState<IZone[]>([]);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const isOptionsOpen = Boolean(optionsAnchorEl);
+
+    const zones = useZones();
+    const styles = useStyles();
+    const dataGridStyle = useDataGridStyles();
+    const searchOptionsStyle = useSearchOptionsStyles();
+    const hideColumnsStyle = useHideColumnsStyles();
+    const history = useHistory();
 
     const onRowClick = (row: any) => {
         const user = row.row;
@@ -131,7 +132,6 @@ const AdminList = () => {
     useEffect(() => {
         const loadInitialData = async () => {
             setLoading(true);
-            setZones(await getAllZones());
             await requestUserRows(setFilteredRows, setServerRows, setLoading);
             setLoading(false);
             initialDataLoaded.current = true;
@@ -185,18 +185,20 @@ const AdminList = () => {
                     </Select>
                 </div>
                 {searchOption === SearchOption.ZONE ? (
-                    <Select
-                        className={searchOptionsStyle.zoneOptions}
-                        color={"primary"}
-                        defaultValue={""}
-                        onChange={(event) => setSearchValue(String(event.target.value))}
-                    >
-                        {zones.map((zone) => (
-                            <MenuItem key={zone.id} value={zone.zone_name}>
-                                {zone.zone_name}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                    <div>
+                        <Select
+                            className={searchOptionsStyle.zoneOptions}
+                            color={"primary"}
+                            defaultValue={""}
+                            onChange={(event) => setSearchValue(String(event.target.value))}
+                        >
+                            {Array.from(zones).map(([id, name]) => (
+                                <MenuItem key={id} value={name}>
+                                    {name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </div>
                 ) : (
                     <SearchBar
                         value={searchValue}

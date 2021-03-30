@@ -74,10 +74,10 @@ const AdminNew = () => {
                             <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
-                                    name={AdminField.confirm}
+                                    name={AdminField.confirmPassword}
                                     variant="outlined"
                                     type="password"
-                                    label={fieldLabels[AdminField.confirm]}
+                                    label={fieldLabels[AdminField.confirmPassword]}
                                     required
                                     fullWidth
                                 />

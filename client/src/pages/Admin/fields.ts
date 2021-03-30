@@ -9,7 +9,7 @@ export interface IRouteParams {
 export enum AdminField {
     username = "username",
     password = "password",
-    confirm = "confirm",
+    confirmPassword = "confirmPassword",
     first_name = "first_name",
     last_name = "last_name",
     role = "role",
@@ -21,7 +21,7 @@ export enum AdminField {
 export const fieldLabels = {
     [AdminField.username]: "Username",
     [AdminField.password]: "Enter Password",
-    [AdminField.confirm]: "Confirm Password",
+    [AdminField.confirmPassword]: "Confirm Password",
     [AdminField.first_name]: "First Name",
     [AdminField.last_name]: "Last Name",
     [AdminField.role]: "Role",
@@ -33,7 +33,7 @@ export const fieldLabels = {
 export const initialValues = {
     [AdminField.username]: "",
     [AdminField.password]: "",
-    [AdminField.confirm]: "",
+    [AdminField.confirmPassword]: "",
     [AdminField.first_name]: "",
     [AdminField.last_name]: "",
     [AdminField.role]: UserRole.WORKER,
@@ -75,19 +75,10 @@ export const validationSchema = (newUser: boolean) => {
                 .label(fieldLabels[AdminField.password])
                 .min(8, `Password must be at least 8 characters`)
                 .required(),
-            [AdminField.confirm]: Yup.string()
-                .label(fieldLabels[AdminField.confirm])
-                .min(8, `Password must be at least 8 characters`)
+            [AdminField.confirmPassword]: Yup.string()
+                .label(fieldLabels[AdminField.confirmPassword])
                 .required()
-                .test({
-                    name: "match",
-                    exclusive: false,
-                    params: {},
-                    message: "Passwords must match",
-                    test: function (value) {
-                        return value === this.parent.password;
-                    },
-                }),
+                .oneOf([Yup.ref(AdminField.password)], "Passwords must match"),
         };
     }
 

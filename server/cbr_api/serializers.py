@@ -60,7 +60,6 @@ class UserPasswordSerializer(serializers.ModelSerializer):
     def update(self, user, validated_data):
         user.set_password(validated_data["new_password"])
         user.save()
-
         return user
 
 
@@ -326,7 +325,7 @@ class AdminStatsVisitsSerializer(serializers.Serializer):
 
 
 class AdminStatsReferralSerializer(serializers.Serializer):
-    resolved = serializers.BooleanField()
+    # resolved = serializers.BooleanField()
     total = serializers.IntegerField()
     wheelchair_count = serializers.IntegerField()
     physiotherapy_count = serializers.IntegerField()
@@ -337,7 +336,8 @@ class AdminStatsReferralSerializer(serializers.Serializer):
 
 class AdminStatsSerializer(serializers.Serializer):
     visits = AdminStatsVisitsSerializer(many=True, read_only=True)
-    referrals = AdminStatsReferralSerializer(many=True, read_only=True)
+    referrals_resolved = AdminStatsReferralSerializer(many=False, read_only=True)
+    referrals_unresolved = AdminStatsReferralSerializer(many=False, read_only=True)
 
 
 class ClientListSerializer(serializers.ModelSerializer):

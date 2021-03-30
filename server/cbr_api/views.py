@@ -43,41 +43,47 @@ class AdminStats(generics.RetrieveAPIView):
                 user_id = json.loads(self.request.body)["user_id"]
             except:
                 user_id = -1
-            
-            if (user_id == -1):
-                sql = """
-                    SELECT resolved,
-                    COUNT(*) as total,
-                    COUNT(*) filter(where wheelchair) as wheelchair_count,
-                    COUNT(*) filter(where physiotherapy) as physiotherapy_count,
-                    COUNT(*) filter(where prosthetic) as prosthetic_count,
-                    COUNT(*) filter(where orthotic) as orthotic_count,
-                    COUNT(*) filter(where services_other != '') as other_count
-                    FROM cbr_api_referral GROUP BY resolved ORDER BY resolved DESC
-                    """
-            else:
-                sql = """
-                    SELECT resolved,
-                    COUNT(*) as total,
-                    COUNT(*) filter(where wheelchair) as wheelchair_count,
-                    COUNT(*) filter(where physiotherapy) as physiotherapy_count,
-                    COUNT(*) filter(where prosthetic) as prosthetic_count,
-                    COUNT(*) filter(where orthotic) as orthotic_count,
-                    COUNT(*) filter(where services_other != '') as other_count
-                    FROM cbr_api_referral WHERE user_id=%s
-                    GROUP BY resolved ORDER BY resolved DESC
-                    """
+
+            sql = """
+                SELECT resolved,
+                COUNT(*) as total,
+                COUNT(*) filter(where wheelchair) as wheelchair_count,
+                COUNT(*) filter(where physiotherapy) as physiotherapy_count,
+                COUNT(*) filter(where prosthetic) as prosthetic_count,
+                COUNT(*) filter(where orthotic) as orthotic_count,
+                COUNT(*) filter(where services_other != '') as other_count
+                FROM cbr_api_referral
+            """
+
+            if user_id != -1:
+                sql += "WHERE user_id=%s"
+
+            sql += "GROUP BY resolved ORDER BY resolved DESC"
+
             from django.db import connection
         
             with connection.cursor() as cursor:
                 cursor.execute(sql, [user_id],)
 
                 columns = [col[0] for col in cursor.description]
-                return [dict(zip(columns, row)) for row in cursor.fetchall()]
-                
+                rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+                empty_stats = dict(zip(columns, [0] * len(columns)))
+
+                def getOrEmpty(resolved):
+                    return next((r for r in rows if r["resolved"] == resolved), empty_stats)
+
+                return {
+                    "resolved": getOrEmpty(True),
+                    "unresolved": getOrEmpty(False)
+                }
+
+        referral_stats = getReferralStats()
+
         return {
             "visits": getVisitStats(),
-            "referrals": getReferralStats(),
+            "referrals_resolved": referral_stats["resolved"],
+            "referrals_unresolved": referral_stats["unresolved"],
         }
 
 class UserCurrent(generics.RetrieveAPIView):

@@ -34,6 +34,21 @@ const updateUser = async (userInfo: string, userId: number) => {
         });
 };
 
+export const handleUpdatePassword = async (userInfo: string, userId: number) => {
+    const init: RequestInit = {
+        method: "PUT",
+        body: userInfo,
+    };
+
+    return await apiFetch(Endpoint.PASSWORD, `${userId}`, init)
+        .then((res) => {
+            return res.json();
+        })
+        .then((res) => {
+            return res as IUser;
+        });
+};
+
 export const handleNewSubmit = async (
     values: TNewUserValues,
     helpers: FormikHelpers<TNewUserValues>

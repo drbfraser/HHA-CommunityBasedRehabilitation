@@ -7,17 +7,16 @@ import Button from "@material-ui/core/Button";
 import { useRouteMatch } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
 import { useState, useEffect } from "react";
-import { handleCancel, handleEditSubmit } from "./handler";
+import { handleCancel, handleEditSubmit, handleUpdatePassword } from "./handler";
 import { getAllZones, IZone } from "util/cache";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { IUser, userRoles } from "util/users";
 
-const AdminEdit = () => {
+const AdminPasswordEdit = () => {
     const styles = useStyles();
     const { userId } = useRouteMatch<IRouteParams>().params;
     const [user, setUser] = useState<IUser>();
-    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
     const [loadingError, setLoadingError] = useState(false);
 
     useEffect(() => {
@@ -27,8 +26,6 @@ const AdminEdit = () => {
                     await apiFetch(Endpoint.USER, `${userId}`)
                 ).json()) as IUser;
                 setUser(theUser);
-                const zones = await getAllZones();
-                setZoneOptions(zones);
             } catch (e) {
                 setLoadingError(true);
             }
@@ -40,11 +37,11 @@ const AdminEdit = () => {
         <Alert severity="error">
             Something went wrong trying to load that user. Please go back and try again.
         </Alert>
-    ) : user && zoneOptions ? (
+    ) : user ? (
         <Formik
-            initialValues={user}
+            initialValues={{password: "", id : userId}}
             validationSchema={validationEditSchema}
-            onSubmit={handleEditSubmit}
+            onSubmit={handleUpdatePassword}
         >
             {({ values, setFieldValue, isSubmitting }) => (
                 <div className={styles.container}>
@@ -57,77 +54,15 @@ const AdminEdit = () => {
                             <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
-                                    name={AdminField.first_name}
+                                    name={AdminField.password}
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.first_name]}
+                                    label={fieldLabels[AdminField.password]}
                                     required
                                     fullWidth
                                 />
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <Field
-                                    component={TextField}
-                                    name={AdminField.last_name}
-                                    variant="outlined"
-                                    label={fieldLabels[AdminField.last_name]}
-                                    required
-                                    fullWidth
-                                />
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <FormControl fullWidth variant="outlined">
-                                    <Field
-                                        component={TextField}
-                                        fullWidth
-                                        select
-                                        variant="outlined"
-                                        required
-                                        label={fieldLabels[AdminField.zone]}
-                                        name={AdminField.zone}
-                                    >
-                                        {zoneOptions.map((option) => (
-                                            <MenuItem key={option.id} value={option.id}>
-                                                {option.zone_name}
-                                            </MenuItem>
-                                        ))}
-                                    </Field>
-                                </FormControl>
-                            </Grid>
-
-                            <Grid item md={6} xs={12}>
-                                <Field
-                                    component={TextField}
-                                    fullWidth
-                                    required
-                                    variant="outlined"
-                                    label={fieldLabels[AdminField.phone_number]}
-                                    name={AdminField.phone_number}
-                                />
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <FormControl fullWidth variant="outlined">
-                                    <Field
-                                        component={TextField}
-                                        select
-                                        required
-                                        variant="outlined"
-                                        label={fieldLabels[AdminField.role]}
-                                        name={AdminField.role}
-                                    >
-                                        {Object.entries(userRoles).map(([value, { name }]) => (
-                                            <MenuItem key={value} value={value}>
-                                                {name}
-                                            </MenuItem>
-                                        ))}
-                                    </Field>
-                                </FormControl>
                             </Grid>
                         </Grid>
-
-                        <br />
-                        <b>Status</b>
-                        <p>{values.is_active ? "Active" : "Disabled"}</p>
-                        <br />
+                        
                         <Grid
                             container
                             direction="row"
@@ -135,18 +70,6 @@ const AdminEdit = () => {
                             justify="space-between"
                             alignItems="center"
                         >
-                            <Button
-                                variant="contained"
-                                className={
-                                    values.is_active ? styles["disableBtn"] : styles["activeBtn"]
-                                }
-                                disabled={isSubmitting}
-                                onClick={() =>
-                                    setFieldValue(AdminField.is_active, !values.is_active)
-                                }
-                            >
-                                {values.is_active ? "Disable" : "Activate"}
-                            </Button>
                             <Grid item>
                                 <Button
                                     color="primary"
@@ -172,4 +95,4 @@ const AdminEdit = () => {
     );
 };
 
-export default AdminEdit;
+export default AdminPasswordEdit;

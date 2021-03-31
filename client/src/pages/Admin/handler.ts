@@ -2,7 +2,7 @@ import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { TNewUserValues } from "./fields";
 import history from "util/history";
-import { IUser } from "util/users";
+import { IUser, UserIDPassword } from "util/users";
 
 const addUser = async (userInfo: string) => {
     const init: RequestInit = {
@@ -34,7 +34,7 @@ const updateUser = async (userInfo: string, userId: number) => {
         });
 };
 
-export const handleUpdatePassword = async (userInfo: string, userId: number) => {
+const updateUserPassword = async (userInfo: string, userId: number) => {
     const init: RequestInit = {
         method: "PUT",
         body: userInfo,
@@ -44,9 +44,23 @@ export const handleUpdatePassword = async (userInfo: string, userId: number) => 
         .then((res) => {
             return res.json();
         })
-        .then((res) => {
-            return res as IUser;
-        });
+};
+
+export const handleUpdatePassword = async (
+    values: UserIDPassword,
+    helpers: FormikHelpers<UserIDPassword>
+) => {
+    const newPassword = JSON.stringify({
+        new_password: values.password,
+    });
+
+    try {
+        await updateUserPassword(newPassword, values.id);
+        history.goBack();
+    } catch (e) {
+        alert("Sorry, something went wrong trying to edit that user. Please try again.");
+        helpers.setSubmitting(false);
+    }
 };
 
 export const handleNewSubmit = async (

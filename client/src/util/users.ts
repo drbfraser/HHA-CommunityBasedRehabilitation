@@ -9,6 +9,11 @@ export interface IUser {
     is_active: boolean;
 }
 
+export interface UserIDPassword{
+    id: number;
+    password: string;
+}
+
 export enum UserRole {
     ADMIN = "ADM",
     CLINICIAN = "CLN",

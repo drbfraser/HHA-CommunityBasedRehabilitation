@@ -1,5 +1,5 @@
 import { IReferral } from "./referrals";
-import { IRisk } from "./risks";
+import { IRisk, riskLevels } from "./risks";
 import { IVisitSummary } from "./visits";
 
 export interface IClientSummary {
@@ -46,4 +46,23 @@ export enum Gender {
 export const genders = {
     [Gender.FEMALE]: "Female",
     [Gender.MALE]: "Male",
+};
+
+export const clientPrioritySort = (a: IClientSummary, b: IClientSummary) => {
+    const getCombinedRisk = (c: IClientSummary) =>
+        [c.health_risk_level, c.educat_risk_level, c.social_risk_level].reduce(
+            (sum, r) => sum + riskLevels[r].level,
+            0
+        );
+
+    const riskA = getCombinedRisk(a);
+    const riskB = getCombinedRisk(b);
+
+    if (riskA !== riskB) {
+        // sort risks descending
+        return riskB - riskA;
+    }
+
+    // if they have the same risk, sort by visit dates ascending (oldest first)
+    return a.last_visit_date - b.last_visit_date;
 };

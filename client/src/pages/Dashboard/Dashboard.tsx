@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Divider, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { IClientSummary } from "util/clients";
+import { clientPrioritySort, IClientSummary } from "util/clients";
 import { apiFetch, Endpoint } from "util/endpoints";
-import { riskLevels } from "util/risks";
 
 const Dashboard = () => {
     const [clients, setClients] = useState<IClientSummary[]>([]);
@@ -14,19 +13,6 @@ const Dashboard = () => {
             .then((clients) => setClients(clients))
             .catch(() => alert("TODO: error handling if clients fail to load"));
     }, []);
-
-    const clientPrioritySort = (a: IClientSummary, b: IClientSummary) => {
-        const getCombinedRisk = (c: IClientSummary) =>
-            [c.health_risk_level, c.educat_risk_level, c.social_risk_level].reduce(
-                (sum, r) => sum + riskLevels[r].level,
-                0
-            );
-
-        const riskA = getCombinedRisk(a);
-        const riskB = getCombinedRisk(b);
-
-        return riskA !== riskB ? riskB - riskA : b.last_visit_date - a.last_visit_date;
-    };
 
     return (
         <>

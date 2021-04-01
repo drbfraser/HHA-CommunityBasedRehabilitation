@@ -168,13 +168,13 @@ class Referral(models.Model):
         INTERMEDIATE = "INT", _("Intermediate")
 
     wheelchair = models.BooleanField(default=False)
-    wheelchair_experience = models.CharField(max_length=3, choices=Experience.choices)
-    hip_width = models.IntegerField()
+    wheelchair_experience = models.CharField(max_length=3, choices=Experience.choices, blank=True)
+    hip_width = models.IntegerField(default=0, blank=True)
     wheelchair_owned = models.BooleanField(default=False)
     wheelchair_repairable = models.BooleanField(default=False)
 
     physiotherapy = models.BooleanField(default=False)
-    condition = models.CharField(max_length=100)
+    condition = models.CharField(max_length=100, blank=True)
 
     class InjuryLocation(models.TextChoices):
         BELOW = "BEL", _("Below")
@@ -182,15 +182,15 @@ class Referral(models.Model):
 
     prosthetic = models.BooleanField(default=False)
     prosthetic_injury_location = models.CharField(
-        max_length=3, choices=InjuryLocation.choices
+        max_length=3, choices=InjuryLocation.choices, blank=True
     )
 
     orthotic = models.BooleanField(default=False)
     orthotic_injury_location = models.CharField(
-        max_length=3, choices=InjuryLocation.choices
+        max_length=3, choices=InjuryLocation.choices, blank=True
     )
 
-    services_other = models.CharField(max_length=100)
+    services_other = models.CharField(max_length=100, blank=True)
 
 
 class Outcome(models.Model):

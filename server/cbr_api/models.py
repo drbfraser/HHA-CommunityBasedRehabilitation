@@ -171,7 +171,7 @@ class Referral(models.Model):
     wheelchair_experience = models.CharField(
         max_length=3, choices=Experience.choices, blank=True
     )
-    hip_width = models.IntegerField(default=0, blank=True)
+    hip_width = models.IntegerField(default=0)
     wheelchair_owned = models.BooleanField(default=False)
     wheelchair_repairable = models.BooleanField(default=False)
 

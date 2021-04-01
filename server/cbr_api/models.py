@@ -168,7 +168,9 @@ class Referral(models.Model):
         INTERMEDIATE = "INT", _("Intermediate")
 
     wheelchair = models.BooleanField(default=False)
-    wheelchair_experience = models.CharField(max_length=3, choices=Experience.choices, blank=True)
+    wheelchair_experience = models.CharField(
+        max_length=3, choices=Experience.choices, blank=True
+    )
     hip_width = models.IntegerField(default=0, blank=True)
     wheelchair_owned = models.BooleanField(default=False)
     wheelchair_repairable = models.BooleanField(default=False)

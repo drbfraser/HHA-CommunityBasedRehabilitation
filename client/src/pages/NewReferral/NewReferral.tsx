@@ -172,7 +172,7 @@ const PhysiotherapyForm = (props: IFormProps) => {
                     variant="outlined"
                 >
                     {Array.from(disabilities).map(([id, name]) => (
-                        <MenuItem key={id} value={id}>
+                        <MenuItem key={id} value={name}>
                             {name}
                         </MenuItem>
                     ))}

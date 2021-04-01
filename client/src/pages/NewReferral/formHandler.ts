@@ -24,13 +24,13 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         wheelchair: values[FormField.wheelchair],
         wheelchair_experience: values[FormField.wheelchair]
             ? values[FormField.wheelchairExperience]
-            : false,
+            : "",
         hip_width: values[FormField.wheelchair] ? values[FormField.hipWidth] : 0,
-        wheelchair_owned: values[FormField.wheelchair] ? values[FormField.wheelchairOwned] : "",
+        wheelchair_owned: values[FormField.wheelchair] ? values[FormField.wheelchairOwned] : false,
         wheelchair_repairable:
             values[FormField.wheelchair] && values[FormField.wheelchairOwned]
                 ? values[FormField.wheelchairRepairable]
-                : "",
+                : false,
         physiotherapy: values[FormField.physiotherapy],
         condition: values[FormField.physiotherapy] ? values[FormField.condition] : "",
         prosthetic: values[FormField.prosthetic],

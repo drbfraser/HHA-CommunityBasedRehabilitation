@@ -35,12 +35,41 @@ const AdminNew = () => {
                                 />
                             </Grid>
                             <Grid item md={6} xs={12}>
+                                <FormControl fullWidth variant="outlined">
+                                    <Field
+                                        component={TextField}
+                                        select
+                                        required
+                                        variant="outlined"
+                                        label={fieldLabels[AdminField.role]}
+                                        name={AdminField.role}
+                                    >
+                                        {Object.entries(userRoles).map(([value, { name }]) => (
+                                            <MenuItem key={value} value={value}>
+                                                {name}
+                                            </MenuItem>
+                                        ))}
+                                    </Field>
+                                </FormControl>
+                            </Grid>
+                            <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
                                     name={AdminField.password}
                                     variant="outlined"
                                     type="password"
                                     label={fieldLabels[AdminField.password]}
+                                    required
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Field
+                                    component={TextField}
+                                    name={AdminField.confirmPassword}
+                                    variant="outlined"
+                                    type="password"
+                                    label={fieldLabels[AdminField.confirmPassword]}
                                     required
                                     fullWidth
                                 />
@@ -84,7 +113,6 @@ const AdminNew = () => {
                                     </Field>
                                 </FormControl>
                             </Grid>
-
                             <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
@@ -94,24 +122,6 @@ const AdminNew = () => {
                                     label={fieldLabels[AdminField.phone_number]}
                                     name={AdminField.phone_number}
                                 />
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <FormControl fullWidth variant="outlined">
-                                    <Field
-                                        component={TextField}
-                                        select
-                                        required
-                                        variant="outlined"
-                                        label={fieldLabels[AdminField.role]}
-                                        name={AdminField.role}
-                                    >
-                                        {Object.entries(userRoles).map(([value, { name }]) => (
-                                            <MenuItem key={value} value={value}>
-                                                {name}
-                                            </MenuItem>
-                                        ))}
-                                    </Field>
-                                </FormControl>
                             </Grid>
                         </Grid>
                         <br />

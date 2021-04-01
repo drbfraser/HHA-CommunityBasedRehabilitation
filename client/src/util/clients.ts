@@ -2,6 +2,17 @@ import { IReferral } from "./referrals";
 import { IRisk } from "./risks";
 import { IVisitSummary } from "./visits";
 
+export interface IClientSummary {
+    id: number;
+    full_name: string;
+    zone: number;
+    health_risk_level: string;
+    educat_risk_level: string;
+    social_risk_level: string;
+    last_visit_date: number;
+    created_by_user: number;
+}
+
 export interface IClient {
     id: number;
     first_name: string;

@@ -64,12 +64,12 @@ export const riskLevels: { [key: string]: IRiskLevel } = {
         color: themeColors.riskYellow,
     },
     [RiskLevel.HIGH]: {
-        level: 2,
+        level: 4, // 1 high > 3 mediums, as specified by customer
         name: "High",
         color: themeColors.riskRed,
     },
     [RiskLevel.CRITICAL]: {
-        level: 3,
+        level: 13, // 1 critical > 3 highs, as specified by customer
         name: "Critical",
         color: themeColors.riskBlack,
     },

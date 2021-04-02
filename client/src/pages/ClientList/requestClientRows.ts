@@ -1,24 +1,10 @@
 import { RowsProp } from "@material-ui/data-grid";
+import { IClientSummary } from "util/clients";
 import { apiFetch, APILoadError, Endpoint } from "util/endpoints";
 import { getCurrentUser } from "util/hooks/currentUser";
 import { getZones } from "util/hooks/zones";
 import { RiskType } from "util/risks";
 import { SearchOption } from "./searchOptions";
-
-enum RiskTypeAPIColumn {
-    HEALTH = "health_risk_level",
-    EDUCATION = "educat_risk_level",
-    SOCIAL = "social_risk_level",
-}
-
-interface IResponseRow {
-    id: number;
-    full_name: string;
-    zone: number;
-    [RiskTypeAPIColumn.HEALTH]: string;
-    [RiskTypeAPIColumn.EDUCATION]: string;
-    [RiskTypeAPIColumn.SOCIAL]: string;
-}
 
 const requestClientRows = async (
     setRows: (rows: RowsProp) => void,
@@ -50,15 +36,15 @@ const requestClientRows = async (
 
         const zones = await getZones();
         const resp = await apiFetch(Endpoint.CLIENTS, "?" + urlParams.toString());
-        const responseRows: IResponseRow[] = await resp.json();
+        const responseRows: IClientSummary[] = await resp.json();
         const rows: RowsProp = responseRows.map((responseRow) => {
             return {
                 id: responseRow.id,
                 name: responseRow.full_name,
                 zone: zones.get(responseRow.zone) ?? "",
-                [RiskType.HEALTH]: responseRow[RiskTypeAPIColumn.HEALTH],
-                [RiskType.EDUCATION]: responseRow[RiskTypeAPIColumn.EDUCATION],
-                [RiskType.SOCIAL]: responseRow[RiskTypeAPIColumn.SOCIAL],
+                [RiskType.HEALTH]: responseRow.health_risk_level,
+                [RiskType.EDUCATION]: responseRow.educat_risk_level,
+                [RiskType.SOCIAL]: responseRow.social_risk_level,
             };
         });
 

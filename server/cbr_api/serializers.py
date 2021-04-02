@@ -286,6 +286,10 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         visit = models.Visit.objects.create(**validated_data)
         visit.save()
 
+        client = validated_data["client"]
+        client.last_visit_date = current_time
+        client.save()
+
         for improvement_data in improvement_dataset:
             improvement_data["visit"] = visit
             improvement = models.Improvement.objects.create(**improvement_data)
@@ -327,6 +331,7 @@ class ClientListSerializer(serializers.ModelSerializer):
             "health_risk_level",
             "social_risk_level",
             "educat_risk_level",
+            "last_visit_date",
             "created_by_user",
         ]
 

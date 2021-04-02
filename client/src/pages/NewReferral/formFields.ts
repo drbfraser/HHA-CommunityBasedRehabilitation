@@ -46,7 +46,7 @@ export const fieldLabels = {
 export const initialValues = {
     [FormField.client]: 0,
     [FormField.wheelchairExperience]: WheelchairExperience.BASIC,
-    [FormField.hipWidth]: 35,
+    [FormField.hipWidth]: "",
     [FormField.wheelchair]: false,
     [FormField.wheelchairOwned]: false,
     [FormField.wheelchairRepairable]: false,

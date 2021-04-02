@@ -33,6 +33,6 @@ urlpatterns = [
     path("visit/<int:pk>", views.VisitDetail.as_view(), name="visit-detail"),
     path("referral/<int:pk>", views.ReferralDetail.as_view(), name="referral-detail"),
     path("referrals", views.ReferralList.as_view(), name="referral-list"),
-    #path("stats", views.user_list, name="admin-stats"),
+    # path("stats", views.user_list, name="admin-stats"),
     path("stats", views.AdminStats.as_view(), name="admin-stats"),
 ]

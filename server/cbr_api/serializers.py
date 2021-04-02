@@ -332,9 +332,23 @@ class AdminStatsReferralSerializer(serializers.Serializer):
     prosthetic_count = serializers.IntegerField()
     orthotic_count = serializers.IntegerField()
     other_count = serializers.IntegerField()
-    #user_id = serializers.IntegerField()
+    # user_id = serializers.IntegerField()
+
+
+class AdminStatsDisabilitySerializer(serializers.Serializer):
+    disability_id = serializers.IntegerField()
+    total = serializers.IntegerField()
+
+
+class AdminStatsDisabilityIndiviudalSerializer(serializers.Serializer):
+    total = serializers.IntegerField()
+
 
 class AdminStatsSerializer(serializers.Serializer):
+    disabilities = AdminStatsDisabilitySerializer(many=True, read_only=True)
+    people_with_any_disabilities = AdminStatsDisabilityIndiviudalSerializer(
+        many=True, read_only=True
+    )
     visits = AdminStatsVisitsSerializer(many=True, read_only=True)
     referrals_resolved = AdminStatsReferralSerializer(many=False, read_only=True)
     referrals_unresolved = AdminStatsReferralSerializer(many=False, read_only=True)

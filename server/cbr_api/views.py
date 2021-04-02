@@ -5,6 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 import json
 
+
 class UserList(generics.ListCreateAPIView):
     permission_classes = [permissions.AdminAll]
     queryset = models.UserCBR.objects.all()
@@ -22,28 +23,65 @@ class AdminStats(generics.RetrieveAPIView):
     serializer_class = serializers.AdminStatsSerializer
 
     def get_object(self):
+        try:
+            from_time = json.loads(self.request.body)["from"]
+            to_time = json.loads(self.request.body)["to"]
+        except:
+            from_time = "-1"
+            to_time = "-1"
+
+        print("HELLO")
+        print(from_time)
+        print(to_time)
+
+        def getDisabilityStats():
+            from django.db import connection
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT disability_id,
+                    COUNT(*) as total
+                    FROM cbr_api_client_disability GROUP BY disability_id ORDER BY disability_id
+                """
+                )
+
+                columns = [col[0] for col in cursor.description]
+                return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+        def getTotalDisabilityStats():
+            from django.db import connection
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT COUNT(DISTINCT client_id) as total
+                    FROM cbr_api_client_disability
+                """
+                )
+
+                columns = [col[0] for col in cursor.description]
+                return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
         def getVisitStats():
             from django.db import connection
-        
+
             with connection.cursor() as cursor:
-                cursor.execute("""
+                cursor.execute(
+                    """
                     SELECT zone_id,
                     COUNT(*) as total,
                     COUNT(*) filter(where health_visit) as health_count,
                     COUNT(*) filter(where educat_visit) as educat_count,
                     COUNT(*) filter(where social_visit) as social_count
                     FROM cbr_api_visit GROUP BY zone_id
-                """)
+                """
+                )
 
                 columns = [col[0] for col in cursor.description]
                 return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
-        def getReferralStats():
-            try:
-                user_id = json.loads(self.request.body)["user_id"]
-            except:
-                user_id = -1
-
+        def getReferralStats(from_time, to_time):
             sql = """
                 SELECT resolved,
                 COUNT(*) as total,
@@ -55,15 +93,27 @@ class AdminStats(generics.RetrieveAPIView):
                 FROM cbr_api_referral
             """
 
-            if user_id != -1:
-                sql += "WHERE user_id=%s"
+            try:
+                user_id = json.loads(self.request.body)["user_id"]
+            except:
+                user_id = -1
 
-            sql += "GROUP BY resolved ORDER BY resolved DESC"
+            if user_id != -1:
+                sql += " WHERE user_id=%s"
+
+            if from_time != -1 and to_time != -1:
+                sql += " AND date_referred >= %s AND date_referred <= %s"
+
+            sql += " GROUP BY resolved ORDER BY resolved DESC"
 
             from django.db import connection
-        
+
+            print(sql)
             with connection.cursor() as cursor:
-                cursor.execute(sql, [user_id],)
+                cursor.execute(
+                    sql,
+                    [user_id, from_time, to_time],
+                )
 
                 columns = [col[0] for col in cursor.description]
                 rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
@@ -71,20 +121,22 @@ class AdminStats(generics.RetrieveAPIView):
                 empty_stats = dict(zip(columns, [0] * len(columns)))
 
                 def getOrEmpty(resolved):
-                    return next((r for r in rows if r["resolved"] == resolved), empty_stats)
+                    return next(
+                        (r for r in rows if r["resolved"] == resolved), empty_stats
+                    )
 
-                return {
-                    "resolved": getOrEmpty(True),
-                    "unresolved": getOrEmpty(False)
-                }
+                return {"resolved": getOrEmpty(True), "unresolved": getOrEmpty(False)}
 
-        referral_stats = getReferralStats()
+        referral_stats = getReferralStats(from_time, to_time)
 
         return {
+            "disabilities": getDisabilityStats(),
+            "people_with_any_disabilities": getTotalDisabilityStats(),
             "visits": getVisitStats(),
             "referrals_resolved": referral_stats["resolved"],
             "referrals_unresolved": referral_stats["unresolved"],
         }
+
 
 class UserCurrent(generics.RetrieveAPIView):
     queryset = models.UserCBR.objects.all()

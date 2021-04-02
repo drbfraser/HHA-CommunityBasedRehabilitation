@@ -69,6 +69,7 @@ export const wheelchairValidationSchema = () =>
             .required(),
         [FormField.hipWidth]: Yup.number()
             .label(fieldLabels[FormField.hipWidth])
+            .max(200)
             .positive()
             .required(),
     });

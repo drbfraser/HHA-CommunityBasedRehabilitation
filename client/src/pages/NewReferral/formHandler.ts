@@ -18,7 +18,11 @@ const addReferral = async (referralInfo: string) => {
         });
 };
 
-export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
+export const handleSubmit = async (
+    values: TFormValues,
+    helpers: FormikHelpers<TFormValues>,
+    setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
+) => {
     const newReferral = JSON.stringify({
         client: values[FormField.client],
         wheelchair: values[FormField.wheelchair],
@@ -49,5 +53,6 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);
+        setSubmissionError(true);
     }
 };

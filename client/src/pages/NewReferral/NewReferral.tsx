@@ -3,6 +3,7 @@ import {
     FormControl,
     FormGroup,
     FormLabel,
+    InputAdornment,
     MenuItem,
     Radio,
     Step,
@@ -15,10 +16,8 @@ import { CheckboxWithLabel, RadioGroup, TextField } from "formik-material-ui";
 import React, { useState } from "react";
 import { useDisabilities } from "util/hooks/disabilities";
 import {
-    InjuryLocation,
     orthoticInjuryLocations,
     prostheticInjuryLocations,
-    WheelchairExperience,
     wheelchairExperiences,
 } from "util/referrals";
 import {
@@ -36,6 +35,7 @@ import { ArrowBack } from "@material-ui/icons";
 import history from "../../util/history";
 import { useParams } from "react-router-dom";
 import { useStyles } from "./NewReferral.styles";
+import { Alert } from "@material-ui/lab";
 
 const serviceTypes: FormField[] = [
     FormField.wheelchair,
@@ -73,7 +73,7 @@ const ReferralServiceForm = (
 
     return (
         <FormControl component="fieldset">
-            <FormLabel>Select Referral Services</FormLabel>
+            <FormLabel>Select referral services</FormLabel>
             <FormGroup>
                 {serviceTypes.map((serviceType) => (
                     <Field
@@ -98,26 +98,26 @@ const WheelchairForm = (props: IFormProps) => {
 
     return (
         <div>
-            <FormLabel>What is the Client's Wheelchair Experience?</FormLabel>
+            <FormLabel>What is the client's wheelchair experience?</FormLabel>
             <Field
                 component={RadioGroup}
                 name={FormField.wheelchairExperience}
                 label={fieldLabels[FormField.wheelchairExperience]}
             >
-                {Object.keys(wheelchairExperiences).map((experience) => (
-                    <label key={experience}>
+                {Object.entries(wheelchairExperiences).map(([value, name]) => (
+                    <label key={value}>
                         <Field
                             component={Radio}
                             type="radio"
                             name={FormField.wheelchairExperience}
-                            value={experience}
+                            value={value}
                         />
-                        {wheelchairExperiences[experience as WheelchairExperience]}
+                        {name}
                     </label>
                 ))}
             </Field>
             <br />
-            <FormLabel>What is the Client's Hip Width?</FormLabel>
+            <FormLabel>What is the client's hip width?</FormLabel>
             <br />
             <div className={`${styles.fieldIndent}`}>
                 <Field
@@ -125,11 +125,13 @@ const WheelchairForm = (props: IFormProps) => {
                     component={TextField}
                     type="number"
                     name={FormField.hipWidth}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">inches</InputAdornment>,
+                    }}
                 />
-                <FormLabel className={styles.inches}>inches</FormLabel>
             </div>
             <br />
-            <FormLabel>Wheelchair Information</FormLabel>
+            <FormLabel>Wheelchair information</FormLabel>
             <br />
             <div className={styles.fieldIndent}>
                 <Field
@@ -158,7 +160,7 @@ const PhysiotherapyForm = (props: IFormProps) => {
 
     return (
         <div>
-            <FormLabel>What Condition does the Client have?</FormLabel>
+            <FormLabel>What condition does the client have?</FormLabel>
             <br />
             <br />
             <div className={styles.fieldIndent}>
@@ -194,15 +196,15 @@ const ProstheticOrthoticForm = (props: IFormProps, serviceType: FormField) => {
                 name={`${serviceType}_injury_location`}
                 label={fieldLabels[serviceType]}
             >
-                {Object.values(InjuryLocation).map((location) => (
-                    <label key={location}>
+                {Object.entries(injuryLocations).map(([value, name]) => (
+                    <label key={value}>
                         <Field
                             component={Radio}
                             type="radio"
                             name={`${serviceType}_injury_location`}
-                            value={location}
+                            value={value}
                         />
-                        {injuryLocations[location as InjuryLocation]}
+                        {name}
                     </label>
                 ))}
             </Field>
@@ -215,7 +217,7 @@ const OtherServicesForm = (props: IFormProps) => {
 
     return (
         <div>
-            <FormLabel>Please Describe the Referral</FormLabel>
+            <FormLabel>Please describe the referral</FormLabel>
             <br />
             <br />
             <div className={styles.fieldIndent}>
@@ -237,6 +239,7 @@ const OtherServicesForm = (props: IFormProps) => {
 const NewReferral = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
+    const [submissionError, setSubmissionError] = useState(false);
     const { clientId } = useParams<{ clientId: string }>();
 
     const services: { [key: string]: IService } = {
@@ -284,7 +287,7 @@ const NewReferral = () => {
 
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
-            handleSubmit(values, helpers);
+            handleSubmit(values, helpers, setSubmissionError);
         } else {
             if (activeStep === 0) {
                 helpers.setFieldValue(`${[FormField.client]}`, clientId);
@@ -293,6 +296,12 @@ const NewReferral = () => {
             helpers.setSubmitting(false);
             helpers.setTouched({});
         }
+    };
+
+    const isNoServiceChecked = (formikProps: FormikProps<any>) => {
+        return !serviceTypes
+            .map((serviceType) => Boolean(formikProps.values[serviceType]))
+            .reduce((disabledState, serviceState) => disabledState || serviceState);
     };
 
     const prevStep = () => setActiveStep(activeStep - 1);
@@ -304,57 +313,49 @@ const NewReferral = () => {
             onSubmit={nextStep}
             enableReinitialize
         >
-            {(formikProps) => {
-                console.log(formikProps.values);
-                console.log(formikProps.errors);
-                return (
-                    <Form>
-                        <Button onClick={history.goBack}>
-                            <ArrowBack /> Go back
-                        </Button>
-                        <Stepper activeStep={activeStep} orientation="vertical">
-                            {referralSteps.map((referralStep, index) => (
-                                <Step key={index}>
-                                    <StepLabel>{referralStep.label}</StepLabel>
-                                    <StepContent>
-                                        <referralStep.Form formikProps={formikProps} />
-                                        <br />
-                                        {activeStep !== 0 && (
-                                            <Button
-                                                style={{ marginRight: "5px" }}
-                                                variant="outlined"
-                                                color="primary"
-                                                onClick={prevStep}
-                                            >
-                                                Prev Step
-                                            </Button>
-                                        )}
+            {(formikProps) => (
+                <Form>
+                    {submissionError && (
+                        <Alert onClose={() => setSubmissionError(false)} severity="error">
+                            Something went wrong submitting the referral. Please try again.
+                        </Alert>
+                    )}
+                    <Button onClick={history.goBack}>
+                        <ArrowBack /> Go back
+                    </Button>
+                    <Stepper activeStep={activeStep} orientation="vertical">
+                        {referralSteps.map((referralStep, index) => (
+                            <Step key={index}>
+                                <StepLabel>{referralStep.label}</StepLabel>
+                                <StepContent>
+                                    <referralStep.Form formikProps={formikProps} />
+                                    <br />
+                                    {activeStep !== 0 && (
                                         <Button
-                                            type="submit"
-                                            variant="contained"
+                                            style={{ marginRight: "5px" }}
+                                            variant="outlined"
                                             color="primary"
-                                            disabled={
-                                                !serviceTypes
-                                                    .map((serviceType) =>
-                                                        Boolean(formikProps.values[serviceType])
-                                                    )
-                                                    .reduce(
-                                                        (disabledState, serviceState) =>
-                                                            disabledState || serviceState
-                                                    )
-                                            }
+                                            onClick={prevStep}
                                         >
-                                            {isFinalStep && index === activeStep
-                                                ? "Submit"
-                                                : "Next Step"}
+                                            Prev Step
                                         </Button>
-                                    </StepContent>
-                                </Step>
-                            ))}
-                        </Stepper>
-                    </Form>
-                );
-            }}
+                                    )}
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        disabled={isNoServiceChecked(formikProps)}
+                                    >
+                                        {isFinalStep && index === activeStep
+                                            ? "Submit"
+                                            : "Next Step"}
+                                    </Button>
+                                </StepContent>
+                            </Step>
+                        ))}
+                    </Stepper>
+                </Form>
+            )}
         </Formik>
     );
 };

@@ -6,7 +6,7 @@ export const useStyles = makeStyles(
             paddingLeft: "9px",
         },
         hipWidth: {
-            maxWidth: "50px",
+            maxWidth: "160px",
         },
         inches: {
             verticalAlign: "sub",

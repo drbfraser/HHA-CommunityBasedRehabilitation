@@ -325,14 +325,12 @@ class AdminStatsVisitsSerializer(serializers.Serializer):
 
 
 class AdminStatsReferralSerializer(serializers.Serializer):
-    # resolved = serializers.BooleanField()
     total = serializers.IntegerField()
     wheelchair_count = serializers.IntegerField()
     physiotherapy_count = serializers.IntegerField()
     prosthetic_count = serializers.IntegerField()
     orthotic_count = serializers.IntegerField()
     other_count = serializers.IntegerField()
-    # user_id = serializers.IntegerField()
 
 
 class AdminStatsDisabilitySerializer(serializers.Serializer):

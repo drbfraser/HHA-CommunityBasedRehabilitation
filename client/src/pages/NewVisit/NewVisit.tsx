@@ -1,8 +1,6 @@
 import {
     Button,
-    Checkbox,
     FormControl,
-    FormControlLabel,
     FormGroup,
     FormLabel,
     MenuItem,
@@ -10,13 +8,13 @@ import {
     StepContent,
     StepLabel,
     Stepper,
+    Typography,
 } from "@material-ui/core";
 import { ArrowBack } from "@material-ui/icons";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { getAllZones, IZone } from "util/cache";
 import {
     fieldLabels,
     FormField,
@@ -31,6 +29,11 @@ import {
 import { handleSubmit } from "./formHandler";
 import { useStyles } from "./NewVisit.styles";
 import history from "../../util/history";
+import { IRisk } from "util/risks";
+import { apiFetch, Endpoint } from "util/endpoints";
+import { IClient } from "util/clients";
+import { Alert } from "@material-ui/lab";
+import { TZoneMap, useZones } from "util/hooks/zones";
 
 const visitTypes: FormField[] = [FormField.health, FormField.education, FormField.social];
 
@@ -40,39 +43,34 @@ const ImprovementField = (props: {
     provided: string;
     index: number;
 }) => {
-    const [isFieldVisible, setFieldVisibility] = useState<boolean>(
-        props.formikProps.values.improvements[props.visitType][props.index] !== undefined
-    );
-
     const fieldName = `${FormField.improvements}.${props.visitType}.${props.index}`;
+    const isImprovementEnabled =
+        props.formikProps.values[FormField.improvements][props.visitType][props.index]?.[
+            ImprovementFormField.enabled
+        ] === true;
 
-    const onCheckboxChange = (checked: boolean) => {
-        setFieldVisibility(checked);
-        if (checked) {
-            props.formikProps.setFieldValue(`${fieldName}`, {
-                [ImprovementFormField.riskType]: props.visitType,
-                [ImprovementFormField.provided]: props.provided,
-                [ImprovementFormField.description]: "",
-            });
-        } else {
-            props.formikProps.setFieldValue(`${fieldName}`, undefined);
-        }
-    };
+    if (
+        props.formikProps.values[FormField.improvements][props.visitType][props.index] === undefined
+    ) {
+        // Since this component is dynamically generated we need to set its initial values
+        props.formikProps.setFieldValue(`${fieldName}`, {
+            [ImprovementFormField.enabled]: false,
+            [ImprovementFormField.description]: "",
+            [ImprovementFormField.riskType]: props.visitType,
+            [ImprovementFormField.provided]: props.provided,
+        });
+    }
 
     return (
         <div key={props.index}>
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={isFieldVisible}
-                        onChange={(event) => onCheckboxChange(event.currentTarget.checked)}
-                        name={props.provided}
-                    />
-                }
-                label={props.provided}
+            <Field
+                component={CheckboxWithLabel}
+                type="checkbox"
+                name={`${fieldName}.${ImprovementFormField.enabled}`}
+                Label={{ label: props.provided }}
             />
             <br />
-            {isFieldVisible && (
+            {isImprovementEnabled && (
                 <Field
                     key={`${props.provided}${ImprovementFormField.description}`}
                     type="text"
@@ -89,11 +87,17 @@ const ImprovementField = (props: {
     );
 };
 
-const OutcomeField = (props: { visitType: FormField }) => {
+const OutcomeField = (props: { visitType: FormField; risks: IRisk[] }) => {
     const fieldName = `${FormField.outcomes}.${props.visitType}`;
 
     return (
         <div>
+            <FormLabel>Client's {fieldLabels[props.visitType]} Goal</FormLabel>
+            <Typography variant={"body1"}>
+                {props.risks.find((r) => r.risk_type === (props.visitType as string))?.goal}
+            </Typography>
+            <br />
+
             <FormLabel>Client's {fieldLabels[props.visitType]} Goal Status</FormLabel>
             <br />
             <Field
@@ -111,6 +115,7 @@ const OutcomeField = (props: { visitType: FormField }) => {
             </Field>
             <br />
             <br />
+
             <div>
                 <FormLabel>What is the Outcome of the Goal?</FormLabel>
                 <Field
@@ -133,7 +138,7 @@ interface IStepProps {
     formikProps: FormikProps<any>;
 }
 
-const VisitTypeStep = (visitType: FormField) => {
+const VisitTypeStep = (visitType: FormField, risks: IRisk[]) => {
     return ({ formikProps }: IStepProps) => {
         return (
             <FormControl>
@@ -153,7 +158,7 @@ const VisitTypeStep = (visitType: FormField) => {
                     }
                 />
                 <br />
-                <OutcomeField visitType={visitType} />
+                <OutcomeField visitType={visitType} risks={risks} />
             </FormControl>
         );
     };
@@ -161,13 +166,13 @@ const VisitTypeStep = (visitType: FormField) => {
 
 const visitReasonStepCallBack = (
     setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>,
-    zoneOptions: IZone[]
-) => ({ formikProps }: IStepProps) => VisitReasonStep(formikProps, setEnabledSteps, zoneOptions);
+    zones: TZoneMap
+) => ({ formikProps }: IStepProps) => VisitReasonStep(formikProps, setEnabledSteps, zones);
 
 const VisitReasonStep = (
     formikProps: FormikProps<any>,
     setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>,
-    zoneOptions: IZone[]
+    zones: TZoneMap
 ) => {
     const styles = useStyles();
 
@@ -187,12 +192,10 @@ const VisitReasonStep = (
                 [OutcomeFormField.goalStatus]: GoalStatus.ongoing,
                 [OutcomeFormField.outcome]: "",
             });
-            formikProps.setFieldTouched(`${FormField.outcomes}.${visitType}`, false);
         } else {
             formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, undefined);
         }
     };
-
     return (
         <>
             <FormLabel>Where was the Visit?</FormLabel>
@@ -220,9 +223,9 @@ const VisitReasonStep = (
                     variant="outlined"
                     required
                 >
-                    {zoneOptions.map((option) => (
-                        <MenuItem key={option.id} value={option.id}>
-                            {option.zone_name}
+                    {Array.from(zones).map(([id, name]) => (
+                        <MenuItem key={id} value={id}>
+                            {name}
                         </MenuItem>
                     ))}
                 </Field>
@@ -253,28 +256,34 @@ const VisitReasonStep = (
 const NewVisit = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
-    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+    const [risks, setRisks] = useState<IRisk[]>([]);
+    const [loadingError, setLoadingError] = useState(false);
+    const zones = useZones();
     const { clientId } = useParams<{ clientId: string }>();
 
     useEffect(() => {
-        const fetchAllZones = async () => {
-            const zones = await getAllZones();
-            setZoneOptions(zones);
-        };
-        fetchAllZones();
-    }, []);
+        apiFetch(Endpoint.CLIENT, `${clientId}`)
+            .then((resp) => resp.json())
+            .then((client: IClient) => {
+                client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
+                setRisks(client.risks);
+            })
+            .catch(() => {
+                setLoadingError(true);
+            });
+    }, [clientId]);
 
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 
     const visitSteps = [
         {
             label: "Visit Focus",
-            Form: visitReasonStepCallBack(setEnabledSteps, zoneOptions),
+            Form: visitReasonStepCallBack(setEnabledSteps, zones),
             validationSchema: initialValidationSchema,
         },
         ...enabledSteps.map((visitType) => ({
             label: `${fieldLabels[visitType]} Visit`,
-            Form: VisitTypeStep(visitType),
+            Form: VisitTypeStep(visitType, risks),
             validationSchema: visitTypeValidationSchema(visitType),
         })),
     ];
@@ -288,6 +297,7 @@ const NewVisit = () => {
             }
             setActiveStep(activeStep + 1);
             helpers.setSubmitting(false);
+            helpers.setTouched({});
         }
     };
 
@@ -295,11 +305,12 @@ const NewVisit = () => {
         setActiveStep(activeStep - 1);
     };
 
-    return (
+    return loadingError ? (
+        <Alert severity="error">Something went wrong loading the client. Please try again.</Alert>
+    ) : (
         <Formik
             initialValues={initialValues}
-            // TODO: Yup validation broken, need to be fixed. thumbs.gfycat.com/AchingForkedAgouti-small.gif
-            //validationSchema={visitSteps[activeStep].validationSchema}
+            validationSchema={visitSteps[activeStep].validationSchema}
             onSubmit={nextStep}
         >
             {(formikProps) => (

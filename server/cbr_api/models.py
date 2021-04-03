@@ -118,15 +118,18 @@ class Client(models.Model):
     village = models.CharField(max_length=50)
     picture = models.ImageField(upload_to="images/", blank=True)  # if picture available
     caregiver_present = models.BooleanField(default=False)
+
     # ------if caregiver present-----
     caregiver_name = models.CharField(max_length=101, blank=True)
     caregiver_phone = models.CharField(max_length=50, blank=True)
     caregiver_email = models.CharField(max_length=50, blank=True)
     caregiver_picture = models.ImageField(upload_to="images/", blank=True)
-    # ------if caregiver present-----
+
+    # summary data to make queries more reasonable
     health_risk_level = RiskLevel.getField()
     social_risk_level = RiskLevel.getField()
     educat_risk_level = RiskLevel.getField()
+    last_visit_date = models.BigIntegerField(default=0)
 
 
 class ClientRisk(models.Model):
@@ -140,7 +143,9 @@ class ClientRisk(models.Model):
 
 class Visit(models.Model):
     client = models.ForeignKey(Client, related_name="visits", on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name="visits", on_delete=models.PROTECT
+    )
     date_visited = models.BigIntegerField()
     health_visit = models.BooleanField(default=False)
     educat_visit = models.BooleanField(default=False)
@@ -168,13 +173,15 @@ class Referral(models.Model):
         INTERMEDIATE = "INT", _("Intermediate")
 
     wheelchair = models.BooleanField(default=False)
-    wheelchair_experience = models.CharField(max_length=3, choices=Experience.choices)
-    hip_width = models.IntegerField()
+    wheelchair_experience = models.CharField(
+        max_length=3, choices=Experience.choices, blank=True
+    )
+    hip_width = models.IntegerField(default=0)
     wheelchair_owned = models.BooleanField(default=False)
     wheelchair_repairable = models.BooleanField(default=False)
 
     physiotherapy = models.BooleanField(default=False)
-    condition = models.CharField(max_length=100)
+    condition = models.CharField(max_length=100, blank=True)
 
     class InjuryLocation(models.TextChoices):
         BELOW = "BEL", _("Below")
@@ -182,15 +189,15 @@ class Referral(models.Model):
 
     prosthetic = models.BooleanField(default=False)
     prosthetic_injury_location = models.CharField(
-        max_length=3, choices=InjuryLocation.choices
+        max_length=3, choices=InjuryLocation.choices, blank=True
     )
 
     orthotic = models.BooleanField(default=False)
     orthotic_injury_location = models.CharField(
-        max_length=3, choices=InjuryLocation.choices
+        max_length=3, choices=InjuryLocation.choices, blank=True
     )
 
-    services_other = models.CharField(max_length=100)
+    services_other = models.CharField(max_length=100, blank=True)
 
 
 class Outcome(models.Model):

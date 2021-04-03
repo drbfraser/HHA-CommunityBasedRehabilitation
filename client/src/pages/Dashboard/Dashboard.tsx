@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useHistory } from "react-router-dom";
 
 import { RiskLevel, IRiskLevel, riskLevels, IRiskType, riskTypes } from "util/risks";
 import { Cancel, FiberManualRecord } from "@material-ui/icons";
+import { clientPrioritySort, IClientSummary } from "util/clients";
+import { apiFetch, Endpoint } from "util/endpoints";
+import { getZones } from "util/hooks/zones";
+import { timestampToDate } from "util/dates";
 
 import { Alert } from "@material-ui/lab";
 import {
@@ -17,54 +21,6 @@ import {
     ValueFormatterParams,
     GridOverlay,
 } from "@material-ui/data-grid";
-
-const dummyClients = [
-    {
-        id: 1,
-        EDUCAT: "CR",
-        HEALTH: "CR",
-        SOCIAL: "CR",
-        name: "Priority Client 1",
-        zone: "Palorinya Zone 2",
-        lastVisit: "03-27-2021",
-    },
-    {
-        id: 2,
-        EDUCAT: "CR",
-        HEALTH: "CR",
-        SOCIAL: "CR",
-        name: "Priority Client 2",
-        zone: "Palorinya Zone 2",
-        lastVisit: "03-28-2021",
-    },
-    {
-        id: 3,
-        EDUCAT: "HI",
-        HEALTH: "CR",
-        SOCIAL: "CR",
-        name: "Priority Client 3",
-        zone: "Palorinya Zone 2",
-        lastVisit: "03-29-2021",
-    },
-    {
-        id: 4,
-        EDUCAT: "CR",
-        HEALTH: "CR",
-        SOCIAL: "HI",
-        name: "Priority Client 4",
-        zone: "Palorinya Zone 2",
-        lastVisit: "03-30-2021",
-    },
-    {
-        id: 5,
-        EDUCAT: "HI",
-        HEALTH: "CR",
-        SOCIAL: "HI",
-        name: "Priority Client 5",
-        zone: "Palorinya Zone 2",
-        lastVisit: "03-31-2021",
-    },
-];
 
 const dummyReferrals = [
     {
@@ -110,6 +66,23 @@ const dummyReferrals = [
 const Dashboard = () => {
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
+
+    const [clients, setClients] = useState<IClientSummary[]>([]);
+    const [zoneMap, setZoneMap] = useState<Map<Number, String>>();
+
+    useEffect(() => {
+        const fetchClients = async () => {
+            await apiFetch(Endpoint.CLIENTS)
+                .then((resp) => resp.json())
+                .then((clients) => setClients(clients.sort(clientPrioritySort)))
+                .catch((err) => alert(err));
+        };
+        const fetchZones = async () => {
+            setZoneMap(await getZones());
+        };
+        fetchClients();
+        fetchZones();
+    }, []);
 
     const RenderBadge = (params: ValueFormatterParams) => {
         const risk: RiskLevel = Object(params.value);
@@ -159,11 +132,23 @@ const Dashboard = () => {
         );
     };
 
+    const RenderDate = (params: ValueFormatterParams) => {
+        return <Typography variant={"body2"}>{timestampToDate(Number(params.value))}</Typography>;
+    };
+
+    const RenderZone = (params: ValueFormatterParams) => {
+        return (
+            <Typography variant={"body2"}>
+                {zoneMap ? zoneMap.get(Number(params.value)) : ""}
+            </Typography>
+        );
+    };
+
     const handleRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
 
     const priorityClientsColumns = [
         {
-            field: "name",
+            field: "full_name",
             headerName: "Name",
             flex: 1,
             renderCell: RenderText,
@@ -180,14 +165,13 @@ const Dashboard = () => {
             field: "zone",
             headerName: "Zone",
             flex: 1.2,
-            renderCell: RenderText,
+            renderCell: RenderZone,
         },
         {
-            field: "lastVisit",
+            field: "last_visit_date",
             headerName: "Last Visit",
-            type: "date",
+            renderCell: RenderDate,
             flex: 1,
-            renderCell: RenderText,
         },
     ];
 
@@ -220,6 +204,7 @@ const Dashboard = () => {
 
     return (
         <>
+            {console.log(zoneMap)}
             <Alert severity="info">
                 <Typography variant="body1">You have 0 new messages from an admin.</Typography>
             </Alert>
@@ -235,7 +220,7 @@ const Dashboard = () => {
                             <div className={dataGridStyle.dashboardTables}>
                                 <DataGrid
                                     className={`${dataGridStyle.datagrid}`}
-                                    rows={dummyClients}
+                                    rows={clients}
                                     hideFooterPagination
                                     columns={priorityClientsColumns}
                                     onRowClick={handleRowClick}

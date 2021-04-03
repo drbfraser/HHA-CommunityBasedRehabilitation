@@ -2,7 +2,6 @@ import React from "react";
 import { Timeline } from "@material-ui/lab";
 import { IClient } from "util/clients";
 import { timestampToDateFromReference } from "util/dates";
-import { IZone } from "util/cache";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import VisitEntry from "./VisitEntry";
@@ -11,10 +10,9 @@ import ReferralEntry from "./ReferralEntry";
 
 interface IProps {
     client?: IClient;
-    zones: IZone[];
 }
 
-const VisitReferralTimeline = ({ client, zones }: IProps) => {
+const VisitReferralTimeline = ({ client }: IProps) => {
     const timelineStyles = useTimelineStyles();
     const dateFormatter = timestampToDateFromReference(client?.created_date);
 
@@ -29,7 +27,6 @@ const VisitReferralTimeline = ({ client, zones }: IProps) => {
                                 <VisitEntry
                                     key={v.id}
                                     visitSummary={v}
-                                    zones={zones}
                                     dateFormatter={dateFormatter}
                                 />
                             ),

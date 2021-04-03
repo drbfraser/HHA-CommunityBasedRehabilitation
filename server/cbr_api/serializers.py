@@ -60,7 +60,6 @@ class UserPasswordSerializer(serializers.ModelSerializer):
     def update(self, user, validated_data):
         user.set_password(validated_data["new_password"])
         user.save()
-
         return user
 
 
@@ -286,6 +285,10 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         visit = models.Visit.objects.create(**validated_data)
         visit.save()
 
+        client = validated_data["client"]
+        client.last_visit_date = current_time
+        client.save()
+
         for improvement_data in improvement_dataset:
             improvement_data["visit"] = visit
             improvement = models.Improvement.objects.create(**improvement_data)
@@ -317,6 +320,36 @@ class SummaryVisitSerializer(serializers.ModelSerializer):
         ]
 
 
+class AdminStatsVisitsSerializer(serializers.Serializer):
+    zone_id = serializers.IntegerField()
+    total = serializers.IntegerField()
+    health_count = serializers.IntegerField()
+    educat_count = serializers.IntegerField()
+    social_count = serializers.IntegerField()
+
+
+class AdminStatsReferralSerializer(serializers.Serializer):
+    total = serializers.IntegerField()
+    wheelchair_count = serializers.IntegerField()
+    physiotherapy_count = serializers.IntegerField()
+    prosthetic_count = serializers.IntegerField()
+    orthotic_count = serializers.IntegerField()
+    other_count = serializers.IntegerField()
+
+
+class AdminStatsDisabilitySerializer(serializers.Serializer):
+    disability_id = serializers.IntegerField()
+    total = serializers.IntegerField()
+
+
+class AdminStatsSerializer(serializers.Serializer):
+    disabilities = AdminStatsDisabilitySerializer(many=True, read_only=True)
+    clients_with_disabilities = serializers.IntegerField()
+    visits = AdminStatsVisitsSerializer(many=True, read_only=True)
+    referrals_resolved = AdminStatsReferralSerializer(many=False, read_only=True)
+    referrals_unresolved = AdminStatsReferralSerializer(many=False, read_only=True)
+
+
 class ClientListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Client
@@ -327,6 +360,7 @@ class ClientListSerializer(serializers.ModelSerializer):
             "health_risk_level",
             "social_risk_level",
             "educat_risk_level",
+            "last_visit_date",
             "created_by_user",
         ]
 

@@ -1,9 +1,11 @@
 import { RowsProp } from "@material-ui/data-grid";
+import { getZones } from "util/hooks/zones";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { UserRole, userRoles } from "util/users";
 
 interface IResponseRow {
     id: number;
+    zone: number;
     first_name: string;
     last_name: string;
     role: UserRole;
@@ -23,9 +25,11 @@ const requestUserRows = async (
         const resp = await apiFetch(Endpoint.USERS, urlParams);
 
         const responseRows: IResponseRow[] = await resp.json();
+        const zoneMap = await getZones();
         const rows: RowsProp = responseRows.map((responseRow) => {
             return {
                 id: responseRow.id,
+                zone: zoneMap.get(responseRow.zone) ?? "",
                 first_name: responseRow.first_name,
                 last_name: responseRow.last_name,
                 name: responseRow.first_name + " " + responseRow.last_name,

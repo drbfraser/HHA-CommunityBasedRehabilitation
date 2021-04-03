@@ -3,7 +3,12 @@ from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
-from cbr_api.sql import getDisabilityStats, getTotalDisabilityStats, getVisitStats, getReferralStats
+from cbr_api.sql import (
+    getDisabilityStats,
+    getTotalDisabilityStats,
+    getVisitStats,
+    getReferralStats,
+)
 import json
 
 

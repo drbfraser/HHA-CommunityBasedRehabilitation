@@ -5,7 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from cbr_api.sql import (
     getDisabilityStats,
-    getTotalDisabilityStats,
+    getNumClientsWithDisabilities,
     getVisitStats,
     getReferralStats,
 )
@@ -29,26 +29,21 @@ class AdminStats(generics.RetrieveAPIView):
     serializer_class = serializers.AdminStatsSerializer
 
     def get_object(self):
-        try:
-            from_time = json.loads(self.request.body)["from"]
-        except:
-            from_time = -1
+        def get_int_or_none(req_body_key):
+            try:
+                return int(json.loads(self.request.body)[req_body_key])
+            except:
+                return None
 
-        try:
-            to_time = json.loads(self.request.body)["to"]
-        except:
-            to_time = -1
-
-        try:
-            user_id = json.loads(self.request.body)["user_id"]
-        except:
-            user_id = -1
+        user_id = get_int_or_none("user_id")
+        from_time = get_int_or_none("from_time")
+        to_time = get_int_or_none("to_time")
 
         referral_stats = getReferralStats(user_id, from_time, to_time)
 
         return {
             "disabilities": getDisabilityStats(),
-            "people_with_any_disabilities": getTotalDisabilityStats(),
+            "clients_with_disabilities": getNumClientsWithDisabilities(),
             "visits": getVisitStats(user_id, from_time, to_time),
             "referrals_resolved": referral_stats["resolved"],
             "referrals_unresolved": referral_stats["unresolved"],

@@ -340,15 +340,9 @@ class AdminStatsDisabilitySerializer(serializers.Serializer):
     total = serializers.IntegerField()
 
 
-class AdminStatsDisabilityIndiviudalSerializer(serializers.Serializer):
-    total = serializers.IntegerField()
-
-
 class AdminStatsSerializer(serializers.Serializer):
     disabilities = AdminStatsDisabilitySerializer(many=True, read_only=True)
-    people_with_any_disabilities = AdminStatsDisabilityIndiviudalSerializer(
-        many=True, read_only=True
-    )
+    clients_with_disabilities = serializers.IntegerField()
     visits = AdminStatsVisitsSerializer(many=True, read_only=True)
     referrals_resolved = AdminStatsReferralSerializer(many=False, read_only=True)
     referrals_unresolved = AdminStatsReferralSerializer(many=False, read_only=True)

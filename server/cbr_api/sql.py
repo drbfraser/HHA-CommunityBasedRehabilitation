@@ -14,7 +14,7 @@ def getDisabilityStats():
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 
-def getTotalDisabilityStats():
+def getNumClientsWithDisabilities():
     from django.db import connection
 
     with connection.cursor() as cursor:
@@ -25,8 +25,7 @@ def getTotalDisabilityStats():
         """
         )
 
-        columns = [col[0] for col in cursor.description]
-        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+        return cursor.fetchone()[0]
 
 
 def getVisitStats(user_id, from_time, to_time):
@@ -38,35 +37,8 @@ def getVisitStats(user_id, from_time, to_time):
         COUNT(*) filter(where social_visit) as social_count
         FROM cbr_api_visit
     """
-    if user_id != -1:
-        sql += " WHERE user_id=" + str(user_id)
 
-    if from_time != -1 and to_time != -1:
-        if user_id != -1:
-            sql += " AND"
-        else:
-            sql += " WHERE"
-        sql += (
-            " date_visited >= "
-            + str(from_time)
-            + " AND date_visited <= "
-            + str(to_time)
-        )
-
-    elif from_time != -1 and to_time == -1:
-        if user_id != -1:
-            sql += " AND"
-        else:
-            sql += " WHERE"
-        sql += " date_visited >= " + str(from_time)
-
-    elif from_time == -1 and to_time != -1:
-        if user_id != -1:
-            sql += " AND"
-        else:
-            sql += " WHERE"
-        sql += " date_visited <= " + str(to_time)
-
+    sql += getStatsWhere(user_id, "date_visited", from_time, to_time)
     sql += " GROUP BY zone_id ORDER BY zone_id"
 
     from django.db import connection
@@ -90,35 +62,7 @@ def getReferralStats(user_id, from_time, to_time):
         FROM cbr_api_referral
     """
 
-    if user_id != -1:
-        sql += " WHERE user_id=" + str(user_id)
-
-    if from_time != -1 and to_time != -1:
-        if user_id != -1:
-            sql += " AND"
-        else:
-            sql += " WHERE"
-        sql += (
-            " date_referred >= "
-            + str(from_time)
-            + " AND date_referred <= "
-            + str(to_time)
-        )
-
-    elif from_time != -1 and to_time == -1:
-        if user_id != -1:
-            sql += " AND"
-        else:
-            sql += " WHERE"
-        sql += " date_referred >= " + str(from_time)
-
-    elif from_time == -1 and to_time != -1:
-        if user_id != -1:
-            sql += " AND"
-        else:
-            sql += " WHERE"
-        sql += " date_referred <= " + str(to_time)
-
+    sql += getStatsWhere(user_id, "date_referred", from_time, to_time)
     sql += " GROUP BY resolved ORDER BY resolved DESC"
 
     from django.db import connection
@@ -135,3 +79,21 @@ def getReferralStats(user_id, from_time, to_time):
             return next((r for r in rows if r["resolved"] == resolved), empty_stats)
 
         return {"resolved": getOrEmpty(True), "unresolved": getOrEmpty(False)}
+
+
+def getStatsWhere(user_id, time_col, from_time, to_time):
+    where = []
+
+    if user_id is not None:
+        where.append(f"user_id={str(user_id)}")
+
+    if from_time is not None:
+        where.append(f"{time_col}={str(from_time)}")
+
+    if to_time is not None:
+        where.append(f"{time_col}={str(to_time)}")
+
+    if len(where) == 0:
+        return ""
+
+    return "WHERE " + " AND ".join(where)

@@ -1,6 +1,6 @@
 export enum RateLevel {
     POOR = "POOR",
-    VERYPOOR = "VERY_POOR",
+    VERYPOOR = "VERYPOOR",
     FINE = "FINE",
     GOOD = "GOOD",
 }
@@ -39,6 +39,16 @@ export enum GRADE {
     S6 = "S6",
 }
 
+export enum ChildNourish {
+    MALNOURISHED = "MALNOURISHED",
+    UNDERNOURISHED = "UNDERNOURISHED",
+    WELLNOURISHED = "WELLNOURISHED",
+}
+
+export enum IsSelfEmployed {
+    EMPLOYED = "POOR",
+    SELFEMPLOYED = "SELFEMPLOYED",
+}
 export interface IRateLevel {
     name: string;
     level: number;
@@ -79,7 +89,6 @@ export const deviceType = {
     [DeviceType.WALKINGSTICK]: {
         name: "Walking Stick",
     },
-
     [DeviceType.HEARINGAID]: {
         name: "Hearing Aid",
     },
@@ -106,6 +115,27 @@ export const reasonNotSchool = {
     },
 };
 
+export const childNourish = {
+    [ChildNourish.MALNOURISHED]: {
+        name: "Malnourished",
+    },
+    [ChildNourish.UNDERNOURISHED]: {
+        name: "Undernourished",
+    },
+    [ChildNourish.WELLNOURISHED]: {
+        name: "Well nourished",
+    },
+};
+
+export const isSelfEmployed = {
+    [IsSelfEmployed.EMPLOYED]: {
+        name: "Employed",
+    },
+    [IsSelfEmployed.SELFEMPLOYED]: {
+        name: "Self Employed",
+    },
+};
+
 export const grade = {
     [GRADE.P1]: {
         name: "Primary 1",
@@ -128,7 +158,7 @@ export const grade = {
     [GRADE.P7]: {
         name: "Primary 7",
     },
-    
+
     [GRADE.S1]: {
         name: "Secondary 1",
     },

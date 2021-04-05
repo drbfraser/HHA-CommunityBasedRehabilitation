@@ -2,6 +2,8 @@ import * as Yup from "yup";
 
 export enum FormField {
     client = "client",
+    shelter = "services_other",
+    otherDescription = "other_description",
 
     rateLevel = "rate_level",
     health = "health",
@@ -14,17 +16,50 @@ export enum FormField {
     deviceType = "device_type",
     deviceSatisf = "device_satisf",
     education = "education",
-    goSchool = "goSchool",
+    goSchool = "go_school",
     grade = "grade",
     reasonNotSchool = "reason_not_school",
     beenSchool = "been_school",
     wantSchool = "want_school",
+
+    social = "social",
+    feelValue = "feel_value",
+    feelIndependent = "feel_independent",
+    ableInSocial = "able_in_social",
+    disabiAffectSocial = "disability_affect_social",
+    disabiDiscrimination = "disability_discrimination",
+
+    livelihood = "livelihood",
+    isWorking = "is_working",
+    job = "job",
+    isSelfEmployed = "is_employed",
+    meetFinanceNeeds = "meet_finance_needs",
+    disabiAffectWork = "disability_affect_work",
+    wantWork = "want_work",
+
+    foodAndNutrition = "food_nutrition",
+    foodSecurity = "food_security",
+    enoughFoodPerMonth = "enough_food_per_month",
+    isChild = "is_child",
+    childNourish = "child_nourish",
+
+    empowerment = "empowerment",
+    memOfOrgan = "mem_of_organ",
+    awareRight = "aware_right",
+    ableInfluence = "able_influence",
+
+    shelterAndCare = "shelter_care",
+    haveShelter = "have_shelter",
+    accessItem = "access_item",
 }
+export const servicesTypes = [FormField.health, FormField.education, FormField.social];
 
 export const fieldLabels = {
     [FormField.client]: "Client",
-
     [FormField.rateLevel]: "Health Level",
+    [FormField.shelter]: "Other Services",
+    [FormField.otherDescription]: "Service Description",
+
     [FormField.health]: "Health",
     [FormField.healthRate]: "Rate your general health",
     [FormField.getService]:
@@ -43,12 +78,48 @@ export const fieldLabels = {
     [FormField.reasonNotSchool]: "Reason",
     [FormField.beenSchool]: "Have you ever been to school before?",
     [FormField.wantSchool]: "Do you want to go to school?",
+
+    [FormField.social]: "Social",
+    [FormField.feelValue]: "Do you feel valued as a member of your community?",
+    [FormField.feelIndependent]: "Do you feel independent?",
+    [FormField.ableInSocial]:
+        "Are you able to participate in community/social events (going to church, market, meeting friends)?",
+    [FormField.disabiAffectSocial]:
+        "Does your disability affect your ability to interact socially?",
+    [FormField.disabiDiscrimination]:
+        "Have you experienced discrimination because of your disability?",
+
+    [FormField.livelihood]: "Livelihood",
+    [FormField.isWorking]: "Are you working?",
+    [FormField.job]: "Job",
+    [FormField.meetFinanceNeeds]: "Does this meet your financial needs?",
+    [FormField.disabiAffectWork]: "Does your disability affect your ability to go to work?",
+    [FormField.wantWork]: "Do you want to work?",
+    [FormField.isSelfEmployed]: "",
+
+    [FormField.foodAndNutrition]: "Food and Nutrition",
+    [FormField.foodSecurity]: "Rate",
+    [FormField.enoughFoodPerMonth]: "Do you have enough food every month",
+    [FormField.isChild]: "Is the client child?",
+    [FormField.childNourish]: "Nourishment",
+
+    [FormField.empowerment]: "Empowerment",
+    [FormField.memOfOrgan]:
+        "Are you member of any organisations which assist people with disabilities?",
+    [FormField.awareRight]: "Are you aware of your rights as a citizen living with disabilities?",
+    [FormField.ableInfluence]: "Do you feel like you are able to influence people around you?",
+
+    [FormField.shelterAndCare]: "Shelter and Care",
+    [FormField.haveShelter]: "Do you have adequate shelter?",
+    [FormField.accessItem]: "Do you have access to essential items for your household?",
 };
 
 export const initialValues = {
     [FormField.client]: 0,
-
     [FormField.rateLevel]: "",
+    [FormField.shelter]: true,
+    [FormField.otherDescription]: "",
+
     [FormField.healthRate]: "",
     [FormField.getService]: false,
     [FormField.needService]: false,
@@ -62,17 +133,50 @@ export const initialValues = {
     [FormField.reasonNotSchool]: "",
     [FormField.beenSchool]: false,
     [FormField.wantSchool]: false,
+
+    [FormField.feelValue]: false,
+    [FormField.feelIndependent]: "",
+    [FormField.ableInSocial]: "",
+    [FormField.disabiAffectSocial]: false,
+    [FormField.disabiDiscrimination]: false,
+
+    [FormField.isWorking]: false,
+    [FormField.job]: "",
+    [FormField.isSelfEmployed]: "",
+    [FormField.meetFinanceNeeds]: false,
+    [FormField.disabiAffectWork]: false,
+    [FormField.wantWork]: false,
+
+    [FormField.foodAndNutrition]: "Food and Nutrition",
+    [FormField.foodSecurity]: "Rate",
+    [FormField.enoughFoodPerMonth]: false,
+    [FormField.isChild]: false,
+    [FormField.childNourish]: "",
+
+    [FormField.memOfOrgan]: false,
+    [FormField.awareRight]: false,
+    [FormField.ableInfluence]: false,
+
+    [FormField.haveShelter]: false,
+    [FormField.accessItem]: false,
 };
 
 export const initialValidationSchema = () => Yup.object().shape({});
 
 export const rateLevelValidationSchema = () =>
     Yup.object().shape({
-        [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.rateLevel]).required(),
+        [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.rateLevel]),
+    });
+export const jobValidationSchema = () =>
+    Yup.object().shape({
+        [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.job]).max(30),
     });
 export const otherServicesValidationSchema = () =>
     Yup.object().shape({
-        [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.rateLevel]).required(),
+        [FormField.otherDescription]: Yup.string()
+            .label(fieldLabels[FormField.otherDescription])
+            .max(100)
+            .required(),
     });
 
 export type TFormValues = typeof initialValues;

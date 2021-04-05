@@ -164,14 +164,6 @@ const ClientForm = () => {
                                         ))}
                                     </Field>
                                 </Grid>
-                                <Grid item md={12} xs={12} style={{ marginBottom: "-20px" }}>
-                                    <Field
-                                        component={CheckboxWithLabel}
-                                        type="checkbox"
-                                        name={FormField.interviewConsent}
-                                        Label={{ label: fieldLabels[FormField.interviewConsent] }}
-                                    />
-                                </Grid>
                                 <Grid item md={12} xs={12}>
                                     <Field
                                         component={CheckboxWithLabel}
@@ -378,7 +370,17 @@ const ClientForm = () => {
                                     />
                                 </Grid>
                             </Grid>
-
+                            <br />
+                            <Grid item md={12} xs={12}>
+                                <Field
+                                    component={CheckboxWithLabel}
+                                    type="checkbox"
+                                    name={FormField.interviewConsent}
+                                    Label={{ label: fieldLabels[FormField.interviewConsent] }}
+                                    required
+                                />
+                            </Grid>
+                            <br />
                             <br />
                             <Grid justify="flex-end" container spacing={2}>
                                 <Grid item>

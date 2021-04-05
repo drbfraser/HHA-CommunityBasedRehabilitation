@@ -35,7 +35,7 @@ export const fieldLabels = {
     [FormField.zone]: "Zone",
     [FormField.phoneNumber]: "Phone Number",
     [FormField.interviewConsent]: "Consent to Interview? *",
-    [FormField.caregiverPresent]: "Caregiver Present? *",
+    [FormField.caregiverPresent]: "Caregiver Present?",
     [FormField.caregiverPhone]: "Caregiver Phone Number",
     [FormField.caregiverName]: "Caregiver Name",
     [FormField.caregiverEmail]: "Caregiver Email",
@@ -131,6 +131,10 @@ export const validationSchema = () =>
             .label(fieldLabels[FormField.socialGoals])
             .trim()
             .required(),
+        [FormField.interviewConsent]: Yup.boolean()
+            .label(fieldLabels[FormField.interviewConsent])
+            .oneOf([true], "Consent to Interview is required")
+            .required("Consent to Interview is required"),
         [FormField.caregiverPhone]: Yup.string()
             .label(fieldLabels[FormField.caregiverPhone])
             .max(50)

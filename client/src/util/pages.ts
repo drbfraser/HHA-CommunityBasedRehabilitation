@@ -21,6 +21,7 @@ import Dashboard from "pages/Dashboard/Dashboard";
 import NewVisit from "pages/NewVisit/NewVisit";
 import { IUser, UserRole } from "./users";
 import { APILoadError, TAPILoadError } from "./endpoints";
+import NewSurvey from "pages/ClientDetails/BaseSurvey/ClientBaseSurvey";
 
 export interface IPage {
     path: string;
@@ -70,6 +71,12 @@ const pages: IPage[] = [
         path: "/client/:clientId/visits/new",
         name: "Add a Visit",
         Component: NewVisit,
+        showInNav: false,
+    },
+    {
+        path: "/client/:clientId/surveys/new",
+        name: "Add a survey",
+        Component: NewSurvey,
         showInNav: false,
     },
     {

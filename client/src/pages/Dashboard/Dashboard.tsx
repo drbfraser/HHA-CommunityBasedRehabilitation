@@ -61,7 +61,6 @@ const dummyReferrals = [
 ];
 
 // TODO: Connecting API endpoints
-// TODO: Loading data animation
 
 const Dashboard = () => {
     const dataGridStyle = useDataGridStyles();
@@ -69,12 +68,14 @@ const Dashboard = () => {
 
     const [clients, setClients] = useState<IClientSummary[]>([]);
     const [zoneMap, setZoneMap] = useState<Map<Number, String>>();
+    const [isPriorityClientsLoading, setPriorityClientsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchClients = async () => {
             await apiFetch(Endpoint.CLIENTS)
                 .then((resp) => resp.json())
                 .then((clients) => setClients(clients.sort(clientPrioritySort)))
+                .then(() => setPriorityClientsLoading(false))
                 .catch((err) => alert(err));
         };
         const fetchZones = async () => {
@@ -211,7 +212,7 @@ const Dashboard = () => {
             <br />
             <Grid container direction="row" spacing={1}>
                 <Grid item lg={6} md={12} xs={12}>
-                    <Card>
+                    <Card variant="outlined">
                         <CardContent>
                             <Typography variant="h6" component="h2">
                                 Priority Clients
@@ -221,8 +222,10 @@ const Dashboard = () => {
                                 <DataGrid
                                     className={`${dataGridStyle.datagrid}`}
                                     rows={clients}
-                                    hideFooterPagination
+                                    // hideFooterPagination
+                                    loading={isPriorityClientsLoading}
                                     columns={priorityClientsColumns}
+                                    pageSize={5}
                                     onRowClick={handleRowClick}
                                     density={DensityTypes.Comfortable}
                                     components={{
@@ -234,7 +237,7 @@ const Dashboard = () => {
                     </Card>
                 </Grid>
                 <Grid item lg={6} md={12} xs={12}>
-                    <Card>
+                    <Card variant="outlined">
                         <CardContent>
                             <Typography variant="h6" component="h2">
                                 Outstanding Referrals
@@ -245,6 +248,7 @@ const Dashboard = () => {
                                     hideFooterPagination
                                     className={`${dataGridStyle.datagrid}`}
                                     rows={dummyReferrals}
+                                    // TODO: set loading
                                     columns={outstandingReferralsColumns}
                                     density={DensityTypes.Comfortable}
                                     onRowClick={handleRowClick}

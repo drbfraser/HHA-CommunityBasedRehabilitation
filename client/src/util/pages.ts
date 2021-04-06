@@ -20,17 +20,20 @@ import AdminPasswordEdit from "pages/Admin/AdminPasswordEdit";
 import ClientRiskHistory from "pages/ClientDetails/RiskHistory/ClientRiskHistory";
 import Dashboard from "pages/Dashboard/Dashboard";
 import NewVisit from "pages/NewVisit/NewVisit";
+import { IUser, UserRole } from "./users";
+import { APILoadError, TAPILoadError } from "./endpoints";
 
 export interface IPage {
     path: string;
     exact?: boolean;
     name: string;
+    roles?: UserRole[];
     Component: React.ComponentType<any>;
     showInNav: boolean;
     Icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
 }
 
-export const pages: IPage[] = [
+const pages: IPage[] = [
     {
         path: "/dashboard",
         name: "Dashboard",
@@ -80,6 +83,7 @@ export const pages: IPage[] = [
     {
         path: "/admin",
         name: "Admin",
+        roles: [UserRole.ADMIN],
         Component: AdminList,
         showInNav: true,
         Icon: SettingsIcon,
@@ -87,18 +91,21 @@ export const pages: IPage[] = [
     {
         path: "/admin/new",
         name: "New User",
+        roles: [UserRole.ADMIN],
         Component: AdminNew,
         showInNav: false,
     },
     {
         path: "/admin/view/:userId",
         name: "View User",
+        roles: [UserRole.ADMIN],
         Component: AdminView,
         showInNav: false,
     },
     {
         path: "/admin/edit/:userId",
         name: "Edit User",
+        roles: [UserRole.ADMIN],
         Component: AdminEdit,
         showInNav: false,
     },
@@ -125,5 +132,19 @@ export const pages: IPage[] = [
     },
 ];
 
+export const pagesForUser = (user: IUser | TAPILoadError | undefined) => {
+    return pages.filter((page) => {
+        if (!page.roles) {
+            return true;
+        }
+
+        if (!user || user === APILoadError) {
+            return false;
+        }
+
+        return page.roles.includes(user.role);
+    });
+};
+
 // TODO: change back to pages[0] once dashboard is finished
-export const defaultPage = pages[2];
+export const defaultPagePath = pages[2].path;

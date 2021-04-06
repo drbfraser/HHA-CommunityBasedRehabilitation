@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { FormControl, Divider, MenuItem, Select, Typography } from "@material-ui/core";
+import { Divider, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { getAllZones, IZone } from "util/cache";
+import { clientPrioritySort, IClientSummary } from "util/clients";
+import { apiFetch, Endpoint } from "util/endpoints";
 
 const Dashboard = () => {
-    const [zones, setZones] = useState<IZone[]>([]);
-    const [zoneSelected, setZoneSelected] = useState<string | number>("");
+    const [clients, setClients] = useState<IClientSummary[]>([]);
 
     useEffect(() => {
-        getAllZones().then((zones) => {
-            setZones(zones);
-
-            if (zones.length) {
-                setZoneSelected(zones[0].id);
-            }
-        });
+        apiFetch(Endpoint.CLIENTS)
+            .then((resp) => resp.json())
+            .then((clients) => setClients(clients))
+            .catch(() => alert("TODO: error handling if clients fail to load"));
     }, []);
 
     return (
@@ -36,22 +33,23 @@ const Dashboard = () => {
             <br />
             <Divider />
             <br />
-            <div>
-                <Typography variant="h5" component="span">
-                    Show high-priority clients from &nbsp;
-                </Typography>
-                <FormControl variant="outlined" style={{ verticalAlign: "baseline" }}>
-                    <Select
-                        value={zoneSelected}
-                        onChange={(e) => setZoneSelected(e.target.value as number)}
-                    >
-                        {zones.map((zone) => (
-                            <MenuItem key={zone.id} value={zone.id}>
-                                {zone.zone_name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+            <Typography variant="h4" component="span">
+                Priority Clients
+            </Typography>
+            <br />
+            <br />
+            <Typography variant="body1">
+                This is a temporary section, to be replaced with the actual priority client tables.
+                Sorted priority clients from the <code>/api/clients</code> endpoint. Clients are
+                sorted primarily according to their combined risk levels. One critical risk is
+                ranked as higher priority than three high risks; one high risk is ranked as higher
+                priority than three medium risks; etc. If a client ties for their combined risk
+                &quot;score&quot;, they are then sorted based upon last visit date, oldest first.
+            </Typography>
+            <div style={{ fontSize: "125%", fontFamily: "monospace" }}>
+                {clients.sort(clientPrioritySort).map((c) => (
+                    <p>{JSON.stringify(c, null, 1)}</p>
+                ))}
             </div>
         </>
     );

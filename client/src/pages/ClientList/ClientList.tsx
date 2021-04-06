@@ -30,9 +30,9 @@ import { RiskLevel, IRiskLevel, riskLevels, RiskType, IRiskType, riskTypes } fro
 import { SearchOption } from "./searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
 import requestClientRows from "./requestClientRows";
-import { getAllZones, IZone } from "util/cache";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
+import { useZones } from "util/hooks/zones";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
     const risk1: IRiskLevel = riskLevels[String(params1.value)];
@@ -97,9 +97,9 @@ const ClientList = () => {
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
-    const [zones, setZones] = useState<IZone[]>([]);
     const [rows, setRows] = useState<RowsProp>([]);
 
+    const zones = useZones();
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
     const searchOptionsStyle = useSearchOptionsStyles();
@@ -171,7 +171,6 @@ const ClientList = () => {
     useEffect(() => {
         const loadInitialData = async () => {
             setLoading(true);
-            setZones(await getAllZones());
             await requestClientRows(setRows, setLoading, "", "", true);
             setLoading(false);
             initialDataLoaded.current = true;
@@ -193,40 +192,6 @@ const ClientList = () => {
 
     return (
         <div className={styles.root}>
-            <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
-                <MoreVert />
-            </IconButton>
-            <Popover
-                open={isOptionsOpen}
-                anchorEl={optionsAnchorEl}
-                onClose={onOptionsClose}
-                anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                }}
-                transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                }}
-            >
-                <div className={hideColumnsStyle.optionsContainer}>
-                    {columns.map(
-                        (column): JSX.Element => {
-                            return (
-                                <div key={column.field} className={hideColumnsStyle.optionsRow}>
-                                    <Typography component={"span"} variant={"body2"}>
-                                        {column.headerName}
-                                    </Typography>
-                                    <Switch
-                                        checked={!column.hide}
-                                        onClick={() => column.hideFunction(!column.hide)}
-                                    />
-                                </div>
-                            );
-                        }
-                    )}
-                </div>
-            </Popover>
             <div className={styles.switch}>
                 <Typography
                     color={allClientsMode ? "textSecondary" : "textPrimary"}
@@ -266,24 +231,60 @@ const ClientList = () => {
                     </Select>
                 </div>
                 {searchOption === SearchOption.ZONE ? (
-                    <Select
-                        className={styles.zoneOptions}
-                        color={"primary"}
-                        defaultValue={""}
-                        onChange={(e) => setSearchValue(String(e.target.value))}
-                    >
-                        {zones.map((zone) => (
-                            <MenuItem key={zone.id} value={zone.id}>
-                                {zone.zone_name}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                    <div>
+                        <Select
+                            className={searchOptionsStyle.zoneOptions}
+                            color={"primary"}
+                            defaultValue={""}
+                            onChange={(e) => setSearchValue(String(e.target.value))}
+                        >
+                            {Array.from(zones).map(([id, name]) => (
+                                <MenuItem key={id} value={id}>
+                                    {name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </div>
                 ) : (
                     <SearchBar
                         value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
                     />
                 )}
+                <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
+                    <MoreVert />
+                </IconButton>
+                <Popover
+                    open={isOptionsOpen}
+                    anchorEl={optionsAnchorEl}
+                    onClose={onOptionsClose}
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                    }}
+                >
+                    <div className={hideColumnsStyle.optionsContainer}>
+                        {columns.map(
+                            (column): JSX.Element => {
+                                return (
+                                    <div key={column.field} className={hideColumnsStyle.optionsRow}>
+                                        <Typography component={"span"} variant={"body2"}>
+                                            {column.headerName}
+                                        </Typography>
+                                        <Switch
+                                            checked={!column.hide}
+                                            onClick={() => column.hideFunction(!column.hide)}
+                                        />
+                                    </div>
+                                );
+                            }
+                        )}
+                    </div>
+                </Popover>
             </div>
             <DataGrid
                 className={dataGridStyle.datagrid}

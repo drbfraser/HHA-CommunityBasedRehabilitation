@@ -9,6 +9,7 @@ export interface IRouteParams {
 export enum AdminField {
     username = "username",
     password = "password",
+    confirmPassword = "confirmPassword",
     first_name = "first_name",
     last_name = "last_name",
     role = "role",
@@ -19,7 +20,8 @@ export enum AdminField {
 
 export const fieldLabels = {
     [AdminField.username]: "Username",
-    [AdminField.password]: "Password",
+    [AdminField.password]: "Enter Password",
+    [AdminField.confirmPassword]: "Confirm Password",
     [AdminField.first_name]: "First Name",
     [AdminField.last_name]: "Last Name",
     [AdminField.role]: "Role",
@@ -31,6 +33,7 @@ export const fieldLabels = {
 export const initialValues = {
     [AdminField.username]: "",
     [AdminField.password]: "",
+    [AdminField.confirmPassword]: "",
     [AdminField.first_name]: "",
     [AdminField.last_name]: "",
     [AdminField.role]: UserRole.WORKER,
@@ -68,6 +71,20 @@ export const validationSchema = (newUser: boolean) => {
             .min(8)
             .required(),
     } as any;
+
+    if (newUser) {
+        yupShape = {
+            ...yupShape,
+            [AdminField.password]: Yup.string()
+                .label(fieldLabels[AdminField.password])
+                .min(8, `Password must be at least 8 characters`)
+                .required(),
+            [AdminField.confirmPassword]: Yup.string()
+                .label(fieldLabels[AdminField.confirmPassword])
+                .required()
+                .oneOf([Yup.ref(AdminField.password)], "Passwords must match"),
+        };
+    }
 
     return Yup.object().shape(yupShape);
 };

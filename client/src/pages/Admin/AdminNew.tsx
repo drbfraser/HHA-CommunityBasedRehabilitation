@@ -1,3 +1,4 @@
+import React from "react";
 import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
@@ -6,21 +7,12 @@ import { fieldLabels, AdminField, initialValues, validationNewSchema } from "./f
 import Button from "@material-ui/core/Button";
 import { FormControl, MenuItem } from "@material-ui/core";
 import { handleCancel, handleNewSubmit } from "./handler";
-import { useState, useEffect } from "react";
-import { getAllZones, IZone } from "util/cache";
 import { userRoles } from "util/users";
+import { useZones } from "util/hooks/zones";
 
 const AdminNew = () => {
     const styles = useStyles();
-    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
-
-    useEffect(() => {
-        const fetchAllZones = async () => {
-            const zones = await getAllZones();
-            setZoneOptions(zones);
-        };
-        fetchAllZones();
-    }, []);
+    const zones = useZones();
 
     return (
         <Formik
@@ -43,12 +35,41 @@ const AdminNew = () => {
                                 />
                             </Grid>
                             <Grid item md={6} xs={12}>
+                                <FormControl fullWidth variant="outlined">
+                                    <Field
+                                        component={TextField}
+                                        select
+                                        required
+                                        variant="outlined"
+                                        label={fieldLabels[AdminField.role]}
+                                        name={AdminField.role}
+                                    >
+                                        {Object.entries(userRoles).map(([value, { name }]) => (
+                                            <MenuItem key={value} value={value}>
+                                                {name}
+                                            </MenuItem>
+                                        ))}
+                                    </Field>
+                                </FormControl>
+                            </Grid>
+                            <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
                                     name={AdminField.password}
                                     variant="outlined"
                                     type="password"
                                     label={fieldLabels[AdminField.password]}
+                                    required
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <Field
+                                    component={TextField}
+                                    name={AdminField.confirmPassword}
+                                    variant="outlined"
+                                    type="password"
+                                    label={fieldLabels[AdminField.confirmPassword]}
                                     required
                                     fullWidth
                                 />
@@ -84,15 +105,14 @@ const AdminNew = () => {
                                         label={fieldLabels[AdminField.zone]}
                                         name={AdminField.zone}
                                     >
-                                        {zoneOptions.map((option) => (
-                                            <MenuItem key={option.id} value={option.id}>
-                                                {option.zone_name}
+                                        {Array.from(zones).map(([id, name]) => (
+                                            <MenuItem key={id} value={id}>
+                                                {name}
                                             </MenuItem>
                                         ))}
                                     </Field>
                                 </FormControl>
                             </Grid>
-
                             <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
@@ -102,24 +122,6 @@ const AdminNew = () => {
                                     label={fieldLabels[AdminField.phone_number]}
                                     name={AdminField.phone_number}
                                 />
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <FormControl fullWidth variant="outlined">
-                                    <Field
-                                        component={TextField}
-                                        select
-                                        required
-                                        variant="outlined"
-                                        label={fieldLabels[AdminField.role]}
-                                        name={AdminField.role}
-                                    >
-                                        {Object.entries(userRoles).map(([value, { name }]) => (
-                                            <MenuItem key={value} value={value}>
-                                                {name}
-                                            </MenuItem>
-                                        ))}
-                                    </Field>
-                                </FormControl>
                             </Grid>
                         </Grid>
                         <br />

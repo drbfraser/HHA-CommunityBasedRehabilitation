@@ -3,6 +3,13 @@ from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
+from cbr_api.sql import (
+    getDisabilityStats,
+    getNumClientsWithDisabilities,
+    getVisitStats,
+    getReferralStats,
+)
+import json
 
 
 class UserList(generics.ListCreateAPIView):
@@ -15,6 +22,32 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.AdminAll]
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRSerializer
+
+
+class AdminStats(generics.RetrieveAPIView):
+    permission_classes = [permissions.AdminAll]
+    serializer_class = serializers.AdminStatsSerializer
+
+    def get_object(self):
+        def get_int_or_none(req_body_key):
+            try:
+                return int(json.loads(self.request.body)[req_body_key])
+            except:
+                return None
+
+        user_id = get_int_or_none("user_id")
+        from_time = get_int_or_none("from_time")
+        to_time = get_int_or_none("to_time")
+
+        referral_stats = getReferralStats(user_id, from_time, to_time)
+
+        return {
+            "disabilities": getDisabilityStats(),
+            "clients_with_disabilities": getNumClientsWithDisabilities(),
+            "visits": getVisitStats(user_id, from_time, to_time),
+            "referrals_resolved": referral_stats["resolved"],
+            "referrals_unresolved": referral_stats["unresolved"],
+        }
 
 
 class UserCurrent(generics.RetrieveAPIView):

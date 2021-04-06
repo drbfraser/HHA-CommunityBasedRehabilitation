@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useStyles } from "../NewClient/ClientForm.styles";
 
-import { IZone, IDisability } from "util/cache";
 import { Field, Form, Formik } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 
@@ -23,15 +22,18 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 import { handleSubmit, handleCancel } from "./formHandler";
 import { IClient, genders } from "util/clients";
+import { useZones } from "util/hooks/zones";
+import { useDisabilities } from "util/hooks/disabilities";
+import history from "util/history";
 
 interface IProps {
     clientInfo: IClient;
-    zoneOptions: IZone[];
-    disabilityOptions: IDisability[];
 }
 
 const ClientInfoForm = (props: IProps) => {
     const styles = useStyles();
+    const zones = useZones();
+    const disabilities = useDisabilities();
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     return (
@@ -43,7 +45,7 @@ const ClientInfoForm = (props: IProps) => {
             }}
         >
             {({ values, isSubmitting, resetForm }) => (
-                <Grid container direction="row" justify="flex-start">
+                <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
                         <Card className={styles.profileImgContainer}>
                             <CardContent>
@@ -58,6 +60,33 @@ const ClientInfoForm = (props: IProps) => {
                                 </div>
                             </CardContent>
                         </Card>
+                        <Grid container direction="row" spacing={1}>
+                            <Grid className={styles.sideFormButtonWrapper} item md={10} xs={12}>
+                                <Button
+                                    className={styles.sideFormButton}
+                                    color="primary"
+                                    variant="contained"
+                                    fullWidth
+                                    onClick={() =>
+                                        history.push(`/client/${props.clientInfo.id}/visits/new`)
+                                    }
+                                    disabled={isSubmitting}
+                                >
+                                    New Visit
+                                </Button>
+                            </Grid>
+                            <Grid className={styles.sideFormButtonWrapper} item md={10} xs={12}>
+                                <Button
+                                    className={styles.sideFormButton}
+                                    color="primary"
+                                    variant="contained"
+                                    fullWidth
+                                    disabled={isSubmitting}
+                                >
+                                    New Referral
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item md={10} xs={12}>
                         <Form>
@@ -149,9 +178,9 @@ const ClientInfoForm = (props: IProps) => {
                                             label={fieldLabels[FormField.zone]}
                                             name={FormField.zone}
                                         >
-                                            {props.zoneOptions.map((option: IZone) => (
-                                                <MenuItem key={option.id} value={option.id}>
-                                                    {option.zone_name}
+                                            {Array.from(zones).map(([id, name]) => (
+                                                <MenuItem key={id} value={id}>
+                                                    {name}
                                                 </MenuItem>
                                             ))}
                                         </Field>
@@ -183,9 +212,9 @@ const ClientInfoForm = (props: IProps) => {
                                         name={FormField.disability}
                                         variant="outlined"
                                     >
-                                        {props.disabilityOptions.map((option) => (
-                                            <MenuItem key={option.id} value={option.id}>
-                                                {option.disability_type}
+                                        {Array.from(disabilities).map(([id, name]) => (
+                                            <MenuItem key={id} value={id}>
+                                                {name}
                                             </MenuItem>
                                         ))}
                                     </Field>
@@ -296,7 +325,7 @@ const ClientInfoForm = (props: IProps) => {
                                     <Grid item>
                                         <></>
                                         <Button
-                                            variant="contained"
+                                            variant="outlined"
                                             color="primary"
                                             onClick={() => {
                                                 setIsEditing(true);

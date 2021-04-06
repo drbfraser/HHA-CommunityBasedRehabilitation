@@ -44,17 +44,18 @@ const updateUserPassword = async (userInfo: string, userId: number) => {
         .then((res) => {
             return res.json();
         })
+        .then((res) => {
+            return res as IUser;
+        });
 };
 
-export const handleUpdatePassword = async (
-    values: UserIDPassword,
-    helpers: FormikHelpers<UserIDPassword>
-) => {
+export const handleUpdatePassword = async (values: IUser, helpers: FormikHelpers<IUser>) => {
     const newPassword = JSON.stringify({
         new_password: values.password,
     });
 
     try {
+        console.log(values.password);
         await updateUserPassword(newPassword, values.id);
         history.goBack();
     } catch (e) {

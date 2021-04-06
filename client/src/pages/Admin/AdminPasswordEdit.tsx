@@ -5,13 +5,11 @@ import Grid from "@material-ui/core/Grid";
 import { fieldLabels, AdminField, validationEditSchema, IRouteParams } from "./fields";
 import Button from "@material-ui/core/Button";
 import { useRouteMatch } from "react-router-dom";
-import { FormControl, MenuItem } from "@material-ui/core";
 import { useState, useEffect } from "react";
-import { handleCancel, handleEditSubmit, handleUpdatePassword } from "./handler";
-import { getAllZones, IZone } from "util/cache";
+import { handleCancel, handleUpdatePassword } from "./handler";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { apiFetch, Endpoint } from "util/endpoints";
-import { IUser, userRoles } from "util/users";
+import { IUser } from "util/users";
 
 const AdminPasswordEdit = () => {
     const styles = useStyles();
@@ -39,7 +37,7 @@ const AdminPasswordEdit = () => {
         </Alert>
     ) : user ? (
         <Formik
-            initialValues={{password: "", id : userId}}
+            initialValues={user}
             validationSchema={validationEditSchema}
             onSubmit={handleUpdatePassword}
         >
@@ -51,25 +49,34 @@ const AdminPasswordEdit = () => {
                     <p>{user.username}</p>
                     <Form>
                         <Grid container spacing={2}>
-                            <Grid item md={6} xs={12}>
+                            <Grid item md={7} xs={12}>
                                 <Field
                                     component={TextField}
                                     name={AdminField.password}
                                     variant="outlined"
+                                    type="password"
                                     label={fieldLabels[AdminField.password]}
                                     required
                                     fullWidth
                                 />
                             </Grid>
+                            <Grid item md={7} xs={12}>
+                                <Field
+                                    component={TextField}
+                                    name={AdminField.confirmPassword}
+                                    variant="outlined"
+                                    type="password"
+                                    label={fieldLabels[AdminField.confirmPassword]}
+                                    required
+                                    fullWidth
+                                />
+                            </Grid>
+                            <br />
                         </Grid>
-                        
-                        <Grid
-                            container
-                            direction="row"
-                            spacing={2}
-                            justify="space-between"
-                            alignItems="center"
-                        >
+
+                        <br />
+
+                        <Grid container direction="row" spacing={2} justify="flex-end">
                             <Grid item>
                                 <Button
                                     color="primary"

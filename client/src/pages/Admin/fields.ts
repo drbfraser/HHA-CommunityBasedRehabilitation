@@ -63,17 +63,11 @@ export const validationSchema = (newUser: boolean) => {
             .required(),
         [AdminField.role]: Yup.string().label(fieldLabels[AdminField.role]).required(),
         [AdminField.is_active]: Yup.boolean().label(fieldLabels[AdminField.is_active]).required(),
+        [AdminField.password]: Yup.string()
+            .label(fieldLabels[AdminField.password])
+            .min(8)
+            .required(),
     } as any;
-
-    if (newUser) {
-        yupShape = {
-            ...yupShape,
-            [AdminField.password]: Yup.string()
-                .label(fieldLabels[AdminField.password])
-                .min(8)
-                .required(),
-        };
-    }
 
     return Yup.object().shape(yupShape);
 };

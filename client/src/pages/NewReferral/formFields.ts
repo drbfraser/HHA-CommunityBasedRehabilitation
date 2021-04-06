@@ -32,7 +32,7 @@ export const fieldLabels = {
     [FormField.wheelchairExperience]: "Wheelchair Experience",
     [FormField.hipWidth]: "Hip Width",
     [FormField.wheelchairOwned]: "Client Owns a Wheelchair",
-    [FormField.wheelchairRepairable]: "Client's Wheelchair Needs Repair",
+    [FormField.wheelchairRepairable]: "Client's Wheelchair is Repairable",
     [FormField.physiotherapy]: "Physiotherapy",
     [FormField.condition]: "Condition",
     [FormField.prosthetic]: "Prosthetic",

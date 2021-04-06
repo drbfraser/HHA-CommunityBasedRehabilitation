@@ -98,6 +98,13 @@ const WheelchairForm = (props: IFormProps) => {
 
     return (
         <div>
+            {props.formikProps.values[FormField.wheelchairOwned] &&
+                props.formikProps.values[FormField.wheelchairRepairable] && (
+                    <div>
+                        <Alert severity="info">Please bring wheelchair to the center</Alert>
+                        <br />
+                    </div>
+                )}
             <FormLabel>What is the client's wheelchair experience?</FormLabel>
             <Field
                 component={RadioGroup}

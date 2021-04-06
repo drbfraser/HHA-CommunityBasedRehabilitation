@@ -118,15 +118,18 @@ class Client(models.Model):
     village = models.CharField(max_length=50)
     picture = models.ImageField(upload_to="images/", blank=True)  # if picture available
     caregiver_present = models.BooleanField(default=False)
+
     # ------if caregiver present-----
     caregiver_name = models.CharField(max_length=101, blank=True)
     caregiver_phone = models.CharField(max_length=50, blank=True)
     caregiver_email = models.CharField(max_length=50, blank=True)
     caregiver_picture = models.ImageField(upload_to="images/", blank=True)
-    # ------if caregiver present-----
+
+    # summary data to make queries more reasonable
     health_risk_level = RiskLevel.getField()
     social_risk_level = RiskLevel.getField()
     educat_risk_level = RiskLevel.getField()
+    last_visit_date = models.BigIntegerField(default=0)
 
 
 class ClientRisk(models.Model):
@@ -140,7 +143,9 @@ class ClientRisk(models.Model):
 
 class Visit(models.Model):
     client = models.ForeignKey(Client, related_name="visits", on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name="visits", on_delete=models.PROTECT
+    )
     date_visited = models.BigIntegerField()
     health_visit = models.BooleanField(default=False)
     educat_visit = models.BooleanField(default=False)

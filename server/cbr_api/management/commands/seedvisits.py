@@ -7,7 +7,6 @@ import random
 class Command(BaseCommand):
     def handle(self, *args, **options):
         results = ["CAN", "GO", "CON"]
-        risks = ["LO", "ME", "HI", "CR"]
         outcomes = [
             "Full Recovery",
             "Partial Recovery",
@@ -27,7 +26,6 @@ class Command(BaseCommand):
         zones = models.Zone.objects.all()
         users = models.UserCBR.objects.all()
         clients = models.Client.objects.all()
-        disabilities = models.Disability.objects.all()
 
         def getYearTimestamp(self, year):
             return (year - 1970) * (60 * 60 * 24 * 365)
@@ -49,12 +47,20 @@ class Command(BaseCommand):
             )
 
         def createVisit(self, health, social, educat, type, village):
+            client = random.choice(clients)
+
+            date_visited = random.randint(
+                max(getYearTimestamp(self, 2019), client.last_visit_date),
+                getYearTimestamp(self, 2021),
+            )
+
+            client.last_visit_date = date_visited
+            client.save()
+
             visit = models.Visit.objects.create(
                 user=random.choice(users),
-                client=random.choice(clients),
-                date_visited=random.randint(
-                    getYearTimestamp(self, 2019), getYearTimestamp(self, 2020)
-                ),
+                client=client,
+                date_visited=date_visited,
                 longitude=0.0,
                 latitude=0.0,
                 zone=random.choice(zones),

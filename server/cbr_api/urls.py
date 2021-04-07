@@ -34,4 +34,6 @@ urlpatterns = [
     path("referral/<int:pk>", views.ReferralDetail.as_view(), name="referral-detail"),
     path("referrals", views.ReferralList.as_view(), name="referral-list"),
     path("stats", views.AdminStats.as_view(), name="admin-stats"),
+    path("baselinesurveys", views.BaselineSurveyList.as_view(), name="baseline-survey-list"),
+    path("baselinesurvey/<int:pk>", views.BaselineSurveyDetail.as_view(), name="baseline-survey-detail"),
 ]

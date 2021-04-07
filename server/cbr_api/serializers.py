@@ -471,3 +471,21 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         instance.full_name = instance.first_name + " " + instance.last_name
         instance.save()
         return instance
+
+class BaselineSurveySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=models.BaselineSurvey
+        fields = '__all__'
+
+        read_only_fields = [
+            "user",
+            "survey_date"
+        ]
+    
+    def create(self, validated_data):
+        current_time = int(time.time())
+        validated_data["survey_date"] = current_time
+        validated_data["user"] = self.context["request"].user
+        baseline_survey = models.BaselineSurvey.objects.create(**validated_data)
+        baseline_survey.save()
+        return baseline_survey

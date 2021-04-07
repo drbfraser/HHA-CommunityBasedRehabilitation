@@ -222,7 +222,10 @@ class Improvement(models.Model):
 
 
 class BaselineSurvey(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    client = models.ForeignKey(Client, related_name="baselinesurveys", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name="baselinesurveys", on_delete=models.PROTECT
+    )
     survey_date = models.BigIntegerField()
 
     class Ratings(models.TextChoices):
@@ -230,6 +233,17 @@ class BaselineSurvey(models.Model):
         POOR = "P", _("Poor")
         FINE = "F", _("Fine")
         GOOD = "G", _("Good")
+
+    class AssistiveDevices(models.TextChoices):
+        WHEELCHAIR = "WC", _("Wheelchair")
+        PROSTHETIC = "PR", _("Prosthetic")
+        ORTHOTIC = "OR", _("Orthotic")
+        CRUTCH = "CR", _("Crutch")
+        WALKING_STICK = "WS", _("Walking Stick")
+        HEARING_AID = "HA", _("Hearing Aid")
+        GLASSES = "GL", _("Glasses")
+        STANDING_FRAME = "SF", _("Standing Frame")
+        CORNER_SEAT = "CS", _("Corner Seat")
     
     #Health
     health = models.CharField(max_length=2, choices=Ratings.choices)
@@ -238,7 +252,7 @@ class BaselineSurvey(models.Model):
     health_have_assistive_device = models.BooleanField()
     health_working_assistive_device = models.BooleanField()
     health_need_assistive_device = models.BooleanField()
-    #health_what_assistive_device = (dropdown list)- wheelchair, prosthetic, orthotic, crutch, walking stick, hearing aid, glasses, standing frame, corner seat
+    health_what_assistive_device = models.CharField(max_length=2, choices=AssistiveDevices.choices)
     health_services_satisfaction = models.CharField(max_length=2, choices=Ratings.choices)
 
     class SchoolBarriers(models.TextChoices):

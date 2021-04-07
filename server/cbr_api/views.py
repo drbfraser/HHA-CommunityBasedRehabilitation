@@ -172,3 +172,12 @@ class ReferralDetail(generics.RetrieveUpdateAPIView):
     )
     def put(self, request, pk):
         return super().put(request)
+
+class BaselineSurveyList(generics.CreateAPIView):
+    queryset = models.BaselineSurvey.objects.all()
+    serializer_class = serializers.BaselineSurveySerializer
+
+
+class BaselineSurveyDetail(generics.RetrieveAPIView):
+    queryset = models.BaselineSurvey.objects.all()
+    serializer_class = serializers.BaselineSurveySerializer

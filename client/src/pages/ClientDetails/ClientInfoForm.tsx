@@ -81,6 +81,9 @@ const ClientInfoForm = (props: IProps) => {
                                     color="primary"
                                     variant="contained"
                                     fullWidth
+                                    onClick={() =>
+                                        history.push(`/client/${props.clientInfo.id}/referrals/new`)
+                                    }
                                     disabled={isSubmitting}
                                 >
                                     New Referral

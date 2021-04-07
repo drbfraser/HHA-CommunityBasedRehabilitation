@@ -14,14 +14,14 @@ import React, { useState } from "react";
 import {
     fieldLabels,
     FormField,
-    initialValidationSchema,
+    emptyValidationSchema,
     initialValues,
     foodValidationSchema,
     livelihoodValidationSchema,
     healthValidationSchema,
     educationValidationSchema,
-} from "./surveyFormFields";
-import { handleSubmit } from "./surveyHandler";
+} from "./formFields";
+import { handleSubmit } from "./formHandler";
 import { ArrowBack } from "@material-ui/icons";
 import history from "util/history";
 import { useParams } from "react-router-dom";
@@ -29,7 +29,7 @@ import { useStyles } from "./BaseSurvey.style";
 import { Alert } from "@material-ui/lab";
 import {
     childNourish,
-    deviceType,
+    deviceTypes,
     grade,
     isSelfEmployed,
     rateLevel,
@@ -127,7 +127,7 @@ const HealthForm = () => {
                     label={fieldLabels[FormField.deviceType]}
                     name={FormField.deviceType}
                 >
-                    {Object.entries(deviceType).map(([value, { name }]) => (
+                    {Object.entries(deviceTypes).map(([value, name]) => (
                         <MenuItem key={value} value={value}>
                             {name}
                         </MenuItem>
@@ -188,7 +188,7 @@ const EducationForm = (props: IFormProps) => {
                                 label={fieldLabels[FormField.grade]}
                                 name={FormField.grade}
                             >
-                                {Object.entries(grade).map(([value, { name }]) => (
+                                {Object.entries(grade).map(([value, name]) => (
                                     <MenuItem key={value} value={value}>
                                         {name}
                                     </MenuItem>
@@ -208,7 +208,7 @@ const EducationForm = (props: IFormProps) => {
                                 label={fieldLabels[FormField.reasonNotSchool]}
                                 name={FormField.reasonNotSchool}
                             >
-                                {Object.entries(reasonNotSchool).map(([value, { name }]) => (
+                                {Object.entries(reasonNotSchool).map(([value, name]) => (
                                     <MenuItem key={value} value={value}>
                                         {name}
                                     </MenuItem>
@@ -290,13 +290,13 @@ const LivelihoodForm = (props: IFormProps) => {
                             <FormLabel>What do you do?</FormLabel>
                             <br />
                             <Field
-                                type="text"
                                 component={TextField}
-                                variant="outlined"
                                 multiline
+                                variant="outlined"
                                 label={fieldLabels[FormField.job]}
                                 name={FormField.job}
-                            ></Field>
+                                fullWidth
+                            />
                         </FormControl>
                         <br />
                     </div>
@@ -311,7 +311,7 @@ const LivelihoodForm = (props: IFormProps) => {
                     label={fieldLabels[FormField.isSelfEmployed]}
                     name={FormField.reasonNotSchool}
                 >
-                    {Object.entries(isSelfEmployed).map(([value, { name }]) => (
+                    {Object.entries(isSelfEmployed).map(([value, name]) => (
                         <MenuItem key={value} value={value}>
                             {name}
                         </MenuItem>
@@ -394,7 +394,7 @@ const FoodForm = (props: IFormProps) => {
                                 label={fieldLabels[FormField.childNourish]}
                                 name={FormField.childNourish}
                             >
-                                {Object.entries(childNourish).map(([value, { name }]) => (
+                                {Object.entries(childNourish).map(([value, name]) => (
                                     <MenuItem key={value} value={value}>
                                         {name}
                                     </MenuItem>
@@ -490,14 +490,14 @@ const NewSurvey = () => {
             validationSchema: healthValidationSchema,
         },
         {
-            label: "Education(under 18)",
+            label: "Education (under 18)",
             Form: (formikProps) => EducationForm(formikProps),
             validationSchema: educationValidationSchema,
         },
         {
             label: "Social",
             Form: () => SocialForm(),
-            validationSchema: initialValidationSchema,
+            validationSchema: emptyValidationSchema,
         },
         {
             label: "Livelihood (over 16)",
@@ -512,12 +512,12 @@ const NewSurvey = () => {
         {
             label: "Empowerment",
             Form: (formikProps) => EmpowermentForm(formikProps),
-            validationSchema: initialValidationSchema,
+            validationSchema: emptyValidationSchema,
         },
         {
             label: "Shelter and Care",
             Form: () => ShelterForm(),
-            validationSchema: initialValidationSchema,
+            validationSchema: emptyValidationSchema,
         },
     ];
 

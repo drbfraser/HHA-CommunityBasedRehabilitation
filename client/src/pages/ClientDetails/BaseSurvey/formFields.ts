@@ -94,7 +94,7 @@ export const fieldLabels = {
 
     [FormField.foodAndNutrition]: "Food and Nutrition",
     [FormField.foodSecurityRate]: "Rate",
-    [FormField.enoughFoodPerMonth]: "Do you have enough food every month",
+    [FormField.enoughFoodPerMonth]: "Do you have enough food every month?",
     [FormField.isChild]: "Is the client child?",
     [FormField.childNourish]: "Nourishment",
 
@@ -152,7 +152,7 @@ export const initialValues = {
     [FormField.accessItem]: false,
 };
 
-export const initialValidationSchema = () => Yup.object().shape({});
+export const emptyValidationSchema = () => Yup.object().shape({});
 
 export const healthValidationSchema = () =>
     Yup.object().shape({

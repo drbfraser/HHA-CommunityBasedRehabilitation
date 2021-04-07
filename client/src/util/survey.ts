@@ -1,6 +1,6 @@
 export enum RateLevel {
     POOR = "POOR",
-    VERYPOOR = "VERYPOOR",
+    VERY_POOR = "VERY_POOR",
     FINE = "FINE",
     GOOD = "GOOD",
 }
@@ -10,20 +10,20 @@ export enum DeviceType {
     PROSTHETIC = "PROSTHETIC",
     ORTHOTIC = "ORTHEOTIC",
     CRUTCH = "CRUTCH",
-    WALKINGSTICK = "WALKINGSTICK",
-    HEARINGAID = "HEARINGAID",
+    WALKING_STICK = "WALKING_STICK",
+    HEARING_AID = "HEARING_AID",
     GLASSES = "GLASSES",
-    STANDINGFRAME = "STANDINGFRAME",
-    CORNERSEAT = "CORNERSEAT",
+    STANDING_FRAME = "STANDING_FRAME",
+    CORNER_SEAT = "CORNER_SEAT",
 }
 
 export enum ReasonNotSchool {
-    LACKOFFUNDING = "LACKOFFUNDING",
-    MYDISABILITYSTOPSME = "MYDISABILITYSTOPSME",
+    LACK_OF_FUNDING = "LACK_OF_FUNDING",
+    MY_DISABILITY_STOPS_ME = "MY_DISABILITY_STOPS_ME",
     OTHER = "OTHER",
 }
 
-export enum GRADE {
+export enum Grade {
     P1 = "P1",
     P2 = "P2",
     P3 = "P3",
@@ -42,11 +42,11 @@ export enum GRADE {
 export enum ChildNourish {
     MALNOURISHED = "MALNOURISHED",
     UNDERNOURISHED = "UNDERNOURISHED",
-    WELLNOURISHED = "WELLNOURISHED",
+    WELL_NOURISHED = "WELL_NOURISHED",
 }
 
 export enum IsSelfEmployed {
-    EMPLOYED = "POOR",
+    EMPLOYED = "EMPLOYED",
     SELFEMPLOYED = "SELFEMPLOYED",
 }
 export interface IRateLevel {
@@ -55,7 +55,7 @@ export interface IRateLevel {
 }
 
 export const rateLevel = {
-    [RateLevel.VERYPOOR]: {
+    [RateLevel.VERY_POOR]: {
         name: "Very poor",
         level: 1,
     },
@@ -72,107 +72,46 @@ export const rateLevel = {
         level: 4,
     },
 };
-export const deviceType = {
-    [DeviceType.WHEELCHAIR]: {
-        name: "Wheelchair",
-    },
-    [DeviceType.PROSTHETIC]: {
-        name: "Prosthetic",
-    },
-    [DeviceType.ORTHOTIC]: {
-        name: "Orthotic",
-    },
-    [DeviceType.CRUTCH]: {
-        name: "Crutch",
-    },
-    [DeviceType.WALKINGSTICK]: {
-        name: "Walking Stick",
-    },
-    [DeviceType.HEARINGAID]: {
-        name: "Hearing Aid",
-    },
-    [DeviceType.GLASSES]: {
-        name: "Glasses",
-    },
-    [DeviceType.STANDINGFRAME]: {
-        name: "Standing Frame",
-    },
-    [DeviceType.CORNERSEAT]: {
-        name: "Corner Seat",
-    },
+export const deviceTypes = {
+    [DeviceType.WHEELCHAIR]: "Wheelchair",
+    [DeviceType.PROSTHETIC]: "Prosthetic",
+    [DeviceType.ORTHOTIC]: "Orthotic",
+    [DeviceType.CRUTCH]: "Crutch",
+    [DeviceType.WALKING_STICK]: "Walking Stick",
+    [DeviceType.HEARING_AID]: "Hearing Aid",
+    [DeviceType.GLASSES]: "Glasses",
+    [DeviceType.STANDING_FRAME]: "Standing Frame",
+    [DeviceType.CORNER_SEAT]: "Corner Seat",
 };
 export const reasonNotSchool = {
-    [ReasonNotSchool.LACKOFFUNDING]: {
-        name: "Lack of funding",
-    },
-    [ReasonNotSchool.MYDISABILITYSTOPSME]: {
-        name: "My disability stops me",
-    },
-    [ReasonNotSchool.OTHER]: {
-        name: "Other",
-    },
+    [ReasonNotSchool.LACK_OF_FUNDING]: "Lack of funding",
+    [ReasonNotSchool.MY_DISABILITY_STOPS_ME]: "My disability stops me",
+    [ReasonNotSchool.OTHER]: "Other",
 };
 
 export const childNourish = {
-    [ChildNourish.MALNOURISHED]: {
-        name: "Malnourished",
-    },
-    [ChildNourish.UNDERNOURISHED]: {
-        name: "Undernourished",
-    },
-    [ChildNourish.WELLNOURISHED]: {
-        name: "Well nourished",
-    },
+    [ChildNourish.MALNOURISHED]: "Malnourished",
+    [ChildNourish.UNDERNOURISHED]: "Undernourished",
+    [ChildNourish.WELL_NOURISHED]: "Well nourished",
 };
 
 export const isSelfEmployed = {
-    [IsSelfEmployed.EMPLOYED]: {
-        name: "Employed",
-    },
-    [IsSelfEmployed.SELFEMPLOYED]: {
-        name: "Self Employed",
-    },
+    [IsSelfEmployed.EMPLOYED]: "Employed",
+    [IsSelfEmployed.SELFEMPLOYED]: "Self Employed",
 };
 
 export const grade = {
-    [GRADE.P1]: {
-        name: "Primary 1",
-    },
-    [GRADE.P2]: {
-        name: "Primary 2",
-    },
-    [GRADE.P3]: {
-        name: "Primary 3",
-    },
-    [GRADE.P4]: {
-        name: "Primary 4",
-    },
-    [GRADE.P5]: {
-        name: "Primary 5",
-    },
-    [GRADE.P6]: {
-        name: "Primary 6",
-    },
-    [GRADE.P7]: {
-        name: "Primary 7",
-    },
-
-    [GRADE.S1]: {
-        name: "Secondary 1",
-    },
-    [GRADE.S2]: {
-        name: "Secondary 2",
-    },
-    [GRADE.S3]: {
-        name: "Secondary 3",
-    },
-    [GRADE.S4]: {
-        name: "Secondary 4",
-    },
-    [GRADE.S5]: {
-        name: "Secondary 5",
-    },
-    [GRADE.S6]: {
-        name: "Secondary 6",
-    },
+    [Grade.P1]: "Primary 1",
+    [Grade.P2]: "Primary 2",
+    [Grade.P3]: "Primary 3",
+    [Grade.P4]: "Primary 4",
+    [Grade.P5]: "Primary 5",
+    [Grade.P6]: "Primary 6",
+    [Grade.P7]: "Primary 7",
+    [Grade.S1]: "Secondary 1",
+    [Grade.S2]: "Secondary 2",
+    [Grade.S3]: "Secondary 3",
+    [Grade.S4]: "Secondary 4",
+    [Grade.S5]: "Secondary 5",
+    [Grade.S6]: "Secondary 6",
 };

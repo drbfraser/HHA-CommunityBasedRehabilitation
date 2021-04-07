@@ -21,7 +21,7 @@ import Dashboard from "pages/Dashboard/Dashboard";
 import NewVisit from "pages/NewVisit/NewVisit";
 import { IUser, UserRole } from "./users";
 import { APILoadError, TAPILoadError } from "./endpoints";
-import NewSurvey from "pages/ClientDetails/BaseSurvey/ClientBaseSurvey";
+import NewSurvey from "pages/ClientDetails/BaseSurvey/BaseSurvey";
 
 export interface IPage {
     path: string;

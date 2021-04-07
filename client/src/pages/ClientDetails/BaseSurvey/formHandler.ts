@@ -1,6 +1,6 @@
 import { FormikHelpers } from "formik";
 // import { apiFetch, Endpoint } from "util/endpoints";
-import { FormField, TFormValues } from "./surveyFormFields";
+import { FormField, TFormValues } from "./formFields";
 import history from "util/history";
 
 const addSurvey = async (surveyInfo: string) => {

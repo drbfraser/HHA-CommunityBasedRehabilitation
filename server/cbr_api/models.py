@@ -219,3 +219,76 @@ class Improvement(models.Model):
     risk_type = RiskType.getField()
     provided = models.CharField(max_length=50)
     desc = models.TextField()
+
+
+class BaselineSurvey(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    survey_date = models.BigIntegerField()
+
+    class Ratings(models.TextChoices):
+        VERY_POOR = "VP", _("Very Poor")
+        POOR = "P", _("Poor")
+        FINE = "F", _("Fine")
+        GOOD = "G", _("Good")
+    
+    #Health
+    health = models.CharField(max_length=2, choices=Ratings.choices)
+    health_have_rehabilitation_access = models.BooleanField()
+    health_need_rehabilitation_access = models.BooleanField()
+    health_have_assistive_device = models.BooleanField()
+    health_working_assistive_device = models.BooleanField()
+    health_need_assistive_device = models.BooleanField()
+    #health_what_assistive_device = (dropdown list)- wheelchair, prosthetic, orthotic, crutch, walking stick, hearing aid, glasses, standing frame, corner seat
+    health_services_satisfaction = models.CharField(max_length=2, choices=Ratings.choices)
+
+    class SchoolBarriers(models.TextChoices):
+        LACK_FUNDING = "LF", _("Lack Funding")
+        DISABILITY = "D", _("Disability")
+        OTHER = "O", _("Other")
+    
+    #Education (under 18)
+    school_currently = models.BooleanField()
+    school_grade = models.IntegerField(blank = True)
+    school_why_not = models.CharField(max_length=2, choices=SchoolBarriers.choices)
+    school_ever_in = models.BooleanField()
+    school_want = models.BooleanField()
+
+    #Social
+    social_community_valued = models.BooleanField()
+    social_independent = models.BooleanField()
+    social_able_participate = models.BooleanField()
+    social_affected_by_disability = models.BooleanField()
+    social_discrimination = models.BooleanField()
+
+    class Employment(models.TextChoices):
+        EMPLOYED = "EM", _("Employed")
+        SELF_EMPLOYED = "SEM", _("Self-Employed")
+
+    #Livelihood
+    work = models.BooleanField()
+    work_what = models.CharField(max_length=50)
+    work_status = models.CharField(max_length=3, choices=Employment.choices)
+    work_meet_financial_needs = models.BooleanField()
+    work_affected_by_disability = models.BooleanField()
+    work_want = models.BooleanField()
+
+    class Nourishment(models.TextChoices):
+        MALNOURISHED = "M", _("Malnourished")
+        UNDERNOURISHED = "U", _("Undernourished")
+        WELLNOURISHED = "W", _("Well nourished")
+
+    #Food and Nutrition
+    food_security = models.CharField(max_length=2, choices=Ratings.choices)
+    food_enough_monthly = models.BooleanField()
+    food_enough_for_child = models.CharField(max_length=1, choices=Nourishment.choices)
+    #if malnourished referral to health centre required - Frontend?
+
+    #Empowerment
+    empowerment_organization_member = models.BooleanField()
+    empowerment_organization = models.CharField(max_length=50)
+    empowerment_rights_awareness = models.BooleanField()
+    empowerment_influence_others = models.BooleanField()
+
+    #Shelter and Care
+    shelter_adequate = models.BooleanField()
+    shelter_essential_access = models.BooleanField()

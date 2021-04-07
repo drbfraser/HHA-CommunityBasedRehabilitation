@@ -106,8 +106,8 @@ def getOutstandingReferrals():
         cursor.execute(
             """
             SELECT c.full_name, r.wheelchair, r.prosthetic, r.orthotic, r.date_referred
-            FROM cbr_api_client AS c
-            INNER JOIN cbr_api_referral AS r
+            FROM cbr_api_referral as r
+            INNER JOIN cbr_api_client as c
             ON c.id = r.client_id
             WHERE r.resolved=False
         """

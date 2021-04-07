@@ -85,7 +85,6 @@ export const deviceType = {
     [DeviceType.CRUTCH]: {
         name: "Crutch",
     },
-
     [DeviceType.WALKINGSTICK]: {
         name: "Walking Stick",
     },
@@ -98,8 +97,7 @@ export const deviceType = {
     [DeviceType.STANDINGFRAME]: {
         name: "Standing Frame",
     },
-
-    [DeviceType.CRUTCH]: {
+    [DeviceType.CORNERSEAT]: {
         name: "Corner Seat",
     },
 };

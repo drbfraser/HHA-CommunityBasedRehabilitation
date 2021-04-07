@@ -3,19 +3,19 @@ import { apiFetch, Endpoint } from "util/endpoints";
 import { FormField, TFormValues } from "./surveyFormFields";
 import history from "util/history";
 
-const addService = async (surveyInfo: string) => {
+const addSurvey = async (surveyInfo: string) => {
     const init: RequestInit = {
         method: "POST",
         body: surveyInfo,
     };
-
-    return await apiFetch(Endpoint.REFERRALS, "", init)
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            return res;
-        });
+    // TODO: connect to the endpoint
+    // return await apiFetch(Endpoint.SURVEY, "", init)
+    //     .then((res) => {
+    //         return res.json();
+    //     })
+    //     .then((res) => {
+    //         return res;
+    //     });
 };
 
 export const handleSubmit = async (
@@ -23,10 +23,13 @@ export const handleSubmit = async (
     helpers: FormikHelpers<TFormValues>,
     setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
-    const newSurvey = JSON.stringify({});
+    const newSurvey = JSON.stringify({
+        // TODO: connedt to the endpoint
+        client: values[FormField.client],
+    });
 
     try {
-        await addService(newSurvey);
+        await addSurvey(newSurvey);
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);

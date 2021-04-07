@@ -16,8 +16,10 @@ import {
     FormField,
     initialValidationSchema,
     initialValues,
-    otherServicesValidationSchema,
-    rateLevelValidationSchema,
+    foodValidationSchema,
+    livelihoodValidationSchema,
+    healthValidationSchema,
+    educationValidationSchema,
 } from "./surveyFormFields";
 import { handleSubmit } from "./surveyHandler";
 import { ArrowBack } from "@material-ui/icons";
@@ -34,6 +36,10 @@ import {
     reasonNotSchool,
 } from "util/survey";
 
+interface IFormProps {
+    formikProps: FormikProps<any>;
+}
+
 const surveyTypes: FormField[] = [
     FormField.health,
     FormField.education,
@@ -43,10 +49,6 @@ const surveyTypes: FormField[] = [
     FormField.empowerment,
     FormField.shelterAndCare,
 ];
-
-interface IFormProps {
-    formikProps: FormikProps<any>;
-}
 
 interface ISurvey {
     label: string;
@@ -94,18 +96,18 @@ const HealthForm = () => {
                     <Field
                         component={CheckboxWithLabel}
                         type="checkbox"
+                        name={FormField.haveDevice}
+                        Label={{ label: fieldLabels[FormField.haveDevice] }}
+                    />
+                    <br />
+                    <Field
+                        component={CheckboxWithLabel}
+                        type="checkbox"
                         name={FormField.deviceWoking}
                         Label={{ label: fieldLabels[FormField.deviceWoking] }}
                     />
                     <br />
 
-                    <Field
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        name={FormField.haveDevice}
-                        Label={{ label: fieldLabels[FormField.haveDevice] }}
-                    />
-                    <br />
                     <Field
                         component={CheckboxWithLabel}
                         type="checkbox"
@@ -358,8 +360,8 @@ const FoodForm = (props: IFormProps) => {
                     component={TextField}
                     select
                     variant="outlined"
-                    label={fieldLabels[FormField.foodSecurity]}
-                    name={FormField.foodSecurity}
+                    label={fieldLabels[FormField.foodSecurityRate]}
+                    name={FormField.foodSecurityRate}
                 >
                     {Object.entries(rateLevel).map(([value, { name }]) => (
                         <MenuItem key={value} value={value}>
@@ -402,11 +404,11 @@ const FoodForm = (props: IFormProps) => {
                         <br />
                     </div>
                 )}
+
                 {props.formikProps.values[FormField.childNourish] === "MALNOURISHED" && (
                     <div className={styles.fieldIndent}>
-                        <FormControl fullWidth variant="outlined">
-                            <FormLabel>Please referral to health centre required?</FormLabel>
-                        </FormControl>
+                        <br />
+                        Please referral to health centre required !!!
                         <br />
                     </div>
                 )}
@@ -474,64 +476,23 @@ const ShelterForm = () => {
     );
 };
 
+//Todo: Make more forms as requirement in the future
+
 const NewSurvey = () => {
-    const [activeStep, setActiveStep] = useState<number>(0);
+    const [step, setStep] = useState<number>(0);
     const [submissionError, setSubmissionError] = useState(false);
     const { clientId } = useParams<{ clientId: string }>();
-
-    const surveys: { [key: string]: ISurvey } = {
-        [FormField.health]: {
-            label: `${fieldLabels[FormField.health]} Survey`,
-            Form: HealthForm,
-            validationSchema: rateLevelValidationSchema,
-        },
-        [FormField.education]: {
-            label: `${fieldLabels[FormField.education]} Survey`,
-            Form: EducationForm,
-            validationSchema: rateLevelValidationSchema,
-        },
-
-        [FormField.social]: {
-            label: `${fieldLabels[FormField.social]} Survey`,
-            Form: SocialForm,
-            validationSchema: otherServicesValidationSchema,
-        },
-
-        [FormField.social]: {
-            label: `${fieldLabels[FormField.social]} Survey`,
-            Form: LivelihoodForm,
-            validationSchema: otherServicesValidationSchema,
-        },
-
-        [FormField.social]: {
-            label: `${fieldLabels[FormField.social]} Survey`,
-            Form: FoodForm,
-            validationSchema: otherServicesValidationSchema,
-        },
-
-        [FormField.social]: {
-            label: `${fieldLabels[FormField.social]} Survey`,
-            Form: EmpowermentForm,
-            validationSchema: otherServicesValidationSchema,
-        },
-
-        [FormField.social]: {
-            label: `${fieldLabels[FormField.social]} Survey`,
-            Form: ShelterForm,
-            validationSchema: otherServicesValidationSchema,
-        },
-    };
 
     const surveySteps: ISurvey[] = [
         {
             label: "Health",
             Form: () => HealthForm(),
-            validationSchema: initialValidationSchema,
+            validationSchema: healthValidationSchema,
         },
         {
             label: "Education(under 18)",
             Form: (formikProps) => EducationForm(formikProps),
-            validationSchema: initialValidationSchema,
+            validationSchema: educationValidationSchema,
         },
         {
             label: "Social",
@@ -541,12 +502,12 @@ const NewSurvey = () => {
         {
             label: "Livelihood (over 16)",
             Form: (formikProps) => LivelihoodForm(formikProps),
-            validationSchema: initialValidationSchema,
+            validationSchema: livelihoodValidationSchema,
         },
         {
             label: "Food and Nutrition",
             Form: (formikProps) => FoodForm(formikProps),
-            validationSchema: initialValidationSchema,
+            validationSchema: foodValidationSchema,
         },
         {
             label: "Empowerment",
@@ -559,31 +520,26 @@ const NewSurvey = () => {
             validationSchema: initialValidationSchema,
         },
     ];
-    const isFinalStep = activeStep + 1 === surveyTypes.length && activeStep !== 0;
-    const prevStep = () => setActiveStep(activeStep - 1);
+
+    const isFinalStep = step + 1 === surveyTypes.length && step !== 0;
+    const prevStep = () => setStep(step - 1);
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             handleSubmit(values, helpers, setSubmissionError);
         } else {
-            if (activeStep === 0) {
+            if (step === 0) {
                 helpers.setFieldValue(`${[FormField.client]}`, clientId);
             }
-            setActiveStep(activeStep + 1);
+            setStep(step + 1);
             helpers.setSubmitting(false);
             helpers.setTouched({});
         }
     };
 
-    const isNoSurveyChecked = (formikProps: FormikProps<any>) => {
-        return !surveyTypes
-            .map((serviceType) => Boolean(formikProps.values[serviceType]))
-            .reduce((disabledState, serviceState) => disabledState || serviceState);
-    };
-
     return (
         <Formik
             initialValues={initialValues}
-            validationSchema={surveySteps[activeStep].validationSchema}
+            validationSchema={surveySteps[step].validationSchema}
             onSubmit={nextStep}
             enableReinitialize
         >
@@ -597,14 +553,14 @@ const NewSurvey = () => {
                     <Button onClick={history.goBack}>
                         <ArrowBack /> Go back
                     </Button>
-                    <Stepper activeStep={activeStep} orientation="vertical">
+                    <Stepper activeStep={step} orientation="vertical">
                         {surveySteps.map((surveyStep, index) => (
                             <Step key={index}>
                                 <StepLabel>{surveyStep.label}</StepLabel>
                                 <StepContent>
                                     <surveyStep.Form formikProps={formikProps} />
                                     <br />
-                                    {activeStep !== 0 && (
+                                    {step !== 0 && (
                                         <Button
                                             style={{ marginRight: "5px" }}
                                             variant="outlined"
@@ -614,15 +570,8 @@ const NewSurvey = () => {
                                             Prev Step
                                         </Button>
                                     )}
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        color="primary"
-                                        disabled={isNoSurveyChecked(formikProps)}
-                                    >
-                                        {isFinalStep && index === activeStep
-                                            ? "Submit"
-                                            : "Next Step"}
+                                    <Button type="submit" variant="contained" color="primary">
+                                        {isFinalStep && index === step ? "Submit" : "Next Step"}
                                     </Button>
                                 </StepContent>
                             </Step>

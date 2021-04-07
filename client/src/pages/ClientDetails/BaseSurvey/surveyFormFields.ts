@@ -2,12 +2,9 @@ import * as Yup from "yup";
 
 export enum FormField {
     client = "client",
-    shelter = "services_other",
-    otherDescription = "other_description",
 
-    rateLevel = "rate_level",
     health = "health",
-    healthRate = "health_rate",
+    rateLevel = "rate_level",
     getService = "get_service",
     needService = "need_service",
     haveDevice = "have_device",
@@ -15,6 +12,7 @@ export enum FormField {
     needDevice = "need_device",
     deviceType = "device_type",
     deviceSatisf = "device_satisf",
+
     education = "education",
     goSchool = "go_school",
     grade = "grade",
@@ -38,7 +36,7 @@ export enum FormField {
     wantWork = "want_work",
 
     foodAndNutrition = "food_nutrition",
-    foodSecurity = "food_security",
+    foodSecurityRate = "food_security",
     enoughFoodPerMonth = "enough_food_per_month",
     isChild = "is_child",
     childNourish = "child_nourish",
@@ -57,11 +55,8 @@ export const servicesTypes = [FormField.health, FormField.education, FormField.s
 export const fieldLabels = {
     [FormField.client]: "Client",
     [FormField.rateLevel]: "Health Level",
-    [FormField.shelter]: "Other Services",
-    [FormField.otherDescription]: "Service Description",
 
     [FormField.health]: "Health",
-    [FormField.healthRate]: "Rate your general health",
     [FormField.getService]:
         "Do you have access to rehabilitation services (e.g physiotherapy, speech therapy, training how to use assistive device)?",
     [FormField.needService]: "Do you need access to rehabilitation services?",
@@ -98,7 +93,7 @@ export const fieldLabels = {
     [FormField.isSelfEmployed]: "",
 
     [FormField.foodAndNutrition]: "Food and Nutrition",
-    [FormField.foodSecurity]: "Rate",
+    [FormField.foodSecurityRate]: "Rate",
     [FormField.enoughFoodPerMonth]: "Do you have enough food every month",
     [FormField.isChild]: "Is the client child?",
     [FormField.childNourish]: "Nourishment",
@@ -116,11 +111,8 @@ export const fieldLabels = {
 
 export const initialValues = {
     [FormField.client]: 0,
-    [FormField.rateLevel]: "",
-    [FormField.shelter]: true,
-    [FormField.otherDescription]: "",
 
-    [FormField.healthRate]: "",
+    [FormField.rateLevel]: "",
     [FormField.getService]: false,
     [FormField.needService]: false,
     [FormField.haveDevice]: false,
@@ -147,8 +139,7 @@ export const initialValues = {
     [FormField.disabiAffectWork]: false,
     [FormField.wantWork]: false,
 
-    [FormField.foodAndNutrition]: "Food and Nutrition",
-    [FormField.foodSecurity]: "Rate",
+    [FormField.foodSecurityRate]: "",
     [FormField.enoughFoodPerMonth]: false,
     [FormField.isChild]: false,
     [FormField.childNourish]: "",
@@ -163,20 +154,27 @@ export const initialValues = {
 
 export const initialValidationSchema = () => Yup.object().shape({});
 
-export const rateLevelValidationSchema = () =>
+export const healthValidationSchema = () =>
     Yup.object().shape({
+        [FormField.deviceType]: Yup.string().label(fieldLabels[FormField.deviceType]),
         [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.rateLevel]),
     });
-export const jobValidationSchema = () =>
+
+export const educationValidationSchema = () =>
     Yup.object().shape({
-        [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.job]).max(30),
+        [FormField.grade]: Yup.string().label(fieldLabels[FormField.grade]),
+        [FormField.reasonNotSchool]: Yup.string().label(fieldLabels[FormField.reasonNotSchool]),
     });
-export const otherServicesValidationSchema = () =>
+
+export const livelihoodValidationSchema = () =>
     Yup.object().shape({
-        [FormField.otherDescription]: Yup.string()
-            .label(fieldLabels[FormField.otherDescription])
-            .max(100)
-            .required(),
+        [FormField.job]: Yup.string().label(fieldLabels[FormField.job]).max(50),
+        [FormField.isSelfEmployed]: Yup.string().label(fieldLabels[FormField.isSelfEmployed]),
+    });
+export const foodValidationSchema = () =>
+    Yup.object().shape({
+        [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.rateLevel]),
+        [FormField.childNourish]: Yup.string().label(fieldLabels[FormField.rateLevel]),
     });
 
 export type TFormValues = typeof initialValues;

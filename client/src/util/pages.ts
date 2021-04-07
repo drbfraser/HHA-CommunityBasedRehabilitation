@@ -19,6 +19,7 @@ import AdminEdit from "pages/Admin/AdminEdit";
 import ClientRiskHistory from "pages/ClientDetails/RiskHistory/ClientRiskHistory";
 import Dashboard from "pages/Dashboard/Dashboard";
 import NewVisit from "pages/NewVisit/NewVisit";
+import NewReferral from "pages/NewReferral/NewReferral";
 import { IUser, UserRole } from "./users";
 import { APILoadError, TAPILoadError } from "./endpoints";
 import NewSurvey from "pages/ClientDetails/BaseSurvey/BaseSurvey";
@@ -77,6 +78,12 @@ const pages: IPage[] = [
         path: "/client/:clientId/surveys/new",
         name: "Add a survey",
         Component: NewSurvey,
+        showInNav: false,
+    },
+    {
+        path: "/client/:clientId/referrals/new",
+        name: "Add a Referral",
+        Component: NewReferral,
         showInNav: false,
     },
     {

@@ -10,11 +10,6 @@ export interface IUser {
     password: string;
 }
 
-export interface UserIDPassword{
-    id: number;
-    password: string;
-}
-
 export enum UserRole {
     ADMIN = "ADM",
     CLINICIAN = "CLN",

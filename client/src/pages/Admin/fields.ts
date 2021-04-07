@@ -68,23 +68,13 @@ export const validationSchema = (newUser: boolean) => {
         [AdminField.is_active]: Yup.boolean().label(fieldLabels[AdminField.is_active]).required(),
         [AdminField.password]: Yup.string()
             .label(fieldLabels[AdminField.password])
-            .min(8)
+            .min(8, `Password must be at least 8 characters`)
             .required(),
+        [AdminField.confirmPassword]: Yup.string()
+            .label(fieldLabels[AdminField.confirmPassword])
+            .required()
+            .oneOf([Yup.ref(AdminField.password)], "Passwords must match"),
     } as any;
-
-    if (newUser) {
-        yupShape = {
-            ...yupShape,
-            [AdminField.password]: Yup.string()
-                .label(fieldLabels[AdminField.password])
-                .min(8, `Password must be at least 8 characters`)
-                .required(),
-            [AdminField.confirmPassword]: Yup.string()
-                .label(fieldLabels[AdminField.confirmPassword])
-                .required()
-                .oneOf([Yup.ref(AdminField.password)], "Passwords must match"),
-        };
-    }
 
     return Yup.object().shape(yupShape);
 };

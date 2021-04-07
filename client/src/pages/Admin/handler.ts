@@ -2,7 +2,7 @@ import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { TNewUserValues } from "./fields";
 import history from "util/history";
-import { IUser, UserIDPassword } from "util/users";
+import { IUser } from "util/users";
 
 const addUser = async (userInfo: string) => {
     const init: RequestInit = {

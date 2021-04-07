@@ -5,7 +5,6 @@ export const API_URL =
         ? `http://${window.location.hostname}:8000/api/`
         : "/api/";
 
-
 export enum Endpoint {
     LOGIN = "login",
     LOGIN_REFRESH = "login/refresh",
@@ -19,7 +18,7 @@ export enum Endpoint {
     RISKS = "risks",
     DISABILITIES = "disabilities",
     VISIT = "visit/",
-    REFERRALS = "REFERRALS"
+    // SURVEY =
 }
 
 export const APILoadError = "APILoadError";

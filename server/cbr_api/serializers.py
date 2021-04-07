@@ -243,11 +243,23 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         current_time = int(time.time())
+        current_time = int(time.time())
         validated_data["date_referred"] = current_time
         validated_data["user"] = self.context["request"].user
         referrals = models.Referral.objects.create(**validated_data)
+        client = validated_data["client"]
+        client.last_referral_date = current_time
         referrals.save()
+        client.save()
         return referrals
+
+
+class OutstandingReferralSerializer(serializers.Serializer):
+    full_name = serializers.CharField()
+    wheelchair = serializers.BooleanField()
+    prosthetic = serializers.BooleanField()
+    orthotic = serializers.BooleanField()
+    last_referral_date = serializers.IntegerField()
 
 
 class DetailedVisitSerializer(serializers.ModelSerializer):

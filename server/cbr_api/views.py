@@ -8,6 +8,7 @@ from cbr_api.sql import (
     getNumClientsWithDisabilities,
     getVisitStats,
     getReferralStats,
+    getOutstandingReferrals,
 )
 import json
 
@@ -172,3 +173,10 @@ class ReferralDetail(generics.RetrieveUpdateAPIView):
     )
     def put(self, request, pk):
         return super().put(request)
+
+
+class ReferralOutstanding(generics.ListAPIView):
+    serializer_class = serializers.OutstandingReferralSerializer
+
+    def get_queryset(self):
+        return getOutstandingReferrals()

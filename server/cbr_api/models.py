@@ -130,6 +130,7 @@ class Client(models.Model):
     social_risk_level = RiskLevel.getField()
     educat_risk_level = RiskLevel.getField()
     last_visit_date = models.BigIntegerField(default=0)
+    last_referral_date = models.BigIntegerField(default=0)
 
 
 class ClientRisk(models.Model):

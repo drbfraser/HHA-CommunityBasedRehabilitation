@@ -7,7 +7,6 @@ export interface IUser {
     zone: number;
     phone_number: string;
     is_active: boolean;
-    password: string;
 }
 
 export enum UserRole {

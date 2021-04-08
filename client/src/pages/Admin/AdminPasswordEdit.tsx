@@ -2,7 +2,7 @@ import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
-import { fieldLabels, AdminField, validationEditSchema, IRouteParams } from "./fields";
+import { fieldLabels, AdminField, passwordValidationSchema, IRouteParams, passwordInitialValues } from "./fields";
 import Button from "@material-ui/core/Button";
 import { useRouteMatch } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -37,11 +37,11 @@ const AdminPasswordEdit = () => {
         </Alert>
     ) : user ? (
         <Formik
-            initialValues={user}
-            validationSchema={validationEditSchema}
-            onSubmit={handleUpdatePassword}
+            initialValues={passwordInitialValues}
+            validationSchema={passwordValidationSchema}
+            onSubmit={handleUpdatePassword(Number(userId))}
         >
-            {({ values, setFieldValue, isSubmitting }) => (
+            {({ isSubmitting }) => (
                 <div className={styles.container}>
                     <b>ID</b>
                     <p>{userId}</p>

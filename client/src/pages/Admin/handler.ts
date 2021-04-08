@@ -1,6 +1,6 @@
 import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "util/endpoints";
-import { TNewUserValues } from "./fields";
+import { TNewUserValues, TPasswordValues } from "./fields";
 import history from "util/history";
 import { IUser } from "util/users";
 
@@ -26,12 +26,6 @@ const updateUser = async (userInfo: string, userId: number) => {
     };
 
     return await apiFetch(Endpoint.USER, `${userId}`, init)
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            return res as IUser;
-        });
 };
 
 const updateUserPassword = async (userInfo: string, userId: number) => {
@@ -41,22 +35,15 @@ const updateUserPassword = async (userInfo: string, userId: number) => {
     };
 
     return await apiFetch(Endpoint.PASSWORD, `${userId}`, init)
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            return res as IUser;
-        });
 };
 
-export const handleUpdatePassword = async (values: IUser, helpers: FormikHelpers<IUser>) => {
+export const handleUpdatePassword = (userId: number) => async (values: TPasswordValues, helpers: FormikHelpers<TPasswordValues>) => {
     const newPassword = JSON.stringify({
         new_password: values.password,
     });
 
     try {
-        console.log(values.password);
-        await updateUserPassword(newPassword, values.id);
+        await updateUserPassword(newPassword, userId);
         history.goBack();
     } catch (e) {
         alert("Sorry, something went wrong trying to edit that user. Please try again.");

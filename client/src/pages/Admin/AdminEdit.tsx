@@ -2,7 +2,7 @@ import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
-import { fieldLabels, AdminField, validationEditSchema, IRouteParams } from "./fields";
+import { fieldLabels, AdminField, editValidationSchema, IRouteParams } from "./fields";
 import Button from "@material-ui/core/Button";
 import { useRouteMatch } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
@@ -41,7 +41,7 @@ const AdminEdit = () => {
     ) : user && zones.size ? (
         <Formik
             initialValues={user}
-            validationSchema={validationEditSchema}
+            validationSchema={editValidationSchema}
             onSubmit={handleEditSubmit}
         >
             {({ values, setFieldValue, isSubmitting }) => (

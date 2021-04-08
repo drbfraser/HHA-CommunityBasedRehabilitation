@@ -373,6 +373,22 @@ class ClientListSerializer(serializers.ModelSerializer):
         ]
 
 
+class BaselineSurveySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.BaselineSurvey
+        fields = "__all__"
+
+        read_only_fields = ["user", "survey_date"]
+
+    def create(self, validated_data):
+        current_time = int(time.time())
+        validated_data["survey_date"] = current_time
+        validated_data["user"] = self.context["request"].user
+        baseline_survey = models.BaselineSurvey.objects.create(**validated_data)
+        baseline_survey.save()
+        return baseline_survey
+
+
 class ClientCreateSerializer(serializers.ModelSerializer):
     health_risk = ClientCreationRiskSerializer(many=False, write_only=True)
     social_risk = ClientCreationRiskSerializer(many=False, write_only=True)
@@ -445,6 +461,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
     risks = ClientCreationRiskSerializer(many=True, read_only=True)
     visits = SummaryVisitSerializer(many=True, read_only=True)
     referrals = DetailedReferralSerializer(many=True, read_only=True)
+    baseline_surveys = BaselineSurveySerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Client
@@ -472,6 +489,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "risks",
             "visits",
             "referrals",
+            "baseline_surveys",
         ]
 
         read_only_fields = ["created_by_user", "created_date"]

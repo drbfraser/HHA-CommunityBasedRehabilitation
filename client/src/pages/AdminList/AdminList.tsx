@@ -5,11 +5,8 @@ import {
     DataGrid,
     DensityTypes,
     RowsProp,
-    GridOverlay,
-    ValueFormatterParams,
 } from "@material-ui/data-grid";
 import {
-    LinearProgress,
     IconButton,
     Typography,
     Select,
@@ -25,34 +22,10 @@ import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import requestUserRows from "./requestUserRows";
 import React from "react";
-import { Cancel, MoreVert } from "@material-ui/icons";
+import { MoreVert } from "@material-ui/icons";
 import { SearchOption } from "../ClientList/searchOptions";
 import { useZones } from "util/hooks/zones";
-
-const RenderText = (params: ValueFormatterParams) => {
-    return <Typography variant={"body2"}>{params.value}</Typography>;
-};
-
-const RenderLoadingOverlay = () => {
-    return (
-        <GridOverlay>
-            <div style={{ position: "absolute", top: 0, width: "100%" }}>
-                <LinearProgress />
-            </div>
-        </GridOverlay>
-    );
-};
-
-const RenderNoRowsOverlay = () => {
-    const styles = useDataGridStyles();
-
-    return (
-        <GridOverlay className={styles.noRows}>
-            <Cancel color="primary" className={styles.noRowsIcon} />
-            <Typography color="primary">No Users Found</Typography>
-        </GridOverlay>
-    );
-};
+import { RenderLoadingOverlay, RenderNoRowsOverlay, RenderText } from "util/datagrid";
 
 const AdminList = () => {
     const [searchValue, setSearchValue] = useState<string>("");

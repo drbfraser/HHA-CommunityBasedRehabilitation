@@ -34,7 +34,7 @@ import {
     rateLevel,
     reasonNotSchool,
 } from "util/survey";
-import { useStyles } from "./baseSurvey.style";
+import { useStyles } from "./survey.style";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -191,7 +191,7 @@ const EducationForm = (props: IFormProps) => {
                                 label={fieldLabels[FormField.grade]}
                                 name={FormField.grade}
                             >
-                                {Object.entries(grade).map(([value, name]) => (
+                                {Object.entries(grade).map(([value, { name }]) => (
                                     <MenuItem key={value} value={value}>
                                         {name}
                                     </MenuItem>

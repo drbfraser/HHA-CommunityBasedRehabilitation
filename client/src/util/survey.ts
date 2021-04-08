@@ -101,17 +101,56 @@ export const isSelfEmployed = {
 };
 
 export const grade = {
-    [Grade.P1]: "Primary 1",
-    [Grade.P2]: "Primary 2",
-    [Grade.P3]: "Primary 3",
-    [Grade.P4]: "Primary 4",
-    [Grade.P5]: "Primary 5",
-    [Grade.P6]: "Primary 6",
-    [Grade.P7]: "Primary 7",
-    [Grade.S1]: "Secondary 1",
-    [Grade.S2]: "Secondary 2",
-    [Grade.S3]: "Secondary 3",
-    [Grade.S4]: "Secondary 4",
-    [Grade.S5]: "Secondary 5",
-    [Grade.S6]: "Secondary 6",
+    [Grade.P1]: {
+        name: "Primary 1",
+        number: 1,
+    },
+    [Grade.P2]: {
+        name: "Primary 2",
+        number: 2,
+    },
+    [Grade.P3]: {
+        name: "Primary 3",
+        number: 3,
+    },
+    [Grade.P4]: {
+        name: "Primary 4",
+        number: 4,
+    },
+    [Grade.P5]: {
+        name: "Primary 5",
+        number: 5,
+    },
+    [Grade.P6]: {
+        name: "Primary 6",
+        number: 6,
+    },
+    [Grade.P7]: {
+        name: "Primary 7",
+        number: 7,
+    },
+    [Grade.S1]: {
+        name: "Secondary 1",
+        number: 8,
+    },
+    [Grade.S2]: {
+        name: "Secondary 2",
+        number: 9,
+    },
+    [Grade.S3]: {
+        name: "Secondary 3",
+        number: 10,
+    },
+    [Grade.S4]: {
+        name: "Secondary 4",
+        number: 11,
+    },
+    [Grade.S5]: {
+        name: "Secondary 5",
+        number: 12,
+    },
+    [Grade.S6]: {
+        name: "Secondary 6",
+        number: 13,
+    },
 };

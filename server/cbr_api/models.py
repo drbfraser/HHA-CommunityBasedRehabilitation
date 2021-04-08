@@ -222,9 +222,13 @@ class Improvement(models.Model):
 
 
 class BaselineSurvey(models.Model):
-    client = models.ForeignKey(Client, related_name="baselinesurveys", on_delete=models.CASCADE)
+    client = models.ForeignKey(
+        Client, related_name="baseline_surveys", on_delete=models.CASCADE
+    )
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, related_name="baselinesurveys", on_delete=models.PROTECT
+        settings.AUTH_USER_MODEL,
+        related_name="baselinesurveys",
+        on_delete=models.PROTECT,
     )
     survey_date = models.BigIntegerField()
 
@@ -244,30 +248,34 @@ class BaselineSurvey(models.Model):
         GLASSES = "GL", _("Glasses")
         STANDING_FRAME = "SF", _("Standing Frame")
         CORNER_SEAT = "CS", _("Corner Seat")
-    
-    #Health
+
+    # Health
     health = models.CharField(max_length=2, choices=Ratings.choices)
     health_have_rehabilitation_access = models.BooleanField()
     health_need_rehabilitation_access = models.BooleanField()
     health_have_assistive_device = models.BooleanField()
     health_working_assistive_device = models.BooleanField()
     health_need_assistive_device = models.BooleanField()
-    health_what_assistive_device = models.CharField(max_length=2, choices=AssistiveDevices.choices)
-    health_services_satisfaction = models.CharField(max_length=2, choices=Ratings.choices)
+    health_what_assistive_device = models.CharField(
+        max_length=2, choices=AssistiveDevices.choices
+    )
+    health_services_satisfaction = models.CharField(
+        max_length=2, choices=Ratings.choices
+    )
 
     class SchoolBarriers(models.TextChoices):
         LACK_FUNDING = "LF", _("Lack Funding")
         DISABILITY = "D", _("Disability")
         OTHER = "O", _("Other")
-    
-    #Education (under 18)
+
+    # Education (under 18)
     school_currently = models.BooleanField()
-    school_grade = models.IntegerField(blank = True)
+    school_grade = models.IntegerField(blank=True)
     school_why_not = models.CharField(max_length=2, choices=SchoolBarriers.choices)
     school_ever_in = models.BooleanField()
     school_want = models.BooleanField()
 
-    #Social
+    # Social
     social_community_valued = models.BooleanField()
     social_independent = models.BooleanField()
     social_able_participate = models.BooleanField()
@@ -278,7 +286,7 @@ class BaselineSurvey(models.Model):
         EMPLOYED = "EM", _("Employed")
         SELF_EMPLOYED = "SEM", _("Self-Employed")
 
-    #Livelihood
+    # Livelihood
     work = models.BooleanField()
     work_what = models.CharField(max_length=50)
     work_status = models.CharField(max_length=3, choices=Employment.choices)
@@ -291,18 +299,18 @@ class BaselineSurvey(models.Model):
         UNDERNOURISHED = "U", _("Undernourished")
         WELLNOURISHED = "W", _("Well nourished")
 
-    #Food and Nutrition
+    # Food and Nutrition
     food_security = models.CharField(max_length=2, choices=Ratings.choices)
     food_enough_monthly = models.BooleanField()
     food_enough_for_child = models.CharField(max_length=1, choices=Nourishment.choices)
-    #if malnourished referral to health centre required - Frontend?
+    # if malnourished referral to health centre required - Frontend?
 
-    #Empowerment
+    # Empowerment
     empowerment_organization_member = models.BooleanField()
     empowerment_organization = models.CharField(max_length=50)
     empowerment_rights_awareness = models.BooleanField()
     empowerment_influence_others = models.BooleanField()
 
-    #Shelter and Care
+    # Shelter and Care
     shelter_adequate = models.BooleanField()
     shelter_essential_access = models.BooleanField()

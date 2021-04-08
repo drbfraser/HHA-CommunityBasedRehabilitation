@@ -45,7 +45,7 @@ const ReferralStats = ({ stats }: IProps) => {
 
     return (
         <>
-            <Typography variant="body1">
+            <Typography variant="body1" align="center">
                 <b>Total Unresolved:</b> {stats.referrals_unresolved.total}
                 <br />
                 <b>Total Resolved:</b> {stats.referrals_resolved.total}

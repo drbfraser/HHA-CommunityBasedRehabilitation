@@ -106,18 +106,26 @@ const Stats = () => {
             <br />
             <Divider />
             <br />
-            <Typography variant="h2">Visits</Typography>
+            <Typography variant="h2" align="center">
+                Visits
+            </Typography>
             <VisitStats stats={stats} />
             <br />
             <Divider />
             <br />
-            <Typography variant="h2">Referrals</Typography>
+            <Typography variant="h2" align="center">
+                Referrals
+            </Typography>
             <ReferralStats stats={stats} />
             <br />
             <Divider />
             <br />
-            <Typography variant="h2">Disabilities</Typography>
-            <Typography variant="body1">Filters do not apply to disabilities.</Typography>
+            <Typography variant="h2" align="center">
+                Disabilities
+            </Typography>
+            <Typography variant="body1" align="center">
+                Filters do not apply to disabilities.
+            </Typography>
             <br />
             <DisabilityStats stats={stats} />
         </>

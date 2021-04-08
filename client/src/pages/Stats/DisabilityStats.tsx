@@ -20,9 +20,10 @@ const DisabilityStats = ({ stats }: IProps) => {
 
     return (
         <>
-            <Typography variant="body1">
+            <Typography variant="body1" align="center">
                 <b>Clients with Disabilities:</b> {stats.clients_with_disabilities}
             </Typography>
+            <br />
             <ResponsiveContainer width="100%" height={500}>
                 <BarChart layout="vertical" data={stats.disabilities}>
                     <XAxis type="number" allowDecimals={false} />

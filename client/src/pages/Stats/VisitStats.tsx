@@ -22,11 +22,12 @@ interface IProps {
 }
 
 const VisitStats = ({ stats }: IProps) => {
-    const [specificZoneId, setSpecificZoneId] = useState(0);
-    const specificZone = stats?.visits.find((v) => v.zone_id === specificZoneId);
+    const CHART_HEIGHT = 400;
 
     const zones = useZones();
     const zoneToName = (id: number) => zones.get(id) ?? "";
+    const [specificZoneId, setSpecificZoneId] = useState(0);
+    const specificZone = stats?.visits.find((v) => v.zone_id === specificZoneId);
 
     const specificZoneData = [
         {
@@ -55,12 +56,22 @@ const VisitStats = ({ stats }: IProps) => {
     };
 
     return (
-        <Grid container spacing={2} style={{ minHeight: 400 }}>
-            <Grid item xs={12} md={8}>
+        <Grid container spacing={3} style={{ minHeight: CHART_HEIGHT }}>
+            <Grid item xs={12} lg={7} xl={8}>
                 <Typography variant="h3">All Zones</Typography>
                 <Typography variant="body1">Only zones with visits are shown.</Typography>
+                {Boolean(stats && !stats.visits.length) && (
+                    <Typography variant="body1">
+                        If you are filtering, perhaps there are no visits during the selected date
+                        period or completed by the selected user?
+                    </Typography>
+                )}
+                <br />
                 {stats ? (
-                    <ResponsiveContainer width="100%" height={stats.visits.length ? 400 : 0}>
+                    <ResponsiveContainer
+                        width="100%"
+                        height={stats.visits.length ? CHART_HEIGHT : 0}
+                    >
                         <BarChart layout="vertical" data={stats.visits} onClick={handleChartClick}>
                             <XAxis type="number" allowDecimals={false} />
                             <YAxis
@@ -81,12 +92,12 @@ const VisitStats = ({ stats }: IProps) => {
                     <Skeleton variant="rect" height={400} />
                 )}
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} lg={5} xl={4}>
                 <Typography variant="h3">
                     {specificZone ? zoneToName(specificZoneId) : "Specific Zone"}
                 </Typography>
                 {specificZoneId ? (
-                    <ResponsiveContainer width="100%" height={400}>
+                    <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
                         <PieChart>
                             <Pie
                                 data={specificZoneData}

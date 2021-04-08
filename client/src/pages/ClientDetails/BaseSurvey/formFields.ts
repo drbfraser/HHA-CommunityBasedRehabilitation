@@ -58,55 +58,53 @@ export const fieldLabels = {
 
     [FormField.health]: "Health",
     [FormField.getService]:
-        "Do you have access to rehabilitation services (e.g physiotherapy, speech therapy, training how to use assistive device)?",
-    [FormField.needService]: "Do you need access to rehabilitation services?",
+        "I have access to rehabilitation services (e.g physiotherapy, speech therapy, training how to use assistive device)",
+    [FormField.needService]: "I need access to rehabilitation services",
     [FormField.haveDevice]:
-        "Do you have an assistive device(e.g wheelchair, crutches, prosthetic limbs, hearing aid)?",
-    [FormField.deviceWoking]: "Is your assistive device working well?",
-    [FormField.needDevice]: "Do you need an assistive device?",
+        "I have an assistive device(e.g wheelchair, crutches, prosthetic limbs, hearing aid)",
+    [FormField.deviceWoking]: "My assistive device is working well",
+    [FormField.needDevice]: "I need an assistive device",
     [FormField.deviceType]: "Assistive Device",
     [FormField.deviceSatisf]: "Satisfied Rate",
 
     [FormField.education]: "Education",
-    [FormField.goSchool]: "Do you go to school?",
+    [FormField.goSchool]: "I go to school",
     [FormField.grade]: "Grade",
     [FormField.reasonNotSchool]: "Reason",
-    [FormField.beenSchool]: "Have you ever been to school before?",
-    [FormField.wantSchool]: "Do you want to go to school?",
+    [FormField.beenSchool]: "I have been to school before",
+    [FormField.wantSchool]: "I want to go to school",
 
     [FormField.social]: "Social",
-    [FormField.feelValue]: "Do you feel valued as a member of your community?",
-    [FormField.feelIndependent]: "Do you feel independent?",
+    [FormField.feelValue]: "I feel valued as a member of your community",
+    [FormField.feelIndependent]: "I feel independent",
     [FormField.ableInSocial]:
-        "Are you able to participate in community/social events (going to church, market, meeting friends)?",
-    [FormField.disabiAffectSocial]:
-        "Does your disability affect your ability to interact socially?",
-    [FormField.disabiDiscrimination]:
-        "Have you experienced discrimination because of your disability?",
+        "I am able to participate in community/social events (going to church, market, meeting friends)",
+    [FormField.disabiAffectSocial]: "My disability affects my ability to interact socially",
+    [FormField.disabiDiscrimination]: "I have experienced discrimination because of my disability",
 
     [FormField.livelihood]: "Livelihood",
-    [FormField.isWorking]: "Are you working?",
+    [FormField.isWorking]: "I am working",
     [FormField.job]: "Job",
-    [FormField.meetFinanceNeeds]: "Does this meet your financial needs?",
-    [FormField.disabiAffectWork]: "Does your disability affect your ability to go to work?",
-    [FormField.wantWork]: "Do you want to work?",
+    [FormField.meetFinanceNeeds]: "This meets my financial needs",
+    [FormField.disabiAffectWork]: "My disability affect my ability to go to work",
+    [FormField.wantWork]: "I want to work",
     [FormField.isSelfEmployed]: "",
 
     [FormField.foodAndNutrition]: "Food and Nutrition",
     [FormField.foodSecurityRate]: "Rate",
-    [FormField.enoughFoodPerMonth]: "Do you have enough food every month?",
-    [FormField.isChild]: "Is the client child?",
+    [FormField.enoughFoodPerMonth]: "I have enough food every month",
+    [FormField.isChild]: "I am a child or with child",
     [FormField.childNourish]: "Nourishment",
 
     [FormField.empowerment]: "Empowerment",
     [FormField.memOfOrgan]:
-        "Are you member of any organisations which assist people with disabilities?",
-    [FormField.awareRight]: "Are you aware of your rights as a citizen living with disabilities?",
-    [FormField.ableInfluence]: "Do you feel like you are able to influence people around you?",
+        "I am a member of some organisations which assist people with disabilities",
+    [FormField.awareRight]: "I am aware of my rights as a citizen living with disabilities",
+    [FormField.ableInfluence]: "I feel like I am able to influence people around me",
 
     [FormField.shelterAndCare]: "Shelter and Care",
-    [FormField.haveShelter]: "Do you have adequate shelter?",
-    [FormField.accessItem]: "Do you have access to essential items for your household?",
+    [FormField.haveShelter]: "I have adequate shelter",
+    [FormField.accessItem]: "I have access to essential items for your household",
 };
 
 export const initialValues = {

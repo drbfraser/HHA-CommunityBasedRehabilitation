@@ -25,7 +25,6 @@ import { handleSubmit } from "./formHandler";
 import { ArrowBack } from "@material-ui/icons";
 import history from "util/history";
 import { useParams } from "react-router-dom";
-import { useStyles } from "./BaseSurvey.style";
 import { Alert } from "@material-ui/lab";
 import {
     childNourish,
@@ -35,6 +34,7 @@ import {
     rateLevel,
     reasonNotSchool,
 } from "util/survey";
+import { useStyles } from "./baseSurvey.style";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -56,7 +56,8 @@ interface ISurvey {
     validationSchema: () => any;
 }
 
-const HealthForm = () => {
+const HealthForm = (props: IFormProps) => {
+    const styles = useStyles();
     return (
         <div>
             <FormLabel>Rate your general health</FormLabel>
@@ -77,65 +78,74 @@ const HealthForm = () => {
                         </MenuItem>
                     ))}
                 </Field>
-
-                <div>
-                    <Field
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        name={FormField.getService}
-                        Label={{ label: fieldLabels[FormField.getService] }}
-                    />
-                    <br />
-                    <Field
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        name={FormField.needService}
-                        Label={{ label: fieldLabels[FormField.needService] }}
-                    />
-                    <br />
-                    <Field
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        name={FormField.haveDevice}
-                        Label={{ label: fieldLabels[FormField.haveDevice] }}
-                    />
-                    <br />
-                    <Field
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        name={FormField.deviceWoking}
-                        Label={{ label: fieldLabels[FormField.deviceWoking] }}
-                    />
-                    <br />
-
-                    <Field
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        name={FormField.needDevice}
-                        Label={{ label: fieldLabels[FormField.needDevice] }}
-                    />
-                    <br />
-                </div>
-
-                <FormLabel>What assistive device do you need?</FormLabel>
+            </FormControl>
+            <div>
+                <Field
+                    component={CheckboxWithLabel}
+                    type="checkbox"
+                    name={FormField.getService}
+                    Label={{ label: fieldLabels[FormField.getService] }}
+                />
+                <br />
+                <Field
+                    component={CheckboxWithLabel}
+                    type="checkbox"
+                    name={FormField.needService}
+                    Label={{ label: fieldLabels[FormField.needService] }}
+                />
+                <br />
+                <Field
+                    component={CheckboxWithLabel}
+                    type="checkbox"
+                    name={FormField.haveDevice}
+                    Label={{ label: fieldLabels[FormField.haveDevice] }}
+                />
+                <br />
+                <Field
+                    component={CheckboxWithLabel}
+                    type="checkbox"
+                    name={FormField.deviceWoking}
+                    Label={{ label: fieldLabels[FormField.deviceWoking] }}
+                />
                 <br />
 
                 <Field
-                    component={TextField}
-                    select
-                    variant="outlined"
-                    label={fieldLabels[FormField.deviceType]}
-                    name={FormField.deviceType}
-                >
-                    {Object.entries(deviceTypes).map(([value, name]) => (
-                        <MenuItem key={value} value={value}>
-                            {name}
-                        </MenuItem>
-                    ))}
-                </Field>
-
-                <FormLabel>Are you satisfied with the health services you receive</FormLabel>
+                    component={CheckboxWithLabel}
+                    type="checkbox"
+                    name={FormField.needDevice}
+                    Label={{ label: fieldLabels[FormField.needDevice] }}
+                />
                 <br />
+            </div>
+
+            {props.formikProps.values[FormField.needDevice] && (
+                <div className={styles.fieldIndent}>
+                    <FormControl fullWidth variant="outlined">
+                        <FormLabel>What assistive device do you need?</FormLabel>
+                        <br />
+
+                        <Field
+                            component={TextField}
+                            select
+                            variant="outlined"
+                            label={fieldLabels[FormField.deviceType]}
+                            name={FormField.deviceType}
+                        >
+                            {Object.entries(deviceTypes).map(([value, name]) => (
+                                <MenuItem key={value} value={value}>
+                                    {name}
+                                </MenuItem>
+                            ))}
+                        </Field>
+                    </FormControl>
+                </div>
+            )}
+
+            <br />
+            <FormLabel>Are you satisfied with the health services you receive?</FormLabel>
+            <br />
+            <br />
+            <FormControl fullWidth variant="outlined">
                 <Field
                     component={TextField}
                     select
@@ -164,13 +174,6 @@ const EducationForm = (props: IFormProps) => {
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
-                name={FormField.needDevice}
-                Label={{ label: fieldLabels[FormField.needDevice] }}
-            />
-            <br />
-            <Field
-                component={CheckboxWithLabel}
-                type="checkbox"
                 name={FormField.goSchool}
                 Label={{ label: fieldLabels[FormField.goSchool] }}
             />
@@ -178,8 +181,8 @@ const EducationForm = (props: IFormProps) => {
             <div className={styles.fieldIndent}>
                 {props.formikProps.values[FormField.goSchool] ? (
                     <div className={styles.fieldIndent}>
+                        <FormLabel>What grade?</FormLabel>
                         <FormControl fullWidth variant="outlined">
-                            <FormLabel>What grade?</FormLabel>
                             <br />
                             <Field
                                 component={TextField}
@@ -198,8 +201,8 @@ const EducationForm = (props: IFormProps) => {
                     </div>
                 ) : (
                     <div className={styles.fieldIndent}>
+                        <FormLabel>Why do you not go to school?</FormLabel>
                         <FormControl fullWidth variant="outlined">
-                            <FormLabel>Why do you not go to school?</FormLabel>
                             <br />
                             <Field
                                 component={TextField}
@@ -299,11 +302,13 @@ const LivelihoodForm = (props: IFormProps) => {
                             />
                         </FormControl>
                         <br />
+                        <br />
                     </div>
                 )}
-
-                <FormLabel>Are you employed or self-employed?</FormLabel>
-                <br />
+            </FormControl>
+            <FormLabel>Are you employed or self-employed?</FormLabel>
+            <br />
+            <FormControl fullWidth variant="outlined">
                 <Field
                     component={TextField}
                     select
@@ -317,12 +322,7 @@ const LivelihoodForm = (props: IFormProps) => {
                         </MenuItem>
                     ))}
                 </Field>
-                <Field
-                    component={CheckboxWithLabel}
-                    type="checkbox"
-                    name={FormField.beenSchool}
-                    Label={{ label: fieldLabels[FormField.beenSchool] }}
-                />
+
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
@@ -353,8 +353,8 @@ const FoodForm = (props: IFormProps) => {
 
     return (
         <div>
+            <FormLabel>Food security</FormLabel>
             <FormControl fullWidth variant="outlined">
-                <FormLabel>Food security</FormLabel>
                 <br />
                 <Field
                     component={TextField}
@@ -476,8 +476,6 @@ const ShelterForm = () => {
     );
 };
 
-//Todo: Make more forms as requirement in the future
-
 const NewSurvey = () => {
     const [step, setStep] = useState<number>(0);
     const [submissionError, setSubmissionError] = useState(false);
@@ -486,7 +484,7 @@ const NewSurvey = () => {
     const surveySteps: ISurvey[] = [
         {
             label: "Health",
-            Form: () => HealthForm(),
+            Form: (formikProps) => HealthForm(formikProps),
             validationSchema: healthValidationSchema,
         },
         {

@@ -19,7 +19,7 @@ export enum Endpoint {
     RISKS = "risks",
     DISABILITIES = "disabilities",
     VISIT = "visit/",
-    PASSWORD = "user/password/",
+    USER_PASSWORD = "user/password/",
 }
 
 export const APILoadError = "APILoadError";

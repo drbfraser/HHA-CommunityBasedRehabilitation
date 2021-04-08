@@ -34,7 +34,7 @@ const updateUserPassword = async (userInfo: string, userId: number) => {
         body: userInfo,
     };
 
-    return await apiFetch(Endpoint.PASSWORD, `${userId}`, init);
+    return await apiFetch(Endpoint.USER_PASSWORD, `${userId}`, init);
 };
 
 export const handleUpdatePassword = (userId: number) => async (
@@ -49,7 +49,7 @@ export const handleUpdatePassword = (userId: number) => async (
         await updateUserPassword(newPassword, userId);
         history.goBack();
     } catch (e) {
-        alert("Sorry, something went wrong trying to edit that user. Please try again.");
+        alert("Sorry, something went wrong trying to edit that user's password. Please try again.");
         helpers.setSubmitting(false);
     }
 };

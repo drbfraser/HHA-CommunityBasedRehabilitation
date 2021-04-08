@@ -303,7 +303,6 @@ class BaselineSurvey(models.Model):
     food_security = models.CharField(max_length=2, choices=Ratings.choices)
     food_enough_monthly = models.BooleanField()
     food_enough_for_child = models.CharField(max_length=1, choices=Nourishment.choices)
-    # if malnourished referral to health centre required - Frontend?
 
     # Empowerment
     empowerment_organization_member = models.BooleanField()

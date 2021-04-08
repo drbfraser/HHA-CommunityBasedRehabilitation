@@ -26,7 +26,7 @@ const VisitStats = ({ stats }: IProps) => {
     const specificZone = stats?.visits.find((v) => v.zone_id === specificZoneId);
 
     const zones = useZones();
-    const zoneToName = (id: number) => zones.get(id) ?? "Loading";
+    const zoneToName = (id: number) => zones.get(id) ?? "";
 
     const specificZoneData = [
         {
@@ -47,19 +47,20 @@ const VisitStats = ({ stats }: IProps) => {
     ].filter((z) => z.count);
 
     const handleChartClick = (e: any) => {
-        if(!e || !("activePayload" in e) || e.activePayload.length === 0) {
+        if (!e || !Array.isArray(e.activePayload) || e.activePayload.length === 0) {
             return;
         }
 
         setSpecificZoneId(e.activePayload[0].payload?.zone_id);
-    }
+    };
 
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} style={{ minHeight: 400 }}>
             <Grid item xs={12} md={8}>
                 <Typography variant="h3">All Zones</Typography>
+                <Typography variant="body1">Only zones with visits are shown.</Typography>
                 {stats ? (
-                    <ResponsiveContainer width="100%" height={400}>
+                    <ResponsiveContainer width="100%" height={stats.visits.length ? 400 : 0}>
                         <BarChart layout="vertical" data={stats.visits} onClick={handleChartClick}>
                             <XAxis type="number" allowDecimals={false} />
                             <YAxis

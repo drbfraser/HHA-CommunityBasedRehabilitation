@@ -1,6 +1,5 @@
 from cbr_api import models, serializers, filters, permissions
 from rest_framework import generics
-from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from cbr_api.sql import (
@@ -9,7 +8,6 @@ from cbr_api.sql import (
     getVisitStats,
     getReferralStats,
 )
-import json
 
 
 class UserList(generics.ListCreateAPIView):
@@ -30,14 +28,12 @@ class AdminStats(generics.RetrieveAPIView):
 
     def get_object(self):
         def get_int_or_none(req_body_key):
-            try:
-                return int(json.loads(self.request.body)[req_body_key])
-            except:
-                return None
+            val = self.request.GET.get(req_body_key, "")
+            return int(val) if val != "" else None
 
         user_id = get_int_or_none("user_id")
-        from_time = get_int_or_none("from_time")
-        to_time = get_int_or_none("to_time")
+        from_time = get_int_or_none("from")
+        to_time = get_int_or_none("to")
 
         referral_stats = getReferralStats(user_id, from_time, to_time)
 

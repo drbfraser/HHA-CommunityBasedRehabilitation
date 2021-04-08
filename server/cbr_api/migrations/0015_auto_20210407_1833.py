@@ -6,18 +6,27 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0014_auto_20210407_1745'),
+        ("cbr_api", "0014_auto_20210407_1745"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='baselinesurvey',
-            name='food_enough_for_child',
-            field=models.CharField(choices=[('M', 'Malnourished'), ('U', 'Undernourished'), ('W', 'Well-nourished')], max_length=1),
+            model_name="baselinesurvey",
+            name="food_enough_for_child",
+            field=models.CharField(
+                choices=[
+                    ("M", "Malnourished"),
+                    ("U", "Undernourished"),
+                    ("W", "Well-nourished"),
+                ],
+                max_length=1,
+            ),
         ),
         migrations.AlterField(
-            model_name='baselinesurvey',
-            name='work_status',
-            field=models.CharField(choices=[('EMPL', 'Employed'), ('SEMPL', 'Self-Employed')], max_length=5),
+            model_name="baselinesurvey",
+            name="work_status",
+            field=models.CharField(
+                choices=[("EMPL", "Employed"), ("SEMPL", "Self-Employed")], max_length=5
+            ),
         ),
     ]

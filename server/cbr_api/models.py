@@ -269,11 +269,13 @@ class BaselineSurvey(models.Model):
         OTHER = "O", _("Other")
 
     # Education (under 18)
-    school_currently = models.BooleanField()
+    school_currently_attend = models.BooleanField()
     school_grade = models.IntegerField(blank=True)
-    school_why_not = models.CharField(max_length=2, choices=SchoolBarriers.choices)
-    school_ever_in = models.BooleanField()
-    school_want = models.BooleanField()
+    school_not_attend_reason = models.CharField(
+        max_length=2, choices=SchoolBarriers.choices
+    )
+    school_ever_attend = models.BooleanField()
+    school_want_attend = models.BooleanField()
 
     # Social
     social_community_valued = models.BooleanField()

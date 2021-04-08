@@ -44,8 +44,8 @@ export const initialValues = {
 
 export const passwordInitialValues = {
     [AdminField.password]: "",
-    [AdminField.confirmPassword]: ""
-}
+    [AdminField.confirmPassword]: "",
+};
 
 export type TNewUserValues = typeof initialValues;
 export type TPasswordValues = typeof passwordInitialValues;
@@ -59,10 +59,7 @@ const infoValidationShape = {
         .label(fieldLabels[AdminField.last_name])
         .required()
         .max(50),
-    [AdminField.username]: Yup.string()
-        .label(fieldLabels[AdminField.username])
-        .required()
-        .max(50),
+    [AdminField.username]: Yup.string().label(fieldLabels[AdminField.username]).required().max(50),
     [AdminField.zone]: Yup.string().label(fieldLabels[AdminField.zone]).required(),
     [AdminField.phone_number]: Yup.string()
         .matches(Validation.phoneRegExp, "Phone number is not valid")
@@ -70,8 +67,8 @@ const infoValidationShape = {
         .max(50)
         .required(),
     [AdminField.role]: Yup.string().label(fieldLabels[AdminField.role]).required(),
-    [AdminField.is_active]: Yup.boolean().label(fieldLabels[AdminField.is_active]).required()
-}
+    [AdminField.is_active]: Yup.boolean().label(fieldLabels[AdminField.is_active]).required(),
+};
 
 const passwordValidationShape = {
     [AdminField.password]: Yup.string()
@@ -82,12 +79,11 @@ const passwordValidationShape = {
         .label(fieldLabels[AdminField.confirmPassword])
         .required()
         .oneOf([Yup.ref(AdminField.password)], "Passwords must match"),
-}
-
+};
 
 export const newValidationSchema = Yup.object().shape({
     ...infoValidationShape,
-    ...passwordValidationShape
+    ...passwordValidationShape,
 });
-export const editValidationSchema= Yup.object().shape(infoValidationShape);
+export const editValidationSchema = Yup.object().shape(infoValidationShape);
 export const passwordValidationSchema = Yup.object().shape(passwordValidationShape);

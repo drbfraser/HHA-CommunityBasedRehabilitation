@@ -25,7 +25,7 @@ const updateUser = async (userInfo: string, userId: number) => {
         body: userInfo,
     };
 
-    return await apiFetch(Endpoint.USER, `${userId}`, init)
+    return await apiFetch(Endpoint.USER, `${userId}`, init);
 };
 
 const updateUserPassword = async (userInfo: string, userId: number) => {
@@ -34,10 +34,13 @@ const updateUserPassword = async (userInfo: string, userId: number) => {
         body: userInfo,
     };
 
-    return await apiFetch(Endpoint.PASSWORD, `${userId}`, init)
+    return await apiFetch(Endpoint.PASSWORD, `${userId}`, init);
 };
 
-export const handleUpdatePassword = (userId: number) => async (values: TPasswordValues, helpers: FormikHelpers<TPasswordValues>) => {
+export const handleUpdatePassword = (userId: number) => async (
+    values: TPasswordValues,
+    helpers: FormikHelpers<TPasswordValues>
+) => {
     const newPassword = JSON.stringify({
         new_password: values.password,
     });

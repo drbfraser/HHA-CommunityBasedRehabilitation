@@ -7,6 +7,7 @@ from cbr_api.sql import (
     getNumClientsWithDisabilities,
     getVisitStats,
     getReferralStats,
+    getOutstandingReferrals,
 )
 
 
@@ -178,3 +179,15 @@ class ReferralDetail(generics.RetrieveUpdateAPIView):
     )
     def put(self, request, pk):
         return super().put(request)
+
+
+class BaselineSurveyCreate(generics.CreateAPIView):
+    queryset = models.BaselineSurvey.objects.all()
+    serializer_class = serializers.BaselineSurveySerializer
+
+
+class ReferralOutstanding(generics.ListAPIView):
+    serializer_class = serializers.OutstandingReferralSerializer
+
+    def get_queryset(self):
+        return getOutstandingReferrals()

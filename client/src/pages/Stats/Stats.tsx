@@ -6,6 +6,7 @@ import { apiFetch, Endpoint } from "util/endpoints";
 import { IStats } from "util/stats";
 import { IUser } from "util/users";
 import DisabilityStats from "./DisabilityStats";
+import ExportStats from "./ExportStats";
 import ReferralStats from "./ReferralStats";
 import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
 import StatsUserFilter from "./StatsUserFilter";
@@ -17,6 +18,7 @@ const Stats = () => {
     const [userFilterOpen, setUserFilterOpen] = useState(false);
     const [users, setUsers] = useState<IUser[]>([]);
     const [user, setUser] = useState<IUser | null>(null);
+    const [exportOpen, setExportOpen] = useState(false);
     const [stats, setStats] = useState<IStats>();
     const [errorLoading, setErrorLoading] = useState(false);
 
@@ -28,7 +30,7 @@ const Stats = () => {
             <Button variant="outlined" onClick={() => setUserFilterOpen(true)}>
                 Filter by User
             </Button>{" "}
-            <Button variant="outlined" onClick={() => alert("Not yet implemented")}>
+            <Button variant="outlined" onClick={() => setExportOpen(true)}>
                 Export to CSV
             </Button>{" "}
             <br />
@@ -100,6 +102,7 @@ const Stats = () => {
                 user={user}
                 setUser={setUser}
             />
+            <ExportStats open={exportOpen} onClose={() => setExportOpen(false)} stats={stats} />
             <br />
             <Divider />
             <br />

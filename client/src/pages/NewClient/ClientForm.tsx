@@ -1,5 +1,5 @@
 import React from "react";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, ErrorMessage } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 
 import { useStyles } from "./ClientForm.styles";
@@ -35,7 +35,7 @@ const ClientForm = () => {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
         >
-            {({ values, isSubmitting, resetForm }) => (
+            {({ values, isSubmitting, resetForm, errors, touched }) => (
                 <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
                         <Card className={styles.profileImgContainer}>
@@ -369,16 +369,30 @@ const ClientForm = () => {
                                         name={FormField.socialGoals}
                                     />
                                 </Grid>
-                            </Grid>
-                            <br />
-                            <Grid item md={12} xs={12}>
-                                <Field
-                                    component={CheckboxWithLabel}
-                                    type="checkbox"
-                                    name={FormField.interviewConsent}
-                                    Label={{ label: fieldLabels[FormField.interviewConsent] }}
-                                    required
-                                />
+                                <br />
+                                <Grid
+                                    item
+                                    md={12}
+                                    xs={12}
+                                    className={
+                                        !values.interviewConsent && touched.interviewConsent
+                                            ? styles.checkboxError
+                                            : ""
+                                    }
+                                >
+                                    <Field
+                                        component={CheckboxWithLabel}
+                                        type="checkbox"
+                                        name={FormField.interviewConsent}
+                                        Label={{ label: fieldLabels[FormField.interviewConsent] }}
+                                        required
+                                    />
+                                    <ErrorMessage
+                                        component="div"
+                                        className={styles.errorMessage}
+                                        name={FormField.interviewConsent}
+                                    />
+                                </Grid>
                             </Grid>
                             <br />
                             <br />

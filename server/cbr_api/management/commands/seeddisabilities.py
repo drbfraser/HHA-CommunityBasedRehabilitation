@@ -19,6 +19,5 @@ class Command(BaseCommand):
         models.Disability.objects.create(disability_type="Visual impairment")
         models.Disability.objects.create(disability_type="Hearing impairment")
         models.Disability.objects.create(disability_type="Don’t know")
-        models.Disability.objects.create(disability_type="Other")
 
         self.stdout.write(self.style.SUCCESS("Disabilities successfully created!"))

@@ -2,6 +2,7 @@ import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { FormField, TFormValues } from "./formFields";
 import history from "../../util/history";
+import { getDisabilities, OTHER, useDisabilities } from "util/hooks/disabilities";
 
 const addReferral = async (referralInfo: string) => {
     const init: RequestInit = {
@@ -23,6 +24,8 @@ export const handleSubmit = async (
     helpers: FormikHelpers<TFormValues>,
     setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
+    const disabilities = await getDisabilities();
+
     const newReferral = JSON.stringify({
         client: values[FormField.client],
         wheelchair: values[FormField.wheelchair],
@@ -36,7 +39,11 @@ export const handleSubmit = async (
                 ? values[FormField.wheelchairRepairable]
                 : false,
         physiotherapy: values[FormField.physiotherapy],
-        condition: values[FormField.physiotherapy] ? values[FormField.condition] : "",
+        condition: values[FormField.physiotherapy]
+            ? Number(values[FormField.condition]) === OTHER
+                ? values[FormField.conditionOther]
+                : disabilities.get(Number(values[FormField.condition]))
+            : "",
         prosthetic: values[FormField.prosthetic],
         prosthetic_injury_location: values[FormField.prosthetic]
             ? values[FormField.prostheticInjuryLocation]

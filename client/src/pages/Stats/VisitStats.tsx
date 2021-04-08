@@ -15,7 +15,7 @@ import {
 } from "recharts";
 import { themeColors } from "theme.styles";
 import { useZones } from "util/hooks/zones";
-import { IStats, IStatsVisit } from "util/stats";
+import { IStats } from "util/stats";
 
 interface IProps {
     stats?: IStats;
@@ -46,13 +46,21 @@ const VisitStats = ({ stats }: IProps) => {
         },
     ].filter((z) => z.count);
 
+    const handleChartClick = (e: any) => {
+        if(!e || !("activePayload" in e) || e.activePayload.length === 0) {
+            return;
+        }
+
+        setSpecificZoneId(e.activePayload[0].payload?.zone_id);
+    }
+
     return (
         <Grid container spacing={2}>
             <Grid item xs={12} md={8}>
                 <Typography variant="h3">All Zones</Typography>
                 {stats ? (
                     <ResponsiveContainer width="100%" height={400}>
-                        <BarChart layout="vertical" data={stats.visits}>
+                        <BarChart layout="vertical" data={stats.visits} onClick={handleChartClick}>
                             <XAxis type="number" allowDecimals={false} />
                             <YAxis
                                 type="category"
@@ -65,7 +73,6 @@ const VisitStats = ({ stats }: IProps) => {
                                 dataKey="total"
                                 name="Total Visits"
                                 fill={themeColors.blueAccent}
-                                onClick={(v: IStatsVisit) => setSpecificZoneId(v.zone_id)}
                             />
                         </BarChart>
                     </ResponsiveContainer>

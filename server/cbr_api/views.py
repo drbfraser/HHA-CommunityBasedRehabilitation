@@ -1,7 +1,7 @@
 from cbr_api import models, serializers, filters, permissions
 from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from cbr_api.sql import (
     getDisabilityStats,
     getNumClientsWithDisabilities,
@@ -25,6 +25,16 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
 class AdminStats(generics.RetrieveAPIView):
     permission_classes = [permissions.AdminAll]
     serializer_class = serializers.AdminStatsSerializer
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(name="user_id", type={"type": "int"}),
+            OpenApiParameter(name="from", type={"type": "int"}),
+            OpenApiParameter(name="to", type={"type": "int"}),
+        ]
+    )
+    def get(self, request):
+        return super().get(request)
 
     def get_object(self):
         def get_int_or_none(req_body_key):

@@ -283,13 +283,13 @@ class BaselineSurvey(models.Model):
     social_discrimination = models.BooleanField()
 
     class Employment(models.TextChoices):
-        EMPLOYED = "EM", _("Employed")
-        SELF_EMPLOYED = "SEM", _("Self-Employed")
+        EMPLOYED = "EMPL", _("Employed")
+        SELF_EMPLOYED = "SEMPL", _("Self-Employed")
 
     # Livelihood
     work = models.BooleanField()
     work_what = models.CharField(max_length=50)
-    work_status = models.CharField(max_length=3, choices=Employment.choices)
+    work_status = models.CharField(max_length=5, choices=Employment.choices)
     work_meet_financial_needs = models.BooleanField()
     work_affected_by_disability = models.BooleanField()
     work_want = models.BooleanField()
@@ -297,7 +297,7 @@ class BaselineSurvey(models.Model):
     class Nourishment(models.TextChoices):
         MALNOURISHED = "M", _("Malnourished")
         UNDERNOURISHED = "U", _("Undernourished")
-        WELLNOURISHED = "W", _("Well nourished")
+        WELLNOURISHED = "W", _("Well-nourished")
 
     # Food and Nutrition
     food_security = models.CharField(max_length=2, choices=Ratings.choices)

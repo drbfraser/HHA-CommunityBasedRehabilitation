@@ -34,7 +34,7 @@ import {
     rateLevel,
     reasonNotSchool,
 } from "util/survey";
-import { useStyles } from "./survey.style";
+import { useStyles } from "./baseSurvey.style";
 
 interface IFormProps {
     formikProps: FormikProps<any>;

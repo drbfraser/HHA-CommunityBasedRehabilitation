@@ -257,6 +257,7 @@ const NewVisit = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
     const [risks, setRisks] = useState<IRisk[]>([]);
+    const [submissionError, setSubmissionError] = useState(false);
     const [loadingError, setLoadingError] = useState(false);
     const zones = useZones();
     const { clientId } = useParams<{ clientId: string }>();
@@ -290,7 +291,7 @@ const NewVisit = () => {
 
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
-            handleSubmit(values, helpers);
+            handleSubmit(values, helpers, setSubmissionError);
         } else {
             if (activeStep === 0) {
                 helpers.setFieldValue(`${[FormField.client]}`, clientId);
@@ -315,6 +316,11 @@ const NewVisit = () => {
         >
             {(formikProps) => (
                 <Form>
+                    {submissionError && (
+                        <Alert onClose={() => setSubmissionError(false)} severity="error">
+                            Something went wrong submitting the visit. Please try again.
+                        </Alert>
+                    )}
                     <Button onClick={history.goBack}>
                         <ArrowBack /> Go back
                     </Button>

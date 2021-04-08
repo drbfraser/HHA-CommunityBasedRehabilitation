@@ -108,6 +108,7 @@ class Client(models.Model):
         max_length=50, blank=True
     )  # if contact info available
     disability = models.ManyToManyField(Disability)
+    other_disability = models.CharField(max_length=100, blank=True)
     created_by_user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT
     )
@@ -256,7 +257,7 @@ class BaselineSurvey(models.Model):
     health_have_assistive_device = models.BooleanField()
     health_working_assistive_device = models.BooleanField()
     health_need_assistive_device = models.BooleanField()
-    health_what_assistive_device = models.CharField(
+    health_assistive_device_type = models.CharField(
         max_length=2, choices=AssistiveDevices.choices
     )
     health_services_satisfaction = models.CharField(

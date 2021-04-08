@@ -97,3 +97,21 @@ def getStatsWhere(user_id, time_col, from_time, to_time):
         return ""
 
     return "WHERE " + " AND ".join(where)
+
+
+def getOutstandingReferrals():
+    from django.db import connection
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT c.full_name, r.wheelchair, r.prosthetic, r.orthotic, r.date_referred
+            FROM cbr_api_referral as r
+            INNER JOIN cbr_api_client as c
+            ON c.id = r.client_id
+            WHERE r.resolved=False
+        """
+        )
+
+        columns = [col[0] for col in cursor.description]
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]

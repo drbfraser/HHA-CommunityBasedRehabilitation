@@ -20,6 +20,7 @@ import AdminPasswordEdit from "pages/Admin/AdminPasswordEdit";
 import ClientRiskHistory from "pages/ClientDetails/RiskHistory/ClientRiskHistory";
 import Dashboard from "pages/Dashboard/Dashboard";
 import NewVisit from "pages/NewVisit/NewVisit";
+import NewReferral from "pages/NewReferral/NewReferral";
 import { IUser, UserRole } from "./users";
 import { APILoadError, TAPILoadError } from "./endpoints";
 
@@ -71,6 +72,12 @@ const pages: IPage[] = [
         path: "/client/:clientId/visits/new",
         name: "Add a Visit",
         Component: NewVisit,
+        showInNav: false,
+    },
+    {
+        path: "/client/:clientId/referrals/new",
+        name: "Add a Referral",
+        Component: NewReferral,
         showInNav: false,
     },
     {

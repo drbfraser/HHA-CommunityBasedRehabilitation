@@ -16,7 +16,7 @@ const Stats = () => {
     const [dateRange, setDateRange] = useState(blankDateRange);
     const [userFilterOpen, setUserFilterOpen] = useState(false);
     const [users, setUsers] = useState<IUser[]>([]);
-    const [user, setUser] = useState<IUser>();
+    const [user, setUser] = useState<IUser | null>(null);
     const [stats, setStats] = useState<IStats>();
     const [errorLoading, setErrorLoading] = useState(false);
 
@@ -44,7 +44,7 @@ const Stats = () => {
             {user ? (
                 <Chip
                     label={`${user.first_name} (${user.username})`}
-                    onDelete={() => setUser(undefined)}
+                    onDelete={() => setUser(null)}
                 />
             ) : (
                 <Chip label="All Users" />

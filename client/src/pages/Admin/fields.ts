@@ -70,10 +70,14 @@ const infoValidationShape = {
     [AdminField.is_active]: Yup.boolean().label(fieldLabels[AdminField.is_active]).required(),
 };
 
+//Referencing Daniel's answer https://stackoverflow.com/questions/55451304/formik-yup-password-strength-validation-with-react
 const passwordValidationShape = {
     [AdminField.password]: Yup.string()
         .label(fieldLabels[AdminField.password])
-        .min(8, `Password must be at least 8 characters`)
+        .matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+            "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+        )
         .required(),
     [AdminField.confirmPassword]: Yup.string()
         .label(fieldLabels[AdminField.confirmPassword])

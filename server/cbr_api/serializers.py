@@ -250,6 +250,14 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
         return referrals
 
 
+class OutstandingReferralSerializer(serializers.Serializer):
+    full_name = serializers.CharField()
+    wheelchair = serializers.BooleanField()
+    prosthetic = serializers.BooleanField()
+    orthotic = serializers.BooleanField()
+    date_referred = serializers.IntegerField()
+
+
 class DetailedVisitSerializer(serializers.ModelSerializer):
     improvements = ImprovementSerializer(many=True)
     outcomes = OutcomeSerializer(many=True)
@@ -380,6 +388,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "gender",
             "phone_number",
             "disability",
+            "other_disability",
             "created_by_user",
             "created_date",
             "longitude",
@@ -447,6 +456,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "gender",
             "phone_number",
             "disability",
+            "other_disability",
             "created_by_user",
             "created_date",
             "longitude",

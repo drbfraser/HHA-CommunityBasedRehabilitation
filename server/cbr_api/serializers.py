@@ -364,6 +364,7 @@ class ClientListSerializer(serializers.ModelSerializer):
             "created_by_user",
         ]
 
+
 class BaselineSurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.BaselineSurvey
@@ -378,6 +379,7 @@ class BaselineSurveySerializer(serializers.ModelSerializer):
         baseline_survey = models.BaselineSurvey.objects.create(**validated_data)
         baseline_survey.save()
         return baseline_survey
+
 
 class ClientCreateSerializer(serializers.ModelSerializer):
     health_risk = ClientCreationRiskSerializer(many=False, write_only=True)
@@ -487,6 +489,3 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         instance.full_name = instance.first_name + " " + instance.last_name
         instance.save()
         return instance
-
-
-

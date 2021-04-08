@@ -10,14 +10,14 @@ export const useStyles = makeStyles(
             backgroundColor: "#ffffff",
         },
         checkboxError: {
-            color: "#f44336",
+            color: themeColors.errorRed,
             "& .MuiCheckbox-root": {
-                color: "#f44336",
+                color: themeColors.errorRed,
             },
         },
         errorMessage: {
             fontSize: "0.75rem",
-            color: "#f44336",
+            color: themeColors.errorRed,
             marginTop: "-4px",
             marginLeft: "14px",
         },

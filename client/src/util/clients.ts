@@ -21,6 +21,7 @@ export interface IClient {
     gender: Gender;
     phone_number: string;
     disability: number[];
+    other_disability: string;
     created_by_user: number;
     created_date: number;
     longitude: string;

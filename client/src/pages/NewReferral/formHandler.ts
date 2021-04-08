@@ -2,7 +2,7 @@ import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { FormField, TFormValues } from "./formFields";
 import history from "../../util/history";
-import { getDisabilities, OTHER, useDisabilities } from "util/hooks/disabilities";
+import { getDisabilities, OTHER } from "util/hooks/disabilities";
 
 const addReferral = async (referralInfo: string) => {
     const init: RequestInit = {

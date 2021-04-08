@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { Validation } from "util/validations";
+import { OTHER } from "util/hooks/disabilities";
 
 export enum FormField {
     first_name = "first_name",
@@ -14,6 +15,7 @@ export enum FormField {
     caregiver_email = "caregiver_email",
     caregiver_name = "caregiver_name",
     disability = "disability",
+    otherDisability = "other_disability",
 }
 
 export const fieldLabels = {
@@ -29,6 +31,7 @@ export const fieldLabels = {
     [FormField.caregiver_phone]: "Caregiver Phone Number",
     [FormField.caregiver_email]: "Caregiver Email",
     [FormField.disability]: "Disabilities",
+    [FormField.otherDisability]: "Other Disabilities",
 };
 
 export const validationSchema = () =>
@@ -50,6 +53,11 @@ export const validationSchema = () =>
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
         [FormField.disability]: Yup.array().label(fieldLabels[FormField.disability]).required(),
+        [FormField.otherDisability]: Yup.string()
+            .label(fieldLabels[FormField.otherDisability])
+            .when(FormField.disability, (disability: number[], schema: any) =>
+                disability.includes(OTHER) ? schema.max(100).required() : schema
+            ),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),
         [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),

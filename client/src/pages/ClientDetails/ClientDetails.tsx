@@ -14,6 +14,7 @@ import { useHistory } from "react-router-dom";
 import VisitReferralTimeline from "./VisitReferralTimeline/VisitReferralTimeline";
 import { timestampToFormDate } from "util/dates";
 import { Alert, Skeleton } from "@material-ui/lab";
+import { OTHER } from "util/hooks/disabilities";
 interface IUrlParam {
     clientId: string;
 }
@@ -34,6 +35,9 @@ const ClientDetails = () => {
 
                 client.birth_date = timestampToFormDate(client.birth_date as number);
                 client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
+                if (!client.disability.includes(OTHER) && client.other_disability.length > 1) {
+                    client.disability.push(OTHER);
+                }
 
                 setClientInfo(client);
             } catch (e) {

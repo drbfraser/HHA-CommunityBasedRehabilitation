@@ -36,7 +36,6 @@ import history from "../../util/history";
 import { useParams } from "react-router-dom";
 import { useStyles } from "./NewReferral.styles";
 import { Alert } from "@material-ui/lab";
-import { eventNames } from "cluster";
 
 const serviceTypes: FormField[] = [
     FormField.wheelchair,
@@ -160,7 +159,6 @@ const WheelchairForm = (props: IFormProps) => {
 };
 
 const PhysiotherapyForm = (props: IFormProps) => {
-    const [isOtherSelected, setIsOtherSelected] = useState<Boolean>(false);
     const styles = useStyles();
     const disabilities = useDisabilities();
 

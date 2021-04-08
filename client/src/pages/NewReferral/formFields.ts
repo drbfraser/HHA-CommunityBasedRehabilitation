@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { InjuryLocation, WheelchairExperience } from "util/referrals";
+import { OTHER } from "util/hooks/disabilities";
 
 export enum FormField {
     client = "client",
@@ -36,7 +37,7 @@ export const fieldLabels = {
     [FormField.wheelchairRepairable]: "Client's Wheelchair is Repairable",
     [FormField.physiotherapy]: "Physiotherapy",
     [FormField.condition]: "Condition",
-    [FormField.conditionOther]: "Please specifiy",
+    [FormField.conditionOther]: "Other Condition",
     [FormField.prosthetic]: "Prosthetic",
     [FormField.prostheticInjuryLocation]: "Prosthetic Injury Location",
     [FormField.orthotic]: "Orthotic",
@@ -79,7 +80,15 @@ export const wheelchairValidationSchema = () =>
 
 export const physiotherapyValidationSchema = () =>
     Yup.object().shape({
-        [FormField.condition]: Yup.string().label(fieldLabels[FormField.condition]).required(),
+        [FormField.condition]: Yup.string()
+            .label(fieldLabels[FormField.condition])
+            .max(100)
+            .required(),
+        [FormField.conditionOther]: Yup.string()
+            .label(fieldLabels[FormField.conditionOther])
+            .when(FormField.condition, (condition: number, schema: any) =>
+                Number(condition) === OTHER ? schema.max(100).required() : schema
+            ),
     });
 
 export const prostheticOrthoticValidationSchema = (serviceType: FormField) =>

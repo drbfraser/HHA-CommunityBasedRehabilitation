@@ -1,5 +1,4 @@
 import { apiFetch, Endpoint } from "util/endpoints";
-import { number } from "yup/lib/locale";
 import { cachedAPIGet, cachedAPIHook, IAPICacheData } from "./cachedAPI";
 
 interface IDisability {
@@ -18,7 +17,7 @@ const cache: IAPICacheData<TDisabilityMap, TDisabilityMap, TDisabilityMap> = {
     errorValue: new Map<number, string>(),
 };
 
-export const OTHER = -1;
+export const OTHER = 0;
 
 export const getDisabilities = async () => cachedAPIGet(cache);
 export const useDisabilities = () => cachedAPIHook(cache)().set(OTHER, "Other");

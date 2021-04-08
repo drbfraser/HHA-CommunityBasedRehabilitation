@@ -3,6 +3,7 @@ import { TFormValues } from "./formFields";
 import { Endpoint, apiFetch } from "../../util/endpoints";
 import history from "../../util/history";
 import { timestampFromFormDate } from "util/dates";
+import { OTHER } from "util/hooks/disabilities";
 
 const addClient = async (clientInfo: string) => {
     const init: RequestInit = {
@@ -23,7 +24,10 @@ const addClient = async (clientInfo: string) => {
 export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
     const newClient = JSON.stringify({
         birth_date: timestampFromFormDate(values.birthDate),
-        disability: values.disability,
+        disability: (values.disability as number[]).filter((disability) => disability !== OTHER),
+        other_disability: (values.disability as number[]).includes(OTHER)
+            ? values.other_disability
+            : "",
         first_name: values.firstName,
         last_name: values.lastName,
         gender: values.gender,

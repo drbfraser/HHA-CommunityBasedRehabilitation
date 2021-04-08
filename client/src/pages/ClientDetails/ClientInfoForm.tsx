@@ -23,7 +23,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { handleSubmit, handleCancel } from "./formHandler";
 import { IClient, genders } from "util/clients";
 import { useZones } from "util/hooks/zones";
-import { useDisabilities } from "util/hooks/disabilities";
+import { OTHER, useDisabilities } from "util/hooks/disabilities";
 import history from "util/history";
 
 interface IProps {
@@ -221,6 +221,21 @@ const ClientInfoForm = (props: IProps) => {
                                             </MenuItem>
                                         ))}
                                     </Field>
+                                    {(values[FormField.disability] as number[]).includes(OTHER) && (
+                                        <div>
+                                            <br />
+                                            <Field
+                                                component={TextField}
+                                                className={styles.disabledTextField}
+                                                fullWidth
+                                                label={fieldLabels[FormField.otherDisability]}
+                                                disabled={!isEditing}
+                                                required
+                                                name={FormField.otherDisability}
+                                                variant="outlined"
+                                            />
+                                        </div>
+                                    )}
                                 </Grid>
                                 <Grid item md={12} xs={12}>
                                     <Field
@@ -229,7 +244,9 @@ const ClientInfoForm = (props: IProps) => {
                                         disabled={!isEditing}
                                         className={styles.disabledTextField}
                                         name={FormField.caregiver_present}
-                                        Label={{ label: fieldLabels[FormField.caregiver_present] }}
+                                        Label={{
+                                            label: fieldLabels[FormField.caregiver_present],
+                                        }}
                                     />
                                 </Grid>
                                 {values.caregiver_present ? (

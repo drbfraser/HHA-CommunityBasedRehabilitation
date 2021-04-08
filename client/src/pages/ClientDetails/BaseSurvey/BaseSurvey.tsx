@@ -68,6 +68,7 @@ const HealthForm = (props: IFormProps) => {
                 <Field
                     component={TextField}
                     select
+                    required
                     variant="outlined"
                     label={fieldLabels[FormField.rateLevel]}
                     name={FormField.rateLevel}
@@ -127,6 +128,7 @@ const HealthForm = (props: IFormProps) => {
                         <Field
                             component={TextField}
                             select
+                            required
                             variant="outlined"
                             label={fieldLabels[FormField.deviceType]}
                             name={FormField.deviceType}
@@ -149,6 +151,7 @@ const HealthForm = (props: IFormProps) => {
                 <Field
                     component={TextField}
                     select
+                    required
                     variant="outlined"
                     label={fieldLabels[FormField.deviceSatisf]}
                     name={FormField.deviceSatisf}
@@ -187,6 +190,7 @@ const EducationForm = (props: IFormProps) => {
                             <Field
                                 component={TextField}
                                 select
+                                required
                                 variant="outlined"
                                 label={fieldLabels[FormField.grade]}
                                 name={FormField.grade}
@@ -207,6 +211,7 @@ const EducationForm = (props: IFormProps) => {
                             <Field
                                 component={TextField}
                                 select
+                                required
                                 variant="outlined"
                                 label={fieldLabels[FormField.reasonNotSchool]}
                                 name={FormField.reasonNotSchool}
@@ -312,6 +317,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 <Field
                     component={TextField}
                     select
+                    required
                     variant="outlined"
                     label={fieldLabels[FormField.isSelfEmployed]}
                     name={FormField.reasonNotSchool}
@@ -359,6 +365,7 @@ const FoodForm = (props: IFormProps) => {
                 <Field
                     component={TextField}
                     select
+                    required
                     variant="outlined"
                     label={fieldLabels[FormField.foodSecurityRate]}
                     name={FormField.foodSecurityRate}
@@ -390,6 +397,7 @@ const FoodForm = (props: IFormProps) => {
                             <Field
                                 component={TextField}
                                 select
+                                required
                                 variant="outlined"
                                 label={fieldLabels[FormField.childNourish]}
                                 name={FormField.childNourish}
@@ -404,12 +412,10 @@ const FoodForm = (props: IFormProps) => {
                         <br />
                     </div>
                 )}
-
                 {props.formikProps.values[FormField.childNourish] === "MALNOURISHED" && (
                     <div className={styles.fieldIndent}>
                         <br />
-                        Please referral to health centre required !!!
-                        <br />
+                        <Alert severity="info">A referral to the health center is required!</Alert>
                     </div>
                 )}
             </FormControl>

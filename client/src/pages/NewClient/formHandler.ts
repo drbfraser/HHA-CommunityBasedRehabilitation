@@ -50,23 +50,30 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
             risk_level: values.educationRisk,
             requirement: values.educationRequirements,
             goal: values.educationGoals,
-        },
+        }
     };
 
     const formData = new FormData();
     Object.entries(newClient).forEach(([key, val]) => {
-        const vals = Array.isArray(val) ? val : [val];
-        vals.forEach((v) => formData.append(key, String(v)));
+        if (Array.isArray(val)) {
+            val.forEach((v) => formData.append(key, String(v)));
+        }
+        else if (typeof(val) === 'object' && val !== null){
+            Object.entries(val).forEach(([objKey, v]) => {
+                formData.append(`${key}.${objKey}`, String(v));
+            });
+        }
+        else {
+            formData.append(key, String(val));
+        }
     });
 
-    // TODO: creating client fails when using formData.
-    // const clientProfilePicture = await (await fetch(values.picture)).blob();
-    // formData.append(
-    //     "picture",
-    //     clientProfilePicture,
-    //     Math.random().toString(36).substring(7) + ".png"
-    // );
-    // console.log(clientProfilePicture);
+    const clientProfilePicture = await (await fetch(values.picture)).blob();
+    formData.append(
+        "picture",
+        clientProfilePicture,
+        Math.random().toString(36).substring(7) + ".png"
+    );
 
     try {
         const client = await addClient(formData);

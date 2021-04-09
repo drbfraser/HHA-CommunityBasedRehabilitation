@@ -9,6 +9,18 @@ export const useStyles = makeStyles(
         caregiverInputField: {
             backgroundColor: "#ffffff",
         },
+        checkboxError: {
+            color: themeColors.errorRed,
+            "& .MuiCheckbox-root": {
+                color: themeColors.errorRed,
+            },
+        },
+        errorMessage: {
+            fontSize: "0.75rem",
+            color: themeColors.errorRed,
+            marginTop: "-4px",
+            marginLeft: "14px",
+        },
         disabledTextField: {
             "& div": {
                 color: "black",

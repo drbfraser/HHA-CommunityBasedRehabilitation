@@ -1,3 +1,39 @@
+export interface ISurvey {
+    id: number;
+    survey_date: number;
+    health: RateLevel;
+    health_have_rehabilitation_access: boolean;
+    health_need_rehabilitation_access: boolean;
+    health_have_assistive_device: boolean;
+    health_working_assistive_device: boolean;
+    health_need_assistive_device: boolean;
+    health_services_satisfaction: RateLevel;
+    school_currently_attend: boolean;
+    school_grade: number;
+    school_ever_attend: boolean;
+    school_want_attend: boolean;
+    social_community_valued: boolean;
+    social_independent: boolean;
+    social_able_participate: boolean;
+    social_affected_by_disability: boolean;
+    social_discrimination: boolean;
+    work: boolean;
+    work_what: string;
+    work_meet_financial_needs: boolean;
+    work_affected_by_disability: boolean;
+    work_want: boolean;
+    food_security: RateLevel;
+    food_enough_monthly: boolean;
+    empowerment_organization_member: boolean;
+    empowerment_organization: string;
+    empowerment_rights_awareness: boolean;
+    empowerment_influence_others: boolean;
+    shelter_adequate: boolean;
+    shelter_essential_access: boolean;
+    client: number;
+    user: number;
+}
+
 export enum RateLevel {
     VERY_POOR = "VP",
     POOR = "P",

@@ -94,7 +94,7 @@ export const fieldLabels = {
     [FormField.foodAndNutrition]: "Food and Nutrition",
     [FormField.foodSecurityRate]: "Rate",
     [FormField.enoughFoodPerMonth]: "I have enough food every month",
-    [FormField.isChild]: "I am a child or with a child",
+    [FormField.isChild]: "I am a child or have a child",
     [FormField.childNourish]: "Nourishment",
 
     [FormField.empowerment]: "Empowerment",

@@ -7,6 +7,7 @@ export const themeColors = {
     blueBgDark: "#273364",
     yellow: "rgb(250, 195, 90)",
     yellowDark: "rgb(240, 170, 80)",
+    errorRed: "#f44336",
     riskRed: "#ef5350",
     riskGreen: "#81C784",
     riskYellow: "#f0aa50",

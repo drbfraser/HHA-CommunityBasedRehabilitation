@@ -11,7 +11,7 @@ export enum FormField {
     deviceWoking = "device_working",
     needDevice = "need_device",
     deviceType = "device_type",
-    serviceSatisf = "device_satisf",
+    serviceSatisf = "service_satisf",
 
     education = "education",
     goSchool = "go_school",

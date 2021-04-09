@@ -32,7 +32,7 @@ export const apiFetch = async (
 ): Promise<Response> => {
     const url = API_URL + endpoint + urlParams;
     const authToken = await getAuthToken();
-    const init = {
+    const init: RequestInit = {
         ...customInit,
         headers: {
             "Content-Type": "application/json",
@@ -40,6 +40,10 @@ export const apiFetch = async (
             ...customInit.headers,
         },
     };
+
+    if (init.body instanceof FormData) {
+        delete (init.headers as any)["Content-Type"];
+    }
 
     return fetch(url, init).then(async (resp) => {
         if (!resp.ok) {

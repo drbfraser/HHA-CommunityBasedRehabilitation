@@ -27,7 +27,7 @@ export interface IClient {
     latitude: string;
     zone: number;
     village: string;
-    picture: unknown;
+    picture: string;
     caregiver_present: boolean;
     caregiver_name: string;
     caregiver_phone: string;

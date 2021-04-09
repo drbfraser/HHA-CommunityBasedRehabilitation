@@ -25,6 +25,8 @@ export const useStyles = makeStyles(
             marginLeft: "auto",
             marginRight: "auto",
             cursor: "pointer",
+        },
+        profileUploadHover: {
             "&:hover": {
                 opacity: 0.5,
                 "& $uploadIcon": {

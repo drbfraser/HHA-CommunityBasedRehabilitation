@@ -14,6 +14,7 @@ export enum FormField {
     caregiver_email = "caregiver_email",
     caregiver_name = "caregiver_name",
     disability = "disability",
+    picture = "picture",
 }
 
 export const fieldLabels = {

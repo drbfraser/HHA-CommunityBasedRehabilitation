@@ -14,7 +14,7 @@ import {
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, RadioGroup, TextField } from "formik-material-ui";
 import React, { useState } from "react";
-import { OTHER, useDisabilities } from "util/hooks/disabilities";
+import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
 import {
     orthoticInjuryLocations,
     prostheticInjuryLocations,
@@ -183,7 +183,8 @@ const PhysiotherapyForm = (props: IFormProps) => {
                         </MenuItem>
                     ))}
                 </Field>
-                {props.formikProps.values[FormField.condition] === OTHER && (
+                {props.formikProps.values[FormField.condition] ===
+                    getOtherDisabilityId(disabilities) && (
                     <div>
                         <br />
                         <Field

@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import { InjuryLocation, WheelchairExperience } from "util/referrals";
-import { OTHER } from "util/hooks/disabilities";
+import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
 
 export enum FormField {
     client = "client",
@@ -78,6 +78,9 @@ export const wheelchairValidationSchema = () =>
             .required(),
     });
 
+const isOtherCondition = async (condition: number) =>
+    Number(condition) === Number(getOtherDisabilityId(await getDisabilities()));
+
 export const physiotherapyValidationSchema = () =>
     Yup.object().shape({
         [FormField.condition]: Yup.string()
@@ -86,8 +89,20 @@ export const physiotherapyValidationSchema = () =>
             .required(),
         [FormField.conditionOther]: Yup.string()
             .label(fieldLabels[FormField.conditionOther])
-            .when(FormField.condition, (condition: number, schema: any) =>
-                Number(condition) === OTHER ? schema.max(100).required() : schema
+            .trim()
+            .test(
+                "require-if-other-selected",
+                "Other Condition is required",
+                async (conditionOther, schema) =>
+                    !(await isOtherCondition(schema.parent.condition)) ||
+                    (conditionOther !== undefined && conditionOther.length > 0)
+            )
+            .test(
+                "require-if-other-selected",
+                "Other Condition must be at most 100 characters",
+                async (conditionOther, schema) =>
+                    !(await isOtherCondition(schema.parent.condition)) ||
+                    (conditionOther !== undefined && conditionOther.length <= 100)
             ),
     });
 
@@ -103,6 +118,7 @@ export const otherServicesValidationSchema = () =>
         [FormField.otherDescription]: Yup.string()
             .label(fieldLabels[FormField.otherDescription])
             .max(100)
+            .trim()
             .required(),
     });
 

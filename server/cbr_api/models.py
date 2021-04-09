@@ -107,7 +107,7 @@ class Client(models.Model):
     phone_number = models.CharField(
         max_length=50, blank=True
     )  # if contact info available
-    disability = models.ManyToManyField(Disability, blank=True)
+    disability = models.ManyToManyField(Disability)
     other_disability = models.CharField(max_length=100, blank=True)
     created_by_user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT

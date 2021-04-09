@@ -2,7 +2,7 @@ import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { FormField, TFormValues } from "./formFields";
 import history from "../../util/history";
-import { getDisabilities, OTHER } from "util/hooks/disabilities";
+import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
 
 const addReferral = async (referralInfo: string) => {
     const init: RequestInit = {
@@ -40,7 +40,7 @@ export const handleSubmit = async (
                 : false,
         physiotherapy: values[FormField.physiotherapy],
         condition: values[FormField.physiotherapy]
-            ? Number(values[FormField.condition]) === OTHER
+            ? Number(values[FormField.condition]) === getOtherDisabilityId(disabilities)
                 ? values[FormField.conditionOther]
                 : disabilities.get(Number(values[FormField.condition]))
             : "",

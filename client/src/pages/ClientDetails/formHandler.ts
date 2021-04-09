@@ -2,7 +2,7 @@ import { FormikHelpers } from "formik";
 import { Endpoint, apiFetch } from "../../util/endpoints";
 import { IClient } from "util/clients";
 import { timestampFromFormDate } from "util/dates";
-import { OTHER } from "util/hooks/disabilities";
+import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
 
 const updateClient = async (clientInfo: string, clientId: number) => {
     const init: RequestInit = {
@@ -23,6 +23,8 @@ export const handleSubmit = async (
     helpers: FormikHelpers<IClient>,
     setIsEditing: (isEditing: boolean) => void
 ) => {
+    const disabilities = await getDisabilities();
+
     const updatedValues = JSON.stringify({
         first_name: values.first_name,
         last_name: values.last_name,
@@ -37,8 +39,10 @@ export const handleSubmit = async (
         caregiver_phone: values.caregiver_phone,
         longitude: values.longitude,
         latitude: values.latitude,
-        disability: values.disability.filter((disability) => disability !== OTHER),
-        other_disability: values.disability.includes(OTHER) ? values.other_disability : "",
+        disability: values.disability,
+        other_disability: values.disability.includes(getOtherDisabilityId(disabilities))
+            ? values.other_disability
+            : "",
     });
 
     try {

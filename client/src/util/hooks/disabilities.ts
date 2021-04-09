@@ -17,7 +17,15 @@ const cache: IAPICacheData<TDisabilityMap, TDisabilityMap, TDisabilityMap> = {
     errorValue: new Map<number, string>(),
 };
 
-export const OTHER = 0;
+const OTHER_DISABILITY_LABEL = "Other";
+
+export const getOtherDisabilityId = (disabilities: TDisabilityMap): number => {
+    return (
+        Array.from(disabilities).find(
+            (disability) => disability[1] === OTHER_DISABILITY_LABEL
+        )?.[0] ?? 0
+    );
+};
 
 export const getDisabilities = async () => cachedAPIGet(cache);
-export const useDisabilities = () => cachedAPIHook(cache)().set(OTHER, "Other");
+export const useDisabilities = cachedAPIHook(cache);

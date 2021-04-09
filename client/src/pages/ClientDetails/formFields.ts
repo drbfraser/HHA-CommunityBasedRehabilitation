@@ -1,6 +1,5 @@
 import * as Yup from "yup";
 import { Validation } from "util/validations";
-import { OTHER } from "util/hooks/disabilities";
 
 export enum FormField {
     first_name = "first_name",
@@ -15,7 +14,7 @@ export enum FormField {
     caregiver_email = "caregiver_email",
     caregiver_name = "caregiver_name",
     disability = "disability",
-    otherDisability = "other_disability",
+    other_disability = "other_disability",
 }
 
 export const fieldLabels = {
@@ -31,7 +30,7 @@ export const fieldLabels = {
     [FormField.caregiver_phone]: "Caregiver Phone Number",
     [FormField.caregiver_email]: "Caregiver Email",
     [FormField.disability]: "Disabilities",
-    [FormField.otherDisability]: "Other Disabilities",
+    [FormField.other_disability]: "Other Disabilities",
 };
 
 export const validationSchema = () =>
@@ -53,10 +52,22 @@ export const validationSchema = () =>
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
         [FormField.disability]: Yup.array().label(fieldLabels[FormField.disability]).required(),
-        [FormField.otherDisability]: Yup.string()
-            .label(fieldLabels[FormField.otherDisability])
-            .when(FormField.disability, (disability: number[], schema: any) =>
-                disability.includes(OTHER) ? schema.max(100).required() : schema
+        [FormField.other_disability]: Yup.string()
+            .label(fieldLabels[FormField.other_disability])
+            .trim()
+            .test(
+                "require-if-other-selected",
+                "Other Disability is required",
+                async (other_disability, schema) =>
+                    !(await Validation.includesOtherDisability(schema.parent.disability)) ||
+                    (other_disability !== undefined && other_disability.length > 0)
+            )
+            .test(
+                "require-if-other-selected",
+                "Other Disability must be at most 100 characters",
+                async (other_disability, schema) =>
+                    !(await Validation.includesOtherDisability(schema.parent.disability)) ||
+                    (other_disability !== undefined && other_disability.length <= 100)
             ),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),

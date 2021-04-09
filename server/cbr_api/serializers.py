@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from cbr_api import models, validators
+from cbr_api import models
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 import time
@@ -49,7 +49,9 @@ class UserCBRSerializer(serializers.ModelSerializer):
 
 
 class UserPasswordSerializer(serializers.ModelSerializer):
-    new_password = serializers.CharField(write_only=True, required=True, validators=[])
+    new_password = serializers.CharField(
+        write_only=True, required=True, validators=[validate_password]
+    )
 
     class Meta:
         model = models.UserCBR
@@ -403,13 +405,11 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "social_risk",
             "educat_risk",
         ]
+
         read_only_fields = ["created_by_user", "created_date", "full_name"]
 
     def create(self, validated_data):
         current_time = int(time.time())
-
-        if not validated_data["disability"] and not validated_data["other_disability"]:
-            raise serializers.ValidationError({"detail": "Disability cannot be empty"})
 
         # must be removed before passing validated_data into Client.objects.create
         health_data = validated_data.pop("health_risk")
@@ -439,12 +439,6 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         create_risk(educat_data, models.RiskType.EDUCAT)
 
         return client
-
-    def validate(self, data):
-        validators.validate_client_disabilities(
-            data["disability"], data["other_disability"]
-        )
-        return data
 
 
 class ClientDetailSerializer(serializers.ModelSerializer):
@@ -487,9 +481,3 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         instance.full_name = instance.first_name + " " + instance.last_name
         instance.save()
         return instance
-
-    def validate(self, data):
-        validators.validate_client_disabilities(
-            data["disability"], data["other_disability"]
-        )
-        return data

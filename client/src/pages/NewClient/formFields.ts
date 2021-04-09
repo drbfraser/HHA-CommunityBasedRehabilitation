@@ -1,6 +1,5 @@
 import * as Yup from "yup";
 import { Validation } from "util/validations";
-import { OTHER } from "util/hooks/disabilities";
 
 export enum FormField {
     firstName = "firstName",
@@ -16,7 +15,7 @@ export enum FormField {
     caregiverName = "caregiverName",
     caregiverEmail = "caregiverEmail",
     disability = "disability",
-    otherDisability = "other_disability",
+    otherDisability = "otherDisability",
     healthRisk = "healthRisk",
     healthRequirements = "healthRequirements",
     healthGoals = "healthGoals",
@@ -103,8 +102,19 @@ export const validationSchema = () =>
         [FormField.disability]: Yup.array().label(fieldLabels[FormField.disability]).required(),
         [FormField.otherDisability]: Yup.string()
             .label(fieldLabels[FormField.otherDisability])
-            .when(FormField.disability, (disability: number[], schema: any) =>
-                disability.includes(OTHER) ? schema.max(100).required() : schema
+            .test(
+                "require-if-other-selected",
+                "Other Disability is required",
+                async (otherDisability, schema) =>
+                    !(await Validation.includesOtherDisability(schema.parent.disability)) ||
+                    (otherDisability !== undefined && otherDisability.length > 0)
+            )
+            .test(
+                "require-if-other-selected",
+                "Other Disability must be at most 100 characters",
+                async (otherDisability, schema) =>
+                    !(await Validation.includesOtherDisability(schema.parent.disability)) ||
+                    (otherDisability !== undefined && otherDisability.length <= 100)
             ),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),

@@ -27,7 +27,6 @@ class Command(BaseCommand):
         zones = models.Zone.objects.all()
         users = models.UserCBR.objects.all()
         disabilities = models.Disability.objects.all()
-        disabilities.exclude(disability_type="Other")
 
         def getYearTimestamp(self, year, days):
             return ((year - 1970) * (60 * 60 * 24 * 365)) + (days * 60 * 60 * 24)

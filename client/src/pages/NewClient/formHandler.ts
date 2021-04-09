@@ -3,7 +3,7 @@ import { TFormValues } from "./formFields";
 import { Endpoint, apiFetch } from "../../util/endpoints";
 import history from "../../util/history";
 import { timestampFromFormDate } from "util/dates";
-import { OTHER } from "util/hooks/disabilities";
+import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
 
 const addClient = async (clientInfo: string) => {
     const init: RequestInit = {
@@ -22,10 +22,14 @@ const addClient = async (clientInfo: string) => {
 
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
 export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
+    const disabilities = await getDisabilities();
+
     const newClient = JSON.stringify({
         birth_date: timestampFromFormDate(values.birthDate),
-        disability: (values.disability as number[]).filter((disability) => disability !== OTHER),
-        other_disability: (values.disability as number[]).includes(OTHER)
+        disability: values.disability,
+        other_disability: (values.disability as number[]).includes(
+            getOtherDisabilityId(disabilities)
+        )
             ? values.other_disability
             : "",
         first_name: values.firstName,

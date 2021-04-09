@@ -23,7 +23,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { handleSubmit, handleCancel } from "./formHandler";
 import { IClient, genders } from "util/clients";
 import { useZones } from "util/hooks/zones";
-import { OTHER, useDisabilities } from "util/hooks/disabilities";
+import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
 import history from "util/history";
 
 interface IProps {
@@ -221,17 +221,19 @@ const ClientInfoForm = (props: IProps) => {
                                             </MenuItem>
                                         ))}
                                     </Field>
-                                    {(values[FormField.disability] as number[]).includes(OTHER) && (
+                                    {(values[FormField.disability] as number[]).includes(
+                                        getOtherDisabilityId(disabilities)
+                                    ) && (
                                         <div>
                                             <br />
                                             <Field
                                                 component={TextField}
                                                 className={styles.disabledTextField}
                                                 fullWidth
-                                                label={fieldLabels[FormField.otherDisability]}
+                                                label={fieldLabels[FormField.other_disability]}
                                                 disabled={!isEditing}
                                                 required
-                                                name={FormField.otherDisability}
+                                                name={FormField.other_disability}
                                                 variant="outlined"
                                             />
                                         </div>

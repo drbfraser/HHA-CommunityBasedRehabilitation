@@ -16,6 +16,7 @@ import NotFound from "pages/NotFound/NotFound";
 import AdminNew from "pages/Admin/AdminNew";
 import AdminView from "pages/Admin/AdminView";
 import AdminEdit from "pages/Admin/AdminEdit";
+import AdminPasswordEdit from "pages/Admin/AdminPasswordEdit";
 import ClientRiskHistory from "pages/ClientDetails/RiskHistory/ClientRiskHistory";
 import Dashboard from "pages/Dashboard/Dashboard";
 import NewVisit from "pages/NewVisit/NewVisit";
@@ -113,6 +114,12 @@ const pages: IPage[] = [
         name: "Edit User",
         roles: [UserRole.ADMIN],
         Component: AdminEdit,
+        showInNav: false,
+    },
+    {
+        path: "/admin/password/:userId",
+        name: "Edit User Password",
+        Component: AdminPasswordEdit,
         showInNav: false,
     },
     {

@@ -22,6 +22,10 @@ const AdminView = () => {
         return history.push("/admin/edit/" + userId);
     };
 
+    const handlePasswordEdit = () => {
+        return history.push("/admin/password/" + userId);
+    };
+
     useEffect(() => {
         const getUser = async () => {
             try {
@@ -50,6 +54,9 @@ const AdminView = () => {
                     <div className={styles.floatRight}>
                         <Button color="primary" onClick={handleEdit}>
                             <EditIcon></EditIcon>Edit
+                        </Button>
+                        <Button color="primary" onClick={handlePasswordEdit}>
+                            <EditIcon></EditIcon>Change Password
                         </Button>
                     </div>
 

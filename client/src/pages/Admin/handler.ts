@@ -1,6 +1,6 @@
 import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "util/endpoints";
-import { TNewUserValues } from "./fields";
+import { TNewUserValues, TPasswordValues } from "./fields";
 import history from "util/history";
 import { IUser } from "util/users";
 
@@ -25,13 +25,33 @@ const updateUser = async (userInfo: string, userId: number) => {
         body: userInfo,
     };
 
-    return await apiFetch(Endpoint.USER, `${userId}`, init)
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            return res as IUser;
-        });
+    return await apiFetch(Endpoint.USER, `${userId}`, init);
+};
+
+const updateUserPassword = async (userInfo: string, userId: number) => {
+    const init: RequestInit = {
+        method: "PUT",
+        body: userInfo,
+    };
+
+    return await apiFetch(Endpoint.USER_PASSWORD, `${userId}`, init);
+};
+
+export const handleUpdatePassword = (userId: number) => async (
+    values: TPasswordValues,
+    helpers: FormikHelpers<TPasswordValues>
+) => {
+    const newPassword = JSON.stringify({
+        new_password: values.password,
+    });
+
+    try {
+        await updateUserPassword(newPassword, userId);
+        history.goBack();
+    } catch (e) {
+        alert("Sorry, something went wrong trying to edit that user's password. Please try again.");
+        helpers.setSubmitting(false);
+    }
 };
 
 export const handleNewSubmit = async (

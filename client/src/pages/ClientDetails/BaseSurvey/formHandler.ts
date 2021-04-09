@@ -49,7 +49,9 @@ export const handleSubmit = async (
         work: values[FormField.isWorking],
         work_what: values[FormField.isWorking] ? values[FormField.job] : "",
         work_status: values[FormField.isWorking] ? values[FormField.isSelfEmployed] : "",
-        work_meet_financial_needs: values[FormField.meetFinanceNeeds],
+        work_meet_financial_needs: values[FormField.isWorking]
+            ? values[FormField.meetFinanceNeeds]
+            : false,
         work_affected_by_disability: values[FormField.disabiAffectWork],
         work_want: values[FormField.wantWork],
         food_security: values[FormField.foodSecurityRate],

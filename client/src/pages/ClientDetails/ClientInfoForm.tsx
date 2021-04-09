@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useStyles } from "../NewClient/ClientForm.styles";
 
 import { Field, Form, Formik } from "formik";
@@ -44,7 +44,7 @@ const ClientInfoForm = (props: IProps) => {
     const styles = useStyles();
     const zones = useZones();
     const disabilities = useDisabilities();
-    const [initialPicture, _] = useState<string>(props.clientInfo.picture);
+    const [initialPicture] = useState<string>(props.clientInfo.picture);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isViewingPicture, setIsViewingPicture] = useState<boolean>(false);
 

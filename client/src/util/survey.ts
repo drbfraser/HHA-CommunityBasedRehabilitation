@@ -1,53 +1,53 @@
 export enum RateLevel {
-    POOR = "POOR",
-    VERY_POOR = "VERY_POOR",
-    FINE = "FINE",
-    GOOD = "GOOD",
+    VERY_POOR = "VP",
+    POOR = "P",
+    FINE = "F",
+    GOOD = "G",
 }
 
 export enum DeviceType {
-    WHEELCHAIR = "WHEELCHAIR",
-    PROSTHETIC = "PROSTHETIC",
-    ORTHOTIC = "ORTHEOTIC",
-    CRUTCH = "CRUTCH",
-    WALKING_STICK = "WALKING_STICK",
-    HEARING_AID = "HEARING_AID",
-    GLASSES = "GLASSES",
-    STANDING_FRAME = "STANDING_FRAME",
-    CORNER_SEAT = "CORNER_SEAT",
+    WHEELCHAIR = "WC",
+    PROSTHETIC = "PR",
+    ORTHOTIC = "OR",
+    CRUTCH = "CR",
+    WALKING_STICK = "WS",
+    HEARING_AID = "HA",
+    GLASSES = "GL",
+    STANDING_FRAME = "SF",
+    CORNER_SEAT = "CS",
 }
 
 export enum ReasonNotSchool {
-    LACK_OF_FUNDING = "LACK_OF_FUNDING",
-    MY_DISABILITY_STOPS_ME = "MY_DISABILITY_STOPS_ME",
-    OTHER = "OTHER",
+    LACK_OF_FUNDING = "LF",
+    MY_DISABILITY_STOPS_ME = "D",
+    OTHER = "O",
 }
 
 export enum Grade {
-    P1 = "P1",
-    P2 = "P2",
-    P3 = "P3",
-    P4 = "P4",
-    P5 = "P5",
-    P6 = "P6",
-    P7 = "P7",
-    S1 = "S1",
-    S2 = "S2",
-    S3 = "S3",
-    S4 = "S4",
-    S5 = "S5",
-    S6 = "S6",
+    P1 = 1,
+    P2 = 2,
+    P3 = 3,
+    P4 = 4,
+    P5 = 5,
+    P6 = 6,
+    P7 = 7,
+    S1 = 8,
+    S2 = 9,
+    S3 = 10,
+    S4 = 11,
+    S5 = 12,
+    S6 = 13,
 }
 
 export enum ChildNourish {
-    MALNOURISHED = "MALNOURISHED",
-    UNDERNOURISHED = "UNDERNOURISHED",
-    WELL_NOURISHED = "WELL_NOURISHED",
+    MALNOURISHED = "M",
+    UNDERNOURISHED = "U",
+    WELL_NOURISHED = "W",
 }
 
 export enum IsSelfEmployed {
-    EMPLOYED = "EMPLOYED",
-    SELFEMPLOYED = "SELFEMPLOYED",
+    EMPLOYED = "EMPL",
+    SELFEMPLOYED = "SEMPL",
 }
 export interface IRateLevel {
     name: string;
@@ -92,12 +92,12 @@ export const reasonNotSchool = {
 export const childNourish = {
     [ChildNourish.MALNOURISHED]: "Malnourished",
     [ChildNourish.UNDERNOURISHED]: "Undernourished",
-    [ChildNourish.WELL_NOURISHED]: "Well nourished",
+    [ChildNourish.WELL_NOURISHED]: "Well-nourished",
 };
 
 export const isSelfEmployed = {
     [IsSelfEmployed.EMPLOYED]: "Employed",
-    [IsSelfEmployed.SELFEMPLOYED]: "Self Employed",
+    [IsSelfEmployed.SELFEMPLOYED]: "Self-employed",
 };
 
 export const grade = {

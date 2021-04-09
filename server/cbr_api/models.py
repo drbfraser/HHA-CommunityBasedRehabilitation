@@ -258,7 +258,7 @@ class BaselineSurvey(models.Model):
     health_working_assistive_device = models.BooleanField()
     health_need_assistive_device = models.BooleanField()
     health_assistive_device_type = models.CharField(
-        max_length=2, choices=AssistiveDevices.choices
+        max_length=2, choices=AssistiveDevices.choices, blank=True
     )
     health_services_satisfaction = models.CharField(
         max_length=2, choices=Ratings.choices
@@ -273,7 +273,7 @@ class BaselineSurvey(models.Model):
     school_currently_attend = models.BooleanField()
     school_grade = models.IntegerField(blank=True)
     school_not_attend_reason = models.CharField(
-        max_length=2, choices=SchoolBarriers.choices
+        max_length=2, choices=SchoolBarriers.choices, blank=True
     )
     school_ever_attend = models.BooleanField()
     school_want_attend = models.BooleanField()
@@ -291,8 +291,8 @@ class BaselineSurvey(models.Model):
 
     # Livelihood
     work = models.BooleanField()
-    work_what = models.CharField(max_length=50)
-    work_status = models.CharField(max_length=5, choices=Employment.choices)
+    work_what = models.CharField(max_length=50, blank=True)
+    work_status = models.CharField(max_length=5, choices=Employment.choices, blank=True)
     work_meet_financial_needs = models.BooleanField()
     work_affected_by_disability = models.BooleanField()
     work_want = models.BooleanField()
@@ -305,11 +305,13 @@ class BaselineSurvey(models.Model):
     # Food and Nutrition
     food_security = models.CharField(max_length=2, choices=Ratings.choices)
     food_enough_monthly = models.BooleanField()
-    food_enough_for_child = models.CharField(max_length=1, choices=Nourishment.choices)
+    food_enough_for_child = models.CharField(
+        max_length=1, choices=Nourishment.choices, blank=True
+    )
 
     # Empowerment
     empowerment_organization_member = models.BooleanField()
-    empowerment_organization = models.CharField(max_length=50)
+    empowerment_organization = models.CharField(max_length=50, blank=True)
     empowerment_rights_awareness = models.BooleanField()
     empowerment_influence_others = models.BooleanField()
 

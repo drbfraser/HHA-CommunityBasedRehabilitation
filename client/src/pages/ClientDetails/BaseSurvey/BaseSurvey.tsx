@@ -28,6 +28,7 @@ import history from "util/history";
 import { useParams } from "react-router-dom";
 import { Alert } from "@material-ui/lab";
 import {
+    ChildNourish,
     childNourish,
     deviceTypes,
     grade,
@@ -89,6 +90,7 @@ const HealthForm = (props: IFormProps) => {
                     Label={{ label: fieldLabels[FormField.getService] }}
                 />
                 <br />
+
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
@@ -96,6 +98,7 @@ const HealthForm = (props: IFormProps) => {
                     Label={{ label: fieldLabels[FormField.needService] }}
                 />
                 <br />
+
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
@@ -103,6 +106,7 @@ const HealthForm = (props: IFormProps) => {
                     Label={{ label: fieldLabels[FormField.haveDevice] }}
                 />
                 <br />
+
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
@@ -125,7 +129,6 @@ const HealthForm = (props: IFormProps) => {
                     <FormControl fullWidth variant="outlined">
                         <FormLabel>What assistive device do you need?</FormLabel>
                         <br />
-
                         <Field
                             component={TextField}
                             select
@@ -154,8 +157,8 @@ const HealthForm = (props: IFormProps) => {
                     select
                     required
                     variant="outlined"
-                    label={fieldLabels[FormField.deviceSatisf]}
-                    name={FormField.deviceSatisf}
+                    label={fieldLabels[FormField.serviceSatisf]}
+                    name={FormField.serviceSatisf}
                 >
                     {Object.entries(rateLevel).map(([value, { name }]) => (
                         <MenuItem key={value} value={value}>
@@ -293,49 +296,52 @@ const LivelihoodForm = (props: IFormProps) => {
                     name={FormField.isWorking}
                     Label={{ label: fieldLabels[FormField.isWorking] }}
                 />
-                {props.formikProps.values[FormField.isWorking] && (
-                    <div className={styles.fieldIndent}>
-                        <FormLabel>What do you do?</FormLabel>
-                        <FormControl fullWidth variant="outlined">
-                            <br />
-                            <Field
-                                component={TextField}
-                                multiline
-                                variant="outlined"
-                                label={fieldLabels[FormField.job]}
-                                name={FormField.job}
-                                fullWidth
-                            />
-                        </FormControl>
-                        <br />
-                        <FormLabel>Are you employed or self-employed?</FormLabel>
-                        <br />
-                        <FormControl fullWidth variant="outlined">
-                            <Field
-                                component={TextField}
-                                select
-                                required
-                                variant="outlined"
-                                label={fieldLabels[FormField.isSelfEmployed]}
-                                name={FormField.isSelfEmployed}
-                            >
-                                {Object.entries(isSelfEmployed).map(([value, name]) => (
-                                    <MenuItem key={value} value={value}>
-                                        {name}
-                                    </MenuItem>
-                                ))}
-                            </Field>
-                            <br />
-                            <Field
-                                component={CheckboxWithLabel}
-                                type="checkbox"
-                                name={FormField.meetFinanceNeeds}
-                                Label={{ label: fieldLabels[FormField.meetFinanceNeeds] }}
-                            />
-                        </FormControl>
-                    </div>
-                )}
             </FormControl>
+            {props.formikProps.values[FormField.isWorking] && (
+                <div className={styles.fieldIndent}>
+                    <FormLabel>What do you do?</FormLabel>
+                    <FormControl fullWidth variant="outlined">
+                        <br />
+                        <Field
+                            component={TextField}
+                            multiline
+                            variant="outlined"
+                            label={fieldLabels[FormField.job]}
+                            name={FormField.job}
+                            fullWidth
+                        />
+                    </FormControl>
+                    <br />
+                    <br />
+                    <FormLabel>Are you employed or self-employed?</FormLabel>
+                    <br />
+                    <br />
+                    <FormControl fullWidth variant="outlined">
+                        <Field
+                            component={TextField}
+                            select
+                            required
+                            variant="outlined"
+                            label={fieldLabels[FormField.isSelfEmployed]}
+                            name={FormField.isSelfEmployed}
+                        >
+                            {Object.entries(isSelfEmployed).map(([value, name]) => (
+                                <MenuItem key={value} value={value}>
+                                    {name}
+                                </MenuItem>
+                            ))}
+                        </Field>
+                        <br />
+                        <Field
+                            component={CheckboxWithLabel}
+                            type="checkbox"
+                            name={FormField.meetFinanceNeeds}
+                            Label={{ label: fieldLabels[FormField.meetFinanceNeeds] }}
+                        />
+                    </FormControl>
+                </div>
+            )}
+
             <br />
             <FormControl fullWidth variant="outlined">
                 <Field
@@ -410,14 +416,17 @@ const FoodForm = (props: IFormProps) => {
                                     </MenuItem>
                                 ))}
                             </Field>
+                            {props.formikProps.values[FormField.childNourish] ===
+                                ChildNourish.MALNOURISHED && (
+                                <div className={styles.fieldIndent}>
+                                    <br />
+                                    <Alert severity="info">
+                                        A referral to the health center is required!
+                                    </Alert>
+                                </div>
+                            )}
                         </FormControl>
                         <br />
-                    </div>
-                )}
-                {props.formikProps.values[FormField.childNourish] === "MALNOURISHED" && (
-                    <div className={styles.fieldIndent}>
-                        <br />
-                        <Alert severity="info">A referral to the health center is required!</Alert>
                     </div>
                 )}
             </FormControl>

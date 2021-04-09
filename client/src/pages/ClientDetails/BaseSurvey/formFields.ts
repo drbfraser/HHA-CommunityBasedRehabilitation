@@ -11,7 +11,7 @@ export enum FormField {
     deviceWoking = "device_working",
     needDevice = "need_device",
     deviceType = "device_type",
-    deviceSatisf = "device_satisf",
+    serviceSatisf = "device_satisf",
 
     education = "education",
     goSchool = "go_school",
@@ -66,7 +66,7 @@ export const fieldLabels = {
     [FormField.deviceWoking]: "My assistive device is working well",
     [FormField.needDevice]: "I need an assistive device",
     [FormField.deviceType]: "Assistive Device",
-    [FormField.deviceSatisf]: "Satisfied Rate",
+    [FormField.serviceSatisf]: "Satisfied Rate",
 
     [FormField.education]: "Education",
     [FormField.goSchool]: "I go to school",
@@ -87,14 +87,14 @@ export const fieldLabels = {
     [FormField.isWorking]: "I am working",
     [FormField.job]: "Job",
     [FormField.meetFinanceNeeds]: "This meets my financial needs",
-    [FormField.disabiAffectWork]: "My disability affect my ability to go to work",
+    [FormField.disabiAffectWork]: "My disability affects my ability to go to work",
     [FormField.wantWork]: "I want to work",
     [FormField.isSelfEmployed]: "",
 
     [FormField.foodAndNutrition]: "Food and Nutrition",
     [FormField.foodSecurityRate]: "Rate",
     [FormField.enoughFoodPerMonth]: "I have enough food every month",
-    [FormField.isChild]: "I am a child or with child",
+    [FormField.isChild]: "I am a child or with a child",
     [FormField.childNourish]: "Nourishment",
 
     [FormField.empowerment]: "Empowerment",
@@ -119,16 +119,17 @@ export const initialValues = {
     [FormField.deviceWoking]: false,
     [FormField.needDevice]: false,
     [FormField.deviceType]: "",
+    [FormField.serviceSatisf]: "",
 
     [FormField.goSchool]: false,
-    [FormField.grade]: "",
+    [FormField.grade]: 0,
     [FormField.reasonNotSchool]: "",
     [FormField.beenSchool]: false,
     [FormField.wantSchool]: false,
 
     [FormField.feelValue]: false,
-    [FormField.feelIndependent]: "",
-    [FormField.ableInSocial]: "",
+    [FormField.feelIndependent]: false,
+    [FormField.ableInSocial]: false,
     [FormField.disabiAffectSocial]: false,
     [FormField.disabiDiscrimination]: false,
 
@@ -172,11 +173,13 @@ export const livelihoodValidationSchema = () =>
         [FormField.job]: Yup.string().label(fieldLabels[FormField.job]).max(50),
         [FormField.isSelfEmployed]: Yup.string().label(fieldLabels[FormField.isSelfEmployed]),
     });
+
 export const foodValidationSchema = () =>
     Yup.object().shape({
         [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.rateLevel]),
         [FormField.childNourish]: Yup.string().label(fieldLabels[FormField.rateLevel]),
     });
+
 export const empowermentValidationSchema = () =>
     Yup.object().shape({
         [FormField.organization]: Yup.string().label(fieldLabels[FormField.organization]).max(50),

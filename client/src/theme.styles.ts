@@ -16,6 +16,7 @@ export const themeColors = {
     hhaBlue: "#009dc5",
     hhaPurple: "#863b8f",
     hhaGreen: "#56af31",
+    linkBlue: "#0078EE",
 };
 
 export const themeMui = createMuiTheme({
@@ -28,6 +29,12 @@ export const themeMui = createMuiTheme({
                 "#root": {
                     minHeight: "100%",
                 },
+            },
+        },
+        MuiLink: {
+            root: {
+                color: themeColors.linkBlue,
+                textDecoration: "underline",
             },
         },
     },

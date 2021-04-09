@@ -18,9 +18,9 @@ interface IProps {
     setUser: (user: IUser | null) => void;
 }
 
-const StatsDateFilter = ({ open, onClose, users, user, setUser }: IProps) => {
+const StatsUserFilter = ({ open, onClose, users, user, setUser }: IProps) => {
     const [selectedUser, setSelectedUser] = useState<IUser | null>(user);
-    const renderUser = (u?: IUser) => (u ? `${u.first_name} (${u.username})` : "");
+    const renderUser = (u?: IUser) => (u ? `${u.first_name} ${u.last_name} (${u.username})` : "");
 
     const handleSubmit = () => {
         setUser(selectedUser);
@@ -66,4 +66,4 @@ const StatsDateFilter = ({ open, onClose, users, user, setUser }: IProps) => {
     );
 };
 
-export default StatsDateFilter;
+export default StatsUserFilter;

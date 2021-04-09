@@ -53,7 +53,7 @@ const ReferralStats = ({ stats }: IProps) => {
             <br />
             <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={data}>
-                    <XAxis dataKey="label" interval={0} />
+                    <XAxis dataKey="label" />
                     <YAxis allowDecimals={false} />
                     <Tooltip />
                     <Legend />

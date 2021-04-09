@@ -1,7 +1,7 @@
-import { Typography } from "@material-ui/core";
+import { Link, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Skeleton from "@material-ui/lab/Skeleton";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     BarChart,
     ResponsiveContainer,
@@ -15,7 +15,7 @@ import {
 } from "recharts";
 import { themeColors } from "theme.styles";
 import { useZones } from "util/hooks/zones";
-import { IStats } from "util/stats";
+import { IStats, IStatsVisit } from "util/stats";
 
 interface IProps {
     stats?: IStats;
@@ -26,23 +26,35 @@ const VisitStats = ({ stats }: IProps) => {
 
     const zones = useZones();
     const zoneToName = (id: number) => zones.get(id) ?? "";
-    const [specificZoneId, setSpecificZoneId] = useState(0);
-    const specificZone = stats?.visits.find((v) => v.zone_id === specificZoneId);
+    const [breakdownZoneId, setBreakdownZoneId] = useState(0);
+    const breakdownZone = stats?.visits.find((v) => v.zone_id === breakdownZoneId);
 
-    const specificZoneData = [
+    useEffect(() => {
+        setBreakdownZoneId(0);
+    }, [stats]);
+
+    const getBreakdownCount = (key: keyof IStatsVisit): number => {
+        if (breakdownZone) {
+            return breakdownZone[key];
+        }
+
+        return stats?.visits.reduce((count, visit) => (count += visit[key]), 0) ?? 0;
+    };
+
+    const breakdownData = [
         {
             label: "Health",
-            count: specificZone?.health_count,
+            count: getBreakdownCount("health_count"),
             color: themeColors.hhaGreen,
         },
         {
             label: "Education",
-            count: specificZone?.educat_count,
+            count: getBreakdownCount("educat_count"),
             color: themeColors.hhaPurple,
         },
         {
             label: "Social",
-            count: specificZone?.social_count,
+            count: getBreakdownCount("social_count"),
             color: themeColors.hhaBlue,
         },
     ].filter((z) => z.count);
@@ -52,20 +64,18 @@ const VisitStats = ({ stats }: IProps) => {
             return;
         }
 
-        setSpecificZoneId(e.activePayload[0].payload?.zone_id);
+        setBreakdownZoneId(e.activePayload[0].payload?.zone_id);
     };
 
     return (
         <Grid container spacing={3} style={{ minHeight: CHART_HEIGHT }}>
             <Grid item xs={12} lg={7} xl={8}>
-                <Typography variant="h3">All Zones</Typography>
-                <Typography variant="body1">Only zones with visits are shown.</Typography>
-                {Boolean(stats && !stats.visits.length) && (
-                    <Typography variant="body1">
-                        If you are filtering, perhaps there are no visits during the selected date
-                        period or completed by the selected user?
-                    </Typography>
-                )}
+                <Typography variant="h3">By Zone</Typography>
+                <Typography variant="body1">
+                    {Boolean(!stats || stats.visits.length)
+                        ? "Only zones with visits are shown."
+                        : "No visits found. If you are filtering, perhaps there were no visits during the date period selected or the user selected has not visited any clients yet."}
+                </Typography>
                 <br />
                 {stats ? (
                     <ResponsiveContainer
@@ -93,21 +103,33 @@ const VisitStats = ({ stats }: IProps) => {
                 )}
             </Grid>
             <Grid item xs={12} lg={5} xl={4}>
-                <Typography variant="h3">
-                    {specificZone ? zoneToName(specificZoneId) : "Specific Zone"}
+                <Typography variant="h3">By Type</Typography>
+                <Typography variant="body1">
+                    Showing data for <b>{zones.get(breakdownZoneId) ?? "all zones"}</b>.<br />
+                    {Boolean(!breakdownZone) ? (
+                        "For zone-specific data, click on a zone in the zone chart."
+                    ) : (
+                        <Link
+                            component="button"
+                            variant="body1"
+                            onClick={() => setBreakdownZoneId(0)}
+                        >
+                            View data for all zones.
+                        </Link>
+                    )}
                 </Typography>
-                {specificZoneId ? (
+                {stats ? (
                     <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
                         <PieChart>
                             <Pie
-                                data={specificZoneData}
+                                data={breakdownData}
                                 dataKey="count"
                                 nameKey="label"
                                 label={(a) => a.label}
                                 labelLine={true}
                                 innerRadius={60}
                             >
-                                {specificZoneData.map((entry, i) => (
+                                {breakdownData.map((entry, i) => (
                                     <Cell key={i} fill={entry.color} />
                                 ))}
                             </Pie>
@@ -115,9 +137,7 @@ const VisitStats = ({ stats }: IProps) => {
                         </PieChart>
                     </ResponsiveContainer>
                 ) : (
-                    <Typography variant="body1">
-                        To view detailed visit stats per zone, click on a zone in the chart.
-                    </Typography>
+                    <Skeleton variant="rect" height={400} />
                 )}
             </Grid>
         </Grid>

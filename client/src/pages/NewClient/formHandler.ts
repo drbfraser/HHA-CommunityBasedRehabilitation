@@ -4,7 +4,7 @@ import { Endpoint, apiFetch } from "../../util/endpoints";
 import history from "../../util/history";
 import { timestampFromFormDate } from "util/dates";
 
-const addClient = async (clientInfo: string) => {
+const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {
         method: "POST",
         body: clientInfo,
@@ -21,7 +21,7 @@ const addClient = async (clientInfo: string) => {
 
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
 export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
-    const newClient = JSON.stringify({
+    const newClient = {
         birth_date: timestampFromFormDate(values.birthDate),
         disability: values.disability,
         first_name: values.firstName,
@@ -51,12 +51,28 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
             requirement: values.educationRequirements,
             goal: values.educationGoals,
         },
+    };
+
+    const formData = new FormData();
+    Object.entries(newClient).forEach(([key, val]) => {
+        const vals = Array.isArray(val) ? val : [val];
+        vals.forEach((v) => formData.append(key, String(v)));
     });
 
+    // TODO: creating client fails when using formData.
+    // const clientProfilePicture = await (await fetch(values.picture)).blob();
+    // formData.append(
+    //     "picture",
+    //     clientProfilePicture,
+    //     Math.random().toString(36).substring(7) + ".png"
+    // );
+    // console.log(clientProfilePicture);
+
     try {
-        const client = await addClient(newClient);
+        const client = await addClient(formData);
         history.push(`/client/${client.id}`);
     } catch (e) {
+        alert("Encountered an error while trying to create the client!");
         helpers.setSubmitting(false);
     }
 };

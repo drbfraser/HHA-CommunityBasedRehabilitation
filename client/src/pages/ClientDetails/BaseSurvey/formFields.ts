@@ -43,6 +43,7 @@ export enum FormField {
 
     empowerment = "empowerment",
     memOfOrgan = "mem_of_organ",
+    organization = "organization",
     awareRight = "aware_right",
     ableInfluence = "able_influence",
 
@@ -99,6 +100,7 @@ export const fieldLabels = {
     [FormField.empowerment]: "Empowerment",
     [FormField.memOfOrgan]:
         "I am a member of some organisations which assist people with disabilities",
+    [FormField.organization]: "Organization",
     [FormField.awareRight]: "I am aware of my rights as a citizen living with disabilities",
     [FormField.ableInfluence]: "I feel like I am able to influence people around me",
 
@@ -143,6 +145,7 @@ export const initialValues = {
     [FormField.childNourish]: "",
 
     [FormField.memOfOrgan]: false,
+    [FormField.organization]: "",
     [FormField.awareRight]: false,
     [FormField.ableInfluence]: false,
 
@@ -173,6 +176,10 @@ export const foodValidationSchema = () =>
     Yup.object().shape({
         [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.rateLevel]),
         [FormField.childNourish]: Yup.string().label(fieldLabels[FormField.rateLevel]),
+    });
+export const empowermentValidationSchema = () =>
+    Yup.object().shape({
+        [FormField.organization]: Yup.string().label(fieldLabels[FormField.organization]).max(50),
     });
 
 export type TFormValues = typeof initialValues;

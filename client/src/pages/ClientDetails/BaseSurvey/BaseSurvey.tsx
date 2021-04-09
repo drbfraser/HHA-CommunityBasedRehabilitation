@@ -20,6 +20,7 @@ import {
     livelihoodValidationSchema,
     healthValidationSchema,
     educationValidationSchema,
+    empowermentValidationSchema,
 } from "./formFields";
 import { handleSubmit } from "./formHandler";
 import { ArrowBack } from "@material-ui/icons";
@@ -294,8 +295,8 @@ const LivelihoodForm = (props: IFormProps) => {
                 />
                 {props.formikProps.values[FormField.isWorking] && (
                     <div className={styles.fieldIndent}>
+                        <FormLabel>What do you do?</FormLabel>
                         <FormControl fullWidth variant="outlined">
-                            <FormLabel>What do you do?</FormLabel>
                             <br />
                             <Field
                                 component={TextField}
@@ -307,35 +308,36 @@ const LivelihoodForm = (props: IFormProps) => {
                             />
                         </FormControl>
                         <br />
+                        <FormLabel>Are you employed or self-employed?</FormLabel>
                         <br />
+                        <FormControl fullWidth variant="outlined">
+                            <Field
+                                component={TextField}
+                                select
+                                required
+                                variant="outlined"
+                                label={fieldLabels[FormField.isSelfEmployed]}
+                                name={FormField.isSelfEmployed}
+                            >
+                                {Object.entries(isSelfEmployed).map(([value, name]) => (
+                                    <MenuItem key={value} value={value}>
+                                        {name}
+                                    </MenuItem>
+                                ))}
+                            </Field>
+                            <br />
+                            <Field
+                                component={CheckboxWithLabel}
+                                type="checkbox"
+                                name={FormField.meetFinanceNeeds}
+                                Label={{ label: fieldLabels[FormField.meetFinanceNeeds] }}
+                            />
+                        </FormControl>
                     </div>
                 )}
             </FormControl>
-            <FormLabel>Are you employed or self-employed?</FormLabel>
             <br />
             <FormControl fullWidth variant="outlined">
-                <Field
-                    component={TextField}
-                    select
-                    required
-                    variant="outlined"
-                    label={fieldLabels[FormField.isSelfEmployed]}
-                    name={FormField.reasonNotSchool}
-                >
-                    {Object.entries(isSelfEmployed).map(([value, name]) => (
-                        <MenuItem key={value} value={value}>
-                            {name}
-                        </MenuItem>
-                    ))}
-                </Field>
-
-                <Field
-                    component={CheckboxWithLabel}
-                    type="checkbox"
-                    name={FormField.meetFinanceNeeds}
-                    Label={{ label: fieldLabels[FormField.meetFinanceNeeds] }}
-                />
-
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
@@ -437,24 +439,33 @@ const EmpowermentForm = (props: IFormProps) => {
                 />
                 {props.formikProps.values[FormField.memOfOrgan] && (
                     <div className={styles.fieldIndent}>
-                        <FormControl fullWidth variant="outlined">
-                            <Field
-                                component={CheckboxWithLabel}
-                                type="checkbox"
-                                name={FormField.awareRight}
-                                Label={{ label: fieldLabels[FormField.awareRight] }}
-                            />
-
-                            <Field
-                                component={CheckboxWithLabel}
-                                type="checkbox"
-                                name={FormField.ableInfluence}
-                                Label={{ label: fieldLabels[FormField.ableInfluence] }}
-                            />
-                        </FormControl>
-                        <br />
+                        <Field
+                            component={TextField}
+                            multiline
+                            variant="outlined"
+                            label={fieldLabels[FormField.organization]}
+                            name={FormField.organization}
+                            fullWidth
+                        />
                     </div>
                 )}
+
+                <FormControl fullWidth variant="outlined">
+                    <Field
+                        component={CheckboxWithLabel}
+                        type="checkbox"
+                        name={FormField.awareRight}
+                        Label={{ label: fieldLabels[FormField.awareRight] }}
+                    />
+
+                    <Field
+                        component={CheckboxWithLabel}
+                        type="checkbox"
+                        name={FormField.ableInfluence}
+                        Label={{ label: fieldLabels[FormField.ableInfluence] }}
+                    />
+                </FormControl>
+                <br />
             </FormControl>
         </div>
     );
@@ -516,7 +527,7 @@ const NewSurvey = () => {
         {
             label: "Empowerment",
             Form: (formikProps) => EmpowermentForm(formikProps),
-            validationSchema: emptyValidationSchema,
+            validationSchema: empowermentValidationSchema,
         },
         {
             label: "Shelter and Care",

@@ -27,6 +27,7 @@ class Command(BaseCommand):
         zones = models.Zone.objects.all()
         users = models.UserCBR.objects.all()
         disabilities = models.Disability.objects.all()
+        disabilities.exclude(disability_type="Other")
 
         def getYearTimestamp(self, year, days):
             return ((year - 1970) * (60 * 60 * 24 * 365)) + (days * 60 * 60 * 24)
@@ -75,7 +76,9 @@ class Command(BaseCommand):
 
             return risk
 
-        def createClient(self, first, last, gender, village, phone):
+        def createClient(
+            self, first, last, gender, village, phone, other_disability=""
+        ):
             health_risk = random.choice(risks)
             social_risk = random.choice(risks)
             educat_risk = random.choice(risks)
@@ -96,11 +99,17 @@ class Command(BaseCommand):
                 longitude=0.0,
                 latitude=0.0,
                 village=village,
+                other_disability=other_disability,
                 health_risk_level=health_risk,
                 social_risk_level=social_risk,
                 educat_risk_level=educat_risk,
             )
             client.disability.add(random.choice(disabilities))
+
+            if other_disability:
+                client.disability.add(
+                    models.Disability.objects.get(disability_type="Other")
+                )
 
             createRisk(self, client, "HEALTH", health_risk, creation_date)
             createRisk(self, client, "SOCIAL", social_risk, creation_date)
@@ -138,8 +147,8 @@ class Command(BaseCommand):
         createClient(self, "Ana", "Sofia", "F", "#5", "555-0005")
         createClient(self, "Edgar", "Hirah", "M", "#6", "555-0006")
         createClient(self, "Okan", "Alvis", "M", "#7", "555-0007")
-        createClient(self, "Beatrix", "Adem", "F", "#8", "555-0008")
-        createClient(self, "Rigel", "Lachlan", "M", "#9", "555-0009")
+        createClient(self, "Beatrix", "Adem", "F", "#8", "555-0008", "Epilepsy")
+        createClient(self, "Rigel", "Lachlan", "M", "#9", "555-0009", "Dementia")
 
         clients = models.Client.objects.all()
 

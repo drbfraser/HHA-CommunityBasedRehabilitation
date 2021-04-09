@@ -106,14 +106,14 @@ export const validationSchema = () =>
                 "require-if-other-selected",
                 "Other Disability is required",
                 async (otherDisability, schema) =>
-                    !(await Validation.includesOtherDisability(schema.parent.disability)) ||
+                    !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
                     (otherDisability !== undefined && otherDisability.length > 0)
             )
             .test(
                 "require-if-other-selected",
                 "Other Disability must be at most 100 characters",
                 async (otherDisability, schema) =>
-                    !(await Validation.includesOtherDisability(schema.parent.disability)) ||
+                    !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
                     (otherDisability !== undefined && otherDisability.length <= 100)
             ),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),

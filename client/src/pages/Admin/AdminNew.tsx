@@ -3,7 +3,7 @@ import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
-import { fieldLabels, AdminField, initialValues, validationNewSchema } from "./fields";
+import { fieldLabels, AdminField, initialValues, newValidationSchema } from "./fields";
 import Button from "@material-ui/core/Button";
 import { FormControl, MenuItem } from "@material-ui/core";
 import { handleCancel, handleNewSubmit } from "./handler";
@@ -17,7 +17,7 @@ const AdminNew = () => {
     return (
         <Formik
             initialValues={initialValues}
-            validationSchema={validationNewSchema}
+            validationSchema={newValidationSchema}
             onSubmit={handleNewSubmit}
         >
             {({ isSubmitting }) => (

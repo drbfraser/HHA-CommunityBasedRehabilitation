@@ -30,7 +30,7 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         other_disability: (values.disability as number[]).includes(
             getOtherDisabilityId(disabilities)
         )
-            ? values.other_disability
+            ? values.otherDisability
             : "",
         first_name: values.firstName,
         last_name: values.lastName,

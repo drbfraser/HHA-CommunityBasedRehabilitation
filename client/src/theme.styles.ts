@@ -9,6 +9,7 @@ export const themeColors = {
     bluePale: "#6890AC",
     yellow: "#FAC35A",
     yellowDark: "#F0AA50",
+    errorRed: "#f44336",
     riskRed: "#ef5350",
     riskGreen: "#81C784",
     riskYellow: "#f0aa50",

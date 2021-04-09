@@ -50,20 +50,18 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
             risk_level: values.educationRisk,
             requirement: values.educationRequirements,
             goal: values.educationGoals,
-        }
+        },
     };
 
     const formData = new FormData();
     Object.entries(newClient).forEach(([key, val]) => {
         if (Array.isArray(val)) {
             val.forEach((v) => formData.append(key, String(v)));
-        }
-        else if (typeof(val) === 'object' && val !== null){
+        } else if (typeof val === "object" && val !== null) {
             Object.entries(val).forEach(([objKey, v]) => {
                 formData.append(`${key}.${objKey}`, String(v));
             });
-        }
-        else {
+        } else {
             formData.append(key, String(val));
         }
     });
@@ -84,8 +82,9 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
     }
 };
 
-export const handleReset = (resetForm: () => void) => {
+export const handleReset = (resetForm: () => void, setProfilePicture: (pic: string) => void) => {
     if (window.confirm("Are you sure you want to clear the form?")) {
         resetForm();
+        setProfilePicture("/images/profile_pic_icon.png");
     }
 };

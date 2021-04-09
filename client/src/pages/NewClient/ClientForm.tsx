@@ -495,7 +495,9 @@ const ClientForm = () => {
                                     <Button
                                         variant="outlined"
                                         color="primary"
-                                        onClick={() => handleReset(resetForm)}
+                                        onClick={() =>
+                                            handleReset(resetForm, setCroppedProfilePicture)
+                                        }
                                         disabled={isSubmitting}
                                     >
                                         Clear

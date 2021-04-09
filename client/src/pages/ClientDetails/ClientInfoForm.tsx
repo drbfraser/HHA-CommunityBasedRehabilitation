@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useStyles } from "../NewClient/ClientForm.styles";
 
 import { Field, Form, Formik } from "formik";
@@ -36,10 +36,15 @@ interface IProps {
     clientInfo: IClient;
 }
 
+interface IPictureModal {
+    picture: string;
+}
+
 const ClientInfoForm = (props: IProps) => {
     const styles = useStyles();
     const zones = useZones();
     const disabilities = useDisabilities();
+    const [initialPicture, _] = useState<string>(props.clientInfo.picture);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isViewingPicture, setIsViewingPicture] = useState<boolean>(false);
 
@@ -49,7 +54,7 @@ const ClientInfoForm = (props: IProps) => {
     const [profilePicture, setProfilePicture] = useState("/images/profile_pic_icon.png");
     const profilePicRef: React.RefObject<HTMLInputElement> = React.createRef();
 
-    const PictureModal = (props: any) => {
+    const PictureModal = (props: IPictureModal) => {
         return (
             <Dialog
                 open={isViewingPicture}
@@ -452,6 +457,7 @@ const ClientInfoForm = (props: IProps) => {
                                                     color="primary"
                                                     onClick={() => {
                                                         handleCancel(resetForm, setIsEditing);
+                                                        props.clientInfo.picture = initialPicture;
                                                     }}
                                                     disabled={isSubmitting}
                                                 >

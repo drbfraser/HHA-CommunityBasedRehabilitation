@@ -21,6 +21,8 @@ import {
     ValueFormatterParams,
     GridOverlay,
 } from "@material-ui/data-grid";
+import { RenderNoRowsOverlay, RenderText } from "util/datagrid";
+
 
 const dummyReferrals = [
     {
@@ -67,6 +69,7 @@ const Dashboard = () => {
     const history = useHistory();
 
     const [clients, setClients] = useState<IClientSummary[]>([]);
+    const [referrals, setReferrals] = useState<any>([]);
     const [zoneMap, setZoneMap] = useState<Map<Number, String>>();
     const [isPriorityClientsLoading, setPriorityClientsLoading] = useState<boolean>(true);
 
@@ -81,8 +84,17 @@ const Dashboard = () => {
         const fetchZones = async () => {
             setZoneMap(await getZones());
         };
+        const fetchReferrals = async () => {
+            await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
+                .then((resp) => resp.json())
+                .then((referrals) => setReferrals(referrals))
+                .catch((err)=> alert(err));
+        }
+
         fetchClients();
         fetchZones();
+        fetchReferrals();
+
     }, []);
 
     const RenderBadge = (params: ValueFormatterParams) => {
@@ -135,8 +147,8 @@ const Dashboard = () => {
 
     const RenderDate = (params: ValueFormatterParams) => {
         return <Typography variant={"body2"}>{timestampToDate(Number(params.value))}</Typography>;
-    };
-
+      };
+      
     const RenderZone = (params: ValueFormatterParams) => {
         return (
             <Typography variant={"body2"}>
@@ -144,7 +156,7 @@ const Dashboard = () => {
             </Typography>
         );
     };
-
+    
     const handleRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
 
     const priorityClientsColumns = [
@@ -178,7 +190,7 @@ const Dashboard = () => {
 
     const outstandingReferralsColumns = [
         {
-            field: "name",
+            field: "full_name",
             headerName: "Name",
             flex: 0.7,
             renderCell: RenderText,
@@ -189,14 +201,14 @@ const Dashboard = () => {
             flex: 1,
             renderCell: RenderText,
         },
+        // {
+        //     field: "zone",
+        //     headerName: "Zone",
+        //     flex: 1,
+        //     renderCell: RenderText,
+        // },
         {
-            field: "zone",
-            headerName: "Zone",
-            flex: 1,
-            renderCell: RenderText,
-        },
-        {
-            field: "lastReferral",
+            field: "date_referred",
             headerName: "Last Referral",
             flex: 1,
             renderCell: RenderText,
@@ -205,7 +217,6 @@ const Dashboard = () => {
 
     return (
         <>
-            {console.log(zoneMap)}
             <Alert severity="info">
                 <Typography variant="body1">You have 0 new messages from an admin.</Typography>
             </Alert>

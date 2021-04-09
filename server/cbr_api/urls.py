@@ -39,4 +39,9 @@ urlpatterns = [
         name="referral-outstanding",
     ),
     path("stats", views.AdminStats.as_view(), name="admin-stats"),
+    path(
+        "baselinesurveys",
+        views.BaselineSurveyCreate.as_view(),
+        name="baseline-survey-list",
+    ),
 ]

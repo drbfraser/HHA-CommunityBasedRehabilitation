@@ -7,7 +7,7 @@ import { RiskLevel, IRiskLevel, riskLevels, IRiskType, riskTypes, RiskType } fro
 import { Cancel, FiberManualRecord } from "@material-ui/icons";
 import { clientPrioritySort, IClientSummary } from "util/clients";
 import { apiFetch, Endpoint } from "util/endpoints";
-import { getZones } from "util/hooks/zones";
+import { useZones } from "util/hooks/zones";
 import { timestampToDate } from "util/dates";
 import { IOutstandingReferral } from "util/referrals";
 
@@ -31,7 +31,7 @@ const Dashboard = () => {
 
     const [clients, setClients] = useState<RowData[]>([]);
     const [referrals, setReferrals] = useState<RowsProp>([]);
-    const [zoneMap, setZoneMap] = useState<Map<Number, String>>();
+    const zones = useZones();
     const [isPriorityClientsLoading, setPriorityClientsLoading] = useState<boolean>(true);
     const [referralsLoading, setReferralsLoading] = useState<boolean>(true);
 
@@ -39,37 +39,36 @@ const Dashboard = () => {
         const fetchClients = async () => {
             const tempClients = await apiFetch(Endpoint.CLIENTS)
                 .then((resp) => resp.json())
-                .then((client) => client.sort(clientPrioritySort))
                 .catch((err) => alert("Error occured while trying to load priority clients!"));
 
-            const priorityClients: RowsProp = tempClients.map((row: IClientSummary) => {
-                return {
-                    id: row.id,
-                    full_name: row.full_name,
-                    zone: row.zone,
-                    [RiskType.HEALTH]: row.health_risk_level,
-                    [RiskType.EDUCATION]: row.educat_risk_level,
-                    [RiskType.SOCIAL]: row.social_risk_level,
-                    last_visit_date: row.last_visit_date,
-                };
-            });
+            const priorityClients: RowsProp = tempClients
+                .sort(clientPrioritySort)
+                .map((row: IClientSummary) => {
+                    return {
+                        id: row.id,
+                        full_name: row.full_name,
+                        zone: row.zone,
+                        [RiskType.HEALTH]: row.health_risk_level,
+                        [RiskType.EDUCATION]: row.educat_risk_level,
+                        [RiskType.SOCIAL]: row.social_risk_level,
+                        last_visit_date: row.last_visit_date,
+                    };
+                });
 
             setClients(priorityClients);
             setPriorityClientsLoading(false);
-        };
-        const fetchZones = async () => {
-            setZoneMap(await getZones());
         };
         const fetchReferrals = async () => {
             const tempReferrals = await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
                 .then((resp) => resp.json())
                 .catch((err) => alert("Error occured while trying to load outstanding referrals!"));
 
-            let i = 0;
-
-            const outstandingReferrals: RowsProp = tempReferrals.map(
-                (row: IOutstandingReferral) => {
-                    i += 1;
+            const outstandingReferrals: RowsProp = tempReferrals
+                .sort(
+                    (a: IOutstandingReferral, b: IOutstandingReferral) =>
+                        a.date_referred - b.date_referred
+                )
+                .map((row: IOutstandingReferral, i: Number) => {
                     return {
                         id: i,
                         client_id: row.id,
@@ -77,10 +76,9 @@ const Dashboard = () => {
                         type: concatenateReferralType(row),
                         date_referred: row.date_referred,
                     };
-                }
-            );
+                });
 
-            setReferrals(outstandingReferrals.sort((a, b) => a.date_referred - b.date_referred));
+            setReferrals(outstandingReferrals);
             setReferralsLoading(false);
         };
 
@@ -96,7 +94,6 @@ const Dashboard = () => {
         };
 
         fetchClients();
-        fetchZones();
         fetchReferrals();
     }, []);
 
@@ -155,7 +152,7 @@ const Dashboard = () => {
     const RenderZone = (params: ValueFormatterParams) => {
         return (
             <Typography variant={"body2"}>
-                {zoneMap ? zoneMap.get(Number(params.value)) : ""}
+                {zones ? zones.get(Number(params.value)) : ""}
             </Typography>
         );
     };

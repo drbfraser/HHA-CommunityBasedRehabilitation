@@ -35,6 +35,7 @@ export const useStyles = makeStyles(
             marginBottom: 15,
             overflow: "hidden",
             marginLeft: "auto",
+            minHeight: "28vh",
             marginRight: "auto",
             cursor: "pointer",
         },
@@ -58,7 +59,7 @@ export const useStyles = makeStyles(
         },
         profilePicture: {
             maxWidth: "100%",
-            minHeight: "22vh",
+            objectFit: "cover",
             maxHeight: "22vh",
             marginLeft: "auto",
             marginRight: "auto",

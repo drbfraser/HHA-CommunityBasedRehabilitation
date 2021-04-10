@@ -14,9 +14,9 @@ export interface IRisk {
 }
 
 export enum RiskType {
-    HEALTH = "health_risk_level",
-    EDUCATION = "educat_risk_level",
-    SOCIAL = "social_risk_level",
+    HEALTH = "HEALTH",
+    EDUCATION = "EDUCAT",
+    SOCIAL = "SOCIAL",
 }
 
 export interface IRiskType {

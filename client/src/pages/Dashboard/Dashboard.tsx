@@ -3,7 +3,7 @@ import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useHistory } from "react-router-dom";
 
-import { RiskLevel, IRiskLevel, riskLevels, IRiskType, riskTypes } from "util/risks";
+import { RiskLevel, IRiskLevel, riskLevels, IRiskType, riskTypes, RiskType } from "util/risks";
 import { Cancel, FiberManualRecord } from "@material-ui/icons";
 import { clientPrioritySort, IClientSummary } from "util/clients";
 import { apiFetch, Endpoint } from "util/endpoints";
@@ -22,13 +22,14 @@ import {
     ValueFormatterParams,
     GridOverlay,
     RowsProp,
+    RowData,
 } from "@material-ui/data-grid";
 
 const Dashboard = () => {
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
 
-    const [clients, setClients] = useState<IClientSummary[]>([]);
+    const [clients, setClients] = useState<RowData[]>([]);
     const [referrals, setReferrals] = useState<RowsProp>([]);
     const [zoneMap, setZoneMap] = useState<Map<Number, String>>();
     const [isPriorityClientsLoading, setPriorityClientsLoading] = useState<boolean>(true);
@@ -36,11 +37,24 @@ const Dashboard = () => {
 
     useEffect(() => {
         const fetchClients = async () => {
-            await apiFetch(Endpoint.CLIENTS)
+            const tempClients = await apiFetch(Endpoint.CLIENTS)
                 .then((resp) => resp.json())
-                .then((clients) => setClients(clients.sort(clientPrioritySort)))
-                .then(() => setPriorityClientsLoading(false))
                 .catch((err) => alert("Error occured while trying to load priority clients!"));
+
+            const priorityClients: RowsProp = tempClients.map((row: IClientSummary) => {
+                return {
+                    id: row.id,
+                    full_name: row.full_name,
+                    zone: row.zone,
+                    [RiskType.HEALTH]: row.health_risk_level,
+                    [RiskType.EDUCATION]: row.educat_risk_level,
+                    [RiskType.SOCIAL]: row.social_risk_level,
+                    last_visit_date: row.last_visit_date,
+                };
+            });
+
+            setClients(priorityClients.sort(clientPrioritySort));
+            setPriorityClientsLoading(false);
         };
         const fetchZones = async () => {
             setZoneMap(await getZones());
@@ -202,6 +216,7 @@ const Dashboard = () => {
 
     return (
         <>
+            {console.log(clients)}
             <Alert severity="info">
                 {/* TODO: Update message alert once message alert functionality is implemented. */}
                 <Typography variant="body1">You have 0 new messages from an admin.</Typography>

@@ -70,7 +70,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
         },
         [FormField.education]: {
             [FormField.goSchool]: survey.school_currently_attend,
-            [FormField.grade]: grade[survey.school_grade as Grade].name,
+            [FormField.grade]: grade[survey.school_grade as Grade]?.name ?? "",
             [FormField.reasonNotSchool]:
                 survey.school_not_attend_reason !== undefined
                     ? reasonNotSchool[survey.school_not_attend_reason]

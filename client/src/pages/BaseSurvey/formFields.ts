@@ -62,7 +62,7 @@ export const fieldLabels = {
         "I have access to rehabilitation services (e.g physiotherapy, speech therapy, training how to use assistive device)",
     [FormField.needService]: "I need access to rehabilitation services",
     [FormField.haveDevice]:
-        "I have an assistive device(e.g wheelchair, crutches, prosthetic limbs, hearing aid)",
+        "I have an assistive device (e.g wheelchair, crutches, prosthetic limbs, hearing aid)",
     [FormField.deviceWorking]: "My assistive device is working well",
     [FormField.needDevice]: "I need an assistive device",
     [FormField.deviceType]: "Assistive Device",
@@ -76,7 +76,7 @@ export const fieldLabels = {
     [FormField.wantSchool]: "I want to go to school",
 
     [FormField.social]: "Social",
-    [FormField.feelValue]: "I feel valued as a member of your community",
+    [FormField.feelValue]: "I feel valued as a member of my community",
     [FormField.feelIndependent]: "I feel independent",
     [FormField.ableInSocial]:
         "I am able to participate in community/social events (going to church, market, meeting friends)",
@@ -89,7 +89,7 @@ export const fieldLabels = {
     [FormField.meetFinanceNeeds]: "This meets my financial needs",
     [FormField.disabiAffectWork]: "My disability affects my ability to go to work",
     [FormField.wantWork]: "I want to work",
-    [FormField.isSelfEmployed]: "",
+    [FormField.isSelfEmployed]: "I am",
 
     [FormField.foodAndNutrition]: "Food and Nutrition",
     [FormField.foodSecurityRate]: "Rate",
@@ -106,7 +106,7 @@ export const fieldLabels = {
 
     [FormField.shelterAndCare]: "Shelter and Care",
     [FormField.haveShelter]: "I have adequate shelter",
-    [FormField.accessItem]: "I have access to essential items for your household",
+    [FormField.accessItem]: "I have access to essential items for my household",
 };
 
 export const initialValues = {

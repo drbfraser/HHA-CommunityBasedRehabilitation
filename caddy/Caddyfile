@@ -8,6 +8,12 @@ http://{$DOMAIN}:80 {
         X-Content-Type-Options "nosniff"
     }
 
+    handle /api/uploads/* {
+        uri strip_prefix /api/uploads
+        file_server
+        root * /var/www-uploads
+    }
+
     handle /api/* {
         reverse_proxy {$API_HOSTNAME}:8000
     }

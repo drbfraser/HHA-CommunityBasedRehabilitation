@@ -29,6 +29,7 @@ import {
     rateLevel,
     reasonNotSchool,
 } from "util/survey";
+import DataCard from "components/DataCard/DataCard";
 
 interface IEntryProps {
     survey: ISurvey;
@@ -119,13 +120,6 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
         }
 
         const DetailAccordion = ({ categoryName }: { categoryName: string }) => {
-            interface IDataCardProps {
-                data: {
-                    title: string;
-                    desc: string;
-                }[];
-            }
-
             const fields = Object.keys(surveyInfo[categoryName])
                 .filter(
                     (k) =>
@@ -145,21 +139,6 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
                         desc: desc,
                     };
                 });
-
-            const DataCard = ({ data }: IDataCardProps) => (
-                <>
-                    <Card>
-                        <CardContent>
-                            {data.map((d, i) => (
-                                <p key={i}>
-                                    <b>{d.title}:</b> {d.desc}
-                                </p>
-                            ))}
-                        </CardContent>
-                    </Card>
-                    <br />
-                </>
-            );
 
             return (
                 <Accordion key={categoryName} className={styles.impOutcomeAccordion}>

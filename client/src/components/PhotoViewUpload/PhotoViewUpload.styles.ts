@@ -3,12 +3,14 @@ import { makeStyles } from "@material-ui/core/styles";
 export const useStyles = makeStyles(
     {
         profileImgContainer: {
+            "& .MuiCardContent-root": {
+                padding: "16px",
+            },
             position: "relative",
             display: "block",
             marginBottom: 15,
             overflow: "hidden",
             marginLeft: "auto",
-            minHeight: "20vh",
             marginRight: "auto",
             cursor: "pointer",
         },
@@ -28,6 +30,10 @@ export const useStyles = makeStyles(
             marginLeft: "auto",
             marginRight: "auto",
             display: "block",
+        },
+        pictureModal: {
+            width: "65vw",
+            maxWidth: "400px",
         },
         uploadIcon: {
             color: "white",

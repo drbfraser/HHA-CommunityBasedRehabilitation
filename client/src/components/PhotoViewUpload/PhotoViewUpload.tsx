@@ -29,6 +29,8 @@ export const ProfilePicCard = (props: IProps) => {
     const [profilePicture, setProfilePicture] = useState("/images/profile_pic_icon.png");
 
     const PictureModal = (props: IPictureModal) => {
+        const styles = useStyles();
+
         return (
             <Dialog
                 open={isViewingPicture}
@@ -38,6 +40,7 @@ export const ProfilePicCard = (props: IProps) => {
             >
                 <DialogContent>
                     <img
+                        className={styles.pictureModal}
                         src={props.picture ? props.picture : "/images/profile_pic_icon.png"}
                         alt="user-profile-pic"
                     />
@@ -72,6 +75,7 @@ export const ProfilePicCard = (props: IProps) => {
                     minCropBoxHeight={10}
                     minCropBoxWidth={10}
                     viewMode={1}
+                    aspectRatio={1}
                     src={profilePicture}
                     background={false}
                     onInitialized={(instance) => {

@@ -3,14 +3,25 @@ import { Alert, Skeleton } from "@material-ui/lab";
 import { useCurrentUser } from "util/hooks/currentUser";
 import { APILoadError } from "util/endpoints";
 import { useZones } from "util/hooks/zones";
+import { Button } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 const UserView = () => {
+    const history = useHistory();
     const styles = useStyles();
     const user = useCurrentUser();
     const zones = useZones();
 
     return (
         <div className={styles.container}>
+            <Button
+                onClick={() => history.push("/logout")}
+                className={styles.floatRight}
+                color="primary"
+                variant="contained"
+            >
+                Logout
+            </Button>
             {user === APILoadError ? (
                 <Alert severity="error">Something went wrong. Please go back and try again.</Alert>
             ) : user ? (

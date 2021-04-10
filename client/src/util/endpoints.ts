@@ -36,7 +36,7 @@ export const apiFetch = async (
 ): Promise<Response> => {
     const url = API_URL + endpoint + urlParams;
     const authToken = await getAuthToken();
-    const init = {
+    const init: RequestInit = {
         ...customInit,
         headers: {
             "Content-Type": "application/json",
@@ -44,6 +44,10 @@ export const apiFetch = async (
             ...customInit.headers,
         },
     };
+
+    if (init.body instanceof FormData) {
+        delete (init.headers as any)["Content-Type"];
+    }
 
     return fetch(url, init).then(async (resp) => {
         if (!resp.ok) {
@@ -54,4 +58,21 @@ export const apiFetch = async (
 
         return resp;
     });
+};
+
+// NOTE: This function does not handle nested objects or arrays of objects.
+export const objectToFormData = (clientInfo: object) => {
+    const formData = new FormData();
+    Object.entries(clientInfo).forEach(([key, val]) => {
+        if (Array.isArray(val)) {
+            val.forEach((v) => formData.append(key, String(v)));
+        } else if (typeof val === "object" && val !== null) {
+            Object.entries(val).forEach(([objKey, v]) => {
+                formData.append(`${key}.${objKey}`, String(v));
+            });
+        } else {
+            formData.append(key, String(val));
+        }
+    });
+    return formData;
 };

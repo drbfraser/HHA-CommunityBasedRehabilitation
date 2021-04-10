@@ -1,11 +1,11 @@
 import { FormikHelpers } from "formik";
 import { TFormValues } from "./formFields";
-import { Endpoint, apiFetch } from "../../util/endpoints";
+import { Endpoint, apiFetch, objectToFormData } from "../../util/endpoints";
 import history from "../../util/history";
 import { timestampFromFormDate } from "util/dates";
 import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
 
-const addClient = async (clientInfo: string) => {
+const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {
         method: "POST",
         body: clientInfo,
@@ -24,7 +24,7 @@ const addClient = async (clientInfo: string) => {
 export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
     const disabilities = await getDisabilities();
 
-    const newClient = JSON.stringify({
+    const newClient = {
         birth_date: timestampFromFormDate(values.birthDate),
         disability: values.disability,
         other_disability: (values.disability as number[]).includes(
@@ -59,12 +59,24 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
             requirement: values.educationRequirements,
             goal: values.educationGoals,
         },
-    });
+    };
+
+    const formData = objectToFormData(newClient);
+
+    if (values.picture) {
+        const clientProfilePicture = await (await fetch(values.picture)).blob();
+        formData.append(
+            "picture",
+            clientProfilePicture,
+            Math.random().toString(36).substring(7) + ".png"
+        );
+    }
 
     try {
-        const client = await addClient(newClient);
+        const client = await addClient(formData);
         history.push(`/client/${client.id}`);
     } catch (e) {
+        alert("Encountered an error while trying to create the client!");
         helpers.setSubmitting(false);
     }
 };

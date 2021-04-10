@@ -5,8 +5,6 @@ import { CheckboxWithLabel, TextField } from "formik-material-ui";
 import { useStyles } from "./ClientForm.styles";
 
 import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -14,7 +12,6 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 import { fieldLabels, FormField, initialValues, validationSchema } from "./formFields";
 
@@ -23,6 +20,7 @@ import { handleSubmit, handleReset } from "./formHandler";
 import { genders } from "util/clients";
 import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
 import { useZones } from "util/hooks/zones";
+import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 
 const ClientForm = () => {
     const styles = useStyles();
@@ -35,22 +33,14 @@ const ClientForm = () => {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
         >
-            {({ values, isSubmitting, resetForm, errors, touched }) => (
+            {({ values, isSubmitting, resetForm, touched, setFieldValue }) => (
                 <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
-                        <Card className={styles.profileImgContainer}>
-                            <CardContent>
-                                {/* TODO: Change image src based on whether the client exists or not */}
-                                <img
-                                    className={styles.profilePicture}
-                                    src={`/images/profile_pic_icon.png`}
-                                    alt="user-icon"
-                                />
-                                <div className={styles.uploadIcon}>
-                                    <CloudUploadIcon />
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <ProfilePicCard
+                            isEditing={true}
+                            setFieldValue={setFieldValue}
+                            picture={values.picture}
+                        />
                     </Grid>
                     <Grid item md={10} xs={12}>
                         <Form>

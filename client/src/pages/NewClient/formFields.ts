@@ -25,6 +25,7 @@ export enum FormField {
     socialRisk = "socialRisk",
     socialRequirements = "socialRequirements",
     socialGoals = "socialGoals",
+    picture = "picture",
 }
 
 export const fieldLabels = {
@@ -77,6 +78,7 @@ export const initialValues = {
     [FormField.socialRisk]: "",
     [FormField.socialRequirements]: "",
     [FormField.socialGoals]: "",
+    [FormField.picture]: "",
 };
 
 export type TFormValues = typeof initialValues;

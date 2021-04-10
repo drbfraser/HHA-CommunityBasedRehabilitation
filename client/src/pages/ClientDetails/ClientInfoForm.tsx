@@ -8,8 +8,6 @@ import { fieldLabels, FormField, validationSchema } from "./formFields";
 
 import {
     Button,
-    Card,
-    CardContent,
     Accordion,
     AccordionDetails,
     AccordionSummary,
@@ -17,14 +15,14 @@ import {
     Grid,
     MenuItem,
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { handleSubmit, handleCancel } from "./formHandler";
 import { IClient, genders } from "util/clients";
 import { useZones } from "util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
 import history from "util/history";
+import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 
 interface IProps {
     clientInfo: IClient;
@@ -34,6 +32,7 @@ const ClientInfoForm = (props: IProps) => {
     const styles = useStyles();
     const zones = useZones();
     const disabilities = useDisabilities();
+    const [initialPicture] = useState<string>(props.clientInfo.picture);
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     return (
@@ -44,22 +43,14 @@ const ClientInfoForm = (props: IProps) => {
                 handleSubmit(values, setSubmitting, setIsEditing);
             }}
         >
-            {({ values, isSubmitting, resetForm }) => (
+            {({ values, isSubmitting, resetForm, setFieldValue }) => (
                 <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
-                        <Card className={styles.profileImgContainer}>
-                            <CardContent>
-                                {/* TODO: Change image src based on whether the client exists or not */}
-                                <img
-                                    className={styles.profilePicture}
-                                    src={`/images/profile_pic_icon.png`}
-                                    alt="user-icon"
-                                />
-                                <div className={styles.uploadIcon}>
-                                    <CloudUploadIcon />
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <ProfilePicCard
+                            isEditing={isEditing}
+                            setFieldValue={setFieldValue}
+                            picture={values.picture}
+                        />
                         <Grid container direction="row" spacing={1}>
                             <Grid className={styles.sideFormButtonWrapper} item md={10} xs={12}>
                                 <Button
@@ -350,6 +341,7 @@ const ClientInfoForm = (props: IProps) => {
                                                 color="primary"
                                                 onClick={() => {
                                                     handleCancel(resetForm, setIsEditing);
+                                                    props.clientInfo.picture = initialPicture;
                                                 }}
                                                 disabled={isSubmitting}
                                             >

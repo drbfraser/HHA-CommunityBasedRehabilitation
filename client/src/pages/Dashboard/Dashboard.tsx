@@ -90,6 +90,10 @@ const Dashboard = () => {
         return <FiberManualRecord style={{ color: riskLevels[risk].color }} />;
     };
 
+    export const RenderText = (params: ValueFormatterParams) => {
+        return <Typography variant={"body2"}>{params.value}</Typography>;
+    };
+
     const riskComparator = (
         v1: CellValue,
         v2: CellValue,
@@ -109,10 +113,6 @@ const Dashboard = () => {
                 <riskType.Icon />
             </div>
         );
-    };
-
-    const RenderText = (params: ValueFormatterParams) => {
-        return <Typography variant={"body2"}>{params.value}</Typography>;
     };
 
     const RenderNoPriorityClientsOverlay = () => {

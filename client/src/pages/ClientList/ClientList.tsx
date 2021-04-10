@@ -5,6 +5,7 @@ import {
     ColParams,
     DataGrid,
     DensityTypes,
+    GridOverlay,
     RowParams,
     RowsProp,
     ValueFormatterParams,
@@ -32,7 +33,6 @@ import requestClientRows from "./requestClientRows";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import { useZones } from "util/hooks/zones";
-import { RenderLoadingOverlay, RenderNoRowsOverlay, RenderText } from "util/datagrid";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
     const risk1: IRiskLevel = riskLevels[String(params1.value)];
@@ -50,6 +50,10 @@ const RenderRiskHeader = (params: ColParams): JSX.Element => {
     );
 };
 
+const RenderText = (params: ValueFormatterParams) => {
+    return <Typography variant={"body2"}>{params.value}</Typography>;
+};
+
 const RenderBadge = (params: ValueFormatterParams) => {
     const risk: RiskLevel = Object(params.value);
 
@@ -57,6 +61,27 @@ const RenderBadge = (params: ValueFormatterParams) => {
         <RiskLevelChip clickable risk={risk} />
     ) : (
         <FiberManualRecord style={{ color: riskLevels[risk].color }} />
+    );
+};
+
+const RenderLoadingOverlay = () => {
+    return (
+        <GridOverlay>
+            <div style={{ position: "absolute", top: 0, width: "100%" }}>
+                <LinearProgress />
+            </div>
+        </GridOverlay>
+    );
+};
+
+const RenderNoRowsOverlay = () => {
+    const styles = useDataGridStyles();
+
+    return (
+        <GridOverlay className={styles.noRows}>
+            <Cancel color="primary" className={styles.noRowsIcon} />
+            <Typography color="primary">No Clients Found</Typography>
+        </GridOverlay>
     );
 };
 

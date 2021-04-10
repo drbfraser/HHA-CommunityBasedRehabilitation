@@ -10,9 +10,10 @@ import ReferralEntry from "./ReferralEntry";
 
 interface IProps {
     client?: IClient;
+    refreshClient: () => void;
 }
 
-const VisitReferralTimeline = ({ client }: IProps) => {
+const VisitReferralTimeline = ({ client, refreshClient }: IProps) => {
     const timelineStyles = useTimelineStyles();
     const dateFormatter = timestampToDateFromReference(client?.created_date);
 
@@ -37,6 +38,7 @@ const VisitReferralTimeline = ({ client }: IProps) => {
                                 <ReferralEntry
                                     key={r.id}
                                     referral={r}
+                                    refreshClient={refreshClient}
                                     dateFormatter={dateFormatter}
                                 />
                             ),

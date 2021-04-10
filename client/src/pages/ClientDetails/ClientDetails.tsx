@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router";
 
 import { Grid, Typography, Button } from "@material-ui/core";
@@ -25,24 +25,21 @@ const ClientDetails = () => {
 
     const history = useHistory();
 
-    useEffect(() => {
-        const getClient = async () => {
-            try {
-                const client = (await (
-                    await apiFetch(Endpoint.CLIENT, `${clientId}`)
-                ).json()) as IClient;
-
+    const getClient = useCallback(() => {
+        apiFetch(Endpoint.CLIENT, `${clientId}`)
+            .then((resp) => resp.json())
+            .then((client: IClient) => {
                 client.birth_date = timestampToFormDate(client.birth_date as number);
                 client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
 
                 setClientInfo(client);
-            } catch (e) {
-                setLoadingError(true);
-            }
-        };
-
-        getClient();
+            })
+            .catch(() => setLoadingError(true));
     }, [clientId]);
+
+    useEffect(() => {
+        getClient();
+    }, [getClient]);
 
     return loadingError ? (
         <Alert severity="error">Something went wrong loading that client. Please try again.</Alert>
@@ -90,7 +87,7 @@ const ClientDetails = () => {
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <VisitReferralTimeline client={clientInfo} />
+                <VisitReferralTimeline refreshClient={() => getClient()} client={clientInfo} />
             </Grid>
         </Grid>
     );

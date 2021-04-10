@@ -13,6 +13,7 @@ export enum Endpoint {
     VISITS = "visits",
     REFERRALS = "referrals",
     REFERRALS_OUTSTANDING = "referrals/outstanding",
+    REFERRAL = "referral/",
     ZONES = "zones",
     USERS = "users",
     USER = "user/",
@@ -20,6 +21,7 @@ export enum Endpoint {
     RISKS = "risks",
     DISABILITIES = "disabilities",
     VISIT = "visit/",
+    STATS = "stats",
     BASELINE_SURVEY = "baselinesurveys",
     USER_PASSWORD = "user/password/",
 }

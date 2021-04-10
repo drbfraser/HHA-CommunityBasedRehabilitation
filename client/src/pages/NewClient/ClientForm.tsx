@@ -65,6 +65,7 @@ const ClientForm = () => {
         };
         if (files[0]) reader.readAsDataURL(files[0]);
         if (profilePicture) setProfileModalOpen(true);
+        e.target.value = null;
     };
 
     const triggerFileUpload = () => {

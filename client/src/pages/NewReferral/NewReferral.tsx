@@ -14,7 +14,7 @@ import {
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, RadioGroup, TextField } from "formik-material-ui";
 import React, { useState } from "react";
-import { useDisabilities } from "util/hooks/disabilities";
+import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
 import {
     orthoticInjuryLocations,
     prostheticInjuryLocations,
@@ -178,11 +178,25 @@ const PhysiotherapyForm = (props: IFormProps) => {
                     variant="outlined"
                 >
                     {Array.from(disabilities).map(([id, name]) => (
-                        <MenuItem key={id} value={name}>
+                        <MenuItem key={id} value={id}>
                             {name}
                         </MenuItem>
                     ))}
                 </Field>
+                {props.formikProps.values[FormField.condition] ===
+                    getOtherDisabilityId(disabilities) && (
+                    <div>
+                        <br />
+                        <Field
+                            component={TextField}
+                            fullWidth
+                            label={fieldLabels[FormField.conditionOther]}
+                            required
+                            name={FormField.conditionOther}
+                            variant="outlined"
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

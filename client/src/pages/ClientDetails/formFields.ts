@@ -14,6 +14,7 @@ export enum FormField {
     caregiver_email = "caregiver_email",
     caregiver_name = "caregiver_name",
     disability = "disability",
+    other_disability = "other_disability",
 }
 
 export const fieldLabels = {
@@ -29,6 +30,7 @@ export const fieldLabels = {
     [FormField.caregiver_phone]: "Caregiver Phone Number",
     [FormField.caregiver_email]: "Caregiver Email",
     [FormField.disability]: "Disabilities",
+    [FormField.other_disability]: "Other Disabilities",
 };
 
 export const validationSchema = () =>
@@ -50,6 +52,23 @@ export const validationSchema = () =>
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
         [FormField.disability]: Yup.array().label(fieldLabels[FormField.disability]).required(),
+        [FormField.other_disability]: Yup.string()
+            .label(fieldLabels[FormField.other_disability])
+            .trim()
+            .test(
+                "require-if-other-selected",
+                "Other Disability is required",
+                async (other_disability, schema) =>
+                    !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
+                    (other_disability !== undefined && other_disability.length > 0)
+            )
+            .test(
+                "require-if-other-selected",
+                "Other Disability must be at most 100 characters",
+                async (other_disability, schema) =>
+                    !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
+                    (other_disability !== undefined && other_disability.length <= 100)
+            ),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).required(),
         [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),

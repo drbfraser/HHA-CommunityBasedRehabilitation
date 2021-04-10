@@ -19,6 +19,23 @@ const addClient = async (clientInfo: FormData) => {
         });
 };
 
+// NOTE: This function does not handle nested objects or arrays of objects.
+const objectToFormData = (clientInfo: object) => {
+    const formData = new FormData();
+    Object.entries(clientInfo).forEach(([key, val]) => {
+        if (Array.isArray(val)) {
+            val.forEach((v) => formData.append(key, String(v)));
+        } else if (typeof val === "object" && val !== null) {
+            Object.entries(val).forEach(([objKey, v]) => {
+                formData.append(`${key}.${objKey}`, String(v));
+            });
+        } else {
+            formData.append(key, String(val));
+        }
+    });
+    return formData;
+};
+
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
 export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
     const newClient = {
@@ -53,18 +70,7 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         },
     };
 
-    const formData = new FormData();
-    Object.entries(newClient).forEach(([key, val]) => {
-        if (Array.isArray(val)) {
-            val.forEach((v) => formData.append(key, String(v)));
-        } else if (typeof val === "object" && val !== null) {
-            Object.entries(val).forEach(([objKey, v]) => {
-                formData.append(`${key}.${objKey}`, String(v));
-            });
-        } else {
-            formData.append(key, String(val));
-        }
-    });
+    const formData = objectToFormData(newClient);
 
     if (values.picture) {
         const clientProfilePicture = await (await fetch(values.picture)).blob();

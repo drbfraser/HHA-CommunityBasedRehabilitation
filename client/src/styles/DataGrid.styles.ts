@@ -26,8 +26,9 @@ export const useDataGridStyles = makeStyles(
             "& .MuiDataGrid-colCellTitle": {
                 userSelect: "none",
                 textOverflow: "clip",
-                whiteSpace: "pre-line",
                 lineHeight: "normal",
+                paddingTop: "36px",
+                paddingBottom: "36px",
             },
             "& .MuiSvgIcon-root": {
                 verticalAlign: "middle",

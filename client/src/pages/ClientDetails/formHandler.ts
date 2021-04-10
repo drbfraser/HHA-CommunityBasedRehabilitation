@@ -50,12 +50,14 @@ export const handleSubmit = async (
         vals.forEach((v) => formData.append(key, String(v)));
     });
 
-    const clientProfilePicture = await (await fetch(values.picture)).blob();
-    formData.append(
-        "picture",
-        clientProfilePicture,
-        Math.random().toString(36).substring(7) + ".png"
-    );
+    if (values.picture){
+        const clientProfilePicture = await (await fetch(values.picture)).blob();
+        formData.append(
+            "picture",
+            clientProfilePicture,
+            Math.random().toString(36).substring(7) + ".png"
+        );
+    }
 
     try {
         await updateClient(formData, values.id);

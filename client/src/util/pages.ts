@@ -24,7 +24,7 @@ import NewReferral from "pages/NewReferral/NewReferral";
 import Stats from "pages/Stats/Stats";
 import { IUser, UserRole } from "./users";
 import { APILoadError, TAPILoadError } from "./endpoints";
-import NewSurvey from "pages/ClientDetails/BaseSurvey/BaseSurvey";
+import NewSurvey from "pages/BaseSurvey/BaseSurvey";
 
 export interface IPage {
     path: string;
@@ -168,5 +168,4 @@ export const pagesForUser = (user: IUser | TAPILoadError | undefined) => {
     });
 };
 
-// TODO: change back to pages[0] once dashboard is finished
-export const defaultPagePath = pages[2].path;
+export const defaultPagePath = pages[0].path;

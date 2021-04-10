@@ -9,7 +9,7 @@ export const useStyles = makeStyles(
             display: "flex",
             justifyContent: "space-between",
         },
-        floatRight: {
+        logOutButton: {
             float: "right",
         },
     },

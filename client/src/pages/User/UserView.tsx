@@ -6,6 +6,7 @@ import { useCurrentUser } from "util/hooks/currentUser";
 import { APILoadError } from "util/endpoints";
 import { useZones } from "util/hooks/zones";
 import { useHistory } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
 
 const UserView = () => {
     const styles = useStyles();
@@ -39,7 +40,19 @@ const UserView = () => {
                     <b>Zone</b>
                     <p> {zones.get(user.zone) ?? "Unknown"} </p>
                     <b>Phone Number</b>
-                    <p> {user.phone_number} </p>
+                    <Grid container direction="row" justify="space-between" alignItems="center">
+                        <p> {user.phone_number} </p>
+                        <div>
+                            <Button
+                                onClick={() => history.push("/logout")}
+                                className={styles.logOutButton}
+                                color="primary"
+                                variant="contained"
+                            >
+                                Logout
+                            </Button>
+                        </div>
+                    </Grid>
                 </>
             ) : (
                 <Skeleton variant="rect" height={400} />

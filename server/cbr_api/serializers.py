@@ -251,7 +251,10 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
 
 
 class OutstandingReferralSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     full_name = serializers.CharField()
+    services_other = serializers.CharField()
+    physiotherapy = serializers.BooleanField()
     wheelchair = serializers.BooleanField()
     prosthetic = serializers.BooleanField()
     orthotic = serializers.BooleanField()

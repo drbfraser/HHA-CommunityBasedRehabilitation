@@ -53,7 +53,7 @@ const UserChangePassword = () => {
                     <div className={styles.container}>
                         <Form>
                             <Grid container spacing={1}>
-                                <Grid item md={3}>
+                                <Grid item md={3} xs={12}>
                                     <Field
                                         component={TextField}
                                         name={changePasswordField.oldPassword}

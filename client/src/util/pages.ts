@@ -5,7 +5,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 import PersonIcon from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import InsertChart from "@material-ui/icons/InsertChart";
 import Logout from "pages/Logout/Logout";
 import AdminList from "pages/AdminList/AdminList";
 import ClientList from "pages/ClientList/ClientList";
@@ -21,9 +21,11 @@ import ClientRiskHistory from "pages/ClientDetails/RiskHistory/ClientRiskHistory
 import Dashboard from "pages/Dashboard/Dashboard";
 import NewVisit from "pages/NewVisit/NewVisit";
 import NewReferral from "pages/NewReferral/NewReferral";
+import Stats from "pages/Stats/Stats";
 import { IUser, UserRole } from "./users";
 import { APILoadError, TAPILoadError } from "./endpoints";
 import UserChangePassword from "pages/User/UserPasswordEdit";
+import NewSurvey from "pages/ClientDetails/BaseSurvey/BaseSurvey";
 
 export interface IPage {
     path: string;
@@ -76,6 +78,12 @@ const pages: IPage[] = [
         showInNav: false,
     },
     {
+        path: "/client/:clientId/surveys/new",
+        name: "Add a survey",
+        Component: NewSurvey,
+        showInNav: false,
+    },
+    {
         path: "/client/:clientId/referrals/new",
         name: "Add a Referral",
         Component: NewReferral,
@@ -93,6 +101,14 @@ const pages: IPage[] = [
         name: "Edit User Password",
         Component: UserChangePassword,
         showInNav: false,
+    },
+    {
+        path: "/stats",
+        name: "Stats",
+        roles: [UserRole.ADMIN],
+        Component: Stats,
+        showInNav: true,
+        Icon: InsertChart,
     },
     {
         path: "/admin",
@@ -133,8 +149,7 @@ const pages: IPage[] = [
         path: "/logout",
         name: "Logout",
         Component: Logout,
-        showInNav: true,
-        Icon: ExitToAppIcon,
+        showInNav: false,
     },
     // must be at the bottom
     {

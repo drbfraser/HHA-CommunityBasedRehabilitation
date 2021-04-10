@@ -1,8 +1,7 @@
 from cbr_api import models, serializers, filters, permissions
 from rest_framework import generics
-from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from cbr_api.sql import (
     getDisabilityStats,
     getNumClientsWithDisabilities,
@@ -10,7 +9,6 @@ from cbr_api.sql import (
     getReferralStats,
     getOutstandingReferrals,
 )
-import json
 
 
 class UserList(generics.ListCreateAPIView):
@@ -29,16 +27,24 @@ class AdminStats(generics.RetrieveAPIView):
     permission_classes = [permissions.AdminAll]
     serializer_class = serializers.AdminStatsSerializer
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(name="user_id", type={"type": "int"}),
+            OpenApiParameter(name="from", type={"type": "int"}),
+            OpenApiParameter(name="to", type={"type": "int"}),
+        ]
+    )
+    def get(self, request):
+        return super().get(request)
+
     def get_object(self):
         def get_int_or_none(req_body_key):
-            try:
-                return int(json.loads(self.request.body)[req_body_key])
-            except:
-                return None
+            val = self.request.GET.get(req_body_key, "")
+            return int(val) if val != "" else None
 
         user_id = get_int_or_none("user_id")
-        from_time = get_int_or_none("from_time")
-        to_time = get_int_or_none("to_time")
+        from_time = get_int_or_none("from")
+        to_time = get_int_or_none("to")
 
         referral_stats = getReferralStats(user_id, from_time, to_time)
 

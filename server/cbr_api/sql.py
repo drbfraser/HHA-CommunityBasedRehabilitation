@@ -88,10 +88,10 @@ def getStatsWhere(user_id, time_col, from_time, to_time):
         where.append(f"user_id={str(user_id)}")
 
     if from_time is not None:
-        where.append(f"{time_col}={str(from_time)}")
+        where.append(f"{time_col}>={str(from_time)}")
 
     if to_time is not None:
-        where.append(f"{time_col}={str(to_time)}")
+        where.append(f"{time_col}<={str(to_time)}")
 
     if len(where) == 0:
         return ""
@@ -105,7 +105,7 @@ def getOutstandingReferrals():
     with connection.cursor() as cursor:
         cursor.execute(
             """
-            SELECT c.full_name, r.wheelchair, r.prosthetic, r.orthotic, r.date_referred
+            SELECT c.id, c.full_name, r.services_other, r.physiotherapy, r.wheelchair, r.prosthetic, r.orthotic, r.date_referred
             FROM cbr_api_referral as r
             INNER JOIN cbr_api_client as c
             ON c.id = r.client_id

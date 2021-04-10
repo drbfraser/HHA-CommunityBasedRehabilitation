@@ -13,7 +13,7 @@ const updateCurrentUserPassword = async (userInfo: string) => {
     return await apiFetch(Endpoint.USER_CURRENT_PASSWORD, userParams, init);
 };
 
-export const handleUpdatePassword = () => async (
+export const handleUpdatePassword = (setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>) => async (
     values: TPasswordValues,
     helpers: FormikHelpers<TPasswordValues>
 ) => {
@@ -26,7 +26,7 @@ export const handleUpdatePassword = () => async (
         await updateCurrentUserPassword(passwordInfo);
         history.goBack();
     } catch (e) {
-        alert("The old password you have entered is incorrect. Please try again.");
+        setSubmissionError(true);
         helpers.setSubmitting(false);
     }
 };

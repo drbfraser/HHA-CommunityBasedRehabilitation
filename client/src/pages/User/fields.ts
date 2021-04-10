@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { Validation } from "util/validations";
 
 export enum changePasswordField {
     oldPassword = "oldPassword",
@@ -28,8 +29,8 @@ export const passwordValidationSchema = () =>
         [changePasswordField.newPassword]: Yup.string()
             .label(fieldLabels[changePasswordField.newPassword])
             .matches(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/,
-                "Your password must be at least 8 characters long and must contain at least: one lowercase letter, one uppercase letter and one number."
+                Validation.passwordRegExp,
+                Validation.passwordInvalidMsg
             )
             .required(),
         [changePasswordField.confirmNewPassword]: Yup.string()

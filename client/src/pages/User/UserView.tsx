@@ -14,9 +14,8 @@ const UserView = () => {
     const user = useCurrentUser();
     const zones = useZones();
 
-    const handleChangePassword = (userId: number) => {
-        console.log(userId);
-        return history.push("/user/password/" + userId);
+    const handleChangePassword = () => {
+        return history.push("/user/password");
     };
 
     return (
@@ -29,7 +28,7 @@ const UserView = () => {
                         <h1>
                             {user.first_name} {user.last_name}
                         </h1>
-                        <Button color="primary" onClick={() => handleChangePassword(user.id)}>
+                        <Button color="primary" onClick={handleChangePassword}>
                             <EditIcon></EditIcon>Change Password
                         </Button>
                     </div>

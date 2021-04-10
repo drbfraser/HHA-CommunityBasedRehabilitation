@@ -97,8 +97,8 @@ const pages: IPage[] = [
         Icon: PersonIcon,
     },
     {
-        path: "/user/password/:userID",
-        name: "Edit User Password",
+        path: "/user/password",
+        name: "Change Password",
         Component: UserChangePassword,
         showInNav: false,
     },

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useStyles } from "./styles";
 import { TextField } from "formik-material-ui";
 import { Field, Form, Formik } from "formik";
@@ -15,29 +14,24 @@ import {
     passwordValidationSchema,
 } from "./fields";
 import { handleCancel, handleUpdatePassword } from "./handleUpdatePassword";
+import { useState } from "react";
 
-const UserChangePassword = () => {
+const UserPasswordEdit = () => {
     const styles = useStyles();
     const user = useCurrentUser();
-    const [loadingError, setLoadingError] = useState(false);
-    const [initialRender, setInitialRender] = useState(true);
+    const [wrongPasswordError, setWrongPasswordError] = useState(false);
 
-    useEffect(() => {
-        if (initialRender) {
-            setInitialRender(false);
-            return;
-        }
-        setLoadingError(true);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user]);
-
-    return user === APILoadError || loadingError ? (
+    return user === APILoadError ? (
         <Alert severity="error">
             Something went wrong trying to load that user. Please go back and try again.
         </Alert>
     ) : user ? (
         <>
             <div className={styles.container}>
+                { wrongPasswordError &&  
+                <Alert onClose={() => setWrongPasswordError(false)} severity="error">
+                    The old password you have entered is incorrect. Please try again.
+                </Alert>} 
                 <br />
                 <b>ID</b>
                 <p>{user.id}</p>
@@ -47,7 +41,7 @@ const UserChangePassword = () => {
             <Formik
                 initialValues={changePasswordInitialValues}
                 validationSchema={passwordValidationSchema}
-                onSubmit={handleUpdatePassword()}
+                onSubmit={handleUpdatePassword(setWrongPasswordError)}
             >
                 {({ isSubmitting }) => (
                     <div className={styles.container}>
@@ -126,4 +120,4 @@ const UserChangePassword = () => {
     );
 };
 
-export default UserChangePassword;
+export default UserPasswordEdit;

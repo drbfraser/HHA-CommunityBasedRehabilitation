@@ -121,19 +121,20 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
 
         const DetailAccordion = ({ categoryName }: { categoryName: string }) => {
             const fields = Object.keys(surveyInfo[categoryName])
-            .map((k) => {
-                let desc;
-                if (typeof surveyInfo[categoryName][k] === "boolean") {
-                    desc = surveyInfo[categoryName][k] ? "Yes" : "No";
-                } else {
-                    desc = surveyInfo[categoryName][k]?.toString();
-                }
-                
-                return {
-                    title: fieldLabels[k as FormField],
-                    desc: desc ?? "",
-                };
-            }).filter((d) => d.desc !== "");
+                .map((k) => {
+                    let desc;
+                    if (typeof surveyInfo[categoryName][k] === "boolean") {
+                        desc = surveyInfo[categoryName][k] ? "Yes" : "No";
+                    } else {
+                        desc = surveyInfo[categoryName][k]?.toString();
+                    }
+
+                    return {
+                        title: fieldLabels[k as FormField],
+                        desc: desc ?? "",
+                    };
+                })
+                .filter((d) => d.desc !== "");
 
             return (
                 <Accordion key={categoryName} className={styles.impOutcomeAccordion}>

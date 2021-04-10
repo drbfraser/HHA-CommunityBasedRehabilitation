@@ -23,7 +23,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { handleSubmit, handleCancel } from "./formHandler";
 import { IClient, genders } from "util/clients";
 import { useZones } from "util/hooks/zones";
-import { useDisabilities } from "util/hooks/disabilities";
+import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
 import history from "util/history";
 
 interface IProps {
@@ -235,6 +235,23 @@ const ClientInfoForm = (props: IProps) => {
                                             </MenuItem>
                                         ))}
                                     </Field>
+                                    {(values[FormField.disability] as number[]).includes(
+                                        getOtherDisabilityId(disabilities)
+                                    ) && (
+                                        <div>
+                                            <br />
+                                            <Field
+                                                component={TextField}
+                                                className={styles.disabledTextField}
+                                                fullWidth
+                                                label={fieldLabels[FormField.other_disability]}
+                                                disabled={!isEditing}
+                                                required
+                                                name={FormField.other_disability}
+                                                variant="outlined"
+                                            />
+                                        </div>
+                                    )}
                                 </Grid>
                                 <Grid item md={12} xs={12}>
                                     <Field
@@ -243,7 +260,9 @@ const ClientInfoForm = (props: IProps) => {
                                         disabled={!isEditing}
                                         className={styles.disabledTextField}
                                         name={FormField.caregiver_present}
-                                        Label={{ label: fieldLabels[FormField.caregiver_present] }}
+                                        Label={{
+                                            label: fieldLabels[FormField.caregiver_present],
+                                        }}
                                     />
                                 </Grid>
                                 {values.caregiver_present ? (

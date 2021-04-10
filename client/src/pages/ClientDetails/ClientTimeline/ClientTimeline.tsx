@@ -11,9 +11,10 @@ import BaseSurveyEntry from "./BaseSurveyEntry";
 
 interface IProps {
     client?: IClient;
+    refreshClient: () => void;
 }
 
-const ClientTimeline = ({ client }: IProps) => {
+const ClientTimeline = ({ client, refreshClient }: IProps) => {
     const timelineStyles = useTimelineStyles();
     const dateFormatter = timestampToDateFromReference(client?.created_date);
 
@@ -38,6 +39,7 @@ const ClientTimeline = ({ client }: IProps) => {
                                 <ReferralEntry
                                     key={`referral${r.id}`}
                                     referral={r}
+                                    refreshClient={refreshClient}
                                     dateFormatter={dateFormatter}
                                 />
                             ),

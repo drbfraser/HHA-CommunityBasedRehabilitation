@@ -24,7 +24,7 @@ import { fieldLabels, FormField, initialValues, validationSchema } from "./formF
 import { riskLevels } from "util/risks";
 import { handleSubmit, handleReset } from "./formHandler";
 import { genders } from "util/clients";
-import { useDisabilities } from "util/hooks/disabilities";
+import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
 import { useZones } from "util/hooks/zones";
 
 import Cropper from "react-cropper";
@@ -264,6 +264,21 @@ const ClientForm = () => {
                                             </MenuItem>
                                         ))}
                                     </Field>
+                                    {(values[FormField.disability] as number[]).includes(
+                                        getOtherDisabilityId(disabilities)
+                                    ) && (
+                                        <div>
+                                            <br />
+                                            <Field
+                                                component={TextField}
+                                                fullWidth
+                                                label={fieldLabels[FormField.otherDisability]}
+                                                required
+                                                name={FormField.otherDisability}
+                                                variant="outlined"
+                                            />
+                                        </div>
+                                    )}
                                 </Grid>
                                 <Grid item md={12} xs={12}>
                                     <Field

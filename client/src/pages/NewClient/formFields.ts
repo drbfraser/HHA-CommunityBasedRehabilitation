@@ -15,6 +15,7 @@ export enum FormField {
     caregiverName = "caregiverName",
     caregiverEmail = "caregiverEmail",
     disability = "disability",
+    otherDisability = "otherDisability",
     healthRisk = "healthRisk",
     healthRequirements = "healthRequirements",
     healthGoals = "healthGoals",
@@ -41,6 +42,7 @@ export const fieldLabels = {
     [FormField.caregiverName]: "Caregiver Name",
     [FormField.caregiverEmail]: "Caregiver Email",
     [FormField.disability]: "Disabilities",
+    [FormField.otherDisability]: "Other Disabilities",
     [FormField.healthRisk]: "Health Risk",
     [FormField.healthRequirements]: "Health Requirement(s)",
     [FormField.healthGoals]: "Health Goal(s)",
@@ -66,6 +68,7 @@ export const initialValues = {
     [FormField.caregiverName]: "",
     [FormField.caregiverEmail]: "",
     [FormField.disability]: [],
+    [FormField.otherDisability]: "",
     [FormField.healthRisk]: "",
     [FormField.healthRequirements]: "",
     [FormField.healthGoals]: "",
@@ -101,6 +104,22 @@ export const validationSchema = () =>
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
         [FormField.disability]: Yup.array().label(fieldLabels[FormField.disability]).required(),
+        [FormField.otherDisability]: Yup.string()
+            .label(fieldLabels[FormField.otherDisability])
+            .test(
+                "require-if-other-selected",
+                "Other Disability is required",
+                async (otherDisability, schema) =>
+                    !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
+                    (otherDisability !== undefined && otherDisability.length > 0)
+            )
+            .test(
+                "require-if-other-selected",
+                "Other Disability must be at most 100 characters",
+                async (otherDisability, schema) =>
+                    !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
+                    (otherDisability !== undefined && otherDisability.length <= 100)
+            ),
         [FormField.gender]: Yup.string().label(fieldLabels[FormField.gender]).required(),
         [FormField.village]: Yup.string().label(fieldLabels[FormField.village]).trim().required(),
         [FormField.zone]: Yup.string().label(fieldLabels[FormField.zone]).required(),

@@ -4,6 +4,9 @@ export const useStyles = makeStyles(
     {
         container: {
             padding: 30,
+            "& h1": {
+                marginTop: 0,
+            },
         },
         floatRight: {
             float: "right",

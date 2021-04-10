@@ -146,7 +146,11 @@ const Dashboard = () => {
     };
 
     const RenderDate = (params: ValueFormatterParams) => {
-        return <Typography variant={"body2"}>{timestampToDate(Number(params.value))}</Typography>;
+        return Number(params.value) === 0 ? (
+            <Typography variant={"body2"}>No Visits</Typography>
+        ) : (
+            <Typography variant={"body2"}>{timestampToDate(Number(params.value))}</Typography>
+        );
     };
 
     const RenderZone = (params: ValueFormatterParams) => {

@@ -1,5 +1,5 @@
 import { FormikHelpers } from "formik";
-import { Endpoint, apiFetch } from "../../util/endpoints";
+import { Endpoint, apiFetch, objectToFormData } from "../../util/endpoints";
 import { IClient } from "util/clients";
 import { timestampFromFormDate } from "util/dates";
 import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
@@ -44,11 +44,7 @@ export const handleSubmit = async (
             : "",
     };
 
-    const formData = new FormData();
-    Object.entries(updatedValues).forEach(([key, val]) => {
-        const vals = Array.isArray(val) ? val : [val];
-        vals.forEach((v) => formData.append(key, String(v)));
-    });
+    const formData = objectToFormData(updatedValues);
 
     if (values.picture) {
         const clientProfilePicture = await (await fetch(values.picture)).blob();

@@ -1,6 +1,6 @@
 import { FormikHelpers } from "formik";
 import { TFormValues } from "./formFields";
-import { Endpoint, apiFetch } from "../../util/endpoints";
+import { Endpoint, apiFetch, objectToFormData } from "../../util/endpoints";
 import history from "../../util/history";
 import { timestampFromFormDate } from "util/dates";
 import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
@@ -18,23 +18,6 @@ const addClient = async (clientInfo: FormData) => {
         .then((res) => {
             return res;
         });
-};
-
-// NOTE: This function does not handle nested objects or arrays of objects.
-const objectToFormData = (clientInfo: object) => {
-    const formData = new FormData();
-    Object.entries(clientInfo).forEach(([key, val]) => {
-        if (Array.isArray(val)) {
-            val.forEach((v) => formData.append(key, String(v)));
-        } else if (typeof val === "object" && val !== null) {
-            Object.entries(val).forEach(([objKey, v]) => {
-                formData.append(`${key}.${objKey}`, String(v));
-            });
-        } else {
-            formData.append(key, String(val));
-        }
-    });
-    return formData;
 };
 
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)

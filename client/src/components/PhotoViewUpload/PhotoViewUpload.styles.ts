@@ -22,7 +22,9 @@ export const useStyles = makeStyles(
         },
         profilePicture: {
             maxWidth: "100%",
+            width: "auto",
             objectFit: "cover",
+            minHeight: "22vh",
             maxHeight: "22vh",
             marginLeft: "auto",
             marginRight: "auto",

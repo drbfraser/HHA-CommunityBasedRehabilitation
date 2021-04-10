@@ -58,3 +58,20 @@ export const apiFetch = async (
         return resp;
     });
 };
+
+// NOTE: This function does not handle nested objects or arrays of objects.
+export const objectToFormData = (clientInfo: object) => {
+    const formData = new FormData();
+    Object.entries(clientInfo).forEach(([key, val]) => {
+        if (Array.isArray(val)) {
+            val.forEach((v) => formData.append(key, String(v)));
+        } else if (typeof val === "object" && val !== null) {
+            Object.entries(val).forEach(([objKey, v]) => {
+                formData.append(`${key}.${objKey}`, String(v));
+            });
+        } else {
+            formData.append(key, String(val));
+        }
+    });
+    return formData;
+};

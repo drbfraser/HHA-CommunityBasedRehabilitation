@@ -61,12 +61,17 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
     };
 
     const ResolveForm = () => {
+        const outcomeField = {
+            key: "outcome",
+            label: "Outcome",
+        };
+
         const initialValues = {
-            outcome: "",
+            [outcomeField.key]: "",
         };
 
         const validationSchema = Yup.object().shape({
-            outcome: Yup.string().label("Outcome").max(100).trim().required(),
+            [outcomeField.key]: Yup.string().label(outcomeField.label).max(100).trim().required(),
         });
 
         const handleSubmit = (values: typeof initialValues) => {
@@ -74,7 +79,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                 method: "PUT",
                 body: JSON.stringify({
                     resolved: true,
-                    outcome: values.outcome,
+                    [outcomeField.key]: values[outcomeField.key],
                 }),
             })
                 .then(() => refreshClient())
@@ -97,8 +102,8 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                         <Form>
                             <Field
                                 component={TextField}
-                                label="Outcome"
-                                name="outcome"
+                                label={outcomeField.label}
+                                name={outcomeField.key}
                                 variant="outlined"
                                 fullWidth
                                 required

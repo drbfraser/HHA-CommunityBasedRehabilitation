@@ -22,6 +22,13 @@ export const useStyles = makeStyles(
             color: themeColors.riskRed,
             verticalAlign: "text-top",
         },
+        resolveAccordion: {
+            display: "block",
+            textAlign: "right",
+        },
+        resolveBtn: {
+            color: themeColors.riskGreen,
+        },
     },
     { index: 1 }
 );

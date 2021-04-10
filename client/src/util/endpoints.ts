@@ -12,6 +12,7 @@ export enum Endpoint {
     CLIENTS = "clients",
     VISITS = "visits",
     REFERRALS = "referrals",
+    REFERRAL = "referral/",
     ZONES = "zones",
     USERS = "users",
     USER = "user/",

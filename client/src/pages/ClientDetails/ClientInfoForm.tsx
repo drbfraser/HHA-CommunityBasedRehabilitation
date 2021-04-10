@@ -8,8 +8,6 @@ import { fieldLabels, FormField, validationSchema } from "./formFields";
 
 import {
     Button,
-    Card,
-    CardContent,
     Accordion,
     AccordionDetails,
     AccordionSummary,
@@ -17,27 +15,17 @@ import {
     Grid,
     MenuItem,
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
 
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { handleSubmit, handleCancel } from "./formHandler";
 import { IClient, genders } from "util/clients";
 import { useZones } from "util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
 import history from "util/history";
-
-import Cropper from "react-cropper";
-import "cropperjs/dist/cropper.css";
+import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 
 interface IProps {
     clientInfo: IClient;
-}
-
-interface IPictureModal {
-    picture: string;
 }
 
 const ClientInfoForm = (props: IProps) => {
@@ -46,63 +34,6 @@ const ClientInfoForm = (props: IProps) => {
     const disabilities = useDisabilities();
     const [initialPicture] = useState<string>(props.clientInfo.picture);
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [isViewingPicture, setIsViewingPicture] = useState<boolean>(false);
-
-    const [profileModalOpen, setProfileModalOpen] = useState<boolean>(false);
-    const [cropper, setCropper] = useState<any>();
-
-    const [profilePicture, setProfilePicture] = useState("/images/profile_pic_icon.png");
-    const profilePicRef: React.RefObject<HTMLInputElement> = React.createRef();
-
-    const PictureModal = (props: IPictureModal) => {
-        return (
-            <Dialog
-                open={isViewingPicture}
-                onClose={() => {
-                    setIsViewingPicture(false);
-                }}
-            >
-                <DialogContent>
-                    <img
-                        src={props.picture ? props.picture : "/images/profile_pic_icon.png"}
-                        alt="user-profile-pic"
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        onClick={() => {
-                            setIsViewingPicture(false);
-                        }}
-                    >
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        );
-    };
-
-    const onSelectFile = (e: any) => {
-        e.preventDefault();
-        let files;
-        if (e.dataTransfer) {
-            files = e.dataTransfer.files;
-        } else if (e.target) {
-            files = e.target.files;
-        }
-        const reader = new FileReader();
-        reader.onload = () => {
-            setProfilePicture(reader.result as any);
-        };
-        reader.readAsDataURL(files[0]);
-        if (profilePicture) setProfileModalOpen(true);
-        e.target.value = null;
-    };
-
-    const triggerFileUpload = () => {
-        profilePicRef.current!.click();
-    };
 
     return (
         <Formik
@@ -112,89 +43,15 @@ const ClientInfoForm = (props: IProps) => {
                 handleSubmit(values, setSubmitting, setIsEditing);
             }}
         >
-            {({ values, isSubmitting, resetForm }) => (
+            {({ values, isSubmitting, resetForm, setFieldValue }) => (
                 <>
-                    <Dialog
-                        open={profileModalOpen}
-                        onClose={() => {
-                            setProfileModalOpen(false);
-                        }}
-                        aria-labelledby="form-modal-title"
-                    >
-                        <DialogContent>
-                            <Cropper
-                                style={{ height: 400, width: "100%" }}
-                                responsive={true}
-                                minCropBoxHeight={10}
-                                minCropBoxWidth={10}
-                                viewMode={1}
-                                src={profilePicture}
-                                background={false}
-                                onInitialized={(instance) => {
-                                    setCropper(instance);
-                                }}
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                onClick={() => {
-                                    if (typeof cropper !== undefined) {
-                                        values.picture = cropper.getCroppedCanvas().toDataURL();
-                                    }
-                                    setProfileModalOpen(false);
-                                }}
-                            >
-                                Save
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                onClick={() => {
-                                    setProfileModalOpen(false);
-                                }}
-                            >
-                                Cancel
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
                     <Grid container direction="row" justify="flex-start" spacing={2}>
                         <Grid item md={2} xs={12}>
-                            <Card
-                                className={
-                                    !isEditing
-                                        ? styles.profileImgContainer
-                                        : `${styles.profileImgContainer} ${styles.profileUploadHover}`
-                                }
-                            >
-                                <CardContent
-                                    onClick={() =>
-                                        !isEditing ? setIsViewingPicture(true) : triggerFileUpload()
-                                    }
-                                >
-                                    <img
-                                        className={styles.profilePicture}
-                                        src={
-                                            props.clientInfo.picture ||
-                                            `/images/profile_pic_icon.png`
-                                        }
-                                        alt="user-icon"
-                                    />
-                                    <div className={styles.uploadIcon}>
-                                        <CloudUploadIcon />
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            ref={profilePicRef}
-                                            style={{ visibility: "hidden" }}
-                                            onChange={(e: any) => {
-                                                onSelectFile(e);
-                                            }}
-                                        />
-                                    </div>
-                                </CardContent>
-                            </Card>
+                            <ProfilePicCard
+                                isEditing={isEditing}
+                                setFieldValue={setFieldValue}
+                                picture={values.picture}
+                            />
                             <Grid container direction="row" spacing={1}>
                                 <Grid className={styles.sideFormButtonWrapper} item md={10} xs={12}>
                                     <Button
@@ -517,7 +374,6 @@ const ClientInfoForm = (props: IProps) => {
                             </Form>
                         </Grid>
                     </Grid>
-                    <PictureModal picture={values.picture} />
                 </>
             )}
         </Formik>

@@ -98,9 +98,8 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
     }
 };
 
-export const handleReset = (resetForm: () => void, setProfilePicture: (pic: string) => void) => {
+export const handleReset = (resetForm: () => void) => {
     if (window.confirm("Are you sure you want to clear the form?")) {
         resetForm();
-        setProfilePicture("/images/profile_pic_icon.png");
     }
 };

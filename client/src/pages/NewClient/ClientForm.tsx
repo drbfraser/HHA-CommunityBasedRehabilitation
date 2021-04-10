@@ -26,51 +26,22 @@ import { handleSubmit, handleReset } from "./formHandler";
 import { genders } from "util/clients";
 import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
 import { useZones } from "util/hooks/zones";
-
-import Cropper from "react-cropper";
-import "cropperjs/dist/cropper.css";
+import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 
 const ClientForm = () => {
     const styles = useStyles();
     const zones = useZones();
     const disabilities = useDisabilities();
 
-    const [profilePicture, setProfilePicture] = useState("/images/profile_pic_icon.png");
-    const [croppedProfilePicture, setCroppedProfilePicture] = useState(
-        "/images/profile_pic_icon.png"
-    );
+    // const [croppedProfilePicture, setCroppedProfilePicture] = useState(
+    //     "/images/profile_pic_icon.png"
+    // );
 
-    const [cropper, setCropper] = useState<any>();
-    const [profileModalOpen, setProfileModalOpen] = useState<boolean>(false);
-
-    const profilePicRef: React.RefObject<HTMLInputElement> = React.createRef();
-
-    useEffect(() => {
-        return () => {
-            setCroppedProfilePicture("/images/profile_pic_icon.png");
-        };
-    }, [setCroppedProfilePicture]);
-
-    const onSelectFile = (e: any) => {
-        e.preventDefault();
-        let files;
-        if (e.dataTransfer) {
-            files = e.dataTransfer.files;
-        } else if (e.target) {
-            files = e.target.files;
-        }
-        const reader = new FileReader();
-        reader.onload = () => {
-            setProfilePicture(reader.result as any);
-        };
-        if (files[0]) reader.readAsDataURL(files[0]);
-        if (profilePicture) setProfileModalOpen(true);
-        e.target.value = null;
-    };
-
-    const triggerFileUpload = () => {
-        profilePicRef.current!.click();
-    };
+    // useEffect(() => {
+    //     return () => {
+    //         setCroppedProfilePicture("/images/profile_pic_icon.png");
+    //     };
+    // }, [setCroppedProfilePicture]);
 
     return (
         <Formik
@@ -78,10 +49,15 @@ const ClientForm = () => {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
         >
-            {({ values, isSubmitting, resetForm, errors, touched }) => (
+            {({ values, isSubmitting, resetForm, touched, setFieldValue }) => (
                 <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
-                        <Card
+                        <ProfilePicCard
+                            isEditing={true}
+                            setFieldValue={setFieldValue}
+                            picture={values.picture}
+                        />
+                        {/* <Card
                             className={`${styles.profileImgContainer} ${styles.profileUploadHover}`}
                         >
                             <CardContent onClick={triggerFileUpload}>
@@ -151,7 +127,7 @@ const ClientForm = () => {
                                     </Button>
                                 </DialogActions>
                             </Dialog>
-                        </Card>
+                        </Card> */}
                     </Grid>
                     <Grid item md={10} xs={12}>
                         <Form>
@@ -527,9 +503,7 @@ const ClientForm = () => {
                                     <Button
                                         variant="outlined"
                                         color="primary"
-                                        onClick={() =>
-                                            handleReset(resetForm, setCroppedProfilePicture)
-                                        }
+                                        onClick={() => handleReset(resetForm)}
                                         disabled={isSubmitting}
                                     >
                                         Clear

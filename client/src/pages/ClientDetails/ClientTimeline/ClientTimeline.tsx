@@ -7,12 +7,13 @@ import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import VisitEntry from "./VisitEntry";
 import { useTimelineStyles } from "../Timeline/timelines.styles";
 import ReferralEntry from "./ReferralEntry";
+import BaseSurveyEntry from "./BaseSurveyEntry";
 
 interface IProps {
     client?: IClient;
 }
 
-const VisitReferralTimeline = ({ client }: IProps) => {
+const ClientTimeline = ({ client }: IProps) => {
     const timelineStyles = useTimelineStyles();
     const dateFormatter = timestampToDateFromReference(client?.created_date);
 
@@ -41,6 +42,16 @@ const VisitReferralTimeline = ({ client }: IProps) => {
                                 />
                             ),
                         })),
+                        ...client.baseline_surveys.slice().map((r) => ({
+                            timestamp: r.survey_date,
+                            Component: (
+                                <BaseSurveyEntry
+                                    key={r.id}
+                                    survey={r}
+                                    dateFormatter={dateFormatter}
+                                />
+                            ),
+                        })),
                     ]
                         .sort((a, b) => b.timestamp - a.timestamp)
                         .map((entry) => entry.Component)}
@@ -53,4 +64,4 @@ const VisitReferralTimeline = ({ client }: IProps) => {
     );
 };
 
-export default VisitReferralTimeline;
+export default ClientTimeline;

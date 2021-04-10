@@ -28,7 +28,7 @@ export const handleSubmit = async (
         health_have_rehabilitation_access: values[FormField.getService],
         health_need_rehabilitation_access: values[FormField.needService],
         health_have_assistive_device: values[FormField.haveDevice],
-        health_working_assistive_device: values[FormField.deviceWoking],
+        health_working_assistive_device: values[FormField.deviceWorking],
         health_need_assistive_device: values[FormField.needDevice],
         health_assistive_device_type: values[FormField.needDevice]
             ? values[FormField.deviceType]

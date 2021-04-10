@@ -8,8 +8,10 @@ export interface ISurvey {
     health_working_assistive_device: boolean;
     health_need_assistive_device: boolean;
     health_services_satisfaction: RateLevel;
+    health_assistive_device_type?: DeviceType;
     school_currently_attend: boolean;
     school_grade: number;
+    school_not_attend_reason?: ReasonNotSchool;
     school_ever_attend: boolean;
     school_want_attend: boolean;
     social_community_valued: boolean;
@@ -19,11 +21,13 @@ export interface ISurvey {
     social_discrimination: boolean;
     work: boolean;
     work_what: string;
+    work_status?: IsSelfEmployed;
     work_meet_financial_needs: boolean;
     work_affected_by_disability: boolean;
     work_want: boolean;
     food_security: RateLevel;
     food_enough_monthly: boolean;
+    food_enough_for_child?: ChildNourish;
     empowerment_organization_member: boolean;
     empowerment_organization: string;
     empowerment_rights_awareness: boolean;

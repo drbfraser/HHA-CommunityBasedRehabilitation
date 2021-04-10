@@ -11,7 +11,7 @@ import { IClient } from "util/clients";
 import ClientRisks from "./Risks/ClientRisks";
 import { IRisk } from "util/risks";
 import { useHistory } from "react-router-dom";
-import VisitReferralTimeline from "./VisitReferralTimeline/VisitReferralTimeline";
+import ClientTimeline from "./ClientTimeline/ClientTimeline";
 import { timestampToFormDate } from "util/dates";
 import { Alert, Skeleton } from "@material-ui/lab";
 interface IUrlParam {
@@ -86,11 +86,11 @@ const ClientDetails = () => {
             </Grid>
             <Grid item xs={6}>
                 <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
-                    <b>Visits &amp; Referrals</b>
+                    <b>Client Timeline</b>
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <VisitReferralTimeline client={clientInfo} />
+                <ClientTimeline client={clientInfo} />
             </Grid>
         </Grid>
     );

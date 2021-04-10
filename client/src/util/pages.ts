@@ -23,7 +23,7 @@ import NewVisit from "pages/NewVisit/NewVisit";
 import NewReferral from "pages/NewReferral/NewReferral";
 import { IUser, UserRole } from "./users";
 import { APILoadError, TAPILoadError } from "./endpoints";
-import NewSurvey from "pages/ClientDetails/BaseSurvey/BaseSurvey";
+import NewSurvey from "pages/BaseSurvey/BaseSurvey";
 
 export interface IPage {
     path: string;

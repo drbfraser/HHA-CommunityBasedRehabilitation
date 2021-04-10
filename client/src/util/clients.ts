@@ -1,5 +1,6 @@
 import { IReferral } from "./referrals";
 import { IRisk, riskLevels } from "./risks";
+import { ISurvey } from "./survey";
 import { IVisitSummary } from "./visits";
 
 export interface IClientSummary {
@@ -36,6 +37,7 @@ export interface IClient {
     risks: IRisk[];
     visits: IVisitSummary[];
     referrals: IReferral[];
+    baseline_surveys: ISurvey[];
 }
 
 export enum Gender {

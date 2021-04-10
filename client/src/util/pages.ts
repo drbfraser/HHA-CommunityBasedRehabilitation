@@ -168,5 +168,4 @@ export const pagesForUser = (user: IUser | TAPILoadError | undefined) => {
     });
 };
 
-// TODO: change back to pages[0] once dashboard is finished
-export const defaultPagePath = pages[2].path;
+export const defaultPagePath = pages[0].path;

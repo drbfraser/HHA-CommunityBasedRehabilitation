@@ -43,6 +43,7 @@ const Dashboard = () => {
 
             const priorityClients: RowsProp = tempClients
                 .sort(clientPrioritySort)
+                .slice(0, 5)
                 .map((row: IClientSummary) => {
                     return {
                         id: row.id,
@@ -127,14 +128,12 @@ const Dashboard = () => {
         );
     };
 
-    const RenderNoPriorityClientsOverlay = () => {
-        return (
-            <GridOverlay className={dataGridStyle.noRows}>
-                <Cancel color="primary" className={dataGridStyle.noRowsIcon} />
-                <Typography color="primary">No Priority Clients Found</Typography>
-            </GridOverlay>
-        );
-    };
+    const RenderNoPriorityClientsOverlay = () => (
+        <GridOverlay className={dataGridStyle.noRows}>
+            <Cancel color="primary" className={dataGridStyle.noRowsIcon} />
+            <Typography color="primary">No Priority Clients Found</Typography>
+        </GridOverlay>
+    );
 
     const RenderNoOutstandingReferralsOverlay = () => {
         return (
@@ -218,7 +217,6 @@ const Dashboard = () => {
 
     return (
         <>
-            {console.log(clients)}
             <Alert severity="info">
                 {/* TODO: Update message alert once message alert functionality is implemented. */}
                 <Typography variant="body1">You have 0 new messages from an admin.</Typography>
@@ -259,7 +257,6 @@ const Dashboard = () => {
                             <br />
                             <div className={dataGridStyle.dashboardTables}>
                                 <DataGrid
-                                    hideFooterPagination
                                     className={`${dataGridStyle.datagrid}`}
                                     rows={referrals}
                                     loading={referralsLoading}

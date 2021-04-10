@@ -48,11 +48,11 @@ const AdminView = () => {
                 </Alert>
             ) : user ? (
                 <>
-                    <h1>
-                        {user.first_name} {user.last_name}
-                    </h1>
-                    <div className={styles.floatRight}>
-                        <Button color="primary" onClick={handleEdit}>
+                    <div className={styles.topContainer}>
+                        <h1>
+                            {user.first_name} {user.last_name}
+                        </h1>
+                        <Button color="primary" onClick={handleEdit} style={{ marginLeft: "auto" }}>
                             <EditIcon></EditIcon>Edit
                         </Button>
                         <Button color="primary" onClick={handlePasswordEdit}>

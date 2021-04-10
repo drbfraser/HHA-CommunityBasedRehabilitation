@@ -16,6 +16,7 @@ export enum Endpoint {
     USERS = "users",
     USER = "user/",
     USER_CURRENT = "user/current",
+    USER_CURRENT_PASSWORD = "user/password/current",
     RISKS = "risks",
     DISABILITIES = "disabilities",
     VISIT = "visit/",

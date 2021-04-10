@@ -23,6 +23,7 @@ import NewVisit from "pages/NewVisit/NewVisit";
 import NewReferral from "pages/NewReferral/NewReferral";
 import { IUser, UserRole } from "./users";
 import { APILoadError, TAPILoadError } from "./endpoints";
+import UserChangePassword from "pages/User/UserPasswordEdit";
 
 export interface IPage {
     path: string;
@@ -86,6 +87,12 @@ const pages: IPage[] = [
         Component: UserView,
         showInNav: true,
         Icon: PersonIcon,
+    },
+    {
+        path: "/user/password/:userID",
+        name: "Edit User Password",
+        Component: UserChangePassword,
+        showInNav: false,
     },
     {
         path: "/admin",

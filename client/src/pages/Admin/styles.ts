@@ -4,7 +4,10 @@ import { themeColors } from "theme.styles";
 export const useStyles = makeStyles(
     {
         container: {
-            padding: 30,
+            paddingLeft: 20,
+        },
+        topContainer: {
+            display: "flex",
         },
         floatRight: {
             float: "right",

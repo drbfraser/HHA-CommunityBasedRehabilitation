@@ -46,6 +46,7 @@ const AdminEdit = () => {
         >
             {({ values, setFieldValue, isSubmitting }) => (
                 <div className={styles.container}>
+                    <br />
                     <b>ID</b>
                     <p>{userId}</p>
                     <b>Username </b>

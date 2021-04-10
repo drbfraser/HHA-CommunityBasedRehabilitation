@@ -24,6 +24,7 @@ import NewReferral from "pages/NewReferral/NewReferral";
 import Stats from "pages/Stats/Stats";
 import { IUser, UserRole } from "./users";
 import { APILoadError, TAPILoadError } from "./endpoints";
+import UserChangePassword from "pages/User/UserPasswordEdit";
 import NewSurvey from "pages/BaseSurvey/BaseSurvey";
 
 export interface IPage {
@@ -94,6 +95,12 @@ const pages: IPage[] = [
         Component: UserView,
         showInNav: true,
         Icon: PersonIcon,
+    },
+    {
+        path: "/user/password",
+        name: "Change Password",
+        Component: UserChangePassword,
+        showInNav: false,
     },
     {
         path: "/stats",

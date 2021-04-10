@@ -74,10 +74,7 @@ const infoValidationShape = {
 const passwordValidationShape = {
     [AdminField.password]: Yup.string()
         .label(fieldLabels[AdminField.password])
-        .matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/,
-            "Your password must be at least 8 characters long and must contain at least: one lowercase letter, one uppercase letter and one number."
-        )
+        .matches(Validation.passwordRegExp, Validation.passwordInvalidMsg)
         .required(),
     [AdminField.confirmPassword]: Yup.string()
         .label(fieldLabels[AdminField.confirmPassword])

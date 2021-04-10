@@ -48,18 +48,19 @@ const AdminView = () => {
                 </Alert>
             ) : user ? (
                 <>
-                    <h1>
-                        {user.first_name} {user.last_name}
-                    </h1>
-                    <div className={styles.floatRight}>
-                        <Button color="primary" onClick={handleEdit}>
-                            <EditIcon></EditIcon>Edit
-                        </Button>
-                        <Button color="primary" onClick={handlePasswordEdit}>
-                            <EditIcon></EditIcon>Change Password
-                        </Button>
+                    <div className={styles.header}>
+                        <h1>
+                            {user.first_name} {user.last_name}
+                        </h1>
+                        <div className={styles.editButton}>
+                            <Button color="primary" onClick={handleEdit}>
+                                <EditIcon></EditIcon>Edit
+                            </Button>
+                            <Button color="primary" onClick={handlePasswordEdit}>
+                                <EditIcon></EditIcon>Change Password
+                            </Button>
+                        </div>
                     </div>
-
                     <b>Username</b>
                     <p>{user.username}</p>
                     <b>ID</b>

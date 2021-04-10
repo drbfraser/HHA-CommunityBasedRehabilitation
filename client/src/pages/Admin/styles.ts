@@ -4,10 +4,17 @@ import { themeColors } from "theme.styles";
 export const useStyles = makeStyles(
     {
         container: {
-            padding: 30,
+            paddingLeft: 20,
         },
-        floatRight: {
-            float: "right",
+        header: {
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+        },
+        editButton: {
+            marginBottom: 20,
         },
         disableBtn: {
             backgroundColor: themeColors.riskRed,

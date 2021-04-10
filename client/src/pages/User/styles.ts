@@ -3,13 +3,21 @@ import { makeStyles } from "@material-ui/core/styles";
 export const useStyles = makeStyles(
     {
         container: {
-            padding: 30,
-            "& h1": {
-                marginTop: 0,
-            },
+            paddingLeft: 20,
         },
-        floatRight: {
-            float: "right",
+        header: {
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+        },
+        changePasswordButton: {
+            marginBottom: 20,
+        },
+        logOutButton: {
+            display: "flex",
+            justifyContent: "flex-end",
         },
     },
     { index: 1 }

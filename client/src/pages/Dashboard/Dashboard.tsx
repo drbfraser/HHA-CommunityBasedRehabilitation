@@ -9,6 +9,7 @@ import { clientPrioritySort, IClientSummary } from "util/clients";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { getZones } from "util/hooks/zones";
 import { timestampToDate } from "util/dates";
+import { IOutstandingReferral } from "util/referrals";
 
 import { Alert } from "@material-ui/lab";
 import {
@@ -20,17 +21,18 @@ import {
     DensityTypes,
     ValueFormatterParams,
     GridOverlay,
+    RowsProp,
 } from "@material-ui/data-grid";
-
 
 const Dashboard = () => {
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
 
     const [clients, setClients] = useState<IClientSummary[]>([]);
-    const [referrals, setReferrals] = useState<any>([]);
+    const [referrals, setReferrals] = useState<RowsProp>([]);
     const [zoneMap, setZoneMap] = useState<Map<Number, String>>();
     const [isPriorityClientsLoading, setPriorityClientsLoading] = useState<boolean>(true);
+    const [referralsLoading, setReferralsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchClients = async () => {
@@ -38,17 +40,45 @@ const Dashboard = () => {
                 .then((resp) => resp.json())
                 .then((clients) => setClients(clients.sort(clientPrioritySort)))
                 .then(() => setPriorityClientsLoading(false))
-                .catch((err) => alert(err));
+                .catch((err) => alert("Error occured while trying to load priority clients!"));
         };
         const fetchZones = async () => {
             setZoneMap(await getZones());
         };
         const fetchReferrals = async () => {
-            await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
+            const tempReferrals = await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
                 .then((resp) => resp.json())
-                .then((referrals) => setReferrals(referrals))
-                .catch((err)=> alert(err));
-        }
+                .catch((err) => alert("Error occured while trying to load outstanding referrals!"));
+
+            let i = 0;
+
+            const outstandingReferrals: RowsProp = tempReferrals.map(
+                (row: IOutstandingReferral) => {
+                    i += 1;
+                    return {
+                        id: i,
+                        client_id: row.id,
+                        full_name: row.full_name,
+                        type: concatenateReferralType(row),
+                        date_referred: row.date_referred,
+                    };
+                }
+            );
+
+            setReferrals(outstandingReferrals.sort((a, b) => a.date_referred - b.date_referred));
+            setReferralsLoading(false);
+        };
+
+        const concatenateReferralType = (row: IOutstandingReferral) => {
+            let referralTypes = [];
+            if (row.wheelchair) referralTypes.push("Wheelchair");
+            if (row.physiotherapy) referralTypes.push("Physiotherapy");
+            if (row.orthotic) referralTypes.push("Orthotic");
+            if (row.prosthetic) referralTypes.push("Prosthetic");
+            if (row.services_other) referralTypes.push(row.services_other);
+
+            return referralTypes.join(", ");
+        };
 
         fetchClients();
         fetchZones();
@@ -105,8 +135,8 @@ const Dashboard = () => {
 
     const RenderDate = (params: ValueFormatterParams) => {
         return <Typography variant={"body2"}>{timestampToDate(Number(params.value))}</Typography>;
-      };
-      
+    };
+
     const RenderZone = (params: ValueFormatterParams) => {
         return (
             <Typography variant={"body2"}>
@@ -114,8 +144,11 @@ const Dashboard = () => {
             </Typography>
         );
     };
-    
-    const handleRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
+
+    const handleClientRowClick = (rowParams: RowParams) =>
+        history.push(`/client/${rowParams.row.id}`);
+    const handleReferralRowClick = (rowParams: RowParams) =>
+        history.push(`/client/${rowParams.row.client_id}`);
 
     const priorityClientsColumns = [
         {
@@ -146,40 +179,29 @@ const Dashboard = () => {
         },
     ];
 
-    // const outstandingReferralsColumns = [
-    //     {
-    //         field: "full_name",
-    //         headerName: "Name",
-    //         flex: 0.7,
-    //         renderCell: RenderText,
-    //     },
-    //     {
-    //         field: "wheelchair",
-    //         headerName: "wheelchair",
-    //         renderCell: RenderText
-    //     },
-    //     {
-    //         field: "prosthetic",
-    //         headerName: "prosthetic",
-    //         renderCell: RenderText
-    //     },
-    //     {
-    //         field: "orthotics",
-    //         headerName: "orthotics",
-    //         renderCell: RenderText
-    //     },
-    //     {
-    //         field: "date_referred",
-    //         headerName: "Last Referral",
-    //         flex: 1,
-    //         renderCell: RenderDate,
-    //     },
-    // ];
+    const outstandingReferralsColumns = [
+        {
+            field: "full_name",
+            headerName: "Name",
+            flex: 0.7,
+            renderCell: RenderText,
+        },
+        {
+            field: "type",
+            headerName: "Type",
+            flex: 2,
+            renderCell: RenderText,
+        },
+        {
+            field: "date_referred",
+            headerName: "Date Referred",
+            flex: 1,
+            renderCell: RenderDate,
+        },
+    ];
 
     return (
         <>
-        {console.log(clients)}
-        {console.log(referrals)}
             <Alert severity="info">
                 <Typography variant="body1">You have 0 new messages from an admin.</Typography>
             </Alert>
@@ -196,11 +218,11 @@ const Dashboard = () => {
                                 <DataGrid
                                     className={`${dataGridStyle.datagrid}`}
                                     rows={clients}
-                                    // hideFooterPagination
+                                    hideFooterPagination
                                     loading={isPriorityClientsLoading}
                                     columns={priorityClientsColumns}
                                     pageSize={5}
-                                    onRowClick={handleRowClick}
+                                    onRowClick={handleClientRowClick}
                                     density={DensityTypes.Comfortable}
                                     components={{
                                         NoRowsOverlay: RenderNoPriorityClientsOverlay,
@@ -218,18 +240,19 @@ const Dashboard = () => {
                             </Typography>
                             <br />
                             <div className={dataGridStyle.dashboardTables}>
-                                {/* <DataGrid
+                                <DataGrid
                                     hideFooterPagination
                                     className={`${dataGridStyle.datagrid}`}
                                     rows={referrals}
-                                    // TODO: set loading
+                                    loading={referralsLoading}
                                     columns={outstandingReferralsColumns}
+                                    pageSize={5}
                                     density={DensityTypes.Comfortable}
-                                    onRowClick={handleRowClick}
+                                    onRowClick={handleReferralRowClick}
                                     components={{
                                         NoRowsOverlay: RenderNoOutstandingReferralsOverlay,
                                     }}
-                                /> */}
+                                />
                             </div>
                         </CardContent>
                     </Card>

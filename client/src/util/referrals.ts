@@ -20,6 +20,17 @@ export interface IReferral {
     services_other: string;
 }
 
+export interface IOutstandingReferral {
+    id: number;
+    full_name: string;
+    date_referred: number;
+    wheelchair: boolean;
+    physiotherapy: boolean;
+    prosthetic: boolean;
+    orthotic: boolean;
+    services_other: string;
+}
+
 export enum ReferralTypes {
     WHEELCHAIR = "wheelchair",
     PROSTHETIC = "prosthetic",

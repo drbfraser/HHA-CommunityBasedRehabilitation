@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Field, Form, Formik, ErrorMessage } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 
 import { useStyles } from "./ClientForm.styles";
 
 import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -14,10 +12,6 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
 
 import { fieldLabels, FormField, initialValues, validationSchema } from "./formFields";
 
@@ -33,16 +27,6 @@ const ClientForm = () => {
     const zones = useZones();
     const disabilities = useDisabilities();
 
-    // const [croppedProfilePicture, setCroppedProfilePicture] = useState(
-    //     "/images/profile_pic_icon.png"
-    // );
-
-    // useEffect(() => {
-    //     return () => {
-    //         setCroppedProfilePicture("/images/profile_pic_icon.png");
-    //     };
-    // }, [setCroppedProfilePicture]);
-
     return (
         <Formik
             initialValues={initialValues}
@@ -57,77 +41,6 @@ const ClientForm = () => {
                             setFieldValue={setFieldValue}
                             picture={values.picture}
                         />
-                        {/* <Card
-                            className={`${styles.profileImgContainer} ${styles.profileUploadHover}`}
-                        >
-                            <CardContent onClick={triggerFileUpload}>
-                                <img
-                                    className={styles.profilePicture}
-                                    src={croppedProfilePicture}
-                                    alt="user-icon"
-                                />
-                                <div className={styles.uploadIcon}>
-                                    <CloudUploadIcon />
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        ref={profilePicRef}
-                                        style={{ visibility: "hidden" }}
-                                        onChange={(e: any) => {
-                                            onSelectFile(e);
-                                        }}
-                                    />
-                                </div>
-                            </CardContent>
-                            <Dialog
-                                open={profileModalOpen}
-                                onClose={() => {
-                                    setProfileModalOpen(false);
-                                }}
-                                aria-labelledby="form-modal-title"
-                            >
-                                <DialogContent>
-                                    <Cropper
-                                        style={{ height: 400, width: "100%" }}
-                                        responsive={true}
-                                        minCropBoxHeight={10}
-                                        minCropBoxWidth={10}
-                                        viewMode={1}
-                                        src={profilePicture}
-                                        background={false}
-                                        onInitialized={(instance) => {
-                                            setCropper(instance);
-                                        }}
-                                    />
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button
-                                        color="primary"
-                                        variant="contained"
-                                        onClick={() => {
-                                            if (typeof cropper !== undefined) {
-                                                values.picture = cropper
-                                                    .getCroppedCanvas()
-                                                    .toDataURL();
-                                                setCroppedProfilePicture(values.picture);
-                                            }
-                                            setProfileModalOpen(false);
-                                        }}
-                                    >
-                                        Save
-                                    </Button>
-                                    <Button
-                                        variant="outlined"
-                                        color="primary"
-                                        onClick={() => {
-                                            setProfileModalOpen(false);
-                                        }}
-                                    >
-                                        Cancel
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
-                        </Card> */}
                     </Grid>
                     <Grid item md={10} xs={12}>
                         <Form>

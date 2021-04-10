@@ -26,7 +26,7 @@ const ClientTimeline = ({ client }: IProps) => {
                             timestamp: v.date_visited,
                             Component: (
                                 <VisitEntry
-                                    key={v.id}
+                                    key={`visit${v.id}`}
                                     visitSummary={v}
                                     dateFormatter={dateFormatter}
                                 />
@@ -36,18 +36,18 @@ const ClientTimeline = ({ client }: IProps) => {
                             timestamp: r.date_referred,
                             Component: (
                                 <ReferralEntry
-                                    key={r.id}
+                                    key={`referral${r.id}`}
                                     referral={r}
                                     dateFormatter={dateFormatter}
                                 />
                             ),
                         })),
-                        ...client.baseline_surveys.slice().map((r) => ({
-                            timestamp: r.survey_date,
+                        ...client.baseline_surveys.slice().map((s) => ({
+                            timestamp: s.survey_date,
                             Component: (
                                 <BaseSurveyEntry
-                                    key={r.id}
-                                    survey={r}
+                                    key={`survey${s.id}`}
+                                    survey={s}
                                     dateFormatter={dateFormatter}
                                 />
                             ),

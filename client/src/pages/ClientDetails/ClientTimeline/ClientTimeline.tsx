@@ -7,13 +7,14 @@ import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import VisitEntry from "./VisitEntry";
 import { useTimelineStyles } from "../Timeline/timelines.styles";
 import ReferralEntry from "./ReferralEntry";
+import BaseSurveyEntry from "./BaseSurveyEntry";
 
 interface IProps {
     client?: IClient;
     refreshClient: () => void;
 }
 
-const VisitReferralTimeline = ({ client, refreshClient }: IProps) => {
+const ClientTimeline = ({ client, refreshClient }: IProps) => {
     const timelineStyles = useTimelineStyles();
     const dateFormatter = timestampToDateFromReference(client?.created_date);
 
@@ -26,7 +27,7 @@ const VisitReferralTimeline = ({ client, refreshClient }: IProps) => {
                             timestamp: v.date_visited,
                             Component: (
                                 <VisitEntry
-                                    key={v.id}
+                                    key={`visit${v.id}`}
                                     visitSummary={v}
                                     dateFormatter={dateFormatter}
                                 />
@@ -36,9 +37,19 @@ const VisitReferralTimeline = ({ client, refreshClient }: IProps) => {
                             timestamp: r.date_referred,
                             Component: (
                                 <ReferralEntry
-                                    key={r.id}
+                                    key={`referral${r.id}`}
                                     referral={r}
                                     refreshClient={refreshClient}
+                                    dateFormatter={dateFormatter}
+                                />
+                            ),
+                        })),
+                        ...client.baseline_surveys.slice().map((s) => ({
+                            timestamp: s.survey_date,
+                            Component: (
+                                <BaseSurveyEntry
+                                    key={`survey${s.id}`}
+                                    survey={s}
                                     dateFormatter={dateFormatter}
                                 />
                             ),
@@ -55,4 +66,4 @@ const VisitReferralTimeline = ({ client, refreshClient }: IProps) => {
     );
 };
 
-export default VisitReferralTimeline;
+export default ClientTimeline;

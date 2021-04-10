@@ -23,6 +23,7 @@ import { RiskType, riskTypes } from "util/risks";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 import { useZones } from "util/hooks/zones";
+import DataCard from "components/DataCard/DataCard";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -94,28 +95,6 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
             if (!improvements.length && !outcomes.length) {
                 return <React.Fragment key={type} />;
             }
-
-            interface IDataCardProps {
-                data: {
-                    title: string;
-                    desc: string;
-                }[];
-            }
-
-            const DataCard = ({ data }: IDataCardProps) => (
-                <>
-                    <Card>
-                        <CardContent>
-                            {data.map((d, i) => (
-                                <p key={i}>
-                                    <b>{d.title}:</b> {d.desc}
-                                </p>
-                            ))}
-                        </CardContent>
-                    </Card>
-                    <br />
-                </>
-            );
 
             let titleDescArr = [];
 

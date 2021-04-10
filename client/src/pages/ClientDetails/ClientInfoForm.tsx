@@ -227,6 +227,22 @@ const ClientInfoForm = (props: IProps) => {
                                         New Referral
                                     </Button>
                                 </Grid>
+                                <Grid className={styles.sideFormButtonWrapper} item md={10} xs={12}>
+                                    <Button
+                                        className={styles.sideFormButton}
+                                        color="primary"
+                                        variant="contained"
+                                        fullWidth
+                                        onClick={() =>
+                                            history.push(
+                                                `/client/${props.clientInfo.id}/surveys/new`
+                                            )
+                                        }
+                                        disabled={isSubmitting}
+                                    >
+                                        Baseline Survey
+                                    </Button>
+                                </Grid>
                             </Grid>
                         </Grid>
                         <Grid item md={10} xs={12}>

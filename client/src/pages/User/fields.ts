@@ -28,10 +28,7 @@ export const passwordValidationSchema = () =>
             .required(),
         [changePasswordField.newPassword]: Yup.string()
             .label(fieldLabels[changePasswordField.newPassword])
-            .matches(
-                Validation.passwordRegExp,
-                Validation.passwordInvalidMsg
-            )
+            .matches(Validation.passwordRegExp, Validation.passwordInvalidMsg)
             .required(),
         [changePasswordField.confirmNewPassword]: Yup.string()
             .label(fieldLabels[changePasswordField.confirmNewPassword])

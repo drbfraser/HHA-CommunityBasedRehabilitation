@@ -5,12 +5,19 @@ export const useStyles = makeStyles(
         container: {
             paddingLeft: 20,
         },
-        topContainer: {
+        header: {
             display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
             justifyContent: "space-between",
+            alignItems: "center",
+        },
+        changePasswordButton: {
+            marginBottom: 20,
         },
         logOutButton: {
-            float: "right",
+            display: "flex",
+            justifyContent: "flex-end",
         },
     },
     { index: 1 }

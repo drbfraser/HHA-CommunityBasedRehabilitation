@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router";
 
 import { Grid, Typography, Button } from "@material-ui/core";
@@ -11,7 +11,7 @@ import { IClient } from "util/clients";
 import ClientRisks from "./Risks/ClientRisks";
 import { IRisk } from "util/risks";
 import { useHistory } from "react-router-dom";
-import VisitReferralTimeline from "./VisitReferralTimeline/VisitReferralTimeline";
+import ClientTimeline from "./ClientTimeline/ClientTimeline";
 import { timestampToFormDate } from "util/dates";
 import { Alert, Skeleton } from "@material-ui/lab";
 interface IUrlParam {
@@ -25,24 +25,21 @@ const ClientDetails = () => {
 
     const history = useHistory();
 
-    useEffect(() => {
-        const getClient = async () => {
-            try {
-                const client = (await (
-                    await apiFetch(Endpoint.CLIENT, `${clientId}`)
-                ).json()) as IClient;
-
+    const getClient = useCallback(() => {
+        apiFetch(Endpoint.CLIENT, `${clientId}`)
+            .then((resp) => resp.json())
+            .then((client: IClient) => {
                 client.birth_date = timestampToFormDate(client.birth_date as number);
                 client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
 
                 setClientInfo(client);
-            } catch (e) {
-                setLoadingError(true);
-            }
-        };
-
-        getClient();
+            })
+            .catch(() => setLoadingError(true));
     }, [clientId]);
+
+    useEffect(() => {
+        getClient();
+    }, [getClient]);
 
     return loadingError ? (
         <Alert severity="error">Something went wrong loading that client. Please try again.</Alert>
@@ -86,11 +83,11 @@ const ClientDetails = () => {
             </Grid>
             <Grid item xs={6}>
                 <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
-                    <b>Visits &amp; Referrals</b>
+                    <b>Visits, Referrals &amp; Surveys</b>
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <VisitReferralTimeline client={clientInfo} />
+                <ClientTimeline refreshClient={() => getClient()} client={clientInfo} />
             </Grid>
         </Grid>
     );

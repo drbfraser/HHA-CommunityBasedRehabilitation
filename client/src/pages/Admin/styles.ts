@@ -6,11 +6,15 @@ export const useStyles = makeStyles(
         container: {
             paddingLeft: 20,
         },
-        topContainer: {
+        header: {
             display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
         },
-        floatRight: {
-            float: "right",
+        editButton: {
+            marginBottom: 20,
         },
         disableBtn: {
             backgroundColor: themeColors.riskRed,

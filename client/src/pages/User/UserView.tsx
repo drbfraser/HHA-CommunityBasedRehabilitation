@@ -6,7 +6,6 @@ import { useCurrentUser } from "util/hooks/currentUser";
 import { APILoadError } from "util/endpoints";
 import { useZones } from "util/hooks/zones";
 import { useHistory } from "react-router-dom";
-import Grid from "@material-ui/core/Grid";
 
 const UserView = () => {
     const styles = useStyles();
@@ -24,11 +23,15 @@ const UserView = () => {
                 <Alert severity="error">Something went wrong. Please go back and try again.</Alert>
             ) : user ? (
                 <>
-                    <div className={styles.topContainer}>
+                    <div className={styles.header}>
                         <h1>
                             {user.first_name} {user.last_name}
                         </h1>
-                        <Button color="primary" onClick={handleChangePassword}>
+                        <Button
+                            className={styles.changePasswordButton}
+                            color="primary"
+                            onClick={handleChangePassword}
+                        >
                             <EditIcon></EditIcon>Change Password
                         </Button>
                     </div>
@@ -39,19 +42,16 @@ const UserView = () => {
                     <b>Zone</b>
                     <p> {zones.get(user.zone) ?? "Unknown"} </p>
                     <b>Phone Number</b>
-                    <Grid container direction="row" justify="space-between" alignItems="center">
-                        <p> {user.phone_number} </p>
-                        <div>
-                            <Button
-                                onClick={() => history.push("/logout")}
-                                className={styles.logOutButton}
-                                color="primary"
-                                variant="contained"
-                            >
-                                Logout
-                            </Button>
-                        </div>
-                    </Grid>
+                    <p> {user.phone_number} </p>
+                    <div className={styles.logOutButton}>
+                        <Button
+                            onClick={() => history.push("/logout")}
+                            color="primary"
+                            variant="contained"
+                        >
+                            Logout
+                        </Button>
+                    </div>
                 </>
             ) : (
                 <Skeleton variant="rect" height={400} />

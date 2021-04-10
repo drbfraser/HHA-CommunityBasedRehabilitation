@@ -28,10 +28,11 @@ const UserPasswordEdit = () => {
     ) : user ? (
         <>
             <div className={styles.container}>
-                { wrongPasswordError &&  
-                <Alert onClose={() => setWrongPasswordError(false)} severity="error">
-                    The old password you have entered is incorrect. Please try again.
-                </Alert>} 
+                {wrongPasswordError && (
+                    <Alert onClose={() => setWrongPasswordError(false)} severity="error">
+                        The old password you have entered is incorrect. Please try again.
+                    </Alert>
+                )}
                 <br />
                 <b>ID</b>
                 <p>{user.id}</p>

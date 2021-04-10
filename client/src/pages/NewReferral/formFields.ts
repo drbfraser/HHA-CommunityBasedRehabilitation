@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { InjuryLocation, WheelchairExperience } from "util/referrals";
+import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
 
 export enum FormField {
     client = "client",
@@ -10,6 +11,7 @@ export enum FormField {
     wheelchairRepairable = "wheelchair_repairable",
     physiotherapy = "physiotherapy",
     condition = "condition",
+    conditionOther = "condition_other",
     prosthetic = "prosthetic",
     prostheticInjuryLocation = "prosthetic_injury_location",
     orthotic = "orthotic",
@@ -35,6 +37,7 @@ export const fieldLabels = {
     [FormField.wheelchairRepairable]: "Client's Wheelchair is Repairable",
     [FormField.physiotherapy]: "Physiotherapy",
     [FormField.condition]: "Condition",
+    [FormField.conditionOther]: "Other Condition",
     [FormField.prosthetic]: "Prosthetic",
     [FormField.prostheticInjuryLocation]: "Prosthetic Injury Location",
     [FormField.orthotic]: "Orthotic",
@@ -52,6 +55,7 @@ export const initialValues = {
     [FormField.wheelchairRepairable]: false,
     [FormField.physiotherapy]: false,
     [FormField.condition]: "",
+    [FormField.conditionOther]: "",
     [FormField.prosthetic]: false,
     [FormField.prostheticInjuryLocation]: InjuryLocation.BELOW,
     [FormField.orthotic]: false,
@@ -74,9 +78,32 @@ export const wheelchairValidationSchema = () =>
             .required(),
     });
 
+const isOtherCondition = async (condition: number) =>
+    Number(condition) === Number(getOtherDisabilityId(await getDisabilities()));
+
 export const physiotherapyValidationSchema = () =>
     Yup.object().shape({
-        [FormField.condition]: Yup.string().label(fieldLabels[FormField.condition]).required(),
+        [FormField.condition]: Yup.string()
+            .label(fieldLabels[FormField.condition])
+            .max(100)
+            .required(),
+        [FormField.conditionOther]: Yup.string()
+            .label(fieldLabels[FormField.conditionOther])
+            .trim()
+            .test(
+                "require-if-other-selected",
+                "Other Condition is required",
+                async (conditionOther, schema) =>
+                    !(await isOtherCondition(schema.parent.condition)) ||
+                    (conditionOther !== undefined && conditionOther.length > 0)
+            )
+            .test(
+                "require-if-other-selected",
+                "Other Condition must be at most 100 characters",
+                async (conditionOther, schema) =>
+                    !(await isOtherCondition(schema.parent.condition)) ||
+                    (conditionOther !== undefined && conditionOther.length <= 100)
+            ),
     });
 
 export const prostheticOrthoticValidationSchema = (serviceType: FormField) =>
@@ -91,6 +118,7 @@ export const otherServicesValidationSchema = () =>
         [FormField.otherDescription]: Yup.string()
             .label(fieldLabels[FormField.otherDescription])
             .max(100)
+            .trim()
             .required(),
     });
 

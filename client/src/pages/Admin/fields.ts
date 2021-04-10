@@ -74,10 +74,7 @@ const infoValidationShape = {
 const passwordValidationShape = {
     [AdminField.password]: Yup.string()
         .label(fieldLabels[AdminField.password])
-        .matches(
-            Validation.passwordRegExp,
-            Validation.passwordInvalidMsg
-        )
+        .matches(Validation.passwordRegExp, Validation.passwordInvalidMsg)
         .required(),
     [AdminField.confirmPassword]: Yup.string()
         .label(fieldLabels[AdminField.confirmPassword])

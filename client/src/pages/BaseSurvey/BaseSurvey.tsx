@@ -110,8 +110,8 @@ const HealthForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.deviceWoking}
-                    Label={{ label: fieldLabels[FormField.deviceWoking] }}
+                    name={FormField.deviceWorking}
+                    Label={{ label: fieldLabels[FormField.deviceWorking] }}
                 />
                 <br />
 

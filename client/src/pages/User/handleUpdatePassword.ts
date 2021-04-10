@@ -13,10 +13,9 @@ const updateCurrentUserPassword = async (userInfo: string) => {
     return await apiFetch(Endpoint.USER_CURRENT_PASSWORD, userParams, init);
 };
 
-export const handleUpdatePassword = (setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>) => async (
-    values: TPasswordValues,
-    helpers: FormikHelpers<TPasswordValues>
-) => {
+export const handleUpdatePassword = (
+    setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
+) => async (values: TPasswordValues, helpers: FormikHelpers<TPasswordValues>) => {
     const passwordInfo = JSON.stringify({
         current_password: values.oldPassword,
         new_password: values.newPassword,

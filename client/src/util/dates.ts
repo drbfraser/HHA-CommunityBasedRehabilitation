@@ -45,6 +45,7 @@ export const timestampToDateFromReference = (referenceTimestamp?: number) => {
     }
 };
 
+// TODO: the following two functions don't properly take time zones into account
 export const timestampToFormDate = (timestamp: number) => {
     return timestampToDateObj(timestamp).toISOString().substring(0, 10);
 };

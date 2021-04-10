@@ -19,6 +19,7 @@ export enum Endpoint {
     RISKS = "risks",
     DISABILITIES = "disabilities",
     VISIT = "visit/",
+    STATS = "stats",
     BASELINE_SURVEY = "baselinesurveys",
     USER_PASSWORD = "user/password/",
 }

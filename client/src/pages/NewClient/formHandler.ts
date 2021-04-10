@@ -66,7 +66,7 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         }
     });
 
-    if (values.picture){
+    if (values.picture) {
         const clientProfilePicture = await (await fetch(values.picture)).blob();
         formData.append(
             "picture",

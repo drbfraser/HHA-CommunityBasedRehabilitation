@@ -21,48 +21,7 @@ import {
     ValueFormatterParams,
     GridOverlay,
 } from "@material-ui/data-grid";
-import { RenderNoRowsOverlay, RenderText } from "util/datagrid";
 
-
-const dummyReferrals = [
-    {
-        id: 1,
-        type: "Wheelchair",
-        name: "Referral Client 1",
-        zone: "Palorinya Zone 2",
-        lastReferral: "03-27-2021",
-    },
-    {
-        id: 2,
-        type: "Orthotics",
-        zone: "Palorinya Zone 2",
-        name: "Referral Client 2",
-        lastReferral: "03-27-2021",
-    },
-    {
-        id: 3,
-        type: "Prosthetic",
-        zone: "Palorinya Zone 2",
-        name: "Referral Client 3",
-        lastReferral: "03-27-2021",
-    },
-    {
-        id: 4,
-        type: "Physiotherapy",
-        zone: "Palorinya Zone 2",
-        name: "Referral Client 4",
-        lastReferral: "03-27-2021",
-    },
-    {
-        id: 5,
-        type: "Prosthetic",
-        zone: "Palorinya Zone 2",
-        name: "Referral Client 5",
-        lastReferral: "03-27-2021",
-    },
-];
-
-// TODO: Connecting API endpoints
 
 const Dashboard = () => {
     const dataGridStyle = useDataGridStyles();
@@ -94,7 +53,6 @@ const Dashboard = () => {
         fetchClients();
         fetchZones();
         fetchReferrals();
-
     }, []);
 
     const RenderBadge = (params: ValueFormatterParams) => {
@@ -188,35 +146,40 @@ const Dashboard = () => {
         },
     ];
 
-    const outstandingReferralsColumns = [
-        {
-            field: "full_name",
-            headerName: "Name",
-            flex: 0.7,
-            renderCell: RenderText,
-        },
-        {
-            field: "type",
-            headerName: "Type",
-            flex: 1,
-            renderCell: RenderText,
-        },
-        // {
-        //     field: "zone",
-        //     headerName: "Zone",
-        //     flex: 1,
-        //     renderCell: RenderText,
-        // },
-        {
-            field: "date_referred",
-            headerName: "Last Referral",
-            flex: 1,
-            renderCell: RenderText,
-        },
-    ];
+    // const outstandingReferralsColumns = [
+    //     {
+    //         field: "full_name",
+    //         headerName: "Name",
+    //         flex: 0.7,
+    //         renderCell: RenderText,
+    //     },
+    //     {
+    //         field: "wheelchair",
+    //         headerName: "wheelchair",
+    //         renderCell: RenderText
+    //     },
+    //     {
+    //         field: "prosthetic",
+    //         headerName: "prosthetic",
+    //         renderCell: RenderText
+    //     },
+    //     {
+    //         field: "orthotics",
+    //         headerName: "orthotics",
+    //         renderCell: RenderText
+    //     },
+    //     {
+    //         field: "date_referred",
+    //         headerName: "Last Referral",
+    //         flex: 1,
+    //         renderCell: RenderDate,
+    //     },
+    // ];
 
     return (
         <>
+        {console.log(clients)}
+        {console.log(referrals)}
             <Alert severity="info">
                 <Typography variant="body1">You have 0 new messages from an admin.</Typography>
             </Alert>
@@ -255,10 +218,10 @@ const Dashboard = () => {
                             </Typography>
                             <br />
                             <div className={dataGridStyle.dashboardTables}>
-                                <DataGrid
+                                {/* <DataGrid
                                     hideFooterPagination
                                     className={`${dataGridStyle.datagrid}`}
-                                    rows={dummyReferrals}
+                                    rows={referrals}
                                     // TODO: set loading
                                     columns={outstandingReferralsColumns}
                                     density={DensityTypes.Comfortable}
@@ -266,7 +229,7 @@ const Dashboard = () => {
                                     components={{
                                         NoRowsOverlay: RenderNoOutstandingReferralsOverlay,
                                     }}
-                                />
+                                /> */}
                             </div>
                         </CardContent>
                     </Card>

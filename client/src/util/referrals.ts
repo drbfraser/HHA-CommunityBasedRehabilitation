@@ -20,6 +20,12 @@ export interface IReferral {
     services_other: string;
 }
 
+export enum ReferralTypes {
+    WHEELCHAIR = "wheelchair",
+    PROSTHETIC = "prosthetic",
+    ORTHOTIC = "orthotic",
+}
+
 export enum InjuryLocation {
     BELOW = "BEL",
     ABOVE = "ABO",

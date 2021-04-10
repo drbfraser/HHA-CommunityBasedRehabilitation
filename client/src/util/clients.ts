@@ -1,7 +1,6 @@
 import { IReferral } from "./referrals";
 import { IRisk, riskLevels } from "./risks";
 import { IVisitSummary } from "./visits";
-import { RowData } from "@material-ui/data-grid";
 
 export interface IClientSummary {
     id: number;
@@ -49,9 +48,12 @@ export const genders = {
     [Gender.MALE]: "Male",
 };
 
-export const clientPrioritySort = (a: RowData, b: RowData) => {
-    const getCombinedRisk = (c: RowData) =>
-        [c.HEALTH, c.EDUCAT, c.SOCIAL].reduce((sum, r) => sum + riskLevels[r].level, 0);
+export const clientPrioritySort = (a: IClientSummary, b: IClientSummary) => {
+    const getCombinedRisk = (c: IClientSummary) =>
+        [c.health_risk_level, c.educat_risk_level, c.social_risk_level].reduce(
+            (sum, r) => sum + riskLevels[r].level,
+            0
+        );
 
     const riskA = getCombinedRisk(a);
     const riskB = getCombinedRisk(b);

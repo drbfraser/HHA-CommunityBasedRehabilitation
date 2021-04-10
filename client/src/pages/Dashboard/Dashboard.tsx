@@ -39,6 +39,7 @@ const Dashboard = () => {
         const fetchClients = async () => {
             const tempClients = await apiFetch(Endpoint.CLIENTS)
                 .then((resp) => resp.json())
+                .then((client) => client.sort(clientPrioritySort))
                 .catch((err) => alert("Error occured while trying to load priority clients!"));
 
             const priorityClients: RowsProp = tempClients.map((row: IClientSummary) => {
@@ -53,7 +54,7 @@ const Dashboard = () => {
                 };
             });
 
-            setClients(priorityClients.sort(clientPrioritySort));
+            setClients(priorityClients);
             setPriorityClientsLoading(false);
         };
         const fetchZones = async () => {

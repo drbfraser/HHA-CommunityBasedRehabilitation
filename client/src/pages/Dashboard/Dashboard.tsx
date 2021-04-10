@@ -90,7 +90,7 @@ const Dashboard = () => {
         return <FiberManualRecord style={{ color: riskLevels[risk].color }} />;
     };
 
-    export const RenderText = (params: ValueFormatterParams) => {
+    const RenderText = (params: ValueFormatterParams) => {
         return <Typography variant={"body2"}>{params.value}</Typography>;
     };
 
@@ -203,6 +203,7 @@ const Dashboard = () => {
     return (
         <>
             <Alert severity="info">
+                {/* TODO: Update message alert once message alert functionality is implemented. */}
                 <Typography variant="body1">You have 0 new messages from an admin.</Typography>
             </Alert>
             <br />

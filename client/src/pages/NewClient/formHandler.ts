@@ -4,6 +4,7 @@ import { Endpoint, apiFetch, objectToFormData } from "../../util/endpoints";
 import history from "../../util/history";
 import { timestampFromFormDate } from "util/dates";
 import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
+import { getRandomStr } from "util/misc";
 
 const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {
@@ -65,11 +66,7 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
 
     if (values.picture) {
         const clientProfilePicture = await (await fetch(values.picture)).blob();
-        formData.append(
-            "picture",
-            clientProfilePicture,
-            Math.random().toString(36).substring(7) + ".png"
-        );
+        formData.append("picture", clientProfilePicture, getRandomStr(30) + ".png");
     }
 
     try {

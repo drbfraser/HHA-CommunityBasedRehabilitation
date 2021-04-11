@@ -2,22 +2,22 @@ import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
-import { fieldLabels, AdminField, validationEditSchema, IRouteParams } from "./fields";
+import { fieldLabels, AdminField, editValidationSchema, IRouteParams } from "./fields";
 import Button from "@material-ui/core/Button";
 import { useRouteMatch } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import { handleCancel, handleEditSubmit } from "./handler";
-import { getAllZones, IZone } from "util/cache";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { IUser, userRoles } from "util/users";
+import { useZones } from "util/hooks/zones";
 
 const AdminEdit = () => {
     const styles = useStyles();
     const { userId } = useRouteMatch<IRouteParams>().params;
     const [user, setUser] = useState<IUser>();
-    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
+    const zones = useZones();
     const [loadingError, setLoadingError] = useState(false);
 
     useEffect(() => {
@@ -27,8 +27,6 @@ const AdminEdit = () => {
                     await apiFetch(Endpoint.USER, `${userId}`)
                 ).json()) as IUser;
                 setUser(theUser);
-                const zones = await getAllZones();
-                setZoneOptions(zones);
             } catch (e) {
                 setLoadingError(true);
             }
@@ -40,14 +38,15 @@ const AdminEdit = () => {
         <Alert severity="error">
             Something went wrong trying to load that user. Please go back and try again.
         </Alert>
-    ) : user && zoneOptions ? (
+    ) : user && zones.size ? (
         <Formik
             initialValues={user}
-            validationSchema={validationEditSchema}
+            validationSchema={editValidationSchema}
             onSubmit={handleEditSubmit}
         >
             {({ values, setFieldValue, isSubmitting }) => (
                 <div className={styles.container}>
+                    <br />
                     <b>ID</b>
                     <p>{userId}</p>
                     <b>Username </b>
@@ -85,9 +84,9 @@ const AdminEdit = () => {
                                         label={fieldLabels[AdminField.zone]}
                                         name={AdminField.zone}
                                     >
-                                        {zoneOptions.map((option) => (
-                                            <MenuItem key={option.id} value={option.id}>
-                                                {option.zone_name}
+                                        {Array.from(zones).map(([id, name]) => (
+                                            <MenuItem key={id} value={id}>
+                                                {name}
                                             </MenuItem>
                                         ))}
                                     </Field>

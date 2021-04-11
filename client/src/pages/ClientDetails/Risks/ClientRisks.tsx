@@ -177,7 +177,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                     </CardContent>
                     <CardActions className={styles.riskCardButtonAndBadge}>
                         <Button
-                            variant="contained"
+                            variant="outlined"
                             color="primary"
                             size="small"
                             onClick={() => {

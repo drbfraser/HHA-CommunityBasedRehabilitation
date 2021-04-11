@@ -14,6 +14,21 @@ export const useStyles = makeStyles(
                 padding: "8px 16px",
             },
         },
+        completeIcon: {
+            color: themeColors.riskGreen,
+            verticalAlign: "text-top",
+        },
+        pendingIcon: {
+            color: themeColors.riskRed,
+            verticalAlign: "text-top",
+        },
+        resolveAccordion: {
+            display: "block",
+            textAlign: "right",
+        },
+        resolveBtn: {
+            color: themeColors.riskGreen,
+        },
     },
     { index: 1 }
 );

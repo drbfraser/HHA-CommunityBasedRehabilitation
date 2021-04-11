@@ -1,9 +1,11 @@
 import { FormikHelpers } from "formik";
-import { Endpoint, apiFetch } from "../../util/endpoints";
+import { Endpoint, apiFetch, objectToFormData } from "../../util/endpoints";
 import { IClient } from "util/clients";
 import { timestampFromFormDate } from "util/dates";
+import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
+import { getRandomStr } from "util/misc";
 
-const updateClient = async (clientInfo: string, clientId: number) => {
+const updateClient = async (clientInfo: FormData, clientId: number) => {
     const init: RequestInit = {
         method: "PUT",
         body: clientInfo,
@@ -22,7 +24,8 @@ export const handleSubmit = async (
     helpers: FormikHelpers<IClient>,
     setIsEditing: (isEditing: boolean) => void
 ) => {
-    const updatedValues = JSON.stringify({
+    const disabilities = await getDisabilities();
+    const updatedValues = {
         first_name: values.first_name,
         last_name: values.last_name,
         birth_date: timestampFromFormDate(values.birth_date as string),
@@ -37,10 +40,20 @@ export const handleSubmit = async (
         longitude: values.longitude,
         latitude: values.latitude,
         disability: values.disability,
-    });
+        other_disability: values.disability.includes(getOtherDisabilityId(disabilities))
+            ? values.other_disability
+            : "",
+    };
+
+    const formData = objectToFormData(updatedValues);
+
+    if (values.picture) {
+        const clientProfilePicture = await (await fetch(values.picture)).blob();
+        formData.append("picture", clientProfilePicture, getRandomStr(30) + ".png");
+    }
 
     try {
-        await updateClient(updatedValues, values.id);
+        await updateClient(formData, values.id);
         setIsEditing(false);
     } catch (e) {
         alert("Encountered an error while trying to edit the client!");

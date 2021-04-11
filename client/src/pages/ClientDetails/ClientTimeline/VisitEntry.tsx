@@ -16,23 +16,25 @@ import { Skeleton, Alert } from "@material-ui/lab";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { timestampToDateTime } from "util/dates";
 import { IVisit, IVisitSummary, outcomeGoalMets } from "util/visits";
-import { useStyles } from "./VisitEntry.styles";
+import { useStyles } from "./Entry.styles";
 import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
-import { IZone } from "util/cache";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { RiskType, riskTypes } from "util/risks";
 import TimelineEntry from "../Timeline/TimelineEntry";
+import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
+import { useZones } from "util/hooks/zones";
+import DataCard from "components/DataCard/DataCard";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
-    zones: IZone[];
     dateFormatter: (timestamp: number) => string;
 }
 
-const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
+const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
     const [open, setOpen] = useState(false);
     const [visit, setVisit] = useState<IVisit>();
     const [loadingError, setLoadingError] = useState(false);
+    const zones = useZones();
     const styles = useStyles();
 
     const onOpen = () => {
@@ -52,11 +54,11 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
     };
 
     const Summary = ({ clickable }: { clickable: boolean }) => {
-        const zone = zones.find((z) => z.id === visitSummary.zone);
+        const zone = zones.get(visitSummary.zone) ?? "Unknown";
 
         return (
             <>
-                Visit in {zone?.zone_name} &nbsp;
+                <b>Visit</b> in {zone} &nbsp;
                 {visitSummary.health_visit && (
                     <RiskTypeChip risk={RiskType.HEALTH} clickable={clickable} />
                 )}{" "}
@@ -94,28 +96,6 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
                 return <React.Fragment key={type} />;
             }
 
-            interface IDataCardProps {
-                data: {
-                    title: string;
-                    desc: string;
-                }[];
-            }
-
-            const DataCard = ({ data }: IDataCardProps) => (
-                <>
-                    <Card>
-                        <CardContent>
-                            {data.map((d, i) => (
-                                <p key={i}>
-                                    <b>{d.title}:</b> {d.desc}
-                                </p>
-                            ))}
-                        </CardContent>
-                    </Card>
-                    <br />
-                </>
-            );
-
             let titleDescArr = [];
 
             if (improvements.length) {
@@ -147,7 +127,7 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
             <>
                 <Card variant="outlined">
                     <CardContent>
-                        <b>When:</b> {timestampToDateTime(visit.date_visited)}
+                        <b>Visit Date:</b> {timestampToDateTime(visit.date_visited)}
                         <br />
                         <b>Village:</b> {visit.village}
                     </CardContent>
@@ -165,6 +145,7 @@ const VisitEntry = ({ visitSummary, zones, dateFormatter }: IEntryProps) => {
             <TimelineEntry
                 date={dateFormatter(visitSummary.date_visited)}
                 content={<Summary clickable={true} />}
+                DotIcon={EmojiPeopleIcon}
                 onClick={onOpen}
             />
             <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>

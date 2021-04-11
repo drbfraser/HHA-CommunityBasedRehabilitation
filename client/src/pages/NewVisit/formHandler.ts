@@ -1,4 +1,4 @@
-import { TFormValues } from "./formFields";
+import { ImprovementFormField, TFormValues } from "./formFields";
 import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "util/endpoints";
 import history from "../../util/history";
@@ -20,7 +20,11 @@ const addVisit = async (visitInfo: string) => {
 };
 
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
-export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
+export const handleSubmit = async (
+    values: TFormValues,
+    helpers: FormikHelpers<TFormValues>,
+    setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
+) => {
     const newVisit = JSON.stringify({
         client: values[FormField.client],
         health_visit: values[FormField.health],
@@ -32,7 +36,10 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         latitude: 0.0,
         improvements: Object.values(values[FormField.improvements])
             .reduce((improvements, typedImprovement) => improvements.concat(typedImprovement))
-            .filter((improvement) => improvement !== undefined),
+            .filter(
+                (improvement) =>
+                    improvement !== undefined && improvement[ImprovementFormField.enabled]
+            ),
         outcomes: Object.values(values[FormField.outcomes]).filter(
             (outcome) => outcome !== undefined
         ),
@@ -43,5 +50,6 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);
+        setSubmissionError(true);
     }
 };

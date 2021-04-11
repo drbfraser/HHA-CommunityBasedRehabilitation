@@ -60,7 +60,6 @@ class UserPasswordSerializer(serializers.ModelSerializer):
     def update(self, user, validated_data):
         user.set_password(validated_data["new_password"])
         user.save()
-
         return user
 
 
@@ -251,6 +250,17 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
         return referrals
 
 
+class OutstandingReferralSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    full_name = serializers.CharField()
+    services_other = serializers.CharField()
+    physiotherapy = serializers.BooleanField()
+    wheelchair = serializers.BooleanField()
+    prosthetic = serializers.BooleanField()
+    orthotic = serializers.BooleanField()
+    date_referred = serializers.IntegerField()
+
+
 class DetailedVisitSerializer(serializers.ModelSerializer):
     improvements = ImprovementSerializer(many=True)
     outcomes = OutcomeSerializer(many=True)
@@ -286,6 +296,10 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         visit = models.Visit.objects.create(**validated_data)
         visit.save()
 
+        client = validated_data["client"]
+        client.last_visit_date = current_time
+        client.save()
+
         for improvement_data in improvement_dataset:
             improvement_data["visit"] = visit
             improvement = models.Improvement.objects.create(**improvement_data)
@@ -317,6 +331,36 @@ class SummaryVisitSerializer(serializers.ModelSerializer):
         ]
 
 
+class AdminStatsVisitsSerializer(serializers.Serializer):
+    zone_id = serializers.IntegerField()
+    total = serializers.IntegerField()
+    health_count = serializers.IntegerField()
+    educat_count = serializers.IntegerField()
+    social_count = serializers.IntegerField()
+
+
+class AdminStatsReferralSerializer(serializers.Serializer):
+    total = serializers.IntegerField()
+    wheelchair_count = serializers.IntegerField()
+    physiotherapy_count = serializers.IntegerField()
+    prosthetic_count = serializers.IntegerField()
+    orthotic_count = serializers.IntegerField()
+    other_count = serializers.IntegerField()
+
+
+class AdminStatsDisabilitySerializer(serializers.Serializer):
+    disability_id = serializers.IntegerField()
+    total = serializers.IntegerField()
+
+
+class AdminStatsSerializer(serializers.Serializer):
+    disabilities = AdminStatsDisabilitySerializer(many=True, read_only=True)
+    clients_with_disabilities = serializers.IntegerField()
+    visits = AdminStatsVisitsSerializer(many=True, read_only=True)
+    referrals_resolved = AdminStatsReferralSerializer(many=False, read_only=True)
+    referrals_unresolved = AdminStatsReferralSerializer(many=False, read_only=True)
+
+
 class ClientListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Client
@@ -327,8 +371,25 @@ class ClientListSerializer(serializers.ModelSerializer):
             "health_risk_level",
             "social_risk_level",
             "educat_risk_level",
+            "last_visit_date",
             "created_by_user",
         ]
+
+
+class BaselineSurveySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.BaselineSurvey
+        fields = "__all__"
+
+        read_only_fields = ["user", "survey_date"]
+
+    def create(self, validated_data):
+        current_time = int(time.time())
+        validated_data["survey_date"] = current_time
+        validated_data["user"] = self.context["request"].user
+        baseline_survey = models.BaselineSurvey.objects.create(**validated_data)
+        baseline_survey.save()
+        return baseline_survey
 
 
 class ClientCreateSerializer(serializers.ModelSerializer):
@@ -346,6 +407,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "gender",
             "phone_number",
             "disability",
+            "other_disability",
             "created_by_user",
             "created_date",
             "longitude",
@@ -402,6 +464,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
     risks = ClientCreationRiskSerializer(many=True, read_only=True)
     visits = SummaryVisitSerializer(many=True, read_only=True)
     referrals = DetailedReferralSerializer(many=True, read_only=True)
+    baseline_surveys = BaselineSurveySerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Client
@@ -413,6 +476,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "gender",
             "phone_number",
             "disability",
+            "other_disability",
             "created_by_user",
             "created_date",
             "longitude",
@@ -428,6 +492,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "risks",
             "visits",
             "referrals",
+            "baseline_surveys",
         ]
 
         read_only_fields = ["created_by_user", "created_date"]

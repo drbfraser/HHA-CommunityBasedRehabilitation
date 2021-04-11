@@ -1,54 +1,60 @@
 import { useStyles } from "./styles";
-import { useEffect, useState } from "react";
-import { apiFetch, Endpoint } from "util/endpoints";
+import { Button } from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
 import { Alert, Skeleton } from "@material-ui/lab";
-import { getZoneMap } from "util/cache";
-import { IUser } from "util/users";
+import { useCurrentUser } from "util/hooks/currentUser";
+import { APILoadError } from "util/endpoints";
+import { useZones } from "util/hooks/zones";
+import { useHistory } from "react-router-dom";
 
 const UserView = () => {
     const styles = useStyles();
-    const [loadingError, setLoadingError] = useState(false);
-    const [user, setUser] = useState<IUser>();
-    const [zone, setZone] = useState<string>();
+    const history = useHistory();
+    const user = useCurrentUser();
+    const zones = useZones();
 
-    useEffect(() => {
-        const getUser = async () => {
-            try {
-                const theUser: IUser = await (await apiFetch(Endpoint.USER_CURRENT)).json();
-                setUser(theUser);
-                const zoneMap = await getZoneMap();
-                setZone(zoneMap.get(theUser.zone));
-            } catch (e) {
-                setLoadingError(true);
-            }
-        };
-        getUser();
-    }, []);
+    const handleChangePassword = () => {
+        return history.push("/user/password");
+    };
 
     return (
         <div className={styles.container}>
-            {loadingError ? (
+            {user === APILoadError ? (
                 <Alert severity="error">Something went wrong. Please go back and try again.</Alert>
-            ) : (
+            ) : user ? (
                 <>
-                    {user ? (
-                        <>
-                            <h1>
-                                {user.first_name} {user.last_name}
-                            </h1>
-                            <b>Username</b>
-                            <p>{user.username}</p>
-                            <b>ID</b>
-                            <p> {user.id} </p>
-                            <b>Zone</b>
-                            <p> {zone} </p>
-                            <b>Phone Number</b>
-                            <p> {user.phone_number} </p>
-                        </>
-                    ) : (
-                        <Skeleton variant="text" />
-                    )}
+                    <div className={styles.header}>
+                        <h1>
+                            {user.first_name} {user.last_name}
+                        </h1>
+                        <Button
+                            className={styles.changePasswordButton}
+                            color="primary"
+                            onClick={handleChangePassword}
+                        >
+                            <EditIcon></EditIcon>Change Password
+                        </Button>
+                    </div>
+                    <b>Username</b>
+                    <p>{user.username}</p>
+                    <b>ID</b>
+                    <p> {user.id} </p>
+                    <b>Zone</b>
+                    <p> {zones.get(user.zone) ?? "Unknown"} </p>
+                    <b>Phone Number</b>
+                    <p> {user.phone_number} </p>
+                    <div className={styles.logOutButton}>
+                        <Button
+                            onClick={() => history.push("/logout")}
+                            color="primary"
+                            variant="contained"
+                        >
+                            Logout
+                        </Button>
+                    </div>
                 </>
+            ) : (
+                <Skeleton variant="rect" height={400} />
             )}
         </div>
     );

@@ -10,10 +10,10 @@ urlpatterns = [
     path("login/refresh", TokenRefreshView.as_view(), name="token-refresh"),
     path("users", views.UserList.as_view(), name="user-list"),
     path("user/<int:pk>", views.UserDetail.as_view(), name="user-detail"),
-    path("user/<int:pk>/password", views.UserPassword.as_view(), name="user-password"),
+    path("user/password/<int:pk>", views.UserPassword.as_view(), name="user-password"),
     path("user/current", views.UserCurrent.as_view(), name="user-current"),
     path(
-        "user/current/password",
+        "user/password/current",
         views.UserCurrentPassword.as_view(),
         name="user-current-password",
     ),
@@ -33,4 +33,15 @@ urlpatterns = [
     path("visit/<int:pk>", views.VisitDetail.as_view(), name="visit-detail"),
     path("referral/<int:pk>", views.ReferralDetail.as_view(), name="referral-detail"),
     path("referrals", views.ReferralList.as_view(), name="referral-list"),
+    path(
+        "referrals/outstanding",
+        views.ReferralOutstanding.as_view(),
+        name="referral-outstanding",
+    ),
+    path("stats", views.AdminStats.as_view(), name="admin-stats"),
+    path(
+        "baselinesurveys",
+        views.BaselineSurveyCreate.as_view(),
+        name="baseline-survey-list",
+    ),
 ]

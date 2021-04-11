@@ -1,10 +1,12 @@
 import { FormikHelpers } from "formik";
 import { TFormValues } from "./formFields";
-import { Endpoint, apiFetch } from "../../util/endpoints";
+import { Endpoint, apiFetch, objectToFormData } from "../../util/endpoints";
 import history from "../../util/history";
 import { timestampFromFormDate } from "util/dates";
+import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
+import { getRandomStr } from "util/misc";
 
-const addClient = async (clientInfo: string) => {
+const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {
         method: "POST",
         body: clientInfo,
@@ -21,9 +23,16 @@ const addClient = async (clientInfo: string) => {
 
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
 export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
-    const newClient = JSON.stringify({
+    const disabilities = await getDisabilities();
+
+    const newClient = {
         birth_date: timestampFromFormDate(values.birthDate),
         disability: values.disability,
+        other_disability: (values.disability as number[]).includes(
+            getOtherDisabilityId(disabilities)
+        )
+            ? values.otherDisability
+            : "",
         first_name: values.firstName,
         last_name: values.lastName,
         gender: values.gender,
@@ -51,12 +60,20 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
             requirement: values.educationRequirements,
             goal: values.educationGoals,
         },
-    });
+    };
+
+    const formData = objectToFormData(newClient);
+
+    if (values.picture) {
+        const clientProfilePicture = await (await fetch(values.picture)).blob();
+        formData.append("picture", clientProfilePicture, getRandomStr(30) + ".png");
+    }
 
     try {
-        const client = await addClient(newClient);
+        const client = await addClient(formData);
         history.push(`/client/${client.id}`);
     } catch (e) {
+        alert("Encountered an error while trying to create the client!");
         helpers.setSubmitting(false);
     }
 };

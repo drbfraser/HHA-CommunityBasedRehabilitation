@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Field, Form, Formik } from "formik";
+import React from "react";
+import { Field, Form, Formik, ErrorMessage } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 
 import { useStyles } from "./ClientForm.styles";
 
 import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -14,32 +12,20 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 import { fieldLabels, FormField, initialValues, validationSchema } from "./formFields";
 
 import { riskLevels } from "util/risks";
 import { handleSubmit, handleReset } from "./formHandler";
-import { getAllZones, IZone, getAllDisabilities, IDisability } from "util/cache";
 import { genders } from "util/clients";
+import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
+import { useZones } from "util/hooks/zones";
+import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 
 const ClientForm = () => {
     const styles = useStyles();
-    const [zoneOptions, setZoneOptions] = useState<IZone[]>([]);
-    const [disabilityOptions, setDisabilityOptions] = useState<IDisability[]>([]);
-
-    useEffect(() => {
-        const fetchAllZones = async () => {
-            const zones = await getAllZones();
-            setZoneOptions(zones);
-        };
-        const fetchAllDisabilities = async () => {
-            const disabilities = await getAllDisabilities();
-            setDisabilityOptions(disabilities);
-        };
-        fetchAllZones();
-        fetchAllDisabilities();
-    }, []);
+    const zones = useZones();
+    const disabilities = useDisabilities();
 
     return (
         <Formik
@@ -47,22 +33,14 @@ const ClientForm = () => {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
         >
-            {({ values, isSubmitting, resetForm }) => (
-                <Grid container direction="row" justify="flex-start">
+            {({ values, isSubmitting, resetForm, touched, setFieldValue }) => (
+                <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
-                        <Card className={styles.profileImgContainer}>
-                            <CardContent>
-                                {/* TODO: Change image src based on whether the client exists or not */}
-                                <img
-                                    className={styles.profilePicture}
-                                    src={`/images/profile_pic_icon.png`}
-                                    alt="user-icon"
-                                />
-                                <div className={styles.uploadIcon}>
-                                    <CloudUploadIcon />
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <ProfilePicCard
+                            isEditing={true}
+                            setFieldValue={setFieldValue}
+                            picture={values.picture}
+                        />
                     </Grid>
                     <Grid item md={10} xs={12}>
                         <Form>
@@ -139,9 +117,9 @@ const ClientForm = () => {
                                             label={fieldLabels[FormField.zone]}
                                             name={FormField.zone}
                                         >
-                                            {zoneOptions.map((option) => (
-                                                <MenuItem key={option.id} value={option.id}>
-                                                    {option.zone_name}
+                                            {Array.from(zones).map(([id, name]) => (
+                                                <MenuItem key={id} value={id}>
+                                                    {name}
                                                 </MenuItem>
                                             ))}
                                         </Field>
@@ -169,20 +147,27 @@ const ClientForm = () => {
                                         name={FormField.disability}
                                         variant="outlined"
                                     >
-                                        {disabilityOptions.map((option) => (
-                                            <MenuItem key={option.id} value={option.id}>
-                                                {option.disability_type}
+                                        {Array.from(disabilities).map(([id, name]) => (
+                                            <MenuItem key={id} value={id}>
+                                                {name}
                                             </MenuItem>
                                         ))}
                                     </Field>
-                                </Grid>
-                                <Grid item md={12} xs={12} style={{ marginBottom: "-20px" }}>
-                                    <Field
-                                        component={CheckboxWithLabel}
-                                        type="checkbox"
-                                        name={FormField.interviewConsent}
-                                        Label={{ label: fieldLabels[FormField.interviewConsent] }}
-                                    />
+                                    {(values[FormField.disability] as number[]).includes(
+                                        getOtherDisabilityId(disabilities)
+                                    ) && (
+                                        <div>
+                                            <br />
+                                            <Field
+                                                component={TextField}
+                                                fullWidth
+                                                label={fieldLabels[FormField.otherDisability]}
+                                                required
+                                                name={FormField.otherDisability}
+                                                variant="outlined"
+                                            />
+                                        </div>
+                                    )}
                                 </Grid>
                                 <Grid item md={12} xs={12}>
                                     <Field
@@ -389,8 +374,32 @@ const ClientForm = () => {
                                         name={FormField.socialGoals}
                                     />
                                 </Grid>
+                                <br />
+                                <Grid
+                                    item
+                                    md={12}
+                                    xs={12}
+                                    className={
+                                        !values.interviewConsent && touched.interviewConsent
+                                            ? styles.checkboxError
+                                            : ""
+                                    }
+                                >
+                                    <Field
+                                        component={CheckboxWithLabel}
+                                        type="checkbox"
+                                        name={FormField.interviewConsent}
+                                        Label={{ label: fieldLabels[FormField.interviewConsent] }}
+                                        required
+                                    />
+                                    <ErrorMessage
+                                        component="div"
+                                        className={styles.errorMessage}
+                                        name={FormField.interviewConsent}
+                                    />
+                                </Grid>
                             </Grid>
-
+                            <br />
                             <br />
                             <Grid justify="flex-end" container spacing={2}>
                                 <Grid item>

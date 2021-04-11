@@ -92,13 +92,15 @@ const OutcomeField = (props: { visitType: FormField; risks: IRisk[] }) => {
 
     return (
         <div>
-            <FormLabel>Client's {fieldLabels[props.visitType]} Goal</FormLabel>
+            <FormLabel focused={false}>Client's {fieldLabels[props.visitType]} Goal</FormLabel>
             <Typography variant={"body1"}>
                 {props.risks.find((r) => r.risk_type === (props.visitType as string))?.goal}
             </Typography>
             <br />
 
-            <FormLabel>Client's {fieldLabels[props.visitType]} Goal Status</FormLabel>
+            <FormLabel focused={false}>
+                Client's {fieldLabels[props.visitType]} Goal Status
+            </FormLabel>
             <br />
             <Field
                 component={TextField}
@@ -115,9 +117,8 @@ const OutcomeField = (props: { visitType: FormField; risks: IRisk[] }) => {
             </Field>
             <br />
             <br />
-
             <div>
-                <FormLabel>What is the Outcome of the Goal?</FormLabel>
+                <FormLabel focused={false}>What is the Outcome of the Goal?</FormLabel>
                 <Field
                     type="text"
                     component={TextField}
@@ -142,7 +143,7 @@ const VisitTypeStep = (visitType: FormField, risks: IRisk[]) => {
     return ({ formikProps }: IStepProps) => {
         return (
             <FormControl>
-                <FormLabel>Select an Improvement</FormLabel>
+                <FormLabel focused={false}>Select an Improvement</FormLabel>
                 <FieldArray
                     name={FormField.improvements}
                     render={() =>
@@ -198,7 +199,7 @@ const VisitReasonStep = (
     };
     return (
         <>
-            <FormLabel>Where was the Visit?</FormLabel>
+            <FormLabel focused={false}>Where was the Visit?</FormLabel>
             <FormControl
                 className={styles.visitLocationContainer}
                 fullWidth
@@ -232,7 +233,7 @@ const VisitReasonStep = (
             </FormControl>
             <br />
             <FormControl component="fieldset">
-                <FormLabel>Select the Reasons for the Visit</FormLabel>
+                <FormLabel focused={false}>Select the Reasons for the Visit</FormLabel>
                 <FormGroup>
                     {visitTypes.map((visitType) => (
                         <Field

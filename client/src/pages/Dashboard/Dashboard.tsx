@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useHistory } from "react-router-dom";
-
+import { Cancel, CheckCircle, FiberManualRecord } from "@material-ui/icons";
 import { RiskLevel, IRiskLevel, riskLevels, IRiskType, riskTypes, RiskType } from "util/risks";
-import { Cancel, FiberManualRecord } from "@material-ui/icons";
 import { clientPrioritySort, IClientSummary } from "util/clients";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { useZones } from "util/hooks/zones";
@@ -138,7 +137,7 @@ const Dashboard = () => {
     const RenderNoOutstandingReferralsOverlay = () => {
         return (
             <GridOverlay className={dataGridStyle.noRows}>
-                <Cancel color="primary" className={dataGridStyle.noRowsIcon} />
+                <CheckCircle color="primary" className={dataGridStyle.noRowsIcon} />
                 <Typography color="primary">No Outstanding Referrals Found</Typography>
             </GridOverlay>
         );

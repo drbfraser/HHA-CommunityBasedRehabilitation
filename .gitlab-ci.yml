@@ -3,7 +3,7 @@ stages:
   - deploy
 
 variables:
-  STAGING_BRANCH: "master"
+  STAGING_BRANCH: "main"
   PROD_BRANCH: "prod"
 
 build client:

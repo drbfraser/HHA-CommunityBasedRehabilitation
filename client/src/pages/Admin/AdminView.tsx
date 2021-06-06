@@ -1,5 +1,5 @@
-import React from "react";
 import EditIcon from "@material-ui/icons/Edit";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
 import { useStyles } from "./styles";
 import { IRouteParams } from "./fields";
 import { useHistory, useRouteMatch } from "react-router-dom";
@@ -57,7 +57,7 @@ const AdminView = () => {
                                 <EditIcon></EditIcon>Edit
                             </Button>
                             <Button color="primary" onClick={handlePasswordEdit}>
-                                <EditIcon></EditIcon>Change Password
+                                <LockOpenIcon></LockOpenIcon>Change Password
                             </Button>
                         </div>
                     </div>

@@ -2,7 +2,8 @@ import * as Yup from "yup";
 
 export enum FormField {
     client = "client",
-
+    giveConsent = "give_consent",
+    
     health = "health",
     rateLevel = "rate_level",
     getService = "get_service",
@@ -55,8 +56,8 @@ export const servicesTypes = [FormField.health, FormField.education, FormField.s
 
 export const fieldLabels = {
     [FormField.client]: "Client",
+    [FormField.giveConsent]: "I give the consent to take the baseline survey",
     [FormField.rateLevel]: "Health Level",
-
     [FormField.health]: "Health",
     [FormField.getService]:
         "I have access to rehabilitation services (e.g physiotherapy, speech therapy, training how to use assistive device)",
@@ -111,7 +112,8 @@ export const fieldLabels = {
 
 export const initialValues = {
     [FormField.client]: 0,
-
+    [FormField.giveConsent]: false,
+    
     [FormField.rateLevel]: "",
     [FormField.getService]: false,
     [FormField.needService]: false,

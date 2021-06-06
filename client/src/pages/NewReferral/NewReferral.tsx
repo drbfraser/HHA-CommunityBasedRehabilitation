@@ -98,7 +98,7 @@ const WheelchairForm = (props: IFormProps) => {
 
     return (
         <div>
-            <FormLabel>What is the client's wheelchair experience?</FormLabel>
+            <FormLabel>What type of wheelchair user?</FormLabel>
             <Field
                 component={RadioGroup}
                 name={FormField.wheelchairExperience}

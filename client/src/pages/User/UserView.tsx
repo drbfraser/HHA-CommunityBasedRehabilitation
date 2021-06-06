@@ -1,6 +1,6 @@
 import { useStyles } from "./styles";
 import { Button } from "@material-ui/core";
-import LockOpenIcon from '@material-ui/icons/LockOpen';
+import LockOpenIcon from "@material-ui/icons/LockOpen";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { useCurrentUser } from "util/hooks/currentUser";
 import { APILoadError } from "util/endpoints";

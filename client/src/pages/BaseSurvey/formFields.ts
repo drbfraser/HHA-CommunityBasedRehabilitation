@@ -3,7 +3,7 @@ import * as Yup from "yup";
 export enum FormField {
     client = "client",
     giveConsent = "give_consent",
-    
+
     health = "health",
     rateLevel = "rate_level",
     getService = "get_service",
@@ -113,7 +113,7 @@ export const fieldLabels = {
 export const initialValues = {
     [FormField.client]: 0,
     [FormField.giveConsent]: false,
-    
+
     [FormField.rateLevel]: "",
     [FormField.getService]: false,
     [FormField.needService]: false,

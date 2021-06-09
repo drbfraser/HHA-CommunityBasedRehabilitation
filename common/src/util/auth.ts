@@ -11,7 +11,6 @@ interface IAPIToken {
     user_id: number;
 }
 
-
 // TODO: Store access token based off of platform (mobile or web)
 const getAccessToken = () => window?.localStorage.getItem(ACCESS_TOKEN_KEY) ?? "";
 const getRefreshToken = () => window?.localStorage.getItem(REFRESH_TOKEN_KEY) ?? "";

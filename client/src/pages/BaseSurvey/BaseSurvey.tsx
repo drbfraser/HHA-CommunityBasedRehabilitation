@@ -582,8 +582,8 @@ const NewSurvey = () => {
                     <Field
                         component={CheckboxWithLabel}
                         type="checkbox"
-                        name={FormField.giveConsent}
-                        Label={{ label: fieldLabels[FormField.giveConsent] }}
+                        name={FormField.surveyConsent}
+                        Label={{ label: fieldLabels[FormField.surveyConsent] }}
                     />
 
                     {formikProps.values.give_consent ? (

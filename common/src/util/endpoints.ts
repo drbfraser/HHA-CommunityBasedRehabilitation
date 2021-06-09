@@ -1,9 +1,7 @@
 import { getAuthToken } from "./auth";
 
-export const API_URL =
-    process.env.NODE_ENV === "development"
-        ? `http://${window.location.hostname}:8000/api/`
-        : "/api/";
+// TODO: Point this to the right API for development and production environments 
+export const API_URL = "/api/";
 
 export enum Endpoint {
     LOGIN = "login",

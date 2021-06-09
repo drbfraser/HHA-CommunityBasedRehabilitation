@@ -219,7 +219,7 @@ const Dashboard = () => {
                 {/* TODO: Update message alert once message alert functionality is implemented. */}
                 <Typography variant="body1">You have 0 new messages from an admin.</Typography>
             </Alert>
-            <br/>
+            <br />
             <Grid container direction="row" spacing={1}>
                 <Grid item lg={6} md={12} xs={12}>
                     <Card variant="outlined">

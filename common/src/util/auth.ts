@@ -11,11 +11,13 @@ interface IAPIToken {
     user_id: number;
 }
 
-const getAccessToken = () => window.localStorage.getItem(ACCESS_TOKEN_KEY) ?? "";
-const getRefreshToken = () => window.localStorage.getItem(REFRESH_TOKEN_KEY) ?? "";
 
-const setAccessToken = (token: string) => window.localStorage.setItem(ACCESS_TOKEN_KEY, token);
-const setRefreshToken = (token: string) => window.localStorage.setItem(REFRESH_TOKEN_KEY, token);
+// TODO: Store access token based off of platform (mobile or web)
+const getAccessToken = () => window?.localStorage.getItem(ACCESS_TOKEN_KEY) ?? "";
+const getRefreshToken = () => window?.localStorage.getItem(REFRESH_TOKEN_KEY) ?? "";
+
+const setAccessToken = (token: string) => window?.localStorage.setItem(ACCESS_TOKEN_KEY, token);
+const setRefreshToken = (token: string) => window?.localStorage.setItem(REFRESH_TOKEN_KEY, token);
 
 // returns false if malformed or within 30 seconds of expiry
 const isTokenValid = (token: string) => {
@@ -84,7 +86,7 @@ export const doLogin = async (username: string, password: string) => {
 export const doLogout = () => {
     setAccessToken("");
     setRefreshToken("");
-    window.location.replace("/");
+    window?.location.replace("/");
 };
 
 export const isLoggedIn = () => isTokenValid(getRefreshToken());

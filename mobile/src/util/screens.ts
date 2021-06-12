@@ -1,5 +1,6 @@
 import { APILoadError, IUser, TAPILoadError, UserRole } from "common";
 import Todo from "../screens/Todo/Todo";
+import ClientList from "../screens/ClientList/ClientList";
 
 export interface IScreen {
   name: string;
@@ -21,7 +22,7 @@ const screens: IScreen[] = [
   },
   {
     name: "Client List",
-    Component: Todo,
+    Component: ClientList,
     iconName: "format-list-bulleted",
   },
   {

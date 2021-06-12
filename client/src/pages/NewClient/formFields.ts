@@ -36,7 +36,7 @@ export const fieldLabels = {
     [FormField.gender]: "Gender",
     [FormField.zone]: "Zone",
     [FormField.phoneNumber]: "Phone Number",
-    [FormField.interviewConsent]: "Consent to Interview? *",
+    [FormField.interviewConsent]: "I give the consent to interview",
     [FormField.caregiverPresent]: "Caregiver Present?",
     [FormField.caregiverPhone]: "Caregiver Phone Number",
     [FormField.caregiverName]: "Caregiver Name",

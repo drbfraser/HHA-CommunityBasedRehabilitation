@@ -10,7 +10,7 @@ const Tab = createMaterialBottomTabNavigator();
 export default function App() {
   return (
     <Provider theme={theme}>
-      <NavigationContainer>
+      <NavigationContainer theme={theme}>
         <Tab.Navigator>
           {screensForUser(undefined).map((screen) => (
             <Tab.Screen

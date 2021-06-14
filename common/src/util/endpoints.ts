@@ -1,7 +1,7 @@
 import { getAuthToken } from "./auth";
 
 // TODO: Point this to the right API for development and production environments
-export const API_URL = "/api/";
+export const API_URL = `https://cbrs.cradleplatform.com`;
 
 export enum Endpoint {
     LOGIN = "login",

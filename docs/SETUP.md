@@ -27,7 +27,11 @@ The secret key, username and password are for your local development environment
 
 ### 4. Install Required NPM Packages
 
-Navigate to the `client` folder and run `npm install`.
+Navigate to the `web` and `mobile` folders and run `npm install`.
+
+### Install Required EXPO Packages
+
+Navigate to the `mobile` folder and run `npm install -g expo-cli`, if there are vulnerabilities found, run `npm audit fix` to fix them.
 
 ### 5. Run Django Database Migrations
 

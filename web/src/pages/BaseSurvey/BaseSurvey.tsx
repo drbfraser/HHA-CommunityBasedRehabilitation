@@ -577,30 +577,43 @@ const NewSurvey = () => {
                     <Button onClick={history.goBack}>
                         <ArrowBack /> Go back
                     </Button>
-                    <Stepper activeStep={step} orientation="vertical">
-                        {surveySteps.map((surveyStep, index) => (
-                            <Step key={index}>
-                                <StepLabel>{surveyStep.label}</StepLabel>
-                                <StepContent>
-                                    <surveyStep.Form formikProps={formikProps} />
-                                    <br />
-                                    {step !== 0 && (
-                                        <Button
-                                            style={{ marginRight: "5px" }}
-                                            variant="outlined"
-                                            color="primary"
-                                            onClick={prevStep}
-                                        >
-                                            Prev Step
+                    <br />
+                    <br />
+                    <Field
+                        component={CheckboxWithLabel}
+                        type="checkbox"
+                        name={FormField.surveyConsent}
+                        Label={{ label: fieldLabels[FormField.surveyConsent] }}
+                    />
+
+                    {formikProps.values.give_consent ? (
+                        <Stepper activeStep={step} orientation="vertical">
+                            {surveySteps.map((surveyStep, index) => (
+                                <Step key={index}>
+                                    <StepLabel>{surveyStep.label}</StepLabel>
+                                    <StepContent>
+                                        <surveyStep.Form formikProps={formikProps} />
+                                        <br />
+                                        {step !== 0 && (
+                                            <Button
+                                                style={{ marginRight: "5px" }}
+                                                variant="outlined"
+                                                color="primary"
+                                                onClick={prevStep}
+                                            >
+                                                Prev Step
+                                            </Button>
+                                        )}
+                                        <Button type="submit" variant="contained" color="primary">
+                                            {isFinalStep && index === step ? "Submit" : "Next Step"}
                                         </Button>
-                                    )}
-                                    <Button type="submit" variant="contained" color="primary">
-                                        {isFinalStep && index === step ? "Submit" : "Next Step"}
-                                    </Button>
-                                </StepContent>
-                            </Step>
-                        ))}
-                    </Stepper>
+                                    </StepContent>
+                                </Step>
+                            ))}
+                        </Stepper>
+                    ) : (
+                        <></>
+                    )}
                 </Form>
             )}
         </Formik>

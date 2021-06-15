@@ -8,8 +8,8 @@ const useStyles = () =>
       paddingTop: 40,
     },
     item: {
-      padding: 10,
-      fontSize: 18,
+      padding: 2,
+      fontSize: 14,
       height: 44,
     },
     list: {

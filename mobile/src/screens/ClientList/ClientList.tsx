@@ -10,6 +10,7 @@ import { Avatar } from "react-native-paper";
 
 function ClientList() {
     const styles = useStyles();
+    //remove ID and test
     const exampleList = [
         {
             Id: 1,
@@ -60,8 +61,12 @@ function ClientList() {
                             <DataTable.Cell>
                                 <Avatar.Icon size={24} icon="folder" />
                             </DataTable.Cell>
-                            <DataTable.Cell style={styles.item}>{item.Education}</DataTable.Cell>
-                            <DataTable.Cell style={styles.item}>{item.Social}</DataTable.Cell>
+                            <DataTable.Cell>
+                                <Avatar.Icon size={24} icon="folder" />
+                            </DataTable.Cell>
+                            <DataTable.Cell>
+                                <Avatar.Icon size={24} icon="folder" />
+                            </DataTable.Cell>
                         </DataTable.Row>
                     );
                 })}

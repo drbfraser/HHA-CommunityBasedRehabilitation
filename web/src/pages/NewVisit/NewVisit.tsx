@@ -165,10 +165,10 @@ const VisitTypeStep = (visitType: FormField, risks: IRisk[]) => {
     };
 };
 
-const visitReasonStepCallBack = (
-    setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>,
-    zones: TZoneMap
-) => ({ formikProps }: IStepProps) => VisitReasonStep(formikProps, setEnabledSteps, zones);
+const visitReasonStepCallBack =
+    (setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>, zones: TZoneMap) =>
+    ({ formikProps }: IStepProps) =>
+        VisitReasonStep(formikProps, setEnabledSteps, zones);
 
 const VisitReasonStep = (
     formikProps: FormikProps<any>,

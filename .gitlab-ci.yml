@@ -1,10 +1,28 @@
 stages:
+  - format
   - build
   - deploy
 
 variables:
   STAGING_BRANCH: "main"
   PROD_BRANCH: "prod"
+
+format common:
+  stage: format
+  image: node:14
+  tags:
+    - docker
+  needs: []
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID != null'
+      changes:
+        - common/**/*
+      when: always
+  before_script:
+    - cd common
+    - npm ci
+  script:
+    - npx prettier --check .
 
 build mobile:
   stage: build
@@ -23,7 +41,7 @@ build mobile:
     - npm uninstall @cbr/common
     - npm pack ../common
     - npm install cbr-common-1.0.0.tgz
-    - npm install
+    - npm ci
   script:
     - npx prettier --check .
     - npx expo export --public-url https://ci-build.local
@@ -45,7 +63,7 @@ build web:
       when: always
   before_script:
     - cd web
-    - npm install
+    - npm ci
   script:
     - npx prettier --check .
     - GENERATE_SOURCEMAP=false npm run build

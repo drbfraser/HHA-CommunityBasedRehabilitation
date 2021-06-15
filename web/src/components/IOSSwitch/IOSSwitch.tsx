@@ -1,3 +1,4 @@
+import React from "react";
 import { Switch, SwitchProps } from "@material-ui/core";
 import { useStyles } from "./IOSSwitch.styles";
 

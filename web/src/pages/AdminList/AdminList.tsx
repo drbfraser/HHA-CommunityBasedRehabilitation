@@ -222,21 +222,19 @@ const AdminList = () => {
                     }}
                 >
                     <div className={hideColumnsStyle.optionsContainer}>
-                        {columns.map(
-                            (column): JSX.Element => {
-                                return (
-                                    <div key={column.field} className={hideColumnsStyle.optionsRow}>
-                                        <Typography component={"span"} variant={"body2"}>
-                                            {column.headerName}
-                                        </Typography>
-                                        <Switch
-                                            checked={!column.hide}
-                                            onClick={() => column.hideFunction(!column.hide)}
-                                        />
-                                    </div>
-                                );
-                            }
-                        )}
+                        {columns.map((column): JSX.Element => {
+                            return (
+                                <div key={column.field} className={hideColumnsStyle.optionsRow}>
+                                    <Typography component={"span"} variant={"body2"}>
+                                        {column.headerName}
+                                    </Typography>
+                                    <Switch
+                                        checked={!column.hide}
+                                        onClick={() => column.hideFunction(!column.hide)}
+                                    />
+                                </div>
+                            );
+                        })}
                     </div>
                 </Popover>
             </div>

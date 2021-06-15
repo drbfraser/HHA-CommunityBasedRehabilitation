@@ -1,5 +1,5 @@
 import { DefaultTheme } from "react-native-paper";
-import { themeColors } from "common";
+import { themeColors } from "@cbr/common";
 import { Theme as PaperTheme } from "react-native-paper/lib/typescript/types";
 import { Theme as NavigationTheme } from "@react-navigation/native";
 

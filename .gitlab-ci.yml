@@ -6,7 +6,29 @@ variables:
   STAGING_BRANCH: "main"
   PROD_BRANCH: "prod"
 
-build client:
+build mobile:
+  stage: build
+  image: node:14
+  tags:
+    - docker
+  needs: []
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID != null'
+      changes:
+        - common/**/*
+        - mobile/**/*
+      when: always
+  before_script:
+    - cd mobile
+    - npm uninstall @cbr/common
+    - npm pack ../common
+    - npm install cbr-common-1.0.0.tgz
+    - npm install
+  script:
+    - npx prettier --check .
+    - npx expo export --public-url https://ci-build.local
+
+build web:
   stage: build
   image: node:14
   tags:

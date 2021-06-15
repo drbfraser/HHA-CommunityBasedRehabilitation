@@ -2,6 +2,7 @@ import React from "react";
 import { APILoadError, IUser, TAPILoadError, UserRole } from "@cbr/common";
 import Todo from "../screens/Todo/Todo";
 import ClientList from "../screens/ClientList/ClientList";
+import { ClientView } from "../screens/Client/Client";
 
 export interface IScreen {
     name: string;

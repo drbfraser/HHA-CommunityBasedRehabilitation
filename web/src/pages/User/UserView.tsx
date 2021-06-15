@@ -1,6 +1,6 @@
 import { useStyles } from "./styles";
 import { Button } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { useCurrentUser } from "util/hooks/currentUser";
 import { APILoadError } from "util/endpoints";
@@ -32,7 +32,7 @@ const UserView = () => {
                             color="primary"
                             onClick={handleChangePassword}
                         >
-                            <EditIcon></EditIcon>Change Password
+                            <LockOpenIcon></LockOpenIcon>Change Password
                         </Button>
                     </div>
                     <b>Username</b>

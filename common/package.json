@@ -1,5 +1,5 @@
 {
-  "name": "common",
+  "name": "@cbr/common",
   "version": "1.0.0",
   "devDependencies": {
     "@types/node": "^15.12.1",

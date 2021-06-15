@@ -20,7 +20,7 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 3. Run `npm start`
 
-4. For any changes in `common` to be reflected in the either client library, run `npm run reinstall`.  
+4. For any changes in `common` to be reflected in the either client library, run `npm run refresh-common`.  
 
 ### 3. Seed Some Data
 

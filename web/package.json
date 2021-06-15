@@ -1,5 +1,5 @@
 {
-  "name": "cbr",
+  "name": "@cbr/web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -17,7 +17,6 @@
     "@types/react-dom": "^16.9.10",
     "@types/react-router-dom": "^5.1.7",
     "bootstrap": "^4.5.3",
-    "common": "file:../common",
     "formik": "^2.2.6",
     "formik-material-ui": "^3.0.1",
     "jwt-decode": "^3.1.2",
@@ -34,7 +33,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "reinstall": "rm -rf node_modules && npm i",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

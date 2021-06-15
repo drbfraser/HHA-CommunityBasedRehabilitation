@@ -24,6 +24,7 @@ export const useStyles = makeStyles(
         },
         pageTitle: {
             marginLeft: 20,
+            fontWeight: "bold",
         },
         [mediaMobile]: {
             container: {

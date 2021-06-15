@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { Text, Title } from "react-native-paper";
+import { Text, DataTable } from "react-native-paper";
 import { FlatList} from 'react-native';
 import useStyles from "./ClientList.styles";
 
@@ -17,17 +17,53 @@ function ClientList(){
   {
     id: '58694a0f-3da1-471f-bd96-145571e29d72',
     title: 'Third Item',
-  },] 
+  },];
+  const exampleList = [
+    {
+      Name: 'ascas',
+      Email: 'Save@sac.com',
+      Age: '14',
+    },
+    {
+      Name: 'ascas',
+      Email: 'Vie@sac.com',
+      Age: '14',
+    },
+  ];
 
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={clientName}
-        renderItem={({item}) => <Text style={styles.item}>
-          {item.title}
-        </Text>}
-      />
+      <DataTable>
+        <DataTable.Header>
+          <DataTable.Title>Account</DataTable.Title>
+          <DataTable.Title>Code</DataTable.Title>
+          <DataTable.Title>
+            Balance Available
+          </DataTable.Title>
+        </DataTable.Header>
+        {
+          exampleList.map(item => {
+          return (
+            <DataTable.Row
+              key={item.Email} // you need a unique key per item
+              onPress={() => {
+                // added to illustrate how you can make the row take the onPress event and do something
+                console.log(`selected account ${item.Email}`)
+              }}
+            >
+              <DataTable.Cell>
+                {item.Name}
+              </DataTable.Cell>
+              <DataTable.Cell style={styles.item}>
+                {item.Email}
+              </DataTable.Cell>
+              <DataTable.Cell numeric>
+                {item.Age}
+              </DataTable.Cell>
+            </DataTable.Row>
+        )})}
+      </DataTable>
     </View>
   );
 };

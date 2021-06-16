@@ -1,5 +1,6 @@
 import jwt_decode from "jwt-decode";
-import { API_URL, Endpoint } from "./endpoints";
+import { Endpoint } from "./endpoints";
+import { commonConfiguration } from "../init";
 
 const ACCESS_TOKEN_KEY = "api_accessToken";
 const REFRESH_TOKEN_KEY = "api_refreshToken";
@@ -11,15 +12,26 @@ interface IAPIToken {
     user_id: number;
 }
 
-// TODO: Store access token based off of platform (mobile or web)
-const getAccessToken = () => window?.localStorage.getItem(ACCESS_TOKEN_KEY) ?? "";
-const getRefreshToken = () => window?.localStorage.getItem(REFRESH_TOKEN_KEY) ?? "";
+const getAccessToken: () => Promise<string | null> = () => {
+    return commonConfiguration.keyValStorageProvider.getItem(ACCESS_TOKEN_KEY);
+}
+const getRefreshToken: () => Promise<string | null> = () => {
+    return commonConfiguration.keyValStorageProvider.getItem(REFRESH_TOKEN_KEY);
+}
 
-const setAccessToken = (token: string) => window?.localStorage.setItem(ACCESS_TOKEN_KEY, token);
-const setRefreshToken = (token: string) => window?.localStorage.setItem(REFRESH_TOKEN_KEY, token);
+const setAccessToken: (token: string) => Promise<void> = (token: string) => {
+    return commonConfiguration.keyValStorageProvider.setItem(ACCESS_TOKEN_KEY, token);
+};
+const setRefreshToken: (token: string) => Promise<void> = (token: string) => {
+    return commonConfiguration.keyValStorageProvider.setItem(REFRESH_TOKEN_KEY, token);
+};
 
 // returns false if malformed or within 30 seconds of expiry
-const isTokenValid = (token: string) => {
+const isTokenValid = (token: string | null) => {
+    if (token === null) {
+        return false;
+    }
+
     try {
         const tokenJson: IAPIToken = jwt_decode(token);
         const timestampIn30Sec = Date.now() / 1000 + 30;
@@ -29,7 +41,7 @@ const isTokenValid = (token: string) => {
     }
 };
 
-const requestTokens = async (endpoint: Endpoint, postBody: string) => {
+const requestTokens = async (endpoint: Endpoint, postBody: string): Promise<boolean> => {
     const init: RequestInit = {
         method: "POST",
         body: postBody,
@@ -39,7 +51,7 @@ const requestTokens = async (endpoint: Endpoint, postBody: string) => {
     };
 
     try {
-        const resp = await fetch(API_URL + endpoint, init);
+        const resp = await fetch(commonConfiguration.apiUrl + endpoint, init);
 
         if (!resp.ok) {
             throw new Error(
@@ -50,8 +62,8 @@ const requestTokens = async (endpoint: Endpoint, postBody: string) => {
         const json = await resp.json();
 
         if (isTokenValid(json.access) && isTokenValid(json.refresh)) {
-            setAccessToken(json.access);
-            setRefreshToken(json.refresh);
+            await setAccessToken(json.access);
+            await setRefreshToken(json.refresh);
         } else {
             throw new Error(
                 "Request token failure: the access and/or refresh token(s) received were invalid."
@@ -67,13 +79,13 @@ const requestTokens = async (endpoint: Endpoint, postBody: string) => {
 
 const refreshTokens = async () => {
     const postBody = JSON.stringify({
-        refresh: getRefreshToken(),
+        refresh: await getRefreshToken(),
     });
 
     return requestTokens(Endpoint.LOGIN_REFRESH, postBody);
 };
 
-export const doLogin = async (username: string, password: string) => {
+export const doLogin = async (username: string, password: string): Promise<boolean> => {
     const postBody = JSON.stringify({
         username,
         password,
@@ -85,17 +97,19 @@ export const doLogin = async (username: string, password: string) => {
 export const doLogout = () => {
     setAccessToken("");
     setRefreshToken("");
-    window?.location.replace("/");
+    // TODO: handle this nicely; detect if the caller is from web,
+    //  or just have web run this code itself
+    // window?.location.replace("/");
 };
 
-export const isLoggedIn = () => isTokenValid(getRefreshToken());
+export const isLoggedIn = async () => isTokenValid(await getRefreshToken());
 
 export const getAuthToken = async () => {
-    if (!isLoggedIn()) {
+    if (!await isLoggedIn()) {
         doLogout();
     }
 
-    if (!isTokenValid(getAccessToken())) {
+    if (!isTokenValid(await getAccessToken())) {
         const refreshSuccess = await refreshTokens();
 
         if (!refreshSuccess) {

@@ -20,7 +20,7 @@ const theme: ReactNativePaper.Theme & NavigationTheme = {
     colors: {
         ...DefaultTheme.colors,
         primary: themeColors.blueBgDark,
-        onPrimary: "white",
+        onPrimary: themeColors.white,
         accent: themeColors.yellow,
         border: DefaultTheme.colors.text,
         card: DefaultTheme.colors.surface,

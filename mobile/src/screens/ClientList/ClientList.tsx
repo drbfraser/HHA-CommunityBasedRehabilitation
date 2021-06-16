@@ -4,10 +4,10 @@ import { DataTable } from "react-native-paper";
 import useStyles from "./ClientList.styles";
 import { fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
 import { doLogin } from "../../util/auth";
-import { RiskIcons } from "./RiskIcons";
-import { ClientView } from "../Client/Client";
 import { Avatar } from "react-native-paper";
-
+import { Endpoint } from "@cbr/common";
+import { MaterialIcons  } from '@expo/vector-icons';
+import { riskTypes, riskLevels } from '../../util/risks';
 function ClientList() {
     const styles = useStyles();
     //remove ID and test
@@ -16,17 +16,17 @@ function ClientList() {
             Id: 1,
             Name: "Naruto",
             Zone: 3,
-            Health: RiskIcons.CRITICAL,
-            Education: RiskIcons.HIGH,
-            Social: RiskIcons.LOW,
+            HealthLevel:riskLevels.LO.color,
+            EducationLevel:riskLevels.HI.color,
+            SocialLevel:riskLevels.CR.color,
         },
         {
             Id: 2,
             Name: "Sasuke",
             Zone: 5,
-            Health: RiskIcons.CRITICAL,
-            Education: RiskIcons.HIGH,
-            Social: RiskIcons.LOW,
+            HealthLevel:riskLevels.LO.color,
+            EducationLevel:riskLevels.HI.color,
+            SocialLevel:riskLevels.CR.color,
         },
     ];
 
@@ -34,7 +34,7 @@ function ClientList() {
         const exampleClient = await fetchClientsFromApi();
         exampleList.push(exampleClient);
     };
-
+    
     return (
         <View style={styles.container}>
             <DataTable>
@@ -42,9 +42,9 @@ function ClientList() {
                     <DataTable.Title>ID</DataTable.Title>
                     <DataTable.Title>Name</DataTable.Title>
                     <DataTable.Title>Zone</DataTable.Title>
-                    <DataTable.Title>Health</DataTable.Title>
-                    <DataTable.Title>Education</DataTable.Title>
-                    <DataTable.Title>Social</DataTable.Title>
+                    <DataTable.Title>{riskTypes.HEALTH.name}</DataTable.Title>
+                    <DataTable.Title>{riskTypes.EDUCAT.name}</DataTable.Title>
+                    <DataTable.Title>{riskTypes.SOCIAL.name}</DataTable.Title>
                 </DataTable.Header>
                 {exampleList.map((item) => {
                     return (
@@ -59,13 +59,13 @@ function ClientList() {
                             <DataTable.Cell style={styles.item}>{item.Name}</DataTable.Cell>
                             <DataTable.Cell style={styles.item}>{item.Zone}</DataTable.Cell>
                             <DataTable.Cell>
-                                <Avatar.Icon size={24} icon="folder" />
+                            <MaterialIcons name= {riskTypes.HEALTH.Icon} size={32} color={item.HealthLevel} />
                             </DataTable.Cell>
                             <DataTable.Cell>
-                                <Avatar.Icon size={24} icon="folder" />
+                            <MaterialIcons name= {riskTypes.EDUCAT.Icon} size={32} color={item.EducationLevel} />
                             </DataTable.Cell>
                             <DataTable.Cell>
-                                <Avatar.Icon size={24} icon="folder" />
+                            <MaterialIcons name= {riskTypes.SOCIAL.Icon} size={32} color={item.SocialLevel} />
                             </DataTable.Cell>
                         </DataTable.Row>
                     );

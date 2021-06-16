@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "dependencies": {
+    "@common": "./../common"
+  },
+  "extends": "expo/tsconfig.base"
+}

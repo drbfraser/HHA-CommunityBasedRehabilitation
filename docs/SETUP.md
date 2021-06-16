@@ -27,7 +27,8 @@ The secret key, username and password are for your local development environment
 
 ### 4. Install Required NPM Packages
 
-Navigate to the `client` folder and run `npm install`.
+Navigate to `web` and run `npm install`.
+Navigate to `mobile`, `npm pack ../common` and run `npm install`.
 
 ### 5. Run Django Database Migrations
 

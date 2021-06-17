@@ -13,11 +13,6 @@ const useStyles = () =>
             right: 20,
             bottom: 25,
         },
-        prevButton: {
-            position: "absolute",
-            left: 20,
-            bottom: 25,
-        },
     });
 
 export default useStyles;

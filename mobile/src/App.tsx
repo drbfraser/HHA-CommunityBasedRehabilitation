@@ -1,9 +1,10 @@
 import React from "react";
-import { Provider } from "react-native-paper";
+import { Appbar, Provider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { screensForUser } from "./util/screens";
 import theme from "./theme.styles";
+import { SafeAreaView } from "react-native";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -11,6 +12,10 @@ export default function App() {
     return (
         <Provider theme={theme}>
             <NavigationContainer theme={theme}>
+                <Appbar.Header statusBarHeight={25}>
+                    {/* <Appbar.BackAction onPress={showAlert} /> */}
+                    <Appbar.Content title={"Title"} />
+                </Appbar.Header>
                 <Tab.Navigator>
                     {screensForUser(undefined).map((screen) => (
                         <Tab.Screen

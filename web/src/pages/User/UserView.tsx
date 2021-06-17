@@ -6,6 +6,7 @@ import { useCurrentUser } from "util/hooks/currentUser";
 import { APILoadError } from "util/endpoints";
 import { useZones } from "util/hooks/zones";
 import { useHistory } from "react-router-dom";
+import React from "react";
 
 const UserView = () => {
     const styles = useStyles();

@@ -37,22 +37,23 @@ const updateUserPassword = async (userInfo: string, userId: number) => {
     return await apiFetch(Endpoint.USER_PASSWORD, `${userId}`, init);
 };
 
-export const handleUpdatePassword = (userId: number) => async (
-    values: TPasswordValues,
-    helpers: FormikHelpers<TPasswordValues>
-) => {
-    const newPassword = JSON.stringify({
-        new_password: values.password,
-    });
+export const handleUpdatePassword =
+    (userId: number) =>
+    async (values: TPasswordValues, helpers: FormikHelpers<TPasswordValues>) => {
+        const newPassword = JSON.stringify({
+            new_password: values.password,
+        });
 
-    try {
-        await updateUserPassword(newPassword, userId);
-        history.goBack();
-    } catch (e) {
-        alert("Sorry, something went wrong trying to edit that user's password. Please try again.");
-        helpers.setSubmitting(false);
-    }
-};
+        try {
+            await updateUserPassword(newPassword, userId);
+            history.goBack();
+        } catch (e) {
+            alert(
+                "Sorry, something went wrong trying to edit that user's password. Please try again."
+            );
+            helpers.setSubmitting(false);
+        }
+    };
 
 export const handleNewSubmit = async (
     values: TNewUserValues,

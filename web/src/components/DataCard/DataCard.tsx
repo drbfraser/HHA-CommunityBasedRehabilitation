@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@material-ui/core";
+import React from "react";
 import { useStyles } from "./DataCard.styles";
 
 interface IDataCardProps {

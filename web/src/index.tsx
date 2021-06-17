@@ -24,7 +24,10 @@ const keyValStorageProvider: KeyValStorageProvider = {
     },
 };
 
-initializeCommon(API_URL, keyValStorageProvider);
+initializeCommon(API_URL, keyValStorageProvider, () => {
+    console.log("logoutCallbacl()");
+    window.location.replace("/");
+});
 
 ReactDOM.render(
     <React.StrictMode>

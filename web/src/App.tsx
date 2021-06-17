@@ -37,14 +37,14 @@ const App = () => {
     };
 
     const LoginRoute = () => {
-        const [loggedIn, setLoggedIn] = useState<boolean | undefined>()
+        const [loggedIn, setLoggedIn] = useState<boolean | undefined>();
         useEffect(() => {
             const updateLoginState = async () => {
                 const newLoginState = await isLoggedIn();
                 setLoggedIn(newLoginState);
-            }
+            };
             updateLoginState();
-        })
+        });
 
         if (loggedIn === undefined) {
             return <></>;
@@ -55,14 +55,14 @@ const App = () => {
         }
     };
     const AllRoutes = () => {
-        const [loggedIn, setLoggedIn] = useState<boolean | undefined>()
+        const [loggedIn, setLoggedIn] = useState<boolean | undefined>();
         useEffect(() => {
             const updateLoginState = async () => {
                 const newLoginState = await isLoggedIn();
                 setLoggedIn(newLoginState);
-            }
+            };
             updateLoginState();
-        })
+        });
 
         if (loggedIn === undefined) {
             return <></>;

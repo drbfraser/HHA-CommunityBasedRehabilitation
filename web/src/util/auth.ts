@@ -97,9 +97,7 @@ export const doLogin = async (username: string, password: string): Promise<boole
 export const doLogout = () => {
     setAccessToken("");
     setRefreshToken("");
-    // TODO: This is code that's in the common module.
-    //  The common should detect if the caller is from web, or just have web run this code itself
-    window.location.replace("/");
+    commonConfiguration.logoutCallback?.();
 };
 
 export const isLoggedIn = async () => isTokenValid(await getRefreshToken());

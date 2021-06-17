@@ -19,13 +19,15 @@ const Stack = createNativeStackNavigator();
 enableScreens();
 
 // TODO: Have a nice transition when the user logins and and logs out.
-//  The React Navigation docs suggest nesting everything in a StackNavigator and have
-//  a conditional for the first screen in the stack.
 export default function App() {
     const [loggedIn, setLoggedIn] = useState<boolean | undefined>(undefined);
 
     useEffect(() => {
-        isLoggedIn().then((loggedIn) => setLoggedIn(loggedIn));
+        const checkLogin = async () => {
+            const loggedInState = await isLoggedIn();
+            setLoggedIn(loggedInState);
+        };
+        checkLogin();
     }, []);
 
     // design inspired by https://reactnavigation.org/docs/auth-flow/

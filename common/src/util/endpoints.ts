@@ -33,6 +33,10 @@ export const apiFetch = async (
 ): Promise<Response> => {
     const url = commonConfiguration.apiUrl + endpoint + urlParams;
     const authToken = await getAuthToken();
+    if (authToken === null) {
+        return Promise.reject("unable to get an access token");
+    }
+
     const init: RequestInit = {
         ...customInit,
         headers: {

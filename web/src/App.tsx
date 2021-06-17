@@ -1,5 +1,5 @@
-import React from "react";
-import { Router, Route, Switch, Redirect } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Redirect, Route, Router, Switch } from "react-router-dom";
 import SideNav from "./components/SideNav/SideNav";
 import { defaultPagePath, pagesForUser } from "util/pages";
 import Login from "pages/Login/Login";
@@ -36,8 +36,42 @@ const App = () => {
         );
     };
 
-    const LoginRoute = () => (!isLoggedIn() ? <Login /> : <Redirect to={defaultPagePath} />);
-    const AllRoutes = () => (!isLoggedIn() ? <Redirect to="/" /> : <PrivateRoutes />);
+    const LoginRoute = () => {
+        const [loggedIn, setLoggedIn] = useState<boolean | undefined>()
+        useEffect(() => {
+            const updateLoginState = async () => {
+                const newLoginState = await isLoggedIn();
+                setLoggedIn(newLoginState);
+            }
+            updateLoginState();
+        })
+
+        if (loggedIn === undefined) {
+            return <></>;
+        } else if (!loggedIn) {
+            return <Login />;
+        } else {
+            return <Redirect to={defaultPagePath} />;
+        }
+    };
+    const AllRoutes = () => {
+        const [loggedIn, setLoggedIn] = useState<boolean | undefined>()
+        useEffect(() => {
+            const updateLoginState = async () => {
+                const newLoginState = await isLoggedIn();
+                setLoggedIn(newLoginState);
+            }
+            updateLoginState();
+        })
+
+        if (loggedIn === undefined) {
+            return <></>;
+        } else if (!loggedIn) {
+            return <Redirect to="/" />;
+        } else {
+            return <PrivateRoutes />;
+        }
+    };
 
     return (
         <Router history={history}>

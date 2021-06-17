@@ -107,6 +107,7 @@ export const isLoggedIn = async () => isTokenValid(await getRefreshToken());
 export const getAuthToken = async () => {
     if (!(await isLoggedIn())) {
         doLogout();
+        return null;
     }
 
     if (!isTokenValid(await getAccessToken())) {
@@ -114,6 +115,7 @@ export const getAuthToken = async () => {
 
         if (!refreshSuccess) {
             doLogout();
+            return null;
         }
     }
 

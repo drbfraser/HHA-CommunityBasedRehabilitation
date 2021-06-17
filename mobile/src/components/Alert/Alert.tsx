@@ -30,7 +30,7 @@ const Alert = (alertProps: AlertProps) => {
     const styles = useStyles(color);
 
     return (
-        <View style={styles.alertContainer}>
+        <View style={styles.alertContainer} {...alertProps}>
             <MaterialIcons name="error" size={30} color="white" />
             <View style={{ margin: 10 }} />
             <Text style={styles.text}>{alertProps.text}</Text>

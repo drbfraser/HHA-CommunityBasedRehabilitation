@@ -1,26 +1,36 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
+import { useTheme } from "react-native-paper";
 
-const useStyles = (theme: ReactNativePaper.Theme) =>
-    StyleSheet.create({
+const useStyles = () => {
+    const theme = useTheme();
+    const { width } = useWindowDimensions();
+    return StyleSheet.create({
         container: {
-            flex: 1,
             backgroundColor: theme.colors.primary,
+        },
+        contentContainer: {
+            flexDirection: "row",
+            alignContent: "flex-start",
+            justifyContent: width <= 600 ? "center" : "flex-end",
         },
         background: { ...StyleSheet.absoluteFillObject },
         logo: {
+            top: 50,
             width: "100%",
         },
         formContainer: {
             flex: 1,
-            maxWidth: 400,
+            bottom: width <= 600 ? undefined : 70,
+            maxWidth: width <= 600 ? undefined : "55%",
             margin: 30,
+            marginRight: width <= 600 ? undefined : 60,
             color: theme.colors.onPrimary,
         },
         loginHeader: {
             fontSize: 40,
-            paddingTop: 20,
             color: theme.colors.onPrimary,
         },
     });
+};
 
 export default useStyles;

@@ -1,11 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
-import { Image, TextInput as NativeTextInput, View } from "react-native";
+import { Image, TextInput as NativeTextInput, useWindowDimensions, View } from "react-native";
 import useStyles from "./Login.styles";
-import LoginBackground from "./LoginBackground";
+import LoginBackgroundSmall from "./LoginBackgroundSmall";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Button, TextInput, Title, useTheme } from "react-native-paper";
+import { Button, Text, TextInput, useTheme } from "react-native-paper";
 import { AuthContext } from "../../context/AuthContext";
 import Alert, { AlertType } from "../../components/Alert/Alert";
+import LoginBackground from "./LoginBackground";
 
 enum LoginStatus {
     INITIAL,
@@ -13,11 +14,9 @@ enum LoginStatus {
     FAILED,
 }
 
-const Login = (props: any) => {
-    props.screenOption;
-
+const Login = () => {
     const theme = useTheme();
-    const styles = useStyles(theme);
+    const styles = useStyles();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -32,23 +31,31 @@ const Login = (props: any) => {
 
     const handleLogin = async () => {
         if (!username.length || !password.length) {
+            setStatus(LoginStatus.FAILED);
             return;
         }
         setStatus(LoginStatus.SUBMITTING);
 
         const loginSucceeded = await login(username, password);
-        if (loginSucceeded) {
-            console.log("login succeeded");
-        } else {
-            console.log("login failed");
+        if (!loginSucceeded) {
             setStatus(LoginStatus.FAILED);
         }
     };
 
-    // TODO: Use the other login background when the user uses landscape mode.
+    const { width, height } = useWindowDimensions();
+
     return (
-        <KeyboardAwareScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-            <LoginBackground style={styles.background} />
+        <KeyboardAwareScrollView
+            style={styles.container}
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="always"
+        >
+            {width <= 600 ? (
+                <LoginBackgroundSmall style={styles.background} height={height * 1.05} />
+            ) : (
+                <LoginBackground style={styles.background} height={height * 2} />
+            )}
 
             <View style={styles.formContainer}>
                 <Image
@@ -57,18 +64,22 @@ const Login = (props: any) => {
                     source={require("../../../assets/hha_logo_white.png")}
                 />
 
-                <Title style={styles.loginHeader}>Login</Title>
+                <Text style={styles.loginHeader}>Login</Text>
                 <View style={{ margin: 10 }} />
 
                 {status === LoginStatus.FAILED ? (
-                    <Alert alertType={AlertType.ERROR} text="Login failed. Please try again." />
+                    <>
+                        <Alert alertType={AlertType.ERROR} text="Login failed. Please try again." />
+                        <View style={{ margin: 10 }} />
+                    </>
                 ) : status === LoginStatus.SUBMITTING ? (
-                    <Alert alertType={AlertType.INFO} text="Logging in" />
+                    <>
+                        <Alert alertType={AlertType.INFO} text="Logging in" />
+                        <View style={{ margin: 10 }} />
+                    </>
                 ) : (
                     <></>
                 )}
-
-                <View style={{ margin: 10 }} />
                 {/*
                     React Native Paper does not have standard styling TextFields as described in
                     https://material-ui.com/components/text-fields/. They only have the outlined
@@ -99,8 +110,8 @@ const Login = (props: any) => {
                 <View style={{ margin: 10 }} />
                 <Button
                     color={theme.colors.accent}
-                    disabled={status === LoginStatus.SUBMITTING}
                     contentStyle={{ backgroundColor: theme.colors.accent }}
+                    disabled={status === LoginStatus.SUBMITTING}
                     loading={status === LoginStatus.SUBMITTING}
                     onPress={handleLogin}
                     mode="contained"

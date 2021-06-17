@@ -7,8 +7,7 @@ const useStyles = (color: string) =>
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "flex-start",
-            paddingHorizontal: 10,
-            height: 60,
+            padding: 10,
             borderRadius: 10,
             backgroundColor: color,
         },
@@ -16,6 +15,7 @@ const useStyles = (color: string) =>
             color: "white",
             fontSize: 16,
             fontWeight: "bold",
+            flexShrink: 1,
         },
     });
 

@@ -16,22 +16,17 @@ export interface AlertProps {
 
 const Alert = (alertProps: AlertProps) => {
     const theme: ReactNativePaper.Theme = useTheme();
-
-    let color: string;
-    switch (alertProps.alertType) {
-        case AlertType.ERROR:
-            color = theme.colors.error;
-            break;
-        case AlertType.INFO: // fall through
-        default:
-            color = theme.colors.info;
-    }
-
+    const iconName = alertProps.alertType == AlertType.ERROR ? "error" : "info";
+    const color = alertProps.alertType == AlertType.ERROR ? theme.colors.error : theme.colors.info;
     const styles = useStyles(color);
-
     return (
         <View style={styles.alertContainer} {...alertProps}>
-            <MaterialIcons name="error" size={30} color="white" />
+            <MaterialIcons
+                name={iconName}
+                style={{ alignSelf: "flex-start" }}
+                size={30}
+                color="white"
+            />
             <View style={{ margin: 10 }} />
             <Text style={styles.text}>{alertProps.text}</Text>
         </View>

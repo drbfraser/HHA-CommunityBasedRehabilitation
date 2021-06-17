@@ -5,10 +5,10 @@ const useStyles = () =>
     container: {
       flex: 1,
       alignItems: "center",
-      paddingTop: 40,
+      paddingTop: 0,
     },
     item: {
-      padding: 2,
+      padding: 5,
       fontSize: 14,
       height: 44,
     },

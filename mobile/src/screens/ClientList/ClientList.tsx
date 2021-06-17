@@ -3,11 +3,9 @@ import { View } from "react-native";
 import { DataTable } from "react-native-paper";
 import useStyles from "./ClientList.styles";
 import { fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
-import { doLogin } from "../../util/auth";
-import { Avatar } from "react-native-paper";
-import { Endpoint } from "@cbr/common";
-import { MaterialIcons  } from '@expo/vector-icons';
-import { riskTypes, riskLevels } from '../../util/risks';
+import { MaterialIcons } from "@expo/vector-icons";
+import { riskTypes, riskLevels } from "../../util/risks";
+
 function ClientList() {
     const styles = useStyles();
     //remove ID and test
@@ -16,17 +14,17 @@ function ClientList() {
             Id: 1,
             Name: "Naruto",
             Zone: 3,
-            HealthLevel:riskLevels.LO.color,
-            EducationLevel:riskLevels.HI.color,
-            SocialLevel:riskLevels.CR.color,
+            HealthLevel: riskLevels.LO.color,
+            EducationLevel: riskLevels.HI.color,
+            SocialLevel: riskLevels.CR.color,
         },
         {
             Id: 2,
             Name: "Sasuke",
             Zone: 5,
-            HealthLevel:riskLevels.LO.color,
-            EducationLevel:riskLevels.HI.color,
-            SocialLevel:riskLevels.CR.color,
+            HealthLevel: riskLevels.LO.color,
+            EducationLevel: riskLevels.HI.color,
+            SocialLevel: riskLevels.CR.color,
         },
     ];
 
@@ -34,7 +32,7 @@ function ClientList() {
         const exampleClient = await fetchClientsFromApi();
         exampleList.push(exampleClient);
     };
-    
+
     return (
         <View style={styles.container}>
             <DataTable>
@@ -59,13 +57,25 @@ function ClientList() {
                             <DataTable.Cell style={styles.item}>{item.Name}</DataTable.Cell>
                             <DataTable.Cell style={styles.item}>{item.Zone}</DataTable.Cell>
                             <DataTable.Cell>
-                            <MaterialIcons name= {riskTypes.HEALTH.Icon} size={32} color={item.HealthLevel} />
+                                <MaterialIcons
+                                    name={riskTypes.HEALTH.Icon}
+                                    size={32}
+                                    color={item.HealthLevel}
+                                />
                             </DataTable.Cell>
                             <DataTable.Cell>
-                            <MaterialIcons name= {riskTypes.EDUCAT.Icon} size={32} color={item.EducationLevel} />
+                                <MaterialIcons
+                                    name={riskTypes.EDUCAT.Icon}
+                                    size={32}
+                                    color={item.EducationLevel}
+                                />
                             </DataTable.Cell>
                             <DataTable.Cell>
-                            <MaterialIcons name= {riskTypes.SOCIAL.Icon} size={32} color={item.SocialLevel} />
+                                <MaterialIcons
+                                    name={riskTypes.SOCIAL.Icon}
+                                    size={32}
+                                    color={item.SocialLevel}
+                                />
                             </DataTable.Cell>
                         </DataTable.Row>
                     );

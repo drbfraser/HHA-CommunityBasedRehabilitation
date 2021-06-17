@@ -6,11 +6,10 @@ export interface KeyValStorageProvider {
 
 export interface CommonConfiguration {
     apiUrl: String;
-    keyValStorageProvider: KeyValStorageProvider
+    keyValStorageProvider: KeyValStorageProvider;
 }
 
-
-export let commonConfiguration: CommonConfiguration
+export let commonConfiguration: CommonConfiguration;
 
 /**
  * Initializes the common module. This needs to be called on app startup.
@@ -21,6 +20,6 @@ export let commonConfiguration: CommonConfiguration
 export const initializeCommon = (apiUrl: string, keyValStorageProvider: KeyValStorageProvider) => {
     commonConfiguration = {
         apiUrl: apiUrl,
-        keyValStorageProvider: keyValStorageProvider
-    }
+        keyValStorageProvider: keyValStorageProvider,
+    };
 };

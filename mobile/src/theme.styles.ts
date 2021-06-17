@@ -11,6 +11,11 @@ declare global {
              * Color for text and icons displayed on top of the primary color.
              */
             onPrimary: string;
+            /**
+             * Used to present information to the user that is neutral and not necessarily important.
+             * {@link https://material-ui.com/customization/palette/}
+             */
+            info: string;
         }
     }
 }
@@ -21,6 +26,7 @@ const theme: ReactNativePaper.Theme & NavigationTheme = {
         ...DefaultTheme.colors,
         primary: themeColors.blueBgDark,
         onPrimary: themeColors.white,
+        info: themeColors.infoBlue,
         accent: themeColors.yellow,
         border: DefaultTheme.colors.text,
         card: DefaultTheme.colors.surface,

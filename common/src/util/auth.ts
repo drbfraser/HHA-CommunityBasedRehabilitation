@@ -14,10 +14,10 @@ interface IAPIToken {
 
 const getAccessToken: () => Promise<string | null> = () => {
     return commonConfiguration.keyValStorageProvider.getItem(ACCESS_TOKEN_KEY);
-}
+};
 const getRefreshToken: () => Promise<string | null> = () => {
     return commonConfiguration.keyValStorageProvider.getItem(REFRESH_TOKEN_KEY);
-}
+};
 
 const setAccessToken: (token: string) => Promise<void> = (token: string) => {
     return commonConfiguration.keyValStorageProvider.setItem(ACCESS_TOKEN_KEY, token);
@@ -105,7 +105,7 @@ export const doLogout = () => {
 export const isLoggedIn = async () => isTokenValid(await getRefreshToken());
 
 export const getAuthToken = async () => {
-    if (!await isLoggedIn()) {
+    if (!(await isLoggedIn())) {
         doLogout();
     }
 

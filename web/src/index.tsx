@@ -10,10 +10,10 @@ const API_URL =
         ? `http://${window.location.hostname}:8000/api/`
         : "/api/";
 
-const keyValStorageProvider: KeyValStorageProvider = {
+const localStorageProvider: KeyValStorageProvider = {
     getItem(key: string): Promise<string | null> {
         return new Promise((resolve) => {
-            resolve(window.localStorage.getItem(key) ?? "");
+            resolve(window.localStorage.getItem(key));
         });
     },
     setItem(key: string, value: string): Promise<void> {
@@ -24,9 +24,13 @@ const keyValStorageProvider: KeyValStorageProvider = {
     },
 };
 
-initializeCommon(API_URL, keyValStorageProvider, () => {
-    console.log("logoutCallbacl()");
-    window.location.replace("/");
+initializeCommon({
+    apiUrl: API_URL,
+    keyValStorageProvider: localStorageProvider,
+    shouldLogoutOnTokenRefreshFailure: true,
+    logoutCallback: () => {
+        window.location.replace("/");
+    },
 });
 
 ReactDOM.render(

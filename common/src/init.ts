@@ -4,8 +4,13 @@ export interface KeyValStorageProvider {
 }
 
 export interface CommonConfiguration {
+    /** The API url for connecting to the server. Should include `/api/` at the end. */
     apiUrl: String;
+    /** A provider for key-value storage. */
     keyValStorageProvider: KeyValStorageProvider;
+    /** Whether to logout when {@link getAuthToken} fails to refresh the token. */
+    shouldLogoutOnTokenRefreshFailure: boolean;
+    /** A optional callback to run after {@link doLogout} is called. */
     logoutCallback: (() => void) | null;
 }
 
@@ -13,19 +18,7 @@ export let commonConfiguration: CommonConfiguration;
 
 /**
  * Initializes the common module. This needs to be called on app startup.
- *
- * @param apiUrl The API url for connecting to the server. Should include `/api/` at the end.
- * @param keyValStorageProvider A provider for key-value storage.
- * @param logoutCallback A optional callback to run after {@link doLogout} is called.
  */
-export const initializeCommon = (
-    apiUrl: string,
-    keyValStorageProvider: KeyValStorageProvider,
-    logoutCallback: (() => void) | null
-) => {
-    commonConfiguration = {
-        apiUrl: apiUrl,
-        keyValStorageProvider: keyValStorageProvider,
-        logoutCallback: logoutCallback,
-    };
+export const initializeCommon = (config: CommonConfiguration) => {
+    commonConfiguration = { ...config };
 };

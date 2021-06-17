@@ -104,7 +104,9 @@ export const isLoggedIn = async () => isTokenValid(await getRefreshToken());
 
 export const getAuthToken = async () => {
     if (!(await isLoggedIn())) {
-        doLogout();
+        if (commonConfiguration.shouldLogoutOnTokenRefreshFailure) {
+            doLogout();
+        }
         return null;
     }
 
@@ -112,7 +114,9 @@ export const getAuthToken = async () => {
         const refreshSuccess = await refreshTokens();
 
         if (!refreshSuccess) {
-            doLogout();
+            if (commonConfiguration.shouldLogoutOnTokenRefreshFailure) {
+                doLogout();
+            }
             return null;
         }
     }

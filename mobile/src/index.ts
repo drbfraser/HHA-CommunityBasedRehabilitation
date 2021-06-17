@@ -15,7 +15,16 @@ const keyValStorageProvider: KeyValStorageProvider = {
     },
 };
 
-// use a null logoutCallback, since logging out should be handled by AuthContext.
-initializeCommon(API_URL, keyValStorageProvider, null);
+initializeCommon({
+    apiUrl: API_URL,
+    keyValStorageProvider: keyValStorageProvider,
+    // We don't want to logout when the user is offline and doesn't have internet (no internet means
+    // refresh token attempt will fail). The user might have data stored offline (in the future). If
+    // their refresh token expires, we need to ask them to login again without deleting all of their
+    // data.
+    shouldLogoutOnTokenRefreshFailure: false,
+    // Use a null logoutCallback, since logging out should be handled by AuthContext.
+    logoutCallback: null,
+});
 
 registerRootComponent(App);

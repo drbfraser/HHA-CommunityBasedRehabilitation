@@ -5,6 +5,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { screensForUser } from "./util/screens";
 import theme from "./theme.styles";
 import { SafeAreaView } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -14,7 +15,8 @@ export default function App() {
             <NavigationContainer theme={theme}>
                 <Appbar.Header statusBarHeight={25}>
                     {/* <Appbar.BackAction onPress={showAlert} /> */}
-                    <Appbar.Content title={"Title"} />
+                    <MaterialIcons name="arrow-back" size={25} color="#FFFFFF" />
+                    <Appbar.Content title={"Baseline Survey"} />
                 </Appbar.Header>
                 <Tab.Navigator>
                     {screensForUser(undefined).map((screen) => (

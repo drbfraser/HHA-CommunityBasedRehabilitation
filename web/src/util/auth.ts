@@ -1,3 +1,4 @@
+// TODO: Use @cbr/common's file instead of duplicating here
 import jwt_decode from "jwt-decode";
 import { Endpoint } from "./endpoints";
 import { commonConfiguration } from "./init";

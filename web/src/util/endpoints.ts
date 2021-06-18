@@ -1,3 +1,4 @@
+// TODO: Use @cbr/common's file instead of duplicating here
 import { getAuthToken } from "./auth";
 import { commonConfiguration } from "./init";
 

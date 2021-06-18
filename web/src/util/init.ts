@@ -1,3 +1,4 @@
+// TODO: Use @cbr/common's file instead of duplicating here
 export interface KeyValStorageProvider {
     getItem: (key: string) => Promise<string | null>;
     setItem: (key: string, value: string) => Promise<void>;

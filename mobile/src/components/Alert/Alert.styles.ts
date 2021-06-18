@@ -11,8 +11,10 @@ const useStyles = (color: string) =>
             borderRadius: 10,
             backgroundColor: color,
         },
+        icon: { alignSelf: "flex-start" },
         text: {
             color: "white",
+            marginLeft: 10,
             fontSize: 16,
             fontWeight: "bold",
             flexShrink: 1,

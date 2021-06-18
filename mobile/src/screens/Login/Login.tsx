@@ -5,7 +5,7 @@ import LoginBackgroundSmall from "./LoginBackgroundSmall";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Button, Text, TextInput, useTheme } from "react-native-paper";
 import { AuthContext } from "../../context/AuthContext";
-import Alert, { AlertType } from "../../components/Alert/Alert";
+import Alert, { AlertSeverity } from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
 
 enum LoginStatus {
@@ -69,12 +69,12 @@ const Login = () => {
 
                 {status === LoginStatus.FAILED ? (
                     <>
-                        <Alert alertType={AlertType.ERROR} text="Login failed. Please try again." />
+                        <Alert severity="error" text="Login failed. Please try again." />
                         <View style={{ margin: 10 }} />
                     </>
                 ) : status === LoginStatus.SUBMITTING ? (
                     <>
-                        <Alert alertType={AlertType.INFO} text="Logging in" />
+                        <Alert severity="info" text="Logging in" />
                         <View style={{ margin: 10 }} />
                     </>
                 ) : (

@@ -81,7 +81,7 @@ const Login = () => {
                     <></>
                 )}
                 {/*
-                    React Native Paper does not have standard styling TextFields as described in
+                    React Native Paper does not have "standard styling" TextFields as described in
                     https://material-ui.com/components/text-fields/. They only have the outlined
                     and filled ("flat") stylings:
                     https://callstack.github.io/react-native-paper/text-input.html
@@ -94,6 +94,8 @@ const Login = () => {
                     blurOnSubmit={false}
                     autoCapitalize="none"
                     autoCorrect={false}
+                    autoCompleteType="username"
+                    textContentType="username"
                     onSubmitEditing={() => passwordTextRef.current?.focus()}
                 />
                 <View style={{ margin: 10 }} />
@@ -101,9 +103,12 @@ const Login = () => {
                     label="Password"
                     value={password}
                     onChangeText={(newPassword) => setPassword(newPassword)}
+                    mode="flat"
                     secureTextEntry
                     autoCapitalize="none"
                     autoCorrect={false}
+                    autoCompleteType="password"
+                    textContentType="password"
                     onSubmitEditing={handleLogin}
                     ref={passwordTextRef}
                 />

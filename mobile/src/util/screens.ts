@@ -3,6 +3,10 @@ import { APILoadError, IUser, TAPILoadError, UserRole } from "@cbr/common";
 import Todo from "../screens/Todo/Todo";
 import ClientList from "../screens/ClientList/ClientList";
 import ClientView from "../screens/Client/Client";
+import ClientScreenController from "../screens/Client/ClientScreenController";
+import HomeScreen from "../screens/HomeScreen/HomeScreen";
+import { Props } from "react-native-paper/lib/typescript/components/RadioButton/RadioButton";
+import HomeScreenController from "../screens/HomeScreen/HomeScreenController";
 
 export interface IScreen {
     name: string;
@@ -61,3 +65,20 @@ export const screensForUser = (user: IUser | TAPILoadError | undefined) => {
 };
 
 export const defaultPage = screens[0];
+
+//Stack screens coming up from here on
+
+export enum stackScreenName {
+    HOME = "Home",
+    CLIENT = "ClientDetails"
+  }
+
+export const stackScreenProps = {
+    [stackScreenName.HOME]: HomeScreenController,
+    [stackScreenName.CLIENT]: ClientScreenController,
+}
+
+export type stackParamList = {
+    [stackScreenName.HOME]: undefined;
+    [stackScreenName.CLIENT]: undefined;
+  };

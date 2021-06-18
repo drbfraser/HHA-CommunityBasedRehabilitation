@@ -5,8 +5,15 @@ import useStyles from "./ClientList.styles";
 import { fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
 import { MaterialIcons } from "@expo/vector-icons";
 import { riskTypes, riskLevels } from "../../util/risks";
+import ClientScreenController from "../Client/ClientScreenController";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { stackParamList, stackScreenName } from "../../util/screens";
 
-function ClientList() {
+interface ClientScreenControllerProps {
+    navigation: StackNavigationProp<stackParamList, stackScreenName.HOME>;
+}
+
+const ClientList = (props: ClientScreenControllerProps) => {
     const styles = useStyles();
     //remove ID and test
     const exampleList = [
@@ -15,7 +22,7 @@ function ClientList() {
             Name: "Naruto",
             Zone: 3,
             HealthLevel: riskLevels.LO.color,
-            EducationLevel: riskLevels.HI.color,
+            EducationLevel: riskLevels.CR.color,
             SocialLevel: riskLevels.CR.color,
         },
         {
@@ -49,8 +56,7 @@ function ClientList() {
                         <DataTable.Row
                             key={item.Id} // you need a unique key per item
                             onPress={() => {
-                                // added to illustrate how you can make the row take the onPress event and do something
-                                console.log(`selected account ${item.Id}`);
+                                props.navigation.navigate(stackScreenName.CLIENT);
                             }}
                         >
                             <DataTable.Cell>{item.Id}</DataTable.Cell>
@@ -83,6 +89,6 @@ function ClientList() {
             </DataTable>
         </View>
     );
-}
+};
 
 export default ClientList;

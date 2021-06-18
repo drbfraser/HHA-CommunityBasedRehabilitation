@@ -1,9 +1,5 @@
 import { DefaultTheme } from "react-native-paper";
 import { themeColors } from "@cbr/common";
-import { Theme as PaperTheme } from "react-native-paper/lib/typescript/types";
-import { Theme as NavigationTheme } from "@react-navigation/native";
-
-const theme: PaperTheme & NavigationTheme = {
 import { Theme as NavigationTheme } from "@react-navigation/native";
 
 // https://callstack.github.io/react-native-paper/theming.html#typescript
@@ -32,3 +28,4 @@ const theme: ReactNativePaper.Theme & NavigationTheme = {
 };
 
 export default theme;
+

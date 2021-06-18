@@ -1,3 +1,4 @@
+import { themeColors } from "@cbr/common";
 import { StyleSheet } from "react-native";
 
 const useStyles = () =>
@@ -6,13 +7,47 @@ const useStyles = () =>
             flex: 1,
             alignItems: "center",
             justifyContent: "center",
+            marginLeft: 25,
+            marginRight: 25,
         },
         centerElement: { justifyContent: "center", alignItems: "center" },
         nextButton: {
             position: "absolute",
-            right: 20,
-            bottom: 25,
+            right: -50,
+            bottom: 0,
+            padding: -1,
+        },
+        prevButton: {
+            position: "absolute",
+            left: -50,
+            bottom: 0,
+            padding: -1,
+        },
+        buttonTextStyle: {
+            color: themeColors.blueBgDark,
+            fontWeight: "bold",
+            fontSize: 14,
         },
     });
+
+export const progressStepsStyle = {
+    activeStepIconBorderColor: themeColors.blueBgDark,
+    activeLabelColor: themeColors.blueBgDark,
+    activeStepNumColor: themeColors.white,
+    activeStepIconColor: themeColors.blueBgDark,
+    completedStepIconColor: themeColors.blueBgDark,
+    completedProgressBarColor: themeColors.blueBgDark,
+    completedCheckColor: themeColors.white,
+    labelFontSize: 3,
+    activeLabelFontSize: 7,
+};
+
+export const defaultScrollViewProps = {
+    keyboardShouldPersistTaps: "handled",
+    contentContainerStyle: {
+        flex: 2,
+        justifyContent: "center",
+    },
+};
 
 export default useStyles;

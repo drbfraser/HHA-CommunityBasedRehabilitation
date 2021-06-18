@@ -1,6 +1,7 @@
 import React from "react";
 import { APILoadError, IUser, TAPILoadError, UserRole } from "@cbr/common";
-import Todo from "../screens/Todo/BaseSurvey";
+import Todo from "../screens/Todo/Todo";
+import BaseSurvey from "../screens/Todo/BaseSurvey/BaseSurvey";
 
 export interface IScreen {
     name: string;
@@ -12,7 +13,7 @@ export interface IScreen {
 const screens: IScreen[] = [
     {
         name: "Dashboard",
-        Component: Todo,
+        Component: BaseSurvey,
         iconName: "home",
     },
     {
@@ -41,6 +42,11 @@ const screens: IScreen[] = [
         roles: [UserRole.ADMIN],
         Component: Todo,
         iconName: "account-cog",
+    },
+    {
+        name: "Baseline Survey",
+        roles: [UserRole.CLINICIAN],
+        Component: BaseSurvey,
     },
 ];
 

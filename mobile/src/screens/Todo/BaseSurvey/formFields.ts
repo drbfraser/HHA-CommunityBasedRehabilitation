@@ -64,7 +64,7 @@ export const fieldLabels = {
     [FormField.needService]: "I need access to rehabilitation services",
     [FormField.haveDevice]:
         "I have an assistive device (e.g wheelchair, crutches, prosthetic limbs, hearing aid)",
-    [FormField.deviceWorking]: "My assistive device is working well",
+    [FormField.deviceWorking]: "My ass istive device is working well",
     [FormField.needDevice]: "I need an assistive device",
     [FormField.deviceType]: "Assistive Device",
     [FormField.serviceSatisf]: "Satisfied Rate",

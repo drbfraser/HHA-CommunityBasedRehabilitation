@@ -8,7 +8,7 @@ interface clientProps {
 const IndividualClientView = (props: clientProps) => {
     return (
         <Card>
-            <Card.Title title="Card Title" subtitle="Card Subtitle" />
+            <Card.Title title={props.clientName} subtitle="Card Subtitle" />
             <Card.Content>
                 <Title>Card title</Title>
                 <Paragraph>Card content</Paragraph>

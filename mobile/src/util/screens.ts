@@ -80,5 +80,7 @@ export const stackScreenProps = {
 
 export type stackParamList = {
     [stackScreenName.HOME]: undefined;
-    [stackScreenName.CLIENT]: undefined;
+    [stackScreenName.CLIENT]: {
+        clientName: string,
+    }
   };

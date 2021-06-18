@@ -5,15 +5,14 @@ import useStyles from "./ClientList.styles";
 import { fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
 import { MaterialIcons } from "@expo/vector-icons";
 import { riskTypes, riskLevels } from "../../util/risks";
-import ClientScreenController from "../Client/ClientScreenController";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { stackParamList, stackScreenName } from "../../util/screens";
 
-interface ClientScreenControllerProps {
+interface ClientListControllerProps {
     navigation: StackNavigationProp<stackParamList, stackScreenName.HOME>;
 }
 
-const ClientList = (props: ClientScreenControllerProps) => {
+const ClientList = (props: ClientListControllerProps) => {
     const styles = useStyles();
     //remove ID and test
     const exampleList = [
@@ -56,7 +55,9 @@ const ClientList = (props: ClientScreenControllerProps) => {
                         <DataTable.Row
                             key={item.Id} // you need a unique key per item
                             onPress={() => {
-                                props.navigation.navigate(stackScreenName.CLIENT);
+                                props.navigation.navigate(stackScreenName.CLIENT, {
+                                    clientName: item.Name,
+                                });
                             }}
                         >
                             <DataTable.Cell>{item.Id}</DataTable.Cell>

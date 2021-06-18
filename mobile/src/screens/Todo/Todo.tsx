@@ -4,8 +4,10 @@ import { Button, Text, Title } from "react-native-paper";
 import useStyles from "./Todo.styles";
 import { AuthContext } from "../../context/AuthContext";
 import { getAuthToken } from "@cbr/common";
+import useIsMounted from "react-is-mounted-hook";
 
 const Todo = () => {
+    const isMounted = useIsMounted();
     const styles = useStyles();
     const authContext = useContext(AuthContext);
     const [isRefreshTokenValid, setRefreshTokenValid] = useState<boolean>();
@@ -14,10 +16,12 @@ const Todo = () => {
         const checkRefreshToken = async () => {
             // getAuthToken might make a call to /api/login/refresh
             const authToken = await getAuthToken();
-            setRefreshTokenValid(authToken != null);
+            if (isMounted()) {
+                setRefreshTokenValid(authToken != null);
+            }
         };
         checkRefreshToken();
-    });
+    }, [isMounted]);
 
     return (
         <View style={styles.container}>

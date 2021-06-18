@@ -39,7 +39,7 @@ export default function App() {
                 return loginSucceeded;
             },
             logout: async () => {
-                doLogout();
+                await doLogout();
                 setLoggedIn(false);
             },
         }),

@@ -12,22 +12,31 @@ interface IAPIToken {
     user_id: number;
 }
 
-const getAccessToken: () => Promise<string | null> = () => {
+const getAccessToken = (): Promise<string | null> => {
     return commonConfiguration.keyValStorageProvider.getItem(ACCESS_TOKEN_KEY);
 };
-const getRefreshToken: () => Promise<string | null> = () => {
+const getRefreshToken = (): Promise<string | null> => {
     return commonConfiguration.keyValStorageProvider.getItem(REFRESH_TOKEN_KEY);
 };
 
-const setAccessToken: (token: string) => Promise<void> = (token: string) => {
+const setAccessToken = (token: string): Promise<void> => {
     return commonConfiguration.keyValStorageProvider.setItem(ACCESS_TOKEN_KEY, token);
 };
-const setRefreshToken: (token: string) => Promise<void> = (token: string) => {
+const setRefreshToken = (token: string): Promise<void> => {
     return commonConfiguration.keyValStorageProvider.setItem(REFRESH_TOKEN_KEY, token);
 };
 
-// returns false if malformed or within 30 seconds of expiry
-const isTokenValid = (token: string | null) => {
+/**
+ * Validates the given token to check if it's valid for use.
+ *
+ * Note: This function uses the user's local time to check for expiry. However, it's possible that
+ * the user's clock can be out of sync, especially on mobile.
+ *
+ * @return `false` if the given token is malformed or within 30 seconds of expiry, and true if
+ * the token is valid and not expired.
+ * @param token The token to validate.
+ */
+const isTokenValid = (token: string | null): boolean => {
     if (token === null) {
         return false;
     }
@@ -41,7 +50,10 @@ const isTokenValid = (token: string | null) => {
     }
 };
 
-const requestTokens = async (endpoint: Endpoint, postBody: string): Promise<boolean> => {
+const requestTokens = async (
+    endpoint: Endpoint.LOGIN | Endpoint.LOGIN_REFRESH,
+    postBody: string
+): Promise<boolean> => {
     const init: RequestInit = {
         method: "POST",
         body: postBody,
@@ -77,7 +89,7 @@ const requestTokens = async (endpoint: Endpoint, postBody: string): Promise<bool
     return true;
 };
 
-const refreshTokens = async () => {
+const refreshTokens = async (): Promise<boolean> => {
     const postBody = JSON.stringify({
         refresh: await getRefreshToken(),
     });
@@ -94,18 +106,33 @@ export const doLogin = async (username: string, password: string): Promise<boole
     return requestTokens(Endpoint.LOGIN, postBody);
 };
 
-export const doLogout = () => {
-    setAccessToken("");
-    setRefreshToken("");
+export const doLogout = async () => {
+    await setAccessToken("");
+    await setRefreshToken("");
     commonConfiguration.logoutCallback?.();
 };
 
-export const isLoggedIn = async () => isTokenValid(await getRefreshToken());
+/**
+ * @return Whether the user's refresh token is invalid. This does not necessarily mean the user has
+ * never used the app before. It could be that their refresh token has expired; on mobile, this
+ * might mean they still have data.
+ */
+export const isLoggedIn = async (): Promise<boolean> => isTokenValid(await getRefreshToken());
 
-export const getAuthToken = async () => {
+/**
+ * Gets the stored access token for the `Authorization: Bearer ${token}` header.
+ *
+ * If the access token is invalid (expired), an attempt to refresh will be made.
+ * If token refreshing fails, {@link doLogout} is called iff the configured
+ * {@link CommonConfiguration#shouldLogoutOnTokenRefreshFailure } setting is true.
+ *
+ * @return a valid access token, or `null` if unable to get a valid token or token refreshing
+ * fails.
+ */
+export const getAuthToken = async (): Promise<string | null> => {
     if (!(await isLoggedIn())) {
         if (commonConfiguration.shouldLogoutOnTokenRefreshFailure) {
-            doLogout();
+            await doLogout();
         }
         return null;
     }
@@ -115,7 +142,7 @@ export const getAuthToken = async () => {
 
         if (!refreshSuccess) {
             if (commonConfiguration.shouldLogoutOnTokenRefreshFailure) {
-                doLogout();
+                await doLogout();
             }
             return null;
         }

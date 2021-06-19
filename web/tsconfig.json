@@ -18,13 +18,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "baseUrl": "src"
   },
   "include": [
     "src"
   ],
   "dependencies": {
-    "@common": "./../common",
-  },
+    "@common": "./../common"
+  }
 }

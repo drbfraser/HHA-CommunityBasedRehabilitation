@@ -3,14 +3,15 @@ import { Alert, SafeAreaView, ScrollView, TouchableOpacity, View } from "react-n
 import {
     Text,
     Title,
-    Checkbox,
     Button,
+    Checkbox,
     Dialog,
     Portal,
     Paragraph,
     Appbar,
     Menu,
     TextInput,
+    TouchableRipple,
 } from "react-native-paper";
 import {
     educationValidationSchema,
@@ -30,7 +31,11 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import DropDownPicker from "react-native-dropdown-picker";
 import { themeColors } from "@cbr/common";
+import { Picker } from "@react-native-community/picker";
+// import Checkbox from "@react-native-community/checkbox";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./baseSurvey.style";
+import DialogWithRadioBtns from "../../../util/DialogWithRadioBtn";
+import TextCheckBox from "../../../util/TextCheckBox";
 interface IFormProps {
     formikProps: FormikProps<any>;
 }
@@ -50,82 +55,141 @@ interface ISurvey {
     Form: (props: IFormProps) => JSX.Element;
     validationSchema: () => any;
 }
+type ButtonVisibility = {
+    [key: string]: boolean | undefined;
+};
 
 const HealthForm = (props: IFormProps) => {
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        { label: "Very Poor", value: "VP" },
-        { label: "Poor", value: "P" },
-        { label: "Fine", value: "F" },
-        { label: "Good", value: "G" },
-    ]);
-    const [satisfyOpen, setSatisfyOpen] = useState(false);
-    const [satisfyValue, setSatisfyValue] = useState(null);
-    const [needDeviceOpen, setNeedDeviceOpen] = useState(false);
-    const [needDeviceValue, setNeedDeviceValue] = useState(null);
-    const [needDeviceItems, setNeedDeviceItems] = useState([
-        { label: "Very Poor", value: "VP" },
-        { label: "Poor", value: "P" },
-        { label: "Fine", value: "F" },
-        { label: "Good", value: "G" },
-    ]);
+    const [visible, setVisible] = React.useState<ButtonVisibility>({});
+    const styles = useStyles();
+    const _toggleDialog = (name: string) => () =>
+        setVisible({ ...visible, [name]: !visible[name] });
+    const _getVisible = (name: string) => !!visible[name];
+
     return (
         <View style={{ flex: 1, position: "relative" }}>
-            <Text>Rate your general health {"\n"}</Text>
-            <DropDownPicker
-                open={open}
-                value={value}
-                items={items}
-                setOpen={setOpen}
-                setValue={setValue}
-                setItems={setItems}
+            <Text style={{ fontSize: 15 }}>Rate your general health {"\n"}</Text>
+            <Button mode="contained" onPress={_toggleDialog("dialog2")}>
+                Choose Health Rate
+            </Button>
+            <Text />
+            <DialogWithRadioBtns
+                visible={_getVisible("dialog2")}
+                close={_toggleDialog("dialog2")}
             />
-            <Checkbox.Item
-                key={FormField.getService}
-                label={fieldLabels[FormField.getService]}
-                status={initialValues[FormField.getService] ? "checked" : "unchecked"}
-            />
-            <Checkbox.Item
-                key={FormField.needService}
-                label={fieldLabels[FormField.needService]}
-                status={initialValues[FormField.needService] ? "checked" : "unchecked"}
-            />
-            <Checkbox.Item
-                key={FormField.haveDevice}
-                label={fieldLabels[FormField.haveDevice]}
-                status={initialValues[FormField.haveDevice] ? "checked" : "unchecked"}
-            />
-            <Checkbox.Item
-                key={FormField.deviceWorking}
-                label={fieldLabels[FormField.deviceWorking]}
-                status={initialValues[FormField.deviceWorking] ? "checked" : "unchecked"}
-            />
-            <Checkbox.Item
-                key={FormField.needDevice}
-                label={fieldLabels[FormField.needDevice]}
-                status={initialValues[FormField.needDevice] ? "checked" : "unchecked"}
-            />
-            <Text>What assistive device do you need? {"\n"}</Text>
-            <DropDownPicker
-                open={satisfyOpen}
-                value={satisfyValue}
-                items={items}
-                setOpen={setSatisfyOpen}
-                setValue={setSatisfyValue}
-                setItems={setItems}
-            />
+            <TouchableRipple
+                onPress={() =>
+                    props.formikProps.setFieldValue(
+                        FormField.getService,
+                        !props.formikProps.values.get_service
+                    )
+                }
+            >
+                <View style={styles.checkBoxText}>
+                    <View pointerEvents="none">
+                        <Checkbox
+                            status={props.formikProps.values.get_service ? "checked" : "unchecked"}
+                        />
+                    </View>
+                    <Paragraph>{fieldLabels[FormField.getService]}</Paragraph>
+                </View>
+            </TouchableRipple>
+            <TouchableRipple
+                onPress={() =>
+                    props.formikProps.setFieldValue(
+                        FormField.needService,
+                        !props.formikProps.values.need_service
+                    )
+                }
+            >
+                <View style={styles.checkBoxText}>
+                    <View pointerEvents="none">
+                        <Checkbox
+                            status={props.formikProps.values.need_service ? "checked" : "unchecked"}
+                        />
+                    </View>
+                    <Paragraph>{fieldLabels[FormField.needService]}</Paragraph>
+                </View>
+            </TouchableRipple>
+            <TouchableRipple
+                onPress={() =>
+                    props.formikProps.setFieldValue(
+                        FormField.haveDevice,
+                        !props.formikProps.values.have_device
+                    )
+                }
+            >
+                <View style={styles.checkBoxText}>
+                    <View pointerEvents="none">
+                        <Checkbox
+                            status={props.formikProps.values.have_device ? "checked" : "unchecked"}
+                        />
+                    </View>
+                    <Paragraph>{fieldLabels[FormField.haveDevice]}</Paragraph>
+                </View>
+            </TouchableRipple>
+            <TouchableRipple
+                onPress={() =>
+                    props.formikProps.setFieldValue(
+                        FormField.deviceWorking,
+                        !props.formikProps.values.device_working
+                    )
+                }
+            >
+                <View style={styles.checkBoxText}>
+                    <View pointerEvents="none">
+                        <Checkbox
+                            status={
+                                props.formikProps.values.device_working ? "checked" : "unchecked"
+                            }
+                        />
+                    </View>
+                    <Paragraph>{fieldLabels[FormField.deviceWorking]}</Paragraph>
+                </View>
+            </TouchableRipple>
+            <TouchableRipple
+                onPress={() =>
+                    props.formikProps.setFieldValue(
+                        FormField.needDevice,
+                        !props.formikProps.values.need_device
+                    )
+                }
+            >
+                <View style={styles.checkBoxText}>
+                    <View pointerEvents="none">
+                        <Checkbox
+                            status={props.formikProps.values.need_device ? "checked" : "unchecked"}
+                        />
+                    </View>
+                    <Paragraph>{fieldLabels[FormField.needDevice]}</Paragraph>
+                </View>
+            </TouchableRipple>
+            <Text />
 
-            <Text>Are you satisfied with the health services you receive?{"\n"}</Text>
+            {props.formikProps.values[FormField.needDevice] && (
+                <View>
+                    <Text style={{ fontSize: 15 }}>What assistive device do you need? {"\n"}</Text>
+                    <Button mode="contained" onPress={_toggleDialog("dialog2")}>
+                        Choose device type
+                    </Button>
+                    <DialogWithRadioBtns
+                        visible={_getVisible("dialog3")}
+                        close={_toggleDialog("dialog3")}
+                    />
+                </View>
+            )}
 
-            <DropDownPicker
-                open={needDeviceOpen}
-                value={needDeviceValue}
-                items={needDeviceItems}
-                setOpen={setNeedDeviceOpen}
-                setValue={setNeedDeviceValue}
-                setItems={setNeedDeviceItems}
-                badgeColors={themeColors.blueBgDark}
+            <Text />
+            <Text style={{ fontSize: 15 }}>
+                Are you satisfied with the health services you receive?{"\n"}
+            </Text>
+
+            <Button mode="contained" onPress={_toggleDialog("dialog2")}>
+                Choose Satisfied Rate
+            </Button>
+            <DialogWithRadioBtns
+                visible={_getVisible("dialog2")}
+                close={_toggleDialog("dialog2")}
             />
         </View>
     );
@@ -227,6 +291,27 @@ const BaseSurvey = () => {
         >
             {(formikProps) => (
                 <View style={styles.container}>
+                    {/* <TextCheckBox field={FormField.needDevice} formikProps={formikProps} /> */}
+                    {/* <TouchableRipple
+                        onPress={() =>
+                            formikProps.setFieldValue(
+                                FormField.needDevice,
+                                !formikProps.values.need_device
+                            )
+                        }
+                    >
+                        <View style={styles.checkBoxText}>
+                            <Paragraph>{fieldLabels[FormField.needDevice]}</Paragraph>
+                            <View pointerEvents="none">
+                                <Checkbox
+                                    status={
+                                        formikProps.values.need_device ? "checked" : "unchecked"
+                                    }
+                                />
+                            </View>
+                        </View>
+                    </TouchableRipple> */}
+
                     <ProgressSteps {...progressStepsStyle}>
                         {surveySteps.map((surveyStep, index) => (
                             <ProgressStep

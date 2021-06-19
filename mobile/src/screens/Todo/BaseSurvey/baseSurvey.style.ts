@@ -10,7 +10,6 @@ const useStyles = () =>
             marginLeft: 25,
             marginRight: 25,
         },
-        centerElement: { justifyContent: "center", alignItems: "center" },
         nextButton: {
             position: "absolute",
             right: -50,
@@ -27,6 +26,13 @@ const useStyles = () =>
             color: themeColors.blueBgDark,
             fontWeight: "bold",
             fontSize: 14,
+        },
+        checkBoxText: {
+            flexDirection: "row",
+            // alignItems: "center",
+            justifyContent: "space-between",
+            paddingVertical: 8,
+            paddingRight: 105,
         },
     });
 

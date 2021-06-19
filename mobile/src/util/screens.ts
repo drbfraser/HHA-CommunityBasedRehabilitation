@@ -1,6 +1,7 @@
 import React from "react";
 import { APILoadError, IUser, TAPILoadError, UserRole } from "@cbr/common";
 import Todo from "../screens/Todo/Todo";
+import visitSurvey from "../screens/Visit/visitSurvey";
 
 export interface IScreen {
     name: string;
@@ -28,6 +29,11 @@ const screens: IScreen[] = [
     {
         name: "Profile",
         Component: Todo,
+        iconName: "account",
+    },
+    {
+        name: "visitSurvey",
+        Component: visitSurvey,
         iconName: "account",
     },
     {

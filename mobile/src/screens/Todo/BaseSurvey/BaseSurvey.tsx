@@ -12,6 +12,7 @@ import {
     Menu,
     TextInput,
     TouchableRipple,
+    Divider,
 } from "react-native-paper";
 import {
     educationValidationSchema,
@@ -21,8 +22,10 @@ import {
     foodValidationSchema,
     FormField,
     healthValidationSchema,
+    IFormProps,
     initialValues,
     livelihoodValidationSchema,
+    surveyTypes,
 } from "./formFields";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { useHistory, useParams } from "react-router-dom";
@@ -36,19 +39,13 @@ import { Picker } from "@react-native-community/picker";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./baseSurvey.style";
 import DialogWithRadioBtns from "../../../util/DialogWithRadioBtn";
 import TextCheckBox from "../../../util/TextCheckBox";
-interface IFormProps {
-    formikProps: FormikProps<any>;
-}
-
-const surveyTypes: FormField[] = [
-    FormField.health,
-    FormField.education,
-    FormField.social,
-    FormField.livelihood,
-    FormField.foodAndNutrition,
-    FormField.empowerment,
-    FormField.shelterAndCare,
-];
+import HealthForm from "./SurveyForm/HealthForm";
+import EducationForm from "./SurveyForm/EducationForm";
+import SocialForm from "./SurveyForm/SocialForm";
+import LivelihoodForm from "./SurveyForm/LivelihoodFom";
+import EmpowermentForm from "./SurveyForm/EmpowermentForm";
+import ShelterForm from "./SurveyForm/ShelterForm";
+import FoodForm from "./SurveyForm/FoodForm";
 
 interface ISurvey {
     label: string;
@@ -57,169 +54,6 @@ interface ISurvey {
 }
 type ButtonVisibility = {
     [key: string]: boolean | undefined;
-};
-
-const HealthForm = (props: IFormProps) => {
-    const [visible, setVisible] = React.useState<ButtonVisibility>({});
-    const styles = useStyles();
-    const _toggleDialog = (name: string) => () =>
-        setVisible({ ...visible, [name]: !visible[name] });
-    const _getVisible = (name: string) => !!visible[name];
-
-    return (
-        <View style={{ flex: 1, position: "relative" }}>
-            <Text style={{ fontSize: 15 }}>Rate your general health {"\n"}</Text>
-            <Button mode="contained" onPress={_toggleDialog("dialog2")}>
-                Choose Health Rate
-            </Button>
-            <Text />
-            <DialogWithRadioBtns
-                visible={_getVisible("dialog2")}
-                close={_toggleDialog("dialog2")}
-            />
-            <TouchableRipple
-                onPress={() =>
-                    props.formikProps.setFieldValue(
-                        FormField.getService,
-                        !props.formikProps.values.get_service
-                    )
-                }
-            >
-                <View style={styles.checkBoxText}>
-                    <View pointerEvents="none">
-                        <Checkbox
-                            status={props.formikProps.values.get_service ? "checked" : "unchecked"}
-                        />
-                    </View>
-                    <Paragraph>{fieldLabels[FormField.getService]}</Paragraph>
-                </View>
-            </TouchableRipple>
-            <TouchableRipple
-                onPress={() =>
-                    props.formikProps.setFieldValue(
-                        FormField.needService,
-                        !props.formikProps.values.need_service
-                    )
-                }
-            >
-                <View style={styles.checkBoxText}>
-                    <View pointerEvents="none">
-                        <Checkbox
-                            status={props.formikProps.values.need_service ? "checked" : "unchecked"}
-                        />
-                    </View>
-                    <Paragraph>{fieldLabels[FormField.needService]}</Paragraph>
-                </View>
-            </TouchableRipple>
-            <TouchableRipple
-                onPress={() =>
-                    props.formikProps.setFieldValue(
-                        FormField.haveDevice,
-                        !props.formikProps.values.have_device
-                    )
-                }
-            >
-                <View style={styles.checkBoxText}>
-                    <View pointerEvents="none">
-                        <Checkbox
-                            status={props.formikProps.values.have_device ? "checked" : "unchecked"}
-                        />
-                    </View>
-                    <Paragraph>{fieldLabels[FormField.haveDevice]}</Paragraph>
-                </View>
-            </TouchableRipple>
-            <TouchableRipple
-                onPress={() =>
-                    props.formikProps.setFieldValue(
-                        FormField.deviceWorking,
-                        !props.formikProps.values.device_working
-                    )
-                }
-            >
-                <View style={styles.checkBoxText}>
-                    <View pointerEvents="none">
-                        <Checkbox
-                            status={
-                                props.formikProps.values.device_working ? "checked" : "unchecked"
-                            }
-                        />
-                    </View>
-                    <Paragraph>{fieldLabels[FormField.deviceWorking]}</Paragraph>
-                </View>
-            </TouchableRipple>
-            <TouchableRipple
-                onPress={() =>
-                    props.formikProps.setFieldValue(
-                        FormField.needDevice,
-                        !props.formikProps.values.need_device
-                    )
-                }
-            >
-                <View style={styles.checkBoxText}>
-                    <View pointerEvents="none">
-                        <Checkbox
-                            status={props.formikProps.values.need_device ? "checked" : "unchecked"}
-                        />
-                    </View>
-                    <Paragraph>{fieldLabels[FormField.needDevice]}</Paragraph>
-                </View>
-            </TouchableRipple>
-            <Text />
-
-            {props.formikProps.values[FormField.needDevice] && (
-                <View>
-                    <Text style={{ fontSize: 15 }}>What assistive device do you need? {"\n"}</Text>
-                    <Button mode="contained" onPress={_toggleDialog("dialog2")}>
-                        Choose device type
-                    </Button>
-                    <DialogWithRadioBtns
-                        visible={_getVisible("dialog3")}
-                        close={_toggleDialog("dialog3")}
-                    />
-                </View>
-            )}
-
-            <Text />
-            <Text style={{ fontSize: 15 }}>
-                Are you satisfied with the health services you receive?{"\n"}
-            </Text>
-
-            <Button mode="contained" onPress={_toggleDialog("dialog2")}>
-                Choose Satisfied Rate
-            </Button>
-            <DialogWithRadioBtns
-                visible={_getVisible("dialog2")}
-                close={_toggleDialog("dialog2")}
-            />
-        </View>
-    );
-};
-const EducationForm = (props: IFormProps) => {
-    return (
-        <View>
-            <Text>This is the test!</Text>
-        </View>
-    );
-};
-
-const SocialForm = () => {
-    return <Text>This is the test!</Text>;
-};
-
-const FoodForm = (props: IFormProps) => {
-    return <Text>This is the test!</Text>;
-};
-
-const LivelihoodForm = (props: IFormProps) => {
-    return <Text>This is the test!</Text>;
-};
-
-const EmpowermentForm = (props: IFormProps) => {
-    return <Text>This is the test!</Text>;
-};
-
-const ShelterForm = () => {
-    return <Text>This is the test!</Text>;
 };
 
 const BaseSurvey = () => {
@@ -258,7 +92,7 @@ const BaseSurvey = () => {
         },
         {
             label: "Social",
-            Form: () => SocialForm(),
+            Form: (formikProps) => SocialForm(formikProps),
             validationSchema: emptyValidationSchema,
         },
         {
@@ -278,50 +112,34 @@ const BaseSurvey = () => {
         },
         {
             label: "Shelter and Care",
-            Form: () => ShelterForm(),
+            Form: (formikProps) => ShelterForm(formikProps),
             validationSchema: emptyValidationSchema,
         },
     ];
     return (
         <Formik
             initialValues={initialValues}
-            // validationSchema={surveySteps[step].validationSchema}
+            validationSchema={surveySteps[step].validationSchema}
             onSubmit={nextStep}
             enableReinitialize
         >
             {(formikProps) => (
                 <View style={styles.container}>
-                    {/* <TextCheckBox field={FormField.needDevice} formikProps={formikProps} /> */}
-                    {/* <TouchableRipple
-                        onPress={() =>
-                            formikProps.setFieldValue(
-                                FormField.needDevice,
-                                !formikProps.values.need_device
-                            )
-                        }
-                    >
-                        <View style={styles.checkBoxText}>
-                            <Paragraph>{fieldLabels[FormField.needDevice]}</Paragraph>
-                            <View pointerEvents="none">
-                                <Checkbox
-                                    status={
-                                        formikProps.values.need_device ? "checked" : "unchecked"
-                                    }
-                                />
-                            </View>
-                        </View>
-                    </TouchableRipple> */}
-
                     <ProgressSteps {...progressStepsStyle}>
                         {surveySteps.map((surveyStep, index) => (
                             <ProgressStep
-                                label={surveyStep.label}
+                                key={index}
+                                // label={surveyStep.label}
                                 scrollViewProps={defaultScrollViewProps}
                                 previousBtnTextStyle={styles.buttonTextStyle}
                                 nextBtnTextStyle={styles.buttonTextStyle}
                                 nextBtnStyle={styles.nextButton}
                                 previousBtnStyle={styles.prevButton}
                             >
+                                <Text style={{ fontSize: 25, fontWeight: "bold" }}>
+                                    {surveyStep.label}
+                                </Text>
+                                <Divider style={{ backgroundColor: themeColors.blueBgDark }} />
                                 <ScrollView>
                                     <surveyStep.Form formikProps={formikProps} />
                                 </ScrollView>

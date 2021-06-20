@@ -1,4 +1,9 @@
+import { FormikProps } from "formik";
 import * as Yup from "yup";
+
+export interface IFormProps {
+    formikProps: FormikProps<any>;
+}
 
 export enum FormField {
     client = "client",
@@ -187,4 +192,13 @@ export const empowermentValidationSchema = () =>
         [FormField.organization]: Yup.string().label(fieldLabels[FormField.organization]).max(50),
     });
 
+export const surveyTypes: FormField[] = [
+    FormField.health,
+    FormField.education,
+    FormField.social,
+    FormField.livelihood,
+    FormField.foodAndNutrition,
+    FormField.empowerment,
+    FormField.shelterAndCare,
+];
 export type TFormValues = typeof initialValues;

@@ -7,8 +7,8 @@ const useStyles = () =>
             flex: 1,
             alignItems: "center",
             justifyContent: "center",
-            marginLeft: 25,
-            marginRight: 25,
+            marginLeft: 30,
+            marginRight: 30,
         },
         nextButton: {
             position: "absolute",
@@ -29,11 +29,15 @@ const useStyles = () =>
         },
         checkBoxText: {
             flexDirection: "row",
-            // alignItems: "center",
+            alignItems: "flex-start",
             justifyContent: "space-between",
-            paddingVertical: 8,
-            paddingRight: 105,
+            paddingVertical: 10,
+            paddingRight: 50,
         },
+        alertText: {
+            color: themeColors.hhaBlue,
+        },
+        centerElement: { justifyContent: "center", alignItems: "center" },
     });
 
 export const progressStepsStyle = {
@@ -45,7 +49,9 @@ export const progressStepsStyle = {
     completedProgressBarColor: themeColors.blueBgDark,
     completedCheckColor: themeColors.white,
     labelFontSize: 3,
-    activeLabelFontSize: 7,
+    activeLabelFontSize: 9,
+    topOffset: 20,
+    marginBottom: 10,
 };
 
 export const defaultScrollViewProps = {

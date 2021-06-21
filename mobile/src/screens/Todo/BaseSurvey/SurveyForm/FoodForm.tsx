@@ -1,47 +1,17 @@
-import React, { useRef, useState } from "react";
-import { Alert, SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
-import {
-    Text,
-    Title,
-    Button,
-    Checkbox,
-    Dialog,
-    Portal,
-    Paragraph,
-    Appbar,
-    Menu,
-    TextInput,
-    TouchableRipple,
-} from "react-native-paper";
-import {
-    educationValidationSchema,
-    empowermentValidationSchema,
-    emptyValidationSchema,
-    fieldLabels,
-    foodValidationSchema,
-    FormField,
-    healthValidationSchema,
-    IFormProps,
-    initialValues,
-    livelihoodValidationSchema,
-} from "../formFields";
-import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { useHistory, useParams } from "react-router-dom";
-import { handleSubmit } from "../formHandler";
-import { MaterialIcons } from "@expo/vector-icons";
-import DropDownPicker from "react-native-dropdown-picker";
-import { themeColors } from "@cbr/common";
+import React, { useState } from "react";
+import { View } from "react-native";
+import { Text, Button, Dialog, Portal, Paragraph } from "react-native-paper";
+import { fieldLabels, FormField, IFormProps } from "../formFields";
+import { childNourish, rateLevel } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
-// import Checkbox from "@react-native-community/checkbox";
-import useStyles, { defaultScrollViewProps, progressStepsStyle } from "../baseSurvey.style";
-import DialogWithRadioBtns from "../../../../util/DialogWithRadioBtn";
+import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../../util/TextCheckBox";
 
 const FoodForm = (props: IFormProps) => {
-    const [submissionError, setSubmissionError] = useState(false);
-    const hideAlert = () => setSubmissionError(false);
-    const showAlert = () => setSubmissionError(true);
+    const [alertError, setAlertError] = useState(false);
     const styles = useStyles();
+    const hideAlert = () => setAlertError(false);
+    const showAlert = () => setAlertError(true);
 
     return (
         <View>
@@ -50,7 +20,18 @@ const FoodForm = (props: IFormProps) => {
                     paddingRight: 50,
                 }}
             >
-                <Text>Food security</Text>
+                <Text style={styles.pickerQuestion}>Food security</Text>
+                <Picker
+                    selectedValue={props.formikProps.values[FormField.foodSecurityRate]}
+                    style={styles.picker}
+                    onValueChange={(itemValue) =>
+                        props.formikProps.setFieldValue(FormField.foodSecurityRate, itemValue)
+                    }
+                >
+                    {Object.entries(rateLevel).map(([value, { name }]) => (
+                        <Picker.Item label={name} value={value} />
+                    ))}
+                </Picker>
                 <TextCheckBox
                     field={FormField.enoughFoodPerMonth}
                     value={props.formikProps.values[FormField.enoughFoodPerMonth]}
@@ -77,25 +58,39 @@ const FoodForm = (props: IFormProps) => {
                         paddingLeft: 30,
                     }}
                 >
-                    <Text>What is this child nutritional status?</Text>
-                    <TouchableOpacity
-                        style={[styles.centerElement, { width: 50, height: 50 }]}
-                        onPress={() => {}}
-                    ></TouchableOpacity>
-                    <Portal>
-                        <Dialog visible={submissionError} onDismiss={showAlert}>
-                            <Dialog.Title>Error</Dialog.Title>
-                            <Dialog.Content>
-                                <Paragraph>A referral to the health center is required!</Paragraph>
-                            </Dialog.Content>
-                            <Dialog.Actions>
-                                <Button onPress={hideAlert}>OK</Button>
-                            </Dialog.Actions>
-                        </Dialog>
-                    </Portal>
-                    <Button onPress={showAlert} mode="contained">
-                        Show Dialog
-                    </Button>
+                    <Text style={styles.pickerQuestion}>
+                        What is this child nutritional status?
+                    </Text>
+                    <Picker
+                        selectedValue={props.formikProps.values[FormField.childNourish]}
+                        style={styles.picker}
+                        onValueChange={(itemValue) => {
+                            props.formikProps.setFieldValue(FormField.childNourish, itemValue);
+                            itemValue === "M" ? showAlert() : hideAlert();
+                        }}
+                    >
+                        {Object.entries(childNourish).map(([value, name]) => (
+                            <Picker.Item label={name} value={value} />
+                        ))}
+                    </Picker>
+
+                    {props.formikProps.values[FormField.childNourish] === "M" && (
+                        <View>
+                            <Portal>
+                                <Dialog visible={alertError} onDismiss={showAlert}>
+                                    <Dialog.Title>Error</Dialog.Title>
+                                    <Dialog.Content>
+                                        <Paragraph>
+                                            A referral to the health center is required!
+                                        </Paragraph>
+                                    </Dialog.Content>
+                                    <Dialog.Actions>
+                                        <Button onPress={hideAlert}>OK</Button>
+                                    </Dialog.Actions>
+                                </Dialog>
+                            </Portal>
+                        </View>
+                    )}
                 </View>
             )}
         </View>

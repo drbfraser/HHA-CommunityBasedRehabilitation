@@ -38,6 +38,8 @@ const useStyles = () =>
             color: themeColors.hhaBlue,
         },
         centerElement: { justifyContent: "center", alignItems: "center" },
+        picker: { height: 40, width: 250 },
+        pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
     });
 
 export const progressStepsStyle = {

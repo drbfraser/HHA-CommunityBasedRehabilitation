@@ -1,42 +1,15 @@
-import React, { useRef, useState } from "react";
-import { Alert, SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
-import {
-    Text,
-    Title,
-    Button,
-    Checkbox,
-    Dialog,
-    Portal,
-    Paragraph,
-    Appbar,
-    Menu,
-    TextInput,
-    TouchableRipple,
-} from "react-native-paper";
-import {
-    educationValidationSchema,
-    empowermentValidationSchema,
-    emptyValidationSchema,
-    fieldLabels,
-    foodValidationSchema,
-    FormField,
-    healthValidationSchema,
-    IFormProps,
-    initialValues,
-    livelihoodValidationSchema,
-} from "../formFields";
-import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { useHistory, useParams } from "react-router-dom";
-import { handleSubmit } from "../formHandler";
-import { MaterialIcons } from "@expo/vector-icons";
-import DropDownPicker from "react-native-dropdown-picker";
-import { themeColors } from "@cbr/common";
+import React from "react";
+import { View } from "react-native";
+import { Text } from "react-native-paper";
+import { fieldLabels, FormField, IFormProps } from "../formFields";
+import { grade, reasonNotSchool } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
-import useStyles, { defaultScrollViewProps, progressStepsStyle } from "../baseSurvey.style";
-import DialogWithRadioBtns from "../../../../util/DialogWithRadioBtn";
+import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../../util/TextCheckBox";
 
 const EducationForm = (props: IFormProps) => {
+    const styles = useStyles();
+
     return (
         <View>
             <View
@@ -51,14 +24,39 @@ const EducationForm = (props: IFormProps) => {
                     setFieldValue={props.formikProps.setFieldValue}
                 />
             </View>
-            <View
-                style={{
-                    paddingLeft: 30,
-                }}
-            >
-                <Text>Why do you not go to school?</Text>
-                <Text>What grade?</Text>
-            </View>
+
+            {props.formikProps.values[FormField.goSchool] ? (
+                <View>
+                    <Text style={styles.pickerQuestion}>What grade?</Text>
+                    <Picker
+                        selectedValue={props.formikProps.values[FormField.grade]}
+                        style={styles.picker}
+                        onValueChange={(itemValue) =>
+                            props.formikProps.setFieldValue(FormField.grade, itemValue)
+                        }
+                    >
+                        {Object.entries(grade).map(([value, { name }]) => (
+                            <Picker.Item label={name} value={value} />
+                        ))}
+                    </Picker>
+                </View>
+            ) : (
+                <View>
+                    <Text style={styles.pickerQuestion}>Why do you not go to school?</Text>
+                    <Picker
+                        selectedValue={props.formikProps.values[FormField.reasonNotSchool]}
+                        style={styles.picker}
+                        onValueChange={(itemValue) =>
+                            props.formikProps.setFieldValue(FormField.reasonNotSchool, itemValue)
+                        }
+                    >
+                        {Object.entries(reasonNotSchool).map(([value, name]) => (
+                            <Picker.Item label={name} value={value} />
+                        ))}
+                    </Picker>
+                </View>
+            )}
+
             <View
                 style={{
                     paddingRight: 55,

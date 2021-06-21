@@ -1,64 +1,31 @@
-import React, { useRef, useState } from "react";
-import { Alert, SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
-import {
-    Text,
-    Title,
-    Button,
-    Checkbox,
-    Dialog,
-    Portal,
-    Paragraph,
-    Appbar,
-    Menu,
-    TextInput,
-    TouchableRipple,
-} from "react-native-paper";
-import {
-    educationValidationSchema,
-    empowermentValidationSchema,
-    emptyValidationSchema,
-    fieldLabels,
-    foodValidationSchema,
-    FormField,
-    healthValidationSchema,
-    IFormProps,
-    initialValues,
-    livelihoodValidationSchema,
-} from "../formFields";
-import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { useHistory, useParams } from "react-router-dom";
-import { handleSubmit } from "../formHandler";
-import { MaterialIcons } from "@expo/vector-icons";
-import DropDownPicker from "react-native-dropdown-picker";
-import { themeColors } from "@cbr/common";
+import React from "react";
+import { View } from "react-native";
+import { Text } from "react-native-paper";
+import { fieldLabels, FormField, IFormProps } from "../formFields";
+import { deviceTypes, rateLevel } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
-// import Checkbox from "@react-native-community/checkbox";
-import useStyles, { defaultScrollViewProps, progressStepsStyle } from "../baseSurvey.style";
-import DialogWithRadioBtns from "../../../../util/DialogWithRadioBtn";
+import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../../util/TextCheckBox";
 
-type ButtonVisibility = {
-    [key: string]: boolean | undefined;
-};
-
 const HealthForm = (props: IFormProps) => {
-    const [visible, setVisible] = React.useState<ButtonVisibility>({});
-    const _toggleDialog = (name: string) => () =>
-        setVisible({ ...visible, [name]: !visible[name] });
-    const _getVisible = (name: string) => !!visible[name];
+    const styles = useStyles();
 
     return (
         <View>
-            <Text style={{ fontSize: 15 }}>Rate your general health {"\n"}</Text>
+            <Text style={styles.pickerQuestion}>{"\n"}Rate your general health </Text>
 
-            <Button mode="contained" onPress={_toggleDialog("dialog2")}>
-                Choose Health Rate
-            </Button>
-            <Text />
-            <DialogWithRadioBtns
-                visible={_getVisible("dialog2")}
-                close={_toggleDialog("dialog2")}
-            />
+            <Picker
+                selectedValue={props.formikProps.values[FormField.rateLevel]}
+                style={styles.picker}
+                onValueChange={(itemValue) =>
+                    props.formikProps.setFieldValue(FormField.rateLevel, itemValue)
+                }
+            >
+                {Object.entries(rateLevel).map(([value, { name }]) => (
+                    <Picker.Item label={name} value={value} />
+                ))}
+            </Picker>
+
             <TextCheckBox
                 field={FormField.getService}
                 value={props.formikProps.values[FormField.getService]}
@@ -107,29 +74,37 @@ const HealthForm = (props: IFormProps) => {
 
             {props.formikProps.values[FormField.needDevice] && (
                 <View>
-                    <Text style={{ fontSize: 15 }}>What assistive device do you need? {"\n"}</Text>
-                    <Button mode="contained" onPress={_toggleDialog("dialog2")}>
-                        Choose device type
-                    </Button>
-                    <DialogWithRadioBtns
-                        visible={_getVisible("dialog3")}
-                        close={_toggleDialog("dialog3")}
-                    />
+                    <Text style={styles.pickerQuestion}>
+                        {"\n"} What assistive device do you need?
+                    </Text>
+                    <Picker
+                        selectedValue={props.formikProps.values[FormField.deviceType]}
+                        style={styles.picker}
+                        onValueChange={(itemValue) =>
+                            props.formikProps.setFieldValue(FormField.deviceType, itemValue)
+                        }
+                    >
+                        {Object.entries(deviceTypes).map(([value, name]) => (
+                            <Picker.Item label={name} value={value} />
+                        ))}
+                    </Picker>
                 </View>
             )}
 
-            <Text />
-            <Text style={{ fontSize: 15 }}>
-                Are you satisfied with the health services you receive?{"\n"}
+            <Text style={styles.pickerQuestion}>
+                {"\n"}Are you satisfied with the health services you receive?
             </Text>
-
-            <Button mode="contained" onPress={_toggleDialog("dialog2")}>
-                Choose Satisfied Rate
-            </Button>
-            <DialogWithRadioBtns
-                visible={_getVisible("dialog2")}
-                close={_toggleDialog("dialog2")}
-            />
+            <Picker
+                selectedValue={props.formikProps.values[FormField.serviceSatisf]}
+                style={styles.picker}
+                onValueChange={(itemValue) =>
+                    props.formikProps.setFieldValue(FormField.serviceSatisf, itemValue)
+                }
+            >
+                {Object.entries(rateLevel).map(([value, { name }]) => (
+                    <Picker.Item label={name} value={value} />
+                ))}
+            </Picker>
         </View>
     );
 };

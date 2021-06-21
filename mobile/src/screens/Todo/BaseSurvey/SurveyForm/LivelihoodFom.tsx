@@ -1,43 +1,15 @@
-import React, { useRef, useState } from "react";
-import { Alert, SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
-import {
-    Text,
-    Title,
-    Button,
-    Checkbox,
-    Dialog,
-    Portal,
-    Paragraph,
-    Appbar,
-    Menu,
-    TextInput,
-    TouchableRipple,
-} from "react-native-paper";
-import {
-    educationValidationSchema,
-    empowermentValidationSchema,
-    emptyValidationSchema,
-    fieldLabels,
-    foodValidationSchema,
-    FormField,
-    healthValidationSchema,
-    IFormProps,
-    initialValues,
-    livelihoodValidationSchema,
-} from "../formFields";
-import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { useHistory, useParams } from "react-router-dom";
-import { handleSubmit } from "../formHandler";
-import { MaterialIcons } from "@expo/vector-icons";
-import DropDownPicker from "react-native-dropdown-picker";
-import { themeColors } from "@cbr/common";
+import React from "react";
+import { View } from "react-native";
+import { Text, TextInput } from "react-native-paper";
+import { fieldLabels, FormField, IFormProps } from "../formFields";
+import { isSelfEmployed } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
-// import Checkbox from "@react-native-community/checkbox";
-import useStyles, { defaultScrollViewProps, progressStepsStyle } from "../baseSurvey.style";
-import DialogWithRadioBtns from "../../../../util/DialogWithRadioBtn";
+import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../../util/TextCheckBox";
 
 const LivelihoodForm = (props: IFormProps) => {
+    const styles = useStyles();
+
     return (
         <View>
             <View
@@ -58,7 +30,7 @@ const LivelihoodForm = (props: IFormProps) => {
                         paddingLeft: 30,
                     }}
                 >
-                    <Text>What do you do?</Text>
+                    <Text style={styles.pickerQuestion}>What do you do?</Text>
                     <TextInput
                         mode="outlined"
                         label={FormField.job}
@@ -66,7 +38,23 @@ const LivelihoodForm = (props: IFormProps) => {
                             props.formikProps.setFieldValue(FormField.job, value)
                         }
                     />
-                    <Text>Are you employed or self-employed?</Text>
+                    <View>
+                        <Text />
+                        <Text style={styles.pickerQuestion}>
+                            Are you employed or self-employed?
+                        </Text>
+                        <Picker
+                            selectedValue={props.formikProps.values[FormField.isSelfEmployed]}
+                            style={styles.picker}
+                            onValueChange={(itemValue) =>
+                                props.formikProps.setFieldValue(FormField.isSelfEmployed, itemValue)
+                            }
+                        >
+                            {Object.entries(isSelfEmployed).map(([value, name]) => (
+                                <Picker.Item label={name} value={value} />
+                            ))}
+                        </Picker>
+                    </View>
                 </View>
             )}
 

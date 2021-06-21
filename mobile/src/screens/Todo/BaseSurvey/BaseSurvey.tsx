@@ -1,44 +1,23 @@
-import React, { useRef, useState } from "react";
-import { Alert, SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
-import {
-    Text,
-    Title,
-    Button,
-    Checkbox,
-    Dialog,
-    Portal,
-    Paragraph,
-    Appbar,
-    Menu,
-    TextInput,
-    TouchableRipple,
-    Divider,
-} from "react-native-paper";
+import React, { useState } from "react";
+import { ScrollView, View } from "react-native";
+import { Text, Divider } from "react-native-paper";
 import {
     educationValidationSchema,
     empowermentValidationSchema,
     emptyValidationSchema,
-    fieldLabels,
     foodValidationSchema,
-    FormField,
     healthValidationSchema,
     IFormProps,
     initialValues,
     livelihoodValidationSchema,
     surveyTypes,
 } from "./formFields";
-import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { useHistory, useParams } from "react-router-dom";
+import { Formik, FormikHelpers } from "formik";
+import { useHistory } from "react-router-dom";
 import { handleSubmit } from "./formHandler";
-import { MaterialIcons } from "@expo/vector-icons";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
-import DropDownPicker from "react-native-dropdown-picker";
 import { themeColors } from "@cbr/common";
-import { Picker } from "@react-native-community/picker";
-// import Checkbox from "@react-native-community/checkbox";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./baseSurvey.style";
-import DialogWithRadioBtns from "../../../util/DialogWithRadioBtn";
-import TextCheckBox from "../../../util/TextCheckBox";
 import HealthForm from "./SurveyForm/HealthForm";
 import EducationForm from "./SurveyForm/EducationForm";
 import SocialForm from "./SurveyForm/SocialForm";
@@ -52,9 +31,6 @@ interface ISurvey {
     Form: (props: IFormProps) => JSX.Element;
     validationSchema: () => any;
 }
-type ButtonVisibility = {
-    [key: string]: boolean | undefined;
-};
 
 const BaseSurvey = () => {
     const [step, setStep] = useState<number>(0);
@@ -129,7 +105,6 @@ const BaseSurvey = () => {
                         {surveySteps.map((surveyStep, index) => (
                             <ProgressStep
                                 key={index}
-                                // label={surveyStep.label}
                                 scrollViewProps={defaultScrollViewProps}
                                 previousBtnTextStyle={styles.buttonTextStyle}
                                 nextBtnTextStyle={styles.buttonTextStyle}

@@ -30,6 +30,12 @@ const useStyles = () => {
             fontSize: 40,
             color: theme.colors.onPrimary,
         },
+        loginAgain: {
+            color: theme.colors.onPrimary,
+        },
+        button: {
+            marginBottom: 10,
+        },
     });
 };
 

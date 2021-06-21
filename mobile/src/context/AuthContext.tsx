@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { AuthState } from "../util/AuthState";
 
 export const AuthContext = createContext<IAuthContext>({
     // setup some dummy interface as the defaultValue for type-safety reasons
@@ -10,9 +11,11 @@ export const AuthContext = createContext<IAuthContext>({
     logout() {
         return new Promise<void>((resolve) => resolve());
     },
+    authState: { state: "unknown" },
 });
 
 export interface IAuthContext {
     login(username: string, password: string): Promise<boolean>;
     logout(): Promise<void>;
+    authState: AuthState;
 }

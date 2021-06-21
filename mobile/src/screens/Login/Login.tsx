@@ -3,9 +3,9 @@ import { Image, TextInput as NativeTextInput, useWindowDimensions, View } from "
 import useStyles from "./Login.styles";
 import LoginBackgroundSmall from "./LoginBackgroundSmall";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Button, Text, TextInput, useTheme } from "react-native-paper";
+import { Button, Text, TextInput, Title, useTheme } from "react-native-paper";
 import { AuthContext } from "../../context/AuthContext";
-import Alert, { AlertSeverity } from "../../components/Alert/Alert";
+import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
 
 enum LoginStatus {
@@ -27,16 +27,19 @@ const Login = () => {
     // https://github.com/callstack/react-native-paper/issues/1453#issuecomment-699163546
     const passwordTextRef = useRef<NativeTextInput>(null);
 
-    const { login } = useContext(AuthContext);
+    const { login, logout, authState } = useContext(AuthContext);
 
     const handleLogin = async () => {
-        if (!username.length || !password.length) {
+        const usernameToUse =
+            authState.state == "previouslyLoggedIn" ? authState.currentUser.username : username;
+
+        if (!usernameToUse.length || !password.length) {
             setStatus(LoginStatus.FAILED);
             return;
         }
         setStatus(LoginStatus.SUBMITTING);
 
-        const loginSucceeded = await login(username, password);
+        const loginSucceeded = await login(usernameToUse, password);
         if (!loginSucceeded) {
             setStatus(LoginStatus.FAILED);
         }
@@ -64,7 +67,14 @@ const Login = () => {
                     source={require("../../../assets/hha_logo_white.png")}
                 />
 
-                <Text style={styles.loginHeader}>Login</Text>
+                {authState.state !== "previouslyLoggedIn" ? (
+                    <Text style={styles.loginHeader}>Login</Text>
+                ) : (
+                    <Alert
+                        severity="info"
+                        text="Logged out due to inactivity. Please login again."
+                    />
+                )}
                 <View style={{ margin: 10 }} />
 
                 {status === LoginStatus.FAILED ? (
@@ -86,18 +96,25 @@ const Login = () => {
                     and filled ("flat") stylings:
                     https://callstack.github.io/react-native-paper/text-input.html
                 */}
-                <TextInput
-                    label="Username"
-                    value={username}
-                    onChangeText={(newUsername) => setUsername(newUsername)}
-                    mode="flat"
-                    blurOnSubmit={false}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    autoCompleteType="username"
-                    textContentType="username"
-                    onSubmitEditing={() => passwordTextRef.current?.focus()}
-                />
+                {authState.state == "previouslyLoggedIn" ? (
+                    <Title style={styles.loginAgain}>
+                        Logging in as: {authState.currentUser.username}
+                    </Title>
+                ) : (
+                    <TextInput
+                        label="Username"
+                        value={username}
+                        onChangeText={(newUsername) => setUsername(newUsername)}
+                        mode="flat"
+                        disabled={status === LoginStatus.SUBMITTING}
+                        blurOnSubmit={false}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        autoCompleteType="username"
+                        textContentType="username"
+                        onSubmitEditing={() => passwordTextRef.current?.focus()}
+                    />
+                )}
                 <View style={{ margin: 10 }} />
                 <TextInput
                     label="Password"
@@ -105,6 +122,7 @@ const Login = () => {
                     onChangeText={(newPassword) => setPassword(newPassword)}
                     mode="flat"
                     secureTextEntry
+                    disabled={status === LoginStatus.SUBMITTING}
                     autoCapitalize="none"
                     autoCorrect={false}
                     autoCompleteType="password"
@@ -114,6 +132,7 @@ const Login = () => {
                 />
                 <View style={{ margin: 10 }} />
                 <Button
+                    style={styles.button}
                     color={theme.colors.accent}
                     contentStyle={{ backgroundColor: theme.colors.accent }}
                     disabled={status === LoginStatus.SUBMITTING}
@@ -123,6 +142,19 @@ const Login = () => {
                 >
                     Login
                 </Button>
+                {authState.state == "previouslyLoggedIn" ? (
+                    <Button
+                        style={styles.button}
+                        color={theme.colors.onPrimary}
+                        disabled={status === LoginStatus.SUBMITTING}
+                        onPress={logout}
+                        mode="text"
+                    >
+                        Logout
+                    </Button>
+                ) : (
+                    <></>
+                )}
             </View>
         </KeyboardAwareScrollView>
     );

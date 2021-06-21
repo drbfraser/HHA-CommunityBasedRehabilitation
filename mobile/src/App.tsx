@@ -5,64 +5,99 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { screensForUser } from "./util/screens";
 import theme from "./theme.styles";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
-import { doLogin, doLogout, isLoggedIn, IUser } from "@cbr/common";
+import { apiFetch, doLogin, doLogout, Endpoint, isLoggedIn, IUser } from "@cbr/common";
 import { AuthContext as AuthContext, IAuthContext } from "./context/AuthContext";
 import { enableScreens } from "react-native-screens";
 import Loading from "./screens/Loading/Loading";
 import Login from "./screens/Login/Login";
-import { apiFetch, Endpoint } from "@cbr/common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthState } from "./util/AuthState";
+import { KEY_CURRENT_USER } from "./util/AsyncStorageKeys";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
 enableScreens();
 
-const CURRENT_USER_KEY = "current_user";
-
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-export interface AuthState {
-    loggedIn: boolean;
-    currentUser: IUser | undefined;
-}
-
 /**
  * @return A Promise resolving to the current user details fetched from the server or rejected if
- * unable to fetch the user from the server or if unable to cache the current user.
+ * unable to fetch the current user details from the server or if unable to cache the current user.
  */
 const fetchAndCacheCurrentUser = async (): Promise<IUser> => {
     const currentUserFromServer: IUser = await apiFetch(Endpoint.USER_CURRENT)
         .then((resp) => resp.json())
         .then((user) => user as IUser);
-    await AsyncStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUserFromServer));
+    await AsyncStorage.setItem(KEY_CURRENT_USER, JSON.stringify(currentUserFromServer));
     return currentUserFromServer;
+};
+
+const getCurrentUserFromCache = async (): Promise<IUser | undefined> => {
+    return AsyncStorage.getItem(KEY_CURRENT_USER)
+        .then((userJson) => {
+            return userJson != null ? (JSON.parse(userJson) as IUser) : undefined;
+        })
+        .catch((err) => {
+            return undefined;
+        });
 };
 
 // TODO: Have a nice transition when the user logins and and logs out.
 export default function App() {
-    const [authState, setAuthState] = useState<AuthState>();
+    const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
 
     useEffect(() => {
         const checkLoginAndUpdateCurrentUserCache = async () => {
+            // TODO: Decide on what to do when the refresh token expires. The current behaviour is
+            //  to show the login screen again and block them from entering the app, forcing them to
+            //  login to get a fresh refresh token again.
+            //
+            //  They might not be able to login if they're offline and the user might have data that
+            //  they created offline.
+            //  * Should we prevent them from accessing that data and require them to login again,
+            //    or is this a security risk? Note that by doing this, they won't be able to access
+            //    the data until they have internet and they can finally login to the server.
+            //  * Otherwise, should we only prompt for login when they need to actually make an API
+            //    call?
             const loggedIn = await isLoggedIn();
             if (!loggedIn) {
-                setAuthState({ loggedIn: false, currentUser: undefined });
+                const currentUser = await getCurrentUserFromCache();
+                if (currentUser) {
+                    setAuthState({ state: "previouslyLoggedIn", currentUser: currentUser });
+                } else {
+                    setAuthState({ state: "loggedOut" });
+                }
                 return;
             }
 
             const currentUser: IUser | undefined = await fetchAndCacheCurrentUser().catch((err) => {
-                // Fetch the cached user details; the device might be offline.
-                console.log("failed to get current user from server; falling back to cache");
-                return AsyncStorage.getItem(CURRENT_USER_KEY).then((userJson) => {
-                    return userJson != null ? (JSON.parse(userJson) as IUser) : undefined;
-                });
+                // At this point, the user is logged in, so the device is probably offline.
+                // Use the cached user details.
+                console.log(
+                    `failed to get current user from server due to error: ${err}. falling back to cache`
+                );
+                return getCurrentUserFromCache();
             });
-            if (currentUser == undefined) {
-                await doLogout();
-                setAuthState({ loggedIn: false, currentUser: undefined });
+            if (currentUser) {
+                setAuthState({ state: "loggedIn", currentUser: currentUser });
             } else {
-                setAuthState({ loggedIn: true, currentUser: currentUser });
+                // Note that here, the auth tokens are valid. So, the only possibility for
+                // currentUser to be undefined is if the network call fails and we failed to get the
+                // cached user details via AsyncStorage.
+                //
+                // Failure is extremely unlikely; the user details should've been cached on login.
+                // It could be that there's something wrong with the SQLite database that
+                // AsyncStorage manages. However, the auth tokens are in the database too, so it's
+                // more likely that the call before to check auth tokens would've failed if the
+                // SQLite database has issues. For now, we log the user out.
+                // TODO: Handle this better. Maybe the user details can be embedded in the JWT token
+                //  instead of needing an extra API call.
+                console.error(
+                    "failed to get current user details from database despite being logged in"
+                );
+                await doLogout();
+                setAuthState({ state: "loggedOut" });
             }
         };
         checkLoginAndUpdateCurrentUserCache();
@@ -74,35 +109,34 @@ export default function App() {
             login: async (username: string, password: string): Promise<boolean> => {
                 const loginSucceeded = await doLogin(username, password);
                 if (!loginSucceeded) {
-                    setAuthState({ loggedIn: false, currentUser: undefined });
                     return false;
                 }
 
                 try {
                     const currentUserFromServer = await fetchAndCacheCurrentUser();
-                    setAuthState({ loggedIn: true, currentUser: currentUserFromServer });
+                    setAuthState({ state: "loggedIn", currentUser: currentUserFromServer });
                     return true;
                 } catch (e) {
-                    setAuthState({ loggedIn: false, currentUser: undefined });
+                    setAuthState({ state: "loggedOut" });
                     return false;
                 }
             },
             logout: async () => {
                 await doLogout();
-                await AsyncStorage.removeItem(CURRENT_USER_KEY);
-                setAuthState({ loggedIn: false, currentUser: undefined });
+                setAuthState({ state: "loggedOut" });
             },
+            authState: authState,
         }),
-        []
+        [authState]
     );
 
     return (
         <Provider theme={theme}>
             <NavigationContainer theme={theme}>
                 <AuthContext.Provider value={authContext}>
-                    {authState?.loggedIn === true ? (
+                    {authState.state === "loggedIn" ? (
                         <Tab.Navigator>
-                            {screensForUser(authState?.currentUser).map((screen) => (
+                            {screensForUser(authState.currentUser).map((screen) => (
                                 <Tab.Screen
                                     key={screen.name}
                                     name={screen.name}
@@ -113,7 +147,8 @@ export default function App() {
                         </Tab.Navigator>
                     ) : (
                         <Stack.Navigator>
-                            {authState?.loggedIn === false ? (
+                            {authState.state === "loggedOut" ||
+                            authState.state === "previouslyLoggedIn" ? (
                                 <Stack.Screen
                                     name="Login"
                                     component={Login}

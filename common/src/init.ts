@@ -11,7 +11,7 @@ export interface CommonConfiguration {
     /** Whether to logout when {@link getAuthToken} fails to refresh the token. */
     shouldLogoutOnTokenRefreshFailure: boolean;
     /** A optional callback to run after {@link doLogout} is called. */
-    logoutCallback: (() => void) | null;
+    logoutCallback: (() => Promise<void>) | null;
 }
 
 export let commonConfiguration: CommonConfiguration;

@@ -10,6 +10,9 @@ const useStyles = () => {
             flex: 1,
             backgroundColor: theme.colors.primary,
         },
+        logo: {
+            width: "75%",
+        },
     });
 };
 

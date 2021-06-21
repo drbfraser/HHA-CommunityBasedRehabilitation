@@ -2,6 +2,7 @@ import { registerRootComponent } from "expo";
 import App from "./App";
 import { initializeCommon, KeyValStorageProvider } from "@cbr/common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { KEY_CURRENT_USER } from "./util/AsyncStorageKeys";
 
 // TODO: read from some configuration a development URL / IP address
 const API_URL = "https://cbrs.cradleplatform.com/api/";
@@ -23,8 +24,10 @@ initializeCommon({
     // their refresh token expires, we need to ask them to login again without deleting all of their
     // data.
     shouldLogoutOnTokenRefreshFailure: false,
-    // Use a null logoutCallback, since logging out should be handled by AuthContext.
-    logoutCallback: null,
+    logoutCallback: async () => {
+        await AsyncStorage.removeItem(KEY_CURRENT_USER).catch((err) => {});
+        // TODO: Delete all stored data in the app including client data, referrals, etc.
+    },
 });
 
 registerRootComponent(App);

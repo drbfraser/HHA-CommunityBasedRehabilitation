@@ -109,7 +109,7 @@ export const doLogin = async (username: string, password: string): Promise<boole
 export const doLogout = async () => {
     await setAccessToken("");
     await setRefreshToken("");
-    commonConfiguration.logoutCallback?.();
+    await commonConfiguration.logoutCallback?.();
 };
 
 /**

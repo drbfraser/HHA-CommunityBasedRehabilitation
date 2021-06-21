@@ -110,7 +110,7 @@ export const doLogin = async (username: string, password: string): Promise<boole
 export const doLogout = async () => {
     await setAccessToken("");
     await setRefreshToken("");
-    commonConfiguration.logoutCallback?.();
+    await commonConfiguration.logoutCallback?.();
 };
 
 /**
@@ -133,7 +133,7 @@ export const isLoggedIn = async (): Promise<boolean> => isTokenValid(await getRe
 export const getAuthToken = async (): Promise<string | null> => {
     if (!(await isLoggedIn())) {
         if (commonConfiguration.shouldLogoutOnTokenRefreshFailure) {
-            await doLogout();
+            doLogout();
         }
         return null;
     }
@@ -143,7 +143,7 @@ export const getAuthToken = async (): Promise<string | null> => {
 
         if (!refreshSuccess) {
             if (commonConfiguration.shouldLogoutOnTokenRefreshFailure) {
-                await doLogout();
+                doLogout();
             }
             return null;
         }

@@ -28,7 +28,7 @@ initializeCommon({
     apiUrl: API_URL,
     keyValStorageProvider: localStorageProvider,
     shouldLogoutOnTokenRefreshFailure: true,
-    logoutCallback: () => {
+    logoutCallback: async () => {
         window.location.replace("/");
     },
 });

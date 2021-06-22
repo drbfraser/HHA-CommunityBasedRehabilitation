@@ -64,25 +64,13 @@ const ClientList = (props: ClientListControllerProps) => {
                             <DataTable.Cell style={styles.item}>{item.Name}</DataTable.Cell>
                             <DataTable.Cell style={styles.item}>{item.Zone}</DataTable.Cell>
                             <DataTable.Cell>
-                                <MaterialIcons
-                                    name={riskTypes.HEALTH.Icon}
-                                    size={32}
-                                    color={item.HealthLevel}
-                                />
+                                {riskTypes.HEALTH.Icon(item.HealthLevel)}
                             </DataTable.Cell>
                             <DataTable.Cell>
-                                <MaterialIcons
-                                    name={riskTypes.EDUCAT.Icon}
-                                    size={32}
-                                    color={item.EducationLevel}
-                                />
+                                {riskTypes.EDUCAT.Icon(item.EducationLevel)}
                             </DataTable.Cell>
                             <DataTable.Cell>
-                                <MaterialIcons
-                                    name={riskTypes.SOCIAL.Icon}
-                                    size={32}
-                                    color={item.SocialLevel}
-                                />
+                                {riskTypes.SOCIAL.Icon(item.SocialLevel)}
                             </DataTable.Cell>
                         </DataTable.Row>
                     );

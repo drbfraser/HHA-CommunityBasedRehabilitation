@@ -1,6 +1,6 @@
 import { MaterialIcons  } from '@expo/vector-icons';
 import { themeColors } from "@cbr/common";
-
+import { healthIcon, educationIcon, socialIcon } from './riskIcon';
 export interface IRisk {
     id: number;
     client: number;
@@ -19,21 +19,21 @@ export enum RiskType {
 
 export interface IRiskType {
     name: string;
-    Icon: string;
+    Icon: typeof healthIcon|typeof educationIcon|typeof socialIcon;
 }
 
 export const riskTypes: { [key: string]: IRiskType } = {
     [RiskType.HEALTH]: {
         name: "Health",
-        Icon: "local-hospital",
+        Icon: healthIcon,
     },
     [RiskType.EDUCATION]: {
         name: "Education",
-        Icon: "school",
+        Icon: educationIcon,
     },
     [RiskType.SOCIAL]: {
         name: "Social",
-        Icon: "record-voice-over",
+        Icon: socialIcon,
     },
 };
 

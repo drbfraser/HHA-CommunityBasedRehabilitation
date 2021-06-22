@@ -18,6 +18,7 @@ const Todo = () => {
             const authToken = await getAuthToken();
             if (isMounted()) {
                 setRefreshTokenValid(authToken != null);
+                await authContext.requireLoggedIn(true);
             }
         };
         checkRefreshToken();

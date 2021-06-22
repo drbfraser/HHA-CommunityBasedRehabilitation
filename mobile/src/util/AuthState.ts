@@ -2,7 +2,10 @@ import { IUser } from "@cbr/common/index";
 
 export namespace AuthState {
     /**
-     * The state where the user is logged in (refresh token is valid)
+     * The state where the user is logged in (refresh token is valid).
+     *
+     * Note: This also covers the following case: If the user has no internet, they can't refresh
+     * tokens, so they end up with an invalid access token but a valid (not-expired) refresh token.
      */
     export interface LoggedIn {
         readonly state: "loggedIn";

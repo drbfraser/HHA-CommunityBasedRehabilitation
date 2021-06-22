@@ -25,7 +25,7 @@ const Stack = createNativeStackNavigator();
  * @return A Promise resolving to the current user details fetched from the server or rejected if
  * unable to fetch the current user details from the server or if unable to cache the current user.
  */
-const fetchAndCacheCurrentUser = async (): Promise<IUser> => {
+const fetchAndCacheUserFromServer = async (): Promise<IUser> => {
     const currentUserFromServer: IUser = await apiFetch(Endpoint.USER_CURRENT)
         .then((resp) => resp.json())
         .then((user) => user as IUser);
@@ -43,64 +43,74 @@ const getCurrentUserFromCache = async (): Promise<IUser | undefined> => {
         });
 };
 
+/**
+ * @see IAuthContext#requireLoggedIn
+ */
+const updateAuthStateIfNeeded = async (
+    currentAuthState: AuthState,
+    setAuthState: React.Dispatch<React.SetStateAction<AuthState>>,
+    tryUpdateUserInfoFromServer: boolean
+): Promise<void> => {
+    // TODO: Decide on what to do when the refresh token expires. The current behaviour is
+    //  to show the login screen again and block them from entering the app, forcing them to
+    //  login to get a fresh refresh token again.
+    //
+    //  They might not be able to login if they're offline and the user might have data that
+    //  they created offline.
+    //  * Should we prevent them from accessing that data and require them to login again,
+    //    or is this a security risk? Note that by doing this, they won't be able to access
+    //    the data until they have internet and they can finally login to the server.
+    //  * Otherwise, should we only prompt for login when they need to actually make an API
+    //    call?
+    const loggedIn = await isLoggedIn();
+    if (!loggedIn) {
+        const currentUser = await getCurrentUserFromCache();
+        if (currentUser) {
+            setAuthState({ state: "previouslyLoggedIn", currentUser: currentUser });
+        } else {
+            setAuthState({ state: "loggedOut" });
+        }
+        return;
+    }
+
+    if (!tryUpdateUserInfoFromServer && currentAuthState.state === "loggedIn") {
+        return;
+    }
+
+    const currentUser: IUser | undefined = await fetchAndCacheUserFromServer().catch((err) => {
+        // At this point, the user is logged in, so the device is probably offline.
+        // Use the cached user details.
+        console.log(
+            `failed to get current user from server due to error: ${err}. falling back to cache`
+        );
+        return getCurrentUserFromCache();
+    });
+    if (currentUser) {
+        setAuthState({ state: "loggedIn", currentUser: currentUser });
+    } else {
+        // Note that here, the auth tokens are valid. So, the only possibility for
+        // currentUser to be undefined is if the network call fails and we failed to get the
+        // cached user details via AsyncStorage.
+        //
+        // Failure is extremely unlikely; the user details should've been cached on login.
+        // It could be that there's something wrong with the SQLite database that
+        // AsyncStorage manages. However, the auth tokens are in the database too, so it's
+        // more likely that the call before to check auth tokens would've failed if the
+        // SQLite database has issues. For now, we log the user out.
+        // TODO: Handle this better. Maybe the user details can be embedded in the JWT token
+        //  instead of needing an extra API call.
+        console.error("failed to get current user details from database despite being logged in");
+        await doLogout();
+        setAuthState({ state: "loggedOut" });
+    }
+};
+
 // TODO: Have a nice transition when the user logins and and logs out.
 export default function App() {
     const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
 
     useEffect(() => {
-        const checkLoginAndUpdateCurrentUserCache = async () => {
-            // TODO: Decide on what to do when the refresh token expires. The current behaviour is
-            //  to show the login screen again and block them from entering the app, forcing them to
-            //  login to get a fresh refresh token again.
-            //
-            //  They might not be able to login if they're offline and the user might have data that
-            //  they created offline.
-            //  * Should we prevent them from accessing that data and require them to login again,
-            //    or is this a security risk? Note that by doing this, they won't be able to access
-            //    the data until they have internet and they can finally login to the server.
-            //  * Otherwise, should we only prompt for login when they need to actually make an API
-            //    call?
-            const loggedIn = await isLoggedIn();
-            if (!loggedIn) {
-                const currentUser = await getCurrentUserFromCache();
-                if (currentUser) {
-                    setAuthState({ state: "previouslyLoggedIn", currentUser: currentUser });
-                } else {
-                    setAuthState({ state: "loggedOut" });
-                }
-                return;
-            }
-
-            const currentUser: IUser | undefined = await fetchAndCacheCurrentUser().catch((err) => {
-                // At this point, the user is logged in, so the device is probably offline.
-                // Use the cached user details.
-                console.log(
-                    `failed to get current user from server due to error: ${err}. falling back to cache`
-                );
-                return getCurrentUserFromCache();
-            });
-            if (currentUser) {
-                setAuthState({ state: "loggedIn", currentUser: currentUser });
-            } else {
-                // Note that here, the auth tokens are valid. So, the only possibility for
-                // currentUser to be undefined is if the network call fails and we failed to get the
-                // cached user details via AsyncStorage.
-                //
-                // Failure is extremely unlikely; the user details should've been cached on login.
-                // It could be that there's something wrong with the SQLite database that
-                // AsyncStorage manages. However, the auth tokens are in the database too, so it's
-                // more likely that the call before to check auth tokens would've failed if the
-                // SQLite database has issues. For now, we log the user out.
-                // TODO: Handle this better. Maybe the user details can be embedded in the JWT token
-                //  instead of needing an extra API call.
-                console.error(
-                    "failed to get current user details from database despite being logged in"
-                );
-                await doLogout();
-                setAuthState({ state: "loggedOut" });
-            }
-        };
-        checkLoginAndUpdateCurrentUserCache();
+        updateAuthStateIfNeeded(authState, setAuthState, true);
     }, []);
 
     // design inspired by https://reactnavigation.org/docs/auth-flow/
@@ -113,7 +123,7 @@ export default function App() {
                 }
 
                 try {
-                    const currentUserFromServer = await fetchAndCacheCurrentUser();
+                    const currentUserFromServer = await fetchAndCacheUserFromServer();
                     setAuthState({ state: "loggedIn", currentUser: currentUserFromServer });
                     return true;
                 } catch (e) {
@@ -124,6 +134,9 @@ export default function App() {
             logout: async () => {
                 await doLogout();
                 setAuthState({ state: "loggedOut" });
+            },
+            requireLoggedIn(tryUpdateUserFromServer: boolean): Promise<void> {
+                return updateAuthStateIfNeeded(authState, setAuthState, tryUpdateUserFromServer);
             },
             authState: authState,
         }),

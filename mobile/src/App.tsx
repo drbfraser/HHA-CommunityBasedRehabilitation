@@ -5,7 +5,15 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { screensForUser } from "./util/screens";
 import theme from "./theme.styles";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
-import { apiFetch, doLogin, doLogout, Endpoint, isLoggedIn, IUser } from "@cbr/common";
+import {
+    apiFetch,
+    doLogin,
+    doLogout,
+    Endpoint,
+    getAuthToken,
+    isLoggedIn,
+    IUser,
+} from "@cbr/common";
 import { AuthContext as AuthContext, IAuthContext } from "./context/AuthContext";
 import { enableScreens } from "react-native-screens";
 import Loading from "./screens/Loading/Loading";
@@ -74,6 +82,10 @@ const updateAuthStateIfNeeded = async (
     }
 
     if (!tryUpdateUserInfoFromServer && currentAuthState.state === "loggedIn") {
+        // This implicitly refreshes the access and refresh tokens if needed.
+        // Note: If we don't enter this branch, the fetchAndCacheUserFromServer will also handle
+        // refreshing the auth tokens if needed.
+        await getAuthToken().catch();
         return;
     }
 

@@ -25,7 +25,7 @@ initializeCommon({
     // data.
     shouldLogoutOnTokenRefreshFailure: false,
     logoutCallback: async () => {
-        await AsyncStorage.removeItem(KEY_CURRENT_USER).catch((err) => {});
+        await AsyncStorage.removeItem(KEY_CURRENT_USER).catch();
         // TODO: Delete all other stored data in the app including client data, referrals, etc.
     },
 });

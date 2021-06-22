@@ -22,10 +22,14 @@ export interface IAuthContext {
     logout(): Promise<void>;
 
     /**
-     * Checks whether the user is logged in (i.e., refresh token is valid). If the user is
-     * considered logged out, {@link authState} will be updated and the user will be forcefully
-     * navigated to the login screen. This can be used to require the user to be logged in on
+     * Checks whether the user is logged in (i.e., refresh token is valid).
+     *
+     * If the user is considered logged out, {@link authState} will be updated and the user will be
+     * forcefully navigated to the login screen. This can be used to require the user to be logged in on
      * certain screens.
+     *
+     * If the user is logged in, an attempt to refresh the access and refresh tokens will be made
+     * if they're close to expiry.
      *
      * If the user was logged in before but their refresh token expires (e.g., offline too long and
      * can't refresh the refresh token), they'll be forced to the login screen, but the data in the

@@ -11,8 +11,8 @@ export interface CommonConfiguration {
     keyValStorageProvider: KeyValStorageProvider;
     /** Whether to logout when {@link getAuthToken} fails to refresh the token. */
     shouldLogoutOnTokenRefreshFailure: boolean;
-    /** A optional callback to run after {@link doLogout} is called. */
-    logoutCallback: (() => Promise<void>) | null;
+    /** A callback to run after {@link doLogout} is called. */
+    logoutCallback: () => Promise<void>;
 }
 
 export let commonConfiguration: CommonConfiguration;

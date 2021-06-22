@@ -33,4 +33,10 @@ const theme: ReactNativePaper.Theme & NavigationTheme = {
     },
 };
 
+/**
+ * The maximum size (in density-independent pixels) for a screen to be considered "small".
+ * Portrait mode on typical handheld smartphones falls within this range.
+ */
+export const SMALL_WIDTH = 600;
+
 export default theme;

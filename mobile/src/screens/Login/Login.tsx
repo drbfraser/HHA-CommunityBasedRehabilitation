@@ -7,6 +7,7 @@ import { Button, Text, TextInput, Title, useTheme } from "react-native-paper";
 import { AuthContext } from "../../context/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
+import { SMALL_WIDTH } from "../../theme.styles";
 
 enum LoginStatus {
     INITIAL,
@@ -54,7 +55,7 @@ const Login = () => {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="always"
         >
-            {width <= 600 ? (
+            {width <= SMALL_WIDTH ? (
                 <LoginBackgroundSmall style={styles.background} height={height * 1.05} />
             ) : (
                 <LoginBackground style={styles.background} height={height * 2} />
@@ -71,21 +72,23 @@ const Login = () => {
                     <Text style={styles.loginHeader}>Login</Text>
                 ) : (
                     <Alert
+                        style={styles.alert}
                         severity="info"
                         text="Logged out due to inactivity. Please login again."
                     />
                 )}
-                <View style={{ margin: 10 }} />
 
                 {status === LoginStatus.FAILED ? (
                     <>
-                        <Alert severity="error" text="Login failed. Please try again." />
-                        <View style={{ margin: 10 }} />
+                        <Alert
+                            style={styles.alert}
+                            severity="error"
+                            text="Login failed. Please try again."
+                        />
                     </>
                 ) : status === LoginStatus.SUBMITTING ? (
                     <>
-                        <Alert severity="info" text="Logging in" />
-                        <View style={{ margin: 10 }} />
+                        <Alert style={styles.alert} severity="info" text="Logging in" />
                     </>
                 ) : (
                     <></>
@@ -103,6 +106,7 @@ const Login = () => {
                 ) : (
                     <TextInput
                         label="Username"
+                        style={styles.textInput}
                         value={username}
                         onChangeText={(newUsername) => setUsername(newUsername)}
                         mode="flat"
@@ -115,8 +119,8 @@ const Login = () => {
                         onSubmitEditing={() => passwordTextRef.current?.focus()}
                     />
                 )}
-                <View style={{ margin: 10 }} />
                 <TextInput
+                    style={styles.textInput}
                     label="Password"
                     value={password}
                     onChangeText={(newPassword) => setPassword(newPassword)}
@@ -130,7 +134,6 @@ const Login = () => {
                     onSubmitEditing={handleLogin}
                     ref={passwordTextRef}
                 />
-                <View style={{ margin: 10 }} />
                 <Button
                     style={styles.button}
                     color={theme.colors.accent}

@@ -27,9 +27,11 @@ const Alert = ({ severity, text, ...other }: AlertProps) => {
     const color = severity == "error" ? theme.colors.error : theme.colors.info;
     const styles = useStyles(color);
     return (
-        <View style={styles.alertContainer} {...other}>
-            <MaterialIcons name={iconName} style={styles.icon} size={30} color="white" />
-            <Text style={styles.text}>{text}</Text>
+        <View {...other}>
+            <View style={styles.alertContainer}>
+                <MaterialIcons name={iconName} style={styles.icon} size={30} color="white" />
+                <Text style={styles.text}>{text}</Text>
+            </View>
         </View>
     );
 };

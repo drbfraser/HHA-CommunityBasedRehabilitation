@@ -36,12 +36,20 @@ class ExampleOne extends Component {
     state = {
         isValid: false,
         errors: true,
+        removeBtnRow: true,
+        activeStep: 1,
+        disabledStepIconColor: "#2400A2",
+        isComplete: false,
     };
 
     render() {
         return (
             <View style={{ flex: 1, marginTop: 50 }}>
-                <ProgressSteps>
+                <ProgressSteps
+                    activeStep={this.state.activeStep}
+                    disabledStepIconColor={this.state.disabledStepIconColor}
+                    isComplete={this.state.isComplete}
+                >
                     <ProgressStep
                         label="Visit Focus"
                         onNext={this.onPaymentStepComplete}
@@ -58,7 +66,6 @@ class ExampleOne extends Component {
                         onNext={this.onNextStep}
                         onPrevious={this.onPrevStep}
                         scrollViewProps={this.defaultScrollViewProps}
-                        errors={this.state.errors}
                     >
                         <View style={{ alignItems: "center" }}>
                             <Text>Health Visit step content</Text>

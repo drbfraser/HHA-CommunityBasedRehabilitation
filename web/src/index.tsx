@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import { themeMui } from "theme.styles";
 import App from "./App";
 import { initializeCommon, KeyValStorageProvider } from "./util/init";
+import { loginState } from "./util/hooks/loginState";
 
 const API_URL =
     process.env.NODE_ENV === "development"
@@ -11,16 +12,11 @@ const API_URL =
         : "/api/";
 
 const localStorageProvider: KeyValStorageProvider = {
-    getItem(key: string): Promise<string | null> {
-        return new Promise((resolve) => {
-            resolve(window.localStorage.getItem(key));
-        });
+    getItem: async (key: string) => {
+        return window.localStorage.getItem(key);
     },
-    setItem(key: string, value: string): Promise<void> {
-        return new Promise((resolve) => {
-            window.localStorage.setItem(key, value);
-            resolve();
-        });
+    setItem: async (key: string, value: string) => {
+        window.localStorage.setItem(key, value);
     },
 };
 
@@ -29,6 +25,7 @@ initializeCommon({
     keyValStorageProvider: localStorageProvider,
     shouldLogoutOnTokenRefreshFailure: true,
     logoutCallback: async () => {
+        loginState.emit(false);
         window.location.replace("/");
     },
 });

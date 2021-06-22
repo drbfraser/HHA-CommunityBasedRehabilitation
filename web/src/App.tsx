@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import SideNav from "./components/SideNav/SideNav";
 import { defaultPagePath, pagesForUser } from "util/pages";
@@ -6,10 +6,11 @@ import Login from "pages/Login/Login";
 import Typography from "@material-ui/core/Typography";
 import { useStyles } from "App.styles";
 import history from "util/history";
-import { isLoggedIn } from "util/auth";
 import { useCurrentUser } from "util/hooks/currentUser";
+import { useIsLoggedIn } from "./util/hooks/loginState";
 
 const App = () => {
+    const isLoggedIn = useIsLoggedIn();
     const styles = useStyles();
 
     const PrivateRoutes = () => {
@@ -36,53 +37,18 @@ const App = () => {
         );
     };
 
-    const LoginRoute = () => {
-        const [loggedIn, setLoggedIn] = useState<boolean | undefined>();
-        useEffect(() => {
-            const updateLoginState = async () => {
-                const newLoginState = await isLoggedIn();
-                setLoggedIn(newLoginState);
-            };
-            updateLoginState();
-        });
-
-        if (loggedIn === undefined) {
-            return <></>;
-        } else if (!loggedIn) {
-            return <Login />;
-        } else {
-            return <Redirect to={defaultPagePath} />;
-        }
-    };
-    const AllRoutes = () => {
-        const [loggedIn, setLoggedIn] = useState<boolean | undefined>();
-        useEffect(() => {
-            const updateLoginState = async () => {
-                const newLoginState = await isLoggedIn();
-                setLoggedIn(newLoginState);
-            };
-            updateLoginState();
-        });
-
-        if (loggedIn === undefined) {
-            return <></>;
-        } else if (!loggedIn) {
-            return <Redirect to="/" />;
-        } else {
-            return <PrivateRoutes />;
-        }
-    };
-
     return (
         <Router history={history}>
-            <Switch>
-                <Route exact path="/">
-                    <LoginRoute />
-                </Route>
-                <Route path="/">
-                    <AllRoutes />
-                </Route>
-            </Switch>
+            {isLoggedIn === undefined ? (
+                <></>
+            ) : (
+                <Switch>
+                    <Route exact path="/">
+                        {!isLoggedIn ? <Login /> : <Redirect to={defaultPagePath} />}
+                    </Route>
+                    <Route path="/">{isLoggedIn ? <PrivateRoutes /> : <Redirect to="/" />}</Route>
+                </Switch>
+            )}
         </Router>
     );
 };

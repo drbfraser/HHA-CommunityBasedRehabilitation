@@ -14,12 +14,12 @@ import {
     isLoggedIn,
     IUser,
 } from "@cbr/common";
-import { AuthContext as AuthContext, IAuthContext } from "./context/AuthContext";
+import { AuthContext as AuthContext, IAuthContext } from "./context/AuthContext/AuthContext";
 import { enableScreens } from "react-native-screens";
 import Loading from "./screens/Loading/Loading";
 import Login from "./screens/Login/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthState } from "./util/AuthState";
+import { AuthState } from "./context/AuthContext/AuthState";
 import { KEY_CURRENT_USER } from "./util/AsyncStorageKeys";
 
 // Ensure we use FragmentActivity on Android

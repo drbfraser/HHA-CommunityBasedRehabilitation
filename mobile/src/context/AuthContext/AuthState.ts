@@ -1,4 +1,4 @@
-import { IUser } from "@cbr/common/index";
+import { IUser } from "@cbr/common";
 
 export namespace AuthState {
     /**
@@ -14,6 +14,8 @@ export namespace AuthState {
 
     /**
      * The state where the user was previously logged in, but the refresh token has expired.
+     * The {@link currentUser} property contains the information of the user that was previously
+     * logged into the app.
      */
     export interface PreviouslyLoggedIn {
         readonly state: "previouslyLoggedIn";
@@ -36,6 +38,11 @@ export namespace AuthState {
     }
 }
 
+/**
+ * Encapsulates the authentication state for the app.
+ * @see AuthContext
+ * @see IAuthContext
+ */
 export type AuthState =
     | AuthState.LoggedIn
     | AuthState.PreviouslyLoggedIn

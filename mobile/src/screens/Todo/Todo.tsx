@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 import { Button, Text, Title } from "react-native-paper";
 import useStyles from "./Todo.styles";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext/AuthContext";
 
 const Todo = () => {
     const styles = useStyles();

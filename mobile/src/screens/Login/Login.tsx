@@ -4,7 +4,7 @@ import useStyles from "./Login.styles";
 import LoginBackgroundSmall from "./LoginBackgroundSmall";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Button, Text, TextInput, Title, useTheme } from "react-native-paper";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
 import { SMALL_WIDTH } from "../../theme.styles";

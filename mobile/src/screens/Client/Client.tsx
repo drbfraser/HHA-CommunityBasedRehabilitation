@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { Button, Card, TextInput, Checkbox, Menu } from "react-native-paper";
+import { Button, Card, TextInput, Checkbox, Menu, Divider } from "react-native-paper";
 import clientStyle from "./clientStyles";
 import { Text, View } from "react-native";
 import { Item } from "react-native-paper/lib/typescript/components/List/List";
@@ -57,6 +57,7 @@ const IndividualClientView = (props: clientProps) => {
                     Baseline Survey
                 </Button>
             </Card>
+            <Divider></Divider>
             <Card style={styles.clientDetailsContainerStyles}>
                 <TextInput
                     style={styles.clientTextStyle}
@@ -166,6 +167,16 @@ const IndividualClientView = (props: clientProps) => {
                         Cancel
                     </Button>
                 </View>
+            </Card>
+            <Divider></Divider>
+            <Card style={styles.clientDetailsContainerStyles}>
+                <Text>Health</Text>
+            </Card>
+            <Card style={styles.clientDetailsContainerStyles}>
+                <Text>Education</Text>
+            </Card>
+            <Card style={styles.clientDetailsContainerStyles}>
+                <Text>Social</Text>
             </Card>
         </ScrollView>
     );

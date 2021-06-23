@@ -12,14 +12,28 @@ const styles = clientStyle();
 const IndividualClientView = (props: clientProps) => {
     const [showDisabilityMenu, setShowDiosabilityMenu] = useState(false);
     const [disability, setdisability] = useState();
-    const [checked, setChecked] = React.useState(false);
-    const [editMode, setEditMode] = React.useState(false);
     const disabilityList = [
         { label: "Amputee", value: "Amputee" },
         { label: "Polio", value: "Polio" },
         { label: "Other", value: "Other" },
     ];
-    const [cancelButtonMode, setCancelButtonMode] = React.useState("outlined");
+    const [checked, setChecked] = React.useState(false);
+    const [editMode, setEditMode] = React.useState(true);
+    const [cancelButtonType, setCancelButtonType] = React.useState("outlined");
+    const enableButtons = () => {
+        if (editMode == true) {
+            setEditMode(false);
+            setCancelButtonType("contained");
+        } else {
+            //Make the PUT Api Call here since this is the save click
+            setEditMode(true);
+            setCancelButtonType("outlined");
+        }
+    };
+    const cancelEdit = () => {
+        setEditMode(true);
+        setCancelButtonType("outlined");
+    };
 
     return (
         <ScrollView style={styles.scrollViewStyles}>
@@ -43,7 +57,7 @@ const IndividualClientView = (props: clientProps) => {
                     style={styles.clientTextStyle}
                     label="First Name: "
                     value={props.clientName}
-                    disabled={checked}
+                    disabled={editMode}
                     editable={true}
                 />
                 <TextInput
@@ -98,7 +112,7 @@ const IndividualClientView = (props: clientProps) => {
                         onPress={() => {
                             setChecked(!checked);
                         }}
-                        disabled={true}
+                        disabled={editMode}
                     />
                 </View>
                 <View style={styles.clientDetailsFinalView}>
@@ -106,13 +120,15 @@ const IndividualClientView = (props: clientProps) => {
                         mode="contained"
                         style={styles.clientDetailsFinalButtons}
                         disabled={false}
+                        onPress={enableButtons}
                     >
-                        Edit
+                        {editMode ? "Edit" : "Save"}
                     </Button>
                     <Button
-                        mode={cancelButtonMode}
+                        mode={cancelButtonType}
                         style={styles.clientDetailsFinalButtons}
-                        disabled={true}
+                        disabled={editMode}
+                        onPress={cancelEdit}
                     >
                         Cancel
                     </Button>

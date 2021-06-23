@@ -3,7 +3,9 @@ import React, { useEffect } from "react";
 import { doLogout } from "util/auth";
 
 const Logout = () => {
-    useEffect(() => doLogout());
+    useEffect(() => {
+        doLogout();
+    });
     return <LinearProgress />;
 };
 

@@ -1,3 +1,4 @@
+// TODO: Use @cbr/common's file instead of duplicating here
 export const getRandomStr = (len: number) => {
     let chars = "abcdefghijklmnopqrstuvwxyz0123456789";
     let str = "";

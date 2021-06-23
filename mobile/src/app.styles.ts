@@ -1,11 +1,11 @@
 import { StyleSheet } from "react-native";
 
-const safeStyle = () =>
+const globalStyle = () =>
   StyleSheet.create({
       safeApp: {
           flex: 1,
       }
   });
 
-export default safeStyle;
+export default globalStyle;
 

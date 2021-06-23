@@ -4,11 +4,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import theme from "./util/theme.styles";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
-import safeStyle from "./app.styles";
+import globalStyle from "./app.styles";
 import { stackScreenName, stackScreenProps } from "./util/screens";
 
 const Stack = createStackNavigator();
-const styles = safeStyle();
+const styles = globalStyle();
 
 export default function App() {
     return (

@@ -6,13 +6,23 @@ import { stackParamList, stackScreenName } from "../../util/screens";
 import IndividualClientView from "./Client";
 import { RouteProp } from "@react-navigation/native";
 import { useEffect } from "react";
+import clientStyle from "./clientStyles";
+import { ScrollView } from "react-native-gesture-handler";
 
+const styles = clientStyle();
 interface clientScreenControllerProps {
     route: RouteProp<stackParamList, stackScreenName.CLIENT>;
     navigation: StackNavigationProp<stackParamList, stackScreenName.CLIENT>;
 }
 
 const ClientScreenController = (props: clientScreenControllerProps) => {
+    props.navigation.setOptions({
+        title: "Client Details",
+        headerStyle: {
+            backgroundColor: "#273263",
+        },
+        headerTintColor: "#fff",
+    });
     const [clientName, setClientName] = useState<String>("");
     useEffect(() => {
         setClientName(props.route.params.clientName);

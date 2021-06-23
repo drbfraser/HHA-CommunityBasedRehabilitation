@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { Button, Card, Title, Paragraph, TextInput, Checkbox, Menu } from "react-native-paper";
+import { Button, Card, TextInput, Checkbox, Menu } from "react-native-paper";
 import clientStyle from "./clientStyles";
 import { Text, View } from "react-native";
+import { Item } from "react-native-paper/lib/typescript/components/List/List";
 
 interface clientProps {
     clientName: String;
@@ -11,12 +12,15 @@ const styles = clientStyle();
 
 const IndividualClientView = (props: clientProps) => {
     const [showDisabilityMenu, setShowDiosabilityMenu] = useState(false);
-    const [disability, setdisability] = useState();
+    const [disability, setdisability] = useState("Amputee"); //Set to amputee for now but get from database
     const disabilityList = [
         { label: "Amputee", value: "Amputee" },
         { label: "Polio", value: "Polio" },
         { label: "Other", value: "Other" },
     ];
+    const [visible, setVisible] = React.useState(false);
+    const openMenu = () => setVisible(true);
+    const closeMenu = () => setVisible(false);
     const [checked, setChecked] = React.useState(false);
     const [editMode, setEditMode] = React.useState(true);
     const [cancelButtonType, setCancelButtonType] = React.useState("outlined");
@@ -25,12 +29,13 @@ const IndividualClientView = (props: clientProps) => {
             setEditMode(false);
             setCancelButtonType("contained");
         } else {
-            //Make the PUT Api Call here since this is the save click
+            //Make the PUT Api Call to edit client here since this is the save click
             setEditMode(true);
             setCancelButtonType("outlined");
         }
     };
     const cancelEdit = () => {
+        //Discard any changes and reset the text fields to show what they originially did
         setEditMode(true);
         setCancelButtonType("outlined");
     };
@@ -102,9 +107,37 @@ const IndividualClientView = (props: clientProps) => {
                     disabled={editMode}
                     editable={true}
                 />
-                <Button mode="contained" style={styles.clientDetailsButtons} disabled={true}>
-                    Edit Disability
-                </Button>
+                <View>
+                    <Text> Disability </Text>
+                    <Text style={styles.clientDetailsCheckboxText}> {disability} </Text>
+                    <Menu
+                        visible={visible}
+                        onDismiss={closeMenu}
+                        anchor={
+                            <Button
+                                mode="contained"
+                                style={styles.disabilityButton}
+                                disabled={editMode}
+                                onPress={openMenu}
+                            >
+                                Edit Disability
+                            </Button>
+                        }
+                    >
+                        {disabilityList.map((item) => {
+                            return (
+                                <Menu.Item
+                                    key={item.label}
+                                    title={item.label}
+                                    onPress={() => {
+                                        setdisability(item.value);
+                                        closeMenu();
+                                    }}
+                                />
+                            );
+                        })}
+                    </Menu>
+                </View>
                 <View style={styles.clientDetailsView}>
                     <Text style={styles.clientDetailsCheckboxText}>Caregiver Present</Text>
                     <Checkbox

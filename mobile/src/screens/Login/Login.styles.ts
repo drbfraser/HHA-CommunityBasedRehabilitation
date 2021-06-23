@@ -10,7 +10,7 @@ const useStyles = () => {
             backgroundColor: theme.colors.primary,
         },
         alert: {
-            marginVertical: 10,
+            marginVertical: 15,
         },
         contentContainer: {
             flexDirection: "row",
@@ -39,10 +39,7 @@ const useStyles = () => {
             color: theme.colors.onPrimary,
             marginBottom: 10,
         },
-        textInput: {
-            marginVertical: 10,
-        },
-        button: {
+        logoutButton: {
             marginVertical: 10,
         },
     });

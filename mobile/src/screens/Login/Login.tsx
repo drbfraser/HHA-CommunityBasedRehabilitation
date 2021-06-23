@@ -3,7 +3,7 @@ import { Image, TextInput as NativeTextInput, useWindowDimensions, View } from "
 import useStyles from "./Login.styles";
 import LoginBackgroundSmall from "./LoginBackgroundSmall";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Button, Text, TextInput, Title, useTheme } from "react-native-paper";
+import { Button, HelperText, Text, TextInput, Title, useTheme } from "react-native-paper";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
@@ -79,17 +79,13 @@ const Login = () => {
                 )}
 
                 {status === LoginStatus.FAILED ? (
-                    <>
-                        <Alert
-                            style={styles.alert}
-                            severity="error"
-                            text="Login failed. Please try again."
-                        />
-                    </>
+                    <Alert
+                        style={styles.alert}
+                        severity="error"
+                        text="Login failed. Please try again."
+                    />
                 ) : status === LoginStatus.SUBMITTING ? (
-                    <>
-                        <Alert style={styles.alert} severity="info" text="Logging in" />
-                    </>
+                    <Alert style={styles.alert} severity="info" text="Logging in" />
                 ) : (
                     <></>
                 )}
@@ -104,38 +100,50 @@ const Login = () => {
                         Logging in as: {authState.currentUser.username}
                     </Title>
                 ) : (
+                    <View>
+                        <TextInput
+                            label="Username"
+                            error={status === LoginStatus.FAILED && !username}
+                            value={username}
+                            onChangeText={(newUsername) => setUsername(newUsername)}
+                            mode="flat"
+                            disabled={status === LoginStatus.SUBMITTING}
+                            blurOnSubmit={false}
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            autoCompleteType="username"
+                            textContentType="username"
+                            onSubmitEditing={() => passwordTextRef.current?.focus()}
+                        />
+                        <HelperText
+                            type="error"
+                            visible={status === LoginStatus.FAILED && !username}
+                        >
+                            Please enter a username.
+                        </HelperText>
+                    </View>
+                )}
+                <View>
                     <TextInput
-                        label="Username"
-                        style={styles.textInput}
-                        value={username}
-                        onChangeText={(newUsername) => setUsername(newUsername)}
+                        label="Password"
+                        error={status === LoginStatus.FAILED && !password}
+                        value={password}
+                        onChangeText={(newPassword) => setPassword(newPassword)}
                         mode="flat"
+                        secureTextEntry
                         disabled={status === LoginStatus.SUBMITTING}
-                        blurOnSubmit={false}
                         autoCapitalize="none"
                         autoCorrect={false}
-                        autoCompleteType="username"
-                        textContentType="username"
-                        onSubmitEditing={() => passwordTextRef.current?.focus()}
+                        autoCompleteType="password"
+                        textContentType="password"
+                        onSubmitEditing={handleLogin}
+                        ref={passwordTextRef}
                     />
-                )}
-                <TextInput
-                    style={styles.textInput}
-                    label="Password"
-                    value={password}
-                    onChangeText={(newPassword) => setPassword(newPassword)}
-                    mode="flat"
-                    secureTextEntry
-                    disabled={status === LoginStatus.SUBMITTING}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    autoCompleteType="password"
-                    textContentType="password"
-                    onSubmitEditing={handleLogin}
-                    ref={passwordTextRef}
-                />
+                    <HelperText type="error" visible={status === LoginStatus.FAILED && !password}>
+                        Please enter a password.
+                    </HelperText>
+                </View>
                 <Button
-                    style={styles.button}
                     color={theme.colors.accent}
                     contentStyle={{ backgroundColor: theme.colors.accent }}
                     disabled={status === LoginStatus.SUBMITTING}
@@ -147,7 +155,7 @@ const Login = () => {
                 </Button>
                 {authState.state == "previouslyLoggedIn" ? (
                     <Button
-                        style={styles.button}
+                        style={styles.logoutButton}
                         color={theme.colors.onPrimary}
                         disabled={status === LoginStatus.SUBMITTING}
                         onPress={logout}

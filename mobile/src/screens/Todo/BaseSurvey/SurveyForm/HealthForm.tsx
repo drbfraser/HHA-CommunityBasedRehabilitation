@@ -1,11 +1,15 @@
 import React from "react";
-import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { TextInput, View } from "react-native";
+import { Text, HelperText } from "react-native-paper";
 import { fieldLabels, FormField, IFormProps } from "../formFields";
-import { deviceTypes, rateLevel } from "@cbr/common";
+import { deviceTypes, rateLevel, themeColors } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../../util/TextCheckBox";
+
+const getKeyByValue = (object: any, value: any) => {
+    return Object.keys(object).find((key) => object[key] === value);
+};
 
 const HealthForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -13,7 +17,6 @@ const HealthForm = (props: IFormProps) => {
     return (
         <View>
             <Text style={styles.pickerQuestion}>{"\n"}Rate your general health </Text>
-
             <Picker
                 selectedValue={props.formikProps.values[FormField.rateLevel]}
                 style={styles.picker}
@@ -25,7 +28,15 @@ const HealthForm = (props: IFormProps) => {
                     <Picker.Item label={name} value={value} />
                 ))}
             </Picker>
+            {/* <Text>
+                {props.formikProps.touched[FormField.rateLevel] &&
+                    props.formikProps.errors[FormField.rateLevel]}
+            </Text> */}
+            <HelperText type="error" visible={props.formikProps.values[FormField.rateLevel] === ""}>
+                Please choose an item!!
+            </HelperText>
 
+            <Text></Text>
             <TextCheckBox
                 field={FormField.getService}
                 value={props.formikProps.values[FormField.getService]}
@@ -38,14 +49,12 @@ const HealthForm = (props: IFormProps) => {
                 label={fieldLabels[FormField.needService]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
-
             <TextCheckBox
                 field={FormField.haveDevice}
                 value={props.formikProps.values[FormField.haveDevice]}
                 label={fieldLabels[FormField.haveDevice]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
-
             <View
                 style={{
                     paddingRight: 19,
@@ -58,7 +67,6 @@ const HealthForm = (props: IFormProps) => {
                     setFieldValue={props.formikProps.setFieldValue}
                 />
             </View>
-
             <View
                 style={{
                     paddingRight: 81,
@@ -71,7 +79,6 @@ const HealthForm = (props: IFormProps) => {
                     setFieldValue={props.formikProps.setFieldValue}
                 />
             </View>
-
             {props.formikProps.values[FormField.needDevice] && (
                 <View>
                     <Text style={styles.pickerQuestion}>
@@ -88,9 +95,14 @@ const HealthForm = (props: IFormProps) => {
                             <Picker.Item label={name} value={value} />
                         ))}
                     </Picker>
+                    <HelperText
+                        type="error"
+                        visible={props.formikProps.values[FormField.deviceType] === ""}
+                    >
+                        Please choose an item!!
+                    </HelperText>
                 </View>
             )}
-
             <Text style={styles.pickerQuestion}>
                 {"\n"}Are you satisfied with the health services you receive?
             </Text>
@@ -105,6 +117,12 @@ const HealthForm = (props: IFormProps) => {
                     <Picker.Item label={name} value={value} />
                 ))}
             </Picker>
+            <HelperText
+                type="error"
+                visible={props.formikProps.values[FormField.serviceSatisf] === ""}
+            >
+                Please choose an item!!
+            </HelperText>
         </View>
     );
 };

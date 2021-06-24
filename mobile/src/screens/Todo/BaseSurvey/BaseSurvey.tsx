@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Text, Divider } from "react-native-paper";
+import { Text, Divider, Appbar } from "react-native-paper";
 import {
     educationValidationSchema,
     empowermentValidationSchema,
@@ -13,7 +13,6 @@ import {
     surveyTypes,
 } from "./formFields";
 import { Formik, FormikHelpers } from "formik";
-import { useHistory } from "react-router-dom";
 import { handleSubmit } from "./formHandler";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { themeColors } from "@cbr/common";
@@ -25,6 +24,7 @@ import LivelihoodForm from "./SurveyForm/LivelihoodFom";
 import EmpowermentForm from "./SurveyForm/EmpowermentForm";
 import ShelterForm from "./SurveyForm/ShelterForm";
 import FoodForm from "./SurveyForm/FoodForm";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface ISurvey {
     label: string;
@@ -35,14 +35,12 @@ interface ISurvey {
 const BaseSurvey = () => {
     const [step, setStep] = useState<number>(0);
     const [submissionError, setSubmissionError] = useState(false);
-    const history = useHistory();
     const styles = useStyles();
-    const hideAlert = () => setSubmissionError(false);
-    const showAlert = () => setSubmissionError(true);
 
     const isFinalStep = step + 1 === surveyTypes.length && step !== 0;
     const prevStep = () => setStep(step - 1);
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
+        // console.log(values);
         if (isFinalStep) {
             handleSubmit(values, helpers, setSubmissionError);
         } else {
@@ -100,28 +98,36 @@ const BaseSurvey = () => {
             enableReinitialize
         >
             {(formikProps) => (
-                <View style={styles.container}>
-                    <ProgressSteps {...progressStepsStyle}>
-                        {surveySteps.map((surveyStep, index) => (
-                            <ProgressStep
-                                key={index}
-                                scrollViewProps={defaultScrollViewProps}
-                                previousBtnTextStyle={styles.buttonTextStyle}
-                                nextBtnTextStyle={styles.buttonTextStyle}
-                                nextBtnStyle={styles.nextButton}
-                                previousBtnStyle={styles.prevButton}
-                            >
-                                <Text style={{ fontSize: 25, fontWeight: "bold" }}>
-                                    {surveyStep.label}
-                                </Text>
-                                <Divider style={{ backgroundColor: themeColors.blueBgDark }} />
-                                <ScrollView>
-                                    <surveyStep.Form formikProps={formikProps} />
-                                </ScrollView>
-                            </ProgressStep>
-                        ))}
-                    </ProgressSteps>
-                </View>
+                <>
+                    <Appbar.Header statusBarHeight={25}>
+                        <MaterialIcons name="arrow-back" size={25} color="#FFFFFF" />
+                        <Appbar.Content title={"Baseline Survey"} />
+                    </Appbar.Header>
+                    <View style={styles.container}>
+                        <ProgressSteps {...progressStepsStyle}>
+                            {surveySteps.map((surveyStep, index) => (
+                                <ProgressStep
+                                    key={index}
+                                    scrollViewProps={defaultScrollViewProps}
+                                    previousBtnTextStyle={styles.buttonTextStyle}
+                                    nextBtnTextStyle={styles.buttonTextStyle}
+                                    nextBtnStyle={styles.nextButton}
+                                    // onNext={nextStep}
+                                    // onPrevious={prevStep}
+                                    previousBtnStyle={styles.prevButton}
+                                >
+                                    <Text style={{ fontSize: 25, fontWeight: "bold" }}>
+                                        {surveyStep.label}
+                                    </Text>
+                                    <Divider style={{ backgroundColor: themeColors.blueBgDark }} />
+                                    <ScrollView>
+                                        <surveyStep.Form formikProps={formikProps} />
+                                    </ScrollView>
+                                </ProgressStep>
+                            ))}
+                        </ProgressSteps>
+                    </View>
+                </>
             )}
         </Formik>
     );

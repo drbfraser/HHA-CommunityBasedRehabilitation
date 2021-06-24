@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { Text, Button, Dialog, Portal, Paragraph } from "react-native-paper";
+import { Text, Button, Dialog, Portal, Paragraph, HelperText } from "react-native-paper";
 import { fieldLabels, FormField, IFormProps } from "../formFields";
 import { childNourish, rateLevel } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
@@ -32,6 +32,12 @@ const FoodForm = (props: IFormProps) => {
                         <Picker.Item label={name} value={value} />
                     ))}
                 </Picker>
+                <HelperText
+                    type="error"
+                    visible={props.formikProps.values[FormField.foodSecurityRate] === ""}
+                >
+                    Please choose an item!!
+                </HelperText>
                 <TextCheckBox
                     field={FormField.enoughFoodPerMonth}
                     value={props.formikProps.values[FormField.enoughFoodPerMonth]}
@@ -73,6 +79,12 @@ const FoodForm = (props: IFormProps) => {
                             <Picker.Item label={name} value={value} />
                         ))}
                     </Picker>
+                    <HelperText
+                        type="error"
+                        visible={props.formikProps.values[FormField.childNourish] === ""}
+                    >
+                        Please choose an item!!
+                    </HelperText>
 
                     {props.formikProps.values[FormField.childNourish] === "M" && (
                         <View>

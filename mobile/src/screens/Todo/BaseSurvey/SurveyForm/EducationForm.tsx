@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { HelperText, Text } from "react-native-paper";
 import { fieldLabels, FormField, IFormProps } from "../formFields";
 import { grade, reasonNotSchool } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
@@ -39,6 +39,12 @@ const EducationForm = (props: IFormProps) => {
                             <Picker.Item label={name} value={value} />
                         ))}
                     </Picker>
+                    <HelperText
+                        type="error"
+                        visible={props.formikProps.values[FormField.grade] === 0}
+                    >
+                        Please choose an item!!
+                    </HelperText>
                 </View>
             ) : (
                 <View>
@@ -54,6 +60,12 @@ const EducationForm = (props: IFormProps) => {
                             <Picker.Item label={name} value={value} />
                         ))}
                     </Picker>
+                    <HelperText
+                        type="error"
+                        visible={props.formikProps.values[FormField.reasonNotSchool] === ""}
+                    >
+                        Please choose an item!!
+                    </HelperText>
                 </View>
             )}
 

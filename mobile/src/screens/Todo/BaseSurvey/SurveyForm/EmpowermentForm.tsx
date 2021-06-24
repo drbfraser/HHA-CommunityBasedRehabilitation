@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { TextInput } from "react-native-paper";
+import { HelperText, TextInput } from "react-native-paper";
 import { fieldLabels, FormField, IFormProps } from "../formFields";
 
 import TextCheckBox from "../../../../util/TextCheckBox";
@@ -15,13 +15,21 @@ const EmpowermentForm = (props: IFormProps) => {
                 setFieldValue={props.formikProps.setFieldValue}
             />
             {props.formikProps.values[FormField.memOfOrgan] && (
-                <TextInput
-                    mode="outlined"
-                    label={FormField.organization}
-                    onChangeText={(value) =>
-                        props.formikProps.setFieldValue(FormField.organization, value)
-                    }
-                />
+                <>
+                    <TextInput
+                        mode="outlined"
+                        label={FormField.organization}
+                        onChangeText={(value) =>
+                            props.formikProps.setFieldValue(FormField.organization, value)
+                        }
+                    />
+                    <HelperText
+                        type="error"
+                        visible={props.formikProps.values[FormField.organization] === ""}
+                    >
+                        Please choose an item!!
+                    </HelperText>
+                </>
             )}
 
             <TextCheckBox

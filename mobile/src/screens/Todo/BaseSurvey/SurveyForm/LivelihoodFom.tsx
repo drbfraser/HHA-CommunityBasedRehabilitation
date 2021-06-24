@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { Text, TextInput } from "react-native-paper";
+import { HelperText, Text, TextInput } from "react-native-paper";
 import { fieldLabels, FormField, IFormProps } from "../formFields";
 import { isSelfEmployed } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
@@ -38,6 +38,12 @@ const LivelihoodForm = (props: IFormProps) => {
                             props.formikProps.setFieldValue(FormField.job, value)
                         }
                     />
+                    <HelperText
+                        type="error"
+                        visible={props.formikProps.values[FormField.job] === ""}
+                    >
+                        Please choose an item!!
+                    </HelperText>
                     <View>
                         <Text />
                         <Text style={styles.pickerQuestion}>
@@ -54,6 +60,12 @@ const LivelihoodForm = (props: IFormProps) => {
                                 <Picker.Item label={name} value={value} />
                             ))}
                         </Picker>
+                        <HelperText
+                            type="error"
+                            visible={props.formikProps.values[FormField.isSelfEmployed] === ""}
+                        >
+                            Please choose an item!!
+                        </HelperText>
                     </View>
                 </View>
             )}

@@ -35,7 +35,7 @@ const screens: IScreen[] = [
         name: "Stats",
         roles: [UserRole.ADMIN],
         Component: Todo,
-        iconName: "chart-box",
+        iconName: "chart-bar",
     },
     {
         name: "Admin",

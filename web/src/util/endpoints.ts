@@ -1,9 +1,6 @@
+// TODO: Use @cbr/common's file instead of duplicating here
 import { getAuthToken } from "./auth";
-
-export const API_URL =
-    process.env.NODE_ENV === "development"
-        ? `http://${window.location.hostname}:8000/api/`
-        : "/api/";
+import { commonConfiguration } from "./init";
 
 export enum Endpoint {
     LOGIN = "login",
@@ -35,8 +32,12 @@ export const apiFetch = async (
     urlParams: string = "",
     customInit: RequestInit = {}
 ): Promise<Response> => {
-    const url = API_URL + endpoint + urlParams;
+    const url = commonConfiguration.apiUrl + endpoint + urlParams;
     const authToken = await getAuthToken();
+    if (authToken === null) {
+        return Promise.reject("unable to get an access token");
+    }
+
     const init: RequestInit = {
         ...customInit,
         headers: {

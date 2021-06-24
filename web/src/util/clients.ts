@@ -1,3 +1,5 @@
+// TODO: Rewrite this so that it can be used in @cbr/common's and then move it there
+//  Risks needs to remove its @material-ui dependency
 import { IReferral } from "./referrals";
 import { IRisk, riskLevels } from "./risks";
 import { ISurvey } from "./survey";

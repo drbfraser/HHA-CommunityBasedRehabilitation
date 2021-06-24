@@ -1,3 +1,4 @@
+// TODO: Use @cbr/common's file instead of duplicating here
 export interface IUser {
     id: number;
     username: string;

@@ -1,3 +1,5 @@
+// TODO: Remove or rework cachedAPI calls. The mobile app should probably be caching data in a
+//  database for proper persistence, not caching in TypeScript variables
 import { apiFetch, Endpoint } from "../endpoints";
 import { cachedAPIGet, IAPICacheData, cachedAPIHook } from "./cachedAPI";
 

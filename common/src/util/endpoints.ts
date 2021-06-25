@@ -1,7 +1,5 @@
 import { getAuthToken } from "./auth";
-
-// TODO: Point this to the right API for development and production environments
-export const API_URL = `https://cbrs.cradleplatform.com`;
+import { commonConfiguration } from "../init";
 
 export enum Endpoint {
     LOGIN = "login",
@@ -33,8 +31,12 @@ export const apiFetch = async (
     urlParams: string = "",
     customInit: RequestInit = {}
 ): Promise<Response> => {
-    const url = API_URL + endpoint + urlParams;
+    const url = commonConfiguration.apiUrl + endpoint + urlParams;
     const authToken = await getAuthToken();
+    if (authToken === null) {
+        return Promise.reject("unable to get an access token");
+    }
+
     const init: RequestInit = {
         ...customInit,
         headers: {

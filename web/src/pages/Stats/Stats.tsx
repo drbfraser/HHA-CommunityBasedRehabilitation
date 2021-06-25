@@ -1,8 +1,8 @@
 import { Button, Chip, Divider, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
-import { timestampFromFormDate } from "util/dates";
-import { apiFetch, Endpoint } from "util/endpoints";
+import { timestampFromFormDate } from "@cbr/common/util/dates";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IStats } from "@cbr/common/util/stats";
 import { IUser } from "@cbr/common/util/users";
 import DisabilityStats from "./DisabilityStats";

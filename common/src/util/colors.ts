@@ -14,5 +14,6 @@ export const themeColors = {
     hhaPurple: "#863b8f",
     hhaGreen: "#56af31",
     linkBlue: "#0078EE",
+    infoBlue: "#2196f3",
     white: "#FFFFFF",
 };

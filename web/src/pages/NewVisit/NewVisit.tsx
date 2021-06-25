@@ -30,7 +30,7 @@ import { handleSubmit } from "./formHandler";
 import { useStyles } from "./NewVisit.styles";
 import history from "../../util/history";
 import { IRisk } from "util/risks";
-import { apiFetch, Endpoint } from "util/endpoints";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IClient } from "util/clients";
 import { Alert } from "@material-ui/lab";
 import { TZoneMap, useZones } from "@cbr/common/util/hooks/zones";

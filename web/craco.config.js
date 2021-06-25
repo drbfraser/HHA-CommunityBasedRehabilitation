@@ -19,6 +19,7 @@ module.exports = {
     },
     alias: {
       "@cbr/common": resolvePackage("../common/src"),
+      react: path.resolve(__dirname, 'node_modules', 'react')
     },
   },
   plugins: [

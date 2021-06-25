@@ -16,7 +16,7 @@ import {
     orthoticInjuryLocations,
     prostheticInjuryLocations,
     wheelchairExperiences,
-} from "util/referrals";
+} from "@cbr/common/util/referrals";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ScheduleIcon from "@material-ui/icons/Schedule";
@@ -27,7 +27,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import * as Yup from "yup";
-import { apiFetch, Endpoint } from "util/endpoints";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 
 interface IEntryProps {
     referral: IReferral;

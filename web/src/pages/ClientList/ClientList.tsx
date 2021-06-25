@@ -33,7 +33,7 @@ import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
 import requestClientRows from "./requestClientRows";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
-import { useZones } from "util/hooks/zones";
+import { useZones } from "@cbr/common/util/hooks/zones";
 
 const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
     const risk1: IRiskLevel = riskLevels[String(params1.value)];

@@ -35,7 +35,7 @@ import {
     isSelfEmployed,
     rateLevel,
     reasonNotSchool,
-} from "util/survey";
+} from "@cbr/common/util/survey";
 import { useStyles } from "./baseSurvey.style";
 
 interface IFormProps {

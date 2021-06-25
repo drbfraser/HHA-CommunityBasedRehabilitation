@@ -7,7 +7,7 @@ import {
     DialogTitle,
     TextField,
 } from "@material-ui/core";
-import { IUser } from "util/users";
+import { IUser } from "@cbr/common/util/users";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
 
 interface IProps {

@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { Validation } from "util/validations";
+import { Validation } from "@cbr/common/util/validations";
 
 export enum changePasswordField {
     oldPassword = "oldPassword",

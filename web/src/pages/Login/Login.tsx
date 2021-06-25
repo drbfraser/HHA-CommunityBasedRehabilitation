@@ -4,7 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { doLogin } from "util/auth";
+import { doLogin } from "@cbr/common/util/auth";
 import { defaultPagePath } from "util/pages";
 import { useStyles } from "./Login.styles";
 

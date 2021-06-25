@@ -33,7 +33,7 @@ import { IRisk } from "util/risks";
 import { apiFetch, Endpoint } from "util/endpoints";
 import { IClient } from "util/clients";
 import { Alert } from "@material-ui/lab";
-import { TZoneMap, useZones } from "util/hooks/zones";
+import { TZoneMap, useZones } from "@cbr/common/util/hooks/zones";
 
 const visitTypes: FormField[] = [FormField.health, FormField.education, FormField.social];
 

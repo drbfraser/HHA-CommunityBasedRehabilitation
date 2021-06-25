@@ -3,8 +3,8 @@ import { Button } from "@material-ui/core";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { useCurrentUser } from "util/hooks/currentUser";
-import { APILoadError } from "util/endpoints";
-import { useZones } from "util/hooks/zones";
+import { APILoadError } from "@cbr/common/util/endpoints";
+import { useZones } from "@cbr/common/util/hooks/zones";
 import { useHistory } from "react-router-dom";
 import React from "react";
 

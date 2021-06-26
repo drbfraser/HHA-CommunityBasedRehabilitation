@@ -8,7 +8,6 @@ import globalStyle from "./app.styles";
 import { stackScreenName, stackScreenProps } from "./util/screens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { screensForUser } from "./util/screens";
-import theme from "./theme.styles";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import {
     apiFetch,
@@ -34,7 +33,6 @@ enableScreens();
 const Stack = createStackNavigator();
 const styles = globalStyle();
 const Tab = createMaterialBottomTabNavigator();
-const Stack = createNativeStackNavigator();
 
 /**
  * @return A Promise resolving to the current user details fetched from the server or rejected if
@@ -166,21 +164,23 @@ export default function App() {
         <SafeAreaView style={styles.safeApp}>
             <Provider theme={theme}>
                 <NavigationContainer theme={theme}>
-                    <Stack.Navigator
-                        initialRouteName={stackScreenName.HOME}
-                        screenOptions={{
-                            headerShown: true,
-                            title: "Main Menu",
-                        }}
-                    >
-                        {Object.values(stackScreenName).map((name) => (
-                            <Stack.Screen
-                                key={name}
-                                name={name}
-                                component={stackScreenProps[name]}
-                            />
-                        ))}
-                    </Stack.Navigator>
+                    <AuthContext.Provider value={authContext}>
+                        <Stack.Navigator
+                            initialRouteName={stackScreenName.LOGIN}
+                            screenOptions={{
+                                headerShown: false,
+                                title: "Main Menu",
+                            }}
+                        >
+                            {Object.values(stackScreenName).map((name) => (
+                                <Stack.Screen
+                                    key={name}
+                                    name={name}
+                                    component={stackScreenProps[name]}
+                                />
+                            ))}
+                        </Stack.Navigator>
+                    </AuthContext.Provider>
                 </NavigationContainer>
             </Provider>
         </SafeAreaView>

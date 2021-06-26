@@ -7,6 +7,7 @@ import ClientScreenController from "../screens/Client/ClientScreenController";
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import { Props } from "react-native-paper/lib/typescript/components/RadioButton/RadioButton";
 import HomeScreenController from "../screens/HomeScreen/HomeScreenController";
+import Login from "../screens/Login/Login";
 
 export interface IScreen {
     name: string;
@@ -70,12 +71,14 @@ export const defaultPage = screens[0];
 
 export enum stackScreenName {
     HOME = "Home",
-    CLIENT = "ClientDetails"
+    CLIENT = "ClientDetails",
+    LOGIN = "Login"
   }
 
 export const stackScreenProps = {
     [stackScreenName.HOME]: HomeScreenController,
     [stackScreenName.CLIENT]: ClientScreenController,
+    [stackScreenName.LOGIN]: Login,
 }
 
 export type stackParamList = {
@@ -83,4 +86,5 @@ export type stackParamList = {
     [stackScreenName.CLIENT]: {
         clientName: string,
     }
+    [stackScreenName.LOGIN]: undefined;
   };

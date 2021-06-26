@@ -7,7 +7,14 @@ import { Button, HelperText, Text, TextInput, Title, useTheme } from "react-nati
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
-import { SMALL_WIDTH } from "../../theme.styles";
+import { SMALL_WIDTH } from "../../util/theme.styles";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { stackParamList, stackScreenName } from "../../util/screens";
+import { Navigation } from "react-native-navigation";
+
+interface LoginProps {
+    navigation: StackNavigationProp<stackParamList, stackScreenName.LOGIN>;
+}
 
 enum LoginStatus {
     INITIAL,
@@ -15,7 +22,7 @@ enum LoginStatus {
     FAILED,
 }
 
-const Login = () => {
+const Login = (props: LoginProps) => {
     const theme = useTheme();
     const styles = useStyles();
 
@@ -41,8 +48,11 @@ const Login = () => {
         setStatus(LoginStatus.SUBMITTING);
 
         const loginSucceeded = await login(usernameToUse, password);
+
         if (!loginSucceeded) {
             setStatus(LoginStatus.FAILED);
+        } else {
+            props.navigation.navigate(stackScreenName.HOME);
         }
     };
 

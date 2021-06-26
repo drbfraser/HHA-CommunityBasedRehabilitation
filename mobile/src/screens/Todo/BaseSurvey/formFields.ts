@@ -162,11 +162,18 @@ export const initialValues = {
 };
 
 export const emptyValidationSchema = () => Yup.object().shape({});
-
+export const consentValidationSchema = () =>
+    Yup.object().shape({
+        [FormField.surveyConsent]: Yup.boolean()
+            .label(fieldLabels[FormField.surveyConsent])
+            .required(),
+    });
 export const healthValidationSchema = () =>
     Yup.object().shape({
-        [FormField.deviceType]: Yup.string().label(fieldLabels[FormField.deviceType]),
-        [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.rateLevel]),
+        [FormField.serviceSatisf]: Yup.string()
+            .label(fieldLabels[FormField.serviceSatisf])
+            .required(),
+        [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.rateLevel]).required(),
     });
 
 export const educationValidationSchema = () =>
@@ -183,8 +190,10 @@ export const livelihoodValidationSchema = () =>
 
 export const foodValidationSchema = () =>
     Yup.object().shape({
-        [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.rateLevel]),
-        [FormField.childNourish]: Yup.string().label(fieldLabels[FormField.rateLevel]),
+        [FormField.foodSecurityRate]: Yup.string()
+            .label(fieldLabels[FormField.foodSecurityRate])
+            .required(),
+        [FormField.childNourish]: Yup.string().label(fieldLabels[FormField.childNourish]),
     });
 
 export const empowermentValidationSchema = () =>

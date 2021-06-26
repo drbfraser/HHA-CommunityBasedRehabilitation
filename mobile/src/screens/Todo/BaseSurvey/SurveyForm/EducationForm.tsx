@@ -31,19 +31,25 @@ const EducationForm = (props: IFormProps) => {
                     <Picker
                         selectedValue={props.formikProps.values[FormField.grade]}
                         style={styles.picker}
-                        onValueChange={(itemValue) =>
-                            props.formikProps.setFieldValue(FormField.grade, itemValue)
-                        }
+                        onValueChange={(itemValue) => {
+                            props.formikProps.setFieldTouched(FormField.grade, true);
+                            props.formikProps.setFieldValue(FormField.grade, itemValue);
+                        }}
                     >
+                        <Picker.Item key={"unselectable"} label={""} value={""} />
                         {Object.entries(grade).map(([value, { name }]) => (
-                            <Picker.Item label={name} value={value} />
+                            <Picker.Item label={name} value={value} key={name} />
                         ))}
                     </Picker>
                     <HelperText
+                        style={styles.errorText}
                         type="error"
-                        visible={props.formikProps.values[FormField.grade] === 0}
+                        visible={
+                            props.formikProps.values[FormField.grade] === "" ||
+                            props.formikProps.touched[FormField.grade] !== true
+                        }
                     >
-                        Please choose an item!!
+                        Grade is a required field
                     </HelperText>
                 </View>
             ) : (
@@ -52,19 +58,25 @@ const EducationForm = (props: IFormProps) => {
                     <Picker
                         selectedValue={props.formikProps.values[FormField.reasonNotSchool]}
                         style={styles.picker}
-                        onValueChange={(itemValue) =>
-                            props.formikProps.setFieldValue(FormField.reasonNotSchool, itemValue)
-                        }
+                        onValueChange={(itemValue) => {
+                            props.formikProps.setFieldTouched(FormField.reasonNotSchool, true);
+                            props.formikProps.setFieldValue(FormField.reasonNotSchool, itemValue);
+                        }}
                     >
+                        <Picker.Item key={"unselectable"} label={""} value={""} />
                         {Object.entries(reasonNotSchool).map(([value, name]) => (
-                            <Picker.Item label={name} value={value} />
+                            <Picker.Item label={name} value={value} key={name} />
                         ))}
                     </Picker>
                     <HelperText
+                        style={styles.errorText}
                         type="error"
-                        visible={props.formikProps.values[FormField.reasonNotSchool] === ""}
+                        visible={
+                            props.formikProps.values[FormField.reasonNotSchool] === "" ||
+                            props.formikProps.touched[FormField.reasonNotSchool] !== true
+                        }
                     >
-                        Please choose an item!!
+                        Reason is a required field
                     </HelperText>
                 </View>
             )}

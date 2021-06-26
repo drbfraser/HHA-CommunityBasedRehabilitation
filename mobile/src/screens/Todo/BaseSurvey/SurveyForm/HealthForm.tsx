@@ -1,15 +1,11 @@
 import React from "react";
-import { TextInput, View } from "react-native";
-import { Text, HelperText } from "react-native-paper";
+import { View } from "react-native";
+import { HelperText, Text } from "react-native-paper";
 import { fieldLabels, FormField, IFormProps } from "../formFields";
-import { deviceTypes, rateLevel, themeColors } from "@cbr/common";
+import { deviceTypes, rateLevel } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../../util/TextCheckBox";
-
-const getKeyByValue = (object: any, value: any) => {
-    return Object.keys(object).find((key) => object[key] === value);
-};
 
 const HealthForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -17,26 +13,31 @@ const HealthForm = (props: IFormProps) => {
     return (
         <View>
             <Text style={styles.pickerQuestion}>{"\n"}Rate your general health </Text>
+
             <Picker
                 selectedValue={props.formikProps.values[FormField.rateLevel]}
                 style={styles.picker}
-                onValueChange={(itemValue) =>
-                    props.formikProps.setFieldValue(FormField.rateLevel, itemValue)
-                }
+                onValueChange={(itemValue) => {
+                    props.formikProps.setFieldTouched(FormField.rateLevel, true);
+                    props.formikProps.setFieldValue(FormField.rateLevel, itemValue);
+                }}
             >
+                <Picker.Item key={"unselectable"} label={""} value={""} />
                 {Object.entries(rateLevel).map(([value, { name }]) => (
-                    <Picker.Item label={name} value={value} />
+                    <Picker.Item label={name} value={value} key={name} />
                 ))}
             </Picker>
-            {/* <Text>
-                {props.formikProps.touched[FormField.rateLevel] &&
-                    props.formikProps.errors[FormField.rateLevel]}
-            </Text> */}
-            <HelperText type="error" visible={props.formikProps.values[FormField.rateLevel] === ""}>
-                Please choose an item!!
+            <HelperText
+                style={styles.errorText}
+                type="error"
+                visible={
+                    props.formikProps.values[FormField.rateLevel] === "" ||
+                    props.formikProps.touched[FormField.rateLevel] !== true
+                }
+            >
+                {props.formikProps.errors[FormField.rateLevel]}
             </HelperText>
 
-            <Text></Text>
             <TextCheckBox
                 field={FormField.getService}
                 value={props.formikProps.values[FormField.getService]}
@@ -87,41 +88,55 @@ const HealthForm = (props: IFormProps) => {
                     <Picker
                         selectedValue={props.formikProps.values[FormField.deviceType]}
                         style={styles.picker}
-                        onValueChange={(itemValue) =>
-                            props.formikProps.setFieldValue(FormField.deviceType, itemValue)
-                        }
+                        onValueChange={(itemValue) => {
+                            props.formikProps.setFieldTouched(FormField.deviceType, true);
+                            props.formikProps.setFieldValue(FormField.deviceType, itemValue);
+                        }}
                     >
+                        <Picker.Item key={"unselectable"} label={""} value={""} />
                         {Object.entries(deviceTypes).map(([value, name]) => (
-                            <Picker.Item label={name} value={value} />
+                            <Picker.Item label={name} value={value} key={name} />
                         ))}
                     </Picker>
+
                     <HelperText
+                        style={styles.errorText}
                         type="error"
-                        visible={props.formikProps.values[FormField.deviceType] === ""}
+                        visible={
+                            props.formikProps.values[FormField.deviceType] === "" ||
+                            props.formikProps.touched[FormField.deviceType] !== true
+                        }
                     >
-                        Please choose an item!!
+                        Assistive device is a required field
                     </HelperText>
                 </View>
             )}
             <Text style={styles.pickerQuestion}>
                 {"\n"}Are you satisfied with the health services you receive?
             </Text>
+
             <Picker
                 selectedValue={props.formikProps.values[FormField.serviceSatisf]}
                 style={styles.picker}
-                onValueChange={(itemValue) =>
-                    props.formikProps.setFieldValue(FormField.serviceSatisf, itemValue)
-                }
+                onValueChange={(itemValue) => {
+                    props.formikProps.setFieldTouched(FormField.serviceSatisf, true);
+                    props.formikProps.setFieldValue(FormField.serviceSatisf, itemValue);
+                }}
             >
+                <Picker.Item key={"unselectable"} label={""} value={""} />
                 {Object.entries(rateLevel).map(([value, { name }]) => (
-                    <Picker.Item label={name} value={value} />
+                    <Picker.Item label={name} value={value} key={name} />
                 ))}
             </Picker>
             <HelperText
+                style={styles.errorText}
                 type="error"
-                visible={props.formikProps.values[FormField.serviceSatisf] === ""}
+                visible={
+                    props.formikProps.values[FormField.serviceSatisf] === "" ||
+                    props.formikProps.touched[FormField.serviceSatisf] !== true
+                }
             >
-                Please choose an item!!
+                {props.formikProps.errors[FormField.serviceSatisf]}
             </HelperText>
         </View>
     );

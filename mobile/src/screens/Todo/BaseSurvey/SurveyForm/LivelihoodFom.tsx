@@ -39,11 +39,15 @@ const LivelihoodForm = (props: IFormProps) => {
                         }
                     />
                     <HelperText
+                        style={styles.errorText}
                         type="error"
-                        visible={props.formikProps.values[FormField.job] === ""}
+                        visible={
+                            props.formikProps.values[FormField.job] === ""
+                        }
                     >
-                        Please choose an item!!
+                        Job is a required field
                     </HelperText>
+
                     <View>
                         <Text />
                         <Text style={styles.pickerQuestion}>
@@ -52,19 +56,28 @@ const LivelihoodForm = (props: IFormProps) => {
                         <Picker
                             selectedValue={props.formikProps.values[FormField.isSelfEmployed]}
                             style={styles.picker}
-                            onValueChange={(itemValue) =>
-                                props.formikProps.setFieldValue(FormField.isSelfEmployed, itemValue)
-                            }
+                            onValueChange={(itemValue) => {
+                                props.formikProps.setFieldTouched(FormField.isSelfEmployed, true);
+                                props.formikProps.setFieldValue(
+                                    FormField.isSelfEmployed,
+                                    itemValue
+                                );
+                            }}
                         >
+                            <Picker.Item key={"unselectable"} label={""} value={""} />
                             {Object.entries(isSelfEmployed).map(([value, name]) => (
-                                <Picker.Item label={name} value={value} />
+                                <Picker.Item label={name} value={value} key={name} />
                             ))}
                         </Picker>
                         <HelperText
+                            style={styles.errorText}
                             type="error"
-                            visible={props.formikProps.values[FormField.isSelfEmployed] === ""}
+                            visible={
+                                props.formikProps.values[FormField.isSelfEmployed] === "" ||
+                                props.formikProps.touched[FormField.isSelfEmployed] !== true
+                            }
                         >
-                            Please choose an item!!
+                            Self Employed is a required field
                         </HelperText>
                     </View>
                 </View>

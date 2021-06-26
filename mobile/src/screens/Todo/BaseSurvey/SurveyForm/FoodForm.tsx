@@ -24,19 +24,26 @@ const FoodForm = (props: IFormProps) => {
                 <Picker
                     selectedValue={props.formikProps.values[FormField.foodSecurityRate]}
                     style={styles.picker}
-                    onValueChange={(itemValue) =>
-                        props.formikProps.setFieldValue(FormField.foodSecurityRate, itemValue)
-                    }
+                    onValueChange={(itemValue) => {
+                        props.formikProps.setFieldTouched(FormField.foodSecurityRate, true);
+                        props.formikProps.setFieldValue(FormField.foodSecurityRate, itemValue);
+                    }}
                 >
+                    <Picker.Item key={"unselectable"} label={""} value={""} />
                     {Object.entries(rateLevel).map(([value, { name }]) => (
-                        <Picker.Item label={name} value={value} />
+                        <Picker.Item label={name} value={value} key={value} />
                     ))}
                 </Picker>
+
                 <HelperText
+                    style={styles.errorText}
                     type="error"
-                    visible={props.formikProps.values[FormField.foodSecurityRate] === ""}
+                    visible={
+                        props.formikProps.values[FormField.foodSecurityRate] === "" ||
+                        props.formikProps.touched[FormField.foodSecurityRate] !== true
+                    }
                 >
-                    Please choose an item!!
+                    {props.formikProps.errors[FormField.foodSecurityRate]}
                 </HelperText>
                 <TextCheckBox
                     field={FormField.enoughFoodPerMonth}
@@ -71,19 +78,26 @@ const FoodForm = (props: IFormProps) => {
                         selectedValue={props.formikProps.values[FormField.childNourish]}
                         style={styles.picker}
                         onValueChange={(itemValue) => {
+                            props.formikProps.setFieldTouched(FormField.childNourish, true);
                             props.formikProps.setFieldValue(FormField.childNourish, itemValue);
                             itemValue === "M" ? showAlert() : hideAlert();
                         }}
                     >
+                        <Picker.Item key={"unselectable"} label={""} value={""} />
                         {Object.entries(childNourish).map(([value, name]) => (
-                            <Picker.Item label={name} value={value} />
+                            <Picker.Item label={name} value={value} key={value} />
                         ))}
                     </Picker>
+
                     <HelperText
+                        style={styles.errorText}
                         type="error"
-                        visible={props.formikProps.values[FormField.childNourish] === ""}
+                        visible={
+                            props.formikProps.values[FormField.childNourish] === "" ||
+                            props.formikProps.touched[FormField.childNourish] !== true
+                        }
                     >
-                        Please choose an item!!
+                        Nourishment is required
                     </HelperText>
 
                     {props.formikProps.values[FormField.childNourish] === "M" && (

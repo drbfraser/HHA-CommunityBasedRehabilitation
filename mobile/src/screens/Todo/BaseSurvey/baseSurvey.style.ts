@@ -40,6 +40,7 @@ const useStyles = () =>
         centerElement: { justifyContent: "center", alignItems: "center" },
         picker: { height: 40, width: 250 },
         pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
+        errorText: { color: themeColors.errorRed, paddingLeft: 15 },
     });
 
 export const progressStepsStyle = {

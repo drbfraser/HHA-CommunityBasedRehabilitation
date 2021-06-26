@@ -1,7 +1,5 @@
 import { FormikHelpers } from "formik";
-// import { apiFetch, Endpoint } from "util/endpoints";
 import { FormField, TFormValues } from "./formFields";
-// import history from "util/history";
 import { apiFetch, Endpoint } from "@cbr/common";
 
 const addSurvey = async (surveyInfo: string) => {
@@ -70,7 +68,7 @@ export const handleSubmit = async (
 
     try {
         await addSurvey(newSurvey);
-        // history.goBack();
+        // Jump back to client using navigation
     } catch (e) {
         helpers.setSubmitting(false);
         setSubmissionError(true);

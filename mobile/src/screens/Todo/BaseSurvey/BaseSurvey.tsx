@@ -6,6 +6,7 @@ import {
     empowermentValidationSchema,
     emptyValidationSchema,
     foodValidationSchema,
+    FormField,
     healthValidationSchema,
     IFormProps,
     initialValues,
@@ -40,11 +41,13 @@ const BaseSurvey = () => {
     const isFinalStep = step + 1 === surveyTypes.length && step !== 0;
     const prevStep = () => setStep(step - 1);
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
-        // console.log(values);
+        // TODO: conncet with the client
         if (isFinalStep) {
             handleSubmit(values, helpers, setSubmissionError);
         } else {
             if (step === 0) {
+                // For testing
+                helpers.setFieldValue(`${[FormField.client]}`, 1);
                 // helpers.setFieldValue(`${[FormField.client]}`, clientId);
             }
             setStep(step + 1);
@@ -112,9 +115,11 @@ const BaseSurvey = () => {
                                     previousBtnTextStyle={styles.buttonTextStyle}
                                     nextBtnTextStyle={styles.buttonTextStyle}
                                     nextBtnStyle={styles.nextButton}
-                                    // onNext={nextStep}
-                                    // onPrevious={prevStep}
+                                    onNext={() => nextStep(formikProps.values, formikProps)}
+                                    nextBtnDisabled={!formikProps.isValid}
+                                    onPrevious={prevStep}
                                     previousBtnStyle={styles.prevButton}
+                                    onSubmit={() => nextStep(formikProps.values, formikProps)}
                                 >
                                     <Text style={{ fontSize: 25, fontWeight: "bold" }}>
                                         {surveyStep.label}

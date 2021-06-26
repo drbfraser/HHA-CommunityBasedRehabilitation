@@ -24,7 +24,6 @@ const SocialForm = (props: IFormProps) => {
                     setFieldValue={props.formikProps.setFieldValue}
                 />
             </View>
-
             <TextCheckBox
                 field={FormField.ableInSocial}
                 value={props.formikProps.values[FormField.ableInSocial]}
@@ -37,7 +36,6 @@ const SocialForm = (props: IFormProps) => {
                 label={fieldLabels[FormField.disabiAffectSocial]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
-
             <TextCheckBox
                 field={FormField.disabiDiscrimination}
                 value={props.formikProps.values[FormField.disabiDiscrimination]}

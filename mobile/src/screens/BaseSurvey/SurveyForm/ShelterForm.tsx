@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { fieldLabels, FormField, IFormProps } from "../formFields";
-import TextCheckBox from "../../../../util/TextCheckBox";
+import TextCheckBox from "../../../components/TextCheckBox";
 
 const ShelterForm = (props: IFormProps) => {
     return (

@@ -1,7 +1,7 @@
 import React from "react";
 import { APILoadError, IUser, TAPILoadError, UserRole } from "@cbr/common";
 import Todo from "../screens/Todo/Todo";
-import BaseSurvey from "../screens/Todo/BaseSurvey/BaseSurvey";
+import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 
 export interface IScreen {
     name: string;
@@ -13,12 +13,12 @@ export interface IScreen {
 const screens: IScreen[] = [
     {
         name: "Dashboard",
-        Component: BaseSurvey,
+        Component: Todo,
         iconName: "home",
     },
     {
         name: "New Client",
-        Component: Todo,
+        Component: BaseSurvey,
         iconName: "plus-circle",
     },
     {

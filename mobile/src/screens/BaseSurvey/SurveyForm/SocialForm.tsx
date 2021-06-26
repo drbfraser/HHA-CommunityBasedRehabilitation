@@ -1,6 +1,6 @@
 import React from "react";
 import { fieldLabels, FormField, IFormProps } from "../formFields";
-import TextCheckBox from "../../../../util/TextCheckBox";
+import TextCheckBox from "../../../components/TextCheckBox";
 import { View } from "react-native";
 
 const SocialForm = (props: IFormProps) => {

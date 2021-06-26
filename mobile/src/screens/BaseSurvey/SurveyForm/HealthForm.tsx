@@ -5,7 +5,7 @@ import { fieldLabels, FormField, IFormProps } from "../formFields";
 import { deviceTypes, rateLevel } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
 import useStyles from "../baseSurvey.style";
-import TextCheckBox from "../../../../util/TextCheckBox";
+import TextCheckBox from "../../../components/TextCheckBox";
 
 const HealthForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -102,12 +102,9 @@ const HealthForm = (props: IFormProps) => {
                     <HelperText
                         style={styles.errorText}
                         type="error"
-                        visible={
-                            props.formikProps.values[FormField.deviceType] === "" ||
-                            props.formikProps.touched[FormField.deviceType] !== true
-                        }
+                        visible={props.formikProps.values[FormField.deviceType] === ""}
                     >
-                        Assistive device is a required field
+                        {props.formikProps.errors[FormField.deviceType]}
                     </HelperText>
                 </View>
             )}

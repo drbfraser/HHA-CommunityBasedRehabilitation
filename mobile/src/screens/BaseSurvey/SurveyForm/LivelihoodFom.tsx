@@ -5,7 +5,7 @@ import { fieldLabels, FormField, IFormProps } from "../formFields";
 import { isSelfEmployed } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
 import useStyles from "../baseSurvey.style";
-import TextCheckBox from "../../../../util/TextCheckBox";
+import TextCheckBox from "../../../components/TextCheckBox";
 
 const LivelihoodForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -34,6 +34,7 @@ const LivelihoodForm = (props: IFormProps) => {
                     <TextInput
                         mode="outlined"
                         label={FormField.job}
+                        value={props.formikProps.values[FormField.job]}
                         onChangeText={(value) =>
                             props.formikProps.setFieldValue(FormField.job, value)
                         }
@@ -41,11 +42,9 @@ const LivelihoodForm = (props: IFormProps) => {
                     <HelperText
                         style={styles.errorText}
                         type="error"
-                        visible={
-                            props.formikProps.values[FormField.job] === ""
-                        }
+                        visible={props.formikProps.values[FormField.job] === ""}
                     >
-                        Job is a required field
+                        {props.formikProps.errors[FormField.job]}
                     </HelperText>
 
                     <View>
@@ -72,10 +71,7 @@ const LivelihoodForm = (props: IFormProps) => {
                         <HelperText
                             style={styles.errorText}
                             type="error"
-                            visible={
-                                props.formikProps.values[FormField.isSelfEmployed] === "" ||
-                                props.formikProps.touched[FormField.isSelfEmployed] !== true
-                            }
+                            visible={props.formikProps.values[FormField.isSelfEmployed] === ""}
                         >
                             Self Employed is a required field
                         </HelperText>

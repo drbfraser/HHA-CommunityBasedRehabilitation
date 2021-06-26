@@ -5,7 +5,7 @@ import { fieldLabels, FormField, IFormProps } from "../formFields";
 import { grade, reasonNotSchool } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
 import useStyles from "../baseSurvey.style";
-import TextCheckBox from "../../../../util/TextCheckBox";
+import TextCheckBox from "../../../components/TextCheckBox";
 
 const EducationForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -32,8 +32,8 @@ const EducationForm = (props: IFormProps) => {
                         selectedValue={props.formikProps.values[FormField.grade]}
                         style={styles.picker}
                         onValueChange={(itemValue) => {
-                            props.formikProps.setFieldTouched(FormField.grade, true);
                             props.formikProps.setFieldValue(FormField.grade, itemValue);
+                            props.formikProps.setFieldTouched(FormField.grade, true);
                         }}
                     >
                         <Picker.Item key={"unselectable"} label={""} value={""} />
@@ -44,12 +44,9 @@ const EducationForm = (props: IFormProps) => {
                     <HelperText
                         style={styles.errorText}
                         type="error"
-                        visible={
-                            props.formikProps.values[FormField.grade] === "" ||
-                            props.formikProps.touched[FormField.grade] !== true
-                        }
+                        visible={props.formikProps.values[FormField.grade] === ""}
                     >
-                        Grade is a required field
+                        {props.formikProps.errors[FormField.grade]}
                     </HelperText>
                 </View>
             ) : (
@@ -71,10 +68,7 @@ const EducationForm = (props: IFormProps) => {
                     <HelperText
                         style={styles.errorText}
                         type="error"
-                        visible={
-                            props.formikProps.values[FormField.reasonNotSchool] === "" ||
-                            props.formikProps.touched[FormField.reasonNotSchool] !== true
-                        }
+                        visible={props.formikProps.values[FormField.reasonNotSchool] === ""}
                     >
                         Reason is a required field
                     </HelperText>

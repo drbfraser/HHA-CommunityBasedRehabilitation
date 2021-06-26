@@ -1,9 +1,9 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
 import { fieldLabels, FormField, IFormProps } from "../formFields";
-import TextCheckBox from "../../../../util/TextCheckBox";
 import useStyles from "../baseSurvey.style";
+import TextCheckBox from "../../../components/TextCheckBox";
 
 const EmpowermentForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -30,7 +30,7 @@ const EmpowermentForm = (props: IFormProps) => {
                         type="error"
                         visible={props.formikProps.values[FormField.organization] === ""}
                     >
-                        Organization is a required field
+                        {props.formikProps.errors[FormField.organization]}
                     </HelperText>
                 </>
             )}

@@ -5,10 +5,10 @@ import { fieldLabels, FormField, IFormProps } from "../formFields";
 import { childNourish, rateLevel } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
 import useStyles from "../baseSurvey.style";
-import TextCheckBox from "../../../../util/TextCheckBox";
+import TextCheckBox from "../../../components/TextCheckBox";
 
 const FoodForm = (props: IFormProps) => {
-    const [alertError, setAlertError] = useState(false);
+    const [alertInfo, setAlertError] = useState(false);
     const styles = useStyles();
     const hideAlert = () => setAlertError(false);
     const showAlert = () => setAlertError(true);
@@ -92,19 +92,16 @@ const FoodForm = (props: IFormProps) => {
                     <HelperText
                         style={styles.errorText}
                         type="error"
-                        visible={
-                            props.formikProps.values[FormField.childNourish] === "" ||
-                            props.formikProps.touched[FormField.childNourish] !== true
-                        }
+                        visible={props.formikProps.values[FormField.childNourish] === ""}
                     >
-                        Nourishment is required
+                        {props.formikProps.errors[FormField.childNourish]}
                     </HelperText>
 
                     {props.formikProps.values[FormField.childNourish] === "M" && (
                         <View>
                             <Portal>
-                                <Dialog visible={alertError} onDismiss={showAlert}>
-                                    <Dialog.Title>Error</Dialog.Title>
+                                <Dialog visible={alertInfo} onDismiss={showAlert}>
+                                    <Dialog.Title>Reminder</Dialog.Title>
                                     <Dialog.Content>
                                         <Paragraph>
                                             A referral to the health center is required!

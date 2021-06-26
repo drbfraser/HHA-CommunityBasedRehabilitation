@@ -17,26 +17,6 @@ export enum RiskType {
     SOCIAL = "SOCIAL",
 }
 
-export interface IRiskType {
-    name: string;
-    Icon: typeof healthIcon|typeof educationIcon|typeof socialIcon;
-}
-
-export const riskTypes: { [key: string]: IRiskType } = {
-    [RiskType.HEALTH]: {
-        name: "Health",
-        Icon: healthIcon,
-    },
-    [RiskType.EDUCATION]: {
-        name: "Education",
-        Icon: educationIcon,
-    },
-    [RiskType.SOCIAL]: {
-        name: "Social",
-        Icon: socialIcon,
-    },
-};
-
 export enum RiskLevel {
     LOW = "LO",
     MEDIUM = "ME",

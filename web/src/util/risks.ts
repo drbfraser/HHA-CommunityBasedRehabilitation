@@ -32,7 +32,7 @@ export const riskTypes: { [key: string]: IRiskType } = {
         Icon: LocalHospital,
     },
     [RiskType.EDUCATION]: {
-        name: "Educatiscon",
+        name: "Education",
         Icon: School,
     },
     [RiskType.SOCIAL]: {

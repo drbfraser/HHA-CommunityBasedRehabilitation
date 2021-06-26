@@ -1,4 +1,4 @@
-import { riskLevels } from "./risks";
+import { riskLevels, RiskType } from "./risks";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 export function healthIcon(props: string) {
@@ -29,3 +29,22 @@ export function socialIcon(props: string) {
     );
 }
 
+export interface IRiskType {
+    name: string;
+    Icon: typeof healthIcon|typeof educationIcon|typeof socialIcon;
+}
+
+export const riskTypes: { [key: string]: IRiskType } = {
+    [RiskType.HEALTH]: {
+        name: "Health",
+        Icon: healthIcon,
+    },
+    [RiskType.EDUCATION]: {
+        name: "Education",
+        Icon: educationIcon,
+    },
+    [RiskType.SOCIAL]: {
+        name: "Social",
+        Icon: socialIcon,
+    },
+};

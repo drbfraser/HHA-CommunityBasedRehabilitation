@@ -23,7 +23,6 @@ export const themeColors = {
 };
 
 export const themeMui = createMuiTheme({
-
     overrides: {
         MuiCssBaseline: {
             "@global": {

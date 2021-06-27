@@ -2,9 +2,13 @@ import { apiFetch, APILoadError, Endpoint, getZones } from "@cbr/common";
 import { IClientSummary } from "../../util/clients";
 import { riskLevels } from "../../util/risks";
 export type ClientTest = {
-    id: number;
-    full_name: string;
-    zone: string;
+    id: number,
+    full_name: string,
+    zone: string,
+    // birthdate: string,
+    // village: string,
+    // phoneNumber: string,
+    // disabilities: string,
     HealthLevel: string,
     EducationLevel: string,
     SocialLevel: string,

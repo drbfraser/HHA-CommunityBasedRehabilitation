@@ -22,12 +22,13 @@ const ClientScreenController = (props: clientScreenControllerProps) => {
             backgroundColor: "#273263",
         },
         headerTintColor: "#fff",
+        headerShown: true,
     });
-    const [clientName, setClientName] = useState<String>("");
+    const [clientID, setClientID] = useState<number>(0);
     useEffect(() => {
-        setClientName(props.route.params.clientName);
+        setClientID(props.route.params.clientID);
     });
 
-    return <IndividualClientView clientName={clientName} />;
+    return <IndividualClientView clientID={clientID} />;
 };
 export default ClientScreenController;

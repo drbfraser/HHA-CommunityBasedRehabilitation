@@ -18,8 +18,7 @@ const ClientList = (props: ClientListControllerProps) => {
     const [clientList, setClientList] = useState<ClientTest[]>([]);
     const newClientGet = async () => {
         const exampleClient = await fetchClientsFromApi();
-        setClientList(exampleClient)
-
+        setClientList(exampleClient);
     };
     newClientGet();
 
@@ -40,7 +39,7 @@ const ClientList = (props: ClientListControllerProps) => {
                             key={item.id} // you need a unique key per item
                             onPress={() => {
                                 props.navigation.navigate(stackScreenName.CLIENT, {
-                                    clientName: item.full_name,
+                                    clientID: item.id,
                                 });
                             }}
                         >

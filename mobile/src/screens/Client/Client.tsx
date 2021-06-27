@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, TextInput, Checkbox, Menu, Divider } from "react-native-paper";
+import { Client } from "./ClientRequests";
 import clientStyle from "./clientStyles";
 import { Text, View } from "react-native";
 import { Item } from "react-native-paper/lib/typescript/components/List/List";
+import { fetchClientDetailsFromApi } from "./ClientRequests";
 
 interface clientProps {
-    clientName: String;
+    clientID: number;
 }
 const styles = clientStyle();
 
 const IndividualClientView = (props: clientProps) => {
+    const [presentClient, setPresentClient] = useState<Client>();
+    const getClientDetails = async () => {
+        const presentClient = await fetchClientDetailsFromApi(props.clientID);
+        setPresentClient(presentClient);
+    };
+    getClientDetails();
     const [showDisabilityMenu, setShowDiosabilityMenu] = useState(false);
     const [disability, setdisability] = useState("Amputee"); //Set to amputee for now but get from database
     const disabilityList = [
@@ -39,7 +47,7 @@ const IndividualClientView = (props: clientProps) => {
         setEditMode(true);
         setCancelButtonType("outlined");
     };
-
+    console.log(props.clientID);
     return (
         <ScrollView style={styles.scrollViewStyles}>
             <Card style={styles.clientCardContainerStyles}>
@@ -62,49 +70,49 @@ const IndividualClientView = (props: clientProps) => {
                 <TextInput
                     style={styles.clientTextStyle}
                     label="First Name: "
-                    value={props.clientName}
+                    value={presentClient?.first_name}
                     disabled={editMode}
                     editable={true}
                 />
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Last Name: "
-                    value={props.clientName}
+                    value={presentClient?.last_name}
                     disabled={editMode}
                     editable={true}
                 />
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Birthdate "
-                    value={props.clientName}
+                    value="TODO"
                     disabled={editMode}
                     editable={true}
                 />
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Village # "
-                    value={props.clientName}
+                    value={presentClient?.village}
                     disabled={editMode}
                     editable={true}
                 />
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Zone "
-                    value={props.clientName}
+                    value="TODO"
                     disabled={editMode}
                     editable={true}
                 />
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Phone Number "
-                    value={props.clientName}
+                    value={presentClient?.phoneNumber}
                     disabled={editMode}
                     editable={true}
                 />
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Disability "
-                    value={props.clientName}
+                    value="TODO"
                     disabled={editMode}
                     editable={true}
                 />

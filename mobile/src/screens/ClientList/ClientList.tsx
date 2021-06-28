@@ -8,7 +8,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { stackParamList, stackScreenName } from "../../util/screens";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
-
 interface ClientListControllerProps {
     navigation: StackNavigationProp<stackParamList, stackScreenName.HOME>;
 }

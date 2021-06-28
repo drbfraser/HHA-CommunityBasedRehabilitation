@@ -6,10 +6,16 @@ import clientStyle from "./clientStyles";
 import { Text, View } from "react-native";
 import { Item } from "react-native-paper/lib/typescript/components/List/List";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
+import { timestampToDate } from "../../../node_modules/@cbr/common";
+import {
+    getDisabilities,
+    TDisabilityMap,
+} from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
 
 interface clientProps {
     clientID: number;
 }
+
 const styles = clientStyle();
 
 const IndividualClientView = (props: clientProps) => {
@@ -26,6 +32,24 @@ const IndividualClientView = (props: clientProps) => {
         { label: "Polio", value: "Polio" },
         { label: "Other", value: "Other" },
     ];
+    //const [disabilityList, setDissabilityList] = useState<TDisabilityMap>();
+    // const getDisabilityList = async () => {
+    //     const tempDisabilityList = await getDisabilities();
+    //     setDissabilityList(tempDisabilityList);
+    // };
+    const [clientDisability, setDisability] = useState<String>("N/A");
+    // getDisabilityList();
+    // console.log(disabilityList);
+    // const assignDisability = () => {
+    //     disabilityList.forEach((value: string, key: number) => {
+    //         if (key === presentClient?.disabilities.indexOf(0)) {
+    //              setDisability(value);
+    //          }
+    //         console.log(key, value);
+    //     });
+    // };
+    // assignDisability();
+
     const [visible, setVisible] = React.useState(false);
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
@@ -84,7 +108,7 @@ const IndividualClientView = (props: clientProps) => {
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Birthdate "
-                    value="TODO"
+                    value={String(timestampToDate(Number(presentClient?.birthdate)))}
                     disabled={editMode}
                     editable={true}
                 />
@@ -98,7 +122,7 @@ const IndividualClientView = (props: clientProps) => {
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Zone "
-                    value="TODO"
+                    value={String(presentClient?.zone)}
                     disabled={editMode}
                     editable={true}
                 />

@@ -2,7 +2,7 @@ import { IReferral } from "@cbr/common";
 import { IRisk, riskLevels } from "./risks";
 import { ISurvey } from "@cbr/common";
 import { IVisitSummary } from "./visits";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
 export interface IClientSummary {
     id: number;

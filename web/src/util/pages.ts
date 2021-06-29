@@ -22,8 +22,8 @@ import Dashboard from "pages/Dashboard/Dashboard";
 import NewVisit from "pages/NewVisit/NewVisit";
 import NewReferral from "pages/NewReferral/NewReferral";
 import Stats from "pages/Stats/Stats";
-import { IUser, UserRole } from "./users";
-import { APILoadError, TAPILoadError } from "./endpoints";
+import { IUser, UserRole } from "@cbr/common/util/users";
+import { APILoadError, TAPILoadError } from "@cbr/common/util/endpoints";
 import UserChangePassword from "pages/User/UserPasswordEdit";
 import NewSurvey from "pages/BaseSurvey/BaseSurvey";
 

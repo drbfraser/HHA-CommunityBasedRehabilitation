@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { useCurrentUser } from "util/hooks/currentUser";
+import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { pagesForUser } from "../../util/pages";
 import { useStyles } from "./SideNav.styles";
 import SideNavIcon from "./SideNavIcon";

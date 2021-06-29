@@ -14,15 +14,15 @@ import {
 } from "@material-ui/core";
 import { Skeleton, Alert } from "@material-ui/lab";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { timestampToDateTime } from "util/dates";
+import { timestampToDateTime } from "@cbr/common/util/dates";
 import { IVisit, IVisitSummary, outcomeGoalMets } from "util/visits";
 import { useStyles } from "./Entry.styles";
 import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
-import { apiFetch, Endpoint } from "util/endpoints";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { RiskType, riskTypes } from "util/risks";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
-import { useZones } from "util/hooks/zones";
+import { useZones } from "@cbr/common/util/hooks/zones";
 import DataCard from "components/DataCard/DataCard";
 
 interface IEntryProps {

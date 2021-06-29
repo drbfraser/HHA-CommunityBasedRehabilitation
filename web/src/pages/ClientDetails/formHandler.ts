@@ -1,9 +1,9 @@
 import { FormikHelpers } from "formik";
-import { Endpoint, apiFetch, objectToFormData } from "../../util/endpoints";
+import { Endpoint, apiFetch, objectToFormData } from "@cbr/common/util/endpoints";
 import { IClient } from "util/clients";
-import { timestampFromFormDate } from "util/dates";
-import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
-import { getRandomStr } from "util/misc";
+import { timestampFromFormDate } from "@cbr/common/util/dates";
+import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
+import { getRandomStr } from "@cbr/common/util/misc";
 
 const updateClient = async (clientInfo: FormData, clientId: number) => {
     const init: RequestInit = {

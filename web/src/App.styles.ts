@@ -1,5 +1,6 @@
+import { themeColors } from "@cbr/common/util/colors";
 import { makeStyles } from "@material-ui/core/styles";
-import { mediaMobile, themeColors } from "theme.styles";
+import { mediaMobile } from "theme.styles";
 
 export const useStyles = makeStyles(
     {

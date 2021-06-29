@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 import { Grid, Typography, Button } from "@material-ui/core";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 
-import { apiFetch, Endpoint } from "../../util/endpoints";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 
 import ClientInfoForm from "./ClientInfoForm";
 import { IClient } from "util/clients";
@@ -12,7 +12,7 @@ import ClientRisks from "./Risks/ClientRisks";
 import { IRisk } from "util/risks";
 import { useHistory } from "react-router-dom";
 import ClientTimeline from "./ClientTimeline/ClientTimeline";
-import { timestampToFormDate } from "util/dates";
+import { timestampToFormDate } from "@cbr/common/util/dates";
 import { Alert, Skeleton } from "@material-ui/lab";
 interface IUrlParam {
     clientId: string;

@@ -22,9 +22,8 @@
     "baseUrl": "src"
   },
   "include": [
-    "src"
+    "src",
+    "../common/src"
   ],
-  "dependencies": {
-    "@common": "./../common"
-  }
+  "extends": "./tsconfig.base.json"
 }

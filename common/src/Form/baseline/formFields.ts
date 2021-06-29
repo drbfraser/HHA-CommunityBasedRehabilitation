@@ -1,6 +1,5 @@
 import { FormikProps } from "formik";
 import * as Yup from "yup";
-
 export interface IFormProps {
     formikProps: FormikProps<any>;
 }
@@ -180,9 +179,14 @@ export const healthValidationSchema = () =>
 export const educationValidationSchema = () =>
     Yup.object().shape({
         go_school: Yup.boolean(),
-
         [FormField.grade]: Yup.string()
-            .label(fieldLabels[FormField.goSchool])
+            .label(fieldLabels[FormField.reasonNotSchool])
+            .when("go_school", {
+                is: false,
+                then: Yup.string().label(fieldLabels[FormField.reasonNotSchool]).required(),
+            }),
+        [FormField.grade]: Yup.string()
+            .label(fieldLabels[FormField.grade])
             .when("go_school", {
                 is: true,
                 then: Yup.string().label(fieldLabels[FormField.grade]).required(),
@@ -229,7 +233,6 @@ export const empowermentValidationSchema = () =>
                 is: true,
                 then: Yup.string().label(fieldLabels[FormField.organization]).max(50).required(),
             }),
-        // [FormField.organization]: Yup.string().label(fieldLabels[FormField.organization]).max(50),
     });
 
 export const surveyTypes: FormField[] = [

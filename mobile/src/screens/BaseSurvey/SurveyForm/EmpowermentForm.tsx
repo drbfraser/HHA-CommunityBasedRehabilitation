@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
-import { fieldLabels, FormField, IFormProps } from "../formFields";
+import { fieldLabels, FormField, IFormProps } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox";
 
@@ -21,14 +21,14 @@ const EmpowermentForm = (props: IFormProps) => {
                         mode="outlined"
                         label={FormField.organization}
                         onChangeText={(value) => {
-                            // props.formikProps.setFieldTouched(FormField.organization, true);
+                            props.formikProps.setFieldTouched(FormField.organization, true);
                             props.formikProps.setFieldValue(FormField.organization, value);
                         }}
                     />
                     <HelperText
                         style={styles.errorText}
                         type="error"
-                        visible={props.formikProps.values[FormField.organization] === ""}
+                        visible={!!props.formikProps.errors[FormField.organization]}
                     >
                         {props.formikProps.errors[FormField.organization]}
                     </HelperText>

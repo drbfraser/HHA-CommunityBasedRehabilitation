@@ -1,7 +1,7 @@
 import React from "react";
-import { fieldLabels, FormField, IFormProps } from "../formFields";
 import TextCheckBox from "../../../components/TextCheckBox";
 import { View } from "react-native";
+import { fieldLabels, FormField, IFormProps } from "@cbr/common";
 
 const SocialForm = (props: IFormProps) => {
     return (
@@ -12,18 +12,14 @@ const SocialForm = (props: IFormProps) => {
                 label={fieldLabels[FormField.feelValue]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
-            <View
-                style={{
-                    paddingRight: 130,
-                }}
-            >
-                <TextCheckBox
-                    field={FormField.feelIndependent}
-                    value={props.formikProps.values[FormField.feelIndependent]}
-                    label={fieldLabels[FormField.feelIndependent]}
-                    setFieldValue={props.formikProps.setFieldValue}
-                />
-            </View>
+
+            <TextCheckBox
+                field={FormField.feelIndependent}
+                value={props.formikProps.values[FormField.feelIndependent]}
+                label={fieldLabels[FormField.feelIndependent]}
+                setFieldValue={props.formikProps.setFieldValue}
+            />
+
             <TextCheckBox
                 field={FormField.ableInSocial}
                 value={props.formikProps.values[FormField.ableInSocial]}

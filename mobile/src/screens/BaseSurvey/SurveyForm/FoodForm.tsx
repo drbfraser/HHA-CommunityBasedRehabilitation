@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { View } from "react-native";
 import { Text, Button, Dialog, Portal, Paragraph, HelperText } from "react-native-paper";
-import { fieldLabels, FormField, IFormProps } from "../formFields";
-import { childNourish, rateLevel } from "@cbr/common";
+import { fieldLabels, FormField, IFormProps, childNourish, rateLevel } from "@cbr/common";
 import { Picker } from "@react-native-community/picker";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox";
+import DicTextPicker from "../../../components/DicTextPicker";
+import TextPicker from "../../../components/TextPicker";
 
 const FoodForm = (props: IFormProps) => {
     const [alertInfo, setAlertError] = useState(false);
@@ -15,65 +16,40 @@ const FoodForm = (props: IFormProps) => {
 
     return (
         <View>
-            <View
-                style={{
-                    paddingRight: 50,
-                }}
-            >
-                <Text style={styles.pickerQuestion}>Food security</Text>
-                <Picker
-                    selectedValue={props.formikProps.values[FormField.foodSecurityRate]}
-                    style={styles.picker}
-                    onValueChange={(itemValue) => {
-                        props.formikProps.setFieldTouched(FormField.foodSecurityRate, true);
-                        props.formikProps.setFieldValue(FormField.foodSecurityRate, itemValue);
-                    }}
-                >
-                    <Picker.Item key={"unselectable"} label={""} value={""} />
-                    {Object.entries(rateLevel).map(([value, { name }]) => (
-                        <Picker.Item label={name} value={value} key={value} />
-                    ))}
-                </Picker>
+            <Text style={styles.pickerQuestion}>Food security</Text>
+            <TextPicker
+                field={FormField.foodSecurityRate}
+                choices={rateLevel}
+                values={props.formikProps.values[FormField.foodSecurityRate]}
+                setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
+            />
 
-                <HelperText
-                    style={styles.errorText}
-                    type="error"
-                    visible={
-                        props.formikProps.values[FormField.foodSecurityRate] === "" ||
-                        props.formikProps.touched[FormField.foodSecurityRate] !== true
-                    }
-                >
-                    {props.formikProps.errors[FormField.foodSecurityRate]}
-                </HelperText>
-                <TextCheckBox
-                    field={FormField.enoughFoodPerMonth}
-                    value={props.formikProps.values[FormField.enoughFoodPerMonth]}
-                    label={fieldLabels[FormField.enoughFoodPerMonth]}
-                    setFieldValue={props.formikProps.setFieldValue}
-                />
-            </View>
-
-            <View
-                style={{
-                    paddingRight: 100,
-                }}
+            <HelperText
+                style={styles.errorText}
+                type="error"
+                visible={!!props.formikProps.errors[FormField.foodSecurityRate]}
             >
-                <TextCheckBox
-                    field={FormField.isChild}
-                    value={props.formikProps.values[FormField.isChild]}
-                    label={fieldLabels[FormField.isChild]}
-                    setFieldValue={props.formikProps.setFieldValue}
-                />
-            </View>
+                {props.formikProps.errors[FormField.foodSecurityRate]}
+            </HelperText>
+            <TextCheckBox
+                field={FormField.enoughFoodPerMonth}
+                value={props.formikProps.values[FormField.enoughFoodPerMonth]}
+                label={fieldLabels[FormField.enoughFoodPerMonth]}
+                setFieldValue={props.formikProps.setFieldValue}
+            />
+            <TextCheckBox
+                field={FormField.isChild}
+                value={props.formikProps.values[FormField.isChild]}
+                label={fieldLabels[FormField.isChild]}
+                setFieldValue={props.formikProps.setFieldValue}
+            />
             {props.formikProps.values[FormField.isChild] && (
-                <View
-                    style={{
-                        paddingLeft: 30,
-                    }}
-                >
+                <View>
                     <Text style={styles.pickerQuestion}>
                         What is this child nutritional status?
                     </Text>
+
                     <Picker
                         selectedValue={props.formikProps.values[FormField.childNourish]}
                         style={styles.picker}
@@ -92,7 +68,7 @@ const FoodForm = (props: IFormProps) => {
                     <HelperText
                         style={styles.errorText}
                         type="error"
-                        visible={props.formikProps.values[FormField.childNourish] === ""}
+                        visible={!!props.formikProps.errors[FormField.childNourish]}
                     >
                         {props.formikProps.errors[FormField.childNourish]}
                     </HelperText>

@@ -1,6 +1,6 @@
 import { FormikHelpers } from "formik";
+import { apiFetch, Endpoint } from "../../util/endpoints";
 import { FormField, TFormValues } from "./formFields";
-import { apiFetch, Endpoint } from "@cbr/common";
 
 const addSurvey = async (surveyInfo: string) => {
     const init: RequestInit = {

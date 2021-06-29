@@ -11,10 +11,10 @@ import {
     IFormProps,
     initialValues,
     livelihoodValidationSchema,
+    handleSubmit,
     surveyTypes,
-} from "./formFields";
+} from "@cbr/common";
 import { Formik, FormikHelpers } from "formik";
-import { handleSubmit } from "./formHandler";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { themeColors } from "@cbr/common";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./baseSurvey.style";
@@ -121,9 +121,7 @@ const BaseSurvey = () => {
                                     previousBtnStyle={styles.prevButton}
                                     onSubmit={() => nextStep(formikProps.values, formikProps)}
                                 >
-                                    <Text style={{ fontSize: 25, fontWeight: "bold" }}>
-                                        {surveyStep.label}
-                                    </Text>
+                                    <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
                                     <Divider style={{ backgroundColor: themeColors.blueBgDark }} />
                                     <ScrollView>
                                         <surveyStep.Form formikProps={formikProps} />

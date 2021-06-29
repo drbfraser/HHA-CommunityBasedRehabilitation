@@ -18,7 +18,7 @@ const TextCheckBox = (props: IProps) => {
                 <View pointerEvents="none">
                     <Checkbox status={props.value ? "checked" : "unchecked"} />
                 </View>
-                <Paragraph>{props.label}</Paragraph>
+                <Paragraph style={{ flexGrow: 1 }}>{props.label}</Paragraph>
             </View>
         </TouchableRipple>
     );

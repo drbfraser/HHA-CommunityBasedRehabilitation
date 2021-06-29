@@ -13,13 +13,13 @@ const useStyles = () =>
         nextButton: {
             position: "absolute",
             right: -50,
-            bottom: 0,
+            bottom: -10,
             padding: -1,
         },
         prevButton: {
             position: "absolute",
             left: -50,
-            bottom: 0,
+            bottom: -10,
             padding: -1,
         },
         buttonTextStyle: {
@@ -33,10 +33,12 @@ const useStyles = () =>
             justifyContent: "space-between",
             paddingVertical: 10,
             paddingRight: 50,
+            // backgroundColor: "blue",
         },
         alertText: {
             color: themeColors.hhaBlue,
         },
+        stepLabelText: { fontSize: 25, fontWeight: "bold" },
         centerElement: { justifyContent: "center", alignItems: "center" },
         picker: { height: 40, width: 250 },
         pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },

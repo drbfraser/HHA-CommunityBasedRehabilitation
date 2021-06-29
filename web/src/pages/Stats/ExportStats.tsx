@@ -1,10 +1,10 @@
 import { Button, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import React, { useMemo } from "react";
-import { IStats } from "util/stats";
+import { IStats } from "@cbr/common/util/stats";
 import { CSVLink } from "react-csv";
-import { useZones } from "util/hooks/zones";
-import { useDisabilities } from "util/hooks/disabilities";
+import { useZones } from "@cbr/common/util/hooks/zones";
+import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
 
 interface IProps {
     open: boolean;

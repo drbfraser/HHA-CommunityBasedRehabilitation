@@ -1,6 +1,6 @@
 import { LinearProgress } from "@material-ui/core";
 import React, { useEffect } from "react";
-import { doLogout } from "util/auth";
+import { doLogout } from "@cbr/common/util/auth";
 
 const Logout = () => {
     useEffect(() => {

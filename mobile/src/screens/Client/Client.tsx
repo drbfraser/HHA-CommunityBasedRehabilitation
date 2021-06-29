@@ -11,6 +11,7 @@ import {
     getDisabilities,
     TDisabilityMap,
 } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
+import { riskTypes } from "../../util/riskIcon";
 
 interface clientProps {
     clientID: number;
@@ -201,14 +202,82 @@ const IndividualClientView = (props: clientProps) => {
                 </View>
             </Card>
             <Divider></Divider>
-            <Card style={styles.clientDetailsContainerStyles}>
-                <Text>Health</Text>
+            <Card style={styles.riskCardStyle}>
+                <View style={styles.riskCardContentStyle}>
+                    <Text style={styles.riskTitleStyle}>Health - </Text>
+                    {/* <View style={styles.riskIconStyle}>{riskTypes.HEALTH.Icon("CRITICAL")}</View> */}
+                    <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
+                </View>
+                <View>
+                    <Text style={styles.riskHeader2Style}>Requirements: </Text>
+                    <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
+                </View>
+                <View>
+                    <Text style={styles.riskHeader2Style}>Goals: </Text>
+                    <Text style={styles.riskRequirementStyle}>Goals go here</Text>
+                </View>
+                <View style={styles.clientDetailsFinalView}>
+                    <Button
+                        mode="contained"
+                        style={styles.clientDetailsFinalButtons}
+                        disabled={false}
+                        onPress={enableButtons}
+                    >
+                        {editMode ? "Edit" : "Save"}
+                    </Button>
+                </View>
             </Card>
-            <Card style={styles.clientDetailsContainerStyles}>
-                <Text>Education</Text>
+
+            <Card style={styles.riskCardStyle}>
+                <View style={styles.riskCardContentStyle}>
+                    <Text style={styles.riskTitleStyle}>Education - </Text>
+                    {/* <View style={styles.riskIconStyle}>{riskTypes.HEALTH.Icon("CRITICAL")}</View> */}
+                    <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
+                </View>
+                <View>
+                    <Text style={styles.riskHeader2Style}>Requirements: </Text>
+                    <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
+                </View>
+                <View>
+                    <Text style={styles.riskHeader2Style}>Goals: </Text>
+                    <Text style={styles.riskRequirementStyle}>Goals go here</Text>
+                </View>
+                <View style={styles.clientDetailsFinalView}>
+                    <Button
+                        mode="contained"
+                        style={styles.clientDetailsFinalButtons}
+                        disabled={false}
+                        onPress={enableButtons}
+                    >
+                        {editMode ? "Edit" : "Save"}
+                    </Button>
+                </View>
             </Card>
-            <Card style={styles.clientDetailsContainerStyles}>
-                <Text>Social</Text>
+
+            <Card style={styles.riskCardStyle}>
+                <View style={styles.riskCardContentStyle}>
+                    <Text style={styles.riskTitleStyle}>Social - </Text>
+                    {/* <View style={styles.riskIconStyle}>{riskTypes.HEALTH.Icon("CRITICAL")}</View> */}
+                    <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
+                </View>
+                <View>
+                    <Text style={styles.riskHeader2Style}>Requirements: </Text>
+                    <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
+                </View>
+                <View>
+                    <Text style={styles.riskHeader2Style}>Goals: </Text>
+                    <Text style={styles.riskRequirementStyle}>Goals go here</Text>
+                </View>
+                <View style={styles.clientDetailsFinalView}>
+                    <Button
+                        mode="contained"
+                        style={styles.clientDetailsFinalButtons}
+                        disabled={false}
+                        onPress={enableButtons}
+                    >
+                        {editMode ? "Edit" : "Save"}
+                    </Button>
+                </View>
             </Card>
         </ScrollView>
     );

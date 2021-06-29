@@ -1,7 +1,7 @@
 import { RowsProp } from "@material-ui/data-grid";
-import { getZones } from "util/hooks/zones";
-import { apiFetch, Endpoint } from "util/endpoints";
-import { UserRole, userRoles } from "util/users";
+import { getZones } from "@cbr/common/util/hooks/zones";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { UserRole, userRoles } from "@cbr/common/util/users";
 
 interface IResponseRow {
     id: number;

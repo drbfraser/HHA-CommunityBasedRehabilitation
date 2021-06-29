@@ -1,8 +1,8 @@
 import { FormikHelpers } from "formik";
-import { apiFetch, Endpoint } from "util/endpoints";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { FormField, TFormValues } from "./formFields";
 import history from "../../util/history";
-import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
+import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
 
 const addReferral = async (referralInfo: string) => {
     const init: RequestInit = {

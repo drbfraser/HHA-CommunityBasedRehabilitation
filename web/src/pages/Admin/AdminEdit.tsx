@@ -10,9 +10,9 @@ import { FormControl, MenuItem } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import { handleCancel, handleEditSubmit } from "./handler";
 import { Alert, Skeleton } from "@material-ui/lab";
-import { apiFetch, Endpoint } from "util/endpoints";
-import { IUser, userRoles } from "util/users";
-import { useZones } from "util/hooks/zones";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { IUser, userRoles } from "@cbr/common/util/users";
+import { useZones } from "@cbr/common/util/hooks/zones";
 
 const AdminEdit = () => {
     const styles = useStyles();

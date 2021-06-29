@@ -1,10 +1,10 @@
 import { FormikHelpers } from "formik";
 import { TFormValues } from "./formFields";
-import { Endpoint, apiFetch, objectToFormData } from "../../util/endpoints";
+import { Endpoint, apiFetch, objectToFormData } from "@cbr/common//util/endpoints";
 import history from "../../util/history";
-import { timestampFromFormDate } from "util/dates";
-import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
-import { getRandomStr } from "util/misc";
+import { timestampFromFormDate } from "@cbr/common/util/dates";
+import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
+import { getRandomStr } from "@cbr/common/util/misc";
 
 const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {

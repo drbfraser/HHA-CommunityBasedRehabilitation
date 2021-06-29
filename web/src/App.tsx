@@ -6,8 +6,8 @@ import Login from "pages/Login/Login";
 import Typography from "@material-ui/core/Typography";
 import { useStyles } from "App.styles";
 import history from "util/history";
-import { useCurrentUser } from "util/hooks/currentUser";
 import { useIsLoggedIn } from "./util/hooks/loginState";
+import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();

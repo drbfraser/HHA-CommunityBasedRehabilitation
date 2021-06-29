@@ -13,9 +13,9 @@ import {
     Pie,
     Cell,
 } from "recharts";
-import { themeColors } from "theme.styles";
-import { useZones } from "util/hooks/zones";
-import { IStats, IStatsVisit } from "util/stats";
+import { useZones } from "@cbr/common/util/hooks/zones";
+import { IStats, IStatsVisit } from "@cbr/common/util/stats";
+import { themeColors } from "@cbr/common/util/colors";
 
 interface IProps {
     stats?: IStats;

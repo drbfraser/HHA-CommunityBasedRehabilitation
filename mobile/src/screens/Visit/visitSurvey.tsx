@@ -5,8 +5,10 @@ import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { Picker } from "@react-native-community/picker";
 import { useParams } from "react-router";
-import { themeColors } from "@cbr/common";
+import { getZones, themeColors } from "@cbr/common";
 import { useHistory } from "react-router-dom";
+import { MaterialIcons } from "@expo/vector-icons";
+
 import {
     fieldLabels,
     FormField,
@@ -40,7 +42,47 @@ const visitFocusForm = (props: IFormProps) => {
 
     return (
         <View>
-            <Text style={styles.pickerQuestion}>{"\n"}Visit Focus </Text>
+            <Formik initialValues={{ village: "" }} onSubmit={(values) => console.log(values)}>
+                <View style={styles.viewPadding}>
+                    <Text style={styles.pickerQuestion}>{"\n"}Where was the Visit? </Text>
+                    <TextInput
+                        style={styles.inputText}
+                        placeholder="Village *"
+                        value={props.formikProps.values.village}
+                        onChangeText={props.formikProps.handleChange("village")}
+                    />
+                    {/* <Picker
+                selectedValue={props.formikProps.values[FormField.zone]}
+                style={styles.picker}
+                onValueChange={(itemValue) => {
+                    props.formikProps.setFieldTouched(FormField.zone, true);
+                    props.formikProps.setFieldValue(FormField.zone, itemValue);
+                }}
+            >
+                <Picker.Item key={"unselectable"} label={""} value={""} />
+                {Object.entries(getZones).map(([value, { name }]) => (
+                    <Picker.Item label={name} value={value} key={name} />
+                ))}
+            </Picker> */}
+                </View>
+            </Formik>
+
+            {/* <Field id="firstName" name="firstName" placeholder="John" /> */}
+            {/* <Field
+                className={styles.pickerQuestion}
+                component={Field}
+                name={FormField.village}
+                label={fieldLabels[FormField.village]}
+                variant="outlined"
+                fullWidth
+                required
+            /> */}
+            <Checkbox
+                status={checked ? "checked" : "unchecked"}
+                onPress={() => {
+                    setChecked(!checked);
+                }}
+            />
         </View>
     );
 };
@@ -69,13 +111,13 @@ const educationVisitForm = (props: IFormProps) => {
     );
 };
 
-const surveySteps: ISurvey[] = [
-    {
-        label: "Visit Focus",
-        Form: (formikProps) => visitFocusForm(formikProps),
-        validationSchema: initialValidationSchema,
-    },
-];
+// const surveySteps: ISurvey[] = [
+//     {
+//         label: "Visit Focus",
+//         Form: (formikProps) => visitFocusForm(formikProps),
+//         validationSchema: initialValidationSchema,
+//     },
+// ];
 
 const NewVisit = () => {
     const [step, setStep] = useState<number>(0);
@@ -92,18 +134,18 @@ const NewVisit = () => {
 
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 
-    // const surveySteps: ISurvey[] = [
-    //     {
-    //         label: "Visit Focus",
-    //         Form: (formikProps) => visitFocusForm(formikProps),
-    //         validationSchema: initialValidationSchema,
-    //     },
-    //     {
-    //         label: "Health Visit",
-    //         Form: (formikProps) => healthVisitForm(formikProps),
-    //         validationSchema: initialValidationSchema,
-    //     },
-    // ];
+    const surveySteps: ISurvey[] = [
+        {
+            label: "Visit Focus",
+            Form: (formikProps) => visitFocusForm(formikProps),
+            validationSchema: initialValidationSchema,
+        },
+        {
+            label: "Health Visit",
+            Form: (formikProps) => healthVisitForm(formikProps),
+            validationSchema: initialValidationSchema,
+        },
+    ];
 
     const prevStep = () => setStep(step - 1);
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
@@ -127,94 +169,88 @@ const NewVisit = () => {
             enableReinitialize
         >
             {(formikProps) => (
-                <SafeAreaView style={styles.container}>
-                    <ProgressSteps key={activeStep} {...progressStepsStyle}>
-                        {/* <ProgressStep label="Payment" scrollViewProps={defaultScrollViewProps}>
-                            <View style={{ alignItems: "center" }}>
-                                <Text>Payment step content</Text>
-                            </View>
-                        </ProgressStep> */}
-                        {surveySteps.slice(0, activeStep).map((surveyStep, index) => {
-                            {
-                                /* {surveySteps
-                            .filter((steps) => steps.label.toLocaleLowerCase().includes("m"))
-                            .map((surveyStep, index) => { */
-                            }
-                            console.log(surveySteps);
+                <>
+                    <Appbar.Header statusBarHeight={25}>
+                        <MaterialIcons name="arrow-back" size={25} color="#FFFFFF" />
+                        <Appbar.Content title={"New Visit Survey"} />
+                    </Appbar.Header>
 
-                            return (
-                                <ProgressStep
-                                    key={index}
-                                    scrollViewProps={defaultScrollViewProps}
-                                    previousBtnTextStyle={styles.buttonTextStyle}
-                                    nextBtnTextStyle={styles.buttonTextStyle}
-                                    nextBtnStyle={styles.nextButton}
-                                    previousBtnStyle={styles.prevButton}
-                                >
-                                    <Text style={{ fontSize: 25, fontWeight: "bold" }}>
-                                        {surveyStep.label}
-                                    </Text>
-                                    <Divider style={{ backgroundColor: themeColors.blueBgDark }} />
-                                    <ScrollView>
-                                        <surveyStep.Form formikProps={formikProps} />
-                                    </ScrollView>
-                                </ProgressStep>
-                            );
-                        })}
-                    </ProgressSteps>
-
-                    <Checkbox
-                        status={checked ? "checked" : "unchecked"}
-                        onPress={() => {
-                            setChecked(!checked);
-
-                            if (!checked) {
-                                surveySteps.push({
-                                    label: "Health Visit",
-                                    Form: (formikProps) => healthVisitForm(formikProps),
-                                    validationSchema: initialValidationSchema,
-                                });
-                                setActiveStep(activeStep + 1);
+                    <SafeAreaView style={styles.container}>
+                        <ProgressSteps key={activeStep} {...progressStepsStyle}>
+                            {surveySteps.slice(0, activeStep).map((surveyStep, index) => {
                                 console.log(surveySteps);
-                            } else {
-                                // surveySteps.filter(
-                                //     (steps) =>
-                                //         !steps.label.toLocaleLowerCase().includes("livelihood")
-                                // );
-                                const indexA = surveySteps.findIndex((steps) =>
-                                    steps.label.toLocaleLowerCase().includes("health")
+
+                                return (
+                                    <ProgressStep
+                                        key={index}
+                                        label={surveyStep.label}
+                                        scrollViewProps={defaultScrollViewProps}
+                                        previousBtnTextStyle={styles.buttonTextStyle}
+                                        nextBtnTextStyle={styles.buttonTextStyle}
+                                        nextBtnStyle={styles.nextButton}
+                                        previousBtnStyle={styles.prevButton}
+                                    >
+                                        <ScrollView>
+                                            <surveyStep.Form formikProps={formikProps} />
+                                        </ScrollView>
+                                    </ProgressStep>
                                 );
-                                // console.log(indexA);
-                                surveySteps.splice(indexA, 1);
-                                setActiveStep(activeStep - 1);
-                            }
-                        }}
-                    />
+                            })}
+                        </ProgressSteps>
 
-                    <Checkbox
-                        status={checked2 ? "checked" : "unchecked"}
-                        onPress={() => {
-                            setChecked2(!checked2);
+                        <Checkbox
+                            status={checked ? "checked" : "unchecked"}
+                            onPress={() => {
+                                setChecked(!checked);
 
-                            if (!checked2) {
-                                surveySteps.push({
-                                    label: "Education",
-                                    Form: (formikProps) => educationVisitForm(formikProps),
-                                    validationSchema: initialValidationSchema,
-                                });
-                                setActiveStep(activeStep + 1);
-                            } else {
-                                const indexA = surveySteps.findIndex((steps) =>
-                                    steps.label.toLocaleLowerCase().includes("education")
-                                );
-                                // console.log(indexA);
-                                surveySteps.splice(indexA, 1);
+                                if (!checked) {
+                                    surveySteps.push({
+                                        label: "Health Visit",
+                                        Form: (formikProps) => healthVisitForm(formikProps),
+                                        validationSchema: initialValidationSchema,
+                                    });
+                                    setActiveStep(activeStep + 1);
+                                    console.log(surveySteps);
+                                } else {
+                                    // surveySteps.filter(
+                                    //     (steps) =>
+                                    //         !steps.label.toLocaleLowerCase().includes("livelihood")
+                                    // );
+                                    const indexA = surveySteps.findIndex((steps) =>
+                                        steps.label.toLocaleLowerCase().includes("health")
+                                    );
+                                    // console.log(indexA);
+                                    surveySteps.splice(indexA, 1);
+                                    setActiveStep(activeStep - 1);
+                                }
+                            }}
+                        />
 
-                                setActiveStep(activeStep - 1);
-                            }
-                        }}
-                    />
-                </SafeAreaView>
+                        <Checkbox
+                            status={checked2 ? "checked" : "unchecked"}
+                            onPress={() => {
+                                setChecked2(!checked2);
+
+                                if (!checked2) {
+                                    surveySteps.push({
+                                        label: "Education",
+                                        Form: (formikProps) => educationVisitForm(formikProps),
+                                        validationSchema: initialValidationSchema,
+                                    });
+                                    setActiveStep(activeStep + 1);
+                                } else {
+                                    const indexA = surveySteps.findIndex((steps) =>
+                                        steps.label.toLocaleLowerCase().includes("education")
+                                    );
+                                    // console.log(indexA);
+                                    surveySteps.splice(indexA, 1);
+
+                                    setActiveStep(activeStep - 1);
+                                }
+                            }}
+                        />
+                    </SafeAreaView>
+                </>
             )}
         </Formik>
     );

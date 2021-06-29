@@ -33,17 +33,19 @@ module.exports = () => {
     // TODO: When we add a script to build a production version of the app, ensure that the
     //  command is prefixed like `APP_ENV=prod expo build:android`. We're not doing this yet
     //  until we settle on what to do for app distribution.
+    const appEnv = process.env.APP_ENV;
+    const prodApiUrl = "https://cbrp.cradleplatform.com/api/";
     const stagingApiUrl = "https://cbrs.cradleplatform.com/api/";
 
-    if (process.env.APP_ENV === "prod") {
+    if (appEnv === "prod") {
         return {
             ...commonAppConfig,
             name: "CBR",
             extra: {
-                apiUrl: "https://cbrp.cradleplatform.com/api/",
+                apiUrl: prodApiUrl,
             },
         };
-    } else if (process.env.APP_ENV === "staging") {
+    } else if (appEnv === "staging") {
         return {
             ...commonAppConfig,
             name: "CBR (Staging)",

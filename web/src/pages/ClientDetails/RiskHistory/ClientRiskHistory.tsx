@@ -6,7 +6,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { IClient } from "util/clients";
-import { apiFetch, Endpoint } from "util/endpoints";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import RiskHistoryCharts from "./RiskHistoryCharts";
 import RiskHistoryTimeline from "./RiskHistoryTimeline";
 

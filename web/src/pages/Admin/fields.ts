@@ -1,6 +1,6 @@
 import * as Yup from "yup";
-import { Validation } from "util/validations";
-import { UserRole } from "util/users";
+import { Validation } from "@cbr/common/util/validations";
+import { UserRole } from "@cbr/common/util/users";
 
 export interface IRouteParams {
     userId: string;

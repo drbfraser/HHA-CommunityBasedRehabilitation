@@ -1,8 +1,8 @@
 import { FormikHelpers } from "formik";
-import { apiFetch, Endpoint } from "util/endpoints";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { TNewUserValues, TPasswordValues } from "./fields";
 import history from "util/history";
-import { IUser } from "util/users";
+import { IUser } from "@cbr/common/util/users";
 
 const addUser = async (userInfo: string) => {
     const init: RequestInit = {

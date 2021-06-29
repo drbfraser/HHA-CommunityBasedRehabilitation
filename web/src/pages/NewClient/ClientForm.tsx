@@ -14,8 +14,8 @@ import { fieldLabels, FormField, initialValues, validationSchema } from "./formF
 import { riskLevels } from "util/risks";
 import { handleSubmit, handleReset } from "./formHandler";
 import { genders } from "util/clients";
-import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
-import { useZones } from "util/hooks/zones";
+import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
+import { useZones } from "@cbr/common/util/hooks/zones";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 
 const ClientForm = () => {

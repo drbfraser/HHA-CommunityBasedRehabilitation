@@ -15,8 +15,8 @@ import { useRouteMatch } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { handleCancel, handleUpdatePassword } from "./handler";
 import { Alert, Skeleton } from "@material-ui/lab";
-import { apiFetch, Endpoint } from "util/endpoints";
-import { IUser } from "util/users";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { IUser } from "@cbr/common/util/users";
 
 const AdminPasswordEdit = () => {
     const styles = useStyles();

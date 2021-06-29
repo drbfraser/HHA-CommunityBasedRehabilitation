@@ -3,7 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { themeMui } from "theme.styles";
 import App from "./App";
-import { initializeCommon, KeyValStorageProvider } from "./util/init";
+import { initializeCommon, KeyValStorageProvider } from "@cbr/common/init";
 import { loginState } from "./util/hooks/loginState";
 
 const API_URL =

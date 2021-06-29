@@ -62,7 +62,9 @@ build web:
     - if: '$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH'
       when: always
   before_script:
-    - cd web
+    - cd common
+    - npm ci
+    - cd ../web
     - npm ci
   script:
     - npx prettier --check .

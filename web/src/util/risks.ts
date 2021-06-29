@@ -3,7 +3,7 @@
 import { SvgIconTypeMap } from "@material-ui/core";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { LocalHospital, RecordVoiceOver, School } from "@material-ui/icons";
-import { themeColors } from "theme.styles";
+import { themeColors } from "@cbr/common/util/colors";
 
 export interface IRisk {
     id: number;

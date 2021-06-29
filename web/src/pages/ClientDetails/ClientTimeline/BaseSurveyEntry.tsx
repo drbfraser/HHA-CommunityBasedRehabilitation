@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import { Skeleton, Alert } from "@material-ui/lab";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { timestampToDateTime } from "util/dates";
+import { timestampToDateTime } from "@cbr/common/util/dates";
 import { useStyles } from "./Entry.styles";
 import { FormField, fieldLabels } from "pages/BaseSurvey/formFields";
 import TimelineEntry from "../Timeline/TimelineEntry";
@@ -28,7 +28,7 @@ import {
     ISurvey,
     rateLevel,
     reasonNotSchool,
-} from "util/survey";
+} from "@cbr/common/util/survey";
 import DataCard from "components/DataCard/DataCard";
 
 interface IEntryProps {

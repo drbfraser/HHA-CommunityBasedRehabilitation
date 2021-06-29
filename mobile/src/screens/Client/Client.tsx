@@ -13,6 +13,13 @@ import {
 } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
 import { riskTypes } from "../../util/riskIcon";
 
+/*
+    Use client image instead of randomly generated
+    Get disabilities details from making the disability API call and map them (done but haven't implemented correctly)
+    Change the dropdown menu to a picker like in the baseline survey
+    Change risk card edit button to popup instead of text box (or can be either)
+    Create component that displays surveys being done
+*/
 interface clientProps {
     clientID: number;
 }
@@ -33,10 +40,10 @@ const IndividualClientView = (props: clientProps) => {
         { label: "Polio", value: "Polio" },
         { label: "Other", value: "Other" },
     ];
-    //const [disabilityList, setDissabilityList] = useState<TDisabilityMap>();
+    //const [disabilityList, setDisabilityList] = useState<TDisabilityMap>();
     // const getDisabilityList = async () => {
     //     const tempDisabilityList = await getDisabilities();
-    //     setDissabilityList(tempDisabilityList);
+    //     setDisabilityList(tempDisabilityList);
     // };
     const [clientDisability, setDisability] = useState<String>("N/A");
     // getDisabilityList();

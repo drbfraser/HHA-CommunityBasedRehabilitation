@@ -11,6 +11,7 @@ import { SMALL_WIDTH } from "../../util/theme.styles";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { stackParamList, stackScreenName } from "../../util/screens";
 import { Navigation } from "react-native-navigation";
+import { useEffect } from "react";
 
 interface LoginProps {
     navigation: StackNavigationProp<stackParamList, stackScreenName.LOGIN>;
@@ -29,6 +30,15 @@ const Login = (props: LoginProps) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [status, setStatus] = useState(LoginStatus.INITIAL);
+
+    useEffect(() => {
+        const resetLoginPage = props.navigation.addListener("focus", () => {
+            setUsername("");
+            setPassword("");
+            setStatus(LoginStatus.INITIAL);
+        });
+        return resetLoginPage;
+    }, [props.navigation]);
 
     // This is for selecting the next TextInput: https://stackoverflow.com/a/59626713
     // Importing RN's TextInput as NativeTextInput fixes the typing as mentioned in

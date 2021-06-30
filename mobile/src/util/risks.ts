@@ -1,6 +1,6 @@
-import { MaterialIcons  } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
 import { themeColors } from "@cbr/common";
-import { healthIcon, educationIcon, socialIcon } from './riskIcon';
+import { healthIcon, educationIcon, socialIcon } from "./riskIcon";
 export interface IRisk {
     id: number;
     client: number;

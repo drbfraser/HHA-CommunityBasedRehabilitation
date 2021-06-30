@@ -40,4 +40,3 @@ const theme: ReactNativePaper.Theme & NavigationTheme = {
 export const SMALL_WIDTH = 600;
 
 export default theme;
-

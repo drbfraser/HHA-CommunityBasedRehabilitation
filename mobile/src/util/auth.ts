@@ -1,7 +1,7 @@
 import jwt_decode from "jwt-decode";
 import { Endpoint } from "./endpoints";
 
-const API_URL = "http://localhost:8000"
+const API_URL = "http://localhost:8000";
 const ACCESS_TOKEN_KEY = "api_accessToken";
 const REFRESH_TOKEN_KEY = "api_refreshToken";
 

@@ -1,3 +1,10 @@
+# Installs packages in mobile. Must be in the mobile directory.
+.install-mobile: &install-mobile
+  - npm uninstall @cbr/common
+  - COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
+  - npm install $COMMON_PACK_NAME
+  - npm ci
+
 stages:
   - format
   - build
@@ -41,10 +48,7 @@ build mobile:
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd mobile
-    - npm uninstall @cbr/common
-    - npm pack ../common
-    - npm install cbr-common-1.0.0.tgz
-    - npm ci
+    - *install-mobile
   script:
     - npx prettier --check .
     - npx expo export --public-url https://ci-build.local
@@ -59,6 +63,7 @@ build web:
     # build on merge requests if there are changes
     - if: '$CI_MERGE_REQUEST_ID != null'
       changes:
+        - common/**/*
         - web/**/*
       when: always
     # build on deployments
@@ -68,6 +73,8 @@ build web:
     - npm install -g npm@$NPM_VERSION
     - cd common
     - npm ci
+    - cd ../mobile
+    - *install-mobile
     - cd ../web
     - npm ci
   script:

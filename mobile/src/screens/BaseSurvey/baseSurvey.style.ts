@@ -27,14 +27,6 @@ const useStyles = () =>
             fontWeight: "bold",
             fontSize: 14,
         },
-        checkBoxText: {
-            flexDirection: "row",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            paddingVertical: 10,
-            paddingRight: 50,
-            // backgroundColor: "blue",
-        },
         alertText: {
             color: themeColors.hhaBlue,
         },

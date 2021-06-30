@@ -1,8 +1,7 @@
-import { Picker } from "@react-native-community/picker";
-import { ItemValue } from "@react-native-community/picker/typings/Picker";
 import React from "react";
-import useStyles from "../screens/BaseSurvey/baseSurvey.style";
-
+import { Picker as SelectPicker } from "@react-native-picker/picker";
+import useStyles from "./TextPicker.style";
+import { ItemValue } from "@react-native-picker/picker/typings/Picker";
 interface IProps {
     field: string;
     setFieldValue: (field: string, value: ItemValue) => void;
@@ -14,7 +13,7 @@ interface IProps {
 const DicTextPicker = (props: IProps) => {
     const styles = useStyles();
     return (
-        <Picker
+        <SelectPicker
             selectedValue={props.values}
             style={styles.picker}
             onValueChange={(itemValue) => {
@@ -22,11 +21,11 @@ const DicTextPicker = (props: IProps) => {
                 props.setFieldValue(props.field, itemValue);
             }}
         >
-            <Picker.Item key={"unselectable"} label={""} value={""} />
+            <SelectPicker.Item key={"unselectable"} label={""} value={""} />
             {Object.entries(props.choices).map(([value, name]) => (
-                <Picker.Item label={name} value={value} key={name} />
+                <SelectPicker.Item label={name} value={value} key={name} />
             ))}
-        </Picker>
+        </SelectPicker>
     );
 };
 

@@ -3,9 +3,9 @@ import { View } from "react-native";
 import { HelperText, Text } from "react-native-paper";
 import { grade, reasonNotSchool, fieldLabels, FormField, IFormProps } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
-import TextCheckBox from "../../../components/TextCheckBox";
-import TextPicker from "../../../components/TextPicker";
-import DicTextPicker from "../../../components/DicTextPicker";
+import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
+import TextPicker from "../../../components/TextPicker/TextPicker";
+import DicTextPicker from "../../../components/TextPicker/DicTextPicker";
 
 const EducationForm = (props: IFormProps) => {
     const styles = useStyles();

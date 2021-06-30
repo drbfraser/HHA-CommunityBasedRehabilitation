@@ -4,8 +4,8 @@ import { HelperText, Text, TextInput } from "react-native-paper";
 import { fieldLabels, FormField, IFormProps } from "@cbr/common";
 import { isSelfEmployed } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
-import TextCheckBox from "../../../components/TextCheckBox";
-import DicTextPicker from "../../../components/DicTextPicker";
+import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
+import DicTextPicker from "../../../components/TextPicker/DicTextPicker";
 
 const LivelihoodForm = (props: IFormProps) => {
     const styles = useStyles();

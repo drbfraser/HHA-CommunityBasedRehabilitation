@@ -163,14 +163,14 @@ export const initialValues = {
 export const emptyValidationSchema = () => Yup.object().shape({});
 export const healthValidationSchema = () =>
     Yup.object().shape({
-        need_device: Yup.boolean(),
+        [FormField.needDevice]: Yup.boolean(),
         [FormField.serviceSatisf]: Yup.string()
             .label(fieldLabels[FormField.serviceSatisf])
             .required(),
         [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.rateLevel]).required(),
         [FormField.deviceType]: Yup.string()
             .label(fieldLabels[FormField.deviceType])
-            .when("need_device", {
+            .when(FormField.needDevice, {
                 is: true,
                 then: Yup.string().label(fieldLabels[FormField.deviceType]).required(),
             }),
@@ -178,16 +178,16 @@ export const healthValidationSchema = () =>
 
 export const educationValidationSchema = () =>
     Yup.object().shape({
-        go_school: Yup.boolean(),
+        [FormField.goSchool]: Yup.boolean(),
         [FormField.grade]: Yup.string()
             .label(fieldLabels[FormField.reasonNotSchool])
-            .when("go_school", {
+            .when(FormField.goSchool, {
                 is: false,
                 then: Yup.string().label(fieldLabels[FormField.reasonNotSchool]).required(),
             }),
         [FormField.grade]: Yup.string()
             .label(fieldLabels[FormField.grade])
-            .when("go_school", {
+            .when(FormField.goSchool, {
                 is: true,
                 then: Yup.string().label(fieldLabels[FormField.grade]).required(),
             }),
@@ -195,16 +195,16 @@ export const educationValidationSchema = () =>
 
 export const livelihoodValidationSchema = () =>
     Yup.object().shape({
-        is_working: Yup.boolean(),
+        [FormField.isWorking]: Yup.boolean(),
         [FormField.job]: Yup.string()
             .label(fieldLabels[FormField.job])
-            .when("is_working", {
+            .when(FormField.isWorking, {
                 is: true,
                 then: Yup.string().label(fieldLabels[FormField.deviceType]).required(),
             }),
         [FormField.isSelfEmployed]: Yup.string()
             .label(fieldLabels[FormField.isSelfEmployed])
-            .when("is_working", {
+            .when(FormField.isWorking, {
                 is: true,
                 then: Yup.string().label(fieldLabels[FormField.isSelfEmployed]).required(),
             }),
@@ -212,13 +212,13 @@ export const livelihoodValidationSchema = () =>
 
 export const foodValidationSchema = () =>
     Yup.object().shape({
-        is_child: Yup.boolean(),
+        [FormField.isChild]: Yup.boolean(),
         [FormField.foodSecurityRate]: Yup.string()
             .label(fieldLabels[FormField.foodSecurityRate])
             .required(),
         [FormField.childNourish]: Yup.string()
             .label(fieldLabels[FormField.childNourish])
-            .when("is_child", {
+            .when(FormField.isChild, {
                 is: true,
                 then: Yup.string().label(fieldLabels[FormField.childNourish]).required(),
             }),
@@ -226,10 +226,10 @@ export const foodValidationSchema = () =>
 
 export const empowermentValidationSchema = () =>
     Yup.object().shape({
-        mem_of_organ: Yup.boolean(),
+        [FormField.memOfOrgan]: Yup.boolean(),
         [FormField.organization]: Yup.string()
             .label(fieldLabels[FormField.organization])
-            .when("mem_of_organ", {
+            .when(FormField.memOfOrgan, {
                 is: true,
                 then: Yup.string().label(fieldLabels[FormField.organization]).max(50).required(),
             }),

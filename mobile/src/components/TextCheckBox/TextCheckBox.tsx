@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { Checkbox, Paragraph, TouchableRipple } from "react-native-paper";
-import useStyles from "../screens/BaseSurvey/baseSurvey.style";
+import useStyles from "./TextCheckBox.style";
 
 interface IProps {
     field: string;

@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
 import { fieldLabels, FormField, IFormProps } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
-import TextCheckBox from "../../../components/TextCheckBox";
+import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
 
 const EmpowermentForm = (props: IFormProps) => {
     const styles = useStyles();

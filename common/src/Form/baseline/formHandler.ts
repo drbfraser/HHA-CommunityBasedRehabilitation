@@ -1,22 +1,19 @@
 import { FormikHelpers } from "formik";
-import { apiFetch, Endpoint } from "../../util/endpoints";
-import { FormField, TFormValues } from "./formFields";
+import { apiFetch, Endpoint } from "../../../../common/src/util/endpoints";
+import { FormField, TFormValues } from "../../../../common/src/Form/baseline/formFields";
+import React from "react";
 
 const addSurvey = async (surveyInfo: string) => {
     const init: RequestInit = {
         method: "POST",
         body: surveyInfo,
     };
-    return await apiFetch(Endpoint.BASELINE_SURVEY, "", init)
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            return res;
-        });
+    return apiFetch(Endpoint.BASELINE_SURVEY, "", init).then((res) => {
+        return res;
+    });
 };
 
-export const handleSubmit = async (
+export const handleSubmitForm = async (
     values: TFormValues,
     helpers: FormikHelpers<TFormValues>,
     setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
@@ -67,7 +64,7 @@ export const handleSubmit = async (
     });
 
     try {
-        await addSurvey(newSurvey);
+        addSurvey(newSurvey);
         // Jump back to client using navigation
     } catch (e) {
         helpers.setSubmitting(false);

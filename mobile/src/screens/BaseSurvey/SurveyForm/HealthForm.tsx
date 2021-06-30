@@ -4,9 +4,9 @@ import { HelperText, Text } from "react-native-paper";
 import { fieldLabels, FormField, IFormProps } from "@cbr/common";
 import { deviceTypes, rateLevel } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
-import TextCheckBox from "../../../components/TextCheckBox";
-import TextPicker from "../../../components/TextPicker";
-import DicTextPicker from "../../../components/DicTextPicker";
+import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
+import TextPicker from "../../../components/TextPicker/TextPicker";
+import DicTextPicker from "../../../components/TextPicker/DicTextPicker";
 
 const HealthForm = (props: IFormProps) => {
     const styles = useStyles();

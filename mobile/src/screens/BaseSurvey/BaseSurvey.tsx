@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, StatusBar, View } from "react-native";
 import { Text, Divider, Appbar } from "react-native-paper";
 import {
     educationValidationSchema,
@@ -11,7 +11,6 @@ import {
     IFormProps,
     initialValues,
     livelihoodValidationSchema,
-    handleSubmit,
     surveyTypes,
 } from "@cbr/common";
 import { Formik, FormikHelpers } from "formik";
@@ -25,7 +24,7 @@ import LivelihoodForm from "./SurveyForm/LivelihoodFom";
 import EmpowermentForm from "./SurveyForm/EmpowermentForm";
 import ShelterForm from "./SurveyForm/ShelterForm";
 import FoodForm from "./SurveyForm/FoodForm";
-import { MaterialIcons } from "@expo/vector-icons";
+import { handleSubmit } from "./formHandler";
 
 interface ISurvey {
     label: string;
@@ -102,8 +101,9 @@ const BaseSurvey = () => {
         >
             {(formikProps) => (
                 <>
-                    <Appbar.Header statusBarHeight={25}>
-                        <MaterialIcons name="arrow-back" size={25} color="#FFFFFF" />
+                    {/* TODO: Update with Global App bar */}
+                    <Appbar.Header>
+                        <Appbar.BackAction />
                         <Appbar.Content title={"Baseline Survey"} />
                     </Appbar.Header>
                     <View style={styles.container}>

@@ -1,5 +1,5 @@
 import React from "react";
-import TextCheckBox from "../../../components/TextCheckBox";
+import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
 import { View } from "react-native";
 import { fieldLabels, FormField, IFormProps } from "@cbr/common";
 

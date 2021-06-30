@@ -16,6 +16,8 @@ const screens: IScreen[] = [
         Component: Todo,
         iconName: "home",
     },
+    // TODO: Waiting until clients screen is done
+    // For test and view, it is supposed to connect with new client screen
     {
         name: "New Client",
         Component: BaseSurvey,

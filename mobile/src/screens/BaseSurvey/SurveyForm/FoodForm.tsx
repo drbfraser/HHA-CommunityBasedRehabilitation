@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { View } from "react-native";
 import { Text, Button, Dialog, Portal, Paragraph, HelperText } from "react-native-paper";
 import { fieldLabels, FormField, IFormProps, childNourish, rateLevel } from "@cbr/common";
-import { Picker } from "@react-native-community/picker";
 import useStyles from "../baseSurvey.style";
-import TextCheckBox from "../../../components/TextCheckBox";
-import DicTextPicker from "../../../components/DicTextPicker";
-import TextPicker from "../../../components/TextPicker";
+import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
+import TextPicker from "../../../components/TextPicker/TextPicker";
+import { Picker } from "@react-native-picker/picker";
 
 const FoodForm = (props: IFormProps) => {
     const [alertInfo, setAlertError] = useState(false);

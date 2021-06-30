@@ -36,10 +36,9 @@ the `mobile` directory, containing the following:
 DEV_API_URL="http://<some hostname or IP>/api/"
 ```
 
-This is optional. If you do not specify `DEV_API_URL`, the staging server is used by  default on
-development builds. Note that `DEV_API_URL` is ignored when running a production or staging build.
-Running Expo using `npn run start` or `expo start` in the `mobile` directory will be considered a
-development build.
+This is optional. If you do not specify `DEV_API_URL`, the staging server is used by default on development builds. Note
+that `DEV_API_URL` is ignored when running a production or staging build. Running Expo using `npm start` or `expo start`
+in the `mobile` directory will be considered a development build.
 
 If you are going to be using an IP address, you will need to specify the port (8000) in the URL.
 * If you are going to be developing the app with a physical phone:

@@ -1,140 +1,158 @@
-stages:
-  - format
-  - build
-  - deploy
+# Installs packages in mobile. Must be in the mobile directory.
+.install-mobile: &install-mobile
+    - npm uninstall @cbr/common
+    - COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
+    - npm install $COMMON_PACK_NAME
+    - npm ci
 
+stages:
+    - format
+    - build
+    - deploy
 variables:
-  STAGING_BRANCH: "main"
-  PROD_BRANCH: "prod"
+    STAGING_BRANCH: "main"
+    PROD_BRANCH: "prod"
+    NPM_VERSION: "7.19.0"
 
 format common:
-  stage: format
-  image: node:14
-  tags:
-    - docker
-  needs: []
-  rules:
-    - if: '$CI_MERGE_REQUEST_ID != null'
-      changes:
-        - common/**/*
-      when: always
-  before_script:
-    - cd common
-    - npm ci
-  script:
-    - npx prettier --check .
+    stage: format
+    image: node:14
+    tags:
+        - docker
+    needs: []
+    rules:
+        - if: "$CI_MERGE_REQUEST_ID != null"
+          changes:
+              - common/**/*
+              - .gitlab-ci.yml
+          when: always
+    before_script:
+        - npm install -g npm@$NPM_VERSION
+        - cd common
+        - npm ci
+    script:
+        - npx prettier --check .
 
 build mobile:
-  stage: build
-  image: node:14
-  tags:
-    - docker
-  needs: []
-  rules:
-    - if: '$CI_MERGE_REQUEST_ID != null'
-      changes:
-        - common/**/*
-        - mobile/**/*
-      when: always
-  before_script:
-    - cd mobile
-    - npm uninstall @cbr/common
-    - npm pack ../common
-    - npm install cbr-common-1.0.0.tgz
-    - npm ci
-  script:
-    - npx prettier --check .
-    - npx expo export --public-url https://ci-build.local
+    stage: build
+    image: node:14
+    tags:
+        - docker
+    needs: []
+    rules:
+        - if: "$CI_MERGE_REQUEST_ID != null"
+          changes:
+              - common/**/*
+              - mobile/**/*
+              - .gitlab-ci.yml
+          when: always
+    before_script:
+        - npm install -g npm@$NPM_VERSION
+        - cd mobile
+        - npm uninstall @cbr/common
+        - npm pack ../common
+        - npm install cbr-common-1.0.0.tgz
+        - npm ci
+        - *install-mobile
+    script:
+        - npx prettier --check .
+        - npx expo export --public-url https://ci-build.local
 
 build web:
-  stage: build
-  image: node:14
-  tags:
-    - docker
-  needs: []
-  rules:
-    # build on merge requests if there are changes
-    - if: '$CI_MERGE_REQUEST_ID != null'
-      changes:
-        - web/**/*
-      when: always
-    # build on deployments
-    - if: '$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH'
-      when: always
-  before_script:
-    - cd common
-    - npm ci
-    - cd ../web
-    - npm ci
-  script:
-    - npx prettier --check .
-    - GENERATE_SOURCEMAP=false npm run build
-  after_script:
-    - tar -czvf web_build.tar.gz web/build
-  artifacts:
-    paths:
-      - web_build.tar.gz
+    stage: build
+    image: node:14
+    tags:
+        - docker
+    needs: []
+    rules:
+        # build on merge requests if there are changes
+        - if: "$CI_MERGE_REQUEST_ID != null"
+          changes:
+              - common/**/*
+              - web/**/*
+              - .gitlab-ci.yml
+          when: always
+        # build on deployments
+        - if: "$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
+          when: always
+    before_script:
+        - npm install -g npm@$NPM_VERSION
+        - cd common
+        - npm ci
+        - cd ../mobile
+        - *install-mobile
+        - cd ../web
+        - npm ci
+    script:
+        - npx prettier --check .
+        - GENERATE_SOURCEMAP=false npm run build
+    after_script:
+        - tar -czvf web_build.tar.gz web/build
+    artifacts:
+        paths:
+            - web_build.tar.gz
 
 build server:
-  stage: build
-  image: python:3.9.1-buster
-  services:
-    - name: postgres:13.1-alpine
-      alias: test_postgres
-  tags:
-    - docker
-  needs: []
-  rules:
-    - if: '$CI_MERGE_REQUEST_ID != null'
-      changes:
-        - server/**/*
-      when: always
-    - if: '$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH'
-      when: always
-  variables:
-      DOMAIN: "example.com"
-      SECRET_KEY: "test"
-      POSTGRES_DB: "cbr"
-      POSTGRES_USER: "test"
-      POSTGRES_PASSWORD: "test"
-      POSTGRES_HOST: "test_postgres"
-  before_script:
-    - cd server
-  script:
-    - pip install -r requirements.txt
-    - python -m black --check . 
-    - python manage.py check
-    - python manage.py makemigrations --check
-    - python manage.py test
-  
+    stage: build
+    image: python:3.9.1-buster
+    services:
+        - name: postgres:13.1-alpine
+          alias: test_postgres
+    tags:
+        - docker
+    needs: []
+    rules:
+        - if: "$CI_MERGE_REQUEST_ID != null"
+          changes:
+              - server/**/*
+              - .gitlab-ci.yml
+          when: always
+        - if: "$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
+          when: always
+    variables:
+        DOMAIN: "example.com"
+        SECRET_KEY: "test"
+        POSTGRES_DB: "cbr"
+        POSTGRES_USER: "test"
+        POSTGRES_PASSWORD: "test"
+        POSTGRES_HOST: "test_postgres"
+    before_script:
+        - cd server
+    script:
+        - pip install -r requirements.txt
+        - python -m black --check .
+        - python manage.py check
+        - python manage.py makemigrations --check
+        - python manage.py test
+
 deploy staging:
-  stage: deploy
-  tags:
-    - shell
-  rules:
-    - if: '$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $STAGING_BRANCH'
-      when: on_success
-  script:
-    - cp /var/cbr/staging.env ./.env
-    - source ./.env
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
-    - tar -xvf web_build.tar.gz
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
-    - bash -c 'sleep 10'
-    - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+    stage: deploy
+    tags:
+        - shell
+    rules:
+        - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $STAGING_BRANCH"
+          when: on_success
+    script:
+        - cp /var/cbr/staging.env ./.env
+        - source ./.env
+        - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
+        - tar -xvf web_build.tar.gz
+        - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
+        - bash -c 'sleep 10'
+        - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
 
 deploy prod:
-  stage: deploy
-  tags:
-    - shell-prod
-  rules:
-    - if: '$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $PROD_BRANCH'
-      when: manual
-  script:
-    - cp /var/cbr/prod.env ./.env
-    - source ./.env
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
-    - tar -xvf web_build.tar.gz
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
-    - bash -c 'sleep 10'
-    - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+    stage: deploy
+    tags:
+        - shell-prod
+    rules:
+        - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $PROD_BRANCH"
+          when: manual
+    script:
+        - cp /var/cbr/prod.env ./.env
+        - source ./.env
+        - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
+        - tar -xvf web_build.tar.gz
+        - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
+        - bash -c 'sleep 10'
+        - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate

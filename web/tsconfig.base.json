@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+        "paths": {
+            "@cbr/common/*": ["../../common/src/*"]
+        }
+    }
+}

@@ -14,12 +14,12 @@ import {
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, RadioGroup, TextField } from "formik-material-ui";
 import React, { useState } from "react";
-import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
+import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import {
     orthoticInjuryLocations,
     prostheticInjuryLocations,
     wheelchairExperiences,
-} from "util/referrals";
+} from "@cbr/common/util/referrals";
 import {
     fieldLabels,
     FormField,

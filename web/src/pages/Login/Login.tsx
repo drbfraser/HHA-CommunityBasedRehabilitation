@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
 import React, { useState } from "react";
-import { doLogin } from "util/auth";
+import { doLogin } from "@cbr/common/util/auth";
 import { useStyles } from "./Login.styles";
 import { loginState } from "../../util/hooks/loginState";
 

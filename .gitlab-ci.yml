@@ -25,6 +25,7 @@ format common:
     - if: '$CI_MERGE_REQUEST_ID != null'
       changes:
         - common/**/*
+        - .gitlab-ci.yml
       when: always
   before_script:
     - npm install -g npm@$NPM_VERSION
@@ -44,6 +45,7 @@ build mobile:
       changes:
         - common/**/*
         - mobile/**/*
+        - .gitlab-ci.yml
       when: always
   before_script:
     - npm install -g npm@$NPM_VERSION
@@ -65,6 +67,7 @@ build web:
       changes:
         - common/**/*
         - web/**/*
+        - .gitlab-ci.yml
       when: always
     # build on deployments
     - if: '$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH'
@@ -99,6 +102,7 @@ build server:
     - if: '$CI_MERGE_REQUEST_ID != null'
       changes:
         - server/**/*
+        - .gitlab-ci.yml
       when: always
     - if: '$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH'
       when: always

@@ -73,22 +73,22 @@ export const defaultPage = screens[0];
 export enum stackScreenName {
     HOME = "Home",
     CLIENT = "ClientDetails",
-    LOGIN = "Login"
-    LOADING = "Loading"
-  }
+    LOGIN = "Login",
+    LOADING = "Loading",
+}
 
 export const stackScreenProps = {
     [stackScreenName.HOME]: HomeScreenController,
     [stackScreenName.CLIENT]: ClientScreenController,
     [stackScreenName.LOGIN]: Login,
     [stackScreenName.LOADING]: Loading,
-}
+};
 
 export type stackParamList = {
     [stackScreenName.HOME]: undefined;
     [stackScreenName.CLIENT]: {
-        clientID: number,
-    }
+        clientID: number;
+    };
     [stackScreenName.LOGIN]: undefined;
     [stackScreenName.LOADING]: undefined;
-  };
+};

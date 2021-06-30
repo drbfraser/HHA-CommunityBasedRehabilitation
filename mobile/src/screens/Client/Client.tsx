@@ -234,7 +234,7 @@ const IndividualClientView = (props: clientProps) => {
                     </Button>
                 </View>
             </Card>
-
+            <Divider></Divider>
             <Card style={styles.riskCardStyle}>
                 <View style={styles.riskCardContentStyle}>
                     <Text style={styles.riskTitleStyle}>Education - </Text>
@@ -260,7 +260,7 @@ const IndividualClientView = (props: clientProps) => {
                     </Button>
                 </View>
             </Card>
-
+            <Divider></Divider>
             <Card style={styles.riskCardStyle}>
                 <View style={styles.riskCardContentStyle}>
                     <Text style={styles.riskTitleStyle}>Social - </Text>

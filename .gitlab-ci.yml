@@ -6,6 +6,7 @@ stages:
 variables:
   STAGING_BRANCH: "main"
   PROD_BRANCH: "prod"
+  NPM_VERSION: "7.19.0"
 
 format common:
   stage: format
@@ -19,6 +20,7 @@ format common:
         - common/**/*
       when: always
   before_script:
+    - npm install -g npm@$NPM_VERSION
     - cd common
     - npm ci
   script:
@@ -37,6 +39,7 @@ build mobile:
         - mobile/**/*
       when: always
   before_script:
+    - npm install -g npm@$NPM_VERSION
     - cd mobile
     - npm uninstall @cbr/common
     - npm pack ../common
@@ -62,6 +65,7 @@ build web:
     - if: '$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH'
       when: always
   before_script:
+    - npm install -g npm@$NPM_VERSION
     - cd common
     - npm ci
     - cd ../web

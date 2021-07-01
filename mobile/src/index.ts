@@ -3,9 +3,7 @@ import App from "./App";
 import { initializeCommon, KeyValStorageProvider } from "@cbr/common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { KEY_CURRENT_USER } from "./util/AsyncStorageKeys";
-
-// TODO: read from some configuration a development URL / IP address
-const API_URL = "https://cbrs.cradleplatform.com/api/";
+import { Constants } from "react-native-unimodules";
 
 const keyValStorageProvider: KeyValStorageProvider = {
     getItem(key: string): Promise<string | null> {
@@ -17,7 +15,9 @@ const keyValStorageProvider: KeyValStorageProvider = {
 };
 
 initializeCommon({
-    apiUrl: API_URL,
+    // Note: Constants will not be available if we eject from Expo's managed workflow.
+    // @ts-ignore
+    apiUrl: Constants.manifest.extra.apiUrl,
     keyValStorageProvider: keyValStorageProvider,
     // We don't want to logout when the user is offline and doesn't have internet (no internet means
     // refresh token attempt will fail). The user might have data stored offline (in the future). If

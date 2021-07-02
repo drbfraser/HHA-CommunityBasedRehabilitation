@@ -4,9 +4,11 @@ import { Text, Title, List, Appbar, Checkbox, Divider } from "react-native-paper
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { Picker } from "@react-native-community/picker";
-import { useParams } from "react-router";
-import { getZones, themeColors } from "@cbr/common";
-import { useHistory } from "react-router-dom";
+import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
+
+// import { useParams } from "react-router";
+import { getZones, themeColors, useZones, TZoneMap } from "@cbr/common";
+// import { useHistory } from "react-router-dom";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import {
@@ -25,9 +27,55 @@ import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./visitSu
 
 const visitTypes: FormField[] = [FormField.health, FormField.education, FormField.social];
 
-interface IFormProps {
+const ImprovementField = (props: {
     formikProps: FormikProps<any>;
-}
+    visitType: string;
+    provided: string;
+    index: number;
+}) => {
+    const fieldName = `${FormField.improvements}.${props.visitType}.${props.index}`;
+    const isImprovementEnabled =
+        props.formikProps.values[FormField.improvements][props.visitType][props.index]?.[
+            ImprovementFormField.enabled
+        ] === true;
+
+    if (
+        props.formikProps.values[FormField.improvements][props.visitType][props.index] === undefined
+    ) {
+        // Since this component is dynamically generated we need to set its initial values
+        props.formikProps.setFieldValue(`${fieldName}`, {
+            [ImprovementFormField.enabled]: false,
+            [ImprovementFormField.description]: "",
+            [ImprovementFormField.riskType]: props.visitType,
+            [ImprovementFormField.provided]: props.provided,
+        });
+    }
+
+    return (
+        <div key={props.index}>
+            <Field
+                component={CheckboxWithLabel}
+                type="checkbox"
+                name={`${fieldName}.${ImprovementFormField.enabled}`}
+                Label={{ label: props.provided }}
+            />
+            <br />
+            {isImprovementEnabled && (
+                <Field
+                    key={`${props.provided}${ImprovementFormField.description}`}
+                    type="text"
+                    component={TextInput}
+                    variant="outlined"
+                    name={`${fieldName}.${ImprovementFormField.description}`}
+                    label={fieldLabels[ImprovementFormField.description]}
+                    required
+                    fullWidth
+                    multiline
+                />
+            )}
+        </div>
+    );
+};
 
 interface ISurvey {
     label: string;
@@ -35,7 +83,24 @@ interface ISurvey {
     validationSchema: () => any;
 }
 
-const visitFocusForm = (props: IFormProps) => {
+interface IFormProps {
+    formikProps: FormikProps<any>;
+}
+
+// const visitReasonStepCallBack =
+//     (setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>, zones: TZoneMap) =>
+//     ({ formikProps }: IFormProps) =>
+//         visitFocusForm(formikProps, setEnabledSteps, zones);
+
+const visitReasonStepCallBack =
+    (setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>) =>
+    ({ formikProps }: IFormProps) =>
+        visitFocusForm(formikProps, setEnabledSteps);
+
+const visitFocusForm = (
+    formikProps: FormikProps<any>,
+    setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>
+) => {
     const styles = useStyles();
     const [checked, setChecked] = React.useState(false);
     const [activeStep, setActiveStep] = useState<number>(1);
@@ -48,41 +113,31 @@ const visitFocusForm = (props: IFormProps) => {
                     <TextInput
                         style={styles.inputText}
                         placeholder="Village *"
-                        value={props.formikProps.values.village}
-                        onChangeText={props.formikProps.handleChange("village")}
+                        value={formikProps.values.village}
+                        onChangeText={formikProps.handleChange("village")}
                     />
                     {/* <Picker
-                selectedValue={props.formikProps.values[FormField.zone]}
-                style={styles.picker}
-                onValueChange={(itemValue) => {
-                    props.formikProps.setFieldTouched(FormField.zone, true);
-                    props.formikProps.setFieldValue(FormField.zone, itemValue);
-                }}
-            >
-                <Picker.Item key={"unselectable"} label={""} value={""} />
-                {Object.entries(getZones).map(([value, { name }]) => (
-                    <Picker.Item label={name} value={value} key={name} />
-                ))}
-            </Picker> */}
+                        selectedValue={formikProps.values[FormField.zone]}
+                        style={styles.picker}
+                        onValueChange={(itemValue) => {
+                            formikProps.setFieldTouched(FormField.zone, true);
+                            formikProps.setFieldValue(FormField.zone, itemValue);
+                        }}
+                    >
+                        <Picker.Item key={"unselectable"} label={""} value={""} />
+                        {Object.entries(zones).map(([value, { name }]) => (
+                            <Picker.Item label={name} value={value} key={name} />
+                        ))}
+                    </Picker> */}
                 </View>
             </Formik>
 
-            {/* <Field id="firstName" name="firstName" placeholder="John" /> */}
-            {/* <Field
-                className={styles.pickerQuestion}
-                component={Field}
-                name={FormField.village}
-                label={fieldLabels[FormField.village]}
-                variant="outlined"
-                fullWidth
-                required
-            /> */}
-            <Checkbox
+            {/* <Checkbox
                 status={checked ? "checked" : "unchecked"}
                 onPress={() => {
                     setChecked(!checked);
                 }}
-            />
+            /> */}
         </View>
     );
 };
@@ -122,7 +177,7 @@ const educationVisitForm = (props: IFormProps) => {
 const NewVisit = () => {
     const [step, setStep] = useState<number>(0);
     const [submissionError, setSubmissionError] = useState(false);
-    const history = useHistory();
+    // const history = useHistory();
     const styles = useStyles();
     const hideAlert = () => setSubmissionError(false);
     const showAlert = () => setSubmissionError(true);
@@ -131,20 +186,22 @@ const NewVisit = () => {
     const [checked, setChecked] = React.useState(false);
     const [checked2, setChecked2] = React.useState(false);
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
+    const zones = useZones();
 
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 
     const surveySteps: ISurvey[] = [
         {
             label: "Visit Focus",
-            Form: (formikProps) => visitFocusForm(formikProps),
+            // Form: (formikProps) => visitFocusForm(formikProps),
+            Form: visitReasonStepCallBack(setEnabledSteps),
             validationSchema: initialValidationSchema,
         },
-        {
-            label: "Health Visit",
-            Form: (formikProps) => healthVisitForm(formikProps),
-            validationSchema: initialValidationSchema,
-        },
+        // {
+        //     label: "Health Visit",
+        //     Form: (formikProps) => healthVisitForm(formikProps),
+        //     validationSchema: initialValidationSchema,
+        // },
     ];
 
     const prevStep = () => setStep(step - 1);

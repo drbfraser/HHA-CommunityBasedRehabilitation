@@ -12,13 +12,13 @@ const useStyles = () =>
         },
         nextButton: {
             position: "absolute",
-            right: -20,
+            right: -45,
             bottom: 0,
             padding: -1,
         },
         prevButton: {
             position: "absolute",
-            left: -20,
+            left: -45,
             bottom: 0,
             padding: -1,
         },
@@ -40,8 +40,13 @@ const useStyles = () =>
         centerElement: { justifyContent: "center", alignItems: "center" },
         picker: { height: 40, width: 250 },
         pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingBottom: 10 },
-        viewPadding: { paddingLeft: 10 },
-        inputText: { borderWidth: 1, borderColor: "#000000", borderRadius: 5, paddingLeft: 10 },
+        viewPadding: { paddingLeft: 10, paddingRight: 10 },
+        inputText: {
+            borderWidth: 1,
+            borderColor: "#000000",
+            borderRadius: 5,
+            paddingLeft: 10,
+        },
     });
 
 export const progressStepsStyle = {
@@ -52,8 +57,6 @@ export const progressStepsStyle = {
     completedStepIconColor: themeColors.blueBgDark,
     completedProgressBarColor: themeColors.blueBgDark,
     completedCheckColor: themeColors.white,
-    //labelFontSize: 3,
-    //activeLabelFontSize: 9,
     topOffset: 20,
     marginBottom: 15,
 };

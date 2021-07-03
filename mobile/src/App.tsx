@@ -89,6 +89,7 @@ const updateAuthStateIfNeeded = async (
         return;
     }
 
+    console.log("Fetching user details from server");
     const currentUser: IUser | undefined = await fetchAndCacheUserFromServer().catch((err) => {
         // At this point, the user is logged in, so the device is probably offline.
         // Use the cached user details.

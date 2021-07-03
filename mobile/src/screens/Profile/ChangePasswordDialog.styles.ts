@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const useStyles = () =>
     StyleSheet.create({
         alert: {
-            marginVertical: 0,
+            marginVertical: 10,
         },
         buttonContainer: {
             marginVertical: 10,

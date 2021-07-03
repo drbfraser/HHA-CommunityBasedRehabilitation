@@ -1,6 +1,6 @@
 import { TPasswordValues } from "../Form/UserProfile/fields";
 import { FormikHelpers } from "formik";
-import { apiFetch, Endpoint } from "./endpoints";
+import { apiFetch, APIFetchFailError, Endpoint } from "./endpoints";
 
 export interface IUser {
     id: number;
@@ -31,6 +31,11 @@ export const userRoles = {
     },
 };
 
+/**
+ * Updates the current user's password.
+ * @return A Promise resolving to a successful response from the server.
+ * @throws APIFetchFailError if the response from the server is not successful.
+ */
 export const updateCurrentUserPassword = async (oldPassword: string, newPassword: string) => {
     const passwordInfo = JSON.stringify({
         current_password: oldPassword,

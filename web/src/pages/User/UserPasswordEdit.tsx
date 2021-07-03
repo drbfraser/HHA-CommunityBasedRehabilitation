@@ -15,7 +15,10 @@ import {
 } from "@cbr/common/Form/UserProfile/fields";
 import { useState } from "react";
 import React from "react";
-import { handleSubmitChangePassword } from "@cbr/common/Form/UserProfile/handleSubmitChangePassword";
+import {
+    getErrorMessageFromSubmissionError,
+    handleSubmitChangePassword,
+} from "@cbr/common/Form/UserProfile/handleSubmitChangePassword";
 import history from "../../util/history";
 
 const handleCancel = () => history.goBack();
@@ -23,7 +26,7 @@ const handleCancel = () => history.goBack();
 const UserPasswordEdit = () => {
     const styles = useStyles();
     const user = useCurrentUser();
-    const [wrongPasswordError, setWrongPasswordError] = useState(false);
+    const [passwordChangeError, setPasswordChangeError] = useState<string | null>(null);
 
     return user === APILoadError ? (
         <Alert severity="error">
@@ -32,9 +35,9 @@ const UserPasswordEdit = () => {
     ) : user ? (
         <>
             <div className={styles.container}>
-                {wrongPasswordError && (
-                    <Alert onClose={() => setWrongPasswordError(false)} severity="error">
-                        The old password you have entered is incorrect. Please try again.
+                {passwordChangeError && (
+                    <Alert onClose={() => setPasswordChangeError(null)} severity="error">
+                        {passwordChangeError}
                     </Alert>
                 )}
                 <br />
@@ -47,17 +50,11 @@ const UserPasswordEdit = () => {
                 initialValues={changePasswordInitialValues}
                 validationSchema={passwordValidationSchema}
                 onSubmit={async (values, formikHelpers) => {
-                    return await handleSubmitChangePassword(
-                        values,
-                        formikHelpers,
-                        (success: boolean) => {
-                            if (success) {
-                                history.goBack();
-                            } else {
-                                setWrongPasswordError(true);
-                            }
-                        }
-                    );
+                    return await handleSubmitChangePassword(values, formikHelpers)
+                        .then(() => history.goBack())
+                        .catch((e: any) => {
+                            setPasswordChangeError(getErrorMessageFromSubmissionError(e));
+                        });
                 }}
             >
                 {({ isSubmitting }) => (

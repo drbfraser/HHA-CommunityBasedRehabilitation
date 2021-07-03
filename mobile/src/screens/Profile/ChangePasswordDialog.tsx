@@ -13,6 +13,8 @@ import {
 } from "@cbr/common";
 import Alert from "../../components/Alert/Alert";
 import { useStyles } from "./ChangePasswordDialog.styles";
+import { APIFetchFailError } from "@cbr/common";
+import { getErrorMessageFromSubmissionError } from "@cbr/common";
 
 export type Props = {
     /**
@@ -27,14 +29,14 @@ export type Props = {
 };
 
 const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
-    const [isSubmissionError, setSubmissionError] = useState(false);
+    const [submissionError, setSubmissionError] = useState<string | null>(null);
     const newPassRef = useRef<NativeTextInput>(null);
     const confirmNewPassRef = useRef<NativeTextInput>(null);
 
     const styles = useStyles();
 
     useEffect(() => {
-        setSubmissionError(false);
+        setSubmissionError(null);
     }, [visible]);
 
     // Pass dismissable={false} to prevent the user from tapping on the outside to dismiss.
@@ -52,26 +54,26 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                     <Formik
                         initialValues={changePasswordInitialValues}
                         validationSchema={passwordValidationSchema}
-                        onReset={() => setSubmissionError(false)}
-                        onSubmit={(values, formikHelpers) => {
-                            return handleSubmitChangePassword(values, formikHelpers, (success) => {
-                                if (success) {
-                                    setSubmissionError(false);
+                        onReset={() => setSubmissionError(null)}
+                        onSubmit={async (values, formikHelpers) => {
+                            return handleSubmitChangePassword(values, formikHelpers)
+                                .then(() => {
+                                    setSubmissionError(null);
                                     onDismiss(true);
                                     formikHelpers.resetForm();
-                                } else {
-                                    setSubmissionError(true);
-                                }
-                            });
+                                })
+                                .catch((e: any) => {
+                                    setSubmissionError(getErrorMessageFromSubmissionError(e));
+                                });
                         }}
                     >
                         {(formikProps: FormikProps<TPasswordValues>) => (
                             <>
-                                {!formikProps.isSubmitting && isSubmissionError ? (
+                                {!formikProps.isSubmitting && submissionError ? (
                                     <Alert
                                         style={styles.alert}
                                         severity="error"
-                                        text="Failed to change password."
+                                        text={submissionError}
                                     />
                                 ) : (
                                     <></>

@@ -3,7 +3,7 @@
 import { apiFetch, Endpoint } from "../endpoints";
 import { cachedAPIGet, IAPICacheData, cachedAPIHook } from "./cachedAPI";
 
-interface IZone {
+export interface IZone {
     id: number;
     zone_name: string;
 }

@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, TextInput, Checkbox, Menu, Divider } from "react-native-paper";
 import { Client } from "./ClientRequests";
-import clientStyle from "./clientStyles";
+import clientStyle from "./Client.styles";
 import { Text, View } from "react-native";
 import { Item } from "react-native-paper/lib/typescript/components/List/List";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
-import { timestampToDate } from "../../../node_modules/@cbr/common";
+import { timestampToDate, timestampToDateObj } from "../../../node_modules/@cbr/common";
 import {
     getDisabilities,
     TDisabilityMap,
 } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
 import { riskTypes } from "../../util/riskIcon";
-
+import { DatePicker } from "react-native-woodpicker";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { useCallback } from "react";
 /*
     Use client image instead of randomly generated
     Get disabilities details from making the disability API call and map them (done but haven't implemented correctly)
@@ -27,25 +29,33 @@ interface clientProps {
 const styles = clientStyle();
 
 const IndividualClientView = (props: clientProps) => {
+    //Client fetch and API call variables
     const [presentClient, setPresentClient] = useState<Client>();
-    const getClientDetails = async () => {
-        const presentClient = await fetchClientDetailsFromApi(props.clientID);
-        setPresentClient(presentClient);
-    };
-    getClientDetails();
-    const [showDisabilityMenu, setShowDiosabilityMenu] = useState(false);
+    const [date, setDate] = useState(new Date());
+    useEffect(() => {
+        const getClientDetails = async () => {
+            const presentClient = await fetchClientDetailsFromApi(props.clientID);
+            setDate(timestampToDateObj(Number(presentClient?.birthdate)));
+            setPresentClient(presentClient);
+        };
+        getClientDetails();
+    }, []);
+
+    //Disability and Menu Variables
+    const [showDisabilityMenu, setShowDisabilityMenu] = useState(false);
     const [disability, setdisability] = useState("Amputee"); //Set to amputee for now but get from database
     const disabilityList = [
         { label: "Amputee", value: "Amputee" },
         { label: "Polio", value: "Polio" },
         { label: "Other", value: "Other" },
     ];
+
     //const [disabilityList, setDisabilityList] = useState<TDisabilityMap>();
     // const getDisabilityList = async () => {
     //     const tempDisabilityList = await getDisabilities();
     //     setDisabilityList(tempDisabilityList);
     // };
-    const [clientDisability, setDisability] = useState<String>("N/A");
+    //const [clientDisability, setDisability] = useState<String>("N/A");
     // getDisabilityList();
     // console.log(disabilityList);
     // const assignDisability = () => {
@@ -58,6 +68,43 @@ const IndividualClientView = (props: clientProps) => {
     // };
     // assignDisability();
 
+    //DatePicker variables
+
+    const [show, setShow] = useState(false);
+
+    const onDateChange = useCallback(
+        (event, newDate) => {
+            if (newDate) setDate(newDate);
+            console.log(newDate);
+            setShow(false);
+        },
+        [show, date]
+    );
+
+    const showDatepicker = () => {
+        setShow(true);
+    };
+
+    const datePicker = () => {
+        return (
+            <View style={styles.clientBirthdayButtons}>
+                <View>
+                    <Button onPress={showDatepicker}>Edit</Button>
+                </View>
+                {show && (
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        value={date}
+                        mode="date"
+                        display="default"
+                        onChange={onDateChange}
+                    />
+                )}
+            </View>
+        );
+    };
+
+    //Menu editable toggle variables
     const [visible, setVisible] = React.useState(false);
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
@@ -79,7 +126,7 @@ const IndividualClientView = (props: clientProps) => {
         setEditMode(true);
         setCancelButtonType("outlined");
     };
-    console.log(props.clientID);
+
     return (
         <ScrollView style={styles.scrollViewStyles}>
             <Card style={styles.clientCardContainerStyles}>
@@ -113,13 +160,11 @@ const IndividualClientView = (props: clientProps) => {
                     disabled={editMode}
                     editable={true}
                 />
-                <TextInput
-                    style={styles.clientTextStyle}
-                    label="Birthdate "
-                    value={String(timestampToDate(Number(presentClient?.birthdate)))}
-                    disabled={editMode}
-                    editable={true}
-                />
+                <Text> Birthdate: </Text>
+                <View style={styles.clientBirthdayView}>
+                    <Text style={styles.clientDetailsCheckboxText}>{date.toDateString()}</Text>
+                    <View>{datePicker()}</View>
+                </View>
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Village # "

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-const clientStyle = () =>
+const useStyles = () =>
     StyleSheet.create({
         clientButtons: {
             padding: 3,
@@ -85,6 +85,37 @@ const clientStyle = () =>
             justifyContent: "flex-start",
             width: 184,
         },
+        clientBirthdayView: {
+            display: "flex",
+            alignItems: "flex-start",
+            alignContent: "space-between",
+            flexDirection: "row",
+            justifyContent: "center",
+            height: 40,
+            width: 350,
+            marginTop: 15,
+            marginBottom: 15,
+        },
+        clientBirthdayButtons: {
+            marginTop: 3,
+            marginBottom: 15,
+            marginRight: 15,
+            width: 75,
+            borderRadius: 5,
+        },
+        pickerStyle: {
+            backgroundColor: "white",
+            borderWidth: 1,
+            borderColor: "blue",
+            borderRadius: 5,
+            alignItems: "center",
+            paddingHorizontal: 8,
+            paddingVertical: 8,
+            marginHorizontal: 8,
+            marginVertical: 8,
+            height: 40,
+            width: 200,
+        },
         clientDetailsFinalView: {
             alignItems: "center",
             justifyContent: "flex-end",
@@ -145,4 +176,4 @@ const clientStyle = () =>
         },
     });
 
-export default clientStyle;
+export default useStyles;

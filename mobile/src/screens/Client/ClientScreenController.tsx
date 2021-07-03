@@ -6,10 +6,10 @@ import { stackParamList, stackScreenName } from "../../util/screens";
 import IndividualClientView from "./Client";
 import { RouteProp } from "@react-navigation/native";
 import { useEffect } from "react";
-import clientStyle from "./clientStyles";
+import useStyles from "./Client.styles";
 import { ScrollView } from "react-native-gesture-handler";
 
-const styles = clientStyle();
+const styles = useStyles();
 interface clientScreenControllerProps {
     route: RouteProp<stackParamList, stackScreenName.CLIENT>;
     navigation: StackNavigationProp<stackParamList, stackScreenName.CLIENT>;

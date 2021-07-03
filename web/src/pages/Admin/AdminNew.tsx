@@ -7,8 +7,8 @@ import { fieldLabels, AdminField, initialValues, newValidationSchema } from "./f
 import Button from "@material-ui/core/Button";
 import { FormControl, MenuItem } from "@material-ui/core";
 import { handleCancel, handleNewSubmit } from "./handler";
-import { userRoles } from "util/users";
-import { useZones } from "util/hooks/zones";
+import { userRoles } from "@cbr/common/util/users";
+import { useZones } from "@cbr/common/util/hooks/zones";
 
 const AdminNew = () => {
     const styles = useStyles();

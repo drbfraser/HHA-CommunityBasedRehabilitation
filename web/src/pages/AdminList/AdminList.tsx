@@ -27,7 +27,7 @@ import requestUserRows from "./requestUserRows";
 import React from "react";
 import { Cancel, MoreVert } from "@material-ui/icons";
 import { SearchOption } from "../ClientList/searchOptions";
-import { useZones } from "util/hooks/zones";
+import { useZones } from "@cbr/common/util/hooks/zones";
 
 const RenderText = (params: ValueFormatterParams) => {
     return <Typography variant={"body2"}>{params.value}</Typography>;

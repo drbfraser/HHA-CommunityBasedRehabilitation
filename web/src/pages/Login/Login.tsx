@@ -3,10 +3,9 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
-import { doLogin } from "util/auth";
-import { defaultPagePath } from "util/pages";
+import { doLogin } from "@cbr/common/util/auth";
 import { useStyles } from "./Login.styles";
+import { loginState } from "../../util/hooks/loginState";
 
 enum LoginStatus {
     INITIAL,
@@ -16,7 +15,6 @@ enum LoginStatus {
 
 const Login = () => {
     const styles = useStyles();
-    const history = useHistory();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -34,7 +32,8 @@ const Login = () => {
         const loginSucceeded = await doLogin(username, password);
 
         if (loginSucceeded) {
-            history.push(defaultPagePath);
+            // The App component handles navigation to dashboard
+            loginState.emit(true);
         } else {
             setStatus(LoginStatus.FAILED);
         }

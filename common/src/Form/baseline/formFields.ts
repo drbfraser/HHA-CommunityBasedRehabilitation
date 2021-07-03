@@ -179,7 +179,7 @@ export const healthValidationSchema = () =>
 export const educationValidationSchema = () =>
     Yup.object().shape({
         [FormField.goSchool]: Yup.boolean(),
-        [FormField.grade]: Yup.string()
+        [FormField.reasonNotSchool]: Yup.string()
             .label(fieldLabels[FormField.reasonNotSchool])
             .when(FormField.goSchool, {
                 is: false,
@@ -200,7 +200,7 @@ export const livelihoodValidationSchema = () =>
             .label(fieldLabels[FormField.job])
             .when(FormField.isWorking, {
                 is: true,
-                then: Yup.string().label(fieldLabels[FormField.deviceType]).required(),
+                then: Yup.string().label(fieldLabels[FormField.job]).required(),
             }),
         [FormField.isSelfEmployed]: Yup.string()
             .label(fieldLabels[FormField.isSelfEmployed])

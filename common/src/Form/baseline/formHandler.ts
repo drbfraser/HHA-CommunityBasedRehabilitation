@@ -8,7 +8,11 @@ const addSurvey = async (surveyInfo: string) => {
         method: "POST",
         body: surveyInfo,
     };
-    return apiFetch(Endpoint.BASELINE_SURVEY, "", init).then((res) => {
+    return await apiFetch(Endpoint.BASELINE_SURVEY, "", init).then((res) => {
+        if (!res.ok) {
+            console.error(res.statusText);
+            throw Error(res.statusText);
+        }
         return res;
     });
 };

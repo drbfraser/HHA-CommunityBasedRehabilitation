@@ -1,6 +1,6 @@
 import { ImprovementFormField, TFormValues } from "./formFields";
 import { FormikHelpers } from "formik";
-import { apiFetch, Endpoint } from "util/endpoints";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import history from "../../util/history";
 import { FormField } from "./formFields";
 

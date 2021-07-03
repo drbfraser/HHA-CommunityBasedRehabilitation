@@ -19,8 +19,8 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { handleSubmit, handleCancel } from "./formHandler";
 import { IClient, genders } from "util/clients";
-import { useZones } from "util/hooks/zones";
-import { getOtherDisabilityId, useDisabilities } from "util/hooks/disabilities";
+import { useZones } from "@cbr/common/util/hooks/zones";
+import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import history from "util/history";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 

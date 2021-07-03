@@ -2,8 +2,8 @@ import { Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React from "react";
 import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar, Legend } from "recharts";
-import { themeColors } from "theme.styles";
-import { IStats, IStatsReferral } from "util/stats";
+import { IStats, IStatsReferral } from "@cbr/common/util/stats";
+import { themeColors } from "@cbr/common/util/colors";
 
 const dataLabels = [
     {

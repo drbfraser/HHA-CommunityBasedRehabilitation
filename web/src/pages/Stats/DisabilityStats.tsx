@@ -2,9 +2,9 @@ import { Typography } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import React from "react";
 import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar } from "recharts";
-import { themeColors } from "theme.styles";
-import { useDisabilities } from "util/hooks/disabilities";
-import { IStats } from "util/stats";
+import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
+import { IStats } from "@cbr/common/util/stats";
+import { themeColors } from "@cbr/common/util/colors";
 
 interface IProps {
     stats?: IStats;

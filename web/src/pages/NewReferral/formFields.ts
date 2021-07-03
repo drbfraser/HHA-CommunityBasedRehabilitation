@@ -1,6 +1,6 @@
 import * as Yup from "yup";
-import { InjuryLocation, WheelchairExperience } from "util/referrals";
-import { getDisabilities, getOtherDisabilityId } from "util/hooks/disabilities";
+import { InjuryLocation, WheelchairExperience } from "@cbr/common/util/referrals";
+import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
 
 export enum FormField {
     client = "client",

@@ -12,7 +12,7 @@ import {
 import { IRisk, RiskLevel, riskLevels, RiskType, riskTypes } from "util/risks";
 import { Grid, Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { timestampToDateFromReference } from "util/dates";
+import { timestampToDateFromReference } from "@cbr/common/util/dates";
 import { IClient } from "util/clients";
 
 interface IProps {

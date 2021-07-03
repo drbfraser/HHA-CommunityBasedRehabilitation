@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { isLoggedIn } from "../auth";
+import { isLoggedIn } from "@cbr/common/util/auth";
 
 type LoginStateListener = (isLoggedInNow: boolean) => void;
 

@@ -40,6 +40,8 @@ If at some point during development you want to re-seed the database with the ex
 
 That's it! The frontend is now running on http://localhost:3000 and the backend is running on http://localhost:8000. Both the frontend and the backend should support hot reloading.
 
+For using a local server when developing the mobile app, ensure that you have followed the mobile environment variables instructions from [SETUP.md](SETUP.md).
+
 If you seeded users in the previous step, you already have an account in the system. Use the username `venus` and password `hhaLogin` to log in, and from there you can create another user if you wish to change the username and password you use.
 
 You can also access auto-generating Swagger API documentation at http://localhost:8000/docs

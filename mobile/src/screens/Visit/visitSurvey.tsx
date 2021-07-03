@@ -38,20 +38,20 @@ interface IFormProps {
     formikProps: FormikProps<any>;
 }
 
-// const visitReasonStepCallBack =
-//     (setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>, zones: TZoneMap) =>
-//     ({ formikProps }: IFormProps) =>
-//         visitFocusForm(formikProps, setEnabledSteps, zones);
-
 const visitReasonStepCallBack =
-    (setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>) =>
+    (setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>, zones: TZoneMap) =>
     ({ formikProps }: IFormProps) =>
-        visitFocusForm(formikProps, setEnabledSteps);
+        visitFocusForm(formikProps, setEnabledSteps, zones);
+
+// const visitReasonStepCallBack =
+//     (setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>) =>
+//     ({ formikProps }: IFormProps) =>
+//         visitFocusForm(formikProps, setEnabledSteps);
 
 const visitFocusForm = (
     formikProps: FormikProps<any>,
-    setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>
-    // zones: TZoneMap
+    setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>,
+    zones: TZoneMap
 ) => {
     const styles = useStyles();
     const [checked, setChecked] = React.useState(false);
@@ -93,25 +93,32 @@ const visitFocusForm = (
                     onChangeText={formikProps.handleChange("village")}
                 />
 
+                <TextPicker
+                    field={FormField.zone}
+                    choices={zones}
+                    values={formikProps.values[FormField.zone]}
+                    setFieldValue={formikProps.setFieldValue}
+                    setFieldTouched={formikProps.setFieldTouched}
+                />
+
                 <Text style={styles.pickerQuestion}>{"\n"}Select the Reasons for the Visit </Text>
 
-                {/* {visitTypes.map((visitType) => (
-                    // <TextCheckBox
-                    //     key={visitType}
-                    //     field={visitType}
-                    //     value={formikProps.values[visitType]}
-                    //     label={fieldLabels[visitType]}
-                    //     setFieldValue={formikProps.setFieldValue}
-                    // />
-                    
-                ))} */}
+                {visitTypes.map((visitType) => (
+                    <TextCheckBox
+                        key={visitType}
+                        field={visitType}
+                        value={formikProps.values[visitType]}
+                        label={fieldLabels[visitType]}
+                        setFieldValue={formikProps.setFieldValue}
+                    />
+                ))}
 
-                <Checkbox
+                {/* <Checkbox
                     status={checked ? "checked" : "unchecked"}
                     onPress={() => {
                         setChecked(!checked);
                     }}
-                />
+                /> */}
             </View>
         </View>
     );
@@ -173,7 +180,7 @@ const NewVisit = () => {
     const [checked, setChecked] = React.useState(false);
     const [checked2, setChecked2] = React.useState(false);
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
-    // const zones = useZones();
+    const zones = useZones();
 
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 
@@ -181,7 +188,7 @@ const NewVisit = () => {
         {
             label: "Visit Focus",
             // Form: (formikProps) => visitFocusForm(formikProps),
-            Form: visitReasonStepCallBack(setEnabledSteps),
+            Form: visitReasonStepCallBack(setEnabledSteps, zones),
             validationSchema: initialValidationSchema,
         },
         // {

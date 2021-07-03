@@ -3,7 +3,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, TextInput, Checkbox, Menu, Divider } from "react-native-paper";
 import { Client } from "./ClientRequests";
 import clientStyle from "./Client.styles";
-import { Text, View } from "react-native";
+import { Platform, Text, View } from "react-native";
 import { Item } from "react-native-paper/lib/typescript/components/List/List";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { timestampToDate, timestampToDateObj } from "../../../node_modules/@cbr/common";
@@ -74,6 +74,7 @@ const IndividualClientView = (props: clientProps) => {
 
     const onDateChange = useCallback(
         (event, newDate) => {
+            setShow(Platform.OS === "ios");
             if (newDate) setDate(newDate);
             console.log(newDate);
             setShow(false);

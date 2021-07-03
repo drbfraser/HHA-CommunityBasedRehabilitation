@@ -2,6 +2,7 @@ import React from "react";
 import { APILoadError, IUser, TAPILoadError, UserRole } from "@cbr/common";
 import Todo from "../screens/Todo/Todo";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
+import Profile from "../screens/Profile/Profile";
 
 export interface IScreen {
     name: string;
@@ -30,7 +31,7 @@ const screens: IScreen[] = [
     },
     {
         name: "Profile",
-        Component: Todo,
+        Component: Profile,
         iconName: "account",
     },
     {

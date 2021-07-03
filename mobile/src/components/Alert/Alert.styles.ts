@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 const useStyles = (color: string) =>
     StyleSheet.create({
         alertContainer: {
-            flex: 1,
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "flex-start",

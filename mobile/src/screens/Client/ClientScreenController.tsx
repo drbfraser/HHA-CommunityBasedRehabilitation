@@ -3,11 +3,12 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import * as React from "react";
 import { useState } from "react";
 import { stackParamList, stackScreenName } from "../../util/screens";
-import IndividualClientView from "./Client";
+import ClientDTO from "./Client";
 import { RouteProp } from "@react-navigation/native";
 import { useEffect } from "react";
 import useStyles from "./Client.styles";
 import { ScrollView } from "react-native-gesture-handler";
+import Client from "./Client";
 
 const styles = useStyles();
 interface clientScreenControllerProps {
@@ -17,7 +18,7 @@ interface clientScreenControllerProps {
 
 const ClientScreenController = (props: clientScreenControllerProps) => {
     props.navigation.setOptions({
-        title: "Client Details",
+        title: "Client Page",
         headerStyle: {
             backgroundColor: "#273263",
         },
@@ -29,6 +30,6 @@ const ClientScreenController = (props: clientScreenControllerProps) => {
         setClientID(props.route.params.clientID);
     });
 
-    return <IndividualClientView clientID={clientID} />;
+    return <Client clientID={clientID} />;
 };
 export default ClientScreenController;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, TextInput, Checkbox, Menu, Divider } from "react-native-paper";
-import { Client } from "./ClientRequests";
+import { ClientDTO } from "./ClientRequests";
 import clientStyle from "./Client.styles";
 import { Platform, Text, View } from "react-native";
 import { Item } from "react-native-paper/lib/typescript/components/List/List";
@@ -26,19 +26,30 @@ interface clientProps {
     clientID: number;
 }
 
-const styles = clientStyle();
-
-const IndividualClientView = (props: clientProps) => {
+const Client = (props: clientProps) => {
+    const styles = clientStyle();
     //Client fetch and API call variables
-    const [presentClient, setPresentClient] = useState<Client>();
+    const [presentClient, setPresentClient] = useState<ClientDTO>();
     const [date, setDate] = useState(new Date());
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [village, setVillage] = useState("");
+    const [zone, setZone] = useState(0);
+    const [phoneNumber, setPhoneNumber] = useState("");
+
     useEffect(() => {
         const getClientDetails = async () => {
             const presentClient = await fetchClientDetailsFromApi(props.clientID);
             setDate(timestampToDateObj(Number(presentClient?.birthdate)));
+            setFirstName(presentClient.first_name);
+            setLastName(presentClient.last_name);
+            setVillage(presentClient.village);
+            setZone(presentClient.zone);
+            setPhoneNumber(presentClient.phoneNumber);
             setPresentClient(presentClient);
         };
         getClientDetails();
+        console.log(presentClient);
     }, []);
 
     //Disability and Menu Variables
@@ -146,44 +157,46 @@ const IndividualClientView = (props: clientProps) => {
                 </Button>
             </Card>
             <Divider></Divider>
+            <Text style={styles.cardSectionTitle}>Client Details</Text>
+            <Divider></Divider>
             <Card style={styles.clientDetailsContainerStyles}>
                 <TextInput
                     style={styles.clientTextStyle}
                     label="First Name: "
-                    value={presentClient?.first_name}
+                    value={firstName}
                     disabled={editMode}
                     editable={true}
                 />
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Last Name: "
-                    value={presentClient?.last_name}
+                    value={lastName}
                     disabled={editMode}
                     editable={true}
                 />
                 <Text> Birthdate: </Text>
                 <View style={styles.clientBirthdayView}>
-                    <Text style={styles.clientDetailsCheckboxText}>{date.toDateString()}</Text>
+                    <Text style={styles.carePresentCheckBox}>{date.toDateString()}</Text>
                     <View>{datePicker()}</View>
                 </View>
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Village # "
-                    value={presentClient?.village}
+                    value={village}
                     disabled={editMode}
                     editable={true}
                 />
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Zone "
-                    value={String(presentClient?.zone)}
+                    value={String(zone)}
                     disabled={editMode}
                     editable={true}
                 />
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Phone Number "
-                    value={presentClient?.phoneNumber}
+                    value={phoneNumber}
                     disabled={editMode}
                     editable={true}
                 />
@@ -196,7 +209,7 @@ const IndividualClientView = (props: clientProps) => {
                 />
                 <View>
                     <Text> Disability </Text>
-                    <Text style={styles.clientDetailsCheckboxText}> {disability} </Text>
+                    <Text style={styles.carePresentCheckBox}> {disability} </Text>
                     <Menu
                         visible={visible}
                         onDismiss={closeMenu}
@@ -225,8 +238,8 @@ const IndividualClientView = (props: clientProps) => {
                         })}
                     </Menu>
                 </View>
-                <View style={styles.clientDetailsView}>
-                    <Text style={styles.clientDetailsCheckboxText}>Caregiver Present</Text>
+                <View style={styles.carePresentView}>
+                    <Text style={styles.carePresentCheckBox}>Caregiver Present</Text>
                     <Checkbox
                         status={checked ? "checked" : "unchecked"}
                         onPress={() => {
@@ -255,18 +268,19 @@ const IndividualClientView = (props: clientProps) => {
                 </View>
             </Card>
             <Divider></Divider>
+            <Text style={styles.cardSectionTitle}>Client Risks</Text>
+            <Divider></Divider>
             <Card style={styles.riskCardStyle}>
                 <View style={styles.riskCardContentStyle}>
                     <Text style={styles.riskTitleStyle}>Health - </Text>
-                    {/* <View style={styles.riskIconStyle}>{riskTypes.HEALTH.Icon("CRITICAL")}</View> */}
                     <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
                 </View>
                 <View>
-                    <Text style={styles.riskHeader2Style}>Requirements: </Text>
+                    <Text style={styles.riskHeaderStyle}>Requirements: </Text>
                     <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
                 </View>
                 <View>
-                    <Text style={styles.riskHeader2Style}>Goals: </Text>
+                    <Text style={styles.riskHeaderStyle}>Goals: </Text>
                     <Text style={styles.riskRequirementStyle}>Goals go here</Text>
                 </View>
                 <View style={styles.clientDetailsFinalView}>
@@ -284,15 +298,14 @@ const IndividualClientView = (props: clientProps) => {
             <Card style={styles.riskCardStyle}>
                 <View style={styles.riskCardContentStyle}>
                     <Text style={styles.riskTitleStyle}>Education - </Text>
-                    {/* <View style={styles.riskIconStyle}>{riskTypes.HEALTH.Icon("CRITICAL")}</View> */}
                     <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
                 </View>
                 <View>
-                    <Text style={styles.riskHeader2Style}>Requirements: </Text>
+                    <Text style={styles.riskHeaderStyle}>Requirements: </Text>
                     <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
                 </View>
                 <View>
-                    <Text style={styles.riskHeader2Style}>Goals: </Text>
+                    <Text style={styles.riskHeaderStyle}>Goals: </Text>
                     <Text style={styles.riskRequirementStyle}>Goals go here</Text>
                 </View>
                 <View style={styles.clientDetailsFinalView}>
@@ -310,15 +323,14 @@ const IndividualClientView = (props: clientProps) => {
             <Card style={styles.riskCardStyle}>
                 <View style={styles.riskCardContentStyle}>
                     <Text style={styles.riskTitleStyle}>Social - </Text>
-                    {/* <View style={styles.riskIconStyle}>{riskTypes.HEALTH.Icon("CRITICAL")}</View> */}
                     <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
                 </View>
                 <View>
-                    <Text style={styles.riskHeader2Style}>Requirements: </Text>
+                    <Text style={styles.riskHeaderStyle}>Requirements: </Text>
                     <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
                 </View>
                 <View>
-                    <Text style={styles.riskHeader2Style}>Goals: </Text>
+                    <Text style={styles.riskHeaderStyle}>Goals: </Text>
                     <Text style={styles.riskRequirementStyle}>Goals go here</Text>
                 </View>
                 <View style={styles.clientDetailsFinalView}>
@@ -336,4 +348,4 @@ const IndividualClientView = (props: clientProps) => {
     );
 };
 
-export default IndividualClientView;
+export default Client;

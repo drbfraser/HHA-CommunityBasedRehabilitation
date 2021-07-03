@@ -54,7 +54,7 @@ const useStyles = () =>
             width: 350,
             borderRadius: 5,
         },
-        clientDetailsView: {
+        carePresentView: {
             alignItems: "center",
             display: "flex",
             flexDirection: "row",
@@ -63,7 +63,7 @@ const useStyles = () =>
             marginTop: 15,
             marginBottom: 15,
         },
-        clientDetailsCheckboxText: {
+        carePresentCheckBox: {
             alignContent: "flex-start",
             fontSize: 18,
             width: 256,
@@ -163,7 +163,7 @@ const useStyles = () =>
             display: "flex",
             flexDirection: "row",
         },
-        riskHeader2Style: {
+        riskHeaderStyle: {
             marginTop: 14,
             marginBottom: 2,
             fontSize: 18,
@@ -173,6 +173,12 @@ const useStyles = () =>
         riskRequirementStyle: {
             fontSize: 16,
             justifyContent: "flex-start",
+        },
+        cardSectionTitle: {
+            textAlign: "center",
+            marginTop: 14,
+            marginBottom: 14,
+            fontSize: 32,
         },
     });
 

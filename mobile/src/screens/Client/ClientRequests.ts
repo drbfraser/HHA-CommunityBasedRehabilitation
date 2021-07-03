@@ -1,7 +1,7 @@
 import { apiFetch, APILoadError, Endpoint, getZones } from "@cbr/common";
 import { IClient } from "../../util/clients";
 import { riskLevels } from "../../util/risks";
-export type Client = {
+export type ClientDTO = {
     id: number;
     first_name: string;
     last_name: string;
@@ -12,7 +12,7 @@ export type Client = {
     //disabilities: string,
 };
 
-export const fetchClientDetailsFromApi = async (clientId: number): Promise<Client> => {
+export const fetchClientDetailsFromApi = async (clientId: number): Promise<ClientDTO> => {
     const urlParams = "" + clientId;
     const resp = await apiFetch(Endpoint.CLIENT, urlParams);
     const response: IClient = await resp.json();

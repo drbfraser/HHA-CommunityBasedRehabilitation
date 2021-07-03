@@ -10,4 +10,7 @@ export const useStyles = () =>
             flexDirection: "row",
             justifyContent: "flex-end",
         },
+        passwordTextInput: {
+            marginVertical: 5,
+        },
     });

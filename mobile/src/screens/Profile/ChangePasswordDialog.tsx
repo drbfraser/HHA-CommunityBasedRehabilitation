@@ -13,7 +13,7 @@ import {
 } from "@cbr/common";
 import Alert from "../../components/Alert/Alert";
 import { useStyles } from "./ChangePasswordDialog.styles";
-import { APIFetchFailError } from "@cbr/common";
+import PasswordTextInput from "../../components/PasswordTextInput/PasswordTextInput";
 import { getErrorMessageFromSubmissionError } from "@cbr/common";
 
 export type Props = {
@@ -78,7 +78,8 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                 ) : (
                                     <></>
                                 )}
-                                <TextInput
+                                <PasswordTextInput
+                                    style={styles.passwordTextInput}
                                     label={fieldLabels[changePasswordField.oldPassword]}
                                     value={formikProps.values.oldPassword}
                                     onChangeText={formikProps.handleChange(
@@ -91,12 +92,7 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                     }}
                                     disabled={formikProps.isSubmitting}
                                     mode="outlined"
-                                    secureTextEntry
                                     blurOnSubmit={false}
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    autoCompleteType="password"
-                                    textContentType="password"
                                     onSubmitEditing={() => newPassRef.current?.focus()}
                                 />
                                 {!!formikProps.errors.oldPassword &&
@@ -107,7 +103,8 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                 ) : (
                                     <></>
                                 )}
-                                <TextInput
+                                <PasswordTextInput
+                                    style={styles.passwordTextInput}
                                     ref={newPassRef}
                                     label={fieldLabels[changePasswordField.newPassword]}
                                     value={formikProps.values.newPassword}
@@ -121,12 +118,7 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                     }}
                                     disabled={formikProps.isSubmitting}
                                     mode="outlined"
-                                    secureTextEntry
                                     blurOnSubmit={false}
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    autoCompleteType="password"
-                                    textContentType="password"
                                     onSubmitEditing={() => confirmNewPassRef.current?.focus()}
                                 />
                                 {!!formikProps.errors.newPassword &&
@@ -137,7 +129,8 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                 ) : (
                                     <></>
                                 )}
-                                <TextInput
+                                <PasswordTextInput
+                                    style={styles.passwordTextInput}
                                     ref={confirmNewPassRef}
                                     label={fieldLabels[changePasswordField.confirmNewPassword]}
                                     value={formikProps.values.confirmNewPassword}
@@ -151,12 +144,7 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                     }}
                                     disabled={formikProps.isSubmitting}
                                     mode="outlined"
-                                    secureTextEntry
                                     blurOnSubmit={false}
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    autoCompleteType="password"
-                                    textContentType="password"
                                     onSubmitEditing={() => {
                                         formikProps.handleSubmit();
                                     }}

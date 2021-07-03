@@ -1,6 +1,7 @@
 import React from "react";
 import Chip, { ChipProps } from "@material-ui/core/Chip";
-import { RiskType, riskTypes } from "util/risks";
+import { RiskType } from "@cbr/common/util/risks";
+import { riskTypes } from "util/riskIcon"
 
 interface IProps extends ChipProps {
     risk: RiskType;

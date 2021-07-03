@@ -7,9 +7,9 @@ import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 
 import ClientInfoForm from "./ClientInfoForm";
-import { IClient } from "util/clients";
+import { IClient } from "@cbr/common/util/clients";
 import ClientRisks from "./Risks/ClientRisks";
-import { IRisk } from "util/risks";
+import { IRisk } from "@cbr/common/util/risks";
 import { useHistory } from "react-router-dom";
 import ClientTimeline from "./ClientTimeline/ClientTimeline";
 import { timestampToFormDate } from "@cbr/common/util/dates";

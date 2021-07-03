@@ -1,6 +1,6 @@
 import { FormikHelpers } from "formik";
 import { Endpoint, apiFetch, objectToFormData } from "@cbr/common/util/endpoints";
-import { IClient } from "util/clients";
+import { IClient } from "@cbr/common/util/clients";
 import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
 import { getRandomStr } from "@cbr/common/util/misc";

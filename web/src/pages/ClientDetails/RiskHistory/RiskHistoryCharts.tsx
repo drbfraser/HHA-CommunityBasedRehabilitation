@@ -9,11 +9,12 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
-import { IRisk, RiskLevel, riskLevels, RiskType, riskTypes } from "util/risks";
+import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
+import { riskTypes } from "util/riskIcon"
 import { Grid, Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { timestampToDateFromReference } from "@cbr/common/util/dates";
-import { IClient } from "util/clients";
+import { IClient } from "@cbr/common/util/clients";
 
 interface IProps {
     client?: IClient;

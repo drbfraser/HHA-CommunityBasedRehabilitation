@@ -1,10 +1,4 @@
-// TODO: Rewrite this (remove @material-ui dependency) so that it can be used in @cbr/common's and
-//  then move it there
-import { SvgIconTypeMap } from "@material-ui/core";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { LocalHospital, RecordVoiceOver, School } from "@material-ui/icons";
-import { themeColors } from "@cbr/common/util/colors";
-
+import { themeColors } from "./colors";
 export interface IRisk {
     id: number;
     client: number;
@@ -20,26 +14,6 @@ export enum RiskType {
     EDUCATION = "EDUCAT",
     SOCIAL = "SOCIAL",
 }
-
-export interface IRiskType {
-    name: string;
-    Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
-}
-
-export const riskTypes: { [key: string]: IRiskType } = {
-    [RiskType.HEALTH]: {
-        name: "Health",
-        Icon: LocalHospital,
-    },
-    [RiskType.EDUCATION]: {
-        name: "Education",
-        Icon: School,
-    },
-    [RiskType.SOCIAL]: {
-        name: "Social",
-        Icon: RecordVoiceOver,
-    },
-};
 
 export enum RiskLevel {
     LOW = "LO",

@@ -1,5 +1,3 @@
-// TODO: Rewrite this so that it can be used in @cbr/common's and then move it there
-//  Risks needs to remove its @material-ui dependency
 import { RiskType } from "./risks";
 
 export interface IVisitSummary {

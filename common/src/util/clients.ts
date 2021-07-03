@@ -1,8 +1,6 @@
-// TODO: Rewrite this so that it can be used in @cbr/common's and then move it there
-//  Risks needs to remove its @material-ui dependency
-import { IReferral } from "@cbr/common/util/referrals";
+import { IReferral } from "./referrals";
 import { IRisk, riskLevels } from "./risks";
-import { ISurvey } from "@cbr/common/util/survey";
+import { ISurvey } from "./survey";
 import { IVisitSummary } from "./visits";
 
 export interface IClientSummary {

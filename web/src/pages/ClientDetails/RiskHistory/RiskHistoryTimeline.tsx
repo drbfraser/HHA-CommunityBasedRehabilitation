@@ -2,9 +2,10 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mate
 import { Timeline } from "@material-ui/lab";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import React, { useState } from "react";
-import { IClient } from "util/clients";
+import { IClient } from "@cbr/common/util/clients";
 import { timestampToDateFromReference, timestampToDateTime } from "@cbr/common/util/dates";
-import { IRisk, riskTypes } from "util/risks";
+import { IRisk } from "@cbr/common/util/risks";
+import { riskTypes } from "util/riskIcon"
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";

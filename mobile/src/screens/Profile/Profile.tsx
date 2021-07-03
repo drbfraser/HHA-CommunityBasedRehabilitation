@@ -7,6 +7,7 @@ import { useZones } from "@cbr/common";
 import { useCurrentUser } from "@cbr/common";
 import theme from "../../theme.styles";
 import useStyles from "./Profile.styles";
+import ChangePasswordDialog from "./ChangePasswordDialog";
 
 const Profile = () => {
     const styles = useStyles();
@@ -30,60 +31,12 @@ const Profile = () => {
             ) : (
                 <>
                     <Portal>
-                        <Dialog
-                            dismissable={false}
+                        <ChangePasswordDialog
                             visible={isPassChangeDialogVisible}
                             onDismiss={() => {
                                 setPassChangeDialogVisibility(false);
                             }}
-                        >
-                            <Dialog.Title>Change password</Dialog.Title>
-                            <Dialog.Content>
-                                <TextInput
-                                    label="Old password"
-                                    mode="outlined"
-                                    secureTextEntry
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    autoCompleteType="password"
-                                    textContentType="password"
-                                />
-                                <TextInput
-                                    label="New password"
-                                    mode="outlined"
-                                    secureTextEntry
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    autoCompleteType="password"
-                                    textContentType="password"
-                                />
-                                <TextInput
-                                    label="Confirm new password"
-                                    mode="outlined"
-                                    secureTextEntry
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    autoCompleteType="password"
-                                    textContentType="password"
-                                />
-                            </Dialog.Content>
-                            <Dialog.Actions>
-                                <Button
-                                    onPress={() => {
-                                        setPassChangeDialogVisibility(false);
-                                    }}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    onPress={() => {
-                                        setPassChangeDialogVisibility(false);
-                                    }}
-                                >
-                                    Change
-                                </Button>
-                            </Dialog.Actions>
-                        </Dialog>
+                        />
                     </Portal>
 
                     <View style={styles.profileInfoContainer}>

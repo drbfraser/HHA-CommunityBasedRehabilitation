@@ -7,26 +7,26 @@ export interface IRisk {
     risk_level: RiskLevel;
     requirement: string;
     goal: string;
-};
+}
 
 export enum RiskType {
     HEALTH = "HEALTH",
     EDUCATION = "EDUCAT",
     SOCIAL = "SOCIAL",
-};
+}
 
 export enum RiskLevel {
     LOW = "LO",
     MEDIUM = "ME",
     HIGH = "HI",
     CRITICAL = "CR",
-};
+}
 
 export interface IRiskLevel {
     name: string;
     color: string;
     level: number;
-};
+}
 
 export const riskLevels: { [key: string]: IRiskLevel } = {
     [RiskLevel.LOW]: {

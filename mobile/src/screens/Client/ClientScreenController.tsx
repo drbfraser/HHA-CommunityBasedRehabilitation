@@ -25,11 +25,8 @@ const ClientScreenController = (props: clientScreenControllerProps) => {
         headerTintColor: "#fff",
         headerShown: true,
     });
-    const [clientID, setClientID] = useState<number>(0);
-    useEffect(() => {
-        setClientID(props.route.params.clientID);
-    });
+    return <Client clientID={props.route.params.clientID} />;
 
-    return <Client clientID={clientID} />;
+    //return <Client clientID={clientID} />;
 };
 export default ClientScreenController;

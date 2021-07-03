@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { IClient } from "@cbr/common/util/clients";
 import { timestampToDateFromReference, timestampToDateTime } from "@cbr/common/util/dates";
 import { IRisk } from "@cbr/common/util/risks";
-import { riskTypes } from "util/riskIcon"
+import { riskTypes } from "util/riskIcon";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";

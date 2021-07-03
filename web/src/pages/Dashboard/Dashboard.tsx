@@ -4,7 +4,7 @@ import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useHistory } from "react-router-dom";
 import { Cancel, CheckCircle, FiberManualRecord } from "@material-ui/icons";
 import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
-import { IRiskType, riskTypes } from "util/riskIcon"
+import { IRiskType, riskTypes } from "util/riskIcon";
 import { clientPrioritySort, IClientSummary } from "@cbr/common/util/clients";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { useZones } from "@cbr/common/util/hooks/zones";

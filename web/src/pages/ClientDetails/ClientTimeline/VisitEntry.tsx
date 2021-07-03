@@ -20,7 +20,7 @@ import { useStyles } from "./Entry.styles";
 import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { RiskType } from "@cbr/common/util/risks";
-import { riskTypes } from "util/riskIcon"
+import { riskTypes } from "util/riskIcon";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 import { useZones } from "@cbr/common/util/hooks/zones";

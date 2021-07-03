@@ -18,7 +18,7 @@ import {
     FormControl,
 } from "@material-ui/core";
 import { IRisk, riskLevels } from "@cbr/common/util/risks";
-import { riskTypes } from "util/riskIcon"
+import { riskTypes } from "util/riskIcon";
 import { IClient } from "@cbr/common/util/clients";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 

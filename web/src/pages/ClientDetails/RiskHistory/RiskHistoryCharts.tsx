@@ -10,7 +10,7 @@ import {
     ResponsiveContainer,
 } from "recharts";
 import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
-import { riskTypes } from "util/riskIcon"
+import { riskTypes } from "util/riskIcon";
 import { Grid, Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { timestampToDateFromReference } from "@cbr/common/util/dates";

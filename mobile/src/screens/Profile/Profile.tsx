@@ -2,10 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext, IAuthContext } from "../../context/AuthContext/AuthContext";
 import { View } from "react-native";
 import Alert from "../../components/Alert/Alert";
-import { Button, Dialog, Portal, Subheading, Text, TextInput, Title } from "react-native-paper";
+import { Button, Portal, Snackbar, Subheading, Text, Title } from "react-native-paper";
 import { useZones } from "@cbr/common";
-import { useCurrentUser } from "@cbr/common";
-import theme from "../../theme.styles";
 import useStyles from "./Profile.styles";
 import ChangePasswordDialog from "./ChangePasswordDialog";
 
@@ -16,11 +14,13 @@ const Profile = () => {
     useEffect(() => {
         authContext.requireLoggedIn(true);
     }, []);
+    // TODO: add cached data to some logged-in startup init process
     const zones = useZones();
     const user =
         authContext.authState.state === "loggedIn" ? authContext.authState.currentUser : null;
 
-    const [isPassChangeDialogVisible, setPassChangeDialogVisibility] = useState<boolean>(false);
+    const [isPassChangeDialogVisible, setPassChangeDialogVisibility] = useState(false);
+    const [isPassChangedSnackbarVisible, setPassChangeSnackbarVisibility] = useState(false);
 
     return (
         <View style={styles.container}>
@@ -33,8 +33,11 @@ const Profile = () => {
                     <Portal>
                         <ChangePasswordDialog
                             visible={isPassChangeDialogVisible}
-                            onDismiss={() => {
+                            onDismiss={(isSubmitSuccess) => {
                                 setPassChangeDialogVisibility(false);
+                                if (isSubmitSuccess) {
+                                    setPassChangeSnackbarVisibility(true);
+                                }
                             }}
                         />
                     </Portal>
@@ -71,6 +74,13 @@ const Profile = () => {
             <Button style={styles.logoutButton} mode="contained" onPress={authContext.logout}>
                 Logout
             </Button>
+            <Snackbar
+                visible={isPassChangedSnackbarVisible}
+                duration={4000}
+                onDismiss={() => setPassChangeSnackbarVisibility(false)}
+            >
+                Password changed successfully.
+            </Snackbar>
         </View>
     );
 };

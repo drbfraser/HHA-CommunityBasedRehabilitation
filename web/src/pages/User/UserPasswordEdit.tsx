@@ -12,10 +12,13 @@ import {
     changePasswordInitialValues,
     fieldLabels,
     passwordValidationSchema,
-} from "./fields";
-import { handleCancel, handleUpdatePassword } from "./handleUpdatePassword";
+} from "@cbr/common/Form/UserProfile/fields";
 import { useState } from "react";
 import React from "react";
+import { handleSubmitChangePassword } from "@cbr/common/Form/UserProfile/handleSubmitChangePassword";
+import history from "../../util/history";
+
+const handleCancel = () => history.goBack();
 
 const UserPasswordEdit = () => {
     const styles = useStyles();
@@ -43,7 +46,19 @@ const UserPasswordEdit = () => {
             <Formik
                 initialValues={changePasswordInitialValues}
                 validationSchema={passwordValidationSchema}
-                onSubmit={handleUpdatePassword(setWrongPasswordError)}
+                onSubmit={async (values, formikHelpers) => {
+                    return await handleSubmitChangePassword(
+                        values,
+                        formikHelpers,
+                        (success: boolean) => {
+                            if (success) {
+                                history.goBack();
+                            } else {
+                                setWrongPasswordError(true);
+                            }
+                        }
+                    );
+                }}
             >
                 {({ isSubmitting }) => (
                     <div className={styles.container}>

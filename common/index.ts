@@ -1,4 +1,6 @@
 export * from "./src/init";
+export * from "./src/Form/UserProfile/handleSubmitChangePassword";
+export * from "./src/Form/UserProfile/fields";
 export * from "./src/util/auth";
 export * from "./src/util/colors";
 export * from "./src/util/dates";

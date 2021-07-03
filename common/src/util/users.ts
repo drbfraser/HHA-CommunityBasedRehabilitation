@@ -1,3 +1,7 @@
+import { TPasswordValues } from "../Form/UserProfile/fields";
+import { FormikHelpers } from "formik";
+import { apiFetch, Endpoint } from "./endpoints";
+
 export interface IUser {
     id: number;
     username: string;
@@ -25,4 +29,17 @@ export const userRoles = {
     [UserRole.WORKER]: {
         name: "Worker",
     },
+};
+
+export const updateCurrentUserPassword = async (oldPassword: string, newPassword: string) => {
+    const passwordInfo = JSON.stringify({
+        current_password: oldPassword,
+        new_password: newPassword,
+    });
+
+    const init: RequestInit = {
+        method: "PUT",
+        body: passwordInfo,
+    };
+    return await apiFetch(Endpoint.USER_CURRENT_PASSWORD, "", init);
 };

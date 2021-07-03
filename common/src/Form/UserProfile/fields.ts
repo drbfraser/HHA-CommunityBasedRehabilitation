@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { Validation } from "@cbr/common/util/validations";
+import { Validation } from "../../util/validations";
 
 export enum changePasswordField {
     oldPassword = "oldPassword",
@@ -8,9 +8,9 @@ export enum changePasswordField {
 }
 
 export const fieldLabels = {
-    [changePasswordField.oldPassword]: "Old Password",
+    [changePasswordField.oldPassword]: "Old password",
     [changePasswordField.newPassword]: "New password",
-    [changePasswordField.confirmNewPassword]: "Confirm New password",
+    [changePasswordField.confirmNewPassword]: "Confirm new password",
 };
 
 export const changePasswordInitialValues = {
@@ -29,9 +29,10 @@ export const passwordValidationSchema = () =>
         [changePasswordField.newPassword]: Yup.string()
             .label(fieldLabels[changePasswordField.newPassword])
             .matches(Validation.passwordRegExp, Validation.passwordInvalidMsg)
+            .notOneOf([Yup.ref(changePasswordField.oldPassword)], "Passwords must be different")
             .required(),
         [changePasswordField.confirmNewPassword]: Yup.string()
             .label(fieldLabels[changePasswordField.confirmNewPassword])
-            .required()
-            .oneOf([Yup.ref(changePasswordField.newPassword)], "Passwords must match"),
+            .oneOf([Yup.ref(changePasswordField.newPassword)], "Passwords must match")
+            .required(),
     });

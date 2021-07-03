@@ -9,14 +9,15 @@ import {
     fieldLabels,
     passwordValidationSchema,
     TPasswordValues,
-} from "./fields";
-import { apiFetch, Endpoint } from "@cbr/common";
+    handleSubmitChangePassword,
+} from "@cbr/common";
 import Alert from "../../components/Alert/Alert";
+import { useStyles } from "./ChangePasswordDialog.styles";
 
 export type Props = {
     /**
      * Callback that is called when the dialog is dismissed (user cancels or password successfully
-     * changed).
+     * changed). The {@link visible} prop needs to be updated when this is called.
      *
      * @param isSubmitSuccess Whether the user's password was changed successfully.
      */
@@ -25,25 +26,15 @@ export type Props = {
     visible: boolean;
 };
 
-const updateCurrentUserPassword = async (userInfo: string) => {
-    const init: RequestInit = {
-        method: "PUT",
-        body: userInfo,
-    };
-
-    const userParams = "";
-    return await apiFetch(Endpoint.USER_CURRENT_PASSWORD, userParams, init);
-};
-
 const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
     const [isSubmissionError, setSubmissionError] = useState(false);
     const newPassRef = useRef<NativeTextInput>(null);
     const confirmNewPassRef = useRef<NativeTextInput>(null);
 
+    const styles = useStyles();
+
     useEffect(() => {
-        if (!visible) {
-            setSubmissionError(false);
-        }
+        setSubmissionError(false);
     }, [visible]);
 
     // Pass dismissable={false} to prevent the user from tapping on the outside to dismiss.
@@ -62,29 +53,23 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                         initialValues={changePasswordInitialValues}
                         validationSchema={passwordValidationSchema}
                         onReset={() => setSubmissionError(false)}
-                        onSubmit={async (values: TPasswordValues, formikHelpers) => {
-                            console.log("Attempting submission");
-                            setSubmissionError(false);
-                            const passwordInfo = JSON.stringify({
-                                current_password: values.oldPassword,
-                                new_password: values.newPasswod,
+                        onSubmit={(values, formikHelpers) => {
+                            return handleSubmitChangePassword(values, formikHelpers, (success) => {
+                                if (success) {
+                                    setSubmissionError(false);
+                                    onDismiss(true);
+                                    formikHelpers.resetForm();
+                                } else {
+                                    setSubmissionError(true);
+                                }
                             });
-                            try {
-                                await updateCurrentUserPassword(passwordInfo);
-                                onDismiss(true);
-                            } catch (e) {
-                                setSubmissionError(true);
-                                formikHelpers.setSubmitting(false);
-                            }
                         }}
                     >
                         {(formikProps: FormikProps<TPasswordValues>) => (
                             <>
                                 {!formikProps.isSubmitting && isSubmissionError ? (
                                     <Alert
-                                        style={{
-                                            marginVertical: 0,
-                                        }}
+                                        style={styles.alert}
                                         severity="error"
                                         text="Failed to change password."
                                     />
@@ -182,13 +167,7 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                 ) : (
                                     <></>
                                 )}
-                                <View
-                                    style={{
-                                        marginVertical: 10,
-                                        flexDirection: "row",
-                                        justifyContent: "flex-en",
-                                    }}
-                                >
+                                <View style={styles.buttonContainer}>
                                     <Button
                                         disabled={formikProps.isSubmitting}
                                         onPress={() => onDismiss(false)}

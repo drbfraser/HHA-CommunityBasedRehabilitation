@@ -5,7 +5,7 @@ import theme from "./util/theme.styles";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyle from "./app.styles";
-import { stackScreenName, stackScreenProps } from "./util/screens";
+import { StackScreenName, stackScreenProps } from "./util/screens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { screensForUser } from "./util/screens";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
@@ -169,16 +169,16 @@ export default function App() {
                             initialRouteName={
                                 authState.state === "loggedIn" ||
                                 authState.state === "previouslyLoggedIn"
-                                    ? stackScreenName.LOADING
-                                    : stackScreenName.LOGIN //this should be reversed and technically supposed to work. On hold for now.
+                                    ? StackScreenName.LOADING
+                                    : StackScreenName.LOGIN //this should be reversed and technically supposed to work. On hold for now.
                             }
-                            //initialRouteName={stackScreenName.LOGIN}
+                            //initialRouteName={StackScreenName.LOGIN}
                             screenOptions={{
                                 headerShown: false,
                                 title: "Main Menu",
                             }}
                         >
-                            {Object.values(stackScreenName).map((name) => (
+                            {Object.values(StackScreenName).map((name) => (
                                 <Stack.Screen
                                     key={name}
                                     name={name}

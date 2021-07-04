@@ -9,12 +9,12 @@ import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
 import { SMALL_WIDTH } from "../../util/theme.styles";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, stackScreenName } from "../../util/screens";
+import { stackParamList, StackScreenName } from "../../util/screens";
 import { Navigation } from "react-native-navigation";
 import { useEffect } from "react";
 
 interface LoginProps {
-    navigation: StackNavigationProp<stackParamList, stackScreenName.LOGIN>;
+    navigation: StackNavigationProp<stackParamList, StackScreenName.LOGIN>;
 }
 
 enum LoginStatus {
@@ -62,7 +62,7 @@ const Login = (props: LoginProps) => {
         if (!loginSucceeded) {
             setStatus(LoginStatus.FAILED);
         } else {
-            props.navigation.navigate(stackScreenName.HOME);
+            props.navigation.navigate(StackScreenName.HOME);
         }
     };
 

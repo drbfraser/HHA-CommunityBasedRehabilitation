@@ -12,7 +12,6 @@ import {
     TDisabilityMap,
 } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
 import { riskTypes } from "../../util/riskIcon";
-import { DatePicker } from "react-native-woodpicker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useCallback } from "react";
 /*
@@ -22,11 +21,11 @@ import { useCallback } from "react";
     Change risk card edit button to popup instead of text box (or can be either)
     Create component that displays surveys being done
 */
-interface clientProps {
+interface ClientProps {
     clientID: number;
 }
 
-const Client = (props: clientProps) => {
+const Client = (props: ClientProps) => {
     const styles = clientStyle();
     //Client fetch and API call variables
     const [presentClient, setPresentClient] = useState<ClientDTO>();
@@ -49,7 +48,6 @@ const Client = (props: clientProps) => {
             setPresentClient(presentClient);
         };
         getClientDetails();
-        console.log(presentClient);
     }, []);
 
     //Disability and Menu Variables
@@ -247,6 +245,7 @@ const Client = (props: clientProps) => {
                         }}
                         disabled={editMode}
                     />
+                    {checked ? <Text>This will show up when checked</Text> : <></>}
                 </View>
                 <View style={styles.clientDetailsFinalView}>
                     <Button
@@ -257,14 +256,18 @@ const Client = (props: clientProps) => {
                     >
                         {editMode ? "Edit" : "Save"}
                     </Button>
-                    <Button
-                        mode={cancelButtonType}
-                        style={styles.clientDetailsFinalButtons}
-                        disabled={editMode}
-                        onPress={cancelEdit}
-                    >
-                        Cancel
-                    </Button>
+                    {editMode ? (
+                        <></>
+                    ) : (
+                        <Button
+                            mode={cancelButtonType}
+                            style={styles.clientDetailsFinalButtons}
+                            disabled={editMode}
+                            onPress={cancelEdit}
+                        >
+                            Cancel
+                        </Button>
+                    )}
                 </View>
             </Card>
             <Divider></Divider>

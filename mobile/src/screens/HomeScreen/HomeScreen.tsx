@@ -26,8 +26,8 @@ const HomeScreen = (props: HomeScreenProps) => {
                         text: "Logout",
                         style: "destructive",
                         onPress: () => {
-                            authContext.logout();
                             props.navigation.dispatch(e.data.action);
+                            authContext.logout();
                         },
                     },
                 ]);

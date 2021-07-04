@@ -5,11 +5,11 @@ import useStyles from "./ClientList.styles";
 import { ClientTest, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
 import { riskLevels } from "../../util/risks";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, stackScreenName } from "../../util/screens";
+import { stackParamList, StackScreenName } from "../../util/screens";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 interface ClientListControllerProps {
-    navigation: StackNavigationProp<stackParamList, stackScreenName.HOME>;
+    navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
 }
 
 const ClientList = (props: ClientListControllerProps) => {
@@ -37,7 +37,7 @@ const ClientList = (props: ClientListControllerProps) => {
                         <DataTable.Row
                             key={item.id} // you need a unique key per item
                             onPress={() => {
-                                props.navigation.navigate(stackScreenName.CLIENT, {
+                                props.navigation.navigate(StackScreenName.CLIENT, {
                                     clientID: item.id,
                                 });
                             }}

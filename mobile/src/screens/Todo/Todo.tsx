@@ -4,11 +4,11 @@ import { Button, Text, Title } from "react-native-paper";
 import useStyles from "./Todo.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, stackScreenName } from "../../util/screens";
+import { stackParamList, StackScreenName } from "../../util/screens";
 import { Navigation } from "react-native-navigation";
 
 interface LogoutProps {
-    navigation: StackNavigationProp<stackParamList, stackScreenName.HOME>;
+    navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
 }
 
 const Todo = (props: LogoutProps) => {
@@ -26,8 +26,7 @@ const Todo = (props: LogoutProps) => {
             <Button
                 mode="contained"
                 onPress={() => {
-                    authContext.logout();
-                    props.navigation.navigate(stackScreenName.LOGIN);
+                    props.navigation.navigate(StackScreenName.LOGIN);
                 }}
             >
                 Logout

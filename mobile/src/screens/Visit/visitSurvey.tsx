@@ -113,7 +113,7 @@ const visitFocusForm = (
                     status={checked ? "checked" : "unchecked"}
                     onPress={() => {
                         setChecked(!checked);
-                        onCheckboxChange(!checked, "HEALTH");
+                        // onCheckboxChange(!checked, "HEALTH");
                     }}
                 />
             </View>
@@ -177,8 +177,15 @@ const NewVisit = () => {
     const [checked, setChecked] = React.useState(false);
     const [checked2, setChecked2] = React.useState(false);
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
-    const zones = useZones();
-    console.log(zones, "1");
+    // const zones = useZones();
+    const [zones, setZones] = useState<TZoneMap>(new Map());
+    // setZones(useZones());
+
+    const getZonesMap = async () => {
+        setZones(await getZones());
+    };
+
+    getZonesMap();
 
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 

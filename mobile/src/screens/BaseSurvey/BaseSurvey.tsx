@@ -36,9 +36,12 @@ const BaseSurvey = () => {
     const [step, setStep] = useState<number>(0);
     const [submissionError, setSubmissionError] = useState(false);
     const styles = useStyles();
-
+    const [stepChecked, setStepChecked] = useState([false]);
     const isFinalStep = step + 1 === surveyTypes.length && step !== 0;
-    const prevStep = () => setStep(step - 1);
+    const prevStep = () => {
+        setStep(step - 1);
+    };
+    // Make sure the user can not click to next if they did not fill out the required fields
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         // TODO: conncet with the client
         if (isFinalStep) {
@@ -46,12 +49,23 @@ const BaseSurvey = () => {
         } else {
             if (step === 0) {
                 // For testing
+                if (stepChecked.length < surveySteps.length - 1) {
+                    for (let i = 1; i < surveySteps.length - 1; i++) {
+                        stepChecked.push(false);
+                    }
+                }
+
                 helpers.setFieldValue(`${[FormField.client]}`, 1);
                 // helpers.setFieldValue(`${[FormField.client]}`, clientId);
             }
+            if (step === 0 || step === 3) {
+                helpers.setTouched({});
+            }
+            let newArr = [...stepChecked];
+            newArr[step] = true;
+            setStepChecked(newArr);
             setStep(step + 1);
             helpers.setSubmitting(false);
-            helpers.setTouched({});
         }
     };
 
@@ -115,8 +129,15 @@ const BaseSurvey = () => {
                                     previousBtnTextStyle={styles.buttonTextStyle}
                                     nextBtnTextStyle={styles.buttonTextStyle}
                                     nextBtnStyle={styles.nextButton}
-                                    onNext={() => nextStep(formikProps.values, formikProps)}
-                                    nextBtnDisabled={!formikProps.isValid}
+                                    onNext={() => {
+                                        nextStep(formikProps.values, formikProps);
+                                    }}
+                                    nextBtnDisabled={
+                                        !stepChecked[step]
+                                            ? Object.keys(formikProps.errors).length !== 0 ||
+                                              Object.keys(formikProps.touched).length === 0
+                                            : false
+                                    }
                                     onPrevious={prevStep}
                                     previousBtnStyle={styles.prevButton}
                                     onSubmit={() => nextStep(formikProps.values, formikProps)}

@@ -66,7 +66,7 @@ const visitFocusForm = (
                     (checked && type === visitType)
             )
         );
-        console.log(visitTypes);
+        console.log(checked);
 
         if (checked) {
             formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, {
@@ -92,18 +92,15 @@ const visitFocusForm = (
                     value={formikProps.values.village}
                     onChangeText={formikProps.handleChange("village")}
                 />
-
-                <TextPicker
+                <DicTextPicker
                     field={FormField.zone}
                     choices={zones}
                     values={formikProps.values[FormField.zone]}
                     setFieldValue={formikProps.setFieldValue}
                     setFieldTouched={formikProps.setFieldTouched}
                 />
-
                 <Text style={styles.pickerQuestion}>{"\n"}Select the Reasons for the Visit </Text>
-
-                {visitTypes.map((visitType) => (
+                {/* {visitTypes.map((visitType) => (
                     <TextCheckBox
                         key={visitType}
                         field={visitType}
@@ -111,14 +108,14 @@ const visitFocusForm = (
                         label={fieldLabels[visitType]}
                         setFieldValue={formikProps.setFieldValue}
                     />
-                ))}
-
-                {/* <Checkbox
+                ))} */}
+                <Checkbox
                     status={checked ? "checked" : "unchecked"}
                     onPress={() => {
                         setChecked(!checked);
+                        onCheckboxChange(!checked, "HEALTH");
                     }}
-                /> */}
+                />
             </View>
         </View>
     );
@@ -181,6 +178,7 @@ const NewVisit = () => {
     const [checked2, setChecked2] = React.useState(false);
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
     const zones = useZones();
+    console.log(zones, "1");
 
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 
@@ -191,11 +189,6 @@ const NewVisit = () => {
             Form: visitReasonStepCallBack(setEnabledSteps, zones),
             validationSchema: initialValidationSchema,
         },
-        // {
-        //     label: "Health Visit",
-        //     Form: (formikProps) => healthVisitForm(formikProps),
-        //     validationSchema: initialValidationSchema,
-        // },
     ];
 
     const prevStep = () => setStep(step - 1);

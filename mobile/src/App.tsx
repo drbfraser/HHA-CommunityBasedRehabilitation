@@ -166,7 +166,13 @@ export default function App() {
                 <NavigationContainer theme={theme}>
                     <AuthContext.Provider value={authContext}>
                         <Stack.Navigator
-                            initialRouteName={stackScreenName.LOGIN}
+                            initialRouteName={
+                                authState.state === "loggedIn" ||
+                                authState.state === "previouslyLoggedIn"
+                                    ? stackScreenName.LOADING
+                                    : stackScreenName.LOGIN //this should be reversed and technically supposed to work. On hold for now.
+                            }
+                            //initialRouteName={stackScreenName.LOGIN}
                             screenOptions={{
                                 headerShown: false,
                                 title: "Main Menu",

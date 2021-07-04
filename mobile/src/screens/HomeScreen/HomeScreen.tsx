@@ -31,7 +31,10 @@ const HomeScreen = (props: HomeScreenProps) => {
                         //         props.navigation.navigate(stackScreenName.LOGIN);
                         //     }
                         // },
-                        onPress: () => props.navigation.dispatch(e.data.action),
+                        onPress: () => {
+                            authContext.logout();
+                            props.navigation.dispatch(e.data.action);
+                        },
                     },
                 ]);
             }),

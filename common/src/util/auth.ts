@@ -12,18 +12,23 @@ interface IAPIToken {
     user_id: number;
 }
 
-const getAccessToken = (): Promise<string | null> => {
+const getAccessToken = async (): Promise<string | null> => {
     return commonConfiguration.keyValStorageProvider.getItem(ACCESS_TOKEN_KEY);
 };
-const getRefreshToken = (): Promise<string | null> => {
+const getRefreshToken = async (): Promise<string | null> => {
     return commonConfiguration.keyValStorageProvider.getItem(REFRESH_TOKEN_KEY);
 };
 
-const setAccessToken = (token: string): Promise<void> => {
+const setAccessToken = async (token: string): Promise<void> => {
     return commonConfiguration.keyValStorageProvider.setItem(ACCESS_TOKEN_KEY, token);
 };
-const setRefreshToken = (token: string): Promise<void> => {
+const setRefreshToken = async (token: string): Promise<void> => {
     return commonConfiguration.keyValStorageProvider.setItem(REFRESH_TOKEN_KEY, token);
+};
+
+const deleteTokens = async () => {
+    await commonConfiguration.keyValStorageProvider.removeItem(ACCESS_TOKEN_KEY);
+    await commonConfiguration.keyValStorageProvider.removeItem(REFRESH_TOKEN_KEY);
 };
 
 /**
@@ -107,8 +112,7 @@ export const doLogin = async (username: string, password: string): Promise<boole
 };
 
 export const doLogout = async () => {
-    await setAccessToken("");
-    await setRefreshToken("");
+    await deleteTokens();
     await commonConfiguration.logoutCallback?.();
 };
 
@@ -132,7 +136,7 @@ export const isLoggedIn = async (): Promise<boolean> => isTokenValid(await getRe
 export const getAuthToken = async (): Promise<string | null> => {
     if (!(await isLoggedIn())) {
         if (commonConfiguration.shouldLogoutOnTokenRefreshFailure) {
-            doLogout();
+            await doLogout();
         }
         return null;
     }
@@ -142,7 +146,7 @@ export const getAuthToken = async (): Promise<string | null> => {
 
         if (!refreshSuccess) {
             if (commonConfiguration.shouldLogoutOnTokenRefreshFailure) {
-                doLogout();
+                await doLogout();
             }
             return null;
         }

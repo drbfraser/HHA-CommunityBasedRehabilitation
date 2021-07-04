@@ -63,6 +63,10 @@ const Login = (props: LoginProps) => {
             setStatus(LoginStatus.FAILED);
         } else {
             props.navigation.navigate(stackScreenName.HOME);
+            // props.navigation.reset({
+            //     index: 0,
+            //     routes: [{ name: stackScreenName.HOME }],
+            // });
         }
     };
 

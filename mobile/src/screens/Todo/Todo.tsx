@@ -26,7 +26,7 @@ const Todo = (props: LogoutProps) => {
             <Button
                 mode="contained"
                 onPress={() => {
-                    authContext.logout;
+                    authContext.logout();
                     props.navigation.navigate(stackScreenName.LOGIN);
                 }}
             >

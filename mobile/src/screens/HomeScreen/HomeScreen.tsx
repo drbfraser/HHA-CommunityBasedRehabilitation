@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { Button, Dialog, Paragraph, Portal, Provider } from "react-native-paper";
+import { Provider } from "react-native-paper";
 import theme from "../../util/theme.styles";
 import { screensForUser, stackParamList, stackScreenName } from "../../util/screens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
-import { Alert, View } from "react-native";
+import { Alert } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 interface HomeScreenProps {
@@ -25,12 +25,6 @@ const HomeScreen = (props: HomeScreenProps) => {
                     {
                         text: "Logout",
                         style: "destructive",
-                        // onPress: () => {
-                        //     {
-                        //         authContext.logout;
-                        //         props.navigation.navigate(stackScreenName.LOGIN);
-                        //     }
-                        // },
                         onPress: () => {
                             authContext.logout();
                             props.navigation.dispatch(e.data.action);

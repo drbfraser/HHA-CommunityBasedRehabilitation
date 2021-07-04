@@ -8,7 +8,7 @@ interface HomeScreenControllerProps {
 }
 
 const HomeScreenController = (props: HomeScreenControllerProps) => {
-    {
+    React.useEffect(() => {
         props.navigation.setOptions({
             title: "Main Menu",
             headerStyle: {
@@ -17,7 +17,7 @@ const HomeScreenController = (props: HomeScreenControllerProps) => {
             headerTintColor: "#fff",
             headerShown: true,
         });
-    }
+    });
 
     return <HomeScreen navigation={props.navigation}></HomeScreen>;
 };

@@ -272,7 +272,7 @@ const Client = (props: clientProps) => {
             <Divider></Divider>
             <Card style={styles.riskCardStyle}>
                 <View style={styles.riskCardContentStyle}>
-                    <Text style={styles.riskTitleStyle}>Health - </Text>
+                    <Text style={styles.riskTitleStyle}>Health</Text>
                     <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
                 </View>
                 <View>
@@ -297,7 +297,7 @@ const Client = (props: clientProps) => {
             <Divider></Divider>
             <Card style={styles.riskCardStyle}>
                 <View style={styles.riskCardContentStyle}>
-                    <Text style={styles.riskTitleStyle}>Education - </Text>
+                    <Text style={styles.riskTitleStyle}>Education</Text>
                     <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
                 </View>
                 <View>
@@ -322,7 +322,7 @@ const Client = (props: clientProps) => {
             <Divider></Divider>
             <Card style={styles.riskCardStyle}>
                 <View style={styles.riskCardContentStyle}>
-                    <Text style={styles.riskTitleStyle}>Social - </Text>
+                    <Text style={styles.riskTitleStyle}>Social</Text>
                     <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
                 </View>
                 <View>

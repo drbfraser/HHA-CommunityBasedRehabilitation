@@ -17,13 +17,15 @@ interface clientScreenControllerProps {
 }
 
 const ClientScreenController = (props: clientScreenControllerProps) => {
-    props.navigation.setOptions({
-        title: "Client Page",
-        headerStyle: {
-            backgroundColor: "#273263",
-        },
-        headerTintColor: "#fff",
-        headerShown: true,
+    React.useEffect(() => {
+        props.navigation.setOptions({
+            title: "Client Page",
+            headerStyle: {
+                backgroundColor: "#273263",
+            },
+            headerTintColor: "#fff",
+            headerShown: true,
+        });
     });
     return <Client clientID={props.route.params.clientID} />;
 

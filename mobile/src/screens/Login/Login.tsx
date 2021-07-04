@@ -63,10 +63,6 @@ const Login = (props: LoginProps) => {
             setStatus(LoginStatus.FAILED);
         } else {
             props.navigation.navigate(stackScreenName.HOME);
-            // props.navigation.reset({
-            //     index: 0,
-            //     routes: [{ name: stackScreenName.HOME }],
-            // });
         }
     };
 
@@ -86,9 +82,9 @@ const Login = (props: LoginProps) => {
             )}
 
             <View style={styles.formContainer}>
-                <Button mode="contained" onPress={() => console.log(authState.state)}>
+                {/* <Button mode="contained" onPress={() => console.log(authState.state)}>
                     STATECHECK
-                </Button>
+                </Button> */}
                 <Image
                     style={styles.logo}
                     resizeMode="contain"

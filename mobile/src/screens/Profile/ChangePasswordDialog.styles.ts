@@ -11,6 +11,6 @@ export const useStyles = () =>
             justifyContent: "flex-end",
         },
         passwordTextInput: {
-            marginVertical: 5,
+            marginTop: 10,
         },
     });

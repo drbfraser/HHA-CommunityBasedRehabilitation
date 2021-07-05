@@ -4,7 +4,7 @@ import { Formik, FormikProps } from "formik";
 import { TextInput as NativeTextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
-    changePasswordField,
+    ChangePasswordField,
     changePasswordInitialValues,
     fieldLabels,
     passwordValidationSchema,
@@ -27,6 +27,9 @@ export type Props = {
     /** Determines whether the dialog is visible. */
     visible: boolean;
 };
+
+const shouldShowError = (formikProps: FormikProps<TPasswordValues>, field: ChangePasswordField) =>
+    !!formikProps.errors[field] && formikProps.touched[field];
 
 const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
     const [submissionError, setSubmissionError] = useState<string | null>(null);
@@ -76,19 +79,17 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                         text={submissionError}
                                         onClose={() => setSubmissionError(null)}
                                     />
-                                ) : (
-                                    <></>
-                                )}
+                                ) : null}
                                 <PasswordTextInput
                                     style={styles.passwordTextInput}
-                                    label={fieldLabels[changePasswordField.oldPassword]}
+                                    label={fieldLabels[ChangePasswordField.oldPassword]}
                                     value={formikProps.values.oldPassword}
                                     onChangeText={formikProps.handleChange(
-                                        changePasswordField.oldPassword
+                                        ChangePasswordField.oldPassword
                                     )}
                                     onEndEditing={() => {
                                         formikProps.setFieldTouched(
-                                            changePasswordField.oldPassword
+                                            ChangePasswordField.oldPassword
                                         );
                                     }}
                                     disabled={formikProps.isSubmitting}
@@ -96,25 +97,22 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                     blurOnSubmit={false}
                                     onSubmitEditing={() => newPassRef.current?.focus()}
                                 />
-                                {!!formikProps.errors.oldPassword &&
-                                formikProps.touched.oldPassword === true ? (
+                                {shouldShowError(formikProps, ChangePasswordField.oldPassword) ? (
                                     <HelperText type="error">
                                         {formikProps.errors.oldPassword}
                                     </HelperText>
-                                ) : (
-                                    <></>
-                                )}
+                                ) : null}
                                 <PasswordTextInput
                                     style={styles.passwordTextInput}
                                     ref={newPassRef}
-                                    label={fieldLabels[changePasswordField.newPassword]}
+                                    label={fieldLabels[ChangePasswordField.newPassword]}
                                     value={formikProps.values.newPassword}
                                     onChangeText={formikProps.handleChange(
-                                        changePasswordField.newPassword
+                                        ChangePasswordField.newPassword
                                     )}
                                     onEndEditing={() => {
                                         formikProps.setFieldTouched(
-                                            changePasswordField.newPassword
+                                            ChangePasswordField.newPassword
                                         );
                                     }}
                                     disabled={formikProps.isSubmitting}
@@ -122,25 +120,22 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                     blurOnSubmit={false}
                                     onSubmitEditing={() => confirmNewPassRef.current?.focus()}
                                 />
-                                {!!formikProps.errors.newPassword &&
-                                formikProps.touched.newPassword === true ? (
+                                {shouldShowError(formikProps, ChangePasswordField.newPassword) ? (
                                     <HelperText type="error">
                                         {formikProps.errors.newPassword}
                                     </HelperText>
-                                ) : (
-                                    <></>
-                                )}
+                                ) : null}
                                 <PasswordTextInput
                                     style={styles.passwordTextInput}
                                     ref={confirmNewPassRef}
-                                    label={fieldLabels[changePasswordField.confirmNewPassword]}
+                                    label={fieldLabels[ChangePasswordField.confirmNewPassword]}
                                     value={formikProps.values.confirmNewPassword}
                                     onChangeText={formikProps.handleChange(
-                                        changePasswordField.confirmNewPassword
+                                        ChangePasswordField.confirmNewPassword
                                     )}
                                     onEndEditing={() => {
                                         formikProps.setFieldTouched(
-                                            changePasswordField.confirmNewPassword
+                                            ChangePasswordField.confirmNewPassword
                                         );
                                     }}
                                     disabled={formikProps.isSubmitting}
@@ -150,14 +145,14 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                         formikProps.handleSubmit();
                                     }}
                                 />
-                                {!!formikProps.errors.confirmNewPassword &&
-                                formikProps.touched.confirmNewPassword === true ? (
+                                {shouldShowError(
+                                    formikProps,
+                                    ChangePasswordField.confirmNewPassword
+                                ) ? (
                                     <HelperText type="error">
                                         {formikProps.errors.confirmNewPassword}
                                     </HelperText>
-                                ) : (
-                                    <></>
-                                )}
+                                ) : null}
                             </KeyboardAwareScrollView>
                         </Dialog.ScrollArea>
                         <Dialog.Actions>

@@ -8,17 +8,17 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
 import {
-    changePasswordField,
+    ChangePasswordField,
     changePasswordInitialValues,
     fieldLabels,
     passwordValidationSchema,
-} from "@cbr/common/Form/UserProfile/fields";
+} from "@cbr/common/form/UserProfile/userProfileFields";
 import { useState } from "react";
 import React from "react";
 import {
     getErrorMessageFromSubmissionError,
     handleSubmitChangePassword,
-} from "@cbr/common/Form/UserProfile/handleSubmitChangePassword";
+} from "@cbr/common/form/UserProfile/handleSubmitChangePassword";
 import history from "../../util/history";
 
 const handleCancel = () => history.goBack();
@@ -64,10 +64,10 @@ const UserPasswordEdit = () => {
                                 <Grid item md={3} xs={12}>
                                     <Field
                                         component={TextField}
-                                        name={changePasswordField.oldPassword}
+                                        name={ChangePasswordField.oldPassword}
                                         variant="outlined"
                                         type="password"
-                                        label={fieldLabels[changePasswordField.oldPassword]}
+                                        label={fieldLabels[ChangePasswordField.oldPassword]}
                                         required
                                         fullWidth
                                     />
@@ -76,10 +76,10 @@ const UserPasswordEdit = () => {
                                     <Grid>
                                         <Field
                                             component={TextField}
-                                            name={changePasswordField.newPassword}
+                                            name={ChangePasswordField.newPassword}
                                             variant="outlined"
                                             type="password"
-                                            label={fieldLabels[changePasswordField.newPassword]}
+                                            label={fieldLabels[ChangePasswordField.newPassword]}
                                             style={{ marginBottom: 8 }}
                                             required
                                             fullWidth
@@ -88,11 +88,11 @@ const UserPasswordEdit = () => {
                                     <Grid>
                                         <Field
                                             component={TextField}
-                                            name={changePasswordField.confirmNewPassword}
+                                            name={ChangePasswordField.confirmNewPassword}
                                             variant="outlined"
                                             type="password"
                                             label={
-                                                fieldLabels[changePasswordField.confirmNewPassword]
+                                                fieldLabels[ChangePasswordField.confirmNewPassword]
                                             }
                                             required
                                             fullWidth

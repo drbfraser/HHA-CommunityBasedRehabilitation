@@ -1,4 +1,4 @@
-import { TPasswordValues } from "./fields";
+import { TPasswordValues } from "./userProfileFields";
 import { FormikHelpers } from "formik";
 import { updateCurrentUserPassword } from "../../util/users";
 import { APIFetchFailError } from "../../util/endpoints";

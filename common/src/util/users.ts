@@ -1,5 +1,3 @@
-import { TPasswordValues } from "../Form/UserProfile/fields";
-import { FormikHelpers } from "formik";
 import { apiFetch, APIFetchFailError, Endpoint } from "./endpoints";
 
 export interface IUser {

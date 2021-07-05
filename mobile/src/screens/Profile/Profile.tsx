@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext, IAuthContext } from "../../context/AuthContext/AuthContext";
 import { View } from "react-native";
 import Alert from "../../components/Alert/Alert";
-import { Button, Portal, Snackbar, Subheading, Text, Title } from "react-native-paper";
+import { Button, Dialog, Portal, Snackbar, Subheading, Text, Title } from "react-native-paper";
 import { useZones } from "@cbr/common";
 import useStyles from "./Profile.styles";
 import ChangePasswordDialog from "./ChangePasswordDialog";
@@ -22,6 +22,8 @@ const Profile = () => {
     const [isPassChangeDialogVisible, setPassChangeDialogVisibility] = useState(false);
     const [isPassChangedSnackbarVisible, setPassChangeSnackbarVisibility] = useState(false);
 
+    const [isLogoutConfirmDialogVisible, setLogoutConfirmDialogVisibility] = useState(false);
+
     return (
         <View style={styles.container}>
             {user === null ? (
@@ -40,6 +42,22 @@ const Profile = () => {
                                 }
                             }}
                         />
+                        <Dialog
+                            visible={isLogoutConfirmDialogVisible}
+                            onDismiss={() => setLogoutConfirmDialogVisibility(false)}
+                        >
+                            {/* TODO: If the user has data made that isn't synced with the server,
+                                 tell them about it. */}
+                            <Dialog.Content>
+                                <Text>Are you sure you want to logout?</Text>
+                            </Dialog.Content>
+                            <Dialog.Actions>
+                                <Button onPress={() => setLogoutConfirmDialogVisibility(false)}>
+                                    Cancel
+                                </Button>
+                                <Button onPress={authContext.logout}>Logout</Button>
+                            </Dialog.Actions>
+                        </Dialog>
                     </Portal>
 
                     <View style={styles.profileInfoContainer}>
@@ -75,7 +93,7 @@ const Profile = () => {
                         <Button
                             style={styles.logoutButton}
                             mode="contained"
-                            onPress={authContext.logout}
+                            onPress={() => setLogoutConfirmDialogVisibility(true)}
                         >
                             Logout
                         </Button>

@@ -48,27 +48,27 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                 onDismiss(false);
             }}
         >
-            <Dialog.Title>Change password</Dialog.Title>
-            <Dialog.ScrollArea>
-                <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
-                    <Formik
-                        initialValues={changePasswordInitialValues}
-                        validationSchema={passwordValidationSchema}
-                        onReset={() => setSubmissionError(null)}
-                        onSubmit={async (values, formikHelpers) => {
-                            return handleSubmitChangePassword(values, formikHelpers)
-                                .then(() => {
-                                    setSubmissionError(null);
-                                    onDismiss(true);
-                                    formikHelpers.resetForm();
-                                })
-                                .catch((e: any) => {
-                                    setSubmissionError(getErrorMessageFromSubmissionError(e));
-                                });
-                        }}
-                    >
-                        {(formikProps: FormikProps<TPasswordValues>) => (
-                            <>
+            <Formik
+                initialValues={changePasswordInitialValues}
+                validationSchema={passwordValidationSchema}
+                onReset={() => setSubmissionError(null)}
+                onSubmit={async (values, formikHelpers) => {
+                    return handleSubmitChangePassword(values, formikHelpers)
+                        .then(() => {
+                            setSubmissionError(null);
+                            onDismiss(true);
+                            formikHelpers.resetForm();
+                        })
+                        .catch((e: any) => {
+                            setSubmissionError(getErrorMessageFromSubmissionError(e));
+                        });
+                }}
+            >
+                {(formikProps: FormikProps<TPasswordValues>) => (
+                    <>
+                        <Dialog.Title>Change password</Dialog.Title>
+                        <Dialog.ScrollArea>
+                            <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
                                 {!formikProps.isSubmitting && submissionError ? (
                                     <Alert
                                         style={styles.alert}
@@ -157,30 +157,30 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                 ) : (
                                     <></>
                                 )}
-                                <View style={styles.buttonContainer}>
-                                    <Button
-                                        disabled={formikProps.isSubmitting}
-                                        onPress={() => onDismiss(false)}
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        disabled={
-                                            formikProps.isSubmitting ||
-                                            Object.keys(formikProps.errors).length !== 0 ||
-                                            Object.keys(formikProps.touched).length === 0
-                                        }
-                                        loading={formikProps.isSubmitting}
-                                        onPress={formikProps.handleSubmit}
-                                    >
-                                        Change
-                                    </Button>
-                                </View>
-                            </>
-                        )}
-                    </Formik>
-                </KeyboardAwareScrollView>
-            </Dialog.ScrollArea>
+                            </KeyboardAwareScrollView>
+                        </Dialog.ScrollArea>
+                        <Dialog.Actions>
+                            <Button
+                                disabled={formikProps.isSubmitting}
+                                onPress={() => onDismiss(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                disabled={
+                                    formikProps.isSubmitting ||
+                                    Object.keys(formikProps.errors).length !== 0 ||
+                                    Object.keys(formikProps.touched).length === 0
+                                }
+                                loading={formikProps.isSubmitting}
+                                onPress={formikProps.handleSubmit}
+                            >
+                                Save
+                            </Button>
+                        </Dialog.Actions>
+                    </>
+                )}
+            </Formik>
         </Dialog>
     );
 };

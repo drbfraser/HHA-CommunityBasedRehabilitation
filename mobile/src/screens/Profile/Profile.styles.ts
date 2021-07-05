@@ -19,11 +19,13 @@ const useStyles = () => {
             fontSize: 24,
             fontWeight: "bold",
         },
-        profileInfoHeader: { fontWeight: "bold" },
+        profileInfoHeader: { fontWeight: "bold", fontSize: 18, marginBottom: 5 },
+        profileInfoText: { fontSize: 18, marginBottom: 5 },
+        changePasswordButton: {
+            marginVertical: 10,
+        },
         logoutButton: {
-            position: "absolute",
-            right: 0,
-            bottom: 0,
+            marginVertical: 5,
         },
     });
 };

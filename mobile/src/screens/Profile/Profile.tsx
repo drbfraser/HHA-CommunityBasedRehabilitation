@@ -48,18 +48,21 @@ const Profile = () => {
                         </Title>
 
                         <Subheading style={styles.profileInfoHeader}>Username</Subheading>
-                        <Text>{user.username}</Text>
+                        <Text style={styles.profileInfoText}>{user.username}</Text>
 
                         <Subheading style={styles.profileInfoHeader}>ID</Subheading>
-                        <Text>{user.id}</Text>
+                        <Text style={styles.profileInfoText}>{user.id}</Text>
 
                         <Subheading style={styles.profileInfoHeader}>Zone</Subheading>
-                        <Text>{zones.get(user.zone) ?? "Unknown"}</Text>
+                        <Text style={styles.profileInfoText}>
+                            {zones.get(user.zone) ?? "Unknown"}
+                        </Text>
 
                         <Subheading style={styles.profileInfoHeader}>Phone number</Subheading>
-                        <Text>{user.phone_number}</Text>
+                        <Text style={styles.profileInfoText}>{user.phone_number}</Text>
 
                         <Button
+                            style={styles.changePasswordButton}
                             icon="lock-open"
                             mode="text"
                             onPress={() => {
@@ -68,12 +71,17 @@ const Profile = () => {
                         >
                             Change password
                         </Button>
+
+                        <Button
+                            style={styles.logoutButton}
+                            mode="contained"
+                            onPress={authContext.logout}
+                        >
+                            Logout
+                        </Button>
                     </View>
                 </>
             )}
-            <Button style={styles.logoutButton} mode="contained" onPress={authContext.logout}>
-                Logout
-            </Button>
             <Snackbar
                 visible={isPassChangedSnackbarVisible}
                 duration={4000}

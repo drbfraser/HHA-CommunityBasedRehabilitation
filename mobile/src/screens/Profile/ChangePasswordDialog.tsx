@@ -74,6 +74,7 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                         style={styles.alert}
                                         severity="error"
                                         text={submissionError}
+                                        onClose={() => setSubmissionError(null)}
                                     />
                                 ) : (
                                     <></>

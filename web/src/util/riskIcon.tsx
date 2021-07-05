@@ -1,10 +1,8 @@
 import { RiskType } from "@cbr/common/util/risks";
-import { LocalHospital, RecordVoiceOver, School } from "@material-ui/icons";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core";
+import { LocalHospital, RecordVoiceOver, School, SvgIconComponent } from "@material-ui/icons";
 export interface IRiskType {
     name: string;
-    Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
+    Icon: SvgIconComponent;
 }
 
 export const riskTypes: { [key: string]: IRiskType } = {

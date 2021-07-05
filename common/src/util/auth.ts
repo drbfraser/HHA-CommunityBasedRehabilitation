@@ -2,35 +2,14 @@ import jwt_decode from "jwt-decode";
 import { Endpoint } from "./endpoints";
 import { commonConfiguration } from "../init";
 import { Mutex } from "async-mutex";
-
-const ACCESS_TOKEN_KEY = "api_accessToken";
-const REFRESH_TOKEN_KEY = "api_refreshToken";
-
-interface IAPIToken {
-    token_type: "access" | "refresh";
-    exp: number;
-    jti: string;
-    user_id: number;
-}
-
-const getAccessToken = async (): Promise<string | null> => {
-    return commonConfiguration.keyValStorageProvider.getItem(ACCESS_TOKEN_KEY);
-};
-const getRefreshToken = async (): Promise<string | null> => {
-    return commonConfiguration.keyValStorageProvider.getItem(REFRESH_TOKEN_KEY);
-};
-
-const setAccessToken = async (token: string): Promise<void> => {
-    return commonConfiguration.keyValStorageProvider.setItem(ACCESS_TOKEN_KEY, token);
-};
-const setRefreshToken = async (token: string): Promise<void> => {
-    return commonConfiguration.keyValStorageProvider.setItem(REFRESH_TOKEN_KEY, token);
-};
-
-const deleteTokens = async () => {
-    await commonConfiguration.keyValStorageProvider.removeItem(ACCESS_TOKEN_KEY);
-    await commonConfiguration.keyValStorageProvider.removeItem(REFRESH_TOKEN_KEY);
-};
+import {
+    deleteTokens,
+    getAccessToken,
+    getRefreshToken,
+    IAPIToken,
+    setAccessToken,
+    setRefreshToken,
+} from "./internal/tokens";
 
 /**
  * Validates the given token to check if it's valid for use.

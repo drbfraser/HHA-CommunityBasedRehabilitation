@@ -6,7 +6,6 @@
   - npm ci
 
 stages:
-  - format
   - build
   - deploy
 
@@ -19,8 +18,8 @@ variables:
   PROD_BRANCH: "prod"
   NPM_VERSION: "7.19.0"
 
-format common:
-  stage: format
+test common:
+  stage: build
   image: node:14
   tags:
     - docker
@@ -37,6 +36,13 @@ format common:
     - npm ci
   script:
     - npx prettier --check .
+    - npx tsc
+    - npm run test-ci
+  artifacts:
+    expire_in: 1 day
+    reports:
+      junit:
+        - common/test-results.xml
 
 build mobile:
   stage: build

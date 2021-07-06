@@ -2,23 +2,24 @@
   "name": "@cbr/common",
   "version": "1.0.0",
   "scripts": {
-    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha -r ts-node/register test/**/*.ts",
-    "test-ci": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha -r ts-node/register test/**/*.ts --reporter mocha-junit-reporter"
+    "test": "jest",
+    "test-ci": "jest --ci --reporters=default --reporters=jest-junit"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.19",
+    "@testing-library/react-hooks": "^7.0.1",
     "@types/fetch-mock": "^7.3.3",
-    "@types/mocha": "^8.2.2",
+    "@types/jest": "^26.0.23",
     "@types/node": "^15.12.1",
     "@types/react": "^17.0.9",
     "base64url": "^3.0.1",
-    "chai": "^4.3.4",
     "fetch-mock": "^7.3.9",
-    "mocha": "^9.0.2",
-    "mocha-junit-reporter": "^2.0.0",
+    "jest": "^27.0.6",
+    "jest-junit": "^12.2.0",
     "node-fetch": "^2.6.1",
     "prettier": "^2.3.0",
-    "ts-node": "^10.0.0",
+    "react": "16.13.1",
+    "react-test-renderer": "16.13.1",
+    "ts-jest": "^27.0.3",
     "typescript": "~4.0.0"
   },
   "dependencies": {

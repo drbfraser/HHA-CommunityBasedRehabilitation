@@ -1,54 +1,20 @@
 import { calls, MockResponseObject, post, reset } from "fetch-mock";
 import { Endpoint } from "../../src/util/endpoints";
-import { doLogin, getAuthToken, isLoggedIn } from "../../src/util/auth";
-import { expect } from "chai";
-import base64url from "base64url";
+import { doLogin, doLogout, getAuthToken, isLoggedIn } from "../../src/util/auth";
 import jwt_decode from "jwt-decode";
 import {
     getAccessToken,
+    getRefreshToken,
     IAPIToken,
     setAccessToken,
     setRefreshToken,
 } from "../../src/util/internal/tokens";
-import { testKeyValStorage } from "../testSetup";
-import { describe } from "mocha";
+import { logoutCallbacks, testKeyValStorage } from "../testHelpers/testCommonConfiguration";
+import { sleep } from "../testHelpers/sleep";
+import { createFakeToken } from "../testHelpers/authTokenHelpers";
 
 const correctUsername = "user";
 const correctPassword = "password";
-
-const jwtJoseHeader: string = base64url.encode(
-    JSON.stringify({
-        typ: "JWT",
-        alg: "HS256",
-    })
-);
-
-// just a static signature because we don't verify the signatures
-const fakeJwsSignature = "ktkMgaQJFU83ds642P+8fMBv9UqhEQW3oVUkIlE/0PA";
-
-/**
- * Creates a fake token for testing
- *
- * @see https://datatracker.ietf.org/doc/html/rfc7519
- * @param tokenType Access or refresh
- * @param expireNow Whether to create an already-expired token
- */
-const createFakeToken = (tokenType: "access" | "refresh", expireNow: boolean): string => {
-    const jwtClaimsSet: string = base64url.encode(
-        JSON.stringify({
-            token_type: tokenType,
-            exp: expireNow ? 1000 : Date.now() / 1000 + 120,
-            jti: "97cf729673794d518c82240f3b59ee47",
-            user_id: 1,
-        } as IAPIToken)
-    );
-
-    return jwtJoseHeader + "." + jwtClaimsSet + "." + fakeJwsSignature;
-};
-
-const sleep = (ms: number) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-};
 
 beforeEach(() => {
     reset();
@@ -97,57 +63,79 @@ beforeEach(() => {
 describe("auth.ts", () => {
     describe("doLogin", () => {
         it("returns false if login fails", async () => {
-            expect(await doLogin(correctUsername, correctPassword + "wrong")).equal(false);
-            expect(await isLoggedIn()).equal(false);
+            expect(await doLogin(correctUsername, correctPassword + "wrong")).toEqual(false);
+            expect(await isLoggedIn()).toEqual(false);
         });
         it("returns true if login succeeds", async () => {
-            expect(await doLogin(correctUsername, correctPassword)).equal(true);
-            expect(await isLoggedIn()).equal(true);
+            expect(await doLogin(correctUsername, correctPassword)).toEqual(true);
+            expect(await isLoggedIn()).toEqual(true);
+        });
+    });
+
+    describe("doLogout", () => {
+        it("should work", async () => {
+            expect(await doLogin(correctUsername, correctPassword)).toEqual(true);
+            expect(await isLoggedIn()).toEqual(true);
+            expect(await getAccessToken()).not.toBeNull();
+            expect(await getRefreshToken()).not.toBeNull();
+
+            await new Promise((resolve) => {
+                // Test that the logout callback works. This will timeout if the logout callback
+                // isn't called.
+                logoutCallbacks.push(() => {
+                    resolve();
+                });
+                doLogout();
+            });
+
+            expect(await isLoggedIn()).toEqual(false);
+            expect(await getAccessToken()).toBeNull();
+            expect(await getRefreshToken()).toBeNull();
         });
     });
 
     describe("getAuthToken", () => {
         it("doesn't refresh tokens when all tokens valid", async () => {
-            expect(testKeyValStorage.size).equal(0);
+            expect(testKeyValStorage.size).toEqual(0);
             await setAccessToken(createFakeToken("access", false));
             await setRefreshToken(createFakeToken("refresh", false));
 
             const newAccessToken = await getAuthToken();
-            expect(newAccessToken).not.null;
-            expect(await getAccessToken()).equal(newAccessToken);
+            expect(newAccessToken).not.toBeNull();
+            expect(await getAccessToken()).toEqual(newAccessToken);
 
-            expect(calls().length).equal(0);
+            expect(calls().length).toEqual(0);
         });
 
         it("refreshes expired access token when we have valid refresh token", async () => {
-            expect(testKeyValStorage.size).equal(0);
+            expect(testKeyValStorage.size).toEqual(0);
             await setAccessToken(createFakeToken("access", true));
             await setRefreshToken(createFakeToken("refresh", false));
 
             const newAccessToken = await getAuthToken();
-            expect(newAccessToken).not.null;
-            expect(await getAccessToken()).equal(newAccessToken);
-            expect((jwt_decode(newAccessToken as string) as IAPIToken).exp).greaterThan(
+            expect(newAccessToken).not.toBeNull();
+            expect(await getAccessToken()).toEqual(newAccessToken);
+            expect((jwt_decode(newAccessToken as string) as IAPIToken).exp).toBeGreaterThan(
                 Date.now() / 1000
             );
 
-            expect(calls().length).equal(1);
+            expect(calls().length).toEqual(1);
             const [endpoint] = calls()[0];
-            expect(endpoint).matches(RegExp(`^.*${Endpoint.LOGIN_REFRESH}$`));
+            expect(endpoint).toMatch(RegExp(`^.*${Endpoint.LOGIN_REFRESH}$`));
         });
 
         it("fails to refreshes tokens when we have invalid refresh token", async () => {
-            expect(testKeyValStorage.size).equal(0);
+            expect(testKeyValStorage.size).toEqual(0);
             await setAccessToken(createFakeToken("access", true));
             await setRefreshToken(createFakeToken("refresh", true));
 
             const newAccessToken = await getAuthToken();
-            expect(newAccessToken).null;
-            expect(calls().length).equal(0);
+            expect(newAccessToken).toBeNull();
+            expect(calls().length).toEqual(0);
         });
 
         it("doesn't excessively refresh tokens on multiple async API calls", async () => {
-            expect(testKeyValStorage.size).equal(0);
+            expect(testKeyValStorage.size).toEqual(0);
             await setAccessToken(createFakeToken("access", true));
             await setRefreshToken(createFakeToken("refresh", false));
 
@@ -161,14 +149,14 @@ describe("auth.ts", () => {
             const allAccessTokens = await Promise.all(promises);
 
             // There should only be one network call to the refresh endpoint.
-            expect(calls().length).equal(1);
+            expect(calls().length).toEqual(1);
             const [endpoint] = calls()[0];
-            expect(endpoint).matches(RegExp(`^.*${Endpoint.LOGIN_REFRESH}$`));
+            expect(endpoint).toMatch(RegExp(`^.*${Endpoint.LOGIN_REFRESH}$`));
 
             // All of the API calls should be using the same access token.
             const expectedToken = await getAccessToken();
             for (const token of allAccessTokens) {
-                expect(token).equals(expectedToken);
+                expect(token).toEqual(expectedToken);
             }
         });
     });

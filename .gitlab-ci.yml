@@ -42,7 +42,7 @@ test common:
     expire_in: 1 day
     reports:
       junit:
-        - common/test-results.xml
+        - common/junit.xml
 
 build mobile:
   stage: build

@@ -3,7 +3,7 @@
 import { apiFetch, Endpoint } from "../endpoints";
 import { cachedAPIGet, cachedAPIHook, IAPICacheData } from "./cachedAPI";
 
-interface IDisability {
+export interface IDisability {
     id: number;
     disability_type: string;
 }
@@ -24,7 +24,7 @@ const OTHER_DISABILITY_LABEL = "Other";
 export const getOtherDisabilityId = (disabilities: TDisabilityMap): number => {
     return (
         Array.from(disabilities).find(
-            (disability) => disability[1] === OTHER_DISABILITY_LABEL
+            ([, disabilityType]) => disabilityType === OTHER_DISABILITY_LABEL
         )?.[0] ?? 0
     );
 };

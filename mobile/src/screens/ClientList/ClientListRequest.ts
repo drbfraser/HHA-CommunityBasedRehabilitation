@@ -1,6 +1,6 @@
 import { apiFetch, APILoadError, Endpoint, getZones } from "@cbr/common";
-import { IClientSummary } from "../../util/clients";
-import { riskLevels } from "../../util/risks";
+import { IClientSummary } from "@cbr/common";
+import { riskLevels } from "@cbr/common";
 export type ClientTest = {
     id: number;
     full_name: string;

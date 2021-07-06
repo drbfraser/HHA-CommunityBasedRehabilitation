@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { riskLevels } from "util/risks";
+import { riskLevels } from "@cbr/common/util/risks";
 
 // remove all lines from the cartesian grid
 const chartContainer: { [key: string]: React.CSSProperties } = {

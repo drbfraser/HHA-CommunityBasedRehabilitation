@@ -5,7 +5,7 @@ import { fieldLabels, FormField, IFormProps } from "@cbr/common";
 import { isSelfEmployed } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import DicTextPicker from "../../../components/TextPicker/DicTextPicker";
+import TextPicker, { IPickerChoice } from "../../../components/TextPicker/TextPicker";
 
 const LivelihoodForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -43,10 +43,16 @@ const LivelihoodForm = (props: IFormProps) => {
                         <Text style={styles.pickerQuestion}>
                             Are you employed or self-employed?
                         </Text>
-                        <DicTextPicker
+                        <TextPicker
                             field={FormField.isSelfEmployed}
-                            choices={isSelfEmployed}
-                            values={props.formikProps.values[FormField.isSelfEmployed]}
+                            choices={Object.entries(isSelfEmployed).map(
+                                (key) =>
+                                    ({
+                                        value: key[0],
+                                        label: key[1],
+                                    } as IPickerChoice)
+                            )}
+                            selectedValue={props.formikProps.values[FormField.isSelfEmployed]}
                             setFieldValue={props.formikProps.setFieldValue}
                             setFieldTouched={props.formikProps.setFieldTouched}
                         />

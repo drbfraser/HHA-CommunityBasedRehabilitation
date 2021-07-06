@@ -5,8 +5,7 @@ import { fieldLabels, FormField, IFormProps } from "@cbr/common";
 import { deviceTypes, rateLevel } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import TextPicker from "../../../components/TextPicker/TextPicker";
-import DicTextPicker from "../../../components/TextPicker/DicTextPicker";
+import TextPicker, { IPickerChoice } from "../../../components/TextPicker/TextPicker";
 
 const HealthForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -14,11 +13,16 @@ const HealthForm = (props: IFormProps) => {
     return (
         <View>
             <Text style={styles.pickerQuestion}>{"\n"}Rate your general health </Text>
-
             <TextPicker
                 field={FormField.rateLevel}
-                choices={rateLevel}
-                values={props.formikProps.values[FormField.rateLevel]}
+                choices={Object.entries(rateLevel).map(
+                    (key) =>
+                        ({
+                            value: key[0],
+                            label: key[1].name,
+                        } as IPickerChoice)
+                )}
+                selectedValue={props.formikProps.values[FormField.rateLevel]}
                 setFieldValue={props.formikProps.setFieldValue}
                 setFieldTouched={props.formikProps.setFieldTouched}
             />
@@ -69,10 +73,16 @@ const HealthForm = (props: IFormProps) => {
                     <Text style={styles.pickerQuestion}>
                         {"\n"} What assistive device do you need?
                     </Text>
-                    <DicTextPicker
+                    <TextPicker
                         field={FormField.deviceType}
-                        choices={deviceTypes}
-                        values={props.formikProps.values[FormField.deviceType]}
+                        choices={Object.entries(deviceTypes).map(
+                            (key) =>
+                                ({
+                                    value: key[0],
+                                    label: key[1],
+                                } as IPickerChoice)
+                        )}
+                        selectedValue={props.formikProps.values[FormField.deviceType]}
                         setFieldValue={props.formikProps.setFieldValue}
                         setFieldTouched={props.formikProps.setFieldTouched}
                     />
@@ -92,8 +102,14 @@ const HealthForm = (props: IFormProps) => {
 
             <TextPicker
                 field={FormField.serviceSatisf}
-                choices={rateLevel}
-                values={props.formikProps.values[FormField.serviceSatisf]}
+                choices={Object.entries(rateLevel).map(
+                    (key) =>
+                        ({
+                            value: key[0],
+                            label: key[1].name,
+                        } as IPickerChoice)
+                )}
+                selectedValue={props.formikProps.values[FormField.serviceSatisf]}
                 setFieldValue={props.formikProps.setFieldValue}
                 setFieldTouched={props.formikProps.setFieldTouched}
             />

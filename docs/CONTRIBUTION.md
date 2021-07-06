@@ -77,9 +77,17 @@ Once you are finished, take some time to clean up your code and make sure to tes
 
 Prior to submitting a merge request make sure to format your code - it won't pass the CI/CD pipeline without it. Note that both of these commands end in a `.` - that's important!
 
+**Common:**
+
+From within the `common` directory, run `npx prettier --write .`
+
+**Mobile:**
+
+From within the `mobile` directory, run `npx prettier --write .`
+
 **Frontend:**
 
-From within the `client` directory, run `npx prettier --write .`
+From within the `web` directory, run `npx prettier --write .`
 
 **Backend:**
 

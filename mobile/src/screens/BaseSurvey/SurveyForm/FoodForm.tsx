@@ -4,7 +4,7 @@ import { Text, Button, Dialog, Portal, Paragraph, HelperText } from "react-nativ
 import { fieldLabels, FormField, IFormProps, childNourish, rateLevel } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import TextPicker from "../../../components/TextPicker/TextPicker";
+import TextPicker, { IPickerChoice } from "../../../components/TextPicker/TextPicker";
 import { Picker } from "@react-native-picker/picker";
 
 const FoodForm = (props: IFormProps) => {
@@ -18,8 +18,14 @@ const FoodForm = (props: IFormProps) => {
             <Text style={styles.pickerQuestion}>Food security</Text>
             <TextPicker
                 field={FormField.foodSecurityRate}
-                choices={rateLevel}
-                values={props.formikProps.values[FormField.foodSecurityRate]}
+                choices={Object.entries(rateLevel).map(
+                    (key) =>
+                        ({
+                            value: key[0],
+                            label: key[1].name,
+                        } as IPickerChoice)
+                )}
+                selectedValue={props.formikProps.values[FormField.foodSecurityRate]}
                 setFieldValue={props.formikProps.setFieldValue}
                 setFieldTouched={props.formikProps.setFieldTouched}
             />

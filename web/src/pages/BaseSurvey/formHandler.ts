@@ -1,7 +1,7 @@
 import { FormikHelpers } from "formik";
 import history from "util/history";
-import { TFormValues } from "@cbr/common/Form/baseline/formFields";
-import { handleSubmitForm } from "@cbr/common/Form/baseline/formHandler";
+import { TFormValues } from "@cbr/common/forms/baseSurvey/baseSurveyFormFields";
+import { handleSubmitForm } from "@cbr/common/forms/baseSurvey/baseSurveyFormHandler";
 
 export const handleSubmit = async (
     values: TFormValues,

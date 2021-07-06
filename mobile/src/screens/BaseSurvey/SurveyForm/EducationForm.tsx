@@ -4,8 +4,7 @@ import { HelperText, Text } from "react-native-paper";
 import { grade, reasonNotSchool, fieldLabels, FormField, IFormProps } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import TextPicker from "../../../components/TextPicker/TextPicker";
-import DicTextPicker from "../../../components/TextPicker/DicTextPicker";
+import TextPicker, { IPickerChoice } from "../../../components/TextPicker/TextPicker";
 
 const EducationForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -25,8 +24,14 @@ const EducationForm = (props: IFormProps) => {
 
                     <TextPicker
                         field={FormField.grade}
-                        choices={grade}
-                        values={props.formikProps.values[FormField.grade]}
+                        choices={Object.entries(grade).map(
+                            (key) =>
+                                ({
+                                    value: key[0],
+                                    label: key[1].name,
+                                } as IPickerChoice)
+                        )}
+                        selectedValue={props.formikProps.values[FormField.grade]}
                         setFieldValue={props.formikProps.setFieldValue}
                         setFieldTouched={props.formikProps.setFieldTouched}
                     />
@@ -42,10 +47,16 @@ const EducationForm = (props: IFormProps) => {
             ) : (
                 <View>
                     <Text style={styles.pickerQuestion}>Why do you not go to school?</Text>
-                    <DicTextPicker
+                    <TextPicker
                         field={FormField.reasonNotSchool}
-                        choices={reasonNotSchool}
-                        values={props.formikProps.values[FormField.reasonNotSchool]}
+                        choices={Object.entries(reasonNotSchool).map(
+                            (key) =>
+                                ({
+                                    value: key[0],
+                                    label: key[1],
+                                } as IPickerChoice)
+                        )}
+                        selectedValue={props.formikProps.values[FormField.reasonNotSchool]}
                         setFieldValue={props.formikProps.setFieldValue}
                         setFieldTouched={props.formikProps.setFieldTouched}
                     />

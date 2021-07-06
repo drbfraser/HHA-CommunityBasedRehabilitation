@@ -78,7 +78,7 @@ const visitFocusForm = (
             formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, undefined);
         }
     };
-
+    console.log(zones);
     return (
         <View>
             {/* <Formik initialValues={{ village: "" }} onSubmit={(values) => console.log(values)}> */}
@@ -92,15 +92,18 @@ const visitFocusForm = (
                     value={formikProps.values.village}
                     onChangeText={formikProps.handleChange("village")}
                 />
-                <DicTextPicker
+                <TextPicker
                     field={FormField.zone}
-                    choices={zones}
-                    values={formikProps.values[FormField.zone]}
+                    choices={Array.from(zones.entries()).map(([key, value]) => ({
+                        label: value,
+                        value: key,
+                    }))}
+                    selectedValue={formikProps.values[FormField.zone]}
                     setFieldValue={formikProps.setFieldValue}
                     setFieldTouched={formikProps.setFieldTouched}
                 />
                 <Text style={styles.pickerQuestion}>{"\n"}Select the Reasons for the Visit </Text>
-                {/* {visitTypes.map((visitType) => (
+                {visitTypes.map((visitType) => (
                     <TextCheckBox
                         key={visitType}
                         field={visitType}
@@ -108,14 +111,14 @@ const visitFocusForm = (
                         label={fieldLabels[visitType]}
                         setFieldValue={formikProps.setFieldValue}
                     />
-                ))} */}
-                <Checkbox
+                ))}
+                {/* <Checkbox
                     status={checked ? "checked" : "unchecked"}
                     onPress={() => {
                         setChecked(!checked);
                         // onCheckboxChange(!checked, "HEALTH");
                     }}
-                />
+                /> */}
             </View>
         </View>
     );
@@ -177,15 +180,20 @@ const NewVisit = () => {
     const [checked, setChecked] = React.useState(false);
     const [checked2, setChecked2] = React.useState(false);
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
-    // const zones = useZones();
-    const [zones, setZones] = useState<TZoneMap>(new Map());
-    // setZones(useZones());
+    const zones = useZones();
 
-    const getZonesMap = async () => {
-        setZones(await getZones());
-    };
+    // console.log(zones);
 
-    getZonesMap();
+    // const [zones, setZones] = useState<TZoneMap>(new Map());
+
+    // useEffect(() => {
+    //     const getZonesMap = async () => {
+    //         setZones(await getZones());
+    //         // console.log(await getZones());
+    //     };
+
+    //     getZonesMap();
+    // });
 
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 

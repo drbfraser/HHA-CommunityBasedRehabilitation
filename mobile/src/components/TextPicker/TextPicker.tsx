@@ -7,15 +7,22 @@ interface IProps {
     field: string;
     setFieldValue: (field: string, value: ItemValue) => void;
     setFieldTouched: (field: string, value: boolean) => void;
-    choices: object;
-    values: string;
+    choices: IPickerChoice[];
+    // choices: object;
+    selectedValue: string | number;
+}
+
+export interface IPickerChoice {
+    label: string;
+    value: string | number;
 }
 
 const TextPicker = (props: IProps) => {
     const styles = useStyles();
+
     return (
         <SelectPicker
-            selectedValue={props.values}
+            selectedValue={props.selectedValue}
             style={styles.picker}
             onValueChange={(itemValue) => {
                 props.setFieldTouched(props.field, true);
@@ -23,8 +30,11 @@ const TextPicker = (props: IProps) => {
             }}
         >
             <SelectPicker.Item key={"unselectable"} label={""} value={""} />
-            {Object.entries(props.choices).map(([value, { name }]) => (
+            {/* {Object.entries(props.choices).map(([value, name]) => (
                 <SelectPicker.Item label={name} value={value} key={name} />
+            ))} */}
+            {props.choices.map((choice) => (
+                <SelectPicker.Item label={choice.label} value={choice.value} key={choice.label} />
             ))}
         </SelectPicker>
     );

@@ -8,7 +8,6 @@ interface IProps {
     setFieldValue: (field: string, value: ItemValue) => void;
     setFieldTouched: (field: string, value: boolean) => void;
     choices: IPickerChoice[];
-    // choices: object;
     selectedValue: string | number;
 }
 
@@ -30,9 +29,6 @@ const TextPicker = (props: IProps) => {
             }}
         >
             <SelectPicker.Item key={"unselectable"} label={""} value={""} />
-            {/* {Object.entries(props.choices).map(([value, name]) => (
-                <SelectPicker.Item label={name} value={value} key={name} />
-            ))} */}
             {props.choices.map((choice) => (
                 <SelectPicker.Item label={choice.label} value={choice.value} key={choice.label} />
             ))}

@@ -7,6 +7,7 @@
 
 stages:
   - build
+  - test
   - deploy
 
 stages:
@@ -18,7 +19,7 @@ variables:
   PROD_BRANCH: "prod"
   NPM_VERSION: "7.19.0"
 
-test common:
+build common:
   stage: build
   image: node:14
   tags:
@@ -37,12 +38,6 @@ test common:
   script:
     - npx prettier --check .
     - npx tsc
-    - npm run test-ci
-  artifacts:
-    expire_in: 1 day
-    reports:
-      junit:
-        - common/junit.xml
 
 build mobile:
   stage: build
@@ -131,7 +126,31 @@ build server:
     - python manage.py check
     - python manage.py makemigrations --check
     - python manage.py test
-  
+
+test common:
+  stage: test
+  image: node:14
+  tags:
+    - docker
+  needs: []
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID != null'
+      changes:
+        - common/**/*
+        - .gitlab-ci.yml
+      when: always
+  before_script:
+    - npm install -g npm@$NPM_VERSION
+    - cd common
+    - npm ci
+  script:
+    - npm run test-ci
+  artifacts:
+    expire_in: 1 day
+    reports:
+      junit:
+        - common/junit.xml
+
 deploy staging:
     stage: deploy
     tags:

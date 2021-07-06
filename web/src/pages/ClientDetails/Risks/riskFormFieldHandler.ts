@@ -1,4 +1,4 @@
-import { IRisk } from "util/risks";
+import { IRisk } from "@cbr/common/util/risks";
 import { Endpoint, apiFetch } from "@cbr/common/util/endpoints";
 
 const updateRisk = async (updatedRisk: string) => {

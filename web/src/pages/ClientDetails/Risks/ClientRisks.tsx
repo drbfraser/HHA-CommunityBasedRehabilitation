@@ -17,8 +17,9 @@ import {
     MenuItem,
     FormControl,
 } from "@material-ui/core";
-import { IRisk, riskLevels, riskTypes } from "util/risks";
-import { IClient } from "util/clients";
+import { IRisk, riskLevels } from "@cbr/common/util/risks";
+import { riskTypes } from "util/riskIcon";
+import { IClient } from "@cbr/common/util/clients";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 
 import { fieldLabels, FormField, validationSchema } from "./riskFormFields";

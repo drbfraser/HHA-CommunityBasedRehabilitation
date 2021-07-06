@@ -1,9 +1,9 @@
 import { RowsProp } from "@material-ui/data-grid";
-import { IClientSummary } from "util/clients";
+import { IClientSummary } from "@cbr/common/util/clients";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { getZones } from "@cbr/common/util/hooks/zones";
-import { RiskType } from "util/risks";
+import { RiskType } from "@cbr/common/util/risks";
 import { SearchOption } from "./searchOptions";
 
 const requestClientRows = async (

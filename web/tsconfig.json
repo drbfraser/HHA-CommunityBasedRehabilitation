@@ -23,7 +23,8 @@
   },
   "include": [
     "src",
-    "../common/src"
+    "../common/src",
+    "../mobile/src/screens/BaseSurvey/formHandler.ts"
   ],
   "extends": "./tsconfig.base.json"
 }

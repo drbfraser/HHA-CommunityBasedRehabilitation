@@ -167,10 +167,10 @@ export default function App() {
                     <AuthContext.Provider value={authContext}>
                         <Stack.Navigator
                             initialRouteName={
-                                authState.state === "loggedIn" ||
+                                authState.state === "loggedOut" ||
                                 authState.state === "previouslyLoggedIn"
-                                    ? StackScreenName.LOADING
-                                    : StackScreenName.LOGIN //this should be reversed and technically supposed to work. On hold for now.
+                                    ? StackScreenName.LOGIN
+                                    : StackScreenName.LOADING //this should be reversed and technically supposed to work. On hold for now.
                             }
                             //initialRouteName={StackScreenName.LOGIN}
                             screenOptions={{

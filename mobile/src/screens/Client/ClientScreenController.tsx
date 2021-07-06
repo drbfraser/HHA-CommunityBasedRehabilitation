@@ -2,7 +2,7 @@ import { useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as React from "react";
 import { useState } from "react";
-import { stackParamList, stackScreenName } from "../../util/screens";
+import { stackParamList, StackScreenName } from "../../util/screens";
 import ClientDTO from "./Client";
 import { RouteProp } from "@react-navigation/native";
 import { useEffect } from "react";
@@ -12,8 +12,8 @@ import Client from "./Client";
 
 const styles = useStyles();
 interface clientScreenControllerProps {
-    route: RouteProp<stackParamList, stackScreenName.CLIENT>;
-    navigation: StackNavigationProp<stackParamList, stackScreenName.CLIENT>;
+    route: RouteProp<stackParamList, StackScreenName.CLIENT>;
+    navigation: StackNavigationProp<stackParamList, StackScreenName.CLIENT>;
 }
 
 const ClientScreenController = (props: clientScreenControllerProps) => {

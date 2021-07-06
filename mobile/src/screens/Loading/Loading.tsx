@@ -3,12 +3,12 @@ import React, { useContext } from "react";
 import { ActivityIndicator, Button, useTheme } from "react-native-paper";
 import useStyles from "./Loading.styles";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, stackScreenName } from "../../util/screens";
+import { stackParamList, StackScreenName } from "../../util/screens";
 import { Navigation } from "react-native-navigation";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 
 interface LoadingProps {
-    navigation: StackNavigationProp<stackParamList, stackScreenName.HOME>;
+    navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
 }
 
 const Loading = (props: LoadingProps) => {

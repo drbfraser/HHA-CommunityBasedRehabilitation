@@ -14,3 +14,6 @@ export * from "./src/util/hooks/disabilities";
 export * from "./src/util/hooks/zones";
 export * from "./src/forms/baseSurvey/baseSurveyFormFields";
 export * from "./src/forms/baseSurvey/baseSurveyFormHandler";
+export * from "./src/util/clients";
+export * from "./src/util/risks";
+export * from "./src/util/visits";

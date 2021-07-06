@@ -14,6 +14,8 @@ import {
 import { riskTypes } from "../../util/riskIcon";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useCallback } from "react";
+import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from "formik";
+
 /*
     Use client image instead of randomly generated
     Get disabilities details from making the disability API call and map them (done but haven't implemented correctly)
@@ -35,17 +37,51 @@ const Client = (props: ClientProps) => {
     const [village, setVillage] = useState("");
     const [zone, setZone] = useState(0);
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [caregiverPresent, setCaregiverPresent] = React.useState(false);
+    const [caregiverName, setCaregiverName] = React.useState("");
+    const [caregiverEmail, setCaregiverEmail] = React.useState("");
+    const [caregiverPhone, setCaregiverPhone] = React.useState("");
+
+    const [tempDate, setTempDate] = useState(new Date());
+    const [tempFirstName, setTempFirstName] = useState("");
+    const [tempLastName, setTempLastName] = useState("");
+    const [tempVillage, setTempVillage] = useState("");
+    const [tempZone, setTempZone] = useState(0);
+    const [tempPhoneNumber, setTempPhoneNumber] = useState("");
+    const [tempCaregiverPresent, setTempCaregiverPresent] = React.useState(false);
+    const [tempCaregiverName, setTempCaregiverName] = React.useState("");
+    const [tempCaregiverEmail, setTempCaregiverEmail] = React.useState("");
+    const [tempCaregiverPhone, setTempCaregiverPhone] = React.useState("");
 
     useEffect(() => {
         const getClientDetails = async () => {
             const presentClient = await fetchClientDetailsFromApi(props.clientID);
+            setPresentClient(presentClient);
             setDate(timestampToDateObj(Number(presentClient?.birthdate)));
             setFirstName(presentClient.first_name);
             setLastName(presentClient.last_name);
             setVillage(presentClient.village);
             setZone(presentClient.zone);
             setPhoneNumber(presentClient.phoneNumber);
-            setPresentClient(presentClient);
+            setCaregiverPresent(presentClient.careGiverPresent);
+            if (caregiverPresent) {
+                setCaregiverName(presentClient.careGiverName);
+                setCaregiverPhone(presentClient.careGiverPhoneNumber);
+                setCaregiverEmail(presentClient.careGiverEmail);
+            }
+
+            setTempDate(timestampToDateObj(Number(presentClient?.birthdate)));
+            setTempFirstName(presentClient.first_name);
+            setTempLastName(presentClient.last_name);
+            setTempVillage(presentClient.village);
+            setTempZone(presentClient.zone);
+            setTempPhoneNumber(presentClient.phoneNumber);
+            setTempCaregiverPresent(presentClient.careGiverPresent);
+            if (caregiverPresent) {
+                setTempCaregiverName(presentClient.careGiverName);
+                setTempCaregiverPhone(presentClient.careGiverPhoneNumber);
+                setTempCaregiverEmail(presentClient.careGiverEmail);
+            }
         };
         getClientDetails();
     }, []);
@@ -99,7 +135,9 @@ const Client = (props: ClientProps) => {
         return (
             <View style={styles.clientBirthdayButtons}>
                 <View>
-                    <Button onPress={showDatepicker}>Edit</Button>
+                    <Button disabled={editMode} mode="contained" onPress={showDatepicker}>
+                        Edit
+                    </Button>
                 </View>
                 {show && (
                     <DateTimePicker
@@ -118,7 +156,7 @@ const Client = (props: ClientProps) => {
     const [visible, setVisible] = React.useState(false);
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
-    const [checked, setChecked] = React.useState(false);
+
     const [editMode, setEditMode] = React.useState(true);
     const [cancelButtonType, setCancelButtonType] = React.useState("outlined");
     const enableButtons = () => {
@@ -127,6 +165,18 @@ const Client = (props: ClientProps) => {
             setCancelButtonType("contained");
         } else {
             //Make the PUT Api Call to edit client here since this is the save click
+
+            setTempFirstName(firstName);
+            setTempLastName(lastName);
+            setTempDate(date);
+            setTempVillage(village);
+            setTempZone(zone);
+            setTempPhoneNumber(phoneNumber);
+            setTempCaregiverPresent(caregiverPresent);
+            setTempCaregiverName(caregiverName);
+            setTempCaregiverPhone(caregiverPhone);
+            setTempCaregiverEmail(caregiverEmail);
+
             setEditMode(true);
             setCancelButtonType("outlined");
         }
@@ -135,6 +185,16 @@ const Client = (props: ClientProps) => {
         //Discard any changes and reset the text fields to show what they originially did
         setEditMode(true);
         setCancelButtonType("outlined");
+        setFirstName(tempFirstName);
+        setLastName(tempLastName);
+        setDate(tempDate);
+        setVillage(tempVillage);
+        setZone(tempZone);
+        setPhoneNumber(tempPhoneNumber);
+        setCaregiverPresent(tempCaregiverPresent);
+        setCaregiverName(tempCaregiverName);
+        setCaregiverPhone(tempCaregiverPhone);
+        setCaregiverEmail(tempCaregiverEmail);
     };
 
     return (
@@ -162,6 +222,7 @@ const Client = (props: ClientProps) => {
                     style={styles.clientTextStyle}
                     label="First Name: "
                     value={firstName}
+                    onChangeText={(text) => setFirstName(text)}
                     disabled={editMode}
                     editable={true}
                 />
@@ -169,6 +230,7 @@ const Client = (props: ClientProps) => {
                     style={styles.clientTextStyle}
                     label="Last Name: "
                     value={lastName}
+                    onChangeText={(text) => setLastName(text)}
                     disabled={editMode}
                     editable={true}
                 />
@@ -181,6 +243,7 @@ const Client = (props: ClientProps) => {
                     style={styles.clientTextStyle}
                     label="Village # "
                     value={village}
+                    onChangeText={(text) => setVillage(text)}
                     disabled={editMode}
                     editable={true}
                 />
@@ -188,6 +251,7 @@ const Client = (props: ClientProps) => {
                     style={styles.clientTextStyle}
                     label="Zone "
                     value={String(zone)}
+                    onChangeText={(number) => setZone(Number(number))}
                     disabled={editMode}
                     editable={true}
                 />
@@ -195,6 +259,7 @@ const Client = (props: ClientProps) => {
                     style={styles.clientTextStyle}
                     label="Phone Number "
                     value={phoneNumber}
+                    onChangeText={(text) => setPhoneNumber(text)}
                     disabled={editMode}
                     editable={true}
                 />
@@ -239,14 +304,43 @@ const Client = (props: ClientProps) => {
                 <View style={styles.carePresentView}>
                     <Text style={styles.carePresentCheckBox}>Caregiver Present</Text>
                     <Checkbox
-                        status={checked ? "checked" : "unchecked"}
+                        status={caregiverPresent ? "checked" : "unchecked"}
                         onPress={() => {
-                            setChecked(!checked);
+                            setCaregiverPresent(!caregiverPresent);
                         }}
                         disabled={editMode}
                     />
-                    {checked ? <Text>This will show up when checked</Text> : <></>}
                 </View>
+                {caregiverPresent ? (
+                    <View>
+                        <TextInput
+                            style={styles.clientTextStyle}
+                            label="Caregiver Name"
+                            value={caregiverName}
+                            onChangeText={(text) => setCaregiverName(text)}
+                            disabled={editMode}
+                            editable={true}
+                        />
+                        <TextInput
+                            style={styles.clientTextStyle}
+                            label="Caregiver Phone Number"
+                            value={caregiverPhone}
+                            onChangeText={(text) => setCaregiverPhone(text)}
+                            disabled={editMode}
+                            editable={true}
+                        />
+                        <TextInput
+                            style={styles.clientTextStyle}
+                            label="Caregiver Email"
+                            value={caregiverEmail}
+                            onChangeText={(text) => setCaregiverEmail(text)}
+                            disabled={editMode}
+                            editable={true}
+                        />
+                    </View>
+                ) : (
+                    <></>
+                )}
                 <View style={styles.clientDetailsFinalView}>
                     <Button
                         mode="contained"

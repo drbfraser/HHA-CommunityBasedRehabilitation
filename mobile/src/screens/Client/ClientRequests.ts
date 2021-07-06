@@ -10,6 +10,10 @@ export type ClientDTO = {
     phoneNumber: string;
     zone: number;
     //disabilities: string,
+    careGiverPresent: boolean;
+    careGiverName: string;
+    careGiverEmail: string;
+    careGiverPhoneNumber: string;
 };
 
 export const fetchClientDetailsFromApi = async (clientId: number): Promise<ClientDTO> => {
@@ -25,5 +29,9 @@ export const fetchClientDetailsFromApi = async (clientId: number): Promise<Clien
         phoneNumber: response.phone_number,
         zone: response.zone,
         //disabilities: response.disability,
+        careGiverPresent: response.caregiver_present,
+        careGiverName: response.caregiver_name,
+        careGiverEmail: response.caregiver_email,
+        careGiverPhoneNumber: response.caregiver_phone,
     };
 };

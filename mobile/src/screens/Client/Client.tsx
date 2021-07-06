@@ -4,9 +4,13 @@ import { Button, Card, TextInput, Checkbox, Menu, Divider } from "react-native-p
 import { ClientDTO } from "./ClientRequests";
 import clientStyle from "./Client.styles";
 import { Platform, Text, View } from "react-native";
-import { Item } from "react-native-paper/lib/typescript/components/List/List";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
-import { timestampToDate, timestampToDateObj } from "../../../node_modules/@cbr/common";
+import {
+    IReferral,
+    ISurvey,
+    timestampToDate,
+    timestampToDateObj,
+} from "../../../node_modules/@cbr/common";
 import {
     getDisabilities,
     TDisabilityMap,
@@ -14,7 +18,9 @@ import {
 import { riskTypes } from "../../util/riskIcon";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useCallback } from "react";
-import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from "formik";
+import { IVisitSummary } from "../../util/visits";
+import { ActivityDTO, ActivityType, SummaryActivity } from "./Activity";
+import { TimeLineDate } from "./TimeLineDate";
 
 /*
     Use client image instead of randomly generated
@@ -23,6 +29,7 @@ import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from "for
     Change risk card edit button to popup instead of text box (or can be either)
     Create component that displays surveys being done
 */
+
 interface ClientProps {
     clientID: number;
 }
@@ -30,6 +37,8 @@ interface ClientProps {
 const Client = (props: ClientProps) => {
     const styles = clientStyle();
     //Client fetch and API call variables
+
+    //Main Client Variables
     const [presentClient, setPresentClient] = useState<ClientDTO>();
     const [date, setDate] = useState(new Date());
     const [firstName, setFirstName] = useState("");
@@ -42,6 +51,14 @@ const Client = (props: ClientProps) => {
     const [caregiverEmail, setCaregiverEmail] = React.useState("");
     const [caregiverPhone, setCaregiverPhone] = React.useState("");
 
+    //Variables that cannot be edited and are for read only
+    const [clientCreateDate, setClientCreateDate] = useState(0);
+    const [clientVisits, setClientVisits] = useState<IVisitSummary[]>();
+    const [clientReferrals, setClientReferrals] = useState<IReferral[]>();
+    const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
+    const [allRecentActivity, setRecentActivity] = useState<ActivityDTO[]>();
+
+    //Editable values to have temporary storages if cancel is pressed
     const [tempDate, setTempDate] = useState(new Date());
     const [tempFirstName, setTempFirstName] = useState("");
     const [tempLastName, setTempLastName] = useState("");
@@ -69,6 +86,11 @@ const Client = (props: ClientProps) => {
                 setCaregiverPhone(presentClient.careGiverPhoneNumber);
                 setCaregiverEmail(presentClient.careGiverEmail);
             }
+
+            setClientCreateDate(presentClient.clientCreatedDate);
+            setClientVisits(presentClient.clientVisits);
+            setClientReferrals(presentClient.clientReferrals);
+            setClientSurveys(presentClient.clientSurveys);
 
             setTempDate(timestampToDateObj(Number(presentClient?.birthdate)));
             setTempFirstName(presentClient.first_name);
@@ -152,11 +174,12 @@ const Client = (props: ClientProps) => {
         );
     };
 
-    //Menu editable toggle variables
+    //Disability Menu editable toggle variables
     const [visible, setVisible] = React.useState(false);
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
 
+    //Overall Screen editable toggle variables
     const [editMode, setEditMode] = React.useState(true);
     const [cancelButtonType, setCancelButtonType] = React.useState("outlined");
     const enableButtons = () => {
@@ -195,6 +218,63 @@ const Client = (props: ClientProps) => {
         setCaregiverName(tempCaregiverName);
         setCaregiverPhone(tempCaregiverPhone);
         setCaregiverEmail(tempCaregiverEmail);
+    };
+
+    var tempActivity: ActivityDTO[];
+    tempActivity = [];
+    if (clientVisits) {
+        clientVisits.map((presentVisit) => {
+            tempActivity.push({
+                type: ActivityType.VISIT,
+                date: presentVisit.date_visited,
+                visit: presentVisit,
+                referral: undefined,
+                survey: undefined,
+            });
+        });
+    }
+    if (clientReferrals) {
+        clientReferrals.map((presentRef) => {
+            tempActivity.push({
+                type: ActivityType.REFERAL,
+                date: presentRef.date_referred,
+                visit: undefined,
+                referral: presentRef,
+                survey: undefined,
+            });
+        });
+    }
+    if (clientSurveys) {
+        clientSurveys.map((presentSurvey) => {
+            tempActivity.push({
+                type: ActivityType.SURVEY,
+                date: presentSurvey.survey_date,
+                visit: undefined,
+                referral: undefined,
+                survey: presentSurvey,
+            });
+        });
+    }
+
+    tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));
+    console.log(tempActivity);
+
+    const recentActivity = () => {
+        if (clientVisits)
+            return (
+                <View>
+                    {tempActivity.map((presentVisit) => {
+                        return <SummaryActivity activity={presentVisit}></SummaryActivity>;
+                    })}
+                    <TimeLineDate date={clientCreateDate}></TimeLineDate>
+                </View>
+            );
+        else
+            return (
+                <View>
+                    <Text>{timestampToDate(clientCreateDate)}</Text>
+                </View>
+            );
     };
 
     return (
@@ -440,6 +520,14 @@ const Client = (props: ClientProps) => {
                         {editMode ? "Edit" : "Save"}
                     </Button>
                 </View>
+            </Card>
+            <Divider></Divider>
+            <Card style={styles.riskCardStyle}>
+                <View style={styles.activityCardContentStyle}>
+                    <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>
+                </View>
+                <View>{recentActivity()}</View>
+                <View style={styles.clientDetailsFinalView}></View>
             </Card>
         </ScrollView>
     );

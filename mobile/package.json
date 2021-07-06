@@ -47,7 +47,6 @@
     "react-native-screens": "~3.0.0",
     "react-native-svg": "12.1.0",
     "react-native-unimodules": "~0.13.3",
-    "react-native-vector-icons": "^8.1.0",
     "react-native-woodpicker": "^0.3.7"
   },
   "devDependencies": {

@@ -1,6 +1,8 @@
-import { apiFetch, APILoadError, Endpoint, getZones } from "@cbr/common";
+import { apiFetch, APILoadError, Endpoint, getZones, IReferral, ISurvey } from "@cbr/common";
 import { IClient } from "../../util/clients";
 import { riskLevels } from "../../util/risks";
+import { IVisitSummary } from "../../util/visits";
+
 export type ClientDTO = {
     id: number;
     first_name: string;
@@ -14,6 +16,10 @@ export type ClientDTO = {
     careGiverName: string;
     careGiverEmail: string;
     careGiverPhoneNumber: string;
+    clientCreatedDate: number;
+    clientVisits: IVisitSummary[];
+    clientReferrals: IReferral[];
+    clientSurveys: ISurvey[];
 };
 
 export const fetchClientDetailsFromApi = async (clientId: number): Promise<ClientDTO> => {
@@ -33,5 +39,9 @@ export const fetchClientDetailsFromApi = async (clientId: number): Promise<Clien
         careGiverName: response.caregiver_name,
         careGiverEmail: response.caregiver_email,
         careGiverPhoneNumber: response.caregiver_phone,
+        clientCreatedDate: response.created_date,
+        clientVisits: response.visits,
+        clientReferrals: response.referrals,
+        clientSurveys: response.baseline_surveys,
     };
 };

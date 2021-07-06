@@ -180,6 +180,14 @@ const useStyles = () =>
             marginBottom: 14,
             fontSize: 32,
         },
+        activityCardContentStyle: {
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            height: 110,
+            width: 350,
+            marginTop: 15,
+        },
     });
 
 export default useStyles;

@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
 import { Provider } from "react-native-paper";
 import theme from "../../util/theme.styles";
-import { screensForUser, stackParamList, stackScreenName } from "../../util/screens";
+import { screensForUser, stackParamList, StackScreenName } from "../../util/screens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { Alert } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 interface HomeScreenProps {
-    navigation: StackNavigationProp<stackParamList, stackScreenName.HOME>;
+    navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
 }
 
 const HomeScreen = (props: HomeScreenProps) => {
@@ -27,7 +27,7 @@ const HomeScreen = (props: HomeScreenProps) => {
                         style: "destructive",
                         onPress: () => {
                             props.navigation.dispatch(e.data.action);
-                            authContext.logout();
+                            //authContext.logout();
                         },
                     },
                 ]);

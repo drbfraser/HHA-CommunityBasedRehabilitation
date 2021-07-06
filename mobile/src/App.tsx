@@ -165,7 +165,7 @@ export default function App() {
             <Provider theme={theme}>
                 <NavigationContainer theme={theme}>
                     <AuthContext.Provider value={authContext}>
-                        <Stack.Navigator
+                        {/* <Stack.Navigator
                             initialRouteName={
                                 authState.state === "loggedOut" ||
                                 authState.state === "previouslyLoggedIn"
@@ -185,6 +185,29 @@ export default function App() {
                                     component={stackScreenProps[name]}
                                 />
                             ))}
+                        </Stack.Navigator> */}
+                        <Stack.Navigator>
+                            {authState.state === "loggedIn" ?
+                                Object.values(StackScreenName).map((name) => (
+                                    <Stack.Screen
+                                        key={name}
+                                        name={name}
+                                        component={stackScreenProps[name]}
+                                    />
+                                ))
+                            : authState.state === "loggedOut" || authState.state === "previouslyLoggedIn" ? (
+                                <Stack.Screen
+                                    name="Login"
+                                    component={Login}
+                                    options={{ headerShown: false }}
+                                />
+                            ) : (
+                                <Stack.Screen
+                                    name="Loading"
+                                    component={Loading}
+                                    options={{ headerShown: false }}
+                                />
+                            )}
                         </Stack.Navigator>
                     </AuthContext.Provider>
                 </NavigationContainer>

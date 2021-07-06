@@ -1,35 +1,27 @@
-import { riskLevels, RiskType } from "./risks";
-import { MaterialIcons } from "@expo/vector-icons";
+import { RiskType } from "@cbr/common";
 import React from "react";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-const healthIcon = (props: string) => {
-    return <MaterialIcons name={"local-hospital"} size={32} color={props} />;
-};
-
-const educationIcon = (props: string) => {
-    return <MaterialIcons name={"school"} size={32} color={props} />;
-};
-
-const socialIcon = (props: string) => {
-    return <MaterialIcons name={"record-voice-over"} size={32} color={props} />;
+const riskIcon = (name: string, color: string) => {
+    return <Icon name={name} color={color} size={32} />;
 };
 
 export interface IRiskType {
     name: string;
-    Icon: typeof healthIcon | typeof educationIcon | typeof socialIcon;
+    Icon: typeof riskIcon;
 }
 
 export const riskTypes: { [key: string]: IRiskType } = {
     [RiskType.HEALTH]: {
         name: "Health",
-        Icon: healthIcon,
+        Icon: (color: string) => riskIcon("hospital-box", color),
     },
     [RiskType.EDUCATION]: {
         name: "Education",
-        Icon: educationIcon,
+        Icon: (color: string) => riskIcon("school", color),
     },
     [RiskType.SOCIAL]: {
         name: "Social",
-        Icon: socialIcon,
+        Icon: (color: string) => riskIcon("account-voice", color),
     },
 };

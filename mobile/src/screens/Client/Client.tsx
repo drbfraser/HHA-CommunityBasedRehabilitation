@@ -272,7 +272,7 @@ const Client = (props: ClientProps) => {
         else
             return (
                 <View>
-                    <Text>{timestampToDate(clientCreateDate)}</Text>
+                    <TimeLineDate date={clientCreateDate}></TimeLineDate>
                 </View>
             );
     };

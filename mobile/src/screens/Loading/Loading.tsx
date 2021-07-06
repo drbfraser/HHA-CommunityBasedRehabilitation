@@ -19,12 +19,6 @@ const Loading = (props: LoadingProps) => {
     const styles = useStyles();
     return (
         <View style={styles.container}>
-            <Button mode="contained" onPress={() => console.log(authState.state)}>
-                STATECHECK
-            </Button>
-            <Button mode="contained" onPress={() => authContext.logout()}>
-                LOGOUT
-            </Button>
             <Image
                 style={styles.logo}
                 resizeMode="contain"

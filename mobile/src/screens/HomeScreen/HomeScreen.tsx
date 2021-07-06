@@ -14,26 +14,6 @@ interface HomeScreenProps {
 const HomeScreen = (props: HomeScreenProps) => {
     const Tab = createMaterialBottomTabNavigator();
     const { authState } = useContext(AuthContext);
-    const authContext = useContext(AuthContext);
-
-    React.useEffect(
-        () =>
-            props.navigation.addListener("beforeRemove", (e) => {
-                e.preventDefault();
-                Alert.alert("Alert", "Do you want to logout?", [
-                    { text: "Don't Logout", style: "cancel", onPress: () => {} },
-                    {
-                        text: "Logout",
-                        style: "destructive",
-                        onPress: () => {
-                            props.navigation.dispatch(e.data.action);
-                            //authContext.logout();
-                        },
-                    },
-                ]);
-            }),
-        [props.navigation]
-    );
 
     return (
         <Provider theme={theme}>

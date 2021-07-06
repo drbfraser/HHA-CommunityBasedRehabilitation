@@ -187,7 +187,7 @@ export default function App() {
                             ))}
                         </Stack.Navigator> */}
                         <Stack.Navigator>
-                            {authState.state === "loggedIn" ?
+                            {authState.state === "loggedIn" ? (
                                 Object.values(StackScreenName).map((name) => (
                                     <Stack.Screen
                                         key={name}
@@ -195,7 +195,8 @@ export default function App() {
                                         component={stackScreenProps[name]}
                                     />
                                 ))
-                            : authState.state === "loggedOut" || authState.state === "previouslyLoggedIn" ? (
+                            ) : authState.state === "loggedOut" ||
+                              authState.state === "previouslyLoggedIn" ? (
                                 <Stack.Screen
                                     name="Login"
                                     component={Login}

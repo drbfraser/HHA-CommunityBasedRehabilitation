@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { Button, Text, Title } from "react-native-paper";
 import useStyles from "./Todo.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
@@ -19,6 +19,15 @@ const Todo = (props: LogoutProps) => {
         authContext.requireLoggedIn(true);
     }, []);
 
+    const logoutAlert = () =>
+        Alert.alert("Alert", "Do you want to logout?", [
+            {
+                text: "Don't logout",
+                style: "cancel",
+            },
+            { text: "Logout", onPress: () => authContext.logout() },
+        ]);
+
     return (
         <View style={styles.container}>
             <Title>This is a placeholder component screen.</Title>
@@ -26,8 +35,7 @@ const Todo = (props: LogoutProps) => {
             <Button
                 mode="contained"
                 onPress={() => {
-                    authContext.logout();
-                    // props.navigation.navigate(StackScreenName.LOGIN);
+                    logoutAlert();
                 }}
             >
                 Logout

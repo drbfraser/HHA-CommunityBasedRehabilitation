@@ -12,3 +12,6 @@ export * from "./src/util/validations";
 export * from "./src/util/hooks/currentUser";
 export * from "./src/util/hooks/disabilities";
 export * from "./src/util/hooks/zones";
+export * from "./src/util/clients";
+export * from "./src/util/risks";
+export * from "./src/util/visits";

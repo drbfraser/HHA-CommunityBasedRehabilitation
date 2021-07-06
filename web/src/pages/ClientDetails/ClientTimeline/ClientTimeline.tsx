@@ -1,6 +1,6 @@
 import React from "react";
 import { Timeline } from "@material-ui/lab";
-import { IClient } from "util/clients";
+import { IClient } from "@cbr/common/util/clients";
 import { timestampToDateFromReference } from "@cbr/common/util/dates";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";

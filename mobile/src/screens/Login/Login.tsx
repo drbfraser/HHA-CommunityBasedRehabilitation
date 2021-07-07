@@ -8,6 +8,7 @@ import { AuthContext } from "../../context/AuthContext/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
 import { SMALL_WIDTH } from "../../theme.styles";
+import PasswordTextInput from "../../components/PasswordTextInput/PasswordTextInput";
 
 enum LoginStatus {
     INITIAL,
@@ -124,18 +125,13 @@ const Login = () => {
                     </View>
                 )}
                 <View>
-                    <TextInput
+                    <PasswordTextInput
                         label="Password"
                         error={status === LoginStatus.FAILED && !password}
                         value={password}
                         onChangeText={(newPassword) => setPassword(newPassword)}
                         mode="flat"
-                        secureTextEntry
                         disabled={status === LoginStatus.SUBMITTING}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        autoCompleteType="password"
-                        textContentType="password"
                         onSubmitEditing={handleLogin}
                         ref={passwordTextRef}
                     />

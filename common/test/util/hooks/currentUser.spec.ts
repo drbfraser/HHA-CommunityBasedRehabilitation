@@ -1,4 +1,9 @@
-import { get as mockGet, MockResponseObject, reset as resetFetchMocks } from "fetch-mock";
+import {
+    calls as mockedCalls,
+    get as mockGet,
+    MockResponseObject,
+    reset as resetFetchMocks,
+} from "fetch-mock";
 import { APILoadError, Endpoint, TAPILoadError } from "../../../src/util/endpoints";
 import { renderHook } from "@testing-library/react-hooks";
 import { addValidTokens } from "../../testHelpers/authTokenHelpers";
@@ -6,6 +11,7 @@ import { fromNewCommonModule } from "../../testHelpers/testCommonConfiguration";
 import { checkAuthHeader } from "../../testHelpers/mockServerHelpers";
 import { IUser, UserRole } from "../../../src/util/users";
 import { getCurrentUser, useCurrentUser } from "../../../src/util/hooks/currentUser";
+import { invalidateAllCachedAPI } from "../../../src/util/hooks/cachedAPI";
 
 const testUser: IUser = {
     id: 1,
@@ -33,6 +39,7 @@ const mockGetWithDefaultUser = () => {
 };
 
 beforeEach(async () => {
+    await invalidateAllCachedAPI(true, true, false, false);
     resetFetchMocks();
     await addValidTokens();
 });
@@ -56,6 +63,16 @@ describe("currentUser.ts", () => {
             mockGetWithDefaultUser();
 
             expect(await getCurrentUser()).toEqual(testUser);
+        });
+
+        it("should refetch if refresh is true", async () => {
+            mockGetWithDefaultUser();
+            expect(await getCurrentUser(false)).toEqual(testUser);
+            expect(mockedCalls().length).toBe(1);
+            expect(await getCurrentUser(false)).toEqual(testUser);
+            expect(mockedCalls().length).toBe(1);
+            expect(await getCurrentUser(true)).toEqual(testUser);
+            expect(mockedCalls().length).toBe(2);
         });
 
         it("should use APILoadError if the server returns an error", async () => {

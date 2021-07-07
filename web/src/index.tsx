@@ -5,6 +5,7 @@ import { themeMui } from "theme.styles";
 import App from "./App";
 import { initializeCommon, KeyValStorageProvider } from "@cbr/common/init";
 import { loginState } from "./util/hooks/loginState";
+import { invalidateAllCachedAPI } from "@cbr/common/util/hooks/cachedAPI";
 
 const API_URL =
     process.env.NODE_ENV === "development"
@@ -26,9 +27,11 @@ const localStorageProvider: KeyValStorageProvider = {
 initializeCommon({
     apiUrl: API_URL,
     keyValStorageProvider: localStorageProvider,
+    useKeyValStorageForCachedAPIBackup: false,
     shouldLogoutOnTokenRefreshFailure: true,
     logoutCallback: async () => {
         loginState.emit(false);
+        await invalidateAllCachedAPI(true, true, false, false);
         window.location.replace("/");
     },
 });

@@ -1,6 +1,6 @@
 import {
-    timestampToDate,
     getDateFormatterFromReference,
+    timestampToDate,
     timestampToFormDate,
     timestampToWeekdayTime,
 } from "../../src/util/dates";

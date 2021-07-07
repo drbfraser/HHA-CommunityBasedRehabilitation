@@ -10,6 +10,10 @@ stages:
   - build
   - deploy
 
+stages:
+    - format
+    - build
+    - deploy
 variables:
   STAGING_BRANCH: "main"
   PROD_BRANCH: "prod"
@@ -123,33 +127,33 @@ build server:
     - python manage.py test
   
 deploy staging:
-  stage: deploy
-  tags:
-    - shell
-  rules:
-    - if: '$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $STAGING_BRANCH'
-      when: on_success
-  script:
-    - cp /var/cbr/staging.env ./.env
-    - source ./.env
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
-    - tar -xvf web_build.tar.gz
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
-    - bash -c 'sleep 10'
-    - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+    stage: deploy
+    tags:
+        - shell
+    rules:
+        - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $STAGING_BRANCH"
+          when: on_success
+    script:
+        - cp /var/cbr/staging.env ./.env
+        - source ./.env
+        - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
+        - tar -xvf web_build.tar.gz
+        - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
+        - bash -c 'sleep 10'
+        - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
 
 deploy prod:
-  stage: deploy
-  tags:
-    - shell-prod
-  rules:
-    - if: '$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $PROD_BRANCH'
-      when: manual
-  script:
-    - cp /var/cbr/prod.env ./.env
-    - source ./.env
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
-    - tar -xvf web_build.tar.gz
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
-    - bash -c 'sleep 10'
-    - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+    stage: deploy
+    tags:
+        - shell-prod
+    rules:
+        - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $PROD_BRANCH"
+          when: manual
+    script:
+        - cp /var/cbr/prod.env ./.env
+        - source ./.env
+        - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
+        - tar -xvf web_build.tar.gz
+        - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
+        - bash -c 'sleep 10'
+        - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate

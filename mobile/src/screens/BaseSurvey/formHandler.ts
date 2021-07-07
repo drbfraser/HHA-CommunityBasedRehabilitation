@@ -1,7 +1,6 @@
 import { FormikHelpers } from "formik";
-import history from "util/history";
-import { TFormValues } from "@cbr/common/forms/baseSurvey/baseSurveyFormFields";
-import { handleSubmitForm } from "@cbr/common/forms/baseSurvey/baseSurveyFormHandler";
+import { TFormValues } from "@cbr/common/src/forms/baseSurvey/baseSurveyFormFields";
+import { handleSubmitForm } from "@cbr/common/src/forms/baseSurvey/baseSurveyFormHandler";
 
 export const handleSubmit = async (
     values: TFormValues,
@@ -10,7 +9,7 @@ export const handleSubmit = async (
 ) => {
     try {
         handleSubmitForm(values, helpers, setSubmissionError);
-        history.goBack();
+        // TODO: navigation to client page
     } catch (e) {
         helpers.setSubmitting(false);
         setSubmissionError(true);

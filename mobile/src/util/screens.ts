@@ -1,6 +1,7 @@
 import React from "react";
 import { APILoadError, IUser, TAPILoadError, UserRole } from "@cbr/common";
 import Todo from "../screens/Todo/Todo";
+import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 
 export interface IScreen {
     name: string;
@@ -15,9 +16,11 @@ const screens: IScreen[] = [
         Component: Todo,
         iconName: "home",
     },
+    // TODO: Waiting until clients screen is done
+    // For test and view, it is supposed to connect with new client screen
     {
         name: "New Client",
-        Component: Todo,
+        Component: BaseSurvey,
         iconName: "plus-circle",
     },
     {
@@ -41,6 +44,11 @@ const screens: IScreen[] = [
         roles: [UserRole.ADMIN],
         Component: Todo,
         iconName: "account-cog",
+    },
+    {
+        name: "Baseline Survey",
+        roles: [UserRole.CLINICIAN],
+        Component: BaseSurvey,
     },
 ];
 

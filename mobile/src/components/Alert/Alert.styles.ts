@@ -9,7 +9,6 @@ const useStyles = (color: string) =>
             padding: 10,
             borderRadius: 7,
             backgroundColor: color,
-            flex: 1,
         },
         iconAndTextContainer: {
             flexDirection: "row",

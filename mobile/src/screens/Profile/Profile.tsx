@@ -26,9 +26,35 @@ const Profile = () => {
 
     return (
         <View style={styles.container}>
-            {user === null ? (
+            <Portal>
+                <Dialog
+                    visible={isLogoutConfirmDialogVisible}
+                    onDismiss={() => setLogoutConfirmDialogVisibility(false)}
+                >
+                    {/* TODO: If the user has data made that isn't synced with the server,
+                                 tell them about it. */}
+                    <Dialog.Content>
+                        <Text>Are you sure you want to logout?</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={() => setLogoutConfirmDialogVisibility(false)}>
+                            Cancel
+                        </Button>
+                        <Button onPress={authContext.logout}>Logout</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
+
+            {!user ? (
                 <View style={styles.errorAlertContainer}>
                     <Alert severity="error" text="Something went wrong. Please login again." />
+                    <Button
+                        style={styles.logoutButton}
+                        mode="contained"
+                        onPress={() => setLogoutConfirmDialogVisibility(true)}
+                    >
+                        Logout
+                    </Button>
                 </View>
             ) : (
                 <>
@@ -42,22 +68,6 @@ const Profile = () => {
                                 }
                             }}
                         />
-                        <Dialog
-                            visible={isLogoutConfirmDialogVisible}
-                            onDismiss={() => setLogoutConfirmDialogVisibility(false)}
-                        >
-                            {/* TODO: If the user has data made that isn't synced with the server,
-                                 tell them about it. */}
-                            <Dialog.Content>
-                                <Text>Are you sure you want to logout?</Text>
-                            </Dialog.Content>
-                            <Dialog.Actions>
-                                <Button onPress={() => setLogoutConfirmDialogVisibility(false)}>
-                                    Cancel
-                                </Button>
-                                <Button onPress={authContext.logout}>Logout</Button>
-                            </Dialog.Actions>
-                        </Dialog>
                     </Portal>
 
                     <View style={styles.profileInfoContainer}>

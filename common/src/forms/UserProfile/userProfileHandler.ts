@@ -3,6 +3,11 @@ import { updateCurrentUserPassword } from "../../util/users";
 import { APIFetchFailError } from "../../util/endpoints";
 import { TPasswordValues } from "./userProfileFields";
 
+const createFailedToGetPasswordError = (reason?: string) => {
+    const baseError = "Failed to change password";
+    return reason ? baseError + ` (${reason})` : baseError;
+};
+
 /**
  * Gets a user-friendly error message from an exception thrown from
  * {@link handleSubmitChangePassword}.
@@ -15,16 +20,16 @@ export const getPassChangeErrorMessageFromSubmissionError = (error: any): string
         if (error.status === 400) {
             return "Old password is incorrect";
         } else if (error.response.hasOwnProperty("detail")) {
-            return `Failed to change password (${error.response.detail})`;
+            return createFailedToGetPasswordError(error.response.detail);
         } else {
-            return `Failed to change password (${error.message})`;
+            return createFailedToGetPasswordError(error.message);
         }
     } else if (error instanceof Error) {
-        return `Failed to change password (${error.message})`;
+        return createFailedToGetPasswordError(error.message);
     } else if (typeof error === "string") {
-        return `Failed to change password (${error})`;
+        return createFailedToGetPasswordError(error);
     } else {
-        return "Failed to change password";
+        return createFailedToGetPasswordError();
     }
 };
 

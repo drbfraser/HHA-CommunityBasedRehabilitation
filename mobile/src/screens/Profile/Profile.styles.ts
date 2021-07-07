@@ -7,9 +7,7 @@ const useStyles = () => {
             flex: 1,
         },
         errorAlertContainer: {
-            alignSelf: "center",
-            alignItems: "center",
-            justifyContent: "center",
+            flexDirection: "column",
         },
         profileInfoContainer: {
             flex: 1,

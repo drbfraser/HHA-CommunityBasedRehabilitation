@@ -1,4 +1,9 @@
-export * from "./src/init";
+export {
+    KeyValStorageProvider,
+    CommonConfiguration,
+    commonConfiguration,
+    initializeCommon, // don't export reinitializeCommon
+} from "./src/init";
 export * from "./src/util/auth";
 export * from "./src/util/colors";
 export * from "./src/util/dates";

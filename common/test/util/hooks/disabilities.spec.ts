@@ -1,6 +1,6 @@
-import { get, MockResponseObject, reset } from "fetch-mock";
+import { get as mockGet, MockResponseObject, reset as resetFetchMocks } from "fetch-mock";
 import { Endpoint } from "../../../src/util/endpoints";
-import { act, renderHook } from "@testing-library/react-hooks";
+import { renderHook } from "@testing-library/react-hooks";
 import {
     getDisabilities,
     getOtherDisabilityId,
@@ -9,6 +9,8 @@ import {
     useDisabilities,
 } from "../../../src/util/hooks/disabilities";
 import { addValidTokens } from "../../testHelpers/authTokenHelpers";
+import { fromNewCommonModule } from "../../testHelpers/testCommonConfiguration";
+import { checkAuthHeader } from "../../testHelpers/mockServerHelpers";
 
 const ID_OF_OTHER_IN_TEST_DISABILITY_MAP = 4;
 
@@ -20,9 +22,13 @@ const testDisabilityMap: TDisabilityMap = new Map<number, string>([
     [5, "disability #4"],
 ]);
 
-beforeEach(async () => {
-    reset();
-    get(Endpoint.DISABILITIES, async (): Promise<MockResponseObject> => {
+const mockGetWithDefaultTestDisabilityMap = () => {
+    mockGet(Endpoint.DISABILITIES, async (url, request): Promise<MockResponseObject> => {
+        const errorResponse = checkAuthHeader(request);
+        if (errorResponse) {
+            return errorResponse;
+        }
+
         return {
             status: 200,
             body: JSON.stringify(
@@ -37,18 +43,23 @@ beforeEach(async () => {
             ),
         };
     });
+};
+
+beforeEach(async () => {
+    resetFetchMocks();
     await addValidTokens();
 });
 
 describe("disabilities.ts", () => {
-    // Mock FormData, as FormData isn't available in nodejs environment.
-    // https://stackoverflow.com/a/59726560
-    // @ts-ignore
-    global.FormData = () => {};
-
     describe("useDisabilities", () => {
         it("should load data from the mocked fetch", async () => {
+            mockGetWithDefaultTestDisabilityMap();
+
+            // TODO: Have a way to clear out the cache, because using Jest's isolateModules doesn't
+            //  work well with testing these hooks with different local state.
             const renderHookResult = renderHook(() => useDisabilities());
+            // The loading value is an empty map.
+            expect(renderHookResult.result.current.size).toBe(0);
             await renderHookResult.waitForNextUpdate();
             expect(renderHookResult.result.current.entries()).toEqual(testDisabilityMap.entries());
         });
@@ -56,12 +67,28 @@ describe("disabilities.ts", () => {
 
     describe("getDisabilities", () => {
         it("should load data from the mocked fetch", async () => {
+            mockGetWithDefaultTestDisabilityMap();
+
             expect((await getDisabilities()).entries()).toEqual(testDisabilityMap.entries());
+        });
+
+        it("should use an empty map if the server returns an error", async () => {
+            mockGet(Endpoint.DISABILITIES, { status: 500 });
+
+            const freshGetDisabilitiesFn = await fromNewCommonModule(async () => {
+                return import("../../../src/util/hooks/disabilities").then(
+                    (module) => module.getDisabilities
+                );
+            });
+
+            expect((await freshGetDisabilitiesFn()).size).toBe(0);
         });
     });
 
     describe("getOtherDisabilityId", () => {
         it("should be able to find the 'Other' disability from server if it exists", async () => {
+            mockGetWithDefaultTestDisabilityMap();
+
             const disabilities = await getDisabilities();
             expect(getOtherDisabilityId(disabilities)).toEqual(ID_OF_OTHER_IN_TEST_DISABILITY_MAP);
         });

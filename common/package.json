@@ -2,8 +2,8 @@
   "name": "@cbr/common",
   "version": "1.0.0",
   "scripts": {
-    "test": "jest",
-    "test-ci": "jest --ci --coverage --reporters=default --reporters=jest-junit"
+    "test": "LANG=en-US jest",
+    "test-ci": "LANG=en-US jest --ci --coverage --reporters=default --reporters=jest-junit"
   },
   "devDependencies": {
     "@testing-library/react-hooks": "^7.0.1",

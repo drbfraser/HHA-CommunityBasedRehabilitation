@@ -21,7 +21,7 @@ import {
  * the token is valid and not expired.
  * @param token The token to validate.
  */
-const isTokenValid = (token: string | null): boolean => {
+export const isTokenValid = (token: string | null): boolean => {
     if (token === null) {
         return false;
     }

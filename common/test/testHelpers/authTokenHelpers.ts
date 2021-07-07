@@ -1,14 +1,19 @@
 import base64url from "base64url";
 import { IAPIToken, setAccessToken, setRefreshToken } from "../../src/util/internal/tokens";
 
-const jwtJoseHeader: string = base64url.encode(
+const JWT_JOSE_HEADER: string = base64url.encode(
     JSON.stringify({
         typ: "JWT",
         alg: "HS256",
     })
 );
-// just a static signature because we don't verify the signatures
-const fakeJwsSignature = "ktkMgaQJFU83ds642P+8fMBv9UqhEQW3oVUkIlE/0PA";
+
+/**
+ * A static, fake JSON Web Signature for completeness. We don't check signatures, so it's
+ * fine to have this as a constant.
+ */
+const FAKE_JWS_SIGNATURE = "ktkMgaQJFU83ds642P+8fMBv9UqhEQW3oVUkIlE/0PA";
+
 /**
  * Creates a fake token for testing
  *
@@ -26,7 +31,7 @@ export const createFakeToken = (tokenType: "access" | "refresh", expireNow: bool
         } as IAPIToken)
     );
 
-    return jwtJoseHeader + "." + jwtClaimsSet + "." + fakeJwsSignature;
+    return JWT_JOSE_HEADER + "." + jwtClaimsSet + "." + FAKE_JWS_SIGNATURE;
 };
 
 export const addValidTokens = async () => {

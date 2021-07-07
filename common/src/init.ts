@@ -27,3 +27,13 @@ export const initializeCommon = (config: CommonConfiguration) => {
         console.error("trying to initialize common twice");
     }
 };
+
+/**
+ * Reinitializes the common module, for testing purposes only. Should not be exported out of the
+ * common module.
+ *
+ * @internal
+ */
+export const reinitializeCommon = (config: CommonConfiguration) => {
+    commonConfiguration = { ...config };
+};

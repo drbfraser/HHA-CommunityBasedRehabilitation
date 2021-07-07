@@ -8,17 +8,17 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
 import {
+    changePassValidationSchema,
     ChangePasswordField,
+    changePasswordFieldLabels,
     changePasswordInitialValues,
-    fieldLabels,
-    passwordValidationSchema,
-} from "@cbr/common/form/UserProfile/userProfileFields";
+} from "@cbr/common/forms/UserProfile/userProfileFields";
 import { useState } from "react";
 import React from "react";
 import {
-    getErrorMessageFromSubmissionError,
+    getPassChangeErrorMessageFromSubmissionError,
     handleSubmitChangePassword,
-} from "@cbr/common/form/UserProfile/handleSubmitChangePassword";
+} from "@cbr/common/forms/UserProfile/userProfileHandler";
 import history from "../../util/history";
 
 const handleCancel = () => history.goBack();
@@ -48,12 +48,12 @@ const UserPasswordEdit = () => {
             </div>
             <Formik
                 initialValues={changePasswordInitialValues}
-                validationSchema={passwordValidationSchema}
+                validationSchema={changePassValidationSchema}
                 onSubmit={async (values, formikHelpers) => {
                     return await handleSubmitChangePassword(values, formikHelpers)
                         .then(() => history.goBack())
                         .catch((e: any) => {
-                            setPasswordChangeError(getErrorMessageFromSubmissionError(e));
+                            setPasswordChangeError(getPassChangeErrorMessageFromSubmissionError(e));
                         });
                 }}
             >
@@ -67,7 +67,11 @@ const UserPasswordEdit = () => {
                                         name={ChangePasswordField.oldPassword}
                                         variant="outlined"
                                         type="password"
-                                        label={fieldLabels[ChangePasswordField.oldPassword]}
+                                        label={
+                                            changePasswordFieldLabels[
+                                                ChangePasswordField.oldPassword
+                                            ]
+                                        }
                                         required
                                         fullWidth
                                     />
@@ -79,7 +83,11 @@ const UserPasswordEdit = () => {
                                             name={ChangePasswordField.newPassword}
                                             variant="outlined"
                                             type="password"
-                                            label={fieldLabels[ChangePasswordField.newPassword]}
+                                            label={
+                                                changePasswordFieldLabels[
+                                                    ChangePasswordField.newPassword
+                                                ]
+                                            }
                                             style={{ marginBottom: 8 }}
                                             required
                                             fullWidth
@@ -92,7 +100,9 @@ const UserPasswordEdit = () => {
                                             variant="outlined"
                                             type="password"
                                             label={
-                                                fieldLabels[ChangePasswordField.confirmNewPassword]
+                                                changePasswordFieldLabels[
+                                                    ChangePasswordField.confirmNewPassword
+                                                ]
                                             }
                                             required
                                             fullWidth

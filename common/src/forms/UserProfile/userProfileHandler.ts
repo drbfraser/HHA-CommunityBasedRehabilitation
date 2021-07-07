@@ -1,7 +1,7 @@
-import { TPasswordValues } from "./userProfileFields";
 import { FormikHelpers } from "formik";
 import { updateCurrentUserPassword } from "../../util/users";
 import { APIFetchFailError } from "../../util/endpoints";
+import { TPasswordValues } from "./userProfileFields";
 
 /**
  * Gets a user-friendly error message from an exception thrown from
@@ -10,7 +10,7 @@ import { APIFetchFailError } from "../../util/endpoints";
  * @param error The error from {@link handleSubmitChangePassword}, obtained from a `.catch` or try-
  * catch block.
  */
-export const getErrorMessageFromSubmissionError = (error: any): string => {
+export const getPassChangeErrorMessageFromSubmissionError = (error: any): string => {
     if (error instanceof APIFetchFailError) {
         if (error.status === 400) {
             return "Old password is incorrect";
@@ -33,7 +33,7 @@ export const getErrorMessageFromSubmissionError = (error: any): string => {
  *
  * @return A Promise resolving if the user was successfully able to change their password, and
  * rejecting otherwise. User-friendly messages for users from rejected Promises can be obtained by
- * passing the rejection reason into {@link getErrorMessageFromSubmissionError}.
+ * passing the rejection reason into {@link getPassChangeErrorMessageFromSubmissionError}.
  * @throws APIFetchFailError if the server returned a non-successful response.
  * @param values The old and new password values.
  * @param helpers Form helpers as given in Formik's onSubmit prop.

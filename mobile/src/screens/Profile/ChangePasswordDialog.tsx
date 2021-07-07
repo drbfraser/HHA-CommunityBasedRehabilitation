@@ -1,15 +1,15 @@
 import { Button, Dialog, HelperText } from "react-native-paper";
-import React, { forwardRef, RefObject, useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { Formik, FormikProps } from "formik";
 import { StyleProp, TextInput as NativeTextInput, TextStyle } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
+    changePassValidationSchema,
     ChangePasswordField,
+    changePasswordFieldLabels,
     changePasswordInitialValues,
-    fieldLabels,
-    getErrorMessageFromSubmissionError,
+    getPassChangeErrorMessageFromSubmissionError,
     handleSubmitChangePassword,
-    passwordValidationSchema,
     TPasswordValues,
 } from "@cbr/common";
 import Alert from "../../components/Alert/Alert";
@@ -36,7 +36,7 @@ const FormikPasswordTextInput = forwardRef<NativeTextInput, FormikPasswordTextIn
                     style={textInputStyle}
                     ref={ref}
                     error={isError}
-                    label={fieldLabels[field]}
+                    label={changePasswordFieldLabels[field]}
                     value={formikProps.values[field]}
                     onChangeText={formikProps.handleChange(field)}
                     onEndEditing={() => formikProps.setFieldTouched(field)}
@@ -79,7 +79,7 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
         <Dialog dismissable={false} visible={visible} onDismiss={() => onDismiss(false)}>
             <Formik
                 initialValues={changePasswordInitialValues}
-                validationSchema={passwordValidationSchema}
+                validationSchema={changePassValidationSchema}
                 onReset={() => setSubmissionError(null)}
                 onSubmit={async (values, formikHelpers) => {
                     return handleSubmitChangePassword(values, formikHelpers)
@@ -89,7 +89,7 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                             formikHelpers.resetForm();
                         })
                         .catch((e: any) => {
-                            setSubmissionError(getErrorMessageFromSubmissionError(e));
+                            setSubmissionError(getPassChangeErrorMessageFromSubmissionError(e));
                         });
                 }}
             >
@@ -111,7 +111,7 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                     field={ChangePasswordField.oldPassword}
                                     textInputStyle={styles.passwordTextInput}
                                     formikProps={formikProps}
-                                    onSubmitEnding={() => newPassRef.current?.focus}
+                                    onSubmitEnding={() => newPassRef.current?.focus()}
                                 />
 
                                 <FormikPasswordTextInput
@@ -119,7 +119,7 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                     textInputStyle={styles.passwordTextInput}
                                     formikProps={formikProps}
                                     ref={newPassRef}
-                                    onSubmitEnding={() => confirmNewPassRef.current?.focus}
+                                    onSubmitEnding={() => confirmNewPassRef.current?.focus()}
                                 />
 
                                 <FormikPasswordTextInput

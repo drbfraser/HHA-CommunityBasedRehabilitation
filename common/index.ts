@@ -1,6 +1,4 @@
 export * from "./src/init";
-export * from "./src/form/UserProfile/handleSubmitChangePassword";
-export * from "./src/form/UserProfile/userProfileFields";
 export * from "./src/util/auth";
 export * from "./src/util/colors";
 export * from "./src/util/dates";
@@ -16,6 +14,8 @@ export * from "./src/util/hooks/disabilities";
 export * from "./src/util/hooks/zones";
 export * from "./src/forms/baseSurvey/baseSurveyFormFields";
 export * from "./src/forms/baseSurvey/baseSurveyFormHandler";
+export * from "./src/forms/UserProfile/userProfileHandler";
+export * from "./src/forms/UserProfile/userProfileFields";
 export * from "./src/util/clients";
 export * from "./src/util/risks";
 export * from "./src/util/visits";

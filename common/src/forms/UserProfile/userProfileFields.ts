@@ -7,7 +7,7 @@ export enum ChangePasswordField {
     confirmNewPassword = "confirmNewPassword",
 }
 
-export const fieldLabels = {
+export const changePasswordFieldLabels = {
     [ChangePasswordField.oldPassword]: "Old password",
     [ChangePasswordField.newPassword]: "New password",
     [ChangePasswordField.confirmNewPassword]: "Confirm new password",
@@ -21,18 +21,18 @@ export const changePasswordInitialValues = {
 
 export type TPasswordValues = typeof changePasswordInitialValues;
 
-export const passwordValidationSchema = () =>
+export const changePassValidationSchema = () =>
     Yup.object().shape({
         [ChangePasswordField.oldPassword]: Yup.string()
-            .label(fieldLabels[ChangePasswordField.oldPassword])
+            .label(changePasswordFieldLabels[ChangePasswordField.oldPassword])
             .required(),
         [ChangePasswordField.newPassword]: Yup.string()
-            .label(fieldLabels[ChangePasswordField.newPassword])
+            .label(changePasswordFieldLabels[ChangePasswordField.newPassword])
             .matches(Validation.passwordRegExp, Validation.passwordInvalidMsg)
             .notOneOf([Yup.ref(ChangePasswordField.oldPassword)], "Passwords must be different")
             .required(),
         [ChangePasswordField.confirmNewPassword]: Yup.string()
-            .label(fieldLabels[ChangePasswordField.confirmNewPassword])
+            .label(changePasswordFieldLabels[ChangePasswordField.confirmNewPassword])
             .oneOf([Yup.ref(ChangePasswordField.newPassword)], "Passwords must match")
             .required(),
     });

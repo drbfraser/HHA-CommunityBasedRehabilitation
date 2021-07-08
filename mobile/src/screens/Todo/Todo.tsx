@@ -6,6 +6,7 @@ import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { stackParamList, StackScreenName } from "../../util/screens";
 import { Navigation } from "react-native-navigation";
+import { useNavigation } from "@react-navigation/core";
 
 interface LogoutProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
@@ -14,10 +15,10 @@ interface LogoutProps {
 const Todo = (props: LogoutProps) => {
     const styles = useStyles();
     const authContext = useContext(AuthContext);
-
     useEffect(() => {
         authContext.requireLoggedIn(true);
     }, []);
+    const navigation = useNavigation();
 
     const logoutAlert = () =>
         Alert.alert("Alert", "Do you want to logout?", [

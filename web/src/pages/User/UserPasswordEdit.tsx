@@ -8,19 +8,25 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
 import {
-    changePasswordField,
+    changePassValidationSchema,
+    ChangePasswordField,
+    changePasswordFieldLabels,
     changePasswordInitialValues,
-    fieldLabels,
-    passwordValidationSchema,
-} from "./fields";
-import { handleCancel, handleUpdatePassword } from "./handleUpdatePassword";
+} from "@cbr/common/forms/UserProfile/userProfileFields";
 import { useState } from "react";
 import React from "react";
+import {
+    getPassChangeErrorMessageFromSubmissionError,
+    handleSubmitChangePassword,
+} from "@cbr/common/forms/UserProfile/userProfileHandler";
+import history from "../../util/history";
+
+const handleCancel = () => history.goBack();
 
 const UserPasswordEdit = () => {
     const styles = useStyles();
     const user = useCurrentUser();
-    const [wrongPasswordError, setWrongPasswordError] = useState(false);
+    const [passwordChangeError, setPasswordChangeError] = useState<string | null>(null);
 
     return user === APILoadError ? (
         <Alert severity="error">
@@ -29,9 +35,9 @@ const UserPasswordEdit = () => {
     ) : user ? (
         <>
             <div className={styles.container}>
-                {wrongPasswordError && (
-                    <Alert onClose={() => setWrongPasswordError(false)} severity="error">
-                        The old password you have entered is incorrect. Please try again.
+                {passwordChangeError && (
+                    <Alert onClose={() => setPasswordChangeError(null)} severity="error">
+                        {passwordChangeError}
                     </Alert>
                 )}
                 <br />
@@ -42,8 +48,14 @@ const UserPasswordEdit = () => {
             </div>
             <Formik
                 initialValues={changePasswordInitialValues}
-                validationSchema={passwordValidationSchema}
-                onSubmit={handleUpdatePassword(setWrongPasswordError)}
+                validationSchema={changePassValidationSchema}
+                onSubmit={async (values, formikHelpers) => {
+                    return await handleSubmitChangePassword(values, formikHelpers)
+                        .then(() => history.goBack())
+                        .catch((e: any) => {
+                            setPasswordChangeError(getPassChangeErrorMessageFromSubmissionError(e));
+                        });
+                }}
             >
                 {({ isSubmitting }) => (
                     <div className={styles.container}>
@@ -52,10 +64,14 @@ const UserPasswordEdit = () => {
                                 <Grid item md={3} xs={12}>
                                     <Field
                                         component={TextField}
-                                        name={changePasswordField.oldPassword}
+                                        name={ChangePasswordField.oldPassword}
                                         variant="outlined"
                                         type="password"
-                                        label={fieldLabels[changePasswordField.oldPassword]}
+                                        label={
+                                            changePasswordFieldLabels[
+                                                ChangePasswordField.oldPassword
+                                            ]
+                                        }
                                         required
                                         fullWidth
                                     />
@@ -64,10 +80,14 @@ const UserPasswordEdit = () => {
                                     <Grid>
                                         <Field
                                             component={TextField}
-                                            name={changePasswordField.newPassword}
+                                            name={ChangePasswordField.newPassword}
                                             variant="outlined"
                                             type="password"
-                                            label={fieldLabels[changePasswordField.newPassword]}
+                                            label={
+                                                changePasswordFieldLabels[
+                                                    ChangePasswordField.newPassword
+                                                ]
+                                            }
                                             style={{ marginBottom: 8 }}
                                             required
                                             fullWidth
@@ -76,11 +96,13 @@ const UserPasswordEdit = () => {
                                     <Grid>
                                         <Field
                                             component={TextField}
-                                            name={changePasswordField.confirmNewPassword}
+                                            name={ChangePasswordField.confirmNewPassword}
                                             variant="outlined"
                                             type="password"
                                             label={
-                                                fieldLabels[changePasswordField.confirmNewPassword]
+                                                changePasswordFieldLabels[
+                                                    ChangePasswordField.confirmNewPassword
+                                                ]
                                             }
                                             required
                                             fullWidth

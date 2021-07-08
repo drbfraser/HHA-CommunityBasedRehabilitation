@@ -21,8 +21,8 @@ import {
     healthValidationSchema,
     educationValidationSchema,
     empowermentValidationSchema,
-} from "./formFields";
-import { handleSubmit } from "./formHandler";
+    surveyTypes,
+} from "@cbr/common/forms/baseSurvey/baseSurveyFormFields";
 import { ArrowBack } from "@material-ui/icons";
 import history from "util/history";
 import { useParams } from "react-router-dom";
@@ -37,20 +37,11 @@ import {
     reasonNotSchool,
 } from "@cbr/common/util/survey";
 import { useStyles } from "./baseSurvey.style";
+import { handleSubmit } from "./formHandler";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
 }
-
-const surveyTypes: FormField[] = [
-    FormField.health,
-    FormField.education,
-    FormField.social,
-    FormField.livelihood,
-    FormField.foodAndNutrition,
-    FormField.empowerment,
-    FormField.shelterAndCare,
-];
 
 interface ISurvey {
     label: string;

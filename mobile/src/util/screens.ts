@@ -23,6 +23,8 @@ const screens: IScreen[] = [
         Component: Todo,
         iconName: "home",
     },
+    // TODO: Waiting until clients screen is done
+    // For test and view, it is supposed to connect with new client screen
     {
         name: "New Client",
         Component: Todo,
@@ -35,7 +37,7 @@ const screens: IScreen[] = [
     },
     {
         name: "Profile",
-        Component: Todo,
+        Component: Profile,
         iconName: "account",
     },
     {
@@ -49,6 +51,11 @@ const screens: IScreen[] = [
         roles: [UserRole.ADMIN],
         Component: Todo,
         iconName: "account-cog",
+    },
+    {
+        name: "Baseline Survey",
+        roles: [UserRole.CLINICIAN],
+        Component: BaseSurvey,
     },
 ];
 

@@ -7,7 +7,8 @@ import { Button, HelperText, Text, TextInput, Title, useTheme } from "react-nati
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
-import { SMALL_WIDTH } from "../../util/theme.styles";
+import { SMALL_WIDTH } from "../../theme.styles";
+import PasswordTextInput from "../../components/PasswordTextInput/PasswordTextInput";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { stackParamList, StackScreenName } from "../../util/screens";
 import { Navigation } from "react-native-navigation";
@@ -147,18 +148,13 @@ const Login = (props: LoginProps) => {
                     </View>
                 )}
                 <View>
-                    <TextInput
+                    <PasswordTextInput
                         label="Password"
                         error={status === LoginStatus.FAILED && !password}
                         value={password}
                         onChangeText={(newPassword) => setPassword(newPassword)}
                         mode="flat"
-                        secureTextEntry
                         disabled={status === LoginStatus.SUBMITTING}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        autoCompleteType="password"
-                        textContentType="password"
                         onSubmitEditing={handleLogin}
                         ref={passwordTextRef}
                     />

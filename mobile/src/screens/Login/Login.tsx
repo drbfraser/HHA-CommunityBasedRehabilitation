@@ -7,7 +7,7 @@ import { Button, HelperText, Text, TextInput, Title, useTheme } from "react-nati
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
-import { SMALL_WIDTH } from "../../theme.styles";
+import { SMALL_WIDTH } from "../../util/theme.styles";
 import PasswordTextInput from "../../components/PasswordTextInput/PasswordTextInput";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { stackParamList, StackScreenName } from "../../util/screens";

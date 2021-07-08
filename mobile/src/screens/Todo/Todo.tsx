@@ -19,7 +19,6 @@ const Todo = (props: LogoutProps) => {
         authContext.requireLoggedIn(true);
     }, []);
     const navigation = useNavigation();
-
     const logoutAlert = () =>
         Alert.alert("Alert", "Do you want to logout?", [
             {

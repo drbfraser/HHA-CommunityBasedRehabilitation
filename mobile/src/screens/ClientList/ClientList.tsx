@@ -3,7 +3,6 @@ import { View } from "react-native";
 import { DataTable } from "react-native-paper";
 import useStyles from "./ClientList.styles";
 import { ClientTest, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
-import { riskLevels } from "../../util/risks";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { stackParamList, StackScreenName } from "../../util/screens";
 import { riskTypes } from "../../util/riskIcon";

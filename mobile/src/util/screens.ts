@@ -9,6 +9,8 @@ import { Props } from "react-native-paper/lib/typescript/components/RadioButton/
 import HomeScreenController from "../screens/HomeScreen/HomeScreenController";
 import Login from "../screens/Login/Login";
 import Loading from "../screens/Loading/Loading";
+import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
+import Profile from "../screens/Profile/Profile";
 
 export interface IScreen {
     name: string;
@@ -27,7 +29,7 @@ const screens: IScreen[] = [
     // For test and view, it is supposed to connect with new client screen
     {
         name: "New Client",
-        Component: Todo,
+        Component: BaseSurvey,
         iconName: "plus-circle",
     },
     {

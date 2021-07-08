@@ -46,3 +46,10 @@ export const updateCurrentUserPassword = async (oldPassword: string, newPassword
     };
     return await apiFetch(Endpoint.USER_CURRENT_PASSWORD, "", init);
 };
+
+
+/**
+ * Updates the current user's password.
+ * @return A Promise resolving to a successful response from the server.
+ * @throws APIFetchFailError if the response from the server is not successful.
+ */

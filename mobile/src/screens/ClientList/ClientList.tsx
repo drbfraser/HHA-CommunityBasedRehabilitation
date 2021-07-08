@@ -60,5 +60,4 @@ const ClientList = (props: ClientListControllerProps) => {
         </View>
     );
 };
-
 export default ClientList;

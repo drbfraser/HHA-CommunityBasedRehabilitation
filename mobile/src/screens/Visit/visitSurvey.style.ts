@@ -39,7 +39,8 @@ const useStyles = () =>
         },
         centerElement: { justifyContent: "center", alignItems: "center" },
         picker: { height: 40, width: 250 },
-        pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingBottom: 10 },
+        pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingBottom: 0, paddingLeft: 7 },
+        normalInput: { fontSize: 15, paddingBottom: 0, paddingLeft: 7 },
         viewPadding: { paddingLeft: 10, paddingRight: 10 },
         inputText: {
             borderWidth: 1,

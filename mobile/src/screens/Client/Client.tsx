@@ -143,7 +143,6 @@ const Client = (props: ClientProps) => {
         (event, newDate) => {
             setShow(Platform.OS === "ios");
             if (newDate) setDate(newDate);
-            console.log(newDate);
             setShow(false);
         },
         [show, date]
@@ -257,7 +256,6 @@ const Client = (props: ClientProps) => {
     }
 
     tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));
-    console.log(tempActivity);
 
     const recentActivity = () => {
         if (clientVisits)

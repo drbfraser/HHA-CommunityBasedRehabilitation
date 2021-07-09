@@ -188,6 +188,10 @@ const useStyles = () =>
             width: 350,
             marginTop: 15,
         },
+        itemDividerStyle: {
+            borderBottomColor: "black",
+            borderBottomWidth: 1,
+        },
     });
 
 export default useStyles;

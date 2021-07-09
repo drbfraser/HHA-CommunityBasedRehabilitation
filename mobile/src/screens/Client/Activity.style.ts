@@ -27,13 +27,11 @@ const useStyles = () =>
             backgroundColor: "#909090",
         },
         subItem: {
-            borderColor: "#6890AC",
             borderBottomLeftRadius: 10,
             borderBottomRightRadius: 10,
             borderTopRightRadius: 10,
             borderTopLeftRadius: 10,
             marginTop: 2,
-            borderWidth: 5,
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
@@ -46,6 +44,10 @@ const useStyles = () =>
             marginLeft: 10,
             marginEnd: 10,
             paddingLeft: 10,
+        },
+        dividerStyle: {
+            borderBottomColor: "black",
+            borderBottomWidth: 0.5,
         },
     });
 

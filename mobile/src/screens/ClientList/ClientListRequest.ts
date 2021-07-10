@@ -25,23 +25,18 @@ Promise<ClientTest[]> => {
         EducationLevel: riskLevels[responseRow.educat_risk_level].color,
         SocialLevel: riskLevels[responseRow.social_risk_level].color,
     }));
-    if(selectedSearchOption == "full_name" || selectedSearchOption =="zone"){
-        resultRow.forEach((i, index)=>{
-            if (!i[selectedSearchOption].includes(searchQuery)){
-                resultRow.splice(index,1);
-            }
+    console.log(resultRow.length)
+    if(selectedSearchOption == "full_name" || selectedSearchOption =="zone" && searchQuery.length!=0){
+        var resultRow = resultRow.filter(function(value, index, arr){ 
+            return value[selectedSearchOption].includes(searchQuery);
         })
     }
-    else if(selectedSearchOption == "id"){
+    else if(selectedSearchOption == "id" && searchQuery.length!=0){
         const selectedId = Number(searchQuery)
-        console.log(selectedId)
         if(selectedId != NaN){
-            resultRow.forEach((i, index)=>{
-                if (i.id != selectedId){
-                    console.log(index)
-                    resultRow.splice(index,1);
-                }
-            })
+            var resultRow = resultRow.filter(function(value, index, arr){ 
+                return value.id == selectedId;
+            });
         }
     }
     return resultRow

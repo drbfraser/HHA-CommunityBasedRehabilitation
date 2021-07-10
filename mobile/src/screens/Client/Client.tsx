@@ -14,6 +14,7 @@ import {
 import {
     getDisabilities,
     TDisabilityMap,
+    useDisabilities,
 } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
 import { riskTypes } from "../../util/riskIcon";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -38,6 +39,7 @@ interface ClientProps {
 const Client = (props: ClientProps) => {
     const styles = clientStyle();
     var zoneList = useZones();
+    var disabilityList = useDisabilities();
     //Client fetch and API call variables
 
     //Main Client Variables
@@ -52,6 +54,7 @@ const Client = (props: ClientProps) => {
     const [caregiverName, setCaregiverName] = React.useState("");
     const [caregiverEmail, setCaregiverEmail] = React.useState("");
     const [caregiverPhone, setCaregiverPhone] = React.useState("");
+    const [clientDisability, setDisability] = useState<String[]>([]);
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);
@@ -71,6 +74,8 @@ const Client = (props: ClientProps) => {
     const [tempCaregiverName, setTempCaregiverName] = React.useState("");
     const [tempCaregiverEmail, setTempCaregiverEmail] = React.useState("");
     const [tempCaregiverPhone, setTempCaregiverPhone] = React.useState("");
+    const [tempClientDisabilityIndex, setTempClientDisabilityIndex] = useState([0]);
+    const [tempClientDisability, setTempDisability] = useState<String[]>([""]);
 
     useEffect(() => {
         const getClientDetails = async () => {
@@ -88,6 +93,13 @@ const Client = (props: ClientProps) => {
                 setCaregiverPhone(presentClient.careGiverPhoneNumber);
                 setCaregiverEmail(presentClient.careGiverEmail);
             }
+            var tempDisabilityList: string[] = [];
+            for (let entry of presentClient.disabilities) {
+                console.log("The index is: " + entry);
+                tempDisabilityList.push(Array.from(disabilityList.entries())[entry - 1][1]);
+            }
+            console.log(tempDisabilityList);
+            setDisability(tempDisabilityList);
 
             setClientCreateDate(presentClient.clientCreatedDate);
             setClientVisits(presentClient.clientVisits);
@@ -109,33 +121,6 @@ const Client = (props: ClientProps) => {
         };
         getClientDetails();
     }, []);
-
-    //Disability and Menu Variables
-    const [showDisabilityMenu, setShowDisabilityMenu] = useState(false);
-    const [disability, setdisability] = useState("Amputee"); //Set to amputee for now but get from database
-    const disabilityList = [
-        { label: "Amputee", value: "Amputee" },
-        { label: "Polio", value: "Polio" },
-        { label: "Other", value: "Other" },
-    ];
-
-    //const [disabilityList, setDisabilityList] = useState<TDisabilityMap>();
-    // const getDisabilityList = async () => {
-    //     const tempDisabilityList = await getDisabilities();
-    //     setDisabilityList(tempDisabilityList);
-    // };
-    //const [clientDisability, setDisability] = useState<String>("N/A");
-    // getDisabilityList();
-    // console.log(disabilityList);
-    // const assignDisability = () => {
-    //     disabilityList.forEach((value: string, key: number) => {
-    //         if (key === presentClient?.disabilities.indexOf(0)) {
-    //              setDisability(value);
-    //          }
-    //         console.log(key, value);
-    //     });
-    // };
-    // assignDisability();
 
     //DatePicker variables
 
@@ -180,6 +165,7 @@ const Client = (props: ClientProps) => {
     const openDisabilityMenu = () => setDisabilityVisible(true);
     const closeDisabilityMenu = () => setDisabilityVisible(false);
 
+    //Zone Menu editable toggle variables
     const [zonesVisible, setZonesVisible] = React.useState(false);
     const openZonesMenu = () => setZonesVisible(true);
     const closeZonesMenu = () => setZonesVisible(false);
@@ -204,7 +190,6 @@ const Client = (props: ClientProps) => {
             setTempCaregiverName(caregiverName);
             setTempCaregiverPhone(caregiverPhone);
             setTempCaregiverEmail(caregiverEmail);
-
             setEditMode(true);
             setCancelButtonType("outlined");
         }
@@ -331,14 +316,6 @@ const Client = (props: ClientProps) => {
                     disabled={editMode}
                     editable={true}
                 />
-                {/* <TextInput
-                    style={styles.clientTextStyle}
-                    label="Zone "
-                    value={String(zone)}
-                    onChangeText={(number) => setZone(Number(number))}
-                    disabled={editMode}
-                    editable={true}
-                /> */}
                 <View>
                     <Text> Zone:</Text>
                     <Text style={styles.carePresentCheckBox}> {zone} </Text>
@@ -386,8 +363,10 @@ const Client = (props: ClientProps) => {
                     editable={true}
                 />
                 <View>
-                    <Text> Disability </Text>
-                    <Text style={styles.carePresentCheckBox}> {disability} </Text>
+                    <Text> Disability:</Text>
+                    {clientDisability.map((disability) => {
+                        return <Text style={styles.carePresentCheckBox}> {disability} </Text>;
+                    })}
                     <Menu
                         visible={disabilityVisible}
                         onDismiss={closeDisabilityMenu}
@@ -402,13 +381,13 @@ const Client = (props: ClientProps) => {
                             </Button>
                         }
                     >
-                        {disabilityList.map((item) => {
+                        {Array.from(disabilityList.entries()).map(([key, value]) => {
                             return (
                                 <Menu.Item
-                                    key={item.label}
-                                    title={item.label}
+                                    key={key}
+                                    title={value}
                                     onPress={() => {
-                                        setdisability(item.value);
+                                        //clientDisability.push(value);
                                         closeDisabilityMenu();
                                     }}
                                 />

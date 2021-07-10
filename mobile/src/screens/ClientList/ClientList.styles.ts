@@ -20,7 +20,7 @@ const useStyles = () =>
         select: {
             height: 50,
             width: 200,
-            left:10,
+            left: 10,
         },
         search: {
             height: 50,
@@ -29,9 +29,8 @@ const useStyles = () =>
         },
         row: {
             flex: 1,
-            flexDirection: "row"
+            flexDirection: "row",
         },
     });
-    
 
 export default useStyles;

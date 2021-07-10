@@ -10,9 +10,11 @@ export type ClientTest = {
     SocialLevel: string;
 };
 
-export const fetchClientsFromApi = async (selectedSearchOption, searchQuery:string): //possible search conditions
+export const fetchClientsFromApi = async (
+    selectedSearchOption,
+    searchQuery: string
+): //possible search conditions
 Promise<ClientTest[]> => {
-
     const zones = await getZones();
     const urlParams = new URLSearchParams();
     const resp = await apiFetch(Endpoint.CLIENTS, "?" + urlParams.toString());

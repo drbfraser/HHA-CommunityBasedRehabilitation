@@ -16,7 +16,6 @@ Promise<ClientTest[]> => {
     const urlParams = new URLSearchParams();
     const resp = await apiFetch(Endpoint.CLIENTS, "?" + urlParams.toString());
     const responseRows: IClientSummary[] = await resp.json();
-    //var fetchedList = new Array<ClientTest>();
     return responseRows.map((responseRow: IClientSummary) => ({
         id: responseRow.id,
         full_name: responseRow.full_name,

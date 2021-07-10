@@ -21,6 +21,7 @@ import { useCallback } from "react";
 import { IVisitSummary } from "../../util/visits";
 import { ActivityDTO, ActivityType, SummaryActivity } from "./Activity";
 import { TimeLineDate } from "./TimeLineDate";
+import { useZones, IZone, TZoneMap, getZones } from "@cbr/common/src/util/hooks/zones";
 
 /*
     Use client image instead of randomly generated
@@ -36,6 +37,7 @@ interface ClientProps {
 
 const Client = (props: ClientProps) => {
     const styles = clientStyle();
+    var zoneList = useZones();
     //Client fetch and API call variables
 
     //Main Client Variables
@@ -44,7 +46,7 @@ const Client = (props: ClientProps) => {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [village, setVillage] = useState("");
-    const [zone, setZone] = useState(0);
+    const [zone, setZone] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [caregiverPresent, setCaregiverPresent] = React.useState(false);
     const [caregiverName, setCaregiverName] = React.useState("");
@@ -63,7 +65,7 @@ const Client = (props: ClientProps) => {
     const [tempFirstName, setTempFirstName] = useState("");
     const [tempLastName, setTempLastName] = useState("");
     const [tempVillage, setTempVillage] = useState("");
-    const [tempZone, setTempZone] = useState(0);
+    const [tempZone, setTempZone] = useState("");
     const [tempPhoneNumber, setTempPhoneNumber] = useState("");
     const [tempCaregiverPresent, setTempCaregiverPresent] = React.useState(false);
     const [tempCaregiverName, setTempCaregiverName] = React.useState("");
@@ -78,7 +80,7 @@ const Client = (props: ClientProps) => {
             setFirstName(presentClient.first_name);
             setLastName(presentClient.last_name);
             setVillage(presentClient.village);
-            setZone(presentClient.zone);
+            setZone(Array.from(zoneList.entries())[presentClient.zone][1]);
             setPhoneNumber(presentClient.phoneNumber);
             setCaregiverPresent(presentClient.careGiverPresent);
             if (caregiverPresent) {
@@ -96,7 +98,7 @@ const Client = (props: ClientProps) => {
             setTempFirstName(presentClient.first_name);
             setTempLastName(presentClient.last_name);
             setTempVillage(presentClient.village);
-            setTempZone(presentClient.zone);
+            setTempZone(Array.from(zoneList.entries())[presentClient.zone][1]);
             setTempPhoneNumber(presentClient.phoneNumber);
             setTempCaregiverPresent(presentClient.careGiverPresent);
             if (caregiverPresent) {
@@ -174,9 +176,13 @@ const Client = (props: ClientProps) => {
     };
 
     //Disability Menu editable toggle variables
-    const [visible, setVisible] = React.useState(false);
-    const openMenu = () => setVisible(true);
-    const closeMenu = () => setVisible(false);
+    const [disabilityVisible, setDisabilityVisible] = React.useState(false);
+    const openDisabilityMenu = () => setDisabilityVisible(true);
+    const closeDisabilityMenu = () => setDisabilityVisible(false);
+
+    const [zonesVisible, setZonesVisible] = React.useState(false);
+    const openZonesMenu = () => setZonesVisible(true);
+    const closeZonesMenu = () => setZonesVisible(false);
 
     //Overall Screen editable toggle variables
     const [editMode, setEditMode] = React.useState(true);
@@ -325,14 +331,45 @@ const Client = (props: ClientProps) => {
                     disabled={editMode}
                     editable={true}
                 />
-                <TextInput
+                {/* <TextInput
                     style={styles.clientTextStyle}
                     label="Zone "
                     value={String(zone)}
                     onChangeText={(number) => setZone(Number(number))}
                     disabled={editMode}
                     editable={true}
-                />
+                /> */}
+                <View>
+                    <Text> Zone:</Text>
+                    <Text style={styles.carePresentCheckBox}> {zone} </Text>
+                    <Menu
+                        visible={zonesVisible}
+                        onDismiss={closeZonesMenu}
+                        anchor={
+                            <Button
+                                mode="contained"
+                                style={styles.disabilityButton}
+                                disabled={editMode}
+                                onPress={openZonesMenu}
+                            >
+                                Edit Zones
+                            </Button>
+                        }
+                    >
+                        {Array.from(zoneList.entries()).map(([key, value]) => {
+                            return (
+                                <Menu.Item
+                                    key={key}
+                                    title={value}
+                                    onPress={() => {
+                                        setZone(value);
+                                        closeZonesMenu();
+                                    }}
+                                />
+                            );
+                        })}
+                    </Menu>
+                </View>
                 <TextInput
                     style={styles.clientTextStyle}
                     label="Phone Number "
@@ -352,14 +389,14 @@ const Client = (props: ClientProps) => {
                     <Text> Disability </Text>
                     <Text style={styles.carePresentCheckBox}> {disability} </Text>
                     <Menu
-                        visible={visible}
-                        onDismiss={closeMenu}
+                        visible={disabilityVisible}
+                        onDismiss={closeDisabilityMenu}
                         anchor={
                             <Button
                                 mode="contained"
                                 style={styles.disabilityButton}
                                 disabled={editMode}
-                                onPress={openMenu}
+                                onPress={openDisabilityMenu}
                             >
                                 Edit Disability
                             </Button>
@@ -372,7 +409,7 @@ const Client = (props: ClientProps) => {
                                     title={item.label}
                                     onPress={() => {
                                         setdisability(item.value);
-                                        closeMenu();
+                                        closeDisabilityMenu();
                                     }}
                                 />
                             );

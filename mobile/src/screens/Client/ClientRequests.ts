@@ -1,6 +1,5 @@
 import { apiFetch, APILoadError, Endpoint, getZones, IReferral, ISurvey } from "@cbr/common";
 import { IClient } from "../../util/clients";
-import { riskLevels } from "../../util/risks";
 import { IVisitSummary } from "../../util/visits";
 
 export type ClientDTO = {

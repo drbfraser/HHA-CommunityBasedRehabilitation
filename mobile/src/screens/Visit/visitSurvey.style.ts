@@ -47,6 +47,8 @@ const useStyles = () =>
             borderColor: "#000000",
             borderRadius: 5,
             paddingLeft: 10,
+            marginLeft: 5,
+            marginTop: 5,
         },
     });
 

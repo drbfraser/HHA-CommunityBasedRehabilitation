@@ -79,45 +79,47 @@ const visitFocusForm = (
     console.log(zones);
     return (
         <View>
-            {/* <Formik initialValues={{ village: "" }} onSubmit={(values) => console.log(values)}> */}
-
-            <View style={styles.viewPadding}>
-                <Text style={styles.pickerQuestion}>{"\n"}Where was the Visit? </Text>
-                <TextInput
-                    // TODO: missing label for formHandler?
-                    style={styles.inputText}
-                    placeholder="Village *"
-                    value={formikProps.values.village}
-                    onChangeText={formikProps.handleChange("village")}
-                />
-                <TextPicker
-                    field={FormField.zone}
-                    choices={Array.from(zones.entries()).map(([key, value]) => ({
-                        label: value,
-                        value: key,
-                    }))}
-                    selectedValue={formikProps.values[FormField.zone]}
-                    setFieldValue={formikProps.setFieldValue}
-                    setFieldTouched={formikProps.setFieldTouched}
-                />
-                <Text style={styles.pickerQuestion}>{"\n"}Select the Reasons for the Visit </Text>
-                {visitTypes.map((visitType) => (
-                    <TextCheckBox
-                        key={visitType}
-                        field={visitType}
-                        value={formikProps.values[visitType]}
-                        label={fieldLabels[visitType]}
-                        setFieldValue={formikProps.setFieldValue}
+            <Formik initialValues={{ village: "" }} onSubmit={(values) => console.log(values)}>
+                <View style={styles.viewPadding}>
+                    <Text style={styles.pickerQuestion}>{"\n"}Where was the Visit? </Text>
+                    <TextInput
+                        // TODO: missing label for formHandler?
+                        style={styles.inputText}
+                        placeholder="Village *"
+                        value={formikProps.values.village}
+                        onChangeText={formikProps.handleChange("village")}
                     />
-                ))}
-                {/* <Checkbox
+                    <TextPicker
+                        field={FormField.zone}
+                        choices={Array.from(zones.entries()).map(([key, value]) => ({
+                            label: value,
+                            value: key,
+                        }))}
+                        selectedValue={formikProps.values[FormField.zone]}
+                        setFieldValue={formikProps.setFieldValue}
+                        setFieldTouched={formikProps.setFieldTouched}
+                    />
+                    <Text style={styles.pickerQuestion}>
+                        {"\n"}Select the Reasons for the Visit{" "}
+                    </Text>
+                    {visitTypes.map((visitType) => (
+                        <TextCheckBox
+                            key={visitType}
+                            field={visitType}
+                            value={formikProps.values[visitType]}
+                            label={fieldLabels[visitType]}
+                            setFieldValue={formikProps.setFieldValue}
+                        />
+                    ))}
+                    {/* <Checkbox
                     status={checked ? "checked" : "unchecked"}
                     onPress={() => {
                         setChecked(!checked);
                         // onCheckboxChange(formikProps, "HEALTH");
                     }}
                 /> */}
-            </View>
+                </View>
+            </Formik>
         </View>
     );
 };
@@ -139,6 +141,14 @@ const healthVisitForm = (props: IFormProps, visitType: FormField) => {
             <Text style={styles.pickerQuestion}>{"\n"}Client's Health Goal </Text>
             <Text style={styles.normalInput}>{"\n"}Improved Learning </Text>
             <Text style={styles.pickerQuestion}>{"\n"}Client's Health Goal Status </Text>
+            <Text style={styles.pickerQuestion}>{"\n"}What is the Outcome of the Goal? </Text>
+            <TextInput
+                // TODO: missing label for formHandler?
+                style={styles.inputText}
+                placeholder="Outcome *"
+                value={props.formikProps.values.outcome}
+                onChangeText={props.formikProps.handleChange("outcome")}
+            />
             {/* <TextPicker
                 field={GoalStatus.ongoing}
                 // choices={Array.from(zones.entries()).map(([key, value]) => ({
@@ -158,37 +168,63 @@ const healthVisitForm = (props: IFormProps, visitType: FormField) => {
     );
 };
 
-const educationVisitForm = (props: IFormProps) => {
+const educationVisitForm = (props: IFormProps, visitType: FormField) => {
     const styles = useStyles();
-    const [checked, setChecked] = React.useState(false);
-    const [activeStep, setActiveStep] = useState<number>(1);
-
     return (
         <View>
-            <Text style={styles.pickerQuestion}>{"\n"}Education visit form </Text>
+            <Text style={styles.pickerQuestion}>{"\n"}Select an Improvement </Text>
+            {provisionals[visitType].map((visitType) => (
+                <TextCheckBox
+                    key={visitType}
+                    field={visitType}
+                    value={props.formikProps.values[visitType]}
+                    label={visitType}
+                    setFieldValue={props.formikProps.setFieldValue}
+                />
+            ))}
+            <Text style={styles.pickerQuestion}>{"\n"}Client's Education Goal </Text>
+            <Text style={styles.normalInput}>{"\n"}Additional Mobility </Text>
+            <Text style={styles.pickerQuestion}>{"\n"}Client's Education Goal Status </Text>
+            <Text style={styles.pickerQuestion}>{"\n"}What is the Outcome of the Goal? </Text>
+            <TextInput
+                // TODO: missing label for formHandler?
+                style={styles.inputText}
+                placeholder="Outcome *"
+                value={props.formikProps.values.outcome}
+                onChangeText={props.formikProps.handleChange("outcome")}
+            />
         </View>
     );
 };
 
-const socialVisitForm = (props: IFormProps) => {
+const socialVisitForm = (props: IFormProps, visitType: FormField) => {
     const styles = useStyles();
-    const [checked, setChecked] = React.useState(false);
-    const [activeStep, setActiveStep] = useState<number>(1);
-
     return (
         <View>
-            <Text style={styles.pickerQuestion}>{"\n"}Social visit form </Text>
+            <Text style={styles.pickerQuestion}>{"\n"}Select an Improvement </Text>
+            {provisionals[visitType].map((visitType) => (
+                <TextCheckBox
+                    key={visitType}
+                    field={visitType}
+                    value={props.formikProps.values[visitType]}
+                    label={visitType}
+                    setFieldValue={props.formikProps.setFieldValue}
+                />
+            ))}
+            <Text style={styles.pickerQuestion}>{"\n"}Client's Social Goal </Text>
+            <Text style={styles.normalInput}>{"\n"}Full Recovery </Text>
+            <Text style={styles.pickerQuestion}>{"\n"}Client's Social Goal Status </Text>
+            <Text style={styles.pickerQuestion}>{"\n"}What is the Outcome of the Goal? </Text>
+            <TextInput
+                // TODO: missing label for formHandler?
+                style={styles.inputText}
+                placeholder="Outcome *"
+                value={props.formikProps.values.outcome}
+                onChangeText={props.formikProps.handleChange("outcome")}
+            />
         </View>
     );
 };
-
-// const surveySteps: ISurvey[] = [
-//     {
-//         label: "Visit Focus",
-//         Form: (formikProps) => visitFocusForm(formikProps),
-//         validationSchema: initialValidationSchema,
-//     },
-// ];
 
 const NewVisit = () => {
     const [step, setStep] = useState<number>(0);
@@ -204,19 +240,6 @@ const NewVisit = () => {
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
     const zones = useZones();
 
-    // console.log(zones);
-
-    // const [zones, setZones] = useState<TZoneMap>(new Map());
-
-    // useEffect(() => {
-    //     const getZonesMap = async () => {
-    //         setZones(await getZones());
-    //         // console.log(await getZones());
-    //     };
-
-    //     getZonesMap();
-    // });
-
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 
     const surveySteps: ISurvey[] = [
@@ -228,9 +251,17 @@ const NewVisit = () => {
         },
         {
             label: "Health Visit",
-            // Form: (formikProps) => visitFocusForm(formikProps),
             Form: (formikProps) => healthVisitForm(formikProps, visitTypes[0]),
-
+            validationSchema: initialValidationSchema,
+        },
+        {
+            label: "Education Visit",
+            Form: (formikProps) => educationVisitForm(formikProps, visitTypes[1]),
+            validationSchema: initialValidationSchema,
+        },
+        {
+            label: "Social Visit",
+            Form: (formikProps) => socialVisitForm(formikProps, visitTypes[2]),
             validationSchema: initialValidationSchema,
         },
     ];
@@ -292,11 +323,11 @@ const NewVisit = () => {
                                 if (!checked) {
                                     surveySteps.push({
                                         label: "Health Visit",
-                                        Form: (formikProps) => healthVisitForm(formikProps),
+                                        Form: (formikProps) =>
+                                            healthVisitForm(formikProps, visitTypes[0]),
                                         validationSchema: initialValidationSchema,
                                     });
                                     setActiveStep(activeStep + 1);
-                                    console.log(surveySteps);
                                 } else {
                                     // surveySteps.filter(
                                     //     (steps) =>
@@ -305,14 +336,13 @@ const NewVisit = () => {
                                     const indexA = surveySteps.findIndex((steps) =>
                                         steps.label.toLocaleLowerCase().includes("health")
                                     );
-                                    // console.log(indexA);
                                     surveySteps.splice(indexA, 1);
                                     setActiveStep(activeStep - 1);
                                 }
                             }}
-                        />
+                        /> */}
 
-                        <Checkbox
+                        {/* <Checkbox
                             status={checked2 ? "checked" : "unchecked"}
                             onPress={() => {
                                 setChecked2(!checked2);

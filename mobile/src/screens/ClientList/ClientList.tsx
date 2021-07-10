@@ -23,39 +23,16 @@ const ClientList = (props: ClientListControllerProps) => {
     const onChangeSearch = query => setSearchQuery(query);
     
     
-    useEffect(() => {
-        
-        const newClientGet = async () => {
-            const exampleClient = await fetchClientsFromApi(selectedSearchOption, searchQuery);
-            setClientList(exampleClient);
-        };
-        newClientGet();
-        
-    }, [selectedSearchOption, searchQuery]);
 
-
+        
+    const newClientGet = async () => {
+        const exampleClient = await fetchClientsFromApi(selectedSearchOption, searchQuery);
+        setClientList(exampleClient);
+    };
+    newClientGet();
+        
     return (
         <View style={styles.container}>
-            <View style={styles.row}>
-                <Picker
-                style={styles.select}
-                selectedValue={selectedSearchOption}
-                onValueChange={(itemValue, itemIndex) =>
-                    setSearchOption(itemValue)
-                }>
-                <Picker.Item label="N/A" value="" />
-                <Picker.Item label="ID" value="id" />
-                <Picker.Item label="Name" value="full_name" />
-                <Picker.Item label="Zone" value="zone" />
-            </Picker>
-            <Searchbar
-                style={styles.select}
-                placeholder="Search"
-                onChangeText={onChangeSearch}
-                value={searchQuery}
-            />
-            </View>
-            
             <DataTable>
                 <DataTable.Header>
                     <DataTable.Title>ID</DataTable.Title>

@@ -5,6 +5,7 @@ const useStyles = () =>
         container: {
             flex: 1,
             alignItems: "center",
+            alignItems: "flex-start",
             paddingTop: 0,
         },
         item: {
@@ -17,6 +18,21 @@ const useStyles = () =>
             fontSize: 18,
             height: 44,
         },
+        select: {
+            height: 50,
+            width: 200,
+            left:10,
+        },
+        search: {
+            height: 50,
+            width: 100,
+            left: 15,
+        },
+        row: {
+            flex: 1,
+            flexDirection: "row"
+        },
     });
+
 
 export default useStyles;

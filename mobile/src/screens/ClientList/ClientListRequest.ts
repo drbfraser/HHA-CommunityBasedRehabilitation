@@ -10,14 +10,14 @@ export type ClientTest = {
     SocialLevel: string;
 };
 
-export const fetchClientsFromApi = async (): //possible search conditions
+export const fetchClientsFromApi = async (selectedSearchOption, searchQuery:string): //possible search conditions
 Promise<ClientTest[]> => {
+
     const zones = await getZones();
     const urlParams = new URLSearchParams();
     const resp = await apiFetch(Endpoint.CLIENTS, "?" + urlParams.toString());
     const responseRows: IClientSummary[] = await resp.json();
-    //var fetchedList = new Array<ClientTest>();
-    return responseRows.map((responseRow: IClientSummary) => ({
+    var resultRow = responseRows.map((responseRow: IClientSummary) => ({
         id: responseRow.id,
         full_name: responseRow.full_name,
         zone: zones.get(responseRow.zone) ?? "",
@@ -25,4 +25,24 @@ Promise<ClientTest[]> => {
         EducationLevel: riskLevels[responseRow.educat_risk_level].color,
         SocialLevel: riskLevels[responseRow.social_risk_level].color,
     }));
+    if(selectedSearchOption == "full_name" || selectedSearchOption =="zone"){
+        resultRow.forEach((i, index)=>{
+            if (!i[selectedSearchOption].includes(searchQuery)){
+                resultRow.splice(index,1);
+            }
+        })
+    }
+    else if(selectedSearchOption == "id"){
+        const selectedId = Number(searchQuery)
+        console.log(selectedId)
+        if(selectedId != NaN){
+            resultRow.forEach((i, index)=>{
+                if (i.id != selectedId){
+                    console.log(index)
+                    resultRow.splice(index,1);
+                }
+            })
+        }
+    }
+    return resultRow
 };

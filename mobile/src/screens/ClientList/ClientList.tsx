@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View } from "react-native";
+import { Picker } from "@react-native-picker/picker"
 import { DataTable } from "react-native-paper";
 import useStyles from "./ClientList.styles";
 import { ClientTest, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
@@ -7,6 +8,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { stackParamList, StackScreenName } from "../../util/screens";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
+import { Searchbar } from 'react-native-paper';
+
 interface ClientListControllerProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
 }
@@ -14,14 +17,45 @@ interface ClientListControllerProps {
 const ClientList = (props: ClientListControllerProps) => {
     const styles = useStyles();
     const [clientList, setClientList] = useState<ClientTest[]>([]);
-    const newClientGet = async () => {
-        const exampleClient = await fetchClientsFromApi();
-        setClientList(exampleClient);
-    };
-    newClientGet();
+    const [selectedSearchOption, setSearchOption] = useState("");
+    const [searchQuery, setSearchQuery] = React.useState("");
+
+    const onChangeSearch = query => setSearchQuery(query);
+    
+    
+    useEffect(() => {
+        
+        const newClientGet = async () => {
+            const exampleClient = await fetchClientsFromApi(selectedSearchOption, searchQuery);
+            setClientList(exampleClient);
+        };
+        newClientGet();
+        
+    }, [selectedSearchOption, searchQuery]);
+
 
     return (
         <View style={styles.container}>
+            <View style={styles.row}>
+                <Picker
+                style={styles.select}
+                selectedValue={selectedSearchOption}
+                onValueChange={(itemValue, itemIndex) =>
+                    setSearchOption(itemValue)
+                }>
+                <Picker.Item label="N/A" value="" />
+                <Picker.Item label="ID" value="id" />
+                <Picker.Item label="Name" value="full_name" />
+                <Picker.Item label="Zone" value="zone" />
+            </Picker>
+            <Searchbar
+                style={styles.select}
+                placeholder="Search"
+                onChangeText={onChangeSearch}
+                value={searchQuery}
+            />
+            </View>
+            
             <DataTable>
                 <DataTable.Header>
                     <DataTable.Title>ID</DataTable.Title>

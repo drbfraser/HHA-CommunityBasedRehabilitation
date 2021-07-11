@@ -6,14 +6,37 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { Alert } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import useStyles from "./HomeScreen.style";
+import { themeColors } from "@cbr/common/src/util/colors";
 
 interface HomeScreenProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
 }
 
 const HomeScreen = (props: HomeScreenProps) => {
+    const styles = useStyles();
+    React.useEffect(() => {
+        props.navigation.setOptions({
+            title: "Main Menu",
+            headerStyle: {
+                backgroundColor: "#273263",
+            },
+            headerTintColor: themeColors.blueAccent,
+            headerShown: true,
+        });
+    });
+
     const Tab = createMaterialBottomTabNavigator();
     const { authState } = useContext(AuthContext);
+
+    React.useEffect(() => {
+        props.navigation.setOptions({
+            title: "Main Menu",
+            headerStyle: styles.headerStyle,
+            headerTintColor: "#fff",
+            headerShown: true,
+        });
+    });
 
     return (
         <Provider theme={theme}>

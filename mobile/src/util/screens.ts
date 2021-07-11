@@ -6,7 +6,6 @@ import ClientView from "../screens/Client/Client";
 import ClientScreenController from "../screens/Client/ClientScreenController";
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import { Props } from "react-native-paper/lib/typescript/components/RadioButton/RadioButton";
-import HomeScreenController from "../screens/HomeScreen/HomeScreenController";
 import Login from "../screens/Login/Login";
 import Loading from "../screens/Loading/Loading";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
@@ -85,7 +84,7 @@ export enum StackScreenName {
 }
 
 export const stackScreenProps = {
-    [StackScreenName.HOME]: HomeScreenController,
+    [StackScreenName.HOME]: HomeScreen,
     [StackScreenName.CLIENT]: ClientScreenController,
 };
 

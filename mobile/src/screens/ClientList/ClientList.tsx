@@ -11,6 +11,8 @@ import { useState } from "react";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { Item } from "react-native-paper/lib/typescript/components/List/List";
+import { SearchOption } from "./searchOptions";
+import { useZones } from "@cbr/common";
 
 interface ClientListControllerProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
@@ -20,7 +22,6 @@ const test = (item) => {
     const name_array = item.full_name.split(" ");
 
     if (name_array.length == 1) {
-        console.log(name_array.length);
         return (
             <View>
                 <Text key={name_array[0]}>{name_array[0]}</Text>
@@ -42,6 +43,7 @@ const ClientList = (props: ClientListControllerProps) => {
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = React.useState("");
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
+    const zones = useZones();
 
     const onChangeSearch = (query) => setSearchQuery(query);
 
@@ -56,16 +58,28 @@ const ClientList = (props: ClientListControllerProps) => {
         };
         newClientGet();
     }, [selectedSearchOption, searchQuery, allClientsMode]);
-
     return (
         <View style={styles.container}>
             <View style={styles.row}>
-                <Searchbar
-                    style={styles.search}
-                    placeholder="Search"
-                    onChangeText={onChangeSearch}
-                    value={searchQuery}
-                />
+                {selectedSearchOption === SearchOption.ZONE ? (
+                    <Picker
+                        style={styles.select}
+                        selectedValue={searchQuery}
+                        onValueChange={(itemValue, itemIndex) => setSearchQuery(itemValue)}
+                    >
+                        <Picker.Item label="N/A" value="" />
+                        {Array.from(zones).map(([id, name]) => (
+                            <Picker.Item key={id} label={name} value={id} />
+                        ))}
+                    </Picker>
+                ) : (
+                    <Searchbar
+                        style={styles.search}
+                        placeholder="Search"
+                        onChangeText={onChangeSearch}
+                        value={searchQuery}
+                    />
+                )}
             </View>
             <View style={styles.row}>
                 <Text style={{ flex: 0.7, paddingLeft: 10 }}>My Clients</Text>
@@ -79,16 +93,19 @@ const ClientList = (props: ClientListControllerProps) => {
                 />
                 <Text style={{ flex: 1 }}>All Clients</Text>
 
-                <Text style={{ textAlign: "center", fontSize:16 }}>Filter by</Text>
+                <Text style={{ textAlign: "center", fontSize: 16 }}>Filter by</Text>
                 <Picker
                     style={styles.select}
                     selectedValue={selectedSearchOption}
-                    onValueChange={(itemValue, itemIndex) => setSearchOption(itemValue)}
+                    onValueChange={(itemValue, itemIndex) => {
+                        setSearchOption(itemValue);
+                        setSearchQuery("");
+                    }}
                 >
                     <Picker.Item label="N/A" value="" />
-                    <Picker.Item label="ID" value="id" />
-                    <Picker.Item label="Name" value="full_name" />
-                    <Picker.Item label="Zone" value="zone" />
+                    <Picker.Item label="ID" value={SearchOption.ID} />
+                    <Picker.Item label="Name" value={SearchOption.NAME} />
+                    <Picker.Item label="Zone" value={SearchOption.ZONE} />
                 </Picker>
             </View>
             <ScrollView>

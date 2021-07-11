@@ -1,4 +1,4 @@
-import { apiFetch, APILoadError, Endpoint, getZones } from "@cbr/common";
+import { apiFetch, APILoadError, Endpoint, getCurrentUser, getZones } from "@cbr/common";
 import { IClientSummary } from "@cbr/common";
 import { riskLevels } from "@cbr/common";
 export type ClientTest = {
@@ -10,11 +10,17 @@ export type ClientTest = {
     SocialLevel: string;
 };
 
-export const fetchClientsFromApi = async (selectedSearchOption, searchQuery:string): //possible search conditions
+export const fetchClientsFromApi = async (selectedSearchOption, searchQuery:string, allClientsMode: boolean): //possible search conditions
 Promise<ClientTest[]> => {
 
     const zones = await getZones();
     const urlParams = new URLSearchParams();
+    if (!allClientsMode) {
+        const user = await getCurrentUser();
+        if (user !== APILoadError) {
+            urlParams.append("created_by_user", String(user.id));
+        }
+    }
     const resp = await apiFetch(Endpoint.CLIENTS, "?" + urlParams.toString());
     const responseRows: IClientSummary[] = await resp.json();
     var resultRow = responseRows.map((responseRow: IClientSummary) => ({

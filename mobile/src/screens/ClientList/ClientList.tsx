@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Switch } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { DataTable } from "react-native-paper";
 import useStyles from "./ClientList.styles";
@@ -41,16 +41,21 @@ const ClientList = (props: ClientListControllerProps) => {
     const [clientList, setClientList] = useState<ClientTest[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = React.useState("");
+    const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
 
     const onChangeSearch = (query) => setSearchQuery(query);
 
     useEffect(() => {
         const newClientGet = async () => {
-            const exampleClient = await fetchClientsFromApi(selectedSearchOption, searchQuery);
+            const exampleClient = await fetchClientsFromApi(
+                selectedSearchOption,
+                searchQuery,
+                allClientsMode
+            );
             setClientList(exampleClient);
         };
         newClientGet();
-    }, [selectedSearchOption, searchQuery]);
+    }, [selectedSearchOption, searchQuery, allClientsMode]);
 
     return (
         <View style={styles.container}>
@@ -63,9 +68,18 @@ const ClientList = (props: ClientListControllerProps) => {
                 />
             </View>
             <View style={styles.row}>
-                <View style={{ flex: 1, alignContent: "center", justifyContent: "center" }}>
-                    <Text style={{ textAlign: "center", fontSize:18 }}>Filter by</Text>
-                </View>
+                <Text style={{ flex: 0.7, paddingLeft: 10 }}>My Clients</Text>
+                <Switch
+                    style={{ flex: 0.2 }}
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={allClientsMode ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={setAllClientsMode}
+                    value={allClientsMode}
+                />
+                <Text style={{ flex: 1 }}>All Clients</Text>
+
+                <Text style={{ textAlign: "center", fontSize:16 }}>Filter by</Text>
                 <Picker
                     style={styles.select}
                     selectedValue={selectedSearchOption}

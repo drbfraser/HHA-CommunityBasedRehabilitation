@@ -18,7 +18,9 @@ const useStyles = () =>
         },
         row: {
             flexDirection: "row",
-            alignContent: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
         },
     });
 

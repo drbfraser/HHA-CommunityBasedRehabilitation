@@ -18,7 +18,7 @@ interface ClientListControllerProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
 }
 
-const test = (item) => {
+const showName = (item) => {
     const name_array = item.full_name.split(" ");
 
     if (name_array.length == 1) {
@@ -136,7 +136,7 @@ const ClientList = (props: ClientListControllerProps) => {
                                 }}
                             >
                                 <DataTable.Cell style={{ flex: 0.7 }}>{item.id}</DataTable.Cell>
-                                <View style={{ flex: 1.5 }}>{test(item)}</View>
+                                <View style={{ flex: 1.5 }}>{showName(item)}</View>
                                 <DataTable.Cell style={{ flex: 2 }}>{item.zone}</DataTable.Cell>
                                 <DataTable.Cell style={{ flex: 0.8 }}>
                                     {riskTypes.HEALTH.Icon(item.HealthLevel)}

@@ -3,6 +3,7 @@ import { APILoadError, IUser, TAPILoadError, UserRole } from "@cbr/common";
 import Todo from "../screens/Todo/Todo";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 import Profile from "../screens/Profile/Profile";
+import NewReferral from "../screens/NewReferral/NewReferral";
 
 export interface IScreen {
     name: string;
@@ -37,7 +38,7 @@ const screens: IScreen[] = [
     {
         name: "Stats",
         roles: [UserRole.ADMIN],
-        Component: Todo,
+        Component: NewReferral,
         iconName: "chart-bar",
     },
     {

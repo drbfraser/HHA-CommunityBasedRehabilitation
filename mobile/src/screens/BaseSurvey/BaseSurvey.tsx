@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, StatusBar, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Text, Divider, Appbar } from "react-native-paper";
 import {
     educationValidationSchema,

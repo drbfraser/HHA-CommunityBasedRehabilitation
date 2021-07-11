@@ -17,14 +17,23 @@ interface ClientListControllerProps {
 }
 
 const test = (item) => {
-    const name_array = item.full_name.split(' ')
-    return (
-        <View>
-            {name_array.map((i) => {
-                return <Text key={i}>{i}</Text>
-            })}
-        </View>
-    );
+    const name_array = item.full_name.split(" ");
+
+    if (name_array.length == 1) {
+        console.log(name_array.length);
+        return (
+            <View>
+                <Text key={name_array[0]}>{name_array[0]}</Text>
+            </View>
+        );
+    } else {
+        return (
+            <View>
+                <Text>{name_array[0]}</Text>
+                <Text>{name_array[name_array.length - 1]}</Text>
+            </View>
+        );
+    }
 };
 
 const ClientList = (props: ClientListControllerProps) => {
@@ -46,6 +55,17 @@ const ClientList = (props: ClientListControllerProps) => {
     return (
         <View style={styles.container}>
             <View style={styles.row}>
+                <Searchbar
+                    style={styles.search}
+                    placeholder="Search"
+                    onChangeText={onChangeSearch}
+                    value={searchQuery}
+                />
+            </View>
+            <View style={styles.row}>
+                <View style={{ flex: 1, alignContent: "center", justifyContent: "center" }}>
+                    <Text style={{ textAlign: "center", fontSize:18 }}>Filter by</Text>
+                </View>
                 <Picker
                     style={styles.select}
                     selectedValue={selectedSearchOption}
@@ -56,12 +76,6 @@ const ClientList = (props: ClientListControllerProps) => {
                     <Picker.Item label="Name" value="full_name" />
                     <Picker.Item label="Zone" value="zone" />
                 </Picker>
-                <Searchbar
-                    style={styles.search}
-                    placeholder="Search"
-                    onChangeText={onChangeSearch}
-                    value={searchQuery}
-                />
             </View>
             <ScrollView>
                 <DataTable>

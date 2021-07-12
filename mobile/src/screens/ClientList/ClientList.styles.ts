@@ -4,11 +4,12 @@ const useStyles = () =>
     StyleSheet.create({
         container: {
             flex: 1,
-            paddingTop: 0,
         },
         item: {
             padding: 3,
             fontSize: 14,
+            alignItems: "center",
+            justifyContent: "center",
         },
         select: {
             flex: 1,

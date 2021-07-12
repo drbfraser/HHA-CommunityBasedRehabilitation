@@ -112,23 +112,23 @@ const ClientList = (props: ClientListControllerProps) => {
                 <DataTable>
                     <DataTable.Header style={styles.item}>
                         <DataTable.Title style={{ flex: 0.7 }}>ID</DataTable.Title>
-                        <DataTable.Title style={{ flex: 2 }}>Name</DataTable.Title>
+                        <DataTable.Title style={{ flex: 1.5 }}>Name</DataTable.Title>
                         <DataTable.Title style={{ flex: 2 }}>Zone</DataTable.Title>
-                        <DataTable.Title style={{ flex: 1 }}>
-                            {riskTypes.HEALTH.name}
+                        <DataTable.Title style={{ flex: 0.8 }}>
+                            {riskTypes.HEALTH.Icon("#000000")}
                         </DataTable.Title>
-                        <DataTable.Title style={{ flex: 1 }}>
-                            {riskTypes.EDUCAT.name}
+                        <DataTable.Title style={{ flex: 0.8 }}>
+                            {riskTypes.EDUCAT.Icon("#000000")}
                         </DataTable.Title>
-                        <DataTable.Title style={{ flex: 1 }}>
-                            {riskTypes.SOCIAL.name}
+                        <DataTable.Title style={{ flex: 0.8 }}>
+                            {riskTypes.SOCIAL.Icon("#000000")}
                         </DataTable.Title>
                     </DataTable.Header>
                     {clientList.map((item) => {
                         return (
                             <DataTable.Row
                                 style={styles.item}
-                                key={item.id} // you need a unique key per item
+                                key={item.id}
                                 onPress={() => {
                                     props.navigation.navigate(StackScreenName.CLIENT, {
                                         clientID: item.id,
@@ -139,13 +139,13 @@ const ClientList = (props: ClientListControllerProps) => {
                                 <View style={{ flex: 1.5 }}>{showName(item)}</View>
                                 <DataTable.Cell style={{ flex: 2 }}>{item.zone}</DataTable.Cell>
                                 <DataTable.Cell style={{ flex: 0.8 }}>
-                                    {riskTypes.HEALTH.Icon(item.HealthLevel)}
+                                    {riskTypes.CIRCLE.Icon(item.HealthLevel)}
                                 </DataTable.Cell>
                                 <DataTable.Cell style={{ flex: 0.8 }}>
-                                    {riskTypes.EDUCAT.Icon(item.EducationLevel)}
+                                    {riskTypes.CIRCLE.Icon(item.EducationLevel)}
                                 </DataTable.Cell>
                                 <DataTable.Cell style={{ flex: 0.8 }}>
-                                    {riskTypes.SOCIAL.Icon(item.SocialLevel)}
+                                    {riskTypes.CIRCLE.Icon(item.SocialLevel)}
                                 </DataTable.Cell>
                             </DataTable.Row>
                         );

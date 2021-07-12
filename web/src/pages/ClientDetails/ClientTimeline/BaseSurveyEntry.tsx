@@ -16,7 +16,7 @@ import { Skeleton, Alert } from "@material-ui/lab";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import { useStyles } from "./Entry.styles";
-import { FormField, fieldLabels } from "@cbr/common/forms/baseSurvey/baseSurveyFormFields";
+import { FormField, fieldLabels } from "@cbr/common/forms/BaseSurvey/baseSurveyFormFields";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import { Assignment } from "@material-ui/icons";
 import {

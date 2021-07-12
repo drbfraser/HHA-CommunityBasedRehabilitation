@@ -39,7 +39,6 @@ interface FormValues {
 }
 
 export const ClientDetails = (props: FormProps) => {
-    console.log(props);
     const styles = clientStyle();
     var zoneList = useZones();
     var disabilityList = useDisabilities();
@@ -107,27 +106,6 @@ export const ClientDetails = (props: FormProps) => {
         setShow(true);
     };
 
-    const datePicker = () => {
-        return (
-            <View style={styles.clientBirthdayButtons}>
-                <View>
-                    <Button disabled={editMode} mode="contained" onPress={showDatepicker}>
-                        Edit
-                    </Button>
-                </View>
-                {show && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={date}
-                        mode="date"
-                        display="default"
-                        onChange={onDateChange}
-                    />
-                )}
-            </View>
-        );
-    };
-
     //Disability Menu editable toggle variables
     const [disabilityVisible, setDisabilityVisible] = React.useState(false);
     const openDisabilityMenu = () => setDisabilityVisible(true);
@@ -156,6 +134,7 @@ export const ClientDetails = (props: FormProps) => {
                             value={formikProps.values.firstName}
                             disabled={editMode}
                         ></TextInput>
+
                         <TextInput
                             style={styles.clientTextStyle}
                             label="Last Name "
@@ -164,11 +143,33 @@ export const ClientDetails = (props: FormProps) => {
                             value={formikProps.values.lastName}
                             disabled={editMode}
                         ></TextInput>
+
                         <Text> Birthdate </Text>
                         <View style={styles.clientBirthdayView}>
                             <Text style={styles.carePresentCheckBox}>{date.toDateString()}</Text>
-                            <View>{datePicker()}</View>
+                            <View style={styles.clientBirthdayButtons}>
+                                <View>
+                                    <Button
+                                        disabled={editMode}
+                                        mode="contained"
+                                        onPress={showDatepicker}
+                                    >
+                                        Edit
+                                    </Button>
+                                </View>
+                                {show && (
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={date}
+                                        mode="date"
+                                        display="default"
+                                        //onChange={onDateChange}
+                                        onChange={formikProps.handleChange("date")}
+                                    />
+                                )}
+                            </View>
                         </View>
+
                         <TextInput
                             style={styles.clientTextStyle}
                             label="Gender "
@@ -177,6 +178,7 @@ export const ClientDetails = (props: FormProps) => {
                             value={formikProps.values.gender}
                             disabled={editMode}
                         />
+
                         <TextInput
                             style={styles.clientTextStyle}
                             label="Village # "
@@ -217,6 +219,7 @@ export const ClientDetails = (props: FormProps) => {
                                 })}
                             </Menu>
                         </View>
+
                         <TextInput
                             style={styles.clientTextStyle}
                             label="Phone Number "
@@ -225,6 +228,7 @@ export const ClientDetails = (props: FormProps) => {
                             value={formikProps.values.phone}
                             disabled={editMode}
                         />
+
                         <View>
                             <Text> Disability</Text>
                             {clientDisability.map((disability) => {
@@ -260,6 +264,7 @@ export const ClientDetails = (props: FormProps) => {
                                 })}
                             </Menu>
                         </View>
+
                         <View style={styles.carePresentView}>
                             <Text style={styles.carePresentCheckBox}>Caregiver Present</Text>
                             <Checkbox
@@ -271,6 +276,7 @@ export const ClientDetails = (props: FormProps) => {
                                 disabled={editMode}
                             />
                         </View>
+
                         {caregiverPresent ? (
                             <View>
                                 <TextInput

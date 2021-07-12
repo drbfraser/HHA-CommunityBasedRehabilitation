@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import theme from "../../util/theme.styles";
 
 const useStyles = () =>
     StyleSheet.create({
@@ -191,6 +192,12 @@ const useStyles = () =>
         itemDividerStyle: {
             borderBottomColor: "black",
             borderBottomWidth: 1,
+        },
+        loadingContainer: {
+            alignItems: "center",
+            justifyContent: "center",
+            flex: 1,
+            marginTop: 300,
         },
     });
 

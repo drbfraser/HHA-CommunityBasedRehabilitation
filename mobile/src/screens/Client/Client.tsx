@@ -1,32 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { Button, Card, TextInput, Checkbox, Menu, Divider } from "react-native-paper";
+import {
+    Button,
+    Card,
+    TextInput,
+    Checkbox,
+    Menu,
+    Divider,
+    ActivityIndicator,
+} from "react-native-paper";
 import { ClientDTO } from "./ClientRequests";
 import clientStyle from "./Client.styles";
 import { Platform, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
-import {
-    IReferral,
-    ISurvey,
-    objectToFormData,
-    timestampToDate,
-    timestampToDateObj,
-} from "../../../node_modules/@cbr/common";
-import {
-    getDisabilities,
-    TDisabilityMap,
-    useDisabilities,
-} from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
-import { riskTypes } from "../../util/riskIcon";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { useCallback } from "react";
+import { IReferral, ISurvey, timestampToDateObj } from "../../../node_modules/@cbr/common";
+import { useDisabilities } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
 import { IVisitSummary } from "../../util/visits";
 import { ActivityDTO, ActivityType, SummaryActivity } from "./Activity";
 import { TimeLineDate } from "./TimeLineDate";
-import { useZones, IZone, TZoneMap, getZones } from "@cbr/common/src/util/hooks/zones";
-import { Field, Form, Formik, validateYupSchema } from "formik";
-import { stringify } from "querystring";
-import * as Yup from "yup";
+import { useZones } from "@cbr/common/src/util/hooks/zones";
+
 import { ClientDetails } from "./ClientDetails";
 
 /*
@@ -45,7 +38,7 @@ const Client = (props: ClientProps) => {
     const styles = clientStyle();
     var zoneList = useZones();
     var disabilityList = useDisabilities();
-    //Client fetch and API call variables
+    const [loading, setLoading] = useState(true);
 
     //Main Client Variables
     const [presentClient, setPresentClient] = useState<ClientDTO>();
@@ -69,34 +62,45 @@ const Client = (props: ClientProps) => {
     const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
     const [allRecentActivity, setRecentActivity] = useState<ActivityDTO[]>();
 
+    const getClientDetails = async () => {
+        const presentClient = await fetchClientDetailsFromApi(props.clientID);
+        setPresentClient(presentClient);
+        setDate(timestampToDateObj(Number(presentClient?.birthdate)));
+        setFirstName(presentClient.first_name);
+        setLastName(presentClient.last_name);
+        setVillage(presentClient.village);
+        setZone(Array.from(zoneList.entries())[presentClient.zone][1]);
+        setPhoneNumber(presentClient.phoneNumber);
+        setCaregiverPresent(presentClient.careGiverPresent);
+        setGender(presentClient.gender);
+        if (caregiverPresent) {
+            setCaregiverName(presentClient.careGiverName);
+            setCaregiverPhone(presentClient.careGiverPhoneNumber);
+            setCaregiverEmail(presentClient.careGiverEmail);
+        }
+
+        setClientCreateDate(presentClient.clientCreatedDate);
+        setClientVisits(presentClient.clientVisits);
+        setClientReferrals(presentClient.clientReferrals);
+        setClientSurveys(presentClient.clientSurveys);
+    };
     useEffect(() => {
-        const getClientDetails = async () => {
-            const presentClient = await fetchClientDetailsFromApi(props.clientID);
-            setPresentClient(presentClient);
-            setDate(timestampToDateObj(Number(presentClient?.birthdate)));
-            setFirstName(presentClient.first_name);
-            setLastName(presentClient.last_name);
-            setVillage(presentClient.village);
-            setZone(Array.from(zoneList.entries())[presentClient.zone][1]);
-            setPhoneNumber(presentClient.phoneNumber);
-            setCaregiverPresent(presentClient.careGiverPresent);
-            setGender(presentClient.gender);
-            if (caregiverPresent) {
-                setCaregiverName(presentClient.careGiverName);
-                setCaregiverPhone(presentClient.careGiverPhoneNumber);
-                setCaregiverEmail(presentClient.careGiverEmail);
-            }
-            var tempDisabilityList: string[] = [];
-            for (let entry of presentClient.disabilities) {
-                tempDisabilityList.push(Array.from(disabilityList.entries())[entry - 1][1]);
-            }
-            setDisability(tempDisabilityList);
-            setClientCreateDate(presentClient.clientCreatedDate);
-            setClientVisits(presentClient.clientVisits);
-            setClientReferrals(presentClient.clientReferrals);
-            setClientSurveys(presentClient.clientSurveys);
-        };
-        getClientDetails();
+        getClientDetails()
+            .then(() => {
+                var tempDisabilityList: string[] = [];
+                const setDisabilityList = () => {
+                    if (presentClient)
+                        for (let entry of presentClient.disabilities) {
+                            tempDisabilityList.push(
+                                Array.from(disabilityList.entries())[entry - 1][1]
+                            );
+                        }
+                    setDisability(tempDisabilityList);
+                };
+            })
+            .then(() => {
+                setLoading(false);
+            });
     }, []);
 
     //Overall Screen editable toggle variables
@@ -172,126 +176,133 @@ const Client = (props: ClientProps) => {
 
     return (
         <ScrollView style={styles.scrollViewStyles}>
-            <Card style={styles.clientCardContainerStyles}>
-                <Card.Cover
-                    style={styles.clientCardImageStyle}
-                    source={{ uri: "https://picsum.photos/700" }}
-                />
-                <Button mode="contained" style={styles.clientButtons}>
-                    New Visit
-                </Button>
-                <Button mode="contained" style={styles.clientButtons}>
-                    New Referral
-                </Button>
-                <Button mode="contained" style={styles.clientButtons}>
-                    Baseline Survey
-                </Button>
-            </Card>
-            <Divider></Divider>
-            <Text style={styles.cardSectionTitle}>Client Details</Text>
-            <Divider></Divider>
-
-            <Card style={styles.clientDetailsContainerStyles}>
-                <ClientDetails
-                    firstName={firstName}
-                    lastName={lastName}
-                    date={date}
-                    gender={gender}
-                    village={village}
-                    zone={zone}
-                    phone={phoneNumber}
-                    caregiverPresent={caregiverPresent}
-                    caregiverName={caregiverName}
-                    caregiverEmail={caregiverEmail}
-                    caregiverPhone={caregiverPhone}
-                    clientDisability={clientDisability}
-                />
-            </Card>
-            <Divider></Divider>
-            <Text style={styles.cardSectionTitle}>Client Risks</Text>
-            <Divider></Divider>
-            <Card style={styles.riskCardStyle}>
-                <View style={styles.riskCardContentStyle}>
-                    <Text style={styles.riskTitleStyle}>Health</Text>
-                    <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
+            {loading ? (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color="#273364" />
                 </View>
+            ) : (
                 <View>
-                    <Text style={styles.riskHeaderStyle}>Requirements: </Text>
-                    <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
+                    <Card style={styles.clientCardContainerStyles}>
+                        <Card.Cover
+                            style={styles.clientCardImageStyle}
+                            source={{ uri: "https://picsum.photos/700" }}
+                        />
+                        <Button mode="contained" style={styles.clientButtons}>
+                            New Visit
+                        </Button>
+                        <Button mode="contained" style={styles.clientButtons}>
+                            New Referral
+                        </Button>
+                        <Button mode="contained" style={styles.clientButtons}>
+                            Baseline Survey
+                        </Button>
+                    </Card>
+                    <Divider></Divider>
+                    <Text style={styles.cardSectionTitle}>Client Details</Text>
+                    <Divider></Divider>
+                    <Card style={styles.clientDetailsContainerStyles}>
+                        <ClientDetails
+                            firstName={firstName}
+                            lastName={lastName}
+                            date={date}
+                            gender={gender}
+                            village={village}
+                            zone={zone}
+                            phone={phoneNumber}
+                            caregiverPresent={caregiverPresent}
+                            caregiverName={caregiverName}
+                            caregiverEmail={caregiverEmail}
+                            caregiverPhone={caregiverPhone}
+                            clientDisability={clientDisability}
+                        />
+                    </Card>
+                    <Divider></Divider>
+                    <Text style={styles.cardSectionTitle}>Client Risks</Text>
+                    <Divider></Divider>
+                    <Card style={styles.riskCardStyle}>
+                        <View style={styles.riskCardContentStyle}>
+                            <Text style={styles.riskTitleStyle}>Health</Text>
+                            <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
+                        </View>
+                        <View>
+                            <Text style={styles.riskHeaderStyle}>Requirements: </Text>
+                            <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
+                        </View>
+                        <View>
+                            <Text style={styles.riskHeaderStyle}>Goals: </Text>
+                            <Text style={styles.riskRequirementStyle}>Goals go here</Text>
+                        </View>
+                        <View style={styles.clientDetailsFinalView}>
+                            <Button
+                                mode="contained"
+                                style={styles.clientDetailsFinalButtons}
+                                disabled={false}
+                                onPress={enableButtons}
+                            >
+                                {editMode ? "Edit" : "Save"}
+                            </Button>
+                        </View>
+                    </Card>
+                    <Divider></Divider>
+                    <Card style={styles.riskCardStyle}>
+                        <View style={styles.riskCardContentStyle}>
+                            <Text style={styles.riskTitleStyle}>Education</Text>
+                            <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
+                        </View>
+                        <View>
+                            <Text style={styles.riskHeaderStyle}>Requirements: </Text>
+                            <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
+                        </View>
+                        <View>
+                            <Text style={styles.riskHeaderStyle}>Goals: </Text>
+                            <Text style={styles.riskRequirementStyle}>Goals go here</Text>
+                        </View>
+                        <View style={styles.clientDetailsFinalView}>
+                            <Button
+                                mode="contained"
+                                style={styles.clientDetailsFinalButtons}
+                                disabled={false}
+                                onPress={enableButtons}
+                            >
+                                {editMode ? "Edit" : "Save"}
+                            </Button>
+                        </View>
+                    </Card>
+                    <Divider></Divider>
+                    <Card style={styles.riskCardStyle}>
+                        <View style={styles.riskCardContentStyle}>
+                            <Text style={styles.riskTitleStyle}>Social</Text>
+                            <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
+                        </View>
+                        <View>
+                            <Text style={styles.riskHeaderStyle}>Requirements: </Text>
+                            <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
+                        </View>
+                        <View>
+                            <Text style={styles.riskHeaderStyle}>Goals: </Text>
+                            <Text style={styles.riskRequirementStyle}>Goals go here</Text>
+                        </View>
+                        <View style={styles.clientDetailsFinalView}>
+                            <Button
+                                mode="contained"
+                                style={styles.clientDetailsFinalButtons}
+                                disabled={false}
+                                onPress={enableButtons}
+                            >
+                                {editMode ? "Edit" : "Save"}
+                            </Button>
+                        </View>
+                    </Card>
+                    <Divider></Divider>
+                    <Card style={styles.riskCardStyle}>
+                        <View style={styles.activityCardContentStyle}>
+                            <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>
+                        </View>
+                        <View>{recentActivity()}</View>
+                        <View style={styles.clientDetailsFinalView}></View>
+                    </Card>
                 </View>
-                <View>
-                    <Text style={styles.riskHeaderStyle}>Goals: </Text>
-                    <Text style={styles.riskRequirementStyle}>Goals go here</Text>
-                </View>
-                <View style={styles.clientDetailsFinalView}>
-                    <Button
-                        mode="contained"
-                        style={styles.clientDetailsFinalButtons}
-                        disabled={false}
-                        onPress={enableButtons}
-                    >
-                        {editMode ? "Edit" : "Save"}
-                    </Button>
-                </View>
-            </Card>
-            <Divider></Divider>
-            <Card style={styles.riskCardStyle}>
-                <View style={styles.riskCardContentStyle}>
-                    <Text style={styles.riskTitleStyle}>Education</Text>
-                    <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
-                </View>
-                <View>
-                    <Text style={styles.riskHeaderStyle}>Requirements: </Text>
-                    <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
-                </View>
-                <View>
-                    <Text style={styles.riskHeaderStyle}>Goals: </Text>
-                    <Text style={styles.riskRequirementStyle}>Goals go here</Text>
-                </View>
-                <View style={styles.clientDetailsFinalView}>
-                    <Button
-                        mode="contained"
-                        style={styles.clientDetailsFinalButtons}
-                        disabled={false}
-                        onPress={enableButtons}
-                    >
-                        {editMode ? "Edit" : "Save"}
-                    </Button>
-                </View>
-            </Card>
-            <Divider></Divider>
-            <Card style={styles.riskCardStyle}>
-                <View style={styles.riskCardContentStyle}>
-                    <Text style={styles.riskTitleStyle}>Social</Text>
-                    <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
-                </View>
-                <View>
-                    <Text style={styles.riskHeaderStyle}>Requirements: </Text>
-                    <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
-                </View>
-                <View>
-                    <Text style={styles.riskHeaderStyle}>Goals: </Text>
-                    <Text style={styles.riskRequirementStyle}>Goals go here</Text>
-                </View>
-                <View style={styles.clientDetailsFinalView}>
-                    <Button
-                        mode="contained"
-                        style={styles.clientDetailsFinalButtons}
-                        disabled={false}
-                        onPress={enableButtons}
-                    >
-                        {editMode ? "Edit" : "Save"}
-                    </Button>
-                </View>
-            </Card>
-            <Divider></Divider>
-            <Card style={styles.riskCardStyle}>
-                <View style={styles.activityCardContentStyle}>
-                    <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>
-                </View>
-                <View>{recentActivity()}</View>
-                <View style={styles.clientDetailsFinalView}></View>
-            </Card>
+            )}
         </ScrollView>
     );
 };

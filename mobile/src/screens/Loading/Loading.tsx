@@ -12,9 +12,6 @@ interface LoadingProps {
 }
 
 const Loading = (props: LoadingProps) => {
-    //Delete next 2 lines after debugging
-    const { authState } = useContext(AuthContext);
-    const authContext = useContext(AuthContext);
     const theme = useTheme();
     const styles = useStyles();
     return (

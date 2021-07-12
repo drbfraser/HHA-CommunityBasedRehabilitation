@@ -4,7 +4,7 @@ export interface IFormProps {
     formikProps: FormikProps<any>;
 }
 
-export enum FormField {
+export enum BaseSurveyFormField {
     client = "client",
     surveyConsent = "give_consent",
 
@@ -56,192 +56,192 @@ export enum FormField {
     haveShelter = "have_shelter",
     accessItem = "access_item",
 }
-export const servicesTypes = [FormField.health, FormField.education, FormField.social];
+export const baseServicesTypes = [BaseSurveyFormField.health, BaseSurveyFormField.education, BaseSurveyFormField.social];
 
-export const fieldLabels = {
-    [FormField.client]: "Client",
-    [FormField.surveyConsent]: "I give the consent to take the baseline survey",
-    [FormField.rateLevel]: "Health Level",
-    [FormField.health]: "Health",
-    [FormField.getService]:
+export const baseFieldLabels = {
+    [BaseSurveyFormField.client]: "Client",
+    [BaseSurveyFormField.surveyConsent]: "I give the consent to take the baseline survey",
+    [BaseSurveyFormField.rateLevel]: "Health Level",
+    [BaseSurveyFormField.health]: "Health",
+    [BaseSurveyFormField.getService]:
         "I have access to rehabilitation services (e.g physiotherapy, speech therapy, training how to use assistive device)",
-    [FormField.needService]: "I need access to rehabilitation services",
-    [FormField.haveDevice]:
+    [BaseSurveyFormField.needService]: "I need access to rehabilitation services",
+    [BaseSurveyFormField.haveDevice]:
         "I have an assistive device (e.g wheelchair, crutches, prosthetic limbs, hearing aid)",
-    [FormField.deviceWorking]: "My assistive device is working well",
-    [FormField.needDevice]: "I need an assistive device",
-    [FormField.deviceType]: "Assistive Device",
-    [FormField.serviceSatisf]: "Satisfied Rate",
+    [BaseSurveyFormField.deviceWorking]: "My assistive device is working well",
+    [BaseSurveyFormField.needDevice]: "I need an assistive device",
+    [BaseSurveyFormField.deviceType]: "Assistive Device",
+    [BaseSurveyFormField.serviceSatisf]: "Satisfied Rate",
 
-    [FormField.education]: "Education",
-    [FormField.goSchool]: "I go to school",
-    [FormField.grade]: "Grade",
-    [FormField.reasonNotSchool]: "Reason",
-    [FormField.beenSchool]: "I have been to school before",
-    [FormField.wantSchool]: "I want to go to school",
+    [BaseSurveyFormField.education]: "Education",
+    [BaseSurveyFormField.goSchool]: "I go to school",
+    [BaseSurveyFormField.grade]: "Grade",
+    [BaseSurveyFormField.reasonNotSchool]: "Reason",
+    [BaseSurveyFormField.beenSchool]: "I have been to school before",
+    [BaseSurveyFormField.wantSchool]: "I want to go to school",
 
-    [FormField.social]: "Social",
-    [FormField.feelValue]: "I feel valued as a member of my community",
-    [FormField.feelIndependent]: "I feel independent",
-    [FormField.ableInSocial]:
+    [BaseSurveyFormField.social]: "Social",
+    [BaseSurveyFormField.feelValue]: "I feel valued as a member of my community",
+    [BaseSurveyFormField.feelIndependent]: "I feel independent",
+    [BaseSurveyFormField.ableInSocial]:
         "I am able to participate in community/social events (going to church, market, meeting friends)",
-    [FormField.disabiAffectSocial]: "My disability affects my ability to interact socially",
-    [FormField.disabiDiscrimination]: "I have experienced discrimination because of my disability",
+    [BaseSurveyFormField.disabiAffectSocial]: "My disability affects my ability to interact socially",
+    [BaseSurveyFormField.disabiDiscrimination]: "I have experienced discrimination because of my disability",
 
-    [FormField.livelihood]: "Livelihood",
-    [FormField.isWorking]: "I am working",
-    [FormField.job]: "Job",
-    [FormField.meetFinanceNeeds]: "This meets my financial needs",
-    [FormField.disabiAffectWork]: "My disability affects my ability to go to work",
-    [FormField.wantWork]: "I want to work",
-    [FormField.isSelfEmployed]: "I am",
+    [BaseSurveyFormField.livelihood]: "Livelihood",
+    [BaseSurveyFormField.isWorking]: "I am working",
+    [BaseSurveyFormField.job]: "Job",
+    [BaseSurveyFormField.meetFinanceNeeds]: "This meets my financial needs",
+    [BaseSurveyFormField.disabiAffectWork]: "My disability affects my ability to go to work",
+    [BaseSurveyFormField.wantWork]: "I want to work",
+    [BaseSurveyFormField.isSelfEmployed]: "I am",
 
-    [FormField.foodAndNutrition]: "Food and Nutrition",
-    [FormField.foodSecurityRate]: "Rate",
-    [FormField.enoughFoodPerMonth]: "I have enough food every month",
-    [FormField.isChild]: "I am a child or have a child",
-    [FormField.childNourish]: "Nourishment",
+    [BaseSurveyFormField.foodAndNutrition]: "Food and Nutrition",
+    [BaseSurveyFormField.foodSecurityRate]: "Rate",
+    [BaseSurveyFormField.enoughFoodPerMonth]: "I have enough food every month",
+    [BaseSurveyFormField.isChild]: "I am a child or have a child",
+    [BaseSurveyFormField.childNourish]: "Nourishment",
 
-    [FormField.empowerment]: "Empowerment",
-    [FormField.memOfOrgan]:
+    [BaseSurveyFormField.empowerment]: "Empowerment",
+    [BaseSurveyFormField.memOfOrgan]:
         "I am a member of some organisations which assist people with disabilities",
-    [FormField.organization]: "Organization",
-    [FormField.awareRight]: "I am aware of my rights as a citizen living with disabilities",
-    [FormField.ableInfluence]: "I feel like I am able to influence people around me",
+    [BaseSurveyFormField.organization]: "Organization",
+    [BaseSurveyFormField.awareRight]: "I am aware of my rights as a citizen living with disabilities",
+    [BaseSurveyFormField.ableInfluence]: "I feel like I am able to influence people around me",
 
-    [FormField.shelterAndCare]: "Shelter and Care",
-    [FormField.haveShelter]: "I have adequate shelter",
-    [FormField.accessItem]: "I have access to essential items for my household",
+    [BaseSurveyFormField.shelterAndCare]: "Shelter and Care",
+    [BaseSurveyFormField.haveShelter]: "I have adequate shelter",
+    [BaseSurveyFormField.accessItem]: "I have access to essential items for my household",
 };
 
-export const initialValues = {
-    [FormField.client]: 0,
-    [FormField.surveyConsent]: false,
+export const baseInitialValues = {
+    [BaseSurveyFormField.client]: 0,
+    [BaseSurveyFormField.surveyConsent]: false,
 
-    [FormField.rateLevel]: "",
-    [FormField.getService]: false,
-    [FormField.needService]: false,
-    [FormField.haveDevice]: false,
-    [FormField.deviceWorking]: false,
-    [FormField.needDevice]: false,
-    [FormField.deviceType]: "",
-    [FormField.serviceSatisf]: "",
+    [BaseSurveyFormField.rateLevel]: "",
+    [BaseSurveyFormField.getService]: false,
+    [BaseSurveyFormField.needService]: false,
+    [BaseSurveyFormField.haveDevice]: false,
+    [BaseSurveyFormField.deviceWorking]: false,
+    [BaseSurveyFormField.needDevice]: false,
+    [BaseSurveyFormField.deviceType]: "",
+    [BaseSurveyFormField.serviceSatisf]: "",
 
-    [FormField.goSchool]: false,
-    [FormField.grade]: 0,
-    [FormField.reasonNotSchool]: "",
-    [FormField.beenSchool]: false,
-    [FormField.wantSchool]: false,
+    [BaseSurveyFormField.goSchool]: false,
+    [BaseSurveyFormField.grade]: 0,
+    [BaseSurveyFormField.reasonNotSchool]: "",
+    [BaseSurveyFormField.beenSchool]: false,
+    [BaseSurveyFormField.wantSchool]: false,
 
-    [FormField.feelValue]: false,
-    [FormField.feelIndependent]: false,
-    [FormField.ableInSocial]: false,
-    [FormField.disabiAffectSocial]: false,
-    [FormField.disabiDiscrimination]: false,
+    [BaseSurveyFormField.feelValue]: false,
+    [BaseSurveyFormField.feelIndependent]: false,
+    [BaseSurveyFormField.ableInSocial]: false,
+    [BaseSurveyFormField.disabiAffectSocial]: false,
+    [BaseSurveyFormField.disabiDiscrimination]: false,
 
-    [FormField.isWorking]: false,
-    [FormField.job]: "",
-    [FormField.isSelfEmployed]: "",
-    [FormField.meetFinanceNeeds]: false,
-    [FormField.disabiAffectWork]: false,
-    [FormField.wantWork]: false,
+    [BaseSurveyFormField.isWorking]: false,
+    [BaseSurveyFormField.job]: "",
+    [BaseSurveyFormField.isSelfEmployed]: "",
+    [BaseSurveyFormField.meetFinanceNeeds]: false,
+    [BaseSurveyFormField.disabiAffectWork]: false,
+    [BaseSurveyFormField.wantWork]: false,
 
-    [FormField.foodSecurityRate]: "",
-    [FormField.enoughFoodPerMonth]: false,
-    [FormField.isChild]: false,
-    [FormField.childNourish]: "",
+    [BaseSurveyFormField.foodSecurityRate]: "",
+    [BaseSurveyFormField.enoughFoodPerMonth]: false,
+    [BaseSurveyFormField.isChild]: false,
+    [BaseSurveyFormField.childNourish]: "",
 
-    [FormField.memOfOrgan]: false,
-    [FormField.organization]: "",
-    [FormField.awareRight]: false,
-    [FormField.ableInfluence]: false,
+    [BaseSurveyFormField.memOfOrgan]: false,
+    [BaseSurveyFormField.organization]: "",
+    [BaseSurveyFormField.awareRight]: false,
+    [BaseSurveyFormField.ableInfluence]: false,
 
-    [FormField.haveShelter]: false,
-    [FormField.accessItem]: false,
+    [BaseSurveyFormField.haveShelter]: false,
+    [BaseSurveyFormField.accessItem]: false,
 };
 
 export const emptyValidationSchema = () => Yup.object().shape({});
 export const healthValidationSchema = () =>
     Yup.object().shape({
-        [FormField.needDevice]: Yup.boolean(),
-        [FormField.serviceSatisf]: Yup.string()
-            .label(fieldLabels[FormField.serviceSatisf])
+        [BaseSurveyFormField.needDevice]: Yup.boolean(),
+        [BaseSurveyFormField.serviceSatisf]: Yup.string()
+            .label(baseFieldLabels[BaseSurveyFormField.serviceSatisf])
             .required(),
-        [FormField.rateLevel]: Yup.string().label(fieldLabels[FormField.rateLevel]).required(),
-        [FormField.deviceType]: Yup.string()
-            .label(fieldLabels[FormField.deviceType])
-            .when(FormField.needDevice, {
+        [BaseSurveyFormField.rateLevel]: Yup.string().label(baseFieldLabels[BaseSurveyFormField.rateLevel]).required(),
+        [BaseSurveyFormField.deviceType]: Yup.string()
+            .label(baseFieldLabels[BaseSurveyFormField.deviceType])
+            .when(BaseSurveyFormField.needDevice, {
                 is: true,
-                then: Yup.string().label(fieldLabels[FormField.deviceType]).required(),
+                then: Yup.string().label(baseFieldLabels[BaseSurveyFormField.deviceType]).required(),
             }),
     });
 
 export const educationValidationSchema = () =>
     Yup.object().shape({
-        [FormField.goSchool]: Yup.boolean(),
-        [FormField.reasonNotSchool]: Yup.string()
-            .label(fieldLabels[FormField.reasonNotSchool])
-            .when(FormField.goSchool, {
+        [BaseSurveyFormField.goSchool]: Yup.boolean(),
+        [BaseSurveyFormField.reasonNotSchool]: Yup.string()
+            .label(baseFieldLabels[BaseSurveyFormField.reasonNotSchool])
+            .when(BaseSurveyFormField.goSchool, {
                 is: false,
-                then: Yup.string().label(fieldLabels[FormField.reasonNotSchool]).required(),
+                then: Yup.string().label(baseFieldLabels[BaseSurveyFormField.reasonNotSchool]).required(),
             }),
-        [FormField.grade]: Yup.string()
-            .label(fieldLabels[FormField.grade])
-            .when(FormField.goSchool, {
+        [BaseSurveyFormField.grade]: Yup.string()
+            .label(baseFieldLabels[BaseSurveyFormField.grade])
+            .when(BaseSurveyFormField.goSchool, {
                 is: true,
-                then: Yup.string().label(fieldLabels[FormField.grade]).required(),
+                then: Yup.string().label(baseFieldLabels[BaseSurveyFormField.grade]).required(),
             }),
     });
 
 export const livelihoodValidationSchema = () =>
     Yup.object().shape({
-        [FormField.isWorking]: Yup.boolean(),
-        [FormField.job]: Yup.string()
-            .label(fieldLabels[FormField.job])
-            .when(FormField.isWorking, {
+        [BaseSurveyFormField.isWorking]: Yup.boolean(),
+        [BaseSurveyFormField.job]: Yup.string()
+            .label(baseFieldLabels[BaseSurveyFormField.job])
+            .when(BaseSurveyFormField.isWorking, {
                 is: true,
-                then: Yup.string().label(fieldLabels[FormField.job]).required(),
+                then: Yup.string().label(baseFieldLabels[BaseSurveyFormField.job]).required(),
             }),
-        [FormField.isSelfEmployed]: Yup.string()
-            .label(fieldLabels[FormField.isSelfEmployed])
-            .when(FormField.isWorking, {
+        [BaseSurveyFormField.isSelfEmployed]: Yup.string()
+            .label(baseFieldLabels[BaseSurveyFormField.isSelfEmployed])
+            .when(BaseSurveyFormField.isWorking, {
                 is: true,
-                then: Yup.string().label(fieldLabels[FormField.isSelfEmployed]).required(),
+                then: Yup.string().label(baseFieldLabels[BaseSurveyFormField.isSelfEmployed]).required(),
             }),
     });
 
 export const foodValidationSchema = () =>
     Yup.object().shape({
-        [FormField.isChild]: Yup.boolean(),
-        [FormField.foodSecurityRate]: Yup.string()
-            .label(fieldLabels[FormField.foodSecurityRate])
+        [BaseSurveyFormField.isChild]: Yup.boolean(),
+        [BaseSurveyFormField.foodSecurityRate]: Yup.string()
+            .label(baseFieldLabels[BaseSurveyFormField.foodSecurityRate])
             .required(),
-        [FormField.childNourish]: Yup.string()
-            .label(fieldLabels[FormField.childNourish])
-            .when(FormField.isChild, {
+        [BaseSurveyFormField.childNourish]: Yup.string()
+            .label(baseFieldLabels[BaseSurveyFormField.childNourish])
+            .when(BaseSurveyFormField.isChild, {
                 is: true,
-                then: Yup.string().label(fieldLabels[FormField.childNourish]).required(),
+                then: Yup.string().label(baseFieldLabels[BaseSurveyFormField.childNourish]).required(),
             }),
     });
 
 export const empowermentValidationSchema = () =>
     Yup.object().shape({
-        [FormField.memOfOrgan]: Yup.boolean(),
-        [FormField.organization]: Yup.string()
-            .label(fieldLabels[FormField.organization])
-            .when(FormField.memOfOrgan, {
+        [BaseSurveyFormField.memOfOrgan]: Yup.boolean(),
+        [BaseSurveyFormField.organization]: Yup.string()
+            .label(baseFieldLabels[BaseSurveyFormField.organization])
+            .when(BaseSurveyFormField.memOfOrgan, {
                 is: true,
-                then: Yup.string().label(fieldLabels[FormField.organization]).max(50).required(),
+                then: Yup.string().label(baseFieldLabels[BaseSurveyFormField.organization]).max(50).required(),
             }),
     });
 
-export const surveyTypes: FormField[] = [
-    FormField.health,
-    FormField.education,
-    FormField.social,
-    FormField.livelihood,
-    FormField.foodAndNutrition,
-    FormField.empowerment,
-    FormField.shelterAndCare,
+export const surveyTypes: BaseSurveyFormField[] = [
+    BaseSurveyFormField.health,
+    BaseSurveyFormField.education,
+    BaseSurveyFormField.social,
+    BaseSurveyFormField.livelihood,
+    BaseSurveyFormField.foodAndNutrition,
+    BaseSurveyFormField.empowerment,
+    BaseSurveyFormField.shelterAndCare,
 ];
-export type TFormValues = typeof initialValues;
+export type BaseFormValues = typeof baseInitialValues;

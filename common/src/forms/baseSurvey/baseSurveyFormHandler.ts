@@ -1,7 +1,7 @@
 import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "../../util/endpoints";
 import React from "react";
-import { FormField, TFormValues } from "./baseSurveyFormFields";
+import { BaseSurveyFormField, BaseFormValues } from "./baseSurveyFormFields";
 
 const addSurvey = async (surveyInfo: string) => {
     const init: RequestInit = {
@@ -17,54 +17,54 @@ const addSurvey = async (surveyInfo: string) => {
     });
 };
 
-export const handleSubmitForm = async (
-    values: TFormValues,
-    helpers: FormikHelpers<TFormValues>,
+export const baseSurveyHandleSubmitForm = async (
+    values: BaseFormValues,
+    helpers: FormikHelpers<BaseFormValues>,
     setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
     const newSurvey = JSON.stringify({
-        client: values[FormField.client],
-        health: values[FormField.rateLevel],
-        health_have_rehabilitation_access: values[FormField.getService],
-        health_need_rehabilitation_access: values[FormField.needService],
-        health_have_assistive_device: values[FormField.haveDevice],
-        health_working_assistive_device: values[FormField.deviceWorking],
-        health_need_assistive_device: values[FormField.needDevice],
-        health_assistive_device_type: values[FormField.needDevice]
-            ? values[FormField.deviceType]
+        client: values[BaseSurveyFormField.client],
+        health: values[BaseSurveyFormField.rateLevel],
+        health_have_rehabilitation_access: values[BaseSurveyFormField.getService],
+        health_need_rehabilitation_access: values[BaseSurveyFormField.needService],
+        health_have_assistive_device: values[BaseSurveyFormField.haveDevice],
+        health_working_assistive_device: values[BaseSurveyFormField.deviceWorking],
+        health_need_assistive_device: values[BaseSurveyFormField.needDevice],
+        health_assistive_device_type: values[BaseSurveyFormField.needDevice]
+            ? values[BaseSurveyFormField.deviceType]
             : "",
-        health_services_satisfaction: values[FormField.serviceSatisf],
-        school_currently_attend: values[FormField.goSchool],
-        school_grade: values[FormField.goSchool] ? values[FormField.grade] : 0,
-        school_not_attend_reason: values[FormField.goSchool]
+        health_services_satisfaction: values[BaseSurveyFormField.serviceSatisf],
+        school_currently_attend: values[BaseSurveyFormField.goSchool],
+        school_grade: values[BaseSurveyFormField.goSchool] ? values[BaseSurveyFormField.grade] : 0,
+        school_not_attend_reason: values[BaseSurveyFormField.goSchool]
             ? ""
-            : values[FormField.reasonNotSchool],
-        school_ever_attend: values[FormField.goSchool] ? false : values[FormField.beenSchool],
-        school_want_attend: values[FormField.wantSchool],
-        social_community_valued: values[FormField.feelValue],
-        social_independent: values[FormField.feelIndependent],
-        social_able_participate: values[FormField.ableInSocial],
-        social_affected_by_disability: values[FormField.disabiAffectSocial],
-        social_discrimination: values[FormField.disabiDiscrimination],
-        work: values[FormField.isWorking],
-        work_what: values[FormField.isWorking] ? values[FormField.job] : "",
-        work_status: values[FormField.isWorking] ? values[FormField.isSelfEmployed] : "",
-        work_meet_financial_needs: values[FormField.isWorking]
-            ? values[FormField.meetFinanceNeeds]
+            : values[BaseSurveyFormField.reasonNotSchool],
+        school_ever_attend: values[BaseSurveyFormField.goSchool] ? false : values[BaseSurveyFormField.beenSchool],
+        school_want_attend: values[BaseSurveyFormField.wantSchool],
+        social_community_valued: values[BaseSurveyFormField.feelValue],
+        social_independent: values[BaseSurveyFormField.feelIndependent],
+        social_able_participate: values[BaseSurveyFormField.ableInSocial],
+        social_affected_by_disability: values[BaseSurveyFormField.disabiAffectSocial],
+        social_discrimination: values[BaseSurveyFormField.disabiDiscrimination],
+        work: values[BaseSurveyFormField.isWorking],
+        work_what: values[BaseSurveyFormField.isWorking] ? values[BaseSurveyFormField.job] : "",
+        work_status: values[BaseSurveyFormField.isWorking] ? values[BaseSurveyFormField.isSelfEmployed] : "",
+        work_meet_financial_needs: values[BaseSurveyFormField.isWorking]
+            ? values[BaseSurveyFormField.meetFinanceNeeds]
             : false,
-        work_affected_by_disability: values[FormField.disabiAffectWork],
-        work_want: values[FormField.wantWork],
-        food_security: values[FormField.foodSecurityRate],
-        food_enough_monthly: values[FormField.enoughFoodPerMonth],
-        food_enough_for_child: values[FormField.isChild] ? values[FormField.childNourish] : "",
-        empowerment_organization_member: values[FormField.memOfOrgan],
-        empowerment_organization: values[FormField.memOfOrgan]
-            ? values[FormField.organization]
+        work_affected_by_disability: values[BaseSurveyFormField.disabiAffectWork],
+        work_want: values[BaseSurveyFormField.wantWork],
+        food_security: values[BaseSurveyFormField.foodSecurityRate],
+        food_enough_monthly: values[BaseSurveyFormField.enoughFoodPerMonth],
+        food_enough_for_child: values[BaseSurveyFormField.isChild] ? values[BaseSurveyFormField.childNourish] : "",
+        empowerment_organization_member: values[BaseSurveyFormField.memOfOrgan],
+        empowerment_organization: values[BaseSurveyFormField.memOfOrgan]
+            ? values[BaseSurveyFormField.organization]
             : "",
-        empowerment_rights_awareness: values[FormField.awareRight],
-        empowerment_influence_others: values[FormField.ableInfluence],
-        shelter_adequate: values[FormField.haveShelter],
-        shelter_essential_access: values[FormField.accessItem],
+        empowerment_rights_awareness: values[BaseSurveyFormField.awareRight],
+        empowerment_influence_others: values[BaseSurveyFormField.ableInfluence],
+        shelter_adequate: values[BaseSurveyFormField.haveShelter],
+        shelter_essential_access: values[BaseSurveyFormField.accessItem],
     });
 
     try {

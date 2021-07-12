@@ -12,10 +12,10 @@ import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 import React, { useState } from "react";
 import {
-    fieldLabels,
-    FormField,
+    baseFieldLabels,
+    BaseSurveyFormField,
     emptyValidationSchema,
-    initialValues,
+    baseInitialValues,
     foodValidationSchema,
     livelihoodValidationSchema,
     healthValidationSchema,
@@ -63,8 +63,8 @@ const HealthForm = (props: IFormProps) => {
                     select
                     required
                     variant="outlined"
-                    label={fieldLabels[FormField.rateLevel]}
-                    name={FormField.rateLevel}
+                    label={baseFieldLabels[BaseSurveyFormField.rateLevel]}
+                    name={BaseSurveyFormField.rateLevel}
                 >
                     {Object.entries(rateLevel).map(([value, { name }]) => (
                         <MenuItem key={value} value={value}>
@@ -77,45 +77,45 @@ const HealthForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.getService}
-                    Label={{ label: fieldLabels[FormField.getService] }}
+                    name={BaseSurveyFormField.getService}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.getService] }}
                 />
                 <br />
 
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.needService}
-                    Label={{ label: fieldLabels[FormField.needService] }}
+                    name={BaseSurveyFormField.needService}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.needService] }}
                 />
                 <br />
 
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.haveDevice}
-                    Label={{ label: fieldLabels[FormField.haveDevice] }}
+                    name={BaseSurveyFormField.haveDevice}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.haveDevice] }}
                 />
                 <br />
 
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.deviceWorking}
-                    Label={{ label: fieldLabels[FormField.deviceWorking] }}
+                    name={BaseSurveyFormField.deviceWorking}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.deviceWorking] }}
                 />
                 <br />
 
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.needDevice}
-                    Label={{ label: fieldLabels[FormField.needDevice] }}
+                    name={BaseSurveyFormField.needDevice}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.needDevice] }}
                 />
                 <br />
             </div>
 
-            {props.formikProps.values[FormField.needDevice] && (
+            {props.formikProps.values[BaseSurveyFormField.needDevice] && (
                 <div className={styles.fieldIndent}>
                     <FormControl fullWidth variant="outlined">
                         <FormLabel>What assistive device do you need?</FormLabel>
@@ -125,8 +125,8 @@ const HealthForm = (props: IFormProps) => {
                             select
                             required
                             variant="outlined"
-                            label={fieldLabels[FormField.deviceType]}
-                            name={FormField.deviceType}
+                            label={baseFieldLabels[BaseSurveyFormField.deviceType]}
+                            name={BaseSurveyFormField.deviceType}
                         >
                             {Object.entries(deviceTypes).map(([value, name]) => (
                                 <MenuItem key={value} value={value}>
@@ -148,8 +148,8 @@ const HealthForm = (props: IFormProps) => {
                     select
                     required
                     variant="outlined"
-                    label={fieldLabels[FormField.serviceSatisf]}
-                    name={FormField.serviceSatisf}
+                    label={baseFieldLabels[BaseSurveyFormField.serviceSatisf]}
+                    name={BaseSurveyFormField.serviceSatisf}
                 >
                     {Object.entries(rateLevel).map(([value, { name }]) => (
                         <MenuItem key={value} value={value}>
@@ -172,12 +172,12 @@ const EducationForm = (props: IFormProps) => {
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
-                name={FormField.goSchool}
-                Label={{ label: fieldLabels[FormField.goSchool] }}
+                name={BaseSurveyFormField.goSchool}
+                Label={{ label: baseFieldLabels[BaseSurveyFormField.goSchool] }}
             />
             <br />
             <div className={styles.fieldIndent}>
-                {props.formikProps.values[FormField.goSchool] ? (
+                {props.formikProps.values[BaseSurveyFormField.goSchool] ? (
                     <div className={styles.fieldIndent}>
                         <FormLabel>What grade?</FormLabel>
                         <FormControl fullWidth variant="outlined">
@@ -187,8 +187,8 @@ const EducationForm = (props: IFormProps) => {
                                 select
                                 required
                                 variant="outlined"
-                                label={fieldLabels[FormField.grade]}
-                                name={FormField.grade}
+                                label={baseFieldLabels[BaseSurveyFormField.grade]}
+                                name={BaseSurveyFormField.grade}
                             >
                                 {Object.entries(grade).map(([value, { name }]) => (
                                     <MenuItem key={value} value={value}>
@@ -208,8 +208,8 @@ const EducationForm = (props: IFormProps) => {
                                 select
                                 required
                                 variant="outlined"
-                                label={fieldLabels[FormField.reasonNotSchool]}
-                                name={FormField.reasonNotSchool}
+                                label={baseFieldLabels[BaseSurveyFormField.reasonNotSchool]}
+                                name={BaseSurveyFormField.reasonNotSchool}
                             >
                                 {Object.entries(reasonNotSchool).map(([value, name]) => (
                                     <MenuItem key={value} value={value}>
@@ -220,8 +220,8 @@ const EducationForm = (props: IFormProps) => {
                             <Field
                                 component={CheckboxWithLabel}
                                 type="checkbox"
-                                name={FormField.beenSchool}
-                                Label={{ label: fieldLabels[FormField.beenSchool] }}
+                                name={BaseSurveyFormField.beenSchool}
+                                Label={{ label: baseFieldLabels[BaseSurveyFormField.beenSchool] }}
                             />
                         </FormControl>
                     </div>
@@ -230,8 +230,8 @@ const EducationForm = (props: IFormProps) => {
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
-                name={FormField.wantSchool}
-                Label={{ label: fieldLabels[FormField.wantSchool] }}
+                name={BaseSurveyFormField.wantSchool}
+                Label={{ label: baseFieldLabels[BaseSurveyFormField.wantSchool] }}
             />
         </div>
     );
@@ -243,32 +243,32 @@ const SocialForm = () => {
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
-                name={FormField.feelValue}
-                Label={{ label: fieldLabels[FormField.feelValue] }}
+                name={BaseSurveyFormField.feelValue}
+                Label={{ label: baseFieldLabels[BaseSurveyFormField.feelValue] }}
             />
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
-                name={FormField.feelIndependent}
-                Label={{ label: fieldLabels[FormField.feelIndependent] }}
+                name={BaseSurveyFormField.feelIndependent}
+                Label={{ label: baseFieldLabels[BaseSurveyFormField.feelIndependent] }}
             />
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
-                name={FormField.ableInSocial}
-                Label={{ label: fieldLabels[FormField.ableInSocial] }}
+                name={BaseSurveyFormField.ableInSocial}
+                Label={{ label: baseFieldLabels[BaseSurveyFormField.ableInSocial] }}
             />
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
-                name={FormField.disabiAffectSocial}
-                Label={{ label: fieldLabels[FormField.disabiAffectSocial] }}
+                name={BaseSurveyFormField.disabiAffectSocial}
+                Label={{ label: baseFieldLabels[BaseSurveyFormField.disabiAffectSocial] }}
             />
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
-                name={FormField.disabiDiscrimination}
-                Label={{ label: fieldLabels[FormField.disabiDiscrimination] }}
+                name={BaseSurveyFormField.disabiDiscrimination}
+                Label={{ label: baseFieldLabels[BaseSurveyFormField.disabiDiscrimination] }}
             />
             <br />
         </FormControl>
@@ -284,11 +284,11 @@ const LivelihoodForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.isWorking}
-                    Label={{ label: fieldLabels[FormField.isWorking] }}
+                    name={BaseSurveyFormField.isWorking}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.isWorking] }}
                 />
             </FormControl>
-            {props.formikProps.values[FormField.isWorking] && (
+            {props.formikProps.values[BaseSurveyFormField.isWorking] && (
                 <div className={styles.fieldIndent}>
                     <FormLabel>What do you do?</FormLabel>
                     <FormControl fullWidth variant="outlined">
@@ -297,8 +297,8 @@ const LivelihoodForm = (props: IFormProps) => {
                             component={TextField}
                             multiline
                             variant="outlined"
-                            label={fieldLabels[FormField.job]}
-                            name={FormField.job}
+                            label={baseFieldLabels[BaseSurveyFormField.job]}
+                            name={BaseSurveyFormField.job}
                             fullWidth
                         />
                     </FormControl>
@@ -313,8 +313,8 @@ const LivelihoodForm = (props: IFormProps) => {
                             select
                             required
                             variant="outlined"
-                            label={fieldLabels[FormField.isSelfEmployed]}
-                            name={FormField.isSelfEmployed}
+                            label={baseFieldLabels[BaseSurveyFormField.isSelfEmployed]}
+                            name={BaseSurveyFormField.isSelfEmployed}
                         >
                             {Object.entries(isSelfEmployed).map(([value, name]) => (
                                 <MenuItem key={value} value={value}>
@@ -326,8 +326,8 @@ const LivelihoodForm = (props: IFormProps) => {
                         <Field
                             component={CheckboxWithLabel}
                             type="checkbox"
-                            name={FormField.meetFinanceNeeds}
-                            Label={{ label: fieldLabels[FormField.meetFinanceNeeds] }}
+                            name={BaseSurveyFormField.meetFinanceNeeds}
+                            Label={{ label: baseFieldLabels[BaseSurveyFormField.meetFinanceNeeds] }}
                         />
                     </FormControl>
                 </div>
@@ -338,15 +338,15 @@ const LivelihoodForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.disabiAffectWork}
-                    Label={{ label: fieldLabels[FormField.disabiAffectWork] }}
+                    name={BaseSurveyFormField.disabiAffectWork}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.disabiAffectWork] }}
                 />
 
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.wantWork}
-                    Label={{ label: fieldLabels[FormField.wantWork] }}
+                    name={BaseSurveyFormField.wantWork}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.wantWork] }}
                 />
             </FormControl>
         </div>
@@ -366,8 +366,8 @@ const FoodForm = (props: IFormProps) => {
                     select
                     required
                     variant="outlined"
-                    label={fieldLabels[FormField.foodSecurityRate]}
-                    name={FormField.foodSecurityRate}
+                    label={baseFieldLabels[BaseSurveyFormField.foodSecurityRate]}
+                    name={BaseSurveyFormField.foodSecurityRate}
                 >
                     {Object.entries(rateLevel).map(([value, { name }]) => (
                         <MenuItem key={value} value={value}>
@@ -378,17 +378,17 @@ const FoodForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.enoughFoodPerMonth}
-                    Label={{ label: fieldLabels[FormField.enoughFoodPerMonth] }}
+                    name={BaseSurveyFormField.enoughFoodPerMonth}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.enoughFoodPerMonth] }}
                 />
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.isChild}
-                    Label={{ label: fieldLabels[FormField.isChild] }}
+                    name={BaseSurveyFormField.isChild}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.isChild] }}
                 />
 
-                {props.formikProps.values[FormField.isChild] && (
+                {props.formikProps.values[BaseSurveyFormField.isChild] && (
                     <div className={styles.fieldIndent}>
                         <FormControl fullWidth variant="outlined">
                             <FormLabel>What is this child nutritional status?</FormLabel>
@@ -398,8 +398,8 @@ const FoodForm = (props: IFormProps) => {
                                 select
                                 required
                                 variant="outlined"
-                                label={fieldLabels[FormField.childNourish]}
-                                name={FormField.childNourish}
+                                label={baseFieldLabels[BaseSurveyFormField.childNourish]}
+                                name={BaseSurveyFormField.childNourish}
                             >
                                 {Object.entries(childNourish).map(([value, name]) => (
                                     <MenuItem key={value} value={value}>
@@ -407,7 +407,7 @@ const FoodForm = (props: IFormProps) => {
                                     </MenuItem>
                                 ))}
                             </Field>
-                            {props.formikProps.values[FormField.childNourish] ===
+                            {props.formikProps.values[BaseSurveyFormField.childNourish] ===
                                 ChildNourish.MALNOURISHED && (
                                 <div className={styles.fieldIndent}>
                                     <br />
@@ -434,17 +434,17 @@ const EmpowermentForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.memOfOrgan}
-                    Label={{ label: fieldLabels[FormField.memOfOrgan] }}
+                    name={BaseSurveyFormField.memOfOrgan}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.memOfOrgan] }}
                 />
-                {props.formikProps.values[FormField.memOfOrgan] && (
+                {props.formikProps.values[BaseSurveyFormField.memOfOrgan] && (
                     <div className={styles.fieldIndent}>
                         <Field
                             component={TextField}
                             multiline
                             variant="outlined"
-                            label={fieldLabels[FormField.organization]}
-                            name={FormField.organization}
+                            label={baseFieldLabels[BaseSurveyFormField.organization]}
+                            name={BaseSurveyFormField.organization}
                             fullWidth
                         />
                     </div>
@@ -454,15 +454,15 @@ const EmpowermentForm = (props: IFormProps) => {
                     <Field
                         component={CheckboxWithLabel}
                         type="checkbox"
-                        name={FormField.awareRight}
-                        Label={{ label: fieldLabels[FormField.awareRight] }}
+                        name={BaseSurveyFormField.awareRight}
+                        Label={{ label: baseFieldLabels[BaseSurveyFormField.awareRight] }}
                     />
 
                     <Field
                         component={CheckboxWithLabel}
                         type="checkbox"
-                        name={FormField.ableInfluence}
-                        Label={{ label: fieldLabels[FormField.ableInfluence] }}
+                        name={BaseSurveyFormField.ableInfluence}
+                        Label={{ label: baseFieldLabels[BaseSurveyFormField.ableInfluence] }}
                     />
                 </FormControl>
                 <br />
@@ -478,15 +478,15 @@ const ShelterForm = () => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.haveShelter}
-                    Label={{ label: fieldLabels[FormField.haveShelter] }}
+                    name={BaseSurveyFormField.haveShelter}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.haveShelter] }}
                 />
 
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
-                    name={FormField.accessItem}
-                    Label={{ label: fieldLabels[FormField.accessItem] }}
+                    name={BaseSurveyFormField.accessItem}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.accessItem] }}
                 />
             </FormControl>
         </div>
@@ -543,7 +543,7 @@ const NewSurvey = () => {
             handleSubmit(values, helpers, setSubmissionError);
         } else {
             if (step === 0) {
-                helpers.setFieldValue(`${[FormField.client]}`, clientId);
+                helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, clientId);
             }
             setStep(step + 1);
             helpers.setSubmitting(false);
@@ -553,7 +553,7 @@ const NewSurvey = () => {
 
     return (
         <Formik
-            initialValues={initialValues}
+            initialValues={baseInitialValues}
             validationSchema={surveySteps[step].validationSchema}
             onSubmit={nextStep}
             enableReinitialize
@@ -573,8 +573,8 @@ const NewSurvey = () => {
                     <Field
                         component={CheckboxWithLabel}
                         type="checkbox"
-                        name={FormField.surveyConsent}
-                        Label={{ label: fieldLabels[FormField.surveyConsent] }}
+                        name={BaseSurveyFormField.surveyConsent}
+                        Label={{ label: baseFieldLabels[BaseSurveyFormField.surveyConsent] }}
                     />
 
                     {formikProps.values.give_consent ? (

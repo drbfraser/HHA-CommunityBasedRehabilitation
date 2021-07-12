@@ -1,14 +1,13 @@
-
 import { FormikProps } from "formik";
-import { getDisabilities, getOtherDisabilityId } from "src/util/hooks/disabilities";
-import { InjuryLocation, WheelchairExperience } from "src/util/referrals";
+import { InjuryLocation, WheelchairExperience } from "../../util/referrals";
+import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
 import * as Yup from "yup";
 
-export interface IFormProps {
+export interface ReferralFormProps {
     formikProps: FormikProps<any>;
 }
 
-export enum FormField {
+export enum ReferralFormField {
     client = "client",
     wheelchair = "wheelchair",
     wheelchairExperience = "wheelchair_experience",
@@ -26,59 +25,59 @@ export enum FormField {
     otherDescription = "other_description",
 }
 
-export const servicesTypes = [
-    FormField.wheelchair,
-    FormField.physiotherapy,
-    FormField.prosthetic,
-    FormField.orthotic,
-    FormField.servicesOther,
+export const referralServicesTypes = [
+    ReferralFormField.wheelchair,
+    ReferralFormField.physiotherapy,
+    ReferralFormField.prosthetic,
+    ReferralFormField.orthotic,
+    ReferralFormField.servicesOther,
 ];
 
-export const fieldLabels = {
-    [FormField.client]: "Client",
-    [FormField.wheelchair]: "Wheelchair",
-    [FormField.wheelchairExperience]: "Wheelchair Experience",
-    [FormField.hipWidth]: "Hip Width",
-    [FormField.wheelchairOwned]: "Client Owns a Wheelchair",
-    [FormField.wheelchairRepairable]: "Client's Wheelchair is Repairable",
-    [FormField.physiotherapy]: "Physiotherapy",
-    [FormField.condition]: "Condition",
-    [FormField.conditionOther]: "Other Condition",
-    [FormField.prosthetic]: "Prosthetic",
-    [FormField.prostheticInjuryLocation]: "Prosthetic Injury Location",
-    [FormField.orthotic]: "Orthotic",
-    [FormField.orthoticInjuryLocation]: "Orthotic Injury Location",
-    [FormField.servicesOther]: "Other Services",
-    [FormField.otherDescription]: "Service Description",
+export const referralFieldLabels = {
+    [ReferralFormField.client]: "Client",
+    [ReferralFormField.wheelchair]: "Wheelchair",
+    [ReferralFormField.wheelchairExperience]: "Wheelchair Experience",
+    [ReferralFormField.hipWidth]: "Hip Width",
+    [ReferralFormField.wheelchairOwned]: "Client Owns a Wheelchair",
+    [ReferralFormField.wheelchairRepairable]: "Client's Wheelchair is Repairable",
+    [ReferralFormField.physiotherapy]: "Physiotherapy",
+    [ReferralFormField.condition]: "Condition",
+    [ReferralFormField.conditionOther]: "Other Condition",
+    [ReferralFormField.prosthetic]: "Prosthetic",
+    [ReferralFormField.prostheticInjuryLocation]: "Prosthetic Injury Location",
+    [ReferralFormField.orthotic]: "Orthotic",
+    [ReferralFormField.orthoticInjuryLocation]: "Orthotic Injury Location",
+    [ReferralFormField.servicesOther]: "Other Services",
+    [ReferralFormField.otherDescription]: "Service Description",
 };
 
-export const initialValues = {
-    [FormField.client]: 0,
-    [FormField.wheelchairExperience]: WheelchairExperience.BASIC,
-    [FormField.hipWidth]: "",
-    [FormField.wheelchair]: false,
-    [FormField.wheelchairOwned]: false,
-    [FormField.wheelchairRepairable]: false,
-    [FormField.physiotherapy]: false,
-    [FormField.condition]: "",
-    [FormField.conditionOther]: "",
-    [FormField.prosthetic]: false,
-    [FormField.prostheticInjuryLocation]: InjuryLocation.BELOW,
-    [FormField.orthotic]: false,
-    [FormField.orthoticInjuryLocation]: InjuryLocation.BELOW,
-    [FormField.servicesOther]: false,
-    [FormField.otherDescription]: "",
+export const referralInitialValues = {
+    [ReferralFormField.client]: 0,
+    [ReferralFormField.wheelchairExperience]: WheelchairExperience.BASIC,
+    [ReferralFormField.hipWidth]: "",
+    [ReferralFormField.wheelchair]: false,
+    [ReferralFormField.wheelchairOwned]: false,
+    [ReferralFormField.wheelchairRepairable]: false,
+    [ReferralFormField.physiotherapy]: false,
+    [ReferralFormField.condition]: "",
+    [ReferralFormField.conditionOther]: "",
+    [ReferralFormField.prosthetic]: false,
+    [ReferralFormField.prostheticInjuryLocation]: InjuryLocation.BELOW,
+    [ReferralFormField.orthotic]: false,
+    [ReferralFormField.orthoticInjuryLocation]: InjuryLocation.BELOW,
+    [ReferralFormField.servicesOther]: false,
+    [ReferralFormField.otherDescription]: "",
 };
 
-export const initialValidationSchema = () => Yup.object().shape({});
+export const referralInitialValidationSchema = () => Yup.object().shape({});
 
 export const wheelchairValidationSchema = () =>
     Yup.object().shape({
-        [FormField.wheelchairExperience]: Yup.string()
-            .label(fieldLabels[FormField.wheelchairExperience])
+        [ReferralFormField.wheelchairExperience]: Yup.string()
+            .label(referralFieldLabels[ReferralFormField.wheelchairExperience])
             .required(),
-        [FormField.hipWidth]: Yup.number()
-            .label(fieldLabels[FormField.hipWidth])
+        [ReferralFormField.hipWidth]: Yup.number()
+            .label(referralFieldLabels[ReferralFormField.hipWidth])
             .max(200)
             .positive()
             .required(),
@@ -89,12 +88,12 @@ const isOtherCondition = async (condition: number) =>
 
 export const physiotherapyValidationSchema = () =>
     Yup.object().shape({
-        [FormField.condition]: Yup.string()
-            .label(fieldLabels[FormField.condition])
+        [ReferralFormField.condition]: Yup.string()
+            .label(referralFieldLabels[ReferralFormField.condition])
             .max(100)
             .required(),
-        [FormField.conditionOther]: Yup.string()
-            .label(fieldLabels[FormField.conditionOther])
+        [ReferralFormField.conditionOther]: Yup.string()
+            .label(referralFieldLabels[ReferralFormField.conditionOther])
             .trim()
             .test(
                 "require-if-other-selected",
@@ -112,20 +111,20 @@ export const physiotherapyValidationSchema = () =>
             ),
     });
 
-export const prostheticOrthoticValidationSchema = (serviceType: FormField) =>
+export const prostheticOrthoticValidationSchema = (serviceType: ReferralFormField) =>
     Yup.object().shape({
         [`${serviceType}_injury_location`]: Yup.string()
-            .label(fieldLabels[`${serviceType}_injury_location` as FormField])
+            .label(referralFieldLabels[`${serviceType}_injury_location` as ReferralFormField])
             .required(),
     });
 
 export const otherServicesValidationSchema = () =>
     Yup.object().shape({
-        [FormField.otherDescription]: Yup.string()
-            .label(fieldLabels[FormField.otherDescription])
+        [ReferralFormField.otherDescription]: Yup.string()
+            .label(referralFieldLabels[ReferralFormField.otherDescription])
             .max(100)
             .trim()
             .required(),
     });
 
-export type TFormValues = typeof initialValues;
+export type ReferralFormValues = typeof referralInitialValues;

@@ -3,7 +3,7 @@ import { View } from "react-native";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
 import { Text, HelperText, TextInput, Paragraph, RadioButton, List } from "react-native-paper";
 import useStyles from "../NewReferral.styles";
-import { FormField, fieldLabels } from "../formFields";
+import { ReferralFormField, referralFieldLabels } from "@cbr/common";
 import { IFormProps, wheelchairExperiences } from "@cbr/common";
 
 const WheelchairForm = (props: IFormProps) => {
@@ -15,9 +15,12 @@ const WheelchairForm = (props: IFormProps) => {
             <Text>What type of wheelchair user?</Text>
             <List.Section>
                 <RadioButton.Group
-                    value={props.formikProps.values[FormField.wheelchairExperience]}
+                    value={props.formikProps.values[ReferralFormField.wheelchairExperience]}
                     onValueChange={(value: string) =>
-                        props.formikProps.setFieldValue(FormField.wheelchairExperience, value)
+                        props.formikProps.setFieldValue(
+                            ReferralFormField.wheelchairExperience,
+                            value
+                        )
                     }
                 >
                     {Object.entries(wheelchairExperiences).map(([value, name]) => (
@@ -34,11 +37,11 @@ const WheelchairForm = (props: IFormProps) => {
                 <TextInput
                     style={styles.hipWidthInput}
                     keyboardType="numeric"
-                    value={props.formikProps.values[FormField.hipWidth]}
+                    value={props.formikProps.values[ReferralFormField.hipWidth]}
                     // error={!_isUsernameValid(nameNoPadding)}
                     onChangeText={(value) => {
-                        props.formikProps.setFieldTouched(FormField.hipWidth, true);
-                        props.formikProps.setFieldValue(FormField.hipWidth, value);
+                        props.formikProps.setFieldTouched(ReferralFormField.hipWidth, true);
+                        props.formikProps.setFieldValue(ReferralFormField.hipWidth, value);
                     }}
                 />
                 <Text>inches</Text>
@@ -47,23 +50,23 @@ const WheelchairForm = (props: IFormProps) => {
             <HelperText
                 style={styles.errorText}
                 type="error"
-                visible={!!props.formikProps.errors[FormField.hipWidth]}
+                visible={!!props.formikProps.errors[ReferralFormField.hipWidth]}
             >
-                {props.formikProps.errors[FormField.hipWidth]}
+                {props.formikProps.errors[ReferralFormField.hipWidth]}
             </HelperText>
             <Text>Wheelchair information</Text>
             <TextCheckBox
-                field={FormField.wheelchairOwned}
-                value={props.formikProps.values[FormField.wheelchairOwned]}
-                label={fieldLabels[FormField.wheelchairOwned]}
+                field={ReferralFormField.wheelchairOwned}
+                value={props.formikProps.values[ReferralFormField.wheelchairOwned]}
+                label={referralFieldLabels[ReferralFormField.wheelchairOwned]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
-            {props.formikProps.values[FormField.wheelchairOwned] && (
+            {props.formikProps.values[ReferralFormField.wheelchairOwned] && (
                 <View>
                     <TextCheckBox
-                        field={FormField.wheelchairRepairable}
-                        value={props.formikProps.values[FormField.wheelchairRepairable]}
-                        label={fieldLabels[FormField.wheelchairRepairable]}
+                        field={ReferralFormField.wheelchairRepairable}
+                        value={props.formikProps.values[ReferralFormField.wheelchairRepairable]}
+                        label={referralFieldLabels[ReferralFormField.wheelchairRepairable]}
                         setFieldValue={props.formikProps.setFieldValue}
                     />
                 </View>

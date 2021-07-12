@@ -1,14 +1,15 @@
 import React from "react";
 import { View } from "react-native";
-import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import { Text, Paragraph, RadioButton, List, HelperText } from "react-native-paper";
+import { Text, Paragraph, RadioButton, List } from "react-native-paper";
 import useStyles from "../NewReferral.styles";
-import { FormField } from "../formFields";
+import { ReferralFormField } from "@cbr/common";
 import { IFormProps, orthoticInjuryLocations, prostheticInjuryLocations } from "@cbr/common";
 
-const ProstheticOrthoticForm = (props: IFormProps, serviceType: FormField) => {
+const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormField) => {
     const injuryLocations =
-        serviceType === FormField.prosthetic ? prostheticInjuryLocations : orthoticInjuryLocations;
+        serviceType === ReferralFormField.prosthetic
+            ? prostheticInjuryLocations
+            : orthoticInjuryLocations;
     const styles = useStyles();
 
     return (

@@ -1,6 +1,6 @@
 import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-import { FormField, TFormValues } from "./formFields";
+import { ReferralFormField, ReferralFormValues } from "@cbr/common/forms/Referral/referralFormFields";
 import history from "../../util/history";
 import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
 
@@ -20,39 +20,39 @@ const addReferral = async (referralInfo: string) => {
 };
 
 export const handleSubmit = async (
-    values: TFormValues,
-    helpers: FormikHelpers<TFormValues>,
+    values: ReferralFormValues,
+    helpers: FormikHelpers<ReferralFormValues>,
     setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
     const disabilities = await getDisabilities();
 
     const newReferral = JSON.stringify({
-        client: values[FormField.client],
-        wheelchair: values[FormField.wheelchair],
-        wheelchair_experience: values[FormField.wheelchair]
-            ? values[FormField.wheelchairExperience]
+        client: values[ReferralFormField.client],
+        wheelchair: values[ReferralFormField.wheelchair],
+        wheelchair_experience: values[ReferralFormField.wheelchair]
+            ? values[ReferralFormField.wheelchairExperience]
             : "",
-        hip_width: values[FormField.wheelchair] ? values[FormField.hipWidth] : 0,
-        wheelchair_owned: values[FormField.wheelchair] ? values[FormField.wheelchairOwned] : false,
+        hip_width: values[ReferralFormField.wheelchair] ? values[ReferralFormField.hipWidth] : 0,
+        wheelchair_owned: values[ReferralFormField.wheelchair] ? values[ReferralFormField.wheelchairOwned] : false,
         wheelchair_repairable:
-            values[FormField.wheelchair] && values[FormField.wheelchairOwned]
-                ? values[FormField.wheelchairRepairable]
+            values[ReferralFormField.wheelchair] && values[ReferralFormField.wheelchairOwned]
+                ? values[ReferralFormField.wheelchairRepairable]
                 : false,
-        physiotherapy: values[FormField.physiotherapy],
-        condition: values[FormField.physiotherapy]
-            ? Number(values[FormField.condition]) === getOtherDisabilityId(disabilities)
-                ? values[FormField.conditionOther]
-                : disabilities.get(Number(values[FormField.condition]))
+        physiotherapy: values[ReferralFormField.physiotherapy],
+        condition: values[ReferralFormField.physiotherapy]
+            ? Number(values[ReferralFormField.condition]) === getOtherDisabilityId(disabilities)
+                ? values[ReferralFormField.conditionOther]
+                : disabilities.get(Number(values[ReferralFormField.condition]))
             : "",
-        prosthetic: values[FormField.prosthetic],
-        prosthetic_injury_location: values[FormField.prosthetic]
-            ? values[FormField.prostheticInjuryLocation]
+        prosthetic: values[ReferralFormField.prosthetic],
+        prosthetic_injury_location: values[ReferralFormField.prosthetic]
+            ? values[ReferralFormField.prostheticInjuryLocation]
             : "",
-        orthotic: values[FormField.orthotic],
-        orthotic_injury_location: values[FormField.orthotic]
-            ? values[FormField.orthoticInjuryLocation]
+        orthotic: values[ReferralFormField.orthotic],
+        orthotic_injury_location: values[ReferralFormField.orthotic]
+            ? values[ReferralFormField.orthoticInjuryLocation]
             : "",
-        services_other: values[FormField.servicesOther] ? values[FormField.otherDescription] : "",
+        services_other: values[ReferralFormField.servicesOther] ? values[ReferralFormField.otherDescription] : "",
     });
 
     try {

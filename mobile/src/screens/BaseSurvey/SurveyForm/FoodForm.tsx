@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { View } from "react-native";
 import { Text, Button, Dialog, Portal, Paragraph, HelperText } from "react-native-paper";
-import { fieldLabels, FormField, IFormProps, childNourish, rateLevel } from "@cbr/common";
+import {
+    baseFieldLabels,
+    BaseSurveyFormField,
+    IFormProps,
+    childNourish,
+    rateLevel,
+} from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
 import TextPicker, { IPickerChoice } from "../../../components/TextPicker/TextPicker";
@@ -17,7 +23,7 @@ const FoodForm = (props: IFormProps) => {
         <View>
             <Text style={styles.pickerQuestion}>Food security</Text>
             <TextPicker
-                field={FormField.foodSecurityRate}
+                field={BaseSurveyFormField.foodSecurityRate}
                 choices={Object.entries(rateLevel).map(
                     (key) =>
                         ({
@@ -25,7 +31,7 @@ const FoodForm = (props: IFormProps) => {
                             label: key[1].name,
                         } as IPickerChoice)
                 )}
-                selectedValue={props.formikProps.values[FormField.foodSecurityRate]}
+                selectedValue={props.formikProps.values[BaseSurveyFormField.foodSecurityRate]}
                 setFieldValue={props.formikProps.setFieldValue}
                 setFieldTouched={props.formikProps.setFieldTouched}
             />
@@ -33,34 +39,40 @@ const FoodForm = (props: IFormProps) => {
             <HelperText
                 style={styles.errorText}
                 type="error"
-                visible={!!props.formikProps.errors[FormField.foodSecurityRate]}
+                visible={!!props.formikProps.errors[BaseSurveyFormField.foodSecurityRate]}
             >
-                {props.formikProps.errors[FormField.foodSecurityRate]}
+                {props.formikProps.errors[BaseSurveyFormField.foodSecurityRate]}
             </HelperText>
             <TextCheckBox
-                field={FormField.enoughFoodPerMonth}
-                value={props.formikProps.values[FormField.enoughFoodPerMonth]}
-                label={fieldLabels[FormField.enoughFoodPerMonth]}
+                field={BaseSurveyFormField.enoughFoodPerMonth}
+                value={props.formikProps.values[BaseSurveyFormField.enoughFoodPerMonth]}
+                label={baseFieldLabels[BaseSurveyFormField.enoughFoodPerMonth]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
             <TextCheckBox
-                field={FormField.isChild}
-                value={props.formikProps.values[FormField.isChild]}
-                label={fieldLabels[FormField.isChild]}
+                field={BaseSurveyFormField.isChild}
+                value={props.formikProps.values[BaseSurveyFormField.isChild]}
+                label={baseFieldLabels[BaseSurveyFormField.isChild]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
-            {props.formikProps.values[FormField.isChild] && (
+            {props.formikProps.values[BaseSurveyFormField.isChild] && (
                 <View>
                     <Text style={styles.pickerQuestion}>
                         What is this child nutritional status?
                     </Text>
 
                     <Picker
-                        selectedValue={props.formikProps.values[FormField.childNourish]}
+                        selectedValue={props.formikProps.values[BaseSurveyFormField.childNourish]}
                         style={styles.picker}
                         onValueChange={(itemValue) => {
-                            props.formikProps.setFieldTouched(FormField.childNourish, true);
-                            props.formikProps.setFieldValue(FormField.childNourish, itemValue);
+                            props.formikProps.setFieldTouched(
+                                BaseSurveyFormField.childNourish,
+                                true
+                            );
+                            props.formikProps.setFieldValue(
+                                BaseSurveyFormField.childNourish,
+                                itemValue
+                            );
                             itemValue === "M" ? showAlert() : hideAlert();
                         }}
                     >
@@ -73,12 +85,12 @@ const FoodForm = (props: IFormProps) => {
                     <HelperText
                         style={styles.errorText}
                         type="error"
-                        visible={!!props.formikProps.errors[FormField.childNourish]}
+                        visible={!!props.formikProps.errors[BaseSurveyFormField.childNourish]}
                     >
-                        {props.formikProps.errors[FormField.childNourish]}
+                        {props.formikProps.errors[BaseSurveyFormField.childNourish]}
                     </HelperText>
 
-                    {props.formikProps.values[FormField.childNourish] === "M" && (
+                    {props.formikProps.values[BaseSurveyFormField.childNourish] === "M" && (
                         <View>
                             <Portal>
                                 <Dialog visible={alertInfo} onDismiss={showAlert}>

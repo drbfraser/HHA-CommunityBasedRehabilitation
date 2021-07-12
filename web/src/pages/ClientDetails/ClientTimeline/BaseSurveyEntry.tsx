@@ -16,7 +16,7 @@ import { Skeleton, Alert } from "@material-ui/lab";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import { useStyles } from "./Entry.styles";
-import { FormField, fieldLabels } from "@cbr/common/forms/BaseSurvey/baseSurveyFormFields";
+import { BaseSurveyFormField, baseFieldLabels } from "@cbr/common/forms/BaseSurvey/baseSurveyFormFields";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import { Assignment } from "@material-ui/icons";
 import {
@@ -55,62 +55,62 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
     };
 
     const surveyInfo: ISurveyForm = {
-        [FormField.health]: {
-            [FormField.health]: rateLevel[survey.health].name,
-            [FormField.getService]: survey.health_have_rehabilitation_access,
-            [FormField.needService]: survey.health_need_rehabilitation_access,
-            [FormField.haveDevice]: survey.health_have_assistive_device,
-            [FormField.deviceWorking]: survey.health_working_assistive_device,
-            [FormField.needDevice]: survey.health_need_assistive_device,
-            [FormField.deviceType]:
+        [BaseSurveyFormField.health]: {
+            [BaseSurveyFormField.health]: rateLevel[survey.health].name,
+            [BaseSurveyFormField.getService]: survey.health_have_rehabilitation_access,
+            [BaseSurveyFormField.needService]: survey.health_need_rehabilitation_access,
+            [BaseSurveyFormField.haveDevice]: survey.health_have_assistive_device,
+            [BaseSurveyFormField.deviceWorking]: survey.health_working_assistive_device,
+            [BaseSurveyFormField.needDevice]: survey.health_need_assistive_device,
+            [BaseSurveyFormField.deviceType]:
                 survey.health_assistive_device_type !== undefined
                     ? deviceTypes[survey.health_assistive_device_type]
                     : "",
-            [FormField.serviceSatisf]: rateLevel[survey.health_services_satisfaction].name,
+            [BaseSurveyFormField.serviceSatisf]: rateLevel[survey.health_services_satisfaction].name,
         },
-        [FormField.education]: {
-            [FormField.goSchool]: survey.school_currently_attend,
-            [FormField.grade]: grade[survey.school_grade as Grade]?.name ?? "",
-            [FormField.reasonNotSchool]:
+        [BaseSurveyFormField.education]: {
+            [BaseSurveyFormField.goSchool]: survey.school_currently_attend,
+            [BaseSurveyFormField.grade]: grade[survey.school_grade as Grade]?.name ?? "",
+            [BaseSurveyFormField.reasonNotSchool]:
                 survey.school_not_attend_reason !== undefined
                     ? reasonNotSchool[survey.school_not_attend_reason]
                     : "",
-            [FormField.beenSchool]: survey.school_ever_attend,
-            [FormField.wantSchool]: survey.school_want_attend,
+            [BaseSurveyFormField.beenSchool]: survey.school_ever_attend,
+            [BaseSurveyFormField.wantSchool]: survey.school_want_attend,
         },
-        [FormField.social]: {
-            [FormField.feelValue]: survey.social_community_valued,
-            [FormField.feelIndependent]: survey.social_independent,
-            [FormField.ableInSocial]: survey.social_able_participate,
-            [FormField.disabiAffectSocial]: survey.social_affected_by_disability,
-            [FormField.disabiDiscrimination]: survey.social_discrimination,
+        [BaseSurveyFormField.social]: {
+            [BaseSurveyFormField.feelValue]: survey.social_community_valued,
+            [BaseSurveyFormField.feelIndependent]: survey.social_independent,
+            [BaseSurveyFormField.ableInSocial]: survey.social_able_participate,
+            [BaseSurveyFormField.disabiAffectSocial]: survey.social_affected_by_disability,
+            [BaseSurveyFormField.disabiDiscrimination]: survey.social_discrimination,
         },
-        [FormField.livelihood]: {
-            [FormField.isWorking]: survey.work,
-            [FormField.job]: survey.work_what,
-            [FormField.isSelfEmployed]:
+        [BaseSurveyFormField.livelihood]: {
+            [BaseSurveyFormField.isWorking]: survey.work,
+            [BaseSurveyFormField.job]: survey.work_what,
+            [BaseSurveyFormField.isSelfEmployed]:
                 survey.work_status !== undefined ? isSelfEmployed[survey.work_status] : "",
-            [FormField.meetFinanceNeeds]: survey.work_meet_financial_needs,
-            [FormField.disabiAffectWork]: survey.work_affected_by_disability,
-            [FormField.wantWork]: survey.work_want,
+            [BaseSurveyFormField.meetFinanceNeeds]: survey.work_meet_financial_needs,
+            [BaseSurveyFormField.disabiAffectWork]: survey.work_affected_by_disability,
+            [BaseSurveyFormField.wantWork]: survey.work_want,
         },
-        [FormField.foodAndNutrition]: {
-            [FormField.foodSecurityRate]: rateLevel[survey.food_security].name,
-            [FormField.enoughFoodPerMonth]: survey.food_enough_monthly,
-            [FormField.childNourish]:
+        [BaseSurveyFormField.foodAndNutrition]: {
+            [BaseSurveyFormField.foodSecurityRate]: rateLevel[survey.food_security].name,
+            [BaseSurveyFormField.enoughFoodPerMonth]: survey.food_enough_monthly,
+            [BaseSurveyFormField.childNourish]:
                 survey.food_enough_for_child !== undefined
                     ? childNourish[survey.food_enough_for_child]
                     : "",
         },
-        [FormField.empowerment]: {
-            [FormField.memOfOrgan]: survey.empowerment_organization_member,
-            [FormField.organization]: survey.empowerment_organization,
-            [FormField.awareRight]: survey.empowerment_rights_awareness,
-            [FormField.ableInfluence]: survey.empowerment_influence_others,
+        [BaseSurveyFormField.empowerment]: {
+            [BaseSurveyFormField.memOfOrgan]: survey.empowerment_organization_member,
+            [BaseSurveyFormField.organization]: survey.empowerment_organization,
+            [BaseSurveyFormField.awareRight]: survey.empowerment_rights_awareness,
+            [BaseSurveyFormField.ableInfluence]: survey.empowerment_influence_others,
         },
-        [FormField.shelterAndCare]: {
-            [FormField.haveShelter]: survey.shelter_adequate,
-            [FormField.accessItem]: survey.shelter_essential_access,
+        [BaseSurveyFormField.shelterAndCare]: {
+            [BaseSurveyFormField.haveShelter]: survey.shelter_adequate,
+            [BaseSurveyFormField.accessItem]: survey.shelter_essential_access,
         },
     };
 
@@ -130,7 +130,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
                     }
 
                     return {
-                        title: fieldLabels[k as FormField],
+                        title: baseFieldLabels[k as BaseSurveyFormField],
                         desc: desc ?? "",
                     };
                 })
@@ -140,7 +140,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
                 <Accordion key={categoryName} className={styles.impOutcomeAccordion}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>
-                            <b>{fieldLabels[categoryName as FormField]}</b>
+                            <b>{baseFieldLabels[categoryName as BaseSurveyFormField]}</b>
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>

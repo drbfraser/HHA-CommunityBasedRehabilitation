@@ -6,10 +6,10 @@ import {
     empowermentValidationSchema,
     emptyValidationSchema,
     foodValidationSchema,
-    FormField,
+    BaseSurveyFormField,
     healthValidationSchema,
     IFormProps,
-    initialValues,
+    baseInitialValues,
     livelihoodValidationSchema,
     surveyTypes,
 } from "@cbr/common";
@@ -55,7 +55,7 @@ const BaseSurvey = () => {
                     }
                 }
 
-                helpers.setFieldValue(`${[FormField.client]}`, 1);
+                helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, 1);
                 // helpers.setFieldValue(`${[FormField.client]}`, clientId);
             }
             if (step === 0 || step === 3) {
@@ -108,7 +108,7 @@ const BaseSurvey = () => {
     ];
     return (
         <Formik
-            initialValues={initialValues}
+            initialValues={baseInitialValues}
             validationSchema={surveySteps[step].validationSchema}
             onSubmit={nextStep}
             enableReinitialize

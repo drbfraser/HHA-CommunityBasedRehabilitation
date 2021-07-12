@@ -1,26 +1,19 @@
 import React, { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Text, Divider, Appbar } from "react-native-paper";
-// import {
-//     FormField,
-//     IFormProps,
-//     initialValues,
-//     surveyTypes,
-// } from "@cbr/common";
 import { Formik, FormikHelpers } from "formik";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { IFormProps, themeColors } from "@cbr/common";
-// import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./baseSurvey.style";
 import { handleSubmit } from "./formHandler";
 import {
-    fieldLabels,
-    FormField,
-    initialValues,
+     referralFieldLabels,
+     ReferralFormField,
+     referralInitialValues,
     otherServicesValidationSchema,
     physiotherapyValidationSchema,
     prostheticOrthoticValidationSchema,
     wheelchairValidationSchema,
-} from "./formFields";
+} from "@cbr/common";
 import WheelchairForm from "./ReferralForm/WheelchairForm";
 import PhysiotherapyForm from "./ReferralForm/PhysiotherapyForm";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewReferral.styles";
@@ -35,7 +28,7 @@ interface IService {
 
 const NewReferral = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
-    const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
+    const [enabledSteps, setEnabledSteps] = useState<ReferralFormField[]>([]);
     const [submissionError, setSubmissionError] = useState(false);
     const styles = useStyles();
     const [stepChecked, setStepChecked] = useState([false]);
@@ -58,27 +51,27 @@ const NewReferral = () => {
 
     const services: IService[] = [
         {
-            label: `${fieldLabels[FormField.wheelchair]} Visit`,
+            label: `${referralFieldLabels[ReferralFormField.wheelchair]} Visit`,
             Form: WheelchairForm,
             validationSchema: wheelchairValidationSchema,
         },
         {
-            label: `${fieldLabels[FormField.physiotherapy]} Visit`,
+            label: `${referralFieldLabels[ReferralFormField.physiotherapy]} Visit`,
             Form: PhysiotherapyForm,
             validationSchema: physiotherapyValidationSchema,
         },
         {
-            label: `${fieldLabels[FormField.prosthetic]} Visit`,
-            Form: (formikProps) => ProstheticOrthoticForm(formikProps, FormField.prosthetic),
-            validationSchema: () => prostheticOrthoticValidationSchema(FormField.prosthetic),
+            label: `${referralFieldLabels[ReferralFormField.prosthetic]} Visit`,
+            Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.prosthetic),
+            validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.prosthetic),
         },
         {
-            label: `${fieldLabels[FormField.orthotic]} Visit`,
-            Form: (formikProps) => ProstheticOrthoticForm(formikProps, FormField.orthotic),
-            validationSchema: () => prostheticOrthoticValidationSchema(FormField.orthotic),
+            label: `${referralFieldLabels[ReferralFormField.orthotic]} Visit`,
+            Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.orthotic),
+            validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.orthotic),
         },
         {
-            label: `${fieldLabels[FormField.servicesOther]} Visit`,
+            label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,
             Form: OtherServicesForm,
             validationSchema: otherServicesValidationSchema,
         },
@@ -86,7 +79,7 @@ const NewReferral = () => {
 
     return (
         <Formik
-            initialValues={initialValues}
+            initialValues={referralInitialValues}
             validationSchema={services[activeStep].validationSchema}
             onSubmit={nextStep}
             enableReinitialize

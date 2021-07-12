@@ -15,7 +15,7 @@ export interface IScreen {
 const screens: IScreen[] = [
     {
         name: "Dashboard",
-        Component: Todo,
+        Component: NewReferral,
         iconName: "home",
     },
     // TODO: Waiting until clients screen is done
@@ -38,7 +38,7 @@ const screens: IScreen[] = [
     {
         name: "Stats",
         roles: [UserRole.ADMIN],
-        Component: NewReferral,
+        Component: Todo,
         iconName: "chart-bar",
     },
     {

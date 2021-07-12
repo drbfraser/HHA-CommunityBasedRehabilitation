@@ -1,9 +1,8 @@
 import React from "react";
 import { View } from "react-native";
-import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import { Text, Paragraph, RadioButton, List, TextInput, HelperText } from "react-native-paper";
+import { Text, TextInput, HelperText } from "react-native-paper";
 import useStyles from "../NewReferral.styles";
-import { fieldLabels, FormField, IFormProps } from "../formFields";
+import { referralFieldLabels, ReferralFormField, IFormProps } from "@cbr/common";
 
 const OtherServicesForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -13,18 +12,18 @@ const OtherServicesForm = (props: IFormProps) => {
             <Text>Please describe the referral</Text>
             <TextInput
                 mode="outlined"
-                label={fieldLabels[FormField.otherDescription]}
-                value={props.formikProps.values[FormField.otherDescription]}
+                label={referralFieldLabels[ReferralFormField.otherDescription]}
+                value={props.formikProps.values[ReferralFormField.otherDescription]}
                 onChangeText={(value) =>
-                    props.formikProps.setFieldValue(FormField.otherDescription, value)
+                    props.formikProps.setFieldValue(ReferralFormField.otherDescription, value)
                 }
             />
             <HelperText
                 style={styles.errorText}
                 type="error"
-                visible={!!props.formikProps.errors[FormField.otherDescription]}
+                visible={!!props.formikProps.errors[ReferralFormField.otherDescription]}
             >
-                {props.formikProps.errors[FormField.otherDescription]}
+                {props.formikProps.errors[ReferralFormField.otherDescription]}
             </HelperText>
         </View>
     );

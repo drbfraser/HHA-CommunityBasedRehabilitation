@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { commonConfiguration } from "../../init";
 import EventEmitter from "events";
 
@@ -149,7 +149,7 @@ export class APICacheData<TValue, TLoading, TError> {
         }
 
         if (reFetch) {
-            // Wait until we've attempted to re-fetch.
+            // Wait until we've attempted to re-fetch before notifying listeners.
             await this.getCachedValueInner();
         }
 
@@ -194,17 +194,29 @@ export class APICacheData<TValue, TLoading, TError> {
     useCacheHook(): () => TValue | TLoading | TError {
         return () => {
             const [value, setValue] = useState<TValue | TError | undefined>(this._value);
+            const isMounted = useRef(false);
 
             useEffect(() => {
+                isMounted.current = true;
+
                 if (this.isInvalidated) {
-                    this.getCachedValueInner().then((v) => setValue(v.value));
+                    this.getCachedValueInner().then((v) => {
+                        if (isMounted.current) {
+                            setValue(v.value);
+                        }
+                    });
                 }
 
                 const listener: InvalidationListener = () => {
-                    this.getCachedValueInner().then((v) => setValue(v.value));
+                    this.getCachedValueInner().then((v) => {
+                        if (isMounted.current) {
+                            setValue(v.value);
+                        }
+                    });
                 };
                 this.addInvalidationListener(listener);
                 return () => {
+                    isMounted.current = false;
                     this.removeInvalidationListener(listener);
                 };
             }, []);

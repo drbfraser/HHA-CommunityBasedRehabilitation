@@ -8,6 +8,7 @@ import { fetchClientDetailsFromApi } from "./ClientRequests";
 import {
     IReferral,
     ISurvey,
+    objectToFormData,
     timestampToDate,
     timestampToDateObj,
 } from "../../../node_modules/@cbr/common";
@@ -23,6 +24,10 @@ import { IVisitSummary } from "../../util/visits";
 import { ActivityDTO, ActivityType, SummaryActivity } from "./Activity";
 import { TimeLineDate } from "./TimeLineDate";
 import { useZones, IZone, TZoneMap, getZones } from "@cbr/common/src/util/hooks/zones";
+import { Field, Form, Formik, validateYupSchema } from "formik";
+import { stringify } from "querystring";
+import * as Yup from "yup";
+import { ClientDetails } from "./ClientDetails";
 
 /*
     Use client image instead of randomly generated
@@ -100,7 +105,6 @@ const Client = (props: ClientProps) => {
             }
             console.log(tempDisabilityList);
             setDisability(tempDisabilityList);
-
             setClientCreateDate(presentClient.clientCreatedDate);
             setClientVisits(presentClient.clientVisits);
             setClientReferrals(presentClient.clientReferrals);
@@ -286,6 +290,7 @@ const Client = (props: ClientProps) => {
             <Divider></Divider>
             <Text style={styles.cardSectionTitle}>Client Details</Text>
             <Divider></Divider>
+            <ClientDetails firstName={firstName} lastName={lastName} />
             <Card style={styles.clientDetailsContainerStyles}>
                 <TextInput
                     style={styles.clientTextStyle}

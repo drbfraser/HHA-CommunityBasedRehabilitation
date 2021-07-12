@@ -53,13 +53,14 @@ const Client = (props: ClientProps) => {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [village, setVillage] = useState("");
+    const [gender, setGender] = useState("");
     const [zone, setZone] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [caregiverPresent, setCaregiverPresent] = React.useState(false);
     const [caregiverName, setCaregiverName] = React.useState("");
     const [caregiverEmail, setCaregiverEmail] = React.useState("");
     const [caregiverPhone, setCaregiverPhone] = React.useState("");
-    const [clientDisability, setDisability] = useState<String[]>([]);
+    const [clientDisability, setDisability] = useState<string[]>([]);
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);
@@ -67,20 +68,6 @@ const Client = (props: ClientProps) => {
     const [clientReferrals, setClientReferrals] = useState<IReferral[]>();
     const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
     const [allRecentActivity, setRecentActivity] = useState<ActivityDTO[]>();
-
-    //Editable values to have temporary storages if cancel is pressed
-    const [tempDate, setTempDate] = useState(new Date());
-    const [tempFirstName, setTempFirstName] = useState("");
-    const [tempLastName, setTempLastName] = useState("");
-    const [tempVillage, setTempVillage] = useState("");
-    const [tempZone, setTempZone] = useState("");
-    const [tempPhoneNumber, setTempPhoneNumber] = useState("");
-    const [tempCaregiverPresent, setTempCaregiverPresent] = React.useState(false);
-    const [tempCaregiverName, setTempCaregiverName] = React.useState("");
-    const [tempCaregiverEmail, setTempCaregiverEmail] = React.useState("");
-    const [tempCaregiverPhone, setTempCaregiverPhone] = React.useState("");
-    const [tempClientDisabilityIndex, setTempClientDisabilityIndex] = useState([0]);
-    const [tempClientDisability, setTempDisability] = useState<String[]>([""]);
 
     useEffect(() => {
         const getClientDetails = async () => {
@@ -93,6 +80,7 @@ const Client = (props: ClientProps) => {
             setZone(Array.from(zoneList.entries())[presentClient.zone][1]);
             setPhoneNumber(presentClient.phoneNumber);
             setCaregiverPresent(presentClient.careGiverPresent);
+            setGender(presentClient.gender);
             if (caregiverPresent) {
                 setCaregiverName(presentClient.careGiverName);
                 setCaregiverPhone(presentClient.careGiverPhoneNumber);
@@ -100,79 +88,16 @@ const Client = (props: ClientProps) => {
             }
             var tempDisabilityList: string[] = [];
             for (let entry of presentClient.disabilities) {
-                console.log("The index is: " + entry);
                 tempDisabilityList.push(Array.from(disabilityList.entries())[entry - 1][1]);
             }
-            console.log(tempDisabilityList);
             setDisability(tempDisabilityList);
             setClientCreateDate(presentClient.clientCreatedDate);
             setClientVisits(presentClient.clientVisits);
             setClientReferrals(presentClient.clientReferrals);
             setClientSurveys(presentClient.clientSurveys);
-
-            setTempDate(timestampToDateObj(Number(presentClient?.birthdate)));
-            setTempFirstName(presentClient.first_name);
-            setTempLastName(presentClient.last_name);
-            setTempVillage(presentClient.village);
-            setTempZone(Array.from(zoneList.entries())[presentClient.zone][1]);
-            setTempPhoneNumber(presentClient.phoneNumber);
-            setTempCaregiverPresent(presentClient.careGiverPresent);
-            if (caregiverPresent) {
-                setTempCaregiverName(presentClient.careGiverName);
-                setTempCaregiverPhone(presentClient.careGiverPhoneNumber);
-                setTempCaregiverEmail(presentClient.careGiverEmail);
-            }
         };
         getClientDetails();
     }, []);
-
-    //DatePicker variables
-
-    const [show, setShow] = useState(false);
-
-    const onDateChange = useCallback(
-        (event, newDate) => {
-            setShow(Platform.OS === "ios");
-            if (newDate) setDate(newDate);
-            setShow(false);
-        },
-        [show, date]
-    );
-
-    const showDatepicker = () => {
-        setShow(true);
-    };
-
-    const datePicker = () => {
-        return (
-            <View style={styles.clientBirthdayButtons}>
-                <View>
-                    <Button disabled={editMode} mode="contained" onPress={showDatepicker}>
-                        Edit
-                    </Button>
-                </View>
-                {show && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={date}
-                        mode="date"
-                        display="default"
-                        onChange={onDateChange}
-                    />
-                )}
-            </View>
-        );
-    };
-
-    //Disability Menu editable toggle variables
-    const [disabilityVisible, setDisabilityVisible] = React.useState(false);
-    const openDisabilityMenu = () => setDisabilityVisible(true);
-    const closeDisabilityMenu = () => setDisabilityVisible(false);
-
-    //Zone Menu editable toggle variables
-    const [zonesVisible, setZonesVisible] = React.useState(false);
-    const openZonesMenu = () => setZonesVisible(true);
-    const closeZonesMenu = () => setZonesVisible(false);
 
     //Overall Screen editable toggle variables
     const [editMode, setEditMode] = React.useState(true);
@@ -183,37 +108,12 @@ const Client = (props: ClientProps) => {
             setCancelButtonType("contained");
         } else {
             //Make the PUT Api Call to edit client here since this is the save click
-
-            setTempFirstName(firstName);
-            setTempLastName(lastName);
-            setTempDate(date);
-            setTempVillage(village);
-            setTempZone(zone);
-            setTempPhoneNumber(phoneNumber);
-            setTempCaregiverPresent(caregiverPresent);
-            setTempCaregiverName(caregiverName);
-            setTempCaregiverPhone(caregiverPhone);
-            setTempCaregiverEmail(caregiverEmail);
             setEditMode(true);
             setCancelButtonType("outlined");
         }
     };
-    const cancelEdit = () => {
-        //Discard any changes and reset the text fields to show what they originially did
-        setEditMode(true);
-        setCancelButtonType("outlined");
-        setFirstName(tempFirstName);
-        setLastName(tempLastName);
-        setDate(tempDate);
-        setVillage(tempVillage);
-        setZone(tempZone);
-        setPhoneNumber(tempPhoneNumber);
-        setCaregiverPresent(tempCaregiverPresent);
-        setCaregiverName(tempCaregiverName);
-        setCaregiverPhone(tempCaregiverPhone);
-        setCaregiverEmail(tempCaregiverEmail);
-    };
 
+    //Activity component rendering
     var tempActivity: ActivityDTO[];
     tempActivity = [];
     if (clientVisits) {
@@ -290,178 +190,22 @@ const Client = (props: ClientProps) => {
             <Divider></Divider>
             <Text style={styles.cardSectionTitle}>Client Details</Text>
             <Divider></Divider>
-            <ClientDetails firstName={firstName} lastName={lastName} />
+
             <Card style={styles.clientDetailsContainerStyles}>
-                <TextInput
-                    style={styles.clientTextStyle}
-                    label="First Name: "
-                    value={firstName}
-                    onChangeText={(text) => setFirstName(text)}
-                    disabled={editMode}
-                    editable={true}
+                <ClientDetails
+                    firstName={firstName}
+                    lastName={lastName}
+                    date={date}
+                    gender={gender}
+                    village={village}
+                    zone={zone}
+                    phone={phoneNumber}
+                    caregiverPresent={caregiverPresent}
+                    caregiverName={caregiverName}
+                    caregiverEmail={caregiverEmail}
+                    caregiverPhone={caregiverPhone}
+                    clientDisability={clientDisability}
                 />
-                <TextInput
-                    style={styles.clientTextStyle}
-                    label="Last Name: "
-                    value={lastName}
-                    onChangeText={(text) => setLastName(text)}
-                    disabled={editMode}
-                    editable={true}
-                />
-                <Text> Birthdate: </Text>
-                <View style={styles.clientBirthdayView}>
-                    <Text style={styles.carePresentCheckBox}>{date.toDateString()}</Text>
-                    <View>{datePicker()}</View>
-                </View>
-                <TextInput
-                    style={styles.clientTextStyle}
-                    label="Village # "
-                    value={village}
-                    onChangeText={(text) => setVillage(text)}
-                    disabled={editMode}
-                    editable={true}
-                />
-                <View>
-                    <Text> Zone:</Text>
-                    <Text style={styles.carePresentCheckBox}> {zone} </Text>
-                    <Menu
-                        visible={zonesVisible}
-                        onDismiss={closeZonesMenu}
-                        anchor={
-                            <Button
-                                mode="contained"
-                                style={styles.disabilityButton}
-                                disabled={editMode}
-                                onPress={openZonesMenu}
-                            >
-                                Edit Zones
-                            </Button>
-                        }
-                    >
-                        {Array.from(zoneList.entries()).map(([key, value]) => {
-                            return (
-                                <Menu.Item
-                                    key={key}
-                                    title={value}
-                                    onPress={() => {
-                                        setZone(value);
-                                        closeZonesMenu();
-                                    }}
-                                />
-                            );
-                        })}
-                    </Menu>
-                </View>
-                <TextInput
-                    style={styles.clientTextStyle}
-                    label="Phone Number "
-                    value={phoneNumber}
-                    onChangeText={(text) => setPhoneNumber(text)}
-                    disabled={editMode}
-                    editable={true}
-                />
-                <TextInput
-                    style={styles.clientTextStyle}
-                    label="Disability "
-                    value="TODO"
-                    disabled={editMode}
-                    editable={true}
-                />
-                <View>
-                    <Text> Disability:</Text>
-                    {clientDisability.map((disability) => {
-                        return <Text style={styles.carePresentCheckBox}> {disability} </Text>;
-                    })}
-                    <Menu
-                        visible={disabilityVisible}
-                        onDismiss={closeDisabilityMenu}
-                        anchor={
-                            <Button
-                                mode="contained"
-                                style={styles.disabilityButton}
-                                disabled={editMode}
-                                onPress={openDisabilityMenu}
-                            >
-                                Edit Disability
-                            </Button>
-                        }
-                    >
-                        {Array.from(disabilityList.entries()).map(([key, value]) => {
-                            return (
-                                <Menu.Item
-                                    key={key}
-                                    title={value}
-                                    onPress={() => {
-                                        //clientDisability.push(value);
-                                        closeDisabilityMenu();
-                                    }}
-                                />
-                            );
-                        })}
-                    </Menu>
-                </View>
-                <View style={styles.carePresentView}>
-                    <Text style={styles.carePresentCheckBox}>Caregiver Present</Text>
-                    <Checkbox
-                        status={caregiverPresent ? "checked" : "unchecked"}
-                        onPress={() => {
-                            setCaregiverPresent(!caregiverPresent);
-                        }}
-                        disabled={editMode}
-                    />
-                </View>
-                {caregiverPresent ? (
-                    <View>
-                        <TextInput
-                            style={styles.clientTextStyle}
-                            label="Caregiver Name"
-                            value={caregiverName}
-                            onChangeText={(text) => setCaregiverName(text)}
-                            disabled={editMode}
-                            editable={true}
-                        />
-                        <TextInput
-                            style={styles.clientTextStyle}
-                            label="Caregiver Phone Number"
-                            value={caregiverPhone}
-                            onChangeText={(text) => setCaregiverPhone(text)}
-                            disabled={editMode}
-                            editable={true}
-                        />
-                        <TextInput
-                            style={styles.clientTextStyle}
-                            label="Caregiver Email"
-                            value={caregiverEmail}
-                            onChangeText={(text) => setCaregiverEmail(text)}
-                            disabled={editMode}
-                            editable={true}
-                        />
-                    </View>
-                ) : (
-                    <></>
-                )}
-                <View style={styles.clientDetailsFinalView}>
-                    <Button
-                        mode="contained"
-                        style={styles.clientDetailsFinalButtons}
-                        disabled={false}
-                        onPress={enableButtons}
-                    >
-                        {editMode ? "Edit" : "Save"}
-                    </Button>
-                    {editMode ? (
-                        <></>
-                    ) : (
-                        <Button
-                            mode={cancelButtonType}
-                            style={styles.clientDetailsFinalButtons}
-                            disabled={editMode}
-                            onPress={cancelEdit}
-                        >
-                            Cancel
-                        </Button>
-                    )}
-                </View>
             </Card>
             <Divider></Divider>
             <Text style={styles.cardSectionTitle}>Client Risks</Text>

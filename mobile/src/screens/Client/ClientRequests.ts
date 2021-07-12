@@ -8,6 +8,7 @@ export type ClientDTO = {
     last_name: string;
     birthdate: number | string;
     village: string;
+    gender: string;
     phoneNumber: string;
     zone: number;
     disabilities: number[];
@@ -31,6 +32,7 @@ export const fetchClientDetailsFromApi = async (clientId: number): Promise<Clien
         last_name: response.last_name,
         birthdate: response.birth_date,
         village: response.village,
+        gender: response.gender,
         phoneNumber: response.phone_number,
         zone: response.zone,
         disabilities: response.disability,

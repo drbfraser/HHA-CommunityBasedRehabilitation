@@ -3,13 +3,17 @@ import { StyleSheet } from "react-native";
 const useStyles = (color: string) =>
     StyleSheet.create({
         alertContainer: {
-            flex: 1,
             flexDirection: "row",
             alignItems: "center",
-            justifyContent: "flex-start",
+            justifyContent: "space-between",
             padding: 10,
-            borderRadius: 10,
+            borderRadius: 7,
             backgroundColor: color,
+        },
+        iconAndTextContainer: {
+            flexDirection: "row",
+            alignItems: "center",
+            flex: 1,
         },
         icon: { alignSelf: "flex-start" },
         text: {
@@ -18,6 +22,11 @@ const useStyles = (color: string) =>
             fontSize: 16,
             fontWeight: "bold",
             flexShrink: 1,
+        },
+        actionIconButton: {
+            padding: 5,
+            alignSelf: "center",
+            justifyContent: "flex-end",
         },
     });
 

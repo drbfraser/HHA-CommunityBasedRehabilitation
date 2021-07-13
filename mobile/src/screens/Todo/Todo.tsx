@@ -3,14 +3,15 @@ import { View } from "react-native";
 import { Button, Text, Title } from "react-native-paper";
 import useStyles from "./Todo.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
+import { useNavigation } from "@react-navigation/core";
 
 const Todo = () => {
     const styles = useStyles();
     const authContext = useContext(AuthContext);
-
     useEffect(() => {
         authContext.requireLoggedIn(true);
     }, []);
+    const navigation = useNavigation();
 
     return (
         <View style={styles.container}>

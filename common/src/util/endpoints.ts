@@ -26,6 +26,38 @@ export enum Endpoint {
 export const APILoadError = "APILoadError";
 export type TAPILoadError = typeof APILoadError;
 
+/**
+ * Represents a failed response from calling {@link apiFetch}.
+ */
+export class APIFetchFailError extends Error {
+    /**
+     * The status code from the response.
+     */
+    readonly status: number;
+    /**
+     * The response data, which may contain an error message from the server.
+     */
+    readonly response: Readonly<any>;
+
+    constructor(message: string, status: number, response: any) {
+        super(message);
+        this.status = status;
+        this.response = response;
+    }
+}
+
+/**
+ * Performs a fetch to the server. The returned Promise rejects on both HTTP errors and network
+ * errors.
+ *
+ * @return A Promise that resolves to a successful {@link Response} from the server.
+ * @throws APIFetchFailError if the response from the server is not successful (HTTP error).
+ * @param endpoint The endpoint to fetch data from
+ * @param urlParams A string to put after the API endpoint, like a number to refer to an ID. By
+ * default, this is blank.
+ * @param customInit An object containing any custom settings that you want to apply to the request.
+ * By default, this is empty. The access token is always placed in the request headers.
+ */
 export const apiFetch = async (
     endpoint: Endpoint,
     urlParams: string = "",
@@ -52,9 +84,10 @@ export const apiFetch = async (
 
     return fetch(url, init).then(async (resp) => {
         if (!resp.ok) {
-            const msg = "API Fetch failed with HTTP Status " + resp.status;
-            console.error(msg);
-            return Promise.reject(msg);
+            const jsonPromise = resp.json();
+            const message = `API Fetch failed with HTTP Status ${resp.status}`;
+            console.error(message);
+            return Promise.reject(new APIFetchFailError(message, resp.status, await jsonPromise));
         }
 
         return resp;

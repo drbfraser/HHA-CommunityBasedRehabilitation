@@ -2,7 +2,8 @@
   "compilerOptions": {
     "jsx": "react",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noImplicitAny": false
   },
   "dependencies": {
     "@common": "./../common"

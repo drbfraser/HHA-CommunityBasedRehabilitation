@@ -15,7 +15,7 @@ Clone the repo using `git`. Ensure you have registered your SSH key with GitLab 
 
 ### 3. Set up Environment Variables
 
-#### Django backend 
+#### Django backend
 
 Create a file named `.env` in the root project directory. It should contain the following:
 
@@ -44,7 +44,7 @@ If you are going to be using an IP address, you will need to specify the port (8
 * If you are going to be developing the app with a physical phone:
   * Ensure that the phone is connected to the same network as the computer that will be running the
     backend.
-  * Use the computer's local IP address for `<some hostname or IP>` above.
+  - Use the computer's local IP address for `<some hostname or IP>` above.
     * On Windows, you can find the local IP by running `ipconfig` in PowerShell or the command line.
     * On macOS and Linux, you can find the IP by running `ifconfig`.
 * If you are going to be developing the app with AVD / Android Emulator, then use `10.0.2.2` as the
@@ -55,8 +55,7 @@ If you are going to be using an IP address, you will need to specify the port (8
   DEV_API_URL="http://10.0.2.2:8000/api/"
   ```
 
-To validate that your specified API URL is being used for a development build, run `expo config
---type public` (or print out the API URL in the app to the console). If you need to change the URL
+To validate that your specified API URL is being used for a development build, run `expo config --type public` (or print out the API URL in the app to the console). If you need to change the URL
 while Expo is running, you will need to stop and restart Expo.
 
 ### 4. Install Required NPM Packages

@@ -53,7 +53,7 @@ const Client = (props: ClientProps) => {
     const [caregiverName, setCaregiverName] = React.useState("");
     const [caregiverEmail, setCaregiverEmail] = React.useState("");
     const [caregiverPhone, setCaregiverPhone] = React.useState("");
-    const [clientDisability, setDisability] = useState<string[]>([]);
+    const [clientDisability, setDisability] = useState<number[]>([]);
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);
@@ -78,31 +78,17 @@ const Client = (props: ClientProps) => {
             setCaregiverPhone(presentClient.careGiverPhoneNumber);
             setCaregiverEmail(presentClient.careGiverEmail);
         }
-
+        console.log(presentClient.disabilities);
+        setDisability(presentClient.disabilities);
         setClientCreateDate(presentClient.clientCreatedDate);
         setClientVisits(presentClient.clientVisits);
         setClientReferrals(presentClient.clientReferrals);
         setClientSurveys(presentClient.clientSurveys);
     };
     useEffect(() => {
-        getClientDetails()
-            .then(() => {
-                var tempDisabilityList: string[] = [];
-                const setDisabilityList = () => {
-                    if (presentClient)
-                        for (let entry of presentClient.disabilities) {
-                            console.log(entry);
-                            tempDisabilityList.push(
-                                Array.from(disabilityList.entries())[entry - 1][1]
-                            );
-                        }
-                    setDisabilityList();
-                    setDisability(tempDisabilityList);
-                };
-            })
-            .then(() => {
-                setLoading(false);
-            });
+        getClientDetails().then(() => {
+            setLoading(false);
+        });
     }, []);
 
     //Overall Screen editable toggle variables

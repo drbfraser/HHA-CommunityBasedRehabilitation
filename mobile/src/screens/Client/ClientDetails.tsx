@@ -4,10 +4,22 @@ import { useCallback, useEffect } from "react";
 import { Component, useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
-import { View, Text, Platform } from "react-native";
-import { Button, Checkbox, List, Menu, TextInput } from "react-native-paper";
+import { View, Text, Platform, ScrollView } from "react-native";
+import {
+    Button,
+    Checkbox,
+    List,
+    Menu,
+    Portal,
+    Provider,
+    TextInput,
+    Modal,
+} from "react-native-paper";
 import clientStyle from "./Client.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import CustomMultiPicker from "react-native-multiple-select-list";
+import MultiSelect from "react-native-multiple-select";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 interface FormProps {
     firstName: string;
@@ -21,21 +33,22 @@ interface FormProps {
     caregiverName?: string;
     caregiverEmail?: string;
     caregiverPhone?: string;
-    clientDisability?: string[];
+    clientDisability?: number[];
 }
 interface FormValues {
-    firstName: string;
-    lastName: string;
-    date: Date;
-    gender: string;
-    village: string;
-    zone: string;
-    phone: string;
+    //isNewClient?: boolean;
+    firstName?: string;
+    lastName?: string;
+    date?: Date;
+    gender?: string;
+    village?: string;
+    zone?: string;
+    phone?: string;
     caregiverPresent?: boolean;
     caregiverName?: string;
     caregiverEmail?: string;
     caregiverPhone?: string;
-    clientDisability?: string[];
+    clientDisability?: number[];
 }
 
 export const ClientDetails = (props: FormProps) => {
@@ -55,7 +68,7 @@ export const ClientDetails = (props: FormProps) => {
     const [caregiverName, setCaregiverName] = React.useState("");
     const [caregiverEmail, setCaregiverEmail] = React.useState("");
     const [caregiverPhone, setCaregiverPhone] = React.useState("");
-    const [clientDisability, setDisability] = useState<string[]>(["N/A"]);
+    const [clientDisability, setDisability] = useState<number[]>([]);
 
     const initialValues: FormValues = {
         firstName: props.firstName,
@@ -117,20 +130,14 @@ export const ClientDetails = (props: FormProps) => {
             });
         }
     };
+
     const DisabilityChecklist = () => {
         return (
             <List.Section>
                 <List.Accordion title="Disability">
                     {Array.from(disabilityList.entries()).map(([key, value]) => {
                         return (
-                            // <Menu.Item
-                            //     key={key}
-                            //     title={value}
-                            //     onPress={() => {
-                            //         console.log(value);
-                            //     }}
-                            // />
-                            <View key={key} style={styles.disabilityCheckling}>
+                            <View key={key} style={styles.disabilityChecking}>
                                 <Text>{value}</Text>
                                 <Checkbox
                                     status="unchecked"
@@ -150,6 +157,7 @@ export const ClientDetails = (props: FormProps) => {
     const [zonesVisible, setZonesVisible] = React.useState(false);
     const openZonesMenu = () => setZonesVisible(true);
     const closeZonesMenu = () => setZonesVisible(false);
+
     return (
         <View>
             <Formik
@@ -266,7 +274,47 @@ export const ClientDetails = (props: FormProps) => {
                         />
 
                         <View>
-                            <DisabilityChecklist></DisabilityChecklist>
+                            <Portal>
+                                <Modal
+                                    visible={disabilityVisible}
+                                    onDismiss={closeDisabilityMenu}
+                                    style={styles.disabilityChecklist}
+                                >
+                                    <View style={styles.nestedScrollView}>
+                                        <View style={styles.disabilityListHeaderContainerStyle}>
+                                            <Text style={styles.disabilityListHeaderStyle}>
+                                                Disability List
+                                            </Text>
+                                        </View>
+                                        <ScrollView nestedScrollEnabled={true}>
+                                            <CustomMultiPicker
+                                                options={Array.from(disabilityList.entries())}
+                                                multiple={true}
+                                                placeholder={"Disability"}
+                                                placeholderTextColor={"#757575"}
+                                                returnValue={"disability_type"}
+                                                callback={(res) => {
+                                                    console.log(res);
+                                                }}
+                                                rowBackgroundColor={"#eee"}
+                                                iconSize={30}
+                                                selectedIconName={"checkmark-circle"}
+                                                unselectedIconName={"radio-button-off"}
+                                                selected={props.clientDisability?.map(String)}
+                                            />
+                                        </ScrollView>
+                                    </View>
+                                </Modal>
+                            </Portal>
+                            <Text> Disability</Text>
+                            <Button
+                                mode="contained"
+                                style={styles.disabilityButton}
+                                disabled={editMode}
+                                onPress={openDisabilityMenu}
+                            >
+                                Edit Disabilities
+                            </Button>
                         </View>
 
                         <View style={styles.carePresentView}>
@@ -344,3 +392,6 @@ export const ClientDetails = (props: FormProps) => {
         </View>
     );
 };
+function getSelectedItemsExt(selectedItems: any): React.ReactNode {
+    throw new Error("Function not implemented.");
+}

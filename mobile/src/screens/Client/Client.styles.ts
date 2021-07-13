@@ -199,12 +199,33 @@ const useStyles = () =>
             flex: 1,
             marginTop: 300,
         },
-        disabilityCheckling: {
+        disabilityCheckContainer: {
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: 5,
-            marginTop: 5,
+            flex: 0,
+        },
+        disabilityListHeaderContainerStyle: {
+            marginTop: 4,
+            alignItems: "center",
+            justifyContent: "center",
+        },
+        disabilityListHeaderStyle: {
+            fontSize: 24,
+        },
+        disabilityChecklist: {
+            flex: 1,
+            justifyContent: "flex-start",
+            height: 400,
+            marginHorizontal: 20,
+            marginTop: 220,
+            marginBottom: 40,
+            display: "flex",
+            backgroundColor: "white",
+            borderRadius: 10,
+        },
+        nestedScrollView: {
+            justifyContent: "center",
+            padding: 20,
+            height: 400,
         },
     });
 

@@ -1,11 +1,21 @@
 import React, { Component, useEffect, useState } from "react";
-import { SafeAreaView, TextInput, View, Button, ScrollView } from "react-native";
-import { Text, Title, List, Appbar, Checkbox, Divider } from "react-native-paper";
+import { SafeAreaView, View, Button, ScrollView } from "react-native";
+import {
+    Text,
+    Title,
+    List,
+    Appbar,
+    Checkbox,
+    Divider,
+    TextInput,
+    HelperText,
+} from "react-native-paper";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import DicTextPicker from "../../components/TextPicker/DicTextPicker";
 import TextPicker from "../../components/TextPicker/TextPicker";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
+// import { IRisk } from "util/risks";
 
 // import { useParams } from "react-router";
 import { getZones, themeColors, useZones, TZoneMap } from "@cbr/common";
@@ -76,50 +86,62 @@ const visitFocusForm = (
             console.log("not checked");
         }
     };
-    console.log(zones);
     return (
         <View>
-            <Formik initialValues={{ village: "" }} onSubmit={(values) => console.log(values)}>
-                <View style={styles.viewPadding}>
-                    <Text style={styles.pickerQuestion}>{"\n"}Where was the Visit? </Text>
-                    <TextInput
-                        // TODO: missing label for formHandler?
-                        style={styles.inputText}
-                        placeholder="Village *"
-                        value={formikProps.values.village}
-                        onChangeText={formikProps.handleChange("village")}
-                    />
-                    <TextPicker
-                        field={FormField.zone}
-                        choices={Array.from(zones.entries()).map(([key, value]) => ({
-                            label: value,
-                            value: key,
-                        }))}
-                        selectedValue={formikProps.values[FormField.zone]}
+            <View style={styles.viewPadding}>
+                <Text style={styles.pickerQuestion}>{"\n"}Where was the Visit? </Text>
+                <Text />
+                <TextInput
+                    mode="outlined"
+                    label={fieldLabels[FormField.village]}
+                    value={formikProps.values[FormField.village]}
+                    onChangeText={(value) => formikProps.setFieldValue(FormField.village, value)}
+                />
+
+                <HelperText
+                    // style={styles.errorText}
+                    type="error"
+                    visible={!!formikProps.errors[FormField.village]}
+                >
+                    {formikProps.errors[FormField.village]}
+                </HelperText>
+
+                <TextPicker
+                    field={FormField.zone}
+                    choices={Array.from(zones.entries()).map(([key, value]) => ({
+                        label: value,
+                        value: key,
+                    }))}
+                    selectedValue={formikProps.values[FormField.zone]}
+                    setFieldValue={formikProps.setFieldValue}
+                    setFieldTouched={formikProps.setFieldTouched}
+                />
+
+                <HelperText
+                    // style={styles.errorText}
+                    type="error"
+                    visible={!!formikProps.errors[FormField.zone]}
+                >
+                    {formikProps.errors[FormField.zone]}
+                </HelperText>
+                <Text style={styles.pickerQuestion}>{"\n"}Select the Reasons for the Visit </Text>
+                {visitTypes.map((visitType) => (
+                    <TextCheckBox
+                        key={visitType}
+                        field={visitType}
+                        value={formikProps.values[visitType]}
+                        label={fieldLabels[visitType]}
                         setFieldValue={formikProps.setFieldValue}
-                        setFieldTouched={formikProps.setFieldTouched}
                     />
-                    <Text style={styles.pickerQuestion}>
-                        {"\n"}Select the Reasons for the Visit{" "}
-                    </Text>
-                    {visitTypes.map((visitType) => (
-                        <TextCheckBox
-                            key={visitType}
-                            field={visitType}
-                            value={formikProps.values[visitType]}
-                            label={fieldLabels[visitType]}
-                            setFieldValue={formikProps.setFieldValue}
-                        />
-                    ))}
-                    {/* <Checkbox
+                ))}
+                {/* <Checkbox
                     status={checked ? "checked" : "unchecked"}
                     onPress={() => {
                         setChecked(!checked);
-                        // onCheckboxChange(formikProps, "HEALTH");
+                        onCheckboxChange(!checked, "HEALTH");
                     }}
                 /> */}
-                </View>
-            </Formik>
+            </View>
         </View>
     );
 };
@@ -138,32 +160,52 @@ const healthVisitForm = (props: IFormProps, visitType: FormField) => {
                     setFieldValue={props.formikProps.setFieldValue}
                 />
             ))}
+            {/* <FieldArray
+                name={FormField.improvements}
+                render={() =>
+                    provisionals[visitType].map((provided, index) => (
+                        <ImprovementField
+                            key={index}
+                            formikProps={formikProps}
+                            visitType={visitType}
+                            provided={provided}
+                            index={index}
+                        />
+                    ))
+                }
+            /> */}
             <Text style={styles.pickerQuestion}>{"\n"}Client's Health Goal </Text>
             <Text style={styles.normalInput}>{"\n"}Improved Learning </Text>
             <Text style={styles.pickerQuestion}>{"\n"}Client's Health Goal Status </Text>
-            <Text style={styles.pickerQuestion}>{"\n"}What is the Outcome of the Goal? </Text>
-            <TextInput
-                // TODO: missing label for formHandler?
-                style={styles.inputText}
-                placeholder="Outcome *"
-                value={props.formikProps.values.outcome}
-                onChangeText={props.formikProps.handleChange("outcome")}
-            />
-            {/* <TextPicker
-                field={GoalStatus.ongoing}
-                // choices={Array.from(zones.entries()).map(([key, value]) => ({
-                //     label: value,
-                //     value: key,
-                // }))}
 
+            <TextPicker
+                field={OutcomeFormField.goalStatus}
                 choices={Object.values(GoalStatus).map((status) => ({
-                    label: status,
+                    label: fieldLabels[status],
                     value: status,
                 }))}
-                selectedValue={props.formikProps.values(GoalStatus)}
+                selectedValue={props.formikProps.values[OutcomeFormField.goalStatus]}
                 setFieldValue={props.formikProps.setFieldValue}
                 setFieldTouched={props.formikProps.setFieldTouched}
-            /> */}
+            />
+
+            <Text style={styles.pickerQuestion}>{"\n"}What is the Outcome of the Goal? </Text>
+
+            <TextInput
+                mode="outlined"
+                label={fieldLabels[OutcomeFormField.outcome]}
+                value={props.formikProps.values[OutcomeFormField.outcome]}
+                onChangeText={(value) =>
+                    props.formikProps.setFieldValue(OutcomeFormField.outcome, value)
+                }
+            />
+            <HelperText
+                // style={styles.errorText}
+                type="error"
+                visible={!!props.formikProps.errors[FormField.village]}
+            >
+                {props.formikProps.errors[FormField.village]}
+            </HelperText>
         </View>
     );
 };
@@ -185,14 +227,34 @@ const educationVisitForm = (props: IFormProps, visitType: FormField) => {
             <Text style={styles.pickerQuestion}>{"\n"}Client's Education Goal </Text>
             <Text style={styles.normalInput}>{"\n"}Additional Mobility </Text>
             <Text style={styles.pickerQuestion}>{"\n"}Client's Education Goal Status </Text>
-            <Text style={styles.pickerQuestion}>{"\n"}What is the Outcome of the Goal? </Text>
-            <TextInput
-                // TODO: missing label for formHandler?
-                style={styles.inputText}
-                placeholder="Outcome *"
-                value={props.formikProps.values.outcome}
-                onChangeText={props.formikProps.handleChange("outcome")}
+            <TextPicker
+                field={OutcomeFormField.goalStatus}
+                choices={Object.values(GoalStatus).map((status) => ({
+                    label: fieldLabels[status],
+                    value: status,
+                }))}
+                selectedValue={props.formikProps.values[OutcomeFormField.goalStatus]}
+                setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
+
+            <Text style={styles.pickerQuestion}>{"\n"}What is the Outcome of the Goal? </Text>
+
+            <TextInput
+                mode="outlined"
+                label={fieldLabels[OutcomeFormField.outcome]}
+                value={props.formikProps.values[OutcomeFormField.outcome]}
+                onChangeText={(value) =>
+                    props.formikProps.setFieldValue(OutcomeFormField.outcome, value)
+                }
+            />
+            <HelperText
+                // style={styles.errorText}
+                type="error"
+                visible={!!props.formikProps.errors[FormField.village]}
+            >
+                {props.formikProps.errors[FormField.village]}
+            </HelperText>
         </View>
     );
 };
@@ -214,14 +276,34 @@ const socialVisitForm = (props: IFormProps, visitType: FormField) => {
             <Text style={styles.pickerQuestion}>{"\n"}Client's Social Goal </Text>
             <Text style={styles.normalInput}>{"\n"}Full Recovery </Text>
             <Text style={styles.pickerQuestion}>{"\n"}Client's Social Goal Status </Text>
-            <Text style={styles.pickerQuestion}>{"\n"}What is the Outcome of the Goal? </Text>
-            <TextInput
-                // TODO: missing label for formHandler?
-                style={styles.inputText}
-                placeholder="Outcome *"
-                value={props.formikProps.values.outcome}
-                onChangeText={props.formikProps.handleChange("outcome")}
+            <TextPicker
+                field={OutcomeFormField.goalStatus}
+                choices={Object.values(GoalStatus).map((status) => ({
+                    label: fieldLabels[status],
+                    value: status,
+                }))}
+                selectedValue={props.formikProps.values[OutcomeFormField.goalStatus]}
+                setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
+
+            <Text style={styles.pickerQuestion}>{"\n"}What is the Outcome of the Goal? </Text>
+
+            <TextInput
+                mode="outlined"
+                label={fieldLabels[OutcomeFormField.outcome]}
+                value={props.formikProps.values[OutcomeFormField.outcome]}
+                onChangeText={(value) =>
+                    props.formikProps.setFieldValue(OutcomeFormField.outcome, value)
+                }
+            />
+            <HelperText
+                // style={styles.errorText}
+                type="error"
+                visible={!!props.formikProps.errors[FormField.village]}
+            >
+                {props.formikProps.errors[FormField.village]}
+            </HelperText>
         </View>
     );
 };
@@ -233,6 +315,8 @@ const NewVisit = () => {
     const styles = useStyles();
     const hideAlert = () => setSubmissionError(false);
     const showAlert = () => setSubmissionError(true);
+
+    // const [risks, setRisks] = useState<IRisk[]>([]);
 
     const [activeStep, setActiveStep] = useState<number>(1);
     const [checked, setChecked] = React.useState(false);

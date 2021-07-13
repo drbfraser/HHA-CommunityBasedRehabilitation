@@ -54,6 +54,7 @@ const Client = (props: ClientProps) => {
     const [caregiverEmail, setCaregiverEmail] = React.useState("");
     const [caregiverPhone, setCaregiverPhone] = React.useState("");
     const [clientDisability, setDisability] = useState<number[]>([]);
+    const [otherDisability, setOtherDisability] = useState("");
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);
@@ -71,6 +72,7 @@ const Client = (props: ClientProps) => {
         setVillage(presentClient.village);
         setZone(Array.from(zoneList.entries())[presentClient.zone][1]);
         setPhoneNumber(presentClient.phoneNumber);
+        setOtherDisability(presentClient.otherDisability);
         setCaregiverPresent(presentClient.careGiverPresent);
         setGender(presentClient.gender);
         if (caregiverPresent) {
@@ -78,7 +80,6 @@ const Client = (props: ClientProps) => {
             setCaregiverPhone(presentClient.careGiverPhoneNumber);
             setCaregiverEmail(presentClient.careGiverEmail);
         }
-        console.log(presentClient.disabilities);
         setDisability(presentClient.disabilities);
         setClientCreateDate(presentClient.clientCreatedDate);
         setClientVisits(presentClient.clientVisits);
@@ -214,6 +215,7 @@ const Client = (props: ClientProps) => {
                             caregiverEmail={caregiverEmail}
                             caregiverPhone={caregiverPhone}
                             clientDisability={clientDisability}
+                            otherDisability={otherDisability}
                         />
                     </Card>
                     <Divider></Divider>

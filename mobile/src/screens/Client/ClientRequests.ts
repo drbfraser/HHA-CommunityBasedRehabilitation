@@ -20,6 +20,7 @@ export type ClientDTO = {
     clientVisits: IVisitSummary[];
     clientReferrals: IReferral[];
     clientSurveys: ISurvey[];
+    otherDisability: string;
 };
 
 export const fetchClientDetailsFromApi = async (clientId: number): Promise<ClientDTO> => {
@@ -44,5 +45,6 @@ export const fetchClientDetailsFromApi = async (clientId: number): Promise<Clien
         clientVisits: response.visits,
         clientReferrals: response.referrals,
         clientSurveys: response.baseline_surveys,
+        otherDisability: response.other_disability,
     };
 };

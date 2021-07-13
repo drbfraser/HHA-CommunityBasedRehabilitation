@@ -207,25 +207,37 @@ const useStyles = () =>
             marginTop: 4,
             alignItems: "center",
             justifyContent: "center",
+            marginBottom: 4,
         },
         disabilityListHeaderStyle: {
             fontSize: 24,
         },
         disabilityChecklist: {
-            flex: 1,
-            justifyContent: "flex-start",
-            height: 400,
+            height: 460,
             marginHorizontal: 20,
-            marginTop: 220,
-            marginBottom: 40,
+            marginTop: 160,
             display: "flex",
             backgroundColor: "white",
             borderRadius: 10,
         },
         nestedScrollView: {
+            display: "flex",
             justifyContent: "center",
             padding: 20,
-            height: 400,
+            height: 460,
+        },
+        nestedScrollStyle: {
+            marginBottom: 20,
+        },
+        otherDisabilityStyle: {
+            marginLeft: 5,
+            marginEnd: 10,
+            height: 60,
+            width: 300,
+            borderBottomLeftRadius: 5,
+            borderBottomRightRadius: 5,
+            borderTopRightRadius: 5,
+            borderTopLeftRadius: 5,
         },
     });
 

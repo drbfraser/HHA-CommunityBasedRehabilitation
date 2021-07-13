@@ -4,7 +4,7 @@ import { useCallback, useEffect } from "react";
 import { Component, useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
-import { View, Text, Platform, ScrollView } from "react-native";
+import { View, Platform, ScrollView } from "react-native";
 import {
     Button,
     Checkbox,
@@ -14,12 +14,11 @@ import {
     Provider,
     TextInput,
     Modal,
+    Text,
 } from "react-native-paper";
 import clientStyle from "./Client.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
-import MultiSelect from "react-native-multiple-select";
-import Icon from "react-native-vector-icons/FontAwesome";
 
 interface FormProps {
     firstName: string;
@@ -34,6 +33,7 @@ interface FormProps {
     caregiverEmail?: string;
     caregiverPhone?: string;
     clientDisability?: number[];
+    otherDisability?: string;
 }
 interface FormValues {
     //isNewClient?: boolean;
@@ -49,6 +49,7 @@ interface FormValues {
     caregiverEmail?: string;
     caregiverPhone?: string;
     clientDisability?: number[];
+    otherDisability?: string;
 }
 
 export const ClientDetails = (props: FormProps) => {
@@ -70,6 +71,18 @@ export const ClientDetails = (props: FormProps) => {
     const [caregiverPhone, setCaregiverPhone] = React.useState("");
     const [clientDisability, setDisability] = useState<number[]>([]);
 
+    var correctedClientDisability: number[] = [];
+    var disabilityNameList: string[] = [];
+    if (props.clientDisability)
+        for (let index of props.clientDisability) {
+            var tempIndex = index - 1;
+            correctedClientDisability.push(tempIndex);
+        }
+    for (let index of Array.from(disabilityList.entries())) {
+        disabilityNameList.push(index[1]);
+    }
+    const [otherDisability, showOtherDisability] = useState(false);
+
     const initialValues: FormValues = {
         firstName: props.firstName,
         lastName: props.lastName,
@@ -83,6 +96,7 @@ export const ClientDetails = (props: FormProps) => {
         caregiverEmail: props.caregiverEmail,
         caregiverPhone: props.caregiverPhone,
         clientDisability: props.clientDisability,
+        otherDisability: props.otherDisability,
     };
 
     //Menu Consts and functions
@@ -123,35 +137,6 @@ export const ClientDetails = (props: FormProps) => {
     const [disabilityVisible, setDisabilityVisible] = React.useState(false);
     const openDisabilityMenu = () => setDisabilityVisible(true);
     const closeDisabilityMenu = () => setDisabilityVisible(false);
-    const disabilityComponent = () => {
-        {
-            clientDisability.map((disability) => {
-                return <Text style={styles.carePresentCheckBox}> {disability} </Text>;
-            });
-        }
-    };
-
-    const DisabilityChecklist = () => {
-        return (
-            <List.Section>
-                <List.Accordion title="Disability">
-                    {Array.from(disabilityList.entries()).map(([key, value]) => {
-                        return (
-                            <View key={key} style={styles.disabilityChecking}>
-                                <Text>{value}</Text>
-                                <Checkbox
-                                    status="unchecked"
-                                    onPress={() => {
-                                        console.log(value);
-                                    }}
-                                />
-                            </View>
-                        );
-                    })}
-                </List.Accordion>
-            </List.Section>
-        );
-    };
 
     //Zone Menu editable toggle variables
     const [zonesVisible, setZonesVisible] = React.useState(false);
@@ -286,22 +271,47 @@ export const ClientDetails = (props: FormProps) => {
                                                 Disability List
                                             </Text>
                                         </View>
-                                        <ScrollView nestedScrollEnabled={true}>
+                                        <ScrollView
+                                            style={styles.nestedScrollStyle}
+                                            nestedScrollEnabled={true}
+                                        >
                                             <CustomMultiPicker
-                                                options={Array.from(disabilityList.entries())}
+                                                options={disabilityNameList}
                                                 multiple={true}
                                                 placeholder={"Disability"}
                                                 placeholderTextColor={"#757575"}
                                                 returnValue={"disability_type"}
-                                                callback={(res) => {
-                                                    console.log(res);
+                                                callback={(values) => {
+                                                    var checkBoolean = false;
+                                                    for (let checkOther of Array.from(values)) {
+                                                        if (checkOther == 9) {
+                                                            checkBoolean = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                    showOtherDisability(checkBoolean);
                                                 }}
                                                 rowBackgroundColor={"#eee"}
                                                 iconSize={30}
                                                 selectedIconName={"checkmark-circle"}
                                                 unselectedIconName={"radio-button-off"}
-                                                selected={props.clientDisability?.map(String)}
+                                                selected={correctedClientDisability.map(String)}
                                             />
+                                            {otherDisability ? (
+                                                <View>
+                                                    <TextInput
+                                                        style={styles.otherDisabilityStyle}
+                                                        label="Other Disability "
+                                                        placeholder="Other Disability"
+                                                        onChangeText={formikProps.handleChange(
+                                                            "otherDisability"
+                                                        )}
+                                                        value={formikProps.values.otherDisability}
+                                                    />
+                                                </View>
+                                            ) : (
+                                                <></>
+                                            )}
                                         </ScrollView>
                                     </View>
                                 </Modal>

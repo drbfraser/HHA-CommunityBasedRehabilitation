@@ -5,21 +5,21 @@ const useStyles = () =>
     StyleSheet.create({
         container: {
             flex: 1,
-            // alignItems: "center",
+            alignItems: "center",
             justifyContent: "center",
-            marginLeft: 10,
-            marginRight: 10,
+            marginLeft: 30,
+            marginRight: 30,
         },
         nextButton: {
             position: "absolute",
-            right: -45,
-            bottom: 0,
+            right: -50,
+            bottom: -10,
             padding: -1,
         },
         prevButton: {
             position: "absolute",
-            left: -45,
-            bottom: 0,
+            left: -50,
+            bottom: -10,
             padding: -1,
         },
         buttonTextStyle: {
@@ -27,31 +27,14 @@ const useStyles = () =>
             fontWeight: "bold",
             fontSize: 14,
         },
-        checkBoxText: {
-            flexDirection: "row",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            paddingVertical: 10,
-            paddingRight: 50,
-        },
         alertText: {
             color: themeColors.hhaBlue,
         },
+        stepLabelText: { fontSize: 25, fontWeight: "bold" },
         centerElement: { justifyContent: "center", alignItems: "center" },
         picker: { height: 40, width: 250 },
-        pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingBottom: 0, paddingLeft: 5 },
-        normalInput: { fontSize: 15, paddingBottom: 0, paddingLeft: 5 },
-        viewPadding: { paddingLeft: 10, paddingRight: 10 },
-        inputText: {
-            borderWidth: 1,
-            borderColor: "#000000",
-            borderRadius: 5,
-            paddingLeft: 10,
-            marginLeft: 5,
-            marginTop: 5,
-        },
-
-        textPicker: { borderWidth: 1, borderColor: "#000000", borderRadius: 5 },
+        pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
+        errorText: { color: themeColors.errorRed, paddingLeft: 15 },
     });
 
 export const progressStepsStyle = {
@@ -62,8 +45,10 @@ export const progressStepsStyle = {
     completedStepIconColor: themeColors.blueBgDark,
     completedProgressBarColor: themeColors.blueBgDark,
     completedCheckColor: themeColors.white,
+    labelFontSize: 3,
+    activeLabelFontSize: 9,
     topOffset: 20,
-    marginBottom: 15,
+    marginBottom: 10,
 };
 
 export const defaultScrollViewProps = {

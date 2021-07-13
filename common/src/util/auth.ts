@@ -98,8 +98,6 @@ const refreshTokens = async (): Promise<boolean> => {
 };
 
 export const doLogin = async (username: string, password: string): Promise<boolean> => {
-    console.log("Username: ", username);
-    console.log("Password: ", password);
     const postBody = JSON.stringify({
         username,
         password,

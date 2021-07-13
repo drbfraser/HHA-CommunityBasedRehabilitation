@@ -5,7 +5,7 @@ import { Component, useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
 import { View, Text, Platform } from "react-native";
-import { Button, Checkbox, Menu, TextInput } from "react-native-paper";
+import { Button, Checkbox, List, Menu, TextInput } from "react-native-paper";
 import clientStyle from "./Client.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -55,7 +55,7 @@ export const ClientDetails = (props: FormProps) => {
     const [caregiverName, setCaregiverName] = React.useState("");
     const [caregiverEmail, setCaregiverEmail] = React.useState("");
     const [caregiverPhone, setCaregiverPhone] = React.useState("");
-    const [clientDisability, setDisability] = useState<string[]>([]);
+    const [clientDisability, setDisability] = useState<string[]>(["N/A"]);
 
     const initialValues: FormValues = {
         firstName: props.firstName,
@@ -69,7 +69,7 @@ export const ClientDetails = (props: FormProps) => {
         caregiverName: props.caregiverName,
         caregiverEmail: props.caregiverEmail,
         caregiverPhone: props.caregiverPhone,
-        clientDisability: clientDisability,
+        clientDisability: props.clientDisability,
     };
 
     //Menu Consts and functions
@@ -110,12 +110,46 @@ export const ClientDetails = (props: FormProps) => {
     const [disabilityVisible, setDisabilityVisible] = React.useState(false);
     const openDisabilityMenu = () => setDisabilityVisible(true);
     const closeDisabilityMenu = () => setDisabilityVisible(false);
+    const disabilityComponent = () => {
+        {
+            clientDisability.map((disability) => {
+                return <Text style={styles.carePresentCheckBox}> {disability} </Text>;
+            });
+        }
+    };
+    const DisabilityChecklist = () => {
+        return (
+            <List.Section>
+                <List.Accordion title="Disability">
+                    {Array.from(disabilityList.entries()).map(([key, value]) => {
+                        return (
+                            // <Menu.Item
+                            //     key={key}
+                            //     title={value}
+                            //     onPress={() => {
+                            //         console.log(value);
+                            //     }}
+                            // />
+                            <View key={key} style={styles.disabilityCheckling}>
+                                <Text>{value}</Text>
+                                <Checkbox
+                                    status="unchecked"
+                                    onPress={() => {
+                                        console.log(value);
+                                    }}
+                                />
+                            </View>
+                        );
+                    })}
+                </List.Accordion>
+            </List.Section>
+        );
+    };
 
     //Zone Menu editable toggle variables
     const [zonesVisible, setZonesVisible] = React.useState(false);
     const openZonesMenu = () => setZonesVisible(true);
     const closeZonesMenu = () => setZonesVisible(false);
-
     return (
         <View>
             <Formik
@@ -146,7 +180,9 @@ export const ClientDetails = (props: FormProps) => {
 
                         <Text> Birthdate </Text>
                         <View style={styles.clientBirthdayView}>
-                            <Text style={styles.carePresentCheckBox}>{date.toDateString()}</Text>
+                            <Text style={styles.carePresentCheckBox}>
+                                {props.date.toDateString()}
+                            </Text>
                             <View style={styles.clientBirthdayButtons}>
                                 <View>
                                     <Button
@@ -160,7 +196,7 @@ export const ClientDetails = (props: FormProps) => {
                                 {show && (
                                     <DateTimePicker
                                         testID="dateTimePicker"
-                                        value={date}
+                                        value={props.date}
                                         mode="date"
                                         display="default"
                                         //onChange={onDateChange}
@@ -190,7 +226,7 @@ export const ClientDetails = (props: FormProps) => {
 
                         <View>
                             <Text> Zone</Text>
-                            <Text style={styles.carePresentCheckBox}> {zone} </Text>
+                            <Text style={styles.carePresentCheckBox}> {props.zone} </Text>
                             <Menu
                                 visible={zonesVisible}
                                 onDismiss={closeZonesMenu}
@@ -230,39 +266,7 @@ export const ClientDetails = (props: FormProps) => {
                         />
 
                         <View>
-                            <Text> Disability</Text>
-                            {clientDisability.map((disability) => {
-                                return (
-                                    <Text style={styles.carePresentCheckBox}> {disability} </Text>
-                                );
-                            })}
-                            <Menu
-                                visible={disabilityVisible}
-                                onDismiss={closeDisabilityMenu}
-                                anchor={
-                                    <Button
-                                        mode="contained"
-                                        style={styles.disabilityButton}
-                                        disabled={editMode}
-                                        onPress={openDisabilityMenu}
-                                    >
-                                        Edit Disability
-                                    </Button>
-                                }
-                            >
-                                {Array.from(disabilityList.entries()).map(([key, value]) => {
-                                    return (
-                                        <Menu.Item
-                                            key={key}
-                                            title={value}
-                                            onPress={() => {
-                                                formikProps.handleChange("disability");
-                                                closeDisabilityMenu();
-                                            }}
-                                        />
-                                    );
-                                })}
-                            </Menu>
+                            <DisabilityChecklist></DisabilityChecklist>
                         </View>
 
                         <View style={styles.carePresentView}>

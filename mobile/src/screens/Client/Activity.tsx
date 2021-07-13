@@ -19,6 +19,7 @@ export enum ActivityType {
 }
 
 export interface ActivityDTO {
+    id: number;
     type: ActivityType;
     date: number;
     visit: IVisitSummary | undefined;
@@ -81,7 +82,7 @@ export const SummaryActivity = (props: SummaryProps) => {
                     ) : props.activity.type === ActivityType.REFERAL && props.activity.referral ? (
                         <View style={styles.subItem}>
                             <View>
-                                <Text style={styles.subItemText}>Referra l Posted</Text>
+                                <Text style={styles.subItemText}>Referral Posted</Text>
                                 <View style={styles.subItemRow}>
                                     {props.activity.referral.outcome === "Resolved" ? (
                                         <Text style={styles.subItemText}>Resolved</Text>

@@ -91,10 +91,12 @@ const Client = (props: ClientProps) => {
                 const setDisabilityList = () => {
                     if (presentClient)
                         for (let entry of presentClient.disabilities) {
+                            console.log(entry);
                             tempDisabilityList.push(
                                 Array.from(disabilityList.entries())[entry - 1][1]
                             );
                         }
+                    setDisabilityList();
                     setDisability(tempDisabilityList);
                 };
             })
@@ -119,38 +121,45 @@ const Client = (props: ClientProps) => {
 
     //Activity component rendering
     var tempActivity: ActivityDTO[];
+    var presentId = 0;
     tempActivity = [];
     if (clientVisits) {
         clientVisits.map((presentVisit) => {
             tempActivity.push({
+                id: presentId,
                 type: ActivityType.VISIT,
                 date: presentVisit.date_visited,
                 visit: presentVisit,
                 referral: undefined,
                 survey: undefined,
             });
+            presentId += 1;
         });
     }
     if (clientReferrals) {
         clientReferrals.map((presentRef) => {
             tempActivity.push({
+                id: presentId,
                 type: ActivityType.REFERAL,
                 date: presentRef.date_referred,
                 visit: undefined,
                 referral: presentRef,
                 survey: undefined,
             });
+            presentId += 1;
         });
     }
     if (clientSurveys) {
         clientSurveys.map((presentSurvey) => {
             tempActivity.push({
+                id: presentId,
                 type: ActivityType.SURVEY,
                 date: presentSurvey.survey_date,
                 visit: undefined,
                 referral: undefined,
                 survey: presentSurvey,
             });
+            presentId += 1;
         });
     }
 
@@ -160,8 +169,13 @@ const Client = (props: ClientProps) => {
         if (clientVisits)
             return (
                 <View>
-                    {tempActivity.map((presentVisit) => {
-                        return <SummaryActivity activity={presentVisit}></SummaryActivity>;
+                    {tempActivity.map((presentActivity) => {
+                        return (
+                            <SummaryActivity
+                                key={presentActivity.id}
+                                activity={presentActivity}
+                            ></SummaryActivity>
+                        );
                     })}
                     <TimeLineDate date={clientCreateDate}></TimeLineDate>
                 </View>

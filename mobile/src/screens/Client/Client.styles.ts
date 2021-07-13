@@ -199,6 +199,13 @@ const useStyles = () =>
             flex: 1,
             marginTop: 300,
         },
+        disabilityCheckling: {
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: 5,
+            marginTop: 5,
+        },
     });
 
 export default useStyles;

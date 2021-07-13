@@ -1,6 +1,12 @@
 import "dotenv/config";
+import { ExpoConfig } from "@expo/config";
 
-const commonAppConfig = {
+const BASE_APP_NAME = "CBR";
+
+// Note: TypeScript for Expo configs are "experimental and subject to breaking changes."
+// https://docs.expo.io/workflow/configuration/#using-typescript-for-configuration-appconfigts-instead-of
+const commonAppConfig: ExpoConfig = {
+    name: BASE_APP_NAME,
     slug: "cbr-mobile",
     version: "0.0.1",
     orientation: "portrait",
@@ -18,6 +24,9 @@ const commonAppConfig = {
         supportsTablet: true,
     },
     android: {
+        // TODO: Confirm with Izzy.
+        package: "org.hopehealthaction.cbr",
+        versionCode: 1,
         adaptiveIcon: {
             foregroundImage: "./assets/adaptive-icon.png",
             backgroundColor: "#FFFFFF",
@@ -29,10 +38,7 @@ const commonAppConfig = {
     },
 };
 
-module.exports = () => {
-    // TODO: When we add a script to build a production version of the app, ensure that the
-    //  command is prefixed like `APP_ENV=prod expo build:android`. We're not doing this yet
-    //  until we settle on what to do for app distribution.
+export default (): ExpoConfig => {
     const appEnv = process.env.APP_ENV;
     const prodApiUrl = "https://cbrp.cradleplatform.com/api/";
     const stagingApiUrl = "https://cbrs.cradleplatform.com/api/";
@@ -40,7 +46,7 @@ module.exports = () => {
     if (appEnv === "prod") {
         return {
             ...commonAppConfig,
-            name: "CBR",
+            name: BASE_APP_NAME,
             extra: {
                 apiUrl: prodApiUrl,
             },
@@ -48,7 +54,7 @@ module.exports = () => {
     } else if (appEnv === "staging") {
         return {
             ...commonAppConfig,
-            name: "CBR (Staging)",
+            name: `${BASE_APP_NAME} (Staging)`,
             extra: {
                 apiUrl: stagingApiUrl,
             },
@@ -57,10 +63,10 @@ module.exports = () => {
         const devApiUrl = process.env.DEV_API_URL;
         return {
             ...commonAppConfig,
-            name: "CBR (Development)",
+            name: `${BASE_APP_NAME} (Development)`,
             extra: {
                 // Fall back to the staging server if not set.
-                apiUrl: typeof devApiUrl === "string" ? devApiUrl : stagingApiUrl,
+                apiUrl: devApiUrl && devApiUrl.length !== 0 ? devApiUrl : stagingApiUrl,
             },
         };
     }

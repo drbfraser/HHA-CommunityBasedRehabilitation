@@ -15,8 +15,7 @@ export const fetchClientsFromApi = async (
     searchOption,
     searchValue: string,
     allClientsMode: boolean
-):
-Promise<ClientTest[]> => {
+): Promise<ClientTest[]> => {
     try {
         const urlParams = new URLSearchParams();
         if (searchOption === SearchOption.NAME) {

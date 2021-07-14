@@ -39,7 +39,9 @@ export const baseSurveyHandleSubmitForm = async (
         school_not_attend_reason: values[BaseSurveyFormField.goSchool]
             ? ""
             : values[BaseSurveyFormField.reasonNotSchool],
-        school_ever_attend: values[BaseSurveyFormField.goSchool] ? false : values[BaseSurveyFormField.beenSchool],
+        school_ever_attend: values[BaseSurveyFormField.goSchool]
+            ? false
+            : values[BaseSurveyFormField.beenSchool],
         school_want_attend: values[BaseSurveyFormField.wantSchool],
         social_community_valued: values[BaseSurveyFormField.feelValue],
         social_independent: values[BaseSurveyFormField.feelIndependent],
@@ -48,7 +50,9 @@ export const baseSurveyHandleSubmitForm = async (
         social_discrimination: values[BaseSurveyFormField.disabiDiscrimination],
         work: values[BaseSurveyFormField.isWorking],
         work_what: values[BaseSurveyFormField.isWorking] ? values[BaseSurveyFormField.job] : "",
-        work_status: values[BaseSurveyFormField.isWorking] ? values[BaseSurveyFormField.isSelfEmployed] : "",
+        work_status: values[BaseSurveyFormField.isWorking]
+            ? values[BaseSurveyFormField.isSelfEmployed]
+            : "",
         work_meet_financial_needs: values[BaseSurveyFormField.isWorking]
             ? values[BaseSurveyFormField.meetFinanceNeeds]
             : false,
@@ -56,7 +60,9 @@ export const baseSurveyHandleSubmitForm = async (
         work_want: values[BaseSurveyFormField.wantWork],
         food_security: values[BaseSurveyFormField.foodSecurityRate],
         food_enough_monthly: values[BaseSurveyFormField.enoughFoodPerMonth],
-        food_enough_for_child: values[BaseSurveyFormField.isChild] ? values[BaseSurveyFormField.childNourish] : "",
+        food_enough_for_child: values[BaseSurveyFormField.isChild]
+            ? values[BaseSurveyFormField.childNourish]
+            : "",
         empowerment_organization_member: values[BaseSurveyFormField.memOfOrgan],
         empowerment_organization: values[BaseSurveyFormField.memOfOrgan]
             ? values[BaseSurveyFormField.organization]

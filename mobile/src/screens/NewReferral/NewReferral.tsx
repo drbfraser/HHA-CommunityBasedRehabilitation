@@ -3,12 +3,12 @@ import { ScrollView, View } from "react-native";
 import { Text, Divider, Appbar } from "react-native-paper";
 import { Formik, FormikHelpers } from "formik";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
-import { IFormProps, themeColors } from "@cbr/common";
+import { IFormProps, referralInitialValidationSchema, themeColors } from "@cbr/common";
 import { handleSubmit } from "./formHandler";
 import {
-     referralFieldLabels,
-     ReferralFormField,
-     referralInitialValues,
+    referralFieldLabels,
+    ReferralFormField,
+    referralInitialValues,
     otherServicesValidationSchema,
     physiotherapyValidationSchema,
     prostheticOrthoticValidationSchema,
@@ -19,6 +19,7 @@ import PhysiotherapyForm from "./ReferralForm/PhysiotherapyForm";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewReferral.styles";
 import ProstheticOrthoticForm from "./ReferralForm/ProstheticOrthoticForm";
 import OtherServicesForm from "./ReferralForm/OtherServicesForm";
+import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 
 interface IService {
     label: string;
@@ -26,12 +27,56 @@ interface IService {
     validationSchema: () => any;
 }
 
+const serviceTypes: ReferralFormField[] = [
+    ReferralFormField.wheelchair,
+    ReferralFormField.physiotherapy,
+    ReferralFormField.prosthetic,
+    ReferralFormField.orthotic,
+    ReferralFormField.servicesOther,
+];
+
+const ReferralServiceForm = (
+    props: IFormProps,
+    setEnabledSteps: React.Dispatch<React.SetStateAction<ReferralFormField[]>>
+) => {
+    const onCheckboxChange = (checked: boolean, selectedServiceType: string) => {
+        setEnabledSteps(
+            serviceTypes.filter(
+                (serviceType) =>
+                    (props.formikProps.values[serviceType] &&
+                        serviceType !== selectedServiceType) ||
+                    (checked && serviceType === selectedServiceType)
+            )
+        );
+    };
+
+    return (
+        <View>
+            <Text>Select referral services</Text>
+            {serviceTypes.map((serviceType) => (
+                <TextCheckBox
+                    key={serviceType}
+                    field={serviceType}
+                    label={referralFieldLabels[serviceType]}
+                    value={props.formikProps.values[serviceType]}
+                    setFieldValue={props.formikProps.setFieldValue}
+                    onChange={(value) => {
+                        // props.formikProps.handleChange(value);
+                        // props.formikProps.setTouched(props.formikProps.values[serviceType], true);
+                        // props.formikProps.setValues(!props.formikProps.values[serviceType]);
+                        onCheckboxChange(value, serviceType);
+                    }}
+                />
+            ))}
+        </View>
+    );
+};
+
 const NewReferral = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<ReferralFormField[]>([]);
     const [submissionError, setSubmissionError] = useState(false);
     const styles = useStyles();
-    const [stepChecked, setStepChecked] = useState([false]);
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
     const prevStep = () => setActiveStep(activeStep - 1);
 
@@ -49,38 +94,52 @@ const NewReferral = () => {
         }
     };
 
-    const services: IService[] = [
-        {
+    const services: { [key: string]: IService } = {
+        [ReferralFormField.wheelchair]: {
             label: `${referralFieldLabels[ReferralFormField.wheelchair]} Visit`,
             Form: WheelchairForm,
             validationSchema: wheelchairValidationSchema,
         },
-        {
+        [ReferralFormField.physiotherapy]: {
             label: `${referralFieldLabels[ReferralFormField.physiotherapy]} Visit`,
             Form: PhysiotherapyForm,
             validationSchema: physiotherapyValidationSchema,
         },
-        {
+        [ReferralFormField.prosthetic]: {
             label: `${referralFieldLabels[ReferralFormField.prosthetic]} Visit`,
-            Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.prosthetic),
-            validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.prosthetic),
+            Form: (formikProps) =>
+                ProstheticOrthoticForm(formikProps, ReferralFormField.prosthetic),
+            validationSchema: () =>
+                prostheticOrthoticValidationSchema(ReferralFormField.prosthetic),
         },
-        {
+        [ReferralFormField.orthotic]: {
             label: `${referralFieldLabels[ReferralFormField.orthotic]} Visit`,
             Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.orthotic),
             validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.orthotic),
         },
-        {
+        [ReferralFormField.servicesOther]: {
             label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,
             Form: OtherServicesForm,
             validationSchema: otherServicesValidationSchema,
         },
-    ];
+    };
 
+    const referralSteps: IService[] = [
+        {
+            label: "Referral Services",
+            Form: (props) => ReferralServiceForm(props, setEnabledSteps),
+            validationSchema: referralInitialValidationSchema,
+        },
+        ...enabledSteps.map((serviceType) => ({
+            label: services[serviceType].label,
+            Form: services[serviceType].Form,
+            validationSchema: services[serviceType].validationSchema,
+        })),
+    ];
     return (
         <Formik
             initialValues={referralInitialValues}
-            validationSchema={services[activeStep].validationSchema}
+            validationSchema={referralSteps[activeStep].validationSchema}
             onSubmit={nextStep}
             enableReinitialize
         >
@@ -93,7 +152,7 @@ const NewReferral = () => {
                     </Appbar.Header>
                     <View style={styles.container}>
                         <ProgressSteps {...progressStepsStyle}>
-                            {services.map((surveyStep, index) => (
+                            {referralSteps.map((surveyStep, index) => (
                                 <ProgressStep
                                     key={index}
                                     scrollViewProps={defaultScrollViewProps}

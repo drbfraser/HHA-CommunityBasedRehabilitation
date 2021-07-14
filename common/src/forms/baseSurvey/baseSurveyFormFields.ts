@@ -56,7 +56,11 @@ export enum BaseSurveyFormField {
     haveShelter = "have_shelter",
     accessItem = "access_item",
 }
-export const baseServicesTypes = [BaseSurveyFormField.health, BaseSurveyFormField.education, BaseSurveyFormField.social];
+export const baseServicesTypes = [
+    BaseSurveyFormField.health,
+    BaseSurveyFormField.education,
+    BaseSurveyFormField.social,
+];
 
 export const baseFieldLabels = {
     [BaseSurveyFormField.client]: "Client",
@@ -85,8 +89,10 @@ export const baseFieldLabels = {
     [BaseSurveyFormField.feelIndependent]: "I feel independent",
     [BaseSurveyFormField.ableInSocial]:
         "I am able to participate in community/social events (going to church, market, meeting friends)",
-    [BaseSurveyFormField.disabiAffectSocial]: "My disability affects my ability to interact socially",
-    [BaseSurveyFormField.disabiDiscrimination]: "I have experienced discrimination because of my disability",
+    [BaseSurveyFormField.disabiAffectSocial]:
+        "My disability affects my ability to interact socially",
+    [BaseSurveyFormField.disabiDiscrimination]:
+        "I have experienced discrimination because of my disability",
 
     [BaseSurveyFormField.livelihood]: "Livelihood",
     [BaseSurveyFormField.isWorking]: "I am working",
@@ -106,7 +112,8 @@ export const baseFieldLabels = {
     [BaseSurveyFormField.memOfOrgan]:
         "I am a member of some organisations which assist people with disabilities",
     [BaseSurveyFormField.organization]: "Organization",
-    [BaseSurveyFormField.awareRight]: "I am aware of my rights as a citizen living with disabilities",
+    [BaseSurveyFormField.awareRight]:
+        "I am aware of my rights as a citizen living with disabilities",
     [BaseSurveyFormField.ableInfluence]: "I feel like I am able to influence people around me",
 
     [BaseSurveyFormField.shelterAndCare]: "Shelter and Care",
@@ -167,12 +174,16 @@ export const healthValidationSchema = () =>
         [BaseSurveyFormField.serviceSatisf]: Yup.string()
             .label(baseFieldLabels[BaseSurveyFormField.serviceSatisf])
             .required(),
-        [BaseSurveyFormField.rateLevel]: Yup.string().label(baseFieldLabels[BaseSurveyFormField.rateLevel]).required(),
+        [BaseSurveyFormField.rateLevel]: Yup.string()
+            .label(baseFieldLabels[BaseSurveyFormField.rateLevel])
+            .required(),
         [BaseSurveyFormField.deviceType]: Yup.string()
             .label(baseFieldLabels[BaseSurveyFormField.deviceType])
             .when(BaseSurveyFormField.needDevice, {
                 is: true,
-                then: Yup.string().label(baseFieldLabels[BaseSurveyFormField.deviceType]).required(),
+                then: Yup.string()
+                    .label(baseFieldLabels[BaseSurveyFormField.deviceType])
+                    .required(),
             }),
     });
 
@@ -183,7 +194,9 @@ export const educationValidationSchema = () =>
             .label(baseFieldLabels[BaseSurveyFormField.reasonNotSchool])
             .when(BaseSurveyFormField.goSchool, {
                 is: false,
-                then: Yup.string().label(baseFieldLabels[BaseSurveyFormField.reasonNotSchool]).required(),
+                then: Yup.string()
+                    .label(baseFieldLabels[BaseSurveyFormField.reasonNotSchool])
+                    .required(),
             }),
         [BaseSurveyFormField.grade]: Yup.string()
             .label(baseFieldLabels[BaseSurveyFormField.grade])
@@ -206,7 +219,9 @@ export const livelihoodValidationSchema = () =>
             .label(baseFieldLabels[BaseSurveyFormField.isSelfEmployed])
             .when(BaseSurveyFormField.isWorking, {
                 is: true,
-                then: Yup.string().label(baseFieldLabels[BaseSurveyFormField.isSelfEmployed]).required(),
+                then: Yup.string()
+                    .label(baseFieldLabels[BaseSurveyFormField.isSelfEmployed])
+                    .required(),
             }),
     });
 
@@ -220,7 +235,9 @@ export const foodValidationSchema = () =>
             .label(baseFieldLabels[BaseSurveyFormField.childNourish])
             .when(BaseSurveyFormField.isChild, {
                 is: true,
-                then: Yup.string().label(baseFieldLabels[BaseSurveyFormField.childNourish]).required(),
+                then: Yup.string()
+                    .label(baseFieldLabels[BaseSurveyFormField.childNourish])
+                    .required(),
             }),
     });
 
@@ -231,7 +248,10 @@ export const empowermentValidationSchema = () =>
             .label(baseFieldLabels[BaseSurveyFormField.organization])
             .when(BaseSurveyFormField.memOfOrgan, {
                 is: true,
-                then: Yup.string().label(baseFieldLabels[BaseSurveyFormField.organization]).max(50).required(),
+                then: Yup.string()
+                    .label(baseFieldLabels[BaseSurveyFormField.organization])
+                    .max(50)
+                    .required(),
             }),
     });
 

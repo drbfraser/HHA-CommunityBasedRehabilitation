@@ -32,7 +32,9 @@ export const referralHandleSubmit = async (
             ? values[ReferralFormField.wheelchairExperience]
             : "",
         hip_width: values[ReferralFormField.wheelchair] ? values[ReferralFormField.hipWidth] : 0,
-        wheelchair_owned: values[ReferralFormField.wheelchair] ? values[ReferralFormField.wheelchairOwned] : false,
+        wheelchair_owned: values[ReferralFormField.wheelchair]
+            ? values[ReferralFormField.wheelchairOwned]
+            : false,
         wheelchair_repairable:
             values[ReferralFormField.wheelchair] && values[ReferralFormField.wheelchairOwned]
                 ? values[ReferralFormField.wheelchairRepairable]
@@ -51,7 +53,9 @@ export const referralHandleSubmit = async (
         orthotic_injury_location: values[ReferralFormField.orthotic]
             ? values[ReferralFormField.orthoticInjuryLocation]
             : "",
-        services_other: values[ReferralFormField.servicesOther] ? values[ReferralFormField.otherDescription] : "",
+        services_other: values[ReferralFormField.servicesOther]
+            ? values[ReferralFormField.otherDescription]
+            : "",
     });
 
     try {

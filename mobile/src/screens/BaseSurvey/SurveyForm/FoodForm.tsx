@@ -60,28 +60,30 @@ const FoodForm = (props: IFormProps) => {
                     <Text style={styles.pickerQuestion}>
                         What is this child nutritional status?
                     </Text>
-
-                    <Picker
-                        selectedValue={props.formikProps.values[BaseSurveyFormField.childNourish]}
-                        style={styles.picker}
-                        onValueChange={(itemValue) => {
-                            props.formikProps.setFieldTouched(
-                                BaseSurveyFormField.childNourish,
-                                true
-                            );
-                            props.formikProps.setFieldValue(
-                                BaseSurveyFormField.childNourish,
-                                itemValue
-                            );
-                            itemValue === "M" ? showAlert() : hideAlert();
-                        }}
-                    >
-                        <Picker.Item key={"unselectable"} label={""} value={""} />
-                        {Object.entries(childNourish).map(([value, name]) => (
-                            <Picker.Item label={name} value={value} key={value} />
-                        ))}
-                    </Picker>
-
+                    <View style={styles.pickerBoard}>
+                        <Picker
+                            selectedValue={
+                                props.formikProps.values[BaseSurveyFormField.childNourish]
+                            }
+                            style={styles.picker}
+                            onValueChange={(itemValue) => {
+                                props.formikProps.setFieldTouched(
+                                    BaseSurveyFormField.childNourish,
+                                    true
+                                );
+                                props.formikProps.setFieldValue(
+                                    BaseSurveyFormField.childNourish,
+                                    itemValue
+                                );
+                                itemValue === "M" ? showAlert() : hideAlert();
+                            }}
+                        >
+                            <Picker.Item key={"unselectable"} label={""} value={""} />
+                            {Object.entries(childNourish).map(([value, name]) => (
+                                <Picker.Item label={name} value={value} key={value} />
+                            ))}
+                        </Picker>
+                    </View>
                     <HelperText
                         style={styles.errorText}
                         type="error"

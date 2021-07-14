@@ -146,7 +146,9 @@ const WheelchairForm = (props: IFormProps) => {
                         component={CheckboxWithLabel}
                         type="checkbox"
                         name={ReferralFormField.wheelchairRepairable}
-                        Label={{ label: referralFieldLabels[ReferralFormField.wheelchairRepairable] }}
+                        Label={{
+                            label: referralFieldLabels[ReferralFormField.wheelchairRepairable],
+                        }}
                     />
                 )}
             </div>
@@ -204,7 +206,9 @@ const PhysiotherapyForm = (props: IFormProps) => {
 
 const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormField) => {
     const injuryLocations =
-        serviceType === ReferralFormField.prosthetic ? prostheticInjuryLocations : orthoticInjuryLocations;
+        serviceType === ReferralFormField.prosthetic
+            ? prostheticInjuryLocations
+            : orthoticInjuryLocations;
 
     return (
         <div>
@@ -273,8 +277,10 @@ const NewReferral = () => {
         },
         [ReferralFormField.prosthetic]: {
             label: `${referralFieldLabels[ReferralFormField.prosthetic]} Visit`,
-            Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.prosthetic),
-            validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.prosthetic),
+            Form: (formikProps) =>
+                ProstheticOrthoticForm(formikProps, ReferralFormField.prosthetic),
+            validationSchema: () =>
+                prostheticOrthoticValidationSchema(ReferralFormField.prosthetic),
         },
         [ReferralFormField.orthotic]: {
             label: `${referralFieldLabels[ReferralFormField.orthotic]} Visit`,

@@ -30,6 +30,13 @@ const useStyles = () =>
         fieldIndent: {
             paddingLeft: "9px",
         },
+        checkBoxText: {
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingVertical: 10,
+            paddingRight: 50,
+        },
         nextButton: {
             position: "absolute",
             right: -50,

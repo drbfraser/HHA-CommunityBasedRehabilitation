@@ -3,7 +3,7 @@ import React from "react";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const riskIcon = (name: string, color: string) => {
-    return <Icon name={name} color={color} size={32} />;
+    return <Icon name={name} color={color} size={20} />;
 };
 
 export interface IRiskType {
@@ -23,5 +23,9 @@ export const riskTypes: { [key: string]: IRiskType } = {
     [RiskType.SOCIAL]: {
         name: "Social",
         Icon: (color: string) => riskIcon("account-voice", color),
+    },
+    CIRCLE: {
+        name: "Circle",
+        Icon: (color: string) => riskIcon("circle", color),
     },
 };

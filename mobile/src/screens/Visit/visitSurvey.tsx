@@ -12,10 +12,9 @@ import {
 } from "react-native-paper";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import DicTextPicker from "../../components/TextPicker/DicTextPicker";
 import TextPicker from "../../components/TextPicker/TextPicker";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
-// import { IRisk } from "util/risks";
+import { IRisk } from "@cbr/common";
 
 // import { useParams } from "react-router";
 import { getZones, themeColors, useZones, TZoneMap } from "@cbr/common";
@@ -38,6 +37,56 @@ import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./visitSu
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const visitTypes: FormField[] = [FormField.health, FormField.education, FormField.social];
+
+// const ImprovementField = (props: {
+//     formikProps: FormikProps<any>;
+//     visitType: string;
+//     provided: string;
+//     index: number;
+// }) => {
+//     const fieldName = `${FormField.improvements}.${props.visitType}.${props.index}`;
+//     const isImprovementEnabled =
+//         props.formikProps.values[FormField.improvements][props.visitType][props.index]?.[
+//             ImprovementFormField.enabled
+//         ] === true;
+
+//     if (
+//         props.formikProps.values[FormField.improvements][props.visitType][props.index] === undefined
+//     ) {
+//         // Since this component is dynamically generated we need to set its initial values
+//         props.formikProps.setFieldValue(`${fieldName}`, {
+//             [ImprovementFormField.enabled]: false,
+//             [ImprovementFormField.description]: "",
+//             [ImprovementFormField.riskType]: props.visitType,
+//             [ImprovementFormField.provided]: props.provided,
+//         });
+//     }
+
+//     return (
+//         <div key={props.index}>
+//             <Field
+//                 component={CheckboxWithLabel}
+//                 type="checkbox"
+//                 name={`${fieldName}.${ImprovementFormField.enabled}`}
+//                 Label={{ label: props.provided }}
+//             />
+//             <br />
+//             {isImprovementEnabled && (
+//                 <Field
+//                     key={`${props.provided}${ImprovementFormField.description}`}
+//                     type="text"
+//                     component={TextField}
+//                     variant="outlined"
+//                     name={`${fieldName}.${ImprovementFormField.description}`}
+//                     label={fieldLabels[ImprovementFormField.description]}
+//                     required
+//                     fullWidth
+//                     multiline
+//                 />
+//             )}
+//         </div>
+//     );
+// };
 
 interface ISurvey {
     label: string;

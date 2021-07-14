@@ -126,5 +126,17 @@ export const otherServicesValidationSchema = () =>
             .trim()
             .required(),
     });
+export const serviceTypes: ReferralFormField[] = [
+    ReferralFormField.wheelchair,
+    ReferralFormField.physiotherapy,
+    ReferralFormField.prosthetic,
+    ReferralFormField.orthotic,
+    ReferralFormField.servicesOther,
+];
 
+export interface IReferralForm {
+    label: string;
+    Form: (props: ReferralFormProps) => JSX.Element;
+    validationSchema: () => any;
+}
 export type ReferralFormValues = typeof referralInitialValues;

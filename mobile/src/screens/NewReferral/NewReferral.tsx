@@ -3,9 +3,13 @@ import { ScrollView, View } from "react-native";
 import { Text, Divider, Appbar } from "react-native-paper";
 import { Formik, FormikHelpers } from "formik";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
-import { IFormProps, referralInitialValidationSchema, themeColors } from "@cbr/common";
 import { handleSubmit } from "./formHandler";
 import {
+    IReferralForm,
+    ReferralFormProps,
+    referralInitialValidationSchema,
+    serviceTypes,
+    themeColors,
     referralFieldLabels,
     ReferralFormField,
     referralInitialValues,
@@ -21,22 +25,8 @@ import ProstheticOrthoticForm from "./ReferralForm/ProstheticOrthoticForm";
 import OtherServicesForm from "./ReferralForm/OtherServicesForm";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 
-interface IService {
-    label: string;
-    Form: (props: IFormProps) => JSX.Element;
-    validationSchema: () => any;
-}
-
-const serviceTypes: ReferralFormField[] = [
-    ReferralFormField.wheelchair,
-    ReferralFormField.physiotherapy,
-    ReferralFormField.prosthetic,
-    ReferralFormField.orthotic,
-    ReferralFormField.servicesOther,
-];
-
 const ReferralServiceForm = (
-    props: IFormProps,
+    props: ReferralFormProps,
     setEnabledSteps: React.Dispatch<React.SetStateAction<ReferralFormField[]>>
 ) => {
     const onCheckboxChange = (checked: boolean, selectedServiceType: string) => {
@@ -49,7 +39,6 @@ const ReferralServiceForm = (
             )
         );
     };
-
     return (
         <View>
             <Text>Select referral services</Text>
@@ -60,12 +49,7 @@ const ReferralServiceForm = (
                     label={referralFieldLabels[serviceType]}
                     value={props.formikProps.values[serviceType]}
                     setFieldValue={props.formikProps.setFieldValue}
-                    onChange={(value) => {
-                        // props.formikProps.handleChange(value);
-                        // props.formikProps.setTouched(props.formikProps.values[serviceType], true);
-                        // props.formikProps.setValues(!props.formikProps.values[serviceType]);
-                        onCheckboxChange(value, serviceType);
-                    }}
+                    onChange={(value) => onCheckboxChange(value, serviceType)}
                 />
             ))}
         </View>
@@ -86,6 +70,8 @@ const NewReferral = () => {
             handleSubmit(values, helpers, setSubmissionError);
         } else {
             if (activeStep === 0) {
+                // TODO: Change back when it is connected to the web
+                helpers.setFieldValue(`${[ReferralFormField.client]}`, 1);
                 // helpers.setFieldValue(`${[FormField.client]}`, clientId);
             }
             setActiveStep(activeStep + 1);
@@ -94,7 +80,7 @@ const NewReferral = () => {
         }
     };
 
-    const services: { [key: string]: IService } = {
+    const services: { [key: string]: IReferralForm } = {
         [ReferralFormField.wheelchair]: {
             label: `${referralFieldLabels[ReferralFormField.wheelchair]} Visit`,
             Form: WheelchairForm,
@@ -124,7 +110,7 @@ const NewReferral = () => {
         },
     };
 
-    const referralSteps: IService[] = [
+    const referralSteps: IReferralForm[] = [
         {
             label: "Referral Services",
             Form: (props) => ReferralServiceForm(props, setEnabledSteps),
@@ -148,10 +134,10 @@ const NewReferral = () => {
                     {/* TODO: Update with Global App bar */}
                     <Appbar.Header>
                         <Appbar.BackAction />
-                        <Appbar.Content title={"Baseline Survey"} />
+                        <Appbar.Content title={"New Referral"} />
                     </Appbar.Header>
                     <View style={styles.container}>
-                        <ProgressSteps {...progressStepsStyle}>
+                        <ProgressSteps key={referralSteps} {...progressStepsStyle}>
                             {referralSteps.map((surveyStep, index) => (
                                 <ProgressStep
                                     key={index}

@@ -22,7 +22,7 @@ import {
     educationValidationSchema,
     empowermentValidationSchema,
     surveyTypes,
-} from "@cbr/common/forms/BaseSurvey/baseSurveyFormFields";
+} from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
 import { ArrowBack } from "@material-ui/icons";
 import history from "util/history";
 import { useParams } from "react-router-dom";

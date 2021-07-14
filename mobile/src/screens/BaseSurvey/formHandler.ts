@@ -1,6 +1,6 @@
 import { FormikHelpers } from "formik";
-import { BaseFormValues } from "@cbr/common/src/forms/BaseSurvey/BaseSurveyFormFields";
-import { baseSurveyHandleSubmitForm } from "@cbr/common/src/forms/BaseSurvey/baseSurveyFormHandler";
+import { BaseFormValues } from "@cbr/common/src/forms/BaseSurvey/baseSurveyFields";
+import { baseSurveyHandleSubmitForm } from "@cbr/common/src/forms/BaseSurvey/baseSurveyHandler";
 
 export const handleSubmit = async (
     values: BaseFormValues,

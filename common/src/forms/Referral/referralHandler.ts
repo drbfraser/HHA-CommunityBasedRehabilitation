@@ -1,5 +1,5 @@
 import { FormikHelpers } from "formik";
-import { ReferralFormField, ReferralFormValues } from "./referralFormFields";
+import { ReferralFormField, ReferralFormValues } from "./referralFields";
 import { apiFetch, Endpoint } from "../../util/endpoints";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
 
@@ -57,10 +57,8 @@ export const referralHandleSubmit = async (
             ? values[ReferralFormField.otherDescription]
             : "",
     });
-
     try {
         await addReferral(newReferral);
-        // history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);
         setSubmissionError(true);

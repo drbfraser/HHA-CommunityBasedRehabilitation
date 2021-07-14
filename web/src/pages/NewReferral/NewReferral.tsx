@@ -35,15 +35,8 @@ import {
     physiotherapyValidationSchema,
     prostheticOrthoticValidationSchema,
     wheelchairValidationSchema,
-} from "@cbr/common/forms/Referral/referralFormFields";
-
-const serviceTypes: ReferralFormField[] = [
-    ReferralFormField.wheelchair,
-    ReferralFormField.physiotherapy,
-    ReferralFormField.prosthetic,
-    ReferralFormField.orthotic,
-    ReferralFormField.servicesOther,
-];
+    serviceTypes,
+} from "@cbr/common/forms/Referral/referralFields";
 
 interface IFormProps {
     formikProps: FormikProps<any>;

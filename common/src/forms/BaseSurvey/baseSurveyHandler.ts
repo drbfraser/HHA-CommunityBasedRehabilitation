@@ -1,7 +1,7 @@
 import { FormikHelpers } from "formik";
 import { apiFetch, Endpoint } from "../../util/endpoints";
 import React from "react";
-import { BaseSurveyFormField, BaseFormValues } from "./baseSurveyFormFields";
+import { BaseFormValues, BaseSurveyFormField } from "./baseSurveyFields";
 
 const addSurvey = async (surveyInfo: string) => {
     const init: RequestInit = {

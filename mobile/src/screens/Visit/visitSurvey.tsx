@@ -14,7 +14,7 @@ import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import TextPicker from "../../components/TextPicker/TextPicker";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
-import { IRisk } from "@cbr/common";
+import { IRisk, prostheticInjuryLocations } from "@cbr/common";
 
 // import { useParams } from "react-router";
 import { getZones, themeColors, useZones, TZoneMap } from "@cbr/common";
@@ -34,59 +34,56 @@ import {
 } from "./formFields";
 import { handleSubmit } from "./formHandler";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./visitSurvey.style";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const visitTypes: FormField[] = [FormField.health, FormField.education, FormField.social];
 
-// const ImprovementField = (props: {
-//     formikProps: FormikProps<any>;
-//     visitType: string;
-//     provided: string;
-//     index: number;
-// }) => {
-//     const fieldName = `${FormField.improvements}.${props.visitType}.${props.index}`;
-//     const isImprovementEnabled =
-//         props.formikProps.values[FormField.improvements][props.visitType][props.index]?.[
-//             ImprovementFormField.enabled
-//         ] === true;
+const ImprovementField = (props: {
+    formikProps: FormikProps<any>;
+    visitType: string;
+    provided: string;
+    index: number;
+}) => {
+    const fieldName = `${FormField.improvements}.${props.visitType}.${props.index}`;
+    const isImprovementEnabled =
+        props.formikProps.values[FormField.improvements][props.visitType][props.index]?.[
+            ImprovementFormField.enabled
+        ] === true;
 
-//     if (
-//         props.formikProps.values[FormField.improvements][props.visitType][props.index] === undefined
-//     ) {
-//         // Since this component is dynamically generated we need to set its initial values
-//         props.formikProps.setFieldValue(`${fieldName}`, {
-//             [ImprovementFormField.enabled]: false,
-//             [ImprovementFormField.description]: "",
-//             [ImprovementFormField.riskType]: props.visitType,
-//             [ImprovementFormField.provided]: props.provided,
-//         });
-//     }
+    if (
+        props.formikProps.values[FormField.improvements][props.visitType][props.index] === undefined
+    ) {
+        // Since this component is dynamically generated we need to set its initial values
+        props.formikProps.setFieldValue(`${fieldName}`, {
+            [ImprovementFormField.enabled]: false,
+            [ImprovementFormField.description]: "",
+            [ImprovementFormField.riskType]: props.visitType,
+            [ImprovementFormField.provided]: props.provided,
+        });
+    }
 
-//     return (
-//         <div key={props.index}>
-//             <Field
-//                 component={CheckboxWithLabel}
-//                 type="checkbox"
-//                 name={`${fieldName}.${ImprovementFormField.enabled}`}
-//                 Label={{ label: props.provided }}
-//             />
-//             <br />
-//             {isImprovementEnabled && (
-//                 <Field
-//                     key={`${props.provided}${ImprovementFormField.description}`}
-//                     type="text"
-//                     component={TextField}
-//                     variant="outlined"
-//                     name={`${fieldName}.${ImprovementFormField.description}`}
-//                     label={fieldLabels[ImprovementFormField.description]}
-//                     required
-//                     fullWidth
-//                     multiline
-//                 />
-//             )}
-//         </div>
-//     );
-// };
+    return (
+        <View key={props.index}>
+            <TextCheckBox
+                //key={visitType}
+                field={FormField.improvements}
+                value={props.formikProps.values[ImprovementFormField.enabled]}
+                label={props.provided}
+                setFieldValue={props.formikProps.setFieldValue}
+            />
+
+            {/* {isImprovementEnabled && (
+                <TextInput
+                    mode="outlined"
+                    label={fieldLabels[ImprovementFormField.description]}
+                    value={props.formikProps.values[ImprovementFormField.description]}
+                    onChangeText={(value) =>
+                        props.formikProps.setFieldValue(ImprovementFormField.description, value)
+                    }
+                />
+            )} */}
+        </View>
+    );
+};
 
 interface ISurvey {
     label: string;
@@ -173,6 +170,7 @@ const visitFocusForm = (
                 >
                     {formikProps.errors[FormField.zone]}
                 </HelperText>
+
                 <Text style={styles.pickerQuestion}>{"\n"}Select the Reasons for the Visit </Text>
                 {visitTypes.map((visitType) => (
                     <TextCheckBox
@@ -201,28 +199,48 @@ const healthVisitForm = (props: IFormProps, visitType: FormField) => {
         <View>
             <Text style={styles.pickerQuestion}>{"\n"}Select an Improvement </Text>
             {provisionals[visitType].map((visitType) => (
-                <TextCheckBox
-                    key={visitType}
-                    field={visitType}
-                    value={props.formikProps.values[visitType]}
-                    label={visitType}
-                    setFieldValue={props.formikProps.setFieldValue}
-                />
+                <>
+                    <TextCheckBox
+                        key={visitType}
+                        field={visitType}
+                        value={props.formikProps.values[visitType]}
+                        label={visitType}
+                        setFieldValue={props.formikProps.setFieldValue}
+                    />
+
+                    {props.formikProps.values[visitType] && (
+                        <>
+                            <TextInput
+                                key={"unselectable"}
+                                mode="outlined"
+                                label={fieldLabels[ImprovementFormField.description]}
+                                value={props.formikProps.values[ImprovementFormField.description]}
+                                onChangeText={(value) => {
+                                    props.formikProps.setFieldTouched(
+                                        ImprovementFormField.description,
+                                        true
+                                    );
+
+                                    props.formikProps.setFieldValue(
+                                        ImprovementFormField.description,
+                                        value
+                                    );
+                                }}
+                            />
+                            <HelperText
+                                // style={styles.errorText}
+                                type="error"
+                                visible={
+                                    !!props.formikProps.errors[ImprovementFormField.description]
+                                }
+                            >
+                                {props.formikProps.errors[ImprovementFormField.description]}
+                            </HelperText>
+                        </>
+                    )}
+                </>
             ))}
-            {/* <FieldArray
-                name={FormField.improvements}
-                render={() =>
-                    provisionals[visitType].map((provided, index) => (
-                        <ImprovementField
-                            key={index}
-                            formikProps={formikProps}
-                            visitType={visitType}
-                            provided={provided}
-                            index={index}
-                        />
-                    ))
-                }
-            /> */}
+
             <Text style={styles.pickerQuestion}>{"\n"}Client's Health Goal </Text>
             <Text style={styles.normalInput}>{"\n"}Improved Learning </Text>
             <Text style={styles.pickerQuestion}>{"\n"}Client's Health Goal Status </Text>

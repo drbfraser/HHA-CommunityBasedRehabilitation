@@ -27,9 +27,6 @@ const useStyles = () =>
             fontWeight: "bold",
             fontSize: 14,
         },
-        alertText: {
-            color: themeColors.hhaBlue,
-        },
         pickerBoard: {
             flex: 1,
             justifyContent: "center",
@@ -41,7 +38,6 @@ const useStyles = () =>
             color: themeColors.blueBgDark,
         },
         stepLabelText: { fontSize: 25, fontWeight: "bold" },
-        centerElement: { justifyContent: "center", alignItems: "center" },
         picker: { height: 55, width: "100%", flexGrow: 1 },
         pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
         errorText: { color: themeColors.errorRed, paddingLeft: 15 },

@@ -227,7 +227,7 @@ const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormFiel
     );
 };
 
-const OtherServicesForm = (props: IFormProps) => {
+const OtherServicesForm = () => {
     const styles = useStyles();
 
     return (

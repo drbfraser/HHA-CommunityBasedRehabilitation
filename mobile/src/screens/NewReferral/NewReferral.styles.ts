@@ -1,20 +1,3 @@
-// import { makeStyles } from "@material-ui/core/styles";
-
-// export const useStyles = makeStyles(
-//     {
-//         fieldIndent: {
-//             paddingLeft: "9px",
-//         },
-//         hipWidth: {
-//             maxWidth: "160px",
-//         },
-//         inches: {
-//             verticalAlign: "sub",
-//         },
-//     },
-//     { index: 1 }
-// );
-
 import { themeColors } from "@cbr/common";
 import { StyleSheet } from "react-native";
 
@@ -26,9 +9,6 @@ const useStyles = () =>
             justifyContent: "center",
             marginLeft: 30,
             marginRight: 30,
-        },
-        fieldIndent: {
-            paddingLeft: "9px",
         },
         checkBoxText: {
             flexDirection: "row",
@@ -65,7 +45,6 @@ const useStyles = () =>
             paddingHorizontal: 16,
         },
         stepLabelText: { fontSize: 25, fontWeight: "bold" },
-        centerElement: { justifyContent: "center", alignItems: "center" },
         picker: { height: 40, width: 250 },
         pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
         errorText: { color: themeColors.errorRed, paddingLeft: 15 },

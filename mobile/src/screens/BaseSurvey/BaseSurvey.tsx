@@ -58,7 +58,7 @@ const BaseSurvey = () => {
                 helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, 1);
                 // helpers.setFieldValue(`${[FormField.client]}`, clientId);
             }
-            if (step === 0 || step === 3) {
+            if ((step === 0 || step === 3) && !stepChecked[step]) {
                 helpers.setTouched({});
             }
             let newArr = [...stepChecked];

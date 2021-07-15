@@ -14,9 +14,10 @@ const OtherServicesForm = (props: IFormProps) => {
                 mode="outlined"
                 label={referralFieldLabels[ReferralFormField.otherDescription]}
                 value={props.formikProps.values[ReferralFormField.otherDescription]}
-                onChangeText={(value) =>
-                    props.formikProps.setFieldValue(ReferralFormField.otherDescription, value)
-                }
+                onChangeText={(value) => {
+                    props.formikProps.setFieldTouched(ReferralFormField.otherDescription, true);
+                    props.formikProps.setFieldValue(ReferralFormField.otherDescription, value);
+                }}
             />
             <HelperText
                 style={styles.errorText}

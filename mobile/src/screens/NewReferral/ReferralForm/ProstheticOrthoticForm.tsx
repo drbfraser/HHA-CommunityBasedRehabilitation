@@ -11,16 +11,16 @@ const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormFiel
             ? prostheticInjuryLocations
             : orthoticInjuryLocations;
     const styles = useStyles();
-
     return (
         <View>
             <Text />
             <Text>Where is the injury?</Text>
             <List.Section>
                 <RadioButton.Group
-                    value={props.formikProps.values[serviceType] ? "BEL" : "ABO"}
+                    value={props.formikProps.values[`${serviceType}_injury_location`]}
                     onValueChange={(value: string) => {
-                        props.formikProps.setFieldValue(serviceType, value === "BEL");
+                        props.formikProps.setFieldTouched(`${serviceType}_injury_location`, true);
+                        props.formikProps.setFieldValue(`${serviceType}_injury_location`, value);
                     }}
                 >
                     {Object.entries(injuryLocations).map(([value, name]) => (

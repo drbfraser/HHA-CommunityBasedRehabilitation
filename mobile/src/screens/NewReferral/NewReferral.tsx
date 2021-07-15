@@ -49,7 +49,10 @@ const ReferralServiceForm = (
                     label={referralFieldLabels[serviceType]}
                     value={props.formikProps.values[serviceType]}
                     setFieldValue={props.formikProps.setFieldValue}
-                    onChange={(value) => onCheckboxChange(value, serviceType)}
+                    onChange={(value) => {
+                        props.formikProps.setFieldTouched(serviceType, true);
+                        onCheckboxChange(value, serviceType);
+                    }}
                 />
             ))}
         </View>
@@ -63,20 +66,34 @@ const NewReferral = () => {
     const styles = useStyles();
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
     const prevStep = () => setActiveStep(activeStep - 1);
-
+    const [stepChecked, setStepChecked] = useState([false]);
     // Make sure the user can not click to next if they did not fill out the required fields
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             handleSubmit(values, helpers, setSubmissionError);
         } else {
             if (activeStep === 0) {
-                // TODO: Change back when it is connected to the web
+                if (stepChecked.length < enabledSteps.length - 1) {
+                    for (let i = 1; i < enabledSteps.length - 1; i++) {
+                        stepChecked.push(false);
+                    }
+                }
+                // TODO: Change back when it is connected to the client detail
                 helpers.setFieldValue(`${[ReferralFormField.client]}`, 1);
                 // helpers.setFieldValue(`${[FormField.client]}`, clientId);
             }
+            if (
+                enabledSteps[activeStep] !== ReferralFormField.prosthetic &&
+                enabledSteps[activeStep] !== ReferralFormField.orthotic &&
+                !stepChecked[activeStep]
+            ) {
+                helpers.setTouched({});
+            }
+            let newArr = [...stepChecked];
+            newArr[activeStep] = true;
+            setStepChecked(newArr);
             setActiveStep(activeStep + 1);
             helpers.setSubmitting(false);
-            helpers.setTouched({});
         }
     };
 
@@ -149,7 +166,12 @@ const NewReferral = () => {
                                         nextStep(formikProps.values, formikProps);
                                     }}
                                     nextBtnDisabled={
-                                        !formikProps.isValid || enabledSteps.length === 0
+                                        !stepChecked[activeStep]
+                                            ? activeStep === 0 && activeStep < enabledSteps.length
+                                                ? false
+                                                : Object.keys(formikProps.errors).length !== 0 ||
+                                                  Object.keys(formikProps.touched).length === 0
+                                            : false
                                     }
                                     onPrevious={prevStep}
                                     previousBtnStyle={styles.prevButton}

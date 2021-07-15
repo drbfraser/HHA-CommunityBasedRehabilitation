@@ -148,7 +148,9 @@ const NewReferral = () => {
                                     onNext={() => {
                                         nextStep(formikProps.values, formikProps);
                                     }}
-                                    nextBtnDisabled={!formikProps.isValid}
+                                    nextBtnDisabled={
+                                        !formikProps.isValid || enabledSteps.length === 0
+                                    }
                                     onPrevious={prevStep}
                                     previousBtnStyle={styles.prevButton}
                                     onSubmit={() => nextStep(formikProps.values, formikProps)}

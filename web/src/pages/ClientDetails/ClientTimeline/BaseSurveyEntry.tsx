@@ -16,7 +16,10 @@ import { Skeleton, Alert } from "@material-ui/lab";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import { useStyles } from "./Entry.styles";
-import { BaseSurveyFormField, baseFieldLabels } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
+import {
+    BaseSurveyFormField,
+    baseFieldLabels,
+} from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import { Assignment } from "@material-ui/icons";
 import {
@@ -66,7 +69,8 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
                 survey.health_assistive_device_type !== undefined
                     ? deviceTypes[survey.health_assistive_device_type]
                     : "",
-            [BaseSurveyFormField.serviceSatisf]: rateLevel[survey.health_services_satisfaction].name,
+            [BaseSurveyFormField.serviceSatisf]:
+                rateLevel[survey.health_services_satisfaction].name,
         },
         [BaseSurveyFormField.education]: {
             [BaseSurveyFormField.goSchool]: survey.school_currently_attend,

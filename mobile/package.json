@@ -3,6 +3,9 @@
   "scripts": {
     "start": "expo start",
     "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz && expo r -c",
+    "build-android-apk": "APP_ENV=prod expo build:android -t apk",
+    "build-android-app-bundle": "APP_ENV=prod expo build:android -t app-bundle",
+    "publish-expo": "APP_ENV=prod expo publish",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -51,6 +54,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
+    "@expo/config-types": "^41.0.0",
     "@types/react": "~16.9.35",
     "@types/react-native": "^0.63.52",
     "@types/react-native-material-dropdown": "^0.11.4",

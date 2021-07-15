@@ -85,7 +85,7 @@ const ImprovementField = (props: {
     );
 };
 
-interface ISurvey {
+interface IVisitForm {
     label: string;
     Form: (props: IFormProps) => JSX.Element;
     validationSchema: () => any;
@@ -118,77 +118,69 @@ const visitFocusForm = (
                     (checked && type === visitType)
             )
         );
-        console.log(checked);
 
         if (checked) {
-            // formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, {
-            //     [OutcomeFormField.riskType]: visitType,
-            //     [OutcomeFormField.goalStatus]: GoalStatus.ongoing,
-            //     [OutcomeFormField.outcome]: "",
-            // });
-            console.log("checked");
+            formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, {
+                [OutcomeFormField.riskType]: visitType,
+                [OutcomeFormField.goalStatus]: GoalStatus.ongoing,
+                [OutcomeFormField.outcome]: "",
+            });
         } else {
-            // formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, undefined);
-            console.log("not checked");
+            formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, undefined);
         }
     };
     return (
-        <View>
-            <View style={styles.viewPadding}>
-                <Text style={styles.pickerQuestion}>{"\n"}Where was the Visit? </Text>
-                <Text />
-                <TextInput
-                    mode="outlined"
-                    label={fieldLabels[FormField.village]}
-                    value={formikProps.values[FormField.village]}
-                    onChangeText={(value) => formikProps.setFieldValue(FormField.village, value)}
-                />
+        <View style={styles.viewPadding}>
+            <Text style={styles.pickerQuestion}>{"\n"}Where was the Visit? </Text>
+            <Text />
+            <TextInput
+                mode="outlined"
+                label={fieldLabels[FormField.village]}
+                value={formikProps.values[FormField.village]}
+                onChangeText={(value) => formikProps.setFieldValue(FormField.village, value)}
+            />
 
-                <HelperText
-                    // style={styles.errorText}
-                    type="error"
-                    visible={!!formikProps.errors[FormField.village]}
-                >
-                    {formikProps.errors[FormField.village]}
-                </HelperText>
+            <HelperText
+                // style={styles.errorText}
+                type="error"
+                visible={!!formikProps.errors[FormField.village]}
+            >
+                {formikProps.errors[FormField.village]}
+            </HelperText>
 
-                <TextPicker
-                    field={FormField.zone}
-                    choices={Array.from(zones.entries()).map(([key, value]) => ({
-                        label: value,
-                        value: key,
-                    }))}
-                    selectedValue={formikProps.values[FormField.zone]}
+            <TextPicker
+                field={FormField.zone}
+                choices={Array.from(zones.entries()).map(([key, value]) => ({
+                    label: value,
+                    value: key,
+                }))}
+                selectedValue={formikProps.values[FormField.zone]}
+                setFieldValue={formikProps.setFieldValue}
+                setFieldTouched={formikProps.setFieldTouched}
+            />
+
+            <HelperText
+                // style={styles.errorText}
+                type="error"
+                visible={!!formikProps.errors[FormField.zone]}
+            >
+                {formikProps.errors[FormField.zone]}
+            </HelperText>
+
+            <Text style={styles.pickerQuestion}>{"\n"}Select the Reasons for the Visit </Text>
+            {visitTypes.map((visitType) => (
+                <TextCheckBox
+                    key={visitType}
+                    field={visitType}
+                    value={formikProps.values[visitType]}
+                    label={fieldLabels[visitType]}
                     setFieldValue={formikProps.setFieldValue}
-                    setFieldTouched={formikProps.setFieldTouched}
-                />
-
-                <HelperText
-                    // style={styles.errorText}
-                    type="error"
-                    visible={!!formikProps.errors[FormField.zone]}
-                >
-                    {formikProps.errors[FormField.zone]}
-                </HelperText>
-
-                <Text style={styles.pickerQuestion}>{"\n"}Select the Reasons for the Visit </Text>
-                {visitTypes.map((visitType) => (
-                    <TextCheckBox
-                        key={visitType}
-                        field={visitType}
-                        value={formikProps.values[visitType]}
-                        label={fieldLabels[visitType]}
-                        setFieldValue={formikProps.setFieldValue}
-                    />
-                ))}
-                {/* <Checkbox
-                    status={checked ? "checked" : "unchecked"}
-                    onPress={() => {
-                        setChecked(!checked);
-                        onCheckboxChange(!checked, "HEALTH");
+                    onChange={(value) => {
+                        formikProps.setFieldTouched(visitType, true);
+                        onCheckboxChange(value, visitType);
                     }}
-                /> */}
-            </View>
+                />
+            ))}
         </View>
     );
 };
@@ -196,7 +188,7 @@ const visitFocusForm = (
 const healthVisitForm = (props: IFormProps, visitType: FormField) => {
     const styles = useStyles();
     return (
-        <View>
+        <View style={styles.viewPadding}>
             <Text style={styles.pickerQuestion}>{"\n"}Select an Improvement </Text>
             {provisionals[visitType].map((visitType) => (
                 <>
@@ -211,7 +203,7 @@ const healthVisitForm = (props: IFormProps, visitType: FormField) => {
                     {props.formikProps.values[visitType] && (
                         <>
                             <TextInput
-                                key={"unselectable"}
+                                // key={"unselectable"}
                                 mode="outlined"
                                 label={fieldLabels[ImprovementFormField.description]}
                                 value={props.formikProps.values[ImprovementFormField.description]}
@@ -385,36 +377,42 @@ const NewVisit = () => {
 
     // const [risks, setRisks] = useState<IRisk[]>([]);
 
-    const [activeStep, setActiveStep] = useState<number>(1);
-    const [checked, setChecked] = React.useState(false);
-    const [checked2, setChecked2] = React.useState(false);
+    const [activeStep, setActiveStep] = useState<number>(0);
+
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
     const zones = useZones();
 
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 
-    const surveySteps: ISurvey[] = [
+    const focuses: { [key: string]: IVisitForm } = {
+        [FormField.health]: {
+            label: `${fieldLabels[FormField.health]} Visit`,
+            Form: (formikProps) => healthVisitForm(formikProps, visitTypes[0]),
+            validationSchema: () => visitTypeValidationSchema(visitTypes[0]),
+        },
+        [FormField.education]: {
+            label: `${fieldLabels[FormField.education]} Visit`,
+            Form: (formikProps) => educationVisitForm(formikProps, visitTypes[1]),
+            validationSchema: () => visitTypeValidationSchema(visitTypes[1]),
+        },
+        [FormField.social]: {
+            label: `${fieldLabels[FormField.social]} Visit`,
+            Form: (formikProps) => educationVisitForm(formikProps, visitTypes[2]),
+            validationSchema: () => visitTypeValidationSchema(visitTypes[2]),
+        },
+    };
+
+    const surveySteps: IVisitForm[] = [
         {
             label: "Visit Focus",
-            // Form: (formikProps) => visitFocusForm(formikProps),
             Form: visitReasonStepCallBack(setEnabledSteps, zones),
             validationSchema: initialValidationSchema,
         },
-        {
-            label: "Health Visit",
-            Form: (formikProps) => healthVisitForm(formikProps, visitTypes[0]),
-            validationSchema: initialValidationSchema,
-        },
-        {
-            label: "Education Visit",
-            Form: (formikProps) => educationVisitForm(formikProps, visitTypes[1]),
-            validationSchema: initialValidationSchema,
-        },
-        {
-            label: "Social Visit",
-            Form: (formikProps) => socialVisitForm(formikProps, visitTypes[2]),
-            validationSchema: initialValidationSchema,
-        },
+        ...enabledSteps.map((visitType) => ({
+            label: focuses[visitType].label,
+            Form: focuses[visitType].Form,
+            validationSchema: focuses[visitType].validationSchema,
+        })),
     ];
 
     const prevStep = () => setStep(step - 1);
@@ -434,7 +432,7 @@ const NewVisit = () => {
     return (
         <Formik
             initialValues={initialValues}
-            validationSchema={surveySteps[step].validationSchema}
+            validationSchema={surveySteps[activeStep].validationSchema}
             onSubmit={nextStep}
             enableReinitialize
         >
@@ -442,11 +440,11 @@ const NewVisit = () => {
                 <>
                     <Appbar.Header>
                         <Appbar.BackAction />
-                        <Appbar.Content title={"Baseline Survey"} />
+                        <Appbar.Content title={"Visit Survey"} />
                     </Appbar.Header>
 
-                    <SafeAreaView style={styles.container}>
-                        <ProgressSteps {...progressStepsStyle}>
+                    <View style={styles.container}>
+                        <ProgressSteps key={surveySteps} {...progressStepsStyle}>
                             {surveySteps.map((surveyStep, index) => {
                                 return (
                                     <ProgressStep
@@ -457,6 +455,7 @@ const NewVisit = () => {
                                         nextBtnTextStyle={styles.buttonTextStyle}
                                         nextBtnStyle={styles.nextButton}
                                         previousBtnStyle={styles.prevButton}
+                                        style={{ flex: 1, backgroundColor: "#000000" }}
                                     >
                                         <ScrollView>
                                             <surveyStep.Form formikProps={formikProps} />
@@ -465,58 +464,7 @@ const NewVisit = () => {
                                 );
                             })}
                         </ProgressSteps>
-
-                        {/* <Checkbox
-                            status={checked ? "checked" : "unchecked"}
-                            onPress={() => {
-                                setChecked(!checked);
-
-                                if (!checked) {
-                                    surveySteps.push({
-                                        label: "Health Visit",
-                                        Form: (formikProps) =>
-                                            healthVisitForm(formikProps, visitTypes[0]),
-                                        validationSchema: initialValidationSchema,
-                                    });
-                                    setActiveStep(activeStep + 1);
-                                } else {
-                                    // surveySteps.filter(
-                                    //     (steps) =>
-                                    //         !steps.label.toLocaleLowerCase().includes("livelihood")
-                                    // );
-                                    const indexA = surveySteps.findIndex((steps) =>
-                                        steps.label.toLocaleLowerCase().includes("health")
-                                    );
-                                    surveySteps.splice(indexA, 1);
-                                    setActiveStep(activeStep - 1);
-                                }
-                            }}
-                        /> */}
-
-                        {/* <Checkbox
-                            status={checked2 ? "checked" : "unchecked"}
-                            onPress={() => {
-                                setChecked2(!checked2);
-
-                                if (!checked2) {
-                                    surveySteps.push({
-                                        label: "Education",
-                                        Form: (formikProps) => educationVisitForm(formikProps),
-                                        validationSchema: initialValidationSchema,
-                                    });
-                                    setActiveStep(activeStep + 1);
-                                } else {
-                                    const indexA = surveySteps.findIndex((steps) =>
-                                        steps.label.toLocaleLowerCase().includes("education")
-                                    );
-                                    // console.log(indexA);
-                                    surveySteps.splice(indexA, 1);
-
-                                    setActiveStep(activeStep - 1);
-                                }
-                            }}
-                        /> */}
-                    </SafeAreaView>
+                    </View>
                 </>
             )}
         </Formik>

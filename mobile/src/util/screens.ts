@@ -4,6 +4,8 @@ import Todo from "../screens/Todo/Todo";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 import Profile from "../screens/Profile/Profile";
 
+import Dashboard from "../screens/DashBoard/Dashboard";
+
 export interface IScreen {
     name: string;
     roles?: UserRole[];
@@ -14,7 +16,7 @@ export interface IScreen {
 const screens: IScreen[] = [
     {
         name: "Dashboard",
-        Component: Todo,
+        Component: Dashboard,
         iconName: "home",
     },
     // TODO: Waiting until clients screen is done
@@ -68,3 +70,18 @@ export const screensForUser = (user: IUser | TAPILoadError | undefined) => {
 };
 
 export const defaultPage = screens[0];
+
+export enum StackScreenName {
+    HOME = "Home",
+    CLIENT = "ClientDetails",
+}
+
+export const stackScreenProps = {
+};
+
+export type stackParamList = {
+    [StackScreenName.HOME]: undefined;
+    [StackScreenName.CLIENT]: {
+        clientID: number;
+    };
+};

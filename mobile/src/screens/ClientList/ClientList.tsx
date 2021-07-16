@@ -18,12 +18,11 @@ interface ClientListControllerProps {
 
 const returnWrapedView = (item) => {
     return (
-        <View style={{ flexDirection: "row", flex: 1.5, alignItems: "center", padding:5 }}>
+        <View style={{ flexDirection: "row", flex: 1.5, alignItems: "center", padding: 5 }}>
             <Text style={{ flexShrink: 1 }}>{item}</Text>
         </View>
     );
 };
-
 
 const ClientList = (props: ClientListControllerProps) => {
     const styles = useStyles();
@@ -73,8 +72,8 @@ const ClientList = (props: ClientListControllerProps) => {
                 <Text style={{ flex: 0.7, paddingLeft: 10 }}>My Clients</Text>
                 <Switch
                     style={{ flex: 0.2 }}
-                    trackColor={{ false: themeColors.yellow, true: themeColors.yellow }} 
-                    thumbColor={allClientsMode ? themeColors.white : themeColors.white }
+                    trackColor={{ false: themeColors.yellow, true: themeColors.yellow }}
+                    thumbColor={allClientsMode ? themeColors.white : themeColors.white}
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={setAllClientsMode}
                     value={allClientsMode}
@@ -124,7 +123,9 @@ const ClientList = (props: ClientListControllerProps) => {
                                 }}
                             >
                                 <DataTable.Cell style={{ flex: 0.7 }}>{item.id}</DataTable.Cell>
-                                <View style={{ flex: 1.5 }}>{returnWrapedView(item.full_name)}</View>
+                                <View style={{ flex: 1.5 }}>
+                                    {returnWrapedView(item.full_name)}
+                                </View>
                                 <View style={{ flex: 1.5 }}>{returnWrapedView(item.zone)}</View>
                                 <DataTable.Cell style={{ flex: 0.8 }}>
                                     {riskTypes.CIRCLE.Icon(item.HealthLevel)}

@@ -16,7 +16,6 @@ const useStyles = () =>
         },
         search: {
             flex: 2,
-            
         },
         row: {
             flexDirection: "row",

@@ -76,8 +76,7 @@ export enum StackScreenName {
     CLIENT = "ClientDetails",
 }
 
-export const stackScreenProps = {
-};
+export const stackScreenProps = {};
 
 export type stackParamList = {
     [StackScreenName.HOME]: undefined;

@@ -10,32 +10,20 @@ import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
-import { Item } from "react-native-paper/lib/typescript/components/List/List";
-import { SearchOption } from "./searchOptions";
-import { useZones } from "@cbr/common";
+import { SearchOption, themeColors, useZones } from "@cbr/common";
 
 interface ClientListControllerProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
 }
 
-const showName = (item) => {
-    const name_array = item.full_name.split(" ");
-
-    if (name_array.length == 1) {
-        return (
-            <View>
-                <Text key={name_array[0]}>{name_array[0]}</Text>
-            </View>
-        );
-    } else {
-        return (
-            <View>
-                <Text>{name_array[0]}</Text>
-                <Text>{name_array[name_array.length - 1]}</Text>
-            </View>
-        );
-    }
+const returnWrapedView = (item) => {
+    return (
+        <View style={{ flexDirection: "row", flex: 1.5, alignItems: "center", padding:5 }}>
+            <Text style={{ flexShrink: 1 }}>{item}</Text>
+        </View>
+    );
 };
+
 
 const ClientList = (props: ClientListControllerProps) => {
     const styles = useStyles();
@@ -45,7 +33,7 @@ const ClientList = (props: ClientListControllerProps) => {
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
     const zones = useZones();
 
-    const onChangeSearch = (query) => setSearchQuery(query);
+    const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
 
     useEffect(() => {
         const newClientGet = async () => {
@@ -85,8 +73,8 @@ const ClientList = (props: ClientListControllerProps) => {
                 <Text style={{ flex: 0.7, paddingLeft: 10 }}>My Clients</Text>
                 <Switch
                     style={{ flex: 0.2 }}
-                    trackColor={{ false: "#767577", true: "#81b0ff" }}
-                    thumbColor={allClientsMode ? "#f5dd4b" : "#f4f3f4"}
+                    trackColor={{ false: themeColors.yellow, true: themeColors.yellow }} 
+                    thumbColor={allClientsMode ? themeColors.white : themeColors.white }
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={setAllClientsMode}
                     value={allClientsMode}
@@ -111,16 +99,16 @@ const ClientList = (props: ClientListControllerProps) => {
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>
-                        <DataTable.Title style={{ flex: 0.7 }}>ID</DataTable.Title>
-                        <DataTable.Title style={{ flex: 1.5 }}>Name</DataTable.Title>
-                        <DataTable.Title style={{ flex: 2 }}>Zone</DataTable.Title>
-                        <DataTable.Title style={{ flex: 0.8 }}>
+                        <DataTable.Title style={styles.column_id}>ID</DataTable.Title>
+                        <DataTable.Title style={styles.column_name}>Name</DataTable.Title>
+                        <DataTable.Title style={styles.column_zone}>Zone</DataTable.Title>
+                        <DataTable.Title style={styles.column_icons}>
                             {riskTypes.HEALTH.Icon("#000000")}
                         </DataTable.Title>
-                        <DataTable.Title style={{ flex: 0.8 }}>
+                        <DataTable.Title style={styles.column_icons}>
                             {riskTypes.EDUCAT.Icon("#000000")}
                         </DataTable.Title>
-                        <DataTable.Title style={{ flex: 0.8 }}>
+                        <DataTable.Title style={styles.column_icons}>
                             {riskTypes.SOCIAL.Icon("#000000")}
                         </DataTable.Title>
                     </DataTable.Header>
@@ -136,8 +124,8 @@ const ClientList = (props: ClientListControllerProps) => {
                                 }}
                             >
                                 <DataTable.Cell style={{ flex: 0.7 }}>{item.id}</DataTable.Cell>
-                                <View style={{ flex: 1.5 }}>{showName(item)}</View>
-                                <DataTable.Cell style={{ flex: 2 }}>{item.zone}</DataTable.Cell>
+                                <View style={{ flex: 1.5 }}>{returnWrapedView(item.full_name)}</View>
+                                <View style={{ flex: 1.5 }}>{returnWrapedView(item.zone)}</View>
                                 <DataTable.Cell style={{ flex: 0.8 }}>
                                     {riskTypes.CIRCLE.Icon(item.HealthLevel)}
                                 </DataTable.Cell>

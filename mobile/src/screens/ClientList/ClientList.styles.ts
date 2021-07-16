@@ -16,12 +16,25 @@ const useStyles = () =>
         },
         search: {
             flex: 2,
+            
         },
         row: {
             flexDirection: "row",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+        },
+        column_id: {
+            flex: 0.7,
+        },
+        column_name: {
+            flex: 1.5,
+        },
+        column_zone: {
+            flex: 1.5,
+        },
+        column_icons: {
+            flex: 0.8,
         },
     });
 

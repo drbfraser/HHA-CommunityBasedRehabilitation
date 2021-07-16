@@ -5,7 +5,6 @@ const useStyles = () =>
     StyleSheet.create({
         container: {
             flex: 1,
-            // alignItems: "center",
             justifyContent: "center",
             marginLeft: 15,
             marginRight: 15,
@@ -53,7 +52,8 @@ export const progressStepsStyle = {
     completedStepIconColor: themeColors.blueBgDark,
     completedProgressBarColor: themeColors.blueBgDark,
     completedCheckColor: themeColors.white,
-
+    labelFontSize: 3,
+    activeLabelFontSize: 9,
     topOffset: 20,
     marginBottom: 10,
 };

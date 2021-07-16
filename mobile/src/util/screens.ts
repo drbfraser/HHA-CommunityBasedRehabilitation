@@ -1,7 +1,8 @@
 import React from "react";
 import { APILoadError, IUser, TAPILoadError, UserRole } from "@cbr/common";
 import Todo from "../screens/Todo/Todo";
-import visitSurvey from "../screens/Visit/visitSurvey";
+
+import NewVisit from "../screens/NewVisit/NewVisit";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 import Profile from "../screens/Profile/Profile";
 
@@ -15,7 +16,7 @@ export interface IScreen {
 const screens: IScreen[] = [
     {
         name: "Dashboard",
-        Component: Todo,
+        Component: NewVisit,
         iconName: "home",
     },
     // TODO: Waiting until clients screen is done
@@ -37,7 +38,7 @@ const screens: IScreen[] = [
     },
     {
         name: "visitSurvey",
-        Component: visitSurvey,
+        Component: Todo,
         iconName: "account",
     },
     {

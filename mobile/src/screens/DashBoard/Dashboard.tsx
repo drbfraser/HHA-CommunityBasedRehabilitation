@@ -16,18 +16,10 @@ interface ClientListControllerProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
 }
 
-const returnName = (item) => {
+const returnText = (item) => {
     return (
-        <View style={{ flexDirection: "row", flex: 3, alignItems: "center" }}>
-            <Text style={{ flexShrink: 1 }}>{item.full_name}</Text>
-        </View>
-    );
-};
-
-const returnReferralType = (item) => {
-    return (
-        <View style={{ flexDirection: "row", flex: 3, alignItems: "center", padding: 10 }}>
-            <Text style={{ flexShrink: 1 }}>{item.type}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={{ flexShrink: 1 }}>{item}</Text>
         </View>
     );
 };
@@ -58,18 +50,22 @@ const Dashboard = (props: ClientListControllerProps) => {
                         <ScrollView>
                             <DataTable>
                                 <DataTable.Header style={styles.item}>
-                                    <DataTable.Title style={{ flex: 0.8 }}>Name</DataTable.Title>
-                                    <DataTable.Title style={{ flex: 1.0 }}>Zone</DataTable.Title>
-                                    <DataTable.Title style={{ flex: 0.2 }}>
+                                    <DataTable.Title style={styles.column_client_name}>
+                                        Name
+                                    </DataTable.Title>
+                                    <DataTable.Title style={styles.column_client_zone}>
+                                        Zone
+                                    </DataTable.Title>
+                                    <DataTable.Title style={styles.column_client_icon}>
                                         {riskTypes.HEALTH.Icon("#000000")}
                                     </DataTable.Title>
-                                    <DataTable.Title style={{ flex: 0.2 }}>
+                                    <DataTable.Title style={styles.column_client_icon}>
                                         {riskTypes.EDUCAT.Icon("#000000")}
                                     </DataTable.Title>
-                                    <DataTable.Title style={{ flex: 0.2 }}>
+                                    <DataTable.Title style={styles.column_client_icon}>
                                         {riskTypes.SOCIAL.Icon("#000000")}
                                     </DataTable.Title>
-                                    <DataTable.Title style={{ flex: 0.8, padding: 3 }}>
+                                    <DataTable.Title style={styles.column_client_Last_visit_date}>
                                         Last visit date
                                     </DataTable.Title>
                                 </DataTable.Header>
@@ -84,20 +80,24 @@ const Dashboard = (props: ClientListControllerProps) => {
                                                 });
                                             }}
                                         >
-                                            <View style={{ flex: 0.8 }}>{returnName(item)}</View>
-                                            <DataTable.Cell style={{ flex: 1.0, padding: 1 }}>
+                                            <View style={styles.column_client_name}>
+                                                {returnText(item.full_name)}
+                                            </View>
+                                            <DataTable.Cell style={styles.column_client_zone}>
                                                 <Text style={styles.fontSize}>{item.zone}</Text>
                                             </DataTable.Cell>
-                                            <DataTable.Cell style={{ flex: 0.2 }}>
+                                            <DataTable.Cell style={styles.column_client_icon}>
                                                 {riskTypes.CIRCLE.Icon(item.HealthLevel)}
                                             </DataTable.Cell>
-                                            <DataTable.Cell style={{ flex: 0.2 }}>
+                                            <DataTable.Cell style={styles.column_client_icon}>
                                                 {riskTypes.CIRCLE.Icon(item.EducationLevel)}
                                             </DataTable.Cell>
-                                            <DataTable.Cell style={{ flex: 0.2 }}>
+                                            <DataTable.Cell style={styles.column_client_icon}>
                                                 {riskTypes.CIRCLE.Icon(item.SocialLevel)}
                                             </DataTable.Cell>
-                                            <DataTable.Cell style={{ flex: 0.8, padding: 3 }}>
+                                            <DataTable.Cell
+                                                style={styles.column_client_Last_visit_date}
+                                            >
                                                 <Text style={styles.fontSize}>
                                                     {timestampToDate(Number(item.last_visit_date))}
                                                 </Text>
@@ -115,9 +115,13 @@ const Dashboard = (props: ClientListControllerProps) => {
                         <ScrollView>
                             <DataTable>
                                 <DataTable.Header style={styles.item}>
-                                    <DataTable.Title style={{ flex: 1 }}>Name</DataTable.Title>
-                                    <DataTable.Title style={{ flex: 3 }}>Type</DataTable.Title>
-                                    <DataTable.Title style={{ flex: 1 }}>
+                                    <DataTable.Title style={styles.column_refreal_name}>
+                                        Name
+                                    </DataTable.Title>
+                                    <DataTable.Title style={styles.column_refreal_type}>
+                                        Type
+                                    </DataTable.Title>
+                                    <DataTable.Title style={styles.column_refreal_date}>
                                         Date Reffered
                                     </DataTable.Title>
                                 </DataTable.Header>
@@ -132,9 +136,13 @@ const Dashboard = (props: ClientListControllerProps) => {
                                                 });
                                             }}
                                         >
-                                            <View style={{ flex: 1 }}>{returnName(item)}</View>
-                                            {returnReferralType(item)}
-                                            <DataTable.Cell style={{ flex: 1, padding: 5 }}>
+                                            <View style={styles.column_refreal_name}>
+                                                {returnText(item.full_name)}
+                                            </View>
+                                            <View style={styles.column_refreal_type}>
+                                                {returnText(item.type)}
+                                            </View>
+                                            <DataTable.Cell style={styles.column_refreal_date}>
                                                 <Text style={styles.fontSize}>
                                                     {timestampToDate(Number(item.date_referred))}
                                                 </Text>

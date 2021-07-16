@@ -5,6 +5,7 @@
 You'll need to install Docker and NodeJS + NPM.
 
 Follow this guide to install Docker: https://docs.docker.com/get-docker/
+
 - If on Windows 10 Home, you'll need to first [enable WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and then follow this guide: https://docs.docker.com/docker-for-windows/install-windows-home/
 
 Install NodeJS 14 LTS from here: https://nodejs.org/en/
@@ -41,13 +42,14 @@ that `DEV_API_URL` is ignored when running a production or staging build. Runnin
 in the `mobile` directory will be considered a development build.
 
 If you are going to be using an IP address, you will need to specify the port (8000) in the URL.
-* If you are going to be developing the app with a physical phone:
-  * Ensure that the phone is connected to the same network as the computer that will be running the
+
+- If you are going to be developing the app with a physical phone:
+  - Ensure that the phone is connected to the same network as the computer that will be running the
     backend.
-  - Use the computer's local IP address for `<some hostname or IP>` above.
-    * On Windows, you can find the local IP by running `ipconfig` in PowerShell or the command line.
-    * On macOS and Linux, you can find the IP by running `ifconfig`.
-* If you are going to be developing the app with AVD / Android Emulator, then use `10.0.2.2` as the
+  * Use the computer's local IP address for `<some hostname or IP>` above.
+    - On Windows, you can find the local IP by running `ipconfig` in PowerShell or the command line.
+    - On macOS and Linux, you can find the IP by running `ifconfig`.
+- If you are going to be developing the app with AVD / Android Emulator, then use `10.0.2.2` as the
   IP address, since
   [the emulator's virtual router uses that as an alias for localhost / `127.0.0.1` on your computer](https://developer.android.com/studio/run/emulator-networking#networkaddresses):
 

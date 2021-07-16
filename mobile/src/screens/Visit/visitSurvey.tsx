@@ -14,12 +14,10 @@ import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import TextPicker from "../../components/TextPicker/TextPicker";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
-import { IRisk, prostheticInjuryLocations } from "@cbr/common";
 
 // import { useParams } from "react-router";
-import { getZones, themeColors, useZones, TZoneMap } from "@cbr/common";
+import { getZones, themeColors, useZones, TZoneMap, IRisk } from "@cbr/common";
 // import { useHistory } from "react-router-dom";
-import { MaterialIcons } from "@expo/vector-icons";
 
 import {
     fieldLabels,
@@ -261,9 +259,9 @@ const healthVisitForm = (props: IFormProps, visitType: FormField) => {
             <HelperText
                 // style={styles.errorText}
                 type="error"
-                visible={!!props.formikProps.errors[FormField.village]}
+                visible={!!props.formikProps.errors[OutcomeFormField.outcome]}
             >
-                {props.formikProps.errors[FormField.village]}
+                {props.formikProps.errors[OutcomeFormField.outcome]}
             </HelperText>
         </View>
     );
@@ -275,13 +273,46 @@ const educationVisitForm = (props: IFormProps, visitType: FormField) => {
         <View>
             <Text style={styles.pickerQuestion}>{"\n"}Select an Improvement </Text>
             {provisionals[visitType].map((visitType) => (
-                <TextCheckBox
-                    key={visitType}
-                    field={visitType}
-                    value={props.formikProps.values[visitType]}
-                    label={visitType}
-                    setFieldValue={props.formikProps.setFieldValue}
-                />
+                <>
+                    <TextCheckBox
+                        key={visitType}
+                        field={visitType}
+                        value={props.formikProps.values[visitType]}
+                        label={visitType}
+                        setFieldValue={props.formikProps.setFieldValue}
+                    />
+
+                    {props.formikProps.values[visitType] && (
+                        <>
+                            <TextInput
+                                // key={"unselectable"}
+                                mode="outlined"
+                                label={fieldLabels[ImprovementFormField.description]}
+                                value={props.formikProps.values[ImprovementFormField.description]}
+                                onChangeText={(value) => {
+                                    props.formikProps.setFieldTouched(
+                                        ImprovementFormField.description,
+                                        true
+                                    );
+
+                                    props.formikProps.setFieldValue(
+                                        ImprovementFormField.description,
+                                        value
+                                    );
+                                }}
+                            />
+                            <HelperText
+                                // style={styles.errorText}
+                                type="error"
+                                visible={
+                                    !!props.formikProps.errors[ImprovementFormField.description]
+                                }
+                            >
+                                {props.formikProps.errors[ImprovementFormField.description]}
+                            </HelperText>
+                        </>
+                    )}
+                </>
             ))}
             <Text style={styles.pickerQuestion}>{"\n"}Client's Education Goal </Text>
             <Text style={styles.normalInput}>{"\n"}Additional Mobility </Text>
@@ -310,9 +341,9 @@ const educationVisitForm = (props: IFormProps, visitType: FormField) => {
             <HelperText
                 // style={styles.errorText}
                 type="error"
-                visible={!!props.formikProps.errors[FormField.village]}
+                visible={!!props.formikProps.errors[OutcomeFormField.outcome]}
             >
-                {props.formikProps.errors[FormField.village]}
+                {props.formikProps.errors[OutcomeFormField.outcome]}
             </HelperText>
         </View>
     );
@@ -324,13 +355,46 @@ const socialVisitForm = (props: IFormProps, visitType: FormField) => {
         <View>
             <Text style={styles.pickerQuestion}>{"\n"}Select an Improvement </Text>
             {provisionals[visitType].map((visitType) => (
-                <TextCheckBox
-                    key={visitType}
-                    field={visitType}
-                    value={props.formikProps.values[visitType]}
-                    label={visitType}
-                    setFieldValue={props.formikProps.setFieldValue}
-                />
+                <>
+                    <TextCheckBox
+                        key={visitType}
+                        field={visitType}
+                        value={props.formikProps.values[visitType]}
+                        label={visitType}
+                        setFieldValue={props.formikProps.setFieldValue}
+                    />
+
+                    {props.formikProps.values[visitType] && (
+                        <>
+                            <TextInput
+                                // key={"unselectable"}
+                                mode="outlined"
+                                label={fieldLabels[ImprovementFormField.description]}
+                                value={props.formikProps.values[ImprovementFormField.description]}
+                                onChangeText={(value) => {
+                                    props.formikProps.setFieldTouched(
+                                        ImprovementFormField.description,
+                                        true
+                                    );
+
+                                    props.formikProps.setFieldValue(
+                                        ImprovementFormField.description,
+                                        value
+                                    );
+                                }}
+                            />
+                            <HelperText
+                                // style={styles.errorText}
+                                type="error"
+                                visible={
+                                    !!props.formikProps.errors[ImprovementFormField.description]
+                                }
+                            >
+                                {props.formikProps.errors[ImprovementFormField.description]}
+                            </HelperText>
+                        </>
+                    )}
+                </>
             ))}
             <Text style={styles.pickerQuestion}>{"\n"}Client's Social Goal </Text>
             <Text style={styles.normalInput}>{"\n"}Full Recovery </Text>
@@ -359,9 +423,9 @@ const socialVisitForm = (props: IFormProps, visitType: FormField) => {
             <HelperText
                 // style={styles.errorText}
                 type="error"
-                visible={!!props.formikProps.errors[FormField.village]}
+                visible={!!props.formikProps.errors[OutcomeFormField.outcome]}
             >
-                {props.formikProps.errors[FormField.village]}
+                {props.formikProps.errors[OutcomeFormField.outcome]}
             </HelperText>
         </View>
     );

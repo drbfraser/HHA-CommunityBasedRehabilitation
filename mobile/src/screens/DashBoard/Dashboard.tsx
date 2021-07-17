@@ -39,6 +39,7 @@ const Dashboard = (props: ClientListControllerProps) => {
     useEffect(() => {
         newClientGet();
         referealsGet();
+        //TODO alert part.
     }, []);
     return (
         <SafeAreaView style={styles.container}>

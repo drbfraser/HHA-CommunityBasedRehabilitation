@@ -12,6 +12,7 @@ const useStyles = () =>
             borderWidth: 1.2,
             borderRadius: 4,
             marginTop: 10,
+            marginBottom: 10,
             color: themeColors.blueBgDark,
         },
     });

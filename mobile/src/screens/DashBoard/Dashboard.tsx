@@ -19,7 +19,7 @@ interface ClientListControllerProps {
 const returnText = (item) => {
     return (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ flexShrink: 1 }}>{item}</Text>
+            <Text style={{ flexShrink: 1, fontSize: 12 }}>{item}</Text>
         </View>
     );
 };
@@ -31,13 +31,15 @@ const Dashboard = (props: ClientListControllerProps) => {
         var fetchedClientList = await fetchAllClientsFromApi();
         setClientList(fetchedClientList);
     };
-    newClientGet();
 
     const referealsGet = async () => {
         var fetchedReferrals = await fetchReferrals();
         setReferealList(fetchedReferrals);
     };
-    referealsGet();
+    useEffect(() => {
+        newClientGet();
+        referealsGet();
+    }, []);
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -83,9 +85,9 @@ const Dashboard = (props: ClientListControllerProps) => {
                                             <View style={styles.column_client_name}>
                                                 {returnText(item.full_name)}
                                             </View>
-                                            <DataTable.Cell style={styles.column_client_zone}>
-                                                <Text style={styles.fontSize}>{item.zone}</Text>
-                                            </DataTable.Cell>
+                                            <View style={styles.column_client_zone}>
+                                                {returnText(item.zone)}
+                                            </View>
                                             <DataTable.Cell style={styles.column_client_icon}>
                                                 {riskTypes.CIRCLE.Icon(item.HealthLevel)}
                                             </DataTable.Cell>
@@ -111,7 +113,7 @@ const Dashboard = (props: ClientListControllerProps) => {
                 </View>
                 <View style={styles.card}>
                     <Card>
-                        <Card.Title title="OutStanding Referrals"></Card.Title>
+                        <Card.Title title="Outstanding Referrals"></Card.Title>
                         <ScrollView>
                             <DataTable>
                                 <DataTable.Header style={styles.item}>
@@ -122,7 +124,7 @@ const Dashboard = (props: ClientListControllerProps) => {
                                         Type
                                     </DataTable.Title>
                                     <DataTable.Title style={styles.column_refreal_date}>
-                                        Date Reffered
+                                        Date Referred
                                     </DataTable.Title>
                                 </DataTable.Header>
                                 {referealList.map((item) => {

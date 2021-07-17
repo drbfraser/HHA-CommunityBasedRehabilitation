@@ -58,23 +58,15 @@ export const ClientDetails = (props: FormProps) => {
     var disabilityList = useDisabilities();
 
     //Client Details Usestates
-    const [clientFirstName, setClientFirstName] = useState<string>("");
-    const [clientLastName, setClientLastName] = useState<string>("");
-    const [date, setDate] = useState(new Date());
-    const [gender, setGender] = useState("");
-    const [village, setVillage] = useState("");
-    const [zone, setZone] = useState<number>();
-    const [phoneNumber, setPhoneNumber] = useState("");
+
+    const [date, setDate] = useState(new Date(props.date));
     const [caregiverPresent, setCaregiverPresent] = React.useState(false);
-    const [caregiverName, setCaregiverName] = React.useState("");
-    const [caregiverEmail, setCaregiverEmail] = React.useState("");
-    const [caregiverPhone, setCaregiverPhone] = React.useState("");
-    const [clientDisability, setDisability] = useState<number[]>([]);
 
     var zoneNameList: string[] = [];
     for (let index of Array.from(zoneList.entries())) {
         zoneNameList.push(index[1]);
     }
+    const [presentZone, setPresentZone] = React.useState<String>(zoneNameList[props.zone - 1]);
 
     var correctedClientDisability: number[] = [];
     var disabilityNameList: string[] = [];
@@ -143,15 +135,6 @@ export const ClientDetails = (props: FormProps) => {
     //Date Picker
     const [show, setShow] = useState(false);
 
-    const onDateChange = useCallback(
-        (event, newDate) => {
-            setShow(Platform.OS === "ios");
-            if (newDate) setDate(newDate);
-            setShow(false);
-        },
-        [show, date]
-    );
-
     const showDatepicker = () => {
         setShow(true);
     };
@@ -196,9 +179,7 @@ export const ClientDetails = (props: FormProps) => {
 
                         <Text> Birthdate </Text>
                         <View style={styles.clientBirthdayView}>
-                            <Text style={styles.carePresentCheckBox}>
-                                {props.date.toDateString()}
-                            </Text>
+                            <Text style={styles.carePresentCheckBox}>{date.toDateString()}</Text>
                             <View style={styles.clientBirthdayButtons}>
                                 <View>
                                     <Button
@@ -215,8 +196,14 @@ export const ClientDetails = (props: FormProps) => {
                                         value={props.date}
                                         mode="date"
                                         display="default"
-                                        //onChange={onDateChange}
-                                        onChange={formikProps.handleChange("date")}
+                                        onChange={(event, date) => {
+                                            setShow(Platform.OS === "ios");
+                                            if (date) {
+                                                formikProps.setFieldValue("date", date);
+                                                setDate(date);
+                                            }
+                                            setShow(false);
+                                        }}
                                     />
                                 )}
                             </View>
@@ -264,6 +251,12 @@ export const ClientDetails = (props: FormProps) => {
                                                 returnValue={"zone_name"}
                                                 callback={(values) => {
                                                     formikProps.handleChange("zone");
+                                                    formikProps.setFieldValue(
+                                                        "zone",
+                                                        Number(values[0])
+                                                    );
+                                                    console.log(Number(values[0]));
+                                                    setPresentZone(zoneNameList[Number(values[0])]);
                                                 }}
                                                 rowBackgroundColor={"#eee"}
                                                 iconSize={30}
@@ -292,9 +285,7 @@ export const ClientDetails = (props: FormProps) => {
                             >
                                 Edit Zone
                             </Button>
-                            <Text style={styles.carePresentCheckBox}>
-                                {zoneNameList[props.zone - 1]}
-                            </Text>
+                            <Text style={styles.carePresentCheckBox}>{presentZone}</Text>
                         </View>
 
                         <TextInput

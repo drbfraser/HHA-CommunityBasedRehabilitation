@@ -13,7 +13,7 @@ const PhysiotherapyForm = (props: IFormProps) => {
     return (
         <View>
             <Text />
-            <Text>What condition does the client have?</Text>
+            <Text style={styles.question}>What condition does the client have?</Text>
             <TextPicker
                 field={ReferralFormField.condition}
                 choices={Array.from(disabilities.entries()).map(([key, value]) => ({

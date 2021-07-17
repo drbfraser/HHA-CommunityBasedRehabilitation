@@ -9,7 +9,7 @@ const OtherServicesForm = (props: IFormProps) => {
     return (
         <View>
             <Text />
-            <Text>Please describe the referral</Text>
+            <Text style={styles.question}>Please describe the referral</Text>
             <TextInput
                 mode="outlined"
                 label={referralFieldLabels[ReferralFormField.otherDescription]}

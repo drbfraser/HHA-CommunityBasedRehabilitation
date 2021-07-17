@@ -5,7 +5,6 @@ const useStyles = () =>
     StyleSheet.create({
         container: {
             flex: 1,
-            alignItems: "center",
             justifyContent: "center",
             marginLeft: 30,
             marginRight: 30,

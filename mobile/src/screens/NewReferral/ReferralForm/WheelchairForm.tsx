@@ -12,7 +12,7 @@ const WheelchairForm = (props: IFormProps) => {
     return (
         <View>
             <Text />
-            <Text>What type of wheelchair user?</Text>
+            <Text style={styles.question}>What type of wheelchair user?</Text>
             <List.Section>
                 <RadioButton.Group
                     value={props.formikProps.values[ReferralFormField.wheelchairExperience]}
@@ -32,13 +32,12 @@ const WheelchairForm = (props: IFormProps) => {
                 </RadioButton.Group>
             </List.Section>
 
-            <Text>What is the client's hip width?</Text>
+            <Text style={styles.question}>What is the client's hip width?</Text>
             <View style={styles.hipWidthContainer}>
                 <TextInput
                     style={styles.hipWidthInput}
                     keyboardType="numeric"
                     value={props.formikProps.values[ReferralFormField.hipWidth]}
-                    // error={!_isUsernameValid(nameNoPadding)}
                     onChangeText={(value) => {
                         props.formikProps.setFieldTouched(ReferralFormField.hipWidth, true);
                         props.formikProps.setFieldValue(ReferralFormField.hipWidth, value);
@@ -54,7 +53,7 @@ const WheelchairForm = (props: IFormProps) => {
             >
                 {props.formikProps.errors[ReferralFormField.hipWidth]}
             </HelperText>
-            <Text>Wheelchair information</Text>
+            <Text style={styles.question}>Wheelchair information</Text>
             <TextCheckBox
                 field={ReferralFormField.wheelchairOwned}
                 value={props.formikProps.values[ReferralFormField.wheelchairOwned]}

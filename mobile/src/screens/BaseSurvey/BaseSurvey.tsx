@@ -133,10 +133,9 @@ const BaseSurvey = () => {
                                         nextStep(formikProps.values, formikProps);
                                     }}
                                     nextBtnDisabled={
-                                        !stepChecked[step]
-                                            ? Object.keys(formikProps.errors).length !== 0 ||
-                                              Object.keys(formikProps.touched).length === 0
-                                            : false
+                                        Object.keys(formikProps.errors).length !== 0 ||
+                                        (Object.keys(formikProps.touched).length === 0 &&
+                                            !stepChecked[step])
                                     }
                                     onPrevious={prevStep}
                                     previousBtnStyle={styles.prevButton}

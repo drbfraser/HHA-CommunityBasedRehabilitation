@@ -5,7 +5,6 @@ const useStyles = () =>
     StyleSheet.create({
         container: {
             flex: 1,
-            alignItems: "center",
             justifyContent: "center",
             marginLeft: 30,
             marginRight: 30,
@@ -46,7 +45,7 @@ const useStyles = () =>
         },
         stepLabelText: { fontSize: 25, fontWeight: "bold" },
         picker: { height: 40, width: 250 },
-        pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
+        question: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
         errorText: { color: themeColors.errorRed, paddingLeft: 15 },
         hipWidthInput: {
             backgroundColor: "transparent",

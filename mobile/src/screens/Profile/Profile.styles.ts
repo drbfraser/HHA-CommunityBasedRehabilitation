@@ -3,7 +3,8 @@ import { StyleSheet } from "react-native";
 const useStyles = () => {
     return StyleSheet.create({
         container: {
-            margin: 30,
+            marginTop: 30,
+            marginHorizontal: 30,
             flex: 1,
         },
         errorAlertContainer: {

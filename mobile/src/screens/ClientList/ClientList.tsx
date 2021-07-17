@@ -43,8 +43,8 @@ const ClientList = (props: ClientListControllerProps) => {
             allClientsMode,
             sortOption,
             sortDirection
-        )
-        console.log(exampleClient)
+        );
+        console.log(exampleClient);
         setClientList(exampleClient);
     };
     const sortBy = async (option: string) => {
@@ -60,7 +60,6 @@ const ClientList = (props: ClientListControllerProps) => {
     };
 
     useEffect(() => {
-        
         newClientGet();
     }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection]);
     return (

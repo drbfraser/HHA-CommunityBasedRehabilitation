@@ -1,26 +1,26 @@
 version: "3.7"
 services:
-    django:
-        container_name: ${COMPOSE_PROJECT_NAME}_django
-        restart: always
-        command: gunicorn cbr.wsgi --bind 0:8000
-        user: ${GITLAB_RUNNER_UID_GID}
-        environment: 
-            - DOMAIN=${DOMAIN}
-            - POSTGRES_HOST=${COMPOSE_PROJECT_NAME}_postgres
-    postgres:
-        container_name: ${COMPOSE_PROJECT_NAME}_postgres
-        restart: always
-    caddy:
-        container_name: ${COMPOSE_PROJECT_NAME}_caddy
-        image: caddy:2.3.0
-        restart: always
-        volumes:
-            - ./caddy:/etc/caddy
-            - ./web/build:/var/www
-            - django_uploads:/var/www-uploads
-        ports:
-            - ${PORT}:80
-        environment:
-            - DOMAIN=${DOMAIN}
-            - API_HOSTNAME=${COMPOSE_PROJECT_NAME}_django
+  django:
+    container_name: ${COMPOSE_PROJECT_NAME}_django
+    restart: always
+    command: gunicorn cbr.wsgi --bind 0:8000
+    user: ${GITLAB_RUNNER_UID_GID}
+    environment:
+      - DOMAIN=${DOMAIN}
+      - POSTGRES_HOST=${COMPOSE_PROJECT_NAME}_postgres
+  postgres:
+    container_name: ${COMPOSE_PROJECT_NAME}_postgres
+    restart: always
+  caddy:
+    container_name: ${COMPOSE_PROJECT_NAME}_caddy
+    image: caddy:2.3.0
+    restart: always
+    volumes:
+      - ./caddy:/etc/caddy
+      - ./web/build:/var/www
+      - django_uploads:/var/www-uploads
+    ports:
+      - ${PORT}:80
+    environment:
+      - DOMAIN=${DOMAIN}
+      - API_HOSTNAME=${COMPOSE_PROJECT_NAME}_django

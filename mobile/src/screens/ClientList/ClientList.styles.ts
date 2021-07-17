@@ -4,32 +4,36 @@ const useStyles = () =>
     StyleSheet.create({
         container: {
             flex: 1,
-            alignItems: "flex-start",
-            paddingTop: 0,
         },
         item: {
-            padding: 5,
+            padding: 3,
             fontSize: 14,
-            height: 44,
-        },
-        list: {
-            padding: 10,
-            fontSize: 18,
-            height: 44,
+            alignItems: "center",
+            justifyContent: "center",
         },
         select: {
-            height: 50,
-            width: 200,
-            left: 10,
+            flex: 1,
         },
         search: {
-            height: 50,
-            width: 100,
-            left: 15,
+            flex: 2,
         },
         row: {
-            flex: 1,
             flexDirection: "row",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+        },
+        column_id: {
+            flex: 0.7,
+        },
+        column_name: {
+            flex: 1.5,
+        },
+        column_zone: {
+            flex: 1.5,
+        },
+        column_icons: {
+            flex: 0.8,
         },
     });
 

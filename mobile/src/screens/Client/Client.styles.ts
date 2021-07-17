@@ -213,21 +213,31 @@ const useStyles = () =>
             fontSize: 24,
         },
         disabilityChecklist: {
-            height: 460,
+            height: 500,
             marginHorizontal: 20,
-            marginTop: 160,
+            marginTop: 140,
             display: "flex",
             backgroundColor: "white",
             borderRadius: 10,
+            justifyContent: "space-between",
+        },
+        zoneChecklist: {
+            height: 540,
+            marginHorizontal: 20,
+            marginTop: 140,
+            display: "flex",
+            backgroundColor: "white",
+            borderRadius: 10,
+            justifyContent: "space-between",
         },
         nestedScrollView: {
             display: "flex",
             justifyContent: "center",
             padding: 20,
-            height: 460,
+            height: 480,
         },
         nestedScrollStyle: {
-            marginBottom: 20,
+            marginBottom: 10,
         },
         otherDisabilityStyle: {
             marginLeft: 5,
@@ -238,6 +248,12 @@ const useStyles = () =>
             borderBottomRightRadius: 5,
             borderTopRightRadius: 5,
             borderTopLeftRadius: 5,
+        },
+        modalSelectorButton: {
+            padding: 3,
+            marginLeft: 10,
+            marginRight: 10,
+            borderRadius: 5,
         },
     });
 

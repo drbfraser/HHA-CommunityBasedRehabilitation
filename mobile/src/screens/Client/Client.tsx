@@ -19,7 +19,7 @@ import { IVisitSummary } from "../../util/visits";
 import { ActivityDTO, ActivityType, SummaryActivity } from "./Activity";
 import { TimeLineDate } from "./TimeLineDate";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
-
+import { ClientRisk } from "./ClientRisk";
 import { ClientDetails } from "./ClientDetails";
 
 /*
@@ -47,7 +47,7 @@ const Client = (props: ClientProps) => {
     const [lastName, setLastName] = useState("");
     const [village, setVillage] = useState("");
     const [gender, setGender] = useState("");
-    const [zone, setZone] = useState("");
+    const [zone, setZone] = useState<number>();
     const [phoneNumber, setPhoneNumber] = useState("");
     const [caregiverPresent, setCaregiverPresent] = React.useState(false);
     const [caregiverName, setCaregiverName] = React.useState("");
@@ -70,7 +70,7 @@ const Client = (props: ClientProps) => {
         setFirstName(presentClient.first_name);
         setLastName(presentClient.last_name);
         setVillage(presentClient.village);
-        setZone(Array.from(zoneList.entries())[presentClient.zone][1]);
+        setZone(presentClient.zone);
         setPhoneNumber(presentClient.phoneNumber);
         setOtherDisability(presentClient.otherDisability);
         setCaregiverPresent(presentClient.careGiverPresent);
@@ -219,82 +219,7 @@ const Client = (props: ClientProps) => {
                         />
                     </Card>
                     <Divider></Divider>
-                    <Text style={styles.cardSectionTitle}>Client Risks</Text>
-                    <Divider></Divider>
-                    <Card style={styles.riskCardStyle}>
-                        <View style={styles.riskCardContentStyle}>
-                            <Text style={styles.riskTitleStyle}>Health</Text>
-                            <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.riskHeaderStyle}>Requirements: </Text>
-                            <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.riskHeaderStyle}>Goals: </Text>
-                            <Text style={styles.riskRequirementStyle}>Goals go here</Text>
-                        </View>
-                        <View style={styles.clientDetailsFinalView}>
-                            <Button
-                                mode="contained"
-                                style={styles.clientDetailsFinalButtons}
-                                disabled={false}
-                                onPress={enableButtons}
-                            >
-                                {editMode ? "Edit" : "Save"}
-                            </Button>
-                        </View>
-                    </Card>
-                    <Divider></Divider>
-                    <Card style={styles.riskCardStyle}>
-                        <View style={styles.riskCardContentStyle}>
-                            <Text style={styles.riskTitleStyle}>Education</Text>
-                            <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.riskHeaderStyle}>Requirements: </Text>
-                            <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.riskHeaderStyle}>Goals: </Text>
-                            <Text style={styles.riskRequirementStyle}>Goals go here</Text>
-                        </View>
-                        <View style={styles.clientDetailsFinalView}>
-                            <Button
-                                mode="contained"
-                                style={styles.clientDetailsFinalButtons}
-                                disabled={false}
-                                onPress={enableButtons}
-                            >
-                                {editMode ? "Edit" : "Save"}
-                            </Button>
-                        </View>
-                    </Card>
-                    <Divider></Divider>
-                    <Card style={styles.riskCardStyle}>
-                        <View style={styles.riskCardContentStyle}>
-                            <Text style={styles.riskTitleStyle}>Social</Text>
-                            <Text style={styles.riskSubtitleStyle}>CRITICAL</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.riskHeaderStyle}>Requirements: </Text>
-                            <Text style={styles.riskRequirementStyle}>Requrements go here</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.riskHeaderStyle}>Goals: </Text>
-                            <Text style={styles.riskRequirementStyle}>Goals go here</Text>
-                        </View>
-                        <View style={styles.clientDetailsFinalView}>
-                            <Button
-                                mode="contained"
-                                style={styles.clientDetailsFinalButtons}
-                                disabled={false}
-                                onPress={enableButtons}
-                            >
-                                {editMode ? "Edit" : "Save"}
-                            </Button>
-                        </View>
-                    </Card>
+                    <ClientRisk editMode={editMode}></ClientRisk>
                     <Divider></Divider>
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>

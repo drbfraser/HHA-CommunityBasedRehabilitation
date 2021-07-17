@@ -26,7 +26,7 @@ interface FormProps {
     date: Date;
     gender: string;
     village: string;
-    zone: string;
+    zone: number;
     phone: string;
     caregiverPresent?: boolean;
     caregiverName?: string;
@@ -42,7 +42,7 @@ interface FormValues {
     date?: Date;
     gender?: string;
     village?: string;
-    zone?: string;
+    zone?: number;
     phone?: string;
     caregiverPresent?: boolean;
     caregiverName?: string;
@@ -63,7 +63,7 @@ export const ClientDetails = (props: FormProps) => {
     const [date, setDate] = useState(new Date());
     const [gender, setGender] = useState("");
     const [village, setVillage] = useState("");
-    const [zone, setZone] = useState("");
+    const [zone, setZone] = useState<number>();
     const [phoneNumber, setPhoneNumber] = useState("");
     const [caregiverPresent, setCaregiverPresent] = React.useState(false);
     const [caregiverName, setCaregiverName] = React.useState("");
@@ -71,8 +71,14 @@ export const ClientDetails = (props: FormProps) => {
     const [caregiverPhone, setCaregiverPhone] = React.useState("");
     const [clientDisability, setDisability] = useState<number[]>([]);
 
+    var zoneNameList: string[] = [];
+    for (let index of Array.from(zoneList.entries())) {
+        zoneNameList.push(index[1]);
+    }
+
     var correctedClientDisability: number[] = [];
     var disabilityNameList: string[] = [];
+    const [selectedDisabilityList, setSelectedDisabilityList] = useState<string[]>([]);
     if (props.clientDisability)
         for (let index of props.clientDisability) {
             var tempIndex = index - 1;
@@ -83,6 +89,23 @@ export const ClientDetails = (props: FormProps) => {
     }
     const [otherDisability, showOtherDisability] = useState(false);
 
+    const updateSelectedDisabilityList = () => {
+        // useEffect(() => {
+        //     setSelectedDisabilityList([]);
+        // });
+        var strLen = selectedDisabilityList.length;
+        for (let popIndex = 0; popIndex < strLen; popIndex++) {
+            selectedDisabilityList.pop();
+        }
+        for (let index of correctedClientDisability) {
+            if (index == 9) {
+                selectedDisabilityList.push(
+                    disabilityNameList[index] + " - " + props.otherDisability
+                );
+            } else selectedDisabilityList.push(disabilityNameList[index]);
+        }
+    };
+    updateSelectedDisabilityList();
     const initialValues: FormValues = {
         firstName: props.firstName,
         lastName: props.lastName,
@@ -218,35 +241,60 @@ export const ClientDetails = (props: FormProps) => {
                         />
 
                         <View>
-                            <Text> Zone</Text>
-                            <Text style={styles.carePresentCheckBox}> {props.zone} </Text>
-                            <Menu
-                                visible={zonesVisible}
-                                onDismiss={closeZonesMenu}
-                                anchor={
+                            <Portal>
+                                <Modal
+                                    visible={zonesVisible}
+                                    onDismiss={closeZonesMenu}
+                                    style={styles.zoneChecklist}
+                                >
+                                    <View style={styles.nestedScrollView}>
+                                        <View style={styles.disabilityListHeaderContainerStyle}>
+                                            <Text style={styles.disabilityListHeaderStyle}>
+                                                Zones List
+                                            </Text>
+                                        </View>
+                                        <ScrollView
+                                            style={styles.nestedScrollStyle}
+                                            nestedScrollEnabled={true}
+                                        >
+                                            <CustomMultiPicker
+                                                options={zoneNameList}
+                                                placeholder={"Zones"}
+                                                placeholderTextColor={"#757575"}
+                                                returnValue={"zone_name"}
+                                                callback={(values) => {
+                                                    formikProps.handleChange("zone");
+                                                }}
+                                                rowBackgroundColor={"#eee"}
+                                                iconSize={30}
+                                                selectedIconName={"checkmark-circle"}
+                                                unselectedIconName={"radio-button-off"}
+                                                selected={String(props.zone - 1)}
+                                            />
+                                        </ScrollView>
+                                    </View>
                                     <Button
                                         mode="contained"
-                                        style={styles.disabilityButton}
+                                        style={styles.modalSelectorButton}
                                         disabled={editMode}
-                                        onPress={openZonesMenu}
+                                        onPress={closeZonesMenu}
                                     >
-                                        Edit Zones
+                                        Save
                                     </Button>
-                                }
+                                </Modal>
+                            </Portal>
+                            <Text> Zone</Text>
+                            <Button
+                                mode="contained"
+                                style={styles.disabilityButton}
+                                disabled={editMode}
+                                onPress={openZonesMenu}
                             >
-                                {Array.from(zoneList.entries()).map(([key, value]) => {
-                                    return (
-                                        <Menu.Item
-                                            key={key}
-                                            title={value}
-                                            onPress={() => {
-                                                formikProps.handleChange("zone");
-                                                closeZonesMenu();
-                                            }}
-                                        />
-                                    );
-                                })}
-                            </Menu>
+                                Edit Zone
+                            </Button>
+                            <Text style={styles.carePresentCheckBox}>
+                                {zoneNameList[props.zone - 1]}
+                            </Text>
                         </View>
 
                         <TextInput
@@ -282,6 +330,7 @@ export const ClientDetails = (props: FormProps) => {
                                                 placeholderTextColor={"#757575"}
                                                 returnValue={"disability_type"}
                                                 callback={(values) => {
+                                                    updateSelectedDisabilityList();
                                                     var checkBoolean = false;
                                                     for (let checkOther of Array.from(values)) {
                                                         if (checkOther == 9) {
@@ -313,6 +362,14 @@ export const ClientDetails = (props: FormProps) => {
                                                 <></>
                                             )}
                                         </ScrollView>
+                                        <Button
+                                            mode="contained"
+                                            style={styles.modalSelectorButton}
+                                            disabled={editMode}
+                                            onPress={closeDisabilityMenu}
+                                        >
+                                            Save
+                                        </Button>
                                     </View>
                                 </Modal>
                             </Portal>
@@ -325,6 +382,13 @@ export const ClientDetails = (props: FormProps) => {
                             >
                                 Edit Disabilities
                             </Button>
+                            {selectedDisabilityList.map((item) => {
+                                return (
+                                    <Text key={item} style={styles.carePresentCheckBox}>
+                                        {item}
+                                    </Text>
+                                );
+                            })}
                         </View>
 
                         <View style={styles.carePresentView}>

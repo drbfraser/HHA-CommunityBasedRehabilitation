@@ -10,7 +10,7 @@ import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
-import { SearchOption, themeColors, useZones } from "@cbr/common";
+import { SearchOption, themeColors, useZones, SortOptions } from "@cbr/common";
 
 interface ClientListControllerProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
@@ -28,23 +28,41 @@ const ClientList = (props: ClientListControllerProps) => {
     const styles = useStyles();
     const [clientList, setClientList] = useState<ClientTest[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
-    const [searchQuery, setSearchQuery] = React.useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
+    const [sortDirection, setIsSortDirection] = useState("");
+    const [sortOption, setSortOption] = useState("");
     const zones = useZones();
-
+    const sortDirections = ["asc", "dec", "0"];
+    var currentDirection = 0;
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
+    const newClientGet = async () => {
+        const exampleClient = await fetchClientsFromApi(
+            selectedSearchOption,
+            searchQuery,
+            allClientsMode,
+            sortOption,
+            sortDirection
+        )
+        console.log(exampleClient)
+        setClientList(exampleClient);
+    };
+    const sortBy = async (option: string) => {
+        if (option != sortOption) {
+            setSortOption(option);
+            currentDirection = 0;
+            setIsSortDirection(sortDirections[currentDirection]);
+        } else {
+            currentDirection = (currentDirection + 1) % 3;
+
+            setIsSortDirection(sortDirections[currentDirection]);
+        }
+    };
 
     useEffect(() => {
-        const newClientGet = async () => {
-            const exampleClient = await fetchClientsFromApi(
-                selectedSearchOption,
-                searchQuery,
-                allClientsMode
-            );
-            setClientList(exampleClient);
-        };
+        
         newClientGet();
-    }, [selectedSearchOption, searchQuery, allClientsMode]);
+    }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection]);
     return (
         <View style={styles.container}>
             <View style={styles.row}>
@@ -98,16 +116,31 @@ const ClientList = (props: ClientListControllerProps) => {
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>
-                        <DataTable.Title style={styles.column_id}>ID</DataTable.Title>
-                        <DataTable.Title style={styles.column_name}>Name</DataTable.Title>
-                        <DataTable.Title style={styles.column_zone}>Zone</DataTable.Title>
-                        <DataTable.Title style={styles.column_icons}>
+                        <DataTable.Title style={styles.column_id} onPress={() => sortBy("id")}>
+                            ID
+                        </DataTable.Title>
+                        <DataTable.Title style={styles.column_name} onPress={() => sortBy("name")}>
+                            Name
+                        </DataTable.Title>
+                        <DataTable.Title style={styles.column_zone} onPress={() => sortBy("zone")}>
+                            Zone
+                        </DataTable.Title>
+                        <DataTable.Title
+                            style={styles.column_icons}
+                            onPress={() => sortBy("health")}
+                        >
                             {riskTypes.HEALTH.Icon("#000000")}
                         </DataTable.Title>
-                        <DataTable.Title style={styles.column_icons}>
+                        <DataTable.Title
+                            style={styles.column_icons}
+                            onPress={() => sortBy("education")}
+                        >
                             {riskTypes.EDUCAT.Icon("#000000")}
                         </DataTable.Title>
-                        <DataTable.Title style={styles.column_icons}>
+                        <DataTable.Title
+                            style={styles.column_icons}
+                            onPress={() => sortBy("social")}
+                        >
                             {riskTypes.SOCIAL.Icon("#000000")}
                         </DataTable.Title>
                     </DataTable.Header>

@@ -21,6 +21,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
 
 interface FormProps {
+    //isNewClient?: boolean;
     firstName: string;
     lastName: string;
     date: Date;
@@ -36,7 +37,6 @@ interface FormProps {
     otherDisability?: string;
 }
 interface FormValues {
-    //isNewClient?: boolean;
     firstName?: string;
     lastName?: string;
     date?: Date;
@@ -62,6 +62,7 @@ export const ClientDetails = (props: FormProps) => {
     const [date, setDate] = useState(new Date(props.date));
     const [caregiverPresent, setCaregiverPresent] = React.useState(false);
 
+    const [selectedZone, setSelectedZone] = useState<Number>(props.zone - 1);
     var zoneNameList: string[] = [];
     for (let index of Array.from(zoneList.entries())) {
         zoneNameList.push(index[1]);
@@ -70,34 +71,62 @@ export const ClientDetails = (props: FormProps) => {
 
     var correctedClientDisability: number[] = [];
     var disabilityNameList: string[] = [];
-    const [selectedDisabilityList, setSelectedDisabilityList] = useState<string[]>([]);
-    if (props.clientDisability)
-        for (let index of props.clientDisability) {
-            var tempIndex = index - 1;
-            correctedClientDisability.push(tempIndex);
-        }
+
     for (let index of Array.from(disabilityList.entries())) {
         disabilityNameList.push(index[1]);
     }
+
     const [otherDisability, showOtherDisability] = useState(false);
 
-    const updateSelectedDisabilityList = () => {
-        // useEffect(() => {
-        //     setSelectedDisabilityList([]);
-        // });
-        var strLen = selectedDisabilityList.length;
-        for (let popIndex = 0; popIndex < strLen; popIndex++) {
-            selectedDisabilityList.pop();
+    var newSelectedDisabilityList: string[] = [];
+
+    const updateSelectedDisabilityList = (disabilityArray: number[]) => {
+        for (let index of disabilityArray) {
+            var tempIndex = index - 1;
+            correctedClientDisability.push(tempIndex);
         }
-        for (let index of correctedClientDisability) {
-            if (index == 9) {
-                selectedDisabilityList.push(
-                    disabilityNameList[index] + " - " + props.otherDisability
+
+        //empty the array
+        for (let popIndex = 0; popIndex < newSelectedDisabilityList.length; popIndex++) {
+            newSelectedDisabilityList.pop();
+        }
+
+        //fill the array
+        for (let index of disabilityArray) {
+            if (index == 10) {
+                newSelectedDisabilityList.push(
+                    disabilityNameList[index - 1] + " - " + props.otherDisability
                 );
-            } else selectedDisabilityList.push(disabilityNameList[index]);
+            } else newSelectedDisabilityList.push(disabilityNameList[index - 1]);
         }
     };
-    updateSelectedDisabilityList();
+
+    const updateNewDisability = (disabilityArray: number[]) => {
+        for (let index of disabilityArray) {
+            var tempIndex = index - 1;
+            correctedClientDisability.push(tempIndex);
+        }
+
+        //empty the array
+        for (let popIndex = 0; popIndex < newSelectedDisabilityList.length; popIndex++) {
+            newSelectedDisabilityList.pop();
+        }
+
+        //fill the array
+        for (let index of disabilityArray) {
+            if (index == 10) {
+                newSelectedDisabilityList.push(
+                    disabilityNameList[index] + " - " + props.otherDisability
+                );
+            } else newSelectedDisabilityList.push(disabilityNameList[index]);
+        }
+    };
+
+    if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
+
+    const [selectedDisabilityList, setSelectedDisabilityList] =
+        useState<string[]>(newSelectedDisabilityList);
+
     const initialValues: FormValues = {
         firstName: props.firstName,
         lastName: props.lastName,
@@ -255,14 +284,14 @@ export const ClientDetails = (props: FormProps) => {
                                                         "zone",
                                                         Number(values[0])
                                                     );
-                                                    console.log(Number(values[0]));
                                                     setPresentZone(zoneNameList[Number(values[0])]);
+                                                    setSelectedZone(Number(values[0]));
                                                 }}
                                                 rowBackgroundColor={"#eee"}
                                                 iconSize={30}
                                                 selectedIconName={"checkmark-circle"}
                                                 unselectedIconName={"radio-button-off"}
-                                                selected={String(props.zone - 1)}
+                                                selected={String(selectedZone)}
                                             />
                                         </ScrollView>
                                     </View>
@@ -320,8 +349,8 @@ export const ClientDetails = (props: FormProps) => {
                                                 placeholder={"Disability"}
                                                 placeholderTextColor={"#757575"}
                                                 returnValue={"disability_type"}
-                                                callback={(values) => {
-                                                    updateSelectedDisabilityList();
+                                                callback={(values: number[]) => {
+                                                    var toUpdateDisability: number[] = [];
                                                     var checkBoolean = false;
                                                     for (let checkOther of Array.from(values)) {
                                                         if (checkOther == 9) {
@@ -330,6 +359,31 @@ export const ClientDetails = (props: FormProps) => {
                                                         }
                                                     }
                                                     showOtherDisability(checkBoolean);
+                                                    for (
+                                                        let popIndex = 0;
+                                                        popIndex < toUpdateDisability.length;
+                                                        popIndex++
+                                                    ) {
+                                                        toUpdateDisability.pop();
+                                                    }
+                                                    for (let index of Array.from(values)) {
+                                                        toUpdateDisability.push(Number(index));
+                                                    }
+                                                    formikProps.setFieldValue(
+                                                        "clientDisability",
+                                                        toUpdateDisability
+                                                    );
+
+                                                    for (let x of toUpdateDisability) {
+                                                        x -= 1;
+                                                    }
+
+                                                    updateNewDisability(toUpdateDisability);
+
+                                                    setSelectedDisabilityList(
+                                                        newSelectedDisabilityList
+                                                    );
+                                                    console.log(correctedClientDisability);
                                                 }}
                                                 rowBackgroundColor={"#eee"}
                                                 iconSize={30}

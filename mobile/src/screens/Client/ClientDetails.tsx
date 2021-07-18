@@ -21,14 +21,14 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
 
 interface FormProps {
-    //isNewClient?: boolean;
-    firstName: string;
-    lastName: string;
-    date: Date;
-    gender: string;
-    village: string;
-    zone: number;
-    phone: string;
+    isNewClient?: boolean;
+    firstName?: string;
+    lastName?: string;
+    date?: Date;
+    gender?: string;
+    village?: string;
+    zone?: number;
+    phone?: string;
     caregiverPresent?: boolean;
     caregiverName?: string;
     caregiverEmail?: string;
@@ -58,7 +58,6 @@ export const ClientDetails = (props: FormProps) => {
     var disabilityList = useDisabilities();
 
     //Client Details Usestates
-
     const [date, setDate] = useState(new Date(props.date));
     const [caregiverPresent, setCaregiverPresent] = React.useState(false);
 
@@ -149,7 +148,8 @@ export const ClientDetails = (props: FormProps) => {
     };
 
     //Menu Consts and functions
-    const [editMode, setEditMode] = React.useState(true);
+    const [editMode, setEditMode] = React.useState(!props.isNewClient);
+
     const [cancelButtonType, setCancelButtonType] = React.useState("outlined");
     const enableButtons = () => {
         if (editMode == true) {
@@ -311,14 +311,19 @@ export const ClientDetails = (props: FormProps) => {
                                 </Modal>
                             </Portal>
                             <Text> Zone</Text>
-                            <Button
-                                mode="contained"
-                                style={styles.disabilityButton}
-                                disabled={editMode}
-                                onPress={openZonesMenu}
-                            >
-                                Edit Zone
-                            </Button>
+                            {!editMode ? (
+                                <Button
+                                    mode="contained"
+                                    style={styles.disabilityButton}
+                                    disabled={editMode}
+                                    onPress={openZonesMenu}
+                                >
+                                    Edit Zone
+                                </Button>
+                            ) : (
+                                <></>
+                            )}
+
                             <Text style={styles.carePresentCheckBox}>{presentZone}</Text>
                         </View>
 
@@ -419,14 +424,20 @@ export const ClientDetails = (props: FormProps) => {
                                 </Modal>
                             </Portal>
                             <Text> Disability</Text>
-                            <Button
-                                mode="contained"
-                                style={styles.disabilityButton}
-                                disabled={editMode}
-                                onPress={openDisabilityMenu}
-                            >
-                                Edit Disabilities
-                            </Button>
+
+                            {!editMode ? (
+                                <Button
+                                    mode="contained"
+                                    style={styles.disabilityButton}
+                                    disabled={editMode}
+                                    onPress={openDisabilityMenu}
+                                >
+                                    Edit Disabilities
+                                </Button>
+                            ) : (
+                                <></>
+                            )}
+
                             {selectedDisabilityList.map((item) => {
                                 return (
                                     <Text key={item} style={styles.carePresentCheckBox}>
@@ -478,79 +489,104 @@ export const ClientDetails = (props: FormProps) => {
                         ) : (
                             <></>
                         )}
-                        <View style={styles.clientDetailsFinalView}>
+                        {props.isNewClient ? (
                             <Button
                                 mode="contained"
                                 style={styles.clientDetailsFinalButtons}
                                 disabled={false}
                                 onPress={() => {
-                                    enableButtons();
-                                    if (!editMode) {
-                                        formikProps.handleSubmit();
-                                    }
+                                    formikProps.handleSubmit();
                                 }}
                             >
-                                {editMode ? "Edit" : "Save"}
+                                Save
                             </Button>
-                            {editMode ? (
-                                <></>
-                            ) : (
+                        ) : (
+                            <View style={styles.clientDetailsFinalView}>
                                 <Button
-                                    mode={cancelButtonType}
+                                    mode="contained"
                                     style={styles.clientDetailsFinalButtons}
-                                    disabled={editMode}
+                                    disabled={false}
                                     onPress={() => {
-                                        cancelEdit();
-                                        formikProps.setFieldValue("firstName", props.firstName);
-
-                                        formikProps.setFieldValue("lastName", props.lastName);
-
-                                        formikProps.setFieldValue("date", props.date);
-                                        setDate(props.date);
-
-                                        formikProps.setFieldValue("gender", props.gender);
-
-                                        formikProps.setFieldValue("village", props.village);
-
-                                        formikProps.setFieldValue("zone", props.zone);
-                                        setPresentZone(zoneNameList[props.zone - 1]);
-                                        setSelectedZone(props.zone - 1);
-
-                                        formikProps.setFieldValue("phone", props.phone);
-
-                                        formikProps.setFieldValue(
-                                            "caregiverPresent",
-                                            props.caregiverPresent
-                                        );
-                                        if (props.caregiverPresent)
-                                            setCaregiverPresent(props.caregiverPresent);
-                                        else setCaregiverPresent(false);
-
-                                        formikProps.setFieldValue(
-                                            "caregiverName",
-                                            props.caregiverName
-                                        );
-
-                                        formikProps.setFieldValue(
-                                            "caregiverEmail",
-                                            props.caregiverEmail
-                                        );
-
-                                        formikProps.setFieldValue(
-                                            "caregiverPhone",
-                                            props.caregiverPhone
-                                        );
-
-                                        formikProps.setFieldValue(
-                                            "otherDisability",
-                                            props.otherDisability
-                                        );
+                                        enableButtons();
+                                        if (!editMode) {
+                                            formikProps.handleSubmit();
+                                        }
                                     }}
                                 >
-                                    Cancel
+                                    {editMode ? "Edit" : "Save"}
                                 </Button>
-                            )}
-                        </View>
+                                {editMode ? (
+                                    <></>
+                                ) : (
+                                    <Button
+                                        mode={cancelButtonType}
+                                        style={styles.clientDetailsFinalButtons}
+                                        disabled={editMode}
+                                        onPress={() => {
+                                            cancelEdit();
+                                            formikProps.setFieldValue("firstName", props.firstName);
+
+                                            formikProps.setFieldValue("lastName", props.lastName);
+
+                                            formikProps.setFieldValue("date", props.date);
+                                            setDate(props.date);
+
+                                            formikProps.setFieldValue("gender", props.gender);
+
+                                            formikProps.setFieldValue("village", props.village);
+
+                                            formikProps.setFieldValue("zone", props.zone);
+                                            setPresentZone(zoneNameList[props.zone - 1]);
+                                            setSelectedZone(props.zone - 1);
+
+                                            formikProps.setFieldValue("phone", props.phone);
+
+                                            formikProps.setFieldValue(
+                                                "caregiverPresent",
+                                                props.caregiverPresent
+                                            );
+                                            if (props.caregiverPresent)
+                                                setCaregiverPresent(props.caregiverPresent);
+                                            else setCaregiverPresent(false);
+
+                                            //Disability reset
+                                            formikProps.setFieldValue(
+                                                "clientDisability",
+                                                props.clientDisability
+                                            );
+                                            if (props.clientDisability)
+                                                updateSelectedDisabilityList(
+                                                    props.clientDisability
+                                                );
+                                            setSelectedDisabilityList(newSelectedDisabilityList);
+                                            //setModalSelections(correctedClientDisability);
+
+                                            formikProps.setFieldValue(
+                                                "caregiverName",
+                                                props.caregiverName
+                                            );
+
+                                            formikProps.setFieldValue(
+                                                "caregiverEmail",
+                                                props.caregiverEmail
+                                            );
+
+                                            formikProps.setFieldValue(
+                                                "caregiverPhone",
+                                                props.caregiverPhone
+                                            );
+
+                                            formikProps.setFieldValue(
+                                                "otherDisability",
+                                                props.otherDisability
+                                            );
+                                        }}
+                                    >
+                                        Cancel
+                                    </Button>
+                                )}
+                            </View>
+                        )}
                     </View>
                 )}
             </Formik>

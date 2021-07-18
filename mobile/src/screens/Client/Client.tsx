@@ -203,6 +203,7 @@ const Client = (props: ClientProps) => {
                     <Divider></Divider>
                     <Card style={styles.clientDetailsContainerStyles}>
                         <ClientDetails
+                            //isNewClient={true}
                             firstName={firstName}
                             lastName={lastName}
                             date={date}

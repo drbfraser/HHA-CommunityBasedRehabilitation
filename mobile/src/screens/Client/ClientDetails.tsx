@@ -499,7 +499,53 @@ export const ClientDetails = (props: FormProps) => {
                                     mode={cancelButtonType}
                                     style={styles.clientDetailsFinalButtons}
                                     disabled={editMode}
-                                    onPress={cancelEdit}
+                                    onPress={() => {
+                                        cancelEdit();
+                                        formikProps.setFieldValue("firstName", props.firstName);
+
+                                        formikProps.setFieldValue("lastName", props.lastName);
+
+                                        formikProps.setFieldValue("date", props.date);
+                                        setDate(props.date);
+
+                                        formikProps.setFieldValue("gender", props.gender);
+
+                                        formikProps.setFieldValue("village", props.village);
+
+                                        formikProps.setFieldValue("zone", props.zone);
+                                        setPresentZone(zoneNameList[props.zone - 1]);
+                                        setSelectedZone(props.zone - 1);
+
+                                        formikProps.setFieldValue("phone", props.phone);
+
+                                        formikProps.setFieldValue(
+                                            "caregiverPresent",
+                                            props.caregiverPresent
+                                        );
+                                        if (props.caregiverPresent)
+                                            setCaregiverPresent(props.caregiverPresent);
+                                        else setCaregiverPresent(false);
+
+                                        formikProps.setFieldValue(
+                                            "caregiverName",
+                                            props.caregiverName
+                                        );
+
+                                        formikProps.setFieldValue(
+                                            "caregiverEmail",
+                                            props.caregiverEmail
+                                        );
+
+                                        formikProps.setFieldValue(
+                                            "caregiverPhone",
+                                            props.caregiverPhone
+                                        );
+
+                                        formikProps.setFieldValue(
+                                            "otherDisability",
+                                            props.otherDisability
+                                        );
+                                    }}
                                 >
                                     Cancel
                                 </Button>

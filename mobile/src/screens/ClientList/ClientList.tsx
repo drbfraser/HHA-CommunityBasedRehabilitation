@@ -10,7 +10,7 @@ import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
-import { SearchOption, themeColors, useZones, SortOptions } from "@cbr/common";
+import { SearchOption, SortOptions, themeColors, useZones } from "@cbr/common";
 
 interface ClientListControllerProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
@@ -30,38 +30,154 @@ const ClientList = (props: ClientListControllerProps) => {
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
-    const [sortDirection, setIsSortDirection] = useState("");
+    const [sortDirection, setIsSortDirection] = useState("None");
     const [sortOption, setSortOption] = useState("");
     const zones = useZones();
-    const sortDirections = ["asc", "dec", "0"];
-    var currentDirection = 0;
+    const sortDirections = ["asc", "dec", "None"];
+    const [currentDirection, setCurrentDirection] = useState(0);
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
+    const getLevelByColor = (color: string) => {
+        if (color == themeColors.riskGreen) {
+            return 0;
+        } else if (color == themeColors.riskYellow) {
+            return 1;
+        } else if (color == themeColors.riskRed) {
+            return 4;
+        } else if (color == themeColors.riskBlack) {
+            return 13;
+        }
+        return 0;
+    };
+    const sortBy = async (option: string) => {
+        if (option != sortOption) {
+            setSortOption(option);
+            setCurrentDirection(0);
+            setIsSortDirection(sortDirections[currentDirection]);
+        } else {
+            setCurrentDirection(currentDirection + 1);
+            if (currentDirection == 2) {
+                setCurrentDirection(0);
+            }
+            setIsSortDirection(sortDirections[currentDirection]);
+        }
+    };
+    const theComparator = (a: ClientTest, b: ClientTest): number => {
+        if (sortOption == SortOptions.ID) {
+            if (sortDirection == "asc") {
+                return a.id - b.id;
+            } else {
+                return b.id - a.id;
+            }
+        } else if (sortOption == SortOptions.NAME) {
+            if (sortDirection == "asc") {
+                if (a.full_name > b.full_name) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else {
+                if (a.full_name < b.full_name) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        } else if (sortOption == SortOptions.ZONE) {
+            if (sortDirection == "asc") {
+                if (a.zone > b.zone) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else {
+                if (a.zone < b.zone) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        } else if (sortOption == SortOptions.HEALTH) {
+            if (sortDirection == "asc") {
+                if (getLevelByColor(a.HealthLevel) > getLevelByColor(b.HealthLevel)) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else {
+                if (getLevelByColor(a.HealthLevel) < getLevelByColor(b.HealthLevel)) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        } else if (sortOption == SortOptions.EDUCATION) {
+            if (sortDirection == "asc") {
+                if (getLevelByColor(a.EducationLevel) > getLevelByColor(b.EducationLevel)) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else {
+                if (getLevelByColor(a.EducationLevel) < getLevelByColor(b.EducationLevel)) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        } else if (sortOption == SortOptions.SOCIAL) {
+            if (sortDirection == "asc") {
+                if (getLevelByColor(a.SocialLevel) > getLevelByColor(b.SocialLevel)) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else {
+                if (getLevelByColor(a.SocialLevel) < getLevelByColor(b.SocialLevel)) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        }
+
+        return 0;
+    };
+    const arrowDirectionController = (column_name: string) => {
+        if (column_name == sortOption) {
+            if (sortDirection == "asc") {
+                return "ascending";
+            } else if (sortDirection == "dec") {
+                return "descending";
+            } else {
+                return undefined;
+            }
+        }
+        return undefined;
+    };
     const newClientGet = async () => {
-        const exampleClient = await fetchClientsFromApi(
+        var exampleClient = await fetchClientsFromApi(
             selectedSearchOption,
             searchQuery,
             allClientsMode,
             sortOption,
             sortDirection
         );
-        console.log(exampleClient);
-        setClientList(exampleClient);
-    };
-    const sortBy = async (option: string) => {
-        if (option != sortOption) {
-            setSortOption(option);
-            currentDirection = 0;
-            setIsSortDirection(sortDirections[currentDirection]);
-        } else {
-            currentDirection = (currentDirection + 1) % 3;
-
-            setIsSortDirection(sortDirections[currentDirection]);
+        if (sortDirection !== "None") {
+            exampleClient = exampleClient.sort(theComparator);
         }
+        setClientList(exampleClient);
     };
 
     useEffect(() => {
         newClientGet();
     }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection]);
+    useEffect(() => {
+        var exampleClient = clientList;
+        if (sortDirection !== "None") {
+            exampleClient = exampleClient.sort(theComparator);
+        }
+        setClientList(exampleClient);
+    }, [sortOption, sortDirection]);
     return (
         <View style={styles.container}>
             <View style={styles.row}>
@@ -115,30 +231,45 @@ const ClientList = (props: ClientListControllerProps) => {
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>
-                        <DataTable.Title style={styles.column_id} onPress={() => sortBy("id")}>
+                        <DataTable.Title
+                            style={styles.column_id}
+                            onPress={() => sortBy("id")}
+                            sortDirection={arrowDirectionController("id")}
+                        >
                             ID
                         </DataTable.Title>
-                        <DataTable.Title style={styles.column_name} onPress={() => sortBy("name")}>
+                        <DataTable.Title
+                            style={styles.column_name}
+                            onPress={() => sortBy("name")}
+                            sortDirection={arrowDirectionController("name")}
+                        >
                             Name
                         </DataTable.Title>
-                        <DataTable.Title style={styles.column_zone} onPress={() => sortBy("zone")}>
+                        <DataTable.Title
+                            style={styles.column_zone}
+                            onPress={() => sortBy("zone")}
+                            sortDirection={arrowDirectionController("zone")}
+                        >
                             Zone
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_icons}
                             onPress={() => sortBy("health")}
+                            sortDirection={arrowDirectionController("health")}
                         >
                             {riskTypes.HEALTH.Icon("#000000")}
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_icons}
                             onPress={() => sortBy("education")}
+                            sortDirection={arrowDirectionController("education")}
                         >
                             {riskTypes.EDUCAT.Icon("#000000")}
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_icons}
                             onPress={() => sortBy("social")}
+                            sortDirection={arrowDirectionController("social")}
                         >
                             {riskTypes.SOCIAL.Icon("#000000")}
                         </DataTable.Title>

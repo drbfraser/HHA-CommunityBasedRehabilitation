@@ -15,9 +15,9 @@ import {
     setRefreshToken,
 } from "../../src/util/internal/tokens";
 import { testCommonConfig, testKeyValStorage } from "../testHelpers/testCommonConfiguration";
-import { sleep } from "../testHelpers/sleep";
 import { addValidTokens, createFakeToken } from "../testHelpers/authTokenHelpers";
 import { reinitializeCommon } from "../../src/init";
+import { sleep } from "../../src/util/sleep";
 
 const correctUsername = "user";
 const correctPassword = "password";

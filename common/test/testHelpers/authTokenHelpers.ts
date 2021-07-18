@@ -14,6 +14,8 @@ const JWT_JOSE_HEADER: string = base64url.encode(
  */
 const FAKE_JWS_SIGNATURE = "ktkMgaQJFU83ds642P+8fMBv9UqhEQW3oVUkIlE/0PA";
 
+const FAKE_JTI = "97cf729673794d518c82240f3b59ee47";
+
 /**
  * Creates a fake token for testing
  *
@@ -26,7 +28,7 @@ export const createFakeToken = (tokenType: "access" | "refresh", expireNow: bool
         JSON.stringify({
             token_type: tokenType,
             exp: expireNow ? 1000 : Date.now() / 1000 + 120,
-            jti: "97cf729673794d518c82240f3b59ee47",
+            jti: FAKE_JTI,
             user_id: 1,
         } as IAPIToken)
     );

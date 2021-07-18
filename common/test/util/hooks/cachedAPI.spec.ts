@@ -3,7 +3,7 @@ import { cachedAPIGet, cachedAPIHook, IAPICacheData } from "../../../src/util/ho
 import { apiFetch, Endpoint } from "../../../src/util/endpoints";
 import { addValidTokens } from "../../testHelpers/authTokenHelpers";
 import { renderHook } from "@testing-library/react-hooks";
-import { sleep } from "../../testHelpers/sleep";
+import { sleep } from "../../../src/util/sleep";
 
 beforeEach(async () => {
     resetFetchMocks();

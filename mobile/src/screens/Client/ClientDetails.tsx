@@ -79,6 +79,7 @@ export const ClientDetails = (props: FormProps) => {
     const [otherDisability, showOtherDisability] = useState(false);
 
     var newSelectedDisabilityList: string[] = [];
+    var removedDuplicates: string[] = [];
 
     const updateSelectedDisabilityList = (disabilityArray: number[]) => {
         for (let index of disabilityArray) {
@@ -101,10 +102,12 @@ export const ClientDetails = (props: FormProps) => {
         }
     };
 
+    const [modalSelections, setModalSelections] = useState<number[]>(correctedClientDisability);
+
     const updateNewDisability = (disabilityArray: number[]) => {
+        correctedClientDisability = [];
         for (let index of disabilityArray) {
-            var tempIndex = index - 1;
-            correctedClientDisability.push(tempIndex);
+            correctedClientDisability.push(index);
         }
 
         //empty the array
@@ -120,6 +123,8 @@ export const ClientDetails = (props: FormProps) => {
                 );
             } else newSelectedDisabilityList.push(disabilityNameList[index]);
         }
+
+        removedDuplicates = newSelectedDisabilityList.filter((v, i, a) => a.indexOf(v) === i);
     };
 
     if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
@@ -355,6 +360,7 @@ export const ClientDetails = (props: FormProps) => {
                                                     for (let checkOther of Array.from(values)) {
                                                         if (checkOther == 9) {
                                                             checkBoolean = true;
+
                                                             break;
                                                         }
                                                     }
@@ -369,27 +375,21 @@ export const ClientDetails = (props: FormProps) => {
                                                     for (let index of Array.from(values)) {
                                                         toUpdateDisability.push(Number(index));
                                                     }
+
+                                                    //Add formik prop values by 1 before making request
                                                     formikProps.setFieldValue(
                                                         "clientDisability",
                                                         toUpdateDisability
                                                     );
-
-                                                    for (let x of toUpdateDisability) {
-                                                        x -= 1;
-                                                    }
-
                                                     updateNewDisability(toUpdateDisability);
-
-                                                    setSelectedDisabilityList(
-                                                        newSelectedDisabilityList
-                                                    );
-                                                    console.log(correctedClientDisability);
+                                                    setSelectedDisabilityList(removedDuplicates);
+                                                    setModalSelections(correctedClientDisability);
                                                 }}
                                                 rowBackgroundColor={"#eee"}
                                                 iconSize={30}
                                                 selectedIconName={"checkmark-circle"}
                                                 unselectedIconName={"radio-button-off"}
-                                                selected={correctedClientDisability.map(String)}
+                                                selected={modalSelections.map(String)}
                                             />
                                             {otherDisability ? (
                                                 <View>

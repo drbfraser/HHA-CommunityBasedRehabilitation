@@ -17,9 +17,9 @@ export type ClientDTO = {
     careGiverEmail: string;
     careGiverPhoneNumber: string;
     clientCreatedDate: number;
-    clientVisits: IVisitSummary[];
-    clientReferrals: IReferral[];
-    clientSurveys: ISurvey[];
+    clientVisits?: IVisitSummary[];
+    clientReferrals?: IReferral[];
+    clientSurveys?: ISurvey[];
     otherDisability: string;
 };
 

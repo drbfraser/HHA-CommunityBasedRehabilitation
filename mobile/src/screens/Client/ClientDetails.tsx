@@ -5,23 +5,18 @@ import { Component, useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
 import { View, Platform, ScrollView } from "react-native";
-import {
-    Button,
-    Checkbox,
-    List,
-    Menu,
-    Portal,
-    Provider,
-    TextInput,
-    Modal,
-    Text,
-} from "react-native-paper";
+import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-paper";
 import clientStyle from "./Client.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
+import { Validation } from "@cbr/common";
+import { handleSubmit } from "./ClientSubmitHandler";
+import * as Yup from "yup";
+import { ClientDTO, ClientDTO as FormValues } from "./ClientRequests";
 
 interface FormProps {
     isNewClient?: boolean;
+    id?: number;
     firstName?: string;
     lastName?: string;
     date?: Date;
@@ -36,7 +31,9 @@ interface FormProps {
     clientDisability?: number[];
     otherDisability?: string;
 }
+
 interface FormValues {
+    id?: number;
     firstName?: string;
     lastName?: string;
     date?: Date;
@@ -132,6 +129,7 @@ export const ClientDetails = (props: FormProps) => {
         useState<string[]>(newSelectedDisabilityList);
 
     const initialValues: FormValues = {
+        id: props.id,
         firstName: props.firstName,
         lastName: props.lastName,
         date: props.date,
@@ -147,6 +145,50 @@ export const ClientDetails = (props: FormProps) => {
         otherDisability: props.otherDisability,
     };
 
+    const validationSchema = () =>
+        Yup.object().shape({
+            ["firstName"]: Yup.string().label("firstName").required().max(50),
+            ["lastName"]: Yup.string().label("lastName").required().max(50),
+            ["date"]: Yup.date()
+                .label("date")
+                .max(new Date(), "Birthdate cannot be in the future")
+                .required(),
+            ["phone"]: Yup.string()
+                .label("phone")
+                .max(50)
+                .matches(Validation.phoneRegExp, "Phone number is not valid."),
+            ["clientDisability"]: Yup.array().label("clientDisability").required(),
+            // ["otherDisability"]: Yup.string()
+            //     .label("otherDisability")
+            //     .trim()
+            //     .test(
+            //         "require-if-other-selected",
+            //         "Other Disability is required",
+            //         async (other_disability, schema) =>
+            //             !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
+            //             (other_disability !== undefined && other_disability.length > 0)
+            //     )
+            //     .test(
+            //         "require-if-other-selected",
+            //         "Other Disability must be at most 100 characters",
+            //         async (other_disability, schema) =>
+            //             !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
+            //             (other_disability !== undefined && other_disability.length <= 100)
+            //     ),
+            ["gender"]: Yup.string().label("gender").required(),
+            ["village"]: Yup.string().label("village").required(),
+            ["zone"]: Yup.string().label("zone").required(),
+            ["caregiverName"]: Yup.string().label("caregiverName").max(101),
+            ["caregiverPhone"]: Yup.string()
+                .label("caregiverPhone")
+                .max(50)
+                .matches(Validation.phoneRegExp, "Phone number is not valid"),
+            ["caregiverEmail"]: Yup.string()
+                .label("caregiverEmail")
+                .max(50)
+                .matches(Validation.emailRegExp, "Email Address is not valid"),
+        });
+
     //Menu Consts and functions
     const [editMode, setEditMode] = React.useState(!props.isNewClient);
 
@@ -156,13 +198,11 @@ export const ClientDetails = (props: FormProps) => {
             setEditMode(false);
             setCancelButtonType("contained");
         } else {
-            //Make the PUT Api Call to edit client here since this is the save click
             setEditMode(true);
             setCancelButtonType("outlined");
         }
     };
     const cancelEdit = () => {
-        //Discard any changes and reset the text fields to show what they originially did
         setEditMode(true);
     };
 
@@ -187,8 +227,27 @@ export const ClientDetails = (props: FormProps) => {
         <View>
             <Formik
                 initialValues={initialValues}
+                validationSchema={validationSchema}
                 onSubmit={(values) => {
-                    console.log(values);
+                    const updatedClientDTO: ClientDTO = {
+                        id: values.id!,
+                        first_name: values.firstName!,
+                        last_name: values.lastName!,
+                        birthdate: values.date!.getTime() / 1000,
+                        gender: values.gender!, //TODO: Get this from client
+                        village: values.village!,
+                        zone: values.zone!,
+                        phoneNumber: values.phone!,
+                        careGiverPresent: values.caregiverPresent!,
+                        careGiverName: values.caregiverName!,
+                        careGiverEmail: values.caregiverEmail!,
+                        careGiverPhoneNumber: values.caregiverPhone!,
+                        disabilities: values.clientDisability!,
+                        otherDisability: values.otherDisability!,
+                        clientCreatedDate: new Date().getTime() / 1000,
+                    };
+                    handleSubmit(updatedClientDTO);
+                    setEditMode(true);
                 }}
             >
                 {(formikProps) => (
@@ -365,7 +424,6 @@ export const ClientDetails = (props: FormProps) => {
                                                     for (let checkOther of Array.from(values)) {
                                                         if (checkOther == 9) {
                                                             checkBoolean = true;
-
                                                             break;
                                                         }
                                                     }
@@ -594,5 +652,8 @@ export const ClientDetails = (props: FormProps) => {
     );
 };
 function getSelectedItemsExt(selectedItems: any): React.ReactNode {
+    throw new Error("Function not implemented.");
+}
+function FormikHelpers<T>(): import("formik").FormikHelpers<import("./ClientRequests").ClientDTO> {
     throw new Error("Function not implemented.");
 }

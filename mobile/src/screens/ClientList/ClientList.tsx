@@ -10,7 +10,16 @@ import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
-import { SearchOption, SortOptions, themeColors, useZones } from "@cbr/common";
+import { SearchOption, themeColors, useZones } from "@cbr/common";
+
+enum SortOptions {
+    ID = "id",
+    NAME = "name",
+    ZONE = "zone",
+    HEALTH = "health",
+    EDUCATION = "education",
+    SOCIAL = "social",
+}
 
 interface ClientListControllerProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;

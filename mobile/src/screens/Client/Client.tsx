@@ -54,7 +54,7 @@ const Client = (props: ClientProps) => {
     const [caregiverEmail, setCaregiverEmail] = React.useState("");
     const [caregiverPhone, setCaregiverPhone] = React.useState("");
     const [clientDisability, setDisability] = useState<number[]>([]);
-    const [otherDisability, setOtherDisability] = useState("");
+    const [otherDisability, setOtherDisability] = useState<String>();
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);
@@ -204,6 +204,7 @@ const Client = (props: ClientProps) => {
                     <Card style={styles.clientDetailsContainerStyles}>
                         <ClientDetails
                             //isNewClient={true}
+                            id={props.clientID}
                             firstName={firstName}
                             lastName={lastName}
                             date={date}

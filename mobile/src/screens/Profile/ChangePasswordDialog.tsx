@@ -1,7 +1,12 @@
 import { Button, Dialog, HelperText } from "react-native-paper";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { Formik, FormikProps } from "formik";
-import { StyleProp, TextInput as NativeTextInput, TextStyle } from "react-native";
+import {
+    ReturnKeyTypeOptions,
+    StyleProp,
+    TextInput as NativeTextInput,
+    TextStyle,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
     changePassValidationSchema,
@@ -23,12 +28,13 @@ interface FormikPasswordTextInputProps {
     field: ChangePasswordField;
     textInputStyle: StyleProp<TextStyle>;
     formikProps: FormikProps<TPasswordValues>;
+    returnKeyType: ReturnKeyTypeOptions;
     onSubmitEnding: () => void;
 }
 
 const FormikPasswordTextInput = forwardRef<NativeTextInput, FormikPasswordTextInputProps>(
     (props, ref) => {
-        const { field, textInputStyle, formikProps, onSubmitEnding } = props;
+        const { field, textInputStyle, formikProps, returnKeyType, onSubmitEnding } = props;
         const isError = shouldShowError(formikProps, field);
         return (
             <>
@@ -41,6 +47,7 @@ const FormikPasswordTextInput = forwardRef<NativeTextInput, FormikPasswordTextIn
                     onChangeText={formikProps.handleChange(field)}
                     onEndEditing={() => formikProps.setFieldTouched(field)}
                     disabled={formikProps.isSubmitting}
+                    returnKeyType={returnKeyType}
                     mode="outlined"
                     blurOnSubmit={false}
                     onSubmitEditing={onSubmitEnding}
@@ -111,6 +118,7 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                     field={ChangePasswordField.oldPassword}
                                     textInputStyle={styles.passwordTextInput}
                                     formikProps={formikProps}
+                                    returnKeyType="next"
                                     onSubmitEnding={() => newPassRef.current?.focus()}
                                 />
 
@@ -119,6 +127,7 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                     textInputStyle={styles.passwordTextInput}
                                     formikProps={formikProps}
                                     ref={newPassRef}
+                                    returnKeyType="next"
                                     onSubmitEnding={() => confirmNewPassRef.current?.focus()}
                                 />
 
@@ -127,6 +136,7 @@ const ChangePasswordDialog = ({ onDismiss, visible }: Props) => {
                                     textInputStyle={styles.passwordTextInput}
                                     formikProps={formikProps}
                                     ref={confirmNewPassRef}
+                                    returnKeyType="done"
                                     onSubmitEnding={formikProps.handleSubmit}
                                 />
                             </KeyboardAwareScrollView>

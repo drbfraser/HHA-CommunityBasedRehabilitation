@@ -70,17 +70,3 @@ export const screensForUser = (user: IUser | TAPILoadError | undefined) => {
 };
 
 export const defaultPage = screens[0];
-
-export enum StackScreenName {
-    HOME = "Home",
-    CLIENT = "ClientDetails",
-}
-
-export const stackScreenProps = {};
-
-export type stackParamList = {
-    [StackScreenName.HOME]: undefined;
-    [StackScreenName.CLIENT]: {
-        clientID: number;
-    };
-};

@@ -20,7 +20,7 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 3. Run `npm start`
 
-4. For any changes in `common` to be reflected in the either client library, run `npm run refresh-common`.  
+4. For any changes in `common` to be reflected in the either client library, run `npm run refresh-common`.
 
 ### 3. Seed Some Data
 
@@ -45,7 +45,6 @@ For using a local server when developing the mobile app, ensure that you have fo
 If you seeded users in the previous step, you already have an account in the system. Use the username `venus` and password `hhaLogin` to log in, and from there you can create another user if you wish to change the username and password you use.
 
 You can also access auto-generating Swagger API documentation at http://localhost:8000/docs
-
 
 # How to Contribute
 

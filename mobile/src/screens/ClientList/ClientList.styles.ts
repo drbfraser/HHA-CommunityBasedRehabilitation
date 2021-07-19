@@ -35,6 +35,12 @@ const useStyles = () =>
         column_icons: {
             flex: 0.8,
         },
+        wrappedView: {
+            flexDirection: "row",
+            flex: 1.5,
+            alignItems: "center",
+            padding: 5,
+        },
     });
 
 export default useStyles;

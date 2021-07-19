@@ -18,9 +18,7 @@ const HomeScreen = (props: HomeScreenProps) => {
     React.useEffect(() => {
         props.navigation.setOptions({
             title: "Main Menu",
-            headerStyle: {
-                backgroundColor: themeColors.blueBgDark,
-            },
+            headerStyle: styles.headerStyle,
             headerTintColor: themeColors.blueAccent,
             headerShown: true,
         });

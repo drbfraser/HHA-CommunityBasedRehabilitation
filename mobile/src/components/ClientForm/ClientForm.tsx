@@ -5,14 +5,14 @@ import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 import { View, Platform, ScrollView } from "react-native";
 import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-paper";
-import clientStyle from "../../screens/Client/Client.styles";
+import clientStyle from "../../screens/ClientDetails/Client.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import { handleSubmit } from "./ClientSubmitHandler";
-import { ClientDTO } from "../../screens/Client/ClientRequests";
-import { FormValues, FormProps, validationSchema } from "./ClientDetailsFields";
+import { ClientDTO } from "../../screens/ClientDetails/ClientRequests";
+import { FormValues, FormProps, validationSchema } from "./ClientFormFields";
 
-export const ClientDetails = (props: FormProps) => {
+export const ClientForm = (props: FormProps) => {
     const styles = clientStyle();
     var zoneList = useZones();
     var disabilityList = useDisabilities();
@@ -565,7 +565,7 @@ function getSelectedItemsExt(selectedItems: any): React.ReactNode {
     throw new Error("Function not implemented.");
 }
 function FormikHelpers<T>(): import("formik").FormikHelpers<
-    import("../../screens/Client/ClientRequests").ClientDTO
+    import("../../screens/ClientDetails/ClientRequests").ClientDTO
 > {
     throw new Error("Function not implemented.");
 }

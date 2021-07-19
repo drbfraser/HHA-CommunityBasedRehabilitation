@@ -5,23 +5,37 @@ import { ClientDTO } from "./ClientRequests";
 import clientStyle from "./Client.styles";
 import { Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
-import { IReferral, ISurvey, timestampToDateObj } from "../../../node_modules/@cbr/common";
-import { useDisabilities } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
+import { IReferral, ISurvey, timestampToDateObj } from "@cbr/common";
+import { useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 import { IVisitSummary } from "@cbr/common";
-import { ActivityDTO, ActivityType } from "../../components/ActivityTimeline/Activity";
+import { ActivityDTO, ActivityType } from "./ClientTimeline/Activity";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
-import { ClientRisk } from "../../components/ClientSpecificRisk/ClientRisk";
-import { ClientDetails } from "../../components/ClientSpecificDetails/ClientDetails";
-import { RecentActivity } from "../../components/ActivityTimeline/RecentActivity";
+import { ClientRisk } from "./Risks/ClientRisk";
+import { ClientForm } from "../../components/ClientForm/ClientForm";
+import { RecentActivity } from "./ClientTimeline/RecentActivity";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { stackParamList, StackScreenName } from "../../util/screens";
 
 interface ClientProps {
     clientID: number;
+    route: RouteProp<stackParamList, StackScreenName.CLIENT>;
+    navigation: StackNavigationProp<stackParamList, StackScreenName.CLIENT>;
 }
 
-const Client = (props: ClientProps) => {
+const ClientDetails = (props: ClientProps) => {
+    React.useEffect(() => {
+        props.navigation.setOptions({
+            title: "Client Page",
+            headerStyle: {
+                backgroundColor: "#273263",
+            },
+            headerTintColor: "#fff",
+            headerShown: true,
+        });
+    });
+
     const styles = clientStyle();
-    var zoneList = useZones();
-    var disabilityList = useDisabilities();
     const [loading, setLoading] = useState(true);
 
     //Main Client Variables
@@ -48,7 +62,7 @@ const Client = (props: ClientProps) => {
     const [allRecentActivity, setRecentActivity] = useState<ActivityDTO[]>();
 
     const getClientDetails = async () => {
-        const presentClient = await fetchClientDetailsFromApi(props.clientID);
+        const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
         setPresentClient(presentClient);
         setDate(timestampToDateObj(Number(presentClient?.birthdate)));
         setFirstName(presentClient.first_name);
@@ -201,4 +215,4 @@ const Client = (props: ClientProps) => {
     );
 };
 
-export default Client;
+export default ClientDetails;

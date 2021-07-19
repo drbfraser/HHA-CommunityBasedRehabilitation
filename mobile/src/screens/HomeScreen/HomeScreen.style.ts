@@ -1,9 +1,10 @@
+import { themeColors } from "@cbr/common";
 import { StyleSheet } from "react-native";
 
 const useStyles = () =>
     StyleSheet.create({
         headerStyle: {
-            backgroundColor: "#273263",
+            backgroundColor: themeColors.blueBgDark,
         },
     });
 

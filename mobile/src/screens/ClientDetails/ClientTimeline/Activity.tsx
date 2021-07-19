@@ -50,12 +50,7 @@ export const SummaryActivity = (props: SummaryProps) => {
                 <Text>{timestampToDate(props.activity.date)}</Text>
                 <View style={styles.activityTypeView}>
                     <View style={styles.verticleLine}></View>
-                    <Button
-                        style={styles.logoButton}
-                        icon={icon}
-                        mode="outlined"
-                        compact={true}
-                    ></Button>
+                    <Button style={styles.logoButton} icon={icon} mode="outlined" compact={true} />
                     <View style={styles.verticleLine}></View>
                 </View>
                 <View>

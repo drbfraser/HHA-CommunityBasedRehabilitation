@@ -16,20 +16,15 @@ export const RecentActivity = (props: ActivityProps) => {
         return (
             <View>
                 {props.activityDTO.map((presentActivity) => {
-                    return (
-                        <SummaryActivity
-                            key={presentActivity.id}
-                            activity={presentActivity}
-                        ></SummaryActivity>
-                    );
+                    return <SummaryActivity key={presentActivity.id} activity={presentActivity} />;
                 })}
-                <TimelineDate date={props.clientCreateDate}></TimelineDate>
+                <TimelineDate date={props.clientCreateDate} />
             </View>
         );
     else
         return (
             <View>
-                <TimelineDate date={props.clientCreateDate}></TimelineDate>
+                <TimelineDate date={props.clientCreateDate} />
             </View>
         );
 };

@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { SearchOption, themeColors, useZones } from "@cbr/common";
+import { RouteProp } from "@react-navigation/native";
 
 enum SortOptions {
     ID = "id",
@@ -23,6 +24,7 @@ enum SortOptions {
 
 interface ClientListControllerProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
+    route: RouteProp<stackParamList, StackScreenName.CLIENT>;
 }
 
 const returnWrapedView = (item) => {

@@ -2,14 +2,10 @@ import React from "react";
 import { APILoadError, IUser, TAPILoadError, UserRole } from "@cbr/common";
 import Todo from "../screens/Todo/Todo";
 import ClientList from "../screens/ClientList/ClientList";
-import ClientView from "../screens/Client/Client";
-import ClientScreenController from "../screens/Client/ClientScreenController";
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
-import { Props } from "react-native-paper/lib/typescript/components/RadioButton/RadioButton";
-import Login from "../screens/Login/Login";
-import Loading from "../screens/Loading/Loading";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 import Profile from "../screens/Profile/Profile";
+import Client from "../screens/Client/Client";
 
 export interface IScreen {
     name: string;
@@ -86,7 +82,7 @@ export enum StackScreenName {
 
 export const stackScreenProps = {
     [StackScreenName.HOME]: HomeScreen,
-    [StackScreenName.CLIENT]: ClientScreenController,
+    [StackScreenName.CLIENT]: Client,
     [StackScreenName.BASELINE]: BaseSurvey,
 };
 

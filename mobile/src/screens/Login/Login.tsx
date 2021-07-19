@@ -83,9 +83,6 @@ const Login = (props: LoginProps) => {
             )}
 
             <View style={styles.formContainer}>
-                {/* <Button mode="contained" onPress={() => console.log(authState.state)}>
-                    STATECHECK
-                </Button> */}
                 <Image
                     style={styles.logo}
                     resizeMode="contain"

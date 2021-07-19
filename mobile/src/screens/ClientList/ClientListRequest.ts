@@ -47,7 +47,6 @@ export const fetchClientsFromApi = async (
         const zones = await getZones();
         const resp = await apiFetch(Endpoint.CLIENTS, "?" + urlParams.toString());
         const responseRows: IClientSummary[] = await resp.json();
-        //console.log(sortDirection)
         var resultRow = responseRows.map((responseRow: IClientSummary) => ({
             id: responseRow.id,
             full_name: responseRow.full_name,

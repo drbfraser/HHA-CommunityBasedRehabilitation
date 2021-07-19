@@ -11,7 +11,7 @@ import { useState } from "react";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { SearchOption, themeColors, useZones } from "@cbr/common";
-
+const styles = useStyles();
 enum SortOptions {
     ID = "id",
     NAME = "name",
@@ -25,16 +25,15 @@ interface ClientListControllerProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
 }
 
-const returnWrapedView = (item) => {
+const returnWrappedView = (item) => {
     return (
-        <View style={{ flexDirection: "row", flex: 1.5, alignItems: "center", padding: 5 }}>
+        <View style={styles.wrappedView}>
             <Text style={{ flexShrink: 1 }}>{item}</Text>
         </View>
     );
 };
 
 const ClientList = (props: ClientListControllerProps) => {
-    const styles = useStyles();
     const [clientList, setClientList] = useState<ClientTest[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
@@ -294,18 +293,20 @@ const ClientList = (props: ClientListControllerProps) => {
                                     });
                                 }}
                             >
-                                <DataTable.Cell style={{ flex: 0.7 }}>{item.id}</DataTable.Cell>
-                                <View style={{ flex: 1.5 }}>
-                                    {returnWrapedView(item.full_name)}
+                                <DataTable.Cell style={styles.column_id}>{item.id}</DataTable.Cell>
+                                <View style={styles.column_name}>
+                                    {returnWrappedView(item.full_name)}
                                 </View>
-                                <View style={{ flex: 1.5 }}>{returnWrapedView(item.zone)}</View>
-                                <DataTable.Cell style={{ flex: 0.8 }}>
+                                <View style={styles.column_zone}>
+                                    {returnWrappedView(item.zone)}
+                                </View>
+                                <DataTable.Cell style={styles.column_icons}>
                                     {riskTypes.CIRCLE.Icon(item.HealthLevel)}
                                 </DataTable.Cell>
-                                <DataTable.Cell style={{ flex: 0.8 }}>
+                                <DataTable.Cell style={styles.column_icons}>
                                     {riskTypes.CIRCLE.Icon(item.EducationLevel)}
                                 </DataTable.Cell>
-                                <DataTable.Cell style={{ flex: 0.8 }}>
+                                <DataTable.Cell style={styles.column_icons}>
                                     {riskTypes.CIRCLE.Icon(item.SocialLevel)}
                                 </DataTable.Cell>
                             </DataTable.Row>

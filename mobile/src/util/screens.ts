@@ -5,7 +5,7 @@ import ClientList from "../screens/ClientList/ClientList";
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 import Profile from "../screens/Profile/Profile";
-import Client from "../screens/Client/Client";
+import ClientDetails from "../screens/ClientDetails/ClientDetails";
 
 export interface IScreen {
     name: string;
@@ -82,7 +82,7 @@ export enum StackScreenName {
 
 export const stackScreenProps = {
     [StackScreenName.HOME]: HomeScreen,
-    [StackScreenName.CLIENT]: Client,
+    [StackScreenName.CLIENT]: ClientDetails,
     [StackScreenName.BASELINE]: BaseSurvey,
 };
 

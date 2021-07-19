@@ -137,6 +137,7 @@ const Login = (props: LoginProps) => {
                             autoCorrect={false}
                             autoCompleteType="username"
                             textContentType="username"
+                            returnKeyType="next"
                             onSubmitEditing={() => passwordTextRef.current?.focus()}
                         />
                         <HelperText
@@ -156,6 +157,7 @@ const Login = (props: LoginProps) => {
                         mode="flat"
                         disabled={status === LoginStatus.SUBMITTING}
                         onSubmitEditing={handleLogin}
+                        returnKeyType="done"
                         ref={passwordTextRef}
                     />
                     <HelperText type="error" visible={status === LoginStatus.FAILED && !password}>

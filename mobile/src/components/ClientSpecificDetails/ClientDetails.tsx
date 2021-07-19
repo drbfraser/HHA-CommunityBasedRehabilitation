@@ -1,76 +1,64 @@
-import { Formik, Form as MyInput } from "formik";
+import { Formik } from "formik";
 import * as React from "react";
-import { useCallback, useEffect } from "react";
-import { Component, useState } from "react";
+import { Component, useEffect, useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
-import { useDisabilities } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
+import { useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 import { View, Platform, ScrollView } from "react-native";
 import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-paper";
-import clientStyle from "./Client.styles";
+import clientStyle from "../../screens/Client/Client.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
-import { Validation } from "@cbr/common";
 import { handleSubmit } from "./ClientSubmitHandler";
-import * as Yup from "yup";
-import { ClientDTO } from "./ClientRequests";
-
-interface FormProps {
-    isNewClient?: boolean;
-    id?: number;
-    firstName?: string;
-    lastName?: string;
-    date?: Date;
-    gender?: string;
-    village?: string;
-    zone?: number;
-    phone?: string;
-    caregiverPresent?: boolean;
-    caregiverName?: string;
-    caregiverEmail?: string;
-    caregiverPhone?: string;
-    clientDisability?: number[];
-    otherDisability?: string;
-}
-
-interface FormValues {
-    id?: number;
-    firstName?: string;
-    lastName?: string;
-    date?: Date;
-    gender?: string;
-    village?: string;
-    zone?: number;
-    phone?: string;
-    caregiverPresent?: boolean;
-    caregiverName?: string;
-    caregiverEmail?: string;
-    caregiverPhone?: string;
-    clientDisability?: number[];
-    otherDisability?: string;
-}
+import { ClientDTO } from "../../screens/Client/ClientRequests";
+import { FormValues, FormProps, validationSchema } from "./ClientDetailsFields";
 
 export const ClientDetails = (props: FormProps) => {
     const styles = clientStyle();
     var zoneList = useZones();
     var disabilityList = useDisabilities();
+    var correctedClientDisability: number[] = [];
+    var disabilityNameList: string[] = [];
+    var newSelectedDisabilityList: string[] = [];
+    var removedDuplicates: string[] = [];
 
     //Client Details Usestates
     const [date, setDate] = useState(new Date(props.date));
     const [caregiverPresent, setCaregiverPresent] = useState(false);
     const [selectedZone, setSelectedZone] = useState<Number>(props.zone - 1);
     const [otherDisability, showOtherDisability] = useState(false);
+    const [editMode, setEditMode] = useState(!props.isNewClient);
+    const [cancelButtonType, setCancelButtonType] = useState("outlined");
+    const [show, setShow] = useState(false);
+    const [disabilityVisible, setDisabilityVisible] = useState(false);
+    const openDisabilityMenu = () => setDisabilityVisible(true);
+    const closeDisabilityMenu = () => setDisabilityVisible(false);
+    const [zonesVisible, setZonesVisible] = useState(false);
+    const openZonesMenu = () => setZonesVisible(true);
+    const closeZonesMenu = () => setZonesVisible(false);
+
+    const initialValues: FormValues = {
+        id: props.id,
+        firstName: props.firstName,
+        lastName: props.lastName,
+        date: props.date,
+        gender: props.gender,
+        village: props.village,
+        zone: props.zone,
+        phone: props.phone,
+        caregiverPresent: props.caregiverPresent,
+        caregiverName: props.caregiverName,
+        caregiverEmail: props.caregiverEmail,
+        caregiverPhone: props.caregiverPhone,
+        clientDisability: props.clientDisability,
+        otherDisability: props.otherDisability,
+    };
 
     var zoneNameList: string[] = [];
     for (let index of Array.from(zoneList.entries())) {
         zoneNameList.push(index[1]);
     }
+
     const [presentZone, setPresentZone] = useState<String>(zoneNameList[props.zone - 1]);
-
-    var correctedClientDisability: number[] = [];
-    var disabilityNameList: string[] = [];
-    var newSelectedDisabilityList: string[] = [];
-    var removedDuplicates: string[] = [];
-
     for (let index of Array.from(disabilityList.entries())) {
         disabilityNameList.push(index[1]);
     }
@@ -126,54 +114,7 @@ export const ClientDetails = (props: FormProps) => {
     const [selectedDisabilityList, setSelectedDisabilityList] =
         useState<string[]>(newSelectedDisabilityList);
 
-    const initialValues: FormValues = {
-        id: props.id,
-        firstName: props.firstName,
-        lastName: props.lastName,
-        date: props.date,
-        gender: props.gender, //TODO: Get this from client
-        village: props.village,
-        zone: props.zone,
-        phone: props.phone,
-        caregiverPresent: props.caregiverPresent,
-        caregiverName: props.caregiverName,
-        caregiverEmail: props.caregiverEmail,
-        caregiverPhone: props.caregiverPhone,
-        clientDisability: props.clientDisability,
-        otherDisability: props.otherDisability,
-    };
-
-    const validationSchema = () =>
-        Yup.object().shape({
-            ["firstName"]: Yup.string().label("firstName").required().max(50),
-            ["lastName"]: Yup.string().label("lastName").required().max(50),
-            ["date"]: Yup.date()
-                .label("date")
-                .max(new Date(), "Birthdate cannot be in the future")
-                .required(),
-            ["phone"]: Yup.string()
-                .label("phone")
-                .max(50)
-                .matches(Validation.phoneRegExp, "Phone number is not valid."),
-            ["clientDisability"]: Yup.array().label("clientDisability").required(),
-            ["gender"]: Yup.string().label("gender").required(),
-            ["village"]: Yup.string().label("village").required(),
-            ["zone"]: Yup.string().label("zone").required(),
-            ["caregiverName"]: Yup.string().label("caregiverName").max(101),
-            ["caregiverPhone"]: Yup.string()
-                .label("caregiverPhone")
-                .max(50)
-                .matches(Validation.phoneRegExp, "Phone number is not valid"),
-            ["caregiverEmail"]: Yup.string()
-                .label("caregiverEmail")
-                .max(50)
-                .matches(Validation.emailRegExp, "Email Address is not valid"),
-        });
-
-    //Menu Consts and functions
-    const [editMode, setEditMode] = useState(!props.isNewClient);
-
-    const [cancelButtonType, setCancelButtonType] = useState("outlined");
+    //Menu functions
     const enableButtons = () => {
         if (editMode == true) {
             setEditMode(false);
@@ -188,21 +129,9 @@ export const ClientDetails = (props: FormProps) => {
     };
 
     //Date Picker
-    const [show, setShow] = useState(false);
-
     const showDatepicker = () => {
         setShow(true);
     };
-
-    //Disability Menu editable toggle variables
-    const [disabilityVisible, setDisabilityVisible] = useState(false);
-    const openDisabilityMenu = () => setDisabilityVisible(true);
-    const closeDisabilityMenu = () => setDisabilityVisible(false);
-
-    //Zone Menu editable toggle variables
-    const [zonesVisible, setZonesVisible] = useState(false);
-    const openZonesMenu = () => setZonesVisible(true);
-    const closeZonesMenu = () => setZonesVisible(false);
 
     return (
         <View>
@@ -635,6 +564,8 @@ export const ClientDetails = (props: FormProps) => {
 function getSelectedItemsExt(selectedItems: any): React.ReactNode {
     throw new Error("Function not implemented.");
 }
-function FormikHelpers<T>(): import("formik").FormikHelpers<import("./ClientRequests").ClientDTO> {
+function FormikHelpers<T>(): import("formik").FormikHelpers<
+    import("../../screens/Client/ClientRequests").ClientDTO
+> {
     throw new Error("Function not implemented.");
 }

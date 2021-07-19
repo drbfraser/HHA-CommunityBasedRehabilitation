@@ -1,38 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import {
-    Button,
-    Card,
-    TextInput,
-    Checkbox,
-    Menu,
-    Divider,
-    ActivityIndicator,
-} from "react-native-paper";
+import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
 import { ClientDTO } from "./ClientRequests";
 import clientStyle from "./Client.styles";
-import { Platform, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IReferral, ISurvey, timestampToDateObj } from "../../../node_modules/@cbr/common";
 import { useDisabilities } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
 import { IVisitSummary } from "@cbr/common";
-import {
-    ActivityDTO,
-    ActivityType,
-    SummaryActivity,
-} from "../../components/ActivityTimeline/Activity";
-import { TimelineDate } from "./TimeLineDate";
+import { ActivityDTO, ActivityType } from "../../components/ActivityTimeline/Activity";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
-import { ClientRisk } from "./ClientRisk";
-import { ClientDetails } from "./ClientDetails";
+import { ClientRisk } from "../../components/ClientSpecificRisk/ClientRisk";
+import { ClientDetails } from "../../components/ClientSpecificDetails/ClientDetails";
 import { RecentActivity } from "../../components/ActivityTimeline/RecentActivity";
 
 /*
     Use client image instead of randomly generated
-    Get disabilities details from making the disability API call and map them (done but haven't implemented correctly)
-    Change the dropdown menu to a picker like in the baseline survey
-    Change risk card edit button to popup instead of text box (or can be either)
-    Create component that displays surveys being done
 */
 
 interface ClientProps {

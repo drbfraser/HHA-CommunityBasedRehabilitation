@@ -11,7 +11,7 @@ import {
     ActivityIndicator,
     Text,
 } from "react-native-paper";
-import clientStyle from "./Client.styles";
+import clientStyle from "../../screens/Client/Client.styles";
 
 interface riskProps {
     editMode: boolean;

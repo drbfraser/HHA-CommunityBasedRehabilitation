@@ -1,6 +1,6 @@
 import { Endpoint, apiFetch, objectToFormData } from "@cbr/common";
 import { timestampFromFormDate } from "@cbr/common/";
-import { ClientDTO } from "./ClientRequests";
+import { ClientDTO } from "../../screens/Client/ClientRequests";
 
 const updateClient = async (clientInfo: FormData, clientId: number) => {
     const init: RequestInit = {

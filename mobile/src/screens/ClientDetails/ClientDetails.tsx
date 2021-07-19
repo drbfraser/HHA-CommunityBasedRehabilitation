@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
 import { ClientDTO } from "./ClientRequests";
-import clientStyle from "./Client.styles";
+import clientStyle from "./ClientDetails.styles";
 import { Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IReferral, ISurvey, timestampToDateObj } from "@cbr/common";
@@ -176,7 +176,7 @@ const ClientDetails = (props: ClientProps) => {
                     <Text style={styles.cardSectionTitle}>Client Details</Text>
                     <Divider></Divider>
                     <Card style={styles.clientDetailsContainerStyles}>
-                        <ClientDetails
+                        <ClientForm
                             //isNewClient={true}
                             id={props.clientID}
                             firstName={firstName}

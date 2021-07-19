@@ -5,7 +5,7 @@ import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 import { View, Platform, ScrollView } from "react-native";
 import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-paper";
-import clientStyle from "../../screens/ClientDetails/Client.styles";
+import clientStyle from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import { handleSubmit } from "./ClientSubmitHandler";
@@ -139,24 +139,24 @@ export const ClientForm = (props: FormProps) => {
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                    const updatedClientDTO: ClientDTO = {
-                        id: values.id!,
-                        first_name: values.firstName!,
-                        last_name: values.lastName!,
-                        birthdate: values.date!.getTime() / 1000,
-                        gender: values.gender!, //TODO: Get this from client
-                        village: values.village!,
-                        zone: values.zone!,
-                        phoneNumber: values.phone!,
-                        careGiverPresent: values.caregiverPresent!,
-                        careGiverName: values.caregiverName!,
-                        careGiverEmail: values.caregiverEmail!,
-                        careGiverPhoneNumber: values.caregiverPhone!,
-                        disabilities: values.clientDisability!,
-                        otherDisability: values.otherDisability!,
-                        clientCreatedDate: new Date().getTime() / 1000,
-                    };
-                    handleSubmit(updatedClientDTO);
+                    // const updatedClientDTO: ClientDTO = {
+                    //     id: values.id!,
+                    //     first_name: values.firstName!,
+                    //     last_name: values.lastName!,
+                    //     birthdate: values.date!.getTime() / 1000,
+                    //     gender: values.gender!, //TODO: Get this from client
+                    //     village: values.village!,
+                    //     zone: values.zone!,
+                    //     phoneNumber: values.phone!,
+                    //     careGiverPresent: values.caregiverPresent!,
+                    //     careGiverName: values.caregiverName!,
+                    //     careGiverEmail: values.caregiverEmail!,
+                    //     careGiverPhoneNumber: values.caregiverPhone!,
+                    //     disabilities: values.clientDisability!,
+                    //     otherDisability: values.otherDisability!,
+                    //     clientCreatedDate: new Date().getTime() / 1000,
+                    // };
+                    // handleSubmit(updatedClientDTO);
                     setEditMode(true);
                 }}
             >

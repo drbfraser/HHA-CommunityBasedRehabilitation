@@ -2,7 +2,7 @@ import { IVisitSummary } from "@cbr/common";
 import * as React from "react";
 import { Component } from "react";
 import { View } from "react-native";
-import { TimelineDate } from "./TimeLineDate";
+import { TimelineDate } from "./TimelineDate";
 import { ActivityDTO, SummaryActivity } from "./Activity";
 
 interface ActivityProps {

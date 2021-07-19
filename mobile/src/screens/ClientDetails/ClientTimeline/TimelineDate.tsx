@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { View, Text } from "react-native";
 import { Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { riskTypes } from "../../util/riskIcon";
+import { riskTypes } from "../../../util/riskIcon";
 import { IVisitSummary } from "@cbr/common";
 import useStyles from "./Activity.style";
 

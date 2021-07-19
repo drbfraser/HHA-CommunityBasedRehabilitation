@@ -38,8 +38,8 @@ export interface FormValues {
 
 export const validationSchema = () =>
     Yup.object().shape({
-        ["firstName"]: Yup.string().label("firstName").required().max(50),
-        ["lastName"]: Yup.string().label("lastName").required().max(50),
+        ["firstName"]: Yup.string().label("firstName").required().max(50).min(1),
+        ["lastName"]: Yup.string().label("lastName").required().max(50).min(1),
         ["date"]: Yup.date()
             .label("date")
             .max(new Date(), "Birthdate cannot be in the future")

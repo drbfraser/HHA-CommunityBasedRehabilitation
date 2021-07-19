@@ -25,6 +25,7 @@ import { TimelineDate } from "./TimeLineDate";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { ClientRisk } from "./ClientRisk";
 import { ClientDetails } from "./ClientDetails";
+import { RecentActivity } from "../../components/ActivityTimeline/RecentActivity";
 
 /*
     Use client image instead of randomly generated
@@ -155,29 +156,6 @@ const Client = (props: ClientProps) => {
 
     tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));
 
-    const recentActivity = () => {
-        if (clientVisits)
-            return (
-                <View>
-                    {tempActivity.map((presentActivity) => {
-                        return (
-                            <SummaryActivity
-                                key={presentActivity.id}
-                                activity={presentActivity}
-                            ></SummaryActivity>
-                        );
-                    })}
-                    <TimelineDate date={clientCreateDate}></TimelineDate>
-                </View>
-            );
-        else
-            return (
-                <View>
-                    <TimelineDate date={clientCreateDate}></TimelineDate>
-                </View>
-            );
-    };
-
     return (
         <ScrollView style={styles.scrollViewStyles}>
             {loading ? (
@@ -230,7 +208,12 @@ const Client = (props: ClientProps) => {
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>
                         </View>
-                        <View>{recentActivity()}</View>
+                        {/* <View>{recentActivity()}</View> */}
+                        <RecentActivity
+                            clientVisits={clientVisits!}
+                            activityDTO={tempActivity}
+                            clientCreateDate={clientCreateDate}
+                        ></RecentActivity>
                         <View style={styles.clientDetailsFinalView}></View>
                     </Card>
                 </View>

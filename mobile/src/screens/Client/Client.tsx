@@ -15,9 +15,13 @@ import { Platform, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IReferral, ISurvey, timestampToDateObj } from "../../../node_modules/@cbr/common";
 import { useDisabilities } from "../../../node_modules/@cbr/common/src/util/hooks/disabilities";
-import { IVisitSummary } from "../../util/visits";
-import { ActivityDTO, ActivityType, SummaryActivity } from "./Activity";
-import { TimeLineDate } from "./TimeLineDate";
+import { IVisitSummary } from "@cbr/common";
+import {
+    ActivityDTO,
+    ActivityType,
+    SummaryActivity,
+} from "../../components/ActivityTimeline/Activity";
+import { TimelineDate } from "./TimeLineDate";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { ClientRisk } from "./ClientRisk";
 import { ClientDetails } from "./ClientDetails";
@@ -49,10 +53,10 @@ const Client = (props: ClientProps) => {
     const [gender, setGender] = useState("");
     const [zone, setZone] = useState<number>();
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [caregiverPresent, setCaregiverPresent] = React.useState(false);
-    const [caregiverName, setCaregiverName] = React.useState("");
-    const [caregiverEmail, setCaregiverEmail] = React.useState("");
-    const [caregiverPhone, setCaregiverPhone] = React.useState("");
+    const [caregiverPresent, setCaregiverPresent] = useState(false);
+    const [caregiverName, setCaregiverName] = useState("");
+    const [caregiverEmail, setCaregiverEmail] = useState("");
+    const [caregiverPhone, setCaregiverPhone] = useState("");
     const [clientDisability, setDisability] = useState<number[]>([]);
     const [otherDisability, setOtherDisability] = useState<String>();
 
@@ -93,8 +97,8 @@ const Client = (props: ClientProps) => {
     }, []);
 
     //Overall Screen editable toggle variables
-    const [editMode, setEditMode] = React.useState(true);
-    const [cancelButtonType, setCancelButtonType] = React.useState("outlined");
+    const [editMode, setEditMode] = useState(true);
+    const [cancelButtonType, setCancelButtonType] = useState("outlined");
     const enableButtons = () => {
         if (editMode == true) {
             setEditMode(false);
@@ -107,11 +111,10 @@ const Client = (props: ClientProps) => {
     };
 
     //Activity component rendering
-    var tempActivity: ActivityDTO[];
+    const tempActivity: ActivityDTO[] = [];
     var presentId = 0;
-    tempActivity = [];
     if (clientVisits) {
-        clientVisits.map((presentVisit) => {
+        clientVisits.forEach((presentVisit) => {
             tempActivity.push({
                 id: presentId,
                 type: ActivityType.VISIT,
@@ -124,7 +127,7 @@ const Client = (props: ClientProps) => {
         });
     }
     if (clientReferrals) {
-        clientReferrals.map((presentRef) => {
+        clientReferrals.forEach((presentRef) => {
             tempActivity.push({
                 id: presentId,
                 type: ActivityType.REFERAL,
@@ -137,7 +140,7 @@ const Client = (props: ClientProps) => {
         });
     }
     if (clientSurveys) {
-        clientSurveys.map((presentSurvey) => {
+        clientSurveys.forEach((presentSurvey) => {
             tempActivity.push({
                 id: presentId,
                 type: ActivityType.SURVEY,
@@ -164,13 +167,13 @@ const Client = (props: ClientProps) => {
                             ></SummaryActivity>
                         );
                     })}
-                    <TimeLineDate date={clientCreateDate}></TimeLineDate>
+                    <TimelineDate date={clientCreateDate}></TimelineDate>
                 </View>
             );
         else
             return (
                 <View>
-                    <TimeLineDate date={clientCreateDate}></TimeLineDate>
+                    <TimelineDate date={clientCreateDate}></TimelineDate>
                 </View>
             );
     };

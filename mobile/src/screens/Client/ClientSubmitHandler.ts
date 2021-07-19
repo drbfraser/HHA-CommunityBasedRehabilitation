@@ -7,7 +7,6 @@ const updateClient = async (clientInfo: FormData, clientId: number) => {
         method: "PUT",
         body: clientInfo,
     };
-    console.log(init);
     return await apiFetch(Endpoint.CLIENT, `${clientId}`, init)
         .then((res) => {
             return res.json();
@@ -35,7 +34,7 @@ export const handleSubmit = async (values: ClientDTO) => {
     };
 
     const formData = objectToFormData(updatedValues);
-
+    console.log(formData);
     // if (values.picture) {
     //     const clientProfilePicture = await (await fetch(values.picture)).blob();
     //     formData.append("picture", clientProfilePicture, getRandomStr(30) + ".png");

@@ -19,7 +19,7 @@ const HomeScreen = (props: HomeScreenProps) => {
         props.navigation.setOptions({
             title: "Main Menu",
             headerStyle: {
-                backgroundColor: "#273263",
+                backgroundColor: themeColors.blueBgDark,
             },
             headerTintColor: themeColors.blueAccent,
             headerShown: true,
@@ -33,7 +33,7 @@ const HomeScreen = (props: HomeScreenProps) => {
         props.navigation.setOptions({
             title: "Main Menu",
             headerStyle: styles.headerStyle,
-            headerTintColor: "#fff",
+            headerTintColor: themeColors.white,
             headerShown: true,
         });
     });

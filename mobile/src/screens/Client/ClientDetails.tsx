@@ -12,7 +12,7 @@ import CustomMultiPicker from "react-native-multiple-select-list";
 import { Validation } from "@cbr/common";
 import { handleSubmit } from "./ClientSubmitHandler";
 import * as Yup from "yup";
-import { ClientDTO, ClientDTO as FormValues } from "./ClientRequests";
+import { ClientDTO } from "./ClientRequests";
 
 interface FormProps {
     isNewClient?: boolean;
@@ -56,26 +56,24 @@ export const ClientDetails = (props: FormProps) => {
 
     //Client Details Usestates
     const [date, setDate] = useState(new Date(props.date));
-    const [caregiverPresent, setCaregiverPresent] = React.useState(false);
-
+    const [caregiverPresent, setCaregiverPresent] = useState(false);
     const [selectedZone, setSelectedZone] = useState<Number>(props.zone - 1);
+    const [otherDisability, showOtherDisability] = useState(false);
+
     var zoneNameList: string[] = [];
     for (let index of Array.from(zoneList.entries())) {
         zoneNameList.push(index[1]);
     }
-    const [presentZone, setPresentZone] = React.useState<String>(zoneNameList[props.zone - 1]);
+    const [presentZone, setPresentZone] = useState<String>(zoneNameList[props.zone - 1]);
 
     var correctedClientDisability: number[] = [];
     var disabilityNameList: string[] = [];
+    var newSelectedDisabilityList: string[] = [];
+    var removedDuplicates: string[] = [];
 
     for (let index of Array.from(disabilityList.entries())) {
         disabilityNameList.push(index[1]);
     }
-
-    const [otherDisability, showOtherDisability] = useState(false);
-
-    var newSelectedDisabilityList: string[] = [];
-    var removedDuplicates: string[] = [];
 
     const updateSelectedDisabilityList = (disabilityArray: number[]) => {
         for (let index of disabilityArray) {
@@ -158,23 +156,6 @@ export const ClientDetails = (props: FormProps) => {
                 .max(50)
                 .matches(Validation.phoneRegExp, "Phone number is not valid."),
             ["clientDisability"]: Yup.array().label("clientDisability").required(),
-            // ["otherDisability"]: Yup.string()
-            //     .label("otherDisability")
-            //     .trim()
-            //     .test(
-            //         "require-if-other-selected",
-            //         "Other Disability is required",
-            //         async (other_disability, schema) =>
-            //             !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
-            //             (other_disability !== undefined && other_disability.length > 0)
-            //     )
-            //     .test(
-            //         "require-if-other-selected",
-            //         "Other Disability must be at most 100 characters",
-            //         async (other_disability, schema) =>
-            //             !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
-            //             (other_disability !== undefined && other_disability.length <= 100)
-            //     ),
             ["gender"]: Yup.string().label("gender").required(),
             ["village"]: Yup.string().label("village").required(),
             ["zone"]: Yup.string().label("zone").required(),
@@ -190,9 +171,9 @@ export const ClientDetails = (props: FormProps) => {
         });
 
     //Menu Consts and functions
-    const [editMode, setEditMode] = React.useState(!props.isNewClient);
+    const [editMode, setEditMode] = useState(!props.isNewClient);
 
-    const [cancelButtonType, setCancelButtonType] = React.useState("outlined");
+    const [cancelButtonType, setCancelButtonType] = useState("outlined");
     const enableButtons = () => {
         if (editMode == true) {
             setEditMode(false);
@@ -214,12 +195,12 @@ export const ClientDetails = (props: FormProps) => {
     };
 
     //Disability Menu editable toggle variables
-    const [disabilityVisible, setDisabilityVisible] = React.useState(false);
+    const [disabilityVisible, setDisabilityVisible] = useState(false);
     const openDisabilityMenu = () => setDisabilityVisible(true);
     const closeDisabilityMenu = () => setDisabilityVisible(false);
 
     //Zone Menu editable toggle variables
-    const [zonesVisible, setZonesVisible] = React.useState(false);
+    const [zonesVisible, setZonesVisible] = useState(false);
     const openZonesMenu = () => setZonesVisible(true);
     const closeZonesMenu = () => setZonesVisible(false);
 

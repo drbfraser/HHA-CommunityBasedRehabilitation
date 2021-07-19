@@ -1,6 +1,6 @@
 import { apiFetch, APILoadError, Endpoint, getZones, IReferral, ISurvey } from "@cbr/common";
-import { IClient } from "../../util/clients";
-import { IVisitSummary } from "../../util/visits";
+import { IClient } from "@cbr/common";
+import { IVisitSummary } from "@cbr/common";
 
 export type ClientDTO = {
     id: number;

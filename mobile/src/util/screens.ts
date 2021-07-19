@@ -81,11 +81,13 @@ export const defaultPage = screens[0];
 export enum StackScreenName {
     HOME = "Home",
     CLIENT = "ClientDetails",
+    BASELINE = "BaselineSurvey",
 }
 
 export const stackScreenProps = {
     [StackScreenName.HOME]: HomeScreen,
     [StackScreenName.CLIENT]: ClientScreenController,
+    [StackScreenName.BASELINE]: BaseSurvey,
 };
 
 export type stackParamList = {

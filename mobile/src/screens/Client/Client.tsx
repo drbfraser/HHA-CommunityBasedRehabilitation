@@ -14,10 +14,6 @@ import { ClientRisk } from "../../components/ClientSpecificRisk/ClientRisk";
 import { ClientDetails } from "../../components/ClientSpecificDetails/ClientDetails";
 import { RecentActivity } from "../../components/ActivityTimeline/RecentActivity";
 
-/*
-    Use client image instead of randomly generated
-*/
-
 interface ClientProps {
     clientID: number;
 }

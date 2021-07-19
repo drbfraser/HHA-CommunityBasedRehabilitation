@@ -6,7 +6,7 @@ import { Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { riskTypes } from "../../util/riskIcon";
 import { IVisitSummary } from "@cbr/common";
-import useStyles from "../../components/ActivityTimeline/Activity.style";
+import useStyles from "./Activity.style";
 
 interface SummaryProps {
     date: number;

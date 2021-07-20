@@ -6,7 +6,7 @@ import clientStyle from "./ClientDetails.styles";
 import { Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IReferral, ISurvey, timestampToDateObj } from "@cbr/common";
-import { useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
+import { getDisabilities, useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 import { IVisitSummary } from "@cbr/common";
 import { ActivityDTO, ActivityType } from "./ClientTimeline/Activity";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
@@ -37,6 +37,7 @@ const ClientDetails = (props: ClientProps) => {
 
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
+    var disabilityList = useDisabilities();
 
     //Main Client Variables
     const [presentClient, setPresentClient] = useState<ClientDTO>();
@@ -53,6 +54,7 @@ const ClientDetails = (props: ClientProps) => {
     const [caregiverPhone, setCaregiverPhone] = useState("");
     const [clientDisability, setDisability] = useState<number[]>([]);
     const [otherDisability, setOtherDisability] = useState<String>();
+    const [initialDisabilityArray, setInitialDisabilityArray] = useState<string[]>();
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);
@@ -60,6 +62,18 @@ const ClientDetails = (props: ClientProps) => {
     const [clientReferrals, setClientReferrals] = useState<IReferral[]>();
     const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
     const [allRecentActivity, setRecentActivity] = useState<ActivityDTO[]>();
+
+    const getInitialDisabilities = (disabilityArray: number[]) => {
+        var selectedDisabilities: string[] = [];
+
+        for (let index of disabilityArray) {
+            if (disabilityList.has(index)) {
+                selectedDisabilities.push(disabilityList.get(index)!);
+            }
+        }
+        selectedDisabilities = selectedDisabilities.filter((v, i, a) => a.indexOf(v) === i);
+        return selectedDisabilities;
+    };
 
     const getClientDetails = async () => {
         const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
@@ -83,6 +97,7 @@ const ClientDetails = (props: ClientProps) => {
         setClientVisits(presentClient.clientVisits);
         setClientReferrals(presentClient.clientReferrals);
         setClientSurveys(presentClient.clientSurveys);
+        setInitialDisabilityArray(getInitialDisabilities(presentClient.disabilities));
     };
     useEffect(() => {
         getClientDetails().then(() => {
@@ -92,17 +107,6 @@ const ClientDetails = (props: ClientProps) => {
 
     //Overall Screen editable toggle variables
     const [editMode, setEditMode] = useState(true);
-    const [cancelButtonType, setCancelButtonType] = useState("outlined");
-    const enableButtons = () => {
-        if (editMode == true) {
-            setEditMode(false);
-            setCancelButtonType("contained");
-        } else {
-            //Make the PUT Api Call to edit client here since this is the save click
-            setEditMode(true);
-            setCancelButtonType("outlined");
-        }
-    };
 
     //Activity component rendering
     const tempActivity: ActivityDTO[] = [];
@@ -192,6 +196,7 @@ const ClientDetails = (props: ClientProps) => {
                             caregiverPhone={caregiverPhone}
                             clientDisability={clientDisability}
                             otherDisability={otherDisability}
+                            initialDisabilityArray={initialDisabilityArray}
                         />
                     </Card>
                     <Divider></Divider>
@@ -201,7 +206,6 @@ const ClientDetails = (props: ClientProps) => {
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>
                         </View>
-                        {/* <View>{recentActivity()}</View> */}
                         <RecentActivity
                             clientVisits={clientVisits!}
                             activityDTO={tempActivity}

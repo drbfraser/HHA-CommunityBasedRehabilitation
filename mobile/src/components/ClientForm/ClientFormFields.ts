@@ -17,6 +17,8 @@ export interface FormProps {
     caregiverPhone?: string;
     clientDisability?: number[];
     otherDisability?: string;
+    disabilityString?: string[];
+    initialDisabilityArray?: string[];
 }
 
 export interface FormValues {

@@ -1,4 +1,4 @@
-import { IReferral, ISurvey, themeColors, timestampToDate } from "@cbr/common";
+import { IReferral, ISurvey, themeColors, timestampToDate, useZones } from "@cbr/common";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { View, Text } from "react-native";
@@ -28,6 +28,8 @@ export interface ActivityDTO {
 }
 
 export const SummaryActivity = (props: SummaryProps) => {
+    var zoneList = useZones();
+    const zone = Array.from(zoneList.values())[props.activity.visit!.zone - 1];
     const styles = useStyles();
     const [icon, setIcon] = useState("");
 
@@ -56,7 +58,7 @@ export const SummaryActivity = (props: SummaryProps) => {
                 <View>
                     {props.activity.type === ActivityType.VISIT && props.activity.visit ? (
                         <View>
-                            <Text>Visit in BidiBidi Zone{props.activity.visit.zone}</Text>
+                            <Text>Visit in {zone}</Text>
                             <View>
                                 {props.activity.visit.educat_visit === true ? (
                                     <View style={styles.subItem}>

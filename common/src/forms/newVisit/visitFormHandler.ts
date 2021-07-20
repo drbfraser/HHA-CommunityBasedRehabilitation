@@ -1,6 +1,6 @@
-import { ImprovementFormField, TFormValues } from "./visitFormFields";
+import { ImprovementFormField, TVisitFormValues } from "./visitFormFields";
 import { FormikHelpers } from "formik";
-import { FormField } from "./visitFormFields";
+import { VisitFormField } from "./visitFormFields";
 import { apiFetch, Endpoint } from "../../util/endpoints";
 
 const addVisit = async (visitInfo: string) => {
@@ -19,27 +19,27 @@ const addVisit = async (visitInfo: string) => {
 };
 
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
-export const handleSubmit = async (
-    values: TFormValues,
-    helpers: FormikHelpers<TFormValues>,
+export const handleSubmitVisitForm = async (
+    values: TVisitFormValues,
+    helpers: FormikHelpers<TVisitFormValues>,
     setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
     const newVisit = JSON.stringify({
-        client: values[FormField.client],
-        health_visit: values[FormField.health],
-        educat_visit: values[FormField.education],
-        social_visit: values[FormField.social],
-        zone: values[FormField.zone],
-        village: values[FormField.village],
+        client: values[VisitFormField.client],
+        health_visit: values[VisitFormField.health],
+        educat_visit: values[VisitFormField.education],
+        social_visit: values[VisitFormField.social],
+        zone: values[VisitFormField.zone],
+        village: values[VisitFormField.village],
         longitude: 0.0,
         latitude: 0.0,
-        improvements: Object.values(values[FormField.improvements])
+        improvements: Object.values(values[VisitFormField.improvements])
             .reduce((improvements, typedImprovement) => improvements.concat(typedImprovement))
             .filter(
                 (improvement) =>
                     improvement !== undefined && improvement[ImprovementFormField.enabled]
             ),
-        outcomes: Object.values(values[FormField.outcomes]).filter(
+        outcomes: Object.values(values[VisitFormField.outcomes]).filter(
             (outcome) => outcome !== undefined
         ),
     });

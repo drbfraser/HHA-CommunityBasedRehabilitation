@@ -1,7 +1,6 @@
 import { FormikHelpers } from "formik";
-import history from "util/history";
-import { TVisitFormValues } from "@cbr/common/forms/newVisit/visitFormFields";
-import { handleSubmitVisitForm } from "@cbr/common/forms/newVisit/visitFormHandler";
+import { TVisitFormValues } from "@cbr/common/src/forms/newVisit/visitFormFields";
+import { handleSubmitVisitForm } from "@cbr/common/src/forms/newVisit/visitFormHandler";
 
 export const handleSubmit = async (
     values: TVisitFormValues,
@@ -10,7 +9,7 @@ export const handleSubmit = async (
 ) => {
     try {
         handleSubmitVisitForm(values, helpers, setSubmissionError);
-        history.goBack();
+        // TODO: navigation to client page
     } catch (e) {
         helpers.setSubmitting(false);
         setSubmissionError(true);

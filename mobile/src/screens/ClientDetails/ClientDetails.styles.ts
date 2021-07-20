@@ -1,3 +1,4 @@
+import { themeColors } from "@cbr/common";
 import { StyleSheet } from "react-native";
 import theme from "../../util/theme.styles";
 
@@ -254,6 +255,11 @@ const useStyles = () =>
             marginLeft: 10,
             marginRight: 10,
             borderRadius: 5,
+        },
+        errorText: {
+            color: themeColors.errorRed,
+            flex: 1,
+            alignSelf: "center",
         },
     });
 

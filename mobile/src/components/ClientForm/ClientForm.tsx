@@ -8,9 +8,10 @@ import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-p
 import clientStyle from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
-import { handleSubmit } from "./ClientSubmitHandler";
-import { ClientDTO } from "../../screens/ClientDetails/ClientRequests";
 import { FormValues, FormProps, validationSchema } from "./ClientFormFields";
+import * as Yup from "yup";
+import { ClientDTO } from "../../screens/ClientDetails/ClientRequests";
+import { handleSubmit } from "./ClientSubmitHandler";
 
 export const ClientForm = (props: FormProps) => {
     const styles = clientStyle();
@@ -115,7 +116,7 @@ export const ClientForm = (props: FormProps) => {
         useState<string[]>(newSelectedDisabilityList);
 
     //Menu functions
-    const enableButtons = () => {
+    const toggleButtons = () => {
         if (editMode == true) {
             setEditMode(false);
             setCancelButtonType("contained");
@@ -133,31 +134,36 @@ export const ClientForm = (props: FormProps) => {
         setShow(true);
     };
 
+    const reviewSchema = Yup.object({
+        firstName: Yup.string().required().min(4),
+    });
+
     return (
         <View>
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                    // const updatedClientDTO: ClientDTO = {
-                    //     id: values.id!,
-                    //     first_name: values.firstName!,
-                    //     last_name: values.lastName!,
-                    //     birthdate: values.date!.getTime() / 1000,
-                    //     gender: values.gender!, //TODO: Get this from client
-                    //     village: values.village!,
-                    //     zone: values.zone!,
-                    //     phoneNumber: values.phone!,
-                    //     careGiverPresent: values.caregiverPresent!,
-                    //     careGiverName: values.caregiverName!,
-                    //     careGiverEmail: values.caregiverEmail!,
-                    //     careGiverPhoneNumber: values.caregiverPhone!,
-                    //     disabilities: values.clientDisability!,
-                    //     otherDisability: values.otherDisability!,
-                    //     clientCreatedDate: new Date().getTime() / 1000,
-                    // };
-                    // handleSubmit(updatedClientDTO);
-                    setEditMode(true);
+                    const updatedClientDTO: ClientDTO = {
+                        id: values.id!,
+                        first_name: values.firstName!,
+                        last_name: values.lastName!,
+                        birthdate: values.date!.getTime() / 1000,
+                        gender: values.gender!, //TODO: Get this from client
+                        village: values.village!,
+                        zone: values.zone!,
+                        phoneNumber: values.phone!,
+                        careGiverPresent: values.caregiverPresent!,
+                        careGiverName: values.caregiverName!,
+                        careGiverEmail: values.caregiverEmail!,
+                        careGiverPhoneNumber: values.caregiverPhone!,
+                        disabilities: values.clientDisability!,
+                        otherDisability: values.otherDisability!,
+                        clientCreatedDate: new Date().getTime() / 1000,
+                    };
+                    handleSubmit(updatedClientDTO);
+                    toggleButtons();
+                    console.log(values);
                 }}
             >
                 {(formikProps) => (
@@ -170,6 +176,7 @@ export const ClientForm = (props: FormProps) => {
                             value={formikProps.values.firstName}
                             disabled={editMode}
                         ></TextInput>
+                        <Text style={styles.errorText}>{formikProps.errors.firstName}</Text>
 
                         <TextInput
                             style={styles.clientTextStyle}
@@ -179,6 +186,7 @@ export const ClientForm = (props: FormProps) => {
                             value={formikProps.values.lastName}
                             disabled={editMode}
                         ></TextInput>
+                        <Text style={styles.errorText}>{formikProps.errors.lastName}</Text>
 
                         <Text> Birthdate </Text>
                         <View style={styles.clientBirthdayView}>
@@ -211,6 +219,7 @@ export const ClientForm = (props: FormProps) => {
                                 )}
                             </View>
                         </View>
+                        <Text style={styles.errorText}>{formikProps.errors.date}</Text>
 
                         <TextInput
                             style={styles.clientTextStyle}
@@ -220,6 +229,7 @@ export const ClientForm = (props: FormProps) => {
                             value={formikProps.values.gender}
                             disabled={editMode}
                         />
+                        <Text style={styles.errorText}>{formikProps.errors.gender}</Text>
 
                         <TextInput
                             style={styles.clientTextStyle}
@@ -229,6 +239,7 @@ export const ClientForm = (props: FormProps) => {
                             value={formikProps.values.village}
                             disabled={editMode}
                         />
+                        <Text style={styles.errorText}>{formikProps.errors.village}</Text>
 
                         <View>
                             <Portal>
@@ -295,6 +306,7 @@ export const ClientForm = (props: FormProps) => {
 
                             <Text style={styles.carePresentCheckBox}>{presentZone}</Text>
                         </View>
+                        <Text style={styles.errorText}>{formikProps.errors.zone}</Text>
 
                         <TextInput
                             style={styles.clientTextStyle}
@@ -304,6 +316,7 @@ export const ClientForm = (props: FormProps) => {
                             value={formikProps.values.phone}
                             disabled={editMode}
                         />
+                        <Text style={styles.errorText}>{formikProps.errors.phone}</Text>
 
                         <View>
                             <Portal>
@@ -375,6 +388,9 @@ export const ClientForm = (props: FormProps) => {
                                                         )}
                                                         value={formikProps.values.otherDisability}
                                                     />
+                                                    <Text style={styles.errorText}>
+                                                        {formikProps.errors.otherDisability}
+                                                    </Text>
                                                 </View>
                                             ) : (
                                                 <></>
@@ -414,6 +430,7 @@ export const ClientForm = (props: FormProps) => {
                                 );
                             })}
                         </View>
+                        <Text style={styles.errorText}>{formikProps.errors.clientDisability}</Text>
 
                         <View style={styles.carePresentView}>
                             <Text style={styles.carePresentCheckBox}>Caregiver Present</Text>
@@ -437,6 +454,9 @@ export const ClientForm = (props: FormProps) => {
                                     value={formikProps.values.caregiverName}
                                     disabled={editMode}
                                 />
+                                <Text style={styles.errorText}>
+                                    {formikProps.errors.caregiverName}
+                                </Text>
                                 <TextInput
                                     style={styles.clientTextStyle}
                                     label="Caregiver Phone"
@@ -445,6 +465,9 @@ export const ClientForm = (props: FormProps) => {
                                     value={formikProps.values.caregiverPhone}
                                     disabled={editMode}
                                 />
+                                <Text style={styles.errorText}>
+                                    {formikProps.errors.caregiverPhone}
+                                </Text>
                                 <TextInput
                                     style={styles.clientTextStyle}
                                     label="Caregiver Email "
@@ -453,6 +476,9 @@ export const ClientForm = (props: FormProps) => {
                                     value={formikProps.values.caregiverEmail}
                                     disabled={editMode}
                                 />
+                                <Text style={styles.errorText}>
+                                    {formikProps.errors.caregiverEmail}
+                                </Text>
                             </View>
                         ) : (
                             <></>
@@ -475,7 +501,7 @@ export const ClientForm = (props: FormProps) => {
                                     style={styles.clientDetailsFinalButtons}
                                     disabled={false}
                                     onPress={() => {
-                                        enableButtons();
+                                        if (editMode) toggleButtons();
                                         if (!editMode) {
                                             formikProps.handleSubmit();
                                         }
@@ -492,62 +518,20 @@ export const ClientForm = (props: FormProps) => {
                                         disabled={editMode}
                                         onPress={() => {
                                             cancelEdit();
-                                            formikProps.setFieldValue("firstName", props.firstName);
-
-                                            formikProps.setFieldValue("lastName", props.lastName);
-
-                                            formikProps.setFieldValue("date", props.date);
+                                            formikProps.resetForm();
                                             setDate(props.date);
-
-                                            formikProps.setFieldValue("gender", props.gender);
-
-                                            formikProps.setFieldValue("village", props.village);
-
-                                            formikProps.setFieldValue("zone", props.zone);
                                             setPresentZone(zoneNameList[props.zone - 1]);
                                             setSelectedZone(props.zone - 1);
-
-                                            formikProps.setFieldValue("phone", props.phone);
-
-                                            formikProps.setFieldValue(
-                                                "caregiverPresent",
-                                                props.caregiverPresent
-                                            );
                                             if (props.caregiverPresent)
                                                 setCaregiverPresent(props.caregiverPresent);
                                             else setCaregiverPresent(false);
 
-                                            //Disability reset
-                                            formikProps.setFieldValue(
-                                                "clientDisability",
-                                                props.clientDisability
-                                            );
                                             if (props.clientDisability)
                                                 updateSelectedDisabilityList(
                                                     props.clientDisability
                                                 );
                                             setSelectedDisabilityList(newSelectedDisabilityList);
                                             //setModalSelections(correctedClientDisability);
-
-                                            formikProps.setFieldValue(
-                                                "caregiverName",
-                                                props.caregiverName
-                                            );
-
-                                            formikProps.setFieldValue(
-                                                "caregiverEmail",
-                                                props.caregiverEmail
-                                            );
-
-                                            formikProps.setFieldValue(
-                                                "caregiverPhone",
-                                                props.caregiverPhone
-                                            );
-
-                                            formikProps.setFieldValue(
-                                                "otherDisability",
-                                                props.otherDisability
-                                            );
                                         }}
                                     >
                                         Cancel
@@ -565,7 +549,7 @@ function getSelectedItemsExt(selectedItems: any): React.ReactNode {
     throw new Error("Function not implemented.");
 }
 function FormikHelpers<T>(): import("formik").FormikHelpers<
-    import("../../screens/ClientDetails/ClientRequests").ClientDTO
+    import("../../screens/ClientDetails/ClientRequests").IClient
 > {
     throw new Error("Function not implemented.");
 }

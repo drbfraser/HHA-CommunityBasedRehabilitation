@@ -81,7 +81,6 @@ export const ClientForm = (props: FormProps) => {
         newSelectedDisabilityList = newSelectedDisabilityList.filter(
             (v, i, a) => a.indexOf(v) === i
         );
-        console.log(newSelectedDisabilityList);
     };
 
     const [modalSelections, setModalSelections] = useState<number[]>(correctedClientDisability);
@@ -348,7 +347,6 @@ export const ClientForm = (props: FormProps) => {
                                                         "clientDisability",
                                                         toUpdateDisability
                                                     );
-                                                    console.log(toUpdateDisability);
                                                     //Add formik prop values by 1 before making request
                                                     updateSelectedDisabilityList(
                                                         toUpdateDisability

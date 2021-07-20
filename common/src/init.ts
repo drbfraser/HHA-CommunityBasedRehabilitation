@@ -37,3 +37,10 @@ export const initializeCommon = (config: CommonConfiguration) => {
 export const reinitializeCommon = (config: CommonConfiguration) => {
     commonConfiguration = { ...config };
 };
+
+/**
+ * Reinitializes the common module, for testing purposes only. Should not be exported out of the
+ * common module.
+ *
+ * @internal
+ */

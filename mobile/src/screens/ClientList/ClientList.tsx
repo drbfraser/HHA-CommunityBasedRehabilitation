@@ -5,7 +5,6 @@ import { DataTable } from "react-native-paper";
 import useStyles from "./ClientList.styles";
 import { ClientTest, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
 import { StackNavigationProp } from "@react-navigation/stack";
-//import { stackParamList, StackScreenName } from "../../util/stackScreens";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { Searchbar } from "react-native-paper";

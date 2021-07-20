@@ -52,3 +52,9 @@ export const updateCurrentUserPassword = async (oldPassword: string, newPassword
  * @return A Promise resolving to a successful response from the server.
  * @throws APIFetchFailError if the response from the server is not successful.
  */
+
+/**
+ * Updates the current user's password.
+ * @return A Promise resolving to a successful response from the server.
+ * @throws APIFetchFailError if the response from the server is not successful.
+ */

@@ -1,20 +1,16 @@
 import React, { useEffect } from "react";
-import { Text, View, Switch } from "react-native";
+import { Text, View } from "react-native";
 import { Card, DataTable } from "react-native-paper";
-// import { Card } from "react-native-elements";
 import useStyles from "./Dashboard.styles";
 import { fetchAllClientsFromApi, fetchReferrals } from "./DashboardRequest";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, StackScreenName } from "../../util/screens";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { IClientSummary, timestampToDate } from "@cbr/common";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+
 const styles = useStyles();
-interface ClientListControllerProps {
-    navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
-}
 
 const returnText = (item) => {
     return (
@@ -24,9 +20,10 @@ const returnText = (item) => {
     );
 };
 
-const Dashboard = (props: ClientListControllerProps) => {
+const Dashboard = () => {
     const [clientList, setClientList] = useState<IClientSummary[]>([]);
-    const [referealList, setReferealList] = useState<any[]>([]);
+    const [referralList, setreferralList] = useState<any[]>([]);
+    const navigation = useNavigation();
     const newClientGet = async () => {
         var fetchedClientList = await fetchAllClientsFromApi();
         setClientList(fetchedClientList);
@@ -34,7 +31,7 @@ const Dashboard = (props: ClientListControllerProps) => {
 
     const referealsGet = async () => {
         var fetchedReferrals = await fetchReferrals();
-        setReferealList(fetchedReferrals);
+        setreferralList(fetchedReferrals);
     };
     useEffect(() => {
         newClientGet();
@@ -78,7 +75,7 @@ const Dashboard = (props: ClientListControllerProps) => {
                                             style={styles.item}
                                             key={item.id}
                                             onPress={() => {
-                                                props.navigation.navigate(StackScreenName.CLIENT, {
+                                                navigation.navigate("ClientDetails", {
                                                     clientID: item.id,
                                                 });
                                             }}
@@ -118,34 +115,34 @@ const Dashboard = (props: ClientListControllerProps) => {
                         <ScrollView>
                             <DataTable>
                                 <DataTable.Header style={styles.item}>
-                                    <DataTable.Title style={styles.column_refreal_name}>
+                                    <DataTable.Title style={styles.column_referral_name}>
                                         Name
                                     </DataTable.Title>
-                                    <DataTable.Title style={styles.column_refreal_type}>
+                                    <DataTable.Title style={styles.column_referral_type}>
                                         Type
                                     </DataTable.Title>
-                                    <DataTable.Title style={styles.column_refreal_date}>
+                                    <DataTable.Title style={styles.column_referral_date}>
                                         Date Referred
                                     </DataTable.Title>
                                 </DataTable.Header>
-                                {referealList.map((item) => {
+                                {referralList.map((item) => {
                                     return (
                                         <DataTable.Row
                                             style={styles.item}
                                             key={item.id}
                                             onPress={() => {
-                                                props.navigation.navigate(StackScreenName.CLIENT, {
-                                                    clientID: item.id,
+                                                navigation.navigate("ClientDetails", {
+                                                    clientID: item.client_id,
                                                 });
                                             }}
                                         >
-                                            <View style={styles.column_refreal_name}>
+                                            <View style={styles.column_referral_name}>
                                                 {returnText(item.full_name)}
                                             </View>
-                                            <View style={styles.column_refreal_type}>
+                                            <View style={styles.column_referral_type}>
                                                 {returnText(item.type)}
                                             </View>
-                                            <DataTable.Cell style={styles.column_refreal_date}>
+                                            <DataTable.Cell style={styles.column_referral_date}>
                                                 <Text style={styles.fontSize}>
                                                     {timestampToDate(Number(item.date_referred))}
                                                 </Text>

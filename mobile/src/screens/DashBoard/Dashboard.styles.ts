@@ -56,17 +56,17 @@ const useStyles = () =>
             justifyContent: "center",
         },
 
-        column_refreal_name: {
+        column_referral_name: {
             flex: 2,
             padding: 5,
             justifyContent: "center",
         },
-        column_refreal_type: {
+        column_referral_type: {
             flex: 2,
             padding: 5,
             justifyContent: "center",
         },
-        column_refreal_date: {
+        column_referral_date: {
             flex: 1,
             padding: 5,
             justifyContent: "center",

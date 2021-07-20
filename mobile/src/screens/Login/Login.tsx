@@ -7,8 +7,16 @@ import { Button, HelperText, Text, TextInput, Title, useTheme } from "react-nati
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
-import { SMALL_WIDTH } from "../../theme.styles";
+import { SMALL_WIDTH } from "../../util/theme.styles";
 import PasswordTextInput from "../../components/PasswordTextInput/PasswordTextInput";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { stackParamList, StackScreenName } from "../../util/stackScreens";
+import { Navigation } from "react-native-navigation";
+import { useEffect } from "react";
+
+interface LoginProps {
+    navigation: StackNavigationProp<stackParamList, StackScreenName.LOGIN>;
+}
 
 enum LoginStatus {
     INITIAL,
@@ -16,13 +24,22 @@ enum LoginStatus {
     FAILED,
 }
 
-const Login = () => {
+const Login = (props: LoginProps) => {
     const theme = useTheme();
     const styles = useStyles();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [status, setStatus] = useState(LoginStatus.INITIAL);
+
+    useEffect(() => {
+        const resetLoginPage = props.navigation.addListener("focus", () => {
+            setUsername("");
+            setPassword("");
+            setStatus(LoginStatus.INITIAL);
+        });
+        return resetLoginPage;
+    }, [props.navigation]);
 
     // This is for selecting the next TextInput: https://stackoverflow.com/a/59626713
     // Importing RN's TextInput as NativeTextInput fixes the typing as mentioned in
@@ -42,8 +59,11 @@ const Login = () => {
         setStatus(LoginStatus.SUBMITTING);
 
         const loginSucceeded = await login(usernameToUse, password);
+
         if (!loginSucceeded) {
             setStatus(LoginStatus.FAILED);
+        } else {
+            props.navigation.navigate(StackScreenName.HOME);
         }
     };
 
@@ -114,6 +134,7 @@ const Login = () => {
                             autoCorrect={false}
                             autoCompleteType="username"
                             textContentType="username"
+                            returnKeyType="next"
                             onSubmitEditing={() => passwordTextRef.current?.focus()}
                         />
                         <HelperText
@@ -133,6 +154,7 @@ const Login = () => {
                         mode="flat"
                         disabled={status === LoginStatus.SUBMITTING}
                         onSubmitEditing={handleLogin}
+                        returnKeyType="done"
                         ref={passwordTextRef}
                     />
                     <HelperText type="error" visible={status === LoginStatus.FAILED && !password}>

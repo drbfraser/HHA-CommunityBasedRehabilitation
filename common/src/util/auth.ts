@@ -1,30 +1,15 @@
 import jwt_decode from "jwt-decode";
 import { Endpoint } from "./endpoints";
 import { commonConfiguration } from "../init";
-
-const ACCESS_TOKEN_KEY = "api_accessToken";
-const REFRESH_TOKEN_KEY = "api_refreshToken";
-
-interface IAPIToken {
-    token_type: "access" | "refresh";
-    exp: number;
-    jti: string;
-    user_id: number;
-}
-
-const getAccessToken = (): Promise<string | null> => {
-    return commonConfiguration.keyValStorageProvider.getItem(ACCESS_TOKEN_KEY);
-};
-const getRefreshToken = (): Promise<string | null> => {
-    return commonConfiguration.keyValStorageProvider.getItem(REFRESH_TOKEN_KEY);
-};
-
-const setAccessToken = (token: string): Promise<void> => {
-    return commonConfiguration.keyValStorageProvider.setItem(ACCESS_TOKEN_KEY, token);
-};
-const setRefreshToken = (token: string): Promise<void> => {
-    return commonConfiguration.keyValStorageProvider.setItem(REFRESH_TOKEN_KEY, token);
-};
+import { Mutex } from "async-mutex";
+import {
+    deleteTokens,
+    getAccessToken,
+    getRefreshToken,
+    IAPIToken,
+    setAccessToken,
+    setRefreshToken,
+} from "./internal/tokens";
 
 /**
  * Validates the given token to check if it's valid for use.
@@ -36,7 +21,7 @@ const setRefreshToken = (token: string): Promise<void> => {
  * the token is valid and not expired.
  * @param token The token to validate.
  */
-const isTokenValid = (token: string | null): boolean => {
+export const isTokenValid = (token: string | null): boolean => {
     if (token === null) {
         return false;
     }
@@ -50,10 +35,24 @@ const isTokenValid = (token: string | null): boolean => {
     }
 };
 
+interface AuthTokens {
+    access: string;
+    refresh: string;
+}
+
+/**
+ * Requests fresh access and refresh tokens from the server.
+ *
+ * @return A Promise resolving to fresh auth tokens or `null` if the fetch failed for any reason.
+ * @param endpoint The endpoint to use to get tokens. Which endpoint is used determines what the
+ * postBody should be
+ * @param postBody For `Endpoint.LOGIN`, a json string with `username` and `password` fields. For
+ * `Endpoint.LOGIN_REFRESH`, a json string with a `refresh` field containing a refresh token.
+ */
 const requestTokens = async (
     endpoint: Endpoint.LOGIN | Endpoint.LOGIN_REFRESH,
     postBody: string
-): Promise<boolean> => {
+): Promise<AuthTokens | null> => {
     const init: RequestInit = {
         method: "POST",
         body: postBody,
@@ -71,11 +70,11 @@ const requestTokens = async (
             );
         }
 
-        const json = await resp.json();
-
-        if (isTokenValid(json.access) && isTokenValid(json.refresh)) {
-            await setAccessToken(json.access);
-            await setRefreshToken(json.refresh);
+        const tokens: AuthTokens = await resp.json();
+        if (isTokenValid(tokens.access) && isTokenValid(tokens.refresh)) {
+            await setAccessToken(tokens.access);
+            await setRefreshToken(tokens.refresh);
+            return tokens;
         } else {
             throw new Error(
                 "Request token failure: the access and/or refresh token(s) received were invalid."
@@ -83,13 +82,16 @@ const requestTokens = async (
         }
     } catch (e) {
         console.error(e);
-        return false;
+        return null;
     }
-
-    return true;
 };
 
-const refreshTokens = async (): Promise<boolean> => {
+/**
+ * Calls the {@link Endpoint.LOGIN_REFRESH} to refresh both the access and refresh tokens.
+ * @return A Promise that resolves to fresh tokens, or null if refreshing failed or the tokens
+ * returned aren't valid.
+ */
+const refreshTokens = async (): Promise<AuthTokens | null> => {
     const postBody = JSON.stringify({
         refresh: await getRefreshToken(),
     });
@@ -103,12 +105,11 @@ export const doLogin = async (username: string, password: string): Promise<boole
         password,
     });
 
-    return requestTokens(Endpoint.LOGIN, postBody);
+    return (await requestTokens(Endpoint.LOGIN, postBody)) !== null;
 };
 
 export const doLogout = async () => {
-    await setAccessToken("");
-    await setRefreshToken("");
+    await deleteTokens();
     await commonConfiguration.logoutCallback?.();
 };
 
@@ -120,33 +121,52 @@ export const doLogout = async () => {
 export const isLoggedIn = async (): Promise<boolean> => isTokenValid(await getRefreshToken());
 
 /**
+ * For preventing excessive refreshing due to multiple async API fetches.
+ */
+const refreshTokenMutex = new Mutex();
+
+/**
  * Gets the stored access token for the `Authorization: Bearer ${token}` header.
  *
- * If the access token is invalid (expired), an attempt to refresh will be made.
+ * If the access token is invalid (expired), an attempt to refresh all tokens will be made.
  * If token refreshing fails, {@link doLogout} is called iff the configured
  * {@link CommonConfiguration#shouldLogoutOnTokenRefreshFailure } setting is true.
  *
- * @return a valid access token, or `null` if unable to get a valid token or token refreshing
- * fails.
+ * @return A Promise that resolves to a valid access token or `null` if unable to get a valid token
+ * or token refreshing fails.
  */
 export const getAuthToken = async (): Promise<string | null> => {
     if (!(await isLoggedIn())) {
         if (commonConfiguration.shouldLogoutOnTokenRefreshFailure) {
-            doLogout();
+            await doLogout();
         }
         return null;
     }
 
-    if (!isTokenValid(await getAccessToken())) {
-        const refreshSuccess = await refreshTokens();
-
-        if (!refreshSuccess) {
-            if (commonConfiguration.shouldLogoutOnTokenRefreshFailure) {
-                doLogout();
-            }
-            return null;
-        }
+    const currentAccessToken = await getAccessToken();
+    if (isTokenValid(currentAccessToken)) {
+        // Fast path: Just use the token if it needs no refreshing
+        return currentAccessToken;
     }
 
-    return getAccessToken();
+    // Slow path: Potentially refresh the tokens.
+    return refreshTokenMutex.runExclusive(() => {
+        return getAccessToken().then((accessToken) => {
+            // First check if the tokens have already been refreshed while we were blocked so that
+            // we don't do unnecessary refreshes.
+            if (isTokenValid(accessToken)) {
+                return accessToken;
+            }
+
+            return refreshTokens().then((validAuthTokens) => {
+                if (validAuthTokens) {
+                    return validAuthTokens.access;
+                } else {
+                    return commonConfiguration.shouldLogoutOnTokenRefreshFailure
+                        ? doLogout().then(() => null)
+                        : null;
+                }
+            });
+        });
+    });
 };

@@ -2,7 +2,11 @@ import { Formik } from "formik";
 import * as React from "react";
 import { Component, useEffect, useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
-import { useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
+import {
+    TDisabilityMap,
+    getDisabilities,
+    useDisabilities,
+} from "@cbr/common/src/util/hooks/disabilities";
 import { View, Platform, ScrollView } from "react-native";
 import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-paper";
 import clientStyle from "../../screens/ClientDetails/ClientDetails.styles";
@@ -12,15 +16,15 @@ import { FormValues, FormProps, validationSchema } from "./ClientFormFields";
 import * as Yup from "yup";
 import { ClientDTO } from "../../screens/ClientDetails/ClientRequests";
 import { handleSubmit } from "./ClientSubmitHandler";
+import { themeColors } from "@cbr/common";
 
 export const ClientForm = (props: FormProps) => {
+    var disabilityList = useDisabilities();
     const styles = clientStyle();
     var zoneList = useZones();
-    var disabilityList = useDisabilities();
+
     var correctedClientDisability: number[] = [];
-    var disabilityNameList: string[] = [];
     var newSelectedDisabilityList: string[] = [];
-    var removedDuplicates: string[] = [];
 
     //Client Details Usestates
     const [date, setDate] = useState(new Date(props.date));
@@ -60,57 +64,33 @@ export const ClientForm = (props: FormProps) => {
     }
 
     const [presentZone, setPresentZone] = useState<String>(zoneNameList[props.zone - 1]);
-    for (let index of Array.from(disabilityList.entries())) {
-        disabilityNameList.push(index[1]);
-    }
 
     const updateSelectedDisabilityList = (disabilityArray: number[]) => {
         for (let index of disabilityArray) {
             var tempIndex = index - 1;
             correctedClientDisability.push(tempIndex);
         }
-
-        //empty the array
-        for (let popIndex = 0; popIndex < newSelectedDisabilityList.length; popIndex++) {
+        for (let popIndex = 0; popIndex <= newSelectedDisabilityList.length; popIndex++) {
             newSelectedDisabilityList.pop();
         }
-
-        //fill the array
         for (let index of disabilityArray) {
-            if (index == 10) {
-                newSelectedDisabilityList.push(
-                    disabilityNameList[index - 1] + " - " + props.otherDisability
-                );
-            } else newSelectedDisabilityList.push(disabilityNameList[index - 1]);
+            if (disabilityList.has(index)) {
+                newSelectedDisabilityList.push(disabilityList.get(index)!);
+            }
         }
+        newSelectedDisabilityList = newSelectedDisabilityList.filter(
+            (v, i, a) => a.indexOf(v) === i
+        );
+        console.log(newSelectedDisabilityList);
     };
 
     const [modalSelections, setModalSelections] = useState<number[]>(correctedClientDisability);
 
-    const updateNewDisability = (disabilityArray: number[]) => {
-        correctedClientDisability = [];
-        for (let index of disabilityArray) {
-            correctedClientDisability.push(index);
+    useEffect(() => {
+        if (props.clientDisability) {
+            updateSelectedDisabilityList(props.clientDisability);
         }
-
-        //empty the array
-        for (let popIndex = 0; popIndex < newSelectedDisabilityList.length; popIndex++) {
-            newSelectedDisabilityList.pop();
-        }
-
-        //fill the array
-        for (let index of disabilityArray) {
-            if (index == 10) {
-                newSelectedDisabilityList.push(
-                    disabilityNameList[index] + " - " + props.otherDisability
-                );
-            } else newSelectedDisabilityList.push(disabilityNameList[index]);
-        }
-
-        removedDuplicates = newSelectedDisabilityList.filter((v, i, a) => a.indexOf(v) === i);
-    };
-
-    if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
+    }, [props.clientDisability]);
 
     const [selectedDisabilityList, setSelectedDisabilityList] =
         useState<string[]>(newSelectedDisabilityList);
@@ -161,7 +141,7 @@ export const ClientForm = (props: FormProps) => {
                         otherDisability: values.otherDisability!,
                         clientCreatedDate: new Date().getTime() / 1000,
                     };
-                    handleSubmit(updatedClientDTO);
+                    //handleSubmit(updatedClientDTO); TODO: Work on this next issue - Placeholder code
                     toggleButtons();
                     console.log(values);
                 }}
@@ -204,7 +184,7 @@ export const ClientForm = (props: FormProps) => {
                                 {show && (
                                     <DateTimePicker
                                         testID="dateTimePicker"
-                                        value={props.date}
+                                        value={formikProps.values.date!}
                                         mode="date"
                                         display="default"
                                         onChange={(event, date) => {
@@ -261,7 +241,7 @@ export const ClientForm = (props: FormProps) => {
                                             <CustomMultiPicker
                                                 options={zoneNameList}
                                                 placeholder={"Zones"}
-                                                placeholderTextColor={"#757575"}
+                                                placeholderTextColor={themeColors.blueBgLight}
                                                 returnValue={"zone_name"}
                                                 callback={(values) => {
                                                     formikProps.handleChange("zone");
@@ -291,20 +271,22 @@ export const ClientForm = (props: FormProps) => {
                                 </Modal>
                             </Portal>
                             <Text> Zone</Text>
-                            {!editMode ? (
-                                <Button
-                                    mode="contained"
-                                    style={styles.disabilityButton}
-                                    disabled={editMode}
-                                    onPress={openZonesMenu}
-                                >
-                                    Edit Zone
-                                </Button>
-                            ) : (
-                                <></>
-                            )}
+                            <View style={styles.buttonZoneStyles}>
+                                {!editMode ? (
+                                    <Button
+                                        mode="contained"
+                                        style={styles.disabilityButton}
+                                        disabled={editMode}
+                                        onPress={openZonesMenu}
+                                    >
+                                        Edit Zone
+                                    </Button>
+                                ) : (
+                                    <></>
+                                )}
 
-                            <Text style={styles.carePresentCheckBox}>{presentZone}</Text>
+                                <Text style={styles.carePresentCheckBox}>{presentZone}</Text>
+                            </View>
                         </View>
                         <Text style={styles.errorText}>{formikProps.errors.zone}</Text>
 
@@ -336,10 +318,11 @@ export const ClientForm = (props: FormProps) => {
                                             nestedScrollEnabled={true}
                                         >
                                             <CustomMultiPicker
-                                                options={disabilityNameList}
+                                                //options={disabilityNameList}
+                                                options={Array.from(disabilityList.values())}
                                                 multiple={true}
                                                 placeholder={"Disability"}
-                                                placeholderTextColor={"#757575"}
+                                                placeholderTextColor={themeColors.blueBgLight}
                                                 returnValue={"disability_type"}
                                                 callback={(values: number[]) => {
                                                     var toUpdateDisability: number[] = [];
@@ -353,7 +336,30 @@ export const ClientForm = (props: FormProps) => {
                                                     showOtherDisability(checkBoolean);
                                                     for (
                                                         let popIndex = 0;
-                                                        popIndex < toUpdateDisability.length;
+                                                        popIndex <= toUpdateDisability.length;
+                                                        popIndex++
+                                                    ) {
+                                                        toUpdateDisability.pop();
+                                                    }
+                                                    for (let index of Array.from(values)) {
+                                                        toUpdateDisability.push(Number(index) + 1);
+                                                    }
+                                                    formikProps.setFieldValue(
+                                                        "clientDisability",
+                                                        toUpdateDisability
+                                                    );
+                                                    console.log(toUpdateDisability);
+                                                    //Add formik prop values by 1 before making request
+                                                    updateSelectedDisabilityList(
+                                                        toUpdateDisability
+                                                    );
+                                                    setSelectedDisabilityList(
+                                                        newSelectedDisabilityList
+                                                    );
+
+                                                    for (
+                                                        let popIndex = 0;
+                                                        popIndex <= toUpdateDisability.length;
                                                         popIndex++
                                                     ) {
                                                         toUpdateDisability.pop();
@@ -361,15 +367,7 @@ export const ClientForm = (props: FormProps) => {
                                                     for (let index of Array.from(values)) {
                                                         toUpdateDisability.push(Number(index));
                                                     }
-
-                                                    //Add formik prop values by 1 before making request
-                                                    formikProps.setFieldValue(
-                                                        "clientDisability",
-                                                        toUpdateDisability
-                                                    );
-                                                    updateNewDisability(toUpdateDisability);
-                                                    setSelectedDisabilityList(removedDuplicates);
-                                                    setModalSelections(correctedClientDisability);
+                                                    setModalSelections(toUpdateDisability);
                                                 }}
                                                 rowBackgroundColor={"#eee"}
                                                 iconSize={30}

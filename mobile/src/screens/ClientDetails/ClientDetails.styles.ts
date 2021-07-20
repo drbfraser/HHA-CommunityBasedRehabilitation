@@ -260,6 +260,11 @@ const useStyles = () =>
             color: themeColors.errorRed,
             alignSelf: "center",
         },
+        buttonZoneStyles: {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+        },
     });
 
 export default useStyles;

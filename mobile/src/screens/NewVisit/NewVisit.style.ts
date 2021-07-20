@@ -32,7 +32,7 @@ const useStyles = () =>
         stepLabelText: { fontSize: 25, fontWeight: "bold" },
         centerElement: { justifyContent: "center", alignItems: "center" },
         picker: { height: 40, width: 250 },
-        pickerQuestion: { fontSize: 15, fontWeight: "bold" },
+        pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingTop: 5 },
         normalInput: { fontSize: 15, paddingBottom: 10 },
         viewPadding: { paddingLeft: 10, paddingRight: 10 },
         inputText: {

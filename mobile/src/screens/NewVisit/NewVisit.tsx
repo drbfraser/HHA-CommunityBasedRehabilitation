@@ -17,8 +17,8 @@ import {
     initialValidationSchema,
     visitTypeValidationSchema,
     GoalStatus,
-} from "./formFields";
-import { handleSubmit } from "./formHandler";
+} from "./visitFormFields";
+import { handleSubmit } from "./visitFormHandler";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewVisit.style";
 import { useParams } from "react-router-dom";
 
@@ -40,18 +40,20 @@ const ImprovementField = (props: {
             ImprovementFormField.enabled
         ] === true;
     const styles = useStyles();
-
-    if (
-        props.formikProps.values[FormField.improvements][props.visitType][props.index] === undefined
-    ) {
-        // Since this component is dynamically generated we need to set its initial values
-        props.formikProps.setFieldValue(`${fieldName}`, {
-            [ImprovementFormField.enabled]: false,
-            [ImprovementFormField.description]: "",
-            [ImprovementFormField.riskType]: props.visitType,
-            [ImprovementFormField.provided]: props.provided,
-        });
-    }
+    useEffect(() => {
+        if (
+            props.formikProps.values[FormField.improvements][props.visitType][props.index] ===
+            undefined
+        ) {
+            // Since this component is dynamically generated we need to set its initial values
+            props.formikProps.setFieldValue(`${fieldName}`, {
+                [ImprovementFormField.enabled]: false,
+                [ImprovementFormField.description]: "",
+                [ImprovementFormField.riskType]: props.visitType,
+                [ImprovementFormField.provided]: props.provided,
+            });
+        }
+    });
 
     return (
         <View>
@@ -74,7 +76,6 @@ const ImprovementField = (props: {
                                 props.index
                             ][ImprovementFormField.description]
                         }
-                        // multiline={true}
                         onChangeText={(value) => {
                             props.formikProps.setFieldTouched(
                                 `${fieldName}.${ImprovementFormField.description}`,
@@ -205,7 +206,7 @@ const visitFocusForm = (
     };
     return (
         <View>
-            <Text style={styles.pickerQuestion}>{"\n"}Where was the Visit? </Text>
+            <Text style={styles.pickerQuestion}>Where was the Visit? </Text>
             <Text />
             <TextInput
                 mode="outlined"
@@ -292,9 +293,11 @@ const NewVisit = () => {
     const styles = useStyles();
     const zones = useZones();
     const [submissionError, setSubmissionError] = useState(false);
-    const [stepChecked, setStepChecked] = useState([false]);
+    // const [stepChecked, setStepChecked] = useState([false]);
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
+    const [checkedSteps, setCheckedSteps] = useState<FormField[]>([]);
+
     const [risks, setRisks] = useState<IRisk[]>([]);
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
     // const { clientId } = useParams<{ clientId: string }>();
@@ -325,26 +328,42 @@ const NewVisit = () => {
             validationSchema: visitTypeValidationSchema(visitType),
         })),
     ];
-
     const prevStep = () => setActiveStep(activeStep - 1);
+
+    // const prevStep = (values: any) => {
+    //     setActiveStep(activeStep - 1);
+    //     if (values !== "") {
+    //         checkedSteps.push(enabledSteps[activeStep]);
+    //     }
+    //     if (activeStep === 1) {
+    //         checkedSteps.push(enabledSteps[activeStep]);
+    //     }
+    // };
+
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             handleSubmit(values, helpers, setSubmissionError);
+            setCheckedSteps([]);
         } else {
             if (activeStep === 0) {
-                if (stepChecked.length < enabledSteps.length - 1) {
-                    for (let i = 1; i < enabledSteps.length - 1; i++) {
-                        stepChecked.push(false);
-                    }
-                }
+                // if (stepChecked.length < enabledSteps.length - 1) {
+                //     for (let i = 1; i < enabledSteps.length - 1; i++) {
+                //         stepChecked.push(false);
+                //     }
+                // }
                 // TODO: Change back when it is connected to the client detail
                 helpers.setFieldValue(`${[FormField.client]}`, 1);
                 // helpers.setFieldValue(`${[FormField.client]}`, clientId);
             }
-            helpers.setTouched({});
-            let newArr = [...stepChecked];
-            newArr[activeStep] = true;
-            setStepChecked(newArr);
+            // helpers.setTouched({});
+            // let newArr = [...stepChecked];
+            // newArr[activeStep] = true;
+            // setStepChecked(newArr);
+
+            if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
+                helpers.setTouched({});
+            }
+
             setActiveStep(activeStep + 1);
             helpers.setSubmitting(false);
         }
@@ -379,17 +398,27 @@ const NewVisit = () => {
                                             nextStep(formikProps.values, formikProps);
                                         }}
                                         nextBtnDisabled={
-                                            !stepChecked[activeStep]
-                                                ? Object.keys(formikProps.errors).length !== 0 ||
-                                                  Object.keys(formikProps.touched).length === 0
-                                                : false
+                                            enabledSteps.length === 0 ||
+                                            (enabledSteps[activeStep - 1] !== undefined &&
+                                                (!checkedSteps.includes(
+                                                    enabledSteps[activeStep - 1]
+                                                )
+                                                    ? Object.keys(formikProps.errors).length !==
+                                                          0 ||
+                                                      Object.keys(formikProps.touched).length === 0
+                                                    : Object.keys(formikProps.errors).length !== 0))
                                         }
+                                        // onPrevious={() =>
+                                        //     prevStep(formikProps.values[OutcomeFormField.outcome])
+                                        // }
                                         onPrevious={prevStep}
                                         onSubmit={() => nextStep(formikProps.values, formikProps)}
                                     >
                                         <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
                                         <Divider
-                                            style={{ backgroundColor: themeColors.blueBgDark }}
+                                            style={{
+                                                backgroundColor: themeColors.blueBgDark,
+                                            }}
                                         />
                                         <ScrollView>
                                             <surveyStep.Form formikProps={formikProps} />

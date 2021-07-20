@@ -1,9 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Provider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
+import theme from "./util/theme.styles";
+import { createStackNavigator } from "@react-navigation/stack";
+import { SafeAreaView } from "react-native-safe-area-context";
+import globalStyle from "./app.styles";
+import { StackScreenName, stackScreenProps } from "./util/stackScreens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { screensForUser } from "./util/screens";
-import theme from "./theme.styles";
+import { screensForUser } from "./util/screensForUser";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import {
     apiFetch,
@@ -26,8 +30,9 @@ import { KEY_CURRENT_USER } from "./util/AsyncStorageKeys";
 // https://reactnavigation.org/docs/react-native-screens
 enableScreens();
 
+const Stack = createStackNavigator();
+const styles = globalStyle();
 const Tab = createMaterialBottomTabNavigator();
-const Stack = createNativeStackNavigator();
 
 /**
  * @return A Promise resolving to the current user details fetched from the server or rejected if
@@ -156,24 +161,21 @@ export default function App() {
     );
 
     return (
-        <Provider theme={theme}>
-            <NavigationContainer theme={theme}>
-                <AuthContext.Provider value={authContext}>
-                    {authState.state === "loggedIn" ? (
-                        <Tab.Navigator>
-                            {screensForUser(authState.currentUser).map((screen) => (
-                                <Tab.Screen
-                                    key={screen.name}
-                                    name={screen.name}
-                                    component={screen.Component}
-                                    options={{ tabBarIcon: screen.iconName }}
-                                />
-                            ))}
-                        </Tab.Navigator>
-                    ) : (
+        <SafeAreaView style={styles.safeApp}>
+            <Provider theme={theme}>
+                <NavigationContainer theme={theme}>
+                    <AuthContext.Provider value={authContext}>
                         <Stack.Navigator>
-                            {authState.state === "loggedOut" ||
-                            authState.state === "previouslyLoggedIn" ? (
+                            {authState.state === "loggedIn" ? (
+                                Object.values(StackScreenName).map((name) => (
+                                    <Stack.Screen
+                                        key={name}
+                                        name={name}
+                                        component={stackScreenProps[name]}
+                                    />
+                                ))
+                            ) : authState.state === "loggedOut" ||
+                              authState.state === "previouslyLoggedIn" ? (
                                 <Stack.Screen
                                     name="Login"
                                     component={Login}
@@ -187,9 +189,9 @@ export default function App() {
                                 />
                             )}
                         </Stack.Navigator>
-                    )}
-                </AuthContext.Provider>
-            </NavigationContainer>
-        </Provider>
+                    </AuthContext.Provider>
+                </NavigationContainer>
+            </Provider>
+        </SafeAreaView>
     );
 }

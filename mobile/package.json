@@ -9,7 +9,6 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-
     "eject": "expo eject"
   },
   "dependencies": {
@@ -45,20 +44,20 @@
     "react-is-mounted-hook": "^1.1.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-41.0.0.tar.gz",
     "react-native-checkbox-selection": "^1.1.0",
-    "react-native-elements": "^3.4.2",
     "react-native-dropdown-picker": "^5.1.21",
+    "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-intl": "^1.0.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.4",
     "react-native-localize": "^2.1.1",
+    "react-native-modal-picker": "0.0.16",
+    "react-native-modal-selector": "^2.0.3",
     "react-native-multi-selectbox": "^1.5.0",
     "react-native-multiple-select": "^0.5.6",
     "react-native-multiple-select-list": "^1.0.4",
-    "react-native-modal-picker": "0.0.16",
-    "react-native-modal-selector": "^2.0.3",
     "react-native-paper": "^4.9.1",
-    "react-native-picker-select": "^8.0.4",
     "react-native-paper-dates": "^0.4.6",
+    "react-native-picker-select": "^8.0.4",
     "react-native-progress-steps": "^1.3.4",
     "react-native-reanimated": "~2.1.0",
     "react-native-safe-area-context": "3.2.0",
@@ -68,10 +67,10 @@
     "react-native-unimodules": "~0.13.3",
     "react-native-vector-icons": "^8.1.0",
     "react-native-wizard": "^2.1.0",
+    "react-native-woodpicker": "^0.3.7",
     "react-navigation": "^4.4.4",
     "react-navigation-stack": "^2.10.4",
     "react-router-dom": "^5.2.0",
-    "react-native-woodpicker": "^0.3.7",
     "yup": "^0.32.9"
   },
   "devDependencies": {
@@ -85,7 +84,6 @@
     "react-navigation": "^4.4.4",
     "@types/react-native-material-dropdown": "^0.11.4",
     "@types/react-router-dom": "^5.1.7",
-    "prettier": "2.3.0",
     "typescript": "~4.0.0"
   },
   "private": true

@@ -14,7 +14,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import { FormValues, FormProps, validationSchema } from "./ClientFormFields";
 import * as Yup from "yup";
-import { ClientDTO } from "../../screens/ClientDetails/ClientRequests";
+import { IClient } from "../../screens/ClientDetails/ClientRequests";
 import { handleSubmit } from "./ClientSubmitHandler";
 import { themeColors } from "@cbr/common";
 
@@ -116,7 +116,7 @@ export const ClientForm = (props: FormProps) => {
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                    const updatedClientDTO: ClientDTO = {
+                    const updatedClientDTO: IClient = {
                         id: values.id!,
                         first_name: values.firstName!,
                         last_name: values.lastName!,

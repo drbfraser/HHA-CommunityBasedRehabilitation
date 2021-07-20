@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { ClientDTO } from "./ClientRequests";
+import { IClient } from "./ClientRequests";
 import clientStyle from "./ClientDetails.styles";
 import { Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
@@ -40,7 +40,7 @@ const ClientDetails = (props: ClientProps) => {
     var disabilityList = useDisabilities();
 
     //Main Client Variables
-    const [presentClient, setPresentClient] = useState<ClientDTO>();
+    const [presentClient, setPresentClient] = useState<IClient>();
     const [date, setDate] = useState(new Date());
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -78,26 +78,26 @@ const ClientDetails = (props: ClientProps) => {
     const getClientDetails = async () => {
         const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
         setPresentClient(presentClient);
-        setDate(timestampToDateObj(Number(presentClient?.birthdate)));
+        setDate(timestampToDateObj(Number(presentClient?.birth_date)));
         setFirstName(presentClient.first_name);
         setLastName(presentClient.last_name);
         setVillage(presentClient.village);
         setZone(presentClient.zone);
-        setPhoneNumber(presentClient.phoneNumber);
-        setOtherDisability(presentClient.otherDisability);
-        setCaregiverPresent(presentClient.careGiverPresent);
+        setPhoneNumber(presentClient.phone_number);
+        setOtherDisability(presentClient.other_disability);
+        setCaregiverPresent(presentClient.caregiver_present);
         setGender(presentClient.gender);
         if (caregiverPresent) {
-            setCaregiverName(presentClient.careGiverName);
-            setCaregiverPhone(presentClient.careGiverPhoneNumber);
-            setCaregiverEmail(presentClient.careGiverEmail);
+            setCaregiverName(presentClient.caregiver_name);
+            setCaregiverPhone(presentClient.caregiver_phone);
+            setCaregiverEmail(presentClient.caregiver_email);
         }
-        setDisability(presentClient.disabilities);
-        setClientCreateDate(presentClient.clientCreatedDate);
-        setClientVisits(presentClient.clientVisits);
-        setClientReferrals(presentClient.clientReferrals);
-        setClientSurveys(presentClient.clientSurveys);
-        setInitialDisabilityArray(getInitialDisabilities(presentClient.disabilities));
+        setDisability(presentClient.disability);
+        setClientCreateDate(presentClient.created_date);
+        setClientVisits(presentClient.visits);
+        setClientReferrals(presentClient.referrals);
+        setClientSurveys(presentClient.baseline_surveys);
+        setInitialDisabilityArray(getInitialDisabilities(presentClient.disability));
     };
     useEffect(() => {
         getClientDetails().then(() => {

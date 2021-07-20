@@ -1,7 +1,7 @@
 import { FormikHelpers } from "formik";
 import { BaseFormValues } from "@cbr/common/src/forms/BaseSurvey/baseSurveyFields";
 import { baseSurveyHandleSubmitForm } from "@cbr/common/src/forms/BaseSurvey/baseSurveyHandler";
-
+import { useNavigation } from "@react-navigation/native";
 export const handleSubmit = async (
     values: BaseFormValues,
     helpers: FormikHelpers<BaseFormValues>,
@@ -9,7 +9,6 @@ export const handleSubmit = async (
 ) => {
     try {
         baseSurveyHandleSubmitForm(values, helpers, setSubmissionError);
-        // TODO: navigation to client page
     } catch (e) {
         helpers.setSubmitting(false);
         setSubmissionError(true);

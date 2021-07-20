@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Text, Divider, Appbar } from "react-native-paper";
+import { Text, Divider } from "react-native-paper";
 import {
     educationValidationSchema,
     empowermentValidationSchema,
@@ -12,10 +12,10 @@ import {
     baseInitialValues,
     livelihoodValidationSchema,
     surveyTypes,
+    themeColors,
 } from "@cbr/common";
 import { Formik, FormikHelpers } from "formik";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
-import { themeColors } from "@cbr/common";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./baseSurvey.style";
 import HealthForm from "./SurveyForm/HealthForm";
 import EducationForm from "./SurveyForm/EducationForm";
@@ -25,6 +25,8 @@ import EmpowermentForm from "./SurveyForm/EmpowermentForm";
 import ShelterForm from "./SurveyForm/ShelterForm";
 import FoodForm from "./SurveyForm/FoodForm";
 import { handleSubmit } from "./formHandler";
+import { useParams } from "react-router-dom";
+import { useNavigation } from "@react-navigation/native";
 
 interface ISurvey {
     label: string;
@@ -38,6 +40,7 @@ const BaseSurvey = () => {
     const styles = useStyles();
     const [stepChecked, setStepChecked] = useState([false]);
     const isFinalStep = step + 1 === surveyTypes.length && step !== 0;
+
     const prevStep = () => {
         setStep(step - 1);
     };
@@ -54,9 +57,8 @@ const BaseSurvey = () => {
                         stepChecked.push(false);
                     }
                 }
-
-                helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, 1);
-                // helpers.setFieldValue(`${[FormField.client]}`, clientId);
+                helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, 10);
+                // helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, clientId);
             }
             if ((step === 0 || step === 3) && !stepChecked[step]) {
                 helpers.setTouched({});
@@ -115,11 +117,6 @@ const BaseSurvey = () => {
         >
             {(formikProps) => (
                 <>
-                    {/* TODO: Update with Global App bar */}
-                    <Appbar.Header>
-                        <Appbar.BackAction />
-                        <Appbar.Content title={"Baseline Survey"} />
-                    </Appbar.Header>
                     <View style={styles.container}>
                         <ProgressSteps {...progressStepsStyle}>
                             {surveySteps.map((surveyStep, index) => (

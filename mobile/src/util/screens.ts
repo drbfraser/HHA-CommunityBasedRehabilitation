@@ -23,7 +23,7 @@ export const screens: IScreen[] = [
     // For test and view, it is supposed to connect with new client screen
     {
         name: "New Client",
-        Component: BaseSurvey,
+        Component: Todo,
         iconName: "plus-circle",
     },
     {

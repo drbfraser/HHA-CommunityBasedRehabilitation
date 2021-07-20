@@ -51,7 +51,7 @@ const ReferralServiceForm = (
                     label={referralFieldLabels[serviceType]}
                     value={props.formikProps.values[serviceType]}
                     setFieldValue={props.formikProps.setFieldValue}
-                    onChange={(value) => {
+                    onChange={(value: boolean) => {
                         props.formikProps.setFieldTouched(serviceType, true);
                         onCheckboxChange(value, serviceType);
                     }}
@@ -158,11 +158,6 @@ const NewReferral = () => {
         >
             {(formikProps) => (
                 <>
-                    {/* TODO: Update with Global App bar */}
-                    <Appbar.Header>
-                        <Appbar.BackAction />
-                        <Appbar.Content title={"New Referral"} />
-                    </Appbar.Header>
                     <View style={styles.container}>
                         <ProgressSteps key={referralSteps} {...progressStepsStyle}>
                             {referralSteps.map((surveyStep, index) => (

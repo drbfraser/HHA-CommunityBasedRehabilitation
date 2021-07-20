@@ -16,6 +16,7 @@ import { RecentActivity } from "./ClientTimeline/RecentActivity";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { stackParamList, StackScreenName } from "../../util/stackScreens";
+import { useNavigation } from "@react-navigation/native";
 
 interface ClientProps {
     clientID: number;
@@ -37,7 +38,7 @@ const ClientDetails = (props: ClientProps) => {
 
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
-
+    const navigation = useNavigation();
     //Main Client Variables
     const [presentClient, setPresentClient] = useState<ClientDTO>();
     const [date, setDate] = useState(new Date());
@@ -165,10 +166,26 @@ const ClientDetails = (props: ClientProps) => {
                         <Button mode="contained" style={styles.clientButtons}>
                             New Visit
                         </Button>
-                        <Button mode="contained" style={styles.clientButtons}>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.REFERRAL, {
+                                    clientID: props.clientID,
+                                });
+                            }}
+                        >
                             New Referral
                         </Button>
-                        <Button mode="contained" style={styles.clientButtons}>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.BASELINE, {
+                                    clientID: props.clientID,
+                                });
+                            }}
+                        >
                             Baseline Survey
                         </Button>
                     </Card>

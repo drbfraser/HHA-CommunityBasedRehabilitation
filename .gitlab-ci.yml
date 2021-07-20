@@ -6,25 +6,21 @@
   - npm ci
 
 stages:
-  - format
   - build
+  - test
   - deploy
 
-stages:
-    - format
-    - build
-    - deploy
 variables:
   STAGING_BRANCH: "main"
   PROD_BRANCH: "prod"
   NPM_VERSION: "7.19.0"
 
-format common:
-  stage: format
+build common:
+  stage: build
   image: node:14
   tags:
     - docker
-  needs: []
+  needs: [ ]
   rules:
     - if: '$CI_MERGE_REQUEST_ID != null'
       changes:
@@ -37,13 +33,14 @@ format common:
     - npm ci
   script:
     - npx prettier --check .
+    - npx tsc
 
 build mobile:
   stage: build
   image: node:14
   tags:
     - docker
-  needs: []
+  needs: [ ]
   rules:
     - if: '$CI_MERGE_REQUEST_ID != null'
       changes:
@@ -64,7 +61,7 @@ build web:
   image: node:14
   tags:
     - docker
-  needs: []
+  needs: [ ]
   rules:
     # build on merge requests if there are changes
     - if: '$CI_MERGE_REQUEST_ID != null'
@@ -101,7 +98,7 @@ build server:
       alias: test_postgres
   tags:
     - docker
-  needs: []
+  needs: [ ]
   rules:
     - if: '$CI_MERGE_REQUEST_ID != null'
       changes:
@@ -111,49 +108,75 @@ build server:
     - if: '$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH'
       when: always
   variables:
-      DOMAIN: "example.com"
-      SECRET_KEY: "test"
-      POSTGRES_DB: "cbr"
-      POSTGRES_USER: "test"
-      POSTGRES_PASSWORD: "test"
-      POSTGRES_HOST: "test_postgres"
+    DOMAIN: "example.com"
+    SECRET_KEY: "test"
+    POSTGRES_DB: "cbr"
+    POSTGRES_USER: "test"
+    POSTGRES_PASSWORD: "test"
+    POSTGRES_HOST: "test_postgres"
   before_script:
     - cd server
   script:
     - pip install -r requirements.txt
-    - python -m black --check . 
+    - python -m black --check .
     - python manage.py check
     - python manage.py makemigrations --check
     - python manage.py test
-  
+
+test common:
+  stage: test
+  image: node:14
+  tags:
+    - docker
+  needs: [ ]
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID != null'
+      changes:
+        - common/**/*
+        - .gitlab-ci.yml
+      when: always
+  before_script:
+    - npm install -g npm@$NPM_VERSION
+    - cd common
+    - npm ci
+  script:
+    - npm run test-ci
+  artifacts:
+    expire_in: 1 week
+    reports:
+      junit:
+        - common/junit.xml
+      cobertura:
+        - common/coverage/cobertura-coverage.xml
+
 deploy staging:
-    stage: deploy
-    tags:
-        - shell
-    rules:
-        - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $STAGING_BRANCH"
-          when: on_success
-    script:
-        - cp /var/cbr/staging.env ./.env
-        - source ./.env
-        - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
-        - tar -xvf web_build.tar.gz
-        - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
-        - bash -c 'sleep 10'
-        - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+  stage: deploy
+  tags:
+    - shell
+  rules:
+    - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $STAGING_BRANCH"
+      when: on_success
+  script:
+    - cp /var/cbr/staging.env ./.env
+    - source ./.env
+    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
+    - tar -xvf web_build.tar.gz
+    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
+    - bash -c 'sleep 10'
+    - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
 
 deploy prod:
-    stage: deploy
-    tags:
-        - shell-prod
-    rules:
-        - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $PROD_BRANCH"
-          when: manual
-    script:
-        - cp /var/cbr/prod.env ./.env
-        - source ./.env
-        - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
-        - tar -xvf web_build.tar.gz
-        - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
-        - bash -c 'sleep 10'
-        - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+  stage: deploy
+  tags:
+    - shell-prod
+  rules:
+    - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $PROD_BRANCH"
+      when: manual
+  script:
+    - cp /var/cbr/prod.env ./.env
+    - source ./.env
+    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
+    - tar -xvf web_build.tar.gz
+    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
+    - bash -c 'sleep 10'
+    - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate

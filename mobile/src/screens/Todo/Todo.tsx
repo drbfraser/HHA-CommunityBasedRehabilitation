@@ -7,6 +7,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { stackParamList, StackScreenName } from "../../util/stackScreens";
 import { Navigation } from "react-native-navigation";
 import { useNavigation } from "@react-navigation/core";
+import { useZones } from "@cbr/common";
+import { useCurrentUser, useDisabilities } from "@cbr/common";
 
 interface LogoutProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
@@ -15,6 +17,7 @@ interface LogoutProps {
 const Todo = (props: LogoutProps) => {
     const styles = useStyles();
     const authContext = useContext(AuthContext);
+
     useEffect(() => {
         authContext.requireLoggedIn(true);
     }, []);
@@ -28,6 +31,10 @@ const Todo = (props: LogoutProps) => {
             { text: "Logout", onPress: () => authContext.logout() },
         ]);
 
+    const zones = useZones();
+    const disabilities = useDisabilities();
+    const currentUser = useCurrentUser();
+
     return (
         <View style={styles.container}>
             <Title>This is a placeholder component screen.</Title>
@@ -40,6 +47,10 @@ const Todo = (props: LogoutProps) => {
             >
                 Logout
             </Button>
+
+            <Text>Zones hook: {JSON.stringify(Array.from(zones))}</Text>
+            <Text>Disabilities hook: {JSON.stringify(Array.from(disabilities))}</Text>
+            <Text>Current user hook: {JSON.stringify(currentUser)}</Text>
         </View>
     );
 };

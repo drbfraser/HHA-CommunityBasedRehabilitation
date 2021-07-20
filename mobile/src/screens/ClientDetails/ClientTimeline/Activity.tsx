@@ -57,22 +57,32 @@ export const SummaryActivity = (props: SummaryProps) => {
                     {props.activity.type === ActivityType.VISIT && props.activity.visit ? (
                         <View>
                             <Text>Visit in BidiBidi Zone{props.activity.visit.zone}</Text>
-                            {props.activity.visit.educat_visit === true ? (
-                                <View style={styles.subItem}>
-                                    {riskTypes.EDUCAT.Icon("black")}
-                                    <Text style={styles.subItemText}>Education</Text>
-                                </View>
-                            ) : props.activity.visit.health_visit === true ? (
-                                <View style={styles.subItem}>
-                                    {riskTypes.HEALTH.Icon("black")}
-                                    <Text style={styles.subItemText}>Health</Text>
-                                </View>
-                            ) : (
-                                <View style={styles.subItem}>
-                                    {riskTypes.SOCIAL.Icon("black")}
-                                    <Text style={styles.subItemText}>Social</Text>
-                                </View>
-                            )}
+                            <View>
+                                {props.activity.visit.educat_visit === true ? (
+                                    <View style={styles.subItem}>
+                                        {riskTypes.EDUCAT.Icon("black")}
+                                        <Text style={styles.subItemText}>Education</Text>
+                                    </View>
+                                ) : (
+                                    <></>
+                                )}
+                                {props.activity.visit.health_visit === true ? (
+                                    <View style={styles.subItem}>
+                                        {riskTypes.HEALTH.Icon("black")}
+                                        <Text style={styles.subItemText}>Health</Text>
+                                    </View>
+                                ) : (
+                                    <></>
+                                )}
+                                {props.activity.visit.social_visit === true ? (
+                                    <View style={styles.subItem}>
+                                        {riskTypes.SOCIAL.Icon("black")}
+                                        <Text style={styles.subItemText}>Social</Text>
+                                    </View>
+                                ) : (
+                                    <></>
+                                )}
+                            </View>
                         </View>
                     ) : props.activity.type === ActivityType.REFERAL && props.activity.referral ? (
                         <View style={styles.subItem}>

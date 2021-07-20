@@ -1,27 +1,5 @@
 import { apiFetch, Endpoint, IReferral, ISurvey } from "@cbr/common";
 import { IClient } from "@cbr/common";
-import { IVisitSummary } from "@cbr/common";
-
-// export type IClient = {
-//     id: number;
-//     first_name: string;
-//     last_name: string;
-//     birthdate: number | string;
-//     village: string;
-//     gender: string;
-//     phoneNumber: string;
-//     zone: number;
-//     disabilities: number[];
-//     careGiverPresent: boolean;
-//     careGiverName: string;
-//     careGiverEmail: string;
-//     careGiverPhoneNumber: string;
-//     clientCreatedDate: number;
-//     clientVisits?: IVisitSummary[];
-//     clientReferrals?: IReferral[];
-//     clientSurveys?: ISurvey[];
-//     otherDisability: string;
-// };
 
 export const fetchClientDetailsFromApi = async (clientId: number): Promise<IClient> => {
     const urlParams = "" + clientId;

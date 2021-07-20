@@ -1,6 +1,7 @@
 export interface KeyValStorageProvider {
     readonly getItem: (key: string) => Promise<string | null>;
     readonly setItem: (key: string, value: string) => Promise<void>;
+    readonly removeItem: (key: string) => Promise<void>;
 }
 
 export interface CommonConfiguration {
@@ -25,4 +26,14 @@ export const initializeCommon = (config: CommonConfiguration) => {
     } else {
         console.error("trying to initialize common twice");
     }
+};
+
+/**
+ * Reinitializes the common module, for testing purposes only. Should not be exported out of the
+ * common module.
+ *
+ * @internal
+ */
+export const reinitializeCommon = (config: CommonConfiguration) => {
+    commonConfiguration = { ...config };
 };

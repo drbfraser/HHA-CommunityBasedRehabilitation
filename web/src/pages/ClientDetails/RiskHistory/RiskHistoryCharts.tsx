@@ -13,7 +13,7 @@ import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { riskTypes } from "util/riskIcon";
 import { Grid, Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { timestampToDateFromReference } from "@cbr/common/util/dates";
+import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import { IClient } from "@cbr/common/util/clients";
 
 interface IProps {
@@ -66,7 +66,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
     const styles = useStyles();
     const chartHeight = 300;
     const [chartData, setChartData] = useState<IChartData>();
-    const dateFormatter = timestampToDateFromReference(client?.created_date);
+    const dateFormatter = getDateFormatterFromReference(client?.created_date);
 
     useEffect(() => {
         if (client) {

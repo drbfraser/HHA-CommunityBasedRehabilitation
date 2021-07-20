@@ -3,7 +3,7 @@ import { Timeline } from "@material-ui/lab";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import React, { useState } from "react";
 import { IClient } from "@cbr/common/util/clients";
-import { timestampToDateFromReference, timestampToDateTime } from "@cbr/common/util/dates";
+import { getDateFormatterFromReference, timestampToDateTime } from "@cbr/common/util/dates";
 import { IRisk } from "@cbr/common/util/risks";
 import { riskTypes } from "util/riskIcon";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
@@ -18,7 +18,7 @@ interface IProps {
 
 const RiskHistoryTimeline = ({ client }: IProps) => {
     const timelineStyles = useTimelineStyles();
-    const dateFormatter = timestampToDateFromReference(client?.created_date);
+    const dateFormatter = getDateFormatterFromReference(client?.created_date);
 
     interface IEntryProps {
         risk: IRisk;

@@ -163,10 +163,6 @@ const OutcomeField = (props: {
                             `${fieldName}.${OutcomeFormField.outcome}`,
                             value
                         );
-                        props.formikProps.setFieldTouched(
-                            `${fieldName}.${OutcomeFormField.outcome}`,
-                            true
-                        );
                     }}
                 />
                 <HelperText
@@ -300,7 +296,6 @@ const NewVisit = () => {
     const styles = useStyles();
     const zones = useZones();
     const [submissionError, setSubmissionError] = useState(false);
-    // const [stepChecked, setStepChecked] = useState([false]);
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<VisitFormField[]>([]);
     const [checkedSteps, setCheckedSteps] = useState<VisitFormField[]>([]);
@@ -337,36 +332,17 @@ const NewVisit = () => {
     ];
     const prevStep = () => setActiveStep(activeStep - 1);
 
-    // const prevStep = (values: any) => {
-    //     setActiveStep(activeStep - 1);
-    //     if (values !== "") {
-    //         checkedSteps.push(enabledSteps[activeStep]);
-    //     }
-    //     if (activeStep === 1) {
-    //         checkedSteps.push(enabledSteps[activeStep]);
-    //     }
-    // };
-
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             handleSubmit(values, helpers, setSubmissionError);
             setCheckedSteps([]);
         } else {
             if (activeStep === 0) {
-                // if (stepChecked.length < enabledSteps.length - 1) {
-                //     for (let i = 1; i < enabledSteps.length - 1; i++) {
-                //         stepChecked.push(false);
-                //     }
-                // }
                 // TODO: Change back when it is connected to the client detail
                 helpers.setFieldValue(`${[VisitFormField.client]}`, 1);
                 // helpers.setFieldValue(`${[FormField.client]}`, clientId);
             }
-            // helpers.setTouched({});
-            // let newArr = [...stepChecked];
-            // newArr[activeStep] = true;
-            // setStepChecked(newArr);
-
+            checkedSteps.push(enabledSteps[activeStep - 1]);
             if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
                 helpers.setTouched({});
             }
@@ -406,18 +382,16 @@ const NewVisit = () => {
                                         }}
                                         nextBtnDisabled={
                                             enabledSteps.length === 0 ||
-                                            (enabledSteps[activeStep - 1] !== undefined &&
-                                                (!checkedSteps.includes(
-                                                    enabledSteps[activeStep - 1]
-                                                )
+                                            (enabledSteps[activeStep - 1] !== undefined
+                                                ? !checkedSteps.includes(
+                                                      enabledSteps[activeStep - 1]
+                                                  )
                                                     ? Object.keys(formikProps.errors).length !==
                                                           0 ||
                                                       Object.keys(formikProps.touched).length === 0
-                                                    : Object.keys(formikProps.errors).length !== 0))
+                                                    : Object.keys(formikProps.errors).length !== 0
+                                                : Object.keys(formikProps.errors).length !== 0)
                                         }
-                                        // onPrevious={() =>
-                                        //     prevStep(formikProps.values[OutcomeFormField.outcome])
-                                        // }
                                         onPrevious={prevStep}
                                         onSubmit={() => nextStep(formikProps.values, formikProps)}
                                     >

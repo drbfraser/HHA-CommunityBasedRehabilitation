@@ -17,8 +17,9 @@ import {
     initialValidationSchema,
     visitTypeValidationSchema,
     GoalStatus,
-    handleSubmit,
 } from "@cbr/common";
+
+import { handleSubmit } from "./formHandler";
 
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewVisit.style";
 import { useParams } from "react-router-dom";

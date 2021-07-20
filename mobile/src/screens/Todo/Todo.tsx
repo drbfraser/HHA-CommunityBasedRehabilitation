@@ -4,7 +4,7 @@ import { Button, Text, Title } from "react-native-paper";
 import useStyles from "./Todo.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, StackScreenName } from "../../util/screens";
+import { stackParamList, StackScreenName } from "../../util/stackScreens";
 import { Navigation } from "react-native-navigation";
 import { useNavigation } from "@react-navigation/core";
 

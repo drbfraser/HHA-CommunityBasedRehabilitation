@@ -5,14 +5,15 @@ import { DataTable } from "react-native-paper";
 import useStyles from "./ClientList.styles";
 import { ClientTest, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, StackScreenName } from "../../util/screens";
+//import { stackParamList, StackScreenName } from "../../util/stackScreens";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { SearchOption, themeColors, useZones } from "@cbr/common";
-import { RouteProp } from "@react-navigation/native";
 const styles = useStyles();
+import { useNavigation, useRoute } from "@react-navigation/native";
+
 enum SortOptions {
     ID = "id",
     NAME = "name",
@@ -20,11 +21,6 @@ enum SortOptions {
     HEALTH = "health",
     EDUCATION = "education",
     SOCIAL = "social",
-}
-
-interface ClientListControllerProps {
-    navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
-    route: RouteProp<stackParamList, StackScreenName.CLIENT>;
 }
 
 const returnWrappedView = (item) => {
@@ -35,7 +31,9 @@ const returnWrappedView = (item) => {
     );
 };
 
-const ClientList = (props: ClientListControllerProps) => {
+const ClientList = () => {
+    const navigation = useNavigation();
+    const route = useRoute();
     const [clientList, setClientList] = useState<ClientTest[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
@@ -290,7 +288,7 @@ const ClientList = (props: ClientListControllerProps) => {
                                 style={styles.item}
                                 key={item.id}
                                 onPress={() => {
-                                    props.navigation.navigate(StackScreenName.CLIENT, {
+                                    navigation.navigate("ClientDetails", {
                                         clientID: item.id,
                                     });
                                 }}

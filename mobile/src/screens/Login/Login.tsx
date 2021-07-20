@@ -10,7 +10,7 @@ import LoginBackground from "./LoginBackground";
 import { SMALL_WIDTH } from "../../util/theme.styles";
 import PasswordTextInput from "../../components/PasswordTextInput/PasswordTextInput";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, StackScreenName } from "../../util/screens";
+import { stackParamList, StackScreenName } from "../../util/stackScreens";
 import { Navigation } from "react-native-navigation";
 import { useEffect } from "react";
 

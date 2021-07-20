@@ -2,10 +2,8 @@ import React from "react";
 import { APILoadError, IUser, TAPILoadError, UserRole } from "@cbr/common";
 import Todo from "../screens/Todo/Todo";
 import ClientList from "../screens/ClientList/ClientList";
-import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 import Profile from "../screens/Profile/Profile";
-import ClientDetails from "../screens/ClientDetails/ClientDetails";
 
 export interface IScreen {
     name: string;
@@ -14,7 +12,7 @@ export interface IScreen {
     iconName?: string;
 }
 
-const screens: IScreen[] = [
+export const screens: IScreen[] = [
     {
         name: "Dashboard",
         Component: Todo,
@@ -56,39 +54,4 @@ const screens: IScreen[] = [
     },
 ];
 
-export const screensForUser = (user: IUser | TAPILoadError | undefined) => {
-    return screens.filter((screen) => {
-        if (!screen.roles) {
-            return true;
-        }
-
-        if (!user || user === APILoadError) {
-            return false;
-        }
-
-        return screen.roles.includes(user.role);
-    });
-};
-
 export const defaultPage = screens[0];
-
-//Stack screens coming up from here on
-
-export enum StackScreenName {
-    HOME = "Home",
-    CLIENT = "ClientDetails",
-    BASELINE = "BaselineSurvey",
-}
-
-export const stackScreenProps = {
-    [StackScreenName.HOME]: HomeScreen,
-    [StackScreenName.CLIENT]: ClientDetails,
-    [StackScreenName.BASELINE]: BaseSurvey,
-};
-
-export type stackParamList = {
-    [StackScreenName.HOME]: undefined;
-    [StackScreenName.CLIENT]: {
-        clientID: number;
-    };
-};

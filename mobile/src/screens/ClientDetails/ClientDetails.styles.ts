@@ -258,7 +258,6 @@ const useStyles = () =>
         },
         errorText: {
             color: themeColors.errorRed,
-            flex: 1,
             alignSelf: "center",
         },
     });

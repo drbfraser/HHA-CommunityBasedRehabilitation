@@ -1,17 +1,32 @@
 import React, { useContext } from "react";
 import { Provider } from "react-native-paper";
 import theme from "../../util/theme.styles";
-import { screensForUser, stackParamList, StackScreenName } from "../../util/screens";
+import { stackParamList, StackScreenName } from "../../util/stackScreens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
-import { Alert } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import useStyles from "./HomeScreen.style";
 import { themeColors } from "@cbr/common/src/util/colors";
+import { IUser, TAPILoadError, APILoadError } from "@cbr/common";
+import { screens } from "../../util/screens";
 
 interface HomeScreenProps {
     navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
 }
+
+const screensForUser = (user: IUser | TAPILoadError | undefined) => {
+    return screens.filter((screen) => {
+        if (!screen.roles) {
+            return true;
+        }
+
+        if (!user || user === APILoadError) {
+            return false;
+        }
+
+        return screen.roles.includes(user.role);
+    });
+};
 
 const HomeScreen = (props: HomeScreenProps) => {
     const styles = useStyles();

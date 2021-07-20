@@ -149,7 +149,7 @@ export const ClientForm = (props: FormProps) => {
                         first_name: values.firstName!,
                         last_name: values.lastName!,
                         birthdate: values.date!.getTime() / 1000,
-                        gender: values.gender!, //TODO: Get this from client
+                        gender: values.gender!,
                         village: values.village!,
                         zone: values.zone!,
                         phoneNumber: values.phone!,

@@ -15,7 +15,7 @@ import { ClientForm } from "../../components/ClientForm/ClientForm";
 import { RecentActivity } from "./ClientTimeline/RecentActivity";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, StackScreenName } from "../../util/screens";
+import { stackParamList, StackScreenName } from "../../util/stackScreens";
 
 interface ClientProps {
     clientID: number;

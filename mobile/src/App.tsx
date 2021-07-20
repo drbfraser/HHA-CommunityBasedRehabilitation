@@ -5,7 +5,7 @@ import theme from "./util/theme.styles";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyle from "./app.styles";
-import { StackScreenName, stackScreenProps } from "./util/stackScreens";
+import { StackParamList, stackScreenProps } from "./util/stackScreens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { screensForUser } from "./util/screensForUser";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
@@ -25,6 +25,7 @@ import Login from "./screens/Login/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { KEY_CURRENT_USER } from "./util/AsyncStorageKeys";
+import { StackScreenName } from "./util/StackScreenName";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens

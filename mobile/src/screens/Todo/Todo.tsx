@@ -4,24 +4,18 @@ import { Button, Text, Title } from "react-native-paper";
 import useStyles from "./Todo.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, StackScreenName } from "../../util/stackScreens";
-import { Navigation } from "react-native-navigation";
+import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 import { useNavigation } from "@react-navigation/core";
-import { useZones } from "@cbr/common";
-import { useCurrentUser, useDisabilities } from "@cbr/common";
+import { useCurrentUser, useDisabilities, useZones } from "@cbr/common";
 
-interface LogoutProps {
-    navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
-}
-
-const Todo = (props: LogoutProps) => {
+const Todo = () => {
     const styles = useStyles();
     const authContext = useContext(AuthContext);
 
     useEffect(() => {
         authContext.requireLoggedIn(true);
     }, []);
-    const navigation = useNavigation();
+    const navigation = useNavigation<AppStackNavProp>();
     const logoutAlert = () =>
         Alert.alert("Alert", "Do you want to logout?", [
             {

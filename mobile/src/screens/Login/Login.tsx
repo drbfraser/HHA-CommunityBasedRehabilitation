@@ -10,12 +10,13 @@ import LoginBackground from "./LoginBackground";
 import { SMALL_WIDTH } from "../../util/theme.styles";
 import PasswordTextInput from "../../components/PasswordTextInput/PasswordTextInput";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, StackScreenName } from "../../util/stackScreens";
+import { StackParamList } from "../../util/stackScreens";
 import { Navigation } from "react-native-navigation";
 import { useEffect } from "react";
+import { StackScreenName } from "../../util/StackScreenName";
 
 interface LoginProps {
-    navigation: StackNavigationProp<stackParamList, StackScreenName.LOGIN>;
+    navigation: StackNavigationProp<StackParamList, StackScreenName.LOGIN>;
 }
 
 enum LoginStatus {

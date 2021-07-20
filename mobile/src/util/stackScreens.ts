@@ -1,14 +1,10 @@
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 import ClientDetails from "../screens/ClientDetails/ClientDetails";
+import { StackScreenName } from "./StackScreenName";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 //Stack screens coming up from here on
-
-export enum StackScreenName {
-    HOME = "Home",
-    CLIENT = "ClientDetails",
-    BASELINE = "BaselineSurvey",
-}
 
 export const stackScreenProps = {
     [StackScreenName.HOME]: HomeScreen,
@@ -16,9 +12,11 @@ export const stackScreenProps = {
     [StackScreenName.BASELINE]: BaseSurvey,
 };
 
-export type stackParamList = {
+export type StackParamList = {
     [StackScreenName.HOME]: undefined;
     [StackScreenName.CLIENT]: {
         clientID: number;
     };
 };
+
+export type AppStackNavProp = StackNavigationProp<StackParamList>;

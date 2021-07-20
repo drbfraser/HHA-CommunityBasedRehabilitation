@@ -15,12 +15,13 @@ import { ClientForm } from "../../components/ClientForm/ClientForm";
 import { RecentActivity } from "./ClientTimeline/RecentActivity";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, StackScreenName } from "../../util/stackScreens";
+import { StackParamList } from "../../util/stackScreens";
+import { StackScreenName } from "../../util/StackScreenName";
 
 interface ClientProps {
     clientID: number;
-    route: RouteProp<stackParamList, StackScreenName.CLIENT>;
-    navigation: StackNavigationProp<stackParamList, StackScreenName.CLIENT>;
+    route: RouteProp<StackParamList, StackScreenName.CLIENT>;
+    navigation: StackNavigationProp<StackParamList, StackScreenName.CLIENT>;
 }
 
 const ClientDetails = (props: ClientProps) => {

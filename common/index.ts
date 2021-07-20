@@ -23,6 +23,8 @@ export * from "./src/forms/baseSurvey/baseSurveyFormFields";
 export * from "./src/forms/baseSurvey/baseSurveyFormHandler";
 export * from "./src/forms/UserProfile/userProfileHandler";
 export * from "./src/forms/UserProfile/userProfileFields";
+export * from "./src/forms/newVisit/visitFormFields";
+export * from "./src/forms/newVisit/visitFormHandler";
 export * from "./src/util/clients";
 export * from "./src/util/risks";
 export * from "./src/util/visits";

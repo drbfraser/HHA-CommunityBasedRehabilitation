@@ -8,17 +8,18 @@ import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import { themeColors, useZones, TZoneMap, IRisk, Endpoint, apiFetch, IClient } from "@cbr/common";
 
 import {
-    fieldLabels,
-    FormField,
+    visitFieldLabels,
+    VisitFormField,
     ImprovementFormField,
     OutcomeFormField,
-    initialValues,
+    visitInitialValues,
     provisionals,
     initialValidationSchema,
     visitTypeValidationSchema,
     GoalStatus,
-} from "./visitFormFields";
-import { handleSubmit } from "./visitFormHandler";
+    handleSubmit,
+} from "@cbr/common";
+
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewVisit.style";
 import { useParams } from "react-router-dom";
 
@@ -26,7 +27,11 @@ interface IFormProps {
     formikProps: FormikProps<any>;
 }
 
-const visitTypes: FormField[] = [FormField.health, FormField.education, FormField.social];
+const visitTypes: VisitFormField[] = [
+    VisitFormField.health,
+    VisitFormField.education,
+    VisitFormField.social,
+];
 
 const ImprovementField = (props: {
     formikProps: FormikProps<any>;
@@ -34,15 +39,15 @@ const ImprovementField = (props: {
     provided: string;
     index: number;
 }) => {
-    const fieldName = `${FormField.improvements}.${props.visitType}.${props.index}`;
+    const fieldName = `${VisitFormField.improvements}.${props.visitType}.${props.index}`;
     const isImprovementEnabled =
-        props.formikProps.values[FormField.improvements][props.visitType][props.index]?.[
+        props.formikProps.values[VisitFormField.improvements][props.visitType][props.index]?.[
             ImprovementFormField.enabled
         ] === true;
     const styles = useStyles();
     useEffect(() => {
         if (
-            props.formikProps.values[FormField.improvements][props.visitType][props.index] ===
+            props.formikProps.values[VisitFormField.improvements][props.visitType][props.index] ===
             undefined
         ) {
             // Since this component is dynamically generated we need to set its initial values
@@ -70,9 +75,9 @@ const ImprovementField = (props: {
                     <TextInput
                         mode="outlined"
                         key={`${props.provided}${ImprovementFormField.description}`}
-                        label={fieldLabels[ImprovementFormField.description]}
+                        label={visitFieldLabels[ImprovementFormField.description]}
                         value={
-                            props.formikProps.values[FormField.improvements][props.visitType][
+                            props.formikProps.values[VisitFormField.improvements][props.visitType][
                                 props.index
                             ][ImprovementFormField.description]
                         }
@@ -110,30 +115,32 @@ const ImprovementField = (props: {
 };
 
 const OutcomeField = (props: {
-    visitType: FormField;
+    visitType: VisitFormField;
     risks: IRisk[];
     formikProps: FormikProps<any>;
 }) => {
-    const fieldName = `${FormField.outcomes}.${props.visitType}`;
+    const fieldName = `${VisitFormField.outcomes}.${props.visitType}`;
     const styles = useStyles();
 
     return (
         <View>
-            <Text style={styles.pickerQuestion}>Client's {fieldLabels[props.visitType]} Goal</Text>
+            <Text style={styles.pickerQuestion}>
+                Client's {visitFieldLabels[props.visitType]} Goal
+            </Text>
             <Text style={styles.normalInput}>
                 {props.risks.find((r) => r.risk_type === (props.visitType as string))?.goal}
             </Text>
             <Text style={styles.pickerQuestion}>
-                Client's {fieldLabels[props.visitType]} Goal Status
+                Client's {visitFieldLabels[props.visitType]} Goal Status
             </Text>
             <TextPicker
                 field={`${fieldName}.${OutcomeFormField.goalStatus}`}
                 choices={Object.values(GoalStatus).map((status) => ({
-                    label: fieldLabels[status],
+                    label: visitFieldLabels[status],
                     value: status,
                 }))}
                 selectedValue={
-                    props.formikProps.values[FormField.outcomes][props.visitType][
+                    props.formikProps.values[VisitFormField.outcomes][props.visitType][
                         OutcomeFormField.goalStatus
                     ]
                 }
@@ -145,9 +152,9 @@ const OutcomeField = (props: {
                 <Text style={styles.pickerQuestion}>What is the Outcome of the Goal?</Text>
                 <TextInput
                     mode="outlined"
-                    label={fieldLabels[OutcomeFormField.outcome]}
+                    label={visitFieldLabels[OutcomeFormField.outcome]}
                     value={
-                        props.formikProps.values[FormField.outcomes][props.visitType][
+                        props.formikProps.values[VisitFormField.outcomes][props.visitType][
                             OutcomeFormField.outcome
                         ]
                     }
@@ -175,13 +182,13 @@ const OutcomeField = (props: {
 };
 
 const visitReasonStepCallBack =
-    (setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>, zones: TZoneMap) =>
+    (setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>, zones: TZoneMap) =>
     ({ formikProps }: IFormProps) =>
         visitFocusForm(formikProps, setEnabledSteps, zones);
 
 const visitFocusForm = (
     formikProps: FormikProps<any>,
-    setEnabledSteps: React.Dispatch<React.SetStateAction<FormField[]>>,
+    setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>,
     zones: TZoneMap
 ) => {
     const styles = useStyles();
@@ -195,13 +202,13 @@ const visitFocusForm = (
         );
 
         if (checked) {
-            formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, {
+            formikProps.setFieldValue(`${VisitFormField.outcomes}.${visitType}`, {
                 [OutcomeFormField.riskType]: visitType,
                 [OutcomeFormField.goalStatus]: GoalStatus.ongoing,
                 [OutcomeFormField.outcome]: "",
             });
         } else {
-            formikProps.setFieldValue(`${FormField.outcomes}.${visitType}`, undefined);
+            formikProps.setFieldValue(`${VisitFormField.outcomes}.${visitType}`, undefined);
         }
     };
     return (
@@ -210,26 +217,26 @@ const visitFocusForm = (
             <Text />
             <TextInput
                 mode="outlined"
-                label={fieldLabels[FormField.village]}
-                value={formikProps.values[FormField.village]}
-                onChangeText={(value) => formikProps.setFieldValue(FormField.village, value)}
+                label={visitFieldLabels[VisitFormField.village]}
+                value={formikProps.values[VisitFormField.village]}
+                onChangeText={(value) => formikProps.setFieldValue(VisitFormField.village, value)}
             />
 
             <HelperText
                 style={styles.errorText}
                 type="error"
-                visible={!!formikProps.errors[FormField.village]}
+                visible={!!formikProps.errors[VisitFormField.village]}
             >
-                {formikProps.errors[FormField.village]}
+                {formikProps.errors[VisitFormField.village]}
             </HelperText>
 
             <TextPicker
-                field={FormField.zone}
+                field={VisitFormField.zone}
                 choices={Array.from(zones.entries()).map(([key, value]) => ({
                     label: value,
                     value: key,
                 }))}
-                selectedValue={formikProps.values[FormField.zone]}
+                selectedValue={formikProps.values[VisitFormField.zone]}
                 setFieldValue={formikProps.setFieldValue}
                 setFieldTouched={formikProps.setFieldTouched}
             />
@@ -237,9 +244,9 @@ const visitFocusForm = (
             <HelperText
                 style={styles.errorText}
                 type="error"
-                visible={!!formikProps.errors[FormField.zone]}
+                visible={!!formikProps.errors[VisitFormField.zone]}
             >
-                {formikProps.errors[FormField.zone]}
+                {formikProps.errors[VisitFormField.zone]}
             </HelperText>
 
             <Text style={styles.pickerQuestion}>Select the Reasons for the Visit </Text>
@@ -248,7 +255,7 @@ const visitFocusForm = (
                     key={visitType}
                     field={visitType}
                     value={formikProps.values[visitType]}
-                    label={fieldLabels[visitType]}
+                    label={visitFieldLabels[visitType]}
                     setFieldValue={formikProps.setFieldValue}
                     onChange={(value: boolean) => {
                         formikProps.setFieldTouched(visitType, true);
@@ -260,7 +267,7 @@ const visitFocusForm = (
     );
 };
 
-const VisitTypeStep = (visitType: FormField, risks: IRisk[]) => {
+const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[]) => {
     const styles = useStyles();
 
     return ({ formikProps }: IFormProps) => {
@@ -268,7 +275,7 @@ const VisitTypeStep = (visitType: FormField, risks: IRisk[]) => {
             <View>
                 <Text style={styles.pickerQuestion}>Select an Improvement</Text>
                 <FieldArray
-                    name={FormField.improvements}
+                    name={VisitFormField.improvements}
                     render={() =>
                         provisionals[visitType].map((provided, index) => (
                             <ImprovementField
@@ -295,8 +302,8 @@ const NewVisit = () => {
     const [submissionError, setSubmissionError] = useState(false);
     // const [stepChecked, setStepChecked] = useState([false]);
     const [activeStep, setActiveStep] = useState<number>(0);
-    const [enabledSteps, setEnabledSteps] = useState<FormField[]>([]);
-    const [checkedSteps, setCheckedSteps] = useState<FormField[]>([]);
+    const [enabledSteps, setEnabledSteps] = useState<VisitFormField[]>([]);
+    const [checkedSteps, setCheckedSteps] = useState<VisitFormField[]>([]);
 
     const [risks, setRisks] = useState<IRisk[]>([]);
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
@@ -323,7 +330,7 @@ const NewVisit = () => {
             validationSchema: initialValidationSchema,
         },
         ...enabledSteps.map((visitType) => ({
-            label: `${fieldLabels[visitType]} Visit`,
+            label: `${visitFieldLabels[visitType]} Visit`,
             Form: VisitTypeStep(visitType, risks),
             validationSchema: visitTypeValidationSchema(visitType),
         })),
@@ -352,7 +359,7 @@ const NewVisit = () => {
                 //     }
                 // }
                 // TODO: Change back when it is connected to the client detail
-                helpers.setFieldValue(`${[FormField.client]}`, 1);
+                helpers.setFieldValue(`${[VisitFormField.client]}`, 1);
                 // helpers.setFieldValue(`${[FormField.client]}`, clientId);
             }
             // helpers.setTouched({});
@@ -371,7 +378,7 @@ const NewVisit = () => {
 
     return (
         <Formik
-            initialValues={initialValues}
+            initialValues={visitInitialValues}
             validationSchema={visitSteps[activeStep].validationSchema}
             onSubmit={nextStep}
             enableReinitialize

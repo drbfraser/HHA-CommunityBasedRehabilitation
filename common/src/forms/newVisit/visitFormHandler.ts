@@ -1,7 +1,7 @@
 import { ImprovementFormField, TFormValues } from "./visitFormFields";
 import { FormikHelpers } from "formik";
 import { FormField } from "./visitFormFields";
-import { apiFetch, Endpoint } from "@cbr/common";
+import { apiFetch, Endpoint } from "../../util/endpoints";
 
 const addVisit = async (visitInfo: string) => {
     const init: RequestInit = {

@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { IClient } from "./ClientRequests";
+import { IClient } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IReferral, ISurvey, timestampToDateObj } from "@cbr/common";
-import { getDisabilities, useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
+import {
+    getDisabilities,
+    getOtherDisabilityId,
+    useDisabilities,
+} from "@cbr/common/src/util/hooks/disabilities";
 import { IVisitSummary } from "@cbr/common";
-import { ActivityDTO, ActivityType } from "./ClientTimeline/Activity";
+import { IActivity, ActivityType } from "./ClientTimeline/Activity";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
@@ -37,7 +41,7 @@ const ClientDetails = (props: ClientProps) => {
 
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
-    var disabilityList = useDisabilities();
+    var disabilityMap = useDisabilities();
 
     //Main Client Variables
     const [presentClient, setPresentClient] = useState<IClient>();
@@ -49,12 +53,16 @@ const ClientDetails = (props: ClientProps) => {
     const [clientReferrals, setClientReferrals] = useState<IReferral[]>();
     const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
 
-    const getInitialDisabilities = (disabilityArray: number[]) => {
+    const getInitialDisabilities = (disabilityArray: number[], otherDisability?: string) => {
         var selectedDisabilities: string[] = [];
 
         for (let index of disabilityArray) {
-            if (disabilityList.has(index)) {
-                selectedDisabilities.push(disabilityList.get(index)!);
+            if (disabilityMap.has(index)) {
+                if (index == getOtherDisabilityId(disabilityMap)) {
+                    selectedDisabilities.push("Other - " + otherDisability);
+                } else {
+                    selectedDisabilities.push(disabilityMap.get(index)!);
+                }
             }
         }
         selectedDisabilities = selectedDisabilities.filter((v, i, a) => a.indexOf(v) === i);
@@ -64,11 +72,13 @@ const ClientDetails = (props: ClientProps) => {
     const getClientDetails = async () => {
         const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
         setPresentClient(presentClient);
-        setClientCreateDate(presentClient.clientCreatedDate);
-        setClientVisits(presentClient.clientVisits);
-        setClientReferrals(presentClient.clientReferrals);
-        setClientSurveys(presentClient.clientSurveys);
-        setInitialDisabilityArray(getInitialDisabilities(presentClient.disabilities));
+        setClientCreateDate(presentClient.created_date);
+        setClientVisits(presentClient.visits);
+        setClientReferrals(presentClient.referrals);
+        setClientSurveys(presentClient.baseline_surveys);
+        setInitialDisabilityArray(
+            getInitialDisabilities(presentClient.disability, presentClient.other_disability)
+        );
     };
     useEffect(() => {
         getClientDetails().then(() => {
@@ -80,7 +90,7 @@ const ClientDetails = (props: ClientProps) => {
     const [editMode, setEditMode] = useState(true);
 
     //Activity component rendering
-    const tempActivity: ActivityDTO[] = [];
+    const tempActivity: IActivity[] = [];
     var presentId = 0;
     if (clientVisits) {
         clientVisits.forEach((presentVisit) => {
@@ -155,17 +165,17 @@ const ClientDetails = (props: ClientProps) => {
                             id={props.clientID}
                             firstName={presentClient!.first_name}
                             lastName={presentClient!.last_name}
-                            date={timestampToDateObj(Number(presentClient?.birthdate))}
+                            date={timestampToDateObj(Number(presentClient?.birth_date))}
                             gender={presentClient!.gender}
                             village={presentClient!.village}
                             zone={presentClient!.zone}
-                            phone={presentClient!.phoneNumber}
-                            caregiverPresent={presentClient!.careGiverPresent}
-                            caregiverName={presentClient?.careGiverName}
-                            caregiverEmail={presentClient?.careGiverEmail}
-                            caregiverPhone={presentClient?.careGiverPhoneNumber}
-                            clientDisability={presentClient!.disabilities}
-                            otherDisability={presentClient?.otherDisability}
+                            phone={presentClient!.phone_number}
+                            caregiverPresent={presentClient!.caregiver_present}
+                            caregiverName={presentClient?.caregiver_name}
+                            caregiverEmail={presentClient?.caregiver_email}
+                            caregiverPhone={presentClient?.caregiver_phone}
+                            clientDisability={presentClient!.disability}
+                            otherDisability={presentClient?.other_disability}
                             initialDisabilityArray={initialDisabilityArray}
                         />
                     </Card>

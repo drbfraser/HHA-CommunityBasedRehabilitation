@@ -6,6 +6,7 @@ import {
     TDisabilityMap,
     getDisabilities,
     useDisabilities,
+    getOtherDisabilityId,
 } from "@cbr/common/src/util/hooks/disabilities";
 import { View, Platform, ScrollView } from "react-native";
 import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-paper";
@@ -21,6 +22,8 @@ import { themeColors } from "@cbr/common";
 export const ClientForm = (props: FormProps) => {
     const styles = clientStyle();
     let zoneMap = useZones();
+    let disabilityMap = useDisabilities();
+    let otherDisabilityId = getOtherDisabilityId(disabilityMap);
 
     let initialDisabilityArray: string[] = props.initialDisabilityArray
         ? props.initialDisabilityArray
@@ -42,7 +45,6 @@ export const ClientForm = (props: FormProps) => {
     const [presentZone, setPresentZone] = useState<String>(
         Array.from(zoneMap.values())[initialZone]
     );
-    const [modalSelections, setModalSelections] = useState<number[]>();
 
     const openDisabilityMenu = () => setDisabilityVisible(true);
     const closeDisabilityMenu = () => setDisabilityVisible(false);
@@ -66,7 +68,6 @@ export const ClientForm = (props: FormProps) => {
         otherDisability: props.otherDisability,
     };
 
-    console.log(props.clientDisability);
     const objectFromMap = <K extends string | number | symbol, V>(
         map: Map<K, V> | ReadonlyMap<K, V>
     ): Record<K, V> => {
@@ -79,14 +80,21 @@ export const ClientForm = (props: FormProps) => {
     };
     const disabilityObj = objectFromMap(useDisabilities());
 
-    const updateDisabilityList = (values: number[] | undefined) => {
+    const updateDisabilityList = (values: number[] | undefined, otherDisability?: string) => {
         let newList: string[] = [];
         if (!values) return newList;
         else {
-            for (let index of values) newList.push(disabilityObj[index]);
+            for (let index of values) {
+                if (index == otherDisabilityId) {
+                    showOtherDisability(true);
+                    newList.push("Other - " + otherDisability);
+                } else {
+                    newList.push(disabilityObj[index]);
+                }
+            }
         }
-        console.log(newList);
         setSelectedDisabilityList(newList);
+        console.log(selectedDisabilityList);
     };
 
     //Menu functions
@@ -331,8 +339,10 @@ export const ClientForm = (props: FormProps) => {
                                                         "clientDisability",
                                                         values.map(Number)
                                                     );
-                                                    updateDisabilityList(values.map(Number));
-                                                    console.log(values.map(Number));
+                                                    updateDisabilityList(
+                                                        values.map(Number),
+                                                        formikProps.values.otherDisability
+                                                    );
                                                 }}
                                                 rowBackgroundColor={"#eee"}
                                                 iconSize={30}

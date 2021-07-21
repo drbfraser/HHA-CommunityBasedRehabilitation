@@ -20,7 +20,9 @@ const updateUser = async (userInfo: string, userId: number) => {
         body: userInfo,
     };
 
-    return await apiFetch(Endpoint.USER, `${userId}`, init);
+    return await apiFetch(Endpoint.USER, `${userId}`, init)
+        .then((res) => res.json())
+        .then((res) => res as IUser);
 };
 
 const updateUserPassword = async (userInfo: string, userId: number) => {
@@ -74,6 +76,9 @@ export const handleNewUserSubmit = async (
     }
 };
 
+/**
+ * @return The updated user's JSON from the server.
+ */
 export const handleUserEditSubmit = async (values: IUser, helpers: FormikHelpers<IUser>) => {
     const editUser = JSON.stringify({
         username: values.username,
@@ -86,9 +91,8 @@ export const handleUserEditSubmit = async (values: IUser, helpers: FormikHelpers
     });
 
     try {
-        await updateUser(editUser, values.id);
-        // history.goBack();
-    } catch (e) {
+        return await updateUser(editUser, values.id);
+    } finally {
         helpers.setSubmitting(false);
     }
 };

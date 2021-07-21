@@ -146,9 +146,7 @@ const ChangePasswordDialog = ({ isSelf, user, onDismiss, visible }: Props) => {
                                 onDismiss(true);
                                 formikHelpers.resetForm();
                             })
-                            .catch((e: any) => {
-                                setSubmissionError(getPassChangeErrorMessageFromSubmissionError(e));
-                            });
+                            .catch((e: any) => setSubmissionError(`${e}`));
                     }}
                 >
                     {(formikProps: FormikProps<TAdminPasswordValues>) => (

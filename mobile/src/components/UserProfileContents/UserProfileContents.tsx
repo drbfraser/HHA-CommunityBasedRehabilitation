@@ -6,6 +6,9 @@ import { Button, Dialog, Portal, Snackbar, Subheading, Text, Title } from "react
 import { IUser, userRoles, useZones } from "@cbr/common";
 import useStyles from "./UserProfileContents.styles";
 import ChangePasswordDialog from "./ChangePasswordDialog";
+import { useNavigation } from "@react-navigation/core";
+import { AppStackNavProp } from "../../util/stackScreens";
+import { StackScreenName } from "../../util/StackScreenName";
 
 export interface Props {
     user: IUser | null;
@@ -18,6 +21,7 @@ export interface Props {
 
 const UserProfileContents = ({ user, isSelf }: Props) => {
     const styles = useStyles();
+    const navigation = useNavigation<AppStackNavProp>();
 
     const authContext = useContext<IAuthContext>(AuthContext);
 
@@ -124,7 +128,9 @@ const UserProfileContents = ({ user, isSelf }: Props) => {
                                         icon="account-edit"
                                         mode="text"
                                         onPress={() => {
-                                            console.log("Edit users here");
+                                            navigation.navigate(StackScreenName.ADMIN_EDIT, {
+                                                user: user,
+                                            });
                                         }}
                                     >
                                         Edit

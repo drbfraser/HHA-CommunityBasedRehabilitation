@@ -1,8 +1,8 @@
 import { StyleSheet, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext, IAuthContext } from "../../context/AuthContext/AuthContext";
-import { Endpoint, useZones } from "@cbr/common/index";
-import { ActivityIndicator, Appbar, Button, Text } from "react-native-paper";
+import { Endpoint } from "@cbr/common/index";
+import { ActivityIndicator, Appbar, Button, Snackbar, Text } from "react-native-paper";
 import { apiFetch, APIFetchFailError, IUser } from "@cbr/common";
 import { StackScreenProps } from "@react-navigation/stack";
 import { StackParamList } from "../../util/stackScreens";
@@ -49,13 +49,18 @@ const AdminView = ({
         authContext.requireLoggedIn(true);
     }, []);
 
-    const zones = useZones();
+    const [isUserEditedSnackbarVisible, setUserEditedSnackbarVisible] = useState(false);
 
     const [user, setUser] = useState<IUser>();
     const [errorMessage, setErrorMessage] = useState<string>();
     useEffect(() => {
-        loadUser(route.params.userID, setUser, setErrorMessage);
-    }, []);
+        if (route.params.newEditedUser) {
+            setUserEditedSnackbarVisible(true);
+            setUser(route.params.newEditedUser);
+        } else {
+            loadUser(route.params.userID, setUser, setErrorMessage);
+        }
+    }, [route.params.newEditedUser]);
 
     return !user || errorMessage ? (
         <View style={styles.loadingContainer}>
@@ -77,7 +82,16 @@ const AdminView = ({
             )}
         </View>
     ) : (
-        <UserProfileContents user={user} isSelf={false} />
+        <>
+            <UserProfileContents user={user} isSelf={false} />
+            <Snackbar
+                visible={isUserEditedSnackbarVisible}
+                duration={4000}
+                onDismiss={() => setUserEditedSnackbarVisible(false)}
+            >
+                User updated successfully.
+            </Snackbar>
+        </>
     );
 };
 

@@ -52,6 +52,11 @@ const Todo = () => {
                 style={styles.userIdTextInput}
                 value={userId}
                 onChangeText={setUserId}
+                onSubmitEditing={() => {
+                    if (userId) {
+                        navigation.navigate(StackScreenName.ADMIN_VIEW, { userID: Number(userId) });
+                    }
+                }}
                 keyboardType="number-pad"
                 label="User ID to open"
             />

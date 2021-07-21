@@ -4,12 +4,15 @@ import ClientDetails from "../screens/ClientDetails/ClientDetails";
 import { StackScreenName } from "./StackScreenName";
 import { StackNavigationProp } from "@react-navigation/stack";
 import AdminView from "../screens/Admin/AdminView";
+import AdminEdit from "../screens/Admin/AdminEdit";
+import { IUser } from "@cbr/common";
 
 export const stackScreenProps = {
     [StackScreenName.HOME]: HomeScreen,
     [StackScreenName.CLIENT]: ClientDetails,
     [StackScreenName.BASELINE]: BaseSurvey,
     [StackScreenName.ADMIN_VIEW]: AdminView,
+    [StackScreenName.ADMIN_EDIT]: AdminEdit,
 };
 
 export type StackParamList = {
@@ -19,6 +22,10 @@ export type StackParamList = {
     };
     [StackScreenName.ADMIN_VIEW]: {
         userID: number;
+        newEditedUser?: IUser;
+    };
+    [StackScreenName.ADMIN_EDIT]: {
+        user: IUser;
     };
 };
 

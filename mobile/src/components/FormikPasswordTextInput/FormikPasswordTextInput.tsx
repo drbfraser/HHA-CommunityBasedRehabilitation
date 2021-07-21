@@ -1,10 +1,5 @@
 import { FormikProps } from "formik";
-import {
-    AdminField,
-    ChangePasswordField,
-    TAdminPasswordValues,
-    TPasswordValues,
-} from "@cbr/common/index";
+import { AdminField, ChangePasswordField } from "@cbr/common/index";
 import React, { forwardRef } from "react";
 import {
     ReturnKeyTypeOptions,
@@ -14,22 +9,18 @@ import {
 } from "react-native";
 import PasswordTextInput from "../PasswordTextInput/PasswordTextInput";
 import { HelperText } from "react-native-paper";
+import { shouldShowError } from "../../util/formikUtil";
 
-const shouldShowError = (
-    formikProps: FormikProps<TPasswordValues | TAdminPasswordValues>,
-    field: string
-) => !!formikProps.errors[field] && formikProps.touched[field];
-
-interface FormikPasswordTextInputProps<Field extends string> {
+export interface FormikPasswordTextInputProps<Field extends string> {
     fieldLabels: {
         // @ts-ignore
         [fieldId: Field]: string;
     };
     field: Field;
-    textInputStyle: StyleProp<TextStyle>;
+    textInputStyle?: StyleProp<TextStyle>;
     formikProps: FormikProps<any>;
     returnKeyType: ReturnKeyTypeOptions;
-    onSubmitEnding: () => void;
+    onSubmitEnding?: () => void;
 }
 
 const FormikPasswordTextInput = forwardRef<

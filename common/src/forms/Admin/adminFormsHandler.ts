@@ -1,8 +1,7 @@
 import { FormikHelpers } from "formik";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-import { TNewUserValues, TPasswordValues } from "./fields";
-import history from "util/history";
-import { IUser } from "@cbr/common/util/users";
+import { apiFetch, Endpoint } from "../../util/endpoints";
+import { IUser } from "../../util/users";
+import { TNewUserValues, TAdminPasswordValues } from "./adminFields";
 
 const addUser = async (userInfo: string) => {
     const init: RequestInit = {
@@ -11,12 +10,8 @@ const addUser = async (userInfo: string) => {
     };
 
     return await apiFetch(Endpoint.USERS, "", init)
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            return res as IUser;
-        });
+        .then((res) => res.json())
+        .then((res) => res as IUser);
 };
 
 const updateUser = async (userInfo: string, userId: number) => {
@@ -37,25 +32,27 @@ const updateUserPassword = async (userInfo: string, userId: number) => {
     return await apiFetch(Endpoint.USER_PASSWORD, `${userId}`, init);
 };
 
-export const handleUpdatePassword =
-    (userId: number) =>
-    async (values: TPasswordValues, helpers: FormikHelpers<TPasswordValues>) => {
-        const newPassword = JSON.stringify({
-            new_password: values.password,
-        });
+export const handleUpdatePassword = async (
+    userId: number,
+    values: TAdminPasswordValues,
+    helpers: FormikHelpers<TAdminPasswordValues>
+) => {
+    const newPassword = JSON.stringify({
+        new_password: values.password,
+    });
 
-        try {
-            await updateUserPassword(newPassword, userId);
-            history.goBack();
-        } catch (e) {
-            alert(
-                "Sorry, something went wrong trying to edit that user's password. Please try again."
-            );
-            helpers.setSubmitting(false);
-        }
-    };
+    try {
+        await updateUserPassword(newPassword, userId);
+    } finally {
+        helpers.setSubmitting(false);
+    }
+};
 
-export const handleNewSubmit = async (
+/**
+ * @return The new user's JSON from the server, which has extra properties filled in such as
+ * ID.
+ */
+export const handleNewUserSubmit = async (
     values: TNewUserValues,
     helpers: FormikHelpers<TNewUserValues>
 ) => {
@@ -71,17 +68,13 @@ export const handleNewSubmit = async (
     });
 
     try {
-        const user = await addUser(newUser);
-        history.replace(`/admin/view/${user.id}`);
-    } catch (e) {
-        alert(
-            `Either a user with that username already exists or that password is too weak. Please try again.`
-        );
+        return await addUser(newUser);
+    } finally {
         helpers.setSubmitting(false);
     }
 };
 
-export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUser>) => {
+export const handleUserEditSubmit = async (values: IUser, helpers: FormikHelpers<IUser>) => {
     const editUser = JSON.stringify({
         username: values.username,
         first_name: values.first_name,
@@ -94,11 +87,8 @@ export const handleEditSubmit = async (values: IUser, helpers: FormikHelpers<IUs
 
     try {
         await updateUser(editUser, values.id);
-        history.goBack();
+        // history.goBack();
     } catch (e) {
-        alert("Sorry, something went wrong trying to edit that user. Please try again.");
         helpers.setSubmitting(false);
     }
 };
-
-export const handleCancel = () => history.goBack();

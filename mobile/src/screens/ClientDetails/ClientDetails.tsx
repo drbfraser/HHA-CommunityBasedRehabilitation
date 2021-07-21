@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { ClientDTO } from "./ClientRequests";
+import { IClient } from "./ClientRequests";
 import clientStyle from "./ClientDetails.styles";
 import { Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
@@ -40,7 +40,7 @@ const ClientDetails = (props: ClientProps) => {
     var disabilityList = useDisabilities();
 
     //Main Client Variables
-    const [presentClient, setPresentClient] = useState<ClientDTO>();
+    const [presentClient, setPresentClient] = useState<IClient>();
     const [initialDisabilityArray, setInitialDisabilityArray] = useState<string[]>();
 
     //Variables that cannot be edited and are for read only

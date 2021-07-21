@@ -1,6 +1,6 @@
 import { Endpoint, apiFetch, objectToFormData } from "@cbr/common";
 import { timestampFromFormDate } from "@cbr/common/";
-import { ClientDTO } from "../../screens/ClientDetails/ClientRequests";
+import { IClient } from "@cbr/common";
 
 const updateClient = async (clientInfo: FormData, clientId: number) => {
     const init: RequestInit = {
@@ -16,21 +16,21 @@ const updateClient = async (clientInfo: FormData, clientId: number) => {
         });
 };
 
-export const handleSubmit = async (values: ClientDTO) => {
+export const handleSubmit = async (values: IClient) => {
     const updatedValues = {
         first_name: values.first_name,
         last_name: values.last_name,
-        birth_date: timestampFromFormDate(values.birthdate as string),
+        birth_date: timestampFromFormDate(values.birth_date as string),
         gender: values.gender,
-        phone_number: values.phoneNumber,
+        phone_number: values.phone_number,
         zone: values.zone,
         village: values.village,
-        caregiver_present: values.careGiverPresent,
-        caregiver_name: values.careGiverName,
-        caregiver_email: values.careGiverEmail,
-        caregiver_phone: values.careGiverPhoneNumber,
-        disability: values.disabilities,
-        other_disability: values.otherDisability,
+        caregiver_present: values.caregiver_present,
+        caregiver_name: values.caregiver_name,
+        caregiver_email: values.caregiver_email,
+        caregiver_phone: values.caregiver_phone,
+        disability: values.disability,
+        other_disability: values.other_disability,
     };
 
     const formData = objectToFormData(updatedValues);

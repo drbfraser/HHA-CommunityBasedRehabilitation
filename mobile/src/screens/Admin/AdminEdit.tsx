@@ -167,8 +167,7 @@ const AdminEdit = ({
                                 <Button
                                     disabled={
                                         formikProps.isSubmitting ||
-                                        Object.keys(formikProps.errors).length !== 0 ||
-                                        Object.keys(formikProps.touched).length === 0
+                                        Object.keys(formikProps.errors).length !== 0
                                     }
                                     loading={formikProps.isSubmitting}
                                     onPress={formikProps.handleSubmit}

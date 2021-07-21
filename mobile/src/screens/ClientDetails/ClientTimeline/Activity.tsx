@@ -8,8 +8,8 @@ import { riskTypes } from "../../../util/riskIcon";
 import { IVisitSummary } from "../../../../../common/src/util/visits";
 import useStyles from "./Activity.style";
 
-interface SummaryProps {
-    activity: ActivityDTO;
+interface ISummaryProps {
+    activity: IActivity;
 }
 
 export enum ActivityType {
@@ -18,7 +18,7 @@ export enum ActivityType {
     VISIT = "visit",
 }
 
-export interface ActivityDTO {
+export interface IActivity {
     id: number;
     type: ActivityType;
     date: number;
@@ -27,24 +27,19 @@ export interface ActivityDTO {
     survey: ISurvey | undefined;
 }
 
-export const SummaryActivity = (props: SummaryProps) => {
-    var zoneList = useZones();
-    const zone = Array.from(zoneList.values())[props.activity.visit!.zone - 1];
+export const SummaryActivity = (props: ISummaryProps) => {
+    let zoneList = useZones();
+    let zone: string;
+    if (props.activity.visit) zone = Array.from(zoneList.values())[props.activity.visit!.zone - 1];
+    else zone = "";
     const styles = useStyles();
     const [icon, setIcon] = useState("");
 
-    if (props.activity.type === ActivityType.VISIT)
-        useEffect(() => {
-            setIcon("walk");
-        }, []);
-    else if (props.activity.type === ActivityType.REFERAL)
-        useEffect(() => {
-            setIcon("navigation");
-        }, []);
-    else if (props.activity.type === ActivityType.SURVEY)
-        useEffect(() => {
-            setIcon("account-box-outline");
-        }, []);
+    useEffect(() => {
+        if (props.activity.type === ActivityType.VISIT) setIcon("walk");
+        if (props.activity.type === ActivityType.REFERAL) setIcon("navigation");
+        if (props.activity.type === ActivityType.SURVEY) setIcon("account-box-outline");
+    });
 
     return (
         <View>
@@ -58,11 +53,14 @@ export const SummaryActivity = (props: SummaryProps) => {
                 <View>
                     {props.activity.type === ActivityType.VISIT && props.activity.visit ? (
                         <View>
-                            <Text>Visit in {zone}</Text>
+                            <Text>{zone} visit</Text>
                             <View>
                                 {props.activity.visit.educat_visit === true ? (
                                     <View style={styles.subItem}>
-                                        {riskTypes.EDUCAT.Icon("black")}
+                                        {riskTypes.EDUCAT.Icon(
+                                            themeColors.riskBlack,
+                                            themeColors.riskBlack
+                                        )}
                                         <Text style={styles.subItemText}>Education</Text>
                                     </View>
                                 ) : (
@@ -70,7 +68,10 @@ export const SummaryActivity = (props: SummaryProps) => {
                                 )}
                                 {props.activity.visit.health_visit === true ? (
                                     <View style={styles.subItem}>
-                                        {riskTypes.HEALTH.Icon("black")}
+                                        {riskTypes.HEALTH.Icon(
+                                            themeColors.riskBlack,
+                                            themeColors.riskBlack
+                                        )}
                                         <Text style={styles.subItemText}>Health</Text>
                                     </View>
                                 ) : (
@@ -78,7 +79,10 @@ export const SummaryActivity = (props: SummaryProps) => {
                                 )}
                                 {props.activity.visit.social_visit === true ? (
                                     <View style={styles.subItem}>
-                                        {riskTypes.SOCIAL.Icon("black")}
+                                        {riskTypes.SOCIAL.Icon(
+                                            themeColors.riskBlack,
+                                            themeColors.riskBlack
+                                        )}
                                         <Text style={styles.subItemText}>Social</Text>
                                     </View>
                                 ) : (

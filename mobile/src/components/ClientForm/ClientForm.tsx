@@ -14,30 +14,40 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import { FormValues, FormProps, validationSchema } from "./ClientFormFields";
 import * as Yup from "yup";
-import { ClientDTO } from "../../screens/ClientDetails/ClientRequests";
+import { IClient } from "../../screens/ClientDetails/ClientRequests";
 import { handleSubmit } from "./ClientSubmitHandler";
 import { themeColors } from "@cbr/common";
 
 export const ClientForm = (props: FormProps) => {
-    var disabilityList = useDisabilities();
     const styles = clientStyle();
+    var disabilityList = useDisabilities();
     var zoneList = useZones();
 
     var correctedClientDisability: number[] = [];
     var newSelectedDisabilityList: string[] = [];
+    var initialDisabilityArray: string[] = props.initialDisabilityArray
+        ? props.initialDisabilityArray
+        : [];
+    var initialZone: number = props.zone ? props.zone - 1 : 0;
 
     //Client Details Usestates
     const [date, setDate] = useState(new Date(props.date));
     const [caregiverPresent, setCaregiverPresent] = useState(false);
-    const [selectedZone, setSelectedZone] = useState<Number>(props.zone - 1);
+    const [selectedZone, setSelectedZone] = useState<Number>(initialZone);
     const [otherDisability, showOtherDisability] = useState(false);
     const [editMode, setEditMode] = useState(!props.isNewClient);
     const [cancelButtonType, setCancelButtonType] = useState("outlined");
     const [show, setShow] = useState(false);
     const [disabilityVisible, setDisabilityVisible] = useState(false);
+    const [zonesVisible, setZonesVisible] = useState(false);
+    const [selectedDisabilityList, setSelectedDisabilityList] =
+        useState<string[]>(initialDisabilityArray);
+    const [presentZone, setPresentZone] = useState<String>(
+        Array.from(zoneList.values())[initialZone]
+    );
+
     const openDisabilityMenu = () => setDisabilityVisible(true);
     const closeDisabilityMenu = () => setDisabilityVisible(false);
-    const [zonesVisible, setZonesVisible] = useState(false);
     const openZonesMenu = () => setZonesVisible(true);
     const closeZonesMenu = () => setZonesVisible(false);
 
@@ -58,13 +68,6 @@ export const ClientForm = (props: FormProps) => {
         otherDisability: props.otherDisability,
     };
 
-    var zoneNameList: string[] = [];
-    for (let index of Array.from(zoneList.entries())) {
-        zoneNameList.push(index[1]);
-    }
-
-    const [presentZone, setPresentZone] = useState<String>(zoneNameList[props.zone - 1]);
-
     const updateSelectedDisabilityList = (disabilityArray: number[]) => {
         for (let index of disabilityArray) {
             var tempIndex = index - 1;
@@ -81,18 +84,12 @@ export const ClientForm = (props: FormProps) => {
         newSelectedDisabilityList = newSelectedDisabilityList.filter(
             (v, i, a) => a.indexOf(v) === i
         );
+        correctedClientDisability = correctedClientDisability.filter(
+            (v, i, a) => a.indexOf(v) === i
+        );
     };
-
+    if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
     const [modalSelections, setModalSelections] = useState<number[]>(correctedClientDisability);
-
-    useEffect(() => {
-        if (props.clientDisability) {
-            updateSelectedDisabilityList(props.clientDisability);
-        }
-    }, [props.clientDisability]);
-
-    const [selectedDisabilityList, setSelectedDisabilityList] =
-        useState<string[]>(newSelectedDisabilityList);
 
     //Menu functions
     const toggleButtons = () => {
@@ -113,17 +110,13 @@ export const ClientForm = (props: FormProps) => {
         setShow(true);
     };
 
-    const reviewSchema = Yup.object({
-        firstName: Yup.string().required().min(4),
-    });
-
     return (
         <View>
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                    const updatedClientDTO: ClientDTO = {
+                    const updatedClientDTO: IClient = {
                         id: values.id!,
                         first_name: values.firstName!,
                         last_name: values.lastName!,
@@ -238,7 +231,7 @@ export const ClientForm = (props: FormProps) => {
                                             nestedScrollEnabled={true}
                                         >
                                             <CustomMultiPicker
-                                                options={zoneNameList}
+                                                options={Array.from(zoneList.values())}
                                                 placeholder={"Zones"}
                                                 placeholderTextColor={themeColors.blueBgLight}
                                                 returnValue={"zone_name"}
@@ -248,7 +241,11 @@ export const ClientForm = (props: FormProps) => {
                                                         "zone",
                                                         Number(values[0])
                                                     );
-                                                    setPresentZone(zoneNameList[Number(values[0])]);
+                                                    setPresentZone(
+                                                        Array.from(zoneList.values())[
+                                                            Number(values[0])
+                                                        ]
+                                                    );
                                                     setSelectedZone(Number(values[0]));
                                                 }}
                                                 rowBackgroundColor={"#eee"}
@@ -317,7 +314,6 @@ export const ClientForm = (props: FormProps) => {
                                             nestedScrollEnabled={true}
                                         >
                                             <CustomMultiPicker
-                                                //options={disabilityNameList}
                                                 options={Array.from(disabilityList.values())}
                                                 multiple={true}
                                                 placeholder={"Disability"}
@@ -332,6 +328,7 @@ export const ClientForm = (props: FormProps) => {
                                                             break;
                                                         }
                                                     }
+
                                                     showOtherDisability(checkBoolean);
                                                     for (
                                                         let popIndex = 0;
@@ -340,14 +337,16 @@ export const ClientForm = (props: FormProps) => {
                                                     ) {
                                                         toUpdateDisability.pop();
                                                     }
+
                                                     for (let index of Array.from(values)) {
                                                         toUpdateDisability.push(Number(index) + 1);
                                                     }
+
                                                     formikProps.setFieldValue(
                                                         "clientDisability",
                                                         toUpdateDisability
                                                     );
-                                                    //Add formik prop values by 1 before making request
+
                                                     updateSelectedDisabilityList(
                                                         toUpdateDisability
                                                     );
@@ -516,7 +515,9 @@ export const ClientForm = (props: FormProps) => {
                                             cancelEdit();
                                             formikProps.resetForm();
                                             setDate(props.date);
-                                            setPresentZone(zoneNameList[props.zone - 1]);
+                                            setPresentZone(
+                                                Array.from(zoneList.values())[props.zone - 1]
+                                            );
                                             setSelectedZone(props.zone - 1);
                                             if (props.caregiverPresent)
                                                 setCaregiverPresent(props.caregiverPresent);
@@ -527,7 +528,12 @@ export const ClientForm = (props: FormProps) => {
                                                     props.clientDisability
                                                 );
                                             setSelectedDisabilityList(newSelectedDisabilityList);
-                                            //setModalSelections(correctedClientDisability);
+
+                                            if (props.clientDisability)
+                                                updateSelectedDisabilityList(
+                                                    props.clientDisability
+                                                );
+                                            setModalSelections(correctedClientDisability);
                                         }}
                                     >
                                         Cancel

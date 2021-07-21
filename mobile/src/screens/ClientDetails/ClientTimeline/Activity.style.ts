@@ -49,6 +49,16 @@ const useStyles = () =>
             borderBottomColor: "black",
             borderBottomWidth: 0.5,
         },
+        popupStyle: {
+            height: 50,
+            marginHorizontal: 20,
+            marginTop: 140,
+            display: "flex",
+            backgroundColor: "white",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "space-between",
+        },
     });
 
 export default useStyles;

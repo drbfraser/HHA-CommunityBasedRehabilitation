@@ -48,6 +48,7 @@ const Todo = () => {
             <Text>Disabilities hook: {JSON.stringify(Array.from(disabilities))}</Text>
             <Text>Current user hook: {JSON.stringify(currentUser)}</Text>
 
+            {/* TODO: Remove this when admin user list is created */}
             <TextInput
                 style={styles.userIdTextInput}
                 value={userId}
@@ -61,6 +62,7 @@ const Todo = () => {
                 label="User ID to open"
             />
 
+            {/* TODO: Remove this when admin user list is created */}
             <Button
                 mode="contained"
                 disabled={!userId}
@@ -73,6 +75,7 @@ const Todo = () => {
                 View user as admin
             </Button>
 
+            {/* TODO: Remove this when admin user list is created */}
             <Button mode="contained" onPress={() => navigation.navigate(StackScreenName.ADMIN_NEW)}>
                 Create new user
             </Button>

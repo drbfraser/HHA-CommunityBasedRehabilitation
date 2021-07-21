@@ -59,7 +59,7 @@ const ClientDetails = (props: ClientProps) => {
         for (let index of disabilityArray) {
             if (disabilityMap.has(index)) {
                 if (index == getOtherDisabilityId(disabilityMap)) {
-                    selectedDisabilities.push("Other - " + otherDisability);
+                    selectedDisabilities.push("Other");
                 } else {
                     selectedDisabilities.push(disabilityMap.get(index)!);
                 }

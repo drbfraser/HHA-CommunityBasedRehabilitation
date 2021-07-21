@@ -87,7 +87,7 @@ export const ClientForm = (props: FormProps) => {
             for (let index of values) {
                 if (index == otherDisabilityId) {
                     showOtherDisability(true);
-                    newList.push("Other - " + otherDisability);
+                    newList.push("Other");
                 } else {
                     newList.push(disabilityObj[index]);
                 }

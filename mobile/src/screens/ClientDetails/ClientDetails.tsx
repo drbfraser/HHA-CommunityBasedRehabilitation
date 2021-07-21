@@ -147,9 +147,9 @@ const ClientDetails = (props: ClientProps) => {
                             Baseline Survey
                         </Button>
                     </Card>
-                    <Divider></Divider>
+                    <Divider />
                     <Text style={styles.cardSectionTitle}>Client Details</Text>
-                    <Divider></Divider>
+                    <Divider />
                     <Card style={styles.clientDetailsContainerStyles}>
                         <ClientForm
                             id={props.clientID}
@@ -169,9 +169,9 @@ const ClientDetails = (props: ClientProps) => {
                             initialDisabilityArray={initialDisabilityArray}
                         />
                     </Card>
-                    <Divider></Divider>
+                    <Divider />
                     <ClientRisk editMode={editMode}></ClientRisk>
-                    <Divider></Divider>
+                    <Divider />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>

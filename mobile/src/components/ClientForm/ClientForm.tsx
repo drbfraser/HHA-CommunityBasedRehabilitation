@@ -32,7 +32,7 @@ export const ClientForm = (props: FormProps) => {
 
     //Client Details Usestates
     const [date, setDate] = useState(new Date(props.date));
-    const [caregiverPresent, setCaregiverPresent] = useState(false);
+    const [caregiverPresent, setCaregiverPresent] = useState(props.caregiverPresent);
     const [selectedZone, setSelectedZone] = useState<Number>(initialZone);
     const [otherDisability, showOtherDisability] = useState(false);
     const [isDisabled, setDisabled] = useState(!props.isNewClient);
@@ -131,7 +131,7 @@ export const ClientForm = (props: FormProps) => {
         let updateDisability: number[] = [];
         let checkBoolean = false;
         for (let checkOther of Array.from(values)) {
-            if (checkOther == 9) {
+            if (checkOther == Array.from(disabilityMap.values()).length - 1) {
                 checkBoolean = true;
                 break;
             }

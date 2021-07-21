@@ -20,30 +20,30 @@ import { themeColors } from "@cbr/common";
 
 export const ClientForm = (props: FormProps) => {
     const styles = clientStyle();
-    var disabilityList = useDisabilities();
-    var zoneList = useZones();
+    let disabilityMap = useDisabilities();
+    let zoneMap = useZones();
 
-    var correctedClientDisability: number[] = [];
-    var newSelectedDisabilityList: string[] = [];
-    var initialDisabilityArray: string[] = props.initialDisabilityArray
+    let correctedClientDisability: number[] = [];
+    let newSelectedDisabilityList: string[] = [];
+    let initialDisabilityArray: string[] = props.initialDisabilityArray
         ? props.initialDisabilityArray
         : [];
-    var initialZone: number = props.zone ? props.zone - 1 : 0;
+    let initialZone: number = props.zone ? props.zone - 1 : 0;
 
     //Client Details Usestates
     const [date, setDate] = useState(new Date(props.date));
     const [caregiverPresent, setCaregiverPresent] = useState(false);
     const [selectedZone, setSelectedZone] = useState<Number>(initialZone);
     const [otherDisability, showOtherDisability] = useState(false);
-    const [editMode, setEditMode] = useState(!props.isNewClient);
+    const [isDisabled, setDisabled] = useState(!props.isNewClient);
     const [cancelButtonType, setCancelButtonType] = useState("outlined");
-    const [show, setShow] = useState(false);
+    const [showDatePicker, setShowDatePicker] = useState(false);
     const [disabilityVisible, setDisabilityVisible] = useState(false);
     const [zonesVisible, setZonesVisible] = useState(false);
     const [selectedDisabilityList, setSelectedDisabilityList] =
         useState<string[]>(initialDisabilityArray);
     const [presentZone, setPresentZone] = useState<String>(
-        Array.from(zoneList.values())[initialZone]
+        Array.from(zoneMap.values())[initialZone]
     );
 
     const openDisabilityMenu = () => setDisabilityVisible(true);
@@ -70,15 +70,15 @@ export const ClientForm = (props: FormProps) => {
 
     const updateSelectedDisabilityList = (disabilityArray: number[]) => {
         for (let index of disabilityArray) {
-            var tempIndex = index - 1;
+            let tempIndex = index - 1;
             correctedClientDisability.push(tempIndex);
         }
         for (let popIndex = 0; popIndex <= newSelectedDisabilityList.length; popIndex++) {
             newSelectedDisabilityList.pop();
         }
         for (let index of disabilityArray) {
-            if (disabilityList.has(index)) {
-                newSelectedDisabilityList.push(disabilityList.get(index)!);
+            if (disabilityMap.has(index)) {
+                newSelectedDisabilityList.push(disabilityMap.get(index)!);
             }
         }
         newSelectedDisabilityList = newSelectedDisabilityList.filter(
@@ -88,26 +88,73 @@ export const ClientForm = (props: FormProps) => {
             (v, i, a) => a.indexOf(v) === i
         );
     };
-    if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
+    useEffect(() => {
+        if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
+    });
+
     const [modalSelections, setModalSelections] = useState<number[]>(correctedClientDisability);
 
     //Menu functions
     const toggleButtons = () => {
-        if (editMode == true) {
-            setEditMode(false);
+        if (isDisabled == true) {
+            setDisabled(false);
             setCancelButtonType("contained");
         } else {
-            setEditMode(true);
+            setDisabled(true);
             setCancelButtonType("outlined");
         }
     };
     const cancelEdit = () => {
-        setEditMode(true);
+        setDisabled(true);
     };
 
     //Date Picker
     const showDatepicker = () => {
-        setShow(true);
+        setShowDatePicker(true);
+    };
+
+    const resetFormState = () => {
+        setDate(props.date);
+        setPresentZone(Array.from(zoneMap.values())[props.zone - 1]);
+        setSelectedZone(props.zone - 1);
+        if (props.caregiverPresent) setCaregiverPresent(props.caregiverPresent);
+        else setCaregiverPresent(false);
+
+        if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
+        setSelectedDisabilityList(newSelectedDisabilityList);
+
+        if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
+        setModalSelections(correctedClientDisability);
+    };
+
+    const handleDisabilityPropsChange = (values: number[]) => {
+        let updateDisability: number[] = [];
+        let checkBoolean = false;
+        for (let checkOther of Array.from(values)) {
+            if (checkOther == 9) {
+                checkBoolean = true;
+                break;
+            }
+        }
+        showOtherDisability(checkBoolean);
+        for (let popIndex = 0; popIndex <= updateDisability.length; popIndex++) {
+            updateDisability.pop();
+        }
+
+        for (let index of Array.from(values)) {
+            updateDisability.push(Number(index) + 1);
+        }
+        return updateDisability;
+    };
+
+    const handleDisabilityModalChange = (values: number[], updateDisability: number[]) => {
+        for (let popIndex = 0; popIndex <= updateDisability.length; popIndex++) {
+            updateDisability.pop();
+        }
+        for (let index of Array.from(values)) {
+            updateDisability.push(Number(index));
+        }
+        return updateDisability;
     };
 
     return (
@@ -146,8 +193,8 @@ export const ClientForm = (props: FormProps) => {
                             placeholder="First Name"
                             onChangeText={formikProps.handleChange("firstName")}
                             value={formikProps.values.firstName}
-                            disabled={editMode}
-                        ></TextInput>
+                            disabled={isDisabled}
+                        />
                         <Text style={styles.errorText}>{formikProps.errors.firstName}</Text>
 
                         <TextInput
@@ -156,8 +203,8 @@ export const ClientForm = (props: FormProps) => {
                             placeholder="Last Name"
                             onChangeText={formikProps.handleChange("lastName")}
                             value={formikProps.values.lastName}
-                            disabled={editMode}
-                        ></TextInput>
+                            disabled={isDisabled}
+                        />
                         <Text style={styles.errorText}>{formikProps.errors.lastName}</Text>
 
                         <Text> Birthdate </Text>
@@ -166,26 +213,26 @@ export const ClientForm = (props: FormProps) => {
                             <View style={styles.clientBirthdayButtons}>
                                 <View>
                                     <Button
-                                        disabled={editMode}
+                                        disabled={isDisabled}
                                         mode="contained"
                                         onPress={showDatepicker}
                                     >
                                         Edit
                                     </Button>
                                 </View>
-                                {show && (
+                                {showDatePicker && (
                                     <DateTimePicker
                                         testID="dateTimePicker"
                                         value={formikProps.values.date!}
                                         mode="date"
                                         display="default"
                                         onChange={(event, date) => {
-                                            setShow(Platform.OS === "ios");
+                                            setShowDatePicker(Platform.OS === "ios");
                                             if (date) {
                                                 formikProps.setFieldValue("date", date);
                                                 setDate(date);
                                             }
-                                            setShow(false);
+                                            setShowDatePicker(false);
                                         }}
                                     />
                                 )}
@@ -199,7 +246,7 @@ export const ClientForm = (props: FormProps) => {
                             placeholder="Gender"
                             onChangeText={formikProps.handleChange("gender")}
                             value={formikProps.values.gender}
-                            disabled={editMode}
+                            disabled={isDisabled}
                         />
                         <Text style={styles.errorText}>{formikProps.errors.gender}</Text>
 
@@ -209,7 +256,7 @@ export const ClientForm = (props: FormProps) => {
                             placeholder="Village"
                             onChangeText={formikProps.handleChange("village")}
                             value={formikProps.values.village}
-                            disabled={editMode}
+                            disabled={isDisabled}
                         />
                         <Text style={styles.errorText}>{formikProps.errors.village}</Text>
 
@@ -231,7 +278,7 @@ export const ClientForm = (props: FormProps) => {
                                             nestedScrollEnabled={true}
                                         >
                                             <CustomMultiPicker
-                                                options={Array.from(zoneList.values())}
+                                                options={Array.from(zoneMap.values())}
                                                 placeholder={"Zones"}
                                                 placeholderTextColor={themeColors.blueBgLight}
                                                 returnValue={"zone_name"}
@@ -242,7 +289,7 @@ export const ClientForm = (props: FormProps) => {
                                                         Number(values[0])
                                                     );
                                                     setPresentZone(
-                                                        Array.from(zoneList.values())[
+                                                        Array.from(zoneMap.values())[
                                                             Number(values[0])
                                                         ]
                                                     );
@@ -259,7 +306,7 @@ export const ClientForm = (props: FormProps) => {
                                     <Button
                                         mode="contained"
                                         style={styles.modalSelectorButton}
-                                        disabled={editMode}
+                                        disabled={isDisabled}
                                         onPress={closeZonesMenu}
                                     >
                                         Save
@@ -268,11 +315,11 @@ export const ClientForm = (props: FormProps) => {
                             </Portal>
                             <Text> Zone</Text>
                             <View style={styles.buttonZoneStyles}>
-                                {!editMode ? (
+                                {!isDisabled ? (
                                     <Button
                                         mode="contained"
                                         style={styles.disabilityButton}
-                                        disabled={editMode}
+                                        disabled={isDisabled}
                                         onPress={openZonesMenu}
                                     >
                                         Edit Zone
@@ -292,7 +339,7 @@ export const ClientForm = (props: FormProps) => {
                             placeholder="Phone Number"
                             onChangeText={formikProps.handleChange("phone")}
                             value={formikProps.values.phone}
-                            disabled={editMode}
+                            disabled={isDisabled}
                         />
                         <Text style={styles.errorText}>{formikProps.errors.phone}</Text>
 
@@ -314,57 +361,28 @@ export const ClientForm = (props: FormProps) => {
                                             nestedScrollEnabled={true}
                                         >
                                             <CustomMultiPicker
-                                                options={Array.from(disabilityList.values())}
+                                                options={Array.from(disabilityMap.values())}
                                                 multiple={true}
                                                 placeholder={"Disability"}
                                                 placeholderTextColor={themeColors.blueBgLight}
                                                 returnValue={"disability_type"}
                                                 callback={(values: number[]) => {
-                                                    var toUpdateDisability: number[] = [];
-                                                    var checkBoolean = false;
-                                                    for (let checkOther of Array.from(values)) {
-                                                        if (checkOther == 9) {
-                                                            checkBoolean = true;
-                                                            break;
-                                                        }
-                                                    }
-
-                                                    showOtherDisability(checkBoolean);
-                                                    for (
-                                                        let popIndex = 0;
-                                                        popIndex <= toUpdateDisability.length;
-                                                        popIndex++
-                                                    ) {
-                                                        toUpdateDisability.pop();
-                                                    }
-
-                                                    for (let index of Array.from(values)) {
-                                                        toUpdateDisability.push(Number(index) + 1);
-                                                    }
-
                                                     formikProps.setFieldValue(
                                                         "clientDisability",
-                                                        toUpdateDisability
+                                                        handleDisabilityPropsChange(values)
                                                     );
-
                                                     updateSelectedDisabilityList(
-                                                        toUpdateDisability
+                                                        formikProps.values.clientDisability!
                                                     );
                                                     setSelectedDisabilityList(
                                                         newSelectedDisabilityList
                                                     );
-
-                                                    for (
-                                                        let popIndex = 0;
-                                                        popIndex <= toUpdateDisability.length;
-                                                        popIndex++
-                                                    ) {
-                                                        toUpdateDisability.pop();
-                                                    }
-                                                    for (let index of Array.from(values)) {
-                                                        toUpdateDisability.push(Number(index));
-                                                    }
-                                                    setModalSelections(toUpdateDisability);
+                                                    setModalSelections(
+                                                        handleDisabilityModalChange(
+                                                            values,
+                                                            formikProps.values.clientDisability!
+                                                        )
+                                                    );
                                                 }}
                                                 rowBackgroundColor={"#eee"}
                                                 iconSize={30}
@@ -394,7 +412,7 @@ export const ClientForm = (props: FormProps) => {
                                         <Button
                                             mode="contained"
                                             style={styles.modalSelectorButton}
-                                            disabled={editMode}
+                                            disabled={isDisabled}
                                             onPress={closeDisabilityMenu}
                                         >
                                             Save
@@ -404,11 +422,11 @@ export const ClientForm = (props: FormProps) => {
                             </Portal>
                             <Text> Disability</Text>
 
-                            {!editMode ? (
+                            {!isDisabled ? (
                                 <Button
                                     mode="contained"
                                     style={styles.disabilityButton}
-                                    disabled={editMode}
+                                    disabled={isDisabled}
                                     onPress={openDisabilityMenu}
                                 >
                                     Edit Disabilities
@@ -435,7 +453,7 @@ export const ClientForm = (props: FormProps) => {
                                     setCaregiverPresent(!caregiverPresent);
                                     formikProps.handleChange("caregiverPresent");
                                 }}
-                                disabled={editMode}
+                                disabled={isDisabled}
                             />
                         </View>
 
@@ -447,7 +465,7 @@ export const ClientForm = (props: FormProps) => {
                                     placeholder="Caregiver Name"
                                     onChangeText={formikProps.handleChange("caregiverName")}
                                     value={formikProps.values.caregiverName}
-                                    disabled={editMode}
+                                    disabled={isDisabled}
                                 />
                                 <Text style={styles.errorText}>
                                     {formikProps.errors.caregiverName}
@@ -458,7 +476,7 @@ export const ClientForm = (props: FormProps) => {
                                     placeholder="Caregiver Phone"
                                     onChangeText={formikProps.handleChange("caregiverPhone")}
                                     value={formikProps.values.caregiverPhone}
-                                    disabled={editMode}
+                                    disabled={isDisabled}
                                 />
                                 <Text style={styles.errorText}>
                                     {formikProps.errors.caregiverPhone}
@@ -469,7 +487,7 @@ export const ClientForm = (props: FormProps) => {
                                     placeholder="Caregiver Email"
                                     onChangeText={formikProps.handleChange("caregiverEmail")}
                                     value={formikProps.values.caregiverEmail}
-                                    disabled={editMode}
+                                    disabled={isDisabled}
                                 />
                                 <Text style={styles.errorText}>
                                     {formikProps.errors.caregiverEmail}
@@ -482,7 +500,6 @@ export const ClientForm = (props: FormProps) => {
                             <Button
                                 mode="contained"
                                 style={styles.clientDetailsFinalButtons}
-                                disabled={false}
                                 onPress={() => {
                                     formikProps.handleSubmit();
                                 }}
@@ -494,46 +511,26 @@ export const ClientForm = (props: FormProps) => {
                                 <Button
                                     mode="contained"
                                     style={styles.clientDetailsFinalButtons}
-                                    disabled={false}
                                     onPress={() => {
-                                        if (editMode) toggleButtons();
-                                        if (!editMode) {
+                                        if (isDisabled) toggleButtons();
+                                        else {
                                             formikProps.handleSubmit();
                                         }
                                     }}
                                 >
-                                    {editMode ? "Edit" : "Save"}
+                                    {isDisabled ? "Edit" : "Save"}
                                 </Button>
-                                {editMode ? (
+                                {isDisabled ? (
                                     <></>
                                 ) : (
                                     <Button
                                         mode={cancelButtonType}
                                         style={styles.clientDetailsFinalButtons}
-                                        disabled={editMode}
+                                        disabled={isDisabled}
                                         onPress={() => {
                                             cancelEdit();
                                             formikProps.resetForm();
-                                            setDate(props.date);
-                                            setPresentZone(
-                                                Array.from(zoneList.values())[props.zone - 1]
-                                            );
-                                            setSelectedZone(props.zone - 1);
-                                            if (props.caregiverPresent)
-                                                setCaregiverPresent(props.caregiverPresent);
-                                            else setCaregiverPresent(false);
-
-                                            if (props.clientDisability)
-                                                updateSelectedDisabilityList(
-                                                    props.clientDisability
-                                                );
-                                            setSelectedDisabilityList(newSelectedDisabilityList);
-
-                                            if (props.clientDisability)
-                                                updateSelectedDisabilityList(
-                                                    props.clientDisability
-                                                );
-                                            setModalSelections(correctedClientDisability);
+                                            resetFormState();
                                         }}
                                     >
                                         Cancel
@@ -547,11 +544,3 @@ export const ClientForm = (props: FormProps) => {
         </View>
     );
 };
-function getSelectedItemsExt(selectedItems: any): React.ReactNode {
-    throw new Error("Function not implemented.");
-}
-function FormikHelpers<T>(): import("formik").FormikHelpers<
-    import("../../screens/ClientDetails/ClientRequests").IClient
-> {
-    throw new Error("Function not implemented.");
-}

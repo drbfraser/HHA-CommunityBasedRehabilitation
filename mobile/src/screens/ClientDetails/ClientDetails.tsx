@@ -41,19 +41,6 @@ const ClientDetails = (props: ClientProps) => {
 
     //Main Client Variables
     const [presentClient, setPresentClient] = useState<ClientDTO>();
-    const [date, setDate] = useState(new Date());
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [village, setVillage] = useState("");
-    const [gender, setGender] = useState("");
-    const [zone, setZone] = useState<number>();
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [caregiverPresent, setCaregiverPresent] = useState(false);
-    const [caregiverName, setCaregiverName] = useState("");
-    const [caregiverEmail, setCaregiverEmail] = useState("");
-    const [caregiverPhone, setCaregiverPhone] = useState("");
-    const [clientDisability, setDisability] = useState<number[]>([]);
-    const [otherDisability, setOtherDisability] = useState<String>();
     const [initialDisabilityArray, setInitialDisabilityArray] = useState<string[]>();
 
     //Variables that cannot be edited and are for read only
@@ -61,7 +48,6 @@ const ClientDetails = (props: ClientProps) => {
     const [clientVisits, setClientVisits] = useState<IVisitSummary[]>();
     const [clientReferrals, setClientReferrals] = useState<IReferral[]>();
     const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
-    const [allRecentActivity, setRecentActivity] = useState<ActivityDTO[]>();
 
     const getInitialDisabilities = (disabilityArray: number[]) => {
         var selectedDisabilities: string[] = [];
@@ -78,21 +64,6 @@ const ClientDetails = (props: ClientProps) => {
     const getClientDetails = async () => {
         const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
         setPresentClient(presentClient);
-        setDate(timestampToDateObj(Number(presentClient?.birthdate)));
-        setFirstName(presentClient.first_name);
-        setLastName(presentClient.last_name);
-        setVillage(presentClient.village);
-        setZone(presentClient.zone);
-        setPhoneNumber(presentClient.phoneNumber);
-        setOtherDisability(presentClient.otherDisability);
-        setCaregiverPresent(presentClient.careGiverPresent);
-        setGender(presentClient.gender);
-        if (caregiverPresent) {
-            setCaregiverName(presentClient.careGiverName);
-            setCaregiverPhone(presentClient.careGiverPhoneNumber);
-            setCaregiverEmail(presentClient.careGiverEmail);
-        }
-        setDisability(presentClient.disabilities);
         setClientCreateDate(presentClient.clientCreatedDate);
         setClientVisits(presentClient.clientVisits);
         setClientReferrals(presentClient.clientReferrals);
@@ -181,21 +152,20 @@ const ClientDetails = (props: ClientProps) => {
                     <Divider></Divider>
                     <Card style={styles.clientDetailsContainerStyles}>
                         <ClientForm
-                            //isNewClient={true}
                             id={props.clientID}
-                            firstName={firstName}
-                            lastName={lastName}
-                            date={date}
-                            gender={gender}
-                            village={village}
-                            zone={zone}
-                            phone={phoneNumber}
-                            caregiverPresent={caregiverPresent}
-                            caregiverName={caregiverName}
-                            caregiverEmail={caregiverEmail}
-                            caregiverPhone={caregiverPhone}
-                            clientDisability={clientDisability}
-                            otherDisability={otherDisability}
+                            firstName={presentClient!.first_name}
+                            lastName={presentClient!.last_name}
+                            date={timestampToDateObj(Number(presentClient?.birthdate))}
+                            gender={presentClient!.gender}
+                            village={presentClient!.village}
+                            zone={presentClient!.zone}
+                            phone={presentClient!.phoneNumber}
+                            caregiverPresent={presentClient!.careGiverPresent}
+                            caregiverName={presentClient?.careGiverName}
+                            caregiverEmail={presentClient?.careGiverEmail}
+                            caregiverPhone={presentClient?.careGiverPhoneNumber}
+                            clientDisability={presentClient!.disabilities}
+                            otherDisability={presentClient?.otherDisability}
                             initialDisabilityArray={initialDisabilityArray}
                         />
                     </Card>

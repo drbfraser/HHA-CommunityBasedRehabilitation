@@ -13,6 +13,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { SearchOption, themeColors, useZones } from "@cbr/common";
 const styles = useStyles();
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { StackScreenName } from "../../util/StackScreenName";
+import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 
 enum SortOptions {
     ID = "id",
@@ -32,7 +34,7 @@ const returnWrappedView = (item) => {
 };
 
 const ClientList = () => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<AppStackNavProp>();
     const route = useRoute();
     const [clientList, setClientList] = useState<ClientTest[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
@@ -288,7 +290,7 @@ const ClientList = () => {
                                 style={styles.item}
                                 key={item.id}
                                 onPress={() => {
-                                    navigation.navigate("ClientDetails", {
+                                    navigation.navigate(StackScreenName.CLIENT, {
                                         clientID: item.id,
                                     });
                                 }}

@@ -20,11 +20,8 @@ import { themeColors } from "@cbr/common";
 
 export const ClientForm = (props: FormProps) => {
     const styles = clientStyle();
-    let disabilityMap = useDisabilities();
     let zoneMap = useZones();
 
-    let correctedClientDisability: number[] = [];
-    let newSelectedDisabilityList: string[] = [];
     let initialDisabilityArray: string[] = props.initialDisabilityArray
         ? props.initialDisabilityArray
         : [];
@@ -45,6 +42,7 @@ export const ClientForm = (props: FormProps) => {
     const [presentZone, setPresentZone] = useState<String>(
         Array.from(zoneMap.values())[initialZone]
     );
+    const [modalSelections, setModalSelections] = useState<number[]>();
 
     const openDisabilityMenu = () => setDisabilityVisible(true);
     const closeDisabilityMenu = () => setDisabilityVisible(false);
@@ -68,31 +66,28 @@ export const ClientForm = (props: FormProps) => {
         otherDisability: props.otherDisability,
     };
 
-    const updateSelectedDisabilityList = (disabilityArray: number[]) => {
-        for (let index of disabilityArray) {
-            let tempIndex = index - 1;
-            correctedClientDisability.push(tempIndex);
+    console.log(props.clientDisability);
+    const objectFromMap = <K extends string | number | symbol, V>(
+        map: Map<K, V> | ReadonlyMap<K, V>
+    ): Record<K, V> => {
+        const obj: Partial<Record<K, V>> = {};
+        for (const entry of map) {
+            const [key, value] = entry;
+            obj[key] = value;
         }
-        for (let popIndex = 0; popIndex <= newSelectedDisabilityList.length; popIndex++) {
-            newSelectedDisabilityList.pop();
-        }
-        for (let index of disabilityArray) {
-            if (disabilityMap.has(index)) {
-                newSelectedDisabilityList.push(disabilityMap.get(index)!);
-            }
-        }
-        newSelectedDisabilityList = newSelectedDisabilityList.filter(
-            (v, i, a) => a.indexOf(v) === i
-        );
-        correctedClientDisability = correctedClientDisability.filter(
-            (v, i, a) => a.indexOf(v) === i
-        );
+        return obj as Record<K, V>;
     };
-    useEffect(() => {
-        if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
-    });
+    const disabilityObj = objectFromMap(useDisabilities());
 
-    const [modalSelections, setModalSelections] = useState<number[]>(correctedClientDisability);
+    const updateDisabilityList = (values: number[] | undefined) => {
+        let newList: string[] = [];
+        if (!values) return newList;
+        else {
+            for (let index of values) newList.push(disabilityObj[index]);
+        }
+        console.log(newList);
+        setSelectedDisabilityList(newList);
+    };
 
     //Menu functions
     const toggleButtons = () => {
@@ -104,6 +99,7 @@ export const ClientForm = (props: FormProps) => {
             setCancelButtonType("outlined");
         }
     };
+
     const cancelEdit = () => {
         setDisabled(true);
     };
@@ -120,31 +116,11 @@ export const ClientForm = (props: FormProps) => {
         if (props.caregiverPresent) setCaregiverPresent(props.caregiverPresent);
         else setCaregiverPresent(false);
 
-        if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
-        setSelectedDisabilityList(newSelectedDisabilityList);
+        // if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
+        // setSelectedDisabilityList(newSelectedDisabilityList);
 
-        if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
-        setModalSelections(correctedClientDisability);
-    };
-
-    const handleDisabilityPropsChange = (values: number[]) => {
-        let updateDisability: number[] = [];
-        let checkBoolean = false;
-        for (let checkOther of Array.from(values)) {
-            if (checkOther == Array.from(disabilityMap.values()).length - 1) {
-                checkBoolean = true;
-                break;
-            }
-        }
-        showOtherDisability(checkBoolean);
-        for (let popIndex = 0; popIndex <= updateDisability.length; popIndex++) {
-            updateDisability.pop();
-        }
-
-        for (let index of Array.from(values)) {
-            updateDisability.push(Number(index) + 1);
-        }
-        return updateDisability;
+        // if (props.clientDisability) updateSelectedDisabilityList(props.clientDisability);
+        // setModalSelections(correctedClientDisability);
     };
 
     const handleDisabilityModalChange = (values: number[], updateDisability: number[]) => {
@@ -361,34 +337,26 @@ export const ClientForm = (props: FormProps) => {
                                             nestedScrollEnabled={true}
                                         >
                                             <CustomMultiPicker
-                                                options={Array.from(disabilityMap.values())}
+                                                options={disabilityObj}
                                                 multiple={true}
                                                 placeholder={"Disability"}
                                                 placeholderTextColor={themeColors.blueBgLight}
                                                 returnValue={"disability_type"}
-                                                callback={(values: number[]) => {
+                                                callback={(values) => {
                                                     formikProps.setFieldValue(
                                                         "clientDisability",
-                                                        handleDisabilityPropsChange(values)
+                                                        values.map(Number)
                                                     );
-                                                    updateSelectedDisabilityList(
-                                                        formikProps.values.clientDisability!
-                                                    );
-                                                    setSelectedDisabilityList(
-                                                        newSelectedDisabilityList
-                                                    );
-                                                    setModalSelections(
-                                                        handleDisabilityModalChange(
-                                                            values,
-                                                            formikProps.values.clientDisability!
-                                                        )
-                                                    );
+                                                    updateDisabilityList(values.map(Number));
+                                                    console.log(values.map(Number));
                                                 }}
                                                 rowBackgroundColor={"#eee"}
                                                 iconSize={30}
                                                 selectedIconName={"checkmark-circle"}
                                                 unselectedIconName={"radio-button-off"}
-                                                selected={modalSelections.map(String)}
+                                                selected={formikProps.values.clientDisability?.map(
+                                                    String
+                                                )}
                                             />
                                             {otherDisability ? (
                                                 <View>

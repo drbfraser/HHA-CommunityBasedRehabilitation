@@ -9,7 +9,7 @@ import { IVisitSummary } from "../../../../../common/src/util/visits";
 import useStyles from "./Activity.style";
 
 interface SummaryProps {
-    activity: ActivityDTO;
+    activity: IActivity;
 }
 
 export enum ActivityType {
@@ -18,7 +18,7 @@ export enum ActivityType {
     VISIT = "visit",
 }
 
-export interface ActivityDTO {
+export interface IActivity {
     id: number;
     type: ActivityType;
     date: number;

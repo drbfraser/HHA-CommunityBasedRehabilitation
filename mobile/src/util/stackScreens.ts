@@ -4,8 +4,6 @@ import ClientDetails from "../screens/ClientDetails/ClientDetails";
 import { StackScreenName } from "./StackScreenName";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-//Stack screens coming up from here on
-
 export const stackScreenProps = {
     [StackScreenName.HOME]: HomeScreen,
     [StackScreenName.CLIENT]: ClientDetails,

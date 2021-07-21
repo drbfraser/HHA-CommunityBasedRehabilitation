@@ -5,10 +5,8 @@ import theme from "./util/theme.styles";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyle from "./app.styles";
-import { StackParamList, stackScreenProps } from "./util/stackScreens";
+import { stackScreenProps } from "./util/stackScreens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { screensForUser } from "./util/screensForUser";
-import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import {
     apiFetch,
     doLogin,

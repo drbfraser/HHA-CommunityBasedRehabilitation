@@ -15,7 +15,7 @@ import { Navigation } from "react-native-navigation";
 import { useEffect } from "react";
 import { StackScreenName } from "../../util/StackScreenName";
 
-interface LoginProps {
+interface ILoginProps {
     navigation: StackNavigationProp<StackParamList, StackScreenName.LOGIN>;
 }
 
@@ -25,7 +25,7 @@ enum LoginStatus {
     FAILED,
 }
 
-const Login = (props: LoginProps) => {
+const Login = (props: ILoginProps) => {
     const theme = useTheme();
     const styles = useStyles();
 

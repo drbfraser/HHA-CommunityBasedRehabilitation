@@ -11,7 +11,7 @@ import { IUser, TAPILoadError, APILoadError } from "@cbr/common";
 import { screens } from "../../util/screens";
 import { StackScreenName } from "../../util/StackScreenName";
 
-interface HomeScreenProps {
+interface IHomeScreenProps {
     navigation: StackNavigationProp<StackParamList, StackScreenName.HOME>;
 }
 
@@ -29,7 +29,7 @@ const screensForUser = (user: IUser | TAPILoadError | undefined) => {
     });
 };
 
-const HomeScreen = (props: HomeScreenProps) => {
+const HomeScreen = (props: IHomeScreenProps) => {
     const styles = useStyles();
     React.useEffect(() => {
         props.navigation.setOptions({

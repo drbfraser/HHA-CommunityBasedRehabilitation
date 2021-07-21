@@ -4,14 +4,15 @@ import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import React, { useEffect, useRef, useState } from "react";
 import { Appbar, Button, Subheading, Text } from "react-native-paper";
-import { Keyboard, StyleSheet, TextInput as NativeTextInput, View } from "react-native";
+import { StyleSheet, View, TextInput as NativeTextInput } from "react-native";
 import {
     AdminField,
     adminUserFieldLabels,
-    editUserValidationSchema,
-    handleUserEditSubmit,
-    IUser,
+    adminUserInitialValues,
+    handleNewUserSubmit,
+    newUserValidationSchema,
     themeColors,
+    TNewUserValues,
     userRolesToLabelMap,
     useZones,
 } from "@cbr/common";
@@ -19,20 +20,19 @@ import FormikTextInput from "../../components/FormikTextInput/FormikTextInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Alert from "../../components/Alert/Alert";
 import FormikExposedDropdownMenu from "../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
+import FormikPasswordTextInput from "../../components/FormikPasswordTextInput/FormikPasswordTextInput";
 
-const AdminEdit = ({
+const AdminNew = ({
     navigation,
     route,
-}: StackScreenProps<StackParamList, StackScreenName.ADMIN_EDIT>) => {
-    const user = route.params.user;
-
+}: StackScreenProps<StackParamList, StackScreenName.ADMIN_NEW>) => {
     useEffect(() => {
         navigation.setOptions({
             headerShown: true,
             header: (stackHeaderProps) => (
                 <Appbar.Header statusBarHeight={0}>
                     <Appbar.BackAction onPress={() => stackHeaderProps.navigation.goBack()} />
-                    <Appbar.Content title="Edit user" />
+                    <Appbar.Content title="New user" />
                 </Appbar.Header>
             ),
         });
@@ -42,6 +42,9 @@ const AdminEdit = ({
 
     const [saveError, setSaveError] = useState<string>();
 
+    const passwordRef = useRef<NativeTextInput>(null);
+    const confirmPasswordRef = useRef<NativeTextInput>(null);
+    const firstNameRef = useRef<NativeTextInput>(null);
     const lastNameRef = useRef<NativeTextInput>(null);
     const phoneNumberRef = useRef<NativeTextInput>(null);
 
@@ -57,32 +60,69 @@ const AdminEdit = ({
                     />
                 ) : null}
 
-                <Subheading style={styles.profileInfoHeader}>Username</Subheading>
-                <Text style={styles.profileInfoText}>{user.username}</Text>
-
-                <Subheading style={styles.profileInfoHeader}>ID</Subheading>
-                <Text style={styles.profileInfoText}>{user.id}</Text>
-
                 <Formik
-                    initialValues={user}
-                    validationSchema={editUserValidationSchema}
+                    initialValues={adminUserInitialValues}
+                    validationSchema={newUserValidationSchema}
                     onSubmit={(values, formikHelpers) => {
                         setSaveError(undefined);
-                        handleUserEditSubmit(values, formikHelpers)
+                        handleNewUserSubmit(values, formikHelpers)
                             .then((user) => {
                                 navigation.pop(1);
                                 navigation.navigate(StackScreenName.ADMIN_VIEW, {
                                     userID: user.id,
-                                    userInfo: { isNewUser: false, user: user },
+                                    userInfo: { isNewUser: true, user: user },
                                 });
                             })
                             .catch((e) => setSaveError(`${e}`));
                     }}
                 >
-                    {(formikProps: FormikProps<IUser>) => (
+                    {(formikProps: FormikProps<TNewUserValues>) => (
                         <>
                             <FormikTextInput
                                 style={styles.textInput}
+                                disabled={formikProps.isSubmitting}
+                                fieldLabels={adminUserFieldLabels}
+                                field={AdminField.username}
+                                onSubmitEditing={() => passwordRef.current?.focus()}
+                                formikProps={formikProps}
+                                returnKeyType="next"
+                                mode="outlined"
+                            />
+
+                            <FormikExposedDropdownMenu
+                                style={styles.textInput}
+                                valuesType="map"
+                                values={userRolesToLabelMap}
+                                fieldLabels={adminUserFieldLabels}
+                                field={AdminField.role}
+                                formikProps={formikProps}
+                                mode="outlined"
+                                numericKey={false}
+                            />
+
+                            <FormikPasswordTextInput
+                                textInputStyle={styles.textInput}
+                                ref={passwordRef}
+                                fieldLabels={adminUserFieldLabels}
+                                field={AdminField.password}
+                                onSubmitEditing={() => confirmPasswordRef.current?.focus()}
+                                formikProps={formikProps}
+                                returnKeyType="next"
+                            />
+
+                            <FormikPasswordTextInput
+                                textInputStyle={styles.textInput}
+                                ref={confirmPasswordRef}
+                                fieldLabels={adminUserFieldLabels}
+                                field={AdminField.confirmPassword}
+                                onSubmitEditing={() => firstNameRef.current?.focus()}
+                                formikProps={formikProps}
+                                returnKeyType="next"
+                            />
+
+                            <FormikTextInput
+                                style={styles.textInput}
+                                ref={firstNameRef}
                                 disabled={formikProps.isSubmitting}
                                 fieldLabels={adminUserFieldLabels}
                                 field={AdminField.first_name}
@@ -94,10 +134,10 @@ const AdminEdit = ({
 
                             <FormikTextInput
                                 style={styles.textInput}
+                                ref={lastNameRef}
                                 disabled={formikProps.isSubmitting}
                                 fieldLabels={adminUserFieldLabels}
                                 field={AdminField.last_name}
-                                ref={lastNameRef}
                                 onSubmitEditing={() => phoneNumberRef.current?.focus()}
                                 formikProps={formikProps}
                                 returnKeyType="next"
@@ -121,49 +161,14 @@ const AdminEdit = ({
                                 disabled={formikProps.isSubmitting}
                                 fieldLabels={adminUserFieldLabels}
                                 field={AdminField.phone_number}
-                                onSubmitEditing={Keyboard.dismiss}
                                 formikProps={formikProps}
+                                onSubmitEditing={() => formikProps.handleSubmit}
                                 keyboardType="phone-pad"
-                                returnKeyType="next"
+                                returnKeyType="done"
                                 mode="outlined"
                             />
-
-                            <FormikExposedDropdownMenu
-                                style={styles.textInput}
-                                valuesType="map"
-                                values={userRolesToLabelMap}
-                                fieldLabels={adminUserFieldLabels}
-                                field={AdminField.role}
-                                formikProps={formikProps}
-                                mode="outlined"
-                                numericKey={false}
-                            />
-
-                            <Subheading style={styles.profileInfoHeader}>Status</Subheading>
-                            <Text style={styles.profileInfoText}>
-                                {formikProps.values.is_active ? "Active" : "Disabled"}
-                            </Text>
 
                             <View style={styles.bottomButtonContainer}>
-                                <Button
-                                    style={
-                                        formikProps.values.is_active
-                                            ? styles.disableBtn
-                                            : styles.activeBtn
-                                    }
-                                    disabled={formikProps.isSubmitting}
-                                    onPress={() => {
-                                        formikProps.setFieldValue(
-                                            AdminField.is_active,
-                                            !formikProps.values.is_active
-                                        );
-                                        formikProps.setFieldTouched(AdminField.is_active, true);
-                                    }}
-                                    mode="contained"
-                                >
-                                    {formikProps.values.is_active ? "Disable" : "Activate"}
-                                </Button>
-
                                 <Button
                                     disabled={
                                         formikProps.isSubmitting ||
@@ -208,9 +213,9 @@ const styles = StyleSheet.create({
     bottomButtonContainer: {
         marginVertical: 10,
         flexDirection: "row",
-        justifyContent: "space-between",
-        alignContent: "space-between",
+        justifyContent: "flex-end",
+        alignContent: "flex-end",
     },
 });
 
-export default AdminEdit;
+export default AdminNew;

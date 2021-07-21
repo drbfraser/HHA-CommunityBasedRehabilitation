@@ -9,19 +9,27 @@ import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import UserProfileContents from "../../components/UserProfileContents/UserProfileContents";
 
+interface ILoadError {
+    statusCode?: number;
+    message: string;
+}
+
 const loadUser = (
     userId: number,
     setUser: React.Dispatch<React.SetStateAction<IUser | undefined>>,
-    setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>
+    setError: React.Dispatch<React.SetStateAction<ILoadError | undefined>>
 ) => {
-    setErrorMessage(undefined);
+    setError(undefined);
     apiFetch(Endpoint.USER, `${userId}`)
         .then((resp) => resp.json())
         .then((userJson) => setUser(userJson))
         .catch((e) => {
             const msg =
                 e instanceof APIFetchFailError && e.status == 404 ? "User doesn't exist" : `${e}`;
-            setErrorMessage(msg);
+            setError({
+                statusCode: e instanceof APIFetchFailError ? e.status : undefined,
+                message: msg,
+            });
         });
 };
 
@@ -49,33 +57,35 @@ const AdminView = ({
         authContext.requireLoggedIn(true);
     }, []);
 
-    const [isUserEditedSnackbarVisible, setUserEditedSnackbarVisible] = useState(false);
+    const [isUserChangeSnackbarVisible, setUserChangeSnackbarVisible] = useState(false);
 
     const [user, setUser] = useState<IUser>();
-    const [errorMessage, setErrorMessage] = useState<string>();
+    const [error, setErrorMessage] = useState<ILoadError>();
     useEffect(() => {
-        if (route.params.newEditedUser) {
-            setUserEditedSnackbarVisible(true);
-            setUser(route.params.newEditedUser);
+        if (route.params.userInfo) {
+            setUserChangeSnackbarVisible(true);
+            setUser(route.params.userInfo.user);
         } else {
             loadUser(route.params.userID, setUser, setErrorMessage);
         }
-    }, [route.params.newEditedUser]);
+    }, [route.params.userInfo]);
 
-    return !user || errorMessage ? (
+    return !user || error ? (
         <View style={styles.loadingContainer}>
-            {errorMessage ? (
+            {error ? (
                 <>
                     <Text style={styles.loadingErrorText}>
                         Unable to load user with ID {route.params.userID}:
                     </Text>
-                    <Text style={styles.loadingErrorText}>{errorMessage}</Text>
-                    <Button
-                        style={styles.retryButton}
-                        onPress={() => loadUser(route.params.userID, setUser, setErrorMessage)}
-                    >
-                        Retry
-                    </Button>
+                    <Text style={styles.loadingErrorText}>{error.message}</Text>
+                    {error.statusCode !== 404 ? (
+                        <Button
+                            style={styles.retryButton}
+                            onPress={() => loadUser(route.params.userID, setUser, setErrorMessage)}
+                        >
+                            Retry
+                        </Button>
+                    ) : null}
                 </>
             ) : (
                 <ActivityIndicator animating size={75} />
@@ -85,11 +95,11 @@ const AdminView = ({
         <>
             <UserProfileContents user={user} isSelf={false} />
             <Snackbar
-                visible={isUserEditedSnackbarVisible}
+                visible={isUserChangeSnackbarVisible}
                 duration={4000}
-                onDismiss={() => setUserEditedSnackbarVisible(false)}
+                onDismiss={() => setUserChangeSnackbarVisible(false)}
             >
-                User updated successfully.
+                {route.params.userInfo?.isNewUser ? "User created." : "User updated successfully."}
             </Snackbar>
         </>
     );

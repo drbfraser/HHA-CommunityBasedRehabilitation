@@ -72,6 +72,10 @@ const Todo = () => {
             >
                 View user as admin
             </Button>
+
+            <Button mode="contained" onPress={() => navigation.navigate(StackScreenName.ADMIN_NEW)}>
+                Create new user
+            </Button>
         </View>
     );
 };

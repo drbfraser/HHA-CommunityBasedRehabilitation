@@ -29,6 +29,10 @@ export const userRoles = {
     },
 };
 
+export const userRolesToLabelMap: ReadonlyMap<string, string> = new Map(
+    Object.entries(userRoles).map(([value, { name }]) => [value, name])
+);
+
 /**
  * Updates the current user's password.
  * @return A Promise resolving to a successful response from the server.

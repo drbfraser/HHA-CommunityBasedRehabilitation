@@ -1,5 +1,5 @@
 import React, { memo, useRef, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Keyboard, TouchableOpacity, View } from "react-native";
 import { Menu, TextInput } from "react-native-paper";
 import { TextInputProps } from "react-native-paper/lib/typescript/components/TextInput/TextInput";
 import useStyles from "./ExposedDropdownMenu.styles";
@@ -148,7 +148,10 @@ const ExposedDropdownMenu = (props: Props) => {
 
     const styles = useStyles(width.current + iconWidth.current);
 
-    const openMenu = () => setIsOpen(true);
+    const openMenu = () => {
+        Keyboard.dismiss();
+        setIsOpen(true);
+    };
     const hideMenu = () => setIsOpen(false);
 
     return (

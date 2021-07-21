@@ -20,14 +20,14 @@ export interface FormikPasswordTextInputProps<Field extends string> {
     textInputStyle?: StyleProp<TextStyle>;
     formikProps: FormikProps<any>;
     returnKeyType: ReturnKeyTypeOptions;
-    onSubmitEnding?: () => void;
+    onSubmitEditing?: () => void;
 }
 
 const FormikPasswordTextInput = forwardRef<
     NativeTextInput,
     FormikPasswordTextInputProps<AdminField | ChangePasswordField>
 >((props, ref) => {
-    const { field, textInputStyle, formikProps, returnKeyType, onSubmitEnding } = props;
+    const { field, textInputStyle, formikProps, returnKeyType, onSubmitEditing } = props;
     const isError = shouldShowError(formikProps, field);
     return (
         <>
@@ -43,7 +43,7 @@ const FormikPasswordTextInput = forwardRef<
                 returnKeyType={returnKeyType}
                 mode="outlined"
                 blurOnSubmit={false}
-                onSubmitEditing={onSubmitEnding}
+                onSubmitEditing={onSubmitEditing}
             />
             {isError ? <HelperText type="error">{formikProps.errors[field]}</HelperText> : null}
         </>

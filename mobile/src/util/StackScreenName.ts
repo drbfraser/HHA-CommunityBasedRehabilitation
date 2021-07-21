@@ -4,4 +4,5 @@ export enum StackScreenName {
     BASELINE = "BaselineSurvey",
     ADMIN_VIEW = "AdminView",
     ADMIN_EDIT = "AdminEdit",
+    ADMIN_NEW = "AdminNew",
 }

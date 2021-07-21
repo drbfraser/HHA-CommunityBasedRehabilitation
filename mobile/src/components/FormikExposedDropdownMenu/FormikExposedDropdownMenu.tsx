@@ -36,8 +36,12 @@ const FormikExposedDropdownMenu = (props: FormikMenuProps<string>) => {
     const keyChangeCallback = useCallback(
         (key: string) => {
             const value = numericKey ? Number(key) : key;
-            formikProps.setFieldValue(field, value, true);
-            formikProps.setFieldTouched(field, true);
+            formikProps.setFieldValue(field, value);
+            // Due to https://github.com/formium/formik/issues/2457, we delay and then validate as a
+            // workaround.
+            if (!formikProps.touched[field]) {
+                setTimeout(() => formikProps.setFieldTouched(field, true, true), 150);
+            }
         },
         [formikProps]
     );

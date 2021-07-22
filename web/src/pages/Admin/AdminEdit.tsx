@@ -9,7 +9,7 @@ import { FormControl, MenuItem } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { Alert, Skeleton } from "@material-ui/lab";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import { IUser, userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import {
@@ -52,11 +52,14 @@ const AdminEdit = () => {
             onSubmit={(values, formikHelpers) => {
                 handleUserEditSubmit(values, formikHelpers)
                     .then(() => history.goBack())
-                    .catch(() =>
-                        alert(
-                            "Sorry, something went wrong trying to edit that user. Please try again."
-                        )
-                    );
+                    .catch((e) => {
+                        const errMsg =
+                            e instanceof APIFetchFailError
+                                ? e.buildFormError(adminUserFieldLabels)
+                                : `${e}` ??
+                                  "Sorry, something went wrong trying to edit that user. Please try again.";
+                        alert(errMsg);
+                    });
             }}
         >
             {({ values, setFieldValue, isSubmitting }) => (

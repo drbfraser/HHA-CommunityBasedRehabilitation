@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { ClientDTO } from "./ClientRequests";
+import { IClient } from "./ClientRequests";
 import clientStyle from "./ClientDetails.styles";
 import { Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IReferral, ISurvey, timestampToDateObj } from "@cbr/common";
-import { useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
+import { getDisabilities, useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 import { IVisitSummary } from "@cbr/common";
 import { ActivityDTO, ActivityType } from "./ClientTimeline/Activity";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
@@ -15,12 +15,13 @@ import { ClientForm } from "../../components/ClientForm/ClientForm";
 import { RecentActivity } from "./ClientTimeline/RecentActivity";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, StackScreenName } from "../../util/stackScreens";
+import { StackParamList } from "../../util/stackScreens";
+import { StackScreenName } from "../../util/StackScreenName";
 
 interface ClientProps {
     clientID: number;
-    route: RouteProp<stackParamList, StackScreenName.CLIENT>;
-    navigation: StackNavigationProp<stackParamList, StackScreenName.CLIENT>;
+    route: RouteProp<StackParamList, StackScreenName.CLIENT>;
+    navigation: StackNavigationProp<StackParamList, StackScreenName.CLIENT>;
 }
 
 const ClientDetails = (props: ClientProps) => {
@@ -37,9 +38,10 @@ const ClientDetails = (props: ClientProps) => {
 
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
+    var disabilityList = useDisabilities();
 
     //Main Client Variables
-    const [presentClient, setPresentClient] = useState<ClientDTO>();
+    const [presentClient, setPresentClient] = useState<IClient>();
     const [date, setDate] = useState(new Date());
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -53,6 +55,7 @@ const ClientDetails = (props: ClientProps) => {
     const [caregiverPhone, setCaregiverPhone] = useState("");
     const [clientDisability, setDisability] = useState<number[]>([]);
     const [otherDisability, setOtherDisability] = useState<String>();
+    const [initialDisabilityArray, setInitialDisabilityArray] = useState<string[]>();
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);
@@ -61,28 +64,41 @@ const ClientDetails = (props: ClientProps) => {
     const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
     const [allRecentActivity, setRecentActivity] = useState<ActivityDTO[]>();
 
+    const getInitialDisabilities = (disabilityArray: number[]) => {
+        var selectedDisabilities: string[] = [];
+
+        for (let index of disabilityArray) {
+            if (disabilityList.has(index)) {
+                selectedDisabilities.push(disabilityList.get(index)!);
+            }
+        }
+        selectedDisabilities = selectedDisabilities.filter((v, i, a) => a.indexOf(v) === i);
+        return selectedDisabilities;
+    };
+
     const getClientDetails = async () => {
         const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
         setPresentClient(presentClient);
-        setDate(timestampToDateObj(Number(presentClient?.birthdate)));
+        setDate(timestampToDateObj(Number(presentClient?.birth_date)));
         setFirstName(presentClient.first_name);
         setLastName(presentClient.last_name);
         setVillage(presentClient.village);
         setZone(presentClient.zone);
-        setPhoneNumber(presentClient.phoneNumber);
-        setOtherDisability(presentClient.otherDisability);
-        setCaregiverPresent(presentClient.careGiverPresent);
+        setPhoneNumber(presentClient.phone_number);
+        setOtherDisability(presentClient.other_disability);
+        setCaregiverPresent(presentClient.caregiver_present);
         setGender(presentClient.gender);
         if (caregiverPresent) {
-            setCaregiverName(presentClient.careGiverName);
-            setCaregiverPhone(presentClient.careGiverPhoneNumber);
-            setCaregiverEmail(presentClient.careGiverEmail);
+            setCaregiverName(presentClient.caregiver_name);
+            setCaregiverPhone(presentClient.caregiver_phone);
+            setCaregiverEmail(presentClient.caregiver_email);
         }
-        setDisability(presentClient.disabilities);
-        setClientCreateDate(presentClient.clientCreatedDate);
-        setClientVisits(presentClient.clientVisits);
-        setClientReferrals(presentClient.clientReferrals);
-        setClientSurveys(presentClient.clientSurveys);
+        setDisability(presentClient.disability);
+        setClientCreateDate(presentClient.created_date);
+        setClientVisits(presentClient.visits);
+        setClientReferrals(presentClient.referrals);
+        setClientSurveys(presentClient.baseline_surveys);
+        setInitialDisabilityArray(getInitialDisabilities(presentClient.disability));
     };
     useEffect(() => {
         getClientDetails().then(() => {
@@ -92,17 +108,6 @@ const ClientDetails = (props: ClientProps) => {
 
     //Overall Screen editable toggle variables
     const [editMode, setEditMode] = useState(true);
-    const [cancelButtonType, setCancelButtonType] = useState("outlined");
-    const enableButtons = () => {
-        if (editMode == true) {
-            setEditMode(false);
-            setCancelButtonType("contained");
-        } else {
-            //Make the PUT Api Call to edit client here since this is the save click
-            setEditMode(true);
-            setCancelButtonType("outlined");
-        }
-    };
 
     //Activity component rendering
     const tempActivity: ActivityDTO[] = [];
@@ -192,6 +197,7 @@ const ClientDetails = (props: ClientProps) => {
                             caregiverPhone={caregiverPhone}
                             clientDisability={clientDisability}
                             otherDisability={otherDisability}
+                            initialDisabilityArray={initialDisabilityArray}
                         />
                     </Card>
                     <Divider></Divider>
@@ -201,7 +207,6 @@ const ClientDetails = (props: ClientProps) => {
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>
                         </View>
-                        {/* <View>{recentActivity()}</View> */}
                         <RecentActivity
                             clientVisits={clientVisits!}
                             activityDTO={tempActivity}

@@ -1,5 +1,5 @@
 import jwt_decode from "jwt-decode";
-import { Endpoint } from "./endpoints";
+import { APIFetchFailError, Endpoint } from "./endpoints";
 import { commonConfiguration } from "../init";
 import { Mutex } from "async-mutex";
 import {
@@ -43,7 +43,9 @@ interface AuthTokens {
 /**
  * Requests fresh access and refresh tokens from the server.
  *
- * @return A Promise resolving to fresh auth tokens or `null` if the fetch failed for any reason.
+ * @return A Promise resolving to fresh auth tokens
+ * @throws Error if unable to refresh tokens
+ * @throws APIFetchFailedError if server sent not-ok HTTP response
  * @param endpoint The endpoint to use to get tokens. Which endpoint is used determines what the
  * postBody should be
  * @param postBody For `Endpoint.LOGIN`, a json string with `username` and `password` fields. For
@@ -52,7 +54,7 @@ interface AuthTokens {
 const requestTokens = async (
     endpoint: Endpoint.LOGIN | Endpoint.LOGIN_REFRESH,
     postBody: string
-): Promise<AuthTokens | null> => {
+): Promise<AuthTokens> => {
     const init: RequestInit = {
         method: "POST",
         body: postBody,
@@ -65,8 +67,10 @@ const requestTokens = async (
         const resp = await fetch(commonConfiguration.apiUrl + endpoint, init);
 
         if (!resp.ok) {
-            throw new Error(
-                `Request token failure: request failed with HTTP status ${resp.status}.`
+            throw new APIFetchFailError(
+                `Request token failure: request failed with HTTP status ${resp.status}.`,
+                resp.status,
+                await resp.json()
             );
         }
 
@@ -82,16 +86,16 @@ const requestTokens = async (
         }
     } catch (e) {
         console.error(e);
-        return null;
+        throw e;
     }
 };
 
 /**
  * Calls the {@link Endpoint.LOGIN_REFRESH} to refresh both the access and refresh tokens.
- * @return A Promise that resolves to fresh tokens, or null if refreshing failed or the tokens
- * returned aren't valid.
+ * @return A Promise that resolves to fresh tokens
+ * @throws Error if refreshing failed or the tokens returned aren't valid.
  */
-const refreshTokens = async (): Promise<AuthTokens | null> => {
+const refreshTokens = async (): Promise<AuthTokens> => {
     const postBody = JSON.stringify({
         refresh: await getRefreshToken(),
     });
@@ -99,13 +103,21 @@ const refreshTokens = async (): Promise<AuthTokens | null> => {
     return requestTokens(Endpoint.LOGIN_REFRESH, postBody);
 };
 
-export const doLogin = async (username: string, password: string): Promise<boolean> => {
+/**
+ * Logins to the server
+ *
+ * @return A Promise that resolves when login is successful.
+ * @throws Error if unable to login
+ * @throws APIFetchFailError if unable to login because server sent a not-ok HTTP response (might
+ * mean username / password is wrong)
+ */
+export const doLogin = async (username: string, password: string): Promise<void> => {
     const postBody = JSON.stringify({
         username,
         password,
     });
 
-    return (await requestTokens(Endpoint.LOGIN, postBody)) !== null;
+    await requestTokens(Endpoint.LOGIN, postBody);
 };
 
 export const doLogout = async () => {
@@ -158,15 +170,13 @@ export const getAuthToken = async (): Promise<string | null> => {
                 return accessToken;
             }
 
-            return refreshTokens().then((validAuthTokens) => {
-                if (validAuthTokens) {
-                    return validAuthTokens.access;
-                } else {
+            return refreshTokens()
+                .then((validAuthTokens) => validAuthTokens.access)
+                .catch(() => {
                     return commonConfiguration.shouldLogoutOnTokenRefreshFailure
                         ? doLogout().then(() => null)
                         : null;
-                }
-            });
+                });
         });
     });
 };

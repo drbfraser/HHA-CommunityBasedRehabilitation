@@ -6,19 +6,25 @@ import React, { useState } from "react";
 import { doLogin } from "@cbr/common/util/auth";
 import { useStyles } from "./Login.styles";
 import { loginState } from "../../util/hooks/loginState";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
 
-enum LoginStatus {
-    INITIAL,
-    SUBMITTING,
-    FAILED,
+interface IBaseLoginStatus {
+    status: "initial" | "submitting";
 }
+
+interface ILoginStatusFailed {
+    status: "failed";
+    error: string;
+}
+
+type LoginStatus = ILoginStatusFailed | IBaseLoginStatus;
 
 const Login = () => {
     const styles = useStyles();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [status, setStatus] = useState(LoginStatus.INITIAL);
+    const [status, setStatus] = useState<LoginStatus>({ status: "initial" });
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -27,20 +33,20 @@ const Login = () => {
             return;
         }
 
-        setStatus(LoginStatus.SUBMITTING);
+        setStatus({ status: "submitting" });
 
-        const loginSucceeded = await doLogin(username, password);
-
-        if (loginSucceeded) {
+        try {
+            await doLogin(username, password);
             // The App component handles navigation to dashboard
             loginState.emit(true);
-        } else {
-            setStatus(LoginStatus.FAILED);
+        } catch (e) {
+            const errorMessage = e instanceof APIFetchFailError && e.details ? e.details : `${e}`;
+            setStatus({ status: "failed", error: errorMessage });
         }
     };
 
     const LoginAlert = () => {
-        if (status === LoginStatus.SUBMITTING) {
+        if (status.status === "submitting") {
             return (
                 <Alert variant="filled" severity="info">
                     Logging in...
@@ -48,10 +54,10 @@ const Login = () => {
             );
         }
 
-        if (status === LoginStatus.FAILED) {
+        if (status.status === "failed") {
             return (
                 <Alert variant="filled" severity="error">
-                    Login failed. Please try again.
+                    Login failed: {"\n" + status.error}
                 </Alert>
             );
         }
@@ -102,7 +108,7 @@ const Login = () => {
                         variant="contained"
                         color="secondary"
                         fullWidth
-                        disabled={status === LoginStatus.SUBMITTING}
+                        disabled={status.status === "submitting"}
                     >
                         Login
                     </Button>

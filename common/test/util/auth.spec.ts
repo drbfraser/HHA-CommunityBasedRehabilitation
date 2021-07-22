@@ -106,11 +106,20 @@ beforeEach(() => {
 describe("auth.ts", () => {
     describe("doLogin", () => {
         it("returns false if login fails", async () => {
-            expect(await doLogin(correctUsername, correctPassword + "wrong")).toEqual(false);
+            try {
+                await doLogin(correctUsername, correctPassword + "wrong");
+                expect(false).toBe("expected doLogin to throw an error, but it didn't");
+            } catch (e) {
+                // good
+            }
             expect(await isLoggedIn()).toEqual(false);
         });
         it("returns true if login succeeds", async () => {
-            expect(await doLogin(correctUsername, correctPassword)).toEqual(true);
+            try {
+                await doLogin(correctUsername, correctPassword);
+            } catch (e) {
+                expect(false).toBe("expected doLogin to not throw an error, but it did");
+            }
             expect(await isLoggedIn()).toEqual(true);
         });
     });
@@ -124,7 +133,11 @@ describe("auth.ts", () => {
                 logoutCallback: async () => mockLogoutCallback(),
             });
 
-            expect(await doLogin(correctUsername, correctPassword)).toEqual(true);
+            try {
+                await doLogin(correctUsername, correctPassword);
+            } catch (e) {
+                expect(false).toBe("expected not to throw an error");
+            }
             expect(await isLoggedIn()).toEqual(true);
             expect(await getAccessToken()).not.toBeNull();
             expect(await getRefreshToken()).not.toBeNull();

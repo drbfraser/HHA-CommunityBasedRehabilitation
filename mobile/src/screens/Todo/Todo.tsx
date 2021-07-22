@@ -114,13 +114,13 @@ const Todo = () => {
             }
         } else if (sortOption == SortOptions.STATUS) {
             if (sortDirection == "asc") {
-                if (a.Status > b.Status) {
+                if (a.status > b.status) {
                     return 1;
                 } else {
                     return -1;
                 }
             } else {
-                if (a.Status < b.Status) {
+                if (a.status < b.status) {
                     return 1;
                 } else {
                     return -1;

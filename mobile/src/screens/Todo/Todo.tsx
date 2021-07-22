@@ -154,7 +154,6 @@ const Todo = () => {
                     color={themeColors.bluePale}
                     icon="account-plus"
                     onPress={() => navigation.navigate(StackScreenName.ADMIN_NEW)}
-                    style={styles.addUserIcon}
                 >
                     Create new user
                 </IconButton>

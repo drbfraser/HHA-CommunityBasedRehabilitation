@@ -14,7 +14,9 @@ const useStyles = () =>
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            marginLeft: 15,
             marginTop: 5,
+            marginRight: 15,
         },
         select: {
             flex: 1,
@@ -22,9 +24,6 @@ const useStyles = () =>
         search: {
             flex: 2,
             marginLeft: 60,
-        },
-        addUserIcon: {
-            marginLeft: 10,
         },
         item: {
             padding: 3,

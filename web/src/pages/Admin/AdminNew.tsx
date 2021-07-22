@@ -3,12 +3,18 @@ import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
-import { fieldLabels, AdminField, initialValues, newValidationSchema } from "./fields";
 import Button from "@material-ui/core/Button";
+import history from "util/history";
 import { FormControl, MenuItem } from "@material-ui/core";
-import { handleCancel, handleNewSubmit } from "./handler";
+import { handleNewUserSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import {
+    AdminField,
+    adminUserFieldLabels,
+    adminUserInitialValues,
+    newUserValidationSchema,
+} from "@cbr/common/forms/Admin/adminFields";
 
 const AdminNew = () => {
     const styles = useStyles();
@@ -16,9 +22,17 @@ const AdminNew = () => {
 
     return (
         <Formik
-            initialValues={initialValues}
-            validationSchema={newValidationSchema}
-            onSubmit={handleNewSubmit}
+            initialValues={adminUserInitialValues}
+            validationSchema={newUserValidationSchema}
+            onSubmit={(values, formikHelpers) => {
+                handleNewUserSubmit(values, formikHelpers)
+                    .then((user) => history.replace(`/admin/view/${user.id}`))
+                    .catch((e) => {
+                        alert(
+                            `Either a user with that username already exists or that password is too weak. Please try again.`
+                        );
+                    });
+            }}
         >
             {({ isSubmitting }) => (
                 <div className={styles.container}>
@@ -29,7 +43,7 @@ const AdminNew = () => {
                                     component={TextField}
                                     name={AdminField.username}
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.username]}
+                                    label={adminUserFieldLabels[AdminField.username]}
                                     required
                                     fullWidth
                                 />
@@ -41,7 +55,7 @@ const AdminNew = () => {
                                         select
                                         required
                                         variant="outlined"
-                                        label={fieldLabels[AdminField.role]}
+                                        label={adminUserFieldLabels[AdminField.role]}
                                         name={AdminField.role}
                                     >
                                         {Object.entries(userRoles).map(([value, { name }]) => (
@@ -58,7 +72,7 @@ const AdminNew = () => {
                                     name={AdminField.password}
                                     variant="outlined"
                                     type="password"
-                                    label={fieldLabels[AdminField.password]}
+                                    label={adminUserFieldLabels[AdminField.password]}
                                     required
                                     fullWidth
                                 />
@@ -69,7 +83,7 @@ const AdminNew = () => {
                                     name={AdminField.confirmPassword}
                                     variant="outlined"
                                     type="password"
-                                    label={fieldLabels[AdminField.confirmPassword]}
+                                    label={adminUserFieldLabels[AdminField.confirmPassword]}
                                     required
                                     fullWidth
                                 />
@@ -79,7 +93,7 @@ const AdminNew = () => {
                                     component={TextField}
                                     name={AdminField.first_name}
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.first_name]}
+                                    label={adminUserFieldLabels[AdminField.first_name]}
                                     required
                                     fullWidth
                                 />
@@ -89,7 +103,7 @@ const AdminNew = () => {
                                     component={TextField}
                                     name={AdminField.last_name}
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.last_name]}
+                                    label={adminUserFieldLabels[AdminField.last_name]}
                                     required
                                     fullWidth
                                 />
@@ -102,7 +116,7 @@ const AdminNew = () => {
                                         select
                                         variant="outlined"
                                         required
-                                        label={fieldLabels[AdminField.zone]}
+                                        label={adminUserFieldLabels[AdminField.zone]}
                                         name={AdminField.zone}
                                     >
                                         {Array.from(zones).map(([id, name]) => (
@@ -119,7 +133,7 @@ const AdminNew = () => {
                                     fullWidth
                                     required
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.phone_number]}
+                                    label={adminUserFieldLabels[AdminField.phone_number]}
                                     name={AdminField.phone_number}
                                 />
                             </Grid>
@@ -143,7 +157,7 @@ const AdminNew = () => {
                                     <Button
                                         color="primary"
                                         variant="outlined"
-                                        onClick={handleCancel}
+                                        onClick={history.goBack}
                                     >
                                         Cancel
                                     </Button>

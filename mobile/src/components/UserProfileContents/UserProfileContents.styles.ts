@@ -7,7 +7,7 @@ const useStyles = () => {
             marginHorizontal: 30,
             flex: 1,
         },
-        errorAlertContainer: {
+        loadingContainer: {
             flexDirection: "column",
         },
         profileInfoContainer: {
@@ -20,10 +20,7 @@ const useStyles = () => {
         },
         profileInfoHeader: { fontWeight: "bold", fontSize: 18, marginBottom: 5 },
         profileInfoText: { fontSize: 18, marginBottom: 5 },
-        changePasswordButton: {
-            marginVertical: 10,
-        },
-        logoutButton: {
+        button: {
             marginVertical: 5,
         },
     });

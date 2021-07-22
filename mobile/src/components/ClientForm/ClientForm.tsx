@@ -135,7 +135,6 @@ export const ClientForm = (props: FormProps) => {
                     };
                     //handleSubmit(updatedClientDTO); TODO: Work on this next issue - Placeholder code
                     toggleButtons();
-                    console.log(values);
                 }}
             >
                 {(formikProps) => (

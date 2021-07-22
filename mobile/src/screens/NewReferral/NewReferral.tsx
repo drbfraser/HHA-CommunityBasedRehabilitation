@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Text, Divider, Appbar } from "react-native-paper";
 import { Formik, FormikHelpers } from "formik";
@@ -24,6 +24,10 @@ import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewRefe
 import ProstheticOrthoticForm from "./ReferralForm/ProstheticOrthoticForm";
 import OtherServicesForm from "./ReferralForm/OtherServicesForm";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
+import { StackScreenName } from "../../util/StackScreenName";
+import { StackParamList } from "../../util/stackScreens";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 const ReferralServiceForm = (
     props: ReferralFormProps,
@@ -61,14 +65,31 @@ const ReferralServiceForm = (
     );
 };
 
-const NewReferral = () => {
+interface INewReferralProps {
+    clientID: number;
+    route: RouteProp<StackParamList, StackScreenName.REFERRAL>;
+    navigation: StackNavigationProp<StackParamList, StackScreenName.REFERRAL>;
+}
+
+const NewReferral = (props: INewReferralProps) => {
     const styles = useStyles();
+    const clientId = props.route.params.clientID;
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<ReferralFormField[]>([]);
     const [checkedSteps, setCheckedSteps] = useState<ReferralFormField[]>([]);
     const [submissionError, setSubmissionError] = useState(false);
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
-
+    useEffect(() => {
+        props.navigation.setOptions({
+            headerShown: true,
+            header: (stackHeaderProps) => (
+                <Appbar.Header statusBarHeight={0}>
+                    <Appbar.BackAction onPress={() => stackHeaderProps.navigation.goBack()} />
+                    <Appbar.Content title="New Referral" />
+                </Appbar.Header>
+            ),
+        });
+    }, []);
     const prevStep = (values: any) => {
         setActiveStep(activeStep - 1);
         if (values !== "") {
@@ -82,15 +103,18 @@ const NewReferral = () => {
     // Make sure the user can not click to next if they did not fill out the required fields
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
-            handleSubmit(values, helpers, setSubmissionError);
             setCheckedSteps([]);
+            handleSubmit(values, helpers, setSubmissionError).then(() => {
+                props.navigation.pop(1);
+                props.navigation.navigate(StackScreenName.CLIENT, {
+                    clientID: clientId,
+                });
+            });
         } else {
             if (activeStep === 0) {
                 checkedSteps.push(ReferralFormField.orthotic);
                 checkedSteps.push(ReferralFormField.prosthetic);
-                // TODO: Change back when it is connected to the client detail
-                helpers.setFieldValue(`${[ReferralFormField.client]}`, 1);
-                // helpers.setFieldValue(`${[FormField.client]}`, clientId);
+                helpers.setFieldValue(`${[ReferralFormField.client]}`, clientId);
             }
 
             checkedSteps.push(enabledSteps[activeStep - 1]);

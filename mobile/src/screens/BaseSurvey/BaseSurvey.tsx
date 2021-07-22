@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Text, Divider } from "react-native-paper";
+import { Text, Divider, Appbar } from "react-native-paper";
 import {
     educationValidationSchema,
     empowermentValidationSchema,
@@ -26,39 +26,61 @@ import ShelterForm from "./SurveyForm/ShelterForm";
 import FoodForm from "./SurveyForm/FoodForm";
 import { handleSubmit } from "./formHandler";
 import { useParams } from "react-router-dom";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
+import { StackParamList } from "../../util/stackScreens";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { StackScreenName } from "../../util/StackScreenName";
 
 interface ISurvey {
     label: string;
     Form: (props: IFormProps) => JSX.Element;
     validationSchema: () => any;
 }
+interface IBaseSurveyProps {
+    clientID: number;
+    route: RouteProp<StackParamList, StackScreenName.BASE_SURVEY>;
+    navigation: StackNavigationProp<StackParamList, StackScreenName.BASE_SURVEY>;
+}
 
-const BaseSurvey = () => {
+const BaseSurvey = (props: IBaseSurveyProps) => {
     const [step, setStep] = useState<number>(0);
     const [submissionError, setSubmissionError] = useState(false);
     const styles = useStyles();
     const [stepChecked, setStepChecked] = useState([false]);
     const isFinalStep = step + 1 === surveyTypes.length && step !== 0;
+    const clientId = props.route.params.clientID;
+    useEffect(() => {
+        props.navigation.setOptions({
+            headerShown: true,
+            header: (stackHeaderProps) => (
+                <Appbar.Header statusBarHeight={0}>
+                    <Appbar.BackAction onPress={() => stackHeaderProps.navigation.goBack()} />
+                    <Appbar.Content title="Baseline Survey" />
+                </Appbar.Header>
+            ),
+        });
+    }, []);
 
     const prevStep = () => {
         setStep(step - 1);
     };
-    // Make sure the user can not click to next if they did not fill out the required fields
+
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
-        // TODO: conncet with the client
         if (isFinalStep) {
-            handleSubmit(values, helpers, setSubmissionError);
+            handleSubmit(values, helpers, setSubmissionError).then(() => {
+                props.navigation.pop(1);
+                props.navigation.navigate(StackScreenName.CLIENT, {
+                    clientID: clientId,
+                });
+            });
         } else {
             if (step === 0) {
-                // For testing
                 if (stepChecked.length < surveySteps.length - 1) {
                     for (let i = 1; i < surveySteps.length - 1; i++) {
                         stepChecked.push(false);
                     }
                 }
-                helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, 10);
-                // helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, clientId);
+                helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, clientId);
             }
             if ((step === 0 || step === 3) && !stepChecked[step]) {
                 helpers.setTouched({});
@@ -108,6 +130,7 @@ const BaseSurvey = () => {
             validationSchema: emptyValidationSchema,
         },
     ];
+
     return (
         <Formik
             initialValues={baseInitialValues}

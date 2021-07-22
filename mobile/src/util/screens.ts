@@ -16,7 +16,7 @@ export interface IScreen {
 export const screens: IScreen[] = [
     {
         name: "Dashboard",
-        Component: NewReferral,
+        Component: Todo,
         iconName: "home",
     },
     // TODO: Waiting until clients screen is done

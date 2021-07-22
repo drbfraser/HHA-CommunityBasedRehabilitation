@@ -3,16 +3,22 @@ import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
-import { fieldLabels, AdminField, editValidationSchema, IRouteParams } from "./fields";
 import Button from "@material-ui/core/Button";
 import { useRouteMatch } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
 import { useState, useEffect } from "react";
-import { handleCancel, handleEditSubmit } from "./handler";
+import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IUser, userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import {
+    AdminField,
+    editUserValidationSchema,
+    adminUserFieldLabels,
+    IRouteParams,
+} from "@cbr/common/forms/Admin/adminFields";
+import history from "util/history";
 
 const AdminEdit = () => {
     const styles = useStyles();
@@ -42,8 +48,16 @@ const AdminEdit = () => {
     ) : user && zones.size ? (
         <Formik
             initialValues={user}
-            validationSchema={editValidationSchema}
-            onSubmit={handleEditSubmit}
+            validationSchema={editUserValidationSchema}
+            onSubmit={(values, formikHelpers) => {
+                handleUserEditSubmit(values, formikHelpers)
+                    .then(() => history.goBack())
+                    .catch(() =>
+                        alert(
+                            "Sorry, something went wrong trying to edit that user. Please try again."
+                        )
+                    );
+            }}
         >
             {({ values, setFieldValue, isSubmitting }) => (
                 <div className={styles.container}>
@@ -59,7 +73,7 @@ const AdminEdit = () => {
                                     component={TextField}
                                     name={AdminField.first_name}
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.first_name]}
+                                    label={adminUserFieldLabels[AdminField.first_name]}
                                     required
                                     fullWidth
                                 />
@@ -69,7 +83,7 @@ const AdminEdit = () => {
                                     component={TextField}
                                     name={AdminField.last_name}
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.last_name]}
+                                    label={adminUserFieldLabels[AdminField.last_name]}
                                     required
                                     fullWidth
                                 />
@@ -82,7 +96,7 @@ const AdminEdit = () => {
                                         select
                                         variant="outlined"
                                         required
-                                        label={fieldLabels[AdminField.zone]}
+                                        label={adminUserFieldLabels[AdminField.zone]}
                                         name={AdminField.zone}
                                     >
                                         {Array.from(zones).map(([id, name]) => (
@@ -100,7 +114,7 @@ const AdminEdit = () => {
                                     fullWidth
                                     required
                                     variant="outlined"
-                                    label={fieldLabels[AdminField.phone_number]}
+                                    label={adminUserFieldLabels[AdminField.phone_number]}
                                     name={AdminField.phone_number}
                                 />
                             </Grid>
@@ -111,7 +125,7 @@ const AdminEdit = () => {
                                         select
                                         required
                                         variant="outlined"
-                                        label={fieldLabels[AdminField.role]}
+                                        label={adminUserFieldLabels[AdminField.role]}
                                         name={AdminField.role}
                                     >
                                         {Object.entries(userRoles).map(([value, { name }]) => (
@@ -158,7 +172,7 @@ const AdminEdit = () => {
                                     Save
                                 </Button>
 
-                                <Button color="primary" variant="outlined" onClick={handleCancel}>
+                                <Button color="primary" variant="outlined" onClick={history.goBack}>
                                     Cancel
                                 </Button>
                             </Grid>

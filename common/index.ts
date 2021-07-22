@@ -20,6 +20,8 @@ export * from "./src/util/hooks/disabilities";
 export * from "./src/util/hooks/zones";
 export * from "./src/forms/BaseSurvey/baseSurveyHandler";
 export * from "./src/forms/BaseSurvey/baseSurveyFields";
+export * from "./src/forms/Admin/adminFields";
+export * from "./src/forms/Admin/adminFormsHandler";
 export * from "./src/forms/UserProfile/userProfileHandler";
 export * from "./src/forms/UserProfile/userProfileFields";
 export * from "./src/forms/Referral/referralFields";

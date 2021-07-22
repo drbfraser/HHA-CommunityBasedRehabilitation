@@ -1,27 +1,21 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Alert, View } from "react-native";
-import { Button, Text, Title } from "react-native-paper";
+import { Button, Text, TextInput, Title } from "react-native-paper";
 import useStyles from "./Todo.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, StackScreenName } from "../../util/stackScreens";
-import { Navigation } from "react-native-navigation";
+import { AppStackNavProp } from "../../util/stackScreens";
 import { useNavigation } from "@react-navigation/core";
-import { useZones } from "@cbr/common";
-import { useCurrentUser, useDisabilities } from "@cbr/common";
+import { useCurrentUser, useDisabilities, useZones } from "@cbr/common";
+import { StackScreenName } from "../../util/StackScreenName";
 
-interface LogoutProps {
-    navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
-}
-
-const Todo = (props: LogoutProps) => {
+const Todo = () => {
     const styles = useStyles();
     const authContext = useContext(AuthContext);
 
     useEffect(() => {
         authContext.requireLoggedIn(true);
     }, []);
-    const navigation = useNavigation();
+    const navigation = useNavigation<AppStackNavProp>();
     const logoutAlert = () =>
         Alert.alert("Alert", "Do you want to logout?", [
             {
@@ -34,6 +28,8 @@ const Todo = (props: LogoutProps) => {
     const zones = useZones();
     const disabilities = useDisabilities();
     const currentUser = useCurrentUser();
+
+    const [userId, setUserId] = useState<string>();
 
     return (
         <View style={styles.container}>
@@ -51,6 +47,38 @@ const Todo = (props: LogoutProps) => {
             <Text>Zones hook: {JSON.stringify(Array.from(zones))}</Text>
             <Text>Disabilities hook: {JSON.stringify(Array.from(disabilities))}</Text>
             <Text>Current user hook: {JSON.stringify(currentUser)}</Text>
+
+            {/* TODO: Remove this when admin user list is created */}
+            <TextInput
+                style={styles.userIdTextInput}
+                value={userId}
+                onChangeText={setUserId}
+                onSubmitEditing={() => {
+                    if (userId) {
+                        navigation.navigate(StackScreenName.ADMIN_VIEW, { userID: Number(userId) });
+                    }
+                }}
+                keyboardType="number-pad"
+                label="User ID to open"
+            />
+
+            {/* TODO: Remove this when admin user list is created */}
+            <Button
+                mode="contained"
+                disabled={!userId}
+                onPress={() => {
+                    if (userId) {
+                        navigation.navigate(StackScreenName.ADMIN_VIEW, { userID: Number(userId) });
+                    }
+                }}
+            >
+                View user as admin
+            </Button>
+
+            {/* TODO: Remove this when admin user list is created */}
+            <Button mode="contained" onPress={() => navigation.navigate(StackScreenName.ADMIN_NEW)}>
+                Create new user
+            </Button>
         </View>
     );
 };

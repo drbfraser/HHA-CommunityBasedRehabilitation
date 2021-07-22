@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Provider } from "react-native-paper";
 import theme from "../../util/theme.styles";
-import { stackParamList, StackScreenName } from "../../util/stackScreens";
+import { StackParamList } from "../../util/stackScreens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -9,9 +9,10 @@ import useStyles from "./HomeScreen.style";
 import { themeColors } from "@cbr/common/src/util/colors";
 import { IUser, TAPILoadError, APILoadError } from "@cbr/common";
 import { screens } from "../../util/screens";
+import { StackScreenName } from "../../util/StackScreenName";
 
-interface HomeScreenProps {
-    navigation: StackNavigationProp<stackParamList, StackScreenName.HOME>;
+interface IHomeScreenProps {
+    navigation: StackNavigationProp<StackParamList, StackScreenName.HOME>;
 }
 
 const screensForUser = (user: IUser | TAPILoadError | undefined) => {
@@ -28,7 +29,7 @@ const screensForUser = (user: IUser | TAPILoadError | undefined) => {
     });
 };
 
-const HomeScreen = (props: HomeScreenProps) => {
+const HomeScreen = (props: IHomeScreenProps) => {
     const styles = useStyles();
     React.useEffect(() => {
         props.navigation.setOptions({

@@ -26,4 +26,3 @@ export * from "./src/util/clients";
 export * from "./src/util/risks";
 export * from "./src/util/visits";
 export * from "./src/util/searchOptions";
-export * from "./src/util/searchOptions";

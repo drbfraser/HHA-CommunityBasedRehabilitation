@@ -35,9 +35,6 @@ export const fetchClientsFromApi = async (
         if (searchOption === SearchOption.NAME) {
             searchOption = "full_name";
         }
-        if (searchValue) {
-            urlParams.append(searchOption.toLowerCase(), searchValue);
-        }
         if (!allClientsMode) {
             const user = await getCurrentUser();
             if (user !== APILoadError) {

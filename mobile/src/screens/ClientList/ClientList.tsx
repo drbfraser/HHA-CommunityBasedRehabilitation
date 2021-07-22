@@ -15,15 +15,7 @@ const styles = useStyles();
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
-
-enum SortOptions {
-    ID = "id",
-    NAME = "name",
-    ZONE = "zone",
-    HEALTH = "health",
-    EDUCATION = "education",
-    SOCIAL = "social",
-}
+import { SortOptions } from "@cbr/common";
 
 const returnWrappedView = (item) => {
     return (

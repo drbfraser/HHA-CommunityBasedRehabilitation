@@ -162,7 +162,7 @@ const AdminNew = ({
                                 fieldLabels={adminUserFieldLabels}
                                 field={AdminField.phone_number}
                                 formikProps={formikProps}
-                                onSubmitEditing={() => formikProps.handleSubmit()}
+                                onSubmitEditing={() => formikProps.handleSubmit}
                                 keyboardType="phone-pad"
                                 returnKeyType="done"
                                 mode="outlined"

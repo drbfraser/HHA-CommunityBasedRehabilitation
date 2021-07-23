@@ -1,6 +1,6 @@
 import * as Yup from "yup";
-import { Validation } from "@cbr/common/util/validations";
-import { UserRole } from "@cbr/common/util/users";
+import { Validation } from "../../util/validations";
+import { UserRole } from "../../util/users";
 
 export interface IRouteParams {
     userId: string;
@@ -18,19 +18,19 @@ export enum AdminField {
     is_active = "is_active",
 }
 
-export const fieldLabels = {
+export const adminUserFieldLabels = {
     [AdminField.username]: "Username",
-    [AdminField.password]: "Enter Password",
-    [AdminField.confirmPassword]: "Confirm Password",
-    [AdminField.first_name]: "First Name",
-    [AdminField.last_name]: "Last Name",
+    [AdminField.password]: "Enter password",
+    [AdminField.confirmPassword]: "Confirm password",
+    [AdminField.first_name]: "First name",
+    [AdminField.last_name]: "Last name",
     [AdminField.role]: "Role",
     [AdminField.zone]: "Zone",
-    [AdminField.phone_number]: "Phone Number",
+    [AdminField.phone_number]: "Phone number",
     [AdminField.is_active]: "Status",
 };
 
-export const initialValues = {
+export const adminUserInitialValues = {
     [AdminField.username]: "",
     [AdminField.password]: "",
     [AdminField.confirmPassword]: "",
@@ -42,49 +42,54 @@ export const initialValues = {
     [AdminField.is_active]: true,
 };
 
-export const passwordInitialValues = {
+export const adminPasswordInitialValues = {
     [AdminField.password]: "",
     [AdminField.confirmPassword]: "",
 };
 
-export type TNewUserValues = typeof initialValues;
-export type TPasswordValues = typeof passwordInitialValues;
+export type TNewUserValues = typeof adminUserInitialValues;
+export type TAdminPasswordValues = typeof adminPasswordInitialValues;
 
 const infoValidationShape = {
     [AdminField.first_name]: Yup.string()
-        .label(fieldLabels[AdminField.first_name])
+        .label(adminUserFieldLabels[AdminField.first_name])
         .required()
         .max(50),
     [AdminField.last_name]: Yup.string()
-        .label(fieldLabels[AdminField.last_name])
+        .label(adminUserFieldLabels[AdminField.last_name])
         .required()
         .max(50),
-    [AdminField.username]: Yup.string().label(fieldLabels[AdminField.username]).required().max(50),
-    [AdminField.zone]: Yup.string().label(fieldLabels[AdminField.zone]).required(),
+    [AdminField.username]: Yup.string()
+        .label(adminUserFieldLabels[AdminField.username])
+        .required()
+        .max(50),
+    [AdminField.zone]: Yup.string().label(adminUserFieldLabels[AdminField.zone]).required(),
     [AdminField.phone_number]: Yup.string()
         .matches(Validation.phoneRegExp, "Phone number is not valid")
-        .label(fieldLabels[AdminField.phone_number])
+        .label(adminUserFieldLabels[AdminField.phone_number])
         .max(50)
         .required(),
-    [AdminField.role]: Yup.string().label(fieldLabels[AdminField.role]).required(),
-    [AdminField.is_active]: Yup.boolean().label(fieldLabels[AdminField.is_active]).required(),
+    [AdminField.role]: Yup.string().label(adminUserFieldLabels[AdminField.role]).required(),
+    [AdminField.is_active]: Yup.boolean()
+        .label(adminUserFieldLabels[AdminField.is_active])
+        .required(),
 };
 
 //Referencing Daniel's answer https://stackoverflow.com/questions/55451304/formik-yup-password-strength-validation-with-react
 const passwordValidationShape = {
     [AdminField.password]: Yup.string()
-        .label(fieldLabels[AdminField.password])
+        .label(adminUserFieldLabels[AdminField.password])
         .matches(Validation.passwordRegExp, Validation.passwordInvalidMsg)
         .required(),
     [AdminField.confirmPassword]: Yup.string()
-        .label(fieldLabels[AdminField.confirmPassword])
+        .label(adminUserFieldLabels[AdminField.confirmPassword])
         .required()
         .oneOf([Yup.ref(AdminField.password)], "Passwords must match"),
 };
 
-export const newValidationSchema = Yup.object().shape({
+export const newUserValidationSchema = Yup.object().shape({
     ...infoValidationShape,
     ...passwordValidationShape,
 });
-export const editValidationSchema = Yup.object().shape(infoValidationShape);
-export const passwordValidationSchema = Yup.object().shape(passwordValidationShape);
+export const editUserValidationSchema = Yup.object().shape(infoValidationShape);
+export const adminEditPasswordValidationSchema = Yup.object().shape(passwordValidationShape);

@@ -3,20 +3,21 @@ import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
-import {
-    fieldLabels,
-    AdminField,
-    passwordValidationSchema,
-    IRouteParams,
-    passwordInitialValues,
-} from "./fields";
 import Button from "@material-ui/core/Button";
 import { useRouteMatch } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { handleCancel, handleUpdatePassword } from "./handler";
+import { handleUpdatePassword } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IUser } from "@cbr/common/util/users";
+import {
+    AdminField,
+    adminUserFieldLabels,
+    IRouteParams,
+    adminPasswordInitialValues,
+    adminEditPasswordValidationSchema,
+} from "@cbr/common/forms/Admin/adminFields";
+import history from "util/history";
 
 const AdminPasswordEdit = () => {
     const styles = useStyles();
@@ -44,9 +45,17 @@ const AdminPasswordEdit = () => {
         </Alert>
     ) : user ? (
         <Formik
-            initialValues={passwordInitialValues}
-            validationSchema={passwordValidationSchema}
-            onSubmit={handleUpdatePassword(Number(userId))}
+            initialValues={adminPasswordInitialValues}
+            validationSchema={adminEditPasswordValidationSchema}
+            onSubmit={(values, formikHelpers) => {
+                handleUpdatePassword(Number(userId), values, formikHelpers)
+                    .then(() => history.goBack())
+                    .catch((e) => {
+                        alert(
+                            "Sorry, something went wrong trying to edit that user's password. Please try again."
+                        );
+                    });
+            }}
         >
             {({ isSubmitting }) => (
                 <div className={styles.container}>
@@ -63,7 +72,7 @@ const AdminPasswordEdit = () => {
                                     name={AdminField.password}
                                     variant="outlined"
                                     type="password"
-                                    label={fieldLabels[AdminField.password]}
+                                    label={adminUserFieldLabels[AdminField.password]}
                                     required
                                     fullWidth
                                 />
@@ -74,7 +83,7 @@ const AdminPasswordEdit = () => {
                                     name={AdminField.confirmPassword}
                                     variant="outlined"
                                     type="password"
-                                    label={fieldLabels[AdminField.confirmPassword]}
+                                    label={adminUserFieldLabels[AdminField.confirmPassword]}
                                     required
                                     fullWidth
                                 />
@@ -96,7 +105,7 @@ const AdminPasswordEdit = () => {
                                     Save
                                 </Button>
 
-                                <Button color="primary" variant="outlined" onClick={handleCancel}>
+                                <Button color="primary" variant="outlined" onClick={history.goBack}>
                                     Cancel
                                 </Button>
                             </Grid>

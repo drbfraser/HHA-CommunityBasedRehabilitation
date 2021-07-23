@@ -31,9 +31,15 @@ export const timestampToWeekdayTime = (timestamp: number) => {
     });
 };
 
-// change date format depending on a reference timestamp
-// either "Fri 10:13 AM" if less than 1 week ago else "2/27/2021"
-export const timestampToDateFromReference = (referenceTimestamp?: number) => {
+/**
+ * @return A date formatting function depending on the `referenceTimestamp`'s distance to the
+ * date right now. Either {@link timestampToWeekdayTime} ("Fri 10:13 AM") if less than 1 week ago,
+ * otherwise {@link timestampToDate} ("2/27/2021"))
+ * @param referenceTimestamp An optional timestamp to use for determining the date formatter used.
+ */
+export function getDateFormatterFromReference(
+    referenceTimestamp?: number
+): (timestamp: number) => string {
     const currentTimestamp = Date.now() / 1000;
     const timestampDiff = (referenceTimestamp ?? 0) - currentTimestamp;
     const oneWeek = 60 * 60 * 24 * 7;
@@ -43,7 +49,7 @@ export const timestampToDateFromReference = (referenceTimestamp?: number) => {
     } else {
         return timestampToDate;
     }
-};
+}
 
 // TODO: the following two functions don't properly take time zones into account
 export const timestampToFormDate = (timestamp: number) => {

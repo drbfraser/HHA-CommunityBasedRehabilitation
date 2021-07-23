@@ -1,7 +1,7 @@
 import React from "react";
 import { Timeline } from "@material-ui/lab";
 import { IClient } from "@cbr/common/util/clients";
-import { timestampToDateFromReference } from "@cbr/common/util/dates";
+import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import VisitEntry from "./VisitEntry";
@@ -16,7 +16,7 @@ interface IProps {
 
 const ClientTimeline = ({ client, refreshClient }: IProps) => {
     const timelineStyles = useTimelineStyles();
-    const dateFormatter = timestampToDateFromReference(client?.created_date);
+    const dateFormatter = getDateFormatterFromReference(client?.created_date);
 
     return (
         <Timeline className={timelineStyles.timeline}>

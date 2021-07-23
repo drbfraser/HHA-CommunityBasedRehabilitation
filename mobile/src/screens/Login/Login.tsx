@@ -7,8 +7,17 @@ import { Button, HelperText, Text, TextInput, Title, useTheme } from "react-nati
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
-import { SMALL_WIDTH } from "../../theme.styles";
+import { SMALL_WIDTH } from "../../util/theme.styles";
 import PasswordTextInput from "../../components/PasswordTextInput/PasswordTextInput";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { StackParamList } from "../../util/stackScreens";
+import { Navigation } from "react-native-navigation";
+import { useEffect } from "react";
+import { StackScreenName } from "../../util/StackScreenName";
+
+interface ILoginProps {
+    navigation: StackNavigationProp<StackParamList, StackScreenName.LOGIN>;
+}
 
 enum LoginStatus {
     INITIAL,
@@ -16,13 +25,22 @@ enum LoginStatus {
     FAILED,
 }
 
-const Login = () => {
+const Login = (props: ILoginProps) => {
     const theme = useTheme();
     const styles = useStyles();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [status, setStatus] = useState(LoginStatus.INITIAL);
+
+    useEffect(() => {
+        const resetLoginPage = props.navigation.addListener("focus", () => {
+            setUsername("");
+            setPassword("");
+            setStatus(LoginStatus.INITIAL);
+        });
+        return resetLoginPage;
+    }, [props.navigation]);
 
     // This is for selecting the next TextInput: https://stackoverflow.com/a/59626713
     // Importing RN's TextInput as NativeTextInput fixes the typing as mentioned in
@@ -42,8 +60,11 @@ const Login = () => {
         setStatus(LoginStatus.SUBMITTING);
 
         const loginSucceeded = await login(usernameToUse, password);
+
         if (!loginSucceeded) {
             setStatus(LoginStatus.FAILED);
+        } else {
+            props.navigation.navigate(StackScreenName.HOME);
         }
     };
 

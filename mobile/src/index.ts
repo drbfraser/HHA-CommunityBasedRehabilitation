@@ -12,6 +12,9 @@ const keyValStorageProvider: KeyValStorageProvider = {
     setItem(key: string, value: string): Promise<void> {
         return AsyncStorage.setItem(key, value);
     },
+    removeItem(key: string): Promise<void> {
+        return AsyncStorage.removeItem(key);
+    },
 };
 
 initializeCommon({

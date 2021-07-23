@@ -18,6 +18,9 @@ const localStorageProvider: KeyValStorageProvider = {
     setItem: async (key: string, value: string) => {
         window.localStorage.setItem(key, value);
     },
+    removeItem: async (key: string) => {
+        window.localStorage.removeItem(key);
+    },
 };
 
 initializeCommon({

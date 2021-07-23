@@ -1,7 +1,7 @@
 import React from "react";
 import { APILoadError, IUser, TAPILoadError, UserRole } from "@cbr/common";
 import Todo from "../screens/Todo/Todo";
-
+import ClientList from "../screens/ClientList/ClientList";
 import NewVisit from "../screens/NewVisit/NewVisit";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 import Profile from "../screens/Profile/Profile";
@@ -13,10 +13,10 @@ export interface IScreen {
     iconName?: string;
 }
 
-const screens: IScreen[] = [
+export const screens: IScreen[] = [
     {
         name: "Dashboard",
-        Component: NewVisit,
+        Component: Todo,
         iconName: "home",
     },
     // TODO: Waiting until clients screen is done
@@ -28,7 +28,7 @@ const screens: IScreen[] = [
     },
     {
         name: "Client List",
-        Component: Todo,
+        Component: ClientList,
         iconName: "format-list-bulleted",
     },
     {
@@ -38,7 +38,7 @@ const screens: IScreen[] = [
     },
     {
         name: "visitSurvey",
-        Component: Todo,
+        Component: NewVisit,
         iconName: "account",
     },
     {
@@ -59,19 +59,5 @@ const screens: IScreen[] = [
         Component: BaseSurvey,
     },
 ];
-
-export const screensForUser = (user: IUser | TAPILoadError | undefined) => {
-    return screens.filter((screen) => {
-        if (!screen.roles) {
-            return true;
-        }
-
-        if (!user || user === APILoadError) {
-            return false;
-        }
-
-        return screen.roles.includes(user.role);
-    });
-};
 
 export const defaultPage = screens[0];

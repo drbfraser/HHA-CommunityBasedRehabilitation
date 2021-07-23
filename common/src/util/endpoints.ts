@@ -1,6 +1,7 @@
 import { getAuthToken } from "./auth";
 import { commonConfiguration } from "../init";
 import buildFormErrorInternal from "./internal/buildFormError";
+import rejectWithWrappedError from "./internal/rejectWithWrappedError";
 
 export enum Endpoint {
     LOGIN = "login",
@@ -126,16 +127,20 @@ export const apiFetch = async (
         delete (init.headers as any)["Content-Type"];
     }
 
-    return fetch(url, init).then(async (resp) => {
-        if (!resp.ok) {
-            const jsonPromise = resp.json();
-            const message = `API Fetch failed with HTTP Status ${resp.status}`;
-            console.error(message);
-            return Promise.reject(new APIFetchFailError(message, resp.status, await jsonPromise));
-        }
+    return fetch(url, init)
+        .then(async (resp) => {
+            if (!resp.ok) {
+                const jsonPromise = resp.json();
+                const message = `API Fetch failed with HTTP Status ${resp.status}`;
+                console.error(message);
+                return Promise.reject(
+                    new APIFetchFailError(message, resp.status, await jsonPromise)
+                );
+            }
 
-        return resp;
-    });
+            return resp;
+        })
+        .catch(rejectWithWrappedError);
 };
 
 // NOTE: This function does not handle nested objects or arrays of objects.

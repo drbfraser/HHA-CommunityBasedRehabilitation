@@ -13,6 +13,11 @@ export interface CommonConfiguration {
     readonly shouldLogoutOnTokenRefreshFailure: boolean;
     /** A callback to run after {@link doLogout} is called. */
     readonly logoutCallback: () => Promise<void>;
+    /**
+     * An optional wrapper that is invoked on errors that come from {@link apiFetch} to consume
+     * it and possibly return a more specific error.
+     */
+    readonly fetchErrorWrapper?: (e: Error) => Promise<Error>;
 }
 
 export let commonConfiguration: CommonConfiguration;

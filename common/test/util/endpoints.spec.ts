@@ -2,6 +2,8 @@ import { get as mockGet, reset as resetFetchMocks } from "fetch-mock";
 import { apiFetch, APIFetchFailError, Endpoint } from "../../src/util/endpoints";
 import { addValidTokens } from "../testHelpers/authTokenHelpers";
 import buildFormErrorInternal from "../../src/util/internal/buildFormError";
+import { reinitializeCommon } from "../../src/init";
+import { testCommonConfig } from "../testHelpers/testCommonConfiguration";
 
 beforeEach(async () => {
     resetFetchMocks();
@@ -29,6 +31,30 @@ describe("endpoints.ts", () => {
                 const fetchError = e as APIFetchFailError;
                 expect(fetchError.status).toBe(401);
                 expect(fetchError.details).toEqual(expectedErrorMessage);
+            }
+        });
+
+        it("should wrap errors if configured to do so", async () => {
+            const EXPECTED_ERROR_MESSAGE = "EXPECTED ERROR MESSAGE";
+
+            reinitializeCommon({
+                ...testCommonConfig,
+                fetchErrorWrapper: async (e: Error) => {
+                    return new Error(EXPECTED_ERROR_MESSAGE);
+                },
+            });
+
+            mockGet(Endpoint.LOGIN, () => {
+                // simulate a network error from the fetch call
+                throw new TypeError("Network request failed");
+            });
+
+            try {
+                await apiFetch(Endpoint.LOGIN);
+                expect(false).toBe("Expected to throw an error");
+            } catch (e) {
+                expect(e).toBeInstanceOf(Error);
+                expect((e as Error).message).toBe(EXPECTED_ERROR_MESSAGE);
             }
         });
     });

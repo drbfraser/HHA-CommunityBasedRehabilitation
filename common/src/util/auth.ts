@@ -10,6 +10,7 @@ import {
     setAccessToken,
     setRefreshToken,
 } from "./internal/tokens";
+import rejectWithWrappedError from "./internal/rejectWithWrappedError";
 
 /**
  * Validates the given token to check if it's valid for use.
@@ -64,7 +65,9 @@ const requestTokens = async (
     };
 
     try {
-        const resp = await fetch(commonConfiguration.apiUrl + endpoint, init);
+        const resp = await fetch(commonConfiguration.apiUrl + endpoint, init).catch(
+            rejectWithWrappedError
+        );
 
         if (!resp.ok) {
             throw new APIFetchFailError(

@@ -35,33 +35,35 @@ const updateClient = async (clientInfo: FormData, clientId: number) => {
         });
 };
 
-export const handleSubmit = async (values: IClient) => {
+export const handleSubmit = async (values: IClient, isNewClient?: boolean) => {
     const disabilities = await getDisabilities();
-    const updatedValues = {
-        first_name: values.first_name,
-        last_name: values.last_name,
-        birth_date: timestampFromFormDate(values.birth_date as string),
-        gender: values.gender,
-        phone_number: values.phone_number,
-        zone: values.zone,
-        village: values.village,
-        caregiver_present: values.caregiver_present,
-        caregiver_name: values.caregiver_name,
-        caregiver_email: values.caregiver_email,
-        caregiver_phone: values.caregiver_phone,
-        longitude: values.longitude,
-        latitude: values.latitude,
-        disability: values.disability,
-        other_disability: values.disability.includes(getOtherDisabilityId(disabilities))
-            ? values.other_disability
-            : "",
-    };
-
-    const formData = objectToFormData(updatedValues);
-
-    try {
-        await updateClient(formData, values.id);
-    } catch (e) {
-        alert("Encountered an error while trying to edit the client!");
+    if (isNewClient) {
+        //Do the new client POST request stuff here
+    } else {
+        const updatedValues = {
+            first_name: values.first_name,
+            last_name: values.last_name,
+            birth_date: timestampFromFormDate(values.birth_date as string),
+            gender: values.gender,
+            phone_number: values.phone_number,
+            zone: values.zone,
+            village: values.village,
+            caregiver_present: values.caregiver_present,
+            caregiver_name: values.caregiver_name,
+            caregiver_email: values.caregiver_email,
+            caregiver_phone: values.caregiver_phone,
+            longitude: values.longitude,
+            latitude: values.latitude,
+            disability: values.disability,
+            other_disability: values.disability.includes(getOtherDisabilityId(disabilities))
+                ? values.other_disability
+                : "",
+        };
+        const formData = objectToFormData(updatedValues);
+        try {
+            await updateClient(formData, values.id);
+        } catch (e) {
+            alert("Encountered an error while trying to edit the client!");
+        }
     }
 };

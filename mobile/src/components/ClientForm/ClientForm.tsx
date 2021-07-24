@@ -154,7 +154,7 @@ export const ClientForm = (props: FormProps) => {
                         baseline_surveys: props.clientFormProps?.surveys!,
                     };
 
-                    handleSubmit(updatedIClient);
+                    handleSubmit(updatedIClient, props.isNewClient);
                     toggleButtons();
                 }}
             >

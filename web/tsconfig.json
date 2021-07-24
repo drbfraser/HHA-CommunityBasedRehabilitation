@@ -23,7 +23,7 @@
   },
   "include": [
     "src",
-    "../common/src",
+    "../common/src"
   ],
   "extends": "./tsconfig.base.json"
 }

@@ -28,6 +28,13 @@ import { StackScreenName } from "../../util/StackScreenName";
 import { StackParamList } from "../../util/stackScreens";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import Alert from "../../components/Alert/Alert";
+
+interface INewReferralProps {
+    clientID: number;
+    route: RouteProp<StackParamList, StackScreenName.REFERRAL>;
+    navigation: StackNavigationProp<StackParamList, StackScreenName.REFERRAL>;
+}
 
 const ReferralServiceForm = (
     props: ReferralFormProps,
@@ -44,6 +51,7 @@ const ReferralServiceForm = (
             )
         );
     };
+
     return (
         <View>
             <Text />
@@ -65,59 +73,69 @@ const ReferralServiceForm = (
     );
 };
 
-interface INewReferralProps {
-    clientID: number;
-    route: RouteProp<StackParamList, StackScreenName.REFERRAL>;
-    navigation: StackNavigationProp<StackParamList, StackScreenName.REFERRAL>;
-}
-
 const NewReferral = (props: INewReferralProps) => {
     const styles = useStyles();
     const clientId = props.route.params.clientID;
     const [activeStep, setActiveStep] = useState<number>(0);
+    const [saveError, setSaveError] = useState<string>();
     const [enabledSteps, setEnabledSteps] = useState<ReferralFormField[]>([]);
     const [checkedSteps, setCheckedSteps] = useState<ReferralFormField[]>([]);
     const [submissionError, setSubmissionError] = useState(false);
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
+
     useEffect(() => {
         props.navigation.setOptions({
             headerShown: true,
             header: (stackHeaderProps) => (
                 <Appbar.Header statusBarHeight={0}>
                     <Appbar.BackAction onPress={() => stackHeaderProps.navigation.goBack()} />
-                    <Appbar.Content title="New Referral" />
+                    <Appbar.Content title="New Referral" subtitle={"Client ID: " + clientId} />
                 </Appbar.Header>
             ),
         });
     }, []);
-    const prevStep = (values: any) => {
+
+    const prevStep = (props: any) => {
+        if (Object.keys(props.errors).length !== 0) {
+            const arr = checkedSteps.filter((item) => {
+                return item != enabledSteps[activeStep - 1];
+            });
+            setCheckedSteps(arr);
+        } else {
+            if (props.values[ReferralFormField.otherDescription] !== "") {
+                checkedSteps.push(enabledSteps[activeStep - 1]);
+            }
+        }
         setActiveStep(activeStep - 1);
-        if (values !== "") {
-            checkedSteps.push(enabledSteps[activeStep]);
-        }
-        if (activeStep === 1) {
-            checkedSteps.push(enabledSteps[activeStep]);
-        }
+        props.setErrors({});
     };
 
     // Make sure the user can not click to next if they did not fill out the required fields
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
+            handleSubmit(values, helpers, setSubmissionError)
+                .then(() => {
+                    props.navigation.pop(1);
+                    props.navigation.navigate(StackScreenName.CLIENT, {
+                        clientID: clientId,
+                    });
+                })
+                .catch((e) => setSaveError(`${e}`));
             setCheckedSteps([]);
-            handleSubmit(values, helpers, setSubmissionError).then(() => {
-                props.navigation.pop(1);
-                props.navigation.navigate(StackScreenName.CLIENT, {
-                    clientID: clientId,
-                });
-            });
         } else {
             if (activeStep === 0) {
+                if (checkedSteps.length === 0) {
+                    setCheckedSteps([]);
+                }
                 checkedSteps.push(ReferralFormField.orthotic);
                 checkedSteps.push(ReferralFormField.prosthetic);
                 helpers.setFieldValue(`${[ReferralFormField.client]}`, clientId);
             }
+            if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
+                checkedSteps.push(enabledSteps[activeStep - 1]);
+            }
+            setCheckedSteps([...new Set(checkedSteps)]);
 
-            checkedSteps.push(enabledSteps[activeStep - 1]);
             if (
                 (enabledSteps[activeStep] !== ReferralFormField.prosthetic &&
                     enabledSteps[activeStep] !== ReferralFormField.orthotic) ||
@@ -173,6 +191,7 @@ const NewReferral = (props: INewReferralProps) => {
             validationSchema: services[serviceType].validationSchema,
         })),
     ];
+
     return (
         <Formik
             initialValues={referralInitialValues}
@@ -183,6 +202,14 @@ const NewReferral = (props: INewReferralProps) => {
             {(formikProps) => (
                 <>
                     <View style={styles.container}>
+                        {saveError && (
+                            <Alert
+                                style={styles.errorAlert}
+                                severity={"error"}
+                                text={saveError}
+                                onClose={() => setSaveError(undefined)}
+                            />
+                        )}
                         <ProgressSteps key={referralSteps} {...progressStepsStyle}>
                             {referralSteps.map((surveyStep, index) => (
                                 <ProgressStep
@@ -202,11 +229,7 @@ const NewReferral = (props: INewReferralProps) => {
                                                   Object.keys(formikProps.touched).length === 0
                                                 : Object.keys(formikProps.errors).length !== 0))
                                     }
-                                    onPrevious={() =>
-                                        prevStep(
-                                            formikProps.values[ReferralFormField.otherDescription]
-                                        )
-                                    }
+                                    onPrevious={() => prevStep(formikProps)}
                                     previousBtnStyle={styles.prevButton}
                                     onSubmit={() => nextStep(formikProps.values, formikProps)}
                                 >

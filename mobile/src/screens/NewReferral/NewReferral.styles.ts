@@ -33,6 +33,9 @@ const useStyles = () =>
             fontWeight: "bold",
             fontSize: 14,
         },
+        errorAlert: {
+            marginBottom: 10,
+        },
         alertText: {
             color: themeColors.hhaBlue,
         },

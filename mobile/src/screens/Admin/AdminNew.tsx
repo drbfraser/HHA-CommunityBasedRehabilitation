@@ -39,9 +39,7 @@ const AdminNew = ({
     }, []);
 
     const zones = useZones();
-
     const [saveError, setSaveError] = useState<string>();
-
     const passwordRef = useRef<NativeTextInput>(null);
     const confirmPasswordRef = useRef<NativeTextInput>(null);
     const firstNameRef = useRef<NativeTextInput>(null);

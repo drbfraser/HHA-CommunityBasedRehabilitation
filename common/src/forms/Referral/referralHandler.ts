@@ -10,12 +10,8 @@ const addReferral = async (referralInfo: string) => {
     };
 
     return await apiFetch(Endpoint.REFERRALS, "", init)
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            return res;
-        });
+        .then((res) => res.json())
+        .then((res) => res);
 };
 
 export const referralHandleSubmit = async (
@@ -58,7 +54,7 @@ export const referralHandleSubmit = async (
             : "",
     });
     try {
-        await addReferral(newReferral);
+        return await addReferral(newReferral);
     } catch (e) {
         helpers.setSubmitting(false);
         setSubmissionError(true);

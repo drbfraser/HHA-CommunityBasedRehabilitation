@@ -3,7 +3,7 @@ import * as React from "react";
 import { useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities, getOtherDisabilityId } from "@cbr/common/src/util/hooks/disabilities";
-import { View, Platform, ScrollView, TextInput as NativeTextInput } from "react-native";
+import { View, Platform, ScrollView, Alert } from "react-native";
 import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-paper";
 import clientStyle from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -16,7 +16,7 @@ import {
     FormProps,
 } from "./ClientFormFields";
 import { Gender, genders, IClient, themeColors } from "@cbr/common";
-import { handleSubmit, UpdateIClient } from "./ClientSubmitHandler";
+import { handleSubmit } from "./ClientSubmitHandler";
 
 export const ClientForm = (props: FormProps) => {
     const styles = clientStyle();
@@ -24,20 +24,20 @@ export const ClientForm = (props: FormProps) => {
     let disabilityMap = useDisabilities();
     let otherDisabilityId = getOtherDisabilityId(disabilityMap);
 
-    let initialDisabilityArray: string[] = props.clientFormProps.initialDisabilityArray
-        ? props.clientFormProps.initialDisabilityArray
+    let initialDisabilityArray: string[] = props.clientFormProps?.initialDisabilityArray
+        ? props.clientFormProps?.initialDisabilityArray
         : [];
-    let initialZone: number = props.clientFormProps.zone ? props.clientFormProps.zone - 1 : 0;
+    let initialZone: number = props.clientFormProps?.zone ? props.clientFormProps.zone - 1 : 0;
 
     //Client Details Usestates
-    const [date, setDate] = useState(new Date(props.clientFormProps.date));
+    const [date, setDate] = useState(new Date(props.clientFormProps?.date));
     const [caregiverPresent, setCaregiverPresent] = useState(
-        props.clientFormProps.caregiverPresent
+        props.clientFormProps?.caregiverPresent
     );
     const [clientGender, setClientGender] = useState(props.clientFormProps?.gender);
     const [selectedZone, setSelectedZone] = useState<Number>(initialZone);
     const [otherDisability, showOtherDisability] = useState(false);
-    const [fieldsDisabled, setFieldsDisabled] = useState(!props.clientFormProps.isNewClient);
+    const [fieldsDisabled, setFieldsDisabled] = useState(!props.isNewClient);
     const [cancelButtonType, setCancelButtonType] = useState("outlined");
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [disabilityVisible, setDisabilityVisible] = useState(false);
@@ -113,19 +113,25 @@ export const ClientForm = (props: FormProps) => {
         else setCaregiverPresent(false);
     };
 
+    const getGender = (gender: string) => {
+        if (gender == "M") {
+            return Gender.MALE;
+        }
+        return Gender.FEMALE;
+    };
+
     return (
         <View>
             <Formik
                 initialValues={initialFormValues}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                    //TODO: remake the object to pass in request in issue 44
                     const updatedIClient: IClient = {
                         id: props.clientFormProps?.id!,
                         first_name: values.firstName!,
                         last_name: values.lastName!,
                         birth_date: values.date!.getTime(),
-                        gender: Gender.MALE,
+                        gender: getGender(values.gender!),
                         village: values.village!,
                         zone: values.zone!,
                         phone_number: values.phone || "",
@@ -137,7 +143,7 @@ export const ClientForm = (props: FormProps) => {
                         other_disability: values.otherDisability || "",
                         picture:
                             "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
-                        created_by_user: props.clientFormProps?.createdByUser!, //TODO: Get the user ID here instead of 1
+                        created_by_user: props.clientFormProps?.createdByUser!,
                         created_date: props.clientFormProps?.createdDate!,
                         longitude: props.clientFormProps?.longitude || "",
                         latitude: props.clientFormProps?.latitude || "",
@@ -148,7 +154,7 @@ export const ClientForm = (props: FormProps) => {
                         baseline_surveys: props.clientFormProps?.surveys!,
                     };
 
-                    handleSubmit(updatedIClient); //TODO: Work on this next issue - Placeholder code
+                    handleSubmit(updatedIClient);
                     toggleButtons();
                 }}
             >
@@ -210,14 +216,6 @@ export const ClientForm = (props: FormProps) => {
                         </View>
                         <Text style={styles.errorText}>{formikProps.errors.date}</Text>
 
-                        {/* <TextInput
-                            style={styles.clientTextStyle}
-                            label={ClientFormFieldLabels[ClientFormFields.gender]}
-                            placeholder={ClientFormFieldLabels[ClientFormFields.gender]}
-                            onChangeText={formikProps.handleChange(ClientFormFields.gender)}
-                            value={formikProps.values.gender}
-                            disabled={fieldsDisabled}
-                        /> */}
                         <View>
                             <Portal>
                                 <Modal
@@ -248,8 +246,6 @@ export const ClientForm = (props: FormProps) => {
                                                         values[0]
                                                     );
                                                     setClientGender(values[0]);
-
-                                                    console.log(values);
                                                 }}
                                                 rowBackgroundColor={"#eee"}
                                                 iconSize={30}
@@ -564,9 +560,26 @@ export const ClientForm = (props: FormProps) => {
                                         style={styles.clientDetailsFinalButtons}
                                         disabled={fieldsDisabled}
                                         onPress={() => {
-                                            cancelEdit();
-                                            formikProps.resetForm();
-                                            resetFormState();
+                                            const cancelAlert = () =>
+                                                Alert.alert(
+                                                    "Alert",
+                                                    "You'll lose all your unsaved changes. Cancel anyway?",
+                                                    [
+                                                        {
+                                                            text: "Don't cancel",
+                                                            style: "cancel",
+                                                        },
+                                                        {
+                                                            text: "Cancel",
+                                                            onPress: () => {
+                                                                cancelEdit();
+                                                                formikProps.resetForm();
+                                                                resetFormState();
+                                                            },
+                                                        },
+                                                    ]
+                                                );
+                                            cancelAlert();
                                         }}
                                     >
                                         Cancel

@@ -31,7 +31,7 @@ export interface ClientFormProps {
     risks?: IRisk[];
     visits?: IVisitSummary[];
     referrals?: IReferral[];
-    surverys?: ISurvey[];
+    surveys?: ISurvey[];
 }
 
 export enum ClientFormFields {
@@ -123,36 +123,44 @@ export const setFormInitialValues = (props: ClientFormProps, isNewClient?: boole
 export const validationSchema = () =>
     Yup.object().shape({
         [ClientFormFields.first_name]: Yup.string()
-            .label(ClientFormFields.first_name)
+            .label(ClientFormFieldLabels[ClientFormFields.first_name])
             .required()
             .max(50)
             .min(1),
         [ClientFormFields.last_name]: Yup.string()
-            .label(ClientFormFields.last_name)
+            .label(ClientFormFieldLabels[ClientFormFields.last_name])
             .required()
             .max(50)
             .min(1),
         [ClientFormFields.date]: Yup.date()
-            .label(ClientFormFields.date)
+            .label(ClientFormFieldLabels[ClientFormFields.date])
             .max(new Date(), "Birthdate cannot be in the future")
             .required(),
         [ClientFormFields.phone]: Yup.string()
-            .label(ClientFormFields.phone)
+            .label(ClientFormFieldLabels[ClientFormFields.phone])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
-        [ClientFormFields.disability]: Yup.array().label(ClientFormFields.disability).required(),
-        [ClientFormFields.gender]: Yup.string().label(ClientFormFields.gender).required(),
-        [ClientFormFields.village]: Yup.string().label(ClientFormFields.village).required(),
-        [ClientFormFields.zone]: Yup.string().label(ClientFormFields.zone).required(),
+        [ClientFormFields.disability]: Yup.array()
+            .label(ClientFormFieldLabels[ClientFormFields.disability])
+            .required(),
+        [ClientFormFields.gender]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.gender])
+            .required(),
+        [ClientFormFields.village]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.village])
+            .required(),
+        [ClientFormFields.zone]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.zone])
+            .required(),
         [ClientFormFields.caregiver_name]: Yup.string()
-            .label(ClientFormFields.caregiver_name)
+            .label(ClientFormFieldLabels[ClientFormFields.caregiver_name])
             .max(101),
         [ClientFormFields.caregiver_phone]: Yup.string()
-            .label(ClientFormFields.caregiver_phone)
+            .label(ClientFormFieldLabels[ClientFormFields.caregiver_phone])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid"),
         [ClientFormFields.caregiver_email]: Yup.string()
-            .label(ClientFormFields.caregiver_email)
+            .label(ClientFormFieldLabels[ClientFormFields.caregiver_email])
             .max(50)
             .matches(Validation.emailRegExp, "Email Address is not valid"),
     });

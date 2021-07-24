@@ -7,6 +7,16 @@ import {
     getOtherDisabilityId,
 } from "@cbr/common";
 import { timestampFromFormDate } from "@cbr/common/";
+import { Platform, ToastAndroid, AlertIOS } from "react-native";
+
+const toastSuccess = () => {
+    const msg = "Your changes have been made.";
+    if (Platform.OS === "android") {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
+    } else {
+        AlertIOS.alert(msg);
+    }
+};
 
 const updateClient = async (clientInfo: FormData, clientId: number) => {
     const init: RequestInit = {
@@ -15,11 +25,13 @@ const updateClient = async (clientInfo: FormData, clientId: number) => {
     };
     return await apiFetch(Endpoint.CLIENT, `${clientId}`, init)
         .then((res) => {
-            console.log(res.json);
             return res.json();
         })
         .then((res) => {
             return res;
+        })
+        .then(() => {
+            toastSuccess();
         });
 };
 
@@ -47,21 +59,9 @@ export const handleSubmit = async (values: IClient) => {
 
     const formData = objectToFormData(updatedValues);
 
-    console.log(formData);
     try {
         await updateClient(formData, values.id);
     } catch (e) {
         alert("Encountered an error while trying to edit the client!");
-    }
-};
-
-export const handleCancel = (resetForm: () => void, setIsEditing: (isEditing: boolean) => void) => {
-    if (
-        window.confirm(
-            "Are you sure you want to cancel editing the client?\nClicking OK will not save any edited information."
-        )
-    ) {
-        resetForm();
-        setIsEditing(false);
     }
 };

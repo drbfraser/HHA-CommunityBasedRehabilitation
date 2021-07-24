@@ -14,7 +14,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import { FormValues, FormProps, validationSchema } from "./ClientFormFields";
 import * as Yup from "yup";
-import { IClient } from "../../screens/ClientDetails/ClientRequests";
+import { IClient } from "@cbr/common";
 import { handleSubmit } from "./ClientSubmitHandler";
 import { themeColors } from "@cbr/common";
 
@@ -116,23 +116,7 @@ export const ClientForm = (props: FormProps) => {
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                    const updatedClientDTO: IClient = {
-                        id: values.id!,
-                        first_name: values.firstName!,
-                        last_name: values.lastName!,
-                        birthdate: values.date!.getTime() / 1000,
-                        gender: values.gender!,
-                        village: values.village!,
-                        zone: values.zone!,
-                        phoneNumber: values.phone!,
-                        careGiverPresent: values.caregiverPresent!,
-                        careGiverName: values.caregiverName!,
-                        careGiverEmail: values.caregiverEmail!,
-                        careGiverPhoneNumber: values.caregiverPhone!,
-                        disabilities: values.clientDisability!,
-                        otherDisability: values.otherDisability!,
-                        clientCreatedDate: new Date().getTime() / 1000,
-                    };
+                    //TODO: remake the object to pass in request in issue 44
                     //handleSubmit(updatedClientDTO); TODO: Work on this next issue - Placeholder code
                     toggleButtons();
                 }}

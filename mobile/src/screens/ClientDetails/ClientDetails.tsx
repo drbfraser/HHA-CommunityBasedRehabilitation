@@ -12,7 +12,7 @@ import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import { RecentActivity } from "./ClientTimeline/RecentActivity";
-import { RouteProp, useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useIsFocused } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
@@ -38,7 +38,7 @@ const ClientDetails = (props: IClientProps) => {
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
     var disabilityList = useDisabilities();
-
+    const isFocused = useIsFocused();
     //Main Client Variables
     const [presentClient, setPresentClient] = useState<IClient>();
     const [date, setDate] = useState(new Date());
@@ -61,7 +61,6 @@ const ClientDetails = (props: IClientProps) => {
     const [clientVisits, setClientVisits] = useState<IVisitSummary[]>();
     const [clientReferrals, setClientReferrals] = useState<IReferral[]>();
     const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
-    const [allRecentActivity, setRecentActivity] = useState<IActivity[]>();
 
     const getInitialDisabilities = (disabilityArray: number[]) => {
         var selectedDisabilities: string[] = [];
@@ -103,7 +102,7 @@ const ClientDetails = (props: IClientProps) => {
         getClientDetails().then(() => {
             setLoading(false);
         });
-    }, []);
+    }, [isFocused]);
 
     //Overall Screen editable toggle variables
     const [editMode, setEditMode] = useState(true);

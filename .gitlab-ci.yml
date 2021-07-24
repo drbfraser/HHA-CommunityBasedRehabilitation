@@ -20,9 +20,9 @@ build common:
   image: node:14
   tags:
     - docker
-  needs: [ ]
+  needs: []
   rules:
-    - if: '$CI_MERGE_REQUEST_ID != null'
+    - if: "$CI_MERGE_REQUEST_ID != null"
       changes:
         - common/**/*
         - .gitlab-ci.yml
@@ -40,9 +40,9 @@ build mobile:
   image: node:14
   tags:
     - docker
-  needs: [ ]
+  needs: []
   rules:
-    - if: '$CI_MERGE_REQUEST_ID != null'
+    - if: "$CI_MERGE_REQUEST_ID != null"
       changes:
         - common/**/*
         - mobile/**/*
@@ -61,17 +61,17 @@ build web:
   image: node:14
   tags:
     - docker
-  needs: [ ]
+  needs: []
   rules:
     # build on merge requests if there are changes
-    - if: '$CI_MERGE_REQUEST_ID != null'
+    - if: "$CI_MERGE_REQUEST_ID != null"
       changes:
         - common/**/*
         - web/**/*
         - .gitlab-ci.yml
       when: always
     # build on deployments
-    - if: '$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH'
+    - if: "$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: always
   before_script:
     - npm install -g npm@$NPM_VERSION
@@ -98,14 +98,14 @@ build server:
       alias: test_postgres
   tags:
     - docker
-  needs: [ ]
+  needs: []
   rules:
-    - if: '$CI_MERGE_REQUEST_ID != null'
+    - if: "$CI_MERGE_REQUEST_ID != null"
       changes:
         - server/**/*
         - .gitlab-ci.yml
       when: always
-    - if: '$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH'
+    - if: "$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: always
   variables:
     DOMAIN: "example.com"
@@ -128,9 +128,9 @@ test common:
   image: node:14
   tags:
     - docker
-  needs: [ ]
+  needs: []
   rules:
-    - if: '$CI_MERGE_REQUEST_ID != null'
+    - if: "$CI_MERGE_REQUEST_ID != null"
       changes:
         - common/**/*
         - .gitlab-ci.yml

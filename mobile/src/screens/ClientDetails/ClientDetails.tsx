@@ -21,7 +21,7 @@ import { RouteProp, useIsFocused } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
-import { ClientFormProps } from "../../components/ClientForm/ClientFormFields";
+import { ClientFormProps, InitialValues } from "../../components/ClientForm/ClientFormFields";
 
 interface ClientProps {
     clientID: number;
@@ -48,7 +48,7 @@ const ClientDetails = (props: ClientProps) => {
 
     //Main Client Variables
     const [presentClient, setPresentClient] = useState<IClient>();
-    const [clientFormikProps, setClientFormikProps] = useState<ClientFormProps>();
+    const [clientFormikProps, setClientFormikProps] = useState<ClientFormProps>(InitialValues);
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);

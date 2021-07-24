@@ -1,33 +1,21 @@
 import { Formik } from "formik";
 import * as React from "react";
-import { Component, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
-import {
-    TDisabilityMap,
-    getDisabilities,
-    useDisabilities,
-    getOtherDisabilityId,
-} from "@cbr/common/src/util/hooks/disabilities";
+import { useDisabilities, getOtherDisabilityId } from "@cbr/common/src/util/hooks/disabilities";
 import { View, Platform, ScrollView, TextInput as NativeTextInput } from "react-native";
 import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-paper";
 import clientStyle from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import {
-    FormValues,
-    ClientFormProps,
     validationSchema,
-    InitialValues as InitialValues,
     ClientFormFieldLabels,
     ClientFormFields,
     setFormInitialValues,
     FormProps,
 } from "./ClientFormFields";
-import * as Yup from "yup";
-import { FormField, IClient } from "@cbr/common";
-import { handleSubmit } from "./ClientSubmitHandler";
 import { themeColors } from "@cbr/common";
-import FormikTextInput from "../FormikTextInput/FormikTextInput";
 
 export const ClientForm = (props: FormProps) => {
     const styles = clientStyle();
@@ -57,7 +45,6 @@ export const ClientForm = (props: FormProps) => {
     const [presentZone, setPresentZone] = useState<String>(
         Array.from(zoneMap.values())[initialZone]
     );
-
     const initialFormValues = setFormInitialValues(props.clientFormProps, props.isNewClient);
     const openDisabilityMenu = () => setDisabilityVisible(true);
     const closeDisabilityMenu = () => setDisabilityVisible(false);

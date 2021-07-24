@@ -3,7 +3,7 @@ import * as Yup from "yup";
 
 export interface FormProps {
     isNewClient?: boolean;
-    clientFormProps: ClientFormProps;
+    clientFormProps?: ClientFormProps;
 }
 
 export interface ClientFormProps {

@@ -73,7 +73,7 @@ const requestTokens = async (
             throw new APIFetchFailError(
                 `Request token failure: request failed with HTTP status ${resp.status}.`,
                 resp.status,
-                await resp.json()
+                await resp.json().catch(() => undefined)
             );
         }
 

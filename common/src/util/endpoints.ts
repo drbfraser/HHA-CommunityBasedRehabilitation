@@ -37,9 +37,9 @@ export class APIFetchFailError extends Error {
      */
     readonly status: number;
     /**
-     * The response data, which may contain an error message from the server.
+     * Optional response data, which may contain an error message from the server.
      */
-    readonly response: Readonly<any>;
+    readonly response?: Readonly<any>;
     /**
      * A specific error message given by the server.
      */
@@ -56,11 +56,11 @@ export class APIFetchFailError extends Error {
         return (
             e instanceof APIFetchFailError ||
             e.name === "APIFetchFailError" ||
-            (e.hasOwnProperty("status") && e.hasOwnProperty("response"))
+            e.hasOwnProperty("status")
         );
     }
 
-    constructor(message: string, status: number, response: any) {
+    constructor(message: string, status: number, response: any | undefined) {
         super(message);
         this.status = status;
         this.response = response;
@@ -130,7 +130,7 @@ export const apiFetch = async (
     return fetch(url, init)
         .then(async (resp) => {
             if (!resp.ok) {
-                const jsonPromise = resp.json();
+                const jsonPromise = await resp.json().catch(() => undefined);
                 const message = `API Fetch failed with HTTP Status ${resp.status}`;
                 console.error(message);
                 return Promise.reject(

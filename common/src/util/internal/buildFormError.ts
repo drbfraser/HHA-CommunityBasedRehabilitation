@@ -8,6 +8,10 @@ const buildFormErrorInternal = (
     error: APIFetchFailError,
     formLabels: Record<string, string>
 ): string => {
+    if (!error.response) {
+        return error.message;
+    }
+
     const errResponseEntries = Object.entries(error.response);
     return errResponseEntries.length > 0
         ? errResponseEntries.reduce<string>((previousPartialError, [field, message], index) => {

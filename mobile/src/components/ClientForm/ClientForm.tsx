@@ -267,6 +267,11 @@ export const ClientForm = (props: FormProps) => {
                             </Portal>
                             <Text> Gender</Text>
                             <View style={styles.buttonZoneStyles}>
+                                {clientGender == Gender.MALE ? (
+                                    <Text style={styles.valueText}>{genders.M}</Text>
+                                ) : (
+                                    <Text style={styles.valueText}>{genders.F}</Text>
+                                )}
                                 {!fieldsDisabled ? (
                                     <Button
                                         mode="contained"
@@ -278,11 +283,6 @@ export const ClientForm = (props: FormProps) => {
                                     </Button>
                                 ) : (
                                     <></>
-                                )}
-                                {clientGender == Gender.MALE ? (
-                                    <Text style={styles.valueText}>{genders.M}</Text>
-                                ) : (
-                                    <Text style={styles.valueText}>{genders.F}</Text>
                                 )}
                             </View>
                         </View>
@@ -326,6 +326,7 @@ export const ClientForm = (props: FormProps) => {
                                                         "zone",
                                                         Number(values[0])
                                                     );
+
                                                     setPresentZone(
                                                         Array.from(zoneMap.values())[
                                                             Number(values[0])
@@ -353,6 +354,7 @@ export const ClientForm = (props: FormProps) => {
                             </Portal>
                             <Text> Zone</Text>
                             <View style={styles.buttonZoneStyles}>
+                                <Text style={styles.valueText}>{presentZone}</Text>
                                 {!fieldsDisabled ? (
                                     <Button
                                         mode="contained"
@@ -365,8 +367,6 @@ export const ClientForm = (props: FormProps) => {
                                 ) : (
                                     <></>
                                 )}
-
-                                <Text style={styles.valueText}>{presentZone}</Text>
                             </View>
                         </View>
                         <Text style={styles.errorText}>{formikProps.errors.zone}</Text>
@@ -453,7 +453,13 @@ export const ClientForm = (props: FormProps) => {
                                 </Modal>
                             </Portal>
                             <Text> Disability</Text>
-
+                            {selectedDisabilityList.map((item) => {
+                                return (
+                                    <Text key={item} style={styles.valueText}>
+                                        {item}
+                                    </Text>
+                                );
+                            })}
                             {!fieldsDisabled ? (
                                 <Button
                                     mode="contained"
@@ -466,14 +472,6 @@ export const ClientForm = (props: FormProps) => {
                             ) : (
                                 <></>
                             )}
-
-                            {selectedDisabilityList.map((item) => {
-                                return (
-                                    <Text key={item} style={styles.valueText}>
-                                        {item}
-                                    </Text>
-                                );
-                            })}
                         </View>
                         <Text style={styles.errorText}>{formikProps.errors.clientDisability}</Text>
 

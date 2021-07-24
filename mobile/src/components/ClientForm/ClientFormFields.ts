@@ -142,16 +142,18 @@ export const validationSchema = () =>
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
         [ClientFormFields.disability]: Yup.array()
             .label(ClientFormFieldLabels[ClientFormFields.disability])
-            .required(),
+            .required()
+            .min(1, "You must input at least 1 disability"),
         [ClientFormFields.gender]: Yup.string()
             .label(ClientFormFieldLabels[ClientFormFields.gender])
             .required(),
         [ClientFormFields.village]: Yup.string()
             .label(ClientFormFieldLabels[ClientFormFields.village])
             .required(),
-        [ClientFormFields.zone]: Yup.string()
+        [ClientFormFields.zone]: Yup.number()
             .label(ClientFormFieldLabels[ClientFormFields.zone])
-            .required(),
+            .required()
+            .typeError("Zone is a required field"),
         [ClientFormFields.caregiver_name]: Yup.string()
             .label(ClientFormFieldLabels[ClientFormFields.caregiver_name])
             .max(101),

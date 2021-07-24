@@ -7,6 +7,10 @@ const useStyles = () =>
             alignItems: "center",
             justifyContent: "center",
         },
+        userIdTextInput: {
+            alignSelf: "stretch",
+            marginHorizontal: 10,
+        },
     });
 
 export default useStyles;

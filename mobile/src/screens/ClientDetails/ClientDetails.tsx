@@ -17,14 +17,15 @@ import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import { RecentActivity } from "./ClientTimeline/RecentActivity";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useIsFocused } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { stackParamList, StackScreenName } from "../../util/stackScreens";
+import { StackParamList } from "../../util/stackScreens";
+import { StackScreenName } from "../../util/StackScreenName";
 
 interface ClientProps {
     clientID: number;
-    route: RouteProp<stackParamList, StackScreenName.CLIENT>;
-    navigation: StackNavigationProp<stackParamList, StackScreenName.CLIENT>;
+    route: RouteProp<StackParamList, StackScreenName.CLIENT>;
+    navigation: StackNavigationProp<StackParamList, StackScreenName.CLIENT>;
 }
 
 const ClientDetails = (props: ClientProps) => {
@@ -42,6 +43,7 @@ const ClientDetails = (props: ClientProps) => {
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
     var disabilityMap = useDisabilities();
+    const isFocused = useIsFocused();
 
     //Main Client Variables
     const [presentClient, setPresentClient] = useState<IClient>();
@@ -81,10 +83,12 @@ const ClientDetails = (props: ClientProps) => {
         );
     };
     useEffect(() => {
-        getClientDetails().then(() => {
-            setLoading(false);
-        });
-    }, []);
+        if (isFocused) {
+            getClientDetails().then(() => {
+                setLoading(false);
+            });
+        }
+    }, [isFocused]);
 
     //Overall Screen editable toggle variables
     const [editMode, setEditMode] = useState(true);

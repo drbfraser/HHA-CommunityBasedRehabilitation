@@ -1,6 +1,12 @@
-import { Endpoint, apiFetch, objectToFormData } from "@cbr/common";
+import {
+    Endpoint,
+    apiFetch,
+    objectToFormData,
+    IClient,
+    getDisabilities,
+    getOtherDisabilityId,
+} from "@cbr/common";
 import { timestampFromFormDate } from "@cbr/common/";
-import { IClient } from "@cbr/common";
 
 const updateClient = async (clientInfo: FormData, clientId: number) => {
     const init: RequestInit = {
@@ -9,6 +15,7 @@ const updateClient = async (clientInfo: FormData, clientId: number) => {
     };
     return await apiFetch(Endpoint.CLIENT, `${clientId}`, init)
         .then((res) => {
+            console.log(res.json);
             return res.json();
         })
         .then((res) => {
@@ -17,6 +24,7 @@ const updateClient = async (clientInfo: FormData, clientId: number) => {
 };
 
 export const handleSubmit = async (values: IClient) => {
+    const disabilities = await getDisabilities();
     const updatedValues = {
         first_name: values.first_name,
         last_name: values.last_name,
@@ -29,17 +37,17 @@ export const handleSubmit = async (values: IClient) => {
         caregiver_name: values.caregiver_name,
         caregiver_email: values.caregiver_email,
         caregiver_phone: values.caregiver_phone,
+        longitude: values.longitude,
+        latitude: values.latitude,
         disability: values.disability,
-        other_disability: values.other_disability,
+        other_disability: values.disability.includes(getOtherDisabilityId(disabilities))
+            ? values.other_disability
+            : "",
     };
 
     const formData = objectToFormData(updatedValues);
-    console.log(formData);
-    // if (values.picture) {
-    //     const clientProfilePicture = await (await fetch(values.picture)).blob();
-    //     formData.append("picture", clientProfilePicture, getRandomStr(30) + ".png");
-    // }
 
+    console.log(formData);
     try {
         await updateClient(formData, values.id);
     } catch (e) {

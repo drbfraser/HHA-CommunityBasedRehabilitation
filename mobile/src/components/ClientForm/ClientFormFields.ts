@@ -1,4 +1,4 @@
-import { Validation } from "@cbr/common";
+import { IReferral, IRisk, ISurvey, IVisit, IVisitSummary, Validation } from "@cbr/common";
 import * as Yup from "yup";
 
 export interface FormProps {
@@ -23,6 +23,15 @@ export interface ClientFormProps {
     otherDisability?: string;
     disabilityString?: string[];
     initialDisabilityArray?: string[];
+    createdDate?: number;
+    createdByUser: number;
+    longitude?: string;
+    latitude?: string;
+    caregiverPicture?: string;
+    risks?: IRisk[];
+    visits?: IVisitSummary[];
+    referrals?: IReferral[];
+    surverys?: ISurvey[];
 }
 
 export enum ClientFormFields {

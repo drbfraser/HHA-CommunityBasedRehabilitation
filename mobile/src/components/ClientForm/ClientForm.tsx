@@ -15,7 +15,8 @@ import {
     setFormInitialValues,
     FormProps,
 } from "./ClientFormFields";
-import { Gender, genders, themeColors } from "@cbr/common";
+import { Gender, genders, IClient, themeColors } from "@cbr/common";
+import { handleSubmit, UpdateIClient } from "./ClientSubmitHandler";
 
 export const ClientForm = (props: FormProps) => {
     const styles = clientStyle();
@@ -119,9 +120,36 @@ export const ClientForm = (props: FormProps) => {
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
                     //TODO: remake the object to pass in request in issue 44
-                    //handleSubmit(updatedClientDTO); TODO: Work on this next issue - Placeholder code
+                    const updatedIClient: IClient = {
+                        id: props.clientFormProps?.id!,
+                        first_name: values.firstName!,
+                        last_name: values.lastName!,
+                        birth_date: values.date!.getTime(),
+                        gender: Gender.MALE,
+                        village: values.village!,
+                        zone: values.zone!,
+                        phone_number: values.phone || "",
+                        caregiver_present: caregiverPresent || false,
+                        caregiver_name: values.caregiverName || "",
+                        caregiver_email: values.caregiverEmail || "",
+                        caregiver_phone: values.caregiverPhone || "",
+                        disability: values.clientDisability!,
+                        other_disability: values.otherDisability || "",
+                        picture:
+                            "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
+                        created_by_user: props.clientFormProps?.createdByUser!, //TODO: Get the user ID here instead of 1
+                        created_date: props.clientFormProps?.createdDate!,
+                        longitude: props.clientFormProps?.longitude || "",
+                        latitude: props.clientFormProps?.latitude || "",
+                        caregiver_picture: props.clientFormProps?.caregiverPicture,
+                        risks: props.clientFormProps?.risks!,
+                        visits: props.clientFormProps?.visits!,
+                        referrals: props.clientFormProps?.referrals!,
+                        baseline_surveys: props.clientFormProps?.surveys!,
+                    };
+
+                    handleSubmit(updatedIClient); //TODO: Work on this next issue - Placeholder code
                     toggleButtons();
-                    console.log(values);
                 }}
             >
                 {(formikProps) => (
@@ -459,7 +487,7 @@ export const ClientForm = (props: FormProps) => {
                                 status={caregiverPresent ? "checked" : "unchecked"}
                                 onPress={() => {
                                     setCaregiverPresent(!caregiverPresent);
-                                    formikProps.handleChange("caregiverPresent");
+                                    formikProps.setFieldValue("caregiverPresent", caregiverPresent);
                                 }}
                                 disabled={fieldsDisabled}
                             />

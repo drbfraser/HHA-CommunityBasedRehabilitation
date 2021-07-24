@@ -81,7 +81,7 @@ const ClientDetails = (props: ClientProps) => {
         setClientSurveys(presentClient.baseline_surveys);
 
         const clientFormProps: ClientFormProps = {
-            id: props.clientID,
+            id: props.route.params.clientID,
             firstName: presentClient!.first_name,
             lastName: presentClient!.last_name,
             date: timestampToDateObj(Number(presentClient?.birth_date)),
@@ -99,6 +99,15 @@ const ClientDetails = (props: ClientProps) => {
                 presentClient.disability,
                 presentClient.other_disability
             ),
+            createdDate: presentClient.created_date,
+            createdByUser: presentClient.created_by_user,
+            longitude: presentClient.longitude,
+            latitude: presentClient.latitude,
+            caregiverPicture: String(presentClient.caregiver_picture),
+            risks: presentClient.risks,
+            visits: presentClient.visits,
+            referrals: presentClient.referrals,
+            surveys: presentClient.baseline_surveys,
         };
         setClientFormikProps(clientFormProps);
     };
@@ -169,7 +178,9 @@ const ClientDetails = (props: ClientProps) => {
                     <Card style={styles.clientCardContainerStyles}>
                         <Card.Cover
                             style={styles.clientCardImageStyle}
-                            source={{ uri: "https://picsum.photos/700" }}
+                            source={{
+                                uri: "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png",
+                            }}
                         />
                         <Button mode="contained" style={styles.clientButtons}>
                             New Visit

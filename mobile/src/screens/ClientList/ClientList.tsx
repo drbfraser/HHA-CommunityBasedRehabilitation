@@ -4,17 +4,15 @@ import { Picker } from "@react-native-picker/picker";
 import { DataTable } from "react-native-paper";
 import useStyles from "./ClientList.styles";
 import { ClientTest, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
-import { StackNavigationProp } from "@react-navigation/stack";
-//import { stackParamList, StackScreenName } from "../../util/stackScreens";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { SearchOption, themeColors, useZones } from "@cbr/common";
 const styles = useStyles();
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { StackScreenName } from "../../util/StackScreenName";
-import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
+import { AppStackNavProp } from "../../util/stackScreens";
 
 enum SortOptions {
     ID = "id",
@@ -35,7 +33,6 @@ const returnWrappedView = (item) => {
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
-    const route = useRoute();
     const [clientList, setClientList] = useState<ClientTest[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
@@ -177,10 +174,10 @@ const ClientList = () => {
         }
         setClientList(exampleClient);
     };
-
+    const isFocused = useIsFocused();
     useEffect(() => {
         newClientGet();
-    }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection]);
+    }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection, isFocused]);
     useEffect(() => {
         var exampleClient = clientList;
         if (sortDirection !== "None") {

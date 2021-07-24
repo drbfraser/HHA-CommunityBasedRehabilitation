@@ -9,7 +9,7 @@ interface IResponseRow {
     first_name: string;
     last_name: string;
     role: UserRole;
-    is_active: string;
+    is_active: boolean;
 }
 
 const requestUserRows = async (

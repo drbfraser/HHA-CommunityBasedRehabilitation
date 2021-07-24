@@ -4,6 +4,7 @@ import Todo from "../screens/Todo/Todo";
 import ClientList from "../screens/ClientList/ClientList";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 import Profile from "../screens/Profile/Profile";
+import UserList from "../screens/UserList/UserList";
 
 export interface IScreen {
     name: string;
@@ -44,7 +45,7 @@ export const screens: IScreen[] = [
     {
         name: "Admin",
         roles: [UserRole.ADMIN],
-        Component: Todo,
+        Component: UserList,
         iconName: "account-cog",
     },
     {

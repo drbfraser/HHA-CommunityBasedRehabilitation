@@ -49,7 +49,7 @@ interface MapDropdownMenu extends BaseDropdownMenuProps {
 
 export type Props = RecordDropdownMenu | ArrayDropdownMenu | MapDropdownMenu;
 
-function convertMapToMenuItems(props: Props, hideMenu: () => void) {
+const convertMapToMenuItems = (props: Props, hideMenu: () => void): Array<JSX.Element> => {
     if (props.valuesType !== "map") {
         return [];
     }
@@ -78,7 +78,7 @@ function convertMapToMenuItems(props: Props, hideMenu: () => void) {
     }
 
     return menuItems;
-}
+};
 
 const areMenuItemsPropsEqual = (
     prevProps: Readonly<MenuItemsProps>,
@@ -143,8 +143,9 @@ const ExposedDropdownMenu = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false);
 
     // useRef instead of useState to avoid unnecessary re-renders
-    const width = useRef<number>(100);
-    const iconWidth = useRef<number>(10);
+    const width = useRef<number>(288.727);
+    const iconWidth = useRef<number>(36);
+    const height = useRef<number>(56);
 
     const styles = useStyles(width.current + iconWidth.current);
 
@@ -158,11 +159,20 @@ const ExposedDropdownMenu = (props: Props) => {
         <TouchableOpacity disabled={props.disabled} activeOpacity={1} onPress={openMenu}>
             <TextInput
                 {...props}
-                onLayout={(event) => (width.current = event.nativeEvent.layout.width)}
-                onTouchStart={openMenu}
+                onLayout={(event) => {
+                    width.current = event.nativeEvent.layout.width;
+                    height.current = event.nativeEvent.layout.height;
+                }}
                 editable={false}
                 right={
                     <TextInput.Icon
+                        hitSlop={{
+                            top: height.current / 2,
+                            left: width.current,
+                            bottom: height.current / 2,
+                            right: 10,
+                        }}
+                        disabled={props.disabled}
                         onLayout={(event) => (iconWidth.current = event.nativeEvent.layout.width)}
                         onPress={openMenu}
                         name={!isOpen ? "chevron-down" : "chevron-up"}

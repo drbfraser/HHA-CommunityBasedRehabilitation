@@ -176,7 +176,9 @@ const ClientList = () => {
     };
     const isFocused = useIsFocused();
     useEffect(() => {
-        newClientGet();
+        if (isFocused) {
+            newClientGet();
+        }
     }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection, isFocused]);
     useEffect(() => {
         var exampleClient = clientList;

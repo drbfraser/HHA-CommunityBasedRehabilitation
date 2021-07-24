@@ -99,9 +99,11 @@ const ClientDetails = (props: IClientProps) => {
         setInitialDisabilityArray(getInitialDisabilities(presentClient.disability));
     };
     useEffect(() => {
-        getClientDetails().then(() => {
-            setLoading(false);
-        });
+        if (isFocused) {
+            getClientDetails().then(() => {
+                setLoading(false);
+            });
+        }
     }, [isFocused]);
 
     //Overall Screen editable toggle variables

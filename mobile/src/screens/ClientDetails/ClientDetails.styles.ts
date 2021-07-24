@@ -65,6 +65,12 @@ const useStyles = () =>
             marginTop: 15,
             marginBottom: 15,
         },
+        valueText: {
+            alignContent: "flex-start",
+            fontSize: 18,
+            width: 256,
+            marginBottom: 15,
+        },
         carePresentCheckBox: {
             alignContent: "flex-start",
             fontSize: 18,

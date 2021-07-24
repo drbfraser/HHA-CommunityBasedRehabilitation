@@ -21,6 +21,7 @@ import { RouteProp, useIsFocused } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
+import { ClientFormProps } from "../../components/ClientForm/ClientFormFields";
 
 interface ClientProps {
     clientID: number;
@@ -47,7 +48,7 @@ const ClientDetails = (props: ClientProps) => {
 
     //Main Client Variables
     const [presentClient, setPresentClient] = useState<IClient>();
-    const [initialDisabilityArray, setInitialDisabilityArray] = useState<string[]>();
+    const [clientFormikProps, setClientFormikProps] = useState<ClientFormProps>();
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);
@@ -78,9 +79,28 @@ const ClientDetails = (props: ClientProps) => {
         setClientVisits(presentClient.visits);
         setClientReferrals(presentClient.referrals);
         setClientSurveys(presentClient.baseline_surveys);
-        setInitialDisabilityArray(
-            getInitialDisabilities(presentClient.disability, presentClient.other_disability)
-        );
+
+        const clientFormProps: ClientFormProps = {
+            id: props.clientID,
+            firstName: presentClient!.first_name,
+            lastName: presentClient!.last_name,
+            date: timestampToDateObj(Number(presentClient?.birth_date)),
+            gender: presentClient!.gender,
+            village: presentClient!.village,
+            zone: presentClient!.zone,
+            phone: presentClient!.phone_number,
+            caregiverPresent: presentClient!.caregiver_present,
+            caregiverName: presentClient?.caregiver_name,
+            caregiverEmail: presentClient?.caregiver_email,
+            caregiverPhone: presentClient?.caregiver_phone,
+            clientDisability: presentClient!.disability,
+            otherDisability: presentClient?.other_disability,
+            initialDisabilityArray: getInitialDisabilities(
+                presentClient.disability,
+                presentClient.other_disability
+            ),
+        };
+        setClientFormikProps(clientFormProps);
     };
     useEffect(() => {
         if (isFocused) {
@@ -165,23 +185,7 @@ const ClientDetails = (props: ClientProps) => {
                     <Text style={styles.cardSectionTitle}>Client Details</Text>
                     <Divider />
                     <Card style={styles.clientDetailsContainerStyles}>
-                        <ClientForm
-                            id={props.clientID}
-                            firstName={presentClient!.first_name}
-                            lastName={presentClient!.last_name}
-                            date={timestampToDateObj(Number(presentClient?.birth_date))}
-                            gender={presentClient!.gender}
-                            village={presentClient!.village}
-                            zone={presentClient!.zone}
-                            phone={presentClient!.phone_number}
-                            caregiverPresent={presentClient!.caregiver_present}
-                            caregiverName={presentClient?.caregiver_name}
-                            caregiverEmail={presentClient?.caregiver_email}
-                            caregiverPhone={presentClient?.caregiver_phone}
-                            clientDisability={presentClient!.disability}
-                            otherDisability={presentClient?.other_disability}
-                            initialDisabilityArray={initialDisabilityArray}
-                        />
+                        <ClientForm clientFormProps={clientFormikProps!} />
                     </Card>
                     <Divider />
                     <ClientRisk editMode={editMode}></ClientRisk>

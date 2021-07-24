@@ -70,6 +70,7 @@ const useStyles = () =>
             fontSize: 18,
             width: 256,
             marginBottom: 15,
+            marginStart: 5,
         },
         carePresentCheckBox: {
             alignContent: "flex-start",
@@ -236,6 +237,21 @@ const useStyles = () =>
             backgroundColor: "white",
             borderRadius: 10,
             justifyContent: "space-between",
+        },
+        genderChecklist: {
+            height: 280,
+            marginHorizontal: 20,
+            marginTop: 250,
+            display: "flex",
+            backgroundColor: "white",
+            borderRadius: 10,
+            justifyContent: "space-between",
+        },
+        nestedGenderScrollView: {
+            display: "flex",
+            justifyContent: "center",
+            padding: 20,
+            height: 210,
         },
         nestedScrollView: {
             display: "flex",

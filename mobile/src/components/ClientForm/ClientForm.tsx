@@ -15,7 +15,7 @@ import {
     setFormInitialValues,
     FormProps,
 } from "./ClientFormFields";
-import { themeColors } from "@cbr/common";
+import { Gender, genders, themeColors } from "@cbr/common";
 
 export const ClientForm = (props: FormProps) => {
     const styles = clientStyle();
@@ -33,6 +33,7 @@ export const ClientForm = (props: FormProps) => {
     const [caregiverPresent, setCaregiverPresent] = useState(
         props.clientFormProps.caregiverPresent
     );
+    const [clientGender, setClientGender] = useState(props.clientFormProps?.gender);
     const [selectedZone, setSelectedZone] = useState<Number>(initialZone);
     const [otherDisability, showOtherDisability] = useState(false);
     const [fieldsDisabled, setFieldsDisabled] = useState(!props.clientFormProps.isNewClient);
@@ -40,6 +41,7 @@ export const ClientForm = (props: FormProps) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [disabilityVisible, setDisabilityVisible] = useState(false);
     const [zonesVisible, setZonesVisible] = useState(false);
+    const [genderVisible, setGenderVisible] = useState(false);
     const [selectedDisabilityList, setSelectedDisabilityList] =
         useState<string[]>(initialDisabilityArray);
     const [presentZone, setPresentZone] = useState<String>(
@@ -50,6 +52,8 @@ export const ClientForm = (props: FormProps) => {
     const closeDisabilityMenu = () => setDisabilityVisible(false);
     const openZonesMenu = () => setZonesVisible(true);
     const closeZonesMenu = () => setZonesVisible(false);
+    const openGenderMenu = () => setGenderVisible(true);
+    const closeGenderMenu = () => setGenderVisible(false);
 
     const objectFromMap = <K extends string | number | symbol, V>(
         map: Map<K, V> | ReadonlyMap<K, V>
@@ -178,14 +182,86 @@ export const ClientForm = (props: FormProps) => {
                         </View>
                         <Text style={styles.errorText}>{formikProps.errors.date}</Text>
 
-                        <TextInput
+                        {/* <TextInput
                             style={styles.clientTextStyle}
                             label={ClientFormFieldLabels[ClientFormFields.gender]}
                             placeholder={ClientFormFieldLabels[ClientFormFields.gender]}
                             onChangeText={formikProps.handleChange(ClientFormFields.gender)}
                             value={formikProps.values.gender}
                             disabled={fieldsDisabled}
-                        />
+                        /> */}
+                        <View>
+                            <Portal>
+                                <Modal
+                                    visible={genderVisible}
+                                    onDismiss={closeGenderMenu}
+                                    style={styles.genderChecklist}
+                                >
+                                    <View style={styles.nestedGenderScrollView}>
+                                        <View style={styles.disabilityListHeaderContainerStyle}>
+                                            <Text style={styles.disabilityListHeaderStyle}>
+                                                Gender
+                                            </Text>
+                                        </View>
+                                        <ScrollView
+                                            style={styles.nestedScrollStyle}
+                                            nestedScrollEnabled={true}
+                                        >
+                                            <CustomMultiPicker
+                                                options={genders}
+                                                placeholder={
+                                                    ClientFormFieldLabels[ClientFormFields.gender]
+                                                }
+                                                placeholderTextColor={themeColors.blueBgLight}
+                                                returnValue={"Gender"}
+                                                callback={(values) => {
+                                                    formikProps.setFieldValue(
+                                                        ClientFormFields.gender,
+                                                        values[0]
+                                                    );
+                                                    setClientGender(values[0]);
+
+                                                    console.log(values);
+                                                }}
+                                                rowBackgroundColor={"#eee"}
+                                                iconSize={30}
+                                                selectedIconName={"checkmark-circle"}
+                                                unselectedIconName={"radio-button-off"}
+                                                selected={clientGender}
+                                            />
+                                        </ScrollView>
+                                    </View>
+                                    <Button
+                                        mode="contained"
+                                        style={styles.modalSelectorButton}
+                                        disabled={fieldsDisabled}
+                                        onPress={closeGenderMenu}
+                                    >
+                                        Save
+                                    </Button>
+                                </Modal>
+                            </Portal>
+                            <Text> Gender</Text>
+                            <View style={styles.buttonZoneStyles}>
+                                {!fieldsDisabled ? (
+                                    <Button
+                                        mode="contained"
+                                        style={styles.disabilityButton}
+                                        disabled={fieldsDisabled}
+                                        onPress={openGenderMenu}
+                                    >
+                                        Edit Gender
+                                    </Button>
+                                ) : (
+                                    <></>
+                                )}
+                                {clientGender == Gender.MALE ? (
+                                    <Text style={styles.valueText}>{genders.M}</Text>
+                                ) : (
+                                    <Text style={styles.valueText}>{genders.F}</Text>
+                                )}
+                            </View>
+                        </View>
                         <Text style={styles.errorText}>{formikProps.errors.gender}</Text>
 
                         <TextInput

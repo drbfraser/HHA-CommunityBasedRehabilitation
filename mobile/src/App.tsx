@@ -96,9 +96,6 @@ const updateAuthStateIfNeeded = async (
     const currentUser: IUser | undefined = await fetchAndCacheUserFromServer().catch((err) => {
         // At this point, the user is logged in, so the device is probably offline.
         // Use the cached user details.
-        console.log(
-            `failed to get current user from server due to error: ${err}. falling back to cache`
-        );
         return getCurrentUserFromCache();
     });
     if (currentUser) {

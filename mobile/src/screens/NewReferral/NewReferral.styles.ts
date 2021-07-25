@@ -9,14 +9,18 @@ const useStyles = () =>
             marginLeft: 30,
             marginRight: 30,
         },
+        checkBoxText: {
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingVertical: 10,
+            paddingRight: 50,
+        },
         nextButton: {
             position: "absolute",
             right: -50,
             bottom: -10,
             padding: -1,
-        },
-        errorAlert: {
-            marginVertical: 10,
         },
         prevButton: {
             position: "absolute",
@@ -29,20 +33,29 @@ const useStyles = () =>
             fontWeight: "bold",
             fontSize: 14,
         },
-        pickerBoard: {
-            flex: 1,
-            justifyContent: "center",
+        errorAlert: {
+            marginVertical: 10,
+        },
+        alertText: {
+            color: themeColors.hhaBlue,
+        },
+        row: {
+            flexDirection: "row",
             alignItems: "center",
-            alignSelf: "stretch",
-            borderWidth: 1.2,
-            borderRadius: 4,
-            marginTop: 10,
-            color: themeColors.blueBgDark,
+            justifyContent: "space-between",
+            paddingVertical: 8,
+            paddingHorizontal: 16,
         },
         stepLabelText: { fontSize: 25, fontWeight: "bold" },
-        picker: { height: 55, width: "100%", flexGrow: 1 },
-        pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
+        picker: { height: 40, width: 250 },
+        question: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
         errorText: { color: themeColors.errorRed, paddingLeft: 15 },
+        hipWidthInput: {
+            backgroundColor: "transparent",
+            paddingHorizontal: 10,
+            width: 50,
+        },
+        hipWidthContainer: { flexDirection: "row", alignItems: "center" },
     });
 
 export const progressStepsStyle = {

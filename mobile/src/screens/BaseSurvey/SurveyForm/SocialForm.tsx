@@ -1,41 +1,41 @@
 import React from "react";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
 import { View } from "react-native";
-import { fieldLabels, FormField, IFormProps } from "@cbr/common";
+import { baseFieldLabels, BaseSurveyFormField, IFormProps } from "@cbr/common";
 
 const SocialForm = (props: IFormProps) => {
     return (
         <View>
             <TextCheckBox
-                field={FormField.feelValue}
-                value={props.formikProps.values[FormField.feelValue]}
-                label={fieldLabels[FormField.feelValue]}
+                field={BaseSurveyFormField.feelValue}
+                value={props.formikProps.values[BaseSurveyFormField.feelValue]}
+                label={baseFieldLabels[BaseSurveyFormField.feelValue]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
 
             <TextCheckBox
-                field={FormField.feelIndependent}
-                value={props.formikProps.values[FormField.feelIndependent]}
-                label={fieldLabels[FormField.feelIndependent]}
+                field={BaseSurveyFormField.feelIndependent}
+                value={props.formikProps.values[BaseSurveyFormField.feelIndependent]}
+                label={baseFieldLabels[BaseSurveyFormField.feelIndependent]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
 
             <TextCheckBox
-                field={FormField.ableInSocial}
-                value={props.formikProps.values[FormField.ableInSocial]}
-                label={fieldLabels[FormField.ableInSocial]}
+                field={BaseSurveyFormField.ableInSocial}
+                value={props.formikProps.values[BaseSurveyFormField.ableInSocial]}
+                label={baseFieldLabels[BaseSurveyFormField.ableInSocial]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
             <TextCheckBox
-                field={FormField.disabiAffectSocial}
-                value={props.formikProps.values[FormField.disabiAffectSocial]}
-                label={fieldLabels[FormField.disabiAffectSocial]}
+                field={BaseSurveyFormField.disabiAffectSocial}
+                value={props.formikProps.values[BaseSurveyFormField.disabiAffectSocial]}
+                label={baseFieldLabels[BaseSurveyFormField.disabiAffectSocial]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
             <TextCheckBox
-                field={FormField.disabiDiscrimination}
-                value={props.formikProps.values[FormField.disabiDiscrimination]}
-                label={fieldLabels[FormField.disabiDiscrimination]}
+                field={BaseSurveyFormField.disabiDiscrimination}
+                value={props.formikProps.values[BaseSurveyFormField.disabiDiscrimination]}
+                label={baseFieldLabels[BaseSurveyFormField.disabiDiscrimination]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
         </View>

@@ -119,7 +119,6 @@ export const ClientForm = (props: FormProps) => {
                     //TODO: remake the object to pass in request in issue 44
                     //handleSubmit(updatedClientDTO); TODO: Work on this next issue - Placeholder code
                     toggleButtons();
-                    console.log(values);
                 }}
             >
                 {(formikProps) => (

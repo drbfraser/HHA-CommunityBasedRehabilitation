@@ -7,19 +7,27 @@ import AdminView from "../screens/Admin/AdminView";
 import AdminEdit from "../screens/Admin/AdminEdit";
 import { IUser } from "@cbr/common";
 import AdminNew from "../screens/Admin/AdminNew";
+import NewReferral from "../screens/NewReferral/NewReferral";
 
 export const stackScreenProps = {
     [StackScreenName.HOME]: HomeScreen,
     [StackScreenName.CLIENT]: ClientDetails,
-    [StackScreenName.BASELINE]: BaseSurvey,
     [StackScreenName.ADMIN_VIEW]: AdminView,
     [StackScreenName.ADMIN_EDIT]: AdminEdit,
     [StackScreenName.ADMIN_NEW]: AdminNew,
+    [StackScreenName.REFERRAL]: NewReferral,
+    [StackScreenName.BASE_SURVEY]: BaseSurvey,
 };
 
 export type StackParamList = {
     [StackScreenName.HOME]: undefined;
     [StackScreenName.CLIENT]: {
+        clientID: number;
+    };
+    [StackScreenName.REFERRAL]: {
+        clientID: number;
+    };
+    [StackScreenName.BASE_SURVEY]: {
         clientID: number;
     };
     [StackScreenName.ADMIN_VIEW]: {

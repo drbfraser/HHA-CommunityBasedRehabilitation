@@ -1,17 +1,13 @@
 import { FormikHelpers } from "formik";
-import { TFormValues } from "@cbr/common";
-import { handleSubmitForm } from "@cbr/common";
+import { BaseFormValues } from "@cbr/common/src/forms/BaseSurvey/baseSurveyFields";
+import { baseSurveyHandleSubmitForm } from "@cbr/common/src/forms/BaseSurvey/baseSurveyHandler";
+import React from "react";
 
 export const handleSubmit = async (
-    values: TFormValues,
-    helpers: FormikHelpers<TFormValues>,
+    values: BaseFormValues,
+    helpers: FormikHelpers<BaseFormValues>,
     setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
-    try {
-        handleSubmitForm(values, helpers, setSubmissionError);
-        // TODO: navigation to client page
-    } catch (e) {
-        helpers.setSubmitting(false);
-        setSubmissionError(true);
-    }
+    helpers.setSubmitting(true);
+    return baseSurveyHandleSubmitForm(values, helpers, setSubmissionError);
 };

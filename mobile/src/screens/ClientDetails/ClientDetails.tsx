@@ -43,7 +43,7 @@ const ClientDetails = (props: ClientProps) => {
 
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
-    var disabilityMap = useDisabilities();
+    let disabilityMap = useDisabilities();
     const isFocused = useIsFocused();
 
     //Main Client Variables
@@ -57,7 +57,7 @@ const ClientDetails = (props: ClientProps) => {
     const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
 
     const getInitialDisabilities = (disabilityArray: number[], otherDisability?: string) => {
-        var selectedDisabilities: string[] = [];
+        let selectedDisabilities: string[] = [];
 
         for (let index of disabilityArray) {
             if (disabilityMap.has(index)) {
@@ -124,7 +124,7 @@ const ClientDetails = (props: ClientProps) => {
 
     //Activity component rendering
     const tempActivity: IActivity[] = [];
-    var presentId = 0;
+    let presentId = 0;
     if (clientVisits) {
         clientVisits.forEach((presentVisit) => {
             tempActivity.push({

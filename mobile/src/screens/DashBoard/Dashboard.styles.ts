@@ -23,6 +23,8 @@ const useStyles = () =>
             alignItems: "center",
             justifyContent: "center",
         },
+        textContainer: { flexDirection: "row", alignItems: "center" },
+        text: { flexShrink: 1, fontSize: 12 },
         fontSize: {
             fontSize: 13,
         },

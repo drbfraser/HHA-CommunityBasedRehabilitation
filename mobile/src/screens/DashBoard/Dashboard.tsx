@@ -10,32 +10,31 @@ import { IClientSummary, timestampToDate } from "@cbr/common";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
-const styles = useStyles();
-
-const returnText = (item) => {
-    return (
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ flexShrink: 1, fontSize: 12 }}>{item}</Text>
-        </View>
-    );
-};
-
 const Dashboard = () => {
+    const styles = useStyles();
+
+    const returnText = (item) => {
+        return (
+            <View style={styles.textContainer}>
+                <Text style={styles.text}>{item}</Text>
+            </View>
+        );
+    };
     const [clientList, setClientList] = useState<IClientSummary[]>([]);
     const [referralList, setreferralList] = useState<any[]>([]);
     const navigation = useNavigation();
-    const newClientGet = async () => {
+    const getNewClient = async () => {
         var fetchedClientList = await fetchAllClientsFromApi();
         setClientList(fetchedClientList);
     };
 
-    const referealsGet = async () => {
+    const getRefereals = async () => {
         var fetchedReferrals = await fetchReferrals();
         setreferralList(fetchedReferrals);
     };
     useEffect(() => {
-        newClientGet();
-        referealsGet();
+        getNewClient();
+        getRefereals();
         //TODO alert part.
     }, []);
     return (

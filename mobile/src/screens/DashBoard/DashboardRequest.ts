@@ -4,7 +4,6 @@ import {
     Endpoint,
     getZones,
     IOutstandingReferral,
-    RiskType,
 } from "@cbr/common";
 import { IClientSummary } from "@cbr/common";
 import { riskLevels } from "@cbr/common";
@@ -27,7 +26,7 @@ export const fetchAllClientsFromApi = async (): Promise<IClientSummary[]> => {
             .then((resp) => resp.json())
             .catch((err) => alert("Error occured while trying to load priority clients!"));
 
-        var resultRows = tempClients
+        const resultRows = tempClients
             .sort(clientPrioritySort)
             .map((responseRow: IClientSummary) => ({
                 id: responseRow.id,
@@ -48,7 +47,7 @@ export const fetchReferrals = async () => {
         const tempReferrals = await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
             .then((resp) => resp.json())
             .catch((err) => alert("Error occured while trying to load outstanding referrals!"));
-        var resultRows = tempReferrals
+        const resultRows = tempReferrals
             .sort(
                 (a: IOutstandingReferral, b: IOutstandingReferral) =>
                     a.date_referred - b.date_referred

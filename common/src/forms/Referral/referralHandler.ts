@@ -53,10 +53,6 @@ export const referralHandleSubmit = async (
             ? values[ReferralFormField.otherDescription]
             : "",
     });
-    try {
-        return await addReferral(newReferral);
-    } catch (e) {
-        helpers.setSubmitting(false);
-        setSubmissionError(true);
-    }
+
+    return await addReferral(newReferral);
 };

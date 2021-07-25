@@ -110,9 +110,9 @@ const NewReferral = (props: INewReferralProps) => {
         props.setErrors({});
     };
 
-    // Make sure the user can not click to next if they did not fill out the required fields
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
+            setSaveError(undefined);
             handleSubmit(values, helpers, setSubmissionError)
                 .then(() => {
                     props.navigation.pop(1);
@@ -120,7 +120,11 @@ const NewReferral = (props: INewReferralProps) => {
                         clientID: clientId,
                     });
                 })
-                .catch((e) => setSaveError(`${e}`));
+                .catch((e) => {
+                    setSaveError(`${e}`);
+                    helpers.setSubmitting(false);
+                    setSubmissionError(true);
+                });
             setCheckedSteps([]);
         } else {
             if (activeStep === 0) {
@@ -210,6 +214,7 @@ const NewReferral = (props: INewReferralProps) => {
                                 onClose={() => setSaveError(undefined)}
                             />
                         )}
+
                         <ProgressSteps key={referralSteps} {...progressStepsStyle}>
                             {referralSteps.map((surveyStep, index) => (
                                 <ProgressStep

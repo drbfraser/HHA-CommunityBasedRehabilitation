@@ -73,11 +73,5 @@ export const baseSurveyHandleSubmitForm = async (
         shelter_essential_access: values[BaseSurveyFormField.accessItem],
     });
 
-    try {
-        addSurvey(newSurvey);
-        // Jump back to client using navigation
-    } catch (e) {
-        helpers.setSubmitting(false);
-        setSubmissionError(true);
-    }
+    return await addSurvey(newSurvey);
 };

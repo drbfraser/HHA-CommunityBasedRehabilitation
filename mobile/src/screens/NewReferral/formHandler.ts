@@ -6,11 +6,5 @@ export const handleSubmit = async (
     helpers: FormikHelpers<ReferralFormValues>,
     setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
-    try {
-        referralHandleSubmit(values, helpers, setSubmissionError);
-        // TODO: navigation to client page
-    } catch (e) {
-        helpers.setSubmitting(false);
-        setSubmissionError(true);
-    }
+    return referralHandleSubmit(values, helpers, setSubmissionError);
 };

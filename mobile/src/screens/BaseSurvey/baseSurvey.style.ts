@@ -15,6 +15,9 @@ const useStyles = () =>
             bottom: -10,
             padding: -1,
         },
+        errorAlert: {
+            marginBottom: 10,
+        },
         prevButton: {
             position: "absolute",
             left: -50,

@@ -25,11 +25,11 @@ import EmpowermentForm from "./SurveyForm/EmpowermentForm";
 import ShelterForm from "./SurveyForm/ShelterForm";
 import FoodForm from "./SurveyForm/FoodForm";
 import { handleSubmit } from "./formHandler";
-import { useParams } from "react-router-dom";
-import { RouteProp, useNavigation } from "@react-navigation/native";
+import { RouteProp } from "@react-navigation/native";
 import { StackParamList } from "../../util/stackScreens";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StackScreenName } from "../../util/StackScreenName";
+import Alert from "../../components/Alert/Alert";
 
 interface ISurvey {
     label: string;
@@ -49,30 +49,37 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
     const [stepChecked, setStepChecked] = useState([false]);
     const isFinalStep = step + 1 === surveyTypes.length && step !== 0;
     const clientId = props.route.params.clientID;
+    const [saveError, setSaveError] = useState<string>();
+
     useEffect(() => {
         props.navigation.setOptions({
             headerShown: true,
             header: (stackHeaderProps) => (
                 <Appbar.Header statusBarHeight={0}>
                     <Appbar.BackAction onPress={() => stackHeaderProps.navigation.goBack()} />
-                    <Appbar.Content title="Baseline Survey" />
+                    <Appbar.Content title="Baseline Survey" subtitle={"Client ID: " + clientId} />
                 </Appbar.Header>
             ),
         });
     }, []);
 
-    const prevStep = () => {
-        setStep(step - 1);
-    };
+    const prevStep = () => setStep(step - 1);
 
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
-            handleSubmit(values, helpers, setSubmissionError).then(() => {
-                props.navigation.pop(1);
-                props.navigation.navigate(StackScreenName.CLIENT, {
-                    clientID: clientId,
+            setSaveError(undefined);
+            handleSubmit(values, helpers, setSubmissionError)
+                .then(() => {
+                    props.navigation.pop(1);
+                    props.navigation.navigate(StackScreenName.CLIENT, {
+                        clientID: clientId,
+                    });
+                })
+                .catch((e) => {
+                    setSaveError(`${e}`);
+                    helpers.setSubmitting(false);
+                    setSubmissionError(true);
                 });
-            });
         } else {
             if (step === 0) {
                 if (stepChecked.length < surveySteps.length - 1) {
@@ -141,6 +148,15 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
             {(formikProps) => (
                 <>
                     <View style={styles.container}>
+                        {saveError && (
+                            <Alert
+                                style={styles.errorAlert}
+                                severity={"error"}
+                                text={saveError}
+                                onClose={() => setSaveError(undefined)}
+                            />
+                        )}
+
                         <ProgressSteps {...progressStepsStyle}>
                             {surveySteps.map((surveyStep, index) => (
                                 <ProgressStep

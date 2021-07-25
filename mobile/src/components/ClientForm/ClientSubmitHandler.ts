@@ -34,7 +34,6 @@ export const handleSubmit = async (values: IClient) => {
     };
 
     const formData = objectToFormData(updatedValues);
-    console.log(formData);
     // if (values.picture) {
     //     const clientProfilePicture = await (await fetch(values.picture)).blob();
     //     formData.append("picture", clientProfilePicture, getRandomStr(30) + ".png");

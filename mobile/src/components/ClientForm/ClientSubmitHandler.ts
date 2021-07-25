@@ -37,6 +37,7 @@ const updateClient = async (clientInfo: FormData, clientId: number) => {
 
 export const handleSubmit = async (values: IClient, isNewClient?: boolean) => {
     const disabilities = await getDisabilities();
+    let requestSuccess: boolean = true;
     if (isNewClient) {
         //Do the new client POST request stuff here
     } else {
@@ -63,7 +64,9 @@ export const handleSubmit = async (values: IClient, isNewClient?: boolean) => {
         try {
             await updateClient(formData, values.id);
         } catch (e) {
+            requestSuccess = false;
             alert("Encountered an error while trying to edit the client!");
         }
+        return requestSuccess;
     }
 };

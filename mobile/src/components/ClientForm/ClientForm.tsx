@@ -67,6 +67,7 @@ export const ClientForm = (props: FormProps) => {
         return obj as Record<K, V>;
     };
     const disabilityObj = objectFromMap(useDisabilities());
+    const zoneObj = objectFromMap(useZones());
 
     const updateDisabilityList = (values: number[] | undefined, otherDisability?: string) => {
         let newList: string[] = [];
@@ -85,8 +86,8 @@ export const ClientForm = (props: FormProps) => {
     };
 
     //Menu functions
-    const toggleButtons = () => {
-        if (fieldsDisabled == true) {
+    const toggleButtons = (toggleTo: boolean) => {
+        if (toggleTo == true) {
             setFieldsDisabled(false);
             setCancelButtonType("contained");
         } else {
@@ -118,6 +119,12 @@ export const ClientForm = (props: FormProps) => {
             return Gender.MALE;
         }
         return Gender.FEMALE;
+    };
+
+    const submitForm = async (updatedIClient: IClient) => {
+        const isSuccess = await handleSubmit(updatedIClient, props.isNewClient);
+        console.log(isSuccess);
+        toggleButtons(!isSuccess);
     };
 
     return (
@@ -153,9 +160,7 @@ export const ClientForm = (props: FormProps) => {
                         referrals: props.clientFormProps?.referrals!,
                         baseline_surveys: props.clientFormProps?.surveys!,
                     };
-
-                    handleSubmit(updatedIClient, props.isNewClient);
-                    toggleButtons();
+                    submitForm(updatedIClient);
                 }}
             >
                 {(formikProps) => (
@@ -316,23 +321,18 @@ export const ClientForm = (props: FormProps) => {
                                             nestedScrollEnabled={true}
                                         >
                                             <CustomMultiPicker
-                                                options={Array.from(zoneMap.values())}
+                                                options={zoneObj}
                                                 placeholder={"Zones"}
                                                 placeholderTextColor={themeColors.blueBgLight}
                                                 returnValue={"zone_name"}
                                                 callback={(values) => {
-                                                    formikProps.handleChange("zone");
+                                                    console.log(values);
                                                     formikProps.setFieldValue(
                                                         "zone",
-                                                        Number(values[0])
+                                                        values.map(Number)
                                                     );
-
-                                                    setPresentZone(
-                                                        Array.from(zoneMap.values())[
-                                                            Number(values[0])
-                                                        ]
-                                                    );
-                                                    setSelectedZone(Number(values[0]));
+                                                    setPresentZone(zoneObj[values.map(Number)]);
+                                                    setSelectedZone(values);
                                                 }}
                                                 rowBackgroundColor={"#eee"}
                                                 iconSize={30}
@@ -542,7 +542,7 @@ export const ClientForm = (props: FormProps) => {
                                     mode="contained"
                                     style={styles.clientDetailsFinalButtons}
                                     onPress={() => {
-                                        if (fieldsDisabled) toggleButtons();
+                                        if (fieldsDisabled) toggleButtons(true);
                                         else {
                                             formikProps.handleSubmit();
                                         }

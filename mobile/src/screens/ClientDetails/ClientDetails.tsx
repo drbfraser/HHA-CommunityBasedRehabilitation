@@ -168,7 +168,15 @@ const ClientDetails = (props: IClientProps) => {
                             style={styles.clientCardImageStyle}
                             source={{ uri: "https://picsum.photos/700" }}
                         />
-                        <Button mode="contained" style={styles.clientButtons}>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.VISIT, {
+                                    clientID: props.route.params.clientID,
+                                });
+                            }}
+                        >
                             New Visit
                         </Button>
                         <Button

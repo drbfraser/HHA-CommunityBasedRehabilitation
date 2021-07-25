@@ -6,6 +6,10 @@ import { FieldArray, Formik, FormikHelpers, FormikProps } from "formik";
 import TextPicker from "../../components/TextPicker/TextPicker";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import { themeColors, useZones, TZoneMap, IRisk, Endpoint, apiFetch, IClient } from "@cbr/common";
+import { StackParamList } from "../../util/stackScreens";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { StackScreenName } from "../../util/StackScreenName";
+import { RouteProp } from "@react-navigation/native";
 
 import {
     visitFieldLabels,
@@ -26,6 +30,12 @@ import { useParams } from "react-router-dom";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
+}
+
+interface INewVisitProps {
+    clientID: number;
+    route: RouteProp<StackParamList, StackScreenName.VISIT>;
+    navigation: StackNavigationProp<StackParamList, StackScreenName.VISIT>;
 }
 
 const visitTypes: VisitFormField[] = [
@@ -292,7 +302,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[]) => {
     };
 };
 
-const NewVisit = () => {
+const NewVisit = (props: INewVisitProps) => {
     const [loadingError, setLoadingError] = useState(false);
     const styles = useStyles();
     const zones = useZones();
@@ -303,12 +313,13 @@ const NewVisit = () => {
 
     const [risks, setRisks] = useState<IRisk[]>([]);
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
-    // const { clientId } = useParams<{ clientId: string }>();
+    const [saveError, setSaveError] = useState<string>();
+    const clientId = props.route.params.clientID;
 
     // For test
     // TODO: Change it back after connect to the client detail screen
     useEffect(() => {
-        apiFetch(Endpoint.CLIENT, "1")
+        apiFetch(Endpoint.CLIENT, `${clientId}`)
             .then((resp) => resp.json())
             .then((client: IClient) => {
                 client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
@@ -317,7 +328,19 @@ const NewVisit = () => {
             .catch(() => {
                 setLoadingError(true);
             });
-    }, [1]);
+    }, [clientId]);
+
+    useEffect(() => {
+        props.navigation.setOptions({
+            headerShown: true,
+            header: (stackHeaderProps) => (
+                <Appbar.Header statusBarHeight={0}>
+                    <Appbar.BackAction onPress={() => stackHeaderProps.navigation.goBack()} />
+                    <Appbar.Content title="New Visit" subtitle={"Client ID: " + clientId} />
+                </Appbar.Header>
+            ),
+        });
+    }, []);
 
     const visitSteps = [
         {
@@ -335,13 +358,22 @@ const NewVisit = () => {
 
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
-            handleSubmit(values, helpers, setSubmissionError);
+            setSaveError(undefined);
+            handleSubmit(values, helpers, setSubmissionError)
+                .then(() => {
+                    props.navigation.navigate(StackScreenName.CLIENT, {
+                        clientID: clientId,
+                    });
+                })
+                .catch((e) => {
+                    setSaveError(`${e}`);
+                    helpers.setSubmitting(false);
+                    setSubmissionError(true);
+                });
             setCheckedSteps([]);
         } else {
             if (activeStep === 0) {
-                // TODO: Change back when it is connected to the client detail
-                helpers.setFieldValue(`${[VisitFormField.client]}`, 1);
-                // helpers.setFieldValue(`${[FormField.client]}`, clientId);
+                helpers.setFieldValue(`${[VisitFormField.client]}`, `${clientId}`);
             }
             checkedSteps.push(enabledSteps[activeStep - 1]);
             if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
@@ -362,11 +394,6 @@ const NewVisit = () => {
         >
             {(formikProps) => (
                 <>
-                    <Appbar.Header>
-                        <Appbar.BackAction />
-                        <Appbar.Content title={"New Visit"} />
-                    </Appbar.Header>
-
                     <View style={styles.container}>
                         <ProgressSteps key={visitSteps} {...progressStepsStyle}>
                             {visitSteps.map((surveyStep, index) => {

@@ -35,11 +35,6 @@ export const screens: IScreen[] = [
         iconName: "account",
     },
     {
-        name: "visitSurvey",
-        Component: NewVisit,
-        iconName: "account",
-    },
-    {
         name: "Stats",
         roles: [UserRole.ADMIN],
         Component: Todo,

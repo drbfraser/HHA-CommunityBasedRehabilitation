@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
-import { fieldLabels, FormField, IFormProps } from "@cbr/common";
+import { baseFieldLabels, BaseSurveyFormField, IFormProps } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
 
@@ -10,42 +10,48 @@ const EmpowermentForm = (props: IFormProps) => {
     return (
         <View>
             <TextCheckBox
-                field={FormField.memOfOrgan}
-                value={props.formikProps.values[FormField.memOfOrgan]}
-                label={fieldLabels[FormField.memOfOrgan]}
+                field={BaseSurveyFormField.memOfOrgan}
+                value={props.formikProps.values[BaseSurveyFormField.memOfOrgan]}
+                label={baseFieldLabels[BaseSurveyFormField.memOfOrgan]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
-            {props.formikProps.values[FormField.memOfOrgan] && (
+            {props.formikProps.values[BaseSurveyFormField.memOfOrgan] && (
                 <>
                     <TextInput
                         mode="outlined"
-                        label={FormField.organization}
+                        label={BaseSurveyFormField.organization}
                         onChangeText={(value) => {
-                            props.formikProps.setFieldTouched(FormField.organization, true);
-                            props.formikProps.setFieldValue(FormField.organization, value);
+                            props.formikProps.setFieldTouched(
+                                BaseSurveyFormField.organization,
+                                true
+                            );
+                            props.formikProps.setFieldValue(
+                                BaseSurveyFormField.organization,
+                                value
+                            );
                         }}
                     />
                     <HelperText
                         style={styles.errorText}
                         type="error"
-                        visible={!!props.formikProps.errors[FormField.organization]}
+                        visible={!!props.formikProps.errors[BaseSurveyFormField.organization]}
                     >
-                        {props.formikProps.errors[FormField.organization]}
+                        {props.formikProps.errors[BaseSurveyFormField.organization]}
                     </HelperText>
                 </>
             )}
 
             <TextCheckBox
-                field={FormField.awareRight}
-                value={props.formikProps.values[FormField.awareRight]}
-                label={fieldLabels[FormField.awareRight]}
+                field={BaseSurveyFormField.awareRight}
+                value={props.formikProps.values[BaseSurveyFormField.awareRight]}
+                label={baseFieldLabels[BaseSurveyFormField.awareRight]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
 
             <TextCheckBox
-                field={FormField.ableInfluence}
-                value={props.formikProps.values[FormField.ableInfluence]}
-                label={fieldLabels[FormField.ableInfluence]}
+                field={BaseSurveyFormField.ableInfluence}
+                value={props.formikProps.values[BaseSurveyFormField.ableInfluence]}
+                label={baseFieldLabels[BaseSurveyFormField.ableInfluence]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
         </View>

@@ -1,62 +1,16 @@
 import { FormikHelpers } from "formik";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-import { FormField, TFormValues } from "./formFields";
+import { ReferralFormValues } from "@cbr/common/forms/Referral/referralFields";
+import { referralHandleSubmit } from "@cbr/common/forms/Referral/referralHandler";
+
 import history from "../../util/history";
-import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
-
-const addReferral = async (referralInfo: string) => {
-    const init: RequestInit = {
-        method: "POST",
-        body: referralInfo,
-    };
-
-    return await apiFetch(Endpoint.REFERRALS, "", init)
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            return res;
-        });
-};
 
 export const handleSubmit = async (
-    values: TFormValues,
-    helpers: FormikHelpers<TFormValues>,
+    values: ReferralFormValues,
+    helpers: FormikHelpers<ReferralFormValues>,
     setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
-    const disabilities = await getDisabilities();
-
-    const newReferral = JSON.stringify({
-        client: values[FormField.client],
-        wheelchair: values[FormField.wheelchair],
-        wheelchair_experience: values[FormField.wheelchair]
-            ? values[FormField.wheelchairExperience]
-            : "",
-        hip_width: values[FormField.wheelchair] ? values[FormField.hipWidth] : 0,
-        wheelchair_owned: values[FormField.wheelchair] ? values[FormField.wheelchairOwned] : false,
-        wheelchair_repairable:
-            values[FormField.wheelchair] && values[FormField.wheelchairOwned]
-                ? values[FormField.wheelchairRepairable]
-                : false,
-        physiotherapy: values[FormField.physiotherapy],
-        condition: values[FormField.physiotherapy]
-            ? Number(values[FormField.condition]) === getOtherDisabilityId(disabilities)
-                ? values[FormField.conditionOther]
-                : disabilities.get(Number(values[FormField.condition]))
-            : "",
-        prosthetic: values[FormField.prosthetic],
-        prosthetic_injury_location: values[FormField.prosthetic]
-            ? values[FormField.prostheticInjuryLocation]
-            : "",
-        orthotic: values[FormField.orthotic],
-        orthotic_injury_location: values[FormField.orthotic]
-            ? values[FormField.orthoticInjuryLocation]
-            : "",
-        services_other: values[FormField.servicesOther] ? values[FormField.otherDescription] : "",
-    });
-
     try {
-        await addReferral(newReferral);
+        await referralHandleSubmit(values, helpers, setSubmissionError);
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);

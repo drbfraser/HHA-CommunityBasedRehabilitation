@@ -1,37 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { IClient } from "./ClientRequests";
 import clientStyle from "./ClientDetails.styles";
 import { Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
-import { IReferral, ISurvey, timestampToDateObj } from "@cbr/common";
+import { IClient, IReferral, ISurvey, themeColors, timestampToDateObj } from "@cbr/common";
 import { getDisabilities, useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 import { IVisitSummary } from "@cbr/common";
-import { ActivityDTO, ActivityType } from "./ClientTimeline/Activity";
+import { IActivity, ActivityType } from "./ClientTimeline/Activity";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import { RecentActivity } from "./ClientTimeline/RecentActivity";
-import { RouteProp, useIsFocused } from "@react-navigation/native";
+import { RouteProp, useNavigation, useIsFocused } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { StackParamList } from "../../util/stackScreens";
+import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 
-interface ClientProps {
+interface IClientProps {
     clientID: number;
     route: RouteProp<StackParamList, StackScreenName.CLIENT>;
     navigation: StackNavigationProp<StackParamList, StackScreenName.CLIENT>;
 }
 
-const ClientDetails = (props: ClientProps) => {
+const ClientDetails = (props: IClientProps) => {
     React.useEffect(() => {
         props.navigation.setOptions({
             title: "Client Page",
             headerStyle: {
-                backgroundColor: "#273263",
+                backgroundColor: themeColors.blueBgDark,
             },
-            headerTintColor: "#fff",
+            headerTintColor: themeColors.white,
             headerShown: true,
         });
     });
@@ -111,7 +110,8 @@ const ClientDetails = (props: ClientProps) => {
     const [editMode, setEditMode] = useState(true);
 
     //Activity component rendering
-    const tempActivity: ActivityDTO[] = [];
+    const navigation = useNavigation<AppStackNavProp>();
+    const tempActivity: IActivity[] = [];
     var presentId = 0;
     if (clientVisits) {
         clientVisits.forEach((presentVisit) => {
@@ -171,10 +171,26 @@ const ClientDetails = (props: ClientProps) => {
                         <Button mode="contained" style={styles.clientButtons}>
                             New Visit
                         </Button>
-                        <Button mode="contained" style={styles.clientButtons}>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.REFERRAL, {
+                                    clientID: props.route.params.clientID,
+                                });
+                            }}
+                        >
                             New Referral
                         </Button>
-                        <Button mode="contained" style={styles.clientButtons}>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.BASE_SURVEY, {
+                                    clientID: props.route.params.clientID,
+                                });
+                            }}
+                        >
                             Baseline Survey
                         </Button>
                     </Card>

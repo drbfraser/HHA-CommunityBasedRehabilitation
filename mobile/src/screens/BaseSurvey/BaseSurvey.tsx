@@ -70,7 +70,6 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
             setSaveError(undefined);
             handleSubmit(values, helpers, setSubmissionError)
                 .then(() => {
-                    props.navigation.pop(1);
                     props.navigation.navigate(StackScreenName.CLIENT, {
                         clientID: clientId,
                     });
@@ -169,10 +168,12 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
                                         nextStep(formikProps.values, formikProps);
                                     }}
                                     nextBtnDisabled={
+                                        formikProps.isSubmitting ||
                                         Object.keys(formikProps.errors).length !== 0 ||
                                         (Object.keys(formikProps.touched).length === 0 &&
                                             !stepChecked[step])
                                     }
+                                    previousBtnDisabled={formikProps.isSubmitting}
                                     onPrevious={prevStep}
                                     previousBtnStyle={styles.prevButton}
                                     onSubmit={() => nextStep(formikProps.values, formikProps)}

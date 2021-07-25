@@ -34,7 +34,7 @@ const useStyles = () =>
             fontSize: 14,
         },
         errorAlert: {
-            marginBottom: 10,
+            marginVertical: 10,
         },
         alertText: {
             color: themeColors.hhaBlue,

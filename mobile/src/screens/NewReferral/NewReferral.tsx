@@ -115,7 +115,6 @@ const NewReferral = (props: INewReferralProps) => {
             setSaveError(undefined);
             handleSubmit(values, helpers, setSubmissionError)
                 .then(() => {
-                    props.navigation.pop(1);
                     props.navigation.navigate(StackScreenName.CLIENT, {
                         clientID: clientId,
                     });
@@ -227,6 +226,7 @@ const NewReferral = (props: INewReferralProps) => {
                                         nextStep(formikProps.values, formikProps);
                                     }}
                                     nextBtnDisabled={
+                                        formikProps.isSubmitting ||
                                         enabledSteps.length === 0 ||
                                         (enabledSteps[activeStep - 1] !== undefined &&
                                             (!checkedSteps.includes(enabledSteps[activeStep - 1])
@@ -234,6 +234,7 @@ const NewReferral = (props: INewReferralProps) => {
                                                   Object.keys(formikProps.touched).length === 0
                                                 : Object.keys(formikProps.errors).length !== 0))
                                     }
+                                    previousBtnDisabled={formikProps.isSubmitting}
                                     onPrevious={() => prevStep(formikProps)}
                                     previousBtnStyle={styles.prevButton}
                                     onSubmit={() => nextStep(formikProps.values, formikProps)}

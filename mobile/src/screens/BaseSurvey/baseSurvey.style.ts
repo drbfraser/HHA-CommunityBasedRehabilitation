@@ -16,7 +16,7 @@ const useStyles = () =>
             padding: -1,
         },
         errorAlert: {
-            marginBottom: 10,
+            marginVertical: 10,
         },
         prevButton: {
             position: "absolute",

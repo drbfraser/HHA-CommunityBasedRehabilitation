@@ -9,7 +9,7 @@ export const handleSubmit = async (
     setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
     try {
-        baseSurveyHandleSubmitForm(values, helpers, setSubmissionError);
+        await baseSurveyHandleSubmitForm(values, helpers, setSubmissionError);
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);

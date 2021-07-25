@@ -10,7 +10,7 @@ export const handleSubmit = async (
     setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
     try {
-        referralHandleSubmit(values, helpers, setSubmissionError);
+        await referralHandleSubmit(values, helpers, setSubmissionError);
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);

@@ -119,7 +119,7 @@ const Dashboard = () => {
             setReferralIsSortDirection(sortDirections[currentReferralDirection]);
         } else {
             setReferralCurrentDirection(currentReferralDirection + 1);
-            if (currentReferralDirection == 2) {
+            if (currentClientDirection == 2) {
                 setReferralCurrentDirection(0);
             }
             setReferralIsSortDirection(sortDirections[currentReferralDirection]);
@@ -165,7 +165,7 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        console.log(count);
+        
         count = count + 1;
 
         getNewClient();
@@ -178,7 +178,7 @@ const Dashboard = () => {
                 <View style={styles.row}>
                     <Text style={styles.title}>Dashboard</Text>
                 </View>
-                <View style={styles.card}>
+                <View>
                     <Card>
                         <Card.Title title="Priority Clients"></Card.Title>
                         <ScrollView>

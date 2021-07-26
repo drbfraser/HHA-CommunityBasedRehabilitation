@@ -31,17 +31,13 @@ const useStyles = () =>
         title: {
             fontSize: 30,
         },
-        card: {
-            padding: 10,
-        },
-
         column_client_name: {
             flex: 0.8,
             padding: 5,
             justifyContent: "center",
         },
         column_client_zone: {
-            flex: 1,
+            flex: 0.7,
             padding: 5,
             justifyContent: "center",
         },
@@ -57,7 +53,7 @@ const useStyles = () =>
         },
 
         column_referral_name: {
-            flex: 2,
+            flex: 1.5,
             padding: 5,
             justifyContent: "center",
         },

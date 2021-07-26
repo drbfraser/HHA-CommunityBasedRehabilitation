@@ -32,13 +32,11 @@ const returnWrappedView = (item) => {
 };
 
 export const getLevelByColor = (color: string) => {
-    if (color == themeColors.riskGreen) {
-        return 0;
-    } else if (color == themeColors.riskYellow) {
+    if (color === themeColors.riskYellow) {
         return 1;
-    } else if (color == themeColors.riskRed) {
+    } else if (color === themeColors.riskRed) {
         return 4;
-    } else if (color == themeColors.riskBlack) {
+    } else if (color === themeColors.riskBlack) {
         return 13;
     }
     return 0;
@@ -64,7 +62,7 @@ const ClientList = () => {
             setIsSortDirection(sortDirections[currentDirection]);
         } else {
             setCurrentDirection(currentDirection + 1);
-            if (currentDirection == 2) {
+            if (currentDirection === 2) {
                 setCurrentDirection(0);
             }
             setIsSortDirection(sortDirections[currentDirection]);
@@ -102,10 +100,10 @@ const ClientList = () => {
         return sortDirection === "asc" ? result : -1 * result;
     };
     const arrowDirectionController = (column_name: string) => {
-        if (column_name == sortOption) {
-            if (sortDirection == "asc") {
+        if (column_name === sortOption) {
+            if (sortDirection === "asc") {
                 return "ascending";
-            } else if (sortDirection == "dec") {
+            } else if (sortDirection === "dec") {
                 return "descending";
             } else {
                 return undefined;
@@ -121,7 +119,7 @@ const ClientList = () => {
             sortOption,
             sortDirection
         );
-        if (sortDirection !== "None") {
+        if (sortDirection !=== "None") {
             exampleClient = exampleClient.sort(theComparator);
         }
         setClientList(exampleClient);

@@ -3,11 +3,11 @@ import * as React from "react";
 import { Component } from "react";
 import { View } from "react-native";
 import { TimelineDate } from "./TimelineDate";
-import { ActivityDTO, SummaryActivity } from "./Activity";
+import { IActivity, SummaryActivity } from "./Activity";
 
 interface ActivityProps {
     clientVisits: IVisitSummary[];
-    activityDTO: ActivityDTO[];
+    activityDTO: IActivity[];
     clientCreateDate: number;
 }
 

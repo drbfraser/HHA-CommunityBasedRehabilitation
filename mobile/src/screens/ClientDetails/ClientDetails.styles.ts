@@ -65,6 +65,13 @@ const useStyles = () =>
             marginTop: 15,
             marginBottom: 15,
         },
+        valueText: {
+            alignContent: "flex-start",
+            fontSize: 18,
+            width: 256,
+            marginBottom: 15,
+            marginStart: 5,
+        },
         carePresentCheckBox: {
             alignContent: "flex-start",
             fontSize: 18,
@@ -83,9 +90,9 @@ const useStyles = () =>
             width: 112,
             borderRadius: 5,
         },
-        disabilityButton: {
+        editButton: {
             justifyContent: "flex-start",
-            width: 184,
+            width: 70,
         },
         clientBirthdayView: {
             display: "flex",
@@ -231,6 +238,21 @@ const useStyles = () =>
             borderRadius: 10,
             justifyContent: "space-between",
         },
+        genderChecklist: {
+            height: 280,
+            marginHorizontal: 20,
+            marginTop: 250,
+            display: "flex",
+            backgroundColor: "white",
+            borderRadius: 10,
+            justifyContent: "space-between",
+        },
+        nestedGenderScrollView: {
+            display: "flex",
+            justifyContent: "center",
+            padding: 20,
+            height: 210,
+        },
         nestedScrollView: {
             display: "flex",
             justifyContent: "center",
@@ -261,9 +283,10 @@ const useStyles = () =>
             alignSelf: "center",
         },
         buttonZoneStyles: {
-            display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
             justifyContent: "space-between",
+            marginRight: 16,
+            marginLeft: 4,
         },
     });
 

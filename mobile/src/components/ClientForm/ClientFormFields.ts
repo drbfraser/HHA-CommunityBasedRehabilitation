@@ -150,10 +150,10 @@ export const validationSchema = () =>
         [ClientFormFields.village]: Yup.string()
             .label(ClientFormFieldLabels[ClientFormFields.village])
             .required(),
-        // [ClientFormFields.zone]: Yup.number()
-        //     .label(ClientFormFieldLabels[ClientFormFields.zone])
-        //     .required()
-        //     .typeError("Zone is a required field"),
+        [ClientFormFields.zone]: Yup.number()
+            .label(ClientFormFieldLabels[ClientFormFields.zone])
+            .required()
+            .typeError("Zone is a required field"),
         [ClientFormFields.caregiver_name]: Yup.string()
             .label(ClientFormFieldLabels[ClientFormFields.caregiver_name])
             .max(101),

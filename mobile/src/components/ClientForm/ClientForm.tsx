@@ -18,19 +18,32 @@ import {
 import { Gender, genders, IClient, themeColors } from "@cbr/common";
 import { handleSubmit } from "./ClientSubmitHandler";
 
+const objectFromMap = <K extends string | number | symbol, V>(
+    map: Map<K, V> | ReadonlyMap<K, V>
+): Record<K, V> => {
+    const obj: Partial<Record<K, V>> = {};
+    for (const entry of map) {
+        const [key, value] = entry;
+        obj[key] = value;
+    }
+    return obj as Record<K, V>;
+};
+
 export const ClientForm = (props: FormProps) => {
     const styles = clientStyle();
     let zoneMap = useZones();
     let disabilityMap = useDisabilities();
     let otherDisabilityId = getOtherDisabilityId(disabilityMap);
+    const disabilityObj = objectFromMap(useDisabilities());
+    const zoneObj = objectFromMap(useZones());
 
     let initialDisabilityArray: string[] = props.clientFormProps?.initialDisabilityArray
         ? props.clientFormProps?.initialDisabilityArray
         : [];
-    let initialZone: number = props.clientFormProps?.zone ? props.clientFormProps.zone - 1 : 0;
+    let initialZone: number = props.clientFormProps?.zone ? props.clientFormProps.zone : 0;
 
     //Client Details Usestates
-    const [date, setDate] = useState(new Date(props.clientFormProps?.date));
+    const [date, setDate] = useState(props.clientFormProps?.date);
     const [caregiverPresent, setCaregiverPresent] = useState(
         props.clientFormProps?.caregiverPresent
     );
@@ -45,9 +58,7 @@ export const ClientForm = (props: FormProps) => {
     const [genderVisible, setGenderVisible] = useState(false);
     const [selectedDisabilityList, setSelectedDisabilityList] =
         useState<string[]>(initialDisabilityArray);
-    const [presentZone, setPresentZone] = useState<String>(
-        Array.from(zoneMap.values())[initialZone]
-    );
+    const [presentZone, setPresentZone] = useState<String>(zoneObj[initialZone]);
     const initialFormValues = setFormInitialValues(props.clientFormProps, props.isNewClient);
     const openDisabilityMenu = () => setDisabilityVisible(true);
     const closeDisabilityMenu = () => setDisabilityVisible(false);
@@ -55,19 +66,6 @@ export const ClientForm = (props: FormProps) => {
     const closeZonesMenu = () => setZonesVisible(false);
     const openGenderMenu = () => setGenderVisible(true);
     const closeGenderMenu = () => setGenderVisible(false);
-
-    const objectFromMap = <K extends string | number | symbol, V>(
-        map: Map<K, V> | ReadonlyMap<K, V>
-    ): Record<K, V> => {
-        const obj: Partial<Record<K, V>> = {};
-        for (const entry of map) {
-            const [key, value] = entry;
-            obj[key] = value;
-        }
-        return obj as Record<K, V>;
-    };
-    const disabilityObj = objectFromMap(useDisabilities());
-    const zoneObj = objectFromMap(useZones());
 
     const updateDisabilityList = (values: number[] | undefined, otherDisability?: string) => {
         let newList: string[] = [];

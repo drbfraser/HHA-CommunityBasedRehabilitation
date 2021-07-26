@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { Gender, IClient, IClientSummary, themeColors } from "@cbr/common";
+import { Gender, IClient, themeColors } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
@@ -21,7 +21,7 @@ import {
     initialValues,
     validationSchema,
 } from "../../components/ClientForm/ClientFormFields";
-import { Formik, FormikContext, FormikProps, useFormikContext } from "formik";
+import { Formik } from "formik";
 import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 
 interface ClientProps {
@@ -31,7 +31,7 @@ interface ClientProps {
 }
 
 const ClientDetails = (props: ClientProps) => {
-    React.useEffect(() => {
+    useEffect(() => {
         props.navigation.setOptions({
             title: "Client Page",
             headerStyle: {
@@ -48,7 +48,7 @@ const ClientDetails = (props: ClientProps) => {
     const isFocused = useIsFocused();
 
     //Main Client Variables
-    const [clientFormikProps, setClientFormikProps] = useState<IClientFormProps>(initialValues);
+    const [clientFormikProps, setClientFormikProps] = useState<IClientFormProps>();
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);
@@ -124,9 +124,6 @@ const ClientDetails = (props: ClientProps) => {
                 .finally(() => setLoading(false));
         }
     }, [isFocused]);
-
-    //Overall Screen editable toggle variables
-    const [editMode, setEditMode] = useState(true);
 
     //Activity component rendering
     const navigation = useNavigation<AppStackNavProp>();
@@ -243,7 +240,7 @@ const ClientDetails = (props: ClientProps) => {
                             Baseline Survey
                         </Button>
                         <Button mode="contained" style={styles.clientButtons}>
-                            Baseline Survey
+                            New Visit
                         </Button>
                     </Card>
                     <Divider />
@@ -252,7 +249,7 @@ const ClientDetails = (props: ClientProps) => {
 
                     <Card style={styles.clientDetailsContainerStyles}>
                         <Formik
-                            initialValues={clientFormikProps}
+                            initialValues={clientFormikProps ?? initialValues}
                             validationSchema={validationSchema}
                             onSubmit={(values) => {
                                 handleFormSubmit(values);
@@ -264,7 +261,7 @@ const ClientDetails = (props: ClientProps) => {
                         </Formik>
                     </Card>
                     <Divider />
-                    <ClientRisk editMode={editMode}></ClientRisk>
+                    <ClientRisk editMode={true}></ClientRisk>
                     <Divider />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>

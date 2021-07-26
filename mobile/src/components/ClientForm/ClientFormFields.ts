@@ -48,6 +48,15 @@ export enum ClientFormFields {
     caregiver_name = "caregiverName",
     caregiver_phone = "caregiverPhone",
     caregiver_email = "caregiverEmail",
+    createdDate = "createdDate",
+    createdByUser = "createdByUser",
+    longitude = "longitde",
+    latitude = "latitude",
+    caregiverPicture = "caregiverPicture",
+    risks = "risks",
+    visits = "visits",
+    referrals = "referrals",
+    surveys = "surveys",
 }
 
 export const ClientFormFieldLabels = {
@@ -65,7 +74,7 @@ export const ClientFormFieldLabels = {
     [ClientFormFields.caregiver_email]: "Caregiver Email",
 };
 
-export const initialValues = {
+export const initialValues: IClientFormProps = {
     [ClientFormFields.first_name]: "",
     [ClientFormFields.last_name]: "",
     [ClientFormFields.date]: new Date(),
@@ -78,6 +87,14 @@ export const initialValues = {
     [ClientFormFields.caregiver_name]: "",
     [ClientFormFields.caregiver_phone]: "",
     [ClientFormFields.caregiver_email]: "",
+    [ClientFormFields.createdDate]: new Date().getTime(),
+    [ClientFormFields.createdByUser]: new Date().getTime(),
+    [ClientFormFields.latitude]: "",
+    [ClientFormFields.caregiverPicture]: "",
+    [ClientFormFields.risks]: [],
+    [ClientFormFields.visits]: [],
+    [ClientFormFields.referrals]: [],
+    [ClientFormFields.surveys]: [],
 };
 
 export interface FormValues {

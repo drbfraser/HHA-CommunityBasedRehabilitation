@@ -1,6 +1,5 @@
-import { Formik } from "formik";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities, getOtherDisabilityId } from "@cbr/common/src/util/hooks/disabilities";
 import { View, Platform, ScrollView, Alert } from "react-native";
@@ -9,19 +8,8 @@ import useStyles from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import { ClientFormFieldLabels, ClientFormFields, IFormProps } from "./ClientFormFields";
-import { Gender, genders, IClient, themeColors } from "@cbr/common";
-import { handleSubmit } from "./ClientSubmitHandler";
-
-export const objectFromMap = <K extends string | number | symbol, V>(
-    map: Map<K, V> | ReadonlyMap<K, V>
-): Record<K, V> => {
-    const obj: Partial<Record<K, V>> = {};
-    for (const entry of map) {
-        const [key, value] = entry;
-        obj[key] = value;
-    }
-    return obj as Record<K, V>;
-};
+import { Gender, genders, themeColors } from "@cbr/common";
+import { objectFromMap } from "../../util/ObjectFromMap";
 
 export const ClientForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -30,9 +18,6 @@ export const ClientForm = (props: IFormProps) => {
     const disabilityObj = objectFromMap(disabilityMap);
     const zoneObj = objectFromMap(useZones());
 
-    let initialDisabilityArray: string[] = props.formikProps?.values.initialDisabilityArray
-        ? props.formikProps?.values.initialDisabilityArray
-        : [];
     let initialZone: number = props.formikProps?.values.zone ? props.formikProps.values.zone : 0;
 
     //Client Details Usestates
@@ -139,13 +124,17 @@ export const ClientForm = (props: IFormProps) => {
                     <Text style={styles.valueText}>{date.toDateString()}</Text>
                     <View style={styles.clientBirthdayButtons}>
                         <View>
-                            <Button
-                                disabled={fieldsDisabled}
-                                mode="contained"
-                                onPress={showDatepicker}
-                            >
-                                Edit
-                            </Button>
+                            {!fieldsDisabled ? (
+                                <Button
+                                    disabled={fieldsDisabled}
+                                    mode="contained"
+                                    onPress={showDatepicker}
+                                >
+                                    Edit
+                                </Button>
+                            ) : (
+                                <></>
+                            )}
                         </View>
                         {datePickerVisible && (
                             <DateTimePicker
@@ -153,14 +142,24 @@ export const ClientForm = (props: IFormProps) => {
                                 value={props.formikProps?.values.date ?? new Date()}
                                 mode="date"
                                 display="default"
+                                neutralButtonLabel="Today"
                                 onChange={(event, date) => {
                                     setDatePickerVisible(Platform.OS === "ios");
-                                    if (date) {
+                                    if (event.type === "neutralButtonPressed") {
+                                        const todayDate = new Date();
                                         props.formikProps?.setFieldValue(
                                             ClientFormFields.date,
-                                            date
+                                            todayDate
                                         );
-                                        setDate(date);
+                                        setDate(todayDate);
+                                    } else {
+                                        if (date) {
+                                            props.formikProps?.setFieldValue(
+                                                ClientFormFields.date,
+                                                date
+                                            );
+                                            setDate(date);
+                                        }
                                     }
                                     setDatePickerVisible(false);
                                 }}
@@ -215,26 +214,25 @@ export const ClientForm = (props: IFormProps) => {
                             </Button>
                         </Modal>
                     </Portal>
-                    <Text>Gender</Text>
+
                     <View style={styles.buttonZoneStyles}>
-                        {clientGender === Gender.MALE ? (
-                            <Text style={styles.valueText}>{genders.M}</Text>
-                        ) : (
-                            <Text style={styles.valueText}>{genders.F}</Text>
-                        )}
+                        <Text>Gender</Text>
                         {!fieldsDisabled ? (
                             <Button
                                 mode="contained"
-                                style={styles.disabilityButton}
+                                style={styles.editButton}
                                 disabled={fieldsDisabled}
                                 onPress={openGenderMenu}
                             >
-                                Edit Gender
+                                Edit
                             </Button>
                         ) : (
                             <></>
                         )}
                     </View>
+                    <Text style={styles.valueText}>
+                        {clientGender === Gender.MALE ? genders.M : genders.F}
+                    </Text>
                 </View>
                 <Text style={styles.errorText}>{props.formikProps?.errors.gender}</Text>
 
@@ -294,22 +292,23 @@ export const ClientForm = (props: IFormProps) => {
                             </Button>
                         </Modal>
                     </Portal>
-                    <Text>Zone</Text>
+
                     <View style={styles.buttonZoneStyles}>
-                        <Text style={styles.valueText}>{presentZone}</Text>
+                        <Text>Zone</Text>
                         {!fieldsDisabled ? (
                             <Button
                                 mode="contained"
-                                style={styles.disabilityButton}
+                                style={styles.editButton}
                                 disabled={fieldsDisabled}
                                 onPress={openZonesMenu}
                             >
-                                Edit Zone
+                                Edit
                             </Button>
                         ) : (
                             <></>
                         )}
                     </View>
+                    <Text style={styles.valueText}>{presentZone}</Text>
                 </View>
                 <Text style={styles.errorText}>{props.formikProps?.errors.zone}</Text>
 
@@ -391,7 +390,22 @@ export const ClientForm = (props: IFormProps) => {
                             </View>
                         </Modal>
                     </Portal>
-                    <Text>Disability</Text>
+                    <View style={styles.buttonZoneStyles}>
+                        <Text>Disability</Text>
+                        {!fieldsDisabled ? (
+                            <Button
+                                mode="contained"
+                                style={styles.editButton}
+                                disabled={fieldsDisabled}
+                                onPress={openDisabilityMenu}
+                            >
+                                Edit
+                            </Button>
+                        ) : (
+                            <></>
+                        )}
+                    </View>
+
                     {props.formikProps?.values.clientDisability?.map((item) => {
                         return (
                             <Text key={item} style={styles.valueText}>
@@ -399,18 +413,6 @@ export const ClientForm = (props: IFormProps) => {
                             </Text>
                         );
                     })}
-                    {!fieldsDisabled ? (
-                        <Button
-                            mode="contained"
-                            style={styles.disabilityButton}
-                            disabled={fieldsDisabled}
-                            onPress={openDisabilityMenu}
-                        >
-                            Edit Disabilities
-                        </Button>
-                    ) : (
-                        <></>
-                    )}
                 </View>
                 <Text style={styles.errorText}>{props.formikProps?.errors.clientDisability}</Text>
 

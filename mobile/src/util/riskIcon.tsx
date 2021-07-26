@@ -8,7 +8,7 @@ const riskIcon = (name: string, color: string) => {
 
 export interface IRiskType {
     name: string;
-    Icon: typeof riskIcon;
+    Icon: (color: string) => JSX.Element;
 }
 
 export const riskTypes: { [key: string]: IRiskType } = {

@@ -5,7 +5,7 @@ import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities, getOtherDisabilityId } from "@cbr/common/src/util/hooks/disabilities";
 import { View, Platform, ScrollView, Alert } from "react-native";
 import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-paper";
-import clientStyle from "../../screens/ClientDetails/ClientDetails.styles";
+import useStyles from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import {
@@ -14,6 +14,7 @@ import {
     ClientFormFields,
     setFormInitialValues,
     FormProps,
+    IClientFormProps,
 } from "./ClientFormFields";
 import { Gender, genders, IClient, themeColors } from "@cbr/common";
 import { handleSubmit } from "./ClientSubmitHandler";
@@ -30,10 +31,10 @@ const objectFromMap = <K extends string | number | symbol, V>(
 };
 
 export const ClientForm = (props: FormProps) => {
-    const styles = clientStyle();
-    let zoneMap = useZones();
-    let disabilityMap = useDisabilities();
-    let otherDisabilityId = getOtherDisabilityId(disabilityMap);
+    const styles = useStyles();
+    const zoneMap = useZones();
+    const disabilityMap = useDisabilities();
+    const otherDisabilityId = getOtherDisabilityId(disabilityMap);
     const disabilityObj = objectFromMap(useDisabilities());
     const zoneObj = objectFromMap(useZones());
 
@@ -52,27 +53,31 @@ export const ClientForm = (props: FormProps) => {
     const [otherDisability, showOtherDisability] = useState(false);
     const [fieldsDisabled, setFieldsDisabled] = useState(!props.isNewClient);
     const [cancelButtonType, setCancelButtonType] = useState("outlined");
-    const [showDatePicker, setShowDatePicker] = useState(false);
-    const [disabilityVisible, setDisabilityVisible] = useState(false);
-    const [zonesVisible, setZonesVisible] = useState(false);
-    const [genderVisible, setGenderVisible] = useState(false);
+    const [datePickerVisible, setDatePickerVisible] = useState(false);
+    const [disabilityPickerVisible, setDisabilityPickerVisible] = useState(false);
+    const [zonesPickerVisible, setZonesPickerVisible] = useState(false);
+    const [genderPickerVisible, setGenderPickerVisible] = useState(false);
     const [selectedDisabilityList, setSelectedDisabilityList] =
         useState<string[]>(initialDisabilityArray);
-    const [presentZone, setPresentZone] = useState<String>(zoneObj[initialZone]);
-    const initialFormValues = setFormInitialValues(props.clientFormProps, props.isNewClient);
-    const openDisabilityMenu = () => setDisabilityVisible(true);
-    const closeDisabilityMenu = () => setDisabilityVisible(false);
-    const openZonesMenu = () => setZonesVisible(true);
-    const closeZonesMenu = () => setZonesVisible(false);
-    const openGenderMenu = () => setGenderVisible(true);
-    const closeGenderMenu = () => setGenderVisible(false);
+    const [presentZone, setPresentZone] = useState<String>(String(zoneObj[initialZone]));
+    const initialFormValues = setFormInitialValues(
+        props.clientFormProps as IClientFormProps,
+        props.isNewClient
+    );
+
+    const openDisabilityMenu = () => setDisabilityPickerVisible(true);
+    const closeDisabilityMenu = () => setDisabilityPickerVisible(false);
+    const openZonesMenu = () => setZonesPickerVisible(true);
+    const closeZonesMenu = () => setZonesPickerVisible(false);
+    const openGenderMenu = () => setGenderPickerVisible(true);
+    const closeGenderMenu = () => setGenderPickerVisible(false);
 
     const updateDisabilityList = (values: number[] | undefined, otherDisability?: string) => {
         let newList: string[] = [];
         if (!values) return newList;
         else {
             for (let index of values) {
-                if (index == otherDisabilityId) {
+                if (index === otherDisabilityId) {
                     showOtherDisability(true);
                     newList.push("Other");
                 } else {
@@ -85,7 +90,7 @@ export const ClientForm = (props: FormProps) => {
 
     //Menu functions
     const toggleButtons = (toggleTo: boolean) => {
-        if (toggleTo == true) {
+        if (toggleTo) {
             setFieldsDisabled(false);
             setCancelButtonType("contained");
         } else {
@@ -100,28 +105,31 @@ export const ClientForm = (props: FormProps) => {
 
     //Date Picker
     const showDatepicker = () => {
-        setShowDatePicker(true);
+        setDatePickerVisible(true);
     };
 
     const resetFormState = () => {
-        setDate(props.clientFormProps.date);
-        setPresentZone(Array.from(zoneMap.values())[props.clientFormProps.zone - 1]);
-        setSelectedZone(props.clientFormProps.zone - 1);
-        if (props.clientFormProps.caregiverPresent)
-            setCaregiverPresent(props.clientFormProps.caregiverPresent);
-        else setCaregiverPresent(false);
+        if (props.clientFormProps) {
+            setDate(props.clientFormProps.date);
+            setPresentZone(String(zoneObj[initialZone]));
+            setSelectedZone(initialZone);
+            if (props.clientFormProps.caregiverPresent)
+                setCaregiverPresent(props.clientFormProps.caregiverPresent);
+            else setCaregiverPresent(false);
+        } else {
+            setDate(new Date());
+            setPresentZone(String(zoneObj[initialZone]));
+            setSelectedZone(initialZone);
+            setCaregiverPresent(false);
+        }
     };
 
     const getGender = (gender: string) => {
-        if (gender == "M") {
-            return Gender.MALE;
-        }
-        return Gender.FEMALE;
+        return gender === "M" ? Gender.MALE : Gender.FEMALE;
     };
 
     const submitForm = async (updatedIClient: IClient) => {
         const isSuccess = await handleSubmit(updatedIClient, props.isNewClient);
-        console.log(isSuccess);
         toggleButtons(!isSuccess);
     };
 
@@ -196,14 +204,14 @@ export const ClientForm = (props: FormProps) => {
                                         Edit
                                     </Button>
                                 </View>
-                                {showDatePicker && (
+                                {datePickerVisible && (
                                     <DateTimePicker
                                         testID="dateTimePicker"
                                         value={formikProps.values.date!}
                                         mode="date"
                                         display="default"
                                         onChange={(event, date) => {
-                                            setShowDatePicker(Platform.OS === "ios");
+                                            setDatePickerVisible(Platform.OS === "ios");
                                             if (date) {
                                                 formikProps.setFieldValue(
                                                     ClientFormFields.date,
@@ -211,7 +219,7 @@ export const ClientForm = (props: FormProps) => {
                                                 );
                                                 setDate(date);
                                             }
-                                            setShowDatePicker(false);
+                                            setDatePickerVisible(false);
                                         }}
                                     />
                                 )}
@@ -222,7 +230,7 @@ export const ClientForm = (props: FormProps) => {
                         <View>
                             <Portal>
                                 <Modal
-                                    visible={genderVisible}
+                                    visible={genderPickerVisible}
                                     onDismiss={closeGenderMenu}
                                     style={styles.genderChecklist}
                                 >
@@ -270,7 +278,7 @@ export const ClientForm = (props: FormProps) => {
                             </Portal>
                             <Text> Gender</Text>
                             <View style={styles.buttonZoneStyles}>
-                                {clientGender == Gender.MALE ? (
+                                {clientGender === Gender.MALE ? (
                                     <Text style={styles.valueText}>{genders.M}</Text>
                                 ) : (
                                     <Text style={styles.valueText}>{genders.F}</Text>
@@ -304,7 +312,7 @@ export const ClientForm = (props: FormProps) => {
                         <View>
                             <Portal>
                                 <Modal
-                                    visible={zonesVisible}
+                                    visible={zonesPickerVisible}
                                     onDismiss={closeZonesMenu}
                                     style={styles.zoneChecklist}
                                 >
@@ -324,7 +332,6 @@ export const ClientForm = (props: FormProps) => {
                                                 placeholderTextColor={themeColors.blueBgLight}
                                                 returnValue={"zone_name"}
                                                 callback={(values) => {
-                                                    console.log(values);
                                                     formikProps.setFieldValue(
                                                         "zone",
                                                         values.map(Number)
@@ -382,7 +389,7 @@ export const ClientForm = (props: FormProps) => {
                         <View>
                             <Portal>
                                 <Modal
-                                    visible={disabilityVisible}
+                                    visible={disabilityPickerVisible}
                                     onDismiss={closeDisabilityMenu}
                                     style={styles.disabilityChecklist}
                                 >

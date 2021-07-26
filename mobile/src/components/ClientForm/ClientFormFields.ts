@@ -3,10 +3,10 @@ import * as Yup from "yup";
 
 export interface FormProps {
     isNewClient?: boolean;
-    clientFormProps?: ClientFormProps;
+    clientFormProps?: IClientFormProps;
 }
 
-export interface ClientFormProps {
+export interface IClientFormProps {
     id?: number;
     firstName?: string;
     lastName?: string;
@@ -96,7 +96,7 @@ export interface FormValues {
     otherDisability?: string;
 }
 
-export const setFormInitialValues = (props: ClientFormProps, isNewClient?: boolean) => {
+export const setFormInitialValues = (props: IClientFormProps, isNewClient?: boolean) => {
     if (isNewClient) {
         return InitialValues;
     } else {

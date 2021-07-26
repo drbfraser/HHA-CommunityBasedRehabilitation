@@ -37,7 +37,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
 
     React.useEffect(() => {
         props.navigation.setOptions({
-            title: "Random title",
+            title: "CBR Mobile",
             headerStyle: styles.headerStyle,
             headerTintColor: themeColors.white,
             headerShown: true,

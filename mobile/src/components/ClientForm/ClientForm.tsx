@@ -36,7 +36,7 @@ export const ClientForm = (props: IFormProps) => {
     let initialZone: number = props.formikProps?.values.zone ? props.formikProps.values.zone : 0;
 
     //Client Details Usestates
-    const [date, setDate] = useState(props.formikProps?.values.date);
+    const [date, setDate] = useState(props.formikProps?.values.date ?? new Date());
     const [caregiverPresent, setCaregiverPresent] = useState(
         props.formikProps?.values.caregiverPresent
     );
@@ -49,8 +49,6 @@ export const ClientForm = (props: IFormProps) => {
     const [disabilityPickerVisible, setDisabilityPickerVisible] = useState(false);
     const [zonesPickerVisible, setZonesPickerVisible] = useState(false);
     const [genderPickerVisible, setGenderPickerVisible] = useState(false);
-    const [selectedDisabilityList, setSelectedDisabilityList] =
-        useState<string[]>(initialDisabilityArray);
     const [presentZone, setPresentZone] = useState<String>(String(zoneObj[initialZone]));
 
     const openDisabilityMenu = () => setDisabilityPickerVisible(true);
@@ -61,19 +59,20 @@ export const ClientForm = (props: IFormProps) => {
     const closeGenderMenu = () => setGenderPickerVisible(false);
 
     const updateDisabilityList = (values: number[] | undefined) => {
+        let otherDisabilityFound = false;
         let newList: string[] = [];
         if (!values) return newList;
         else {
             for (let index of values) {
                 if (index === otherDisabilityId) {
-                    showOtherDisability(true);
+                    otherDisabilityFound = true;
                     newList.push("Other");
                 } else {
                     newList.push(disabilityObj[index]);
                 }
             }
         }
-        setSelectedDisabilityList(newList);
+        showOtherDisability(otherDisabilityFound);
     };
 
     //Menu functions
@@ -98,7 +97,7 @@ export const ClientForm = (props: IFormProps) => {
 
     const resetFormState = () => {
         if (props.formikProps) {
-            setDate(props.formikProps.values.date);
+            setDate(props.formikProps.values.date ?? new Date());
             setPresentZone(String(zoneObj[initialZone]));
             setSelectedZone(initialZone);
             if (props.formikProps.values.caregiverPresent)

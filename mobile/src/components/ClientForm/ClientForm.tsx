@@ -122,10 +122,6 @@ export const ClientForm = (props: IFormProps) => {
         }
     };
 
-    const getGender = (gender: string) => {
-        return gender === "M" ? Gender.MALE : Gender.FEMALE;
-    };
-
     const submitForm = async (updatedIClient: IClient) => {
         const isSuccess = await handleSubmit(updatedIClient, props.isNewClient);
         toggleButtons(!isSuccess);
@@ -142,7 +138,7 @@ export const ClientForm = (props: IFormProps) => {
                         first_name: values.firstName ?? "",
                         last_name: values.lastName ?? "",
                         birth_date: values.date ? values.date.getTime() : new Date().getTime(),
-                        gender: getGender(values.gender ?? "M"),
+                        gender: values.gender as Gender,
                         village: values.village ?? "",
                         zone: values.zone ?? 0,
                         phone_number: values.phone ?? "",
@@ -205,7 +201,7 @@ export const ClientForm = (props: IFormProps) => {
                                 {datePickerVisible && (
                                     <DateTimePicker
                                         testID="dateTimePicker"
-                                        value={formikProps.values.date!}
+                                        value={formikProps.values.date ?? new Date()}
                                         mode="date"
                                         display="default"
                                         onChange={(event, date) => {

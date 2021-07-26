@@ -143,6 +143,23 @@ export const validationSchema = () =>
         [ClientFormFields.disability]: Yup.array()
             .label(ClientFormFieldLabels[ClientFormFields.disability])
             .required(),
+        [ClientFormFields.other_disability]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.other_disability])
+            .trim()
+            .test(
+                "require-if-other-selected",
+                "Other Disability is required",
+                async (other_disability, schema) =>
+                    !(await Validation.otherDisabilitySelected(schema.parent.clientDisability)) ||
+                    (other_disability !== undefined && other_disability.length > 0)
+            )
+            .test(
+                "require-if-other-selected",
+                "Other Disability must be at most 100 characters",
+                async (other_disability, schema) =>
+                    !(await Validation.otherDisabilitySelected(schema.parent.clientDisability)) ||
+                    (other_disability !== undefined && other_disability.length <= 100)
+            ),
         [ClientFormFields.gender]: Yup.string()
             .label(ClientFormFieldLabels[ClientFormFields.gender])
             .required(),

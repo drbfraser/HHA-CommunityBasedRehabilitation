@@ -124,7 +124,7 @@ export const ClientForm = (props: FormProps) => {
         <View>
             <Formik
                 initialValues={initialFormValues}
-                validationSchema={validationSchema}
+                validationSchema={validationSchema()}
                 onSubmit={(values) => {
                     const updatedIClient: IClient = {
                         id: props.clientFormProps?.id!,
@@ -440,6 +440,9 @@ export const ClientForm = (props: FormProps) => {
                                             ) : (
                                                 <></>
                                             )}
+                                            <Text style={styles.errorText}>
+                                                {formikProps.errors.date}
+                                            </Text>
                                         </ScrollView>
                                         <Button
                                             mode="contained"

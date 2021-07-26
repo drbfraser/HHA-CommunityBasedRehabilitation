@@ -165,7 +165,6 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        
         count = count + 1;
 
         getNewClient();

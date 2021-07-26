@@ -119,7 +119,7 @@ const ClientList = () => {
             sortOption,
             sortDirection
         );
-        if (sortDirection !=== "None") {
+        if (sortDirection !== "None") {
             exampleClient = exampleClient.sort(theComparator);
         }
         setClientList(exampleClient);

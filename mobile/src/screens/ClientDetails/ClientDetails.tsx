@@ -13,11 +13,11 @@ import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import { RecentActivity } from "./ClientTimeline/RecentActivity";
-import { RouteProp, useIsFocused } from "@react-navigation/native";
+import { RouteProp, useNavigation, useIsFocused } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { StackParamList } from "../../util/stackScreens";
+import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
-import { ClientFormProps, InitialValues } from "../../components/ClientForm/ClientFormFields";
+import { IClientFormProps, InitialValues } from "../../components/ClientForm/ClientFormFields";
 
 interface ClientProps {
     clientID: number;
@@ -44,7 +44,7 @@ const ClientDetails = (props: ClientProps) => {
 
     //Main Client Variables
     const [presentClient, setPresentClient] = useState<IClient>();
-    const [clientFormikProps, setClientFormikProps] = useState<ClientFormProps>(InitialValues);
+    const [clientFormikProps, setClientFormikProps] = useState<IClientFormProps>(InitialValues);
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);
@@ -87,7 +87,7 @@ const ClientDetails = (props: ClientProps) => {
         setClientReferrals(presentClient.referrals);
         setClientSurveys(presentClient.baseline_surveys);
 
-        const clientFormProps: ClientFormProps = {
+        const clientFormProps: IClientFormProps = {
             id: props.route.params.clientID,
             firstName: presentClient!.first_name,
             lastName: presentClient!.last_name,
@@ -135,6 +135,7 @@ const ClientDetails = (props: ClientProps) => {
     const [editMode, setEditMode] = useState(true);
 
     //Activity component rendering
+    const navigation = useNavigation<AppStackNavProp>();
     const tempActivity: IActivity[] = [];
     let presentId = 0;
     if (clientVisits) {
@@ -194,11 +195,27 @@ const ClientDetails = (props: ClientProps) => {
                                 uri: "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png",
                             }}
                         />
-                        <Button mode="contained" style={styles.clientButtons}>
-                            New Visit
-                        </Button>
-                        <Button mode="contained" style={styles.clientButtons}>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.REFERRAL, {
+                                    clientID: props.route.params.clientID,
+                                });
+                            }}
+                        >
                             New Referral
+                        </Button>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.BASE_SURVEY, {
+                                    clientID: props.route.params.clientID,
+                                });
+                            }}
+                        >
+                            Baseline Survey
                         </Button>
                         <Button mode="contained" style={styles.clientButtons}>
                             Baseline Survey

@@ -31,6 +31,17 @@ const returnWrappedView = (item) => {
     );
 };
 
+export const getLevelByColor = (color: string) => {
+    if (color === themeColors.riskYellow) {
+        return 1;
+    } else if (color === themeColors.riskRed) {
+        return 4;
+    } else if (color === themeColors.riskBlack) {
+        return 13;
+    }
+    return 0;
+};
+
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
     const [clientList, setClientList] = useState<ClientTest[]>([]);
@@ -43,18 +54,7 @@ const ClientList = () => {
     const sortDirections = ["asc", "dec", "None"];
     const [currentDirection, setCurrentDirection] = useState(0);
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
-    const getLevelByColor = (color: string) => {
-        if (color == themeColors.riskGreen) {
-            return 0;
-        } else if (color == themeColors.riskYellow) {
-            return 1;
-        } else if (color == themeColors.riskRed) {
-            return 4;
-        } else if (color == themeColors.riskBlack) {
-            return 13;
-        }
-        return 0;
-    };
+
     const sortBy = async (option: string) => {
         if (option != sortOption) {
             setSortOption(option);
@@ -62,98 +62,48 @@ const ClientList = () => {
             setIsSortDirection(sortDirections[currentDirection]);
         } else {
             setCurrentDirection(currentDirection + 1);
-            if (currentDirection == 2) {
+            if (currentDirection === 2) {
                 setCurrentDirection(0);
             }
             setIsSortDirection(sortDirections[currentDirection]);
         }
     };
     const theComparator = (a: ClientTest, b: ClientTest): number => {
-        if (sortOption == SortOptions.ID) {
-            if (sortDirection == "asc") {
-                return a.id - b.id;
-            } else {
-                return b.id - a.id;
+        let result = 0;
+        switch (sortOption) {
+            case SortOptions.ID: {
+                result = a.id - b.id;
+                break;
             }
-        } else if (sortOption == SortOptions.NAME) {
-            if (sortDirection == "asc") {
-                if (a.full_name > b.full_name) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            } else {
-                if (a.full_name < b.full_name) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+            case SortOptions.NAME: {
+                result = a.full_name > b.full_name ? 1 : -1;
+                break;
             }
-        } else if (sortOption == SortOptions.ZONE) {
-            if (sortDirection == "asc") {
-                if (a.zone > b.zone) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            } else {
-                if (a.zone < b.zone) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+            case SortOptions.ZONE: {
+                result = a.zone > b.zone ? 1 : -1;
+                break;
             }
-        } else if (sortOption == SortOptions.HEALTH) {
-            if (sortDirection == "asc") {
-                if (getLevelByColor(a.HealthLevel) > getLevelByColor(b.HealthLevel)) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            } else {
-                if (getLevelByColor(a.HealthLevel) < getLevelByColor(b.HealthLevel)) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+            case SortOptions.HEALTH: {
+                result = getLevelByColor(a.HealthLevel) > getLevelByColor(b.HealthLevel) ? 1 : -1;
+                break;
             }
-        } else if (sortOption == SortOptions.EDUCATION) {
-            if (sortDirection == "asc") {
-                if (getLevelByColor(a.EducationLevel) > getLevelByColor(b.EducationLevel)) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            } else {
-                if (getLevelByColor(a.EducationLevel) < getLevelByColor(b.EducationLevel)) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+            case SortOptions.EDUCATION: {
+                result =
+                    getLevelByColor(a.EducationLevel) > getLevelByColor(b.EducationLevel) ? 1 : -1;
+                break;
             }
-        } else if (sortOption == SortOptions.SOCIAL) {
-            if (sortDirection == "asc") {
-                if (getLevelByColor(a.SocialLevel) > getLevelByColor(b.SocialLevel)) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            } else {
-                if (getLevelByColor(a.SocialLevel) < getLevelByColor(b.SocialLevel)) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+            case SortOptions.SOCIAL: {
+                result = getLevelByColor(a.SocialLevel) > getLevelByColor(b.SocialLevel) ? 1 : -1;
+                break;
             }
         }
-
-        return 0;
+        return sortDirection === "asc" ? result : -1 * result;
     };
     const arrowDirectionController = (column_name: string) => {
-        if (column_name == sortOption) {
-            if (sortDirection == "asc") {
+        if (column_name === sortOption) {
+            if (sortDirection === "asc") {
                 return "ascending";
-            } else if (sortDirection == "dec") {
+            } else if (sortDirection === "dec") {
                 return "descending";
             } else {
                 return undefined;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { IClient } from "@cbr/common";
+import { IClient, themeColors } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
@@ -184,7 +184,7 @@ const ClientDetails = (props: ClientProps) => {
         <ScrollView style={styles.scrollViewStyles}>
             {loading ? (
                 <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color="#273364" />
+                    <ActivityIndicator size="large" color={themeColors.blueAccent} />
                 </View>
             ) : (
                 <View>

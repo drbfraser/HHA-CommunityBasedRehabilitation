@@ -13,7 +13,7 @@ import {
     ClientFormFieldLabels,
     ClientFormFields,
     setFormInitialValues,
-    FormProps,
+    IFormProps,
     IClientFormProps,
 } from "./ClientFormFields";
 import { Gender, genders, IClient, themeColors } from "@cbr/common";
@@ -30,7 +30,7 @@ const objectFromMap = <K extends string | number | symbol, V>(
     return obj as Record<K, V>;
 };
 
-export const ClientForm = (props: FormProps) => {
+export const ClientForm = (props: IFormProps) => {
     const styles = useStyles();
     const otherDisabilityId = getOtherDisabilityId(useDisabilities());
     const disabilityObj = objectFromMap(useDisabilities());
@@ -256,7 +256,7 @@ export const ClientForm = (props: FormProps) => {
                                                     );
                                                     setClientGender(values[0]);
                                                 }}
-                                                rowBackgroundColor={themeColors.lightPickerGray}
+                                                rowBackgroundColor={themeColors.blueBgLight}
                                                 iconSize={30}
                                                 selectedIconName={"checkmark-circle"}
                                                 unselectedIconName={"radio-button-off"}
@@ -337,7 +337,7 @@ export const ClientForm = (props: FormProps) => {
                                                     setPresentZone(zoneObj[values.map(Number)]);
                                                     setSelectedZone(values);
                                                 }}
-                                                rowBackgroundColor={themeColors.lightPickerGray}
+                                                rowBackgroundColor={themeColors.blueBgLight}
                                                 iconSize={30}
                                                 selectedIconName={"checkmark-circle"}
                                                 unselectedIconName={"radio-button-off"}
@@ -417,7 +417,7 @@ export const ClientForm = (props: FormProps) => {
                                                         formikProps.values.otherDisability
                                                     );
                                                 }}
-                                                rowBackgroundColor={themeColors.lightPickerGray}
+                                                rowBackgroundColor={themeColors.blueBgLight}
                                                 iconSize={30}
                                                 selectedIconName={"checkmark-circle"}
                                                 unselectedIconName={"radio-button-off"}

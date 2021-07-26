@@ -6,7 +6,7 @@ import { APIFetchFailError } from "../endpoints";
  */
 const buildFormErrorInternal = (
     error: APIFetchFailError,
-    formLabels: Record<string, string>
+    formLabels: Record<string, string> | undefined | null
 ): string => {
     if (!error.response) {
         return error.message;
@@ -17,7 +17,7 @@ const buildFormErrorInternal = (
         ? errResponseEntries.reduce<string>((previousPartialError, [field, message], index) => {
               return (
                   previousPartialError +
-                  `${index !== 0 ? "\n" : ""}${formLabels[field] ?? field}: ${message}`
+                  `${index !== 0 ? "\n" : ""}${formLabels?.[field] ?? field}: ${message}`
               );
           }, "")
         : error.message;

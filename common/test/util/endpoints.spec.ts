@@ -80,6 +80,9 @@ describe("endpoints.ts", () => {
                 expect(buildFormErrorInternal(error, {})).toBe(
                     "usrnm: Username doesn't exist\npass: Password too weak"
                 );
+                expect(buildFormErrorInternal(error, undefined)).toBe(
+                    "usrnm: Username doesn't exist\npass: Password too weak"
+                );
             });
         });
     });

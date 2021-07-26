@@ -74,15 +74,17 @@ export class APIFetchFailError extends Error {
     }
 
     /**
-     * Builds a single, multi-line error message if this error resulted from a form submission. Such
-     * errors from the server from invalid form input would result in the JSON response containing
-     * the field names mapped to the error message for that field. If no entries can be found, the
+     * Builds a multi-line error message if this error resulted from a form submission. Such errors
+     * from the server from invalid form input would result in the JSON response containing the
+     * field names mapped to the error message for that field. If no entries can be found, the
      * default {@link message} is used.
      *
-     * @param formLabels
+     * @param formLabels A Record that maps field names to user-friendly field labels. If this is
+     * undefined or the error contains fields not covered by the Record, then the raw field name
+     * will be used.
      * @return A human-readable error message as described above.
      */
-    buildFormError(formLabels: Record<string, string>): string {
+    buildFormError(formLabels: Record<string, string> | undefined | null): string {
         // Delegating to an internal function, because there are issues with extending native types
         // in JavaScript apparently. Trying to use this buildFormError func in the class during
         // unit tests results in "TypeError: buildFormError is not a function"

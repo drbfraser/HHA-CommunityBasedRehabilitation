@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { HelperText, Text } from "react-native-paper";
-import { fieldLabels, FormField, IFormProps } from "@cbr/common";
+import { baseFieldLabels, BaseSurveyFormField, IFormProps } from "@cbr/common";
 import { deviceTypes, rateLevel } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
@@ -14,7 +14,7 @@ const HealthForm = (props: IFormProps) => {
         <View>
             <Text style={styles.pickerQuestion}>{"\n"}Rate your general health </Text>
             <TextPicker
-                field={FormField.rateLevel}
+                field={BaseSurveyFormField.rateLevel}
                 choices={Object.entries(rateLevel).map(
                     (key) =>
                         ({
@@ -22,7 +22,7 @@ const HealthForm = (props: IFormProps) => {
                             label: key[1].name,
                         } as IPickerChoice)
                 )}
-                selectedValue={props.formikProps.values[FormField.rateLevel]}
+                selectedValue={props.formikProps.values[BaseSurveyFormField.rateLevel]}
                 setFieldValue={props.formikProps.setFieldValue}
                 setFieldTouched={props.formikProps.setFieldTouched}
             />
@@ -30,51 +30,51 @@ const HealthForm = (props: IFormProps) => {
             <HelperText
                 style={styles.errorText}
                 type="error"
-                visible={!!props.formikProps.errors[FormField.rateLevel]}
+                visible={!!props.formikProps.errors[BaseSurveyFormField.rateLevel]}
             >
-                {props.formikProps.errors[FormField.rateLevel]}
+                {props.formikProps.errors[BaseSurveyFormField.rateLevel]}
             </HelperText>
 
             <TextCheckBox
-                field={FormField.getService}
-                value={props.formikProps.values[FormField.getService]}
-                label={fieldLabels[FormField.getService]}
+                field={BaseSurveyFormField.getService}
+                value={props.formikProps.values[BaseSurveyFormField.getService]}
+                label={baseFieldLabels[BaseSurveyFormField.getService]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
             <TextCheckBox
-                field={FormField.needService}
-                value={props.formikProps.values[FormField.needService]}
-                label={fieldLabels[FormField.needService]}
+                field={BaseSurveyFormField.needService}
+                value={props.formikProps.values[BaseSurveyFormField.needService]}
+                label={baseFieldLabels[BaseSurveyFormField.needService]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
             <TextCheckBox
-                field={FormField.haveDevice}
-                value={props.formikProps.values[FormField.haveDevice]}
-                label={fieldLabels[FormField.haveDevice]}
+                field={BaseSurveyFormField.haveDevice}
+                value={props.formikProps.values[BaseSurveyFormField.haveDevice]}
+                label={baseFieldLabels[BaseSurveyFormField.haveDevice]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
 
             <TextCheckBox
-                field={FormField.deviceWorking}
-                value={props.formikProps.values[FormField.deviceWorking]}
-                label={fieldLabels[FormField.deviceWorking]}
+                field={BaseSurveyFormField.deviceWorking}
+                value={props.formikProps.values[BaseSurveyFormField.deviceWorking]}
+                label={baseFieldLabels[BaseSurveyFormField.deviceWorking]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
 
             <TextCheckBox
-                field={FormField.needDevice}
-                value={props.formikProps.values[FormField.needDevice]}
-                label={fieldLabels[FormField.needDevice]}
+                field={BaseSurveyFormField.needDevice}
+                value={props.formikProps.values[BaseSurveyFormField.needDevice]}
+                label={baseFieldLabels[BaseSurveyFormField.needDevice]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
 
-            {props.formikProps.values[FormField.needDevice] && (
+            {props.formikProps.values[BaseSurveyFormField.needDevice] && (
                 <View>
                     <Text style={styles.pickerQuestion}>
                         {"\n"} What assistive device do you need?
                     </Text>
                     <TextPicker
-                        field={FormField.deviceType}
+                        field={BaseSurveyFormField.deviceType}
                         choices={Object.entries(deviceTypes).map(
                             (key) =>
                                 ({
@@ -82,7 +82,7 @@ const HealthForm = (props: IFormProps) => {
                                     label: key[1],
                                 } as IPickerChoice)
                         )}
-                        selectedValue={props.formikProps.values[FormField.deviceType]}
+                        selectedValue={props.formikProps.values[BaseSurveyFormField.deviceType]}
                         setFieldValue={props.formikProps.setFieldValue}
                         setFieldTouched={props.formikProps.setFieldTouched}
                     />
@@ -90,9 +90,9 @@ const HealthForm = (props: IFormProps) => {
                     <HelperText
                         style={styles.errorText}
                         type="error"
-                        visible={!!props.formikProps.errors[FormField.deviceType]}
+                        visible={!!props.formikProps.errors[BaseSurveyFormField.deviceType]}
                     >
-                        {props.formikProps.errors[FormField.deviceType]}
+                        {props.formikProps.errors[BaseSurveyFormField.deviceType]}
                     </HelperText>
                 </View>
             )}
@@ -101,7 +101,7 @@ const HealthForm = (props: IFormProps) => {
             </Text>
 
             <TextPicker
-                field={FormField.serviceSatisf}
+                field={BaseSurveyFormField.serviceSatisf}
                 choices={Object.entries(rateLevel).map(
                     (key) =>
                         ({
@@ -109,7 +109,7 @@ const HealthForm = (props: IFormProps) => {
                             label: key[1].name,
                         } as IPickerChoice)
                 )}
-                selectedValue={props.formikProps.values[FormField.serviceSatisf]}
+                selectedValue={props.formikProps.values[BaseSurveyFormField.serviceSatisf]}
                 setFieldValue={props.formikProps.setFieldValue}
                 setFieldTouched={props.formikProps.setFieldTouched}
             />
@@ -117,9 +117,9 @@ const HealthForm = (props: IFormProps) => {
             <HelperText
                 style={styles.errorText}
                 type="error"
-                visible={!!props.formikProps.errors[FormField.serviceSatisf]}
+                visible={!!props.formikProps.errors[BaseSurveyFormField.serviceSatisf]}
             >
-                {props.formikProps.errors[FormField.serviceSatisf]}
+                {props.formikProps.errors[BaseSurveyFormField.serviceSatisf]}
             </HelperText>
         </View>
     );

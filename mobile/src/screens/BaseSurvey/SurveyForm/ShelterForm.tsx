@@ -1,22 +1,22 @@
 import React from "react";
 import { View } from "react-native";
-import { fieldLabels, FormField, IFormProps } from "@cbr/common";
+import { baseFieldLabels, BaseSurveyFormField, IFormProps } from "@cbr/common";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
 
 const ShelterForm = (props: IFormProps) => {
     return (
         <View>
             <TextCheckBox
-                field={FormField.haveShelter}
-                value={props.formikProps.values[FormField.haveShelter]}
-                label={fieldLabels[FormField.haveShelter]}
+                field={BaseSurveyFormField.haveShelter}
+                value={props.formikProps.values[BaseSurveyFormField.haveShelter]}
+                label={baseFieldLabels[BaseSurveyFormField.haveShelter]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
 
             <TextCheckBox
-                field={FormField.accessItem}
-                value={props.formikProps.values[FormField.accessItem]}
-                label={fieldLabels[FormField.accessItem]}
+                field={BaseSurveyFormField.accessItem}
+                value={props.formikProps.values[BaseSurveyFormField.accessItem]}
+                label={baseFieldLabels[BaseSurveyFormField.accessItem]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
         </View>

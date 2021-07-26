@@ -3,7 +3,7 @@ import { Formik, FormikProps } from "formik";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import React, { useEffect, useRef, useState } from "react";
-import { Appbar, Button, Subheading, Text } from "react-native-paper";
+import { Appbar, Button } from "react-native-paper";
 import { StyleSheet, View, TextInput as NativeTextInput } from "react-native";
 import {
     AdminField,
@@ -39,9 +39,7 @@ const AdminNew = ({
     }, []);
 
     const zones = useZones();
-
     const [saveError, setSaveError] = useState<string>();
-
     const passwordRef = useRef<NativeTextInput>(null);
     const confirmPasswordRef = useRef<NativeTextInput>(null);
     const firstNameRef = useRef<NativeTextInput>(null);

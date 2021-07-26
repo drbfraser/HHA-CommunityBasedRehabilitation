@@ -485,6 +485,7 @@ export const ClientForm = (props: IFormProps) => {
                                 if (fieldsDisabled) toggleButtons(true);
                                 else {
                                     props.formikProps?.handleSubmit();
+                                    toggleButtons(false);
                                 }
                             }}
                         >

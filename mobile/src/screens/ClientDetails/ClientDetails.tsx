@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { Gender, IClient, themeColors } from "@cbr/common";
+import { Gender, IClient, IClientSummary, themeColors } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
@@ -21,7 +21,7 @@ import {
     initialValues,
     validationSchema,
 } from "../../components/ClientForm/ClientFormFields";
-import { Formik, FormikProps, useFormikContext } from "formik";
+import { Formik, FormikContext, FormikProps, useFormikContext } from "formik";
 import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 
 interface ClientProps {
@@ -174,37 +174,34 @@ const ClientDetails = (props: ClientProps) => {
 
     tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));
 
-    const handleFormSubmit = (formParameters: FormikProps<IClientFormProps>) => {
+    const handleFormSubmit = (values: IClientFormProps) => {
         const updatedIClient: IClient = {
-            id: props.clientID,
-            first_name: formParameters.values.firstName ?? "",
-            last_name: formParameters.values.lastName ?? "",
-            birth_date: formParameters.values.date
-                ? formParameters.values.date.getTime()
-                : new Date().getTime(),
-            gender: formParameters.values.gender as Gender,
-            village: formParameters.values.village ?? "",
-            zone: formParameters.values.zone ?? 0,
-            phone_number: formParameters.values.phone ?? "",
-            caregiver_present: formParameters.values.caregiverPresent ?? false,
-            caregiver_name: formParameters.values.caregiverName ?? "",
-            caregiver_email: formParameters.values.caregiverEmail ?? "",
-            caregiver_phone: formParameters.values.caregiverPhone ?? "",
-            disability: formParameters.values.clientDisability ?? [],
-            other_disability: formParameters.values.otherDisability ?? "",
+            id: props.route.params.clientID,
+            first_name: values.firstName ?? "",
+            last_name: values.lastName ?? "",
+            birth_date: values.date ? values.date.getTime() : new Date().getTime(),
+            gender: values.gender as Gender,
+            village: values.village ?? "",
+            zone: values.zone ?? 0,
+            phone_number: values.phone ?? "",
+            caregiver_present: values.caregiverPresent ?? false,
+            caregiver_name: values.caregiverName ?? "",
+            caregiver_email: values.caregiverEmail ?? "",
+            caregiver_phone: values.caregiverPhone ?? "",
+            disability: values.clientDisability ?? [],
+            other_disability: values.otherDisability ?? "",
             picture:
                 "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
-            created_by_user: formParameters.values.createdByUser ?? 0,
-            created_date: formParameters.values.createdDate ?? new Date().getTime(),
-            longitude: formParameters.values.longitude ?? "",
-            latitude: formParameters.values.latitude ?? "",
-            caregiver_picture: formParameters.values.caregiverPicture,
-            risks: formParameters.values.risks ?? [],
-            visits: formParameters.values.visits ?? [],
-            referrals: formParameters.values.referrals ?? [],
-            baseline_surveys: formParameters.values.surveys ?? [],
+            created_by_user: values.createdByUser ?? 0,
+            created_date: values.createdDate ?? new Date().getTime(),
+            longitude: values.longitude ?? "",
+            latitude: values.latitude ?? "",
+            caregiver_picture: values.caregiverPicture,
+            risks: values.risks ?? [],
+            visits: values.visits ?? [],
+            referrals: values.referrals ?? [],
+            baseline_surveys: values.surveys ?? [],
         };
-
         handleSubmit(updatedIClient);
     };
 
@@ -258,7 +255,7 @@ const ClientDetails = (props: ClientProps) => {
                             initialValues={clientFormikProps}
                             validationSchema={validationSchema}
                             onSubmit={(values) => {
-                                handleFormSubmit();
+                                handleFormSubmit(values);
                             }}
                         >
                             {(formikProps) => (

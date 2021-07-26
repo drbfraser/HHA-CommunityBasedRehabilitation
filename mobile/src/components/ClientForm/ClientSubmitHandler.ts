@@ -60,6 +60,7 @@ export const handleSubmit = async (values: IClient, isNewClient?: boolean) => {
                 ? values.other_disability
                 : "",
         };
+
         const formData = objectToFormData(updatedValues);
         try {
             await updateClient(formData, values.id);

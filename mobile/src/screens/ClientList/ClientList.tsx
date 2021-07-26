@@ -31,6 +31,19 @@ const returnWrappedView = (item) => {
     );
 };
 
+export const getLevelByColor = (color: string) => {
+    if (color == themeColors.riskGreen) {
+        return 0;
+    } else if (color == themeColors.riskYellow) {
+        return 1;
+    } else if (color == themeColors.riskRed) {
+        return 4;
+    } else if (color == themeColors.riskBlack) {
+        return 13;
+    }
+    return 0;
+};
+
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
     const [clientList, setClientList] = useState<ClientTest[]>([]);
@@ -43,18 +56,7 @@ const ClientList = () => {
     const sortDirections = ["asc", "dec", "None"];
     const [currentDirection, setCurrentDirection] = useState(0);
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
-    const getLevelByColor = (color: string) => {
-        if (color == themeColors.riskGreen) {
-            return 0;
-        } else if (color == themeColors.riskYellow) {
-            return 1;
-        } else if (color == themeColors.riskRed) {
-            return 4;
-        } else if (color == themeColors.riskBlack) {
-            return 13;
-        }
-        return 0;
-    };
+
     const sortBy = async (option: string) => {
         if (option != sortOption) {
             setSortOption(option);
@@ -75,7 +77,6 @@ const ClientList = () => {
                 result = a.id - b.id;
                 break;
             }
-
             case SortOptions.NAME: {
                 result = a.full_name > b.full_name ? 1 : -1;
                 break;

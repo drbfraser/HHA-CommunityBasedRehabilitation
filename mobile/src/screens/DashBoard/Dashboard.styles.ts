@@ -32,9 +32,7 @@ const useStyles = () =>
             fontSize: 30,
         },
         card: {
-            paddingBottom: 50,
             padding: 10,
-            height: 500,
         },
 
         column_client_name: {

@@ -7,6 +7,15 @@ import {
 } from "@cbr/common";
 import { IClientSummary } from "@cbr/common";
 import { riskLevels } from "@cbr/common";
+import { ClientTest } from "../ClientList/ClientListRequest";
+
+export type BrifeReferral = {
+    id: number;
+    client_id: number;
+    full_name: string;
+    type: string;
+    date_referred: number;
+};
 
 const concatenateReferralType = (row: IOutstandingReferral) => {
     let referralTypes: any[] = [];
@@ -19,7 +28,7 @@ const concatenateReferralType = (row: IOutstandingReferral) => {
     return referralTypes.join(", ");
 };
 
-export const fetchAllClientsFromApi = async (): Promise<IClientSummary[]> => {
+export const fetchAllClientsFromApi = async (): Promise<ClientTest[]> => {
     try {
         const zones = await getZones();
         const tempClients = await apiFetch(Endpoint.CLIENTS)
@@ -28,6 +37,7 @@ export const fetchAllClientsFromApi = async (): Promise<IClientSummary[]> => {
 
         const resultRows = tempClients
             .sort(clientPrioritySort)
+            .slice(0, 5)
             .map((responseRow: IClientSummary) => ({
                 id: responseRow.id,
                 full_name: responseRow.full_name,
@@ -42,7 +52,7 @@ export const fetchAllClientsFromApi = async (): Promise<IClientSummary[]> => {
         return [];
     }
 };
-export const fetchReferrals = async () => {
+export const fetchReferrals = async (): Promise<BrifeReferral[]> => {
     try {
         const tempReferrals = await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
             .then((resp) => resp.json())
@@ -50,8 +60,9 @@ export const fetchReferrals = async () => {
         const resultRows = tempReferrals
             .sort(
                 (a: IOutstandingReferral, b: IOutstandingReferral) =>
-                    a.date_referred - b.date_referred
+                    b.date_referred - a.date_referred
             )
+            .slice(0, 5)
             .map((row: IOutstandingReferral, i: Number) => ({
                 id: i,
                 client_id: row.id,

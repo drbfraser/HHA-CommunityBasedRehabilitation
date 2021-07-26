@@ -21,7 +21,7 @@ export const ClientForm = (props: IFormProps) => {
     let initialZone: number = props.formikProps?.values.zone ? props.formikProps.values.zone : 0;
 
     //Client Details Usestates
-    const [date, setDate] = useState(props.formikProps?.values.date ?? new Date());
+    const [date, setDate] = useState(props.formikProps?.values.birthDate ?? new Date());
     const [caregiverPresent, setCaregiverPresent] = useState(
         props.formikProps?.values.caregiverPresent
     );
@@ -82,7 +82,7 @@ export const ClientForm = (props: IFormProps) => {
 
     const resetFormState = () => {
         if (props.formikProps) {
-            setDate(props.formikProps.values.date ?? new Date());
+            setDate(props.formikProps.values.birthDate ?? new Date());
             setPresentZone(String(zoneObj[initialZone]));
             setSelectedZone(initialZone);
             if (props.formikProps.values.caregiverPresent)
@@ -108,7 +108,6 @@ export const ClientForm = (props: IFormProps) => {
                     disabled={fieldsDisabled}
                 />
                 <Text style={styles.errorText}>{props.formikProps?.errors.firstName}</Text>
-
                 <TextInput
                     style={styles.clientTextStyle}
                     label={ClientFormFieldLabels[ClientFormFields.last_name]}
@@ -118,8 +117,11 @@ export const ClientForm = (props: IFormProps) => {
                     disabled={fieldsDisabled}
                 />
                 <Text style={styles.errorText}>{props.formikProps?.errors.lastName}</Text>
-
-                <Text>{ClientFormFieldLabels[ClientFormFields.date]}</Text>
+                {ClientFormFieldLabels[ClientFormFields.birthDate] ? (
+                    <Text>{ClientFormFieldLabels[ClientFormFields.birthDate]}</Text>
+                ) : (
+                    <Text>Please pick a date</Text>
+                )}
                 <View style={styles.clientBirthdayView}>
                     <Text style={styles.valueText}>{date.toDateString()}</Text>
                     <View style={styles.clientBirthdayButtons}>
@@ -139,7 +141,7 @@ export const ClientForm = (props: IFormProps) => {
                         {datePickerVisible && (
                             <DateTimePicker
                                 testID="dateTimePicker"
-                                value={props.formikProps?.values.date ?? new Date()}
+                                value={props.formikProps?.values.birthDate ?? new Date()}
                                 mode="date"
                                 display="default"
                                 neutralButtonLabel="Today"
@@ -148,14 +150,14 @@ export const ClientForm = (props: IFormProps) => {
                                     if (event.type === "neutralButtonPressed") {
                                         const todayDate = new Date();
                                         props.formikProps?.setFieldValue(
-                                            ClientFormFields.date,
+                                            ClientFormFields.birthDate,
                                             todayDate
                                         );
                                         setDate(todayDate);
                                     } else {
                                         if (date) {
                                             props.formikProps?.setFieldValue(
-                                                ClientFormFields.date,
+                                                ClientFormFields.birthDate,
                                                 date
                                             );
                                             setDate(date);
@@ -167,8 +169,7 @@ export const ClientForm = (props: IFormProps) => {
                         )}
                     </View>
                 </View>
-                <Text style={styles.errorText}>{props.formikProps?.errors.date}</Text>
-
+                <Text style={styles.errorText}>{props.formikProps?.errors.birthDate}</Text>
                 <View>
                     <Portal>
                         <Modal
@@ -235,7 +236,6 @@ export const ClientForm = (props: IFormProps) => {
                     </Text>
                 </View>
                 <Text style={styles.errorText}>{props.formikProps?.errors.gender}</Text>
-
                 <TextInput
                     style={styles.clientTextStyle}
                     label={ClientFormFieldLabels[ClientFormFields.village]}
@@ -245,7 +245,6 @@ export const ClientForm = (props: IFormProps) => {
                     disabled={fieldsDisabled}
                 />
                 <Text style={styles.errorText}>{props.formikProps?.errors.village}</Text>
-
                 <View>
                     <Portal>
                         <Modal
@@ -311,7 +310,6 @@ export const ClientForm = (props: IFormProps) => {
                     <Text style={styles.valueText}>{presentZone}</Text>
                 </View>
                 <Text style={styles.errorText}>{props.formikProps?.errors.zone}</Text>
-
                 <TextInput
                     style={styles.clientTextStyle}
                     label={ClientFormFieldLabels[ClientFormFields.phone]}
@@ -321,7 +319,6 @@ export const ClientForm = (props: IFormProps) => {
                     disabled={fieldsDisabled}
                 />
                 <Text style={styles.errorText}>{props.formikProps?.errors.phone}</Text>
-
                 <View>
                     <Portal>
                         <Modal
@@ -415,7 +412,6 @@ export const ClientForm = (props: IFormProps) => {
                     })}
                 </View>
                 <Text style={styles.errorText}>{props.formikProps?.errors.clientDisability}</Text>
-
                 <View style={styles.carePresentView}>
                     <Text style={styles.carePresentCheckBox}>Caregiver Present</Text>
                     <Checkbox
@@ -427,7 +423,6 @@ export const ClientForm = (props: IFormProps) => {
                         disabled={fieldsDisabled}
                     />
                 </View>
-
                 {caregiverPresent ? (
                     <View>
                         <TextInput

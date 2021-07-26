@@ -11,7 +11,7 @@ export interface IClientFormProps {
     id?: number;
     firstName?: string;
     lastName?: string;
-    date?: Date;
+    birthDate?: Date;
     gender?: string;
     village?: string;
     zone?: number;
@@ -38,7 +38,7 @@ export interface IClientFormProps {
 export enum ClientFormFields {
     first_name = "firstName",
     last_name = "lastName",
-    date = "date",
+    birthDate = "birthDate",
     phone = "phone",
     disability = "clientDisability",
     other_disability = "otherDisability",
@@ -62,7 +62,7 @@ export enum ClientFormFields {
 export const ClientFormFieldLabels = {
     [ClientFormFields.first_name]: "First Name",
     [ClientFormFields.last_name]: "Last Name",
-    [ClientFormFields.date]: "Birthdate",
+    [ClientFormFields.birthDate]: "Birthdate",
     [ClientFormFields.phone]: "Phone Number",
     [ClientFormFields.disability]: "Disability",
     [ClientFormFields.other_disability]: "Other Disability",
@@ -77,7 +77,6 @@ export const ClientFormFieldLabels = {
 export const initialValues: IClientFormProps = {
     [ClientFormFields.first_name]: "",
     [ClientFormFields.last_name]: "",
-    [ClientFormFields.date]: new Date(),
     [ClientFormFields.phone]: "",
     [ClientFormFields.disability]: [],
     [ClientFormFields.other_disability]: "",
@@ -87,8 +86,7 @@ export const initialValues: IClientFormProps = {
     [ClientFormFields.caregiver_name]: "",
     [ClientFormFields.caregiver_phone]: "",
     [ClientFormFields.caregiver_email]: "",
-    [ClientFormFields.createdDate]: new Date().getTime(),
-    [ClientFormFields.createdByUser]: new Date().getTime(),
+    [ClientFormFields.createdByUser]: 0,
     [ClientFormFields.latitude]: "",
     [ClientFormFields.caregiverPicture]: "",
     [ClientFormFields.risks]: [],
@@ -122,7 +120,7 @@ export const setFormInitialValues = (props: IClientFormProps, isNewClient?: bool
             id: props.id,
             firstName: props.firstName,
             lastName: props.lastName,
-            date: props.date,
+            date: props.birthDate,
             gender: props.gender,
             village: props.village,
             zone: props.zone,
@@ -150,8 +148,8 @@ export const validationSchema = () =>
             .required()
             .max(50)
             .min(1),
-        [ClientFormFields.date]: Yup.date()
-            .label(ClientFormFieldLabels[ClientFormFields.date])
+        [ClientFormFields.birthDate]: Yup.date()
+            .label(ClientFormFieldLabels[ClientFormFields.birthDate])
             .max(new Date(), "Birthdate cannot be in the future")
             .required(),
         [ClientFormFields.phone]: Yup.string()

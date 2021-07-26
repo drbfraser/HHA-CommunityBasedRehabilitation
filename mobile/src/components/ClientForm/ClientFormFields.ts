@@ -1,7 +1,7 @@
 import { IReferral, IRisk, ISurvey, IVisit, IVisitSummary, Validation } from "@cbr/common";
 import * as Yup from "yup";
 
-export interface FormProps {
+export interface IFormProps {
     isNewClient?: boolean;
     clientFormProps?: IClientFormProps;
 }

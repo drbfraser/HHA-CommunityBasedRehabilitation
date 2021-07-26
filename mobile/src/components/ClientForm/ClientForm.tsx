@@ -32,9 +32,7 @@ const objectFromMap = <K extends string | number | symbol, V>(
 
 export const ClientForm = (props: FormProps) => {
     const styles = useStyles();
-    const zoneMap = useZones();
-    const disabilityMap = useDisabilities();
-    const otherDisabilityId = getOtherDisabilityId(disabilityMap);
+    const otherDisabilityId = getOtherDisabilityId(useDisabilities());
     const disabilityObj = objectFromMap(useDisabilities());
     const zoneObj = objectFromMap(useZones());
 
@@ -258,7 +256,7 @@ export const ClientForm = (props: FormProps) => {
                                                     );
                                                     setClientGender(values[0]);
                                                 }}
-                                                rowBackgroundColor={"#eee"}
+                                                rowBackgroundColor={themeColors.lightPickerGray}
                                                 iconSize={30}
                                                 selectedIconName={"checkmark-circle"}
                                                 unselectedIconName={"radio-button-off"}
@@ -339,7 +337,7 @@ export const ClientForm = (props: FormProps) => {
                                                     setPresentZone(zoneObj[values.map(Number)]);
                                                     setSelectedZone(values);
                                                 }}
-                                                rowBackgroundColor={"#eee"}
+                                                rowBackgroundColor={themeColors.lightPickerGray}
                                                 iconSize={30}
                                                 selectedIconName={"checkmark-circle"}
                                                 unselectedIconName={"radio-button-off"}
@@ -419,7 +417,7 @@ export const ClientForm = (props: FormProps) => {
                                                         formikProps.values.otherDisability
                                                     );
                                                 }}
-                                                rowBackgroundColor={"#eee"}
+                                                rowBackgroundColor={themeColors.lightPickerGray}
                                                 iconSize={30}
                                                 selectedIconName={"checkmark-circle"}
                                                 unselectedIconName={"radio-button-off"}

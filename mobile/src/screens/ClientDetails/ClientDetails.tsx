@@ -6,11 +6,7 @@ import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IReferral, ISurvey, timestampToDateObj } from "@cbr/common";
-import {
-    getDisabilities,
-    getOtherDisabilityId,
-    useDisabilities,
-} from "@cbr/common/src/util/hooks/disabilities";
+import { getOtherDisabilityId, useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 import { IVisitSummary } from "@cbr/common";
 import { IActivity, ActivityType } from "./ClientTimeline/Activity";
 import { useZones } from "@cbr/common/src/util/hooks/zones";

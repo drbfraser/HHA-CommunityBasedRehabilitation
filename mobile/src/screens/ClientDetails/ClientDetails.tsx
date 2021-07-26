@@ -69,12 +69,12 @@ const ClientDetails = (props: ClientProps) => {
 
     const getInitialDisabilities = (disabilityArray: number[]) => {
         let selectedDisabilities: string[] = [];
-        for (let index of disabilityArray) {
-            if (disabilityMap.has(index)) {
-                if (index === getOtherDisabilityId(disabilityMap)) {
+        for (let disabilityId of disabilityArray) {
+            if (disabilityMap.has(disabilityId)) {
+                if (disabilityId === getOtherDisabilityId(disabilityMap)) {
                     selectedDisabilities.push("Other");
                 } else {
-                    selectedDisabilities.push(disabilityMap.get(index)!);
+                    selectedDisabilities.push(disabilityMap.get(disabilityId)!);
                 }
             }
         }
@@ -271,7 +271,7 @@ const ClientDetails = (props: ClientProps) => {
                             clientVisits={clientVisits!}
                             activityDTO={tempActivity}
                             clientCreateDate={clientCreateDate}
-                        ></RecentActivity>
+                        />
                         <View style={styles.clientDetailsFinalView}></View>
                     </Card>
                 </View>

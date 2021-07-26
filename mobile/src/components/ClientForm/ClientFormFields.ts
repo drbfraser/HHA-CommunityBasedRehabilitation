@@ -1,12 +1,17 @@
-import { Validation } from "@cbr/common";
+import { IReferral, IRisk, ISurvey, IVisit, IVisitSummary, Validation } from "@cbr/common";
+import { FormikProps } from "formik";
 import * as Yup from "yup";
 
-export interface FormProps {
+export interface IFormProps {
     isNewClient?: boolean;
+    formikProps?: FormikProps<IClientFormProps>;
+}
+
+export interface IClientFormProps {
     id?: number;
     firstName?: string;
     lastName?: string;
-    date?: Date;
+    birthDate?: Date;
     gender?: string;
     village?: string;
     zone?: number;
@@ -19,7 +24,76 @@ export interface FormProps {
     otherDisability?: string;
     disabilityString?: string[];
     initialDisabilityArray?: string[];
+    createdDate?: number;
+    createdByUser: number;
+    longitude?: string;
+    latitude?: string;
+    caregiverPicture?: string;
+    risks?: IRisk[];
+    visits?: IVisitSummary[];
+    referrals?: IReferral[];
+    surveys?: ISurvey[];
 }
+
+export enum ClientFormFields {
+    first_name = "firstName",
+    last_name = "lastName",
+    birthDate = "birthDate",
+    phone = "phone",
+    disability = "clientDisability",
+    other_disability = "otherDisability",
+    gender = "gender",
+    village = "village",
+    zone = "zone",
+    caregiver_name = "caregiverName",
+    caregiver_phone = "caregiverPhone",
+    caregiver_email = "caregiverEmail",
+    createdDate = "createdDate",
+    createdByUser = "createdByUser",
+    longitude = "longitde",
+    latitude = "latitude",
+    caregiverPicture = "caregiverPicture",
+    risks = "risks",
+    visits = "visits",
+    referrals = "referrals",
+    surveys = "surveys",
+}
+
+export const ClientFormFieldLabels = {
+    [ClientFormFields.first_name]: "First Name",
+    [ClientFormFields.last_name]: "Last Name",
+    [ClientFormFields.birthDate]: "Birthdate",
+    [ClientFormFields.phone]: "Phone Number",
+    [ClientFormFields.disability]: "Disability",
+    [ClientFormFields.other_disability]: "Other Disability",
+    [ClientFormFields.gender]: "Gender",
+    [ClientFormFields.village]: "Village",
+    [ClientFormFields.zone]: "Zone",
+    [ClientFormFields.caregiver_name]: "Caregiver Name",
+    [ClientFormFields.caregiver_phone]: "Caregiver Phone",
+    [ClientFormFields.caregiver_email]: "Caregiver Email",
+};
+
+export const initialValues: IClientFormProps = {
+    [ClientFormFields.first_name]: "",
+    [ClientFormFields.last_name]: "",
+    [ClientFormFields.phone]: "",
+    [ClientFormFields.disability]: [],
+    [ClientFormFields.other_disability]: "",
+    [ClientFormFields.gender]: "",
+    [ClientFormFields.village]: "",
+    [ClientFormFields.zone]: 0,
+    [ClientFormFields.caregiver_name]: "",
+    [ClientFormFields.caregiver_phone]: "",
+    [ClientFormFields.caregiver_email]: "",
+    [ClientFormFields.createdByUser]: 0,
+    [ClientFormFields.latitude]: "",
+    [ClientFormFields.caregiverPicture]: "",
+    [ClientFormFields.risks]: [],
+    [ClientFormFields.visits]: [],
+    [ClientFormFields.referrals]: [],
+    [ClientFormFields.surveys]: [],
+};
 
 export interface FormValues {
     id?: number;
@@ -38,29 +112,73 @@ export interface FormValues {
     otherDisability?: string;
 }
 
+export const setFormInitialValues = (props: IClientFormProps, isNewClient?: boolean) => {
+    if (isNewClient) {
+        return initialValues;
+    } else {
+        const loadedInitialValues: FormValues = {
+            id: props.id,
+            firstName: props.firstName,
+            lastName: props.lastName,
+            date: props.birthDate,
+            gender: props.gender,
+            village: props.village,
+            zone: props.zone,
+            phone: props.phone,
+            caregiverPresent: props.caregiverPresent,
+            caregiverName: props.caregiverName,
+            caregiverEmail: props.caregiverEmail,
+            caregiverPhone: props.caregiverPhone,
+            clientDisability: props.clientDisability,
+            otherDisability: props.otherDisability,
+        };
+        return loadedInitialValues;
+    }
+};
+
 export const validationSchema = () =>
     Yup.object().shape({
-        ["firstName"]: Yup.string().label("firstName").required().max(50).min(1),
-        ["lastName"]: Yup.string().label("lastName").required().max(50).min(1),
-        ["date"]: Yup.date()
-            .label("date")
+        [ClientFormFields.first_name]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.first_name])
+            .required()
+            .max(50)
+            .min(1),
+        [ClientFormFields.last_name]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.last_name])
+            .required()
+            .max(50)
+            .min(1),
+        [ClientFormFields.birthDate]: Yup.date()
+            .label(ClientFormFieldLabels[ClientFormFields.birthDate])
             .max(new Date(), "Birthdate cannot be in the future")
             .required(),
-        ["phone"]: Yup.string()
-            .label("phone")
+        [ClientFormFields.phone]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.phone])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
-        ["clientDisability"]: Yup.array().label("clientDisability").required(),
-        ["gender"]: Yup.string().label("gender").required(),
-        ["village"]: Yup.string().label("village").required(),
-        ["zone"]: Yup.string().label("zone").required(),
-        ["caregiverName"]: Yup.string().label("caregiverName").max(101),
-        ["caregiverPhone"]: Yup.string()
-            .label("caregiverPhone")
+        [ClientFormFields.disability]: Yup.array()
+            .label(ClientFormFieldLabels[ClientFormFields.disability])
+            .required()
+            .min(1, "You must input at least 1 disability"),
+        [ClientFormFields.gender]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.gender])
+            .required(),
+        [ClientFormFields.village]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.village])
+            .required(),
+        [ClientFormFields.zone]: Yup.number()
+            .label(ClientFormFieldLabels[ClientFormFields.zone])
+            .required()
+            .typeError("Zone is a required field"),
+        [ClientFormFields.caregiver_name]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.caregiver_name])
+            .max(101),
+        [ClientFormFields.caregiver_phone]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.caregiver_phone])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid"),
-        ["caregiverEmail"]: Yup.string()
-            .label("caregiverEmail")
+        [ClientFormFields.caregiver_email]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.caregiver_email])
             .max(50)
             .matches(Validation.emailRegExp, "Email Address is not valid"),
     });

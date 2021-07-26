@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities, getOtherDisabilityId } from "@cbr/common/src/util/hooks/disabilities";
 import { View, Platform, ScrollView, Alert } from "react-native";
@@ -8,18 +8,11 @@ import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-p
 import useStyles from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
-import {
-    validationSchema,
-    ClientFormFieldLabels,
-    ClientFormFields,
-    setFormInitialValues,
-    IFormProps,
-    IClientFormProps,
-} from "./ClientFormFields";
+import { ClientFormFieldLabels, ClientFormFields, IFormProps } from "./ClientFormFields";
 import { Gender, genders, IClient, themeColors } from "@cbr/common";
 import { handleSubmit } from "./ClientSubmitHandler";
 
-const objectFromMap = <K extends string | number | symbol, V>(
+export const objectFromMap = <K extends string | number | symbol, V>(
     map: Map<K, V> | ReadonlyMap<K, V>
 ): Record<K, V> => {
     const obj: Partial<Record<K, V>> = {};
@@ -33,20 +26,21 @@ const objectFromMap = <K extends string | number | symbol, V>(
 export const ClientForm = (props: IFormProps) => {
     const styles = useStyles();
     const otherDisabilityId = getOtherDisabilityId(useDisabilities());
-    const disabilityObj = objectFromMap(useDisabilities());
+    const disabilityMap = useDisabilities();
+    const disabilityObj = objectFromMap(disabilityMap);
     const zoneObj = objectFromMap(useZones());
 
-    let initialDisabilityArray: string[] = props.clientFormProps?.initialDisabilityArray
-        ? props.clientFormProps?.initialDisabilityArray
+    let initialDisabilityArray: string[] = props.formikProps?.values.initialDisabilityArray
+        ? props.formikProps?.values.initialDisabilityArray
         : [];
-    let initialZone: number = props.clientFormProps?.zone ? props.clientFormProps.zone : 0;
+    let initialZone: number = props.formikProps?.values.zone ? props.formikProps.values.zone : 0;
 
     //Client Details Usestates
-    const [date, setDate] = useState(props.clientFormProps?.date);
+    const [date, setDate] = useState(props.formikProps?.values.date);
     const [caregiverPresent, setCaregiverPresent] = useState(
-        props.clientFormProps?.caregiverPresent
+        props.formikProps?.values.caregiverPresent
     );
-    const [clientGender, setClientGender] = useState(props.clientFormProps?.gender);
+    const [clientGender, setClientGender] = useState(props.formikProps?.values.gender);
     const [selectedZone, setSelectedZone] = useState<Number>(initialZone);
     const [otherDisability, showOtherDisability] = useState(false);
     const [fieldsDisabled, setFieldsDisabled] = useState(!props.isNewClient);
@@ -58,10 +52,6 @@ export const ClientForm = (props: IFormProps) => {
     const [selectedDisabilityList, setSelectedDisabilityList] =
         useState<string[]>(initialDisabilityArray);
     const [presentZone, setPresentZone] = useState<String>(String(zoneObj[initialZone]));
-    const initialFormValues = setFormInitialValues(
-        props.clientFormProps as IClientFormProps,
-        props.isNewClient
-    );
 
     const openDisabilityMenu = () => setDisabilityPickerVisible(true);
     const closeDisabilityMenu = () => setDisabilityPickerVisible(false);
@@ -70,7 +60,7 @@ export const ClientForm = (props: IFormProps) => {
     const openGenderMenu = () => setGenderPickerVisible(true);
     const closeGenderMenu = () => setGenderPickerVisible(false);
 
-    const updateDisabilityList = (values: number[] | undefined, otherDisability?: string) => {
+    const updateDisabilityList = (values: number[] | undefined) => {
         let newList: string[] = [];
         if (!values) return newList;
         else {
@@ -107,12 +97,12 @@ export const ClientForm = (props: IFormProps) => {
     };
 
     const resetFormState = () => {
-        if (props.clientFormProps) {
-            setDate(props.clientFormProps.date);
+        if (props.formikProps) {
+            setDate(props.formikProps.values.date);
             setPresentZone(String(zoneObj[initialZone]));
             setSelectedZone(initialZone);
-            if (props.clientFormProps.caregiverPresent)
-                setCaregiverPresent(props.clientFormProps.caregiverPresent);
+            if (props.formikProps.values.caregiverPresent)
+                setCaregiverPresent(props.formikProps.values.caregiverPresent);
             else setCaregiverPresent(false);
         } else {
             setDate(new Date());
@@ -122,471 +112,420 @@ export const ClientForm = (props: IFormProps) => {
         }
     };
 
-    const submitForm = async (updatedIClient: IClient) => {
-        const isSuccess = await handleSubmit(updatedIClient, props.isNewClient);
-        toggleButtons(!isSuccess);
-    };
-
     return (
         <View>
-            <Formik
-                initialValues={initialFormValues}
-                validationSchema={validationSchema}
-                onSubmit={(values) => {
-                    const updatedIClient: IClient = {
-                        id: props.clientFormProps?.id ?? 0,
-                        first_name: values.firstName ?? "",
-                        last_name: values.lastName ?? "",
-                        birth_date: values.date ? values.date.getTime() : new Date().getTime(),
-                        gender: values.gender as Gender,
-                        village: values.village ?? "",
-                        zone: values.zone ?? 0,
-                        phone_number: values.phone ?? "",
-                        caregiver_present: caregiverPresent ?? false,
-                        caregiver_name: values.caregiverName ?? "",
-                        caregiver_email: values.caregiverEmail ?? "",
-                        caregiver_phone: values.caregiverPhone ?? "",
-                        disability: values.clientDisability ?? [],
-                        other_disability: values.otherDisability ?? "",
-                        picture:
-                            "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
-                        created_by_user: props.clientFormProps?.createdByUser ?? 0,
-                        created_date: props.clientFormProps?.createdDate ?? new Date().getTime(),
-                        longitude: props.clientFormProps?.longitude ?? "",
-                        latitude: props.clientFormProps?.latitude ?? "",
-                        caregiver_picture: props.clientFormProps?.caregiverPicture,
-                        risks: props.clientFormProps?.risks ?? [],
-                        visits: props.clientFormProps?.visits ?? [],
-                        referrals: props.clientFormProps?.referrals ?? [],
-                        baseline_surveys: props.clientFormProps?.surveys ?? [],
-                    };
-                    submitForm(updatedIClient);
-                }}
-            >
-                {(formikProps) => (
-                    <View>
-                        <TextInput
-                            style={styles.clientTextStyle}
-                            label={ClientFormFieldLabels[ClientFormFields.first_name]}
-                            placeholder={ClientFormFieldLabels[ClientFormFields.first_name]}
-                            onChangeText={formikProps.handleChange(ClientFormFields.first_name)}
-                            value={formikProps.values.firstName}
-                            disabled={fieldsDisabled}
-                        />
-                        <Text style={styles.errorText}>{formikProps.errors.firstName}</Text>
+            <View>
+                <TextInput
+                    style={styles.clientTextStyle}
+                    label={ClientFormFieldLabels[ClientFormFields.first_name]}
+                    placeholder={ClientFormFieldLabels[ClientFormFields.first_name]}
+                    onChangeText={props.formikProps?.handleChange(ClientFormFields.first_name)}
+                    value={props.formikProps?.values.firstName}
+                    disabled={fieldsDisabled}
+                />
+                <Text style={styles.errorText}>{props.formikProps?.errors.firstName}</Text>
 
-                        <TextInput
-                            style={styles.clientTextStyle}
-                            label={ClientFormFieldLabels[ClientFormFields.last_name]}
-                            placeholder={ClientFormFieldLabels[ClientFormFields.last_name]}
-                            onChangeText={formikProps.handleChange(ClientFormFields.last_name)}
-                            value={formikProps.values.lastName}
-                            disabled={fieldsDisabled}
-                        />
-                        <Text style={styles.errorText}>{formikProps.errors.lastName}</Text>
+                <TextInput
+                    style={styles.clientTextStyle}
+                    label={ClientFormFieldLabels[ClientFormFields.last_name]}
+                    placeholder={ClientFormFieldLabels[ClientFormFields.last_name]}
+                    onChangeText={props.formikProps?.handleChange(ClientFormFields.last_name)}
+                    value={props.formikProps?.values.lastName}
+                    disabled={fieldsDisabled}
+                />
+                <Text style={styles.errorText}>{props.formikProps?.errors.lastName}</Text>
 
-                        <Text>{ClientFormFieldLabels[ClientFormFields.date]}</Text>
-                        <View style={styles.clientBirthdayView}>
-                            <Text style={styles.valueText}>{date.toDateString()}</Text>
-                            <View style={styles.clientBirthdayButtons}>
-                                <View>
-                                    <Button
-                                        disabled={fieldsDisabled}
-                                        mode="contained"
-                                        onPress={showDatepicker}
-                                    >
-                                        Edit
-                                    </Button>
-                                </View>
-                                {datePickerVisible && (
-                                    <DateTimePicker
-                                        testID="dateTimePicker"
-                                        value={formikProps.values.date ?? new Date()}
-                                        mode="date"
-                                        display="default"
-                                        onChange={(event, date) => {
-                                            setDatePickerVisible(Platform.OS === "ios");
-                                            if (date) {
-                                                formikProps.setFieldValue(
-                                                    ClientFormFields.date,
-                                                    date
-                                                );
-                                                setDate(date);
-                                            }
-                                            setDatePickerVisible(false);
-                                        }}
-                                    />
-                                )}
-                            </View>
-                        </View>
-                        <Text style={styles.errorText}>{formikProps.errors.date}</Text>
-
+                <Text>{ClientFormFieldLabels[ClientFormFields.date]}</Text>
+                <View style={styles.clientBirthdayView}>
+                    <Text style={styles.valueText}>{date.toDateString()}</Text>
+                    <View style={styles.clientBirthdayButtons}>
                         <View>
-                            <Portal>
-                                <Modal
-                                    visible={genderPickerVisible}
-                                    onDismiss={closeGenderMenu}
-                                    style={styles.genderChecklist}
-                                >
-                                    <View style={styles.nestedGenderScrollView}>
-                                        <View style={styles.disabilityListHeaderContainerStyle}>
-                                            <Text style={styles.disabilityListHeaderStyle}>
-                                                Gender
-                                            </Text>
-                                        </View>
-                                        <ScrollView
-                                            style={styles.nestedScrollStyle}
-                                            nestedScrollEnabled={true}
-                                        >
-                                            <CustomMultiPicker
-                                                options={genders}
-                                                placeholder={
-                                                    ClientFormFieldLabels[ClientFormFields.gender]
-                                                }
-                                                placeholderTextColor={themeColors.blueBgLight}
-                                                returnValue={"Gender"}
-                                                callback={(values) => {
-                                                    formikProps.setFieldValue(
-                                                        ClientFormFields.gender,
-                                                        values[0]
-                                                    );
-                                                    setClientGender(values[0]);
-                                                }}
-                                                rowBackgroundColor={themeColors.blueBgLight}
-                                                iconSize={30}
-                                                selectedIconName={"checkmark-circle"}
-                                                unselectedIconName={"radio-button-off"}
-                                                selected={clientGender}
-                                            />
-                                        </ScrollView>
-                                    </View>
-                                    <Button
-                                        mode="contained"
-                                        style={styles.modalSelectorButton}
-                                        disabled={fieldsDisabled}
-                                        onPress={closeGenderMenu}
-                                    >
-                                        Save
-                                    </Button>
-                                </Modal>
-                            </Portal>
-                            <Text> Gender</Text>
-                            <View style={styles.buttonZoneStyles}>
-                                {clientGender === Gender.MALE ? (
-                                    <Text style={styles.valueText}>{genders.M}</Text>
-                                ) : (
-                                    <Text style={styles.valueText}>{genders.F}</Text>
-                                )}
-                                {!fieldsDisabled ? (
-                                    <Button
-                                        mode="contained"
-                                        style={styles.disabilityButton}
-                                        disabled={fieldsDisabled}
-                                        onPress={openGenderMenu}
-                                    >
-                                        Edit Gender
-                                    </Button>
-                                ) : (
-                                    <></>
-                                )}
-                            </View>
-                        </View>
-                        <Text style={styles.errorText}>{formikProps.errors.gender}</Text>
-
-                        <TextInput
-                            style={styles.clientTextStyle}
-                            label={ClientFormFieldLabels[ClientFormFields.village]}
-                            placeholder={ClientFormFieldLabels[ClientFormFields.village]}
-                            onChangeText={formikProps.handleChange(ClientFormFields.village)}
-                            value={formikProps.values.village}
-                            disabled={fieldsDisabled}
-                        />
-                        <Text style={styles.errorText}>{formikProps.errors.village}</Text>
-
-                        <View>
-                            <Portal>
-                                <Modal
-                                    visible={zonesPickerVisible}
-                                    onDismiss={closeZonesMenu}
-                                    style={styles.zoneChecklist}
-                                >
-                                    <View style={styles.nestedScrollView}>
-                                        <View style={styles.disabilityListHeaderContainerStyle}>
-                                            <Text style={styles.disabilityListHeaderStyle}>
-                                                Zones List
-                                            </Text>
-                                        </View>
-                                        <ScrollView
-                                            style={styles.nestedScrollStyle}
-                                            nestedScrollEnabled={true}
-                                        >
-                                            <CustomMultiPicker
-                                                options={zoneObj}
-                                                placeholder={"Zones"}
-                                                placeholderTextColor={themeColors.blueBgLight}
-                                                returnValue={"zone_name"}
-                                                callback={(values) => {
-                                                    formikProps.setFieldValue(
-                                                        "zone",
-                                                        values.map(Number)
-                                                    );
-                                                    setPresentZone(zoneObj[values.map(Number)]);
-                                                    setSelectedZone(values);
-                                                }}
-                                                rowBackgroundColor={themeColors.blueBgLight}
-                                                iconSize={30}
-                                                selectedIconName={"checkmark-circle"}
-                                                unselectedIconName={"radio-button-off"}
-                                                selected={String(selectedZone)}
-                                            />
-                                        </ScrollView>
-                                    </View>
-                                    <Button
-                                        mode="contained"
-                                        style={styles.modalSelectorButton}
-                                        disabled={fieldsDisabled}
-                                        onPress={closeZonesMenu}
-                                    >
-                                        Save
-                                    </Button>
-                                </Modal>
-                            </Portal>
-                            <Text> Zone</Text>
-                            <View style={styles.buttonZoneStyles}>
-                                <Text style={styles.valueText}>{presentZone}</Text>
-                                {!fieldsDisabled ? (
-                                    <Button
-                                        mode="contained"
-                                        style={styles.disabilityButton}
-                                        disabled={fieldsDisabled}
-                                        onPress={openZonesMenu}
-                                    >
-                                        Edit Zone
-                                    </Button>
-                                ) : (
-                                    <></>
-                                )}
-                            </View>
-                        </View>
-                        <Text style={styles.errorText}>{formikProps.errors.zone}</Text>
-
-                        <TextInput
-                            style={styles.clientTextStyle}
-                            label={ClientFormFieldLabels[ClientFormFields.phone]}
-                            placeholder={ClientFormFieldLabels[ClientFormFields.phone]}
-                            onChangeText={formikProps.handleChange(ClientFormFields.phone)}
-                            value={formikProps.values.phone}
-                            disabled={fieldsDisabled}
-                        />
-                        <Text style={styles.errorText}>{formikProps.errors.phone}</Text>
-
-                        <View>
-                            <Portal>
-                                <Modal
-                                    visible={disabilityPickerVisible}
-                                    onDismiss={closeDisabilityMenu}
-                                    style={styles.disabilityChecklist}
-                                >
-                                    <View style={styles.nestedScrollView}>
-                                        <View style={styles.disabilityListHeaderContainerStyle}>
-                                            <Text style={styles.disabilityListHeaderStyle}>
-                                                Disability List
-                                            </Text>
-                                        </View>
-                                        <ScrollView
-                                            style={styles.nestedScrollStyle}
-                                            nestedScrollEnabled={true}
-                                        >
-                                            <CustomMultiPicker
-                                                options={disabilityObj}
-                                                multiple={true}
-                                                placeholder={"Disability"}
-                                                placeholderTextColor={themeColors.blueBgLight}
-                                                returnValue={"disability_type"}
-                                                callback={(values) => {
-                                                    formikProps.setFieldValue(
-                                                        "clientDisability",
-                                                        values.map(Number)
-                                                    );
-                                                    updateDisabilityList(
-                                                        values.map(Number),
-                                                        formikProps.values.otherDisability
-                                                    );
-                                                }}
-                                                rowBackgroundColor={themeColors.blueBgLight}
-                                                iconSize={30}
-                                                selectedIconName={"checkmark-circle"}
-                                                unselectedIconName={"radio-button-off"}
-                                                selected={formikProps.values.clientDisability?.map(
-                                                    String
-                                                )}
-                                            />
-                                            {otherDisability ? (
-                                                <View>
-                                                    <TextInput
-                                                        style={styles.otherDisabilityStyle}
-                                                        label="Other Disability "
-                                                        placeholder="Other Disability"
-                                                        onChangeText={formikProps.handleChange(
-                                                            "otherDisability"
-                                                        )}
-                                                        value={formikProps.values.otherDisability}
-                                                    />
-                                                    <Text style={styles.errorText}>
-                                                        {formikProps.errors.otherDisability}
-                                                    </Text>
-                                                </View>
-                                            ) : (
-                                                <></>
-                                            )}
-                                        </ScrollView>
-                                        <Button
-                                            mode="contained"
-                                            style={styles.modalSelectorButton}
-                                            disabled={fieldsDisabled}
-                                            onPress={closeDisabilityMenu}
-                                        >
-                                            Save
-                                        </Button>
-                                    </View>
-                                </Modal>
-                            </Portal>
-                            <Text> Disability</Text>
-                            {selectedDisabilityList.map((item) => {
-                                return (
-                                    <Text key={item} style={styles.valueText}>
-                                        {item}
-                                    </Text>
-                                );
-                            })}
-                            {!fieldsDisabled ? (
-                                <Button
-                                    mode="contained"
-                                    style={styles.disabilityButton}
-                                    disabled={fieldsDisabled}
-                                    onPress={openDisabilityMenu}
-                                >
-                                    Edit Disabilities
-                                </Button>
-                            ) : (
-                                <></>
-                            )}
-                        </View>
-                        <Text style={styles.errorText}>{formikProps.errors.clientDisability}</Text>
-
-                        <View style={styles.carePresentView}>
-                            <Text style={styles.carePresentCheckBox}>Caregiver Present</Text>
-                            <Checkbox
-                                status={caregiverPresent ? "checked" : "unchecked"}
-                                onPress={() => {
-                                    setCaregiverPresent(!caregiverPresent);
-                                    formikProps.setFieldValue("caregiverPresent", caregiverPresent);
-                                }}
+                            <Button
                                 disabled={fieldsDisabled}
-                            />
+                                mode="contained"
+                                onPress={showDatepicker}
+                            >
+                                Edit
+                            </Button>
                         </View>
-
-                        {caregiverPresent ? (
-                            <View>
-                                <TextInput
-                                    style={styles.clientTextStyle}
-                                    label="Caregiver Name "
-                                    placeholder="Caregiver Name"
-                                    onChangeText={formikProps.handleChange("caregiverName")}
-                                    value={formikProps.values.caregiverName}
-                                    disabled={fieldsDisabled}
-                                />
-                                <Text style={styles.errorText}>
-                                    {formikProps.errors.caregiverName}
-                                </Text>
-                                <TextInput
-                                    style={styles.clientTextStyle}
-                                    label="Caregiver Phone"
-                                    placeholder="Caregiver Phone"
-                                    onChangeText={formikProps.handleChange("caregiverPhone")}
-                                    value={formikProps.values.caregiverPhone}
-                                    disabled={fieldsDisabled}
-                                />
-                                <Text style={styles.errorText}>
-                                    {formikProps.errors.caregiverPhone}
-                                </Text>
-                                <TextInput
-                                    style={styles.clientTextStyle}
-                                    label="Caregiver Email "
-                                    placeholder="Caregiver Email"
-                                    onChangeText={formikProps.handleChange("caregiverEmail")}
-                                    value={formikProps.values.caregiverEmail}
-                                    disabled={fieldsDisabled}
-                                />
-                                <Text style={styles.errorText}>
-                                    {formikProps.errors.caregiverEmail}
-                                </Text>
-                            </View>
-                        ) : (
-                            <></>
+                        {datePickerVisible && (
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={props.formikProps?.values.date ?? new Date()}
+                                mode="date"
+                                display="default"
+                                onChange={(event, date) => {
+                                    setDatePickerVisible(Platform.OS === "ios");
+                                    if (date) {
+                                        props.formikProps?.setFieldValue(
+                                            ClientFormFields.date,
+                                            date
+                                        );
+                                        setDate(date);
+                                    }
+                                    setDatePickerVisible(false);
+                                }}
+                            />
                         )}
-                        {props.isNewClient ? (
+                    </View>
+                </View>
+                <Text style={styles.errorText}>{props.formikProps?.errors.date}</Text>
+
+                <View>
+                    <Portal>
+                        <Modal
+                            visible={genderPickerVisible}
+                            onDismiss={closeGenderMenu}
+                            style={styles.genderChecklist}
+                        >
+                            <View style={styles.nestedGenderScrollView}>
+                                <View style={styles.disabilityListHeaderContainerStyle}>
+                                    <Text style={styles.disabilityListHeaderStyle}>Gender</Text>
+                                </View>
+                                <ScrollView
+                                    style={styles.nestedScrollStyle}
+                                    nestedScrollEnabled={true}
+                                >
+                                    <CustomMultiPicker
+                                        options={genders}
+                                        placeholder={ClientFormFieldLabels[ClientFormFields.gender]}
+                                        placeholderTextColor={themeColors.blueBgLight}
+                                        returnValue={"Gender"}
+                                        callback={(values) => {
+                                            props.formikProps?.setFieldValue(
+                                                ClientFormFields.gender,
+                                                values[0]
+                                            );
+                                            setClientGender(values[0]);
+                                        }}
+                                        rowBackgroundColor={themeColors.blueBgLight}
+                                        iconSize={30}
+                                        selectedIconName={"checkmark-circle"}
+                                        unselectedIconName={"radio-button-off"}
+                                        selected={clientGender}
+                                    />
+                                </ScrollView>
+                            </View>
                             <Button
                                 mode="contained"
-                                style={styles.clientDetailsFinalButtons}
-                                onPress={() => {
-                                    formikProps.handleSubmit();
-                                }}
+                                style={styles.modalSelectorButton}
+                                disabled={fieldsDisabled}
+                                onPress={closeGenderMenu}
                             >
                                 Save
                             </Button>
+                        </Modal>
+                    </Portal>
+                    <Text>Gender</Text>
+                    <View style={styles.buttonZoneStyles}>
+                        {clientGender === Gender.MALE ? (
+                            <Text style={styles.valueText}>{genders.M}</Text>
                         ) : (
-                            <View style={styles.clientDetailsFinalView}>
+                            <Text style={styles.valueText}>{genders.F}</Text>
+                        )}
+                        {!fieldsDisabled ? (
+                            <Button
+                                mode="contained"
+                                style={styles.disabilityButton}
+                                disabled={fieldsDisabled}
+                                onPress={openGenderMenu}
+                            >
+                                Edit Gender
+                            </Button>
+                        ) : (
+                            <></>
+                        )}
+                    </View>
+                </View>
+                <Text style={styles.errorText}>{props.formikProps?.errors.gender}</Text>
+
+                <TextInput
+                    style={styles.clientTextStyle}
+                    label={ClientFormFieldLabels[ClientFormFields.village]}
+                    placeholder={ClientFormFieldLabels[ClientFormFields.village]}
+                    onChangeText={props.formikProps?.handleChange(ClientFormFields.village)}
+                    value={props.formikProps?.values.village}
+                    disabled={fieldsDisabled}
+                />
+                <Text style={styles.errorText}>{props.formikProps?.errors.village}</Text>
+
+                <View>
+                    <Portal>
+                        <Modal
+                            visible={zonesPickerVisible}
+                            onDismiss={closeZonesMenu}
+                            style={styles.zoneChecklist}
+                        >
+                            <View style={styles.nestedScrollView}>
+                                <View style={styles.disabilityListHeaderContainerStyle}>
+                                    <Text style={styles.disabilityListHeaderStyle}>Zones List</Text>
+                                </View>
+                                <ScrollView
+                                    style={styles.nestedScrollStyle}
+                                    nestedScrollEnabled={true}
+                                >
+                                    <CustomMultiPicker
+                                        options={zoneObj}
+                                        placeholder={"Zones"}
+                                        placeholderTextColor={themeColors.blueBgLight}
+                                        returnValue={"zone_name"}
+                                        callback={(values) => {
+                                            props.formikProps?.setFieldValue(
+                                                "zone",
+                                                values.map(Number)
+                                            );
+                                            setPresentZone(zoneObj[values.map(Number)]);
+                                            setSelectedZone(values);
+                                        }}
+                                        rowBackgroundColor={themeColors.blueBgLight}
+                                        iconSize={30}
+                                        selectedIconName={"checkmark-circle"}
+                                        unselectedIconName={"radio-button-off"}
+                                        selected={String(selectedZone)}
+                                    />
+                                </ScrollView>
+                            </View>
+                            <Button
+                                mode="contained"
+                                style={styles.modalSelectorButton}
+                                disabled={fieldsDisabled}
+                                onPress={closeZonesMenu}
+                            >
+                                Save
+                            </Button>
+                        </Modal>
+                    </Portal>
+                    <Text>Zone</Text>
+                    <View style={styles.buttonZoneStyles}>
+                        <Text style={styles.valueText}>{presentZone}</Text>
+                        {!fieldsDisabled ? (
+                            <Button
+                                mode="contained"
+                                style={styles.disabilityButton}
+                                disabled={fieldsDisabled}
+                                onPress={openZonesMenu}
+                            >
+                                Edit Zone
+                            </Button>
+                        ) : (
+                            <></>
+                        )}
+                    </View>
+                </View>
+                <Text style={styles.errorText}>{props.formikProps?.errors.zone}</Text>
+
+                <TextInput
+                    style={styles.clientTextStyle}
+                    label={ClientFormFieldLabels[ClientFormFields.phone]}
+                    placeholder={ClientFormFieldLabels[ClientFormFields.phone]}
+                    onChangeText={props.formikProps?.handleChange(ClientFormFields.phone)}
+                    value={props.formikProps?.values.phone}
+                    disabled={fieldsDisabled}
+                />
+                <Text style={styles.errorText}>{props.formikProps?.errors.phone}</Text>
+
+                <View>
+                    <Portal>
+                        <Modal
+                            visible={disabilityPickerVisible}
+                            onDismiss={closeDisabilityMenu}
+                            style={styles.disabilityChecklist}
+                        >
+                            <View style={styles.nestedScrollView}>
+                                <View style={styles.disabilityListHeaderContainerStyle}>
+                                    <Text style={styles.disabilityListHeaderStyle}>
+                                        Disability List
+                                    </Text>
+                                </View>
+                                <ScrollView
+                                    style={styles.nestedScrollStyle}
+                                    nestedScrollEnabled={true}
+                                >
+                                    <CustomMultiPicker
+                                        options={disabilityObj}
+                                        multiple={true}
+                                        placeholder={"Disability"}
+                                        placeholderTextColor={themeColors.blueBgLight}
+                                        returnValue={"disability_type"}
+                                        callback={(values) => {
+                                            props.formikProps?.setFieldValue(
+                                                "clientDisability",
+                                                values.map(Number)
+                                            );
+                                            updateDisabilityList(values.map(Number));
+                                        }}
+                                        rowBackgroundColor={themeColors.blueBgLight}
+                                        iconSize={30}
+                                        selectedIconName={"checkmark-circle"}
+                                        unselectedIconName={"radio-button-off"}
+                                        selected={props.formikProps?.values.clientDisability?.map(
+                                            String
+                                        )}
+                                    />
+                                    {otherDisability ? (
+                                        <View>
+                                            <TextInput
+                                                style={styles.otherDisabilityStyle}
+                                                label="Other Disability "
+                                                placeholder="Other Disability"
+                                                onChangeText={props.formikProps?.handleChange(
+                                                    "otherDisability"
+                                                )}
+                                                value={props.formikProps?.values.otherDisability}
+                                            />
+                                            <Text style={styles.errorText}>
+                                                {props.formikProps?.errors.otherDisability}
+                                            </Text>
+                                        </View>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </ScrollView>
                                 <Button
                                     mode="contained"
-                                    style={styles.clientDetailsFinalButtons}
-                                    onPress={() => {
-                                        if (fieldsDisabled) toggleButtons(true);
-                                        else {
-                                            formikProps.handleSubmit();
-                                        }
-                                    }}
+                                    style={styles.modalSelectorButton}
+                                    disabled={fieldsDisabled}
+                                    onPress={closeDisabilityMenu}
                                 >
-                                    {fieldsDisabled ? "Edit" : "Save"}
+                                    Save
                                 </Button>
-                                {fieldsDisabled ? (
-                                    <></>
-                                ) : (
-                                    <Button
-                                        mode={cancelButtonType}
-                                        style={styles.clientDetailsFinalButtons}
-                                        disabled={fieldsDisabled}
-                                        onPress={() => {
-                                            const cancelAlert = () =>
-                                                Alert.alert(
-                                                    "Alert",
-                                                    "You'll lose all your unsaved changes. Cancel anyway?",
-                                                    [
-                                                        {
-                                                            text: "Don't cancel",
-                                                            style: "cancel",
-                                                        },
-                                                        {
-                                                            text: "Cancel",
-                                                            onPress: () => {
-                                                                cancelEdit();
-                                                                formikProps.resetForm();
-                                                                resetFormState();
-                                                            },
-                                                        },
-                                                    ]
-                                                );
-                                            cancelAlert();
-                                        }}
-                                    >
-                                        Cancel
-                                    </Button>
-                                )}
                             </View>
+                        </Modal>
+                    </Portal>
+                    <Text>Disability</Text>
+                    {props.formikProps?.values.clientDisability?.map((item) => {
+                        return (
+                            <Text key={item} style={styles.valueText}>
+                                {disabilityMap.get(item)}
+                            </Text>
+                        );
+                    })}
+                    {!fieldsDisabled ? (
+                        <Button
+                            mode="contained"
+                            style={styles.disabilityButton}
+                            disabled={fieldsDisabled}
+                            onPress={openDisabilityMenu}
+                        >
+                            Edit Disabilities
+                        </Button>
+                    ) : (
+                        <></>
+                    )}
+                </View>
+                <Text style={styles.errorText}>{props.formikProps?.errors.clientDisability}</Text>
+
+                <View style={styles.carePresentView}>
+                    <Text style={styles.carePresentCheckBox}>Caregiver Present</Text>
+                    <Checkbox
+                        status={caregiverPresent ? "checked" : "unchecked"}
+                        onPress={() => {
+                            setCaregiverPresent(!caregiverPresent);
+                            props.formikProps?.setFieldValue("caregiverPresent", caregiverPresent);
+                        }}
+                        disabled={fieldsDisabled}
+                    />
+                </View>
+
+                {caregiverPresent ? (
+                    <View>
+                        <TextInput
+                            style={styles.clientTextStyle}
+                            label="Caregiver Name "
+                            placeholder="Caregiver Name"
+                            onChangeText={props.formikProps?.handleChange("caregiverName")}
+                            value={props.formikProps?.values.caregiverName}
+                            disabled={fieldsDisabled}
+                        />
+                        <Text style={styles.errorText}>
+                            {props.formikProps?.errors.caregiverName}
+                        </Text>
+                        <TextInput
+                            style={styles.clientTextStyle}
+                            label="Caregiver Phone"
+                            placeholder="Caregiver Phone"
+                            onChangeText={props.formikProps?.handleChange("caregiverPhone")}
+                            value={props.formikProps?.values.caregiverPhone}
+                            disabled={fieldsDisabled}
+                        />
+                        <Text style={styles.errorText}>
+                            {props.formikProps?.errors.caregiverPhone}
+                        </Text>
+                        <TextInput
+                            style={styles.clientTextStyle}
+                            label="Caregiver Email "
+                            placeholder="Caregiver Email"
+                            onChangeText={props.formikProps?.handleChange("caregiverEmail")}
+                            value={props.formikProps?.values.caregiverEmail}
+                            disabled={fieldsDisabled}
+                        />
+                        <Text style={styles.errorText}>
+                            {props.formikProps?.errors.caregiverEmail}
+                        </Text>
+                    </View>
+                ) : (
+                    <></>
+                )}
+                {props.isNewClient ? (
+                    <Button
+                        mode="contained"
+                        style={styles.clientDetailsFinalButtons}
+                        onPress={() => {
+                            props.formikProps?.handleSubmit();
+                        }}
+                    >
+                        Save
+                    </Button>
+                ) : (
+                    <View style={styles.clientDetailsFinalView}>
+                        <Button
+                            mode="contained"
+                            style={styles.clientDetailsFinalButtons}
+                            onPress={() => {
+                                if (fieldsDisabled) toggleButtons(true);
+                                else {
+                                    props.formikProps?.handleSubmit();
+                                }
+                            }}
+                        >
+                            {fieldsDisabled ? "Edit" : "Save"}
+                        </Button>
+                        {fieldsDisabled ? (
+                            <></>
+                        ) : (
+                            <Button
+                                mode={cancelButtonType}
+                                style={styles.clientDetailsFinalButtons}
+                                disabled={fieldsDisabled}
+                                onPress={() => {
+                                    const cancelAlert = () =>
+                                        Alert.alert(
+                                            "Alert",
+                                            "You'll lose all your unsaved changes. Cancel anyway?",
+                                            [
+                                                {
+                                                    text: "Don't cancel",
+                                                    style: "cancel",
+                                                },
+                                                {
+                                                    text: "Cancel",
+                                                    onPress: () => {
+                                                        cancelEdit();
+                                                        props.formikProps?.resetForm();
+                                                        resetFormState();
+                                                    },
+                                                },
+                                            ]
+                                        );
+                                    cancelAlert();
+                                }}
+                            >
+                                Cancel
+                            </Button>
                         )}
                     </View>
                 )}
-            </Formik>
+            </View>
         </View>
     );
 };

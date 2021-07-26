@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { IClient, themeColors } from "@cbr/common";
+import { Gender, IClient, themeColors } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
@@ -9,7 +9,6 @@ import { IReferral, ISurvey, timestampToDateObj } from "@cbr/common";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 import { IVisitSummary } from "@cbr/common";
 import { IActivity, ActivityType } from "./ClientTimeline/Activity";
-import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import { RecentActivity } from "./ClientTimeline/RecentActivity";
@@ -17,7 +16,13 @@ import { RouteProp, useNavigation, useIsFocused } from "@react-navigation/native
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
-import { IClientFormProps, InitialValues } from "../../components/ClientForm/ClientFormFields";
+import {
+    IClientFormProps,
+    initialValues,
+    validationSchema,
+} from "../../components/ClientForm/ClientFormFields";
+import { Formik, FormikProps, useFormikContext } from "formik";
+import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 
 interface ClientProps {
     clientID: number;
@@ -30,9 +35,9 @@ const ClientDetails = (props: ClientProps) => {
         props.navigation.setOptions({
             title: "Client Page",
             headerStyle: {
-                backgroundColor: "#273263",
+                backgroundColor: themeColors.blueBgDark,
             },
-            headerTintColor: "#fff",
+            headerTintColor: themeColors.white,
             headerShown: true,
         });
     });
@@ -43,8 +48,7 @@ const ClientDetails = (props: ClientProps) => {
     const isFocused = useIsFocused();
 
     //Main Client Variables
-    const [presentClient, setPresentClient] = useState<IClient>();
-    const [clientFormikProps, setClientFormikProps] = useState<IClientFormProps>(InitialValues);
+    const [clientFormikProps, setClientFormikProps] = useState<IClientFormProps>(initialValues);
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);
@@ -63,9 +67,8 @@ const ClientDetails = (props: ClientProps) => {
             },
         ]);
 
-    const getInitialDisabilities = (disabilityArray: number[], otherDisability?: string) => {
+    const getInitialDisabilities = (disabilityArray: number[]) => {
         let selectedDisabilities: string[] = [];
-
         for (let index of disabilityArray) {
             if (disabilityMap.has(index)) {
                 if (index === getOtherDisabilityId(disabilityMap)) {
@@ -81,31 +84,27 @@ const ClientDetails = (props: ClientProps) => {
 
     const getClientDetails = async () => {
         const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
-        setPresentClient(presentClient);
         setClientCreateDate(presentClient.created_date);
         setClientVisits(presentClient.visits);
         setClientReferrals(presentClient.referrals);
         setClientSurveys(presentClient.baseline_surveys);
 
         const clientFormProps: IClientFormProps = {
+            initialDisabilityArray: getInitialDisabilities(presentClient.disability),
             id: props.route.params.clientID,
-            firstName: presentClient!.first_name,
-            lastName: presentClient!.last_name,
+            firstName: presentClient.first_name,
+            lastName: presentClient.last_name,
             date: timestampToDateObj(Number(presentClient?.birth_date)),
-            gender: presentClient!.gender,
-            village: presentClient!.village,
-            zone: presentClient!.zone,
-            phone: presentClient!.phone_number,
-            caregiverPresent: presentClient!.caregiver_present,
-            caregiverName: presentClient?.caregiver_name,
-            caregiverEmail: presentClient?.caregiver_email,
-            caregiverPhone: presentClient?.caregiver_phone,
-            clientDisability: presentClient!.disability,
-            otherDisability: presentClient?.other_disability,
-            initialDisabilityArray: getInitialDisabilities(
-                presentClient.disability,
-                presentClient.other_disability
-            ),
+            gender: presentClient.gender,
+            village: presentClient.village,
+            zone: presentClient.zone,
+            phone: presentClient.phone_number,
+            caregiverPresent: presentClient.caregiver_present,
+            caregiverName: presentClient.caregiver_name,
+            caregiverEmail: presentClient.caregiver_email,
+            caregiverPhone: presentClient.caregiver_phone,
+            clientDisability: presentClient.disability,
+            otherDisability: presentClient.other_disability,
             createdDate: presentClient.created_date,
             createdByUser: presentClient.created_by_user,
             longitude: presentClient.longitude,
@@ -121,13 +120,8 @@ const ClientDetails = (props: ClientProps) => {
     useEffect(() => {
         if (isFocused) {
             getClientDetails()
-                .then(() => {
-                    setLoading(false);
-                })
-                .catch(() => {
-                    setLoading(false);
-                    errorAlert();
-                });
+                .catch(() => errorAlert())
+                .finally(() => setLoading(false));
         }
     }, [isFocused]);
 
@@ -180,6 +174,40 @@ const ClientDetails = (props: ClientProps) => {
 
     tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));
 
+    const handleFormSubmit = (formParameters: FormikProps<IClientFormProps>) => {
+        const updatedIClient: IClient = {
+            id: props.clientID,
+            first_name: formParameters.values.firstName ?? "",
+            last_name: formParameters.values.lastName ?? "",
+            birth_date: formParameters.values.date
+                ? formParameters.values.date.getTime()
+                : new Date().getTime(),
+            gender: formParameters.values.gender as Gender,
+            village: formParameters.values.village ?? "",
+            zone: formParameters.values.zone ?? 0,
+            phone_number: formParameters.values.phone ?? "",
+            caregiver_present: formParameters.values.caregiverPresent ?? false,
+            caregiver_name: formParameters.values.caregiverName ?? "",
+            caregiver_email: formParameters.values.caregiverEmail ?? "",
+            caregiver_phone: formParameters.values.caregiverPhone ?? "",
+            disability: formParameters.values.clientDisability ?? [],
+            other_disability: formParameters.values.otherDisability ?? "",
+            picture:
+                "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
+            created_by_user: formParameters.values.createdByUser ?? 0,
+            created_date: formParameters.values.createdDate ?? new Date().getTime(),
+            longitude: formParameters.values.longitude ?? "",
+            latitude: formParameters.values.latitude ?? "",
+            caregiver_picture: formParameters.values.caregiverPicture,
+            risks: formParameters.values.risks ?? [],
+            visits: formParameters.values.visits ?? [],
+            referrals: formParameters.values.referrals ?? [],
+            baseline_surveys: formParameters.values.surveys ?? [],
+        };
+
+        handleSubmit(updatedIClient);
+    };
+
     return (
         <ScrollView style={styles.scrollViewStyles}>
             {loading ? (
@@ -224,8 +252,19 @@ const ClientDetails = (props: ClientProps) => {
                     <Divider />
                     <Text style={styles.cardSectionTitle}>Client Details</Text>
                     <Divider />
+
                     <Card style={styles.clientDetailsContainerStyles}>
-                        <ClientForm clientFormProps={clientFormikProps!} />
+                        <Formik
+                            initialValues={clientFormikProps}
+                            validationSchema={validationSchema}
+                            onSubmit={(values) => {
+                                handleFormSubmit();
+                            }}
+                        >
+                            {(formikProps) => (
+                                <ClientForm formikProps={formikProps} isNewClient={false} />
+                            )}
+                        </Formik>
                     </Card>
                     <Divider />
                     <ClientRisk editMode={editMode}></ClientRisk>

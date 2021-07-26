@@ -1,9 +1,10 @@
 import { IReferral, IRisk, ISurvey, IVisit, IVisitSummary, Validation } from "@cbr/common";
+import { FormikProps } from "formik";
 import * as Yup from "yup";
 
 export interface IFormProps {
     isNewClient?: boolean;
-    clientFormProps?: IClientFormProps;
+    formikProps?: FormikProps<IClientFormProps>;
 }
 
 export interface IClientFormProps {
@@ -64,7 +65,7 @@ export const ClientFormFieldLabels = {
     [ClientFormFields.caregiver_email]: "Caregiver Email",
 };
 
-export const InitialValues = {
+export const initialValues = {
     [ClientFormFields.first_name]: "",
     [ClientFormFields.last_name]: "",
     [ClientFormFields.date]: new Date(),
@@ -98,7 +99,7 @@ export interface FormValues {
 
 export const setFormInitialValues = (props: IClientFormProps, isNewClient?: boolean) => {
     if (isNewClient) {
-        return InitialValues;
+        return initialValues;
     } else {
         const loadedInitialValues: FormValues = {
             id: props.id,

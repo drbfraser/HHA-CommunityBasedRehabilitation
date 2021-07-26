@@ -50,7 +50,7 @@ export const ClientForm = (props: IFormProps) => {
     const [selectedZone, setSelectedZone] = useState<Number>(initialZone);
     const [otherDisability, showOtherDisability] = useState(false);
     const [fieldsDisabled, setFieldsDisabled] = useState(!props.isNewClient);
-    const [cancelButtonType, setCancelButtonType] = useState("outlined");
+    const [cancelButtonType, setCancelButtonType] = useState<"outlined" | "contained">("outlined");
     const [datePickerVisible, setDatePickerVisible] = useState(false);
     const [disabilityPickerVisible, setDisabilityPickerVisible] = useState(false);
     const [zonesPickerVisible, setZonesPickerVisible] = useState(false);
@@ -138,31 +138,31 @@ export const ClientForm = (props: IFormProps) => {
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
                     const updatedIClient: IClient = {
-                        id: props.clientFormProps?.id!,
-                        first_name: values.firstName!,
-                        last_name: values.lastName!,
-                        birth_date: values.date!.getTime(),
-                        gender: getGender(values.gender!),
-                        village: values.village!,
-                        zone: values.zone!,
-                        phone_number: values.phone || "",
-                        caregiver_present: caregiverPresent || false,
-                        caregiver_name: values.caregiverName || "",
-                        caregiver_email: values.caregiverEmail || "",
-                        caregiver_phone: values.caregiverPhone || "",
-                        disability: values.clientDisability!,
-                        other_disability: values.otherDisability || "",
+                        id: props.clientFormProps?.id ?? 0,
+                        first_name: values.firstName ?? "",
+                        last_name: values.lastName ?? "",
+                        birth_date: values.date ? values.date.getTime() : new Date().getTime(),
+                        gender: getGender(values.gender ?? "M"),
+                        village: values.village ?? "",
+                        zone: values.zone ?? 0,
+                        phone_number: values.phone ?? "",
+                        caregiver_present: caregiverPresent ?? false,
+                        caregiver_name: values.caregiverName ?? "",
+                        caregiver_email: values.caregiverEmail ?? "",
+                        caregiver_phone: values.caregiverPhone ?? "",
+                        disability: values.clientDisability ?? [],
+                        other_disability: values.otherDisability ?? "",
                         picture:
                             "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
-                        created_by_user: props.clientFormProps?.createdByUser!,
-                        created_date: props.clientFormProps?.createdDate!,
-                        longitude: props.clientFormProps?.longitude || "",
-                        latitude: props.clientFormProps?.latitude || "",
+                        created_by_user: props.clientFormProps?.createdByUser ?? 0,
+                        created_date: props.clientFormProps?.createdDate ?? new Date().getTime(),
+                        longitude: props.clientFormProps?.longitude ?? "",
+                        latitude: props.clientFormProps?.latitude ?? "",
                         caregiver_picture: props.clientFormProps?.caregiverPicture,
-                        risks: props.clientFormProps?.risks!,
-                        visits: props.clientFormProps?.visits!,
-                        referrals: props.clientFormProps?.referrals!,
-                        baseline_surveys: props.clientFormProps?.surveys!,
+                        risks: props.clientFormProps?.risks ?? [],
+                        visits: props.clientFormProps?.visits ?? [],
+                        referrals: props.clientFormProps?.referrals ?? [],
+                        baseline_surveys: props.clientFormProps?.surveys ?? [],
                     };
                     submitForm(updatedIClient);
                 }}

@@ -3,7 +3,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
 import { IClient } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
-import { Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IReferral, ISurvey, timestampToDateObj } from "@cbr/common";
 import {
@@ -55,6 +55,17 @@ const ClientDetails = (props: ClientProps) => {
     const [clientVisits, setClientVisits] = useState<IVisitSummary[]>();
     const [clientReferrals, setClientReferrals] = useState<IReferral[]>();
     const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
+
+    const errorAlert = () =>
+        Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
+            {
+                text: "Return",
+                style: "cancel",
+                onPress: () => {
+                    props.navigation.goBack();
+                },
+            },
+        ]);
 
     const getInitialDisabilities = (disabilityArray: number[], otherDisability?: string) => {
         let selectedDisabilities: string[] = [];
@@ -113,9 +124,14 @@ const ClientDetails = (props: ClientProps) => {
     };
     useEffect(() => {
         if (isFocused) {
-            getClientDetails().then(() => {
-                setLoading(false);
-            });
+            getClientDetails()
+                .then(() => {
+                    setLoading(false);
+                })
+                .catch(() => {
+                    setLoading(false);
+                    errorAlert();
+                });
         }
     }, [isFocused]);
 

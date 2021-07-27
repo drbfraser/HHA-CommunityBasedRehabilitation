@@ -5,9 +5,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { apiFetchByRequest, createApiFetchRequest, Endpoint } from "@cbr/common/util/endpoints";
-import { getAuthToken } from "@cbr/common/util/auth";
-import { IMAGE_CACHE_NAME } from "../../util/imageCache";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 
 interface IProps {
     isEditing: boolean;
@@ -42,54 +40,20 @@ export const ProfilePicCard = (props: IProps) => {
         if (!props.picture) {
             return;
         }
-        const cachePromise = caches.open(IMAGE_CACHE_NAME);
 
-        if (props.picture.startsWith("data:image/png")) {
+        if (props.picture && props.picture.startsWith("data:image/png")) {
             setImgSrc(props.picture);
-
-            // If we're using a base64 image, then the user is uploading a new image, so we
-            // invalidate the current cache
-            if (props.clientId && false) {
-                cachePromise.then((cache) =>
-                    cache.delete(
-                        createApiFetchRequest(Endpoint.CLIENT_PICTURE, `${props.clientId}`)
-                    )
-                );
-            }
         } else if (props.clientId) {
             // Since props.picture is not null, this prop comes from the client info returned by
             // the server API. As client pictures require authentication, we make a cached call
             // to get it.
             const abortController = new AbortController();
 
-            const doCachedFetch = async (): Promise<Response> => {
-                const token = await getAuthToken();
-                if (!token) {
-                    return Promise.reject(new Error("Failed to get image: Not logged in"));
-                }
-
-                const request = createApiFetchRequest(Endpoint.CLIENT_PICTURE, `${props.clientId}`);
-
-                const loadedCache = await cachePromise;
-                const cachedResponse = await loadedCache.match(request);
-                if (cachedResponse) {
-                    return cachedResponse;
-                }
-
-                const actualRequest = request.clone();
-                const freshResponse = await apiFetchByRequest(actualRequest, {
-                    signal: abortController.signal,
-                });
-
-                await loadedCache.put(request, freshResponse.clone());
-                return freshResponse;
-            };
-
             let blobUrlRef: string | undefined;
 
-            doCachedFetch()
-                .then((resp) => resp.blob())
-                .then((blob) => {
+            apiFetch(Endpoint.CLIENT_PICTURE, `${props.clientId}`, { cache: "no-cache" })
+                .then(async (resp) => {
+                    const blob = await resp.blob();
                     blobUrlRef = URL.createObjectURL(blob);
                     setImgSrc(blobUrlRef);
                 })

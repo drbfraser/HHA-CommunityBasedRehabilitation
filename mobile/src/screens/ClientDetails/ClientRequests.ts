@@ -16,6 +16,7 @@ export const fetchClientDetailsFromApi = async (clientId: number): Promise<IClie
         other_disability: response.other_disability,
         created_by_user: response.created_by_user,
         created_date: response.created_date,
+        modified_date: response.modified_date,
         longitude: response.longitude,
         latitude: response.latitude,
         zone: response.zone,

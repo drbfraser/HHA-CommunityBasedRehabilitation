@@ -35,7 +35,6 @@ export interface IClient {
     caregiver_name: string;
     caregiver_phone: string;
     caregiver_email: string;
-    caregiver_picture: unknown;
     risks: IRisk[];
     visits: IVisitSummary[];
     referrals: IReferral[];

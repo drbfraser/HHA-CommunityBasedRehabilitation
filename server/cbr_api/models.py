@@ -137,7 +137,6 @@ class Client(models.Model):
     caregiver_name = models.CharField(max_length=101, blank=True)
     caregiver_phone = models.CharField(max_length=50, blank=True)
     caregiver_email = models.CharField(max_length=50, blank=True)
-    caregiver_picture = models.ImageField(upload_to="images/", blank=True)
 
     # summary data to make queries more reasonable
     health_risk_level = RiskLevel.getField()
@@ -184,7 +183,6 @@ class Referral(models.Model):
     client = models.ForeignKey(
         Client, related_name="referrals", on_delete=models.CASCADE
     )
-    picture = models.ImageField(upload_to="images/", blank=True)
 
     class Experience(models.TextChoices):
         BASIC = "BAS", _("Basic")

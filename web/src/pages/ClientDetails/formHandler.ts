@@ -1,28 +1,18 @@
 import { FormikHelpers } from "formik";
-import {
-    apiFetch,
-    APIFetchFailError,
-    Endpoint,
-    objectToFormData,
-} from "@cbr/common/util/endpoints";
+import { apiFetch, Endpoint, objectToFormData } from "@cbr/common/util/endpoints";
 import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
 import { TFormValues } from "./formFields";
 import { IClient } from "@cbr/common/util/clients";
+import { appendPicture } from "../../util/clientSubmission";
 import { fieldLabels } from "../NewClient/formFields";
 
-const updateClient = async (clientInfo: FormData, clientId: number) => {
+const updateClient = async (clientInfo: FormData, clientId: number): Promise<IClient> => {
     const init: RequestInit = {
         method: "PUT",
         body: clientInfo,
     };
-    return await apiFetch(Endpoint.CLIENT, `${clientId}`, init)
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            return res;
-        });
+    return await apiFetch(Endpoint.CLIENT, `${clientId}`, init).then((res) => res.json());
 };
 
 /**
@@ -57,20 +47,7 @@ export const handleSubmit = async (
     const formData = objectToFormData(updatedValues);
 
     if (values.pictureChanged && values.picture) {
-        const clientProfilePictureFetch = await fetch(values.picture);
-        const contentType = clientProfilePictureFetch.headers.get("Content-Type");
-
-        if (contentType?.includes("image/")) {
-            const splitHeader = contentType.split(";");
-            const imageType = splitHeader.find((value) => value.includes("image/"));
-            const imageExtension = imageType?.trim()?.split("/")[1] ?? "";
-
-            formData.append(
-                "picture",
-                await clientProfilePictureFetch.blob(),
-                `client-${values.id}.${imageExtension}`
-            );
-        }
+        await appendPicture(formData, values.picture, values.id);
     }
 
     try {

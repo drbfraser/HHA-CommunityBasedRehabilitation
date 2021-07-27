@@ -97,7 +97,7 @@ class RiskLevel(models.TextChoices):
         return models.CharField(max_length=2, choices=RiskLevel.choices, default="LO")
 
 
-client_picture_upload_dir = "images"
+client_picture_upload_dir = "images/clients"
 
 
 class Client(models.Model):

@@ -1,8 +1,9 @@
-from rest_framework import serializers
-from cbr_api import models
-from rest_framework.validators import UniqueValidator
-from django.contrib.auth.password_validation import validate_password
 import time
+from django.contrib.auth.password_validation import validate_password
+from rest_framework import serializers
+
+from cbr_api import models
+
 
 # create and list
 class UserCBRCreationSerializer(serializers.ModelSerializer):

@@ -8,13 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0015_auto_20210409_0127'),
+        ("cbr_api", "0015_auto_20210409_0127"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='client',
-            name='picture',
-            field=models.ImageField(blank=True, storage=cbr_api.storage.OverwriteStorage(), upload_to=cbr_api.models.Client.rename_file),
+            model_name="client",
+            name="picture",
+            field=models.ImageField(
+                blank=True,
+                storage=cbr_api.storage.OverwriteStorage(),
+                upload_to=cbr_api.models.Client.rename_file,
+            ),
         ),
     ]

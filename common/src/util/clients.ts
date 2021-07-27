@@ -25,6 +25,7 @@ export interface IClient {
     other_disability: string;
     created_by_user: number;
     created_date: number;
+    modified_date: number;
     longitude: string;
     latitude: string;
     zone: number;

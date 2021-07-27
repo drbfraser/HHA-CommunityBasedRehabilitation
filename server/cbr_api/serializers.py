@@ -1,3 +1,5 @@
+import datetime
+
 import time
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
@@ -411,6 +413,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "other_disability",
             "created_by_user",
             "created_date",
+            "modified_date",
             "longitude",
             "latitude",
             "zone",
@@ -426,10 +429,16 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "educat_risk",
         ]
 
-        read_only_fields = ["created_by_user", "created_date", "full_name"]
+        read_only_fields = [
+            "created_by_user",
+            "created_date",
+            "modified_date",
+            "full_name",
+        ]
 
     def create(self, validated_data):
         current_time = int(time.time())
+        datetime.datetime.now().timestamp()
 
         # must be removed before passing validated_data into Client.objects.create
         health_data = validated_data.pop("health_risk")
@@ -480,6 +489,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "other_disability",
             "created_by_user",
             "created_date",
+            "modified_date",
             "longitude",
             "latitude",
             "zone",
@@ -496,7 +506,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "baseline_surveys",
         ]
 
-        read_only_fields = ["created_by_user", "created_date"]
+        read_only_fields = ["created_by_user", "created_date", "modified_date"]
 
     def update(self, instance, validated_data):
         super().update(instance, validated_data)

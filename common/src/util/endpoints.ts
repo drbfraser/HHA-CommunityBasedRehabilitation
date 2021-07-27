@@ -94,8 +94,11 @@ export class APIFetchFailError extends Error {
     }
 }
 
-export const createApiFetchRequest = (endpoint: Endpoint, urlParams: string = "") =>
-    new Request(commonConfiguration.apiUrl + endpoint + urlParams);
+export const createApiFetchRequest = (
+    endpoint: Endpoint,
+    urlParams: string = "",
+    customInit?: RequestInit
+) => new Request(commonConfiguration.apiUrl + endpoint + urlParams, customInit);
 
 /**
  * Performs a fetch to the server. The returned Promise rejects on both HTTP errors and network

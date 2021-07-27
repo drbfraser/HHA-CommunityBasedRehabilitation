@@ -1,5 +1,6 @@
 import os
 import time
+
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -114,6 +115,7 @@ class Client(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT
     )
     created_date = models.BigIntegerField()
+    modified_date = models.BigIntegerField()
     longitude = models.DecimalField(max_digits=12, decimal_places=6)
     latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
@@ -142,6 +144,10 @@ class Client(models.Model):
     social_risk_level = RiskLevel.getField()
     educat_risk_level = RiskLevel.getField()
     last_visit_date = models.BigIntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        self.modified_date = int(time.time())
+        super().save(*args, **kwargs)
 
 
 class ClientRisk(models.Model):

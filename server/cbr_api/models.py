@@ -5,11 +5,12 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 
 from cbr import settings
 from cbr_api.storage import OverwriteStorage
-from cbr_api.validators import client_picture_size_validator, FileSizeValidator
+from cbr_api.validators import FileSizeValidator
 
 
 class Zone(models.Model):
@@ -96,6 +97,9 @@ class RiskLevel(models.TextChoices):
         return models.CharField(max_length=2, choices=RiskLevel.choices, default="LO")
 
 
+client_picture_upload_dir = "images"
+
+
 class Client(models.Model):
     class Gender(models.TextChoices):
         MALE = "M", _("Male")
@@ -123,11 +127,14 @@ class Client(models.Model):
     village = models.CharField(max_length=50)
 
     def rename_file(self, original_filename):
-        upload_dir = "images"
-        extension = original_filename.split(".")[-1]
-
-        new_filename = f"client-{self.pk}.{extension}"
-        return os.path.join(upload_dir, new_filename)
+        # file_ext includes the "."
+        file_root, file_ext = os.path.splitext(original_filename)
+        new_filename = (
+            f"client-{self.pk}{file_ext}"
+            if self.pk is not None
+            else f"temp-{get_random_string(10)}-{file_root}{file_ext}"
+        )
+        return os.path.join(client_picture_upload_dir, new_filename)
 
     filesize_validator = FileSizeValidator(5 * 1024 * 1024)
 
@@ -152,7 +159,24 @@ class Client(models.Model):
 
     def save(self, *args, **kwargs):
         self.modified_date = int(time.time())
+        # The image might need to be renamed if this is a new client, since a new client would be missing the
+        # autoincrement primary key (id).
+        needs_image_rename = (
+            self.pk is None
+            and self.picture.name is not None
+            and len(self.picture.name) > 0
+        )
+
         super().save(*args, **kwargs)
+        if needs_image_rename and self.pk is not None:
+            # Save a second time so that the picture gets a proper name and not a temporary name.
+            old_file_path = self.picture.path
+            self.picture.save(self.picture.name, self.picture.file)
+            # The picture should now have the expected name from the rename_file function.
+            # However, this saves it as a new file and doesn't delete the old, temp file.
+            # Delete the temp file (sanity check to make sure it's really a temp file)
+            if old_file_path != self.picture.path:
+                os.remove(old_file_path)
 
 
 class ClientRisk(models.Model):

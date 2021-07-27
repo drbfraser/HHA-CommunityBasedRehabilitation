@@ -1,24 +1,33 @@
-import React, { useRef, useState } from "react";
-import { Card, CardContent, Dialog, DialogActions, DialogContent, Button } from "@material-ui/core";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Card, CardContent, Dialog, DialogActions, DialogContent } from "@material-ui/core";
 import { useStyles } from "./PhotoViewUpload.styles";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-
-interface IPictureModal {
-    picture: string;
-}
+import { apiFetchByRequest, createApiFetchRequest, Endpoint } from "@cbr/common/util/endpoints";
+import { getAuthToken } from "@cbr/common/util/auth";
+import { IMAGE_CACHE_NAME } from "../../util/imageCache";
 
 interface IProps {
     isEditing: boolean;
+    /**
+     * The client ID if this image is for an existing client.
+     */
+    clientId?: number;
     setFieldValue: (field: string, value: string) => void;
-    picture: string;
+    /**
+     * Indicates either a base64 image starting with `data:image/png;base64` or a (non-accessible)
+     * path to an image on the server.
+     */
+    picture: string | null;
 }
 
 interface ICropperModal {
     setFieldValue: (field: string, value: string) => void;
 }
+
+const DEFAULT_IMAGE_PATH = "/images/profile_pic_icon.png";
 
 export const ProfilePicCard = (props: IProps) => {
     const styles = useStyles();
@@ -26,9 +35,76 @@ export const ProfilePicCard = (props: IProps) => {
     const cropper = useRef<Cropper>();
     const [isViewingPicture, setIsViewingPicture] = useState<boolean>(false);
     const [profileModalOpen, setProfileModalOpen] = useState<boolean>(false);
-    const [profilePicture, setProfilePicture] = useState("/images/profile_pic_icon.png");
+    const [profilePicture, setProfilePicture] = useState(DEFAULT_IMAGE_PATH);
 
-    const PictureModal = (props: IPictureModal) => {
+    const [imgSrc, setImgSrc] = useState<string>(DEFAULT_IMAGE_PATH);
+    useEffect(() => {
+        if (!props.picture) {
+            return;
+        }
+        const cachePromise = caches.open(IMAGE_CACHE_NAME);
+
+        if (props.picture.startsWith("data:image/png")) {
+            setImgSrc(props.picture);
+
+            // If we're using a base64 image, then the user is uploading a new image, so we
+            // invalidate the current cache
+            if (props.clientId && false) {
+                cachePromise.then((cache) =>
+                    cache.delete(
+                        createApiFetchRequest(Endpoint.CLIENT_PICTURE, `${props.clientId}`)
+                    )
+                );
+            }
+        } else if (props.clientId) {
+            // Since props.picture is not null, this prop comes from the client info returned by
+            // the server API. As client pictures require authentication, we make a cached call
+            // to get it.
+            const abortController = new AbortController();
+
+            const doCachedFetch = async (): Promise<Response> => {
+                const token = await getAuthToken();
+                if (!token) {
+                    return Promise.reject(new Error("Failed to get image: Not logged in"));
+                }
+
+                const request = createApiFetchRequest(Endpoint.CLIENT_PICTURE, `${props.clientId}`);
+
+                const loadedCache = await cachePromise;
+                const cachedResponse = await loadedCache.match(request);
+                if (cachedResponse) {
+                    return cachedResponse;
+                }
+
+                const actualRequest = request.clone();
+                const freshResponse = await apiFetchByRequest(actualRequest, {
+                    signal: abortController.signal,
+                });
+
+                await loadedCache.put(request, freshResponse.clone());
+                return freshResponse;
+            };
+
+            let blobUrlRef: string | undefined;
+
+            doCachedFetch()
+                .then((resp) => resp.blob())
+                .then((blob) => {
+                    blobUrlRef = URL.createObjectURL(blob);
+                    setImgSrc(blobUrlRef);
+                })
+                .catch((e) => console.error(e));
+
+            return () => {
+                abortController.abort();
+                if (blobUrlRef) {
+                    URL.revokeObjectURL(blobUrlRef);
+                }
+            };
+        }
+    }, [props.clientId, props.picture]);
+
+    const PictureModal = () => {
         const styles = useStyles();
 
         return (
@@ -39,11 +115,7 @@ export const ProfilePicCard = (props: IProps) => {
                 }}
             >
                 <DialogContent>
-                    <img
-                        className={styles.pictureModal}
-                        src={props.picture ? props.picture : "/images/profile_pic_icon.png"}
-                        alt="user-profile-pic"
-                    />
+                    <img className={styles.pictureModal} src={imgSrc} alt="user-profile-pic" />
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -60,7 +132,7 @@ export const ProfilePicCard = (props: IProps) => {
         );
     };
 
-    const CropModal = (props: ICropperModal) => (
+    const CropModal = (cropperProps: ICropperModal) => (
         <Dialog
             open={profileModalOpen}
             onClose={() => {
@@ -89,7 +161,7 @@ export const ProfilePicCard = (props: IProps) => {
                     variant="contained"
                     onClick={() => {
                         if (cropper.current !== undefined) {
-                            props.setFieldValue(
+                            cropperProps.setFieldValue(
                                 "picture",
                                 cropper.current.getCroppedCanvas().toDataURL()
                             );
@@ -158,11 +230,7 @@ export const ProfilePicCard = (props: IProps) => {
                         !props.isEditing ? setIsViewingPicture(true) : triggerFileUpload()
                     }
                 >
-                    <img
-                        className={styles.profilePicture}
-                        src={props.picture || `/images/profile_pic_icon.png`}
-                        alt="user-icon"
-                    />
+                    <img className={styles.profilePicture} src={imgSrc} alt="user-icon" />
                     <div className={styles.uploadIcon}>
                         <CloudUploadIcon />
                         <input
@@ -170,14 +238,14 @@ export const ProfilePicCard = (props: IProps) => {
                             accept="image/*"
                             ref={profilePicRef}
                             style={{ visibility: "hidden" }}
-                            onChange={(e: any) => {
+                            onChange={(e) => {
                                 onSelectFile(e);
                             }}
                         />
                     </div>
                 </CardContent>
             </Card>
-            <PictureModal picture={props.picture} />
+            <PictureModal />
             <CropModal setFieldValue={props.setFieldValue} />
         </>
     );

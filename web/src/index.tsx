@@ -6,6 +6,7 @@ import App from "./App";
 import { initializeCommon, KeyValStorageProvider } from "@cbr/common/init";
 import { loginState } from "./util/hooks/loginState";
 import { invalidateAllCachedAPI } from "@cbr/common/util/hooks/cachedAPI";
+import { deleteImageCache } from "./util/imageCache";
 
 const API_URL =
     process.env.NODE_ENV === "development"
@@ -32,6 +33,7 @@ initializeCommon({
     logoutCallback: async () => {
         loginState.emit(false);
         await invalidateAllCachedAPI("logout");
+        await deleteImageCache();
         window.location.replace("/");
     },
 });

@@ -1,7 +1,8 @@
-from cbr_api import models, serializers, filters, permissions
-from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+from rest_framework import generics
+
+from cbr_api import models, serializers, filters, permissions
 from cbr_api.sql import (
     getDisabilityStats,
     getNumClientsWithDisabilities,
@@ -9,6 +10,7 @@ from cbr_api.sql import (
     getReferralStats,
     getOutstandingReferrals,
 )
+from downloadview.object import AuthenticatedObjectDownloadView
 
 
 class UserList(generics.ListCreateAPIView):
@@ -108,6 +110,14 @@ class ClientList(generics.ListCreateAPIView):
 class ClientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Client.objects.all()
     serializer_class = serializers.ClientDetailSerializer
+
+
+class ClientImage(AuthenticatedObjectDownloadView):
+    model = models.Client
+    file_field = "picture"
+
+    def get(self, request, *args, **kwargs):
+        return super().get(self, request, args, kwargs)
 
 
 class DisabilityList(generics.ListCreateAPIView):

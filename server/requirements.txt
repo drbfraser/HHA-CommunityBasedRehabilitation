@@ -8,3 +8,4 @@ Pillow==8.1.0
 djangorestframework-simplejwt==4.6.0
 drf-spectacular==0.13.1
 django-filter==2.4.0
+django-downloadview==2.1.1

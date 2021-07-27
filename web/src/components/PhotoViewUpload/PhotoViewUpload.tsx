@@ -13,16 +13,16 @@ interface IProps {
      * The client ID if this image is for an existing client.
      */
     clientId?: number;
-    setFieldValue: (field: string, value: string) => void;
+    onPictureChange: (newPictureURL: string) => void;
     /**
      * Indicates either a base64 image starting with `data:image/png;base64` or a (non-accessible)
-     * path to an image on the server.
+     * URL to an image on the server.
      */
     picture: string | null;
 }
 
 interface ICropperModal {
-    setFieldValue: (field: string, value: string) => void;
+    onPictureChange: (newPictureURL: string) => void;
 }
 
 const DEFAULT_IMAGE_PATH = "/images/profile_pic_icon.png";
@@ -32,21 +32,19 @@ export const ProfilePicCard = (props: IProps) => {
     const profilePicRef = useRef<HTMLInputElement | null>(null);
     const cropper = useRef<Cropper>();
     const [isViewingPicture, setIsViewingPicture] = useState<boolean>(false);
-    const [profileModalOpen, setProfileModalOpen] = useState<boolean>(false);
-    const [profilePicture, setProfilePicture] = useState(DEFAULT_IMAGE_PATH);
+    const [cropModalOpen, setCropModalOpen] = useState<boolean>(false);
+    const [cropperPicture, setCropperPicture] = useState<string>();
 
-    const [imgSrc, setImgSrc] = useState<string>(DEFAULT_IMAGE_PATH);
+    const [imgSrc, setImgSrc] = useState<string>();
     useEffect(() => {
         if (!props.picture) {
+            setImgSrc(DEFAULT_IMAGE_PATH);
             return;
         }
 
         if (props.picture && props.picture.startsWith("data:image/png")) {
             setImgSrc(props.picture);
-        } else if (props.clientId) {
-            // Since props.picture is not null, this prop comes from the client info returned by
-            // the server API. As client pictures require authentication, we make a cached call
-            // to get it.
+        } else if (props.clientId && !props.isEditing) {
             const abortController = new AbortController();
 
             let blobUrlRef: string | undefined;
@@ -66,18 +64,13 @@ export const ProfilePicCard = (props: IProps) => {
                 }
             };
         }
-    }, [props.clientId, props.picture]);
+    }, [props.clientId, props.picture, props.isEditing]);
 
     const PictureModal = () => {
         const styles = useStyles();
 
         return (
-            <Dialog
-                open={isViewingPicture}
-                onClose={() => {
-                    setIsViewingPicture(false);
-                }}
-            >
+            <Dialog open={isViewingPicture} onClose={() => setIsViewingPicture(false)}>
                 <DialogContent>
                     <img className={styles.pictureModal} src={imgSrc} alt="user-profile-pic" />
                 </DialogContent>
@@ -85,9 +78,7 @@ export const ProfilePicCard = (props: IProps) => {
                     <Button
                         variant="outlined"
                         color="primary"
-                        onClick={() => {
-                            setIsViewingPicture(false);
-                        }}
+                        onClick={() => setIsViewingPicture(false)}
                     >
                         Close
                     </Button>
@@ -98,9 +89,9 @@ export const ProfilePicCard = (props: IProps) => {
 
     const CropModal = (cropperProps: ICropperModal) => (
         <Dialog
-            open={profileModalOpen}
+            open={cropModalOpen}
             onClose={() => {
-                setProfileModalOpen(false);
+                setCropModalOpen(false);
             }}
             aria-labelledby="form-modal-title"
         >
@@ -112,7 +103,7 @@ export const ProfilePicCard = (props: IProps) => {
                     minCropBoxWidth={10}
                     viewMode={1}
                     aspectRatio={1}
-                    src={profilePicture}
+                    src={cropperPicture}
                     background={false}
                     onInitialized={(instance) => {
                         cropper.current = instance;
@@ -125,12 +116,12 @@ export const ProfilePicCard = (props: IProps) => {
                     variant="contained"
                     onClick={() => {
                         if (cropper.current !== undefined) {
-                            cropperProps.setFieldValue(
-                                "picture",
+                            cropperProps.onPictureChange(
                                 cropper.current.getCroppedCanvas().toDataURL()
                             );
                         }
-                        setProfileModalOpen(false);
+                        setCropModalOpen(false);
+                        setCropperPicture(undefined);
                     }}
                 >
                     Save
@@ -139,7 +130,8 @@ export const ProfilePicCard = (props: IProps) => {
                     variant="outlined"
                     color="primary"
                     onClick={() => {
-                        setProfileModalOpen(false);
+                        setCropModalOpen(false);
+                        setCropperPicture(undefined);
                     }}
                 >
                     Cancel
@@ -148,31 +140,30 @@ export const ProfilePicCard = (props: IProps) => {
         </Dialog>
     );
 
-    const onSelectFile = (e: any) => {
+    const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
 
-        let files;
-
-        if (e.dataTransfer) {
-            files = e.dataTransfer.files;
-        } else if (e.target) {
-            files = e.target.files;
-        } else {
+        const files = e.target.files;
+        if (!files) {
             return;
         }
 
         const reader = new FileReader();
 
         reader.onload = () => {
-            setProfilePicture(reader.result as any);
+            const cropperPicture = (reader.result as string) ?? undefined;
+            setCropperPicture(cropperPicture);
+            if (cropperPicture) {
+                setCropModalOpen(true);
+            } else {
+                alert("Error opening image");
+            }
         };
 
         reader.readAsDataURL(files[0]);
 
-        if (profilePicture) {
-            setProfileModalOpen(true);
-        }
-
+        // Allow image reuse when selecting in file picker again.
+        // @ts-ignore
         e.target.value = null;
     };
 
@@ -194,7 +185,9 @@ export const ProfilePicCard = (props: IProps) => {
                         !props.isEditing ? setIsViewingPicture(true) : triggerFileUpload()
                     }
                 >
-                    <img className={styles.profilePicture} src={imgSrc} alt="user-icon" />
+                    {imgSrc && (
+                        <img className={styles.profilePicture} src={imgSrc} alt="user-icon" />
+                    )}
                     <div className={styles.uploadIcon}>
                         <CloudUploadIcon />
                         <input
@@ -202,15 +195,13 @@ export const ProfilePicCard = (props: IProps) => {
                             accept="image/*"
                             ref={profilePicRef}
                             style={{ visibility: "hidden" }}
-                            onChange={(e) => {
-                                onSelectFile(e);
-                            }}
+                            onChange={onSelectFile}
                         />
                     </div>
                 </CardContent>
             </Card>
             <PictureModal />
-            <CropModal setFieldValue={props.setFieldValue} />
+            <CropModal onPictureChange={props.onPictureChange} />
         </>
     );
 };

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useStyles } from "../NewClient/ClientForm.styles";
 
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 
-import { fieldLabels, FormField, validationSchema } from "./formFields";
+import { fieldLabels, FormField, TFormValues, validationSchema } from "./formFields";
 
 import {
     Accordion,
@@ -23,6 +23,7 @@ import { useZones } from "@cbr/common/util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import history from "util/history";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
 
 interface IProps {
     clientInfo: IClient;
@@ -32,24 +33,36 @@ const ClientInfoForm = (props: IProps) => {
     const styles = useStyles();
     const zones = useZones();
     const disabilities = useDisabilities();
-    const [initialPicture] = useState<string>(props.clientInfo.picture);
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     return (
         <Formik
-            initialValues={props.clientInfo}
+            initialValues={
+                { ...props.clientInfo, [FormField.pictureChanged]: false } as TFormValues
+            }
             validationSchema={validationSchema}
-            onSubmit={(values, setSubmitting) => {
-                handleSubmit(values, setSubmitting, setIsEditing);
+            onSubmit={(values: TFormValues, formikHelpers) => {
+                handleSubmit(values, formikHelpers, setIsEditing)
+                    .then(() => formikHelpers.setFieldValue(FormField.pictureChanged, false))
+                    .catch((e) =>
+                        alert(
+                            `Encountered an error while trying to edit the client! ${
+                                e instanceof APIFetchFailError ? JSON.stringify(e.response) : e
+                            }`
+                        )
+                    );
             }}
         >
-            {({ values, isSubmitting, resetForm, setFieldValue }) => (
+            {({ isSubmitting, resetForm, setFieldValue, values }: FormikProps<TFormValues>) => (
                 <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
                         <ProfilePicCard
                             clientId={props.clientInfo.id}
                             isEditing={isEditing}
-                            setFieldValue={setFieldValue}
+                            onPictureChange={(newPictureURL) => {
+                                setFieldValue(FormField.picture, newPictureURL);
+                                setFieldValue(FormField.pictureChanged, true);
+                            }}
                             picture={values.picture}
                         />
                         <Grid container direction="row" spacing={1}>
@@ -342,7 +355,6 @@ const ClientInfoForm = (props: IProps) => {
                                                 color="primary"
                                                 onClick={() => {
                                                     handleCancel(resetForm, setIsEditing);
-                                                    props.clientInfo.picture = initialPicture;
                                                 }}
                                                 disabled={isSubmitting}
                                             >

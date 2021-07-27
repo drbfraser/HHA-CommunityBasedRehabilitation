@@ -367,17 +367,19 @@ const NewVisit = (props: INewVisitProps) => {
                     helpers.setSubmitting(false);
                     setSubmissionError(true);
                 });
+            setCheckedSteps([]);
         } else {
             if (activeStep === 0) {
                 helpers.setFieldValue(`${[VisitFormField.client]}`, `${clientId}`);
             }
-
             if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
                 checkedSteps.push(enabledSteps[activeStep - 1]);
             }
+            // setCheckedSteps([...new Set(checkedSteps)]);
 
             setActiveStep(activeStep + 1);
             helpers.setSubmitting(false);
+            // helpers.setTouched({});
         }
     };
 

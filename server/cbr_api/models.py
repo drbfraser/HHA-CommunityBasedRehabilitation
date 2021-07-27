@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 from cbr import settings
 from cbr_api.storage import OverwriteStorage
+from cbr_api.validators import client_picture_size_validator, FileSizeValidator
 
 
 class Zone(models.Model):
@@ -128,8 +129,13 @@ class Client(models.Model):
         new_filename = f"client-{self.pk}.{extension}"
         return os.path.join(upload_dir, new_filename)
 
+    filesize_validator = FileSizeValidator(5 * 1024 * 1024)
+
     picture = models.ImageField(
-        upload_to=rename_file, storage=OverwriteStorage(), blank=True
+        upload_to=rename_file,
+        storage=OverwriteStorage(),
+        blank=True,
+        validators=[filesize_validator],
     )  # if picture available
     caregiver_present = models.BooleanField(default=False)
 

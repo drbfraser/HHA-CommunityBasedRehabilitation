@@ -149,7 +149,7 @@ const UserList = () => {
             </View>
 
             <View style={styles.row}>
-                <Text style={{ textAlign: "center", fontSize: 16 }}>Search by</Text>
+                <Text style={styles.text}>Search by</Text>
                 <Picker
                     style={styles.select}
                     selectedValue={selectedSearchOption}
@@ -169,36 +169,36 @@ const UserList = () => {
                     <DataTable.Header style={styles.item}>
                         <DataTable.Title
                             style={styles.column_id}
-                            onPress={() => sortBy("id")}
-                            sortDirection={arrowDirectionController("id")}
+                            onPress={() => sortBy(SortOptions.ID)}
+                            sortDirection={arrowDirectionController(SortOptions.ID)}
                         >
                             ID
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_name}
-                            onPress={() => sortBy("name")}
-                            sortDirection={arrowDirectionController("name")}
+                            onPress={() => sortBy(SortOptions.NAME)}
+                            sortDirection={arrowDirectionController(SortOptions.NAME)}
                         >
                             Name
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_zone}
-                            onPress={() => sortBy("zone")}
-                            sortDirection={arrowDirectionController("zone")}
+                            onPress={() => sortBy(SortOptions.ZONE)}
+                            sortDirection={arrowDirectionController(SortOptions.ZONE)}
                         >
                             Zone
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_role}
-                            onPress={() => sortBy("role")}
-                            sortDirection={arrowDirectionController("role")}
+                            onPress={() => sortBy(SortOptions.ROLE)}
+                            sortDirection={arrowDirectionController(SortOptions.ROLE)}
                         >
                             Role
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_status}
-                            onPress={() => sortBy("status")}
-                            sortDirection={arrowDirectionController("status")}
+                            onPress={() => sortBy(SortOptions.STATUS)}
+                            sortDirection={arrowDirectionController(SortOptions.STATUS)}
                         >
                             Status
                         </DataTable.Title>

@@ -9,6 +9,8 @@ import { IClient } from "@cbr/common/util/clients";
 import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
 import { getRandomStr } from "@cbr/common/util/misc";
+import { TFormValues } from "./formFields";
+import { IClient } from "@cbr/common/util/clients";
 import { fieldLabels } from "../NewClient/formFields";
 
 const updateClient = async (clientInfo: FormData, clientId: number) => {
@@ -25,13 +27,16 @@ const updateClient = async (clientInfo: FormData, clientId: number) => {
         });
 };
 
+/**
+ * @throws Error if submission fails
+ */
 export const handleSubmit = async (
-    values: IClient,
-    helpers: FormikHelpers<IClient>,
+    values: TFormValues,
+    helpers: FormikHelpers<TFormValues>,
     setIsEditing: (isEditing: boolean) => void
 ) => {
     const disabilities = await getDisabilities();
-    const updatedValues = {
+    const updatedValues: Partial<IClient> = {
         first_name: values.first_name,
         last_name: values.last_name,
         birth_date: timestampFromFormDate(values.birth_date as string),
@@ -53,9 +58,17 @@ export const handleSubmit = async (
 
     const formData = objectToFormData(updatedValues);
 
-    if (values.picture) {
-        const clientProfilePicture = await (await fetch(values.picture)).blob();
-        formData.append("picture", clientProfilePicture, getRandomStr(30) + ".png");
+    if (values.pictureChanged && values.picture) {
+        const clientProfilePictureFetch = await fetch(values.picture);
+        const contentType = clientProfilePictureFetch.headers.get("Content-Type");
+
+        if (contentType?.startsWith("image/")) {
+            formData.append(
+                "picture",
+                await clientProfilePictureFetch.blob(),
+                getRandomStr(30) + ".png"
+            );
+        }
     }
 
     try {
@@ -66,8 +79,9 @@ export const handleSubmit = async (
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(fieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);
+    } finally {
+        helpers.setSubmitting(false);
     }
-    helpers.setSubmitting(false);
 };
 
 export const handleCancel = (resetForm: () => void, setIsEditing: (isEditing: boolean) => void) => {

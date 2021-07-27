@@ -69,9 +69,13 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
 
     const formData = objectToFormData(newClient);
 
-    if (values.picture) {
-        const clientProfilePicture = await (await fetch(values.picture)).blob();
-        formData.append("picture", clientProfilePicture, getRandomStr(30) + ".png");
+    if (values.pictureChanged && values.picture) {
+        const pictureResponse = await fetch(values.picture);
+        const contentType = pictureResponse.headers.get("Content-Type");
+
+        if (contentType?.startsWith("image/")) {
+            formData.append("picture", await pictureResponse.blob(), getRandomStr(30) + ".png");
+        }
     }
 
     try {

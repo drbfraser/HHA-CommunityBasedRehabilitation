@@ -512,17 +512,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ["created_by_user", "created_date", "modified_date"]
 
     def update(self, instance: models.Client, validated_data):
-        new_client_picture: Optional[File] = validated_data.get("picture")
-        if new_client_picture:
-            if hash_client_image(
-                instance.picture.file, close_after=True
-            ) == hash_client_image(new_client_picture, close_after=False):
-                # Use existing image if it's the same to allow for caching by date modified.
-                new_client_picture.close()
-                validated_data["picture"] = instance.picture
-
         super().update(instance, validated_data)
         instance.full_name = instance.first_name + " " + instance.last_name
-
         instance.save()
         return instance

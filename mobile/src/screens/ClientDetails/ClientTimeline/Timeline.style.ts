@@ -53,7 +53,7 @@ const useStyles = () =>
             height: "auto",
             marginHorizontal: 20,
             marginTop: 140,
-            marginBottom: 10,
+            marginBottom: 40,
             display: "flex",
             backgroundColor: "white",
             alignContent: "center",

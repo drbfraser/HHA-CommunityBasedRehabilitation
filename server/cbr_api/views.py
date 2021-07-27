@@ -1,8 +1,6 @@
-from datetime import datetime
-from hashlib import blake2b
-
 from django.views.decorators.cache import cache_control
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import generics
 from rest_framework_condition import condition
@@ -15,6 +13,7 @@ from cbr_api.sql import (
     getReferralStats,
     getOutstandingReferrals,
 )
+from cbr_api.util import client_picture_last_modified_datetime, client_image_etag
 from downloadview.object import AuthenticatedObjectDownloadView
 
 
@@ -117,35 +116,18 @@ class ClientDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ClientDetailSerializer
 
 
-def last_modified_client_datetime(request, pk, *args):
-    return datetime.fromtimestamp(
-        models.Client.objects.filter(id=pk).first().modified_date
-    )
-
-
-def hash_client_image(request, pk, *args):
-    picture_hash = blake2b(digest_size=32)
-    client_picture = models.Client.objects.filter(id=pk).first().picture
-
-    if client_picture.name is None:
-        return "none"
-
-    try:
-        with client_picture.open() as pic_file:
-            for chunk in pic_file.chunks(chunk_size=8192):
-                picture_hash.update(chunk)
-        return picture_hash.hexdigest()
-    except ValueError:
-        return "none"
-
-
 class ClientImage(AuthenticatedObjectDownloadView):
     model = models.Client
     file_field = "picture"
 
+    @extend_schema(
+        description="Gets the profile picture for a client if it exists.",
+        responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
+    )
     @cache_control(max_age=1209600)
     @condition(
-        last_modified_func=last_modified_client_datetime, etag_func=hash_client_image
+        last_modified_func=client_picture_last_modified_datetime,
+        etag_func=client_image_etag,
     )
     def get(self, request, *args, **kwargs):
         return super().get(self, request, args, kwargs)

@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { Validation } from "@cbr/common/util/validations";
+import { Gender } from "@cbr/common/util/clients";
 
 export enum FormField {
     firstName = "firstName",
@@ -26,6 +27,7 @@ export enum FormField {
     socialRequirements = "socialRequirements",
     socialGoals = "socialGoals",
     picture = "picture",
+    pictureChanged = "pictureChanged",
 }
 
 export const fieldLabels = {
@@ -58,16 +60,16 @@ export const initialValues = {
     [FormField.firstName]: "",
     [FormField.lastName]: "",
     [FormField.birthDate]: "",
-    [FormField.gender]: "",
+    [FormField.gender]: "" as Gender,
     [FormField.village]: "",
-    [FormField.zone]: "",
+    [FormField.zone]: undefined as number | undefined,
     [FormField.phoneNumber]: "",
     [FormField.interviewConsent]: false,
     [FormField.caregiverPresent]: false,
     [FormField.caregiverPhone]: "",
     [FormField.caregiverName]: "",
     [FormField.caregiverEmail]: "",
-    [FormField.disability]: [],
+    [FormField.disability]: [] as number[],
     [FormField.otherDisability]: "",
     [FormField.healthRisk]: "",
     [FormField.healthRequirements]: "",
@@ -79,6 +81,7 @@ export const initialValues = {
     [FormField.socialRequirements]: "",
     [FormField.socialGoals]: "",
     [FormField.picture]: "",
+    [FormField.pictureChanged]: false,
 };
 
 export type TFormValues = typeof initialValues;

@@ -1,13 +1,19 @@
 import datetime
 
 import time
+from typing import Optional
+
 from django.contrib.auth.password_validation import validate_password
+from django.core.files import File
 from rest_framework import serializers
 
 from cbr_api import models
 
 
 # create and list
+from cbr_api.util import hash_client_image
+
+
 class UserCBRCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
@@ -505,8 +511,18 @@ class ClientDetailSerializer(serializers.ModelSerializer):
 
         read_only_fields = ["created_by_user", "created_date", "modified_date"]
 
-    def update(self, instance, validated_data):
+    def update(self, instance: models.Client, validated_data):
+        new_client_picture: Optional[File] = validated_data.get("picture")
+        if new_client_picture:
+            if hash_client_image(
+                instance.picture.file, close_after=True
+            ) == hash_client_image(new_client_picture, close_after=False):
+                # Use existing image if it's the same to allow for caching by date modified.
+                new_client_picture.close()
+                validated_data["picture"] = instance.picture
+
         super().update(instance, validated_data)
         instance.full_name = instance.first_name + " " + instance.last_name
+
         instance.save()
         return instance

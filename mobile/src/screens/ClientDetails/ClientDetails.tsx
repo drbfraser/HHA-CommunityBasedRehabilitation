@@ -180,6 +180,7 @@ const ClientDetails = (props: ClientProps) => {
                 "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
             created_by_user: values.createdByUser ?? 0,
             created_date: values.createdDate ?? new Date().getTime(),
+            modified_date: new Date().getTime(),
             longitude: values.longitude ?? "",
             latitude: values.latitude ?? "",
             caregiver_picture: values.caregiverPicture,

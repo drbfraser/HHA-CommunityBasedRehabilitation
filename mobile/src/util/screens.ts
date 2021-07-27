@@ -46,11 +46,6 @@ export const screens: IScreen[] = [
         Component: Todo,
         iconName: "account-cog",
     },
-    {
-        name: "Baseline Survey",
-        roles: [UserRole.CLINICIAN],
-        Component: BaseSurvey,
-    },
 ];
 
 export const defaultPage = screens[0];

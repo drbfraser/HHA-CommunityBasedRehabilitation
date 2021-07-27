@@ -1,30 +1,26 @@
 import { IVisitSummary } from "@cbr/common";
 import * as React from "react";
-import { Component } from "react";
 import { View } from "react-native";
 import { TimelineDate } from "./TimelineDate";
-import { IActivity, SummaryActivity } from "./Activity";
+import Timeline, { IActivity } from "./Timeline";
 
-interface ActivityProps {
+interface IActivityProps {
     clientVisits: IVisitSummary[];
-    activityDTO: IActivity[];
+    activity: IActivity[];
     clientCreateDate: number;
 }
 
-export const RecentActivity = (props: ActivityProps) => {
-    if (props.clientVisits)
-        return (
-            <View>
-                {props.activityDTO.map((presentActivity) => {
-                    return <SummaryActivity key={presentActivity.id} activity={presentActivity} />;
-                })}
-                <TimelineDate date={props.clientCreateDate} />
-            </View>
-        );
-    else
-        return (
-            <View>
-                <TimelineDate date={props.clientCreateDate} />
-            </View>
-        );
+export const RecentActivity = (props: IActivityProps) => {
+    return (
+        <View>
+            {props.activity.map((presentActivity) => {
+                return (
+                    props.clientVisits && (
+                        <Timeline key={presentActivity.id} activity={presentActivity} />
+                    )
+                );
+            })}
+            <TimelineDate date={props.clientCreateDate} />
+        </View>
+    );
 };

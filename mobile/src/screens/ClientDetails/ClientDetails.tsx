@@ -8,7 +8,7 @@ import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IReferral, ISurvey, timestampToDateObj } from "@cbr/common";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 import { IVisitSummary } from "@cbr/common";
-import { IActivity, ActivityType } from "./ClientTimeline/Activity";
+import { IActivity, ActivityType } from "./ClientTimeline/Timeline";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import { RecentActivity } from "./ClientTimeline/RecentActivity";
@@ -269,7 +269,7 @@ const ClientDetails = (props: ClientProps) => {
                         </View>
                         <RecentActivity
                             clientVisits={clientVisits!}
-                            activityDTO={tempActivity}
+                            activity={tempActivity}
                             clientCreateDate={clientCreateDate}
                         />
                         <View style={styles.clientDetailsFinalView}></View>

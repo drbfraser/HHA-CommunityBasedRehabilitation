@@ -50,14 +50,16 @@ const useStyles = () =>
             borderBottomWidth: 0.5,
         },
         popupStyle: {
-            height: 50,
+            height: "auto",
             marginHorizontal: 20,
             marginTop: 140,
+            marginBottom: 10,
             display: "flex",
             backgroundColor: "white",
             alignContent: "center",
             alignItems: "center",
             justifyContent: "space-between",
+            borderRadius: 10,
         },
     });
 

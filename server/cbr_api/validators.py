@@ -3,12 +3,6 @@ from django.template.defaultfilters import filesizeformat
 from django.utils.deconstruct import deconstructible
 
 
-def client_picture_size_validator(value):
-    limit = 5 * 1024 * 1024
-    if value.size > limit:
-        raise ValidationError(f"Picture can't exceed {filesizeformat(limit)}.")
-
-
 @deconstructible
 class FileSizeValidator:
     code = "invalid"

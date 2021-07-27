@@ -2,6 +2,7 @@ import React from "react";
 import { Picker as SelectPicker } from "@react-native-picker/picker";
 import useStyles from "./TextPicker.style";
 import { ItemValue } from "@react-native-picker/picker/typings/Picker";
+import { View } from "react-native";
 
 interface IProps {
     field: string;
@@ -20,19 +21,25 @@ const TextPicker = (props: IProps) => {
     const styles = useStyles();
 
     return (
-        <SelectPicker
-            selectedValue={props.selectedValue}
-            style={styles.picker}
-            onValueChange={(itemValue) => {
-                props.setFieldTouched(props.field, true);
-                props.setFieldValue(props.field, itemValue);
-            }}
-        >
-            <SelectPicker.Item key={"unselectable"} label={""} value={""} />
-            {props.choices.map((choice) => (
-                <SelectPicker.Item label={choice.label} value={choice.value} key={choice.label} />
-            ))}
-        </SelectPicker>
+        <View style={styles.pickerBoard}>
+            <SelectPicker
+                selectedValue={props.selectedValue}
+                style={styles.picker}
+                onValueChange={(itemValue) => {
+                    props.setFieldTouched(props.field, true);
+                    props.setFieldValue(props.field, itemValue);
+                }}
+            >
+                <SelectPicker.Item key={"unselectable"} label={""} value={""} />
+                {props.choices.map((choice) => (
+                    <SelectPicker.Item
+                        label={choice.label}
+                        value={choice.value}
+                        key={choice.label}
+                    />
+                ))}
+            </SelectPicker>
+        </View>
     );
 };
 

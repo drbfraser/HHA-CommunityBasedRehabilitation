@@ -5,6 +5,7 @@ import ClientList from "../screens/ClientList/ClientList";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 import Profile from "../screens/Profile/Profile";
 import UserList from "../screens/UserList/UserList";
+import Dashboard from "../screens/DashBoard/Dashboard";
 
 export interface IScreen {
     name: string;
@@ -16,14 +17,12 @@ export interface IScreen {
 export const screens: IScreen[] = [
     {
         name: "Dashboard",
-        Component: Todo,
+        Component: Dashboard,
         iconName: "home",
     },
-    // TODO: Waiting until clients screen is done
-    // For test and view, it is supposed to connect with new client screen
     {
         name: "New Client",
-        Component: BaseSurvey,
+        Component: Todo,
         iconName: "plus-circle",
     },
     {

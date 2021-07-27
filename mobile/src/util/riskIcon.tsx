@@ -3,12 +3,12 @@ import React from "react";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const riskIcon = (name: string, color: string) => {
-    return <Icon name={name} color={color} size={20} />;
+    return <Icon name={name} color={color} size={15} />;
 };
 
 export interface IRiskType {
     name: string;
-    Icon: typeof riskIcon;
+    Icon: (color: string) => JSX.Element;
 }
 
 export const riskTypes: { [key: string]: IRiskType } = {

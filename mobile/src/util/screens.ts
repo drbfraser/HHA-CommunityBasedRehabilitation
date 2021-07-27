@@ -5,6 +5,7 @@ import ClientList from "../screens/ClientList/ClientList";
 import NewVisit from "../screens/NewVisit/NewVisit";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 import Profile from "../screens/Profile/Profile";
+import Dashboard from "../screens/DashBoard/Dashboard";
 
 export interface IScreen {
     name: string;
@@ -16,7 +17,7 @@ export interface IScreen {
 export const screens: IScreen[] = [
     {
         name: "Dashboard",
-        Component: Todo,
+        Component: Dashboard,
         iconName: "home",
     },
     {

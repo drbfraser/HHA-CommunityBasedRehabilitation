@@ -26,7 +26,6 @@ export const fetchClientDetailsFromApi = async (clientId: number): Promise<IClie
         caregiver_name: response.caregiver_name,
         caregiver_email: response.caregiver_email,
         caregiver_phone: response.caregiver_phone,
-        caregiver_picture: response.caregiver_picture,
         risks: response.risks,
         visits: response.visits,
         referrals: response.referrals,

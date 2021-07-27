@@ -11,8 +11,15 @@ import { IAPIToken } from "../../src/util/internal/tokens";
  * header passes. If not null, the response should be immediately returned.
  */
 export const checkAuthHeader = (request: MockRequest): MockResponseObject | null => {
+    const authorizationHeader = request.headers.hasOwnProperty("Authorization")
+        ? (request.headers["Authorization"] as string)
+        : (request as Request).headers.get("Authorization");
+
     try {
-        const [, base64Jwt] = (request.headers["Authorization"] as string).split(" ");
+        // for some reason, the node-fetch package treats headers as Map<String, Array<Map>>
+        const [, base64Jwt] = (
+            Array.isArray(authorizationHeader) ? authorizationHeader[0] : authorizationHeader
+        ).split(" ");
         const token: IAPIToken = jwt_decode(base64Jwt);
         if (token.token_type === "access" && isTokenValid(base64Jwt)) {
             return null;
@@ -20,6 +27,11 @@ export const checkAuthHeader = (request: MockRequest): MockResponseObject | null
             return { status: 401 };
         }
     } catch (e) {
-        return { status: 501 };
+        console.error(
+            `Error when checking auth header: ${e}. Typeof auth header: ${JSON.stringify(
+                authorizationHeader
+            )}. request: ${JSON.stringify(request)}`
+        );
+        return { status: 555 };
     }
 };

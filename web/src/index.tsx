@@ -5,6 +5,7 @@ import { themeMui } from "theme.styles";
 import App from "./App";
 import { initializeCommon, KeyValStorageProvider } from "@cbr/common/init";
 import { loginState } from "./util/hooks/loginState";
+import { deleteImageCache } from "./util/imageCache";
 
 const API_URL =
     process.env.NODE_ENV === "development"
@@ -29,6 +30,7 @@ initializeCommon({
     shouldLogoutOnTokenRefreshFailure: true,
     logoutCallback: async () => {
         loginState.emit(false);
+        await deleteImageCache();
         window.location.replace("/");
     },
 });

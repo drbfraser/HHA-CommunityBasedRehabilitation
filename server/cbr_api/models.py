@@ -1,12 +1,13 @@
+import os
 import time
-
 from django.contrib.auth.base_user import BaseUserManager
-from cbr import settings
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.utils.translation import gettext_lazy as _
 
-from django.contrib.auth.validators import UnicodeUsernameValidator
+from cbr import settings
+from cbr_api.storage import OverwriteStorage
 
 
 class Zone(models.Model):
@@ -117,7 +118,17 @@ class Client(models.Model):
     latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     village = models.CharField(max_length=50)
-    picture = models.ImageField(upload_to="images/", blank=True)  # if picture available
+
+    def rename_file(self, original_filename):
+        upload_dir = "images"
+        extension = original_filename.split(".")[-1]
+
+        new_filename = f"client-{self.pk}.{extension}"
+        return os.path.join(upload_dir, new_filename)
+
+    picture = models.ImageField(
+        upload_to=rename_file, storage=OverwriteStorage(), blank=True
+    )  # if picture available
     caregiver_present = models.BooleanField(default=False)
 
     # ------if caregiver present-----

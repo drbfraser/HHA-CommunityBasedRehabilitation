@@ -7,18 +7,18 @@ import { CheckboxWithLabel, TextField } from "formik-material-ui";
 import { fieldLabels, FormField, validationSchema } from "./formFields";
 
 import {
-    Button,
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    Button,
     FormControl,
     Grid,
     MenuItem,
 } from "@material-ui/core";
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { handleSubmit, handleCancel } from "./formHandler";
-import { IClient, genders } from "@cbr/common/util/clients";
+import { handleCancel, handleSubmit } from "./formHandler";
+import { genders, IClient } from "@cbr/common/util/clients";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import history from "util/history";
@@ -47,6 +47,7 @@ const ClientInfoForm = (props: IProps) => {
                 <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
                         <ProfilePicCard
+                            clientId={props.clientInfo.id}
                             isEditing={isEditing}
                             setFieldValue={setFieldValue}
                             picture={values.picture}

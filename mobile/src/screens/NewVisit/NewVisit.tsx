@@ -26,7 +26,6 @@ import {
 import { handleSubmit } from "./formHandler";
 
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewVisit.style";
-import { useParams } from "react-router-dom";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -191,9 +190,9 @@ const OutcomeField = (props: {
 const visitReasonStepCallBack =
     (setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>, zones: TZoneMap) =>
     ({ formikProps }: IFormProps) =>
-        visitFocusForm(formikProps, setEnabledSteps, zones);
+        VisitFocusForm(formikProps, setEnabledSteps, zones);
 
-const visitFocusForm = (
+const VisitFocusForm = (
     formikProps: FormikProps<any>,
     setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>,
     zones: TZoneMap
@@ -316,8 +315,6 @@ const NewVisit = (props: INewVisitProps) => {
     const [saveError, setSaveError] = useState<string>();
     const clientId = props.route.params.clientID;
 
-    // For test
-    // TODO: Change it back after connect to the client detail screen
     useEffect(() => {
         apiFetch(Endpoint.CLIENT, `${clientId}`)
             .then((resp) => resp.json())
@@ -370,14 +367,13 @@ const NewVisit = (props: INewVisitProps) => {
                     helpers.setSubmitting(false);
                     setSubmissionError(true);
                 });
-            setCheckedSteps([]);
         } else {
             if (activeStep === 0) {
                 helpers.setFieldValue(`${[VisitFormField.client]}`, `${clientId}`);
             }
-            checkedSteps.push(enabledSteps[activeStep - 1]);
+
             if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
-                helpers.setTouched({});
+                checkedSteps.push(enabledSteps[activeStep - 1]);
             }
 
             setActiveStep(activeStep + 1);

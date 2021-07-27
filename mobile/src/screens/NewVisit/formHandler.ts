@@ -9,7 +9,6 @@ export const handleSubmit = async (
 ) => {
     try {
         handleSubmitVisitForm(values, helpers, setSubmissionError);
-        // TODO: navigation to client page
     } catch (e) {
         helpers.setSubmitting(false);
         setSubmissionError(true);

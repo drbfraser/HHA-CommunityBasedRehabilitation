@@ -31,7 +31,7 @@ const useStyles = () =>
         },
         item: {
             padding: 3,
-            fontSize: 14,
+            fontSize: 50,
             alignItems: "center",
             justifyContent: "center",
         },

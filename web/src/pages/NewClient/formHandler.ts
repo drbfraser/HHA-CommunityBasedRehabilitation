@@ -9,7 +9,6 @@ import {
 import history from "../../util/history";
 import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
-import { getRandomStr } from "@cbr/common/util/misc";
 
 const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {
@@ -73,8 +72,15 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         const pictureResponse = await fetch(values.picture);
         const contentType = pictureResponse.headers.get("Content-Type");
 
-        if (contentType?.startsWith("image/")) {
-            formData.append("picture", await pictureResponse.blob(), getRandomStr(30) + ".png");
+        if (contentType?.includes("image/")) {
+            const splitHeader = contentType.split(";");
+            const imageType = splitHeader.find((value) => value.includes("image/"));
+            const imageExtension = imageType?.trim()?.split("/")[1] ?? "";
+            formData.append(
+                "picture",
+                await pictureResponse.blob(),
+                `client-new.${imageExtension}`
+            );
         }
     }
 

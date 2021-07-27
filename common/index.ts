@@ -8,7 +8,6 @@ export * from "./src/util/auth";
 export * from "./src/util/colors";
 export * from "./src/util/dates";
 export * from "./src/util/endpoints";
-export * from "./src/util/misc";
 export * from "./src/util/referrals";
 export * from "./src/util/sleep";
 export * from "./src/util/stats";

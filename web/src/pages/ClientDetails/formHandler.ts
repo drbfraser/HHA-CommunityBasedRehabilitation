@@ -1,14 +1,12 @@
 import { FormikHelpers } from "formik";
 import {
-    Endpoint,
     apiFetch,
-    objectToFormData,
     APIFetchFailError,
+    Endpoint,
+    objectToFormData,
 } from "@cbr/common/util/endpoints";
-import { IClient } from "@cbr/common/util/clients";
 import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
-import { getRandomStr } from "@cbr/common/util/misc";
 import { TFormValues } from "./formFields";
 import { IClient } from "@cbr/common/util/clients";
 import { fieldLabels } from "../NewClient/formFields";
@@ -62,11 +60,15 @@ export const handleSubmit = async (
         const clientProfilePictureFetch = await fetch(values.picture);
         const contentType = clientProfilePictureFetch.headers.get("Content-Type");
 
-        if (contentType?.startsWith("image/")) {
+        if (contentType?.includes("image/")) {
+            const splitHeader = contentType.split(";");
+            const imageType = splitHeader.find((value) => value.includes("image/"));
+            const imageExtension = imageType?.trim()?.split("/")[1] ?? "";
+
             formData.append(
                 "picture",
                 await clientProfilePictureFetch.blob(),
-                getRandomStr(30) + ".png"
+                `client-${values.id}.${imageExtension}`
             );
         }
     }

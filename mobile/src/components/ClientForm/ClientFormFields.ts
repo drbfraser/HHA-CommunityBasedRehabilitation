@@ -99,7 +99,7 @@ export interface FormValues {
     id?: number;
     firstName?: string;
     lastName?: string;
-    date?: Date;
+    birthDate?: Date;
     gender?: string;
     village?: string;
     zone?: number;

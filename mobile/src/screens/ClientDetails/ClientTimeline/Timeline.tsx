@@ -29,9 +29,7 @@ export interface IActivity {
 
 const Timeline = (props: ISummaryProps) => {
     const zones = useZones();
-    let zone: string;
-    if (props.activity.visit) zone = Array.from(zones.values())[props.activity.visit!.zone - 1];
-    else zone = "";
+    const zone = props.activity.visit ? zones.get(props.activity.visit.zone) : "";
 
     const [detailsVisible, setDetailsVisible] = useState(false);
     const showDetails = () => setDetailsVisible(true);
@@ -71,10 +69,7 @@ const Timeline = (props: ISummaryProps) => {
                                 <View>
                                     {props.activity.visit.educat_visit ? (
                                         <View style={styles.subItem}>
-                                            {riskTypes.EDUCAT.Icon(
-                                                themeColors.riskBlack,
-                                                themeColors.riskBlack
-                                            )}
+                                            {riskTypes.EDUCAT.Icon(themeColors.riskBlack)}
                                             <Text style={styles.subItemText}>Education</Text>
                                         </View>
                                     ) : (
@@ -82,10 +77,7 @@ const Timeline = (props: ISummaryProps) => {
                                     )}
                                     {props.activity.visit.health_visit ? (
                                         <View style={styles.subItem}>
-                                            {riskTypes.HEALTH.Icon(
-                                                themeColors.riskBlack,
-                                                themeColors.riskBlack
-                                            )}
+                                            {riskTypes.HEALTH.Icon(themeColors.riskBlack)}
                                             <Text style={styles.subItemText}>Health</Text>
                                         </View>
                                     ) : (
@@ -93,10 +85,7 @@ const Timeline = (props: ISummaryProps) => {
                                     )}
                                     {props.activity.visit.social_visit ? (
                                         <View style={styles.subItem}>
-                                            {riskTypes.SOCIAL.Icon(
-                                                themeColors.riskBlack,
-                                                themeColors.riskBlack
-                                            )}
+                                            {riskTypes.SOCIAL.Icon(themeColors.riskBlack)}
                                             <Text style={styles.subItemText}>Social</Text>
                                         </View>
                                     ) : (

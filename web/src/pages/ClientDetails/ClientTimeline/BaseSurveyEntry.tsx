@@ -30,7 +30,7 @@ interface IEntryProps {
     dateFormatter: (timestamp: number) => string;
 }
 
-type ISurveyForm = {
+type TSurveyForm = {
     [key: string]: ISurveyCategory;
 };
 
@@ -48,7 +48,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
         setLoadingError(false);
     };
 
-    const surveyInfo: ISurveyForm = getSurveyInfo(survey);
+    const surveyInfo: TSurveyForm = getSurveyInfo(survey);
 
     const Details = () => {
         if (!survey) {

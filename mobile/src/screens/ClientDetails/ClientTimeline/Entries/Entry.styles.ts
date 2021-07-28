@@ -6,8 +6,8 @@ const useStyles = () =>
         createdCard: {
             borderWidth: 1,
             shadowColor: themeColors.riskBlack,
-            marginRight: 17,
-            marginLeft: 1,
+            marginRight: 30,
+            marginLeft: 10,
             padding: 1,
         },
     });

@@ -1,45 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
 import {
     baseFieldLabels,
     BaseSurveyFormField,
-    childNourish,
-    deviceTypes,
     getSurveyInfo,
-    Grade,
-    grade,
-    isSelfEmployed,
     ISurvey,
-    rateLevel,
-    reasonNotSchool,
     themeColors,
     timestampToDateTime,
 } from "@cbr/common";
 import { Button, Card, Dialog, List, Text } from "react-native-paper";
-import Alert from "../../../../components/Alert/Alert";
 import useStyles from "./Entry.styles";
-import { ActivityIndicator, ScrollView, View } from "react-native";
-import DataCard from "../../../../components/TimelineDateCard/DataCard";
+import { ActivityIndicator, ScrollView } from "react-native";
+import DataCard from "../../../../components/DateCard/DataCard";
 
 interface IEntryProps {
     survey: ISurvey;
     close: () => void;
 }
 
-type ISurveyForm = {
+type TSurveyForm = {
     [key: string]: ISurveyCategory;
 };
 
 type ISurveyCategory = { [key: string]: string | boolean | undefined };
 
 const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
-    const [loadingError, setLoadingError] = useState(false);
     const styles = useStyles();
     const onClose = () => {
         close();
-        setLoadingError(false);
     };
 
-    const surveyInfo: ISurveyForm = getSurveyInfo(survey);
+    const surveyInfo: TSurveyForm = getSurveyInfo(survey);
 
     const Details = () => {
         if (!survey) {
@@ -93,11 +83,7 @@ const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
     return (
         <ScrollView>
             <Dialog.Content>
-                {loadingError ? (
-                    <Alert severity="error" text="Something went wrong. Please try again." />
-                ) : (
-                    <Details />
-                )}
+                <Details />
             </Dialog.Content>
             <Dialog.Actions>
                 <Button onPress={onClose} color={themeColors.blueBgDark}>

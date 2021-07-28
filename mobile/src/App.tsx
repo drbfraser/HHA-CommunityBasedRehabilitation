@@ -97,7 +97,6 @@ const updateAuthStateIfNeeded = async (
     }
 };
 
-// TODO: Have a nice transition when the user logins and and logs out.
 export default function App() {
     const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
 

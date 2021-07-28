@@ -54,11 +54,11 @@ export class APICacheData<TValue, TLoading, TError> {
 
     readonly errorValue: Readonly<TError>;
 
-    get promise(): Promise<CachedAPIResult<TValue, TError>> | undefined {
+    get promise(): Promise<ICachedAPIResult<TValue, TError>> | undefined {
         return this._promise;
     }
 
-    private _promise: Promise<CachedAPIResult<TValue, TError>> | undefined;
+    private _promise: Promise<ICachedAPIResult<TValue, TError>> | undefined;
 
     /**
      * A key used for cache data backup storage. Must be unique across all instances of
@@ -129,10 +129,6 @@ export class APICacheData<TValue, TLoading, TError> {
         reFetch: boolean = false,
         notifyListeners: boolean = true
     ): Promise<void> {
-        console.log(
-            `${this.cacheBackupKey}: invalidating cache (clearValue: ${clearValue}, clearBackup: ${clearBackup}, reFetch: ${reFetch}, notifyListeners: ${notifyListeners})`
-        );
-
         this._promise = undefined;
 
         if (clearValue) {
@@ -237,7 +233,7 @@ export class APICacheData<TValue, TLoading, TError> {
         this.invalidationEventEmitter.emit(INVALIDATION_EVENT);
     }
 
-    private getCachedValueInner(): Promise<CachedAPIResult<TValue, TError>> {
+    private getCachedValueInner(): Promise<ICachedAPIResult<TValue, TError>> {
         // Store into a local variable to maintain consistent state (i.e. make sure we don't return
         // undefined if some other thread changes it).
         const currentPromise = this._promise;
@@ -296,7 +292,7 @@ export class APICacheData<TValue, TLoading, TError> {
      * Loads a backup value for the cache for use when the device is offline / can't connect to
      * the server.
      */
-    private async loadBackupValue(): Promise<CachedAPIResult<TValue, TError>> {
+    private async loadBackupValue(): Promise<ICachedAPIResult<TValue, TError>> {
         const baseErrorMsg = `cachedAPIGet(${this.cacheBackupKey}): API fetch failed`;
         try {
             const cachedItem = await commonConfiguration.keyValStorageProvider.getItem(
@@ -311,7 +307,7 @@ export class APICacheData<TValue, TLoading, TError> {
                 return this.makeCachedAPIResult(false, this.errorValue);
             }
         } catch (e) {
-            console.log(
+            console.error(
                 baseErrorMsg + ` and backup retrieval failed due to ${e}; using error value`
             );
             return this.makeCachedAPIResult(false, this.errorValue);
@@ -321,8 +317,8 @@ export class APICacheData<TValue, TLoading, TError> {
     private makeCachedAPIResult(
         isFresh: boolean,
         value: TValue | TError
-    ): CachedAPIResult<TValue, TError> {
-        return { isFresh: isFresh, value: value } as CachedAPIResult<TValue, TError>;
+    ): ICachedAPIResult<TValue, TError> {
+        return { isFresh: isFresh, value: value } as ICachedAPIResult<TValue, TError>;
     }
 }
 
@@ -330,19 +326,19 @@ export class APICacheData<TValue, TLoading, TError> {
  * An interface to help distinguish fresh, recent-from-the-server results from non-fresh results.
  * Fresh results are obviously never error results; this provides type-safety convenience.
  */
-interface FreshCachedAPIResult<TValue, TError> {
+interface IFreshCachedAPIResult<TValue, TError> {
     readonly isFresh: true;
-    readonly value: TValue;
+    readonly value: Readonly<TValue>;
 }
 
 /**
  * An interface to help distinguish stale results from fresh results.
  */
-interface NonFreshCachedAPIResult<TValue, TError> {
+interface IStaleCachedAPIResult<TValue, TError> {
     readonly isFresh: false;
-    readonly value: TValue | TError;
+    readonly value: Readonly<TValue | TError>;
 }
 
-type CachedAPIResult<TValue, TError> =
-    | FreshCachedAPIResult<TValue, TError>
-    | NonFreshCachedAPIResult<TValue, TError>;
+type ICachedAPIResult<TValue, TError> =
+    | IFreshCachedAPIResult<TValue, TError>
+    | IStaleCachedAPIResult<TValue, TError>;

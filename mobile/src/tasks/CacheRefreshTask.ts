@@ -16,7 +16,7 @@ export namespace CacheRefreshTask {
     const TASK_NAME = "cache-refresh-task";
 
     /** A tag for log statements. */
-    const TAG = "CacheRefreshTask";
+    const TASK_TAG = "CacheRefreshTask";
 
     /**
      * From the BackgroundFetch documentation: Inexact interval in seconds between subsequent
@@ -29,7 +29,7 @@ export namespace CacheRefreshTask {
     const refreshMutex = new Mutex();
 
     TaskManager.defineTask(TASK_NAME, async () => {
-        console.log(`${TAG}: Running task`);
+        console.log(`${TASK_TAG}: Running task`);
         // Because Expo's TaskManager / BackgroundFetch doesn't use JobScheduler's network
         // constraints (or use an approach like androidx.work's when working with AlarmManager),
         // tasks will run regardless of whether there is internet connectivity. There is no support
@@ -43,10 +43,10 @@ export namespace CacheRefreshTask {
         if (netInfoState.isInternetReachable) {
             unsubscribeNetInfoListener();
         } else {
-            console.log(`${TAG}: Task failed: No internet connectivity`);
+            console.log(`${TASK_TAG}: Task failed: No internet connectivity`);
             if (!netInfoUnsubscribeFunction) {
                 console.log(
-                    `${TAG}: Registering NetInfo listener to run when internet state changes`
+                    `${TASK_TAG}: Registering NetInfo listener to run when internet state changes`
                 );
                 netInfoUnsubscribeFunction = NetInfo.addEventListener(netInfoEventListener);
             }
@@ -56,10 +56,10 @@ export namespace CacheRefreshTask {
         return refreshMutex.runExclusive(() => {
             return refreshCachesLocked().then((cacheRefreshSuccess) => {
                 if (cacheRefreshSuccess) {
-                    console.log(`${TAG}: Task success`);
+                    console.log(`${TASK_TAG}: Task success`);
                     return BackgroundFetch.Result.NewData;
                 } else {
-                    console.log(`${TAG}: Task failed`);
+                    console.log(`${TASK_TAG}: Task failed`);
                     return BackgroundFetch.Result.Failed;
                 }
             });
@@ -68,7 +68,7 @@ export namespace CacheRefreshTask {
 
     const netInfoEventListener: NetInfoChangeHandler = (state: NetInfoState) => {
         console.log(
-            `${TAG}: netInfoEventListener: isInternetReachable: ${state.isInternetReachable}, isConnected: ${state.isConnected}`
+            `${TASK_TAG}: netInfoEventListener: isInternetReachable: ${state.isInternetReachable}, isConnected: ${state.isConnected}`
         );
 
         if (state.isInternetReachable) {
@@ -83,7 +83,9 @@ export namespace CacheRefreshTask {
 
                     return refreshCachesLocked().then(() => unsubscribeNetInfoListener());
                 })
-                .catch((e) => console.log(`${TAG}: netInfoEventListener failed to refresh, ${e}`));
+                .catch((e) =>
+                    console.log(`${TASK_TAG}: netInfoEventListener failed to refresh, ${e}`)
+                );
         }
     };
 
@@ -91,7 +93,7 @@ export namespace CacheRefreshTask {
 
     const unsubscribeNetInfoListener = () => {
         if (netInfoUnsubscribeFunction) {
-            console.log(`${TAG}: unsubscribing netInfoEventListener`);
+            console.log(`${TASK_TAG}: unsubscribing netInfoEventListener`);
             netInfoUnsubscribeFunction();
             netInfoUnsubscribeFunction = undefined;
         }
@@ -103,7 +105,7 @@ export namespace CacheRefreshTask {
     const refreshCachesLocked = async (): Promise<boolean> => {
         try {
             if (!(await isLoggedIn())) {
-                console.error(`${TAG}: refreshCaches(): failed, because not logged in`);
+                console.error(`${TASK_TAG}: refreshCaches(): failed, because not logged in`);
                 return false;
             }
 
@@ -112,14 +114,14 @@ export namespace CacheRefreshTask {
             await invalidateAllCachedAPI(false, false, true, true);
             return true;
         } catch (e) {
-            console.error(`${TAG}: refreshCaches(): failed, because error: ${e}`);
+            console.error(`${TASK_TAG}: refreshCaches(): failed, because error: ${e}`);
             return false;
         }
     };
 
     export const registerBackgroundFetch = async () => {
         console.log(
-            `${TAG}: registerBackgroundFetch() with interval ${CACHE_REFRESH_INTERVAL_SECONDS} seconds`
+            `${TASK_TAG}: registerBackgroundFetch() with interval ${CACHE_REFRESH_INTERVAL_SECONDS} seconds`
         );
 
         return BackgroundFetch.registerTaskAsync(TASK_NAME, {
@@ -134,7 +136,7 @@ export namespace CacheRefreshTask {
 
         const taskRegistered = await TaskManager.isTaskRegisteredAsync(TASK_NAME);
         console.log(
-            `${TAG}: unregisterBackgroundFetch(): task registered before: ${taskRegistered}`
+            `${TASK_TAG}: unregisterBackgroundFetch(): task registered before: ${taskRegistered}`
         );
 
         if (taskRegistered) {

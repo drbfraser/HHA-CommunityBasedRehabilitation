@@ -38,7 +38,7 @@ export type TAppRouteProp<ScreenName extends StackScreenName> = RouteProp<
     ScreenName
 >;
 
-function DefaultHeader(
+export function DefaultHeader(
     title: string,
     subtitle?: React.ReactNode
 ): (props: StackHeaderProps) => React.ReactNode {
@@ -57,10 +57,13 @@ export const stackScreenOptions: Record<
     [StackScreenName.HOME]: {
         headerShown: false,
     },
-    [StackScreenName.CLIENT]: {
+    [StackScreenName.CLIENT]: ({ route, navigation }) => ({
         headerShown: true,
-        header: DefaultHeader("View client"),
-    },
+        header: DefaultHeader(
+            "View client",
+            `Client ID: ${(route as TAppRouteProp<StackScreenName.CLIENT>).params.clientID}`
+        ),
+    }),
     [StackScreenName.ADMIN_VIEW]: {
         headerShown: true,
         header: DefaultHeader("View user"),

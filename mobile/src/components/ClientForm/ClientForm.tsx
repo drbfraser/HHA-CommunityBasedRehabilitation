@@ -12,6 +12,7 @@ import { Gender, genders, themeColors } from "@cbr/common";
 import { objectFromMap } from "../../util/ObjectFromMap";
 import { useNavigation } from "@react-navigation/core";
 import ConfirmDialog from "../DiscardDialogs/ConfirmDialog";
+import { AppStackNavProp, DefaultHeader } from "../../util/stackScreens";
 
 export const ClientForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -99,11 +100,21 @@ export const ClientForm = (props: IFormProps) => {
         }
     };
 
-    const navigation = useNavigation();
+    const navigation = useNavigation<AppStackNavProp>();
 
     const [discardDialogVisible, setDiscardDialogVisible] = useState(false);
 
     useEffect(() => {
+        const title = props.isNewClient
+            ? "New client"
+            : fieldsDisabled
+            ? "View client"
+            : "Edit client";
+        const subtitle = props.formikProps?.values.id
+            ? `Client ID: ${props.formikProps.values.id}`
+            : undefined;
+        navigation.setOptions({ header: DefaultHeader(title, subtitle) });
+
         if (fieldsDisabled) {
             return;
         }

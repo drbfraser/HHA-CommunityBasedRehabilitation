@@ -41,6 +41,9 @@ const ClientInfoForm = (props: IProps) => {
                 { ...props.clientInfo, [FormField.pictureChanged]: false } as TFormValues
             }
             validationSchema={validationSchema}
+            onReset={(values: TFormValues, formikHelpers) => {
+                formikHelpers.setFieldValue(FormField.pictureChanged, false);
+            }}
             onSubmit={(values: TFormValues, formikHelpers) => {
                 handleSubmit(values, formikHelpers, setIsEditing)
                     .then(() => formikHelpers.setFieldValue(FormField.pictureChanged, false))

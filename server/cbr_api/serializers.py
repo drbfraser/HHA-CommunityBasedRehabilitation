@@ -9,7 +9,6 @@ from rest_framework import serializers
 
 from cbr_api import models
 
-
 # create and list
 from cbr_api.util import hash_client_image
 
@@ -474,7 +473,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         return client
 
 
-class ClientDetailSerializer(serializers.ModelSerializer):
+class BaseClientDetailSerializer(serializers.ModelSerializer):
     risks = ClientCreationRiskSerializer(many=True, read_only=True)
     visits = SummaryVisitSerializer(many=True, read_only=True)
     referrals = DetailedReferralSerializer(many=True, read_only=True)
@@ -511,8 +510,21 @@ class ClientDetailSerializer(serializers.ModelSerializer):
 
         read_only_fields = ["created_by_user", "created_date", "modified_date"]
 
+
+class ClientUpdateSerializer(BaseClientDetailSerializer):
     def update(self, instance: models.Client, validated_data):
         super().update(instance, validated_data)
         instance.full_name = instance.first_name + " " + instance.last_name
         instance.save()
         return instance
+
+    def to_representation(self, instance):
+        serializer = ClientDetailGetSerializer(instance)
+        return serializer.data
+
+
+class ClientDetailGetSerializer(BaseClientDetailSerializer):
+    picture = serializers.SerializerMethodField()
+
+    def get_picture(self, obj: models.Client) -> bool:
+        return len(obj.picture.name) > 0

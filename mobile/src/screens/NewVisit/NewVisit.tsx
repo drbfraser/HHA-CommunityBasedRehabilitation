@@ -5,7 +5,16 @@ import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { FieldArray, Formik, FormikHelpers, FormikProps } from "formik";
 import TextPicker from "../../components/TextPicker/TextPicker";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
-import { themeColors, useZones, TZoneMap, IRisk, Endpoint, apiFetch, IClient } from "@cbr/common";
+import {
+    themeColors,
+    useZones,
+    TZoneMap,
+    IRisk,
+    Endpoint,
+    apiFetch,
+    IClient,
+    APIFetchFailError,
+} from "@cbr/common";
 import { StackParamList } from "../../util/stackScreens";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StackScreenName } from "../../util/StackScreenName";
@@ -26,6 +35,7 @@ import {
 import { handleSubmit } from "./formHandler";
 
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewVisit.style";
+import Alert from "../../components/Alert/Alert";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -331,18 +341,6 @@ const NewVisit = (props: INewVisitProps) => {
             });
     }, [clientId]);
 
-    useEffect(() => {
-        props.navigation.setOptions({
-            headerShown: true,
-            header: (stackHeaderProps) => (
-                <Appbar.Header statusBarHeight={0}>
-                    <Appbar.BackAction onPress={() => stackHeaderProps.navigation.goBack()} />
-                    <Appbar.Content title="New Visit" subtitle={"Client ID: " + clientId} />
-                </Appbar.Header>
-            ),
-        });
-    }, []);
-
     const visitSteps = [
         {
             label: "Visit Focus",
@@ -372,14 +370,16 @@ const NewVisit = (props: INewVisitProps) => {
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
-            handleSubmit(values, helpers, setSubmissionError)
+            handleSubmit(values, helpers)
                 .then(() => {
                     props.navigation.navigate(StackScreenName.CLIENT, {
                         clientID: clientId,
                     });
                 })
                 .catch((e) => {
-                    setSaveError(`${e}`);
+                    setSaveError(
+                        e instanceof APIFetchFailError ? e.buildFormError(visitFieldLabels) : `${e}`
+                    );
                     helpers.setSubmitting(false);
                     setSubmissionError(true);
                 });
@@ -409,6 +409,14 @@ const NewVisit = (props: INewVisitProps) => {
             {(formikProps) => (
                 <>
                     <View style={styles.container}>
+                        {saveError && (
+                            <Alert
+                                style={styles.errorAlert}
+                                severity="error"
+                                text={saveError}
+                                onClose={() => setSaveError(undefined)}
+                            />
+                        )}
                         <ProgressSteps key={visitSteps} {...progressStepsStyle}>
                             {visitSteps.map((surveyStep, index) => {
                                 return (

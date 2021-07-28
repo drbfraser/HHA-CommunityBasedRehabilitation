@@ -84,18 +84,6 @@ const NewReferral = (props: INewReferralProps) => {
     const [submissionError, setSubmissionError] = useState(false);
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 
-    useEffect(() => {
-        props.navigation.setOptions({
-            headerShown: true,
-            header: (stackHeaderProps) => (
-                <Appbar.Header statusBarHeight={0}>
-                    <Appbar.BackAction onPress={() => stackHeaderProps.navigation.goBack()} />
-                    <Appbar.Content title="New Referral" subtitle={"Client ID: " + clientId} />
-                </Appbar.Header>
-            ),
-        });
-    }, []);
-
     const prevStep = (props: any) => {
         if (Object.keys(props.errors).length !== 0) {
             const arr = checkedSteps.filter((item) => {

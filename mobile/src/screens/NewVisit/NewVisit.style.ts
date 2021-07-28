@@ -40,7 +40,7 @@ const useStyles = () =>
             marginLeft: 5,
             marginTop: 5,
         },
-
+        errorAlert: { marginVertical: 10 },
         errorText: { color: themeColors.errorRed, paddingLeft: 15 },
     });
 

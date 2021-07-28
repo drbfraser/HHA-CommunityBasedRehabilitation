@@ -53,18 +53,6 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
     const clientId = props.route.params.clientID;
     const [saveError, setSaveError] = useState<string>();
 
-    useEffect(() => {
-        props.navigation.setOptions({
-            headerShown: true,
-            header: (stackHeaderProps) => (
-                <Appbar.Header statusBarHeight={0}>
-                    <Appbar.BackAction onPress={() => stackHeaderProps.navigation.goBack()} />
-                    <Appbar.Content title="Baseline Survey" subtitle={"Client ID: " + clientId} />
-                </Appbar.Header>
-            ),
-        });
-    }, []);
-
     const prevStep = () => setStep(step - 1);
 
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {

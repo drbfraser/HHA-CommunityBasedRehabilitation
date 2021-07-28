@@ -28,18 +28,6 @@ const AdminNew = ({
     navigation,
     route,
 }: StackScreenProps<StackParamList, StackScreenName.ADMIN_NEW>) => {
-    useEffect(() => {
-        navigation.setOptions({
-            headerShown: true,
-            header: (stackHeaderProps) => (
-                <Appbar.Header statusBarHeight={0}>
-                    <Appbar.BackAction onPress={() => stackHeaderProps.navigation.goBack()} />
-                    <Appbar.Content title="New user" />
-                </Appbar.Header>
-            ),
-        });
-    }, []);
-
     const zones = useZones();
     const [saveError, setSaveError] = useState<string>();
     const passwordRef = useRef<NativeTextInput>(null);

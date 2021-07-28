@@ -27,18 +27,6 @@ const AdminEdit = ({
 }: StackScreenProps<StackParamList, StackScreenName.ADMIN_EDIT>) => {
     const user = route.params.user;
 
-    useEffect(() => {
-        navigation.setOptions({
-            headerShown: true,
-            header: (stackHeaderProps) => (
-                <Appbar.Header statusBarHeight={0}>
-                    <Appbar.BackAction onPress={() => stackHeaderProps.navigation.goBack()} />
-                    <Appbar.Content title="Edit user" />
-                </Appbar.Header>
-            ),
-        });
-    }, []);
-
     const zones = useZones();
 
     const [saveError, setSaveError] = useState<string>();

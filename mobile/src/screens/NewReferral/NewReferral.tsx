@@ -30,6 +30,7 @@ import { StackParamList } from "../../util/stackScreens";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Alert from "../../components/Alert/Alert";
+import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 
 interface INewReferralProps {
     clientID: number;
@@ -84,6 +85,8 @@ const NewReferral = (props: INewReferralProps) => {
     const [submissionError, setSubmissionError] = useState(false);
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 
+    const [hasSubmitted, setHasSubmitted] = useState(false);
+
     const prevStep = (props: any) => {
         if (Object.keys(props.errors).length !== 0) {
             const arr = checkedSteps.filter((item) => {
@@ -104,6 +107,7 @@ const NewReferral = (props: INewReferralProps) => {
             setSaveError(undefined);
             handleSubmit(values, helpers)
                 .then(() => {
+                    setHasSubmitted(true);
                     props.navigation.navigate(StackScreenName.CLIENT, {
                         clientID: clientId,
                     });
@@ -189,61 +193,73 @@ const NewReferral = (props: INewReferralProps) => {
     ];
 
     return (
-        <Formik
-            initialValues={referralInitialValues}
-            validationSchema={referralSteps[activeStep].validationSchema}
-            onSubmit={nextStep}
-            enableReinitialize
-        >
-            {(formikProps) => (
-                <>
-                    <View style={styles.container}>
-                        {saveError && (
-                            <Alert
-                                style={styles.errorAlert}
-                                severity={"error"}
-                                text={saveError}
-                                onClose={() => setSaveError(undefined)}
-                            />
-                        )}
+        <>
+            <ConfirmDialogWithNavListener
+                bypassDialog={hasSubmitted}
+                confirmButtonText="Discard"
+                dialogContent="Discard this new referral?"
+            />
+            <Formik
+                initialValues={referralInitialValues}
+                validationSchema={referralSteps[activeStep].validationSchema}
+                onSubmit={nextStep}
+                enableReinitialize
+            >
+                {(formikProps) => (
+                    <>
+                        <View style={styles.container}>
+                            {saveError && (
+                                <Alert
+                                    style={styles.errorAlert}
+                                    severity={"error"}
+                                    text={saveError}
+                                    onClose={() => setSaveError(undefined)}
+                                />
+                            )}
 
-                        <ProgressSteps key={referralSteps} {...progressStepsStyle}>
-                            {referralSteps.map((surveyStep, index) => (
-                                <ProgressStep
-                                    key={index}
-                                    scrollViewProps={defaultScrollViewProps}
-                                    previousBtnTextStyle={styles.buttonTextStyle}
-                                    nextBtnTextStyle={styles.buttonTextStyle}
-                                    nextBtnStyle={styles.nextButton}
-                                    onNext={() => {
-                                        nextStep(formikProps.values, formikProps);
-                                    }}
-                                    nextBtnDisabled={
-                                        formikProps.isSubmitting ||
-                                        enabledSteps.length === 0 ||
-                                        (enabledSteps[activeStep - 1] !== undefined &&
-                                            (!checkedSteps.includes(enabledSteps[activeStep - 1])
-                                                ? Object.keys(formikProps.errors).length !== 0 ||
-                                                  Object.keys(formikProps.touched).length === 0
-                                                : Object.keys(formikProps.errors).length !== 0))
-                                    }
-                                    previousBtnDisabled={formikProps.isSubmitting}
-                                    onPrevious={() => prevStep(formikProps)}
-                                    previousBtnStyle={styles.prevButton}
-                                    onSubmit={() => nextStep(formikProps.values, formikProps)}
-                                >
-                                    <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
-                                    <Divider style={{ backgroundColor: themeColors.blueBgDark }} />
-                                    <ScrollView>
-                                        <surveyStep.Form formikProps={formikProps} />
-                                    </ScrollView>
-                                </ProgressStep>
-                            ))}
-                        </ProgressSteps>
-                    </View>
-                </>
-            )}
-        </Formik>
+                            <ProgressSteps key={referralSteps} {...progressStepsStyle}>
+                                {referralSteps.map((surveyStep, index) => (
+                                    <ProgressStep
+                                        key={index}
+                                        scrollViewProps={defaultScrollViewProps}
+                                        previousBtnTextStyle={styles.buttonTextStyle}
+                                        nextBtnTextStyle={styles.buttonTextStyle}
+                                        nextBtnStyle={styles.nextButton}
+                                        onNext={() => {
+                                            nextStep(formikProps.values, formikProps);
+                                        }}
+                                        nextBtnDisabled={
+                                            formikProps.isSubmitting ||
+                                            enabledSteps.length === 0 ||
+                                            (enabledSteps[activeStep - 1] !== undefined &&
+                                                (!checkedSteps.includes(
+                                                    enabledSteps[activeStep - 1]
+                                                )
+                                                    ? Object.keys(formikProps.errors).length !==
+                                                          0 ||
+                                                      Object.keys(formikProps.touched).length === 0
+                                                    : Object.keys(formikProps.errors).length !== 0))
+                                        }
+                                        previousBtnDisabled={formikProps.isSubmitting}
+                                        onPrevious={() => prevStep(formikProps)}
+                                        previousBtnStyle={styles.prevButton}
+                                        onSubmit={() => nextStep(formikProps.values, formikProps)}
+                                    >
+                                        <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
+                                        <Divider
+                                            style={{ backgroundColor: themeColors.blueBgDark }}
+                                        />
+                                        <ScrollView>
+                                            <surveyStep.Form formikProps={formikProps} />
+                                        </ScrollView>
+                                    </ProgressStep>
+                                ))}
+                            </ProgressSteps>
+                        </View>
+                    </>
+                )}
+            </Formik>
+        </>
     );
 };
 

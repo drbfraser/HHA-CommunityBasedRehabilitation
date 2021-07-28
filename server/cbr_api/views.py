@@ -113,7 +113,30 @@ class ClientList(generics.ListCreateAPIView):
 
 class ClientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Client.objects.all()
-    serializer_class = serializers.ClientDetailSerializer
+
+    @extend_schema(request=serializers.ClientUpdateSerializer)
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    @extend_schema(
+        request=serializers.ClientUpdateSerializer,
+        responses=serializers.ClientDetailGetSerializer,
+    )
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+
+    @extend_schema(
+        request=serializers.ClientUpdateSerializer,
+        responses=serializers.ClientDetailGetSerializer,
+    )
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return serializers.ClientDetailGetSerializer
+        else:
+            return serializers.ClientUpdateSerializer
 
 
 class ClientImage(AuthenticatedObjectDownloadView):

@@ -25,7 +25,7 @@ const AdminEdit = () => {
     const { userId } = useRouteMatch<IRouteParams>().params;
     const [user, setUser] = useState<IUser>();
     const zones = useZones();
-    const [loadingError, setLoadingError] = useState(false);
+    const [loadingError, setLoadingError] = useState<string>();
 
     useEffect(() => {
         const getInfo = async () => {
@@ -35,7 +35,9 @@ const AdminEdit = () => {
                 ).json()) as IUser;
                 setUser(theUser);
             } catch (e) {
-                setLoadingError(true);
+                setLoadingError(
+                    e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : `${e}`
+                );
             }
         };
         getInfo();
@@ -43,7 +45,8 @@ const AdminEdit = () => {
 
     return loadingError ? (
         <Alert severity="error">
-            Something went wrong trying to load that user. Please go back and try again.
+            Something went wrong trying to load that user. Please go back and try again.{" "}
+            {loadingError}
         </Alert>
     ) : user && zones.size ? (
         <Formik

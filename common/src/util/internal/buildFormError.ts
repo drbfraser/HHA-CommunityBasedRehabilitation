@@ -9,7 +9,7 @@ const buildFormErrorInternal = (
     formLabels: Record<string, string> | undefined | null
 ): string => {
     if (!error.response) {
-        return error.message;
+        return getFallbackErrorMessage(error);
     }
 
     const errResponseEntries = Object.entries(error.response);
@@ -20,7 +20,10 @@ const buildFormErrorInternal = (
                   `${index !== 0 ? "\n" : ""}${formLabels?.[field] ?? field}: ${message}`
               );
           }, "")
-        : error.message;
+        : getFallbackErrorMessage(error);
 };
+
+const getFallbackErrorMessage = (error: APIFetchFailError) =>
+    error.details ? `${error.message} (${error.details})` : error.message;
 
 export default buildFormErrorInternal;

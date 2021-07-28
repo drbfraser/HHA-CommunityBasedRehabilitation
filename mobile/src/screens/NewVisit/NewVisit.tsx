@@ -154,8 +154,8 @@ const OutcomeField = (props: {
                         OutcomeFormField.goalStatus
                     ]
                 }
-                setFieldValue={props.formikProps.setFieldValue}
                 setFieldTouched={props.formikProps.setFieldTouched}
+                setFieldValue={props.formikProps.setFieldValue}
             />
 
             <View>
@@ -169,6 +169,10 @@ const OutcomeField = (props: {
                         ]
                     }
                     onChangeText={(value) => {
+                        props.formikProps.setFieldTouched(
+                            `${fieldName}.${OutcomeFormField.outcome}`,
+                            true
+                        );
                         props.formikProps.setFieldValue(
                             `${fieldName}.${OutcomeFormField.outcome}`,
                             value
@@ -198,6 +202,7 @@ const VisitFocusForm = (
     zones: TZoneMap
 ) => {
     const styles = useStyles();
+
     const onCheckboxChange = (checked: boolean, visitType: string) => {
         setEnabledSteps(
             visitTypes.filter(
@@ -275,7 +280,6 @@ const VisitFocusForm = (
 
 const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[]) => {
     const styles = useStyles();
-
     return ({ formikProps }: IFormProps) => {
         return (
             <View>
@@ -351,7 +355,19 @@ const NewVisit = (props: INewVisitProps) => {
             validationSchema: visitTypeValidationSchema(visitType),
         })),
     ];
-    const prevStep = () => setActiveStep(activeStep - 1);
+
+    const prevStep = (props: any) => {
+        if (Object.keys(props.errors).length !== 0) {
+            const arr = checkedSteps.filter((item) => {
+                return item != enabledSteps[activeStep - 1];
+            });
+            setCheckedSteps(arr);
+        } else {
+            checkedSteps.push(enabledSteps[activeStep - 1]);
+        }
+        setActiveStep(activeStep - 1);
+        props.setErrors({});
+    };
 
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
@@ -375,11 +391,11 @@ const NewVisit = (props: INewVisitProps) => {
             if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
                 checkedSteps.push(enabledSteps[activeStep - 1]);
             }
-            // setCheckedSteps([...new Set(checkedSteps)]);
+            setCheckedSteps([...new Set(checkedSteps)]);
 
             setActiveStep(activeStep + 1);
             helpers.setSubmitting(false);
-            // helpers.setTouched({});
+            helpers.setTouched({});
         }
     };
 
@@ -407,18 +423,19 @@ const NewVisit = (props: INewVisitProps) => {
                                             nextStep(formikProps.values, formikProps);
                                         }}
                                         nextBtnDisabled={
+                                            formikProps.isSubmitting ||
                                             enabledSteps.length === 0 ||
-                                            (enabledSteps[activeStep - 1] !== undefined
-                                                ? !checkedSteps.includes(
-                                                      enabledSteps[activeStep - 1]
-                                                  )
+                                            (enabledSteps[activeStep - 1] !== undefined &&
+                                                (!checkedSteps.includes(
+                                                    enabledSteps[activeStep - 1]
+                                                )
                                                     ? Object.keys(formikProps.errors).length !==
                                                           0 ||
                                                       Object.keys(formikProps.touched).length === 0
-                                                    : Object.keys(formikProps.errors).length !== 0
-                                                : Object.keys(formikProps.errors).length !== 0)
+                                                    : Object.keys(formikProps.errors).length !== 0))
                                         }
-                                        onPrevious={prevStep}
+                                        previousBtnDisabled={formikProps.isSubmitting}
+                                        onPrevious={() => prevStep(formikProps)}
                                         onSubmit={() => nextStep(formikProps.values, formikProps)}
                                     >
                                         <Text style={styles.stepLabelText}>{surveyStep.label}</Text>

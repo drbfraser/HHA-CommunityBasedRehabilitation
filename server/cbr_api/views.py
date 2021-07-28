@@ -1,3 +1,6 @@
+import os
+
+from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.cache import cache_control
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
@@ -5,6 +8,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import generics
 from rest_framework_condition import condition
 
+from cbr.settings import DEBUG
 from cbr_api import models, serializers, filters, permissions
 from cbr_api.sql import (
     getDisabilityStats,
@@ -124,13 +128,33 @@ class ClientImage(AuthenticatedObjectDownloadView):
         description="Gets the profile picture for a client if it exists.",
         responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
     )
-    @cache_control(max_age=1209600)
-    @condition(
-        last_modified_func=client_picture_last_modified_datetime,
-        etag_func=client_image_etag,
-    )
-    def get(self, request, *args, **kwargs):
-        return super().get(self, request, args, kwargs)
+    @cache_control(max_age=1209600, no_cache=True, private=True)
+    def get(self, request, pk):
+        if DEBUG:
+            # We're not using Caddy in debug environments, so let Django stream it via downloadview.
+            # Caddy will add ETag and Last-Modified headers for us, so only apply this decorator in DEBUG mode.
+            @condition(
+                last_modified_func=client_picture_last_modified_datetime,
+                etag_func=client_image_etag,
+            )
+            def super_get(self_new, request_new, pk_new):
+                return super().get(self_new, request_new, pk_new)
+
+            return super_get(self, request, pk)
+
+        client = models.Client.objects.get(pk=pk)
+        if client:
+            if len(client.picture.name) <= 0:
+                return HttpResponseNotFound()
+
+            dir_name, file_name = os.path.split(client.picture.name)
+            response = HttpResponse()
+            # Redirect the image request to Caddy.
+            response["X-Accel-Redirect"] = client.picture.name
+            response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+            return response
+        else:
+            return HttpResponseNotFound()
 
 
 class DisabilityList(generics.ListCreateAPIView):

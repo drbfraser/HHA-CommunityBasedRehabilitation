@@ -34,38 +34,31 @@ const useStyles = () =>
         column_client_name: {
             flex: 0.8,
             padding: 5,
-            justifyContent: "center",
         },
         column_client_zone: {
             flex: 0.7,
             padding: 5,
-            justifyContent: "center",
         },
         column_client_icon: {
             flex: 0.2,
             padding: 5,
-            justifyContent: "center",
         },
         column_client_Last_visit_date: {
             flex: 0.8,
             padding: 5,
-            justifyContent: "center",
         },
 
         column_referral_name: {
             flex: 1.5,
             padding: 5,
-            justifyContent: "center",
         },
         column_referral_type: {
             flex: 2,
             padding: 5,
-            justifyContent: "center",
         },
         column_referral_date: {
             flex: 1,
             padding: 5,
-            justifyContent: "center",
         },
     });
 

@@ -12,7 +12,8 @@ import { Gender, genders, themeColors } from "@cbr/common";
 import { objectFromMap } from "../../util/ObjectFromMap";
 import { useNavigation } from "@react-navigation/core";
 import ConfirmDialog from "../DiscardDialogs/ConfirmDialog";
-import { AppStackNavProp, DefaultHeader } from "../../util/stackScreens";
+import { AppStackNavProp } from "../../util/stackScreens";
+import DefaultHeader from "../DefaultHeader/DefaultHeader";
 
 export const ClientForm = (props: IFormProps) => {
     const styles = useStyles();

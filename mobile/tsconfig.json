@@ -4,8 +4,5 @@
         "esModuleInterop": true,
         "noImplicitAny": false
     },
-    "dependencies": {
-        "@common": "./../common"
-    },
     "extends": "expo/tsconfig.base"
 }

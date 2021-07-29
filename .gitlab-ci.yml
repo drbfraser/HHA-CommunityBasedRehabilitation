@@ -81,6 +81,7 @@ build web:
   after_script:
     - tar -czvf web_build.tar.gz web/build
   artifacts:
+    expire_in: 1 week
     paths:
       - web_build.tar.gz
 
@@ -161,6 +162,7 @@ test caddy:
 .deploy-docker: &deploy-docker
   - source ./.env
   - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
+  - rm -rf web/build
   - tar -xvf web_build.tar.gz
   - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
   - bash -c 'sleep 10'

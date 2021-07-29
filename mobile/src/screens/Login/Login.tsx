@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Image, TextInput as NativeTextInput, useWindowDimensions, View } from "react-native";
 import useStyles from "./Login.styles";
 import LoginBackgroundSmall from "./LoginBackgroundSmall";
@@ -9,38 +9,38 @@ import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
 import { SMALL_WIDTH } from "../../util/theme.styles";
 import PasswordTextInput from "../../components/PasswordTextInput/PasswordTextInput";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { StackParamList } from "../../util/stackScreens";
-import { Navigation } from "react-native-navigation";
-import { useEffect } from "react";
 import { StackScreenName } from "../../util/StackScreenName";
+import { APIFetchFailError } from "@cbr/common";
+import { useNavigation } from "@react-navigation/core";
 
-interface ILoginProps {
-    navigation: StackNavigationProp<StackParamList, StackScreenName.LOGIN>;
+interface IBaseLoginStatus {
+    status: "initial" | "submitting";
 }
 
-enum LoginStatus {
-    INITIAL,
-    SUBMITTING,
-    FAILED,
+interface ILoginStatusFailed {
+    status: "failed";
+    error: string;
 }
 
-const Login = (props: ILoginProps) => {
+type LoginStatus = ILoginStatusFailed | IBaseLoginStatus;
+
+const Login = () => {
     const theme = useTheme();
     const styles = useStyles();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [status, setStatus] = useState(LoginStatus.INITIAL);
+    const [status, setStatus] = useState<LoginStatus>({ status: "initial" });
+
+    const navigation = useNavigation();
 
     useEffect(() => {
-        const resetLoginPage = props.navigation.addListener("focus", () => {
+        return navigation.addListener("focus", () => {
             setUsername("");
             setPassword("");
-            setStatus(LoginStatus.INITIAL);
+            setStatus({ status: "initial" });
         });
-        return resetLoginPage;
-    }, [props.navigation]);
+    }, [navigation]);
 
     // This is for selecting the next TextInput: https://stackoverflow.com/a/59626713
     // Importing RN's TextInput as NativeTextInput fixes the typing as mentioned in
@@ -54,17 +54,24 @@ const Login = (props: ILoginProps) => {
             authState.state == "previouslyLoggedIn" ? authState.currentUser.username : username;
 
         if (!usernameToUse.length || !password.length) {
-            setStatus(LoginStatus.FAILED);
+            const error =
+                !usernameToUse.length && !password.length
+                    ? "Missing username and password"
+                    : !usernameToUse.length
+                    ? "Missing username"
+                    : "Missing password";
+
+            setStatus({ status: "failed", error: error });
             return;
         }
-        setStatus(LoginStatus.SUBMITTING);
 
-        const loginSucceeded = await login(usernameToUse, password);
-
-        if (!loginSucceeded) {
-            setStatus(LoginStatus.FAILED);
-        } else {
-            props.navigation.navigate(StackScreenName.HOME);
+        setStatus({ status: "submitting" });
+        try {
+            await login(usernameToUse, password);
+            // Navigation is handled by App component as it updates the AuthState.
+        } catch (e) {
+            const errorMessage = e instanceof APIFetchFailError && e.details ? e.details : `${e}`;
+            setStatus({ status: "failed", error: errorMessage });
         }
     };
 
@@ -100,17 +107,15 @@ const Login = (props: ILoginProps) => {
                     />
                 )}
 
-                {status === LoginStatus.FAILED ? (
+                {status.status === "failed" ? (
                     <Alert
                         style={styles.alert}
                         severity="error"
-                        text="Login failed. Please try again."
+                        text={`Login failed: ${status.error}`}
                     />
-                ) : status === LoginStatus.SUBMITTING ? (
+                ) : status.status === "submitting" ? (
                     <Alert style={styles.alert} severity="info" text="Logging in" />
-                ) : (
-                    <></>
-                )}
+                ) : null}
                 {/*
                     React Native Paper does not have "standard styling" TextFields as described in
                     https://material-ui.com/components/text-fields/. They only have the outlined
@@ -125,11 +130,11 @@ const Login = (props: ILoginProps) => {
                     <View>
                         <TextInput
                             label="Username"
-                            error={status === LoginStatus.FAILED && !username}
+                            error={status.status === "failed" && !username}
                             value={username}
                             onChangeText={(newUsername) => setUsername(newUsername)}
                             mode="flat"
-                            disabled={status === LoginStatus.SUBMITTING}
+                            disabled={status.status === "submitting"}
                             blurOnSubmit={false}
                             autoCapitalize="none"
                             autoCorrect={false}
@@ -138,10 +143,7 @@ const Login = (props: ILoginProps) => {
                             returnKeyType="next"
                             onSubmitEditing={() => passwordTextRef.current?.focus()}
                         />
-                        <HelperText
-                            type="error"
-                            visible={status === LoginStatus.FAILED && !username}
-                        >
+                        <HelperText type="error" visible={status.status === "failed" && !username}>
                             Please enter a username.
                         </HelperText>
                     </View>
@@ -149,24 +151,24 @@ const Login = (props: ILoginProps) => {
                 <View>
                     <PasswordTextInput
                         label="Password"
-                        error={status === LoginStatus.FAILED && !password}
+                        error={status.status === "failed" && !password}
                         value={password}
                         onChangeText={(newPassword) => setPassword(newPassword)}
                         mode="flat"
-                        disabled={status === LoginStatus.SUBMITTING}
+                        disabled={status.status === "submitting"}
                         onSubmitEditing={handleLogin}
                         returnKeyType="done"
                         ref={passwordTextRef}
                     />
-                    <HelperText type="error" visible={status === LoginStatus.FAILED && !password}>
+                    <HelperText type="error" visible={status.status === "failed" && !password}>
                         Please enter a password.
                     </HelperText>
                 </View>
                 <Button
                     color={theme.colors.accent}
                     contentStyle={{ backgroundColor: theme.colors.accent }}
-                    disabled={status === LoginStatus.SUBMITTING}
-                    loading={status === LoginStatus.SUBMITTING}
+                    disabled={status.status === "submitting"}
+                    loading={status.status === "submitting"}
                     onPress={handleLogin}
                     mode="contained"
                 >
@@ -176,7 +178,7 @@ const Login = (props: ILoginProps) => {
                     <Button
                         style={styles.logoutButton}
                         color={theme.colors.onPrimary}
-                        disabled={status === LoginStatus.SUBMITTING}
+                        disabled={status.status === "submitting"}
                         onPress={logout}
                         mode="text"
                     >

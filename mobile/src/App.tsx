@@ -129,19 +129,15 @@ export default function App() {
     // design inspired by https://reactnavigation.org/docs/auth-flow/
     const authContext = useMemo<IAuthContext>(
         () => ({
-            login: async (username: string, password: string): Promise<boolean> => {
-                const loginSucceeded = await doLogin(username, password);
-                if (!loginSucceeded) {
-                    return false;
-                }
+            login: async (username: string, password: string): Promise<void> => {
+                await doLogin(username, password);
 
                 try {
                     const currentUserFromServer = await fetchAndCacheUserFromServer();
                     setAuthState({ state: "loggedIn", currentUser: currentUserFromServer });
-                    return true;
                 } catch (e) {
                     setAuthState({ state: "loggedOut" });
-                    return false;
+                    throw e;
                 }
             },
             logout: async () => {

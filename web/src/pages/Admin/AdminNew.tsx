@@ -15,6 +15,7 @@ import {
     adminUserInitialValues,
     newUserValidationSchema,
 } from "@cbr/common/forms/Admin/adminFields";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
 
 const AdminNew = () => {
     const styles = useStyles();
@@ -28,9 +29,11 @@ const AdminNew = () => {
                 handleNewUserSubmit(values, formikHelpers)
                     .then((user) => history.replace(`/admin/view/${user.id}`))
                     .catch((e) => {
-                        alert(
-                            `Either a user with that username already exists or that password is too weak. Please try again.`
-                        );
+                        const errMsg =
+                            e instanceof APIFetchFailError
+                                ? e.buildFormError(adminUserFieldLabels)
+                                : `${e}`;
+                        alert(errMsg);
                     });
             }}
         >

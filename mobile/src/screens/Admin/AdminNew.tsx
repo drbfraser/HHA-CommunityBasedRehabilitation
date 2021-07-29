@@ -9,6 +9,7 @@ import {
     AdminField,
     adminUserFieldLabels,
     adminUserInitialValues,
+    APIFetchFailError,
     handleNewUserSubmit,
     newUserValidationSchema,
     themeColors,
@@ -21,6 +22,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import Alert from "../../components/Alert/Alert";
 import FormikExposedDropdownMenu from "../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
 import FormikPasswordTextInput from "../../components/FormikPasswordTextInput/FormikPasswordTextInput";
+import { err } from "react-native-svg/lib/typescript/xml";
 
 const AdminNew = ({
     navigation,
@@ -65,13 +67,18 @@ const AdminNew = ({
                         setSaveError(undefined);
                         handleNewUserSubmit(values, formikHelpers)
                             .then((user) => {
-                                navigation.pop(1);
-                                navigation.navigate(StackScreenName.ADMIN_VIEW, {
+                                navigation.replace(StackScreenName.ADMIN_VIEW, {
                                     userID: user.id,
                                     userInfo: { isNewUser: true, user: user },
                                 });
                             })
-                            .catch((e) => setSaveError(`${e}`));
+                            .catch((e) => {
+                                if (!(e instanceof APIFetchFailError)) {
+                                    setSaveError(`${e}`);
+                                    return;
+                                }
+                                setSaveError(e.buildFormError(adminUserFieldLabels));
+                            });
                     }}
                 >
                     {(formikProps: FormikProps<TNewUserValues>) => (

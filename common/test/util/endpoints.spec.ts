@@ -77,12 +77,9 @@ describe("endpoints.ts", () => {
                 );
 
                 // not passing in the form labels results in the raw fields being used
-                expect(buildFormErrorInternal(error, {})).toBe(
-                    "usrnm: Username doesn't exist\npass: Password too weak"
-                );
-                expect(buildFormErrorInternal(error, undefined)).toBe(
-                    "usrnm: Username doesn't exist\npass: Password too weak"
-                );
+                const rawErrorMessage = "usrnm: Username doesn't exist\npass: Password too weak";
+                expect(buildFormErrorInternal(error, {})).toBe(rawErrorMessage);
+                expect(buildFormErrorInternal(error, undefined)).toBe(rawErrorMessage);
             });
         });
     });

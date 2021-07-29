@@ -1,5 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Button, Card, CardContent, Dialog, DialogActions, DialogContent } from "@material-ui/core";
+import React, { Reducer, useEffect, useReducer, useRef, useState } from "react";
+import {
+    Button,
+    Card,
+    CardContent,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    LinearProgress,
+} from "@material-ui/core";
 import { useStyles } from "./PhotoViewUpload.styles";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
@@ -27,42 +36,50 @@ interface ICropperModal {
 
 const DEFAULT_IMAGE_PATH = "/images/profile_pic_icon.png";
 
+type TReducerAction = { newImgSrc: string };
+
+const imgSrcReducer: Reducer<string, TReducerAction> = (prevImgSrc, { newImgSrc }): string => {
+    if (prevImgSrc === newImgSrc) {
+        return prevImgSrc;
+    }
+
+    if (prevImgSrc.startsWith("blob:")) {
+        URL.revokeObjectURL(prevImgSrc);
+    }
+
+    return newImgSrc;
+};
+
 export const ProfilePicCard = (props: IProps) => {
     const styles = useStyles();
     const profilePicRef = useRef<HTMLInputElement | null>(null);
-    const cropper = useRef<Cropper>();
+
     const [isViewingPicture, setIsViewingPicture] = useState<boolean>(false);
     const [cropModalOpen, setCropModalOpen] = useState<boolean>(false);
-    const [cropperPicture, setCropperPicture] = useState<string>();
 
-    const [imgSrc, setImgSrc] = useState<string>();
+    const [cropperPictureState, dispatchCropperPictureState] = useReducer(imgSrcReducer, "");
+
+    const [imgSrcState, dispatchImgSrcState] = useReducer(imgSrcReducer, "");
     useEffect(() => {
         if (!props.picture) {
-            setImgSrc(DEFAULT_IMAGE_PATH);
+            dispatchImgSrcState({ newImgSrc: DEFAULT_IMAGE_PATH });
             return;
         }
 
-        if (props.picture && props.picture.startsWith("data:image/png")) {
-            setImgSrc(props.picture);
+        if (
+            props.picture &&
+            (props.picture.startsWith("data:image/") || props.picture.startsWith("blob:"))
+        ) {
+            dispatchImgSrcState({ newImgSrc: props.picture });
         } else if (props.clientId && !props.isEditing) {
             const abortController = new AbortController();
 
-            let blobUrlRef: string | undefined;
-
             apiFetch(Endpoint.CLIENT_PICTURE, `${props.clientId}`, { cache: "no-cache" })
-                .then(async (resp) => {
-                    const blob = await resp.blob();
-                    blobUrlRef = URL.createObjectURL(blob);
-                    setImgSrc(blobUrlRef);
-                })
+                .then((resp) => resp.blob())
+                .then((blob) => dispatchImgSrcState({ newImgSrc: URL.createObjectURL(blob) }))
                 .catch((e) => console.error(e));
 
-            return () => {
-                abortController.abort();
-                if (blobUrlRef) {
-                    URL.revokeObjectURL(blobUrlRef);
-                }
-            };
+            return () => abortController.abort();
         }
     }, [props.clientId, props.picture, props.isEditing]);
 
@@ -72,7 +89,7 @@ export const ProfilePicCard = (props: IProps) => {
         return (
             <Dialog open={isViewingPicture} onClose={() => setIsViewingPicture(false)}>
                 <DialogContent>
-                    <img className={styles.pictureModal} src={imgSrc} alt="user-profile-pic" />
+                    <img className={styles.pictureModal} src={imgSrcState} alt="user-profile-pic" />
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -87,58 +104,88 @@ export const ProfilePicCard = (props: IProps) => {
         );
     };
 
-    const CropModal = (cropperProps: ICropperModal) => (
-        <Dialog
-            open={cropModalOpen}
-            onClose={() => {
-                setCropModalOpen(false);
-            }}
-            aria-labelledby="form-modal-title"
-        >
-            <DialogContent>
-                <Cropper
-                    style={{ height: 400, width: "100%" }}
-                    responsive={true}
-                    minCropBoxHeight={10}
-                    minCropBoxWidth={10}
-                    viewMode={1}
-                    aspectRatio={1}
-                    src={cropperPicture}
-                    background={false}
-                    onInitialized={(instance) => {
-                        cropper.current = instance;
-                    }}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={() => {
-                        if (cropper.current !== undefined) {
-                            cropperProps.onPictureChange(
-                                cropper.current.getCroppedCanvas().toDataURL()
-                            );
-                        }
-                        setCropModalOpen(false);
-                        setCropperPicture(undefined);
-                    }}
-                >
-                    Save
-                </Button>
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => {
-                        setCropModalOpen(false);
-                        setCropperPicture(undefined);
-                    }}
-                >
-                    Cancel
-                </Button>
-            </DialogActions>
-        </Dialog>
-    );
+    const CropModal = (cropperProps: ICropperModal) => {
+        const cropper = useRef<Cropper>();
+
+        const [isSaving, setIsSaving] = useState(false);
+        const isMounted = useRef<boolean>(true);
+        useEffect(() => {
+            return () => {
+                isMounted.current = false;
+            };
+        }, []);
+
+        const handleExit = () => {
+            setCropModalOpen(false);
+            dispatchCropperPictureState({ newImgSrc: "" });
+        };
+
+        return (
+            <Dialog
+                open={cropModalOpen}
+                onClose={() => {
+                    setCropModalOpen(false);
+                }}
+                aria-labelledby="form-modal-title"
+            >
+                <DialogContent>
+                    {cropperPictureState ? (
+                        <Cropper
+                            style={{ height: 400, width: "100%" }}
+                            responsive={true}
+                            minCropBoxHeight={10}
+                            minCropBoxWidth={10}
+                            viewMode={1}
+                            aspectRatio={1}
+                            src={cropperPictureState}
+                            background={false}
+                            onInitialized={(instance) => {
+                                cropper.current = instance;
+                            }}
+                        />
+                    ) : (
+                        <LinearProgress />
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        disabled={isSaving || !cropperPictureState}
+                        onClick={() => {
+                            if (!cropper.current) {
+                                alert("Failed to get image!");
+                                return;
+                            }
+
+                            setIsSaving(true);
+                            cropper.current.getCroppedCanvas().toBlob((blob: Blob | null) => {
+                                if (!isMounted.current) {
+                                    return;
+                                }
+
+                                if (blob) {
+                                    cropperProps.onPictureChange(URL.createObjectURL(blob));
+                                } else {
+                                    alert("Failed to get image!");
+                                }
+                                setIsSaving(false);
+                                handleExit();
+                            });
+                        }}
+                    >
+                        Save
+                        {isSaving && (
+                            <CircularProgress color="primary" size={15} style={{ marginLeft: 5 }} />
+                        )}
+                    </Button>
+                    <Button variant="outlined" color="primary" onClick={handleExit}>
+                        Cancel
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    };
 
     const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -151,16 +198,17 @@ export const ProfilePicCard = (props: IProps) => {
         const reader = new FileReader();
 
         reader.onload = () => {
-            const cropperPicture = (reader.result as string) ?? undefined;
-            setCropperPicture(cropperPicture);
+            const cropperPicture = (reader.result as ArrayBuffer) ?? undefined;
             if (cropperPicture) {
-                setCropModalOpen(true);
+                const blob = new Blob([cropperPicture]);
+                dispatchCropperPictureState({ newImgSrc: URL.createObjectURL(blob) });
             } else {
                 alert("Error opening image");
             }
         };
 
-        reader.readAsDataURL(files[0]);
+        reader.readAsArrayBuffer(files[0]);
+        setCropModalOpen(true);
 
         // Allow image reuse when selecting in file picker again.
         // @ts-ignore
@@ -185,8 +233,8 @@ export const ProfilePicCard = (props: IProps) => {
                         !props.isEditing ? setIsViewingPicture(true) : triggerFileUpload()
                     }
                 >
-                    {imgSrc && (
-                        <img className={styles.profilePicture} src={imgSrc} alt="user-icon" />
+                    {imgSrcState && (
+                        <img className={styles.profilePicture} src={imgSrcState} alt="user-icon" />
                     )}
                     <div className={styles.uploadIcon}>
                         <CloudUploadIcon />

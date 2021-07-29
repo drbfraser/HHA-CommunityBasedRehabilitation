@@ -1,5 +1,6 @@
 import datetime
-
+import imghdr
+import os
 import time
 from typing import Optional
 
@@ -11,7 +12,6 @@ from cbr_api import models
 
 
 # create and list
-from cbr_api.util import hash_client_image
 
 
 class UserCBRCreationSerializer(serializers.ModelSerializer):
@@ -512,6 +512,13 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ["created_by_user", "created_date", "modified_date"]
 
     def update(self, instance: models.Client, validated_data):
+        new_client_picture: Optional[File] = validated_data.get("picture")
+        if new_client_picture:
+            file_root, file_ext = os.path.splitext(new_client_picture.name)
+            actual_image_type: Optional[str] = imghdr.what(new_client_picture.file)
+            if actual_image_type and actual_image_type != file_ext.removeprefix("."):
+                new_client_picture.name = f"{file_root}.{actual_image_type}"
+
         super().update(instance, validated_data)
         instance.full_name = instance.first_name + " " + instance.last_name
         instance.save()

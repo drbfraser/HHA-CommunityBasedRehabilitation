@@ -21,9 +21,12 @@ const useStyles = () =>
         select: {
             flex: 1,
         },
-        text: {
+        title: {
             textAlign: "center",
-            fontSize: 16,
+            fontSize: 14,
+        },
+        text: {
+            flexShrink: 1,
         },
         search: {
             flex: 2,

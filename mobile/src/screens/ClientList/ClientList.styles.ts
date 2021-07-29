@@ -41,6 +41,9 @@ const useStyles = () =>
             alignItems: "center",
             padding: 5,
         },
+        text: {
+            flexShrink: 1,
+        },
     });
 
 export default useStyles;

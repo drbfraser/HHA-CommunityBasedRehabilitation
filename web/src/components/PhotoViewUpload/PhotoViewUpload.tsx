@@ -15,6 +15,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import useIsMounted from "react-is-mounted-hook";
 
 interface IProps {
     isEditing: boolean;
@@ -51,6 +52,8 @@ const imgSrcReducer: Reducer<string, TReducerAction> = (prevImgSrc, { newImgSrc 
 };
 
 export const ProfilePicCard = (props: IProps) => {
+    const isMounted = useIsMounted();
+
     const styles = useStyles();
     const profilePicRef = useRef<HTMLInputElement | null>(null);
 
@@ -59,24 +62,39 @@ export const ProfilePicCard = (props: IProps) => {
 
     const [cropperPictureState, dispatchCropperPictureState] = useReducer(imgSrcReducer, "");
 
-    const [imgSrcState, dispatchImgSrcState] = useReducer(imgSrcReducer, "");
+    const [imgSrcState, dispatchImgSrcState] = useReducer(
+        imgSrcReducer,
+        !props.picture ? DEFAULT_IMAGE_PATH : ""
+    );
     useEffect(() => {
-        if (!props.picture) {
-            dispatchImgSrcState({ newImgSrc: DEFAULT_IMAGE_PATH });
+        return () => {
+            if (!isMounted() && imgSrcState.startsWith("blob:")) {
+                URL.revokeObjectURL(imgSrcState);
+            }
+        };
+    }, [isMounted, imgSrcState]);
+    const hasLoadedImage = useRef(false);
+    useEffect(() => {
+        if (!props.picture && !hasLoadedImage.current) {
+            // `!props.picture` means the client didn't have a picture initially. If we've never
+            // loaded an image, don't attempt a network request that is likely to 404.
             return;
         }
 
-        if (
-            props.picture &&
-            (props.picture.startsWith("data:image/") || props.picture.startsWith("blob:"))
-        ) {
+        if (props.picture && props.picture.startsWith("blob:")) {
+            hasLoadedImage.current = true;
             dispatchImgSrcState({ newImgSrc: props.picture });
         } else if (props.clientId && !props.isEditing) {
             const abortController = new AbortController();
 
-            apiFetch(Endpoint.CLIENT_PICTURE, `${props.clientId}`, { cache: "no-cache" })
+            // Note that we refetch the image if the client state changes (and we don't have a local
+            // blob to use)
+            apiFetch(Endpoint.CLIENT_PICTURE, `${props.clientId}`)
                 .then((resp) => resp.blob())
-                .then((blob) => dispatchImgSrcState({ newImgSrc: URL.createObjectURL(blob) }))
+                .then((blob) => {
+                    hasLoadedImage.current = true;
+                    dispatchImgSrcState({ newImgSrc: URL.createObjectURL(blob) });
+                })
                 .catch((e) => console.error(e));
 
             return () => abortController.abort();
@@ -108,12 +126,7 @@ export const ProfilePicCard = (props: IProps) => {
         const cropper = useRef<Cropper>();
 
         const [isSaving, setIsSaving] = useState(false);
-        const isMounted = useRef<boolean>(true);
-        useEffect(() => {
-            return () => {
-                isMounted.current = false;
-            };
-        }, []);
+        const isMounted = useIsMounted();
 
         const handleExit = () => {
             setCropModalOpen(false);
@@ -160,7 +173,7 @@ export const ProfilePicCard = (props: IProps) => {
 
                             setIsSaving(true);
                             cropper.current.getCroppedCanvas().toBlob((blob: Blob | null) => {
-                                if (!isMounted.current) {
+                                if (!isMounted()) {
                                     return;
                                 }
 

@@ -7,7 +7,7 @@ import {
 } from "fetch-mock";
 import {
     APICacheData,
-    invalidateAllCachedAPI,
+    invalidateAllCachedAPIInternal,
     untrackAllCaches,
 } from "../../../src/util/hooks/cachedAPI";
 import { apiFetch, Endpoint } from "../../../src/util/endpoints";
@@ -78,7 +78,7 @@ const mockSuccessGetWithDelayedResponse = (responseBody: any) => {
 };
 
 beforeEach(async () => {
-    await invalidateAllCachedAPI(true, true, false, false);
+    await invalidateAllCachedAPIInternal(true, true, false, false);
     untrackAllCaches();
     resetFetchMocks();
     await addValidTokens();
@@ -112,21 +112,21 @@ describe("cachedAPI.ts", () => {
             expect(await firstCache.getCachedValue()).toEqual(expectedTestData);
             expect(await secondCache.getCachedValue()).toEqual(expectedTestData);
 
-            await invalidateAllCachedAPI(false, false, false, true);
+            await invalidateAllCachedAPIInternal(false, false, false, true);
             expect(firstCacheListener).toBeCalledTimes(1);
             expect(secondCacheListener).toBeCalledTimes(1);
 
-            await invalidateAllCachedAPI(false, false, false, false);
+            await invalidateAllCachedAPIInternal(false, false, false, false);
             expect(firstCacheListener).toBeCalledTimes(1);
             expect(secondCacheListener).toBeCalledTimes(1);
 
-            await invalidateAllCachedAPI(false, false, false, true);
+            await invalidateAllCachedAPIInternal(false, false, false, true);
             expect(firstCacheListener).toBeCalledTimes(2);
             expect(secondCacheListener).toBeCalledTimes(2);
 
             firstCache.removeInvalidationListener(firstCacheListener);
 
-            await invalidateAllCachedAPI(false, false, false, true);
+            await invalidateAllCachedAPIInternal(false, false, false, true);
             expect(firstCacheListener).toBeCalledTimes(2);
             expect(secondCacheListener).toBeCalledTimes(3);
         });
@@ -137,7 +137,7 @@ describe("cachedAPI.ts", () => {
             expect(await secondCache.getCachedValue()).toEqual(expectedTestData);
             expect(secondCache.isInvalidated).toBe(false);
 
-            await invalidateAllCachedAPI(false, false, false);
+            await invalidateAllCachedAPIInternal(false, false, false);
 
             // The in-memory value should not be cleared.
             expect(await firstCache.value).toEqual(expectedTestData);
@@ -157,7 +157,7 @@ describe("cachedAPI.ts", () => {
             expect(await secondCache.getCachedValue()).toEqual(expectedTestData);
             expect(secondCache.isInvalidated).toBe(false);
 
-            await invalidateAllCachedAPI(true, false, false, true);
+            await invalidateAllCachedAPIInternal(true, false, false, true);
 
             expect(await firstCache.value).toBeUndefined();
             expect(firstCache.isInvalidated).toBe(true);
@@ -178,7 +178,7 @@ describe("cachedAPI.ts", () => {
 
             expect(mockedCalls().length).toBe(2);
 
-            await invalidateAllCachedAPI(true, false, true, true);
+            await invalidateAllCachedAPIInternal(true, false, true, true);
 
             expect(mockedCalls().length).toBe(4);
 
@@ -202,7 +202,7 @@ describe("cachedAPI.ts", () => {
                 JSON.stringify(expectedTestData)
             );
 
-            await invalidateAllCachedAPI(true, true, false, true);
+            await invalidateAllCachedAPIInternal(true, true, false, true);
 
             expect(await firstCache.value).toBeUndefined();
             expect(firstCache.isInvalidated).toBe(true);
@@ -237,7 +237,7 @@ describe("cachedAPI.ts", () => {
                 keyValStorageProvider: keyValStorageThatRejectsCacheKeys,
                 useKeyValStorageForCachedAPIBackup: true,
             });
-            await invalidateAllCachedAPI(true, true, false, true);
+            await invalidateAllCachedAPIInternal(true, true, false, true);
 
             expect(await firstCache.value).toBeUndefined();
             expect(firstCache.isInvalidated).toBe(true);
@@ -576,7 +576,7 @@ describe("cachedAPI.ts", () => {
             };
             mockSuccessGetWithDelayedResponse(secondTestDataValues);
 
-            await invalidateAllCachedAPI(false, false, false, true);
+            await invalidateAllCachedAPIInternal(false, false, false, true);
             // It should initially still use the first data values.
             expect(firstReactComponent.result.current).toEqual(firstTestDataValues);
             expect(secondReactComponent.result.current).toEqual(firstTestDataValues);
@@ -590,7 +590,7 @@ describe("cachedAPI.ts", () => {
             resetFetchMockBehavior();
             mockSuccessGetWithDelayedResponse(firstTestDataValues);
 
-            await invalidateAllCachedAPI(true, false, false, true);
+            await invalidateAllCachedAPIInternal(true, false, false, true);
             await Promise.all([
                 firstReactComponent.waitForNextUpdate(),
                 secondReactComponent.waitForNextUpdate(),

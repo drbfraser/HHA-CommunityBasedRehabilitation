@@ -11,7 +11,7 @@ import {
 import { addValidTokens } from "../../testHelpers/authTokenHelpers";
 import { fromNewCommonModule } from "../../testHelpers/testCommonConfiguration";
 import { checkAuthHeader } from "../../testHelpers/mockServerHelpers";
-import { invalidateAllCachedAPI } from "../../../src/util/hooks/cachedAPI";
+import { invalidateAllCachedAPIInternal } from "../../../src/util/hooks/cachedAPI";
 
 const ID_OF_OTHER_IN_TEST_DISABILITY_MAP = 4;
 
@@ -45,7 +45,7 @@ const mockGetWithDefaultTestDisabilityMap = () => {
 };
 
 beforeEach(async () => {
-    await invalidateAllCachedAPI(true, true, false, false);
+    await invalidateAllCachedAPIInternal(true, true, false, false);
     resetFetchMocks();
     await addValidTokens();
 });

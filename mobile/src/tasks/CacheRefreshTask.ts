@@ -111,7 +111,7 @@ export namespace CacheRefreshTask {
 
             // This will cause all caches to re-fetch. We work under the assumption that we have
             // internet connectivity.
-            await invalidateAllCachedAPI(false, false, true, true);
+            await invalidateAllCachedAPI("refresh");
             return true;
         } catch (e) {
             console.error(`${TASK_TAG}: refreshCaches(): failed, because error: ${e}`);

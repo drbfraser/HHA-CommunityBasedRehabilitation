@@ -11,7 +11,7 @@ import { fromNewCommonModule } from "../../testHelpers/testCommonConfiguration";
 import { checkAuthHeader } from "../../testHelpers/mockServerHelpers";
 import { IUser, UserRole } from "../../../src/util/users";
 import { getCurrentUser, useCurrentUser } from "../../../src/util/hooks/currentUser";
-import { invalidateAllCachedAPI } from "../../../src/util/hooks/cachedAPI";
+import { invalidateAllCachedAPIInternal } from "../../../src/util/hooks/cachedAPI";
 
 const testUser: IUser = {
     id: 1,
@@ -39,7 +39,7 @@ const mockGetWithDefaultUser = () => {
 };
 
 beforeEach(async () => {
-    await invalidateAllCachedAPI(true, true, false, false);
+    await invalidateAllCachedAPIInternal(true, true, false, false);
     resetFetchMocks();
     await addValidTokens();
 });

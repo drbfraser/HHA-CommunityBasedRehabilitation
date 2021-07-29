@@ -106,7 +106,7 @@ export default function App() {
             .then((loggedIn) => {
                 if (loggedIn) {
                     console.log("App init: re-fetching cached API from the server");
-                    return invalidateAllCachedAPI(false, false, true, true);
+                    return invalidateAllCachedAPI("refresh");
                 }
             })
             .catch((e) => console.error(`App init: error during initialization: ${e}`))
@@ -125,10 +125,11 @@ export default function App() {
                 // This throws an error if login fails.
                 await doLogin(username, password);
 
-                await CacheRefreshTask.registerBackgroundFetch();
-
-                // This will fetch all cached API data so that they're pre-loaded.
-                await invalidateAllCachedAPI(true, true, true, false);
+                await Promise.all([
+                    CacheRefreshTask.registerBackgroundFetch(),
+                    // This will fetch all cached API data so that they're pre-loaded.
+                    invalidateAllCachedAPI("login"),
+                ]);
 
                 return await updateAuthStateIfNeeded(authState, setAuthState, false);
             },

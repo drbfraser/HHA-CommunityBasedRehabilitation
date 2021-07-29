@@ -31,7 +31,7 @@ initializeCommon({
     shouldLogoutOnTokenRefreshFailure: false,
     logoutCallback: async () => {
         await CacheRefreshTask.unregisterBackgroundFetch();
-        await invalidateAllCachedAPI(true, true, false, false).catch((e) => {
+        await invalidateAllCachedAPI("logout").catch((e) => {
             console.error(`Error while invalidating all cached API during logout: ${e}`);
         });
         // TODO: Delete all other stored data in the app including client data, referrals, etc.

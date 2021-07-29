@@ -31,7 +31,7 @@ initializeCommon({
     shouldLogoutOnTokenRefreshFailure: true,
     logoutCallback: async () => {
         loginState.emit(false);
-        await invalidateAllCachedAPI(true, true, false, false);
+        await invalidateAllCachedAPI("logout");
         window.location.replace("/");
     },
 });

@@ -15,6 +15,22 @@ export const untrackAllCaches = () => {
     }
 };
 
+export const invalidateAllCachedAPI = async (
+    invalidationType: "login" | "refresh" | "logout"
+): Promise<void> => {
+    switch (invalidationType) {
+        case "login":
+            return invalidateAllCachedAPIInternal(true, true, true, true);
+        case "refresh":
+            return invalidateAllCachedAPIInternal(false, false, true, true);
+        case "logout":
+            return invalidateAllCachedAPIInternal(true, true, true, false);
+        default:
+            console.warn(`warning: unknown invalidation type: ${invalidationType}`);
+            return invalidateAllCachedAPIInternal(false, false, false, false);
+    }
+};
+
 /**
  * Invalidates all cached API and forces any active listeners of all caches to refetch API data
  * from the server.
@@ -29,8 +45,10 @@ export const untrackAllCaches = () => {
  * @param reFetch Whether to re-fetch the value from the server.
  * @param notifyListeners Whether to notify listeners that the cache has been invalidated. This is
  * useful when logging out to avoid React state updates. By default, this is true.
+ *
+ * @internal
  */
-export const invalidateAllCachedAPI = async (
+export const invalidateAllCachedAPIInternal = async (
     clearValues: boolean,
     clearBackups: boolean,
     reFetch: boolean,

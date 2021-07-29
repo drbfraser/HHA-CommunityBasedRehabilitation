@@ -205,8 +205,8 @@ export class APICacheData<TValue, TLoading, TError> {
         });
     }
 
-    useCacheHook(): () => TValue | TLoading | TError {
-        return () => {
+    useCacheHook(): (listenForChanges?: boolean) => TValue | TLoading | TError {
+        return (listenForChanges: boolean = true) => {
             const [value, setValue] = useState<TValue | TError | undefined>(this._value);
             const isMounted = useRef(false);
 
@@ -219,6 +219,12 @@ export class APICacheData<TValue, TLoading, TError> {
                             setValue(v.value);
                         }
                     });
+                }
+
+                if (!listenForChanges) {
+                    return () => {
+                        isMounted.current = false;
+                    };
                 }
 
                 const listener: InvalidationListener = () => {

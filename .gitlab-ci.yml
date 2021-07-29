@@ -149,6 +149,29 @@ test common:
       cobertura:
         - common/coverage/cobertura-coverage.xml
 
+test caddy:
+  stage: test
+  image: caddy:2.4.3
+  tags:
+    - docker
+  needs: []
+  rules:
+    - if: "$CI_MERGE_REQUEST_ID != null"
+      changes:
+        - caddy/**/*
+        - .gitlab-ci.yml
+      when: always
+  script:
+    - caddy validate --config caddy/Caddyfile
+
+.deploy-docker: &deploy-docker
+  - source ./.env
+  - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
+  - tar -xvf web_build.tar.gz
+  - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
+  - bash -c 'sleep 10'
+  - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+
 deploy staging:
   stage: deploy
   tags:
@@ -158,12 +181,7 @@ deploy staging:
       when: on_success
   script:
     - cp /var/cbr/staging.env ./.env
-    - source ./.env
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
-    - tar -xvf web_build.tar.gz
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
-    - bash -c 'sleep 10'
-    - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+    - *deploy-docker
 
 deploy prod:
   stage: deploy
@@ -174,9 +192,4 @@ deploy prod:
       when: manual
   script:
     - cp /var/cbr/prod.env ./.env
-    - source ./.env
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
-    - tar -xvf web_build.tar.gz
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
-    - bash -c 'sleep 10'
-    - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+    - *deploy-docker

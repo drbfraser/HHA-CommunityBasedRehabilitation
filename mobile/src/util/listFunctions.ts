@@ -16,8 +16,6 @@ export enum SortOptions {
     ROLE = "role",
 }
 
-
-
 export const sortDirections = ["asc", "dec", "None"];
 
 export const sortBy = async (
@@ -129,8 +127,12 @@ export const referralComparator = (
     return referralSortDirection === "asc" ? result : -1 * result;
 };
 
-
-export const userComparator = (a: userBrife, b: userBrife, sortOption:string, sortDirection:string): number => {
+export const userComparator = (
+    a: userBrife,
+    b: userBrife,
+    sortOption: string,
+    sortDirection: string
+): number => {
     let result = 0;
     switch (sortOption) {
         case SortOptions.ID: {

@@ -14,11 +14,7 @@ export const RecentActivity = (props: IActivityProps) => {
     return (
         <View>
             {props.activity.map((presentActivity) => {
-                return (
-                    props.clientVisits && (
-                        <Timeline key={presentActivity.id} activity={presentActivity} />
-                    )
-                );
+                return <Timeline key={presentActivity.id} activity={presentActivity} />;
             })}
             <TimelineDate date={props.clientCreateDate} />
         </View>

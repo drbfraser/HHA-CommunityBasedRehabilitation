@@ -60,6 +60,7 @@ const infoValidationShape = {
         .required()
         .max(50),
     [AdminField.username]: Yup.string()
+        .matches(Validation.usernameRegExp, Validation.usernameInvalidMsg)
         .label(adminUserFieldLabels[AdminField.username])
         .required()
         .max(50),

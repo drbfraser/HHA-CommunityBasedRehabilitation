@@ -1,8 +1,9 @@
-import { ImprovementFormField, TFormValues } from "./formFields";
+import { fieldLabels, ImprovementFormField, TFormValues } from "./formFields";
 import { FormikHelpers } from "formik";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import history from "../../util/history";
 import { FormField } from "./formFields";
+import React from "react";
 
 const addVisit = async (visitInfo: string) => {
     const init: RequestInit = {
@@ -23,7 +24,7 @@ const addVisit = async (visitInfo: string) => {
 export const handleSubmit = async (
     values: TFormValues,
     helpers: FormikHelpers<TFormValues>,
-    setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
+    setSubmissionError: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
     const newVisit = JSON.stringify({
         client: values[FormField.client],
@@ -50,6 +51,6 @@ export const handleSubmit = async (
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);
-        setSubmissionError(true);
+        setSubmissionError(e instanceof APIFetchFailError ? e.buildFormError(fieldLabels) : `${e}`);
     }
 };

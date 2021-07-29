@@ -17,6 +17,7 @@ import {
     physiotherapyValidationSchema,
     prostheticOrthoticValidationSchema,
     wheelchairValidationSchema,
+    APIFetchFailError,
 } from "@cbr/common";
 import WheelchairForm from "./ReferralForm/WheelchairForm";
 import PhysiotherapyForm from "./ReferralForm/PhysiotherapyForm";
@@ -113,14 +114,18 @@ const NewReferral = (props: INewReferralProps) => {
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
-            handleSubmit(values, helpers, setSubmissionError)
+            handleSubmit(values, helpers)
                 .then(() => {
                     props.navigation.navigate(StackScreenName.CLIENT, {
                         clientID: clientId,
                     });
                 })
                 .catch((e) => {
-                    setSaveError(`${e}`);
+                    setSaveError(
+                        e instanceof APIFetchFailError
+                            ? e.buildFormError(referralFieldLabels)
+                            : `${e}`
+                    );
                     helpers.setSubmitting(false);
                     setSubmissionError(true);
                 });

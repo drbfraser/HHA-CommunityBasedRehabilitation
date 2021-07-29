@@ -10,9 +10,8 @@ export const AuthContext = createContext<IAuthContext>({
     // Setup some dummy interface as the defaultValue for type-safety reasons.
     // This isn't expected to be used at all, since the App component should provide the
     // AuthContext for all other components. The actual implementation is in the App component.
-    login: async (username: string, password: string): Promise<boolean> => {
+    login: async (username: string, password: string): Promise<void> => {
         console.error("dummy AuthContext shouldn't be used, but login was called");
-        return false;
     },
     logout: async () => {
         console.error("dummy AuthContext shouldn't be used, but logout was called");
@@ -30,16 +29,15 @@ export interface IAuthContext {
      * successful if the app is able to both get the tokens and get the details of the current user.
      *
      * {@link authState} will change to {@link AuthState.LoggedIn} if login is successful, causing
-     * the user to be taken to the logged-in screens (see {@link screensForUser and the {@link App}
-     * component}.
+     * the user to be taken to the logged-in screens (see the {@link App} component}.
      *
-     * @return A Promise resolving to whether the login was successful. Note: Resolving to `true`
+     * @return A Promise resolving if login was successful and rejects otherwise. Note: Resolving
      * means the screen will be changed to the logged-in flow (see the {@link App} component).
      * @param username The username to submit to the server. This might be case sensitive---check
      * the backend to be sure.
      * @param password The password to submit to the server.
      */
-    login(username: string, password: string): Promise<boolean>;
+    login(username: string, password: string): Promise<void>;
 
     /**
      * Logs out the user. This is meant to be used when the user explicitly chooses to logout

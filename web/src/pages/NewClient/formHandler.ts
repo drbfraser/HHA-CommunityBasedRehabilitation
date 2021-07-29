@@ -1,6 +1,11 @@
 import { FormikHelpers } from "formik";
-import { TFormValues } from "./formFields";
-import { Endpoint, apiFetch, objectToFormData } from "@cbr/common//util/endpoints";
+import { fieldLabels, TFormValues } from "./formFields";
+import {
+    Endpoint,
+    apiFetch,
+    objectToFormData,
+    APIFetchFailError,
+} from "@cbr/common//util/endpoints";
 import history from "../../util/history";
 import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
@@ -73,7 +78,10 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         const client = await addClient(formData);
         history.push(`/client/${client.id}`);
     } catch (e) {
-        alert("Encountered an error while trying to create the client!");
+        const initialMessage = "Encountered an error while trying to create the client!";
+        const detailedError =
+            e instanceof APIFetchFailError ? e.buildFormError(fieldLabels) : `${e}`;
+        alert(initialMessage + "\n" + detailedError);
         helpers.setSubmitting(false);
     }
 };

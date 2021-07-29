@@ -19,8 +19,8 @@ export const getPassChangeErrorMessageFromSubmissionError = (error: any): string
     if (error instanceof APIFetchFailError) {
         if (error.status === 400) {
             return "Old password is incorrect";
-        } else if (error.response.hasOwnProperty("detail")) {
-            return createFailedToGetPasswordError(error.response.detail);
+        } else if (error.details) {
+            return createFailedToGetPasswordError(error.details);
         } else {
             return createFailedToGetPasswordError(error.message);
         }

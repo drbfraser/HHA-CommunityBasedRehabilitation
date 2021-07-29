@@ -2,9 +2,6 @@ import { IReferral } from "./referrals";
 import { IRisk, riskLevels } from "./risks";
 import { ISurvey } from "./survey";
 import { IVisitSummary } from "./visits";
-import { useZones } from "./hooks/zones";
-import { string } from "yup/lib/locale";
-import { SearchOption } from "./searchOptions";
 
 export interface IClientSummary {
     id: number;

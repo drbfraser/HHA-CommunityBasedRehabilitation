@@ -36,6 +36,7 @@ import { handleSubmit } from "./formHandler";
 
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewVisit.style";
 import Alert from "../../components/Alert/Alert";
+import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -367,11 +368,14 @@ const NewVisit = (props: INewVisitProps) => {
         props.setErrors({});
     };
 
+    const [hasSubmitted, setHasSubmitted] = useState(false);
+
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
             handleSubmit(values, helpers)
                 .then(() => {
+                    setHasSubmitted(true);
                     props.navigation.navigate(StackScreenName.CLIENT, {
                         clientID: clientId,
                     });
@@ -400,69 +404,82 @@ const NewVisit = (props: INewVisitProps) => {
     };
 
     return (
-        <Formik
-            initialValues={visitInitialValues}
-            validationSchema={visitSteps[activeStep].validationSchema}
-            onSubmit={nextStep}
-            enableReinitialize
-        >
-            {(formikProps) => (
-                <>
-                    <View style={styles.container}>
-                        {saveError && (
-                            <Alert
-                                style={styles.errorAlert}
-                                severity="error"
-                                text={saveError}
-                                onClose={() => setSaveError(undefined)}
-                            />
-                        )}
-                        <ProgressSteps key={visitSteps} {...progressStepsStyle}>
-                            {visitSteps.map((surveyStep, index) => {
-                                return (
-                                    <ProgressStep
-                                        key={index}
-                                        scrollViewProps={defaultScrollViewProps}
-                                        previousBtnTextStyle={styles.buttonTextStyle}
-                                        nextBtnTextStyle={styles.buttonTextStyle}
-                                        nextBtnStyle={styles.nextButton}
-                                        previousBtnStyle={styles.prevButton}
-                                        onNext={() => {
-                                            nextStep(formikProps.values, formikProps);
-                                        }}
-                                        nextBtnDisabled={
-                                            formikProps.isSubmitting ||
-                                            enabledSteps.length === 0 ||
-                                            (enabledSteps[activeStep - 1] !== undefined &&
-                                                (!checkedSteps.includes(
-                                                    enabledSteps[activeStep - 1]
-                                                )
-                                                    ? Object.keys(formikProps.errors).length !==
-                                                          0 ||
-                                                      Object.keys(formikProps.touched).length === 0
-                                                    : Object.keys(formikProps.errors).length !== 0))
-                                        }
-                                        previousBtnDisabled={formikProps.isSubmitting}
-                                        onPrevious={() => prevStep(formikProps)}
-                                        onSubmit={() => nextStep(formikProps.values, formikProps)}
-                                    >
-                                        <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
-                                        <Divider
-                                            style={{
-                                                backgroundColor: themeColors.blueBgDark,
+        <>
+            <ConfirmDialogWithNavListener
+                bypassDialog={hasSubmitted}
+                confirmButtonText="Discard"
+                dialogContent="Discard this new visit?"
+            />
+            <Formik
+                initialValues={visitInitialValues}
+                validationSchema={visitSteps[activeStep].validationSchema}
+                onSubmit={nextStep}
+                enableReinitialize
+            >
+                {(formikProps) => (
+                    <>
+                        <View style={styles.container}>
+                            {saveError && (
+                                <Alert
+                                    style={styles.errorAlert}
+                                    severity="error"
+                                    text={saveError}
+                                    onClose={() => setSaveError(undefined)}
+                                />
+                            )}
+                            <ProgressSteps key={visitSteps} {...progressStepsStyle}>
+                                {visitSteps.map((surveyStep, index) => {
+                                    return (
+                                        <ProgressStep
+                                            key={index}
+                                            scrollViewProps={defaultScrollViewProps}
+                                            previousBtnTextStyle={styles.buttonTextStyle}
+                                            nextBtnTextStyle={styles.buttonTextStyle}
+                                            nextBtnStyle={styles.nextButton}
+                                            previousBtnStyle={styles.prevButton}
+                                            onNext={() => {
+                                                nextStep(formikProps.values, formikProps);
                                             }}
-                                        />
-                                        <ScrollView>
-                                            <surveyStep.Form formikProps={formikProps} />
-                                        </ScrollView>
-                                    </ProgressStep>
-                                );
-                            })}
-                        </ProgressSteps>
-                    </View>
-                </>
-            )}
-        </Formik>
+                                            nextBtnDisabled={
+                                                formikProps.isSubmitting ||
+                                                enabledSteps.length === 0 ||
+                                                (enabledSteps[activeStep - 1] !== undefined &&
+                                                    (!checkedSteps.includes(
+                                                        enabledSteps[activeStep - 1]
+                                                    )
+                                                        ? Object.keys(formikProps.errors).length !==
+                                                              0 ||
+                                                          Object.keys(formikProps.touched)
+                                                              .length === 0
+                                                        : Object.keys(formikProps.errors).length !==
+                                                          0))
+                                            }
+                                            previousBtnDisabled={formikProps.isSubmitting}
+                                            onPrevious={() => prevStep(formikProps)}
+                                            onSubmit={() =>
+                                                nextStep(formikProps.values, formikProps)
+                                            }
+                                        >
+                                            <Text style={styles.stepLabelText}>
+                                                {surveyStep.label}
+                                            </Text>
+                                            <Divider
+                                                style={{
+                                                    backgroundColor: themeColors.blueBgDark,
+                                                }}
+                                            />
+                                            <ScrollView>
+                                                <surveyStep.Form formikProps={formikProps} />
+                                            </ScrollView>
+                                        </ProgressStep>
+                                    );
+                                })}
+                            </ProgressSteps>
+                        </View>
+                    </>
+                )}
+            </Formik>
+        </>
     );
 };
 

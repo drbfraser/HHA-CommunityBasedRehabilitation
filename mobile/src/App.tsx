@@ -5,7 +5,7 @@ import theme from "./util/theme.styles";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyle from "./app.styles";
-import { stackScreenProps } from "./util/stackScreens";
+import { stackScreenOptions, stackScreenProps } from "./util/stackScreens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import {
     apiFetch,
@@ -24,6 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { KEY_CURRENT_USER } from "./util/AsyncStorageKeys";
 import { StackScreenName } from "./util/StackScreenName";
+import { RouteProp } from "@react-navigation/core/lib/typescript/src/types";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -164,6 +165,8 @@ export default function App() {
                                         key={name}
                                         name={name}
                                         component={stackScreenProps[name]}
+                                        // @ts-ignore
+                                        options={stackScreenOptions[name]}
                                     />
                                 ))
                             ) : authState.state === "loggedOut" ||

@@ -42,7 +42,8 @@ export const handleSubmit = async (values: IClient, isNewClient?: boolean) => {
     const disabilities = await getDisabilities();
     let requestSuccess: boolean = true;
     if (isNewClient) {
-        //Do the new client POST request stuff here
+        // TODO: Do the new client POST request stuff here
+        return false;
     } else {
         const updatedValues = {
             first_name: values.first_name,

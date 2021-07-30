@@ -40,18 +40,6 @@ const AdminView = ({
     navigation,
     route,
 }: StackScreenProps<StackParamList, StackScreenName.ADMIN_VIEW>) => {
-    useEffect(() => {
-        navigation.setOptions({
-            headerShown: true,
-            header: (stackHeaderProps) => (
-                <Appbar.Header statusBarHeight={0}>
-                    <Appbar.BackAction onPress={() => stackHeaderProps.navigation.goBack()} />
-                    <Appbar.Content title="View user" />
-                </Appbar.Header>
-            ),
-        });
-    }, []);
-
     const authContext = useContext<IAuthContext>(AuthContext);
     useEffect(() => {
         authContext.requireLoggedIn(true);

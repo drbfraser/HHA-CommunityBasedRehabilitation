@@ -1,8 +1,8 @@
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities, getOtherDisabilityId } from "@cbr/common/src/util/hooks/disabilities";
-import { View, Platform, ScrollView, Alert } from "react-native";
+import { View, Platform, ScrollView } from "react-native";
 import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-paper";
 import useStyles from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -10,6 +10,10 @@ import CustomMultiPicker from "react-native-multiple-select-list";
 import { ClientFormFieldLabels, ClientFormFields, IFormProps } from "./ClientFormFields";
 import { Gender, genders, themeColors } from "@cbr/common";
 import { objectFromMap } from "../../util/ObjectFromMap";
+import { useNavigation } from "@react-navigation/core";
+import ConfirmDialog from "../DiscardDialogs/ConfirmDialog";
+import { AppStackNavProp } from "../../util/stackScreens";
+import DefaultHeader from "../DefaultHeader/DefaultHeader";
 
 export const ClientForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -73,6 +77,7 @@ export const ClientForm = (props: IFormProps) => {
 
     const cancelEdit = () => {
         setFieldsDisabled(true);
+        setDiscardDialogVisible(false);
     };
 
     //Date Picker
@@ -96,8 +101,47 @@ export const ClientForm = (props: IFormProps) => {
         }
     };
 
+    const navigation = useNavigation<AppStackNavProp>();
+
+    const [discardDialogVisible, setDiscardDialogVisible] = useState(false);
+
+    useEffect(() => {
+        const title = props.isNewClient
+            ? "New client"
+            : fieldsDisabled
+            ? "View client"
+            : "Edit client";
+        const subtitle = props.formikProps?.values.id
+            ? `Client ID: ${props.formikProps.values.id}`
+            : undefined;
+        navigation.setOptions({ header: DefaultHeader(title, subtitle) });
+
+        if (fieldsDisabled) {
+            return;
+        }
+
+        return navigation.addListener("beforeRemove", (e) => {
+            if (fieldsDisabled) {
+                return;
+            }
+            e.preventDefault();
+            setDiscardDialogVisible(true);
+        });
+    }, [navigation, fieldsDisabled]);
+
     return (
         <View>
+            <ConfirmDialog
+                visible={discardDialogVisible}
+                onDismiss={() => setDiscardDialogVisible(false)}
+                onConfirm={() => {
+                    cancelEdit();
+                    props.formikProps?.resetForm();
+                    resetFormState();
+                }}
+                confirmButtonText="Discard"
+                dialogContent={props.isNewClient ? "Discard new client?" : "Discard your changes?"}
+            />
             <View>
                 <TextInput
                     style={styles.clientTextStyle}
@@ -494,28 +538,7 @@ export const ClientForm = (props: IFormProps) => {
                                 mode={cancelButtonType}
                                 style={styles.clientDetailsFinalButtons}
                                 disabled={fieldsDisabled}
-                                onPress={() => {
-                                    const cancelAlert = () =>
-                                        Alert.alert(
-                                            "Alert",
-                                            "You'll lose all your unsaved changes. Cancel anyway?",
-                                            [
-                                                {
-                                                    text: "Don't cancel",
-                                                    style: "cancel",
-                                                },
-                                                {
-                                                    text: "Cancel",
-                                                    onPress: () => {
-                                                        cancelEdit();
-                                                        props.formikProps?.resetForm();
-                                                        resetFormState();
-                                                    },
-                                                },
-                                            ]
-                                        );
-                                    cancelAlert();
-                                }}
+                                onPress={() => setDiscardDialogVisible(true)}
                             >
                                 Cancel
                             </Button>

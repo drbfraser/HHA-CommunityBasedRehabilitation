@@ -31,17 +31,6 @@ interface ClientProps {
 }
 
 const ClientDetails = (props: ClientProps) => {
-    useEffect(() => {
-        props.navigation.setOptions({
-            title: "Client Page",
-            headerStyle: {
-                backgroundColor: themeColors.blueBgDark,
-            },
-            headerTintColor: themeColors.white,
-            headerShown: true,
-        });
-    });
-
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
     let disabilityMap = useDisabilities();
@@ -239,7 +228,15 @@ const ClientDetails = (props: ClientProps) => {
                         >
                             Baseline Survey
                         </Button>
-                        <Button mode="contained" style={styles.clientButtons}>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.VISIT, {
+                                    clientID: props.route.params.clientID,
+                                });
+                            }}
+                        >
                             New Visit
                         </Button>
                     </Card>

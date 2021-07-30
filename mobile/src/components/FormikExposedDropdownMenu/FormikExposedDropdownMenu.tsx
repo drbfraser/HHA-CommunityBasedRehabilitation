@@ -10,10 +10,7 @@ export type FormikMenuProps<Field extends string> = Omit<
     ExposedDropdownMenuProps,
     "onKeyChange" | "error" | "label" | "value" | "onChangeText" | "onEndEditing"
 > & {
-    fieldLabels: {
-        // @ts-ignore
-        [fieldId: Field]: string;
-    };
+    fieldLabels: Record<Field, string>;
     field: Field;
     formikProps: FormikProps<any>;
     /** Whether the key for the provided values is a number or not */

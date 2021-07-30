@@ -14,7 +14,7 @@ export type FormikMenuProps<Field extends string> = Omit<
      * A secondary `onKeyChange` prop that is executed after the formik values have been set.
      * @param key The key as given by {@link ExposedDropdownMenuProps.values}
      */
-    otherOnKeyChange?: (key: string) => void;
+    otherOnKeyChange?: (key: any) => void;
     /**
      * An override for the value to override the displayed label, where the labels and values should
      * be covered by {@link ExposedDropdownMenuProps.values}.
@@ -23,14 +23,6 @@ export type FormikMenuProps<Field extends string> = Omit<
     fieldLabels: Record<Field, string>;
     field: Field;
     formikProps: FormikProps<any>;
-    /**
-     * Whether the key for the provided values is a number or not. This has no effect when
-     * `valuesType` is `"array"`, as that uses integer indexing.
-     *
-     * This is required for `"record"` and `"map"`, because JavaScript object keys are coerced to
-     * strings by default.
-     */
-    numericKey: boolean;
 };
 
 /**
@@ -39,25 +31,17 @@ export type FormikMenuProps<Field extends string> = Omit<
  *
  * @see ExposedDropdownMenu
  */
-const FormikExposedDropdownMenu = (props: FormikMenuProps<string>) => {
-    const {
-        currentValueOverride,
-        otherOnKeyChange,
-        fieldLabels,
-        field,
-        formikProps,
-        numericKey,
-        ...other
-    } = props;
+const FormikExposedDropdownMenu = <T extends string>(props: FormikMenuProps<T>) => {
+    const { currentValueOverride, otherOnKeyChange, fieldLabels, field, formikProps, ...other } =
+        props;
     const dropdownProps = other as ExposedDropdownMenuProps;
 
     const isError = shouldShowError(formikProps, field);
 
     // useCallback to prevent unnecessary dropdown menu item array rerenders
     const keyChangeCallback = useCallback(
-        (key: string) => {
-            const value = numericKey || props.valuesType === "array" ? Number(key) : key;
-            formikProps.setFieldValue(field, value);
+        (key: any) => {
+            formikProps.setFieldValue(field, key);
             // Due to https://github.com/formium/formik/issues/2457, we delay and then validate as a
             // workaround.
             if (!formikProps.touched[field]) {

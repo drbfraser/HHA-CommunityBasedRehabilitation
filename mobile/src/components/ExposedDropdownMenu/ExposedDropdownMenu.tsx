@@ -4,29 +4,36 @@ import { Menu, TextInput } from "react-native-paper";
 import { TextInputProps } from "react-native-paper/lib/typescript/components/TextInput/TextInput";
 import useStyles from "./ExposedDropdownMenu.styles";
 
-interface BaseDropdownMenuProps extends Omit<TextInputProps, "theme" | "editable"> {
-    valuesType: "record" | "array" | "map";
+interface BaseDropdownMenuProps extends Omit<TextInputProps, "theme" | "editable"> {}
+
+interface RecordDropdownMenuString extends BaseDropdownMenuProps {
+    valuesType: "record-string";
     /**
-     * A callback that is invoked when the current picker selection changes.
+     * An {@link Record} containing labels. {@link onKeyChange} will be invoked with the key of
+     * the element that is selected from this array (string key).
+     */
+    values: Record<string, string>;
+    /**
+     * A callback that is invoked with the current key when the current picker selection changes.
      *
-     * If {@link valuesType} is `array`, the index of the selected string
-     * element in the `values` array will be used.
-     *
-     * If {@link valuesType} is `record` or `map`, the key of the selected element will be used
-     * (and coerced to a string if the key is an integer).
-     *
-     * @param key
+     * @param key The key as given by the `values` prop, as a string.
      */
     onKeyChange: (key: string) => void;
 }
 
-interface RecordDropdownMenu extends BaseDropdownMenuProps {
-    valuesType: "record";
+interface RecordDropdownMenuNumeric extends BaseDropdownMenuProps {
+    valuesType: "record-number";
     /**
-     * A {@link Record} that maps keys to labels. {@link onKeyChange} will be invoked with the key
-     * (coerced to a string)
+     * An {@link Record} containing labels. {@link onKeyChange} will be invoked with the key of
+     * the element that is selected from this array (numeric key).
      */
-    values: Record<React.Key, string>;
+    values: Record<number, string>;
+    /**
+     * A callback that is invoked with the current key when the current picker selection changes.
+     *
+     * @param key The key as given by the `values` prop, as a number.
+     */
+    onKeyChange: (key: number) => void;
 }
 
 interface ArrayDropdownMenu extends BaseDropdownMenuProps {
@@ -36,6 +43,12 @@ interface ArrayDropdownMenu extends BaseDropdownMenuProps {
      * the element that is selected from this array (coerced to a string).
      */
     values: Array<string>;
+    /**
+     * A callback that is invoked with the current key when the current picker selection changes.
+     *
+     * @param key The key as given by the `values` prop, represented as an index in the array.
+     */
+    onKeyChange: (key: number) => void;
 }
 
 interface MapDropdownMenu extends BaseDropdownMenuProps {
@@ -44,15 +57,27 @@ interface MapDropdownMenu extends BaseDropdownMenuProps {
      * A {@link ReadonlyMap} that maps keys to labels. {@link onKeyChange} will be invoked with the
      * key (coerced to a string)
      */
-    values: ReadonlyMap<React.Key, string>;
+    values: ReadonlyMap<any, string>;
+    /**
+     * A callback that is invoked with the current key when the current picker selection changes.
+     *
+     * @param key The key as given by the `values` prop.
+     */
+    onKeyChange: (key: any) => void;
 }
 
-export type Props = RecordDropdownMenu | ArrayDropdownMenu | MapDropdownMenu;
+export type Props =
+    | RecordDropdownMenuString
+    | RecordDropdownMenuNumeric
+    | ArrayDropdownMenu
+    | MapDropdownMenu;
 
 const convertMapToMenuItems = (props: Props, hideMenu: () => void): Array<JSX.Element> => {
+    // for TypeScript smart casting
     if (props.valuesType !== "map") {
         return [];
     }
+
     const map = props.values;
     const menuItems = new Array<JSX.Element>(map.size);
 
@@ -65,7 +90,7 @@ const convertMapToMenuItems = (props: Props, hideMenu: () => void): Array<JSX.El
         menuItems[index] = (
             <Menu.Item
                 onPress={() => {
-                    props.onKeyChange(typeof key === "string" ? key : `${key}`);
+                    props.onKeyChange(key);
                     hideMenu();
                 }}
                 key={key}
@@ -96,11 +121,19 @@ type MenuItemsProps = { hideMenu: () => void; existingProps: Props };
 const MenuItems = ({ hideMenu, existingProps }: MenuItemsProps) => {
     return (
         <>
-            {existingProps.valuesType === "record"
+            {existingProps.valuesType === "record-number" ||
+            existingProps.valuesType === "record-string"
                 ? Object.entries(existingProps.values).map(([key, label]: [string, string]) => (
                       <Menu.Item
                           onPress={() => {
-                              existingProps.onKeyChange(key);
+                              if (existingProps.valuesType === "record-number") {
+                                  // in JavaScript, all keys of objects are strings
+                                  // need to convert it to a number if the caller is expecting
+                                  // numeric keys
+                                  existingProps.onKeyChange(Number(key));
+                              } else {
+                                  existingProps.onKeyChange(key);
+                              }
                               hideMenu();
                           }}
                           key={key}
@@ -111,7 +144,7 @@ const MenuItems = ({ hideMenu, existingProps }: MenuItemsProps) => {
                 ? existingProps.values.map((value, index) => (
                       <Menu.Item
                           onPress={() => {
-                              existingProps.onKeyChange(`${index}`);
+                              existingProps.onKeyChange(index);
                               hideMenu();
                           }}
                           key={value}

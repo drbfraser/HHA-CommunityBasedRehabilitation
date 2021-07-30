@@ -20,7 +20,6 @@ const PhysiotherapyForm = (props: IFormProps) => {
                 formikProps={props.formikProps}
                 fieldLabels={referralFieldLabels}
                 mode="outlined"
-                numericKey
             />
         </View>
     );

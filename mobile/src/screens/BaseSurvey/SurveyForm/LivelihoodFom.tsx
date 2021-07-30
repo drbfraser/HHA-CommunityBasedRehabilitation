@@ -45,12 +45,11 @@ const LivelihoodForm = (props: IFormProps) => {
 
                         <FormikExposedDropdownMenu
                             field={BaseSurveyFormField.isSelfEmployed}
-                            valuesType="record"
+                            valuesType="record-string"
                             values={isSelfEmployed}
                             formikProps={props.formikProps}
                             fieldLabels={baseFieldLabels}
                             mode="outlined"
-                            numericKey={false}
                         />
                     </View>
                 </View>

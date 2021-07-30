@@ -2,9 +2,9 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Formik, FormikProps } from "formik";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
-import React, { useEffect, useRef, useState } from "react";
-import { Appbar, Button } from "react-native-paper";
-import { StyleSheet, View, TextInput as NativeTextInput } from "react-native";
+import React, { useRef, useState } from "react";
+import { Button } from "react-native-paper";
+import { StyleSheet, TextInput as NativeTextInput, View } from "react-native";
 import {
     AdminField,
     adminUserFieldLabels,
@@ -99,7 +99,6 @@ const AdminNew = ({
                                     field={AdminField.role}
                                     formikProps={formikProps}
                                     mode="outlined"
-                                    numericKey={false}
                                 />
 
                                 <FormikPasswordTextInput
@@ -154,7 +153,6 @@ const AdminNew = ({
                                     field={AdminField.zone}
                                     formikProps={formikProps}
                                     mode="outlined"
-                                    numericKey
                                 />
 
                                 <FormikTextInput

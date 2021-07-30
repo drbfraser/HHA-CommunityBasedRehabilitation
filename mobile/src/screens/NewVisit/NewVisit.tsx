@@ -154,7 +154,7 @@ const OutcomeField = (props: {
 
             <FormikExposedDropdownMenu
                 field={`${fieldName}.${OutcomeFormField.goalStatus}`}
-                valuesType="record"
+                valuesType="record-string"
                 values={Object.values(GoalStatus).reduce((accumulator, currentGoalStatus) => {
                     accumulator[currentGoalStatus] = visitFieldLabels[currentGoalStatus];
                     return accumulator;
@@ -167,7 +167,6 @@ const OutcomeField = (props: {
                 formikProps={props.formikProps}
                 fieldLabels={visitFieldLabels}
                 mode="outlined"
-                numericKey={false}
             />
 
             <View>
@@ -260,7 +259,6 @@ const VisitFocusForm = (
                 formikProps={formikProps}
                 fieldLabels={visitFieldLabels}
                 mode="outlined"
-                numericKey
             />
 
             <HelperText

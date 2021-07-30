@@ -23,7 +23,7 @@ const FoodForm = (props: IFormProps) => {
             <Text style={styles.pickerQuestion}>Food security</Text>
             <FormikExposedDropdownMenu
                 field={BaseSurveyFormField.foodSecurityRate}
-                valuesType="record"
+                valuesType="record-string"
                 values={Object.entries(rateLevel).reduce((accumulator, [value, { name }]) => {
                     accumulator[value] = name;
                     return accumulator;
@@ -31,7 +31,6 @@ const FoodForm = (props: IFormProps) => {
                 formikProps={props.formikProps}
                 fieldLabels={baseFieldLabels}
                 mode="outlined"
-                numericKey={false}
             />
             <TextCheckBox
                 field={BaseSurveyFormField.enoughFoodPerMonth}
@@ -53,13 +52,12 @@ const FoodForm = (props: IFormProps) => {
 
                     <FormikExposedDropdownMenu
                         field={BaseSurveyFormField.childNourish}
-                        valuesType="record"
+                        valuesType="record-string"
                         values={childNourish}
                         formikProps={props.formikProps}
                         otherOnKeyChange={(key) => (key === "M" ? showAlert() : hideAlert())}
                         fieldLabels={baseFieldLabels}
                         mode="outlined"
-                        numericKey={false}
                     />
 
                     {props.formikProps.values[BaseSurveyFormField.childNourish] === "M" && (

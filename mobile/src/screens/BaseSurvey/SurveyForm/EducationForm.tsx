@@ -29,7 +29,7 @@ const EducationForm = (props: IFormProps) => {
                     <Text style={styles.pickerQuestion}>What grade?</Text>
                     <FormikExposedDropdownMenu
                         field={BaseSurveyFormField.grade}
-                        valuesType="record"
+                        valuesType="record-string"
                         values={Object.entries(grade).reduce((accumulator, [value, { name }]) => {
                             accumulator[value] = name;
                             return accumulator;
@@ -37,7 +37,6 @@ const EducationForm = (props: IFormProps) => {
                         formikProps={props.formikProps}
                         fieldLabels={baseFieldLabels}
                         mode="outlined"
-                        numericKey={false}
                     />
                 </View>
             ) : (
@@ -47,10 +46,9 @@ const EducationForm = (props: IFormProps) => {
                         fieldLabels={baseFieldLabels}
                         field={BaseSurveyFormField.reasonNotSchool}
                         mode="outlined"
-                        valuesType="record"
+                        valuesType="record-string"
                         values={reasonNotSchool}
                         formikProps={props.formikProps}
-                        numericKey={false}
                     />
                 </View>
             )}

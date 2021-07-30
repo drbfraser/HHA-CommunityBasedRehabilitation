@@ -116,7 +116,6 @@ const AdminEdit = ({
                                     field={AdminField.zone}
                                     formikProps={formikProps}
                                     mode="outlined"
-                                    numericKey
                                 />
 
                                 <FormikTextInput
@@ -140,7 +139,6 @@ const AdminEdit = ({
                                     field={AdminField.role}
                                     formikProps={formikProps}
                                     mode="outlined"
-                                    numericKey={false}
                                 />
 
                                 <Subheading style={styles.profileInfoHeader}>Status</Subheading>

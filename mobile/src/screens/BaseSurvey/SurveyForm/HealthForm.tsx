@@ -20,7 +20,7 @@ const HealthForm = (props: IFormProps) => {
             <Text style={styles.pickerQuestion}>{"\n"}Rate your general health </Text>
             <FormikExposedDropdownMenu
                 field={BaseSurveyFormField.rateLevel}
-                valuesType="record"
+                valuesType="record-string"
                 values={Object.entries(rateLevel).reduce((accumulator, [value, { name }]) => {
                     accumulator[value] = name;
                     return accumulator;
@@ -28,7 +28,6 @@ const HealthForm = (props: IFormProps) => {
                 formikProps={props.formikProps}
                 fieldLabels={baseFieldLabels}
                 mode="outlined"
-                numericKey={false}
             />
 
             <TextCheckBox
@@ -71,12 +70,11 @@ const HealthForm = (props: IFormProps) => {
                     </Text>
                     <FormikExposedDropdownMenu
                         field={BaseSurveyFormField.deviceType}
-                        valuesType="record"
+                        valuesType="record-string"
                         values={deviceTypes}
                         formikProps={props.formikProps}
                         fieldLabels={baseFieldLabels}
                         mode="outlined"
-                        numericKey={false}
                     />
                 </View>
             )}
@@ -86,7 +84,7 @@ const HealthForm = (props: IFormProps) => {
 
             <FormikExposedDropdownMenu
                 field={BaseSurveyFormField.serviceSatisf}
-                valuesType="record"
+                valuesType="record-string"
                 values={Object.entries(rateLevel).reduce((accumulator, [value, { name }]) => {
                     accumulator[value] = name;
                     return accumulator;
@@ -94,7 +92,6 @@ const HealthForm = (props: IFormProps) => {
                 formikProps={props.formikProps}
                 fieldLabels={baseFieldLabels}
                 mode="outlined"
-                numericKey={false}
             />
         </View>
     );

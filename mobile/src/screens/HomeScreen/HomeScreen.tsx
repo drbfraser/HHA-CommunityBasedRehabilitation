@@ -35,12 +35,6 @@ const HomeScreen = (props: IHomeScreenProps) => {
     const Tab = createMaterialBottomTabNavigator();
     const { authState } = useContext(AuthContext);
 
-    React.useEffect(() => {
-        props.navigation.setOptions({
-            headerShown: false,
-        });
-    });
-
     return (
         <Provider theme={theme}>
             <Tab.Navigator>

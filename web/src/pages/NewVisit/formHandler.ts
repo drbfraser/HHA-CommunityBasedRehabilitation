@@ -11,7 +11,7 @@ export const handleSubmit = async (
     setSubmissionError: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
     try {
-        handleSubmitVisitForm(values);
+        await handleSubmitVisitForm(values);
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);

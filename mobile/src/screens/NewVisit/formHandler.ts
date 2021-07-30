@@ -6,6 +6,11 @@ export const handleSubmit = async (
     values: TVisitFormValues,
     helpers: FormikHelpers<TVisitFormValues>
 ) => {
-    helpers.setSubmitting(false);
-    return handleSubmitVisitForm(values);
+    helpers.setSubmitting(true);
+    try {
+        return handleSubmitVisitForm(values);
+    } catch (e) {
+        helpers.setSubmitting(false);
+        throw e;
+    }
 };

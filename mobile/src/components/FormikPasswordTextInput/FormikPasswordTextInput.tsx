@@ -12,10 +12,7 @@ import { HelperText } from "react-native-paper";
 import { shouldShowError } from "../../util/formikUtil";
 
 export interface FormikPasswordTextInputProps<Field extends string> {
-    fieldLabels: {
-        // @ts-ignore
-        [fieldId: Field]: string;
-    };
+    fieldLabels: Record<Field, string>;
     field: Field;
     textInputStyle?: StyleProp<TextStyle>;
     formikProps: FormikProps<any>;

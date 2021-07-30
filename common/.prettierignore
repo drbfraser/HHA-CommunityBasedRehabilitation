@@ -1,4 +1,7 @@
 build
 coverage
 public
+
 *.json
+!package.json
+!tsconfig*.json

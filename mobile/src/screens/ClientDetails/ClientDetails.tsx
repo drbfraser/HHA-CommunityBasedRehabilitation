@@ -239,7 +239,15 @@ const ClientDetails = (props: ClientProps) => {
                         >
                             Baseline Survey
                         </Button>
-                        <Button mode="contained" style={styles.clientButtons}>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.VISIT, {
+                                    clientID: props.route.params.clientID,
+                                });
+                            }}
+                        >
                             New Visit
                         </Button>
                     </Card>

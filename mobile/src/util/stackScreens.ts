@@ -8,6 +8,7 @@ import AdminEdit from "../screens/Admin/AdminEdit";
 import { IUser } from "@cbr/common";
 import AdminNew from "../screens/Admin/AdminNew";
 import NewReferral from "../screens/NewReferral/NewReferral";
+import NewVisit from "../screens/NewVisit/NewVisit";
 
 export const stackScreenProps = {
     [StackScreenName.HOME]: HomeScreen,
@@ -17,6 +18,7 @@ export const stackScreenProps = {
     [StackScreenName.ADMIN_NEW]: AdminNew,
     [StackScreenName.REFERRAL]: NewReferral,
     [StackScreenName.BASE_SURVEY]: BaseSurvey,
+    [StackScreenName.VISIT]: NewVisit,
 };
 
 export type StackParamList = {
@@ -28,6 +30,9 @@ export type StackParamList = {
         clientID: number;
     };
     [StackScreenName.BASE_SURVEY]: {
+        clientID: number;
+    };
+    [StackScreenName.VISIT]: {
         clientID: number;
     };
     [StackScreenName.ADMIN_VIEW]: {

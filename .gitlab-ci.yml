@@ -167,7 +167,6 @@ test caddy:
   - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
   - bash -c 'sleep 10'
   - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
-  - docker exec ${COMPOSE_PROJECT_NAME}_caddy caddy validate --config /etc/caddy/Caddyfile
 
 deploy staging:
   stage: deploy

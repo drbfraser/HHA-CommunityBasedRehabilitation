@@ -4,13 +4,8 @@ import { handleSubmitVisitForm } from "@cbr/common/src/forms/newVisit/visitFormH
 
 export const handleSubmit = async (
     values: TVisitFormValues,
-    helpers: FormikHelpers<TVisitFormValues>,
-    setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
+    helpers: FormikHelpers<TVisitFormValues>
 ) => {
-    try {
-        handleSubmitVisitForm(values, helpers, setSubmissionError);
-    } catch (e) {
-        helpers.setSubmitting(false);
-        setSubmissionError(true);
-    }
+    helpers.setSubmitting(false);
+    return handleSubmitVisitForm(values);
 };

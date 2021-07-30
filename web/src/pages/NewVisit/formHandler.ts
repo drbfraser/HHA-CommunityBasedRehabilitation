@@ -1,18 +1,22 @@
 import { FormikHelpers } from "formik";
 import history from "util/history";
-import { TVisitFormValues } from "@cbr/common/forms/newVisit/visitFormFields";
+import { visitFieldLabels, TVisitFormValues } from "@cbr/common/forms/newVisit/visitFormFields";
 import { handleSubmitVisitForm } from "@cbr/common/forms/newVisit/visitFormHandler";
+import React from "react";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
 
 export const handleSubmit = async (
     values: TVisitFormValues,
     helpers: FormikHelpers<TVisitFormValues>,
-    setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
+    setSubmissionError: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
     try {
-        handleSubmitVisitForm(values, helpers, setSubmissionError);
+        handleSubmitVisitForm(values);
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);
-        setSubmissionError(true);
+        setSubmissionError(
+            e instanceof APIFetchFailError ? e.buildFormError(visitFieldLabels) : `${e}`
+        );
     }
 };

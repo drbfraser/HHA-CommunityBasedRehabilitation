@@ -19,11 +19,7 @@ const addVisit = async (visitInfo: string) => {
 };
 
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
-export const handleSubmitVisitForm = async (
-    values: TVisitFormValues,
-    helpers: FormikHelpers<TVisitFormValues>,
-    setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
-) => {
+export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
     const newVisit = JSON.stringify({
         client: values[VisitFormField.client],
         health_visit: values[VisitFormField.health],
@@ -44,11 +40,5 @@ export const handleSubmitVisitForm = async (
         ),
     });
 
-    try {
-        await addVisit(newVisit);
-        // history.goBack();
-    } catch (e) {
-        helpers.setSubmitting(false);
-        setSubmissionError(true);
-    }
+    return await addVisit(newVisit);
 };

@@ -17,7 +17,7 @@ import {
     theClientComparator,
     referralComparator,
 } from "../../util/listFunctions";
-import { returnWrappedView } from "../../components/WrappedText/WrappedText";
+import { WrappedText } from "../../components/WrappedText/WrappedText";
 var count = 0;
 const Dashboard = () => {
     const styles = useStyles();
@@ -157,18 +157,18 @@ const Dashboard = () => {
                                             }}
                                         >
                                             <View style={styles.column_client_name}>
-                                                {returnWrappedView(
-                                                    item.full_name,
-                                                    styles.textContainer,
-                                                    styles.text
-                                                )}
+                                                <WrappedText
+                                                    item={item.full_name}
+                                                    viewStyle={styles.textContainer}
+                                                    textStyle={styles.text}
+                                                />
                                             </View>
                                             <View style={styles.column_client_zone}>
-                                                {returnWrappedView(
-                                                    item.zone,
-                                                    styles.textContainer,
-                                                    styles.text
-                                                )}
+                                                <WrappedText
+                                                    item={item.zone}
+                                                    viewStyle={styles.textContainer}
+                                                    textStyle={styles.text}
+                                                />
                                             </View>
                                             <DataTable.Cell style={styles.column_client_icon}>
                                                 {riskTypes.CIRCLE.Icon(item.HealthLevel)}
@@ -239,18 +239,18 @@ const Dashboard = () => {
                                             }}
                                         >
                                             <View style={styles.column_referral_name}>
-                                                {returnWrappedView(
-                                                    item.full_name,
-                                                    styles.textContainer,
-                                                    styles.text
-                                                )}
+                                                <WrappedText
+                                                    item={item.full_name}
+                                                    viewStyle={styles.textContainer}
+                                                    textStyle={styles.text}
+                                                />
                                             </View>
                                             <View style={styles.column_referral_type}>
-                                                {returnWrappedView(
-                                                    item.type,
-                                                    styles.textContainer,
-                                                    styles.text
-                                                )}
+                                                <WrappedText
+                                                    item={item.type}
+                                                    viewStyle={styles.textContainer}
+                                                    textStyle={styles.text}
+                                                />
                                             </View>
                                             <DataTable.Cell style={styles.column_referral_date}>
                                                 <Text style={styles.fontSize}>

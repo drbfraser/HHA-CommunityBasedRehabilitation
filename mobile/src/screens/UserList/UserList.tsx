@@ -13,7 +13,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { DataTable } from "react-native-paper";
 import { fetchUsersFromApi, userBrife } from "./UserListRequest";
 import { useIsFocused } from "@react-navigation/native";
-import { returnWrappedView } from "../../components/WrappedText/WrappedText";
+import { WrappedText } from "../../components/WrappedText/WrappedText";
 import {
     SortOptions,
     sortBy,
@@ -170,14 +170,18 @@ const UserList = () => {
                             >
                                 <DataTable.Cell style={styles.column_id}>{item.id}</DataTable.Cell>
                                 <View style={styles.column_name}>
-                                    {returnWrappedView(
-                                        item.full_name,
-                                        styles.wrappedView,
-                                        styles.text
-                                    )}
+                                    <WrappedText
+                                        item={item.full_name}
+                                        viewStyle={styles.wrappedView}
+                                        textStyle={styles.text}
+                                    />
                                 </View>
                                 <View style={styles.column_zone}>
-                                    {returnWrappedView(item.zone, styles.wrappedView, styles.text)}
+                                    <WrappedText
+                                        item={item.zone}
+                                        viewStyle={styles.wrappedView}
+                                        textStyle={styles.text}
+                                    />
                                 </View>
                                 <DataTable.Cell style={styles.column_role}>
                                     {item.role}

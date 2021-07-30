@@ -32,5 +32,3 @@ export * from "./src/util/visits";
 export * from "./src/util/searchOptions";
 export * from "./src/forms/newVisit/visitFormFields";
 export * from "./src/forms/newVisit/visitFormHandler";
-export * from "./src/forms/newVisit/visitFormFields";
-export * from "./src/forms/newVisit/visitFormHandler";

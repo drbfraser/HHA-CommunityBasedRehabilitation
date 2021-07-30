@@ -1,16 +1,16 @@
 import React from "react";
 import { View } from "react-native";
-import { HelperText, Text } from "react-native-paper";
+import { Text } from "react-native-paper";
 import {
-    grade,
-    reasonNotSchool,
     baseFieldLabels,
     BaseSurveyFormField,
+    grade,
     IFormProps,
+    reasonNotSchool,
 } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import TextPicker, { IPickerChoice } from "../../../components/TextPicker/TextPicker";
+import FormikExposedDropdownMenu from "../../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
 
 const EducationForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -27,54 +27,31 @@ const EducationForm = (props: IFormProps) => {
             {props.formikProps.values[BaseSurveyFormField.goSchool] ? (
                 <View>
                     <Text style={styles.pickerQuestion}>What grade?</Text>
-
-                    <TextPicker
+                    <FormikExposedDropdownMenu
                         field={BaseSurveyFormField.grade}
-                        choices={Object.entries(grade).map(
-                            (key) =>
-                                ({
-                                    value: key[0],
-                                    label: key[1].name,
-                                } as IPickerChoice)
-                        )}
-                        selectedValue={props.formikProps.values[BaseSurveyFormField.grade]}
-                        setFieldValue={props.formikProps.setFieldValue}
-                        setFieldTouched={props.formikProps.setFieldTouched}
+                        valuesType="record"
+                        values={Object.entries(grade).reduce((accumulator, [value, { name }]) => {
+                            accumulator[value] = name;
+                            return accumulator;
+                        }, {})}
+                        formikProps={props.formikProps}
+                        fieldLabels={baseFieldLabels}
+                        mode="outlined"
+                        numericKey={false}
                     />
-
-                    <HelperText
-                        style={styles.errorText}
-                        type="error"
-                        visible={!!props.formikProps.errors[BaseSurveyFormField.grade]}
-                    >
-                        {props.formikProps.errors[BaseSurveyFormField.grade]}
-                    </HelperText>
                 </View>
             ) : (
                 <View>
                     <Text style={styles.pickerQuestion}>Why do you not go to school?</Text>
-                    <TextPicker
+                    <FormikExposedDropdownMenu
+                        fieldLabels={baseFieldLabels}
                         field={BaseSurveyFormField.reasonNotSchool}
-                        choices={Object.entries(reasonNotSchool).map(
-                            (key) =>
-                                ({
-                                    value: key[0],
-                                    label: key[1],
-                                } as IPickerChoice)
-                        )}
-                        selectedValue={
-                            props.formikProps.values[BaseSurveyFormField.reasonNotSchool]
-                        }
-                        setFieldValue={props.formikProps.setFieldValue}
-                        setFieldTouched={props.formikProps.setFieldTouched}
+                        mode="outlined"
+                        valuesType="record"
+                        values={reasonNotSchool}
+                        formikProps={props.formikProps}
+                        numericKey={false}
                     />
-                    <HelperText
-                        style={styles.errorText}
-                        type="error"
-                        visible={!!props.formikProps.errors[BaseSurveyFormField.reasonNotSchool]}
-                    >
-                        Reason is a required field
-                    </HelperText>
                 </View>
             )}
 

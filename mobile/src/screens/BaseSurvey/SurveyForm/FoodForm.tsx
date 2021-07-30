@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { Text, Button, Dialog, Portal, Paragraph, HelperText } from "react-native-paper";
+import { Button, Dialog, Paragraph, Portal, Text } from "react-native-paper";
 import {
     baseFieldLabels,
     BaseSurveyFormField,
-    IFormProps,
     childNourish,
+    IFormProps,
     rateLevel,
 } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import TextPicker, { IPickerChoice } from "../../../components/TextPicker/TextPicker";
-import { Picker } from "@react-native-picker/picker";
+import FormikExposedDropdownMenu from "../../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
 
 const FoodForm = (props: IFormProps) => {
     const [alertInfo, setAlertError] = useState(false);
@@ -22,27 +21,18 @@ const FoodForm = (props: IFormProps) => {
     return (
         <View>
             <Text style={styles.pickerQuestion}>Food security</Text>
-            <TextPicker
+            <FormikExposedDropdownMenu
                 field={BaseSurveyFormField.foodSecurityRate}
-                choices={Object.entries(rateLevel).map(
-                    (key) =>
-                        ({
-                            value: key[0],
-                            label: key[1].name,
-                        } as IPickerChoice)
-                )}
-                selectedValue={props.formikProps.values[BaseSurveyFormField.foodSecurityRate]}
-                setFieldValue={props.formikProps.setFieldValue}
-                setFieldTouched={props.formikProps.setFieldTouched}
+                valuesType="record"
+                values={Object.entries(rateLevel).reduce((accumulator, [value, { name }]) => {
+                    accumulator[value] = name;
+                    return accumulator;
+                }, {})}
+                formikProps={props.formikProps}
+                fieldLabels={baseFieldLabels}
+                mode="outlined"
+                numericKey={false}
             />
-
-            <HelperText
-                style={styles.errorText}
-                type="error"
-                visible={!!props.formikProps.errors[BaseSurveyFormField.foodSecurityRate]}
-            >
-                {props.formikProps.errors[BaseSurveyFormField.foodSecurityRate]}
-            </HelperText>
             <TextCheckBox
                 field={BaseSurveyFormField.enoughFoodPerMonth}
                 value={props.formikProps.values[BaseSurveyFormField.enoughFoodPerMonth]}
@@ -60,37 +50,17 @@ const FoodForm = (props: IFormProps) => {
                     <Text style={styles.pickerQuestion}>
                         What is this child nutritional status?
                     </Text>
-                    <View style={styles.pickerBoard}>
-                        <Picker
-                            selectedValue={
-                                props.formikProps.values[BaseSurveyFormField.childNourish]
-                            }
-                            style={styles.picker}
-                            onValueChange={(itemValue) => {
-                                props.formikProps.setFieldTouched(
-                                    BaseSurveyFormField.childNourish,
-                                    true
-                                );
-                                props.formikProps.setFieldValue(
-                                    BaseSurveyFormField.childNourish,
-                                    itemValue
-                                );
-                                itemValue === "M" ? showAlert() : hideAlert();
-                            }}
-                        >
-                            <Picker.Item key={"unselectable"} label={""} value={""} />
-                            {Object.entries(childNourish).map(([value, name]) => (
-                                <Picker.Item label={name} value={value} key={value} />
-                            ))}
-                        </Picker>
-                    </View>
-                    <HelperText
-                        style={styles.errorText}
-                        type="error"
-                        visible={!!props.formikProps.errors[BaseSurveyFormField.childNourish]}
-                    >
-                        {props.formikProps.errors[BaseSurveyFormField.childNourish]}
-                    </HelperText>
+
+                    <FormikExposedDropdownMenu
+                        field={BaseSurveyFormField.childNourish}
+                        valuesType="record"
+                        values={childNourish}
+                        formikProps={props.formikProps}
+                        otherOnKeyChange={(key) => (key === "M" ? showAlert() : hideAlert())}
+                        fieldLabels={baseFieldLabels}
+                        mode="outlined"
+                        numericKey={false}
+                    />
 
                     {props.formikProps.values[BaseSurveyFormField.childNourish] === "M" && (
                         <View>

@@ -20,31 +20,30 @@ export interface FormikPasswordTextInputProps<Field extends string> {
     onSubmitEditing?: () => void;
 }
 
-const FormikPasswordTextInput = forwardRef<
-    NativeTextInput,
-    FormikPasswordTextInputProps<AdminField | ChangePasswordField>
->((props, ref) => {
-    const { field, textInputStyle, formikProps, returnKeyType, onSubmitEditing } = props;
-    const isError = shouldShowError(formikProps, field);
-    return (
-        <>
-            <PasswordTextInput
-                style={textInputStyle}
-                ref={ref}
-                error={isError}
-                label={props.fieldLabels[field]}
-                value={formikProps.values[field]}
-                onChangeText={formikProps.handleChange(field)}
-                onEndEditing={() => formikProps.setFieldTouched(field)}
-                disabled={formikProps.isSubmitting}
-                returnKeyType={returnKeyType}
-                mode="outlined"
-                blurOnSubmit={false}
-                onSubmitEditing={onSubmitEditing}
-            />
-            {isError ? <HelperText type="error">{formikProps.errors[field]}</HelperText> : null}
-        </>
-    );
-});
+const FormikPasswordTextInput = forwardRef<NativeTextInput, FormikPasswordTextInputProps<string>>(
+    (props, ref) => {
+        const { field, textInputStyle, formikProps, returnKeyType, onSubmitEditing } = props;
+        const isError = shouldShowError(formikProps, field);
+        return (
+            <>
+                <PasswordTextInput
+                    style={textInputStyle}
+                    ref={ref}
+                    error={isError}
+                    label={props.fieldLabels[field]}
+                    value={formikProps.values[field]}
+                    onChangeText={formikProps.handleChange(field)}
+                    onEndEditing={() => formikProps.setFieldTouched(field)}
+                    disabled={formikProps.isSubmitting}
+                    returnKeyType={returnKeyType}
+                    mode="outlined"
+                    blurOnSubmit={false}
+                    onSubmitEditing={onSubmitEditing}
+                />
+                {isError ? <HelperText type="error">{formikProps.errors[field]}</HelperText> : null}
+            </>
+        );
+    }
+);
 
 export default FormikPasswordTextInput;

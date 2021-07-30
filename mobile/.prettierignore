@@ -1,3 +1,8 @@
+.expo
+.expo-shared
 build
 public
+
 *.json
+!package.json
+!tsconfig*.json

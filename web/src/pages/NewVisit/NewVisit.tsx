@@ -264,7 +264,7 @@ const NewVisit = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<VisitFormField[]>([]);
     const [risks, setRisks] = useState<IRisk[]>([]);
-    const [submissionError, setSubmissionError] = useState(false);
+    const [submissionError, setSubmissionError] = useState<string>();
     const [loadingError, setLoadingError] = useState(false);
     const zones = useZones();
     const { clientId } = useParams<{ clientId: string }>();
@@ -324,8 +324,8 @@ const NewVisit = () => {
             {(formikProps) => (
                 <Form>
                     {submissionError && (
-                        <Alert onClose={() => setSubmissionError(false)} severity="error">
-                            Something went wrong submitting the visit. Please try again.
+                        <Alert onClose={() => setSubmissionError(undefined)} severity="error">
+                            Error occurred trying to submit the visit: {submissionError}
                         </Alert>
                     )}
                     <Button onClick={history.goBack}>

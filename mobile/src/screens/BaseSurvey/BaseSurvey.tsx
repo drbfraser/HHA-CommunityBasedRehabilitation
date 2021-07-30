@@ -13,6 +13,8 @@ import {
     livelihoodValidationSchema,
     surveyTypes,
     themeColors,
+    APIFetchFailError,
+    baseFieldLabels,
 } from "@cbr/common";
 import { Formik, FormikHelpers } from "formik";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
@@ -68,14 +70,16 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
-            handleSubmit(values, helpers, setSubmissionError)
+            handleSubmit(values, helpers)
                 .then(() => {
                     props.navigation.navigate(StackScreenName.CLIENT, {
                         clientID: clientId,
                     });
                 })
                 .catch((e) => {
-                    setSaveError(`${e}`);
+                    setSaveError(
+                        e instanceof APIFetchFailError ? e.buildFormError(baseFieldLabels) : `${e}`
+                    );
                     helpers.setSubmitting(false);
                     setSubmissionError(true);
                 });

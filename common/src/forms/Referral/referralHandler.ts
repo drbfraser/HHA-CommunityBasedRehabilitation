@@ -2,6 +2,7 @@ import { FormikHelpers } from "formik";
 import { ReferralFormField, ReferralFormValues } from "./referralFields";
 import { apiFetch, Endpoint } from "../../util/endpoints";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
+import React from "react";
 
 const addReferral = async (referralInfo: string) => {
     const init: RequestInit = {
@@ -14,11 +15,7 @@ const addReferral = async (referralInfo: string) => {
         .then((res) => res);
 };
 
-export const referralHandleSubmit = async (
-    values: ReferralFormValues,
-    helpers: FormikHelpers<ReferralFormValues>,
-    setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
-) => {
+export const referralHandleSubmit = async (values: ReferralFormValues) => {
     const disabilities = await getDisabilities();
 
     const newReferral = JSON.stringify({

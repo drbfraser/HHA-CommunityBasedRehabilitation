@@ -8,7 +8,7 @@ import { useRouteMatch } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { handleUpdatePassword } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { Alert, Skeleton } from "@material-ui/lab";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import { IUser } from "@cbr/common/util/users";
 import {
     AdminField,
@@ -23,7 +23,7 @@ const AdminPasswordEdit = () => {
     const styles = useStyles();
     const { userId } = useRouteMatch<IRouteParams>().params;
     const [user, setUser] = useState<IUser>();
-    const [loadingError, setLoadingError] = useState(false);
+    const [loadingError, setLoadingError] = useState<string>();
 
     useEffect(() => {
         const getInfo = async () => {
@@ -33,7 +33,9 @@ const AdminPasswordEdit = () => {
                 ).json()) as IUser;
                 setUser(theUser);
             } catch (e) {
-                setLoadingError(true);
+                setLoadingError(
+                    e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : `${e}`
+                );
             }
         };
         getInfo();
@@ -42,6 +44,7 @@ const AdminPasswordEdit = () => {
     return loadingError ? (
         <Alert severity="error">
             Something went wrong trying to load that user. Please go back and try again.
+            {loadingError}
         </Alert>
     ) : user ? (
         <Formik
@@ -51,8 +54,13 @@ const AdminPasswordEdit = () => {
                 handleUpdatePassword(Number(userId), values, formikHelpers)
                     .then(() => history.goBack())
                     .catch((e) => {
+                        const errorMessage =
+                            e instanceof APIFetchFailError
+                                ? e.buildFormError(adminUserFieldLabels)
+                                : `${e}`;
                         alert(
-                            "Sorry, something went wrong trying to edit that user's password. Please try again."
+                            "Error occurred when trying to change the user's password: " +
+                                errorMessage
                         );
                     });
             }}

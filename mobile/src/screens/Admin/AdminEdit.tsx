@@ -8,6 +8,7 @@ import { Keyboard, StyleSheet, TextInput as NativeTextInput, View } from "react-
 import {
     AdminField,
     adminUserFieldLabels,
+    APIFetchFailError,
     editUserValidationSchema,
     handleUserEditSubmit,
     IUser,
@@ -70,13 +71,18 @@ const AdminEdit = ({
                         setSaveError(undefined);
                         handleUserEditSubmit(values, formikHelpers)
                             .then((user) => {
-                                navigation.pop(1);
                                 navigation.navigate(StackScreenName.ADMIN_VIEW, {
                                     userID: user.id,
                                     userInfo: { isNewUser: false, user: user },
                                 });
                             })
-                            .catch((e) => setSaveError(`${e}`));
+                            .catch((e) => {
+                                if (!(e instanceof APIFetchFailError)) {
+                                    setSaveError(`${e}`);
+                                    return;
+                                }
+                                setSaveError(e.buildFormError(adminUserFieldLabels));
+                            });
                     }}
                 >
                     {(formikProps: FormikProps<IUser>) => (

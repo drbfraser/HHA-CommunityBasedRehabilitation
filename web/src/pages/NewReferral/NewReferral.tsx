@@ -254,7 +254,7 @@ const OtherServicesForm = () => {
 const NewReferral = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<ReferralFormField[]>([]);
-    const [submissionError, setSubmissionError] = useState(false);
+    const [submissionError, setSubmissionError] = useState<string>();
     const { clientId } = useParams<{ clientId: string }>();
 
     const services: { [key: string]: IService } = {
@@ -333,8 +333,8 @@ const NewReferral = () => {
             {(formikProps) => (
                 <Form>
                     {submissionError && (
-                        <Alert onClose={() => setSubmissionError(false)} severity="error">
-                            Something went wrong submitting the referral. Please try again.
+                        <Alert onClose={() => setSubmissionError(undefined)} severity="error">
+                            An error occurred when submitting the referral: {submissionError}
                         </Alert>
                     )}
                     <Button onClick={history.goBack}>

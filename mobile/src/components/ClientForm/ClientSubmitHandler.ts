@@ -5,9 +5,12 @@ import {
     IClient,
     getDisabilities,
     getOtherDisabilityId,
+    APIFetchFailError,
+    baseFieldLabels,
 } from "@cbr/common";
 import { timestampFromFormDate } from "@cbr/common/";
 import { Platform, ToastAndroid, AlertIOS } from "react-native";
+import { ClientFormFieldLabels } from "./ClientFormFields";
 
 const toastSuccess = () => {
     const msg = "Your changes have been made.";
@@ -66,7 +69,12 @@ export const handleSubmit = async (values: IClient, isNewClient?: boolean) => {
             await updateClient(formData, values.id);
         } catch (e) {
             requestSuccess = false;
-            alert("Encountered an error while trying to edit the client!");
+            const initialMessage = isNewClient
+                ? "Encountered an error while trying to create the client!"
+                : "Encountered an error while trying to edit the client!";
+            const detailedError =
+                e instanceof APIFetchFailError ? e.buildFormError(ClientFormFieldLabels) : `${e}`;
+            alert(initialMessage + "\n" + detailedError);
         }
         return requestSuccess;
     }

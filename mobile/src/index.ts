@@ -4,6 +4,7 @@ import { initializeCommon, KeyValStorageProvider } from "@cbr/common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { KEY_CURRENT_USER } from "./util/AsyncStorageKeys";
 import { Constants } from "react-native-unimodules";
+import NetInfo from "@react-native-community/netinfo";
 
 const keyValStorageProvider: KeyValStorageProvider = {
     getItem(key: string): Promise<string | null> {
@@ -30,6 +31,18 @@ initializeCommon({
     logoutCallback: async () => {
         await AsyncStorage.removeItem(KEY_CURRENT_USER).catch();
         // TODO: Delete all other stored data in the app including client data, referrals, etc.
+    },
+    fetchErrorWrapper: async (e: Error): Promise<Error> => {
+        if (e.message === "Network request failed") {
+            const netInfoState = await NetInfo.fetch();
+            return new Error(
+                !netInfoState.isInternetReachable
+                    ? "No internet available"
+                    : "Unable to reach server"
+            );
+        }
+
+        return e;
     },
 });
 

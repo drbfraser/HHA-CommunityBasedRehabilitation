@@ -1,7 +1,9 @@
 import { FormikHelpers } from "formik";
 import history from "util/history";
-import { TVisitFormValues } from "@cbr/common/forms/newVisit/visitFormFields";
+import { visitFieldLabels, TVisitFormValues } from "@cbr/common/forms/newVisit/visitFormFields";
 import { handleSubmitVisitForm } from "@cbr/common/forms/newVisit/visitFormHandler";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
+
 
 export const handleSubmit = async (
     values: TVisitFormValues,
@@ -13,6 +15,6 @@ export const handleSubmit = async (
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);
-        setSubmissionError(true);
+        setSubmissionError(e instanceof APIFetchFailError ? e.buildFormError(visitFieldLabels) : `${e}`);
     }
 };

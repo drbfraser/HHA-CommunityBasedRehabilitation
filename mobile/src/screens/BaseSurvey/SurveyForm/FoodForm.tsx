@@ -60,23 +60,17 @@ const FoodForm = (props: IFormProps) => {
                         mode="outlined"
                     />
 
-                    {props.formikProps.values[BaseSurveyFormField.childNourish] === "M" && (
-                        <View>
-                            <Portal>
-                                <Dialog visible={alertInfo} onDismiss={showAlert}>
-                                    <Dialog.Title>Reminder</Dialog.Title>
-                                    <Dialog.Content>
-                                        <Paragraph>
-                                            A referral to the health center is required!
-                                        </Paragraph>
-                                    </Dialog.Content>
-                                    <Dialog.Actions>
-                                        <Button onPress={hideAlert}>OK</Button>
-                                    </Dialog.Actions>
-                                </Dialog>
-                            </Portal>
-                        </View>
-                    )}
+                    <Portal>
+                        <Dialog visible={alertInfo} onDismiss={hideAlert}>
+                            <Dialog.Title>Reminder</Dialog.Title>
+                            <Dialog.Content>
+                                <Paragraph>A referral to the health center is required!</Paragraph>
+                            </Dialog.Content>
+                            <Dialog.Actions>
+                                <Button onPress={hideAlert}>OK</Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal>
                 </View>
             )}
         </View>

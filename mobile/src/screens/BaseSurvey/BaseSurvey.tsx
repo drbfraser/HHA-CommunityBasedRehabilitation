@@ -22,7 +22,7 @@ import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./baseSur
 import HealthForm from "./SurveyForm/HealthForm";
 import EducationForm from "./SurveyForm/EducationForm";
 import SocialForm from "./SurveyForm/SocialForm";
-import LivelihoodForm from "./SurveyForm/LivelihoodFom";
+import LivelihoodForm from "./SurveyForm/LivelihoodForm";
 import EmpowermentForm from "./SurveyForm/EmpowermentForm";
 import ShelterForm from "./SurveyForm/ShelterForm";
 import FoodForm from "./SurveyForm/FoodForm";

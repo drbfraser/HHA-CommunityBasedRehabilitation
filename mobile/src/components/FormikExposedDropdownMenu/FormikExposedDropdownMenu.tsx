@@ -16,8 +16,8 @@ export type FormikMenuProps<Field extends string> = Omit<
      */
     otherOnKeyChange?: (key: any) => void;
     /**
-     * An override for the value to override the displayed label, where the labels and values should
-     * be covered by {@link ExposedDropdownMenuProps.values}.
+     * An override for the value to override the displayed label, where the selection labels and
+     * their respective values / keys should be covered by {@link ExposedDropdownMenuProps.values}.
      */
     currentValueOverride?: any;
     fieldLabels: Record<Field, string>;
@@ -54,12 +54,14 @@ const FormikExposedDropdownMenu = <T extends string>(props: FormikMenuProps<T>) 
     );
 
     const valueToUse = currentValueOverride ?? formikProps.values[field];
+    // Fall back to empty string, otherwise if it's undefined, React won't rerender the TextInput
+    // if the component had a value before.
     const currentSelectionToDisplay =
-        dropdownProps.valuesType === "array"
+        (dropdownProps.valuesType === "array"
             ? dropdownProps.values[valueToUse]
             : dropdownProps.valuesType === "map"
             ? dropdownProps.values.get(valueToUse)
-            : dropdownProps.values[valueToUse];
+            : dropdownProps.values[valueToUse]) ?? "";
 
     return (
         <>

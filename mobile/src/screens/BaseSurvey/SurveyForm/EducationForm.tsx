@@ -43,12 +43,12 @@ const EducationForm = (props: IFormProps) => {
                 <View>
                     <Text style={styles.pickerQuestion}>Why do you not go to school?</Text>
                     <FormikExposedDropdownMenu
-                        fieldLabels={baseFieldLabels}
                         field={BaseSurveyFormField.reasonNotSchool}
-                        mode="outlined"
                         valuesType="record-string"
                         values={reasonNotSchool}
                         formikProps={props.formikProps}
+                        fieldLabels={baseFieldLabels}
+                        mode="outlined"
                     />
                 </View>
             )}

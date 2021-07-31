@@ -72,7 +72,7 @@ export type Props =
     | IArrayDropdownMenu
     | IMapDropdownMenu;
 
-const convertMapToMenuItems = (props: Props, hideMenu: () => void): Array<JSX.Element> => {
+const convertMapToMenuItems = (props: Props, hideMenu: () => void): Array<React.ReactNode> => {
     // for TypeScript smart casting
     if (props.valuesType !== "map") {
         return [];

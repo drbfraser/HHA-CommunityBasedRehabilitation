@@ -110,7 +110,7 @@ const AdminEdit = ({
 
                                 <FormikExposedDropdownMenu
                                     style={styles.textInput}
-                                    valuesType="record-string"
+                                    valuesType="map"
                                     values={zones}
                                     fieldLabels={adminUserFieldLabels}
                                     field={AdminField.zone}

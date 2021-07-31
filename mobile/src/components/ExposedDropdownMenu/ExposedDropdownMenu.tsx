@@ -1,5 +1,5 @@
 import React, { memo, useRef, useState } from "react";
-import { Keyboard, TouchableOpacity, View } from "react-native";
+import { Keyboard, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Menu, TextInput } from "react-native-paper";
 import { TextInputProps } from "react-native-paper/lib/typescript/components/TextInput/TextInput";
 import useStyles from "./ExposedDropdownMenu.styles";
@@ -72,6 +72,14 @@ export type Props =
     | IArrayDropdownMenu
     | IMapDropdownMenu;
 
+const menuItemStyle = StyleSheet.create({
+    itemStyle: {
+        // react-native-paper sets a maxWidth for menu items.
+        // Make it undefined to fill the entire menu width.
+        maxWidth: undefined,
+    },
+});
+
 const convertMapToMenuItems = (props: Props, hideMenu: () => void): Array<React.ReactNode> => {
     // for TypeScript smart casting
     if (props.valuesType !== "map") {
@@ -89,6 +97,7 @@ const convertMapToMenuItems = (props: Props, hideMenu: () => void): Array<React.
 
         menuItems[index] = (
             <Menu.Item
+                style={menuItemStyle.itemStyle}
                 onPress={() => {
                     props.onKeyChange(key);
                     hideMenu();
@@ -125,6 +134,7 @@ const MenuItems = ({ hideMenu, existingProps }: MenuItemsProps) => {
             existingProps.valuesType === "record-string"
                 ? Object.entries(existingProps.values).map(([key, label]: [string, string]) => (
                       <Menu.Item
+                          style={menuItemStyle.itemStyle}
                           onPress={() => {
                               if (existingProps.valuesType === "record-number") {
                                   // in JavaScript, all keys of objects are strings
@@ -143,6 +153,7 @@ const MenuItems = ({ hideMenu, existingProps }: MenuItemsProps) => {
                 : existingProps.valuesType === "array"
                 ? existingProps.values.map((value, index) => (
                       <Menu.Item
+                          style={menuItemStyle.itemStyle}
                           onPress={() => {
                               existingProps.onKeyChange(index);
                               hideMenu();

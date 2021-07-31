@@ -56,13 +56,14 @@ const keyValStorageThatRejectsCacheKeys: KeyValStorageProvider = {
     },
 };
 
-const createTestCache = (key: string = TEST_CACHE_KEY) => {
+const createTestCache = (key: string = TEST_CACHE_KEY, timeout?: number) => {
     return new APICacheData(
         key,
-        () => apiFetch(TEST_FAKE_ENDPOINT),
+        (abortController) => apiFetch(TEST_FAKE_ENDPOINT, "", { signal: abortController.signal }),
         (data: ITestData) => data,
         "loading",
-        "error"
+        "error",
+        timeout
     );
 };
 
@@ -282,6 +283,36 @@ describe("cachedAPI.ts", () => {
             cache.removeInvalidationListener(listener);
             await cache.invalidate(false, false, false, true);
             expect(listener).toHaveBeenCalledTimes(2);
+        });
+    });
+
+    describe("APICacheData.fetchTimeout", () => {
+        it("should timeout", async () => {
+            const cache = createTestCache(TEST_CACHE_KEY, 500);
+            const listener = jest.fn(() => {});
+            cache.addInvalidationListener(listener);
+            expect(listener).toHaveBeenCalledTimes(0);
+
+            const expectedData = {
+                a: "Should not get this object on first run",
+                b: 235235235,
+                c: false,
+                d: ["why"],
+            } as ITestData;
+
+            let slowResponse = true;
+            mockGet(TEST_FAKE_ENDPOINT, async () => {
+                if (slowResponse) {
+                    await sleep(2000);
+                }
+                return {
+                    status: 200,
+                    body: JSON.stringify(expectedData),
+                };
+            });
+            expect(await cache.getCachedValue()).toEqual(cache.errorValue);
+            slowResponse = false;
+            expect(await cache.getCachedValue()).toEqual(expectedData);
         });
     });
 

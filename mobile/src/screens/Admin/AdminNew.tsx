@@ -10,6 +10,7 @@ import {
     adminUserFieldLabels,
     adminUserInitialValues,
     APIFetchFailError,
+    countObjectKeys,
     handleNewUserSubmit,
     newUserValidationSchema,
     themeColors,
@@ -174,8 +175,8 @@ const AdminNew = ({
                                     <Button
                                         disabled={
                                             formikProps.isSubmitting ||
-                                            Object.keys(formikProps.errors).length !== 0 ||
-                                            Object.keys(formikProps.touched).length === 0
+                                            countObjectKeys(formikProps.errors) !== 0 ||
+                                            countObjectKeys(formikProps.touched) === 0
                                         }
                                         loading={formikProps.isSubmitting}
                                         onPress={formikProps.handleSubmit}

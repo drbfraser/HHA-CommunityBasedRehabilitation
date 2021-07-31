@@ -9,6 +9,7 @@ import {
     AdminField,
     adminUserFieldLabels,
     APIFetchFailError,
+    countObjectKeys,
     editUserValidationSchema,
     handleUserEditSubmit,
     IUser,
@@ -169,7 +170,7 @@ const AdminEdit = ({
                                     <Button
                                         disabled={
                                             formikProps.isSubmitting ||
-                                            Object.keys(formikProps.errors).length !== 0
+                                            countObjectKeys(formikProps.errors) !== 0
                                         }
                                         loading={formikProps.isSubmitting}
                                         onPress={formikProps.handleSubmit}

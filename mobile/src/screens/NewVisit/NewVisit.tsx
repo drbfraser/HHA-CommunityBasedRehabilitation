@@ -7,6 +7,7 @@ import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import {
     apiFetch,
     APIFetchFailError,
+    countObjectKeys,
     Endpoint,
     GoalStatus,
     IClient,
@@ -354,7 +355,7 @@ const NewVisit = (props: INewVisitProps) => {
     ];
 
     const prevStep = (props: any) => {
-        if (Object.keys(props.errors).length !== 0) {
+        if (countObjectKeys(props.errors) !== 0) {
             const arr = checkedSteps.filter((item) => {
                 return item != enabledSteps[activeStep - 1];
             });
@@ -445,11 +446,11 @@ const NewVisit = (props: INewVisitProps) => {
                                                     (!checkedSteps.includes(
                                                         enabledSteps[activeStep - 1]
                                                     )
-                                                        ? Object.keys(formikProps.errors).length !==
+                                                        ? countObjectKeys(formikProps.errors) !==
                                                               0 ||
                                                           Object.keys(formikProps.touched)
                                                               .length === 0
-                                                        : Object.keys(formikProps.errors).length !==
+                                                        : countObjectKeys(formikProps.errors) !==
                                                           0))
                                             }
                                             previousBtnDisabled={formikProps.isSubmitting}

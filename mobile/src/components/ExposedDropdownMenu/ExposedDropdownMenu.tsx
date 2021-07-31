@@ -3,6 +3,7 @@ import { Keyboard, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Menu, TextInput } from "react-native-paper";
 import { TextInputProps } from "react-native-paper/lib/typescript/components/TextInput/TextInput";
 import useStyles from "./ExposedDropdownMenu.styles";
+import { countObjectKeys } from "@cbr/common";
 
 interface IBaseDropdownMenuProps extends Omit<TextInputProps, "theme" | "editable"> {}
 
@@ -151,13 +152,13 @@ const areMenuItemsPropsEqual = (
     ) {
         // We know newProps.existingProps.values should also be a record here.
         if (
-            Object.keys(prevProps.existingProps.values).length !==
-            Object.keys(newProps.existingProps.values).length
+            countObjectKeys(prevProps.existingProps.values) !==
+            countObjectKeys(newProps.existingProps.values)
         ) {
             return false;
         }
     }
-    
+
     return true;
 };
 

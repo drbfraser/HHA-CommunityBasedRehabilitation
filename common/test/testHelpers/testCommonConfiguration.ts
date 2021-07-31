@@ -20,6 +20,7 @@ export const testCommonConfig: CommonConfiguration = {
     keyValStorageProvider: mapStorageProvider,
     logoutCallback: async (): Promise<void> => {},
     shouldLogoutOnTokenRefreshFailure: false,
+    useKeyValStorageForCachedAPIBackup: false,
 };
 
 /**

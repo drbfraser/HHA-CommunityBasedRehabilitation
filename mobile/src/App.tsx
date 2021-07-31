@@ -8,21 +8,20 @@ import globalStyle from "./app.styles";
 import { stackScreenOptions, stackScreenProps } from "./util/stackScreens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import {
-    apiFetch,
+    APILoadError,
     doLogin,
     doLogout,
-    Endpoint,
     getAuthToken,
+    getCurrentUser,
+    invalidateAllCachedAPI,
     isLoggedIn,
-    IUser,
 } from "@cbr/common";
 import { AuthContext as AuthContext, IAuthContext } from "./context/AuthContext/AuthContext";
 import { enableScreens } from "react-native-screens";
 import Loading from "./screens/Loading/Loading";
 import Login from "./screens/Login/Login";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthState } from "./context/AuthContext/AuthState";
-import { KEY_CURRENT_USER } from "./util/AsyncStorageKeys";
+import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
 import { StackScreenName } from "./util/StackScreenName";
 import { RouteProp } from "@react-navigation/core/lib/typescript/src/types";
 
@@ -35,29 +34,8 @@ const styles = globalStyle();
 const Tab = createMaterialBottomTabNavigator();
 
 /**
- * @return A Promise resolving to the current user details fetched from the server or rejected if
- * unable to fetch the current user details from the server or if unable to cache the current user.
- */
-const fetchAndCacheUserFromServer = async (): Promise<IUser> => {
-    const currentUserFromServer: IUser = await apiFetch(Endpoint.USER_CURRENT)
-        .then((resp) => resp.json())
-        .then((user) => user as IUser);
-    await AsyncStorage.setItem(KEY_CURRENT_USER, JSON.stringify(currentUserFromServer));
-    return currentUserFromServer;
-};
-
-const getCurrentUserFromCache = async (): Promise<IUser | undefined> => {
-    return AsyncStorage.getItem(KEY_CURRENT_USER)
-        .then((userJson) => {
-            return userJson != null ? (JSON.parse(userJson) as IUser) : undefined;
-        })
-        .catch((err) => {
-            return undefined;
-        });
-};
-
-/**
  * @see IAuthContext#requireLoggedIn
+ * @return A Promise that resolves if the login was successful and rejects otherwise.
  */
 const updateAuthStateIfNeeded = async (
     currentAuthState: AuthState,
@@ -76,9 +54,12 @@ const updateAuthStateIfNeeded = async (
     //  * Otherwise, should we only prompt for login when they need to actually make an API
     //    call?
     const loggedIn = await isLoggedIn();
+    const shouldTryRefreshingUserInfo = tryUpdateUserInfoFromServer && loggedIn;
+    const currentUser = await getCurrentUser(shouldTryRefreshingUserInfo);
+    // This "isLoggedIn" function is just a refresh token expiry check, so here we're just checking
+    // if the refresh token is expired (hence they could still have user information).
     if (!loggedIn) {
-        const currentUser = await getCurrentUserFromCache();
-        if (currentUser) {
+        if (currentUser !== APILoadError) {
             setAuthState({ state: "previouslyLoggedIn", currentUser: currentUser });
         } else {
             setAuthState({ state: "loggedOut" });
@@ -86,20 +67,17 @@ const updateAuthStateIfNeeded = async (
         return;
     }
 
-    if (!tryUpdateUserInfoFromServer && currentAuthState.state === "loggedIn") {
-        // This implicitly refreshes the access and refresh tokens if needed.
-        // Note: If we don't enter this branch, the fetchAndCacheUserFromServer will also handle
-        // refreshing the auth tokens if needed.
+    if (!shouldTryRefreshingUserInfo && currentAuthState.state === "loggedIn") {
+        // We're already logged in and we didn't try to update user info. Don't bother updating
+        // the auth state.
+        //
+        // Since we didn't try to fetch user info, we  implicitly refresh the access and refresh
+        // tokens here if needed.
         await getAuthToken().catch();
         return;
     }
 
-    const currentUser: IUser | undefined = await fetchAndCacheUserFromServer().catch((err) => {
-        // At this point, the user is logged in, so the device is probably offline.
-        // Use the cached user details.
-        return getCurrentUserFromCache();
-    });
-    if (currentUser) {
+    if (currentUser !== APILoadError) {
         setAuthState({ state: "loggedIn", currentUser: currentUser });
     } else {
         // Note that here, the auth tokens are valid. So, the only possibility for
@@ -119,29 +97,44 @@ const updateAuthStateIfNeeded = async (
     }
 };
 
-// TODO: Have a nice transition when the user logins and and logs out.
 export default function App() {
     const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
 
     useEffect(() => {
-        updateAuthStateIfNeeded(authState, setAuthState, true);
+        // Refresh disabilities, zones, current user information
+        isLoggedIn()
+            .then((loggedIn) => {
+                if (loggedIn) {
+                    console.log("App init: re-fetching cached API from the server");
+                    return invalidateAllCachedAPI("refresh");
+                }
+            })
+            .catch((e) => console.error(`App init: error during initialization: ${e}`))
+            .finally(() => {
+                // Resolve the auth state. invalidateAllCachedAPI already tries to refetch the
+                // current user information so pass false for tryUpdateUserInfoFromServer to avoid
+                // an unnecessary refetch.
+                return updateAuthStateIfNeeded(authState, setAuthState, false);
+            });
     }, []);
 
     // design inspired by https://reactnavigation.org/docs/auth-flow/
     const authContext = useMemo<IAuthContext>(
         () => ({
             login: async (username: string, password: string): Promise<void> => {
+                // This throws an error if login fails.
                 await doLogin(username, password);
 
-                try {
-                    const currentUserFromServer = await fetchAndCacheUserFromServer();
-                    setAuthState({ state: "loggedIn", currentUser: currentUserFromServer });
-                } catch (e) {
-                    setAuthState({ state: "loggedOut" });
-                    throw e;
-                }
+                await Promise.all([
+                    CacheRefreshTask.registerBackgroundFetch(),
+                    // This will fetch all cached API data so that they're pre-loaded.
+                    invalidateAllCachedAPI("login"),
+                ]);
+
+                return await updateAuthStateIfNeeded(authState, setAuthState, false);
             },
             logout: async () => {
+                // BackgroundFetch is unregistered in the logout callback
                 await doLogout();
                 setAuthState({ state: "loggedOut" });
             },

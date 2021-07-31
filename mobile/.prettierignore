@@ -1,6 +1,7 @@
 .expo
 .expo-shared
 build
+dist
 public
 
 *.json

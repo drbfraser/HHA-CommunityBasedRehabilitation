@@ -28,7 +28,7 @@ export interface IActivity {
 }
 
 const Timeline = (props: ISummaryProps) => {
-    const zones = useZones();
+    const zones = useZones(false);
     const zone = props.activity.visit ? zones.get(props.activity.visit.zone) : "";
 
     const [detailsVisible, setDetailsVisible] = useState(false);

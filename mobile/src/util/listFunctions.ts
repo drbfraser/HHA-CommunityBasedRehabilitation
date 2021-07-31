@@ -1,5 +1,5 @@
 import { themeColors } from "@cbr/common";
-import { ClientTest } from "../screens/ClientList/ClientListRequest";
+import { ClientListRow } from "../screens/ClientList/ClientListRequest";
 import { BrifeReferral } from "../screens/DashBoard/DashboardRequest";
 import { userBrife } from "../screens/UserList/UserListRequest";
 
@@ -55,21 +55,19 @@ export const arrowDirectionController = (
     }
     return undefined;
 };
+var mapColorWithLevel = new Map();
+mapColorWithLevel[themeColors.riskGreen] = 0;
+mapColorWithLevel[themeColors.riskYellow] = 1;
+mapColorWithLevel[themeColors.riskRed] = 4;
+mapColorWithLevel[themeColors.riskBlack] = 13;
 
 export const getLevelByColor = (color: string) => {
-    if (color === themeColors.riskYellow) {
-        return 1;
-    } else if (color === themeColors.riskRed) {
-        return 4;
-    } else if (color === themeColors.riskBlack) {
-        return 13;
-    }
-    return 0;
+    return mapColorWithLevel.get(color) || 0;
 };
 
-export const theClientComparator = (
-    a: ClientTest,
-    b: ClientTest,
+export const clientComparator = (
+    a: ClientListRow,
+    b: ClientListRow,
     sortOption: string,
     sortDirection: string
 ): number => {

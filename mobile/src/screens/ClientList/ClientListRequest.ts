@@ -7,13 +7,9 @@ import {
     IClientSummary,
     SearchOption,
     riskLevels,
-    clientPrioritySort,
-    useZones,
-    SortOptions,
-    themeColors,
 } from "@cbr/common";
 
-export type ClientTest = {
+export type ClientListRow = {
     id: number;
     full_name: string;
     zoneID: number;
@@ -30,7 +26,7 @@ export const fetchClientsFromApi = async (
     allClientsMode: boolean,
     sortOption,
     sortDirection
-): Promise<ClientTest[]> => {
+): Promise<ClientListRow[]> => {
     try {
         const urlParams = new URLSearchParams();
         if (searchOption === SearchOption.NAME) {

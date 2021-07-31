@@ -9,12 +9,12 @@ import { ScrollView } from "react-native-gesture-handler";
 import { timestampToDate } from "@cbr/common";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { ClientTest } from "../ClientList/ClientListRequest";
+import { ClientListRow } from "../ClientList/ClientListRequest";
 import {
     arrowDirectionController,
     sortBy,
     SortOptions,
-    theClientComparator,
+    clientComparator,
     referralComparator,
 } from "../../util/listFunctions";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
@@ -29,8 +29,8 @@ const Dashboard = () => {
     const [referralSortDirection, setReferralIsSortDirection] = useState("None");
     const [currentReferralDirection, setReferralCurrentDirection] = useState(0);
 
-    const dashBoardClientComparator = (a: ClientTest, b: ClientTest): number => {
-        return theClientComparator(a, b, clientSortOption, clientSortDirection);
+    const dashBoardClientComparator = (a: ClientListRow, b: ClientListRow): number => {
+        return clientComparator(a, b, clientSortOption, clientSortDirection);
     };
     const clientSortBy = async (option: string) => {
         sortBy(
@@ -64,7 +64,7 @@ const Dashboard = () => {
         return arrowDirectionController(column_name, referralSortOption, referralSortDirection);
     };
 
-    const [clientList, setClientList] = useState<ClientTest[]>([]);
+    const [clientList, setClientList] = useState<ClientListRow[]>([]);
     const [referralList, setreferralList] = useState<BrifeReferral[]>([]);
     const navigation = useNavigation();
     const getNewClient = async () => {
@@ -158,14 +158,14 @@ const Dashboard = () => {
                                         >
                                             <View style={styles.column_client_name}>
                                                 <WrappedText
-                                                    item={item.full_name}
+                                                    text={item.full_name}
                                                     viewStyle={styles.textContainer}
                                                     textStyle={styles.text}
                                                 />
                                             </View>
                                             <View style={styles.column_client_zone}>
                                                 <WrappedText
-                                                    item={item.zone}
+                                                    text={item.zone}
                                                     viewStyle={styles.textContainer}
                                                     textStyle={styles.text}
                                                 />
@@ -240,14 +240,14 @@ const Dashboard = () => {
                                         >
                                             <View style={styles.column_referral_name}>
                                                 <WrappedText
-                                                    item={item.full_name}
+                                                    text={item.full_name}
                                                     viewStyle={styles.textContainer}
                                                     textStyle={styles.text}
                                                 />
                                             </View>
                                             <View style={styles.column_referral_type}>
                                                 <WrappedText
-                                                    item={item.type}
+                                                    text={item.type}
                                                     viewStyle={styles.textContainer}
                                                     textStyle={styles.text}
                                                 />

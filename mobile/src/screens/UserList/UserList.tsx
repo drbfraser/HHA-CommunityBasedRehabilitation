@@ -171,14 +171,14 @@ const UserList = () => {
                                 <DataTable.Cell style={styles.column_id}>{item.id}</DataTable.Cell>
                                 <View style={styles.column_name}>
                                     <WrappedText
-                                        item={item.full_name}
+                                        text={item.full_name}
                                         viewStyle={styles.wrappedView}
                                         textStyle={styles.text}
                                     />
                                 </View>
                                 <View style={styles.column_zone}>
                                     <WrappedText
-                                        item={item.zone}
+                                        text={item.zone}
                                         viewStyle={styles.wrappedView}
                                         textStyle={styles.text}
                                     />

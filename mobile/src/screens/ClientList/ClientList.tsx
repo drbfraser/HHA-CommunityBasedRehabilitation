@@ -3,7 +3,7 @@ import { Text, View, Switch } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { DataTable } from "react-native-paper";
 import useStyles from "./ClientList.styles";
-import { ClientTest, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
+import { ClientListRow, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { Searchbar } from "react-native-paper";
@@ -17,13 +17,13 @@ import {
     SortOptions,
     sortBy,
     arrowDirectionController,
-    theClientComparator,
+    clientComparator,
 } from "../../util/listFunctions";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
-    const [clientList, setClientList] = useState<ClientTest[]>([]);
+    const [clientList, setClientList] = useState<ClientListRow[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
@@ -43,8 +43,8 @@ const ClientList = () => {
         );
     };
 
-    const clientListScreenComparator = (a: ClientTest, b: ClientTest) => {
-        return theClientComparator(a, b, sortOption, sortDirection);
+    const clientListScreenComparator = (a: ClientListRow, b: ClientListRow) => {
+        return clientComparator(a, b, sortOption, sortDirection);
     };
 
     const newClientGet = async () => {
@@ -207,14 +207,14 @@ const ClientList = () => {
                                 <DataTable.Cell style={styles.column_id}>{item.id}</DataTable.Cell>
                                 <View style={styles.column_name}>
                                     <WrappedText
-                                        item={item.full_name}
+                                        text={item.full_name}
                                         viewStyle={styles.wrappedView}
                                         textStyle={styles.text}
                                     />
                                 </View>
                                 <View style={styles.column_zone}>
                                     <WrappedText
-                                        item={item.zone}
+                                        text={item.zone}
                                         viewStyle={styles.wrappedView}
                                         textStyle={styles.text}
                                     />

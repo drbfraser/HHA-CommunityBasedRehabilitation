@@ -7,7 +7,7 @@ import {
 } from "@cbr/common";
 import { IClientSummary } from "@cbr/common";
 import { riskLevels } from "@cbr/common";
-import { ClientTest } from "../ClientList/ClientListRequest";
+import { ClientListRow } from "../ClientList/ClientListRequest";
 
 export type BrifeReferral = {
     id: number;
@@ -28,7 +28,7 @@ const concatenateReferralType = (row: IOutstandingReferral) => {
     return referralTypes.join(", ");
 };
 
-export const fetchAllClientsFromApi = async (): Promise<ClientTest[]> => {
+export const fetchAllClientsFromApi = async (): Promise<ClientListRow[]> => {
     try {
         const zones = await getZones();
         const tempClients = await apiFetch(Endpoint.CLIENTS)

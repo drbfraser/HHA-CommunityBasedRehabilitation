@@ -21,7 +21,8 @@ import {
 } from "@cbr/common";
 import Alert from "../Alert/Alert";
 import { useStyles } from "./ChangePasswordDialog.styles";
-import FormikPasswordTextInput from "../FormikPasswordTextInput/FormikPasswordTextInput";
+import FormikTextInput from "../FormikTextInput/FormikTextInput";
+import passwordTextInputProps from "../PasswordTextInput/passwordTextInputProps";
 
 export type Props = {
     isSelf: boolean;
@@ -82,33 +83,36 @@ const ChangePasswordDialog = ({ isSelf, user, onDismiss, visible }: Props) => {
                                         />
                                     ) : null}
 
-                                    <FormikPasswordTextInput
+                                    <FormikTextInput
+                                        {...passwordTextInputProps}
                                         fieldLabels={changePasswordFieldLabels}
                                         field={ChangePasswordField.oldPassword}
-                                        textInputStyle={styles.passwordTextInput}
+                                        style={styles.passwordTextInput}
                                         formikProps={formikProps}
                                         returnKeyType="next"
                                         onSubmitEditing={() => newPassRef.current?.focus()}
                                     />
 
-                                    <FormikPasswordTextInput
+                                    <FormikTextInput
+                                        {...passwordTextInputProps}
                                         fieldLabels={changePasswordFieldLabels}
                                         field={ChangePasswordField.newPassword}
-                                        textInputStyle={styles.passwordTextInput}
+                                        style={styles.passwordTextInput}
                                         formikProps={formikProps}
                                         ref={newPassRef}
                                         returnKeyType="next"
                                         onSubmitEditing={() => confirmNewPassRef.current?.focus()}
                                     />
 
-                                    <FormikPasswordTextInput
+                                    <FormikTextInput
+                                        {...passwordTextInputProps}
                                         fieldLabels={changePasswordFieldLabels}
                                         field={ChangePasswordField.confirmNewPassword}
-                                        textInputStyle={styles.passwordTextInput}
+                                        style={styles.passwordTextInput}
                                         formikProps={formikProps}
                                         ref={confirmNewPassRef}
                                         returnKeyType="done"
-                                        onSubmitEditing={formikProps.handleSubmit}
+                                        onSubmitEditing={() => formikProps.handleSubmit}
                                     />
                                 </KeyboardAwareScrollView>
                             </Dialog.ScrollArea>
@@ -165,24 +169,26 @@ const ChangePasswordDialog = ({ isSelf, user, onDismiss, visible }: Props) => {
                                         />
                                     ) : null}
 
-                                    <FormikPasswordTextInput
+                                    <FormikTextInput
+                                        {...passwordTextInputProps}
                                         fieldLabels={adminUserFieldLabels}
                                         field={AdminField.password}
-                                        textInputStyle={styles.passwordTextInput}
+                                        style={styles.passwordTextInput}
                                         formikProps={formikProps}
                                         ref={newPassRef}
                                         returnKeyType="next"
                                         onSubmitEditing={() => confirmNewPassRef.current?.focus()}
                                     />
 
-                                    <FormikPasswordTextInput
+                                    <FormikTextInput
+                                        {...passwordTextInputProps}
                                         fieldLabels={adminUserFieldLabels}
                                         field={AdminField.confirmPassword}
-                                        textInputStyle={styles.passwordTextInput}
+                                        style={styles.passwordTextInput}
                                         formikProps={formikProps}
                                         ref={confirmNewPassRef}
                                         returnKeyType="done"
-                                        onSubmitEditing={formikProps.handleSubmit}
+                                        onSubmitEditing={() => formikProps.handleSubmit}
                                     />
                                 </KeyboardAwareScrollView>
                             </Dialog.ScrollArea>

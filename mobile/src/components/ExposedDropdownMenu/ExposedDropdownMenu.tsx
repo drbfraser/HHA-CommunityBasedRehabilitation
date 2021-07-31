@@ -4,9 +4,9 @@ import { Menu, TextInput } from "react-native-paper";
 import { TextInputProps } from "react-native-paper/lib/typescript/components/TextInput/TextInput";
 import useStyles from "./ExposedDropdownMenu.styles";
 
-interface BaseDropdownMenuProps extends Omit<TextInputProps, "theme" | "editable"> {}
+interface IBaseDropdownMenuProps extends Omit<TextInputProps, "theme" | "editable"> {}
 
-interface RecordDropdownMenuString extends BaseDropdownMenuProps {
+interface IRecordDropdownMenuString extends IBaseDropdownMenuProps {
     valuesType: "record-string";
     /**
      * An {@link Record} containing labels. {@link onKeyChange} will be invoked with the key of
@@ -21,7 +21,7 @@ interface RecordDropdownMenuString extends BaseDropdownMenuProps {
     onKeyChange: (key: string) => void;
 }
 
-interface RecordDropdownMenuNumeric extends BaseDropdownMenuProps {
+interface IRecordDropdownMenuNumeric extends IBaseDropdownMenuProps {
     valuesType: "record-number";
     /**
      * An {@link Record} containing labels. {@link onKeyChange} will be invoked with the key of
@@ -36,7 +36,7 @@ interface RecordDropdownMenuNumeric extends BaseDropdownMenuProps {
     onKeyChange: (key: number) => void;
 }
 
-interface ArrayDropdownMenu extends BaseDropdownMenuProps {
+interface IArrayDropdownMenu extends IBaseDropdownMenuProps {
     valuesType: "array";
     /**
      * An {@link Array} containing labels. {@link onKeyChange} will be invoked with the index of
@@ -51,7 +51,7 @@ interface ArrayDropdownMenu extends BaseDropdownMenuProps {
     onKeyChange: (key: number) => void;
 }
 
-interface MapDropdownMenu extends BaseDropdownMenuProps {
+interface IMapDropdownMenu extends IBaseDropdownMenuProps {
     valuesType: "map";
     /**
      * A {@link ReadonlyMap} that maps keys to labels. {@link onKeyChange} will be invoked with the
@@ -67,10 +67,10 @@ interface MapDropdownMenu extends BaseDropdownMenuProps {
 }
 
 export type Props =
-    | RecordDropdownMenuString
-    | RecordDropdownMenuNumeric
-    | ArrayDropdownMenu
-    | MapDropdownMenu;
+    | IRecordDropdownMenuString
+    | IRecordDropdownMenuNumeric
+    | IArrayDropdownMenu
+    | IMapDropdownMenu;
 
 const convertMapToMenuItems = (props: Props, hideMenu: () => void): Array<JSX.Element> => {
     // for TypeScript smart casting

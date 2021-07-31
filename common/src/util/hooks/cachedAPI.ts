@@ -15,6 +15,12 @@ export const untrackAllCaches = () => {
     }
 };
 
+/**
+ * Invalidates all cached API and forces any active listeners of all caches to refetch API data
+ * from the server.
+ *
+ * @return A Promise that resolves once all caches have been invalidated.
+ */
 export const invalidateAllCachedAPI = async (
     invalidationType: "login" | "refresh" | "logout"
 ): Promise<void> => {
@@ -147,6 +153,9 @@ export class APICacheData<TValue, TLoading, TError> {
         reFetch: boolean = false,
         notifyListeners: boolean = true
     ): Promise<void> {
+        if (this._promise) {
+            await this._promise;
+        }
         this._promise = undefined;
 
         if (clearValue) {
@@ -191,18 +200,19 @@ export class APICacheData<TValue, TLoading, TError> {
      * @param refreshValue Whether to refresh the cache's value by attempting a refetch from the
      * server. This will notify listeners. By default, this is false.
      */
-    getCachedValue(refreshValue: boolean = false): Promise<TValue | TError> {
+    async getCachedValue(refreshValue: boolean = false): Promise<TValue | TError> {
         if (refreshValue) {
+            if (this._promise) {
+                await this._promise;
+            }
             this._promise = undefined;
         }
 
-        return this.getCachedValueInner().then((result) => {
-            if (refreshValue) {
-                this.notifyListenersAsync().catch();
-            }
-
-            return result.value;
-        });
+        const result = await this.getCachedValueInner();
+        if (refreshValue) {
+            this.notifyListenersAsync().catch();
+        }
+        return result.value;
     }
 
     useCacheHook(): (listenForChanges?: boolean) => TValue | TLoading | TError {
@@ -287,8 +297,9 @@ export class APICacheData<TValue, TLoading, TError> {
             })
             .catch((e) => {
                 // Invalidate to force subsequent calls to attempt another network call
-                // to get a fresh value. We only set the promise to undefined to prevent
-                // listeners from being triggered.
+                // to get a fresh value. We only set the promise to undefined here; don't
+                // trigger listeners, lest we enter into a loop of attempt -> fail -> notify ->
+                // attempt.
                 this._promise = undefined;
 
                 const existingValue = this._value;

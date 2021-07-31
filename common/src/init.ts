@@ -7,8 +7,18 @@ export interface KeyValStorageProvider {
 export interface CommonConfiguration {
     /** The API url for connecting to the server. Should include `/api/` at the end. */
     readonly apiUrl: String;
-    /** A provider for key-value storage. */
+    /**
+     * A provider interface for storing auth tokens and backups of cached API data if
+     * {@link useKeyValStorageForCachedAPIBackup} is set.
+     */
     readonly keyValStorageProvider: KeyValStorageProvider;
+    /**
+     * Whether to use the {@link keyValStorageProvider} to store backup values so that values can be
+     * persisted as backup when initial {@link APICacheData.getCachedValue} calls fail. This is meant
+     * for the mobile app to have a fallback for {@link APICacheData.getCachedValue} values when
+     * there is no internet.
+     */
+    readonly useKeyValStorageForCachedAPIBackup: boolean;
     /** Whether to logout when {@link getAuthToken} fails to refresh the token. */
     readonly shouldLogoutOnTokenRefreshFailure: boolean;
     /** A callback to run after {@link doLogout} is called. */

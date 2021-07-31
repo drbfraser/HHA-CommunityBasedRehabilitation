@@ -15,6 +15,7 @@ export * from "./src/util/stats";
 export * from "./src/util/survey";
 export * from "./src/util/users";
 export * from "./src/util/validations";
+export { invalidateAllCachedAPI } from "./src/util/hooks/cachedAPI";
 export * from "./src/util/hooks/currentUser";
 export * from "./src/util/hooks/disabilities";
 export * from "./src/util/hooks/zones";

@@ -11,6 +11,7 @@ import {
 import { addValidTokens } from "../../testHelpers/authTokenHelpers";
 import { fromNewCommonModule } from "../../testHelpers/testCommonConfiguration";
 import { checkAuthHeader } from "../../testHelpers/mockServerHelpers";
+import { invalidateAllCachedAPIInternal } from "../../../src/util/hooks/cachedAPI";
 
 const ID_OF_OTHER_IN_TEST_DISABILITY_MAP = 4;
 
@@ -32,20 +33,19 @@ const mockGetWithDefaultTestDisabilityMap = () => {
         return {
             status: 200,
             body: JSON.stringify(
-                Array.from(
-                    testDisabilityMap,
-                    ([id, disability]) =>
-                        ({
-                            id: id,
-                            disability_type: disability,
-                        } as IDisability)
-                )
+                Array.from(testDisabilityMap, ([id, disability]) => {
+                    return {
+                        id: id,
+                        disability_type: disability,
+                    } as IDisability;
+                })
             ),
         };
     });
 };
 
 beforeEach(async () => {
+    await invalidateAllCachedAPIInternal(true, true, false, false);
     resetFetchMocks();
     await addValidTokens();
 });

@@ -7,7 +7,6 @@ const useStyles = (textInputWidth: number) =>
             top: -3,
         },
         invisibleAnchor: {
-            width: textInputWidth,
             height: 1,
             marginBottom: 0,
         },

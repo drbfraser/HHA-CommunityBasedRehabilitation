@@ -177,10 +177,11 @@ const ExposedDropdownMenu = (props: Props) => {
 
     // useRef instead of useState to avoid unnecessary re-renders
     const width = useRef<number>(288.727);
-    const iconWidth = useRef<number>(36);
     const height = useRef<number>(56);
 
-    const styles = useStyles(width.current + iconWidth.current);
+    const anchorWidth = useRef<number>(0);
+
+    const styles = useStyles(anchorWidth.current);
 
     const openMenu = () => {
         Keyboard.dismiss();
@@ -189,7 +190,12 @@ const ExposedDropdownMenu = (props: Props) => {
     const hideMenu = () => setIsOpen(false);
 
     return (
-        <TouchableOpacity disabled={props.disabled} activeOpacity={1} onPress={openMenu}>
+        <TouchableOpacity
+            onLayout={(e) => (anchorWidth.current = e.nativeEvent.layout.width)}
+            disabled={props.disabled}
+            activeOpacity={1}
+            onPress={openMenu}
+        >
             <TextInput
                 {...props}
                 onLayout={(event) => {
@@ -206,7 +212,6 @@ const ExposedDropdownMenu = (props: Props) => {
                             right: 10,
                         }}
                         disabled={props.disabled}
-                        onLayout={(event) => (iconWidth.current = event.nativeEvent.layout.width)}
                         onPress={openMenu}
                         name={!isOpen ? "chevron-down" : "chevron-up"}
                     />

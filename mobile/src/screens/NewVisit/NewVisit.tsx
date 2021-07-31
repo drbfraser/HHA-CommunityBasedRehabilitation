@@ -33,7 +33,7 @@ import { handleSubmit } from "./formHandler";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewVisit.style";
 import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
-import FormikExposedDropdownMenu from "../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
+import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 
 interface IFormProps {
     formikProps: FormikProps<any>;

@@ -10,7 +10,7 @@ import {
 } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import FormikExposedDropdownMenu from "../../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
+import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 
 const HealthForm = (props: IFormProps) => {
     const styles = useStyles();

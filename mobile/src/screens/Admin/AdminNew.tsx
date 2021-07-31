@@ -20,7 +20,7 @@ import {
 import FormikTextInput from "../../components/FormikTextInput/FormikTextInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Alert from "../../components/Alert/Alert";
-import FormikExposedDropdownMenu from "../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
+import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import FormikPasswordTextInput from "../../components/FormikPasswordTextInput/FormikPasswordTextInput";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 

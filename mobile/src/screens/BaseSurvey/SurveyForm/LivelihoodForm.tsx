@@ -4,7 +4,7 @@ import { HelperText, Text, TextInput } from "react-native-paper";
 import { baseFieldLabels, BaseSurveyFormField, IFormProps, isSelfEmployed } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import FormikExposedDropdownMenu from "../../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
+import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 
 const LivelihoodForm = (props: IFormProps) => {
     const styles = useStyles();

@@ -19,7 +19,7 @@ import {
 import FormikTextInput from "../../components/FormikTextInput/FormikTextInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Alert from "../../components/Alert/Alert";
-import FormikExposedDropdownMenu from "../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
+import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 
 const AdminEdit = ({
@@ -110,7 +110,7 @@ const AdminEdit = ({
 
                                 <FormikExposedDropdownMenu
                                     style={styles.textInput}
-                                    valuesType="map"
+                                    valuesType="record-string"
                                     values={zones}
                                     fieldLabels={adminUserFieldLabels}
                                     field={AdminField.zone}

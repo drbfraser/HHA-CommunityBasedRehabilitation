@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { Text } from "react-native-paper";
 import { IFormProps, referralFieldLabels, ReferralFormField, useDisabilities } from "@cbr/common";
 import useStyles from "../NewReferral.styles";
-import FormikExposedDropdownMenu from "../../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
+import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 
 const PhysiotherapyForm = (props: IFormProps) => {
     const styles = useStyles();

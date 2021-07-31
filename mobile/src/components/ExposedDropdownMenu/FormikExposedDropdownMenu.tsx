@@ -2,9 +2,7 @@ import { FormikProps } from "formik";
 import React, { useCallback } from "react";
 import { HelperText } from "react-native-paper";
 import { shouldShowError } from "../../util/formikUtil";
-import ExposedDropdownMenu, {
-    Props as ExposedDropdownMenuProps,
-} from "../ExposedDropdownMenu/ExposedDropdownMenu";
+import ExposedDropdownMenu, { Props as ExposedDropdownMenuProps } from "./ExposedDropdownMenu";
 
 export type FormikMenuProps<Field extends string> = Omit<
     ExposedDropdownMenuProps,

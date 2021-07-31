@@ -118,11 +118,47 @@ const areMenuItemsPropsEqual = (
     prevProps: Readonly<MenuItemsProps>,
     newProps: Readonly<MenuItemsProps>
 ): boolean => {
-    return (
-        prevProps.existingProps.valuesType === newProps.existingProps.valuesType &&
-        prevProps.existingProps.values === newProps.existingProps.values &&
-        prevProps.existingProps.onKeyChange === newProps.existingProps.onKeyChange
-    );
+    if (
+        prevProps.existingProps.valuesType !== newProps.existingProps.valuesType ||
+        prevProps.existingProps.values !== newProps.existingProps.values ||
+        prevProps.existingProps.onKeyChange !== newProps.existingProps.onKeyChange
+    ) {
+        return false;
+    }
+
+    // Although at this point we must have that
+    // prevProps.existingProps.valuesType === newProps.existingProps.valuesType
+    // is true, we check both anyway for TypeScript smart casting.
+    if (
+        prevProps.existingProps.valuesType === "array" &&
+        newProps.existingProps.valuesType === "array" &&
+        prevProps.existingProps.values.length !== newProps.existingProps.values.length
+    ) {
+        return false;
+    }
+
+    if (
+        prevProps.existingProps.valuesType === "map" &&
+        newProps.existingProps.valuesType === "map" &&
+        prevProps.existingProps.values.size !== newProps.existingProps.values.size
+    ) {
+        return false;
+    }
+
+    if (
+        prevProps.existingProps.valuesType === "record-string" ||
+        prevProps.existingProps.valuesType === "record-number"
+    ) {
+        // We know newProps.existingProps.values should also be a record here.
+        if (
+            Object.keys(prevProps.existingProps.values).length !==
+            Object.keys(newProps.existingProps.values).length
+        ) {
+            return false;
+        }
+    }
+    
+    return true;
 };
 
 type MenuItemsProps = { hideMenu: () => void; existingProps: Props };

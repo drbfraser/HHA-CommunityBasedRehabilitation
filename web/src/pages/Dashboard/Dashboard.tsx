@@ -6,7 +6,7 @@ import { Cancel, CheckCircle, FiberManualRecord } from "@material-ui/icons";
 import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { IRiskType, riskTypes } from "util/riskIcon";
 import { clientPrioritySort, IClientSummary } from "@cbr/common/util/clients";
-import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { timestampToDate } from "@cbr/common/util/dates";
 import { IOutstandingReferral } from "@cbr/common/util/referrals";
@@ -39,14 +39,11 @@ const Dashboard = () => {
 
     useEffect(() => {
         const fetchClients = async () => {
+            setClientError(undefined);
             try {
-                let tempClients: IClientSummary[];
-                try {
-                    tempClients = await (await apiFetch(Endpoint.CLIENTS)).json();
-                } catch (e) {
-                    setClientError(e instanceof APIFetchFailError ? e.message : `${e}`);
-                    return;
-                }
+                const tempClients: IClientSummary[] = await (
+                    await apiFetch(Endpoint.CLIENTS)
+                ).json();
 
                 const priorityClients: RowsProp = tempClients
                     .sort(clientPrioritySort)
@@ -64,19 +61,18 @@ const Dashboard = () => {
                     });
 
                 setClients(priorityClients);
+            } catch (e) {
+                setClientError(e instanceof Error ? e.message : `${e}`);
             } finally {
                 setPriorityClientsLoading(false);
             }
         };
         const fetchReferrals = async () => {
+            setReferralError(undefined);
             try {
-                let tempReferrals: IOutstandingReferral[];
-                try {
-                    tempReferrals = await (await apiFetch(Endpoint.REFERRALS_OUTSTANDING)).json();
-                } catch (e) {
-                    setReferralError(e instanceof APIFetchFailError ? e.message : `${e}`);
-                    return;
-                }
+                const tempReferrals: IOutstandingReferral[] = await (
+                    await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
+                ).json();
 
                 const outstandingReferrals: RowsProp = tempReferrals
                     .sort(
@@ -94,6 +90,8 @@ const Dashboard = () => {
                     });
 
                 setReferrals(outstandingReferrals);
+            } catch (e) {
+                setReferralError(e instanceof Error ? e.message : `${e}`);
             } finally {
                 setReferralsLoading(false);
             }

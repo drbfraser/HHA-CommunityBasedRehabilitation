@@ -31,9 +31,8 @@ const UserList = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
     const [sortOption, setSortOption] = useState("");
-    const [sortDirection, setIsSortDirection] = useState<"ascending" | "descending" | "None">(
-        "None"
-    );
+    const [sortDirection, setIsSortDirection] =
+        useState<"ascending" | "descending" | "None">("None");
 
     const userSortby = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);

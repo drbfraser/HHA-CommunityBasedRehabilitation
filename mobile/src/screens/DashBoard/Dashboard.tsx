@@ -22,15 +22,13 @@ import { WrappedText } from "../../components/WrappedText/WrappedText";
 const Dashboard = () => {
     const styles = useStyles();
     const [clientSortOption, setClientSortOption] = useState("");
-    const [clientSortDirection, setClientIsSortDirection] = useState<
-        "ascending" | "descending" | "None"
-    >("None");
+    const [clientSortDirection, setClientIsSortDirection] =
+        useState<"ascending" | "descending" | "None">("None");
     const [currentClientDirection, setClientCurrentDirection] = useState(0);
 
     const [referralSortOption, setReferralSortOption] = useState("");
-    const [referralSortDirection, setReferralIsSortDirection] = useState<
-        "ascending" | "descending" | "None"
-    >("None");
+    const [referralSortDirection, setReferralIsSortDirection] =
+        useState<"ascending" | "descending" | "None">("None");
     const [currentReferralDirection, setReferralCurrentDirection] = useState(0);
 
     const dashBoardClientComparator = (a: ClientListRow, b: ClientListRow): number => {

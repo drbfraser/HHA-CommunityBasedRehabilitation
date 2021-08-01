@@ -27,9 +27,8 @@ const ClientList = () => {
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
-    const [sortDirection, setIsSortDirection] = useState<"ascending" | "descending" | "None">(
-        "None"
-    );
+    const [sortDirection, setIsSortDirection] =
+        useState<"ascending" | "descending" | "None">("None");
     const [sortOption, setSortOption] = useState("");
     const zones = useZones();
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);

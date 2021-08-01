@@ -2,14 +2,15 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Formik, FormikProps } from "formik";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
-import React, { useEffect, useRef, useState } from "react";
-import { Appbar, Button } from "react-native-paper";
-import { StyleSheet, View, TextInput as NativeTextInput } from "react-native";
+import React, { useRef, useState } from "react";
+import { Button } from "react-native-paper";
+import { StyleSheet, TextInput as NativeTextInput, View } from "react-native";
 import {
     AdminField,
     adminUserFieldLabels,
     adminUserInitialValues,
     APIFetchFailError,
+    countObjectKeys,
     handleNewUserSubmit,
     newUserValidationSchema,
     themeColors,
@@ -20,9 +21,9 @@ import {
 import FormikTextInput from "../../components/FormikTextInput/FormikTextInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Alert from "../../components/Alert/Alert";
-import FormikExposedDropdownMenu from "../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
-import FormikPasswordTextInput from "../../components/FormikPasswordTextInput/FormikPasswordTextInput";
+import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
+import passwordTextInputProps from "../../components/PasswordTextInput/passwordTextInputProps";
 
 const AdminNew = ({
     navigation,
@@ -99,11 +100,11 @@ const AdminNew = ({
                                     field={AdminField.role}
                                     formikProps={formikProps}
                                     mode="outlined"
-                                    numericKey={false}
                                 />
 
-                                <FormikPasswordTextInput
-                                    textInputStyle={styles.textInput}
+                                <FormikTextInput
+                                    {...passwordTextInputProps}
+                                    style={styles.textInput}
                                     ref={passwordRef}
                                     fieldLabels={adminUserFieldLabels}
                                     field={AdminField.password}
@@ -112,8 +113,9 @@ const AdminNew = ({
                                     returnKeyType="next"
                                 />
 
-                                <FormikPasswordTextInput
-                                    textInputStyle={styles.textInput}
+                                <FormikTextInput
+                                    {...passwordTextInputProps}
+                                    style={styles.textInput}
                                     ref={confirmPasswordRef}
                                     fieldLabels={adminUserFieldLabels}
                                     field={AdminField.confirmPassword}
@@ -154,7 +156,6 @@ const AdminNew = ({
                                     field={AdminField.zone}
                                     formikProps={formikProps}
                                     mode="outlined"
-                                    numericKey
                                 />
 
                                 <FormikTextInput
@@ -174,8 +175,8 @@ const AdminNew = ({
                                     <Button
                                         disabled={
                                             formikProps.isSubmitting ||
-                                            Object.keys(formikProps.errors).length !== 0 ||
-                                            Object.keys(formikProps.touched).length === 0
+                                            countObjectKeys(formikProps.errors) !== 0 ||
+                                            countObjectKeys(formikProps.touched) === 0
                                         }
                                         loading={formikProps.isSubmitting}
                                         onPress={formikProps.handleSubmit}

@@ -1,11 +1,16 @@
 import React from "react";
 import { View } from "react-native";
-import { HelperText, Text } from "react-native-paper";
-import { baseFieldLabels, BaseSurveyFormField, IFormProps } from "@cbr/common";
-import { deviceTypes, rateLevel } from "@cbr/common";
+import { Text } from "react-native-paper";
+import {
+    baseFieldLabels,
+    BaseSurveyFormField,
+    deviceTypes,
+    IFormProps,
+    rateLevel,
+} from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import TextPicker, { IPickerChoice } from "../../../components/TextPicker/TextPicker";
+import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 
 const HealthForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -13,27 +18,17 @@ const HealthForm = (props: IFormProps) => {
     return (
         <View>
             <Text style={styles.pickerQuestion}>{"\n"}Rate your general health </Text>
-            <TextPicker
+            <FormikExposedDropdownMenu
                 field={BaseSurveyFormField.rateLevel}
-                choices={Object.entries(rateLevel).map(
-                    (key) =>
-                        ({
-                            value: key[0],
-                            label: key[1].name,
-                        } as IPickerChoice)
-                )}
-                selectedValue={props.formikProps.values[BaseSurveyFormField.rateLevel]}
-                setFieldValue={props.formikProps.setFieldValue}
-                setFieldTouched={props.formikProps.setFieldTouched}
+                valuesType="record-string"
+                values={Object.entries(rateLevel).reduce((accumulator, [value, { name }]) => {
+                    accumulator[value] = name;
+                    return accumulator;
+                }, {})}
+                formikProps={props.formikProps}
+                fieldLabels={baseFieldLabels}
+                mode="outlined"
             />
-
-            <HelperText
-                style={styles.errorText}
-                type="error"
-                visible={!!props.formikProps.errors[BaseSurveyFormField.rateLevel]}
-            >
-                {props.formikProps.errors[BaseSurveyFormField.rateLevel]}
-            </HelperText>
 
             <TextCheckBox
                 field={BaseSurveyFormField.getService}
@@ -73,54 +68,31 @@ const HealthForm = (props: IFormProps) => {
                     <Text style={styles.pickerQuestion}>
                         {"\n"} What assistive device do you need?
                     </Text>
-                    <TextPicker
+                    <FormikExposedDropdownMenu
                         field={BaseSurveyFormField.deviceType}
-                        choices={Object.entries(deviceTypes).map(
-                            (key) =>
-                                ({
-                                    value: key[0],
-                                    label: key[1],
-                                } as IPickerChoice)
-                        )}
-                        selectedValue={props.formikProps.values[BaseSurveyFormField.deviceType]}
-                        setFieldValue={props.formikProps.setFieldValue}
-                        setFieldTouched={props.formikProps.setFieldTouched}
+                        valuesType="record-string"
+                        values={deviceTypes}
+                        formikProps={props.formikProps}
+                        fieldLabels={baseFieldLabels}
+                        mode="outlined"
                     />
-
-                    <HelperText
-                        style={styles.errorText}
-                        type="error"
-                        visible={!!props.formikProps.errors[BaseSurveyFormField.deviceType]}
-                    >
-                        {props.formikProps.errors[BaseSurveyFormField.deviceType]}
-                    </HelperText>
                 </View>
             )}
             <Text style={styles.pickerQuestion}>
                 {"\n"}Are you satisfied with the health services you receive?
             </Text>
 
-            <TextPicker
+            <FormikExposedDropdownMenu
                 field={BaseSurveyFormField.serviceSatisf}
-                choices={Object.entries(rateLevel).map(
-                    (key) =>
-                        ({
-                            value: key[0],
-                            label: key[1].name,
-                        } as IPickerChoice)
-                )}
-                selectedValue={props.formikProps.values[BaseSurveyFormField.serviceSatisf]}
-                setFieldValue={props.formikProps.setFieldValue}
-                setFieldTouched={props.formikProps.setFieldTouched}
+                valuesType="record-string"
+                values={Object.entries(rateLevel).reduce((accumulator, [value, { name }]) => {
+                    accumulator[value] = name;
+                    return accumulator;
+                }, {})}
+                formikProps={props.formikProps}
+                fieldLabels={baseFieldLabels}
+                mode="outlined"
             />
-
-            <HelperText
-                style={styles.errorText}
-                type="error"
-                visible={!!props.formikProps.errors[BaseSurveyFormField.serviceSatisf]}
-            >
-                {props.formikProps.errors[BaseSurveyFormField.serviceSatisf]}
-            </HelperText>
         </View>
     );
 };

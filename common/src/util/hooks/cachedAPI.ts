@@ -186,13 +186,13 @@ export class APICacheData<TValue, TLoading, TError> {
             this._value = undefined;
         }
         if (clearBackup && commonConfiguration.useKeyValStorageForCachedAPIBackup) {
-            await commonConfiguration.keyValStorageProvider
-                .removeItem(this.cacheBackupKey)
-                .catch((e) =>
-                    console.log(
-                        `invalidate(${this.cacheBackupKey}): error clearing value in backup: ${e}`
-                    )
+            try {
+                await commonConfiguration.keyValStorageProvider.removeItem(this.cacheBackupKey);
+            } catch (e) {
+                console.log(
+                    `invalidate(${this.cacheBackupKey}): error clearing value in backup: ${e}`
                 );
+            }
         }
 
         if (reFetch) {
@@ -294,20 +294,17 @@ export class APICacheData<TValue, TLoading, TError> {
             return currentPromise;
         }
 
+        const newPromise = this.createCacheLoadPromise();
+        this._promise = newPromise;
+        return newPromise;
+    }
+
+    private async createCacheLoadPromise(): Promise<ICachedAPIResult<TValue, TError>> {
         let abortController = this.abortController;
         if (abortController.signal.aborted) {
             abortController = new AbortController();
             this.abortController = abortController;
         }
-
-        const newPromise = this.createCacheLoadPromise(abortController);
-        this._promise = newPromise;
-        return newPromise;
-    }
-
-    private async createCacheLoadPromise(
-        abortController: AbortController
-    ): Promise<ICachedAPIResult<TValue, TError>> {
         try {
             const timeoutId: any = setTimeout(() => abortController.abort(), this.fetchTimeoutMs);
             let data: any;
@@ -323,16 +320,19 @@ export class APICacheData<TValue, TLoading, TError> {
             this._value = transformedData;
 
             const result = this.makeCachedAPIResult(true, transformedData);
-            return commonConfiguration.useKeyValStorageForCachedAPIBackup
-                ? commonConfiguration.keyValStorageProvider
-                      .setItem(this.cacheBackupKey, JSON.stringify(data))
-                      .catch((e) => {
-                          console.error(
-                              `cachedAPIGetInner(${this.cacheBackupKey}): Error saving result to key-value storage: ${e}`
-                          );
-                      })
-                      .then(() => result)
-                : result;
+            if (commonConfiguration.useKeyValStorageForCachedAPIBackup) {
+                try {
+                    await commonConfiguration.keyValStorageProvider.setItem(
+                        this.cacheBackupKey,
+                        JSON.stringify(data)
+                    );
+                } catch (e) {
+                    console.error(
+                        `cachedAPIGetInner(${this.cacheBackupKey}): Error saving result to key-value storage: ${e}`
+                    );
+                }
+            }
+            return result;
         } catch (e) {
             // Invalidate to force subsequent calls to attempt another network call
             // to get a fresh value. We only set the promise to undefined here; don't

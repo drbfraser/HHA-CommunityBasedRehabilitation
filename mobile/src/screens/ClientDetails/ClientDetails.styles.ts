@@ -90,9 +90,9 @@ const useStyles = () =>
             width: 112,
             borderRadius: 5,
         },
-        disabilityButton: {
+        editButton: {
             justifyContent: "flex-start",
-            width: 184,
+            width: 70,
         },
         clientBirthdayView: {
             display: "flex",
@@ -283,9 +283,10 @@ const useStyles = () =>
             alignSelf: "center",
         },
         buttonZoneStyles: {
-            display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
             justifyContent: "space-between",
+            marginRight: 16,
+            marginLeft: 4,
         },
     });
 

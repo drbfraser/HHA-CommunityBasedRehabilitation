@@ -5,6 +5,7 @@ import { addValidTokens } from "../../testHelpers/authTokenHelpers";
 import { fromNewCommonModule } from "../../testHelpers/testCommonConfiguration";
 import { getZones, IZone, TZoneMap, useZones } from "../../../src/util/hooks/zones";
 import { checkAuthHeader } from "../../testHelpers/mockServerHelpers";
+import { invalidateAllCachedAPIInternal } from "../../../src/util/hooks/cachedAPI";
 
 const testZoneMap: TZoneMap = new Map<number, string>([
     [0, "Zone #1"],
@@ -38,6 +39,7 @@ const mockGetWithDefaultZones = () => {
 };
 
 beforeEach(async () => {
+    await invalidateAllCachedAPIInternal(true, true, false, false);
     resetFetchMocks();
     await addValidTokens();
 });

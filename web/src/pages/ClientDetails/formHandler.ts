@@ -1,9 +1,15 @@
 import { FormikHelpers } from "formik";
-import { Endpoint, apiFetch, objectToFormData } from "@cbr/common/util/endpoints";
+import {
+    Endpoint,
+    apiFetch,
+    objectToFormData,
+    APIFetchFailError,
+} from "@cbr/common/util/endpoints";
 import { IClient } from "@cbr/common/util/clients";
 import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
 import { getRandomStr } from "@cbr/common/util/misc";
+import { fieldLabels } from "../NewClient/formFields";
 
 const updateClient = async (clientInfo: FormData, clientId: number) => {
     const init: RequestInit = {
@@ -56,7 +62,10 @@ export const handleSubmit = async (
         await updateClient(formData, values.id);
         setIsEditing(false);
     } catch (e) {
-        alert("Encountered an error while trying to edit the client!");
+        const initialMessage = "Encountered an error while trying to edit the client!";
+        const detailedError =
+            e instanceof APIFetchFailError ? e.buildFormError(fieldLabels) : `${e}`;
+        alert(initialMessage + "\n" + detailedError);
     }
     helpers.setSubmitting(false);
 };

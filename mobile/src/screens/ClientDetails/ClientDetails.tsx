@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { IClient } from "@cbr/common";
+import { Gender, IClient, themeColors } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
-import { Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IReferral, ISurvey, timestampToDateObj } from "@cbr/common";
-import {
-    getDisabilities,
-    getOtherDisabilityId,
-    useDisabilities,
-} from "@cbr/common/src/util/hooks/disabilities";
+import { getOtherDisabilityId, useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 import { IVisitSummary } from "@cbr/common";
-import { IActivity, ActivityType } from "./ClientTimeline/Activity";
-import { useZones } from "@cbr/common/src/util/hooks/zones";
+import { IActivity, ActivityType } from "./ClientTimeline/Timeline";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import { RecentActivity } from "./ClientTimeline/RecentActivity";
-import { RouteProp, useIsFocused } from "@react-navigation/native";
+import { RouteProp, useNavigation, useIsFocused } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { StackParamList } from "../../util/stackScreens";
+import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
-import { ClientFormProps, InitialValues } from "../../components/ClientForm/ClientFormFields";
+import {
+    IClientFormProps,
+    initialValues,
+    validationSchema,
+} from "../../components/ClientForm/ClientFormFields";
+import { Formik } from "formik";
+import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 
 interface ClientProps {
     clientID: number;
@@ -30,25 +31,13 @@ interface ClientProps {
 }
 
 const ClientDetails = (props: ClientProps) => {
-    React.useEffect(() => {
-        props.navigation.setOptions({
-            title: "Client Page",
-            headerStyle: {
-                backgroundColor: "#273263",
-            },
-            headerTintColor: "#fff",
-            headerShown: true,
-        });
-    });
-
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
-    var disabilityMap = useDisabilities();
+    let disabilityMap = useDisabilities();
     const isFocused = useIsFocused();
 
     //Main Client Variables
-    const [presentClient, setPresentClient] = useState<IClient>();
-    const [clientFormikProps, setClientFormikProps] = useState<ClientFormProps>(InitialValues);
+    const [clientFormikProps, setClientFormikProps] = useState<IClientFormProps>();
 
     //Variables that cannot be edited and are for read only
     const [clientCreateDate, setClientCreateDate] = useState(0);
@@ -56,15 +45,25 @@ const ClientDetails = (props: ClientProps) => {
     const [clientReferrals, setClientReferrals] = useState<IReferral[]>();
     const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
 
-    const getInitialDisabilities = (disabilityArray: number[], otherDisability?: string) => {
-        var selectedDisabilities: string[] = [];
+    const errorAlert = () =>
+        Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
+            {
+                text: "Return",
+                style: "cancel",
+                onPress: () => {
+                    props.navigation.goBack();
+                },
+            },
+        ]);
 
-        for (let index of disabilityArray) {
-            if (disabilityMap.has(index)) {
-                if (index == getOtherDisabilityId(disabilityMap)) {
+    const getInitialDisabilities = (disabilityArray: number[]) => {
+        let selectedDisabilities: string[] = [];
+        for (let disabilityId of disabilityArray) {
+            if (disabilityMap.has(disabilityId)) {
+                if (disabilityId === getOtherDisabilityId(disabilityMap)) {
                     selectedDisabilities.push("Other");
                 } else {
-                    selectedDisabilities.push(disabilityMap.get(index)!);
+                    selectedDisabilities.push(disabilityMap.get(disabilityId)!);
                 }
             }
         }
@@ -74,31 +73,27 @@ const ClientDetails = (props: ClientProps) => {
 
     const getClientDetails = async () => {
         const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
-        setPresentClient(presentClient);
         setClientCreateDate(presentClient.created_date);
         setClientVisits(presentClient.visits);
         setClientReferrals(presentClient.referrals);
         setClientSurveys(presentClient.baseline_surveys);
 
-        const clientFormProps: ClientFormProps = {
+        const clientFormProps: IClientFormProps = {
+            initialDisabilityArray: getInitialDisabilities(presentClient.disability),
             id: props.route.params.clientID,
-            firstName: presentClient!.first_name,
-            lastName: presentClient!.last_name,
-            date: timestampToDateObj(Number(presentClient?.birth_date)),
-            gender: presentClient!.gender,
-            village: presentClient!.village,
-            zone: presentClient!.zone,
-            phone: presentClient!.phone_number,
-            caregiverPresent: presentClient!.caregiver_present,
-            caregiverName: presentClient?.caregiver_name,
-            caregiverEmail: presentClient?.caregiver_email,
-            caregiverPhone: presentClient?.caregiver_phone,
-            clientDisability: presentClient!.disability,
-            otherDisability: presentClient?.other_disability,
-            initialDisabilityArray: getInitialDisabilities(
-                presentClient.disability,
-                presentClient.other_disability
-            ),
+            firstName: presentClient.first_name,
+            lastName: presentClient.last_name,
+            birthDate: timestampToDateObj(Number(presentClient?.birth_date)),
+            gender: presentClient.gender,
+            village: presentClient.village,
+            zone: presentClient.zone,
+            phone: presentClient.phone_number,
+            caregiverPresent: presentClient.caregiver_present,
+            caregiverName: presentClient.caregiver_name,
+            caregiverEmail: presentClient.caregiver_email,
+            caregiverPhone: presentClient.caregiver_phone,
+            clientDisability: presentClient.disability,
+            otherDisability: presentClient.other_disability,
             createdDate: presentClient.created_date,
             createdByUser: presentClient.created_by_user,
             longitude: presentClient.longitude,
@@ -113,18 +108,16 @@ const ClientDetails = (props: ClientProps) => {
     };
     useEffect(() => {
         if (isFocused) {
-            getClientDetails().then(() => {
-                setLoading(false);
-            });
+            getClientDetails()
+                .catch(() => errorAlert())
+                .finally(() => setLoading(false));
         }
     }, [isFocused]);
 
-    //Overall Screen editable toggle variables
-    const [editMode, setEditMode] = useState(true);
-
     //Activity component rendering
+    const navigation = useNavigation<AppStackNavProp>();
     const tempActivity: IActivity[] = [];
-    var presentId = 0;
+    let presentId = 0;
     if (clientVisits) {
         clientVisits.forEach((presentVisit) => {
             tempActivity.push({
@@ -167,11 +160,42 @@ const ClientDetails = (props: ClientProps) => {
 
     tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));
 
+    const handleFormSubmit = (values: IClientFormProps) => {
+        const updatedIClient: IClient = {
+            id: props.route.params.clientID,
+            first_name: values.firstName ?? "",
+            last_name: values.lastName ?? "",
+            birth_date: values.birthDate ? values.birthDate.getTime() : new Date().getTime(),
+            gender: values.gender as Gender,
+            village: values.village ?? "",
+            zone: values.zone ?? 0,
+            phone_number: values.phone ?? "",
+            caregiver_present: values.caregiverPresent ?? false,
+            caregiver_name: values.caregiverName ?? "",
+            caregiver_email: values.caregiverEmail ?? "",
+            caregiver_phone: values.caregiverPhone ?? "",
+            disability: values.clientDisability ?? [],
+            other_disability: values.otherDisability ?? "",
+            picture:
+                "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
+            created_by_user: values.createdByUser ?? 0,
+            created_date: values.createdDate ?? new Date().getTime(),
+            longitude: values.longitude ?? "",
+            latitude: values.latitude ?? "",
+            caregiver_picture: values.caregiverPicture,
+            risks: values.risks ?? [],
+            visits: values.visits ?? [],
+            referrals: values.referrals ?? [],
+            baseline_surveys: values.surveys ?? [],
+        };
+        handleSubmit(updatedIClient);
+    };
+
     return (
         <ScrollView style={styles.scrollViewStyles}>
             {loading ? (
                 <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color="#273364" />
+                    <ActivityIndicator size="large" color={themeColors.blueAccent} />
                 </View>
             ) : (
                 <View>
@@ -182,24 +206,59 @@ const ClientDetails = (props: ClientProps) => {
                                 uri: "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png",
                             }}
                         />
-                        <Button mode="contained" style={styles.clientButtons}>
-                            New Visit
-                        </Button>
-                        <Button mode="contained" style={styles.clientButtons}>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.REFERRAL, {
+                                    clientID: props.route.params.clientID,
+                                });
+                            }}
+                        >
                             New Referral
                         </Button>
-                        <Button mode="contained" style={styles.clientButtons}>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.BASE_SURVEY, {
+                                    clientID: props.route.params.clientID,
+                                });
+                            }}
+                        >
                             Baseline Survey
+                        </Button>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.VISIT, {
+                                    clientID: props.route.params.clientID,
+                                });
+                            }}
+                        >
+                            New Visit
                         </Button>
                     </Card>
                     <Divider />
                     <Text style={styles.cardSectionTitle}>Client Details</Text>
                     <Divider />
+
                     <Card style={styles.clientDetailsContainerStyles}>
-                        <ClientForm clientFormProps={clientFormikProps!} />
+                        <Formik
+                            initialValues={clientFormikProps ?? initialValues}
+                            validationSchema={validationSchema}
+                            onSubmit={(values) => {
+                                handleFormSubmit(values);
+                            }}
+                        >
+                            {(formikProps) => (
+                                <ClientForm formikProps={formikProps} isNewClient={false} />
+                            )}
+                        </Formik>
                     </Card>
                     <Divider />
-                    <ClientRisk editMode={editMode}></ClientRisk>
+                    <ClientRisk editMode={true}></ClientRisk>
                     <Divider />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>
@@ -207,9 +266,9 @@ const ClientDetails = (props: ClientProps) => {
                         </View>
                         <RecentActivity
                             clientVisits={clientVisits!}
-                            activityDTO={tempActivity}
+                            activity={tempActivity}
                             clientCreateDate={clientCreateDate}
-                        ></RecentActivity>
+                        />
                         <View style={styles.clientDetailsFinalView}></View>
                     </Card>
                 </View>

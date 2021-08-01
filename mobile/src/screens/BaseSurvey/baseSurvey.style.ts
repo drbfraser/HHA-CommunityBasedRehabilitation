@@ -5,7 +5,6 @@ const useStyles = () =>
     StyleSheet.create({
         container: {
             flex: 1,
-            alignItems: "center",
             justifyContent: "center",
             marginLeft: 30,
             marginRight: 30,
@@ -15,6 +14,9 @@ const useStyles = () =>
             right: -50,
             bottom: -10,
             padding: -1,
+        },
+        errorAlert: {
+            marginVertical: 10,
         },
         prevButton: {
             position: "absolute",
@@ -27,12 +29,18 @@ const useStyles = () =>
             fontWeight: "bold",
             fontSize: 14,
         },
-        alertText: {
-            color: themeColors.hhaBlue,
+        pickerBoard: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            alignSelf: "stretch",
+            borderWidth: 1.2,
+            borderRadius: 4,
+            marginTop: 10,
+            color: themeColors.blueBgDark,
         },
         stepLabelText: { fontSize: 25, fontWeight: "bold" },
-        centerElement: { justifyContent: "center", alignItems: "center" },
-        picker: { height: 40, width: 250 },
+        picker: { height: 55, width: "100%", flexGrow: 1 },
         pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
         errorText: { color: themeColors.errorRed, paddingLeft: 15 },
     });

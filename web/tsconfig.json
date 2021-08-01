@@ -17,6 +17,6 @@
         "jsx": "react",
         "baseUrl": "src"
     },
-    "include": ["src", "../common/src", "../mobile/src/screens/BaseSurvey/formHandler.ts"],
+    "include": ["src", "../common/src"],
     "extends": "./tsconfig.base.json"
 }

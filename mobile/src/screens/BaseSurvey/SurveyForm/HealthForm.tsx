@@ -1,11 +1,16 @@
 import React from "react";
 import { View } from "react-native";
-import { HelperText, Text } from "react-native-paper";
-import { fieldLabels, FormField, IFormProps } from "@cbr/common";
-import { deviceTypes, rateLevel } from "@cbr/common";
+import { Text } from "react-native-paper";
+import {
+    baseFieldLabels,
+    BaseSurveyFormField,
+    deviceTypes,
+    IFormProps,
+    rateLevel,
+} from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import TextPicker, { IPickerChoice } from "../../../components/TextPicker/TextPicker";
+import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 
 const HealthForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -13,114 +18,81 @@ const HealthForm = (props: IFormProps) => {
     return (
         <View>
             <Text style={styles.pickerQuestion}>{"\n"}Rate your general health </Text>
-            <TextPicker
-                field={FormField.rateLevel}
-                choices={Object.entries(rateLevel).map(
-                    (key) =>
-                        ({
-                            value: key[0],
-                            label: key[1].name,
-                        } as IPickerChoice)
-                )}
-                selectedValue={props.formikProps.values[FormField.rateLevel]}
-                setFieldValue={props.formikProps.setFieldValue}
-                setFieldTouched={props.formikProps.setFieldTouched}
+            <FormikExposedDropdownMenu
+                field={BaseSurveyFormField.rateLevel}
+                valuesType="record-string"
+                values={Object.entries(rateLevel).reduce((accumulator, [value, { name }]) => {
+                    accumulator[value] = name;
+                    return accumulator;
+                }, {})}
+                formikProps={props.formikProps}
+                fieldLabels={baseFieldLabels}
+                mode="outlined"
             />
 
-            <HelperText
-                style={styles.errorText}
-                type="error"
-                visible={!!props.formikProps.errors[FormField.rateLevel]}
-            >
-                {props.formikProps.errors[FormField.rateLevel]}
-            </HelperText>
-
             <TextCheckBox
-                field={FormField.getService}
-                value={props.formikProps.values[FormField.getService]}
-                label={fieldLabels[FormField.getService]}
+                field={BaseSurveyFormField.getService}
+                value={props.formikProps.values[BaseSurveyFormField.getService]}
+                label={baseFieldLabels[BaseSurveyFormField.getService]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
             <TextCheckBox
-                field={FormField.needService}
-                value={props.formikProps.values[FormField.needService]}
-                label={fieldLabels[FormField.needService]}
+                field={BaseSurveyFormField.needService}
+                value={props.formikProps.values[BaseSurveyFormField.needService]}
+                label={baseFieldLabels[BaseSurveyFormField.needService]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
             <TextCheckBox
-                field={FormField.haveDevice}
-                value={props.formikProps.values[FormField.haveDevice]}
-                label={fieldLabels[FormField.haveDevice]}
+                field={BaseSurveyFormField.haveDevice}
+                value={props.formikProps.values[BaseSurveyFormField.haveDevice]}
+                label={baseFieldLabels[BaseSurveyFormField.haveDevice]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
 
             <TextCheckBox
-                field={FormField.deviceWorking}
-                value={props.formikProps.values[FormField.deviceWorking]}
-                label={fieldLabels[FormField.deviceWorking]}
+                field={BaseSurveyFormField.deviceWorking}
+                value={props.formikProps.values[BaseSurveyFormField.deviceWorking]}
+                label={baseFieldLabels[BaseSurveyFormField.deviceWorking]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
 
             <TextCheckBox
-                field={FormField.needDevice}
-                value={props.formikProps.values[FormField.needDevice]}
-                label={fieldLabels[FormField.needDevice]}
+                field={BaseSurveyFormField.needDevice}
+                value={props.formikProps.values[BaseSurveyFormField.needDevice]}
+                label={baseFieldLabels[BaseSurveyFormField.needDevice]}
                 setFieldValue={props.formikProps.setFieldValue}
             />
 
-            {props.formikProps.values[FormField.needDevice] && (
+            {props.formikProps.values[BaseSurveyFormField.needDevice] && (
                 <View>
                     <Text style={styles.pickerQuestion}>
                         {"\n"} What assistive device do you need?
                     </Text>
-                    <TextPicker
-                        field={FormField.deviceType}
-                        choices={Object.entries(deviceTypes).map(
-                            (key) =>
-                                ({
-                                    value: key[0],
-                                    label: key[1],
-                                } as IPickerChoice)
-                        )}
-                        selectedValue={props.formikProps.values[FormField.deviceType]}
-                        setFieldValue={props.formikProps.setFieldValue}
-                        setFieldTouched={props.formikProps.setFieldTouched}
+                    <FormikExposedDropdownMenu
+                        field={BaseSurveyFormField.deviceType}
+                        valuesType="record-string"
+                        values={deviceTypes}
+                        formikProps={props.formikProps}
+                        fieldLabels={baseFieldLabels}
+                        mode="outlined"
                     />
-
-                    <HelperText
-                        style={styles.errorText}
-                        type="error"
-                        visible={!!props.formikProps.errors[FormField.deviceType]}
-                    >
-                        {props.formikProps.errors[FormField.deviceType]}
-                    </HelperText>
                 </View>
             )}
             <Text style={styles.pickerQuestion}>
                 {"\n"}Are you satisfied with the health services you receive?
             </Text>
 
-            <TextPicker
-                field={FormField.serviceSatisf}
-                choices={Object.entries(rateLevel).map(
-                    (key) =>
-                        ({
-                            value: key[0],
-                            label: key[1].name,
-                        } as IPickerChoice)
-                )}
-                selectedValue={props.formikProps.values[FormField.serviceSatisf]}
-                setFieldValue={props.formikProps.setFieldValue}
-                setFieldTouched={props.formikProps.setFieldTouched}
+            <FormikExposedDropdownMenu
+                field={BaseSurveyFormField.serviceSatisf}
+                valuesType="record-string"
+                values={Object.entries(rateLevel).reduce((accumulator, [value, { name }]) => {
+                    accumulator[value] = name;
+                    return accumulator;
+                }, {})}
+                formikProps={props.formikProps}
+                fieldLabels={baseFieldLabels}
+                mode="outlined"
             />
-
-            <HelperText
-                style={styles.errorText}
-                type="error"
-                visible={!!props.formikProps.errors[FormField.serviceSatisf]}
-            >
-                {props.formikProps.errors[FormField.serviceSatisf]}
-            </HelperText>
         </View>
     );
 };

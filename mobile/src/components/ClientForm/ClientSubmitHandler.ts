@@ -5,9 +5,12 @@ import {
     IClient,
     getDisabilities,
     getOtherDisabilityId,
+    APIFetchFailError,
+    baseFieldLabels,
 } from "@cbr/common";
 import { timestampFromFormDate } from "@cbr/common/";
 import { Platform, ToastAndroid, AlertIOS } from "react-native";
+import { ClientFormFieldLabels } from "./ClientFormFields";
 
 const toastSuccess = () => {
     const msg = "Your changes have been made.";
@@ -37,8 +40,10 @@ const updateClient = async (clientInfo: FormData, clientId: number) => {
 
 export const handleSubmit = async (values: IClient, isNewClient?: boolean) => {
     const disabilities = await getDisabilities();
+    let requestSuccess: boolean = true;
     if (isNewClient) {
-        //Do the new client POST request stuff here
+        // TODO: Do the new client POST request stuff here
+        return false;
     } else {
         const updatedValues = {
             first_name: values.first_name,
@@ -59,11 +64,19 @@ export const handleSubmit = async (values: IClient, isNewClient?: boolean) => {
                 ? values.other_disability
                 : "",
         };
+
         const formData = objectToFormData(updatedValues);
         try {
             await updateClient(formData, values.id);
         } catch (e) {
-            alert("Encountered an error while trying to edit the client!");
+            requestSuccess = false;
+            const initialMessage = isNewClient
+                ? "Encountered an error while trying to create the client!"
+                : "Encountered an error while trying to edit the client!";
+            const detailedError =
+                e instanceof APIFetchFailError ? e.buildFormError(ClientFormFieldLabels) : `${e}`;
+            alert(initialMessage + "\n" + detailedError);
         }
+        return requestSuccess;
     }
 };

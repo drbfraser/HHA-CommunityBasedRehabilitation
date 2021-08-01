@@ -1,5 +1,6 @@
 import {
     calls as mockedCalls,
+    get as mockGet,
     MockResponseObject,
     post as mockPost,
     reset as resetMockedCalls,
@@ -16,7 +17,7 @@ import {
 } from "../../src/util/internal/tokens";
 import { testCommonConfig, testKeyValStorage } from "../testHelpers/testCommonConfiguration";
 import { addValidTokens, createFakeToken } from "../testHelpers/authTokenHelpers";
-import { reinitializeCommon } from "../../src/init";
+import { commonConfiguration, reinitializeCommon } from "../../src/init";
 import { sleep } from "../../src/util/sleep";
 
 const correctUsername = "user";
@@ -106,12 +107,50 @@ beforeEach(() => {
 describe("auth.ts", () => {
     describe("doLogin", () => {
         it("returns false if login fails", async () => {
-            expect(await doLogin(correctUsername, correctPassword + "wrong")).toEqual(false);
+            try {
+                await doLogin(correctUsername, correctPassword + "wrong");
+                expect(false).toBe("expected doLogin to throw an error, but it didn't");
+            } catch (e) {
+                // good
+            }
             expect(await isLoggedIn()).toEqual(false);
         });
+
         it("returns true if login succeeds", async () => {
-            expect(await doLogin(correctUsername, correctPassword)).toEqual(true);
+            try {
+                await doLogin(correctUsername, correctPassword);
+            } catch (e) {
+                expect(false).toBe("expected doLogin to not throw an error, but it did");
+            }
             expect(await isLoggedIn()).toEqual(true);
+        });
+
+        it("returns a wrapped error when configured to do so", async () => {
+            const EXPECTED_ERROR_MESSAGE = "EXPECTED WRAPPED ERROR MESSAGE FROM LOGIN";
+
+            reinitializeCommon({
+                ...testCommonConfig,
+                fetchErrorWrapper: async (e: Error) => {
+                    return new Error(EXPECTED_ERROR_MESSAGE);
+                },
+            });
+
+            // get rid of the default mock for this test module
+            resetMockedCalls();
+
+            mockPost(Endpoint.LOGIN, () => {
+                // simulate a network error from the fetch call
+                throw new TypeError("Network request failed");
+            });
+
+            try {
+                await doLogin(correctUsername, correctPassword);
+                expect(false).toBe("expected doLogin to throw an error");
+            } catch (e) {
+                expect(e).toBeInstanceOf(Error);
+                expect((e as Error).message).toBe(EXPECTED_ERROR_MESSAGE);
+            }
+            expect(await isLoggedIn()).toEqual(false);
         });
     });
 
@@ -124,7 +163,11 @@ describe("auth.ts", () => {
                 logoutCallback: async () => mockLogoutCallback(),
             });
 
-            expect(await doLogin(correctUsername, correctPassword)).toEqual(true);
+            try {
+                await doLogin(correctUsername, correctPassword);
+            } catch (e) {
+                expect(false).toBe("expected not to throw an error");
+            }
             expect(await isLoggedIn()).toEqual(true);
             expect(await getAccessToken()).not.toBeNull();
             expect(await getRefreshToken()).not.toBeNull();

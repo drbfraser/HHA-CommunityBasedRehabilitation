@@ -1,18 +1,22 @@
 import { FormikHelpers } from "formik";
 import history from "util/history";
-import { TFormValues } from "@cbr/common/forms/baseSurvey/baseSurveyFormFields";
-import { handleSubmitForm } from "@cbr/common/forms/baseSurvey/baseSurveyFormHandler";
+import { baseFieldLabels, BaseFormValues } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
+import { baseSurveyHandleSubmitForm } from "@cbr/common/forms/BaseSurvey/baseSurveyHandler";
+import React from "react";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
 
 export const handleSubmit = async (
-    values: TFormValues,
-    helpers: FormikHelpers<TFormValues>,
-    setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
+    values: BaseFormValues,
+    helpers: FormikHelpers<BaseFormValues>,
+    setSubmissionError: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
     try {
-        handleSubmitForm(values, helpers, setSubmissionError);
+        await baseSurveyHandleSubmitForm(values);
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);
-        setSubmissionError(true);
+        setSubmissionError(
+            e instanceof APIFetchFailError ? e.buildFormError(baseFieldLabels) : `${e}`
+        );
     }
 };

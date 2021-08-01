@@ -1,16 +1,17 @@
 import { IReferral, IRisk, ISurvey, IVisit, IVisitSummary, Validation } from "@cbr/common";
+import { FormikProps } from "formik";
 import * as Yup from "yup";
 
-export interface FormProps {
+export interface IFormProps {
     isNewClient?: boolean;
-    clientFormProps?: ClientFormProps;
+    formikProps?: FormikProps<IClientFormProps>;
 }
 
-export interface ClientFormProps {
+export interface IClientFormProps {
     id?: number;
     firstName?: string;
     lastName?: string;
-    date?: Date;
+    birthDate?: Date;
     gender?: string;
     village?: string;
     zone?: number;
@@ -37,7 +38,7 @@ export interface ClientFormProps {
 export enum ClientFormFields {
     first_name = "firstName",
     last_name = "lastName",
-    date = "date",
+    birthDate = "birthDate",
     phone = "phone",
     disability = "clientDisability",
     other_disability = "otherDisability",
@@ -47,12 +48,21 @@ export enum ClientFormFields {
     caregiver_name = "caregiverName",
     caregiver_phone = "caregiverPhone",
     caregiver_email = "caregiverEmail",
+    createdDate = "createdDate",
+    createdByUser = "createdByUser",
+    longitude = "longitde",
+    latitude = "latitude",
+    caregiverPicture = "caregiverPicture",
+    risks = "risks",
+    visits = "visits",
+    referrals = "referrals",
+    surveys = "surveys",
 }
 
 export const ClientFormFieldLabels = {
     [ClientFormFields.first_name]: "First Name",
     [ClientFormFields.last_name]: "Last Name",
-    [ClientFormFields.date]: "Birthdate",
+    [ClientFormFields.birthDate]: "Birthdate",
     [ClientFormFields.phone]: "Phone Number",
     [ClientFormFields.disability]: "Disability",
     [ClientFormFields.other_disability]: "Other Disability",
@@ -64,10 +74,9 @@ export const ClientFormFieldLabels = {
     [ClientFormFields.caregiver_email]: "Caregiver Email",
 };
 
-export const InitialValues = {
+export const initialValues: IClientFormProps = {
     [ClientFormFields.first_name]: "",
     [ClientFormFields.last_name]: "",
-    [ClientFormFields.date]: new Date(),
     [ClientFormFields.phone]: "",
     [ClientFormFields.disability]: [],
     [ClientFormFields.other_disability]: "",
@@ -77,13 +86,20 @@ export const InitialValues = {
     [ClientFormFields.caregiver_name]: "",
     [ClientFormFields.caregiver_phone]: "",
     [ClientFormFields.caregiver_email]: "",
+    [ClientFormFields.createdByUser]: 0,
+    [ClientFormFields.latitude]: "",
+    [ClientFormFields.caregiverPicture]: "",
+    [ClientFormFields.risks]: [],
+    [ClientFormFields.visits]: [],
+    [ClientFormFields.referrals]: [],
+    [ClientFormFields.surveys]: [],
 };
 
 export interface FormValues {
     id?: number;
     firstName?: string;
     lastName?: string;
-    date?: Date;
+    birthDate?: Date;
     gender?: string;
     village?: string;
     zone?: number;
@@ -96,15 +112,15 @@ export interface FormValues {
     otherDisability?: string;
 }
 
-export const setFormInitialValues = (props: ClientFormProps, isNewClient?: boolean) => {
+export const setFormInitialValues = (props: IClientFormProps, isNewClient?: boolean) => {
     if (isNewClient) {
-        return InitialValues;
+        return initialValues;
     } else {
         const loadedInitialValues: FormValues = {
             id: props.id,
             firstName: props.firstName,
             lastName: props.lastName,
-            date: props.date,
+            date: props.birthDate,
             gender: props.gender,
             village: props.village,
             zone: props.zone,
@@ -132,8 +148,8 @@ export const validationSchema = () =>
             .required()
             .max(50)
             .min(1),
-        [ClientFormFields.date]: Yup.date()
-            .label(ClientFormFieldLabels[ClientFormFields.date])
+        [ClientFormFields.birthDate]: Yup.date()
+            .label(ClientFormFieldLabels[ClientFormFields.birthDate])
             .max(new Date(), "Birthdate cannot be in the future")
             .required(),
         [ClientFormFields.phone]: Yup.string()
@@ -142,33 +158,18 @@ export const validationSchema = () =>
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
         [ClientFormFields.disability]: Yup.array()
             .label(ClientFormFieldLabels[ClientFormFields.disability])
-            .required(),
-        [ClientFormFields.other_disability]: Yup.string()
-            .label(ClientFormFieldLabels[ClientFormFields.other_disability])
-            .trim()
-            .test(
-                "require-if-other-selected",
-                "Other Disability is required",
-                async (other_disability, schema) =>
-                    !(await Validation.otherDisabilitySelected(schema.parent.clientDisability)) ||
-                    (other_disability !== undefined && other_disability.length > 0)
-            )
-            .test(
-                "require-if-other-selected",
-                "Other Disability must be at most 100 characters",
-                async (other_disability, schema) =>
-                    !(await Validation.otherDisabilitySelected(schema.parent.clientDisability)) ||
-                    (other_disability !== undefined && other_disability.length <= 100)
-            ),
+            .required()
+            .min(1, "You must input at least 1 disability"),
         [ClientFormFields.gender]: Yup.string()
             .label(ClientFormFieldLabels[ClientFormFields.gender])
             .required(),
         [ClientFormFields.village]: Yup.string()
             .label(ClientFormFieldLabels[ClientFormFields.village])
             .required(),
-        [ClientFormFields.zone]: Yup.string()
+        [ClientFormFields.zone]: Yup.number()
             .label(ClientFormFieldLabels[ClientFormFields.zone])
-            .required(),
+            .required()
+            .typeError("Zone is a required field"),
         [ClientFormFields.caregiver_name]: Yup.string()
             .label(ClientFormFieldLabels[ClientFormFields.caregiver_name])
             .max(101),

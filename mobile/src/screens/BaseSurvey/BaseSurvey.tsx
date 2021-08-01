@@ -1,64 +1,92 @@
 import React, { useState } from "react";
-import { ScrollView, StatusBar, View } from "react-native";
-import { Text, Divider, Appbar } from "react-native-paper";
+import { ScrollView, View } from "react-native";
+import { Divider, Text } from "react-native-paper";
 import {
+    baseInitialValues,
+    BaseSurveyFormField,
     educationValidationSchema,
     empowermentValidationSchema,
     emptyValidationSchema,
     foodValidationSchema,
-    FormField,
     healthValidationSchema,
     IFormProps,
-    initialValues,
     livelihoodValidationSchema,
     surveyTypes,
+    themeColors,
+    APIFetchFailError,
+    baseFieldLabels,
+    countObjectKeys,
 } from "@cbr/common";
 import { Formik, FormikHelpers } from "formik";
-import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
-import { themeColors } from "@cbr/common";
+import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./baseSurvey.style";
 import HealthForm from "./SurveyForm/HealthForm";
 import EducationForm from "./SurveyForm/EducationForm";
 import SocialForm from "./SurveyForm/SocialForm";
-import LivelihoodForm from "./SurveyForm/LivelihoodFom";
+import LivelihoodForm from "./SurveyForm/LivelihoodForm";
 import EmpowermentForm from "./SurveyForm/EmpowermentForm";
 import ShelterForm from "./SurveyForm/ShelterForm";
 import FoodForm from "./SurveyForm/FoodForm";
 import { handleSubmit } from "./formHandler";
+import { RouteProp } from "@react-navigation/native";
+import { StackParamList } from "../../util/stackScreens";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { StackScreenName } from "../../util/StackScreenName";
+import Alert from "../../components/Alert/Alert";
+import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 
 interface ISurvey {
     label: string;
     Form: (props: IFormProps) => JSX.Element;
     validationSchema: () => any;
 }
+interface IBaseSurveyProps {
+    clientID: number;
+    route: RouteProp<StackParamList, StackScreenName.BASE_SURVEY>;
+    navigation: StackNavigationProp<StackParamList, StackScreenName.BASE_SURVEY>;
+}
 
-const BaseSurvey = () => {
+const BaseSurvey = (props: IBaseSurveyProps) => {
+    const [hasSubmitted, setHasSubmitted] = useState(false);
+
     const [step, setStep] = useState<number>(0);
     const [submissionError, setSubmissionError] = useState(false);
     const styles = useStyles();
     const [stepChecked, setStepChecked] = useState([false]);
     const isFinalStep = step + 1 === surveyTypes.length && step !== 0;
-    const prevStep = () => {
-        setStep(step - 1);
-    };
-    // Make sure the user can not click to next if they did not fill out the required fields
+    const clientId = props.route.params.clientID;
+    const [saveError, setSaveError] = useState<string>();
+
+    const prevStep = () => setStep(step - 1);
+
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
-        // TODO: conncet with the client
         if (isFinalStep) {
-            handleSubmit(values, helpers, setSubmissionError);
+            setSaveError(undefined);
+            handleSubmit(values, helpers)
+                .then(() => {
+                    setHasSubmitted(true);
+
+                    props.navigation.navigate(StackScreenName.CLIENT, {
+                        clientID: clientId,
+                    });
+                })
+                .catch((e) => {
+                    setSaveError(
+                        e instanceof APIFetchFailError ? e.buildFormError(baseFieldLabels) : `${e}`
+                    );
+                    helpers.setSubmitting(false);
+                    setSubmissionError(true);
+                });
         } else {
             if (step === 0) {
-                // For testing
                 if (stepChecked.length < surveySteps.length - 1) {
                     for (let i = 1; i < surveySteps.length - 1; i++) {
                         stepChecked.push(false);
                     }
                 }
-
-                helpers.setFieldValue(`${[FormField.client]}`, 1);
-                // helpers.setFieldValue(`${[FormField.client]}`, clientId);
+                helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, clientId);
             }
-            if (step === 0 || step === 3) {
+            if ((step === 0 || step === 3) && !stepChecked[step]) {
                 helpers.setTouched({});
             }
             let newArr = [...stepChecked];
@@ -106,54 +134,69 @@ const BaseSurvey = () => {
             validationSchema: emptyValidationSchema,
         },
     ];
+
     return (
-        <Formik
-            initialValues={initialValues}
-            validationSchema={surveySteps[step].validationSchema}
-            onSubmit={nextStep}
-            enableReinitialize
-        >
-            {(formikProps) => (
-                <>
-                    {/* TODO: Update with Global App bar */}
-                    <Appbar.Header>
-                        <Appbar.BackAction />
-                        <Appbar.Content title={"Baseline Survey"} />
-                    </Appbar.Header>
-                    <View style={styles.container}>
-                        <ProgressSteps {...progressStepsStyle}>
-                            {surveySteps.map((surveyStep, index) => (
-                                <ProgressStep
-                                    key={index}
-                                    scrollViewProps={defaultScrollViewProps}
-                                    previousBtnTextStyle={styles.buttonTextStyle}
-                                    nextBtnTextStyle={styles.buttonTextStyle}
-                                    nextBtnStyle={styles.nextButton}
-                                    onNext={() => {
-                                        nextStep(formikProps.values, formikProps);
-                                    }}
-                                    nextBtnDisabled={
-                                        !stepChecked[step]
-                                            ? Object.keys(formikProps.errors).length !== 0 ||
-                                              Object.keys(formikProps.touched).length === 0
-                                            : false
-                                    }
-                                    onPrevious={prevStep}
-                                    previousBtnStyle={styles.prevButton}
-                                    onSubmit={() => nextStep(formikProps.values, formikProps)}
-                                >
-                                    <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
-                                    <Divider style={{ backgroundColor: themeColors.blueBgDark }} />
-                                    <ScrollView>
-                                        <surveyStep.Form formikProps={formikProps} />
-                                    </ScrollView>
-                                </ProgressStep>
-                            ))}
-                        </ProgressSteps>
-                    </View>
-                </>
-            )}
-        </Formik>
+        <>
+            <ConfirmDialogWithNavListener
+                bypassDialog={hasSubmitted}
+                confirmButtonText="Discard"
+                dialogContent="Discard this new baseline survey?"
+            />
+            <Formik
+                initialValues={baseInitialValues}
+                validationSchema={surveySteps[step].validationSchema}
+                onSubmit={nextStep}
+                enableReinitialize
+            >
+                {(formikProps) => (
+                    <>
+                        <View style={styles.container}>
+                            {saveError && (
+                                <Alert
+                                    style={styles.errorAlert}
+                                    severity={"error"}
+                                    text={saveError}
+                                    onClose={() => setSaveError(undefined)}
+                                />
+                            )}
+
+                            <ProgressSteps {...progressStepsStyle}>
+                                {surveySteps.map((surveyStep, index) => (
+                                    <ProgressStep
+                                        key={index}
+                                        scrollViewProps={defaultScrollViewProps}
+                                        previousBtnTextStyle={styles.buttonTextStyle}
+                                        nextBtnTextStyle={styles.buttonTextStyle}
+                                        nextBtnStyle={styles.nextButton}
+                                        onNext={() => {
+                                            nextStep(formikProps.values, formikProps);
+                                        }}
+                                        nextBtnDisabled={
+                                            formikProps.isSubmitting ||
+                                            countObjectKeys(formikProps.errors) !== 0 ||
+                                            (countObjectKeys(formikProps.touched) === 0 &&
+                                                !stepChecked[step])
+                                        }
+                                        previousBtnDisabled={formikProps.isSubmitting}
+                                        onPrevious={prevStep}
+                                        previousBtnStyle={styles.prevButton}
+                                        onSubmit={() => nextStep(formikProps.values, formikProps)}
+                                    >
+                                        <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
+                                        <Divider
+                                            style={{ backgroundColor: themeColors.blueBgDark }}
+                                        />
+                                        <ScrollView>
+                                            <surveyStep.Form formikProps={formikProps} />
+                                        </ScrollView>
+                                    </ProgressStep>
+                                ))}
+                            </ProgressSteps>
+                        </View>
+                    </>
+                )}
+            </Formik>
+        </>
     );
 };
 

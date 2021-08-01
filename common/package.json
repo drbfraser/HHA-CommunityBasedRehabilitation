@@ -15,6 +15,7 @@
         "fetch-mock": "^7.3.9",
         "jest": "^27.0.6",
         "jest-junit": "^12.2.0",
+        "node-abort-controller": "^2.0.0",
         "node-fetch": "^2.6.1",
         "prettier": "^2.3.0",
         "react": "16.13.1",

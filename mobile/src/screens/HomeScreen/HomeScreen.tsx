@@ -31,26 +31,9 @@ const screensForUser = (user: IUser | TAPILoadError | undefined) => {
 
 const HomeScreen = (props: IHomeScreenProps) => {
     const styles = useStyles();
-    React.useEffect(() => {
-        props.navigation.setOptions({
-            title: "Main Menu",
-            headerStyle: styles.headerStyle,
-            headerTintColor: themeColors.blueAccent,
-            headerShown: true,
-        });
-    });
 
     const Tab = createMaterialBottomTabNavigator();
     const { authState } = useContext(AuthContext);
-
-    React.useEffect(() => {
-        props.navigation.setOptions({
-            title: "Main Menu",
-            headerStyle: styles.headerStyle,
-            headerTintColor: themeColors.white,
-            headerShown: true,
-        });
-    });
 
     return (
         <Provider theme={theme}>

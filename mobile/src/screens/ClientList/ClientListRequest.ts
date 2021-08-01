@@ -21,6 +21,7 @@ export type ClientTest = {
     HealthLevel: string;
     EducationLevel: string;
     SocialLevel: string;
+    last_visit_date: number;
 };
 
 export const fetchClientsFromApi = async (
@@ -55,6 +56,7 @@ export const fetchClientsFromApi = async (
             HealthLevel: riskLevels[responseRow.health_risk_level].color,
             EducationLevel: riskLevels[responseRow.educat_risk_level].color,
             SocialLevel: riskLevels[responseRow.social_risk_level].color,
+            last_visit_date: responseRow.last_visit_date,
         }));
 
         return resultRow;

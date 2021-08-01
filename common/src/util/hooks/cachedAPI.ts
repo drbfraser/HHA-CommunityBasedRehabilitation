@@ -101,7 +101,7 @@ export class APICacheData<TValue, TLoading, TError> {
      * @see CommonConfiguration.useKeyValStorageForCachedAPIBackup
      * @see getCachedValueInner
      */
-    private readonly cacheBackupKey: string;
+    readonly cacheBackupKey: string;
     private readonly doFetch: (abortController: AbortController) => Promise<Response>;
     /**
      * A function to transform the response data into the `TValue` type.
@@ -152,6 +152,19 @@ export class APICacheData<TValue, TLoading, TError> {
         this.invalidationEventEmitter.removeListener(INVALIDATION_EVENT, listener);
     }
 
+    private async clearExistingPromise() {
+        const currentPromise = this._promise;
+        if (currentPromise) {
+            // If we invalidate while a promise is still active, invalidation might not do anything,
+            // e.g. if clearBackup is true, we might run the removeItem code below; however, the
+            // leftover promise might still need to run `setItem`, resulting in the backup not being
+            // invalidated at all. Could be an issue on logout.
+            this.abortController.abort();
+            await currentPromise;
+        }
+        this._promise = undefined;
+    }
+
     /**
      * Invalidates all cached API and forces any active listeners of all caches to refetch API data
      * from the server.
@@ -173,14 +186,7 @@ export class APICacheData<TValue, TLoading, TError> {
         reFetch: boolean = false,
         notifyListeners: boolean = true
     ): Promise<void> {
-        if (this._promise) {
-            // If we invalidate while a promise is still active, invalidation might not do anything,
-            // e.g. if clearBackup is true, we might run the removeItem code below; however, the
-            // leftover promise might still need to run `setItem`, resulting in the backup not being
-            // invalidated at all. Could be an issue on logout.
-            await this._promise;
-        }
-        this._promise = undefined;
+        await this.clearExistingPromise();
 
         if (clearValue) {
             this._value = undefined;
@@ -226,11 +232,7 @@ export class APICacheData<TValue, TLoading, TError> {
      */
     async getCachedValue(refreshValue: boolean = false): Promise<TValue | TError> {
         if (refreshValue) {
-            if (this._promise) {
-                // Prevent race conditions.
-                await this._promise;
-            }
-            this._promise = undefined;
+            await this.clearExistingPromise();
         }
 
         const result = await this.getCachedValueInner();
@@ -305,6 +307,7 @@ export class APICacheData<TValue, TLoading, TError> {
             abortController = new AbortController();
             this.abortController = abortController;
         }
+
         try {
             const timeoutId: any = setTimeout(() => abortController.abort(), this.fetchTimeoutMs);
             let data: any;
@@ -321,6 +324,11 @@ export class APICacheData<TValue, TLoading, TError> {
 
             const result = this.makeCachedAPIResult(true, transformedData);
             if (commonConfiguration.useKeyValStorageForCachedAPIBackup) {
+                if (abortController.signal.aborted) {
+                    console.warn(`cachedAPIGet(${this.cacheBackupKey}): previous promise aborted`);
+                    return this.makeCachedAPIResult(false, this.errorValue);
+                }
+
                 try {
                     await commonConfiguration.keyValStorageProvider.setItem(
                         this.cacheBackupKey,
@@ -366,11 +374,11 @@ export class APICacheData<TValue, TLoading, TError> {
     private async loadBackupValue(): Promise<ICachedAPIResult<TValue, TError>> {
         const baseErrorMsg = `cachedAPIGet(${this.cacheBackupKey}): API fetch failed`;
         try {
-            const cachedItem = await commonConfiguration.keyValStorageProvider.getItem(
+            const backup = await commonConfiguration.keyValStorageProvider.getItem(
                 this.cacheBackupKey
             );
-            if (cachedItem) {
-                this._value = this.transformData(JSON.parse(cachedItem));
+            if (backup) {
+                this._value = this.transformData(JSON.parse(backup));
                 console.log(baseErrorMsg + "; using backup");
                 return this.makeCachedAPIResult(false, this._value);
             } else {

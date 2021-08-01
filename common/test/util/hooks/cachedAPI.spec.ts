@@ -284,6 +284,31 @@ describe("cachedAPI.ts", () => {
             await cache.invalidate(false, false, false, true);
             expect(listener).toHaveBeenCalledTimes(2);
         });
+
+        it("should wait until previous promises are resolved", async () => {
+            reinitializeCommon({ ...testCommonConfig, useKeyValStorageForCachedAPIBackup: true });
+            const cache = createTestCache();
+            const expectedTestData: ITestData = { a: "A string", b: -10, c: true, d: ["a", "c"] };
+            mockGet(TEST_FAKE_ENDPOINT, async () => {
+                await sleep(75);
+                return {
+                    status: 200,
+                    body: JSON.stringify(expectedTestData),
+                };
+            });
+
+            const initialPromise = cache.getCachedValue();
+            await sleep(25);
+            await cache.invalidate(true, true, false, false);
+            await sleep(100);
+            // After invalidating with clearBackup set to true, the backup should actually be
+            // undefined.
+            expect(testKeyValStorage.get(cache.cacheBackupKey)).toBeUndefined();
+            expect(cache.value).toBeUndefined();
+            expect(cache.promise).toBeUndefined();
+            // The initial promise should abort.
+            expect(await initialPromise).toEqual(cache.errorValue);
+        });
     });
 
     describe("APICacheData.fetchTimeout", () => {
@@ -429,7 +454,7 @@ describe("cachedAPI.ts", () => {
 
         it("should not throw if server sends a different interface", async () => {
             const wrongInterfaceData = {
-                notInTheInterface: "This is string A",
+                notInTheInterface: "JavaScript is loosely typed",
                 looselyTypedStuff: 1000,
             };
 
@@ -524,6 +549,45 @@ describe("cachedAPI.ts", () => {
             // that the previous in-memory values are cleared. We have no value to rely on, so we
             // expect the errorValue to be used here.
             expect(await cache.getCachedValue()).toEqual(cache.errorValue);
+        });
+
+        it("should wait until previous promises are resolved if refreshValue is true", async () => {
+            reinitializeCommon({ ...testCommonConfig, useKeyValStorageForCachedAPIBackup: true });
+            const cache = createTestCache();
+            const firstTestData: ITestData = { a: "A string", b: -10, c: true, d: ["a", "c"] };
+            const secondTestData: ITestData = { a: "Another", b: 55, c: false, d: ["d"] };
+            let testDataSwitch = 0;
+            mockGet(TEST_FAKE_ENDPOINT, async () => {
+                if (testDataSwitch === 0) {
+                    await sleep(100);
+                    return {
+                        status: 200,
+                        body: JSON.stringify(firstTestData),
+                    };
+                } else {
+                    return {
+                        status: 200,
+                        body: JSON.stringify(secondTestData),
+                    };
+                }
+            });
+
+            const firstPromise = cache.getCachedValue();
+            await sleep(50);
+            testDataSwitch++;
+            const secondPromise = cache.getCachedValue(true);
+            await sleep(75);
+            // After invalidating with refreshValue set to true, the backup should actually be
+            // the second value
+            const secondValue = await secondPromise;
+            expect(secondValue).toStrictEqual(secondTestData);
+            expect(JSON.parse(testKeyValStorage.get(cache.cacheBackupKey))).toStrictEqual(
+                secondValue
+            );
+            expect(cache.value).toStrictEqual(secondValue);
+            expect(cache.promise).not.toBeUndefined();
+            // The initial promise should abort.
+            expect(await firstPromise).toEqual(cache.errorValue);
         });
     });
 

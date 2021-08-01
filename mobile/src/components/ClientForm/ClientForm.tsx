@@ -212,7 +212,6 @@ export const ClientForm = (props: IFormProps) => {
                                                 date
                                             );
                                             setDate(date);
-                                            console.log(date);
                                         }
                                     }
                                     setDatePickerVisible(false);

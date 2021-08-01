@@ -10,3 +10,5 @@ services:
       - POSTGRES_HOST=cbr_postgres
   postgres:
     container_name: cbr_postgres
+    ports:
+      - "5432:5432"

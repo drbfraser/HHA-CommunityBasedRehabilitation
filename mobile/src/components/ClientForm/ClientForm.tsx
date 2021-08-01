@@ -205,7 +205,6 @@ export const ClientForm = (props: IFormProps) => {
                                         );
 
                                         setDate(todayDate);
-                                        console.log("Neutral button pressed");
                                     } else {
                                         if (date) {
                                             props.formikProps?.setFieldValue(

@@ -249,7 +249,6 @@ const ClientDetails = (props: ClientProps) => {
                             initialValues={clientFormikProps ?? initialValues}
                             validationSchema={validationSchema}
                             onSubmit={(values) => {
-                                console.log(timestampFromFormDate(String(values.birthDate!)));
                                 handleFormSubmit(values);
                             }}
                         >

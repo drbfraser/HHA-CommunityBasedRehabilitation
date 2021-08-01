@@ -189,7 +189,7 @@ export class APICacheData<TValue, TLoading, TError> {
             try {
                 await commonConfiguration.keyValStorageProvider.removeItem(this.cacheBackupKey);
             } catch (e) {
-                console.log(
+                console.error(
                     `invalidate(${this.cacheBackupKey}): error clearing value in backup: ${e}`
                 );
             }

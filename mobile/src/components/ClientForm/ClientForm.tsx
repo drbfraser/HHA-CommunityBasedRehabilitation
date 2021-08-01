@@ -7,7 +7,12 @@ import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-p
 import useStyles from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
-import { ClientFormFieldLabels, ClientFormFields, IFormProps } from "./ClientFormFields";
+import {
+    ClientFormFieldLabels,
+    ClientFormFields,
+    IFormProps,
+    showValidationErrorToast,
+} from "./ClientFormFields";
 import { Gender, genders, themeColors } from "@cbr/common";
 import { objectFromMap } from "../../util/ObjectFromMap";
 import { useNavigation } from "@react-navigation/core";
@@ -522,10 +527,14 @@ export const ClientForm = (props: IFormProps) => {
                             mode="contained"
                             style={styles.clientDetailsFinalButtons}
                             onPress={() => {
-                                if (fieldsDisabled) toggleButtons(true);
-                                else {
-                                    props.formikProps?.handleSubmit();
-                                    toggleButtons(false);
+                                if (props.formikProps?.isValid) {
+                                    if (fieldsDisabled) toggleButtons(true);
+                                    else {
+                                        props.formikProps?.handleSubmit();
+                                        toggleButtons(false);
+                                    }
+                                } else {
+                                    showValidationErrorToast();
                                 }
                             }}
                         >

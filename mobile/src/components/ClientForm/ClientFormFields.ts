@@ -1,6 +1,16 @@
 import { IReferral, IRisk, ISurvey, IVisit, IVisitSummary, Validation } from "@cbr/common";
 import { FormikProps } from "formik";
 import * as Yup from "yup";
+import { Platform, ToastAndroid, AlertIOS } from "react-native";
+
+export const showValidationErrorToast = () => {
+    const msg = "Please check one or more fields.";
+    if (Platform.OS === "android") {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
+    } else {
+        AlertIOS.alert(msg);
+    }
+};
 
 export interface IFormProps {
     isNewClient?: boolean;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { Gender, IClient, themeColors } from "@cbr/common";
+import { Gender, IClient, themeColors, timestampFromFormDate } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
@@ -249,6 +249,7 @@ const ClientDetails = (props: ClientProps) => {
                             initialValues={clientFormikProps ?? initialValues}
                             validationSchema={validationSchema}
                             onSubmit={(values) => {
+                                console.log(timestampFromFormDate(String(values.birthDate!)));
                                 handleFormSubmit(values);
                             }}
                         >

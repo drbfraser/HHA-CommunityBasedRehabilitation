@@ -26,6 +26,8 @@ export const ClientForm = (props: IFormProps) => {
     const disabilityMap = useDisabilities();
     const disabilityObj = objectFromMap(disabilityMap);
     const zoneObj = objectFromMap(useZones());
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
 
     let initialZone: number = props.formikProps?.values.zone ? props.formikProps.values.zone : 0;
 
@@ -197,12 +199,13 @@ export const ClientForm = (props: IFormProps) => {
                                 onChange={(event, date) => {
                                     setDatePickerVisible(Platform.OS === "ios");
                                     if (event.type === "neutralButtonPressed") {
-                                        const todayDate = new Date();
                                         props.formikProps?.setFieldValue(
                                             ClientFormFields.birthDate,
                                             todayDate
                                         );
+
                                         setDate(todayDate);
+                                        console.log("Neutral button pressed");
                                     } else {
                                         if (date) {
                                             props.formikProps?.setFieldValue(
@@ -210,6 +213,7 @@ export const ClientForm = (props: IFormProps) => {
                                                 date
                                             );
                                             setDate(date);
+                                            console.log(date);
                                         }
                                     }
                                     setDatePickerVisible(false);

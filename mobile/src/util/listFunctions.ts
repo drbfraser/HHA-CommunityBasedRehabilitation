@@ -102,8 +102,8 @@ export const clientComparator = (
 };
 
 export const referralComparator = (
-    a: BrifeReferral,
-    b: BrifeReferral,
+    a: BriefReferral,
+    b: BriefReferral,
     referralSortOption: string,
     referralSortDirection: string
 ): number => {

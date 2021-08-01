@@ -84,8 +84,6 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        
-
         getNewClient();
         getRefereals();
         //TODO alert part.

@@ -70,6 +70,9 @@ export const invalidateAllCachedAPIInternal = async (
 const INVALIDATION_EVENT = "cacheInvalidation";
 const DEFAULT_FETCH_TIMEOUT_MILLIS = 15000;
 
+/**
+ * @internal
+ */
 export class APICacheData<TValue, TLoading, TError> {
     /**
      * This placeholder value will be used if the cached API data isn't ready on the first render of
@@ -79,10 +82,16 @@ export class APICacheData<TValue, TLoading, TError> {
 
     readonly errorValue: Readonly<TError>;
 
-    get promise(): Promise<ICachedAPIResult<TValue, TError>> | undefined {
+    get promise(): Promise<Readonly<ICachedAPIResult<TValue, TError>>> | undefined {
         return this._promise;
     }
 
+    /**
+     * The promise for an attempt at refreshing the cache, If this is undefined, it means the cache
+     * has been invalidated, and a refresh attempt should be made at the next retrieval.
+     *
+     * Promises are created by {@link createCacheLoadPromise}.
+     */
     private _promise: Promise<ICachedAPIResult<TValue, TError>> | undefined;
 
     /**
@@ -128,6 +137,9 @@ export class APICacheData<TValue, TLoading, TError> {
 
     private _value: TValue | undefined;
 
+    /**
+     * @internal Outside callers should only be using this in tests.
+     */
     get value(): TValue | undefined {
         return this._value;
     }
@@ -152,7 +164,8 @@ export class APICacheData<TValue, TLoading, TError> {
      * effect if {@link CommonConfiguration.useKeyValStorageForCachedAPIBackup} is set.
      * @param reFetch Whether to re-fetch the value from the server. By default, this is false.
      * @param notifyListeners Whether to notify listeners that the cache has been invalidated.
-     * This is useful when logging out to avoid React state updates. By default, this is true.
+     * This is useful to set to false when logging out to avoid React state updates. By default,
+     * this is true.
      */
     async invalidate(
         clearValue: boolean,
@@ -235,13 +248,11 @@ export class APICacheData<TValue, TLoading, TError> {
             useEffect(() => {
                 isMounted.current = true;
 
-                if (this.isInvalidated) {
-                    this.getCachedValueInner().then((v) => {
-                        if (isMounted.current) {
-                            setValue(v.value);
-                        }
-                    });
-                }
+                this.getCachedValueInner().then((v) => {
+                    if (isMounted.current) {
+                        setValue(v.value);
+                    }
+                });
 
                 if (!listenForChanges) {
                     return () => {
@@ -265,10 +276,6 @@ export class APICacheData<TValue, TLoading, TError> {
 
             return value ?? this.loadingValue;
         };
-    }
-
-    get isInvalidated(): boolean {
-        return this._promise === undefined;
     }
 
     private notifyListeners() {

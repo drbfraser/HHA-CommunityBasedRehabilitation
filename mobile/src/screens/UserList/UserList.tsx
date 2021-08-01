@@ -31,18 +31,12 @@ const UserList = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
     const [sortOption, setSortOption] = useState("");
-    const [sortDirection, setIsSortDirection] = useState("None");
-    const [currentDirection, setCurrentDirection] = useState(0);
+    const [sortDirection, setIsSortDirection] = useState<"ascending" | "descending" | "None">(
+        "None"
+    );
 
     const userSortby = (option: string) => {
-        sortBy(
-            option,
-            sortOption,
-            setSortOption,
-            currentDirection,
-            setCurrentDirection,
-            setIsSortDirection
-        );
+        sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
     };
 
     const userArrowDirectionController = (column_name: string) => {

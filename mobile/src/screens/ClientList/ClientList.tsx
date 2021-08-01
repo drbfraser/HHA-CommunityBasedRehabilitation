@@ -13,35 +13,13 @@ const styles = useStyles();
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
-import DropdownMenu from "react-native-dropdown-menu";
-
-enum SortOptions {
-    ID = "id",
-    NAME = "name",
-    ZONE = "zone",
-    HEALTH = "health",
-    EDUCATION = "education",
-    SOCIAL = "social",
-}
-
-const returnWrappedView = (item) => {
-    return (
-        <View style={styles.wrappedView}>
-            <Text style={{ flexShrink: 1 }}>{item}</Text>
-        </View>
-    );
-};
-
-export const getLevelByColor = (color: string) => {
-    if (color === themeColors.riskYellow) {
-        return 1;
-    } else if (color === themeColors.riskRed) {
-        return 4;
-    } else if (color === themeColors.riskBlack) {
-        return 13;
-    }
-    return 0;
-};
+import {
+    SortOptions,
+    sortBy,
+    arrowDirectionController,
+    clientComparator,
+} from "../../util/listFunctions";
+import { WrappedText } from "../../components/WrappedText/WrappedText";
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
@@ -49,79 +27,28 @@ const ClientList = () => {
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
-    const [sortDirection, setIsSortDirection] = useState("None");
+    const [sortDirection, setIsSortDirection] = useState<"ascending" | "descending" | "None">(
+        "None"
+    );
     const [sortOption, setSortOption] = useState("");
     const zones = useZones();
-    const sortDirections = ["asc", "dec", "None"];
-    const [currentDirection, setCurrentDirection] = useState(0);
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
+    const clientSortby = (option: string) => {
+        sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
+    };
 
-    const sortBy = async (option: string) => {
-        if (option != sortOption) {
-            setSortOption(option);
-            setCurrentDirection(0);
-            setIsSortDirection(sortDirections[currentDirection]);
-        } else {
-            setCurrentDirection(currentDirection + 1);
-            if (currentDirection === 2) {
-                setCurrentDirection(0);
-            }
-            setIsSortDirection(sortDirections[currentDirection]);
-        }
+    const clientListScreenComparator = (a: ClientListRow, b: ClientListRow) => {
+        return clientComparator(a, b, sortOption, sortDirection);
     };
-    const theComparator = (a: ClientListRow, b: ClientListRow): number => {
-        let result = 0;
-        switch (sortOption) {
-            case SortOptions.ID: {
-                result = a.id - b.id;
-                break;
-            }
-            case SortOptions.NAME: {
-                result = a.full_name > b.full_name ? 1 : -1;
-                break;
-            }
-            case SortOptions.ZONE: {
-                result = a.zone > b.zone ? 1 : -1;
-                break;
-            }
-            case SortOptions.HEALTH: {
-                result = getLevelByColor(a.HealthLevel) > getLevelByColor(b.HealthLevel) ? 1 : -1;
-                break;
-            }
-            case SortOptions.EDUCATION: {
-                result =
-                    getLevelByColor(a.EducationLevel) > getLevelByColor(b.EducationLevel) ? 1 : -1;
-                break;
-            }
-            case SortOptions.SOCIAL: {
-                result = getLevelByColor(a.SocialLevel) > getLevelByColor(b.SocialLevel) ? 1 : -1;
-                break;
-            }
-        }
-        return sortDirection === "asc" ? result : -1 * result;
-    };
-    const arrowDirectionController = (column_name: string) => {
-        if (column_name === sortOption) {
-            if (sortDirection === "asc") {
-                return "ascending";
-            } else if (sortDirection === "dec") {
-                return "descending";
-            } else {
-                return undefined;
-            }
-        }
-        return undefined;
-    };
+
     const newClientGet = async () => {
         var exampleClient = await fetchClientsFromApi(
             selectedSearchOption,
             searchQuery,
-            allClientsMode,
-            sortOption,
-            sortDirection
+            allClientsMode
         );
         if (sortDirection !== "None") {
-            exampleClient = exampleClient.sort(theComparator);
+            exampleClient = exampleClient.sort(clientListScreenComparator);
         }
         setClientList(exampleClient);
     };
@@ -134,7 +61,7 @@ const ClientList = () => {
     useEffect(() => {
         var exampleClient = clientList;
         if (sortDirection !== "None") {
-            exampleClient = exampleClient.sort(theComparator);
+            exampleClient = exampleClient.sort(clientListScreenComparator);
         }
         setClientList(exampleClient);
     }, [sortOption, sortDirection]);
@@ -162,7 +89,7 @@ const ClientList = () => {
                 )}
             </View>
             <View style={styles.row}>
-                <Text style={{ flex: 0.7, paddingLeft: 10 }}>My Clients</Text>
+                <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>My Clients</Text>
                 <Switch
                     style={{ flex: 0.2 }}
                     trackColor={{ false: themeColors.yellow, true: themeColors.yellow }}
@@ -171,7 +98,7 @@ const ClientList = () => {
                     onValueChange={setAllClientsMode}
                     value={allClientsMode}
                 />
-                <Text style={{ flex: 1 }}>All Clients</Text>
+                <Text style={styles.container}>All Clients</Text>
 
                 <Text style={{ textAlign: "center", fontSize: 16 }}>Filter by</Text>
                 <Picker
@@ -193,43 +120,67 @@ const ClientList = () => {
                     <DataTable.Header style={styles.item}>
                         <DataTable.Title
                             style={styles.column_id}
-                            onPress={() => sortBy("id")}
-                            sortDirection={arrowDirectionController("id")}
+                            onPress={() => clientSortby(SortOptions.ID)}
+                            sortDirection={arrowDirectionController(
+                                SortOptions.ID,
+                                sortOption,
+                                sortDirection
+                            )}
                         >
                             ID
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_name}
-                            onPress={() => sortBy("name")}
-                            sortDirection={arrowDirectionController("name")}
+                            onPress={() => clientSortby(SortOptions.NAME)}
+                            sortDirection={arrowDirectionController(
+                                SortOptions.NAME,
+                                sortOption,
+                                sortDirection
+                            )}
                         >
                             Name
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_zone}
-                            onPress={() => sortBy("zone")}
-                            sortDirection={arrowDirectionController("zone")}
+                            onPress={() => clientSortby(SortOptions.ZONE)}
+                            sortDirection={arrowDirectionController(
+                                SortOptions.ZONE,
+                                sortOption,
+                                sortDirection
+                            )}
                         >
                             Zone
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_icons}
-                            onPress={() => sortBy("health")}
-                            sortDirection={arrowDirectionController("health")}
+                            onPress={() => clientSortby(SortOptions.HEALTH)}
+                            sortDirection={arrowDirectionController(
+                                SortOptions.HEALTH,
+                                sortOption,
+                                sortDirection
+                            )}
                         >
                             {riskTypes.HEALTH.Icon("#000000")}
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_icons}
-                            onPress={() => sortBy("education")}
-                            sortDirection={arrowDirectionController("education")}
+                            onPress={() => clientSortby(SortOptions.EDUCATION)}
+                            sortDirection={arrowDirectionController(
+                                SortOptions.EDUCATION,
+                                sortOption,
+                                sortDirection
+                            )}
                         >
                             {riskTypes.EDUCAT.Icon("#000000")}
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_icons}
-                            onPress={() => sortBy("social")}
-                            sortDirection={arrowDirectionController("social")}
+                            onPress={() => clientSortby(SortOptions.SOCIAL)}
+                            sortDirection={arrowDirectionController(
+                                SortOptions.SOCIAL,
+                                sortOption,
+                                sortDirection
+                            )}
                         >
                             {riskTypes.SOCIAL.Icon("#000000")}
                         </DataTable.Title>
@@ -247,10 +198,18 @@ const ClientList = () => {
                             >
                                 <DataTable.Cell style={styles.column_id}>{item.id}</DataTable.Cell>
                                 <View style={styles.column_name}>
-                                    {returnWrappedView(item.full_name)}
+                                    <WrappedText
+                                        text={item.full_name}
+                                        viewStyle={styles.wrappedView}
+                                        textStyle={styles.text}
+                                    />
                                 </View>
                                 <View style={styles.column_zone}>
-                                    {returnWrappedView(item.zone)}
+                                    <WrappedText
+                                        text={item.zone}
+                                        viewStyle={styles.wrappedView}
+                                        textStyle={styles.text}
+                                    />
                                 </View>
                                 <DataTable.Cell style={styles.column_icons}>
                                     {riskTypes.CIRCLE.Icon(item.HealthLevel)}

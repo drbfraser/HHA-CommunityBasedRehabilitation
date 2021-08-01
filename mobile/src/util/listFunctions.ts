@@ -15,27 +15,25 @@ export enum SortOptions {
     STATUS = "status",
     ROLE = "role",
 }
+export const circularDirection = new Map();
+circularDirection.set("ascending", "descending");
+circularDirection.set("descending", "None");
+circularDirection.set("None", "ascending");
 
 export const sortDirections = ["asc", "dec", "None"];
 
 export const sortBy = async (
     option: string,
     sortOption: string,
+    sortDirection: "ascending" | "descending" | "None",
     setSortOption: React.Dispatch<React.SetStateAction<string>>,
-    currentDirection: number,
-    setCurrentDirection: React.Dispatch<React.SetStateAction<number>>,
-    setIsSortDirection: React.Dispatch<React.SetStateAction<string>>
+    setSortDirection: React.Dispatch<React.SetStateAction<"ascending" | "descending" | "None">>
 ) => {
     if (option != sortOption) {
         setSortOption(option);
-        setCurrentDirection(0);
-        setIsSortDirection(sortDirections[currentDirection]);
+        setSortDirection("ascending");
     } else {
-        setCurrentDirection(currentDirection + 1);
-        if (currentDirection >= 2) {
-            setCurrentDirection(0);
-        }
-        setIsSortDirection(sortDirections[currentDirection]);
+        setSortDirection(circularDirection.get(sortDirection));
     }
 };
 
@@ -43,16 +41,21 @@ export const arrowDirectionController = (
     column_name: string,
     sortOption: string,
     sortDirection: string
-) => {
+): "ascending" | "descending" | undefined => {
     if (column_name === sortOption) {
-        if (sortDirection === "asc") {
-            return "ascending";
-        } else if (sortDirection === "dec") {
-            return "descending";
-        } else {
-            return undefined;
+        switch (sortDirection) {
+            case "ascending": {
+                return "ascending";
+            }
+            case "descending": {
+                return "descending";
+            }
+            case "None": {
+                return undefined;
+            }
         }
     }
+
     return undefined;
 };
 const mapColorWithLevel = new Map();
@@ -98,7 +101,7 @@ export const clientComparator = (
             break;
         }
     }
-    return sortDirection === "asc" ? result : -1 * result;
+    return sortDirection === "ascending" ? result : -1 * result;
 };
 
 export const referralComparator = (
@@ -122,7 +125,7 @@ export const referralComparator = (
             break;
         }
     }
-    return referralSortDirection === "asc" ? result : -1 * result;
+    return referralSortDirection === "ascending" ? result : -1 * result;
 };
 
 export const userComparator = (
@@ -157,5 +160,5 @@ export const userComparator = (
             break;
         }
     }
-    return sortDirection === "asc" ? result : -1 * result;
+    return sortDirection === "ascending" ? result : -1 * result;
 };

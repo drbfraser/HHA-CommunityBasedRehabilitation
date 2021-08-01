@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Text, View } from "react-native";
 import { Card, DataTable } from "react-native-paper";
 import useStyles from "./Dashboard.styles";
-import { BrifeReferral, fetchAllClientsFromApi, fetchReferrals } from "./DashboardRequest";
+import { BriefReferral, fetchAllClientsFromApi, fetchReferrals } from "./DashboardRequest";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -18,7 +18,7 @@ import {
     referralComparator,
 } from "../../util/listFunctions";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
-var count = 0;
+
 const Dashboard = () => {
     const styles = useStyles();
     const [clientSortOption, setClientSortOption] = useState("");
@@ -46,7 +46,7 @@ const Dashboard = () => {
         return arrowDirectionController(column_name, clientSortOption, clientSortDirection);
     };
 
-    const dashBoardReferralComparator = (a: BrifeReferral, b: BrifeReferral): number => {
+    const dashBoardReferralComparator = (a: BriefReferral, b: BriefReferral): number => {
         return referralComparator(a, b, referralSortOption, referralSortDirection);
     };
 
@@ -65,7 +65,7 @@ const Dashboard = () => {
     };
 
     const [clientList, setClientList] = useState<ClientListRow[]>([]);
-    const [referralList, setreferralList] = useState<BrifeReferral[]>([]);
+    const [referralList, setreferralList] = useState<BriefReferral[]>([]);
     const navigation = useNavigation();
     const getNewClient = async () => {
         var fetchedClientList = await fetchAllClientsFromApi();
@@ -84,7 +84,7 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        count = count + 1;
+        
 
         getNewClient();
         getRefereals();

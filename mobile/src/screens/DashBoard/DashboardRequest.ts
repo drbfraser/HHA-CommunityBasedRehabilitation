@@ -9,7 +9,7 @@ import { IClientSummary } from "@cbr/common";
 import { riskLevels } from "@cbr/common";
 import { ClientListRow } from "../ClientList/ClientListRequest";
 
-export type BrifeReferral = {
+export type BriefReferral = {
     id: number;
     client_id: number;
     full_name: string;
@@ -52,7 +52,7 @@ export const fetchAllClientsFromApi = async (): Promise<ClientListRow[]> => {
         return [];
     }
 };
-export const fetchReferrals = async (): Promise<BrifeReferral[]> => {
+export const fetchReferrals = async (): Promise<BriefReferral[]> => {
     try {
         const tempReferrals = await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
             .then((resp) => resp.json())

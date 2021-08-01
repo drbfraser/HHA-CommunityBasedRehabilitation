@@ -1,7 +1,7 @@
 import { themeColors } from "@cbr/common";
 import { ClientListRow } from "../screens/ClientList/ClientListRequest";
-import { BrifeReferral } from "../screens/DashBoard/DashboardRequest";
-import { userBrife } from "../screens/UserList/UserListRequest";
+import { BriefReferral } from "../screens/DashBoard/DashboardRequest";
+import BriefUser from "../screens/UserList/UserListRequest";
 
 export enum SortOptions {
     ID = "id",
@@ -55,7 +55,7 @@ export const arrowDirectionController = (
     }
     return undefined;
 };
-var mapColorWithLevel = new Map();
+const mapColorWithLevel = new Map();
 mapColorWithLevel[themeColors.riskGreen] = 0;
 mapColorWithLevel[themeColors.riskYellow] = 1;
 mapColorWithLevel[themeColors.riskRed] = 4;
@@ -126,8 +126,8 @@ export const referralComparator = (
 };
 
 export const userComparator = (
-    a: userBrife,
-    b: userBrife,
+    a: BriefUser,
+    b: BriefUser,
     sortOption: string,
     sortDirection: string
 ): number => {

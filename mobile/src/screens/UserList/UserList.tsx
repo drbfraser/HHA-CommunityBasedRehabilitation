@@ -11,7 +11,7 @@ import { Picker } from "@react-native-picker/picker";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { DataTable } from "react-native-paper";
-import { fetchUsersFromApi, userBrife } from "./UserListRequest";
+import BriefUser, { fetchUsersFromApi } from "./UserListRequest";
 import { useIsFocused } from "@react-navigation/native";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
 import {
@@ -26,7 +26,7 @@ const UserList = () => {
     const authContext = useContext(AuthContext);
     const navigation = useNavigation<AppStackNavProp>();
     const zones = useZones();
-    const [userList, setUserList] = useState<userBrife[]>([]);
+    const [userList, setUserList] = useState<BriefUser[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
@@ -49,7 +49,7 @@ const UserList = () => {
         return arrowDirectionController(column_name, sortOption, sortDirection);
     };
 
-    const userListScreenComparator = (a: userBrife, b: userBrife): number => {
+    const userListScreenComparator = (a: BriefUser, b: BriefUser): number => {
         return userComparator(a, b, sortOption, sortDirection);
     };
 

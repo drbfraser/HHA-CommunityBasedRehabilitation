@@ -3,7 +3,7 @@ import { Text, View, Switch } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { DataTable } from "react-native-paper";
 import useStyles from "./ClientList.styles";
-import { ClientTest, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
+import { ClientListRow, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { Searchbar } from "react-native-paper";
@@ -45,7 +45,7 @@ export const getLevelByColor = (color: string) => {
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
-    const [clientList, setClientList] = useState<ClientTest[]>([]);
+    const [clientList, setClientList] = useState<ClientListRow[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
@@ -55,9 +55,6 @@ const ClientList = () => {
     const sortDirections = ["asc", "dec", "None"];
     const [currentDirection, setCurrentDirection] = useState(0);
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
-
-    const zoneNameArray = Array.from(zones).map(([id, name]) => name);
-    const zoneIDArray = Array.from(zones).map(([id]) => id);
 
     const sortBy = async (option: string) => {
         if (option != sortOption) {
@@ -72,7 +69,7 @@ const ClientList = () => {
             setIsSortDirection(sortDirections[currentDirection]);
         }
     };
-    const theComparator = (a: ClientTest, b: ClientTest): number => {
+    const theComparator = (a: ClientListRow, b: ClientListRow): number => {
         let result = 0;
         switch (sortOption) {
             case SortOptions.ID: {

@@ -21,10 +21,10 @@ export const sortDirections = ["asc", "dec", "None"];
 export const sortBy = async (
     option: string,
     sortOption: string,
-    setSortOption,
-    currentDirection,
-    setCurrentDirection,
-    setIsSortDirection
+    setSortOption: React.Dispatch<React.SetStateAction<string>>,
+    currentDirection: number,
+    setCurrentDirection: React.Dispatch<React.SetStateAction<number>>,
+    setIsSortDirection: React.Dispatch<React.SetStateAction<string>>
 ) => {
     if (option != sortOption) {
         setSortOption(option);

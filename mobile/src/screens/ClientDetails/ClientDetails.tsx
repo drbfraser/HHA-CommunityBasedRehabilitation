@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { Gender, IClient, themeColors } from "@cbr/common";
+import { Gender, IClient, IRisk, themeColors } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
@@ -44,6 +44,7 @@ const ClientDetails = (props: ClientProps) => {
     const [clientVisits, setClientVisits] = useState<IVisitSummary[]>();
     const [clientReferrals, setClientReferrals] = useState<IReferral[]>();
     const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
+    const [clientRisks, setClientRisks] = useState<IRisk[]>();
 
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
@@ -104,6 +105,7 @@ const ClientDetails = (props: ClientProps) => {
             referrals: presentClient.referrals,
             surveys: presentClient.baseline_surveys,
         };
+        setClientRisks(presentClient.risks);
         setClientFormikProps(clientFormProps);
     };
     useEffect(() => {
@@ -258,7 +260,7 @@ const ClientDetails = (props: ClientProps) => {
                         </Formik>
                     </Card>
                     <Divider />
-                    <ClientRisk editMode={true}></ClientRisk>
+                    <ClientRisk clientRisks={clientRisks ? clientRisks : []} />
                     <Divider />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>

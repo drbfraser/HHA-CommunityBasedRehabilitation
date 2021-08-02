@@ -20,7 +20,7 @@ services:
       - ./web/build:/var/www
       - django_uploads:/var/www-uploads
     ports:
-      - ${PORT}:80
+      - "${PORT}:80"
     environment:
       - DOMAIN=${DOMAIN}
       - API_HOSTNAME=${COMPOSE_PROJECT_NAME}_django

@@ -1,5 +1,6 @@
 import { initializeCommon, reinitializeCommon } from "../src/init";
 import * as TestCommonConfig from "./testHelpers/testCommonConfiguration";
+import AbortController from "node-abort-controller";
 import { Request } from "node-fetch";
 
 beforeAll(() => {
@@ -9,6 +10,8 @@ beforeAll(() => {
     global.FormData = () => {};
     global.Request = Request;
 });
+
+global.Request = Request;
 
 beforeAll(() => {
     initializeCommon(TestCommonConfig.testCommonConfig);

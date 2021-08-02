@@ -63,6 +63,15 @@ const useStyles = () =>
             width: 112,
             borderRadius: 5,
         },
+        modalStyle: {
+            height: 540,
+            marginHorizontal: 20,
+            marginTop: 140,
+            display: "flex",
+            backgroundColor: "white",
+            borderRadius: 10,
+            justifyContent: "space-between",
+        },
     });
 
 export default useStyles;
@@ -70,11 +79,12 @@ export default useStyles;
 export const riskStyles = (textColour: string) =>
     StyleSheet.create({
         riskSubtitleStyle: {
+            fontWeight: "bold",
             height: "auto",
             width: "auto",
-            padding: 10,
+            padding: 14,
             marginTop: 14,
-            fontSize: 22,
+            fontSize: 18,
             alignItems: "center",
             justifyContent: "flex-end",
             display: "flex",

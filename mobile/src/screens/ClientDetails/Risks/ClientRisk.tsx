@@ -2,8 +2,10 @@ import * as React from "react";
 import { useState } from "react";
 import { View } from "react-native";
 import { IRisk, riskLevels, RiskType } from "@cbr/common";
-import { Button, Card, Divider, Text } from "react-native-paper";
+import { Button, Card, Divider, Modal, Portal, Text } from "react-native-paper";
 import clientStyle, { riskStyles } from "./ClientRisk.styles";
+import { ClientRiskForm } from "./ClientRiskForm";
+import { Formik } from "formik";
 
 interface riskProps {
     clientRisks: IRisk[];
@@ -22,7 +24,9 @@ const getLatestRisk = (riskType: RiskType, clientRisk: IRisk[]) => {
 
 export const ClientRisk = (props: riskProps) => {
     const styles = clientStyle();
-
+    const [showHealthModal, setShowHealthModal] = useState(false);
+    const [showEducationModal, setShowEducationModal] = useState(false);
+    const [showSocialModal, setShowSocialModal] = useState(false);
     const [healthRisk, setHealthRisk] = useState<IRisk>(
         getLatestRisk(RiskType.HEALTH, props.clientRisks)
     );
@@ -60,12 +64,36 @@ export const ClientRisk = (props: riskProps) => {
                     <Button
                         mode="contained"
                         style={styles.clientDetailsFinalButtons}
-                        disabled={false}
+                        onPress={() => {
+                            setShowHealthModal(true);
+                        }}
                     >
                         Update
                     </Button>
                 </View>
+                <View>
+                    <Portal>
+                        <Modal
+                            visible={showHealthModal}
+                            style={styles.modalStyle}
+                            onDismiss={() => {
+                                setShowHealthModal(false);
+                            }}
+                        >
+                            <ClientRiskForm risk={healthRisk} />
+                            <Button
+                                mode={"contained"}
+                                onPress={() => {
+                                    setShowHealthModal(false);
+                                }}
+                            >
+                                Save
+                            </Button>
+                        </Modal>
+                    </Portal>
+                </View>
             </Card>
+
             <Divider></Divider>
             <Card style={styles.riskCardStyle}>
                 <View style={styles.riskCardContentStyle}>
@@ -91,9 +119,26 @@ export const ClientRisk = (props: riskProps) => {
                         mode="contained"
                         style={styles.clientDetailsFinalButtons}
                         disabled={false}
+                        onPress={() => {
+                            setShowEducationModal(true);
+                        }}
                     >
                         Update
                     </Button>
+                </View>
+                <View>
+                    <Portal>
+                        <Modal
+                            visible={showEducationModal}
+                            style={styles.modalStyle}
+                            onDismiss={() => {
+                                setShowEducationModal(false);
+                            }}
+                        >
+                            <ClientRiskForm risk={educationRisk} />
+                            <Button mode="contained">Save</Button>
+                        </Modal>
+                    </Portal>
                 </View>
             </Card>
             <Divider></Divider>
@@ -121,9 +166,26 @@ export const ClientRisk = (props: riskProps) => {
                         mode="contained"
                         style={styles.clientDetailsFinalButtons}
                         disabled={false}
+                        onPress={() => {
+                            setShowSocialModal(true);
+                        }}
                     >
                         Update
                     </Button>
+                </View>
+                <View>
+                    <Portal>
+                        <Modal
+                            visible={showSocialModal}
+                            style={styles.modalStyle}
+                            onDismiss={() => {
+                                setShowSocialModal(false);
+                            }}
+                        >
+                            <ClientRiskForm risk={socialRisk} />
+                            <Button mode="contained">Save</Button>
+                        </Modal>
+                    </Portal>
                 </View>
             </Card>
         </View>

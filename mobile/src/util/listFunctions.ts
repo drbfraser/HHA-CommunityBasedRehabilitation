@@ -15,32 +15,44 @@ export enum SortOptions {
     STATUS = "status",
     ROLE = "role",
 }
-export const circularDirection = new Map();
-circularDirection.set("ascending", "descending");
-circularDirection.set("descending", "None");
-circularDirection.set("None", "ascending");
 
-export const sortDirections = ["asc", "dec", "None"];
+//Use to prevent the default return value of map object that will cause syntax error.
+const getNextDirection = (currentDirection: TSortDirection): TSortDirection => {
+    const next = circularDirection.get(currentDirection);
+    if (next === undefined) {
+        return "None";
+    } else {
+        return next;
+    }
+};
+
+export const circularDirection = new Map<TSortDirection, TSortDirection>([
+    ["ascending", "descending"],
+    ["descending", "None"],
+    ["None", "ascending"],
+]);
+
+export type TSortDirection = "ascending" | "descending" | "None";
 
 export const sortBy = async (
     option: string,
     sortOption: string,
-    sortDirection: "ascending" | "descending" | "None",
+    sortDirection: TSortDirection,
     setSortOption: React.Dispatch<React.SetStateAction<string>>,
-    setSortDirection: React.Dispatch<React.SetStateAction<"ascending" | "descending" | "None">>
+    setSortDirection: React.Dispatch<React.SetStateAction<TSortDirection>>
 ) => {
     if (option != sortOption) {
         setSortOption(option);
         setSortDirection("ascending");
     } else {
-        setSortDirection(circularDirection.get(sortDirection));
+        setSortDirection(getNextDirection(sortDirection));
     }
 };
 
 export const arrowDirectionController = (
     column_name: string,
     sortOption: string,
-    sortDirection: string
+    sortDirection: TSortDirection
 ): "ascending" | "descending" | undefined => {
     if (column_name === sortOption) {
         switch (sortDirection) {
@@ -58,11 +70,12 @@ export const arrowDirectionController = (
 
     return undefined;
 };
-const mapColorWithLevel = new Map();
-mapColorWithLevel[themeColors.riskGreen] = 0;
-mapColorWithLevel[themeColors.riskYellow] = 1;
-mapColorWithLevel[themeColors.riskRed] = 4;
-mapColorWithLevel[themeColors.riskBlack] = 13;
+const mapColorWithLevel = new Map([
+    [themeColors.riskGreen, 0],
+    [themeColors.riskYellow, 1],
+    [themeColors.riskRed, 4],
+    [themeColors.riskBlack, 13],
+]);
 
 export const getLevelByColor = (color: string) => {
     return mapColorWithLevel.get(color) || 0;
@@ -98,6 +111,10 @@ export const clientComparator = (
         }
         case SortOptions.SOCIAL: {
             result = getLevelByColor(a.SocialLevel) > getLevelByColor(b.SocialLevel) ? 1 : -1;
+            break;
+        }
+        case SortOptions.DATE: {
+            result = a.last_visit_date > b.last_visit_date ? 1 : -1;
             break;
         }
     }

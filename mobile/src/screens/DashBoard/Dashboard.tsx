@@ -16,20 +16,17 @@ import {
     SortOptions,
     clientComparator,
     referralComparator,
+    TSortDirection,
 } from "../../util/listFunctions";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
 
 const Dashboard = () => {
     const styles = useStyles();
     const [clientSortOption, setClientSortOption] = useState("");
-    const [clientSortDirection, setClientIsSortDirection] =
-        useState<"ascending" | "descending" | "None">("None");
-    const [currentClientDirection, setClientCurrentDirection] = useState(0);
+    const [clientSortDirection, setClientIsSortDirection] = useState<TSortDirection>("None");
 
     const [referralSortOption, setReferralSortOption] = useState("");
-    const [referralSortDirection, setReferralIsSortDirection] =
-        useState<"ascending" | "descending" | "None">("None");
-    const [currentReferralDirection, setReferralCurrentDirection] = useState(0);
+    const [referralSortDirection, setReferralIsSortDirection] = useState<TSortDirection>("None");
 
     const dashBoardClientComparator = (a: ClientListRow, b: ClientListRow): number => {
         return clientComparator(a, b, clientSortOption, clientSortDirection);
@@ -87,7 +84,7 @@ const Dashboard = () => {
         getNewClient();
         getRefereals();
         //TODO alert part.
-    }, [clientSortOption, currentClientDirection, referralSortOption, currentReferralDirection]);
+    }, [clientSortOption, referralSortOption, clientSortDirection, referralSortDirection]);
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>

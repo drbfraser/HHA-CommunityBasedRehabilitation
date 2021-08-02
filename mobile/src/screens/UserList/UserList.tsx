@@ -19,6 +19,7 @@ import {
     sortBy,
     arrowDirectionController,
     userComparator,
+    TSortDirection,
 } from "../../util/listFunctions";
 
 const UserList = () => {
@@ -31,8 +32,7 @@ const UserList = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
     const [sortOption, setSortOption] = useState("");
-    const [sortDirection, setIsSortDirection] =
-        useState<"ascending" | "descending" | "None">("None");
+    const [sortDirection, setIsSortDirection] = useState<TSortDirection>("None");
 
     const userSortby = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);

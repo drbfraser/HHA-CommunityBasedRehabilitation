@@ -105,6 +105,7 @@ const ClientDetails = (props: ClientProps) => {
         };
         setClientFormikProps(clientFormProps);
     };
+
     useEffect(() => {
         if (isFocused) {
             getClientDetails()

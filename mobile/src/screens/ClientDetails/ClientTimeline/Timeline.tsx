@@ -8,6 +8,8 @@ import { riskTypes } from "../../../util/riskIcon";
 import { IVisitSummary } from "../../../../../common/src/util/visits";
 import useStyles from "./Timeline.style";
 import BaselineEntry from "./Entries/BaselineEntry";
+import ReferralEntry from "./Entries/ReferralEntry";
+import { useIsFocused } from "@react-navigation/native";
 interface ISummaryProps {
     activity: IActivity;
 }
@@ -36,6 +38,7 @@ const Timeline = (props: ISummaryProps) => {
     const hideDetails = () => setDetailsVisible(false);
     const styles = useStyles();
     const [icon, setIcon] = useState("");
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         if (props.activity.type === ActivityType.VISIT) setIcon("walk");
@@ -99,11 +102,11 @@ const Timeline = (props: ISummaryProps) => {
                                 <View>
                                     <Text style={styles.subItemText}>Referral Posted</Text>
                                     <View style={styles.subItemRow}>
-                                        {props.activity.referral.outcome === "Resolved" ? (
+                                        {props.activity.referral.resolved ? (
                                             <>
                                                 <Text style={styles.subItemText}>Resolved</Text>
                                                 <Icon
-                                                    name="check"
+                                                    name="check-circle"
                                                     size={15}
                                                     color={themeColors.riskGreen}
                                                 />
@@ -118,6 +121,18 @@ const Timeline = (props: ISummaryProps) => {
                                                 />
                                             </>
                                         )}
+                                        <Portal>
+                                            <Modal
+                                                visible={detailsVisible}
+                                                onDismiss={hideDetails}
+                                                style={styles.popupStyle}
+                                            >
+                                                <ReferralEntry
+                                                    referral={props.activity.referral as IReferral}
+                                                    close={hideDetails}
+                                                />
+                                            </Modal>
+                                        </Portal>
                                     </View>
                                 </View>
                             </View>

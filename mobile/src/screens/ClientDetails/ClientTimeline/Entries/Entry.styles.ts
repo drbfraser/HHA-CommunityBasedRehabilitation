@@ -10,6 +10,16 @@ const useStyles = () =>
             marginLeft: 10,
             padding: 1,
         },
+        labelBold: { fontWeight: "bold" },
+        referralBoard: {
+            marginRight: 3,
+            paddingLeft: 20,
+            paddingRight: 20,
+            paddingTop: 10,
+            paddingBottom: 10,
+            marginBottom: 15,
+        },
+        errorText: { color: themeColors.errorRed, paddingLeft: 15 },
     });
 
 export default useStyles;

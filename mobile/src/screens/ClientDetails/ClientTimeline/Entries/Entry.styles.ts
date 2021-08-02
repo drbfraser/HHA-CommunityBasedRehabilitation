@@ -20,6 +20,13 @@ const useStyles = () =>
             marginBottom: 15,
         },
         errorText: { color: themeColors.errorRed, paddingLeft: 15 },
+        referralChip: {
+            padding: 5,
+            margin: 3,
+            flexDirection: "row",
+            flexWrap: "wrap",
+        },
+        smallChip: { padding: 0 },
     });
 
 export default useStyles;

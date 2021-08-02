@@ -10,7 +10,7 @@ import {
     timestampToDateTime,
     wheelchairExperiences,
 } from "@cbr/common";
-import { Button, Card, Dialog, HelperText, List, Text, TextInput } from "react-native-paper";
+import { Button, Card, Chip, Dialog, HelperText, List, Text, TextInput } from "react-native-paper";
 import useStyles from "./Entry.styles";
 import { ScrollView, View } from "react-native";
 import * as Yup from "yup";
@@ -26,7 +26,13 @@ const ReferralEntry = ({ referral, close }: IEntryProps) => {
     const onClose = () => {
         close();
     };
-
+    const ReasonChip = ({ label }: { label: string }) => (
+        <View style={styles.referralChip}>
+            <Chip style={styles.smallChip} mode="outlined" selectedColor={themeColors.blueBgDark}>
+                {label}
+            </Chip>
+        </View>
+    );
     const ResolveForm = () => {
         const outcomeField = {
             key: "outcome",
@@ -105,9 +111,13 @@ const ReferralEntry = ({ referral, close }: IEntryProps) => {
                     <Icon name="clock-o" size={15} color={themeColors.riskRed} />
                 )}{" "}
                 Referral {referral.resolved ? "Resolved" : "Pending"}
+                {"\n\n"}
+                {referral.wheelchair && <ReasonChip label="Wheelchair" />}
+                {referral.physiotherapy && <ReasonChip label="Physiotherapy" />}
+                {referral.prosthetic && <ReasonChip label="Prosthetic" />}
+                {referral.orthotic && <ReasonChip label="Orthotic" />}
             </Dialog.Title>
             <Dialog.Content>
-                <Text />
                 <Text>
                     <Text style={styles.labelBold}>Referral Date: </Text>
                     {timestampToDateTime(referral.date_referred)}

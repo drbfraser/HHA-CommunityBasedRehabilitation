@@ -1,10 +1,3 @@
-# Installs packages in mobile. Must be in the mobile directory.
-.install-mobile: &install-mobile
-  - npm uninstall @cbr/common
-  - COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
-  - npm install $COMMON_PACK_NAME
-  - npm ci
-
 stages:
   - build
   - test
@@ -51,7 +44,10 @@ build mobile:
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd mobile
-    - *install-mobile
+    - npm uninstall @cbr/common
+    - COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
+    - npm install $COMMON_PACK_NAME
+    - npm ci
   script:
     - npx prettier --check .
     - npx expo export --public-url https://ci-build.local
@@ -77,8 +73,6 @@ build web:
     - npm install -g npm@$NPM_VERSION
     - cd common
     - npm ci
-    - cd ../mobile
-    - *install-mobile
     - cd ../web
     - npm ci
   script:
@@ -87,6 +81,7 @@ build web:
   after_script:
     - tar -czvf web_build.tar.gz web/build
   artifacts:
+    expire_in: 1 week
     paths:
       - web_build.tar.gz
 
@@ -128,7 +123,7 @@ test common:
   image: node:14
   tags:
     - docker
-  needs: []
+  needs: ["build common"]
   rules:
     - if: "$CI_MERGE_REQUEST_ID != null"
       changes:
@@ -149,6 +144,30 @@ test common:
       cobertura:
         - common/coverage/cobertura-coverage.xml
 
+test caddy:
+  stage: test
+  image: caddy:2.4.3
+  tags:
+    - docker
+  needs: []
+  rules:
+    - if: "$CI_MERGE_REQUEST_ID != null"
+      changes:
+        - caddy/**/*
+        - .gitlab-ci.yml
+      when: always
+  script:
+    - caddy validate --config caddy/Caddyfile
+
+.deploy-docker: &deploy-docker
+  - source ./.env
+  - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
+  - rm -rf web/build
+  - tar -xvf web_build.tar.gz
+  - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
+  - bash -c 'sleep 10'
+  - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+
 deploy staging:
   stage: deploy
   tags:
@@ -158,12 +177,7 @@ deploy staging:
       when: on_success
   script:
     - cp /var/cbr/staging.env ./.env
-    - source ./.env
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
-    - tar -xvf web_build.tar.gz
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
-    - bash -c 'sleep 10'
-    - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+    - *deploy-docker
 
 deploy prod:
   stage: deploy
@@ -174,9 +188,4 @@ deploy prod:
       when: manual
   script:
     - cp /var/cbr/prod.env ./.env
-    - source ./.env
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
-    - tar -xvf web_build.tar.gz
-    - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
-    - bash -c 'sleep 10'
-    - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+    - *deploy-docker

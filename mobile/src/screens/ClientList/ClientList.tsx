@@ -126,13 +126,13 @@ const ClientList = () => {
         setClientList(exampleClient);
     };
     const isFocused = useIsFocused();
-    
+
     useEffect(() => {
         if (isFocused) {
             getNewClient();
         }
     }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection, isFocused]);
-    
+
     useEffect(() => {
         var exampleClient = clientList;
         if (sortDirection !== "None") {
@@ -164,7 +164,7 @@ const ClientList = () => {
                     />
                 )}
             </View>
-           
+
             <View style={styles.row}>
                 <Text style={{ flex: 0.7, paddingLeft: 10 }}>My Clients</Text>
                 <Switch
@@ -192,7 +192,7 @@ const ClientList = () => {
                     <Picker.Item label="Zone" value={SearchOption.ZONE} />
                 </Picker>
             </View>
-           
+
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>

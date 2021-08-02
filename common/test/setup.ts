@@ -8,6 +8,7 @@ beforeAll(() => {
     // @ts-ignore
     global.FormData = () => {};
     global.Request = Request;
+});
 
 beforeAll(() => {
     initializeCommon(TestCommonConfig.testCommonConfig);

@@ -3,7 +3,7 @@ import { timestampFromFormDate } from "../../util/dates";
 import { apiFetch, APIFetchFailError, Endpoint, objectToFormData } from "../../util/endpoints";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
 import { clientFieldLabels, TClientValues } from "./clientFields";
-import { IClient } from "src/util/clients";
+import { IClient } from "../../util/clients";
 
 const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {

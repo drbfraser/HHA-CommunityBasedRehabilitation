@@ -11,105 +11,94 @@ interface riskProps {
     clientRisks: IRisk[];
 }
 
-const getLatestRisk = (riskType: RiskType, clientRisk: IRisk[]) => {
+const getLatestRisks = (clientRisk: IRisk[]) => {
     //Get the latest Risk for each type and pass the values on so they can be displayed initially
-    const filteredRisks: IRisk[] = clientRisk.filter(
-        (presentRisk) => presentRisk.risk_type === riskType
+    let latestRisks: IRisk[] = [];
+    const filteredHealthRisks: IRisk[] = clientRisk.filter(
+        (presentRisk) => presentRisk.risk_type === RiskType.HEALTH
     );
-    let latestRisk = filteredRisks.reduce(function (prev, current) {
+    const filteredEducationRisks: IRisk[] = clientRisk.filter(
+        (presentRisk) => presentRisk.risk_type === RiskType.EDUCATION
+    );
+    const filteredSocialRisks: IRisk[] = clientRisk.filter(
+        (presentRisk) => presentRisk.risk_type === RiskType.SOCIAL
+    );
+    let latestHealthRisk = filteredHealthRisks.reduce(function (prev, current) {
         return prev.timestamp > current.timestamp ? prev : current;
     });
-    return latestRisk;
+    let latestEducationRisk = filteredEducationRisks.reduce(function (prev, current) {
+        return prev.timestamp > current.timestamp ? prev : current;
+    });
+    let latestSocialtRisk = filteredSocialRisks.reduce(function (prev, current) {
+        return prev.timestamp > current.timestamp ? prev : current;
+    });
+    latestRisks.push(latestHealthRisk);
+    latestRisks.push(latestEducationRisk);
+    latestRisks.push(latestSocialtRisk);
+    return latestRisks;
 };
 
 export const ClientRisk = (props: riskProps) => {
     const styles = clientStyle();
-    const [showHealthModal, setShowHealthModal] = useState(false);
-    const [showEducationModal, setShowEducationModal] = useState(false);
-    const [showSocialModal, setShowSocialModal] = useState(false);
-    const [healthRisk, setHealthRisk] = useState<IRisk>(
-        getLatestRisk(RiskType.HEALTH, props.clientRisks)
-    );
-    const [educationRisk, setEducationRisk] = useState<IRisk>(
-        getLatestRisk(RiskType.EDUCATION, props.clientRisks)
-    );
-    const [socialRisk, setSocialRisk] = useState<IRisk>(
-        getLatestRisk(RiskType.SOCIAL, props.clientRisks)
-    );
-    const closeModal = (modalType: RiskType) => {
-        if (modalType === RiskType.HEALTH) {
-            setShowHealthModal(false);
-        } else if (modalType === RiskType.EDUCATION) {
-            setShowEducationModal(false);
-        } else {
-            setShowSocialModal(false);
-        }
-    };
+
+    const [latestRisks, setLatestRisks] = useState<IRisk[]>(getLatestRisks(props.clientRisks));
 
     return (
         <View>
             <Text style={styles.cardSectionTitle}>Client Risks</Text>
-            <Divider></Divider>
-            <Card style={styles.riskCardStyle}>
-                <View style={styles.riskCardContentStyle}>
-                    <Text style={styles.riskTitleStyle}>Health</Text>
-                    <Text
-                        style={
-                            riskStyles(riskLevels[healthRisk.risk_level].color).riskSubtitleStyle
-                        }
-                    >
-                        {riskLevels[healthRisk.risk_level].name}
-                    </Text>
-                </View>
-                <View>
-                    <Text style={styles.riskHeaderStyle}>Requirements: </Text>
-                    <Text style={styles.riskRequirementStyle}>{healthRisk.requirement}</Text>
-                </View>
-                <View>
-                    <Text style={styles.riskHeaderStyle}>Goals: </Text>
-                    <Text style={styles.riskRequirementStyle}>{healthRisk.goal}</Text>
-                </View>
-                <View style={styles.clientDetailsFinalView}>
-                    <Button
-                        mode="contained"
-                        style={styles.clientDetailsFinalButtons}
-                        onPress={() => {
-                            setShowHealthModal(true);
-                        }}
-                    >
-                        Update
-                    </Button>
-                </View>
-                <View>
-                    <Portal>
-                        <Modal
-                            visible={showHealthModal}
-                            style={styles.modalStyle}
-                            onDismiss={() => {
-                                setShowHealthModal(false);
-                            }}
-                        >
-                            <Formik
-                                initialValues={healthRisk}
-                                onSubmit={(values) => {
-                                    console.log(values);
-                                }}
-                            >
-                                {(formikProps) => (
-                                    <View>
-                                        <ClientRiskForm
-                                            formikProps={formikProps}
-                                            closeModal={this.closeModal(RiskType.HEALTH)}
-                                        />
-                                    </View>
+            {latestRisks.map((presentRisk) => {
+                return (
+                    //Reason key is type is because we want only one of each type
+                    <View key={presentRisk.risk_type}>
+                        <Divider></Divider>
+                        <Card style={styles.riskCardStyle}>
+                            <View style={styles.riskCardContentStyle}>
+                                {presentRisk.risk_type === RiskType.HEALTH ? (
+                                    <Text style={styles.riskTitleStyle}>Health</Text>
+                                ) : (
+                                    <></>
                                 )}
-                            </Formik>
-                        </Modal>
-                    </Portal>
-                </View>
-            </Card>
+                                {presentRisk.risk_type === RiskType.EDUCATION ? (
+                                    <Text style={styles.riskTitleStyle}>Education</Text>
+                                ) : (
+                                    <></>
+                                )}
+                                {presentRisk.risk_type === RiskType.SOCIAL ? (
+                                    <Text style={styles.riskTitleStyle}>Social</Text>
+                                ) : (
+                                    <></>
+                                )}
 
-            <Divider></Divider>
+                                <Text
+                                    style={
+                                        riskStyles(riskLevels[presentRisk.risk_level].color)
+                                            .riskSubtitleStyle
+                                    }
+                                >
+                                    {riskLevels[presentRisk.risk_level].name}
+                                </Text>
+                            </View>
+                            <View>
+                                <Text style={styles.riskHeaderStyle}>Requirements: </Text>
+                                <Text style={styles.riskRequirementStyle}>
+                                    {presentRisk.requirement}
+                                </Text>
+                            </View>
+                            <View>
+                                <Text style={styles.riskHeaderStyle}>Goals: </Text>
+                                <Text style={styles.riskRequirementStyle}>{presentRisk.goal}</Text>
+                            </View>
+                            <View style={styles.clientDetailsFinalView}></View>
+
+                            <View>
+                                <ClientRiskForm riskData={presentRisk} />
+                            </View>
+                        </Card>
+
+                        <Divider></Divider>
+                    </View>
+                );
+            })}
         </View>
     );
 };

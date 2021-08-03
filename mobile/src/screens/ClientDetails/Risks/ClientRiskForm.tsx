@@ -5,66 +5,95 @@ import { Button, Modal, Portal, TextInput, Text } from "react-native-paper";
 import { useState } from "react";
 import useStyles from "./ClientRisk.styles";
 import { IRisk, RiskType } from "@cbr/common";
-import { FormikProps } from "formik";
+import { Formik } from "formik";
 
 export interface ClientRiskFormProps {
-    formikProps: FormikProps<IRisk>;
-    closeModal: void;
+    riskData: IRisk;
 }
 
 export const ClientRiskForm = (props: ClientRiskFormProps) => {
     const styles = useStyles();
+    const [showModal, setShowModal] = useState(false);
     return (
         <View style={styles.riskModalStyle}>
-            {props.formikProps.values.risk_type === RiskType.HEALTH ? (
-                <Text style={styles.riskHeaderStyle}>Update Health Risk</Text>
-            ) : (
-                <></>
-            )}
-            {props.formikProps.values.risk_type === RiskType.EDUCATION ? (
-                <Text style={styles.riskHeaderStyle}>Update Education Risk</Text>
-            ) : (
-                <></>
-            )}
-            {props.formikProps.values.risk_type === RiskType.SOCIAL ? (
-                <Text style={styles.riskHeaderStyle}>Update Social Risk</Text>
-            ) : (
-                <></>
-            )}
-            <NativeText
-                style={styles.riskLevelTextStyle}
-                placeholder={"I need to be a picker LOL"}
-                textAlignVertical={"center"}
-            />
-            <NativeText
-                style={styles.riskTextStyle}
-                placeholder={"Requirements"}
-                defaultValue={props.formikProps.values.requirement}
-                onChange={() => {
-                    props.formikProps.handleChange("requirement");
-                }}
-                multiline={true}
-                numberOfLines={5}
-                textAlignVertical={"top"}
-            />
-            <NativeText
-                style={styles.riskTextStyle}
-                defaultValue={props.formikProps.values.goal}
-                onChange={() => {
-                    props.formikProps.handleChange("goal");
-                }}
-                placeholder={"Goals"}
-                textAlignVertical={"top"}
-            />
             <Button
-                mode={"contained"}
+                mode="contained"
+                style={styles.modalUpdateButton}
                 onPress={() => {
-                    props.formikProps.handleSubmit();
-                    props.closeModal;
+                    setShowModal(true);
                 }}
             >
-                Save
+                Update
             </Button>
+            <Formik
+                initialValues={props.riskData}
+                onSubmit={(values) => {
+                    console.log(values);
+                }}
+            >
+                {(formikProps) => (
+                    <Portal>
+                        <Modal
+                            visible={showModal}
+                            style={styles.modalStyle}
+                            onDismiss={() => {
+                                setShowModal(false);
+                                formikProps.resetForm();
+                            }}
+                        >
+                            {formikProps.values.risk_type === RiskType.HEALTH ? (
+                                <Text style={styles.riskHeaderStyle}>Update Health Risk</Text>
+                            ) : (
+                                <></>
+                            )}
+                            {formikProps.values.risk_type === RiskType.EDUCATION ? (
+                                <Text style={styles.riskHeaderStyle}>Update Education Risk</Text>
+                            ) : (
+                                <></>
+                            )}
+                            {formikProps.values.risk_type === RiskType.SOCIAL ? (
+                                <Text style={styles.riskHeaderStyle}>Update Social Risk</Text>
+                            ) : (
+                                <></>
+                            )}
+                            <TextInput
+                                style={styles.riskLevelTextStyle}
+                                defaultValue={"Risk Level"}
+                                textAlignVertical={"center"}
+                                mode={"outlined"}
+                            />
+                            <TextInput
+                                style={styles.riskTextStyle}
+                                label={"Requirements"}
+                                defaultValue={formikProps.values.requirement}
+                                onChangeText={formikProps.handleChange("requirement")}
+                                multiline={true}
+                                textAlignVertical={"top"}
+                                mode={"outlined"}
+                            />
+                            <TextInput
+                                style={styles.riskTextStyle}
+                                label={"Goals"}
+                                defaultValue={formikProps.values.goal}
+                                onChangeText={formikProps.handleChange("goal")}
+                                placeholder={"Goals"}
+                                multiline={true}
+                                textAlignVertical={"top"}
+                                mode={"outlined"}
+                            />
+                            <Button
+                                mode={"contained"}
+                                onPress={() => {
+                                    formikProps.handleSubmit();
+                                    setShowModal(false);
+                                }}
+                            >
+                                Save
+                            </Button>
+                        </Modal>
+                    </Portal>
+                )}
+            </Formik>
         </View>
     );
 };

@@ -37,8 +37,9 @@ const useStyles = () =>
         riskHeaderStyle: {
             marginTop: 14,
             marginBottom: 2,
-            fontSize: 18,
-            justifyContent: "flex-start",
+            fontSize: 20,
+            alignItems: "center",
+            alignContent: "center",
             fontWeight: "bold",
         },
         riskRequirementStyle: {
@@ -55,7 +56,7 @@ const useStyles = () =>
             marginTop: 15,
             marginBottom: 15,
         },
-        clientDetailsFinalButtons: {
+        modalUpdateButton: {
             padding: 3,
             marginTop: 3,
             marginBottom: 15,
@@ -65,13 +66,14 @@ const useStyles = () =>
             borderRadius: 5,
         },
         modalStyle: {
-            height: 450,
+            height: 480,
             marginHorizontal: 20,
             marginTop: 140,
             display: "flex",
             backgroundColor: "white",
             borderRadius: 10,
-            justifyContent: "space-between",
+            alignContent: "center",
+            alignItems: "center",
         },
         riskTextStyle: {
             alignContent: "flex-start",
@@ -84,27 +86,23 @@ const useStyles = () =>
             borderTopRightRadius: 5,
             borderTopLeftRadius: 5,
             borderRadius: 5,
-            borderWidth: 1,
+
             padding: 10,
-            borderColor: themeColors.blueBgDark,
         },
         riskLevelTextStyle: {
             alignContent: "flex-start",
-            marginTop: 10,
             width: 320,
-            marginBottom: 10,
             borderBottomLeftRadius: 5,
             borderBottomRightRadius: 5,
             borderTopRightRadius: 5,
             borderTopLeftRadius: 5,
             borderRadius: 5,
-            borderWidth: 1,
             padding: 10,
-            borderColor: themeColors.blueBgDark,
         },
         riskModalStyle: {
             alignContent: "center",
             alignItems: "center",
+            justifyContent: "center",
             padding: 10,
         },
     });

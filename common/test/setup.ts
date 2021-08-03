@@ -13,6 +13,8 @@ beforeAll(() => {
 
 global.Request = Request;
 
+global.Request = Request;
+
 beforeAll(() => {
     initializeCommon(TestCommonConfig.testCommonConfig);
 });

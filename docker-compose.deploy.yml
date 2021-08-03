@@ -13,14 +13,14 @@ services:
     restart: always
   caddy:
     container_name: ${COMPOSE_PROJECT_NAME}_caddy
-    image: caddy:2.3.0
+    image: caddy:2.4.3
     restart: always
     volumes:
       - ./caddy:/etc/caddy
       - ./web/build:/var/www
       - django_uploads:/var/www-uploads
     ports:
-      - ${PORT}:80
+      - "${PORT}:80"
     environment:
       - DOMAIN=${DOMAIN}
       - API_HOSTNAME=${COMPOSE_PROJECT_NAME}_django

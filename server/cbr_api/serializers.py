@@ -1,10 +1,19 @@
-from rest_framework import serializers
-from cbr_api import models
-from rest_framework.validators import UniqueValidator
-from django.contrib.auth.password_validation import validate_password
+import datetime
+import imghdr
+import os
 import time
+from typing import Optional
+
+from django.contrib.auth.password_validation import validate_password
+from django.core.files import File
+from rest_framework import serializers
+
+from cbr_api import models
+
 
 # create and list
+
+
 class UserCBRCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
@@ -218,7 +227,6 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
             "date_resolved",
             "resolved",
             "outcome",
-            "picture",
             "wheelchair",
             "wheelchair_experience",
             "hip_width",
@@ -410,6 +418,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "other_disability",
             "created_by_user",
             "created_date",
+            "modified_date",
             "longitude",
             "latitude",
             "zone",
@@ -419,16 +428,21 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "caregiver_present",
             "caregiver_phone",
             "caregiver_email",
-            "caregiver_picture",
             "health_risk",
             "social_risk",
             "educat_risk",
         ]
 
-        read_only_fields = ["created_by_user", "created_date", "full_name"]
+        read_only_fields = [
+            "created_by_user",
+            "created_date",
+            "modified_date",
+            "full_name",
+        ]
 
     def create(self, validated_data):
         current_time = int(time.time())
+        datetime.datetime.now().timestamp()
 
         # must be removed before passing validated_data into Client.objects.create
         health_data = validated_data.pop("health_risk")
@@ -479,6 +493,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "other_disability",
             "created_by_user",
             "created_date",
+            "modified_date",
             "longitude",
             "latitude",
             "zone",
@@ -488,16 +503,22 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "caregiver_present",
             "caregiver_phone",
             "caregiver_email",
-            "caregiver_picture",
             "risks",
             "visits",
             "referrals",
             "baseline_surveys",
         ]
 
-        read_only_fields = ["created_by_user", "created_date"]
+        read_only_fields = ["created_by_user", "created_date", "modified_date"]
 
-    def update(self, instance, validated_data):
+    def update(self, instance: models.Client, validated_data):
+        new_client_picture: Optional[File] = validated_data.get("picture")
+        if new_client_picture:
+            file_root, file_ext = os.path.splitext(new_client_picture.name)
+            actual_image_type: Optional[str] = imghdr.what(new_client_picture.file)
+            if actual_image_type and actual_image_type != file_ext.removeprefix("."):
+                new_client_picture.name = f"{file_root}.{actual_image_type}"
+
         super().update(instance, validated_data)
         instance.full_name = instance.first_name + " " + instance.last_name
         instance.save()

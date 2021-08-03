@@ -10,7 +10,17 @@ import {
     timestampToDateTime,
     wheelchairExperiences,
 } from "@cbr/common";
-import { Button, Card, Chip, Dialog, HelperText, List, Text, TextInput } from "react-native-paper";
+import {
+    ActivityIndicator,
+    Button,
+    Card,
+    Chip,
+    Dialog,
+    HelperText,
+    List,
+    Text,
+    TextInput,
+} from "react-native-paper";
 import useStyles from "./Entry.styles";
 import { ScrollView, View } from "react-native";
 import * as Yup from "yup";
@@ -116,9 +126,7 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
     return (
         <ScrollView style={styles.referralBoard}>
             {loading ? (
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color={themeColors.blueAccent} />
-                </View>
+                <ActivityIndicator size="small" color={themeColors.blueAccent} />
             ) : (
                 <>
                     <Dialog.Title>

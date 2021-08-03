@@ -29,8 +29,8 @@ const useStyles = () =>
         },
         smallChip: { padding: 0, flex: 1 },
         closeBtn: {
-            justifyContent: "flex-start",
-            // position: "relative",
+            justifyContent: "flex-end",
+            position: "absolute",
             right: 0,
             bottom: 0,
         },

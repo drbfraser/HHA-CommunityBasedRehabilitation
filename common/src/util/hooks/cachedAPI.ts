@@ -159,6 +159,8 @@ export class APICacheData<TValue, TLoading, TError> {
             // e.g. if clearBackup is true, we might run the removeItem code below; however, the
             // leftover promise might still need to run `setItem`, resulting in the backup not being
             // invalidated at all. Could be an issue on logout.
+            //
+            // So we abort it and then wait for it to resolve.
             this.abortController.abort();
             await currentPromise;
         }
@@ -348,47 +350,36 @@ export class APICacheData<TValue, TLoading, TError> {
             // attempt.
             this._promise = undefined;
 
+            const baseErrorMsg = `cachedAPIGet(${this.cacheBackupKey}): API fetch failed (${e})`;
             const existingValue = this._value;
             if (existingValue) {
-                console.log(
-                    `cachedAPIGet(${this.cacheBackupKey}): API fetch failed (${e}); using existing value`
-                );
+                console.error(`${baseErrorMsg}; using existing value`);
                 return this.makeCachedAPIResult(false, existingValue);
             }
 
             if (commonConfiguration.useKeyValStorageForCachedAPIBackup) {
-                return this.loadBackupValue();
+                try {
+                    const backup = await commonConfiguration.keyValStorageProvider.getItem(
+                        this.cacheBackupKey
+                    );
+                    if (backup) {
+                        const transformedBackup = this.transformData(JSON.parse(backup));
+                        this._value = transformedBackup;
+                        console.error(`${baseErrorMsg}; using backup`);
+                        return this.makeCachedAPIResult(false, transformedBackup);
+                    } else {
+                        console.error(`${baseErrorMsg} and no backup; using error value"`);
+                        return this.makeCachedAPIResult(false, this.errorValue);
+                    }
+                } catch (backupError) {
+                    console.error(
+                        `${baseErrorMsg} and backup retrieval failed due to ${backupError}; using error value`
+                    );
+                    return this.makeCachedAPIResult(false, this.errorValue);
+                }
             }
 
-            console.log(
-                `cachedAPIGet(${this.cacheBackupKey}): API fetch failed (${e}); using error value`
-            );
-            return this.makeCachedAPIResult(false, this.errorValue);
-        }
-    }
-
-    /**
-     * Loads a backup value for the cache for use when the device is offline / can't connect to
-     * the server.
-     */
-    private async loadBackupValue(): Promise<ICachedAPIResult<TValue, TError>> {
-        const baseErrorMsg = `cachedAPIGet(${this.cacheBackupKey}): API fetch failed`;
-        try {
-            const backup = await commonConfiguration.keyValStorageProvider.getItem(
-                this.cacheBackupKey
-            );
-            if (backup) {
-                this._value = this.transformData(JSON.parse(backup));
-                console.log(baseErrorMsg + "; using backup");
-                return this.makeCachedAPIResult(false, this._value);
-            } else {
-                console.log(baseErrorMsg + " and no backup; using error value");
-                return this.makeCachedAPIResult(false, this.errorValue);
-            }
-        } catch (e) {
-            console.error(
-                baseErrorMsg + ` and backup retrieval failed due to ${e}; using error value`
-            );
+            console.error(`${baseErrorMsg}; using error value`);
             return this.makeCachedAPIResult(false, this.errorValue);
         }
     }

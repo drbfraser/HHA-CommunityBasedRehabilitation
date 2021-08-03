@@ -1,3 +1,4 @@
+import { themeColors } from "@cbr/common";
 import { StyleSheet } from "react-native";
 
 const useStyles = () =>
@@ -64,13 +65,47 @@ const useStyles = () =>
             borderRadius: 5,
         },
         modalStyle: {
-            height: 540,
+            height: 450,
             marginHorizontal: 20,
             marginTop: 140,
             display: "flex",
             backgroundColor: "white",
             borderRadius: 10,
             justifyContent: "space-between",
+        },
+        riskTextStyle: {
+            alignContent: "flex-start",
+            marginTop: 10,
+            marginBottom: 10,
+            height: 100,
+            width: 320,
+            borderBottomLeftRadius: 5,
+            borderBottomRightRadius: 5,
+            borderTopRightRadius: 5,
+            borderTopLeftRadius: 5,
+            borderRadius: 5,
+            borderWidth: 1,
+            padding: 10,
+            borderColor: themeColors.blueBgDark,
+        },
+        riskLevelTextStyle: {
+            alignContent: "flex-start",
+            marginTop: 10,
+            width: 320,
+            marginBottom: 10,
+            borderBottomLeftRadius: 5,
+            borderBottomRightRadius: 5,
+            borderTopRightRadius: 5,
+            borderTopLeftRadius: 5,
+            borderRadius: 5,
+            borderWidth: 1,
+            padding: 10,
+            borderColor: themeColors.blueBgDark,
+        },
+        riskModalStyle: {
+            alignContent: "center",
+            alignItems: "center",
+            padding: 10,
         },
     });
 

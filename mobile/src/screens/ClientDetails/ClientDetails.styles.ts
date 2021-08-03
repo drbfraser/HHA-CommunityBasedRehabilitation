@@ -29,7 +29,6 @@ const useStyles = () =>
             borderTopLeftRadius: 30,
             overflow: "hidden",
         },
-
         clientDetailsContainerStyles: {
             marginTop: 20,
             marginBottom: 20,

@@ -268,6 +268,7 @@ const ClientDetails = (props: ClientProps) => {
                             clientVisits={clientVisits!}
                             activity={tempActivity}
                             clientCreateDate={clientCreateDate}
+                            refreshClient = {getClientDetails}
                         />
                         <View style={styles.clientDetailsFinalView}></View>
                     </Card>

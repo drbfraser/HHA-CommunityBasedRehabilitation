@@ -12,6 +12,7 @@ import ReferralEntry from "./Entries/ReferralEntry";
 import { useIsFocused } from "@react-navigation/native";
 interface ISummaryProps {
     activity: IActivity;
+    refreshClient: () => void;
 }
 
 export enum ActivityType {
@@ -38,7 +39,6 @@ const Timeline = (props: ISummaryProps) => {
     const hideDetails = () => setDetailsVisible(false);
     const styles = useStyles();
     const [icon, setIcon] = useState("");
-    const isFocused = useIsFocused();
 
     useEffect(() => {
         if (props.activity.type === ActivityType.VISIT) setIcon("walk");
@@ -130,6 +130,7 @@ const Timeline = (props: ISummaryProps) => {
                                                 <ReferralEntry
                                                     referral={props.activity.referral as IReferral}
                                                     close={hideDetails}
+                                                    refreshClient={props.refreshClient}
                                                 />
                                             </Modal>
                                         </Portal>

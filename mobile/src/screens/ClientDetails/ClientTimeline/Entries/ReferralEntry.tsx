@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {
     apiFetch,
@@ -19,13 +19,22 @@ import { Formik, FormikProps } from "formik";
 interface IEntryProps {
     referral: IReferral;
     close: () => void;
+    refreshClient: () => void;
 }
 
-const ReferralEntry = ({ referral, close }: IEntryProps) => {
+const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
     const styles = useStyles();
+    const [loading, setLoading] = useState(false);
+
     const onClose = () => {
         close();
     };
+
+    const handleUpdate = () => {
+        setLoading(false);
+        refreshClient();
+    };
+
     const ReasonChip = ({ label }: { label: string }) => (
         <View style={styles.referralChip}>
             <Chip style={styles.smallChip} mode="outlined" selectedColor={themeColors.blueBgDark}>
@@ -33,6 +42,7 @@ const ReferralEntry = ({ referral, close }: IEntryProps) => {
             </Chip>
         </View>
     );
+
     const ResolveForm = () => {
         const outcomeField = {
             key: "outcome",
@@ -55,7 +65,8 @@ const ReferralEntry = ({ referral, close }: IEntryProps) => {
                     [outcomeField.key]: values[outcomeField.key],
                 }),
             })
-                .then(() => onClose())
+                .then(() => handleUpdate())
+                .then(() => setLoading(false))
                 .catch(() => alert("Something went wrong. Please try that again."));
         };
 
@@ -104,102 +115,116 @@ const ReferralEntry = ({ referral, close }: IEntryProps) => {
 
     return (
         <ScrollView style={styles.referralBoard}>
-            <Dialog.Title>
-                {referral.resolved ? (
-                    <Icon name="check-circle" size={15} color={themeColors.riskGreen} />
-                ) : (
-                    <Icon name="clock-o" size={15} color={themeColors.riskRed} />
-                )}{" "}
-                Referral {referral.resolved ? "Resolved" : "Pending"}
-                {"\n\n"}
-                {referral.wheelchair && <ReasonChip label="Wheelchair" />}
-                {referral.physiotherapy && <ReasonChip label="Physiotherapy" />}
-                {referral.prosthetic && <ReasonChip label="Prosthetic" />}
-                {referral.orthotic && <ReasonChip label="Orthotic" />}
-            </Dialog.Title>
-            <Dialog.Content>
-                <Text>
-                    <Text style={styles.labelBold}>Referral Date: </Text>
-                    {timestampToDateTime(referral.date_referred)}
-                </Text>
-                {referral.resolved && (
-                    <>
-                        <Text />
+            {loading ? (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color={themeColors.blueAccent} />
+                </View>
+            ) : (
+                <>
+                    <Dialog.Title>
+                        {referral.resolved ? (
+                            <Icon name="check-circle" size={15} color={themeColors.riskGreen} />
+                        ) : (
+                            <Icon name="clock-o" size={15} color={themeColors.riskRed} />
+                        )}{" "}
+                        Referral {referral.resolved ? "Resolved" : "Pending"}
+                        {"\n\n"}
+                        {referral.wheelchair && <ReasonChip label="Wheelchair" />}
+                        {referral.physiotherapy && <ReasonChip label="Physiotherapy" />}
+                        {referral.prosthetic && <ReasonChip label="Prosthetic" />}
+                        {referral.orthotic && <ReasonChip label="Orthotic" />}
+                    </Dialog.Title>
+                    <Dialog.Content>
                         <Text>
-                            <Text style={styles.labelBold}>Resolution Date: </Text>
-                            {timestampToDateTime(referral.date_resolved)}
+                            <Text style={styles.labelBold}>Referral Date: </Text>
+                            {timestampToDateTime(referral.date_referred)}
                         </Text>
-                        <Text>
-                            <Text style={styles.labelBold}>Outcome: </Text>
-                            {referral.outcome}
-                        </Text>
-                    </>
-                )}
-                {referral.wheelchair && (
-                    <>
-                        <Text />
-                        <Text>
-                            <Text style={styles.labelBold}>Wheelchair Experience: </Text>
-                            {wheelchairExperiences[referral.wheelchair_experience]}
-                        </Text>
-                        <Text>
-                            <Text style={styles.labelBold}>Hip Width: </Text>
-                            {referral.hip_width} inches
-                        </Text>
-                        <Text>
-                            <Text style={styles.labelBold}>Wheelchair Owned? </Text>
-                            {referral.wheelchair_owned ? "Yes" : "No"}
-                        </Text>
-                        <Text>
-                            <Text style={styles.labelBold}>Wheelchair Repairable? </Text>
-                            {referral.wheelchair_repairable ? "Yes" : "No"}
-                        </Text>
-                        <Text />
-                    </>
-                )}
-                {referral.physiotherapy && (
-                    <>
-                        <Text>
-                            <Text style={styles.labelBold}>Physiotherapy Condition: </Text>
-                            {referral.condition}
-                        </Text>
-                        <Text />
-                    </>
-                )}
-                {referral.prosthetic && (
-                    <>
-                        <Text>
-                            <Text style={styles.labelBold}>Prosthetic Injury Location: </Text>
-                            {prostheticInjuryLocations[referral.prosthetic_injury_location]}
-                        </Text>
-                        <Text />
-                    </>
-                )}
-                {referral.orthotic && (
-                    <>
-                        <Text>
-                            <Text style={styles.labelBold}>Orthotic Injury Location: </Text>
-                            {orthoticInjuryLocations[referral.orthotic_injury_location]}
-                        </Text>
-                        <Text />
-                    </>
-                )}
-                {Boolean(referral.services_other.trim().length) && (
-                    <>
-                        <Text>
-                            <Text style={styles.labelBold}>Other Services Required: </Text>
-                            {referral.services_other}
-                        </Text>
-                        <Text />
-                    </>
-                )}
-                {!referral.resolved && <ResolveForm />}
-            </Dialog.Content>
-            <Dialog.Actions>
-                <Button onPress={onClose} color={themeColors.blueBgDark}>
-                    Close
-                </Button>
-            </Dialog.Actions>
+                        {referral.resolved && (
+                            <>
+                                <Text />
+                                <Text>
+                                    <Text style={styles.labelBold}>Resolution Date: </Text>
+                                    {timestampToDateTime(referral.date_resolved)}
+                                </Text>
+                                <Text>
+                                    <Text style={styles.labelBold}>Outcome: </Text>
+                                    {referral.outcome}
+                                </Text>
+                            </>
+                        )}
+                        {referral.wheelchair && (
+                            <>
+                                <Text />
+                                <Text>
+                                    <Text style={styles.labelBold}>Wheelchair Experience: </Text>
+                                    {wheelchairExperiences[referral.wheelchair_experience]}
+                                </Text>
+                                <Text>
+                                    <Text style={styles.labelBold}>Hip Width: </Text>
+                                    {referral.hip_width} inches
+                                </Text>
+                                <Text>
+                                    <Text style={styles.labelBold}>Wheelchair Owned?</Text>
+                                    {referral.wheelchair_owned ? "Yes" : "No"}
+                                </Text>
+                                <Text>
+                                    <Text style={styles.labelBold}>Wheelchair Repairable?</Text>
+                                    {referral.wheelchair_repairable ? "Yes" : "No"}
+                                </Text>
+                                <Text />
+                            </>
+                        )}
+                        {referral.physiotherapy && (
+                            <>
+                                <Text>
+                                    <Text style={styles.labelBold}>Physiotherapy Condition: </Text>
+                                    {referral.condition}
+                                </Text>
+                                <Text />
+                            </>
+                        )}
+                        {referral.prosthetic && (
+                            <>
+                                <Text>
+                                    <Text style={styles.labelBold}>
+                                        Prosthetic Injury Location:{" "}
+                                    </Text>
+                                    {prostheticInjuryLocations[referral.prosthetic_injury_location]}
+                                </Text>
+                                <Text />
+                            </>
+                        )}
+                        {referral.orthotic && (
+                            <>
+                                <Text>
+                                    <Text style={styles.labelBold}>Orthotic Injury Location: </Text>
+                                    {orthoticInjuryLocations[referral.orthotic_injury_location]}
+                                </Text>
+                                <Text />
+                            </>
+                        )}
+                        {Boolean(referral.services_other.trim().length) && (
+                            <>
+                                <Text>
+                                    <Text style={styles.labelBold}>Other Services Required: </Text>
+                                    {referral.services_other}
+                                </Text>
+                                <Text />
+                            </>
+                        )}
+                        {!referral.resolved && <ResolveForm />}
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button
+                            style={styles.closeBtn}
+                            onPress={onClose}
+                            color={themeColors.blueBgDark}
+                        >
+                            Close
+                        </Button>
+                    </Dialog.Actions>
+                </>
+            )}
         </ScrollView>
     );
 };

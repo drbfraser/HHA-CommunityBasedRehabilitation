@@ -25,8 +25,15 @@ const useStyles = () =>
             margin: 3,
             flexDirection: "row",
             flexWrap: "wrap",
+            flex: 1,
         },
-        smallChip: { padding: 0 },
+        smallChip: { padding: 0, flex: 1 },
+        closeBtn: {
+            justifyContent: "flex-start",
+            // position: "relative",
+            right: 0,
+            bottom: 0,
+        },
     });
 
 export default useStyles;

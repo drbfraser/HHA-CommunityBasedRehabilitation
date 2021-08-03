@@ -4,10 +4,9 @@ const useStyles = (textInputWidth: number) =>
     StyleSheet.create({
         menuContentStyle: {
             width: textInputWidth,
-            top: -5,
+            top: -3,
         },
         invisibleAnchor: {
-            width: textInputWidth,
             height: 1,
             marginBottom: 0,
         },

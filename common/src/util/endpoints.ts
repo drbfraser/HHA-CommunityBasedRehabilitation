@@ -7,6 +7,7 @@ export enum Endpoint {
     LOGIN = "login",
     LOGIN_REFRESH = "login/refresh",
     CLIENT = "client/",
+    CLIENT_PICTURE = "client/picture/",
     CLIENTS = "clients",
     VISITS = "visits",
     REFERRALS = "referrals",
@@ -93,6 +94,12 @@ export class APIFetchFailError extends Error {
     }
 }
 
+export const createApiFetchRequest = (
+    endpoint: Endpoint,
+    urlParams: string = "",
+    customInit?: RequestInit
+) => new Request(commonConfiguration.apiUrl + endpoint + urlParams, customInit);
+
 /**
  * Performs a fetch to the server. The returned Promise rejects on both HTTP errors and network
  * errors.
@@ -110,26 +117,24 @@ export const apiFetch = async (
     urlParams: string = "",
     customInit: RequestInit = {}
 ): Promise<Response> => {
-    const url = commonConfiguration.apiUrl + endpoint + urlParams;
+    return apiFetchByRequest(createApiFetchRequest(endpoint, urlParams), customInit);
+};
+
+export const apiFetchByRequest = async (
+    request: Request,
+    customInit: RequestInit
+): Promise<Response> => {
     const authToken = await getAuthToken();
     if (authToken === null) {
         return Promise.reject("unable to get an access token");
     }
 
-    const init: RequestInit = {
-        ...customInit,
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-            ...customInit.headers,
-        },
-    };
-
-    if (init.body instanceof FormData) {
-        delete (init.headers as any)["Content-Type"];
+    request.headers.set("Authorization", `Bearer ${authToken}`);
+    if (!(customInit.body instanceof FormData)) {
+        request.headers.set("Content-Type", "application/json");
     }
 
-    return fetch(url, init)
+    return fetch(request, customInit)
         .then(async (resp) => {
             if (!resp.ok) {
                 const jsonPromise = await resp.json().catch(() => undefined);

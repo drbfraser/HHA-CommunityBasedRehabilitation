@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { Validation } from "@cbr/common/util/validations";
+import { IClient } from "@cbr/common/util/clients";
 
 export enum FormField {
     first_name = "first_name",
@@ -15,6 +16,7 @@ export enum FormField {
     caregiver_name = "caregiver_name",
     disability = "disability",
     picture = "picture",
+    pictureChanged = "pictureChanged",
     other_disability = "other_disability",
 }
 
@@ -33,6 +35,8 @@ export const fieldLabels = {
     [FormField.disability]: "Disabilities",
     [FormField.other_disability]: "Other Disabilities",
 };
+
+export type TFormValues = IClient & { [FormField.pictureChanged]: boolean };
 
 export const validationSchema = () =>
     Yup.object().shape({

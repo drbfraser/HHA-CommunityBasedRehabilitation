@@ -1,9 +1,11 @@
 import React, { memo, useRef, useState } from "react";
-import { Keyboard, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Keyboard, StyleSheet, TouchableOpacity } from "react-native";
 import { Menu, TextInput } from "react-native-paper";
 import { TextInputProps } from "react-native-paper/lib/typescript/components/TextInput/TextInput";
 import useStyles from "./ExposedDropdownMenu.styles";
 import { countObjectKeys } from "@cbr/common";
+import { color } from "react-native-elements/dist/helpers";
+import theme from "../../util/theme.styles";
 
 interface IBaseDropdownMenuProps extends Omit<TextInputProps, "theme" | "editable"> {
     /**
@@ -84,6 +86,10 @@ const menuItemStyle = StyleSheet.create({
         // Make it undefined to fill the entire menu width.
         maxWidth: undefined,
     },
+    selectedItemStyle: {
+        maxWidth: undefined,
+        backgroundColor: color(theme.colors.text).alpha(0.15).rgb().string(),
+    },
 });
 
 const convertMapToMenuItems = (props: Props, hideMenu: () => void): Array<React.ReactNode> => {
@@ -103,7 +109,11 @@ const convertMapToMenuItems = (props: Props, hideMenu: () => void): Array<React.
 
         menuItems[index] = (
             <Menu.Item
-                style={menuItemStyle.itemStyle}
+                style={
+                    props.value === label
+                        ? menuItemStyle.selectedItemStyle
+                        : menuItemStyle.itemStyle
+                }
                 onPress={() => {
                     props.onKeyChange(key);
                     hideMenu();
@@ -176,7 +186,11 @@ const MenuItems = ({ hideMenu, existingProps }: MenuItemsProps) => {
             existingProps.valuesType === "record-string"
                 ? Object.entries(existingProps.values).map(([key, label]: [string, string]) => (
                       <Menu.Item
-                          style={menuItemStyle.itemStyle}
+                          style={
+                              existingProps.value === label
+                                  ? menuItemStyle.selectedItemStyle
+                                  : menuItemStyle.itemStyle
+                          }
                           onPress={() => {
                               if (existingProps.valuesType === "record-number") {
                                   // in JavaScript, all keys of objects are strings
@@ -193,15 +207,19 @@ const MenuItems = ({ hideMenu, existingProps }: MenuItemsProps) => {
                       />
                   ))
                 : existingProps.valuesType === "array"
-                ? existingProps.values.map((value, index) => (
+                ? existingProps.values.map((label, index) => (
                       <Menu.Item
-                          style={menuItemStyle.itemStyle}
+                          style={
+                              existingProps.value === label
+                                  ? menuItemStyle.selectedItemStyle
+                                  : menuItemStyle.itemStyle
+                          }
                           onPress={() => {
                               existingProps.onKeyChange(index);
                               hideMenu();
                           }}
-                          key={value}
-                          title={value}
+                          key={label}
+                          title={label}
                       />
                   ))
                 : convertMapToMenuItems(existingProps, hideMenu)}
@@ -253,34 +271,33 @@ const ExposedDropdownMenu = (props: Props) => {
             activeOpacity={1}
             onPress={openMenu}
         >
-            <TextInput
-                {...props}
-                onLayout={(event) => {
-                    width.current = event.nativeEvent.layout.width;
-                    height.current = event.nativeEvent.layout.height;
-                }}
-                editable={false}
-                right={
-                    <TextInput.Icon
-                        hitSlop={{
-                            top: height.current / 2,
-                            left: width.current,
-                            bottom: height.current / 2,
-                            right: 10,
-                        }}
-                        disabled={props.disabled}
-                        onPress={openMenu}
-                        name={!isOpen ? "chevron-down" : "chevron-up"}
-                    />
-                }
-            />
-
-            {/* Use a nearly invisible anchor to get the menu anchored below the TextInput. */}
             <Menu
                 visible={isOpen}
                 contentStyle={styles.menuContentStyle}
                 onDismiss={onDismiss}
-                anchor={<View style={styles.invisibleAnchor} />}
+                anchor={
+                    <TextInput
+                        {...props}
+                        onLayout={(event) => {
+                            width.current = event.nativeEvent.layout.width;
+                            height.current = event.nativeEvent.layout.height;
+                        }}
+                        editable={false}
+                        right={
+                            <TextInput.Icon
+                                hitSlop={{
+                                    top: height.current / 2,
+                                    left: width.current,
+                                    bottom: height.current / 2,
+                                    right: 10,
+                                }}
+                                disabled={props.disabled}
+                                onPress={openMenu}
+                                name={!isOpen ? "chevron-down" : "chevron-up"}
+                            />
+                        }
+                    />
+                }
             >
                 <MemoizedMenuItems hideMenu={hideMenu} existingProps={props} />
             </Menu>

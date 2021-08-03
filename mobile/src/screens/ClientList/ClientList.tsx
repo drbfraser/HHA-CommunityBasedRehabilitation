@@ -33,6 +33,7 @@ const ClientList = () => {
     const zones = useZones();
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
     const [modalVisible, setModalVisible] = useState(false);
+    const isFocused = useIsFocused();
 
     const [showIDColumn, setShowIDColumn] = useState(true);
     const [showNameColumn, setShowNameColumn] = useState(true);
@@ -106,7 +107,6 @@ const ClientList = () => {
         }
     };
 
-    const isFocused = useIsFocused();
     useEffect(() => {
         if (isFocused) {
             newClientGet();

@@ -10,12 +10,14 @@ import {
 } from "@cbr/common";
 import { useNavigation } from "@react-navigation/native";
 import { Formik, FormikProps } from "formik";
-import React from "react";
+import React, { LegacyRef, RefObject, useRef } from "react";
+import { Ref } from "react";
+import { useCallback } from "react";
 import { SafeAreaView, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Text, Button, Card, Checkbox, Divider } from "react-native-paper";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
-import FormikExposedDropdownMenu from "../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
+import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import FormikTextInput from "../../components/FormikTextInput/FormikTextInput";
 import { FieldError } from "../../util/formikUtil";
 import { AppStackNavProp } from "../../util/stackScreens";
@@ -40,7 +42,6 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
                 field={`${props.riskPrefix}Risk`}
                 formikProps={props.formikProps}
                 mode="outlined"
-                numericKey={false}
             />
             <FormikTextInput
                 style={styles.field}
@@ -70,14 +71,22 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
 const NewClient = () => {
     const navigation = useNavigation<AppStackNavProp>();
     const styles = useStyles();
+    const scrollRef = React.createRef<KeyboardAwareScrollView>();
+
+    const scrollToTop = useCallback(
+        () => scrollRef?.current?.scrollToPosition(0, 0, false),
+        [scrollRef]
+    );
 
     return (
         <SafeAreaView>
-            <KeyboardAwareScrollView>
+            <KeyboardAwareScrollView ref={scrollRef}>
                 <Formik
                     initialValues={clientInitialValues}
                     validationSchema={newClientValidationSchema}
-                    onSubmit={(values, helpers) => handleSubmit(values, helpers, navigation)}
+                    onSubmit={(values, helpers) =>
+                        handleSubmit(values, helpers, navigation, scrollToTop)
+                    }
                     enableReinitialize
                 >
                     {(formikProps) => (

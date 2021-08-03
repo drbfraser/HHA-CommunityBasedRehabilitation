@@ -2,9 +2,6 @@ import { IReferral } from "./referrals";
 import { IRisk, riskLevels } from "./risks";
 import { ISurvey } from "./survey";
 import { IVisitSummary } from "./visits";
-import { useZones } from "./hooks/zones";
-import { string } from "yup/lib/locale";
-import { SearchOption } from "./searchOptions";
 
 export interface IClientSummary {
     id: number;
@@ -28,6 +25,7 @@ export interface IClient {
     other_disability: string;
     created_by_user: number;
     created_date: number;
+    modified_date: number;
     longitude: string;
     latitude: string;
     zone: number;
@@ -37,7 +35,6 @@ export interface IClient {
     caregiver_name: string;
     caregiver_phone: string;
     caregiver_email: string;
-    caregiver_picture: unknown;
     risks: IRisk[];
     visits: IVisitSummary[];
     referrals: IReferral[];

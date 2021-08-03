@@ -1,10 +1,13 @@
 import { getAuthToken } from "./auth";
 import { commonConfiguration } from "../init";
+import buildFormErrorInternal from "./internal/buildFormError";
+import rejectWithWrappedError from "./internal/rejectWithWrappedError";
 
 export enum Endpoint {
     LOGIN = "login",
     LOGIN_REFRESH = "login/refresh",
     CLIENT = "client/",
+    CLIENT_PICTURE = "client/picture/",
     CLIENTS = "clients",
     VISITS = "visits",
     REFERRALS = "referrals",
@@ -35,16 +38,67 @@ export class APIFetchFailError extends Error {
      */
     readonly status: number;
     /**
-     * The response data, which may contain an error message from the server.
+     * Optional response data, which may contain an error message from the server.
      */
-    readonly response: Readonly<any>;
+    readonly response?: Readonly<any>;
+    /**
+     * A specific error message given by the server.
+     */
+    readonly details?: string;
 
-    constructor(message: string, status: number, response: any) {
+    /**
+     * Workaround for instanceof not working in tests.
+     * https://stackoverflow.com/questions/41719162/instanceof-custom-error-class-returning-false?noredirect=1&lq=1
+     *
+     * @param e The error to check whether it is an instance of {@link APIFetchFailError}
+     * @return Whether the given argument is an {@link APIFetchFailError}.
+     */
+    static isFetchError(e: any): boolean {
+        return (
+            e instanceof APIFetchFailError ||
+            e.name === "APIFetchFailError" ||
+            e.hasOwnProperty("status")
+        );
+    }
+
+    constructor(message: string, status: number, response: any | undefined) {
         super(message);
         this.status = status;
         this.response = response;
+
+        if (response) {
+            const details: any | undefined = response["details"] ?? response["detail"];
+            if (details) {
+                this.details = typeof details === "string" ? details : JSON.stringify(details);
+            }
+        }
+    }
+
+    /**
+     * Builds a multi-line error message if this error resulted from a form submission. Such errors
+     * from the server from invalid form input would result in the JSON response containing the
+     * field names mapped to the error message for that field. If no entries can be found, the
+     * default {@link message} is used.
+     *
+     * @param formLabels A Record that maps field names to user-friendly field labels. If this is
+     * undefined or the error contains fields not covered by the Record, then the raw field name
+     * will be used.
+     * @return A human-readable error message as described above.
+     */
+    buildFormError(formLabels: Record<string, string> | undefined | null): string {
+        // Delegating to an internal function, because there are issues with extending native types
+        // in JavaScript apparently. Trying to use this buildFormError func in the class during
+        // unit tests results in "TypeError: buildFormError is not a function"
+        //  * https://stackoverflow.com/questions/33832646/extending-built-in-natives-in-es6-with-babel?noredirect=1&lq=1
+        return buildFormErrorInternal(this, formLabels);
     }
 }
+
+export const createApiFetchRequest = (
+    endpoint: Endpoint,
+    urlParams: string = "",
+    customInit?: RequestInit
+) => new Request(commonConfiguration.apiUrl + endpoint + urlParams, customInit);
 
 /**
  * Performs a fetch to the server. The returned Promise rejects on both HTTP errors and network
@@ -63,35 +117,37 @@ export const apiFetch = async (
     urlParams: string = "",
     customInit: RequestInit = {}
 ): Promise<Response> => {
-    const url = commonConfiguration.apiUrl + endpoint + urlParams;
+    return apiFetchByRequest(createApiFetchRequest(endpoint, urlParams), customInit);
+};
+
+export const apiFetchByRequest = async (
+    request: Request,
+    customInit: RequestInit
+): Promise<Response> => {
     const authToken = await getAuthToken();
     if (authToken === null) {
         return Promise.reject("unable to get an access token");
     }
 
-    const init: RequestInit = {
-        ...customInit,
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-            ...customInit.headers,
-        },
-    };
-
-    if (init.body instanceof FormData) {
-        delete (init.headers as any)["Content-Type"];
+    request.headers.set("Authorization", `Bearer ${authToken}`);
+    if (!(customInit.body instanceof FormData)) {
+        request.headers.set("Content-Type", "application/json");
     }
 
-    return fetch(url, init).then(async (resp) => {
-        if (!resp.ok) {
-            const jsonPromise = resp.json();
-            const message = `API Fetch failed with HTTP Status ${resp.status}`;
-            console.error(message);
-            return Promise.reject(new APIFetchFailError(message, resp.status, await jsonPromise));
-        }
+    return fetch(request, customInit)
+        .then(async (resp) => {
+            if (!resp.ok) {
+                const jsonPromise = await resp.json().catch(() => undefined);
+                const message = `API Fetch failed with HTTP Status ${resp.status}`;
+                console.error(message);
+                return Promise.reject(
+                    new APIFetchFailError(message, resp.status, await jsonPromise)
+                );
+            }
 
-        return resp;
-    });
+            return resp;
+        })
+        .catch(rejectWithWrappedError);
 };
 
 // NOTE: This function does not handle nested objects or arrays of objects.

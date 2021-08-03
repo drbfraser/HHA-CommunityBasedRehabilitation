@@ -12,7 +12,7 @@ import {
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
-import { IActivity, ActivityType } from "./ClientTimeline/Activity";
+import { IActivity, ActivityType } from "./ClientTimeline/Timeline";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import { RecentActivity } from "./ClientTimeline/RecentActivity";
@@ -30,17 +30,6 @@ interface ClientProps {
 }
 
 const ClientDetails = (props: ClientProps) => {
-    useEffect(() => {
-        props.navigation.setOptions({
-            title: "Client Page",
-            headerStyle: {
-                backgroundColor: themeColors.blueBgDark,
-            },
-            headerTintColor: themeColors.white,
-            headerShown: true,
-        });
-    });
-
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
     const isFocused = useIsFocused();
@@ -200,7 +189,15 @@ const ClientDetails = (props: ClientProps) => {
                         >
                             Baseline Survey
                         </Button>
-                        <Button mode="contained" style={styles.clientButtons}>
+                        <Button
+                            mode="contained"
+                            style={styles.clientButtons}
+                            onPress={() => {
+                                navigation.navigate(StackScreenName.VISIT, {
+                                    clientID: props.route.params.clientID,
+                                });
+                            }}
+                        >
                             New Visit
                         </Button>
                     </Card>
@@ -216,10 +213,11 @@ const ClientDetails = (props: ClientProps) => {
                             }}
                         >
                             {(formikProps) => (
-                                <>
-                                    <ClientForm formikProps={formikProps} isNewClient={false} />
-                                    <Text>hi</Text>
-                                </>
+                                <ClientForm
+                                    clientId={client?.id}
+                                    formikProps={formikProps}
+                                    isNewClient={false}
+                                />
                             )}
                         </Formik>
                     </Card>
@@ -230,11 +228,13 @@ const ClientDetails = (props: ClientProps) => {
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>
                         </View>
-                        <RecentActivity
-                            clientVisits={client?.visits ?? []}
-                            activityDTO={tempActivity}
-                            clientCreateDate={client?.created_date ?? new Date().getTime()}
-                        />
+                        {client && (
+                            <RecentActivity
+                                clientVisits={client.visits ?? []}
+                                activity={tempActivity}
+                                clientCreateDate={client.created_date}
+                            />
+                        )}
                         <View style={styles.clientDetailsFinalView}></View>
                     </Card>
                 </View>

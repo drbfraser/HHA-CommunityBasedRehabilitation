@@ -1,8 +1,8 @@
 // TODO: Remove or rework cachedAPI calls. The mobile app should probably be caching data in a
 //  database for proper persistence, not caching in TypeScript variables
 import { apiFetch, Endpoint } from "../endpoints";
-import { cachedAPIGet, IAPICacheData, cachedAPIHook } from "./cachedAPI";
 import emptyMap from "../internal/emptyMap";
+import { APICacheData } from "./cachedAPI";
 
 export interface IZone {
     id: number;
@@ -11,14 +11,13 @@ export interface IZone {
 
 export type TZoneMap = ReadonlyMap<number, string>;
 
-const cache: IAPICacheData<TZoneMap, TZoneMap, TZoneMap> = {
-    doFetch: () => apiFetch(Endpoint.ZONES),
-    transformData: (zones: IZone[]) => new Map(zones.map((z) => [z.id, z.zone_name])),
-    promise: undefined,
-    value: undefined,
-    loadingValue: emptyMap,
-    errorValue: emptyMap,
-};
+const cache = new APICacheData<TZoneMap, TZoneMap, TZoneMap>(
+    "cache_zones",
+    () => apiFetch(Endpoint.ZONES),
+    (zones: IZone[]) => new Map(zones.map((z) => [z.id, z.zone_name])),
+    emptyMap,
+    emptyMap
+);
 
-export const getZones = async () => cachedAPIGet(cache);
-export const useZones = cachedAPIHook(cache);
+export const getZones = async () => cache.getCachedValue();
+export const useZones = cache.useCacheHook();

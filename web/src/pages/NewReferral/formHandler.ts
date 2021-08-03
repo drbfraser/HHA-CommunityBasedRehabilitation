@@ -1,19 +1,23 @@
 import { FormikHelpers } from "formik";
-import { ReferralFormValues } from "@cbr/common/forms/Referral/referralFields";
+import { referralFieldLabels, ReferralFormValues } from "@cbr/common/forms/Referral/referralFields";
 import { referralHandleSubmit } from "@cbr/common/forms/Referral/referralHandler";
 
 import history from "../../util/history";
+import React from "react";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
 
 export const handleSubmit = async (
     values: ReferralFormValues,
     helpers: FormikHelpers<ReferralFormValues>,
-    setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
+    setSubmissionError: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
     try {
-        await referralHandleSubmit(values, helpers, setSubmissionError);
+        await referralHandleSubmit(values);
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);
-        setSubmissionError(true);
+        setSubmissionError(
+            e instanceof APIFetchFailError ? e.buildFormError(referralFieldLabels) : `${e}`
+        );
     }
 };

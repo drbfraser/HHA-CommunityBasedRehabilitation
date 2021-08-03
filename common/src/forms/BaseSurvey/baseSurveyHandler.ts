@@ -17,11 +17,7 @@ const addSurvey = async (surveyInfo: string) => {
     });
 };
 
-export const baseSurveyHandleSubmitForm = async (
-    values: BaseFormValues,
-    helpers: FormikHelpers<BaseFormValues>,
-    setSubmissionError: React.Dispatch<React.SetStateAction<boolean>>
-) => {
+export const baseSurveyHandleSubmitForm = async (values: BaseFormValues) => {
     const newSurvey = JSON.stringify({
         client: values[BaseSurveyFormField.client],
         health: values[BaseSurveyFormField.rateLevel],

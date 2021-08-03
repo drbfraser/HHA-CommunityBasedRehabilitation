@@ -1,9 +1,10 @@
 import { registerRootComponent } from "expo";
 import App from "./App";
-import { initializeCommon, KeyValStorageProvider } from "@cbr/common";
+import { initializeCommon, invalidateAllCachedAPI, KeyValStorageProvider } from "@cbr/common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { KEY_CURRENT_USER } from "./util/AsyncStorageKeys";
 import { Constants } from "react-native-unimodules";
+import NetInfo from "@react-native-community/netinfo";
+import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
 
 const keyValStorageProvider: KeyValStorageProvider = {
     getItem(key: string): Promise<string | null> {
@@ -22,14 +23,30 @@ initializeCommon({
     // @ts-ignore
     apiUrl: Constants.manifest.extra.apiUrl,
     keyValStorageProvider: keyValStorageProvider,
+    useKeyValStorageForCachedAPIBackup: true,
     // We don't want to logout when the user is offline and doesn't have internet (no internet means
     // refresh token attempt will fail). The user might have data stored offline (in the future). If
     // their refresh token expires, we need to ask them to login again without deleting all of their
     // data.
     shouldLogoutOnTokenRefreshFailure: false,
     logoutCallback: async () => {
-        await AsyncStorage.removeItem(KEY_CURRENT_USER).catch();
+        await CacheRefreshTask.unregisterBackgroundFetch();
+        await invalidateAllCachedAPI("logout").catch((e) => {
+            console.error(`Error while invalidating all cached API during logout: ${e}`);
+        });
         // TODO: Delete all other stored data in the app including client data, referrals, etc.
+    },
+    fetchErrorWrapper: async (e: Error): Promise<Error> => {
+        if (e.message === "Network request failed") {
+            const netInfoState = await NetInfo.fetch();
+            return new Error(
+                !netInfoState.isInternetReachable
+                    ? "No internet available"
+                    : "Unable to reach server"
+            );
+        }
+
+        return e;
     },
 });
 

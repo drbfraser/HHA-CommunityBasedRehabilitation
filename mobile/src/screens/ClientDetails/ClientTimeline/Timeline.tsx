@@ -6,8 +6,8 @@ import { Button, Modal, Portal } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { riskTypes } from "../../../util/riskIcon";
 import { IVisitSummary } from "../../../../../common/src/util/visits";
-import useStyles from "./Activity.style";
-
+import useStyles from "./Timeline.style";
+import BaselineEntry from "./Entries/BaselineEntry";
 interface ISummaryProps {
     activity: IActivity;
 }
@@ -27,11 +27,9 @@ export interface IActivity {
     survey: ISurvey | undefined;
 }
 
-export const SummaryActivity = (props: ISummaryProps) => {
-    let zoneList = useZones();
-    let zone: string;
-    if (props.activity.visit) zone = Array.from(zoneList.values())[props.activity.visit!.zone - 1];
-    else zone = "";
+const Timeline = (props: ISummaryProps) => {
+    const zones = useZones(false);
+    const zone = props.activity.visit ? zones.get(props.activity.visit.zone) : "";
 
     const [detailsVisible, setDetailsVisible] = useState(false);
     const showDetails = () => setDetailsVisible(true);
@@ -52,15 +50,6 @@ export const SummaryActivity = (props: ISummaryProps) => {
             }}
         >
             <View>
-                <Portal>
-                    <Modal
-                        visible={detailsVisible}
-                        onDismiss={hideDetails}
-                        style={styles.popupStyle}
-                    >
-                        <Text>What do you call a bike race sprint? An acyclic path.</Text>
-                    </Modal>
-                </Portal>
                 <View style={styles.container}>
                     <Text>{timestampToDate(props.activity.date)}</Text>
                     <View style={styles.activityTypeView}>
@@ -78,34 +67,25 @@ export const SummaryActivity = (props: ISummaryProps) => {
                             <View>
                                 <Text>{zone} visit</Text>
                                 <View>
-                                    {props.activity.visit.educat_visit === true ? (
+                                    {props.activity.visit.educat_visit ? (
                                         <View style={styles.subItem}>
-                                            {riskTypes.EDUCAT.Icon(
-                                                themeColors.riskBlack,
-                                                themeColors.riskBlack
-                                            )}
+                                            {riskTypes.EDUCAT.Icon(themeColors.riskBlack)}
                                             <Text style={styles.subItemText}>Education</Text>
                                         </View>
                                     ) : (
                                         <></>
                                     )}
-                                    {props.activity.visit.health_visit === true ? (
+                                    {props.activity.visit.health_visit ? (
                                         <View style={styles.subItem}>
-                                            {riskTypes.HEALTH.Icon(
-                                                themeColors.riskBlack,
-                                                themeColors.riskBlack
-                                            )}
+                                            {riskTypes.HEALTH.Icon(themeColors.riskBlack)}
                                             <Text style={styles.subItemText}>Health</Text>
                                         </View>
                                     ) : (
                                         <></>
                                     )}
-                                    {props.activity.visit.social_visit === true ? (
+                                    {props.activity.visit.social_visit ? (
                                         <View style={styles.subItem}>
-                                            {riskTypes.SOCIAL.Icon(
-                                                themeColors.riskBlack,
-                                                themeColors.riskBlack
-                                            )}
+                                            {riskTypes.SOCIAL.Icon(themeColors.riskBlack)}
                                             <Text style={styles.subItemText}>Social</Text>
                                         </View>
                                     ) : (
@@ -120,14 +100,23 @@ export const SummaryActivity = (props: ISummaryProps) => {
                                     <Text style={styles.subItemText}>Referral Posted</Text>
                                     <View style={styles.subItemRow}>
                                         {props.activity.referral.outcome === "Resolved" ? (
-                                            <Text style={styles.subItemText}>Resolved</Text>
+                                            <>
+                                                <Text style={styles.subItemText}>Resolved</Text>
+                                                <Icon
+                                                    name="check"
+                                                    size={15}
+                                                    color={themeColors.riskGreen}
+                                                />
+                                            </>
                                         ) : (
-                                            <Text style={styles.subItemText}>Unresolved</Text>
-                                        )}
-                                        {props.activity.referral.outcome === "Resolved" ? (
-                                            <Icon name="check" size={15} color="green" />
-                                        ) : (
-                                            <Icon name="remove" size={15} color="red" />
+                                            <>
+                                                <Text style={styles.subItemText}>Unresolved</Text>
+                                                <Icon
+                                                    name="clock-o"
+                                                    size={15}
+                                                    color={themeColors.riskRed}
+                                                />
+                                            </>
                                         )}
                                     </View>
                                 </View>
@@ -135,6 +124,18 @@ export const SummaryActivity = (props: ISummaryProps) => {
                         ) : (
                             <View style={styles.subItem}>
                                 <Text style={styles.subItemText}>Baseline Survey</Text>
+                                <Portal>
+                                    <Modal
+                                        visible={detailsVisible}
+                                        onDismiss={hideDetails}
+                                        style={styles.popupStyle}
+                                    >
+                                        <BaselineEntry
+                                            survey={props.activity.survey as ISurvey}
+                                            close={hideDetails}
+                                        />
+                                    </Modal>
+                                </Portal>
                             </View>
                         )}
                     </View>
@@ -144,3 +145,5 @@ export const SummaryActivity = (props: ISummaryProps) => {
         </TouchableOpacity>
     );
 };
+
+export default Timeline;

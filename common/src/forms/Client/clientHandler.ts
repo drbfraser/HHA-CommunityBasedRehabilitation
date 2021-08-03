@@ -1,9 +1,8 @@
 import { FormikHelpers } from "formik";
 import { timestampFromFormDate } from "../../util/dates";
-import { apiFetch, Endpoint, objectToFormData } from "../..//util/endpoints";
+import { apiFetch, APIFetchFailError, Endpoint, objectToFormData } from "../../util/endpoints";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
-import { getRandomStr } from "../..//util/misc";
-import { TClientValues } from "./clientFields";
+import { clientFieldLabels, TClientValues } from "./clientFields";
 import { IClient } from "src/util/clients";
 
 const addClient = async (clientInfo: FormData) => {
@@ -69,14 +68,17 @@ export const handleNewClientSubmit = async (
 
     if (values.picture) {
         const clientProfilePicture = await (await fetch(values.picture)).blob();
-        formData.append("picture", clientProfilePicture, getRandomStr(30) + ".png");
+        formData.append("picture", clientProfilePicture, ".png");
     }
 
     try {
         const client: IClient = await addClient(formData);
         return client;
     } catch (e) {
-        alert("Encountered an error while trying to create the client!");
+        const initialMessage = "Encountered an error while trying to create the client!";
+        const detailedError =
+            e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
+        alert(initialMessage + "\n" + detailedError);
         helpers.setSubmitting(false);
     }
 };

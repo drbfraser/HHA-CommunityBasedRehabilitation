@@ -6,10 +6,7 @@ import { shouldShowError } from "../../util/formikUtil";
 import { TextInputProps } from "react-native-paper/lib/typescript/components/TextInput/TextInput";
 
 export type FormikTextInputProps<Field extends string> = Omit<TextInputProps, "theme"> & {
-    fieldLabels: {
-        // @ts-ignore
-        [fieldId: Field]: string;
-    };
+    fieldLabels: Record<Field, string>;
     field: Field;
     formikProps: FormikProps<any>;
 };

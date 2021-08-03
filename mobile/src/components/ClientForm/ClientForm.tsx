@@ -1,8 +1,8 @@
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities, getOtherDisabilityId } from "@cbr/common/src/util/hooks/disabilities";
-import { View, Platform, Alert, KeyboardAvoidingView } from "react-native";
+import { View, Platform, Alert } from "react-native";
 import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-paper";
 import useStyles from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -22,12 +22,17 @@ import { FormikProps } from "formik";
 import FormikTextInput from "../FormikTextInput/FormikTextInput";
 import { FieldError } from "../../util/formikUtil";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import FormikExposedDropdownMenu from "../FormikExposedDropdownMenu/FormikExposedDropdownMenu";
 import { useCallback } from "react";
+import { useNavigation } from "@react-navigation/core";
+import ConfirmDialog from "../DiscardDialogs/ConfirmDialog";
+import { AppStackNavProp } from "../../util/stackScreens";
+import DefaultHeader from "../DefaultHeader/DefaultHeader";
+import FormikExposedDropdownMenu from "../ExposedDropdownMenu/FormikExposedDropdownMenu";
 
 export interface IClientFormProps {
     isNewClient: boolean;
     formikProps: FormikProps<TClientValues>;
+    clientId?: number;
 }
 
 export const ClientForm = (props: IClientFormProps) => {
@@ -76,6 +81,7 @@ export const ClientForm = (props: IClientFormProps) => {
 
     const cancelEdit = () => {
         setFieldsDisabled(true);
+        setDiscardDialogVisible(false);
     };
 
     //Date Picker
@@ -88,8 +94,46 @@ export const ClientForm = (props: IClientFormProps) => {
         [fieldsDisabled]
     );
 
+    const navigation = useNavigation<AppStackNavProp>();
+
+    const [discardDialogVisible, setDiscardDialogVisible] = useState(false);
+
+    useEffect(() => {
+        const title = props.isNewClient
+            ? "New Client"
+            : fieldsDisabled
+            ? "View Client"
+            : "Edit Client";
+
+        const subtitle = props.clientId ? `Client ID: ${props.clientId}` : undefined;
+
+        navigation.setOptions({ header: DefaultHeader(title, subtitle) });
+
+        if (fieldsDisabled) {
+            return;
+        }
+
+        return navigation.addListener("beforeRemove", (e) => {
+            if (fieldsDisabled) {
+                return;
+            }
+            e.preventDefault();
+            setDiscardDialogVisible(true);
+        });
+    }, [navigation, fieldsDisabled]);
+
     return (
         <View>
+            <ConfirmDialog
+                visible={discardDialogVisible}
+                onDismiss={() => setDiscardDialogVisible(false)}
+                onConfirm={() => {
+                    cancelEdit();
+                    props.formikProps.resetForm();
+                }}
+                confirmButtonText="Discard"
+                dialogContent={props.isNewClient ? "Discard new client?" : "Discard your changes?"}
+            />
             <FormikTextInput
                 style={styles.field}
                 field={ClientField.firstName}
@@ -169,11 +213,10 @@ export const ClientForm = (props: IClientFormProps) => {
                 field={ClientField.gender}
                 fieldLabels={clientFieldLabels}
                 formikProps={props.formikProps}
-                valuesType="record"
+                valuesType="record-string"
                 values={genders}
                 mode="outlined"
                 disabled={isFieldDisabled()}
-                numericKey={false}
             />
             <FormikTextInput
                 style={styles.field}
@@ -189,11 +232,10 @@ export const ClientForm = (props: IClientFormProps) => {
                 field={ClientField.zone}
                 fieldLabels={clientFieldLabels}
                 formikProps={props.formikProps}
-                valuesType="record"
+                valuesType="record-number"
                 values={zoneObj}
                 mode="outlined"
                 disabled={isFieldDisabled()}
-                numericKey={false}
             />
             <FormikTextInput
                 style={styles.field}
@@ -370,28 +412,8 @@ export const ClientForm = (props: IClientFormProps) => {
                         <Button
                             mode={cancelButtonType}
                             style={styles.clientDetailsFinalButtons}
-                            disabled={isFieldDisabled()}
-                            onPress={() => {
-                                const cancelAlert = () =>
-                                    Alert.alert(
-                                        "Alert",
-                                        "You'll lose all your unsaved changes. Cancel anyway?",
-                                        [
-                                            {
-                                                text: "Don't cancel",
-                                                style: "cancel",
-                                            },
-                                            {
-                                                text: "Cancel",
-                                                onPress: () => {
-                                                    cancelEdit();
-                                                    props.formikProps.resetForm();
-                                                },
-                                            },
-                                        ]
-                                    );
-                                cancelAlert();
-                            }}
+                            disabled={fieldsDisabled}
+                            onPress={() => setDiscardDialogVisible(true)}
                         >
                             Cancel
                         </Button>

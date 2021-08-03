@@ -495,7 +495,7 @@ const ShelterForm = () => {
 
 const NewSurvey = () => {
     const [step, setStep] = useState<number>(0);
-    const [submissionError, setSubmissionError] = useState(false);
+    const [submissionError, setSubmissionError] = useState<string>();
     const { clientId } = useParams<{ clientId: string }>();
 
     const surveySteps: ISurvey[] = [
@@ -561,8 +561,8 @@ const NewSurvey = () => {
             {(formikProps) => (
                 <Form>
                     {submissionError && (
-                        <Alert onClose={() => setSubmissionError(false)} severity="error">
-                            Something went wrong submitting the survey. Please try again.
+                        <Alert onClose={() => setSubmissionError(undefined)} severity="error">
+                            Error occurred when submitting the survey: {submissionError}
                         </Alert>
                     )}
                     <Button onClick={history.goBack}>

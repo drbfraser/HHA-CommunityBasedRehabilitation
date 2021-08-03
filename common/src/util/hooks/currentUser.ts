@@ -2,16 +2,16 @@
 //  database for proper persistence, not caching in TypeScript variables
 import { apiFetch, APILoadError, Endpoint, TAPILoadError } from "../endpoints";
 import { IUser } from "../users";
-import { cachedAPIGet, cachedAPIHook, IAPICacheData } from "./cachedAPI";
+import { APICacheData } from "./cachedAPI";
 
-const cache: IAPICacheData<IUser, undefined, TAPILoadError> = {
-    doFetch: () => apiFetch(Endpoint.USER_CURRENT),
-    transformData: (user: IUser) => user,
-    promise: undefined,
-    value: undefined,
-    loadingValue: undefined,
-    errorValue: APILoadError,
-};
+const cache = new APICacheData<IUser, undefined, TAPILoadError>(
+    "cache_user",
+    () => apiFetch(Endpoint.USER_CURRENT),
+    (user: IUser) => user,
+    undefined,
+    APILoadError
+);
 
-export const getCurrentUser = async () => cachedAPIGet(cache);
-export const useCurrentUser = cachedAPIHook(cache);
+export const getCurrentUser = async (refreshValue: boolean = false) =>
+    cache.getCachedValue(refreshValue);
+export const useCurrentUser = cache.useCacheHook();

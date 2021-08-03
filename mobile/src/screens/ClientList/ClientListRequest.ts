@@ -52,6 +52,7 @@ export const fetchClientsFromApi = async (
             SocialLevel: riskLevels[responseRow.social_risk_level].color,
             last_visit_date: responseRow.last_visit_date,
         }));
+
         return resultRow;
     } catch (e) {
         return [];

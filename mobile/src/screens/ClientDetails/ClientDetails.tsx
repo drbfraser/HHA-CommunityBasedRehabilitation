@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { Gender, IClient, themeColors } from "@cbr/common";
+import {
+    clientDetailsValidationSchema,
+    clientInitialValues,
+    Gender,
+    IClient,
+    TClientValues,
+    themeColors,
+} from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
-import { IReferral, ISurvey, timestampToDateObj } from "@cbr/common";
-import { getOtherDisabilityId, useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
-import { IVisitSummary } from "@cbr/common";
 import { IActivity, ActivityType } from "./ClientTimeline/Activity";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
@@ -16,11 +20,6 @@ import { RouteProp, useNavigation, useIsFocused } from "@react-navigation/native
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
-import {
-    IClientFormProps,
-    initialValues,
-    validationSchema,
-} from "../../components/ClientForm/ClientFormFields";
 import { Formik } from "formik";
 import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 
@@ -44,17 +43,10 @@ const ClientDetails = (props: ClientProps) => {
 
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
-    let disabilityMap = useDisabilities();
     const isFocused = useIsFocused();
 
     //Main Client Variables
-    const [clientFormikProps, setClientFormikProps] = useState<IClientFormProps>();
-
-    //Variables that cannot be edited and are for read only
-    const [clientCreateDate, setClientCreateDate] = useState(0);
-    const [clientVisits, setClientVisits] = useState<IVisitSummary[]>();
-    const [clientReferrals, setClientReferrals] = useState<IReferral[]>();
-    const [clientSurveys, setClientSurveys] = useState<ISurvey[]>();
+    const [client, setClient] = useState<IClient>();
 
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
@@ -67,56 +59,36 @@ const ClientDetails = (props: ClientProps) => {
             },
         ]);
 
-    const getInitialDisabilities = (disabilityArray: number[]) => {
-        let selectedDisabilities: string[] = [];
-        for (let disabilityId of disabilityArray) {
-            if (disabilityMap.has(disabilityId)) {
-                if (disabilityId === getOtherDisabilityId(disabilityMap)) {
-                    selectedDisabilities.push("Other");
-                } else {
-                    selectedDisabilities.push(disabilityMap.get(disabilityId)!);
-                }
-            }
-        }
-        selectedDisabilities = selectedDisabilities.filter((v, i, a) => a.indexOf(v) === i);
-        return selectedDisabilities;
-    };
-
     const getClientDetails = async () => {
         const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
-        setClientCreateDate(presentClient.created_date);
-        setClientVisits(presentClient.visits);
-        setClientReferrals(presentClient.referrals);
-        setClientSurveys(presentClient.baseline_surveys);
-
-        const clientFormProps: IClientFormProps = {
-            initialDisabilityArray: getInitialDisabilities(presentClient.disability),
-            id: props.route.params.clientID,
-            firstName: presentClient.first_name,
-            lastName: presentClient.last_name,
-            birthDate: timestampToDateObj(Number(presentClient?.birth_date)),
-            gender: presentClient.gender,
-            village: presentClient.village,
-            zone: presentClient.zone,
-            phone: presentClient.phone_number,
-            caregiverPresent: presentClient.caregiver_present,
-            caregiverName: presentClient.caregiver_name,
-            caregiverEmail: presentClient.caregiver_email,
-            caregiverPhone: presentClient.caregiver_phone,
-            clientDisability: presentClient.disability,
-            otherDisability: presentClient.other_disability,
-            createdDate: presentClient.created_date,
-            createdByUser: presentClient.created_by_user,
-            longitude: presentClient.longitude,
-            latitude: presentClient.latitude,
-            caregiverPicture: String(presentClient.caregiver_picture),
-            risks: presentClient.risks,
-            visits: presentClient.visits,
-            referrals: presentClient.referrals,
-            surveys: presentClient.baseline_surveys,
-        };
-        setClientFormikProps(clientFormProps);
+        setClient(presentClient);
     };
+
+    const getClientFormInitialValues = () => {
+        if (client) {
+            const clientFormProps: TClientValues = {
+                ...clientInitialValues,
+                firstName: client.first_name,
+                lastName: client.last_name,
+                birthDate: client.birth_date as string,
+                gender: client.gender,
+                village: client.village,
+                zone: String(client.zone) ?? "",
+                phoneNumber: client.phone_number,
+                caregiverPresent: client.caregiver_present,
+                caregiverName: client.caregiver_name,
+                caregiverEmail: client.caregiver_email,
+                caregiverPhone: client.caregiver_phone,
+                disability: client.disability,
+                otherDisability: client.other_disability,
+                picture: client.picture,
+            };
+            return clientFormProps;
+        } else {
+            return clientInitialValues;
+        }
+    };
+
     useEffect(() => {
         if (isFocused) {
             getClientDetails()
@@ -129,8 +101,8 @@ const ClientDetails = (props: ClientProps) => {
     const navigation = useNavigation<AppStackNavProp>();
     const tempActivity: IActivity[] = [];
     let presentId = 0;
-    if (clientVisits) {
-        clientVisits.forEach((presentVisit) => {
+    if (client) {
+        client.visits.forEach((presentVisit) => {
             tempActivity.push({
                 id: presentId,
                 type: ActivityType.VISIT,
@@ -141,9 +113,7 @@ const ClientDetails = (props: ClientProps) => {
             });
             presentId += 1;
         });
-    }
-    if (clientReferrals) {
-        clientReferrals.forEach((presentRef) => {
+        client.referrals.forEach((presentRef) => {
             tempActivity.push({
                 id: presentId,
                 type: ActivityType.REFERAL,
@@ -154,9 +124,7 @@ const ClientDetails = (props: ClientProps) => {
             });
             presentId += 1;
         });
-    }
-    if (clientSurveys) {
-        clientSurveys.forEach((presentSurvey) => {
+        client.baseline_surveys.forEach((presentSurvey) => {
             tempActivity.push({
                 id: presentId,
                 type: ActivityType.SURVEY,
@@ -171,35 +139,28 @@ const ClientDetails = (props: ClientProps) => {
 
     tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));
 
-    const handleFormSubmit = (values: IClientFormProps) => {
-        const updatedIClient: IClient = {
-            id: props.route.params.clientID,
-            first_name: values.firstName ?? "",
-            last_name: values.lastName ?? "",
-            birth_date: values.birthDate ? values.birthDate.getTime() : new Date().getTime(),
-            gender: values.gender as Gender,
-            village: values.village ?? "",
-            zone: values.zone ?? 0,
-            phone_number: values.phone ?? "",
-            caregiver_present: values.caregiverPresent ?? false,
-            caregiver_name: values.caregiverName ?? "",
-            caregiver_email: values.caregiverEmail ?? "",
-            caregiver_phone: values.caregiverPhone ?? "",
-            disability: values.clientDisability ?? [],
-            other_disability: values.otherDisability ?? "",
-            picture:
-                "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
-            created_by_user: values.createdByUser ?? 0,
-            created_date: values.createdDate ?? new Date().getTime(),
-            longitude: values.longitude ?? "",
-            latitude: values.latitude ?? "",
-            caregiver_picture: values.caregiverPicture,
-            risks: values.risks ?? [],
-            visits: values.visits ?? [],
-            referrals: values.referrals ?? [],
-            baseline_surveys: values.surveys ?? [],
-        };
-        handleSubmit(updatedIClient);
+    const handleFormSubmit = (values: TClientValues) => {
+        if (client) {
+            const updatedIClient: IClient = {
+                ...client,
+                first_name: values.firstName ?? client.first_name,
+                last_name: values.lastName ?? client.last_name,
+                birth_date: values.birthDate ?? client.birth_date,
+                gender: (values.gender as Gender) ?? client.gender,
+                village: values.village ?? client.village,
+                zone: Number(values.zone) ?? client.zone,
+                phone_number: values.phoneNumber ?? client.phone_number,
+                caregiver_present: values.caregiverPresent ?? client.caregiver_present,
+                caregiver_name: values.caregiverName ?? client.caregiver_name,
+                caregiver_email: values.caregiverEmail ?? client.caregiver_email,
+                caregiver_phone: values.caregiverPhone ?? client.caregiver_phone,
+                disability: values.disability ?? client.disability,
+                other_disability: values.otherDisability ?? client.other_disability,
+                picture:
+                    "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
+            };
+            handleSubmit(updatedIClient);
+        }
     };
 
     return (
@@ -209,7 +170,7 @@ const ClientDetails = (props: ClientProps) => {
                     <ActivityIndicator size="large" color={themeColors.blueAccent} />
                 </View>
             ) : (
-                <View>
+                <View style={styles.clientDetailContainer}>
                     <Card style={styles.clientCardContainerStyles}>
                         <Card.Cover
                             style={styles.clientCardImageStyle}
@@ -246,17 +207,19 @@ const ClientDetails = (props: ClientProps) => {
                     <Divider />
                     <Text style={styles.cardSectionTitle}>Client Details</Text>
                     <Divider />
-
                     <Card style={styles.clientDetailsContainerStyles}>
                         <Formik
-                            initialValues={clientFormikProps ?? initialValues}
-                            validationSchema={validationSchema}
+                            initialValues={getClientFormInitialValues()}
+                            validationSchema={clientDetailsValidationSchema}
                             onSubmit={(values) => {
                                 handleFormSubmit(values);
                             }}
                         >
                             {(formikProps) => (
-                                <ClientForm formikProps={formikProps} isNewClient={false} />
+                                <>
+                                    <ClientForm formikProps={formikProps} isNewClient={false} />
+                                    <Text>hi</Text>
+                                </>
                             )}
                         </Formik>
                     </Card>
@@ -268,9 +231,9 @@ const ClientDetails = (props: ClientProps) => {
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>
                         </View>
                         <RecentActivity
-                            clientVisits={clientVisits!}
+                            clientVisits={client?.visits ?? []}
                             activityDTO={tempActivity}
-                            clientCreateDate={clientCreateDate}
+                            clientCreateDate={client?.created_date ?? new Date().getTime()}
                         />
                         <View style={styles.clientDetailsFinalView}></View>
                     </Card>

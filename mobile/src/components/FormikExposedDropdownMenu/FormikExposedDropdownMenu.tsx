@@ -8,7 +8,7 @@ import ExposedDropdownMenu, {
 
 export type FormikMenuProps<Field extends string> = Omit<
     ExposedDropdownMenuProps,
-    "onKeyChange" | "error" | "label" | "value" | "onChangeText" | "onEndEditing"
+    "onDismiss" | "onKeyChange" | "error" | "label" | "value" | "onChangeText" | "onEndEditing"
 > & {
     fieldLabels: {
         // @ts-ignore
@@ -45,6 +45,9 @@ const FormikExposedDropdownMenu = (props: FormikMenuProps<string>) => {
         },
         [props.field, formikProps.touched, formikProps.setFieldTouched]
     );
+    const setFieldTouched = () => {
+        props.formikProps.setFieldTouched(props.field);
+    };
 
     const currentSelectionToDisplay =
         dropdownProps.valuesType === "array"
@@ -59,9 +62,10 @@ const FormikExposedDropdownMenu = (props: FormikMenuProps<string>) => {
                 {...dropdownProps}
                 error={isError}
                 label={props.fieldLabels[field]}
-                value={currentSelectionToDisplay}
+                value={currentSelectionToDisplay ?? ""}
                 onChangeText={formikProps.handleChange(field)}
-                onEndEditing={() => formikProps.setFieldTouched(field)}
+                onDismiss={setFieldTouched}
+                onEndEditing={setFieldTouched}
                 onKeyChange={keyChangeCallback}
                 disabled={dropdownProps.disabled || formikProps.isSubmitting}
                 blurOnSubmit={false}

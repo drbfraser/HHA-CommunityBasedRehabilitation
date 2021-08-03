@@ -18,6 +18,10 @@ interface BaseDropdownMenuProps extends Omit<TextInputProps, "theme" | "editable
      * @param key
      */
     onKeyChange: (key: string) => void;
+    /**
+     *  A callback that is invoked when the menu is dismissed.
+     */
+    onDismiss: () => void;
 }
 
 interface RecordDropdownMenu extends BaseDropdownMenuProps {
@@ -154,6 +158,10 @@ const ExposedDropdownMenu = (props: Props) => {
         setIsOpen(true);
     };
     const hideMenu = () => setIsOpen(false);
+    const onDismiss = () => {
+        hideMenu();
+        props.onDismiss();
+    };
 
     return (
         <TouchableOpacity disabled={props.disabled} activeOpacity={1} onPress={openMenu}>
@@ -184,7 +192,7 @@ const ExposedDropdownMenu = (props: Props) => {
             <Menu
                 visible={isOpen}
                 contentStyle={styles.menuContentStyle}
-                onDismiss={() => setIsOpen(false)}
+                onDismiss={onDismiss}
                 anchor={<View style={styles.invisibleAnchor} />}
             >
                 <MemoizedMenuItems hideMenu={hideMenu} existingProps={props} />

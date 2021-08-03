@@ -4,6 +4,9 @@ import theme from "../../util/theme.styles";
 
 const useStyles = () =>
     StyleSheet.create({
+        clientDetailContainer: {
+            flex: 1,
+        },
         clientButtons: {
             padding: 3,
             marginTop: 3,
@@ -29,7 +32,6 @@ const useStyles = () =>
             borderTopLeftRadius: 30,
             overflow: "hidden",
         },
-
         clientDetailsContainerStyles: {
             marginTop: 20,
             marginBottom: 20,
@@ -37,6 +39,7 @@ const useStyles = () =>
             paddingTop: 15,
             alignItems: "center",
             borderRadius: 20,
+            flexShrink: 1,
         },
         clientTextStyle: {
             marginTop: 10,
@@ -57,26 +60,19 @@ const useStyles = () =>
             borderRadius: 5,
         },
         carePresentView: {
-            alignItems: "center",
+            alignItems: "baseline",
             display: "flex",
             flexDirection: "row",
-            height: 40,
-            width: 350,
-            marginTop: 15,
-            marginBottom: 15,
         },
         valueText: {
-            alignContent: "flex-start",
+            flex: 1,
             fontSize: 18,
-            width: 256,
             marginBottom: 15,
-            marginStart: 5,
+            marginStart: 15,
         },
         carePresentCheckBox: {
             alignContent: "flex-start",
             fontSize: 18,
-            width: 256,
-            marginBottom: 15,
         },
         scrollViewStyles: {
             marginHorizontal: 5,
@@ -90,27 +86,18 @@ const useStyles = () =>
             width: 112,
             borderRadius: 5,
         },
-        editButton: {
-            justifyContent: "flex-start",
-            width: 70,
-        },
         clientBirthdayView: {
             display: "flex",
-            alignItems: "flex-start",
-            alignContent: "space-between",
+            alignItems: "baseline",
             flexDirection: "row",
-            justifyContent: "center",
-            height: 40,
-            width: 350,
-            marginTop: 15,
-            marginBottom: 15,
+            alignContent: "space-between",
         },
         clientBirthdayButtons: {
             marginTop: 3,
-            marginBottom: 15,
-            marginRight: 15,
-            width: 75,
             borderRadius: 5,
+        },
+        field: {
+            marginTop: 5,
         },
         pickerStyle: {
             backgroundColor: "white",
@@ -282,11 +269,9 @@ const useStyles = () =>
             color: themeColors.errorRed,
             alignSelf: "center",
         },
-        buttonZoneStyles: {
+        disabilityContainer: {
             flexDirection: "row",
             justifyContent: "space-between",
-            marginRight: 16,
-            marginLeft: 4,
         },
     });
 

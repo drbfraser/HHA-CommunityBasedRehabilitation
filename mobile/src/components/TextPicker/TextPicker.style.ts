@@ -12,7 +12,7 @@ const useStyles = () =>
             borderWidth: 1.2,
             borderRadius: 4,
             marginTop: 10,
-            borderColor: themeColors.boarderGray,
+            borderColor: themeColors.borderGray,
         },
     });
 

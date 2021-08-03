@@ -51,12 +51,14 @@ const ClientList = () => {
         }
         setClientList(exampleClient);
     };
+
     const isFocused = useIsFocused();
     useEffect(() => {
         if (isFocused) {
             newClientGet();
         }
     }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection, isFocused]);
+
     useEffect(() => {
         var exampleClient = clientList;
         if (sortDirection !== "None") {
@@ -64,6 +66,7 @@ const ClientList = () => {
         }
         setClientList(exampleClient);
     }, [sortOption, sortDirection]);
+
     return (
         <View style={styles.container}>
             <View style={styles.row}>
@@ -159,7 +162,7 @@ const ClientList = () => {
                                 sortDirection
                             )}
                         >
-                            {riskTypes.HEALTH.Icon("#000000")}
+                            {riskTypes.HEALTH.Icon(themeColors.riskBlack)}
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_icons}
@@ -170,7 +173,7 @@ const ClientList = () => {
                                 sortDirection
                             )}
                         >
-                            {riskTypes.EDUCAT.Icon("#000000")}
+                            {riskTypes.EDUCAT.Icon(themeColors.riskBlack)}
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_icons}
@@ -181,7 +184,7 @@ const ClientList = () => {
                                 sortDirection
                             )}
                         >
-                            {riskTypes.SOCIAL.Icon("#000000")}
+                            {riskTypes.SOCIAL.Icon(themeColors.riskBlack)}
                         </DataTable.Title>
                     </DataTable.Header>
                     {clientList.map((item) => {

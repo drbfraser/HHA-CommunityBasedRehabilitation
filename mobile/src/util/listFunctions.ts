@@ -1,4 +1,5 @@
 import { themeColors } from "@cbr/common";
+import { nextTick } from "process";
 import { ClientListRow } from "../screens/ClientList/ClientListRequest";
 import { BriefReferral } from "../screens/DashBoard/DashboardRequest";
 import BriefUser from "../screens/UserList/UserListRequest";
@@ -19,11 +20,7 @@ export enum SortOptions {
 //Use to prevent the default return value of map object that will cause syntax error.
 const getNextDirection = (currentDirection: TSortDirection): TSortDirection => {
     const next = circularDirection.get(currentDirection);
-    if (next === undefined) {
-        return "None";
-    } else {
-        return next;
-    }
+    return next === undefined ? "None" : next;
 };
 
 export const circularDirection = new Map<TSortDirection, TSortDirection>([

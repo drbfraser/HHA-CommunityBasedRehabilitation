@@ -1,3 +1,4 @@
+import { themeColors } from "@cbr/common";
 import { StyleSheet } from "react-native";
 
 const useStyles = () =>
@@ -15,7 +16,17 @@ const useStyles = () =>
             flex: 1,
         },
         search: {
-            flex: 2,
+            flex: 1,
+        },
+        columnBuilderButton: {
+            flex: 0.2,
+        },
+        switch: { flex: 0.2 },
+        modal: {
+            margin: 35,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: themeColors.white,
         },
         row: {
             flexDirection: "row",

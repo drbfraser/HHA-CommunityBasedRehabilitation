@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { Text, View, Switch } from "react-native";
+import { Text, View, Switch, Modal, Alert, StyleProp, ViewStyle } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { DataTable } from "react-native-paper";
+import { Button, DataTable, IconButton } from "react-native-paper";
 import useStyles from "./ClientList.styles";
 import { ClientListRow, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
 import { riskTypes } from "../../util/riskIcon";
@@ -32,6 +32,15 @@ const ClientList = () => {
     const [sortOption, setSortOption] = useState("");
     const zones = useZones();
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const [showIDColumn, setShowIDColumn] = useState(true);
+    const [showNameColumn, setShowNameColumn] = useState(true);
+    const [showZoneColumn, setShowZoneColumn] = useState(true);
+    const [showHealthColumn, setShowHealthColumn] = useState(true);
+    const [showEducationColumn, setShowEducationColumn] = useState(true);
+    const [showSocialColumn, setShowSocialColumn] = useState(true);
+
     const clientSortby = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
     };
@@ -51,6 +60,52 @@ const ClientList = () => {
         }
         setClientList(exampleClient);
     };
+
+    const ColumnBuilderRow = (props: {
+        text: string;
+        onValueChange: React.Dispatch<React.SetStateAction<boolean>>;
+        value: boolean;
+    }) => {
+        return (
+            <View style={styles.row}>
+                <Switch
+                    style={styles.switch}
+                    trackColor={{ false: themeColors.white, true: themeColors.yellow }}
+                    thumbColor={allClientsMode ? themeColors.white : themeColors.white}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={props.onValueChange}
+                    value={props.value}
+                />
+                <Text>{props.text}</Text>
+            </View>
+        );
+    };
+
+    const ClientListTitle = (props: {
+        label: string | JSX.Element;
+        style: StyleProp<ViewStyle>;
+        showTheTitle: boolean;
+        thisColumnSortOption: SortOptions;
+    }) => {
+        if (props.showTheTitle) {
+            return (
+                <DataTable.Title
+                    style={props.style}
+                    onPress={() => clientSortby(props.thisColumnSortOption)}
+                    sortDirection={arrowDirectionController(
+                        props.thisColumnSortOption,
+                        sortOption,
+                        sortDirection
+                    )}
+                >
+                    {props.label}
+                </DataTable.Title>
+            );
+        } else {
+            return <View></View>;
+        }
+    };
+
     const isFocused = useIsFocused();
     useEffect(() => {
         if (isFocused) {
@@ -86,12 +141,60 @@ const ClientList = () => {
                         value={searchQuery}
                     />
                 )}
+                <IconButton
+                    icon="dots-vertical"
+                    color={themeColors.boarderGray}
+                    size={20}
+                    style={styles.columnBuilderButton}
+                    onPress={() => setModalVisible(!modalVisible)}
+                />
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    <View style={styles.modal}>
+                        <ColumnBuilderRow
+                            text="ID"
+                            onValueChange={setShowIDColumn}
+                            value={showIDColumn}
+                        />
+                        <ColumnBuilderRow
+                            text="Name"
+                            onValueChange={setShowNameColumn}
+                            value={showNameColumn}
+                        />
+                        <ColumnBuilderRow
+                            text="Zone"
+                            onValueChange={setShowZoneColumn}
+                            value={showZoneColumn}
+                        />
+                        <ColumnBuilderRow
+                            text="Health"
+                            onValueChange={setShowHealthColumn}
+                            value={showHealthColumn}
+                        />
+                        <ColumnBuilderRow
+                            text="Education"
+                            onValueChange={setShowEducationColumn}
+                            value={showEducationColumn}
+                        />
+                        <ColumnBuilderRow
+                            text="Social"
+                            onValueChange={setShowSocialColumn}
+                            value={showSocialColumn}
+                        />
+                    </View>
+                </Modal>
             </View>
             <View style={styles.row}>
                 <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>My Clients</Text>
                 <Switch
-                    style={{ flex: 0.2 }}
-                    trackColor={{ false: themeColors.yellow, true: themeColors.yellow }}
+                    style={styles.switch}
+                    trackColor={{ false: themeColors.white, true: themeColors.yellow }}
                     thumbColor={allClientsMode ? themeColors.white : themeColors.white}
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={setAllClientsMode}
@@ -117,72 +220,42 @@ const ClientList = () => {
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>
-                        <DataTable.Title
+                        <ClientListTitle
+                            label="ID"
                             style={styles.column_id}
-                            onPress={() => clientSortby(SortOptions.ID)}
-                            sortDirection={arrowDirectionController(
-                                SortOptions.ID,
-                                sortOption,
-                                sortDirection
-                            )}
-                        >
-                            ID
-                        </DataTable.Title>
-                        <DataTable.Title
+                            showTheTitle={showIDColumn}
+                            thisColumnSortOption={SortOptions.ID}
+                        />
+                        <ClientListTitle
+                            label="Name"
                             style={styles.column_name}
-                            onPress={() => clientSortby(SortOptions.NAME)}
-                            sortDirection={arrowDirectionController(
-                                SortOptions.NAME,
-                                sortOption,
-                                sortDirection
-                            )}
-                        >
-                            Name
-                        </DataTable.Title>
-                        <DataTable.Title
+                            showTheTitle={showNameColumn}
+                            thisColumnSortOption={SortOptions.NAME}
+                        />
+                        <ClientListTitle
+                            label="Zone"
                             style={styles.column_zone}
-                            onPress={() => clientSortby(SortOptions.ZONE)}
-                            sortDirection={arrowDirectionController(
-                                SortOptions.ZONE,
-                                sortOption,
-                                sortDirection
-                            )}
-                        >
-                            Zone
-                        </DataTable.Title>
-                        <DataTable.Title
+                            showTheTitle={showZoneColumn}
+                            thisColumnSortOption={SortOptions.ZONE}
+                        />
+                        <ClientListTitle
+                            label={riskTypes.HEALTH.Icon("#000000")}
                             style={styles.column_icons}
-                            onPress={() => clientSortby(SortOptions.HEALTH)}
-                            sortDirection={arrowDirectionController(
-                                SortOptions.HEALTH,
-                                sortOption,
-                                sortDirection
-                            )}
-                        >
-                            {riskTypes.HEALTH.Icon("#000000")}
-                        </DataTable.Title>
-                        <DataTable.Title
+                            showTheTitle={showHealthColumn}
+                            thisColumnSortOption={SortOptions.HEALTH}
+                        />
+                        <ClientListTitle
+                            label={riskTypes.EDUCAT.Icon("#000000")}
                             style={styles.column_icons}
-                            onPress={() => clientSortby(SortOptions.EDUCATION)}
-                            sortDirection={arrowDirectionController(
-                                SortOptions.EDUCATION,
-                                sortOption,
-                                sortDirection
-                            )}
-                        >
-                            {riskTypes.EDUCAT.Icon("#000000")}
-                        </DataTable.Title>
-                        <DataTable.Title
+                            showTheTitle={showEducationColumn}
+                            thisColumnSortOption={SortOptions.EDUCATION}
+                        />
+                        <ClientListTitle
+                            label={riskTypes.SOCIAL.Icon("#000000")}
                             style={styles.column_icons}
-                            onPress={() => clientSortby(SortOptions.SOCIAL)}
-                            sortDirection={arrowDirectionController(
-                                SortOptions.SOCIAL,
-                                sortOption,
-                                sortDirection
-                            )}
-                        >
-                            {riskTypes.SOCIAL.Icon("#000000")}
-                        </DataTable.Title>
+                            showTheTitle={showSocialColumn}
+                            thisColumnSortOption={SortOptions.SOCIAL}
+                        />
                     </DataTable.Header>
                     {clientList.map((item) => {
                         return (
@@ -195,30 +268,59 @@ const ClientList = () => {
                                     });
                                 }}
                             >
-                                <DataTable.Cell style={styles.column_id}>{item.id}</DataTable.Cell>
-                                <View style={styles.column_name}>
-                                    <WrappedText
-                                        text={item.full_name}
-                                        viewStyle={styles.wrappedView}
-                                        textStyle={styles.text}
-                                    />
-                                </View>
-                                <View style={styles.column_zone}>
-                                    <WrappedText
-                                        text={item.zone}
-                                        viewStyle={styles.wrappedView}
-                                        textStyle={styles.text}
-                                    />
-                                </View>
-                                <DataTable.Cell style={styles.column_icons}>
-                                    {riskTypes.CIRCLE.Icon(item.HealthLevel)}
-                                </DataTable.Cell>
-                                <DataTable.Cell style={styles.column_icons}>
-                                    {riskTypes.CIRCLE.Icon(item.EducationLevel)}
-                                </DataTable.Cell>
-                                <DataTable.Cell style={styles.column_icons}>
-                                    {riskTypes.CIRCLE.Icon(item.SocialLevel)}
-                                </DataTable.Cell>
+                                {showIDColumn ? (
+                                    <DataTable.Cell style={styles.column_id}>
+                                        {item.id}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
+
+                                {showNameColumn ? (
+                                    <View style={styles.column_name}>
+                                        <WrappedText
+                                            text={item.full_name}
+                                            viewStyle={styles.wrappedView}
+                                            textStyle={styles.text}
+                                        />
+                                    </View>
+                                ) : (
+                                    <View></View>
+                                )}
+
+                                {showZoneColumn ? (
+                                    <View style={styles.column_zone}>
+                                        <WrappedText
+                                            text={item.zone}
+                                            viewStyle={styles.wrappedView}
+                                            textStyle={styles.text}
+                                        />
+                                    </View>
+                                ) : (
+                                    <View></View>
+                                )}
+
+                                {showHealthColumn ? (
+                                    <DataTable.Cell style={styles.column_icons}>
+                                        {riskTypes.CIRCLE.Icon(item.HealthLevel)}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
+                                {showEducationColumn ? (
+                                    <DataTable.Cell style={styles.column_icons}>
+                                        {riskTypes.CIRCLE.Icon(item.EducationLevel)}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
+                                {showSocialColumn ? (
+                                    <DataTable.Cell style={styles.column_icons}>
+                                        {riskTypes.CIRCLE.Icon(item.SocialLevel)}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
                             </DataTable.Row>
                         );
                     })}

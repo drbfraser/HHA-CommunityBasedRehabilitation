@@ -23,13 +23,13 @@ const getLatestRisks = (clientRisk: IRisk[]) => {
     const filteredSocialRisks: IRisk[] = clientRisk.filter(
         (presentRisk) => presentRisk.risk_type === RiskType.SOCIAL
     );
-    let latestHealthRisk = filteredHealthRisks.reduce(function (prev, current) {
+    const latestHealthRisk = filteredHealthRisks.reduce(function (prev, current) {
         return prev.timestamp > current.timestamp ? prev : current;
     });
-    let latestEducationRisk = filteredEducationRisks.reduce(function (prev, current) {
+    const latestEducationRisk = filteredEducationRisks.reduce(function (prev, current) {
         return prev.timestamp > current.timestamp ? prev : current;
     });
-    let latestSocialtRisk = filteredSocialRisks.reduce(function (prev, current) {
+    const latestSocialtRisk = filteredSocialRisks.reduce(function (prev, current) {
         return prev.timestamp > current.timestamp ? prev : current;
     });
     latestRisks.push(latestHealthRisk);
@@ -40,9 +40,7 @@ const getLatestRisks = (clientRisk: IRisk[]) => {
 
 export const ClientRisk = (props: riskProps) => {
     const styles = clientStyle();
-
     const [latestRisks, setLatestRisks] = useState<IRisk[]>(getLatestRisks(props.clientRisks));
-
     return (
         <View>
             <Text style={styles.cardSectionTitle}>Client Risks</Text>

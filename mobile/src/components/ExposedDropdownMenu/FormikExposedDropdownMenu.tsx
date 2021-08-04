@@ -1,27 +1,29 @@
 import { FormikProps } from "formik";
 import React, { memo, useCallback } from "react";
 import { HelperText } from "react-native-paper";
-import { shouldShowError } from "../../util/formikUtil";
+import {
+    areFormikComponentPropsEqual,
+    TFormikComponentProps,
+    shouldShowError,
+} from "../../util/formikUtil";
 import ExposedDropdownMenu, { Props as ExposedDropdownMenuProps } from "./ExposedDropdownMenu";
 
 export type FormikMenuProps<Field extends string> = Omit<
     ExposedDropdownMenuProps,
     "onDismiss" | "onKeyChange" | "error" | "label" | "value" | "onChangeText" | "onEndEditing"
-> & {
-    /**
-     * A secondary `onKeyChange` prop that is executed after the formik values have been set.
-     * @param key The key as given by {@link ExposedDropdownMenuProps.values}
-     */
-    otherOnKeyChange?: (key: any) => void;
-    /**
-     * An override for the value to override the displayed label, where the selection labels and
-     * their respective values / keys should be covered by {@link ExposedDropdownMenuProps.values}.
-     */
-    currentValueOverride?: any;
-    fieldLabels: Record<Field, string>;
-    field: Field;
-    formikProps: FormikProps<any>;
-};
+> &
+    TFormikComponentProps<Field> & {
+        /**
+         * A secondary `onKeyChange` prop that is executed after the formik values have been set.
+         * @param key The key as given by {@link ExposedDropdownMenuProps.values}
+         */
+        otherOnKeyChange?: (key: any) => void;
+        /**
+         * An override for the value to override the displayed label, where the selection labels and
+         * their respective values / keys should be covered by {@link ExposedDropdownMenuProps.values}.
+         */
+        currentValueOverride?: any;
+    };
 
 const getCurrentSelection = <T extends string>(menuProps: FormikMenuProps<T>): string => {
     // We destructure in order to do a correct cast of other as ExposedDropdownMenuProps.
@@ -94,30 +96,14 @@ const BaseFormikExposedDropdownMenu = <T extends string>(props: FormikMenuProps<
 const FormikExposedDropdownMenu = memo(
     BaseFormikExposedDropdownMenu,
     <T extends string>(oldProps: FormikMenuProps<T>, newProps: FormikMenuProps<T>) => {
-        if (oldProps.field !== newProps.field) {
-            return false;
-        }
-
-        // TODO: Extract all of
-        //      fieldLabels: Record<Field, string>;
-        //      field: Field;
-        //      formikProps: FormikProps<any>;
-        //  into a type so that many of these equality checks can be reused between FormikTextInput
-        //  and this.
-        const field = oldProps.field;
         return (
+            areFormikComponentPropsEqual(oldProps, newProps) &&
             oldProps.key === newProps.key &&
             oldProps.focusable === newProps.focusable &&
             oldProps.disabled === newProps.disabled &&
             oldProps.currentValueOverride === newProps.currentValueOverride &&
             oldProps.otherOnKeyChange === newProps.otherOnKeyChange &&
-            oldProps.fieldLabels[field] === newProps.fieldLabels[field] &&
-            oldProps.formikProps.values[field] === newProps.formikProps.values[field] &&
-            shouldShowError(oldProps.formikProps, field) ===
-                shouldShowError(newProps.formikProps, field) &&
-            getCurrentSelection(oldProps) === getCurrentSelection(newProps) &&
-            oldProps.formikProps.errors[field] === newProps.formikProps.errors[field] &&
-            oldProps.formikProps.isSubmitting === newProps.formikProps.isSubmitting
+            getCurrentSelection(oldProps) === getCurrentSelection(newProps)
         );
     }
 );

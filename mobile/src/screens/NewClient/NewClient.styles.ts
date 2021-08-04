@@ -24,15 +24,6 @@ const useStyles = () =>
             margin: 5,
             marginTop: 10,
         },
-        checkboxContainer: {
-            marginTop: 5,
-            flex: 1,
-            flexDirection: "row",
-            alignItems: "center",
-        },
-        checkboxLabel: {
-            fontSize: 18,
-        },
         submitButtonContainer: {
             marginTop: 5,
             display: "flex",

@@ -8,6 +8,7 @@ import {
     IClient,
     TClientValues,
     themeColors,
+    timestampToDate,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
@@ -20,7 +21,7 @@ import { RouteProp, useNavigation, useIsFocused } from "@react-navigation/native
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 
 interface ClientProps {
@@ -59,7 +60,7 @@ const ClientDetails = (props: ClientProps) => {
                 ...clientInitialValues,
                 firstName: client.first_name,
                 lastName: client.last_name,
-                birthDate: client.birth_date as string,
+                birthDate: timestampToDate(Number(client.birth_date)),
                 gender: client.gender,
                 village: client.village,
                 zone: String(client.zone) ?? "",
@@ -128,7 +129,10 @@ const ClientDetails = (props: ClientProps) => {
 
     tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));
 
-    const handleFormSubmit = (values: TClientValues) => {
+    const handleFormSubmit = (
+        values: TClientValues,
+        formikHelpers: FormikHelpers<TClientValues>
+    ) => {
         if (client) {
             const updatedIClient: IClient = {
                 ...client,
@@ -148,7 +152,7 @@ const ClientDetails = (props: ClientProps) => {
                 picture:
                     "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
             };
-            handleSubmit(updatedIClient);
+            handleSubmit(updatedIClient).finally(() => formikHelpers.setSubmitting(false));
         }
     };
 
@@ -208,9 +212,7 @@ const ClientDetails = (props: ClientProps) => {
                         <Formik
                             initialValues={getClientFormInitialValues()}
                             validationSchema={clientDetailsValidationSchema}
-                            onSubmit={(values) => {
-                                handleFormSubmit(values);
-                            }}
+                            onSubmit={handleFormSubmit}
                         >
                             {(formikProps) => (
                                 <ClientForm

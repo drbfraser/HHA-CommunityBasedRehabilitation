@@ -1,6 +1,7 @@
 import { themeColors } from "@cbr/common";
-import { StyleSheet } from "react-native";
-import theme from "../../util/theme.styles";
+import { Dimensions, StyleSheet } from "react-native";
+
+const windowHeight = Dimensions.get("window").height;
 
 const useStyles = () =>
     StyleSheet.create({
@@ -208,13 +209,14 @@ const useStyles = () =>
             fontSize: 24,
         },
         disabilityChecklist: {
-            height: 500,
             marginHorizontal: 20,
-            marginTop: 140,
-            display: "flex",
+            alignSelf: "center",
+            paddingTop: 20,
+            paddingBottom: 50,
             backgroundColor: "white",
             borderRadius: 10,
-            justifyContent: "space-between",
+            maxHeight: windowHeight / 1.25,
+            marginTop: windowHeight / 8,
         },
         zoneChecklist: {
             height: 540,
@@ -238,13 +240,11 @@ const useStyles = () =>
             display: "flex",
             justifyContent: "center",
             padding: 20,
-            height: 210,
         },
         nestedScrollView: {
             display: "flex",
-            justifyContent: "center",
             padding: 20,
-            height: 480,
+            justifyContent: "center",
         },
         nestedScrollStyle: {
             marginBottom: 10,

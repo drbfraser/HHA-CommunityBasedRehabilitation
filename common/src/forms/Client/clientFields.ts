@@ -105,6 +105,7 @@ export const clientDetailsValidationSchema = () =>
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
         [ClientField.disability]: Yup.array()
             .label(clientFieldLabels[ClientField.disability])
+            .min(1, "Disability is required")
             .required(),
         [ClientField.otherDisability]: Yup.string()
             .label(clientFieldLabels[ClientField.otherDisability])

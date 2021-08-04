@@ -10,15 +10,14 @@ import {
 } from "@cbr/common";
 import { useNavigation } from "@react-navigation/native";
 import { Formik, FormikProps } from "formik";
-import React, { LegacyRef, RefObject, useRef } from "react";
-import { Ref } from "react";
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import { SafeAreaView, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Text, Button, Card, Checkbox, Divider } from "react-native-paper";
+import { Button, Card, Divider } from "react-native-paper";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import FormikTextInput from "../../components/FormikTextInput/FormikTextInput";
+import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import { FieldError } from "../../util/formikUtil";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { handleSubmit } from "./formHandler";
@@ -108,28 +107,13 @@ const NewClient = () => {
                                     formikProps={formikProps}
                                 />
                             ))}
-                            <View style={styles.checkboxContainer}>
-                                <Checkbox
-                                    status={
-                                        formikProps.values.interviewConsent
-                                            ? "checked"
-                                            : "unchecked"
-                                    }
-                                    onPress={() => {
-                                        formikProps.setFieldTouched(
-                                            ClientField.interviewConsent,
-                                            true
-                                        );
-                                        formikProps.setFieldValue(
-                                            ClientField.interviewConsent,
-                                            !formikProps.values.interviewConsent
-                                        );
-                                    }}
-                                />
-                                <Text style={styles.checkboxLabel}>
-                                    {clientFieldLabels[ClientField.interviewConsent]}
-                                </Text>
-                            </View>
+                            <TextCheckBox
+                                field={ClientField.interviewConsent}
+                                label={clientFieldLabels[ClientField.interviewConsent]}
+                                setFieldTouched={formikProps.setFieldTouched}
+                                setFieldValue={formikProps.setFieldValue}
+                                value={formikProps.values.interviewConsent}
+                            />
                             <FieldError
                                 formikProps={formikProps}
                                 field={ClientField.interviewConsent}

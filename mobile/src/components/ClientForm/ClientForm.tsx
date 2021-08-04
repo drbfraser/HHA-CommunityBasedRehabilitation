@@ -28,6 +28,7 @@ import ConfirmDialog from "../DiscardDialogs/ConfirmDialog";
 import { AppStackNavProp } from "../../util/stackScreens";
 import DefaultHeader from "../DefaultHeader/DefaultHeader";
 import FormikExposedDropdownMenu from "../ExposedDropdownMenu/FormikExposedDropdownMenu";
+import TextCheckBox from "../TextCheckBox/TextCheckBox";
 
 export interface IClientFormProps {
     isNewClient: boolean;
@@ -40,7 +41,7 @@ export const ClientForm = (props: IClientFormProps) => {
     const otherDisabilityId = getOtherDisabilityId(useDisabilities());
     const disabilityMap = useDisabilities();
     const disabilityObj = objectFromMap(disabilityMap);
-    const zoneObj = objectFromMap(useZones());
+    const zoneMap = useZones();
 
     const [otherDisability, showOtherDisability] = useState(false);
     const [fieldsDisabled, setFieldsDisabled] = useState(!props.isNewClient);
@@ -232,8 +233,8 @@ export const ClientForm = (props: IClientFormProps) => {
                 field={ClientField.zone}
                 fieldLabels={clientFieldLabels}
                 formikProps={props.formikProps}
-                valuesType="record-number"
-                values={zoneObj}
+                valuesType="map"
+                values={zoneMap}
                 mode="outlined"
                 disabled={isFieldDisabled()}
             />
@@ -247,7 +248,7 @@ export const ClientForm = (props: IClientFormProps) => {
                 mode="outlined"
                 disabled={isFieldDisabled()}
             />
-            <View style={styles.field}>
+            <View>
                 <Portal>
                     <Modal
                         visible={disabilityPickerVisible}
@@ -263,7 +264,6 @@ export const ClientForm = (props: IClientFormProps) => {
                             <KeyboardAwareScrollView
                                 style={styles.nestedScrollStyle}
                                 nestedScrollEnabled={true}
-                                extraScrollHeight={100}
                             >
                                 <CustomMultiPicker
                                     options={disabilityObj}
@@ -272,6 +272,10 @@ export const ClientForm = (props: IClientFormProps) => {
                                     placeholderTextColor={themeColors.blueBgLight}
                                     returnValue={"disability_type"}
                                     callback={(values) => {
+                                        props.formikProps.setFieldTouched(
+                                            ClientField.disability,
+                                            true
+                                        );
                                         props.formikProps.setFieldValue(
                                             ClientField.disability,
                                             values.map(Number)
@@ -286,14 +290,13 @@ export const ClientForm = (props: IClientFormProps) => {
                                 />
                                 {otherDisability ? (
                                     <View>
-                                        <TextInput
-                                            style={styles.otherDisabilityStyle}
-                                            label="Other Disability "
-                                            placeholder="Other Disability"
-                                            onChangeText={props.formikProps.handleChange(
-                                                ClientField.otherDisability
-                                            )}
-                                            value={props.formikProps.values.otherDisability}
+                                        <FormikTextInput
+                                            field={ClientField.otherDisability}
+                                            fieldLabels={clientFieldLabels}
+                                            formikProps={props.formikProps}
+                                            returnKeyType="next"
+                                            mode="outlined"
+                                            disabled={isFieldDisabled()}
                                         />
                                         <FieldError
                                             formikProps={props.formikProps}
@@ -315,7 +318,7 @@ export const ClientForm = (props: IClientFormProps) => {
                         </View>
                     </Modal>
                 </Portal>
-                <Text>Disability</Text>
+                <Text style={styles.field}>Disability</Text>
                 <View style={styles.disabilityContainer}>
                     <View>
                         {props.formikProps.values.disability?.map((item) => {
@@ -342,19 +345,14 @@ export const ClientForm = (props: IClientFormProps) => {
                 </View>
             </View>
             <FieldError formikProps={props.formikProps} field={ClientField.disability} />
-            <View style={styles.carePresentView}>
-                <Checkbox
-                    status={props.formikProps.values.caregiverPresent ? "checked" : "unchecked"}
-                    onPress={() => {
-                        props.formikProps.setFieldValue(
-                            ClientField.caregiverPresent,
-                            !props.formikProps.values.caregiverPresent
-                        );
-                    }}
-                    disabled={isFieldDisabled()}
-                />
-                <Text style={styles.carePresentCheckBox}>Caregiver Present</Text>
-            </View>
+            <TextCheckBox
+                field={ClientField.caregiverPresent}
+                label={clientFieldLabels[ClientField.caregiverPresent]}
+                setFieldTouched={props.formikProps.setFieldTouched}
+                setFieldValue={props.formikProps.setFieldValue}
+                value={props.formikProps.values.caregiverPresent}
+            />
+            <FieldError formikProps={props.formikProps} field={ClientField.caregiverPresent} />
             {props.formikProps.values.caregiverPresent ? (
                 <View>
                     <FormikTextInput

@@ -11,10 +11,12 @@ export const handleSubmit = async (
 ) => {
     helpers.setSubmitting(true);
     return handleNewClientSubmit(values, helpers).then((res) => {
-        scrollToTop();
-        navigation.navigate(StackScreenName.CLIENT, {
-            clientID: res.id,
-        });
-        helpers.resetForm();
+        if (res) {
+            scrollToTop();
+            navigation.navigate(StackScreenName.CLIENT, {
+                clientID: res.id,
+            });
+            helpers.resetForm();
+        }
     });
 };

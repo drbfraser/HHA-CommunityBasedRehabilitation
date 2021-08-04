@@ -44,7 +44,10 @@ const ClientForm = () => {
                             <Grid item md={2} xs={12}>
                                 <ProfilePicCard
                                     isEditing={true}
-                                    setFieldValue={setFieldValue}
+                                    onPictureChange={(newPictureURL) => {
+                                        setFieldValue(FormField.picture, newPictureURL);
+                                        setFieldValue(FormField.pictureChanged, true);
+                                    }}
                                     picture={values.picture}
                                 />
                             </Grid>

@@ -208,6 +208,10 @@ const useStyles = () =>
         disabilityListHeaderStyle: {
             fontSize: 24,
         },
+        disabilityList: {
+            flexGrow: 1,
+            paddingRight: 20,
+        },
         disabilityChecklist: {
             marginHorizontal: 20,
             alignSelf: "center",
@@ -271,6 +275,7 @@ const useStyles = () =>
         },
         disabilityContainer: {
             flexDirection: "row",
+            alignItems: "flex-start",
             justifyContent: "space-between",
         },
     });

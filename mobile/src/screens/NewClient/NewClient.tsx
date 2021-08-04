@@ -31,6 +31,11 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
     const styles = useStyles();
     const NUMBER_OF_LINES = 4;
 
+    const isFieldDisabled = useCallback(
+        () => props.formikProps.isSubmitting || !props.formikProps.values.interviewConsent,
+        [props.formikProps.isSubmitting, props.formikProps.values.interviewConsent]
+    );
+
     return (
         <View>
             <FormikExposedDropdownMenu
@@ -41,6 +46,7 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
                 field={`${props.riskPrefix}Risk`}
                 formikProps={props.formikProps}
                 mode="outlined"
+                disabled={isFieldDisabled()}
             />
             <FormikTextInput
                 style={styles.field}
@@ -51,17 +57,18 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
                 formikProps={props.formikProps}
                 returnKeyType="next"
                 mode="outlined"
+                disabled={isFieldDisabled()}
             />
             <FormikTextInput
                 style={styles.field}
                 multiline
                 numberOfLines={NUMBER_OF_LINES}
-                disabled={props.formikProps.isSubmitting}
                 fieldLabels={clientFieldLabels}
                 field={`${props.riskPrefix}Goals`}
                 formikProps={props.formikProps}
                 returnKeyType="next"
                 mode="outlined"
+                disabled={isFieldDisabled()}
             />
         </View>
     );
@@ -98,7 +105,23 @@ const NewClient = () => {
                                     }}
                                 />
                             </View>
-                            <ClientForm isNewClient={true} formikProps={formikProps} />
+                            <TextCheckBox
+                                field={ClientField.interviewConsent}
+                                label={clientFieldLabels[ClientField.interviewConsent]}
+                                setFieldTouched={formikProps.setFieldTouched}
+                                setFieldValue={formikProps.setFieldValue}
+                                value={formikProps.values.interviewConsent}
+                                disabled={formikProps.isSubmitting}
+                            />
+                            <FieldError
+                                formikProps={formikProps}
+                                field={ClientField.interviewConsent}
+                            />
+                            <ClientForm
+                                isNewClient={true}
+                                formikProps={formikProps}
+                                disabled={!formikProps.values.interviewConsent}
+                            />
                             <Divider style={styles.divider} />
                             {Object.keys(RiskType).map((riskType) => (
                                 <RiskForm
@@ -107,17 +130,6 @@ const NewClient = () => {
                                     formikProps={formikProps}
                                 />
                             ))}
-                            <TextCheckBox
-                                field={ClientField.interviewConsent}
-                                label={clientFieldLabels[ClientField.interviewConsent]}
-                                setFieldTouched={formikProps.setFieldTouched}
-                                setFieldValue={formikProps.setFieldValue}
-                                value={formikProps.values.interviewConsent}
-                            />
-                            <FieldError
-                                formikProps={formikProps}
-                                field={ClientField.interviewConsent}
-                            />
                             <View style={styles.submitButtonContainer}>
                                 <View style={styles.submitButtonWrapper}>
                                     <Button

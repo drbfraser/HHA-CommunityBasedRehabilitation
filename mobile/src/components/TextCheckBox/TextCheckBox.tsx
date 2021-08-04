@@ -6,6 +6,7 @@ import useStyles from "./TextCheckBox.style";
 interface IProps {
     field: string;
     value: boolean;
+    disabled?: boolean;
     label: string;
     setFieldTouched: (field: string, value: boolean) => void;
     setFieldValue: (field: string, value: boolean) => void;
@@ -16,6 +17,7 @@ const TextCheckBox = (props: IProps) => {
     const styles = useStyles();
     return (
         <TouchableRipple
+            disabled={props.disabled ?? false}
             onPress={() => {
                 props.setFieldTouched(props.field, true);
                 props.setFieldValue(props.field, !props.value);
@@ -24,7 +26,10 @@ const TextCheckBox = (props: IProps) => {
         >
             <View style={styles.checkBoxText}>
                 <View pointerEvents="none">
-                    <Checkbox status={props.value ? "checked" : "unchecked"} />
+                    <Checkbox
+                        disabled={props.disabled ?? false}
+                        status={props.value ? "checked" : "unchecked"}
+                    />
                 </View>
                 <Paragraph style={styles.text}>{props.label}</Paragraph>
             </View>

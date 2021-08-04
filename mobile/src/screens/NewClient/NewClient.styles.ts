@@ -25,7 +25,7 @@ const useStyles = () =>
             marginTop: 10,
         },
         submitButtonContainer: {
-            marginTop: 5,
+            marginTop: 10,
             display: "flex",
             flexDirection: "row",
             justifyContent: "flex-end",

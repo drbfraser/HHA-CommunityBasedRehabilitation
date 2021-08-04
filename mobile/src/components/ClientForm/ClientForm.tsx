@@ -29,11 +29,13 @@ import { AppStackNavProp } from "../../util/stackScreens";
 import DefaultHeader from "../DefaultHeader/DefaultHeader";
 import FormikExposedDropdownMenu from "../ExposedDropdownMenu/FormikExposedDropdownMenu";
 import TextCheckBox from "../TextCheckBox/TextCheckBox";
+import { showValidationErrorToast } from "../../util/validationToast";
 
 export interface IClientFormProps {
     isNewClient: boolean;
     formikProps: FormikProps<TClientValues>;
     clientId?: number;
+    disabled?: boolean;
 }
 
 export const ClientForm = (props: IClientFormProps) => {
@@ -43,7 +45,6 @@ export const ClientForm = (props: IClientFormProps) => {
     const disabilityObj = objectFromMap(disabilityMap);
     const zoneMap = useZones();
 
-    const [otherDisability, showOtherDisability] = useState(false);
     const [fieldsDisabled, setFieldsDisabled] = useState(!props.isNewClient);
     const [cancelButtonType, setCancelButtonType] = useState<"outlined" | "contained">("outlined");
     const [datePickerVisible, setDatePickerVisible] = useState(false);
@@ -51,23 +52,6 @@ export const ClientForm = (props: IClientFormProps) => {
 
     const openDisabilityMenu = () => setDisabilityPickerVisible(true);
     const closeDisabilityMenu = () => setDisabilityPickerVisible(false);
-
-    const updateDisabilityList = (values: number[] | undefined) => {
-        let otherDisabilityFound = false;
-        let newList: string[] = [];
-        if (!values) return newList;
-        else {
-            for (let index of values) {
-                if (index === otherDisabilityId) {
-                    otherDisabilityFound = true;
-                    newList.push("Other");
-                } else {
-                    newList.push(disabilityObj[index]);
-                }
-            }
-        }
-        showOtherDisability(otherDisabilityFound);
-    };
 
     //Menu functions
     const toggleButtons = (toggleTo: boolean) => {
@@ -91,8 +75,8 @@ export const ClientForm = (props: IClientFormProps) => {
     };
 
     const isFieldDisabled = useCallback(
-        () => props.formikProps.isSubmitting || fieldsDisabled,
-        [fieldsDisabled]
+        () => props.formikProps.isSubmitting || fieldsDisabled || props.disabled,
+        [fieldsDisabled, props.disabled]
     );
 
     const navigation = useNavigation<AppStackNavProp>();
@@ -190,6 +174,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 setDatePickerVisible(Platform.OS === "ios");
                                 if (event.type === "neutralButtonPressed") {
                                     const todayDate = new Date();
+                                    todayDate.setHours(0, 0, 0, 0);
                                     props.formikProps.setFieldValue(
                                         ClientField.birthDate,
                                         todayDate
@@ -280,7 +265,6 @@ export const ClientForm = (props: IClientFormProps) => {
                                             ClientField.disability,
                                             values.map(Number)
                                         );
-                                        updateDisabilityList(values.map(Number));
                                     }}
                                     rowBackgroundColor={themeColors.blueBgLight}
                                     iconSize={30}
@@ -288,20 +272,6 @@ export const ClientForm = (props: IClientFormProps) => {
                                     unselectedIconName={"radio-button-off"}
                                     selected={props.formikProps.values.disability?.map(String)}
                                 />
-                                {otherDisability ? (
-                                    <View>
-                                        <FormikTextInput
-                                            field={ClientField.otherDisability}
-                                            fieldLabels={clientFieldLabels}
-                                            formikProps={props.formikProps}
-                                            returnKeyType="next"
-                                            mode="outlined"
-                                            disabled={isFieldDisabled()}
-                                        />
-                                    </View>
-                                ) : (
-                                    <></>
-                                )}
                             </KeyboardAwareScrollView>
                             <Button
                                 mode="contained"
@@ -316,14 +286,31 @@ export const ClientForm = (props: IClientFormProps) => {
                 </Portal>
                 <Text style={styles.field}>{clientFieldLabels[ClientField.disability]}</Text>
                 <View style={styles.disabilityContainer}>
-                    <View>
-                        {props.formikProps.values.disability?.map(
-                            (item) =>
-                                (
-                                    <Text key={item} style={styles.valueText}>
-                                        {disabilityMap.get(item)}
-                                    </Text>
-                                ) ?? <Text>No disabilities selected</Text>
+                    <View style={styles.disabilityList}>
+                        {props.formikProps.values.disability.length > 0 ? (
+                            <>
+                                {props.formikProps.values.disability.map((item) =>
+                                    item !== otherDisabilityId ? (
+                                        <Text key={item} style={styles.valueText}>
+                                            {disabilityMap.get(item)}
+                                        </Text>
+                                    ) : null
+                                )}
+                                {props.formikProps.values.disability.includes(otherDisabilityId) ? (
+                                    <FormikTextInput
+                                        field={ClientField.otherDisability}
+                                        fieldLabels={clientFieldLabels}
+                                        formikProps={props.formikProps}
+                                        returnKeyType="next"
+                                        mode="outlined"
+                                        disabled={isFieldDisabled()}
+                                    />
+                                ) : (
+                                    <></>
+                                )}
+                            </>
+                        ) : (
+                            <Text style={styles.valueText}>No disabilities selected</Text>
                         )}
                     </View>
                     <View>
@@ -348,6 +335,7 @@ export const ClientForm = (props: IClientFormProps) => {
                 setFieldTouched={props.formikProps.setFieldTouched}
                 setFieldValue={props.formikProps.setFieldValue}
                 value={props.formikProps.values.caregiverPresent}
+                disabled={isFieldDisabled()}
             />
             <FieldError formikProps={props.formikProps} field={ClientField.caregiverPresent} />
             {props.formikProps.values.caregiverPresent ? (
@@ -392,10 +380,15 @@ export const ClientForm = (props: IClientFormProps) => {
                         style={styles.clientDetailsFinalButtons}
                         disabled={props.formikProps.isSubmitting}
                         onPress={() => {
-                            if (fieldsDisabled) toggleButtons(true);
-                            else {
-                                props.formikProps.handleSubmit();
-                                toggleButtons(false);
+                            if (fieldsDisabled) {
+                                toggleButtons(true);
+                            } else {
+                                if (props.formikProps.isValid) {
+                                    toggleButtons(false);
+                                    props.formikProps.handleSubmit();
+                                } else {
+                                    showValidationErrorToast();
+                                }
                             }
                         }}
                     >

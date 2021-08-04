@@ -7,7 +7,12 @@ import { Button, Checkbox, Portal, TextInput, Modal, Text } from "react-native-p
 import useStyles from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
-import { ClientFormFieldLabels, ClientFormFields, IFormProps } from "./ClientFormFields";
+import {
+    ClientFormFieldLabels,
+    ClientFormFields,
+    IFormProps,
+    showValidationErrorToast,
+} from "./ClientFormFields";
 import { Gender, genders, themeColors } from "@cbr/common";
 import { objectFromMap } from "../../util/ObjectFromMap";
 import { useNavigation } from "@react-navigation/core";
@@ -21,6 +26,8 @@ export const ClientForm = (props: IFormProps) => {
     const disabilityMap = useDisabilities();
     const disabilityObj = objectFromMap(disabilityMap);
     const zoneObj = objectFromMap(useZones());
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
 
     let initialZone: number = props.formikProps?.values.zone ? props.formikProps.values.zone : 0;
 
@@ -192,11 +199,11 @@ export const ClientForm = (props: IFormProps) => {
                                 onChange={(event, date) => {
                                     setDatePickerVisible(Platform.OS === "ios");
                                     if (event.type === "neutralButtonPressed") {
-                                        const todayDate = new Date();
                                         props.formikProps?.setFieldValue(
                                             ClientFormFields.birthDate,
                                             todayDate
                                         );
+
                                         setDate(todayDate);
                                     } else {
                                         if (date) {
@@ -522,10 +529,14 @@ export const ClientForm = (props: IFormProps) => {
                             mode="contained"
                             style={styles.clientDetailsFinalButtons}
                             onPress={() => {
-                                if (fieldsDisabled) toggleButtons(true);
-                                else {
-                                    props.formikProps?.handleSubmit();
-                                    toggleButtons(false);
+                                if (props.formikProps?.isValid) {
+                                    if (fieldsDisabled) toggleButtons(true);
+                                    else {
+                                        props.formikProps?.handleSubmit();
+                                        toggleButtons(false);
+                                    }
+                                } else {
+                                    showValidationErrorToast();
                                 }
                             }}
                         >

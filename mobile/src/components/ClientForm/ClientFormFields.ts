@@ -1,6 +1,16 @@
 import { IReferral, IRisk, ISurvey, IVisit, IVisitSummary, Validation } from "@cbr/common";
 import { FormikProps } from "formik";
 import * as Yup from "yup";
+import { Platform, ToastAndroid, AlertIOS } from "react-native";
+
+export const showValidationErrorToast = () => {
+    const msg = "Please check one or more fields.";
+    if (Platform.OS === "android") {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
+    } else {
+        AlertIOS.alert(msg);
+    }
+};
 
 export interface IFormProps {
     isNewClient?: boolean;
@@ -120,7 +130,7 @@ export const setFormInitialValues = (props: IClientFormProps, isNewClient?: bool
             id: props.id,
             firstName: props.firstName,
             lastName: props.lastName,
-            date: props.birthDate,
+            birthDate: props.birthDate,
             gender: props.gender,
             village: props.village,
             zone: props.zone,
@@ -160,6 +170,23 @@ export const validationSchema = () =>
             .label(ClientFormFieldLabels[ClientFormFields.disability])
             .required()
             .min(1, "You must input at least 1 disability"),
+        [ClientFormFields.other_disability]: Yup.string()
+            .label(ClientFormFieldLabels[ClientFormFields.other_disability])
+            .trim()
+            .test(
+                "require-if-other-selected",
+                "Other Disability is required",
+                async (other_disability, schema) =>
+                    !(await Validation.otherDisabilitySelected(schema.parent.clientDisability)) ||
+                    (other_disability !== undefined && other_disability.length > 0)
+            )
+            .test(
+                "require-if-other-selected",
+                "Other Disability must be at most 100 characters",
+                async (other_disability, schema) =>
+                    !(await Validation.otherDisabilitySelected(schema.parent.clientDisability)) ||
+                    (other_disability !== undefined && other_disability.length <= 100)
+            ),
         [ClientFormFields.gender]: Yup.string()
             .label(ClientFormFieldLabels[ClientFormFields.gender])
             .required(),

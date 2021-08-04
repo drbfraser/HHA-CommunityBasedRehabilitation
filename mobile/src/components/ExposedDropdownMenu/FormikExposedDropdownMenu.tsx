@@ -48,7 +48,7 @@ const FormikExposedDropdownMenu = <T extends string>(props: FormikMenuProps<T>) 
 
             otherOnKeyChange?.(key);
         },
-        [props.field, formikProps.touched, formikProps.setFieldTouched]
+        [props.field]
     );
     const setFieldTouched = () => {
         props.formikProps.setFieldTouched(props.field);

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {
     apiFetch,
+    countObjectKeys,
     Endpoint,
     IReferral,
     orthoticInjuryLocations,
@@ -77,7 +78,11 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
             })
                 .then(() => handleUpdate())
                 .then(() => setLoading(false))
-                .catch(() => alert("Something went wrong. Please try that again."));
+                .catch(() =>
+                    alert(
+                        "Something went wrong when submitting the outcome and resovleing the referral. Please try that again."
+                    )
+                );
         };
 
         return (
@@ -95,18 +100,24 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
                                         mode="outlined"
                                         label={outcomeField.label}
                                         onChangeText={(value) => {
-                                            formikProps.setFieldValue("outcome", value);
+                                            formikProps.setFieldTouched(outcomeField.key, true);
+                                            formikProps.setFieldValue(outcomeField.key, value);
                                         }}
                                     />
                                     <HelperText
+                                        style={styles.errorText}
                                         type="error"
                                         visible={!!formikProps.errors[outcomeField.key]}
                                     >
                                         {formikProps.errors[outcomeField.key]}
                                     </HelperText>
-                                    <Text />
+
                                     <Button
-                                        disabled={formikProps.isSubmitting}
+                                        disabled={
+                                            formikProps.isSubmitting ||
+                                            countObjectKeys(formikProps.errors) !== 0 ||
+                                            countObjectKeys(formikProps.touched) === 0
+                                        }
                                         onPress={() => {
                                             handleSubmit(formikProps.values);
                                         }}

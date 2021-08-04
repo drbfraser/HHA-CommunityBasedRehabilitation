@@ -1,5 +1,5 @@
 import { FormikProps } from "formik";
-import React, { useCallback } from "react";
+import React, { memo, useCallback } from "react";
 import { HelperText } from "react-native-paper";
 import { shouldShowError } from "../../util/formikUtil";
 import ExposedDropdownMenu, { Props as ExposedDropdownMenuProps } from "./ExposedDropdownMenu";
@@ -23,13 +23,31 @@ export type FormikMenuProps<Field extends string> = Omit<
     formikProps: FormikProps<any>;
 };
 
+const getCurrentSelection = <T extends string>(menuProps: FormikMenuProps<T>): string => {
+    // We destructure in order to do a correct cast of other as ExposedDropdownMenuProps.
+    const { currentValueOverride, otherOnKeyChange, fieldLabels, field, formikProps, ...other } =
+        menuProps;
+    const dropdownProps = other as ExposedDropdownMenuProps;
+
+    const valueToUse = currentValueOverride ?? formikProps.values[menuProps.field];
+    // Fall back to empty string, otherwise if it's undefined, React won't rerender the TextInput
+    // if the component had a value before.
+    return (
+        (dropdownProps.valuesType === "array"
+            ? dropdownProps.values[valueToUse]
+            : dropdownProps.valuesType === "map"
+            ? dropdownProps.values.get(valueToUse)
+            : dropdownProps.values[valueToUse]) ?? ""
+    );
+};
+
 /**
  * Material Design dropdown menu for use with Formik. The key in the provided `values` prop should
  * correspond to the expected Formik value for the field.
  *
  * @see ExposedDropdownMenu
  */
-const FormikExposedDropdownMenu = <T extends string>(props: FormikMenuProps<T>) => {
+const BaseFormikExposedDropdownMenu = <T extends string>(props: FormikMenuProps<T>) => {
     const { currentValueOverride, otherOnKeyChange, fieldLabels, field, formikProps, ...other } =
         props;
     const dropdownProps = other as ExposedDropdownMenuProps;
@@ -54,23 +72,13 @@ const FormikExposedDropdownMenu = <T extends string>(props: FormikMenuProps<T>) 
         props.formikProps.setFieldTouched(props.field);
     };
 
-    const valueToUse = currentValueOverride ?? formikProps.values[field];
-    // Fall back to empty string, otherwise if it's undefined, React won't rerender the TextInput
-    // if the component had a value before.
-    const currentSelectionToDisplay =
-        (dropdownProps.valuesType === "array"
-            ? dropdownProps.values[valueToUse]
-            : dropdownProps.valuesType === "map"
-            ? dropdownProps.values.get(valueToUse)
-            : dropdownProps.values[valueToUse]) ?? "";
-
     return (
         <>
             <ExposedDropdownMenu
                 {...dropdownProps}
                 error={isError}
                 label={props.fieldLabels[field]}
-                value={currentSelectionToDisplay}
+                value={getCurrentSelection(props)}
                 onChangeText={formikProps.handleChange(field)}
                 onDismiss={setFieldTouched}
                 onEndEditing={setFieldTouched}
@@ -82,5 +90,36 @@ const FormikExposedDropdownMenu = <T extends string>(props: FormikMenuProps<T>) 
         </>
     );
 };
+
+const FormikExposedDropdownMenu = memo(
+    BaseFormikExposedDropdownMenu,
+    <T extends string>(oldProps: FormikMenuProps<T>, newProps: FormikMenuProps<T>) => {
+        if (oldProps.field !== newProps.field) {
+            return false;
+        }
+
+        // TODO: Extract all of
+        //      fieldLabels: Record<Field, string>;
+        //      field: Field;
+        //      formikProps: FormikProps<any>;
+        //  into a type so that many of these equality checks can be reused between FormikTextInput
+        //  and this.
+        const field = oldProps.field;
+        return (
+            oldProps.key === newProps.key &&
+            oldProps.focusable === newProps.focusable &&
+            oldProps.disabled === newProps.disabled &&
+            oldProps.currentValueOverride === newProps.currentValueOverride &&
+            oldProps.otherOnKeyChange === newProps.otherOnKeyChange &&
+            oldProps.fieldLabels[field] === newProps.fieldLabels[field] &&
+            oldProps.formikProps.values[field] === newProps.formikProps.values[field] &&
+            shouldShowError(oldProps.formikProps, field) ===
+                shouldShowError(newProps.formikProps, field) &&
+            getCurrentSelection(oldProps) === getCurrentSelection(newProps) &&
+            oldProps.formikProps.errors[field] === newProps.formikProps.errors[field] &&
+            oldProps.formikProps.isSubmitting === newProps.formikProps.isSubmitting
+        );
+    }
+);
 
 export default FormikExposedDropdownMenu;

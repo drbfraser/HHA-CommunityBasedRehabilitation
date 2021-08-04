@@ -34,6 +34,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { StackScreenName } from "../../util/StackScreenName";
 import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
+import ConsentForm from "./SurveyForm/ConsentForm";
 
 interface ISurvey {
     label: string;
@@ -53,7 +54,7 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
     const [submissionError, setSubmissionError] = useState(false);
     const styles = useStyles();
     const [stepChecked, setStepChecked] = useState([false]);
-    const isFinalStep = step + 1 === surveyTypes.length && step !== 0;
+    const isFinalStep = step === surveyTypes.length && step !== 0;
     const clientId = props.route.params.clientID;
     const [saveError, setSaveError] = useState<string>();
 
@@ -86,7 +87,7 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
                 }
                 helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, clientId);
             }
-            if ((step === 0 || step === 3) && !stepChecked[step]) {
+            if ((step === 0 || step === 1 || step === 4) && !stepChecked[step]) {
                 helpers.setTouched({});
             }
             let newArr = [...stepChecked];
@@ -98,6 +99,11 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
     };
 
     const surveySteps: ISurvey[] = [
+        {
+            label: "Consent",
+            Form: (formikProps) => ConsentForm(formikProps),
+            validationSchema: emptyValidationSchema,
+        },
         {
             label: "Health",
             Form: (formikProps) => HealthForm(formikProps),
@@ -175,7 +181,8 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
                                             formikProps.isSubmitting ||
                                             countObjectKeys(formikProps.errors) !== 0 ||
                                             (countObjectKeys(formikProps.touched) === 0 &&
-                                                !stepChecked[step])
+                                                !stepChecked[step]) ||
+                                            !formikProps.values.give_consent
                                         }
                                         previousBtnDisabled={formikProps.isSubmitting}
                                         onPrevious={prevStep}

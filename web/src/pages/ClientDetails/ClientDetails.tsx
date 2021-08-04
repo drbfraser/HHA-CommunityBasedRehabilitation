@@ -87,7 +87,7 @@ const ClientDetails = () => {
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <ClientTimeline refreshClient={() => getClient()} client={clientInfo} />
+                <ClientTimeline refreshClient={getClient} client={clientInfo} />
             </Grid>
         </Grid>
     );

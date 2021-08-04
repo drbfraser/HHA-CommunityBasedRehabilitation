@@ -1,14 +1,16 @@
-import { FormikProps } from "formik";
 import React, { memo, useCallback } from "react";
 import { HelperText } from "react-native-paper";
 import {
     areFormikComponentPropsEqual,
-    TFormikComponentProps,
     shouldShowError,
+    TFormikComponentProps,
 } from "../../util/formikUtil";
-import ExposedDropdownMenu, { Props as ExposedDropdownMenuProps } from "./ExposedDropdownMenu";
+import ExposedDropdownMenu, {
+    areDropdownMenuValuesPropsEqual,
+    TDropdownMenuProps as ExposedDropdownMenuProps,
+} from "./ExposedDropdownMenu";
 
-export type FormikMenuProps<Field extends string> = Omit<
+export type TFormikMenuProps<Field extends string> = Omit<
     ExposedDropdownMenuProps,
     "onDismiss" | "onKeyChange" | "error" | "label" | "value" | "onChangeText" | "onEndEditing"
 > &
@@ -25,7 +27,7 @@ export type FormikMenuProps<Field extends string> = Omit<
         currentValueOverride?: any;
     };
 
-const getCurrentSelection = <T extends string>(menuProps: FormikMenuProps<T>): string => {
+const getCurrentSelection = <T extends string>(menuProps: TFormikMenuProps<T>): string => {
     // We destructure in order to do a correct cast of other as ExposedDropdownMenuProps.
     const { currentValueOverride, otherOnKeyChange, fieldLabels, field, formikProps, ...other } =
         menuProps;
@@ -49,7 +51,7 @@ const getCurrentSelection = <T extends string>(menuProps: FormikMenuProps<T>): s
  *
  * @see ExposedDropdownMenu
  */
-const BaseFormikExposedDropdownMenu = <T extends string>(props: FormikMenuProps<T>) => {
+const BaseFormikExposedDropdownMenu = <T extends string>(props: TFormikMenuProps<T>) => {
     const { currentValueOverride, otherOnKeyChange, fieldLabels, field, formikProps, ...other } =
         props;
     const dropdownProps = other as ExposedDropdownMenuProps;
@@ -95,7 +97,7 @@ const BaseFormikExposedDropdownMenu = <T extends string>(props: FormikMenuProps<
 
 const FormikExposedDropdownMenu = memo(
     BaseFormikExposedDropdownMenu,
-    <T extends string>(oldProps: FormikMenuProps<T>, newProps: FormikMenuProps<T>) => {
+    <T extends string>(oldProps: TFormikMenuProps<T>, newProps: TFormikMenuProps<T>) => {
         return (
             areFormikComponentPropsEqual(oldProps, newProps) &&
             oldProps.key === newProps.key &&
@@ -103,7 +105,8 @@ const FormikExposedDropdownMenu = memo(
             oldProps.disabled === newProps.disabled &&
             oldProps.currentValueOverride === newProps.currentValueOverride &&
             oldProps.otherOnKeyChange === newProps.otherOnKeyChange &&
-            getCurrentSelection(oldProps) === getCurrentSelection(newProps)
+            getCurrentSelection(oldProps) === getCurrentSelection(newProps) &&
+            areDropdownMenuValuesPropsEqual(oldProps, newProps)
         );
     }
 );

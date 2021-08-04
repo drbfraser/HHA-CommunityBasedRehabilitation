@@ -24,7 +24,7 @@ interface IRecordDropdownMenuString extends IBaseDropdownMenuProps {
     /**
      * A callback that is invoked with the current key when the current picker selection changes.
      *
-     * @param key The key as given by the `values` prop, as a string.
+     * @param key The key of the selection as given by the `values` prop, as a string.
      */
     onKeyChange: (key: string) => void;
 }
@@ -39,7 +39,7 @@ interface IRecordDropdownMenuNumeric extends IBaseDropdownMenuProps {
     /**
      * A callback that is invoked with the current key when the current picker selection changes.
      *
-     * @param key The key as given by the `values` prop, as a number.
+     * @param key The key of the selection as given by the `values` prop, as a number.
      */
     onKeyChange: (key: number) => void;
 }
@@ -54,7 +54,8 @@ interface IArrayDropdownMenu extends IBaseDropdownMenuProps {
     /**
      * A callback that is invoked with the current key when the current picker selection changes.
      *
-     * @param key The key as given by the `values` prop, represented as an index in the array.
+     * @param key The key of the selection as given by the `values` prop, represented as an index in
+     * the array.
      */
     onKeyChange: (key: number) => void;
 }
@@ -63,13 +64,13 @@ interface IMapDropdownMenu extends IBaseDropdownMenuProps {
     valuesType: "map";
     /**
      * A {@link ReadonlyMap} that maps keys to labels. {@link onKeyChange} will be invoked with the
-     * key (coerced to a string)
+     * key (not coerced to a string)
      */
     values: ReadonlyMap<any, string>;
     /**
      * A callback that is invoked with the current key when the current picker selection changes.
      *
-     * @param key The key as given by the `values` prop.
+     * @param key The key of the selection as given by the `values` prop, not coerced to a string.
      */
     onKeyChange: (key: any) => void;
 }

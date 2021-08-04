@@ -253,16 +253,6 @@ const MenuItems = ({ hideMenu, existingProps }: TMenuItemsProps) => {
     );
 };
 
-const MemoizedMenuItems = memo(
-    MenuItems,
-    (oldProps: TMenuItemsProps, newProps: TMenuItemsProps) => {
-        return (
-            oldProps.existingProps.onKeyChange === newProps.existingProps.onKeyChange &&
-            areDropdownMenuValuesPropsEqual(oldProps.existingProps, newProps.existingProps)
-        );
-    }
-);
-
 /**
  * A replacement lookalike for exposed dropdown menus from Material Design.
  *
@@ -333,7 +323,7 @@ const ExposedDropdownMenu = (props: TDropdownMenuProps) => {
                     />
                 }
             >
-                <MemoizedMenuItems hideMenu={hideMenu} existingProps={props} />
+                <MenuItems hideMenu={hideMenu} existingProps={props} />
             </Menu>
         </TouchableOpacity>
     );

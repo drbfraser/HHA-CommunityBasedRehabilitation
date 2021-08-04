@@ -63,7 +63,7 @@ const ClientDetails = (props: ClientProps) => {
                 birthDate: timestampToDate(Number(client.birth_date)),
                 gender: client.gender,
                 village: client.village,
-                zone: String(client.zone) ?? "",
+                zone: client.zone ?? "",
                 phoneNumber: client.phone_number,
                 caregiverPresent: client.caregiver_present,
                 caregiverName: client.caregiver_name,

@@ -60,7 +60,7 @@ export const clientInitialValues = {
     [ClientField.birthDate]: "",
     [ClientField.gender]: "",
     [ClientField.village]: "",
-    [ClientField.zone]: "",
+    [ClientField.zone]: "" as number | string,
     [ClientField.phoneNumber]: "",
     [ClientField.caregiverPresent]: false,
     [ClientField.caregiverPhone]: "",

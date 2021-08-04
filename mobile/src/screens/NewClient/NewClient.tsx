@@ -79,7 +79,7 @@ const NewClient = () => {
 
     return (
         <SafeAreaView>
-            <KeyboardAwareScrollView ref={scrollRef}>
+            <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} ref={scrollRef}>
                 <Formik
                     initialValues={clientInitialValues}
                     validationSchema={newClientValidationSchema}

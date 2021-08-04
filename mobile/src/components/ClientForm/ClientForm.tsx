@@ -38,8 +38,8 @@ export interface IClientFormProps {
 
 export const ClientForm = (props: IClientFormProps) => {
     const styles = useStyles();
-    const otherDisabilityId = getOtherDisabilityId(useDisabilities());
     const disabilityMap = useDisabilities();
+    const otherDisabilityId = getOtherDisabilityId(disabilityMap);
     const disabilityObj = objectFromMap(disabilityMap);
     const zoneMap = useZones();
 
@@ -298,10 +298,6 @@ export const ClientForm = (props: IClientFormProps) => {
                                             mode="outlined"
                                             disabled={isFieldDisabled()}
                                         />
-                                        <FieldError
-                                            formikProps={props.formikProps}
-                                            field={ClientField.otherDisability}
-                                        />
                                     </View>
                                 ) : (
                                     <></>
@@ -318,16 +314,17 @@ export const ClientForm = (props: IClientFormProps) => {
                         </View>
                     </Modal>
                 </Portal>
-                <Text style={styles.field}>Disability</Text>
+                <Text style={styles.field}>{clientFieldLabels[ClientField.disability]}</Text>
                 <View style={styles.disabilityContainer}>
                     <View>
-                        {props.formikProps.values.disability?.map((item) => {
-                            return (
-                                <Text key={item} style={styles.valueText}>
-                                    {disabilityMap.get(item)}
-                                </Text>
-                            );
-                        })}
+                        {props.formikProps.values.disability?.map(
+                            (item) =>
+                                (
+                                    <Text key={item} style={styles.valueText}>
+                                        {disabilityMap.get(item)}
+                                    </Text>
+                                ) ?? <Text>No disabilities selected</Text>
+                        )}
                     </View>
                     <View>
                         {!fieldsDisabled ? (

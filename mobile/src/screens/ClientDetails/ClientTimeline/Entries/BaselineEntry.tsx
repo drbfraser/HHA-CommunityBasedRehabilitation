@@ -67,7 +67,7 @@ const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
                 <Card style={styles.createdCard}>
                     <Card.Content>
                         <Text>
-                            <Text style={{ fontWeight: "bold" }}>Survey Date:</Text>{" "}
+                            <Text style={styles.labelBold}>Survey Date:</Text>{" "}
                             {timestampToDateTime(survey.survey_date)}
                         </Text>
                     </Card.Content>

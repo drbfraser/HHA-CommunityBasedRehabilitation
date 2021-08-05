@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {
     apiFetch,
-    countObjectKeys,
     Endpoint,
     IReferral,
     orthoticInjuryLocations,
@@ -168,11 +167,11 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
                                     {referral.hip_width} inches
                                 </Text>
                                 <Text>
-                                    <Text style={styles.labelBold}>Wheelchair Owned?</Text>
+                                    <Text style={styles.labelBold}>Wheelchair Owned? </Text>
                                     {referral.wheelchair_owned ? "Yes" : "No"}
                                 </Text>
                                 <Text>
-                                    <Text style={styles.labelBold}>Wheelchair Repairable?</Text>
+                                    <Text style={styles.labelBold}>Wheelchair Repairable? </Text>
                                     {referral.wheelchair_repairable ? "Yes" : "No"}
                                 </Text>
                                 <Text />

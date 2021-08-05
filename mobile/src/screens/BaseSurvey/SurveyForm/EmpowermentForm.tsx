@@ -14,6 +14,7 @@ const EmpowermentForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.memOfOrgan]}
                 label={baseFieldLabels[BaseSurveyFormField.memOfOrgan]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
             {props.formikProps.values[BaseSurveyFormField.memOfOrgan] && (
                 <>
@@ -46,6 +47,7 @@ const EmpowermentForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.awareRight]}
                 label={baseFieldLabels[BaseSurveyFormField.awareRight]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             <TextCheckBox
@@ -53,6 +55,7 @@ const EmpowermentForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.ableInfluence]}
                 label={baseFieldLabels[BaseSurveyFormField.ableInfluence]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
         </View>
     );

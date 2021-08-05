@@ -11,6 +11,7 @@ const SocialForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.feelValue]}
                 label={baseFieldLabels[BaseSurveyFormField.feelValue]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             <TextCheckBox
@@ -18,6 +19,7 @@ const SocialForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.feelIndependent]}
                 label={baseFieldLabels[BaseSurveyFormField.feelIndependent]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             <TextCheckBox
@@ -25,18 +27,21 @@ const SocialForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.ableInSocial]}
                 label={baseFieldLabels[BaseSurveyFormField.ableInSocial]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
             <TextCheckBox
                 field={BaseSurveyFormField.disabiAffectSocial}
                 value={props.formikProps.values[BaseSurveyFormField.disabiAffectSocial]}
                 label={baseFieldLabels[BaseSurveyFormField.disabiAffectSocial]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
             <TextCheckBox
                 field={BaseSurveyFormField.disabiDiscrimination}
                 value={props.formikProps.values[BaseSurveyFormField.disabiDiscrimination]}
                 label={baseFieldLabels[BaseSurveyFormField.disabiDiscrimination]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
         </View>
     );

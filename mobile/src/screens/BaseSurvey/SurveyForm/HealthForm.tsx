@@ -35,18 +35,21 @@ const HealthForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.getService]}
                 label={baseFieldLabels[BaseSurveyFormField.getService]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
             <TextCheckBox
                 field={BaseSurveyFormField.needService}
                 value={props.formikProps.values[BaseSurveyFormField.needService]}
                 label={baseFieldLabels[BaseSurveyFormField.needService]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
             <TextCheckBox
                 field={BaseSurveyFormField.haveDevice}
                 value={props.formikProps.values[BaseSurveyFormField.haveDevice]}
                 label={baseFieldLabels[BaseSurveyFormField.haveDevice]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             <TextCheckBox
@@ -54,6 +57,7 @@ const HealthForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.deviceWorking]}
                 label={baseFieldLabels[BaseSurveyFormField.deviceWorking]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             <TextCheckBox
@@ -61,6 +65,7 @@ const HealthForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.needDevice]}
                 label={baseFieldLabels[BaseSurveyFormField.needDevice]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             {props.formikProps.values[BaseSurveyFormField.needDevice] && (

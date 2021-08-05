@@ -8,13 +8,20 @@ interface IActivityProps {
     clientVisits: IVisitSummary[];
     activity: IActivity[];
     clientCreateDate: number;
+    refreshClient: () => void;
 }
 
 export const RecentActivity = (props: IActivityProps) => {
     return (
         <View>
             {props.activity.map((presentActivity) => {
-                return <Timeline key={presentActivity.id} activity={presentActivity} />;
+                return (
+                    <Timeline
+                        key={presentActivity.id}
+                        activity={presentActivity}
+                        refreshClient={props.refreshClient}
+                    />
+                );
             })}
             <TimelineDate date={props.clientCreateDate} />
         </View>

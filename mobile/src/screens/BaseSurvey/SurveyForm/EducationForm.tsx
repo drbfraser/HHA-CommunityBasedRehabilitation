@@ -22,6 +22,7 @@ const EducationForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.goSchool]}
                 label={baseFieldLabels[BaseSurveyFormField.goSchool]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             {props.formikProps.values[BaseSurveyFormField.goSchool] ? (
@@ -58,6 +59,7 @@ const EducationForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.beenSchool]}
                 label={baseFieldLabels[BaseSurveyFormField.beenSchool]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             <TextCheckBox
@@ -65,6 +67,7 @@ const EducationForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.wantSchool]}
                 label={baseFieldLabels[BaseSurveyFormField.wantSchool]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
         </View>
     );

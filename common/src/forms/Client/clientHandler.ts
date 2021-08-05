@@ -20,7 +20,6 @@ const addClient = async (clientInfo: FormData) => {
         });
 };
 
-// TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
 export const handleNewClientSubmit = async (
     values: TClientValues,
     helpers: FormikHelpers<TClientValues>

@@ -37,12 +37,14 @@ const FoodForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.enoughFoodPerMonth]}
                 label={baseFieldLabels[BaseSurveyFormField.enoughFoodPerMonth]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
             <TextCheckBox
                 field={BaseSurveyFormField.isChild}
                 value={props.formikProps.values[BaseSurveyFormField.isChild]}
                 label={baseFieldLabels[BaseSurveyFormField.isChild]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
             {props.formikProps.values[BaseSurveyFormField.isChild] && (
                 <View>

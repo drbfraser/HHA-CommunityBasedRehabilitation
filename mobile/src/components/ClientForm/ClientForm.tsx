@@ -152,7 +152,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 mode="contained"
                                 onPress={showDatepicker}
                             >
-                                Edit
+                                SELECT
                             </Button>
                         ) : (
                             <></>
@@ -320,7 +320,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 disabled={isFieldDisabled()}
                                 onPress={openDisabilityMenu}
                             >
-                                Edit
+                                SELECT
                             </Button>
                         ) : (
                             <></>

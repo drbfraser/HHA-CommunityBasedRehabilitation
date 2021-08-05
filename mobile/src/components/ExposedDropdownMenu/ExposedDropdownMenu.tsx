@@ -103,7 +103,7 @@ const convertMapToMenuItems = (
     }
 
     const map = props.values;
-    const menuItems = new Array<JSX.Element>(map.size);
+    const menuItems = new Array<React.ReactNode>(map.size);
 
     const iterator = map.entries();
     let next = iterator.next();
@@ -141,8 +141,6 @@ export const areDropdownMenuValuesPropsEqual = (
     // Workaround for TypeScript smart casting.
     const oldProps = oldPropsParam as TDropdownMenuProps;
     const newProps = newPropsParam as TDropdownMenuProps;
-    // Don't do an oldProps.values !== newProps.values check; they might be different objects,
-    // but they might have the exact same contents.
     if (oldProps.valuesType !== newProps.valuesType) {
         return false;
     }
@@ -171,8 +169,6 @@ export const areDropdownMenuValuesPropsEqual = (
 
         const oldMapIterator = oldProps.values.entries();
         let next = oldMapIterator.next();
-        // The old and new maps have the same size; it'll be clear when one map differs from the
-        // other.
         while (!next.done) {
             const [key, oldValue] = next.value;
             if (newProps.values.get(key) !== oldValue) {
@@ -199,7 +195,6 @@ export const areDropdownMenuValuesPropsEqual = (
         return true;
     }
 
-    console.log("MenuItemProps equal for " + newProps.value);
     return true;
 };
 
@@ -261,8 +256,9 @@ const MenuItems = ({ hideMenu, existingProps }: TMenuItemsProps) => {
  *
  * ## Usage
  *
- * Menu items are either records (`valueTypes === "record"`), string arrays
- * (`valueTypes === "array"`), or maps (`valueTypes === "map"`).
+ * Menu items are either records (`valueType === "record-string"` for string keys;
+ * `valueTypes === "record-number"` for numeric keys), string arrays (`valueType === "array"`), or
+ * maps (`valueType === "map"`).
  *
  * @see https://material.io/components/menus#exposed-dropdown-menu
  * @see TDropdownMenuProps.onKeyChange

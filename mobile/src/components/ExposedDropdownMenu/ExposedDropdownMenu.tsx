@@ -5,7 +5,12 @@ import { TextInputProps } from "react-native-paper/lib/typescript/components/Tex
 import useStyles from "./ExposedDropdownMenu.styles";
 import { countObjectKeys } from "@cbr/common";
 
-interface IBaseDropdownMenuProps extends Omit<TextInputProps, "theme" | "editable"> {}
+interface IBaseDropdownMenuProps extends Omit<TextInputProps, "theme" | "editable"> {
+    /**
+     *  A callback that is invoked when the menu is dismissed.
+     */
+    onDismiss: () => void;
+}
 
 interface IRecordDropdownMenuString extends IBaseDropdownMenuProps {
     valuesType: "record-string";
@@ -236,6 +241,10 @@ const ExposedDropdownMenu = (props: Props) => {
         setIsOpen(true);
     };
     const hideMenu = () => setIsOpen(false);
+    const onDismiss = () => {
+        hideMenu();
+        props.onDismiss();
+    };
 
     return (
         <TouchableOpacity
@@ -270,7 +279,7 @@ const ExposedDropdownMenu = (props: Props) => {
             <Menu
                 visible={isOpen}
                 contentStyle={styles.menuContentStyle}
-                onDismiss={() => setIsOpen(false)}
+                onDismiss={onDismiss}
                 anchor={<View style={styles.invisibleAnchor} />}
             >
                 <MemoizedMenuItems hideMenu={hideMenu} existingProps={props} />

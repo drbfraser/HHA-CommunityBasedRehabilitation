@@ -11,6 +11,7 @@ const ShelterForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.haveShelter]}
                 label={baseFieldLabels[BaseSurveyFormField.haveShelter]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             <TextCheckBox
@@ -18,6 +19,7 @@ const ShelterForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.accessItem]}
                 label={baseFieldLabels[BaseSurveyFormField.accessItem]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
         </View>
     );

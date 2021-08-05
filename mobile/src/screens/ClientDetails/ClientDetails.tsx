@@ -235,6 +235,7 @@ const ClientDetails = (props: ClientProps) => {
                                 clientVisits={client.visits ?? []}
                                 activity={tempActivity}
                                 clientCreateDate={client.created_date}
+                                refreshClient={getClientDetails}
                             />
                         )}
                         <View style={styles.clientDetailsFinalView}></View>

@@ -11,21 +11,12 @@ import {
     timestampToDateTime,
     wheelchairExperiences,
 } from "@cbr/common";
-import {
-    ActivityIndicator,
-    Button,
-    Card,
-    Chip,
-    Dialog,
-    HelperText,
-    List,
-    Text,
-    TextInput,
-} from "react-native-paper";
+import { ActivityIndicator, Button, Card, Chip, Dialog, List, Text } from "react-native-paper";
 import useStyles from "./Entry.styles";
 import { ScrollView, View } from "react-native";
 import * as Yup from "yup";
 import { Formik, FormikProps } from "formik";
+import FormikTextInput from "../../../../components/FormikTextInput/FormikTextInput";
 
 interface IEntryProps {
     referral: IReferral;
@@ -55,17 +46,24 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
     );
 
     const ResolveForm = () => {
-        const outcomeField = {
-            key: "outcome",
-            label: "Outcome",
+        const OutcomeField = {
+            outcome: "outcome",
         };
         const initialValues = {
-            [outcomeField.key]: "",
+            [OutcomeField.outcome]: "",
+        };
+
+        const outcomeFieldLabels = {
+            [OutcomeField.outcome]: "Outcome",
         };
         type TOutcomeValues = typeof initialValues;
 
         const validationSchema = Yup.object().shape({
-            [outcomeField.key]: Yup.string().label(outcomeField.label).max(100).trim().required(),
+            [OutcomeField.outcome]: Yup.string()
+                .label(outcomeFieldLabels[OutcomeField.outcome])
+                .max(100)
+                .trim()
+                .required(),
         });
 
         const handleSubmit = (values: typeof initialValues) => {
@@ -73,16 +71,15 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
                 method: "PUT",
                 body: JSON.stringify({
                     resolved: true,
-                    [outcomeField.key]: values[outcomeField.key],
+                    [OutcomeField.outcome]: values[OutcomeField.outcome],
                 }),
             })
                 .then(() => handleUpdate())
-                .then(() => setLoading(false))
-                .catch(() =>
+                .catch(() => {
                     alert(
                         "Something went wrong when submitting the outcome and resovleing the referral. Please try that again."
-                    )
-                );
+                    );
+                });
         };
 
         return (
@@ -96,21 +93,13 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
                         <View>
                             <Card>
                                 <Card.Content>
-                                    <TextInput
+                                    <FormikTextInput
+                                        field={OutcomeField.outcome}
+                                        fieldLabels={outcomeFieldLabels}
+                                        formikProps={formikProps}
+                                        returnKeyType="done"
                                         mode="outlined"
-                                        label={outcomeField.label}
-                                        onChangeText={(value) => {
-                                            formikProps.setFieldTouched(outcomeField.key, true);
-                                            formikProps.setFieldValue(outcomeField.key, value);
-                                        }}
                                     />
-                                    <HelperText
-                                        style={styles.errorText}
-                                        type="error"
-                                        visible={!!formikProps.errors[outcomeField.key]}
-                                    >
-                                        {formikProps.errors[outcomeField.key]}
-                                    </HelperText>
 
                                     <Button
                                         disabled={
@@ -119,7 +108,7 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
                                             countObjectKeys(formikProps.touched) === 0
                                         }
                                         onPress={() => {
-                                            handleSubmit(formikProps.values);
+                                            formikProps.handleSubmit();
                                         }}
                                         mode="outlined"
                                     >

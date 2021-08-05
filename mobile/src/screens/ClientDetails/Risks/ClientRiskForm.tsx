@@ -4,7 +4,7 @@ import { View, TextInput as NativeText } from "react-native";
 import { Button, Modal, Portal, TextInput, Text, Menu, RadioButton } from "react-native-paper";
 import { useState } from "react";
 import useStyles, { riskStyles } from "./ClientRisk.styles";
-import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common";
+import { handleMobileSubmit, IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common";
 import { Formik } from "formik";
 
 export interface ClientRiskFormProps {
@@ -28,6 +28,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             <Formik
                 initialValues={props.riskData}
                 onSubmit={(values) => {
+                    handleMobileSubmit(values, props.riskData);
                     console.log(values);
                 }}
             >

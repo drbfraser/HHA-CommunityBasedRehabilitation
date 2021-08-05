@@ -66,7 +66,7 @@ const useStyles = () =>
             borderRadius: 5,
         },
         modalStyle: {
-            height: 480,
+            height: 520,
             marginHorizontal: 20,
             marginTop: 140,
             display: "flex",
@@ -86,7 +86,6 @@ const useStyles = () =>
             borderTopRightRadius: 5,
             borderTopLeftRadius: 5,
             borderRadius: 5,
-
             padding: 10,
         },
         riskLevelTextStyle: {
@@ -104,6 +103,17 @@ const useStyles = () =>
             alignItems: "center",
             justifyContent: "center",
             padding: 10,
+        },
+        menuField: {
+            marginTop: 5,
+            flexDirection: "row",
+            justifyContent: "center",
+            padding: 5,
+        },
+        radioIndividual: {
+            alignItems: "center",
+            marginLeft: 10,
+            marginRight: 10,
         },
     });
 
@@ -126,5 +136,26 @@ export const riskStyles = (textColour: string) =>
             borderColor: textColour,
             borderRadius: 5,
             borderWidth: 1,
+        },
+        riskRadioStyle: {
+            fontWeight: "bold",
+            height: 55,
+            width: 55,
+            padding: 14,
+            marginTop: 14,
+            fontSize: 16,
+            alignItems: "center",
+            alignContent: "center",
+            justifyContent: "center",
+            display: "flex",
+            flexDirection: "row",
+            color: textColour,
+            borderColor: textColour,
+            borderRadius: 5,
+            borderWidth: 1,
+        },
+
+        radioSubtitleText: {
+            color: textColour,
         },
     });

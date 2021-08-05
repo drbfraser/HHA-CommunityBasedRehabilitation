@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Component, Dispatch, SetStateAction } from "react";
 import { View, TextInput as NativeText } from "react-native";
-import { Button, Modal, Portal, TextInput, Text } from "react-native-paper";
+import { Button, Modal, Portal, TextInput, Text, Menu, RadioButton } from "react-native-paper";
 import { useState } from "react";
-import useStyles from "./ClientRisk.styles";
-import { IRisk, RiskType } from "@cbr/common";
+import useStyles, { riskStyles } from "./ClientRisk.styles";
+import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common";
 import { Formik } from "formik";
 
 export interface ClientRiskFormProps {
@@ -56,12 +56,60 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                             ) : (
                                 <></>
                             )}
-                            <TextInput
-                                style={styles.riskLevelTextStyle}
-                                defaultValue={"Risk Level"}
-                                textAlignVertical={"center"}
-                                mode={"outlined"}
-                            />
+                            <RadioButton.Group
+                                onValueChange={(newValue) =>
+                                    formikProps.setFieldValue("risk_level", newValue)
+                                }
+                                value={formikProps.values.risk_level}
+                            >
+                                <View style={styles.menuField}>
+                                    <View style={styles.radioIndividual}>
+                                        <Text
+                                            style={
+                                                riskStyles(riskLevels[RiskLevel.LOW].color)
+                                                    .riskRadioStyle
+                                            }
+                                        >
+                                            {RiskLevel.LOW}
+                                        </Text>
+                                        <RadioButton value={RiskLevel.LOW} />
+                                    </View>
+                                    <View style={styles.radioIndividual}>
+                                        <Text
+                                            style={
+                                                riskStyles(riskLevels[RiskLevel.MEDIUM].color)
+                                                    .riskRadioStyle
+                                            }
+                                        >
+                                            {RiskLevel.MEDIUM}
+                                        </Text>
+                                        <RadioButton value={RiskLevel.MEDIUM} />
+                                    </View>
+                                    <View style={styles.radioIndividual}>
+                                        <Text
+                                            style={
+                                                riskStyles(riskLevels[RiskLevel.HIGH].color)
+                                                    .riskRadioStyle
+                                            }
+                                        >
+                                            {RiskLevel.HIGH}
+                                        </Text>
+                                        <RadioButton value={RiskLevel.HIGH} />
+                                    </View>
+                                    <View style={styles.radioIndividual}>
+                                        <Text
+                                            style={
+                                                riskStyles(riskLevels[RiskLevel.CRITICAL].color)
+                                                    .riskRadioStyle
+                                            }
+                                        >
+                                            {RiskLevel.CRITICAL}
+                                        </Text>
+                                        <RadioButton value={RiskLevel.CRITICAL} />
+                                    </View>
+                                </View>
+                            </RadioButton.Group>
+
                             <TextInput
                                 style={styles.riskTextStyle}
                                 label={"Requirements"}

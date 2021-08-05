@@ -102,11 +102,7 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
                                     />
 
                                     <Button
-                                        disabled={
-                                            formikProps.isSubmitting ||
-                                            countObjectKeys(formikProps.errors) !== 0 ||
-                                            countObjectKeys(formikProps.touched) === 0
-                                        }
+                                        disabled={formikProps.isSubmitting}
                                         onPress={() => {
                                             formikProps.handleSubmit();
                                         }}

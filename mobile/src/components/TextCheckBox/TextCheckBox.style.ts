@@ -9,6 +9,9 @@ const useStyles = () =>
             paddingVertical: 7,
             paddingRight: 50,
         },
+        text: {
+            flexGrow: 1,
+        },
     });
 
 export default useStyles;

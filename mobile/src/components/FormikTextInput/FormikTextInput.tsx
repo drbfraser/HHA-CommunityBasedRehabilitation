@@ -17,7 +17,6 @@ const FormikTextInput = forwardRef<NativeTextInput, FormikTextInputProps<string>
     return (
         <>
             <TextInput
-                {...other}
                 ref={ref}
                 error={isError}
                 label={props.fieldLabels[field]}
@@ -27,6 +26,7 @@ const FormikTextInput = forwardRef<NativeTextInput, FormikTextInputProps<string>
                 disabled={formikProps.isSubmitting}
                 mode="outlined"
                 blurOnSubmit={false}
+                {...other}
             />
             {isError ? <HelperText type="error">{formikProps.errors[field]}</HelperText> : null}
         </>

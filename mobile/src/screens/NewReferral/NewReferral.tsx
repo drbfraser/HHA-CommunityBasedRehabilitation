@@ -66,10 +66,8 @@ const ReferralServiceForm = (
                     label={referralFieldLabels[serviceType]}
                     value={props.formikProps.values[serviceType]}
                     setFieldValue={props.formikProps.setFieldValue}
-                    onChange={(value: boolean) => {
-                        props.formikProps.setFieldTouched(serviceType, true);
-                        onCheckboxChange(value, serviceType);
-                    }}
+                    setFieldTouched={props.formikProps.setFieldTouched}
+                    onChange={(value: boolean) => onCheckboxChange(value, serviceType)}
                 />
             ))}
         </View>

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Text, View, Switch, Modal, Alert, StyleProp, ViewStyle } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { Button, DataTable, IconButton } from "react-native-paper";
+import { Button, DataTable, IconButton, Portal } from "react-native-paper";
 import useStyles from "./ClientList.styles";
 import { ClientListRow, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
 import { riskTypes } from "../../util/riskIcon";
@@ -32,7 +32,6 @@ const ClientList = () => {
     const [sortOption, setSortOption] = useState("");
     const zones = useZones();
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
-    const [modalVisible, setModalVisible] = useState(false);
     const isFocused = useIsFocused();
 
     const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
@@ -153,47 +152,47 @@ const ClientList = () => {
                     style={styles.columnBuilderButton}
                     onPress={openColumnBuilderMenu}
                 />
-                <Modal
-                    animationType="slide"
-                    transparent={false}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        setModalVisible(!modalVisible);
-                    }}
-                >
-                    <View style={styles.modal}>
-                        <ColumnBuilderRow
-                            text="ID"
-                            onValueChange={setShowIDColumn}
-                            value={showIDColumn}
-                        />
-                        <ColumnBuilderRow
-                            text="Name"
-                            onValueChange={setShowNameColumn}
-                            value={showNameColumn}
-                        />
-                        <ColumnBuilderRow
-                            text="Zone"
-                            onValueChange={setShowZoneColumn}
-                            value={showZoneColumn}
-                        />
-                        <ColumnBuilderRow
-                            text="Health"
-                            onValueChange={setShowHealthColumn}
-                            value={showHealthColumn}
-                        />
-                        <ColumnBuilderRow
-                            text="Education"
-                            onValueChange={setShowEducationColumn}
-                            value={showEducationColumn}
-                        />
-                        <ColumnBuilderRow
-                            text="Social"
-                            onValueChange={setShowSocialColumn}
-                            value={showSocialColumn}
-                        />
-                    </View>
-                </Modal>
+                <Portal>
+                    <Modal
+                        animationType="slide"
+                        transparent={false}
+                        visible={}
+                        onRequestClose={closeColumnBuilderMenu}
+                    >
+                        <View style={styles.modal}>
+                            <ColumnBuilderRow
+                                text="ID"
+                                onValueChange={setShowIDColumn}
+                                value={showIDColumn}
+                            />
+                            <ColumnBuilderRow
+                                text="Name"
+                                onValueChange={setShowNameColumn}
+                                value={showNameColumn}
+                            />
+                            <ColumnBuilderRow
+                                text="Zone"
+                                onValueChange={setShowZoneColumn}
+                                value={showZoneColumn}
+                            />
+                            <ColumnBuilderRow
+                                text="Health"
+                                onValueChange={setShowHealthColumn}
+                                value={showHealthColumn}
+                            />
+                            <ColumnBuilderRow
+                                text="Education"
+                                onValueChange={setShowEducationColumn}
+                                value={showEducationColumn}
+                            />
+                            <ColumnBuilderRow
+                                text="Social"
+                                onValueChange={setShowSocialColumn}
+                                value={showSocialColumn}
+                            />
+                        </View>
+                    </Modal>
+                </Portal>
             </View>
             <View style={styles.row}>
                 <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>My Clients</Text>

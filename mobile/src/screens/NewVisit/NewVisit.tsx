@@ -87,6 +87,7 @@ const ImprovementField = (props: {
                 value={isImprovementEnabled}
                 label={props.provided}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             {isImprovementEnabled && (
@@ -278,10 +279,8 @@ const VisitFocusForm = (
                     value={formikProps.values[visitType]}
                     label={visitFieldLabels[visitType]}
                     setFieldValue={formikProps.setFieldValue}
-                    onChange={(value: boolean) => {
-                        formikProps.setFieldTouched(visitType, true);
-                        onCheckboxChange(value, visitType);
-                    }}
+                    setFieldTouched={formikProps.setFieldTouched}
+                    onChange={(value: boolean) => onCheckboxChange(value, visitType)}
                 />
             ))}
         </View>

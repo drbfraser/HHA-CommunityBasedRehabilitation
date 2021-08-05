@@ -16,6 +16,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.isWorking]}
                 label={baseFieldLabels[BaseSurveyFormField.isWorking]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             {props.formikProps.values[BaseSurveyFormField.isWorking] && (
@@ -60,6 +61,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.meetFinanceNeeds]}
                 label={baseFieldLabels[BaseSurveyFormField.meetFinanceNeeds]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             <TextCheckBox
@@ -67,6 +69,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.disabiAffectWork]}
                 label={baseFieldLabels[BaseSurveyFormField.disabiAffectWork]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             <TextCheckBox
@@ -74,6 +77,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.wantWork]}
                 label={baseFieldLabels[BaseSurveyFormField.wantWork]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
         </View>
     );

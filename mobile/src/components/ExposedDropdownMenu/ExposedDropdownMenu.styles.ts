@@ -6,10 +6,6 @@ const useStyles = (textInputWidth: number) =>
             width: textInputWidth,
             top: -3,
         },
-        invisibleAnchor: {
-            height: 1,
-            marginBottom: 0,
-        },
     });
 
 export default useStyles;

@@ -1,9 +1,13 @@
 import { themeColors } from "@cbr/common";
-import { StyleSheet } from "react-native";
-import theme from "../../util/theme.styles";
+import { Dimensions, StyleSheet } from "react-native";
+
+const windowHeight = Dimensions.get("window").height;
 
 const useStyles = () =>
     StyleSheet.create({
+        clientDetailContainer: {
+            flex: 1,
+        },
         clientButtons: {
             padding: 3,
             marginTop: 3,
@@ -29,7 +33,6 @@ const useStyles = () =>
             borderTopLeftRadius: 30,
             overflow: "hidden",
         },
-
         clientDetailsContainerStyles: {
             marginTop: 20,
             marginBottom: 20,
@@ -37,6 +40,7 @@ const useStyles = () =>
             paddingTop: 15,
             alignItems: "center",
             borderRadius: 20,
+            flexShrink: 1,
         },
         clientTextStyle: {
             marginTop: 10,
@@ -57,26 +61,19 @@ const useStyles = () =>
             borderRadius: 5,
         },
         carePresentView: {
-            alignItems: "center",
+            alignItems: "baseline",
             display: "flex",
             flexDirection: "row",
-            height: 40,
-            width: 350,
-            marginTop: 15,
-            marginBottom: 15,
         },
         valueText: {
-            alignContent: "flex-start",
+            flex: 1,
             fontSize: 18,
-            width: 256,
             marginBottom: 15,
-            marginStart: 5,
+            marginStart: 15,
         },
         carePresentCheckBox: {
             alignContent: "flex-start",
             fontSize: 18,
-            width: 256,
-            marginBottom: 15,
         },
         scrollViewStyles: {
             marginHorizontal: 5,
@@ -90,27 +87,18 @@ const useStyles = () =>
             width: 112,
             borderRadius: 5,
         },
-        editButton: {
-            justifyContent: "flex-start",
-            width: 70,
-        },
         clientBirthdayView: {
             display: "flex",
-            alignItems: "flex-start",
-            alignContent: "space-between",
+            alignItems: "baseline",
             flexDirection: "row",
-            justifyContent: "center",
-            height: 40,
-            width: 350,
-            marginTop: 15,
-            marginBottom: 15,
+            alignContent: "space-between",
         },
         clientBirthdayButtons: {
             marginTop: 3,
-            marginBottom: 15,
-            marginRight: 15,
-            width: 75,
             borderRadius: 5,
+        },
+        field: {
+            marginTop: 5,
         },
         pickerStyle: {
             backgroundColor: "white",
@@ -220,14 +208,19 @@ const useStyles = () =>
         disabilityListHeaderStyle: {
             fontSize: 24,
         },
+        disabilityList: {
+            flexGrow: 1,
+            paddingRight: 20,
+        },
         disabilityChecklist: {
-            height: 500,
             marginHorizontal: 20,
-            marginTop: 140,
-            display: "flex",
+            alignSelf: "center",
+            paddingTop: 20,
+            paddingBottom: 50,
             backgroundColor: "white",
             borderRadius: 10,
-            justifyContent: "space-between",
+            maxHeight: windowHeight / 1.25,
+            marginTop: windowHeight / 8,
         },
         zoneChecklist: {
             height: 540,
@@ -251,13 +244,11 @@ const useStyles = () =>
             display: "flex",
             justifyContent: "center",
             padding: 20,
-            height: 210,
         },
         nestedScrollView: {
             display: "flex",
-            justifyContent: "center",
             padding: 20,
-            height: 480,
+            justifyContent: "center",
         },
         nestedScrollStyle: {
             marginBottom: 10,
@@ -282,11 +273,10 @@ const useStyles = () =>
             color: themeColors.errorRed,
             alignSelf: "center",
         },
-        buttonZoneStyles: {
+        disabilityContainer: {
             flexDirection: "row",
+            alignItems: "flex-start",
             justifyContent: "space-between",
-            marginRight: 16,
-            marginLeft: 4,
         },
     });
 

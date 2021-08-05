@@ -6,7 +6,7 @@ import ExposedDropdownMenu, { Props as ExposedDropdownMenuProps } from "./Expose
 
 export type FormikMenuProps<Field extends string> = Omit<
     ExposedDropdownMenuProps,
-    "onKeyChange" | "error" | "label" | "value" | "onChangeText" | "onEndEditing"
+    "onDismiss" | "onKeyChange" | "error" | "label" | "value" | "onChangeText" | "onEndEditing"
 > & {
     /**
      * A secondary `onKeyChange` prop that is executed after the formik values have been set.
@@ -50,6 +50,9 @@ const FormikExposedDropdownMenu = <T extends string>(props: FormikMenuProps<T>) 
         },
         [props.field, formikProps.touched, formikProps.setFieldTouched]
     );
+    const setFieldTouched = () => {
+        props.formikProps.setFieldTouched(props.field);
+    };
 
     const valueToUse = currentValueOverride ?? formikProps.values[field];
     // Fall back to empty string, otherwise if it's undefined, React won't rerender the TextInput
@@ -69,7 +72,8 @@ const FormikExposedDropdownMenu = <T extends string>(props: FormikMenuProps<T>) 
                 label={props.fieldLabels[field]}
                 value={currentSelectionToDisplay}
                 onChangeText={formikProps.handleChange(field)}
-                onEndEditing={() => formikProps.setFieldTouched(field)}
+                onDismiss={setFieldTouched}
+                onEndEditing={setFieldTouched}
                 onKeyChange={keyChangeCallback}
                 disabled={dropdownProps.disabled || formikProps.isSubmitting}
                 blurOnSubmit={false}

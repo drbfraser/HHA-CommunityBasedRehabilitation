@@ -66,7 +66,7 @@ const useStyles = () =>
             borderRadius: 5,
         },
         modalStyle: {
-            height: 520,
+            height: 560,
             marginHorizontal: 20,
             marginTop: 140,
             display: "flex",
@@ -114,6 +114,16 @@ const useStyles = () =>
             alignItems: "center",
             marginLeft: 10,
             marginRight: 10,
+        },
+        formikErrorStyle: {
+            color: themeColors.errorRed,
+            justifyContent: "center",
+            alignItems: "center",
+            alignContent: "center",
+            display: "flex",
+        },
+        submitButtonStyle: {
+            margin: 20,
         },
     });
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
-import { Gender, IClient, IRisk, themeColors } from "@cbr/common";
+import { Gender, IClient, IRisk, RiskType, themeColors } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
@@ -258,9 +258,22 @@ const ClientDetails = (props: ClientProps) => {
                             )}
                         </Formik>
                     </Card>
+                    <Text style={styles.cardSectionTitle}>Client Risks</Text>
                     <Divider />
-                    <ClientRisk clientRisks={clientRisks ? clientRisks : []} />
+                    <ClientRisk
+                        clientRisks={clientRisks ? clientRisks : []}
+                        presentRiskType={RiskType.HEALTH}
+                    />
                     <Divider />
+                    <ClientRisk
+                        clientRisks={clientRisks ? clientRisks : []}
+                        presentRiskType={RiskType.EDUCATION}
+                    />
+                    <Divider />
+                    <ClientRisk
+                        clientRisks={clientRisks ? clientRisks : []}
+                        presentRiskType={RiskType.SOCIAL}
+                    />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>

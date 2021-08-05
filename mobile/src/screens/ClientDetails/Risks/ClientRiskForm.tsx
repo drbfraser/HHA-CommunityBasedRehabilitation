@@ -4,11 +4,21 @@ import { View, TextInput as NativeText } from "react-native";
 import { Button, Modal, Portal, TextInput, Text, Menu, RadioButton } from "react-native-paper";
 import { useState } from "react";
 import useStyles, { riskStyles } from "./ClientRisk.styles";
-import { handleMobileSubmit, IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common";
+import {
+    handleMobileSubmit,
+    handleSubmit,
+    IRisk,
+    RiskLevel,
+    riskLevels,
+    RiskType,
+    toastValidationError,
+    validationSchema,
+} from "@cbr/common";
 import { Formik } from "formik";
 
 export interface ClientRiskFormProps {
     riskData: IRisk;
+    setRisk: (risk: IRisk) => void;
 }
 
 export const ClientRiskForm = (props: ClientRiskFormProps) => {
@@ -28,9 +38,10 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             <Formik
                 initialValues={props.riskData}
                 onSubmit={(values) => {
-                    handleMobileSubmit(values, props.riskData);
+                    handleSubmit(values, props.riskData, props.setRisk);
                     console.log(values);
                 }}
+                validationSchema={validationSchema}
             >
                 {(formikProps) => (
                     <Portal>
@@ -120,6 +131,9 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 textAlignVertical={"top"}
                                 mode={"outlined"}
                             />
+                            <Text style={styles.formikErrorStyle}>
+                                {formikProps.errors.requirement}
+                            </Text>
                             <TextInput
                                 style={styles.riskTextStyle}
                                 label={"Goals"}
@@ -130,11 +144,17 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 textAlignVertical={"top"}
                                 mode={"outlined"}
                             />
+                            <Text style={styles.formikErrorStyle}>{formikProps.errors.goal}</Text>
                             <Button
                                 mode={"contained"}
+                                style={styles.submitButtonStyle}
                                 onPress={() => {
-                                    formikProps.handleSubmit();
-                                    setShowModal(false);
+                                    if (formikProps.isValid) {
+                                        formikProps.handleSubmit();
+                                        setShowModal(false);
+                                    } else {
+                                        toastValidationError();
+                                    }
                                 }}
                             >
                                 Save

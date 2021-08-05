@@ -10,7 +10,7 @@ import {
 import { Button, Card, Dialog, List, Text } from "react-native-paper";
 import useStyles from "./Entry.styles";
 import { ActivityIndicator, ScrollView } from "react-native";
-import DataCard from "../../../../components/DateCard/DataCard";
+import DataCard from "../../../../components/DataCard/DataCard";
 
 interface IEntryProps {
     survey: ISurvey;
@@ -67,7 +67,7 @@ const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
                 <Card style={styles.createdCard}>
                     <Card.Content>
                         <Text>
-                            <Text style={{ fontWeight: "bold" }}>Survey Date:</Text>{" "}
+                            <Text style={styles.labelBold}>Survey Date:</Text>{" "}
                             {timestampToDateTime(survey.survey_date)}
                         </Text>
                     </Card.Content>

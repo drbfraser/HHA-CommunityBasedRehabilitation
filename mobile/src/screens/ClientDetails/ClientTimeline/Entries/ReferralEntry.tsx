@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {
     apiFetch,
+    countObjectKeys,
     Endpoint,
     IReferral,
     orthoticInjuryLocations,
@@ -98,10 +99,15 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
                                         formikProps={formikProps}
                                         returnKeyType="done"
                                         mode="outlined"
+                                        touchOnChangeText
                                     />
 
                                     <Button
-                                        disabled={formikProps.isSubmitting}
+                                        disabled={
+                                            formikProps.isSubmitting ||
+                                            countObjectKeys(formikProps.errors) !== 0 ||
+                                            countObjectKeys(formikProps.touched) === 0
+                                        }
                                         onPress={() => {
                                             formikProps.handleSubmit();
                                         }}
@@ -119,7 +125,7 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
     };
 
     return (
-        <ScrollView style={styles.referralBoard}>
+        <ScrollView style={styles.referralBoard} keyboardShouldPersistTaps="always">
             {loading ? (
                 <ActivityIndicator size="small" color={themeColors.blueAccent} />
             ) : (

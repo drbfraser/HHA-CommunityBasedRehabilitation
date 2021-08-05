@@ -35,12 +35,17 @@ const ClientList = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const isFocused = useIsFocused();
 
+    const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
+
     const [showIDColumn, setShowIDColumn] = useState(true);
     const [showNameColumn, setShowNameColumn] = useState(true);
     const [showZoneColumn, setShowZoneColumn] = useState(true);
     const [showHealthColumn, setShowHealthColumn] = useState(true);
     const [showEducationColumn, setShowEducationColumn] = useState(true);
     const [showSocialColumn, setShowSocialColumn] = useState(true);
+
+    const openColumnBuilderMenu = () => setShowColumnBuilderMenu(true);
+    const closeColumnBuilderMenu = () => setShowColumnBuilderMenu(false);
 
     const clientSortby = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
@@ -146,7 +151,7 @@ const ClientList = () => {
                     color={themeColors.boarderGray}
                     size={20}
                     style={styles.columnBuilderButton}
-                    onPress={() => setModalVisible(!modalVisible)}
+                    onPress={openColumnBuilderMenu}
                 />
                 <Modal
                     animationType="slide"

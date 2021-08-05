@@ -84,7 +84,7 @@ const ClientList = () => {
         setClientList(exampleClient);
     };
 
-    const ClientListTitle = (props: {
+    const ShowTitle = (props: {
         label: string | JSX.Element;
         style: StyleProp<ViewStyle>;
         showTheTitle: boolean;
@@ -110,7 +110,6 @@ const ClientList = () => {
     };
 
     const showSelectedColumn = () => {
-        console.log(selectedColumn);
         columnShowingList.forEach((element, index) => {
             if (selectedColumn.includes(String(index))) {
                 element(true);
@@ -154,7 +153,7 @@ const ClientList = () => {
                 )}
                 <IconButton
                     icon="dots-vertical"
-                    color={themeColors.boarderGray}
+                    color={themeColors.borderGray}
                     size={20}
                     style={styles.columnBuilderButton}
                     onPress={openColumnBuilderMenu}
@@ -214,37 +213,37 @@ const ClientList = () => {
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>
-                        <ClientListTitle
+                        <ShowTitle
                             label="ID"
                             style={styles.column_id}
                             showTheTitle={showIDColumn}
                             thisColumnSortOption={SortOptions.ID}
                         />
-                        <ClientListTitle
+                        <ShowTitle
                             label="Name"
                             style={styles.column_name}
                             showTheTitle={showNameColumn}
                             thisColumnSortOption={SortOptions.NAME}
                         />
-                        <ClientListTitle
+                        <ShowTitle
                             label="Zone"
                             style={styles.column_zone}
                             showTheTitle={showZoneColumn}
                             thisColumnSortOption={SortOptions.ZONE}
                         />
-                        <ClientListTitle
+                        <ShowTitle
                             label={riskTypes.HEALTH.Icon("#000000")}
                             style={styles.column_icons}
                             showTheTitle={showHealthColumn}
                             thisColumnSortOption={SortOptions.HEALTH}
                         />
-                        <ClientListTitle
+                        <ShowTitle
                             label={riskTypes.EDUCAT.Icon("#000000")}
                             style={styles.column_icons}
                             showTheTitle={showEducationColumn}
                             thisColumnSortOption={SortOptions.EDUCATION}
                         />
-                        <ClientListTitle
+                        <ShowTitle
                             label={riskTypes.SOCIAL.Icon("#000000")}
                             style={styles.column_icons}
                             showTheTitle={showSocialColumn}

@@ -18,6 +18,18 @@ const useStyles = () =>
             marginTop: 5,
             marginRight: 15,
         },
+        columnBuilderButton: {
+            flex: 0.2,
+        },
+        colonBuilderChecklist: {
+            marginHorizontal: 40,
+            marginTop: 70,
+            marginBottom: 70,
+            display: "flex",
+            backgroundColor: "white",
+            borderRadius: 10,
+            justifyContent: "center",
+        },
         select: {
             flex: 1,
         },

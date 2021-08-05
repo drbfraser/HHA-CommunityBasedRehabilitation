@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { View } from "react-native";
 import { Button, Dialog, Paragraph, Portal, Text } from "react-native-paper";
 import {
     baseFieldLabels,
     BaseSurveyFormField,
     childNourish,
+    ChildNourish,
     IFormProps,
     rateLevel,
 } from "@cbr/common";
@@ -17,6 +18,11 @@ const FoodForm = (props: IFormProps) => {
     const styles = useStyles();
     const hideAlert = () => setAlertError(false);
     const showAlert = () => setAlertError(true);
+
+    const otherDropdownKeyChangeCallback = useCallback(
+        (key: any) => (key === ChildNourish.MALNOURISHED ? showAlert() : hideAlert()),
+        []
+    );
 
     return (
         <View>
@@ -49,7 +55,7 @@ const FoodForm = (props: IFormProps) => {
             {props.formikProps.values[BaseSurveyFormField.isChild] && (
                 <View>
                     <Text style={styles.pickerQuestion}>
-                        What is this child nutritional status?
+                        What is this child's nutritional status?
                     </Text>
 
                     <FormikExposedDropdownMenu
@@ -57,7 +63,7 @@ const FoodForm = (props: IFormProps) => {
                         valuesType="record-string"
                         values={childNourish}
                         formikProps={props.formikProps}
-                        otherOnKeyChange={(key) => (key === "M" ? showAlert() : hideAlert())}
+                        otherOnKeyChange={otherDropdownKeyChangeCallback}
                         fieldLabels={baseFieldLabels}
                         mode="outlined"
                     />

@@ -75,7 +75,7 @@ interface IMapDropdownMenu extends IBaseDropdownMenuProps {
     onKeyChange: (key: any) => void;
 }
 
-export type Props =
+export type TDropdownMenuProps =
     | IRecordDropdownMenuString
     | IRecordDropdownMenuNumeric
     | IArrayDropdownMenu
@@ -93,14 +93,17 @@ const menuItemStyle = StyleSheet.create({
     },
 });
 
-const convertMapToMenuItems = (props: Props, hideMenu: () => void): Array<React.ReactNode> => {
+const convertMapToMenuItems = (
+    props: TDropdownMenuProps,
+    hideMenu: () => void
+): Array<React.ReactNode> => {
     // for TypeScript smart casting
     if (props.valuesType !== "map") {
         return [];
     }
 
     const map = props.values;
-    const menuItems = new Array<JSX.Element>(map.size);
+    const menuItems = new Array<React.ReactNode>(map.size);
 
     const iterator = map.entries();
     let next = iterator.next();
@@ -131,56 +134,73 @@ const convertMapToMenuItems = (props: Props, hideMenu: () => void): Array<React.
     return menuItems;
 };
 
-const areMenuItemsPropsEqual = (
-    prevProps: Readonly<MenuItemsProps>,
-    newProps: Readonly<MenuItemsProps>
+export const areDropdownMenuValuesPropsEqual = (
+    oldPropsParam: Readonly<Pick<TDropdownMenuProps, "values" | "valuesType">>,
+    newPropsParam: Readonly<Pick<TDropdownMenuProps, "values" | "valuesType">>
 ): boolean => {
-    if (
-        prevProps.existingProps.valuesType !== newProps.existingProps.valuesType ||
-        prevProps.existingProps.values !== newProps.existingProps.values ||
-        prevProps.existingProps.onKeyChange !== newProps.existingProps.onKeyChange
-    ) {
+    // Workaround for TypeScript smart casting.
+    const oldProps = oldPropsParam as TDropdownMenuProps;
+    const newProps = newPropsParam as TDropdownMenuProps;
+    if (oldProps.valuesType !== newProps.valuesType) {
         return false;
     }
 
     // Although at this point we must have that
-    // prevProps.existingProps.valuesType === newProps.existingProps.valuesType
+    // oldProps.valuesType === newProps.valuesType
     // is true, we check both anyway for TypeScript smart casting.
-    if (
-        prevProps.existingProps.valuesType === "array" &&
-        newProps.existingProps.valuesType === "array" &&
-        prevProps.existingProps.values.length !== newProps.existingProps.values.length
-    ) {
-        return false;
-    }
-
-    if (
-        prevProps.existingProps.valuesType === "map" &&
-        newProps.existingProps.valuesType === "map" &&
-        prevProps.existingProps.values.size !== newProps.existingProps.values.size
-    ) {
-        return false;
-    }
-
-    if (
-        prevProps.existingProps.valuesType === "record-string" ||
-        prevProps.existingProps.valuesType === "record-number"
-    ) {
-        // We know newProps.existingProps.values should also be a record here.
-        if (
-            countObjectKeys(prevProps.existingProps.values) !==
-            countObjectKeys(newProps.existingProps.values)
-        ) {
+    if (oldProps.valuesType === "array" && newProps.valuesType === "array") {
+        if (oldProps.values.length !== newProps.values.length) {
             return false;
         }
+
+        for (let i = 0; i < oldProps.values.length; i++) {
+            if (oldProps.values[i] !== newProps.values[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    if (oldProps.valuesType === "map" && newProps.valuesType === "map") {
+        if (oldProps.values.size !== newProps.values.size) {
+            return false;
+        }
+
+        const oldMapIterator = oldProps.values.entries();
+        let next = oldMapIterator.next();
+        while (!next.done) {
+            const [key, oldValue] = next.value;
+            if (newProps.values.get(key) !== oldValue) {
+                return false;
+            }
+            next = oldMapIterator.next();
+        }
+
+        return true;
+    }
+
+    if (oldProps.valuesType === "record-string" || oldProps.valuesType === "record-number") {
+        // We know newProps.values should also be a record here.
+        if (countObjectKeys(oldProps.values) !== countObjectKeys(newProps.values)) {
+            return false;
+        }
+
+        for (const key in oldProps.values) {
+            if (oldProps.values[key] !== newProps.values[key]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     return true;
 };
 
-type MenuItemsProps = { hideMenu: () => void; existingProps: Props };
+type TMenuItemsProps = { hideMenu: () => void; existingProps: TDropdownMenuProps };
 
-const MenuItems = ({ hideMenu, existingProps }: MenuItemsProps) => {
+const MenuItems = ({ hideMenu, existingProps }: TMenuItemsProps) => {
     return (
         <>
             {existingProps.valuesType === "record-number" ||
@@ -228,8 +248,6 @@ const MenuItems = ({ hideMenu, existingProps }: MenuItemsProps) => {
     );
 };
 
-const MemoizedMenuItems = memo(MenuItems, areMenuItemsPropsEqual);
-
 /**
  * A replacement lookalike for exposed dropdown menus from Material Design.
  *
@@ -238,13 +256,14 @@ const MemoizedMenuItems = memo(MenuItems, areMenuItemsPropsEqual);
  *
  * ## Usage
  *
- * Menu items are either records (`valueTypes === "record"`), string arrays
- * (`valueTypes === "array"`), or maps (`valueTypes === "map"`).
+ * Menu items are either records (`valueType === "record-string"` for string keys;
+ * `valueTypes === "record-number"` for numeric keys), string arrays (`valueType === "array"`), or
+ * maps (`valueType === "map"`).
  *
  * @see https://material.io/components/menus#exposed-dropdown-menu
- * @see Props.onKeyChange
+ * @see TDropdownMenuProps.onKeyChange
  */
-const ExposedDropdownMenu = (props: Props) => {
+const ExposedDropdownMenu = (props: TDropdownMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
     // useRef instead of useState to avoid unnecessary re-renders
@@ -300,7 +319,7 @@ const ExposedDropdownMenu = (props: Props) => {
                     />
                 }
             >
-                <MemoizedMenuItems hideMenu={hideMenu} existingProps={props} />
+                <MenuItems hideMenu={hideMenu} existingProps={props} />
             </Menu>
         </TouchableOpacity>
     );

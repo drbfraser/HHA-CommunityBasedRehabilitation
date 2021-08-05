@@ -5,6 +5,7 @@ import ClientList from "../screens/ClientList/ClientList";
 import Profile from "../screens/Profile/Profile";
 import UserList from "../screens/UserList/UserList";
 import Dashboard from "../screens/DashBoard/Dashboard";
+import NewClient from "../screens/NewClient/NewClient";
 
 export interface IScreen {
     name: string;
@@ -21,7 +22,7 @@ export const screens: IScreen[] = [
     },
     {
         name: "New Client",
-        Component: Todo,
+        Component: NewClient,
         iconName: "plus-circle",
     },
     {

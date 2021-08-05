@@ -38,6 +38,8 @@ const VisitEntry = ({ visitSummary, refreshClient }: IEntryProps) => {
     const [open, setOpen] = useState(false);
     const [visit, setVisit] = useState<IVisit>();
     const [loadingError, setLoadingError] = useState(false);
+    const [loading, setLoading] = useState(false);
+
     const zones = useZones();
     const styles = useStyles();
 
@@ -56,4 +58,39 @@ const VisitEntry = ({ visitSummary, refreshClient }: IEntryProps) => {
         setOpen(false);
         setLoadingError(false);
     };
+
+    const handleUpdate = () => {
+        setLoading(false);
+        refreshClient();
+    };
+
+    const zone = zones.get(visitSummary.zone) ?? "Unknown";
+    const ReasonChip = ({ label }: { label: string }) => (
+        <View style={styles.referralChip}>
+            <Chip style={styles.smallChip} mode="outlined" selectedColor={themeColors.blueBgDark}>
+                {label}
+            </Chip>
+        </View>
+    );
+
+    // const Summary = ({ clickable }: { clickable: boolean }) => {
+    //     const zone = zones.get(visitSummary.zone) ?? "Unknown";
+
+    //     return (
+    //         <>
+    //             <b>Visit</b> in {zone} &nbsp;
+    //             {visitSummary.health_visit && (
+    //                 <RiskTypeChip risk={RiskType.HEALTH} clickable={clickable} />
+    //             )}{" "}
+    //             {visitSummary.educat_visit && (
+    //                 <RiskTypeChip risk={RiskType.EDUCATION} clickable={clickable} />
+    //             )}{" "}
+    //             {visitSummary.social_visit && (
+    //                 <RiskTypeChip risk={RiskType.SOCIAL} clickable={clickable} />
+    //             )}{" "}
+    //         </>
+    //     );
+    // };
 };
+
+export default VisitEntry;

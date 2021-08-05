@@ -1,11 +1,10 @@
 import React from "react";
 import { View } from "react-native";
 import { HelperText, Text, TextInput } from "react-native-paper";
-import { baseFieldLabels, BaseSurveyFormField, IFormProps } from "@cbr/common";
-import { isSelfEmployed } from "@cbr/common";
+import { baseFieldLabels, BaseSurveyFormField, IFormProps, isSelfEmployed } from "@cbr/common";
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import TextPicker, { IPickerChoice } from "../../../components/TextPicker/TextPicker";
+import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 
 const LivelihoodForm = (props: IFormProps) => {
     const styles = useStyles();
@@ -17,6 +16,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.isWorking]}
                 label={baseFieldLabels[BaseSurveyFormField.isWorking]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             {props.formikProps.values[BaseSurveyFormField.isWorking] && (
@@ -43,29 +43,15 @@ const LivelihoodForm = (props: IFormProps) => {
                         <Text style={styles.pickerQuestion}>
                             Are you employed or self-employed?
                         </Text>
-                        <TextPicker
-                            field={BaseSurveyFormField.isSelfEmployed}
-                            choices={Object.entries(isSelfEmployed).map(
-                                (key) =>
-                                    ({
-                                        value: key[0],
-                                        label: key[1],
-                                    } as IPickerChoice)
-                            )}
-                            selectedValue={
-                                props.formikProps.values[BaseSurveyFormField.isSelfEmployed]
-                            }
-                            setFieldValue={props.formikProps.setFieldValue}
-                            setFieldTouched={props.formikProps.setFieldTouched}
-                        />
 
-                        <HelperText
-                            style={styles.errorText}
-                            type="error"
-                            visible={!!props.formikProps.errors[BaseSurveyFormField.isSelfEmployed]}
-                        >
-                            Self Employed is a required field
-                        </HelperText>
+                        <FormikExposedDropdownMenu
+                            field={BaseSurveyFormField.isSelfEmployed}
+                            valuesType="record-string"
+                            values={isSelfEmployed}
+                            formikProps={props.formikProps}
+                            fieldLabels={baseFieldLabels}
+                            mode="outlined"
+                        />
                     </View>
                 </View>
             )}
@@ -75,6 +61,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.meetFinanceNeeds]}
                 label={baseFieldLabels[BaseSurveyFormField.meetFinanceNeeds]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             <TextCheckBox
@@ -82,6 +69,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.disabiAffectWork]}
                 label={baseFieldLabels[BaseSurveyFormField.disabiAffectWork]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             <TextCheckBox
@@ -89,6 +77,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 value={props.formikProps.values[BaseSurveyFormField.wantWork]}
                 label={baseFieldLabels[BaseSurveyFormField.wantWork]}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
         </View>
     );

@@ -34,52 +34,67 @@ const Dashboard = () => {
     const [isPriorityClientsLoading, setPriorityClientsLoading] = useState<boolean>(true);
     const [referralsLoading, setReferralsLoading] = useState<boolean>(true);
 
+    const [clientError, setClientError] = useState<string>();
+    const [referralError, setReferralError] = useState<string>();
+
     useEffect(() => {
         const fetchClients = async () => {
-            const tempClients = await apiFetch(Endpoint.CLIENTS)
-                .then((resp) => resp.json())
-                .catch((err) => alert("Error occured while trying to load priority clients!"));
+            setClientError(undefined);
+            try {
+                const tempClients: IClientSummary[] = await (
+                    await apiFetch(Endpoint.CLIENTS)
+                ).json();
 
-            const priorityClients: RowsProp = tempClients
-                .sort(clientPrioritySort)
-                .slice(0, 5)
-                .map((row: IClientSummary) => {
-                    return {
-                        id: row.id,
-                        full_name: row.full_name,
-                        zone: row.zone,
-                        [RiskType.HEALTH]: row.health_risk_level,
-                        [RiskType.EDUCATION]: row.educat_risk_level,
-                        [RiskType.SOCIAL]: row.social_risk_level,
-                        last_visit_date: row.last_visit_date,
-                    };
-                });
+                const priorityClients: RowsProp = tempClients
+                    .sort(clientPrioritySort)
+                    .slice(0, 5)
+                    .map((row: IClientSummary) => {
+                        return {
+                            id: row.id,
+                            full_name: row.full_name,
+                            zone: row.zone,
+                            [RiskType.HEALTH]: row.health_risk_level,
+                            [RiskType.EDUCATION]: row.educat_risk_level,
+                            [RiskType.SOCIAL]: row.social_risk_level,
+                            last_visit_date: row.last_visit_date,
+                        };
+                    });
 
-            setClients(priorityClients);
-            setPriorityClientsLoading(false);
+                setClients(priorityClients);
+            } catch (e) {
+                setClientError(e instanceof Error ? e.message : `${e}`);
+            } finally {
+                setPriorityClientsLoading(false);
+            }
         };
         const fetchReferrals = async () => {
-            const tempReferrals = await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
-                .then((resp) => resp.json())
-                .catch((err) => alert("Error occured while trying to load outstanding referrals!"));
+            setReferralError(undefined);
+            try {
+                const tempReferrals: IOutstandingReferral[] = await (
+                    await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
+                ).json();
 
-            const outstandingReferrals: RowsProp = tempReferrals
-                .sort(
-                    (a: IOutstandingReferral, b: IOutstandingReferral) =>
-                        a.date_referred - b.date_referred
-                )
-                .map((row: IOutstandingReferral, i: Number) => {
-                    return {
-                        id: i,
-                        client_id: row.id,
-                        full_name: row.full_name,
-                        type: concatenateReferralType(row),
-                        date_referred: row.date_referred,
-                    };
-                });
+                const outstandingReferrals: RowsProp = tempReferrals
+                    .sort(
+                        (a: IOutstandingReferral, b: IOutstandingReferral) =>
+                            a.date_referred - b.date_referred
+                    )
+                    .map((row: IOutstandingReferral, i: Number) => {
+                        return {
+                            id: i,
+                            client_id: row.id,
+                            full_name: row.full_name,
+                            type: concatenateReferralType(row),
+                            date_referred: row.date_referred,
+                        };
+                    });
 
-            setReferrals(outstandingReferrals);
-            setReferralsLoading(false);
+                setReferrals(outstandingReferrals);
+            } catch (e) {
+                setReferralError(e instanceof Error ? e.message : `${e}`);
+            } finally {
+                setReferralsLoading(false);
+            }
         };
 
         const concatenateReferralType = (row: IOutstandingReferral) => {
@@ -220,6 +235,23 @@ const Dashboard = () => {
                 {/* TODO: Update message alert once message alert functionality is implemented. */}
                 <Typography variant="body1">You have 0 new messages from an admin.</Typography>
             </Alert>
+            {(clientError || referralError) && (
+                <>
+                    <br />
+                    <Alert severity="error">
+                        {clientError && (
+                            <Typography variant="body1">
+                                Error loading priority clients: {clientError}
+                            </Typography>
+                        )}
+                        {referralError && (
+                            <Typography variant="body1">
+                                Error loading referrals: {referralError}
+                            </Typography>
+                        )}
+                    </Alert>
+                </>
+            )}
             <br />
             <Grid container direction="row" spacing={1}>
                 <Grid item lg={6} md={12} xs={12}>

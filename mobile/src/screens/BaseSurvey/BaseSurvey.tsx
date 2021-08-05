@@ -15,6 +15,7 @@ import {
     themeColors,
     APIFetchFailError,
     baseFieldLabels,
+    countObjectKeys,
 } from "@cbr/common";
 import { Formik, FormikHelpers } from "formik";
 import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
@@ -22,7 +23,7 @@ import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./baseSur
 import HealthForm from "./SurveyForm/HealthForm";
 import EducationForm from "./SurveyForm/EducationForm";
 import SocialForm from "./SurveyForm/SocialForm";
-import LivelihoodForm from "./SurveyForm/LivelihoodFom";
+import LivelihoodForm from "./SurveyForm/LivelihoodForm";
 import EmpowermentForm from "./SurveyForm/EmpowermentForm";
 import ShelterForm from "./SurveyForm/ShelterForm";
 import FoodForm from "./SurveyForm/FoodForm";
@@ -172,8 +173,8 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
                                         }}
                                         nextBtnDisabled={
                                             formikProps.isSubmitting ||
-                                            Object.keys(formikProps.errors).length !== 0 ||
-                                            (Object.keys(formikProps.touched).length === 0 &&
+                                            countObjectKeys(formikProps.errors) !== 0 ||
+                                            (countObjectKeys(formikProps.touched) === 0 &&
                                                 !stepChecked[step])
                                         }
                                         previousBtnDisabled={formikProps.isSubmitting}

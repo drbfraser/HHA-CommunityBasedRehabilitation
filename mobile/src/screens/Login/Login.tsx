@@ -8,8 +8,7 @@ import { AuthContext } from "../../context/AuthContext/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
 import { SMALL_WIDTH } from "../../util/theme.styles";
-import PasswordTextInput from "../../components/PasswordTextInput/PasswordTextInput";
-import { StackScreenName } from "../../util/StackScreenName";
+import passwordTextInputProps from "../../components/PasswordTextInput/passwordTextInputProps";
 import { APIFetchFailError } from "@cbr/common";
 import { useNavigation } from "@react-navigation/core";
 
@@ -149,7 +148,8 @@ const Login = () => {
                     </View>
                 )}
                 <View>
-                    <PasswordTextInput
+                    <TextInput
+                        {...passwordTextInputProps}
                         label="Password"
                         error={status.status === "failed" && !password}
                         value={password}

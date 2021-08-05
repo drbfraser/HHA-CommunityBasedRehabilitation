@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Text, Divider, Appbar } from "react-native-paper";
 import { Formik, FormikHelpers } from "formik";
@@ -18,6 +18,7 @@ import {
     prostheticOrthoticValidationSchema,
     wheelchairValidationSchema,
     APIFetchFailError,
+    countObjectKeys,
 } from "@cbr/common";
 import WheelchairForm from "./ReferralForm/WheelchairForm";
 import PhysiotherapyForm from "./ReferralForm/PhysiotherapyForm";
@@ -65,10 +66,8 @@ const ReferralServiceForm = (
                     label={referralFieldLabels[serviceType]}
                     value={props.formikProps.values[serviceType]}
                     setFieldValue={props.formikProps.setFieldValue}
-                    onChange={(value: boolean) => {
-                        props.formikProps.setFieldTouched(serviceType, true);
-                        onCheckboxChange(value, serviceType);
-                    }}
+                    setFieldTouched={props.formikProps.setFieldTouched}
+                    onChange={(value: boolean) => onCheckboxChange(value, serviceType)}
                 />
             ))}
         </View>
@@ -88,7 +87,7 @@ const NewReferral = (props: INewReferralProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
     const prevStep = (props: any) => {
-        if (Object.keys(props.errors).length !== 0) {
+        if (countObjectKeys(props.errors) !== 0) {
             const arr = checkedSteps.filter((item) => {
                 return item != enabledSteps[activeStep - 1];
             });
@@ -235,10 +234,9 @@ const NewReferral = (props: INewReferralProps) => {
                                                 (!checkedSteps.includes(
                                                     enabledSteps[activeStep - 1]
                                                 )
-                                                    ? Object.keys(formikProps.errors).length !==
-                                                          0 ||
-                                                      Object.keys(formikProps.touched).length === 0
-                                                    : Object.keys(formikProps.errors).length !== 0))
+                                                    ? countObjectKeys(formikProps.errors) !== 0 ||
+                                                      countObjectKeys(formikProps.touched) === 0
+                                                    : countObjectKeys(formikProps.errors) !== 0))
                                         }
                                         previousBtnDisabled={formikProps.isSubmitting}
                                         onPrevious={() => prevStep(formikProps)}

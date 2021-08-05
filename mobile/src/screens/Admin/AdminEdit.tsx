@@ -9,6 +9,7 @@ import {
     AdminField,
     adminUserFieldLabels,
     APIFetchFailError,
+    countObjectKeys,
     editUserValidationSchema,
     handleUserEditSubmit,
     IUser,
@@ -19,7 +20,7 @@ import {
 import FormikTextInput from "../../components/FormikTextInput/FormikTextInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Alert from "../../components/Alert/Alert";
-import FormikExposedDropdownMenu from "../../components/FormikExposedDropdownMenu/FormikExposedDropdownMenu";
+import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 
 const AdminEdit = ({
@@ -116,7 +117,6 @@ const AdminEdit = ({
                                     field={AdminField.zone}
                                     formikProps={formikProps}
                                     mode="outlined"
-                                    numericKey
                                 />
 
                                 <FormikTextInput
@@ -140,7 +140,6 @@ const AdminEdit = ({
                                     field={AdminField.role}
                                     formikProps={formikProps}
                                     mode="outlined"
-                                    numericKey={false}
                                 />
 
                                 <Subheading style={styles.profileInfoHeader}>Status</Subheading>
@@ -171,7 +170,7 @@ const AdminEdit = ({
                                     <Button
                                         disabled={
                                             formikProps.isSubmitting ||
-                                            Object.keys(formikProps.errors).length !== 0
+                                            countObjectKeys(formikProps.errors) !== 0
                                         }
                                         loading={formikProps.isSubmitting}
                                         onPress={formikProps.handleSubmit}

@@ -1,42 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { View, ScrollView } from "react-native";
-import { Text, Appbar, Divider, TextInput, HelperText } from "react-native-paper";
-import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
+import { ScrollView, View } from "react-native";
+import { Divider, HelperText, Text, TextInput } from "react-native-paper";
+import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
 import { FieldArray, Formik, FormikHelpers, FormikProps } from "formik";
-import TextPicker from "../../components/TextPicker/TextPicker";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import {
-    themeColors,
-    useZones,
-    TZoneMap,
-    IRisk,
-    Endpoint,
     apiFetch,
-    IClient,
     APIFetchFailError,
+    countObjectKeys,
+    Endpoint,
+    GoalStatus,
+    IClient,
+    ImprovementFormField,
+    initialValidationSchema,
+    IRisk,
+    OutcomeFormField,
+    provisionals,
+    themeColors,
+    TZoneMap,
+    useZones,
+    visitFieldLabels,
+    VisitFormField,
+    visitInitialValues,
+    visitTypeValidationSchema,
 } from "@cbr/common";
 import { StackParamList } from "../../util/stackScreens";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StackScreenName } from "../../util/StackScreenName";
 import { RouteProp } from "@react-navigation/native";
 
-import {
-    visitFieldLabels,
-    VisitFormField,
-    ImprovementFormField,
-    OutcomeFormField,
-    visitInitialValues,
-    provisionals,
-    initialValidationSchema,
-    visitTypeValidationSchema,
-    GoalStatus,
-} from "@cbr/common";
-
 import { handleSubmit } from "./formHandler";
 
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewVisit.style";
 import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
+import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -89,6 +87,7 @@ const ImprovementField = (props: {
                 value={isImprovementEnabled}
                 label={props.provided}
                 setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
             />
 
             {isImprovementEnabled && (
@@ -154,19 +153,22 @@ const OutcomeField = (props: {
             <Text style={styles.pickerQuestion}>
                 Client's {visitFieldLabels[props.visitType]} Goal Status
             </Text>
-            <TextPicker
+
+            <FormikExposedDropdownMenu
                 field={`${fieldName}.${OutcomeFormField.goalStatus}`}
-                choices={Object.values(GoalStatus).map((status) => ({
-                    label: visitFieldLabels[status],
-                    value: status,
-                }))}
-                selectedValue={
+                valuesType="record-string"
+                values={Object.values(GoalStatus).reduce((accumulator, currentGoalStatus) => {
+                    accumulator[currentGoalStatus] = visitFieldLabels[currentGoalStatus];
+                    return accumulator;
+                }, {})}
+                currentValueOverride={
                     props.formikProps.values[VisitFormField.outcomes][props.visitType][
                         OutcomeFormField.goalStatus
                     ]
                 }
-                setFieldTouched={props.formikProps.setFieldTouched}
-                setFieldValue={props.formikProps.setFieldValue}
+                formikProps={props.formikProps}
+                fieldLabels={visitFieldLabels}
+                mode="outlined"
             />
 
             <View>
@@ -252,15 +254,13 @@ const VisitFocusForm = (
                 {formikProps.errors[VisitFormField.village]}
             </HelperText>
 
-            <TextPicker
+            <FormikExposedDropdownMenu
                 field={VisitFormField.zone}
-                choices={Array.from(zones.entries()).map(([key, value]) => ({
-                    label: value,
-                    value: key,
-                }))}
-                selectedValue={formikProps.values[VisitFormField.zone]}
-                setFieldValue={formikProps.setFieldValue}
-                setFieldTouched={formikProps.setFieldTouched}
+                valuesType="map"
+                values={zones}
+                formikProps={formikProps}
+                fieldLabels={visitFieldLabels}
+                mode="outlined"
             />
 
             <HelperText
@@ -279,10 +279,8 @@ const VisitFocusForm = (
                     value={formikProps.values[visitType]}
                     label={visitFieldLabels[visitType]}
                     setFieldValue={formikProps.setFieldValue}
-                    onChange={(value: boolean) => {
-                        formikProps.setFieldTouched(visitType, true);
-                        onCheckboxChange(value, visitType);
-                    }}
+                    setFieldTouched={formikProps.setFieldTouched}
+                    onChange={(value: boolean) => onCheckboxChange(value, visitType)}
                 />
             ))}
         </View>
@@ -356,7 +354,7 @@ const NewVisit = (props: INewVisitProps) => {
     ];
 
     const prevStep = (props: any) => {
-        if (Object.keys(props.errors).length !== 0) {
+        if (countObjectKeys(props.errors) !== 0) {
             const arr = checkedSteps.filter((item) => {
                 return item != enabledSteps[activeStep - 1];
             });
@@ -447,11 +445,11 @@ const NewVisit = (props: INewVisitProps) => {
                                                     (!checkedSteps.includes(
                                                         enabledSteps[activeStep - 1]
                                                     )
-                                                        ? Object.keys(formikProps.errors).length !==
+                                                        ? countObjectKeys(formikProps.errors) !==
                                                               0 ||
                                                           Object.keys(formikProps.touched)
                                                               .length === 0
-                                                        : Object.keys(formikProps.errors).length !==
+                                                        : countObjectKeys(formikProps.errors) !==
                                                           0))
                                             }
                                             previousBtnDisabled={formikProps.isSubmitting}

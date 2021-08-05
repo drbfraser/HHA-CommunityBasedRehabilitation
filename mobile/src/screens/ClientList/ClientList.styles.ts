@@ -21,13 +21,21 @@ const useStyles = () =>
         columnBuilderButton: {
             flex: 0.2,
         },
-        switch: { flex: 0.2 },
-        modal: {
-            margin: 35,
-            alignItems: "center",
+        colonBuilderChecklist: {
+            marginHorizontal: 40,
+            marginTop: 70,
+            marginBottom: 70,
+            display: "flex",
+            backgroundColor: "white",
+            borderRadius: 10,
             justifyContent: "center",
-            backgroundColor: themeColors.white,
         },
+        switch: { flex: 0.2 },
+        switchButtonAndText: {
+            flexDirection: "row",
+            justifyContent: "flex-start",
+        },
+
         row: {
             flexDirection: "row",
             display: "flex",
@@ -54,6 +62,12 @@ const useStyles = () =>
         },
         text: {
             flexShrink: 1,
+        },
+        viewWrapText: {
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "flex-start",
+            padding: 5,
         },
     });
 

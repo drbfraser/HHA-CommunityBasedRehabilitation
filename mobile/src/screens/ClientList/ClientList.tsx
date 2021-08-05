@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { Text, View, Switch, Modal, Alert, StyleProp, ViewStyle } from "react-native";
+import { Text, View, Switch, StyleProp, ViewStyle } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { Button, DataTable, IconButton, Portal } from "react-native-paper";
+import { Modal, DataTable, IconButton, Portal } from "react-native-paper";
 import useStyles from "./ClientList.styles";
 import { ClientListRow, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
 import { riskTypes } from "../../util/riskIcon";
@@ -21,6 +21,7 @@ import {
     TSortDirection,
 } from "../../util/listFunctions";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
+import CustomMultiPicker from "react-native-multiple-select-list";
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
@@ -42,9 +43,26 @@ const ClientList = () => {
     const [showHealthColumn, setShowHealthColumn] = useState(true);
     const [showEducationColumn, setShowEducationColumn] = useState(true);
     const [showSocialColumn, setShowSocialColumn] = useState(true);
+    const [selectedColumn, setSelectedColumn] = useState<String[]>(["0", "1", "2", "3", "4", "5"]);
+    const columnShowingList = [
+        setShowIDColumn,
+        setShowNameColumn,
+        setShowZoneColumn,
+        setShowHealthColumn,
+        setShowEducationColumn,
+        setShowSocialColumn,
+    ];
 
-    const openColumnBuilderMenu = () => setShowColumnBuilderMenu(true);
-    const closeColumnBuilderMenu = () => setShowColumnBuilderMenu(false);
+    const openColumnBuilderMenu = () => {
+        setShowColumnBuilderMenu(true);
+        showSelectedColumn;
+    };
+    const closeColumnBuilderMenu = () => {
+        setShowColumnBuilderMenu(false);
+        showSelectedColumn;
+    };
+
+    const columnList = { 0: "ID", 1: "Name", 2: "Zone", 3: "Health", 4: "Education", 5: "Social" };
 
     const clientSortby = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
@@ -64,26 +82,6 @@ const ClientList = () => {
             exampleClient = exampleClient.sort(clientListScreenComparator);
         }
         setClientList(exampleClient);
-    };
-
-    const ColumnBuilderRow = (props: {
-        text: string;
-        onValueChange: React.Dispatch<React.SetStateAction<boolean>>;
-        value: boolean;
-    }) => {
-        return (
-            <View style={styles.row}>
-                <Switch
-                    style={styles.switch}
-                    trackColor={{ false: themeColors.white, true: themeColors.yellow }}
-                    thumbColor={allClientsMode ? themeColors.white : themeColors.white}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={props.onValueChange}
-                    value={props.value}
-                />
-                <Text>{props.text}</Text>
-            </View>
-        );
     };
 
     const ClientListTitle = (props: {
@@ -111,18 +109,27 @@ const ClientList = () => {
         }
     };
 
+    const showSelectedColumn = () => {
+        console.log(selectedColumn);
+        columnShowingList.forEach((element, index) => {
+            if (selectedColumn.includes(String(index))) {
+                element(true);
+            } else {
+                element(false);
+            }
+        });
+    };
+
     useEffect(() => {
         if (isFocused) {
             newClientGet();
         }
     }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection, isFocused]);
+
     useEffect(() => {
-        var exampleClient = clientList;
-        if (sortDirection !== "None") {
-            exampleClient = exampleClient.sort(clientListScreenComparator);
-        }
-        setClientList(exampleClient);
-    }, [sortOption, sortDirection]);
+        showSelectedColumn();
+    }, [selectedColumn]);
+    useEffect(() => {}, []);
     return (
         <View style={styles.container}>
             <View style={styles.row}>
@@ -154,43 +161,26 @@ const ClientList = () => {
                 />
                 <Portal>
                     <Modal
-                        animationType="slide"
-                        transparent={false}
-                        visible={}
-                        onRequestClose={closeColumnBuilderMenu}
+                        visible={showColumnBuilderMenu}
+                        onDismiss={closeColumnBuilderMenu}
+                        style={styles.colonBuilderChecklist}
                     >
-                        <View style={styles.modal}>
-                            <ColumnBuilderRow
-                                text="ID"
-                                onValueChange={setShowIDColumn}
-                                value={showIDColumn}
-                            />
-                            <ColumnBuilderRow
-                                text="Name"
-                                onValueChange={setShowNameColumn}
-                                value={showNameColumn}
-                            />
-                            <ColumnBuilderRow
-                                text="Zone"
-                                onValueChange={setShowZoneColumn}
-                                value={showZoneColumn}
-                            />
-                            <ColumnBuilderRow
-                                text="Health"
-                                onValueChange={setShowHealthColumn}
-                                value={showHealthColumn}
-                            />
-                            <ColumnBuilderRow
-                                text="Education"
-                                onValueChange={setShowEducationColumn}
-                                value={showEducationColumn}
-                            />
-                            <ColumnBuilderRow
-                                text="Social"
-                                onValueChange={setShowSocialColumn}
-                                value={showSocialColumn}
-                            />
-                        </View>
+                        <CustomMultiPicker
+                            options={columnList}
+                            multiple={true}
+                            placeholder={"Select columns"}
+                            placeholderTextColor={themeColors.blueBgLight}
+                            returnValue={"value"}
+                            callback={(label) => {
+                                setSelectedColumn(label);
+                                showSelectedColumn();
+                            }}
+                            rowBackgroundColor={themeColors.blueBgLight}
+                            iconSize={30}
+                            selectedIconName={"checkmark-circle"}
+                            unselectedIconName={"radio-button-off"}
+                            selected={selectedColumn.map(String)}
+                        />
                     </Modal>
                 </Portal>
             </View>

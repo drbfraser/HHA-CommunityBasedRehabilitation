@@ -16,5 +16,5 @@ export const themeColors = {
     linkBlue: "#0078EE",
     infoBlue: "#2196f3",
     white: "#FFFFFF",
-    boarderGray: "#9E9E9E",
+    borderGray: "#9E9E9E",
 };

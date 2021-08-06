@@ -99,6 +99,7 @@ const ClientList = () => {
         }
         return sortDirection === "asc" ? result : -1 * result;
     };
+
     const arrowDirectionController = (column_name: string) => {
         if (column_name === sortOption) {
             if (sortDirection === "asc") {
@@ -111,7 +112,7 @@ const ClientList = () => {
         }
         return undefined;
     };
-    const newClientGet = async () => {
+    const getNewClient = async () => {
         var exampleClient = await fetchClientsFromApi(
             selectedSearchOption,
             searchQuery,
@@ -125,11 +126,13 @@ const ClientList = () => {
         setClientList(exampleClient);
     };
     const isFocused = useIsFocused();
+
     useEffect(() => {
         if (isFocused) {
-            newClientGet();
+            getNewClient();
         }
     }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection, isFocused]);
+
     useEffect(() => {
         var exampleClient = clientList;
         if (sortDirection !== "None") {
@@ -137,6 +140,7 @@ const ClientList = () => {
         }
         setClientList(exampleClient);
     }, [sortOption, sortDirection]);
+
     return (
         <View style={styles.container}>
             <View style={styles.row}>
@@ -160,6 +164,7 @@ const ClientList = () => {
                     />
                 )}
             </View>
+
             <View style={styles.row}>
                 <Text style={{ flex: 0.7, paddingLeft: 10 }}>My Clients</Text>
                 <Switch
@@ -187,6 +192,7 @@ const ClientList = () => {
                     <Picker.Item label="Zone" value={SearchOption.ZONE} />
                 </Picker>
             </View>
+
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>

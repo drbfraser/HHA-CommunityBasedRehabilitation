@@ -6,10 +6,10 @@ import useStyles from "./TextCheckBox.style";
 interface IProps {
     field: string;
     value: boolean;
-    label: string;
     disabled?: boolean;
-    setFieldValue: (field: string, value: boolean) => void;
+    label: string;
     setFieldTouched?: (field: string, value: boolean) => void;
+    setFieldValue: (field: string, value: boolean) => void;
     onChange?: (value: boolean) => void;
 }
 

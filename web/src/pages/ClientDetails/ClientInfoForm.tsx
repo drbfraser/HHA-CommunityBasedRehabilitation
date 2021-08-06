@@ -283,7 +283,7 @@ const ClientInfoForm = (props: IProps) => {
                                                 Caregiver Details:
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                                <Grid container direction="column" spacing={1}>
+                                                <Grid container direction="row" spacing={2}>
                                                     <Grid item md={8} xs={12}>
                                                         <Field
                                                             className={`${styles.caregiverInputField} ${styles.disabledTextField}`}

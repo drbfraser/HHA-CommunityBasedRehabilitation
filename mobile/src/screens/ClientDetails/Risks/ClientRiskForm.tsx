@@ -5,7 +5,8 @@ import { Button, Modal, Portal, TextInput, Text, Menu, RadioButton } from "react
 import { useState } from "react";
 import useStyles, { riskStyles } from "./ClientRisk.styles";
 import {
-    handleMobileSubmit,
+    fieldLabels,
+    FormField,
     handleSubmit,
     IRisk,
     RiskLevel,
@@ -124,7 +125,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
 
                             <TextInput
                                 style={styles.riskTextStyle}
-                                label={"Requirements"}
+                                label={fieldLabels[FormField.requirement]}
                                 defaultValue={formikProps.values.requirement}
                                 onChangeText={formikProps.handleChange("requirement")}
                                 multiline={true}
@@ -136,7 +137,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                             </Text>
                             <TextInput
                                 style={styles.riskTextStyle}
-                                label={"Goals"}
+                                label={fieldLabels[FormField.goal]}
                                 defaultValue={formikProps.values.goal}
                                 onChangeText={formikProps.handleChange("goal")}
                                 placeholder={"Goals"}

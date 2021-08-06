@@ -9,8 +9,9 @@ import {
     TClientValues,
     themeColors,
     timestampToDate,
+    IRisk,
+    RiskType,
 } from "@cbr/common";
-import { Gender, IClient, IRisk, RiskType, themeColors } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
@@ -38,7 +39,6 @@ const ClientDetails = (props: ClientProps) => {
 
     //Main Client Variables
     const [client, setClient] = useState<IClient>();
-    const [clientRisks, setClientRisks] = useState<IRisk[]>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
             {
@@ -74,7 +74,7 @@ const ClientDetails = (props: ClientProps) => {
                 otherDisability: client.other_disability,
                 picture: client.picture,
             };
-            setClientRisks(client.risks);
+
             return clientFormProps;
         } else {
             return clientInitialValues;
@@ -228,17 +228,17 @@ const ClientDetails = (props: ClientProps) => {
                     <Text style={styles.cardSectionTitle}>Client Risks</Text>
                     <Divider />
                     <ClientRisk
-                        clientRisks={clientRisks ? clientRisks : []}
+                        clientRisks={client?.risks || []}
                         presentRiskType={RiskType.HEALTH}
                     />
                     <Divider />
                     <ClientRisk
-                        clientRisks={clientRisks ? clientRisks : []}
+                        clientRisks={client?.risks || []}
                         presentRiskType={RiskType.EDUCATION}
                     />
                     <Divider />
                     <ClientRisk
-                        clientRisks={clientRisks ? clientRisks : []}
+                        clientRisks={client?.risks || []}
                         presentRiskType={RiskType.SOCIAL}
                     />
                     <Card style={styles.riskCardStyle}>

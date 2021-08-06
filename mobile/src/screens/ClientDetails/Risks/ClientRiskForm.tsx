@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Component, Dispatch, SetStateAction } from "react";
-import { View, TextInput as NativeText } from "react-native";
+import { View, TextInput as NativeText, Platform, ToastAndroid, AlertIOS } from "react-native";
 import { Button, Modal, Portal, TextInput, Text, Menu, RadioButton } from "react-native-paper";
 import { useState } from "react";
 import useStyles, { riskStyles } from "./ClientRisk.styles";
@@ -12,7 +12,6 @@ import {
     RiskLevel,
     riskLevels,
     RiskType,
-    toastValidationError,
     validationSchema,
 } from "@cbr/common";
 import { Formik } from "formik";
@@ -21,6 +20,15 @@ export interface ClientRiskFormProps {
     riskData: IRisk;
     setRisk: (risk: IRisk) => void;
 }
+
+export const toastValidationError = () => {
+    const msg = "Please check one or more fields.";
+    if (Platform.OS === "android") {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
+    } else {
+        AlertIOS.alert(msg);
+    }
+};
 
 export const ClientRiskForm = (props: ClientRiskFormProps) => {
     const styles = useStyles();

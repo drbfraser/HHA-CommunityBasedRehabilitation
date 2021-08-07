@@ -1,31 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {
     apiFetch,
     Endpoint,
     IVisit,
-    orthoticInjuryLocations,
-    prostheticInjuryLocations,
     themeColors,
     timestampToDateTime,
-    wheelchairExperiences,
     IVisitSummary,
     outcomeGoalMets,
     useZones,
     RiskType,
-    riskTypes,
 } from "@cbr/common";
-import {
-    ActivityIndicator,
-    Button,
-    Card,
-    Chip,
-    Dialog,
-    HelperText,
-    List,
-    Text,
-    TextInput,
-} from "react-native-paper";
+import { riskTypes } from "../../../../util/riskIcon";
+import { ActivityIndicator, Button, Card, Chip, Dialog, List, Text } from "react-native-paper";
 import useStyles from "./Entry.styles";
 import { ScrollView, View } from "react-native";
 import * as Yup from "yup";
@@ -35,14 +22,14 @@ import DataCard from "../../../../components/DataCard/DataCard";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
-    refreshClient: () => void;
+    close: () => void;
 }
 
-const VisitEntry = ({ visitSummary, refreshClient }: IEntryProps) => {
+const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
     const [open, setOpen] = useState(false);
     const [visit, setVisit] = useState<IVisit>();
     const [loadingError, setLoadingError] = useState(false);
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
 
     const zones = useZones();
     const styles = useStyles();
@@ -59,31 +46,40 @@ const VisitEntry = ({ visitSummary, refreshClient }: IEntryProps) => {
     };
 
     const onClose = () => {
-        setOpen(false);
-        setLoadingError(false);
-    };
-
-    const handleUpdate = () => {
-        setLoading(false);
-        refreshClient();
+        close();
     };
 
     const zone = zones.get(visitSummary.zone) ?? "Unknown";
-    const ReasonChip = ({ label }: { label: string }) => (
+
+    const HealthChip = ({ label }: { label: string }) => (
         <View style={styles.referralChip}>
             <Chip style={styles.smallChip} mode="outlined" selectedColor={themeColors.blueBgDark}>
-                {label}
+                {riskTypes.HEALTH.Icon(themeColors.riskBlack)} {label}
+            </Chip>
+        </View>
+    );
+    const EducationChip = ({ label }: { label: string }) => (
+        <View style={styles.referralChip}>
+            <Chip style={styles.smallChip} mode="outlined" selectedColor={themeColors.blueBgDark}>
+                {riskTypes.EDUCAT.Icon(themeColors.riskBlack)} {label}
+            </Chip>
+        </View>
+    );
+    const SocialChip = ({ label }: { label: string }) => (
+        <View style={styles.referralChip}>
+            <Chip style={styles.smallChip} mode="outlined" selectedColor={themeColors.blueBgDark}>
+                {riskTypes.SOCIAL.Icon(themeColors.riskBlack)} {label}
             </Chip>
         </View>
     );
 
     const Details = () => {
+        useEffect(() => {
+            onOpen();
+        });
+
         if (!visit) {
-            return (
-                <SkeletonPlaceholder>
-                    <SkeletonPlaceholder.Item height={200} />
-                </SkeletonPlaceholder>
-            );
+            return <ActivityIndicator size="small" color={themeColors.blueAccent} />;
         }
 
         const DetailAccordion = ({ type }: { type: RiskType }) => {
@@ -116,7 +112,11 @@ const VisitEntry = ({ visitSummary, refreshClient }: IEntryProps) => {
             }
 
             return (
-                <List.Accordion key={type} title={riskTypes[type].name}>
+                <List.Accordion
+                    key={type}
+                    theme={{ colors: { background: themeColors.blueBgLight } }}
+                    title={riskTypes[type].name}
+                >
                     {Boolean(improvements.length) && <DataCard data={improvements} />}
                     {Boolean(outcomes.length) && <DataCard data={outcomes} />}
                 </List.Accordion>
@@ -126,12 +126,12 @@ const VisitEntry = ({ visitSummary, refreshClient }: IEntryProps) => {
         return (
             <>
                 <Card.Title title="New Visit Survey" />
-
                 <Card style={styles.createdCard}>
                     <Card.Content>
                         <Text>
                             <Text style={styles.labelBold}>Visit Date:</Text>{" "}
                             {timestampToDateTime(visit.date_visited)}
+                            {"\n"}
                             <Text style={styles.labelBold}>Village:</Text> {visit.village}
                         </Text>
                     </Card.Content>
@@ -142,6 +142,28 @@ const VisitEntry = ({ visitSummary, refreshClient }: IEntryProps) => {
             </>
         );
     };
+
+    return (
+        <ScrollView>
+            <>
+                <Dialog.Title>
+                    Visit in {zone}
+                    {"\n"}
+                    {visitSummary.health_visit && <HealthChip label="Health" />}{" "}
+                    {visitSummary.educat_visit && <EducationChip label="Education" />}{" "}
+                    {visitSummary.social_visit && <SocialChip label="Social" />}{" "}
+                </Dialog.Title>
+                <Dialog.Content>
+                    <Details />
+                </Dialog.Content>
+                <Dialog.Actions>
+                    <Button onPress={onClose} color={themeColors.blueBgDark}>
+                        Close
+                    </Button>
+                </Dialog.Actions>
+            </>
+        </ScrollView>
+    );
 };
 
 export default VisitEntry;

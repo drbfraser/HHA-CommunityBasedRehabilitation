@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import Icon from "react-native-vector-icons/FontAwesome";
+import React, { useState } from "react";
 import {
     apiFetch,
     Endpoint,
@@ -15,9 +14,6 @@ import { riskTypes } from "../../../../util/riskIcon";
 import { ActivityIndicator, Button, Card, Chip, Dialog, List, Text } from "react-native-paper";
 import useStyles from "./Entry.styles";
 import { ScrollView, View } from "react-native";
-import * as Yup from "yup";
-import { Formik, FormikProps } from "formik";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import DataCard from "../../../../components/DataCard/DataCard";
 
 interface IEntryProps {
@@ -26,24 +22,11 @@ interface IEntryProps {
 }
 
 const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
-    const [open, setOpen] = useState(false);
     const [visit, setVisit] = useState<IVisit>();
     const [loadingError, setLoadingError] = useState(false);
-    // const [loading, setLoading] = useState(false);
 
     const zones = useZones();
     const styles = useStyles();
-
-    const onOpen = () => {
-        setOpen(true);
-
-        if (!visit) {
-            apiFetch(Endpoint.VISIT, `${visitSummary.id}`)
-                .then((resp) => resp.json())
-                .then((resp) => setVisit(resp as IVisit))
-                .catch(() => setLoadingError(true));
-        }
-    };
 
     const onClose = () => {
         close();
@@ -74,9 +57,12 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
     );
 
     const Details = () => {
-        useEffect(() => {
-            onOpen();
-        });
+        if (!visit) {
+            apiFetch(Endpoint.VISIT, `${visitSummary.id}`)
+                .then((resp) => resp.json())
+                .then((resp) => setVisit(resp as IVisit))
+                .catch(() => setLoadingError(true));
+        }
 
         if (!visit) {
             return <ActivityIndicator size="small" color={themeColors.blueAccent} />;

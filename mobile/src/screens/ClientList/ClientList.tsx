@@ -200,18 +200,10 @@ const ClientList = () => {
                             >
                                 <DataTable.Cell style={styles.column_id}>{item.id}</DataTable.Cell>
                                 <View style={styles.column_name}>
-                                    <WrappedText
-                                        text={item.full_name}
-                                        viewStyle={styles.wrappedView}
-                                        textStyle={styles.text}
-                                    />
+                                    <WrappedText text={item.full_name} />
                                 </View>
                                 <View style={styles.column_zone}>
-                                    <WrappedText
-                                        text={item.zone}
-                                        viewStyle={styles.wrappedView}
-                                        textStyle={styles.text}
-                                    />
+                                    <WrappedText text={item.zone} />
                                 </View>
                                 <DataTable.Cell style={styles.column_icons}>
                                     {riskTypes.CIRCLE.Icon(item.HealthLevel)}

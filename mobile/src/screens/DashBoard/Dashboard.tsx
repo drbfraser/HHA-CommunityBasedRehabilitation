@@ -152,18 +152,10 @@ const Dashboard = () => {
                                             }}
                                         >
                                             <View style={styles.column_client_name}>
-                                                <WrappedText
-                                                    text={item.full_name}
-                                                    viewStyle={styles.textContainer}
-                                                    textStyle={styles.text}
-                                                />
+                                                <WrappedText text={item.full_name} />
                                             </View>
                                             <View style={styles.column_client_zone}>
-                                                <WrappedText
-                                                    text={item.zone}
-                                                    viewStyle={styles.textContainer}
-                                                    textStyle={styles.text}
-                                                />
+                                                <WrappedText text={item.zone} />
                                             </View>
                                             <DataTable.Cell style={styles.column_client_icon}>
                                                 {riskTypes.CIRCLE.Icon(item.HealthLevel)}
@@ -234,18 +226,10 @@ const Dashboard = () => {
                                             }}
                                         >
                                             <View style={styles.column_referral_name}>
-                                                <WrappedText
-                                                    text={item.full_name}
-                                                    viewStyle={styles.textContainer}
-                                                    textStyle={styles.text}
-                                                />
+                                                <WrappedText text={item.full_name} />
                                             </View>
                                             <View style={styles.column_referral_type}>
-                                                <WrappedText
-                                                    text={item.type}
-                                                    viewStyle={styles.textContainer}
-                                                    textStyle={styles.text}
-                                                />
+                                                <WrappedText text={item.type} />
                                             </View>
                                             <DataTable.Cell style={styles.column_referral_date}>
                                                 <Text style={styles.fontSize}>

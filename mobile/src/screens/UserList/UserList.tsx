@@ -34,7 +34,7 @@ const UserList = () => {
     const [sortOption, setSortOption] = useState("");
     const [sortDirection, setIsSortDirection] = useState<TSortDirection>("None");
 
-    const userSortby = (option: string) => {
+    const userSortBy = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
     };
 
@@ -116,35 +116,35 @@ const UserList = () => {
                     <DataTable.Header style={styles.item}>
                         <DataTable.Title
                             style={styles.column_id}
-                            onPress={() => userSortby(SortOptions.ID)}
+                            onPress={() => userSortBy(SortOptions.ID)}
                             sortDirection={userArrowDirectionController(SortOptions.ID)}
                         >
                             ID
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_name}
-                            onPress={() => userSortby(SortOptions.NAME)}
+                            onPress={() => userSortBy(SortOptions.NAME)}
                             sortDirection={userArrowDirectionController(SortOptions.NAME)}
                         >
                             Name
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_zone}
-                            onPress={() => userSortby(SortOptions.ZONE)}
+                            onPress={() => userSortBy(SortOptions.ZONE)}
                             sortDirection={userArrowDirectionController(SortOptions.ZONE)}
                         >
                             Zone
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_role}
-                            onPress={() => userSortby(SortOptions.ROLE)}
+                            onPress={() => userSortBy(SortOptions.ROLE)}
                             sortDirection={userArrowDirectionController(SortOptions.ROLE)}
                         >
                             Role
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_status}
-                            onPress={() => userSortby(SortOptions.STATUS)}
+                            onPress={() => userSortBy(SortOptions.STATUS)}
                             sortDirection={userArrowDirectionController(SortOptions.STATUS)}
                         >
                             Status
@@ -163,18 +163,10 @@ const UserList = () => {
                             >
                                 <DataTable.Cell style={styles.column_id}>{item.id}</DataTable.Cell>
                                 <View style={styles.column_name}>
-                                    <WrappedText
-                                        text={item.full_name}
-                                        viewStyle={styles.wrappedView}
-                                        textStyle={styles.text}
-                                    />
+                                    <WrappedText text={item.full_name} />
                                 </View>
                                 <View style={styles.column_zone}>
-                                    <WrappedText
-                                        text={item.zone}
-                                        viewStyle={styles.wrappedView}
-                                        textStyle={styles.text}
-                                    />
+                                    <WrappedText text={item.zone} />
                                 </View>
                                 <DataTable.Cell style={styles.column_role}>
                                     {item.role}

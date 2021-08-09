@@ -9,6 +9,7 @@ const useStyles = () =>
             marginRight: 30,
             marginLeft: 10,
             padding: 1,
+            marginBottom: 15,
         },
         labelBold: { fontWeight: "bold" },
         referralBoard: {
@@ -21,6 +22,13 @@ const useStyles = () =>
         },
         errorText: { color: themeColors.errorRed, paddingLeft: 15 },
         referralChip: {
+            padding: 5,
+            margin: 3,
+            flexDirection: "row",
+            flexWrap: "wrap",
+            flex: 1,
+        },
+        visitChip: {
             padding: 5,
             margin: 3,
             flexDirection: "row",

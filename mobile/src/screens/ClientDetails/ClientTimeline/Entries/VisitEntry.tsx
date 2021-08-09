@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     apiFetch,
     Endpoint,
@@ -23,6 +23,18 @@ interface IEntryProps {
 
 const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
     const [visit, setVisit] = useState<IVisit>();
+    const onOpen = () => {
+        if (!visit) {
+            apiFetch(Endpoint.VISIT, `${visitSummary.id}`)
+                .then((resp) => resp.json())
+                .then((resp) => setVisit(resp as IVisit))
+                .catch(() => setLoadingError(true));
+        }
+    };
+    useEffect(() => {
+        onOpen();
+    }, []);
+
     const [loadingError, setLoadingError] = useState(false);
 
     const zones = useZones();
@@ -34,36 +46,15 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
 
     const zone = zones.get(visitSummary.zone) ?? "Unknown";
 
-    const HealthChip = ({ label }: { label: string }) => (
-        <View style={styles.referralChip}>
+    const SocialChip = ({ label, type }: { label: string; type: RiskType }) => (
+        <View style={styles.visitChip}>
             <Chip style={styles.smallChip} mode="outlined" selectedColor={themeColors.blueBgDark}>
-                {riskTypes.HEALTH.Icon(themeColors.riskBlack)} {label}
-            </Chip>
-        </View>
-    );
-    const EducationChip = ({ label }: { label: string }) => (
-        <View style={styles.referralChip}>
-            <Chip style={styles.smallChip} mode="outlined" selectedColor={themeColors.blueBgDark}>
-                {riskTypes.EDUCAT.Icon(themeColors.riskBlack)} {label}
-            </Chip>
-        </View>
-    );
-    const SocialChip = ({ label }: { label: string }) => (
-        <View style={styles.referralChip}>
-            <Chip style={styles.smallChip} mode="outlined" selectedColor={themeColors.blueBgDark}>
-                {riskTypes.SOCIAL.Icon(themeColors.riskBlack)} {label}
+                {riskTypes[type].Icon(themeColors.riskBlack)} {label}
             </Chip>
         </View>
     );
 
     const Details = () => {
-        if (!visit) {
-            apiFetch(Endpoint.VISIT, `${visitSummary.id}`)
-                .then((resp) => resp.json())
-                .then((resp) => setVisit(resp as IVisit))
-                .catch(() => setLoadingError(true));
-        }
-
         if (!visit) {
             return <ActivityIndicator size="small" color={themeColors.blueAccent} />;
         }
@@ -102,9 +93,10 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                     key={type}
                     theme={{ colors: { background: themeColors.blueBgLight } }}
                     title={riskTypes[type].name}
+                    {...titleDescArr.join(" & ")}
                 >
-                    {Boolean(improvements.length) && <DataCard data={improvements} />}
-                    {Boolean(outcomes.length) && <DataCard data={outcomes} />}
+                    {improvements.length > 0 && <DataCard data={improvements} />}
+                    {outcomes.length > 0 && <DataCard data={outcomes} />}
                 </List.Accordion>
             );
         };
@@ -135,9 +127,15 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 <Dialog.Title>
                     Visit in {zone}
                     {"\n"}
-                    {visitSummary.health_visit && <HealthChip label="Health" />}{" "}
-                    {visitSummary.educat_visit && <EducationChip label="Education" />}{" "}
-                    {visitSummary.social_visit && <SocialChip label="Social" />}{" "}
+                    {visitSummary.health_visit && (
+                        <SocialChip label="Health" type={RiskType.HEALTH} />
+                    )}{" "}
+                    {visitSummary.educat_visit && (
+                        <SocialChip label="Education" type={RiskType.EDUCATION} />
+                    )}{" "}
+                    {visitSummary.social_visit && (
+                        <SocialChip label="Social" type={RiskType.SOCIAL} />
+                    )}{" "}
                 </Dialog.Title>
                 <Dialog.Content>
                     <Details />

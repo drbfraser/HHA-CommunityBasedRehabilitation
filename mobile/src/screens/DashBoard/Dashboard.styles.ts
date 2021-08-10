@@ -32,11 +32,11 @@ const useStyles = () =>
             fontSize: 30,
         },
         column_client_name: {
-            flex: 0.8,
+            flex: 0.6,
             padding: 5,
         },
         column_client_zone: {
-            flex: 0.7,
+            flex: 0.6,
             padding: 5,
         },
         column_client_icon: {
@@ -44,7 +44,7 @@ const useStyles = () =>
             padding: 5,
         },
         column_client_Last_visit_date: {
-            flex: 0.8,
+            flex: 0.6,
             padding: 5,
         },
 

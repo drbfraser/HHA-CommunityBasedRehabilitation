@@ -25,10 +25,7 @@ import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/Form
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import passwordTextInputProps from "../../components/PasswordTextInput/passwordTextInputProps";
 
-const AdminNew = ({
-    navigation,
-    route,
-}: StackScreenProps<StackParamList, StackScreenName.ADMIN_NEW>) => {
+const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenName.ADMIN_NEW>) => {
     const zones = useZones();
     const [saveError, setSaveError] = useState<string>();
     const passwordRef = useRef<NativeTextInput>(null);

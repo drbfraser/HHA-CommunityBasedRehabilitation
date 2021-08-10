@@ -9,6 +9,8 @@ import { IVisitSummary } from "../../../../../common/src/util/visits";
 import useStyles from "./Timeline.style";
 import BaselineEntry from "./Entries/BaselineEntry";
 import ReferralEntry from "./Entries/ReferralEntry";
+import VisitEntry from "./Entries/VisitEntry";
+
 import { useIsFocused } from "@react-navigation/native";
 interface ISummaryProps {
     activity: IActivity;
@@ -95,6 +97,18 @@ const Timeline = (props: ISummaryProps) => {
                                         <></>
                                     )}
                                 </View>
+                                <Portal>
+                                    <Modal
+                                        visible={detailsVisible}
+                                        onDismiss={hideDetails}
+                                        style={styles.popupStyle}
+                                    >
+                                        <VisitEntry
+                                            visitSummary={props.activity.visit as IVisitSummary}
+                                            close={hideDetails}
+                                        />
+                                    </Modal>
+                                </Portal>
                             </View>
                         ) : props.activity.type === ActivityType.REFERAL &&
                           props.activity.referral ? (

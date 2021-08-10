@@ -8,18 +8,19 @@ interface IProps {
     value: boolean;
     disabled?: boolean;
     label: string;
-    setFieldTouched: (field: string, value: boolean) => void;
+    setFieldTouched?: (field: string, value: boolean) => void;
     setFieldValue: (field: string, value: boolean) => void;
     onChange?: (value: boolean) => void;
 }
 
 const TextCheckBox = (props: IProps) => {
     const styles = useStyles();
+
     return (
         <TouchableRipple
             disabled={props.disabled ?? false}
             onPress={() => {
-                props.setFieldTouched(props.field, true);
+                props.setFieldTouched?.(props.field, true);
                 props.setFieldValue(props.field, !props.value);
                 props.onChange?.(!props.value);
             }}

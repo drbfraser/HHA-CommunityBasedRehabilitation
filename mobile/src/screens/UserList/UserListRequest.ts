@@ -8,7 +8,7 @@ import {
     userRoles,
 } from "@cbr/common";
 
-export type userBrife = {
+type BriefUser = {
     id: number;
     full_name: string;
     zoneID: number;
@@ -16,13 +16,14 @@ export type userBrife = {
     role: string;
     status: string;
 };
+export default BriefUser;
 
 export const fetchUsersFromApi = async (
     searchOption,
     searchValue: string,
     sortOption,
     sortDirection
-): Promise<userBrife[]> => {
+): Promise<BriefUser[]> => {
     try {
         const urlParams = new URLSearchParams();
 

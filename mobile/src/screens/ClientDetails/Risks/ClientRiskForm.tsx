@@ -48,7 +48,6 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 initialValues={props.riskData}
                 onSubmit={(values) => {
                     handleSubmit(values, props.riskData, props.setRisk);
-                    console.log(values);
                 }}
                 validationSchema={validationSchema}
             >

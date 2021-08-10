@@ -1,15 +1,13 @@
 import React from "react";
 import { StyleProp, View, ViewStyle } from "react-native";
 import { Text } from "react-native-paper";
+import useStyles from "./WrappedText.style";
 
-export const WrappedText = (props: {
-    text: string;
-    viewStyle: StyleProp<ViewStyle>;
-    textStyle: StyleProp<ViewStyle>;
-}) => {
+export const WrappedText = (props: { text: string }) => {
+    const styles = useStyles();
     return (
-        <View style={props.viewStyle}>
-            <Text style={props.textStyle}>{props.text}</Text>
+        <View style={styles.wrappedView}>
+            <Text style={styles.text}>{props.text}</Text>
         </View>
     );
 };

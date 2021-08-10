@@ -50,3 +50,19 @@ export const riskLevels: { [key: string]: IRiskLevel } = {
         color: themeColors.riskBlack,
     },
 };
+
+export interface IRiskType {
+    name: string;
+}
+
+export const riskTypes: { [key: string]: IRiskType } = {
+    [RiskType.HEALTH]: {
+        name: "Health",
+    },
+    [RiskType.EDUCATION]: {
+        name: "Education",
+    },
+    [RiskType.SOCIAL]: {
+        name: "Social",
+    },
+};

@@ -34,6 +34,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { StackScreenName } from "../../util/StackScreenName";
 import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
+import ConsentForm from "./SurveyForm/ConsentForm";
 
 interface ISurvey {
     label: string;
@@ -48,16 +49,18 @@ interface IBaseSurveyProps {
 
 const BaseSurvey = (props: IBaseSurveyProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
-
     const [step, setStep] = useState<number>(0);
     const [submissionError, setSubmissionError] = useState(false);
     const styles = useStyles();
     const [stepChecked, setStepChecked] = useState([false]);
-    const isFinalStep = step + 1 === surveyTypes.length && step !== 0;
+    const isFinalStep = step === surveyTypes.length && step !== 0;
     const clientId = props.route.params.clientID;
     const [saveError, setSaveError] = useState<string>();
 
-    const prevStep = () => setStep(step - 1);
+    const prevStep = () => {
+        console.log(stepChecked);
+        setStep(step - 1);
+    };
 
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
@@ -65,7 +68,6 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
             handleSubmit(values, helpers)
                 .then(() => {
                     setHasSubmitted(true);
-
                     props.navigation.navigate(StackScreenName.CLIENT, {
                         clientID: clientId,
                     });
@@ -80,24 +82,31 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
         } else {
             if (step === 0) {
                 if (stepChecked.length < surveySteps.length - 1) {
-                    for (let i = 1; i < surveySteps.length - 1; i++) {
+                    for (let i = 0; i < surveySteps.length - 1; i++) {
                         stepChecked.push(false);
                     }
                 }
                 helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, clientId);
             }
-            if ((step === 0 || step === 3) && !stepChecked[step]) {
+            console.log(step);
+            if ((step === 0 || step === 1 || step === 4) && !stepChecked[step]) {
                 helpers.setTouched({});
             }
             let newArr = [...stepChecked];
             newArr[step] = true;
             setStepChecked(newArr);
             setStep(step + 1);
+
             helpers.setSubmitting(false);
         }
     };
 
     const surveySteps: ISurvey[] = [
+        {
+            label: "Consent",
+            Form: (formikProps) => ConsentForm(formikProps),
+            validationSchema: emptyValidationSchema,
+        },
         {
             label: "Health",
             Form: (formikProps) => HealthForm(formikProps),
@@ -170,11 +179,13 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
                                         nextBtnStyle={styles.nextButton}
                                         onNext={() => {
                                             nextStep(formikProps.values, formikProps);
+                                            console.log(step);
                                         }}
                                         nextBtnDisabled={
                                             formikProps.isSubmitting ||
-                                            countObjectKeys(formikProps.errors) !== 0 ||
-                                            (countObjectKeys(formikProps.touched) === 0 &&
+                                            !formikProps.values.give_consent ||
+                                            ((countObjectKeys(formikProps.errors) !== 0 ||
+                                                countObjectKeys(formikProps.touched) === 0) &&
                                                 !stepChecked[step])
                                         }
                                         previousBtnDisabled={formikProps.isSubmitting}

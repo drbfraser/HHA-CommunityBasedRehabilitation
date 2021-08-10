@@ -79,7 +79,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                             )}
                             <RadioButton.Group
                                 onValueChange={(newValue) =>
-                                    formikProps.setFieldValue("risk_level", newValue)
+                                    formikProps.setFieldValue(FormField.risk_level, newValue)
                                 }
                                 value={formikProps.values.risk_level}
                             >
@@ -135,7 +135,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 style={styles.riskTextStyle}
                                 label={fieldLabels[FormField.requirement]}
                                 defaultValue={formikProps.values.requirement}
-                                onChangeText={formikProps.handleChange("requirement")}
+                                onChangeText={formikProps.handleChange(FormField.requirement)}
                                 multiline={true}
                                 textAlignVertical={"top"}
                                 mode={"outlined"}
@@ -147,8 +147,8 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 style={styles.riskTextStyle}
                                 label={fieldLabels[FormField.goal]}
                                 defaultValue={formikProps.values.goal}
-                                onChangeText={formikProps.handleChange("goal")}
-                                placeholder={"Goals"}
+                                onChangeText={formikProps.handleChange(FormField.goal)}
+                                placeholder={FormField.goal}
                                 multiline={true}
                                 textAlignVertical={"top"}
                                 mode={"outlined"}

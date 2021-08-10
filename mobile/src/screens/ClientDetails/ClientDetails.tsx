@@ -37,7 +37,6 @@ const ClientDetails = (props: ClientProps) => {
     const [loading, setLoading] = useState(true);
     const isFocused = useIsFocused();
 
-    //Main Client Variables
     const [client, setClient] = useState<IClient>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [

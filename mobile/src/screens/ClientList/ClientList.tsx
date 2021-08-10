@@ -32,7 +32,7 @@ const ClientList = () => {
     const [sortOption, setSortOption] = useState("");
     const zones = useZones();
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
-    const clientSortby = (option: string) => {
+    const clientSortBy = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
     };
 
@@ -122,7 +122,7 @@ const ClientList = () => {
                     <DataTable.Header style={styles.item}>
                         <DataTable.Title
                             style={styles.column_id}
-                            onPress={() => clientSortby(SortOptions.ID)}
+                            onPress={() => clientSortBy(SortOptions.ID)}
                             sortDirection={arrowDirectionController(
                                 SortOptions.ID,
                                 sortOption,
@@ -133,7 +133,7 @@ const ClientList = () => {
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_name}
-                            onPress={() => clientSortby(SortOptions.NAME)}
+                            onPress={() => clientSortBy(SortOptions.NAME)}
                             sortDirection={arrowDirectionController(
                                 SortOptions.NAME,
                                 sortOption,
@@ -144,7 +144,7 @@ const ClientList = () => {
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_zone}
-                            onPress={() => clientSortby(SortOptions.ZONE)}
+                            onPress={() => clientSortBy(SortOptions.ZONE)}
                             sortDirection={arrowDirectionController(
                                 SortOptions.ZONE,
                                 sortOption,
@@ -155,7 +155,7 @@ const ClientList = () => {
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_icons}
-                            onPress={() => clientSortby(SortOptions.HEALTH)}
+                            onPress={() => clientSortBy(SortOptions.HEALTH)}
                             sortDirection={arrowDirectionController(
                                 SortOptions.HEALTH,
                                 sortOption,
@@ -166,7 +166,7 @@ const ClientList = () => {
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_icons}
-                            onPress={() => clientSortby(SortOptions.EDUCATION)}
+                            onPress={() => clientSortBy(SortOptions.EDUCATION)}
                             sortDirection={arrowDirectionController(
                                 SortOptions.EDUCATION,
                                 sortOption,
@@ -177,7 +177,7 @@ const ClientList = () => {
                         </DataTable.Title>
                         <DataTable.Title
                             style={styles.column_icons}
-                            onPress={() => clientSortby(SortOptions.SOCIAL)}
+                            onPress={() => clientSortBy(SortOptions.SOCIAL)}
                             sortDirection={arrowDirectionController(
                                 SortOptions.SOCIAL,
                                 sortOption,

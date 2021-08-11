@@ -66,9 +66,10 @@ const useStyles = () =>
             borderRadius: 5,
         },
         modalStyle: {
-            height: 560,
+            height: 470,
             marginHorizontal: 20,
             marginTop: 140,
+            marginBottom: 100,
             display: "flex",
             backgroundColor: "white",
             borderRadius: 10,
@@ -77,9 +78,7 @@ const useStyles = () =>
         },
         riskTextStyle: {
             alignContent: "flex-start",
-            marginTop: 10,
-            marginBottom: 10,
-            height: 100,
+            height: 80,
             width: 320,
             borderBottomLeftRadius: 5,
             borderBottomRightRadius: 5,
@@ -105,10 +104,8 @@ const useStyles = () =>
             padding: 10,
         },
         menuField: {
-            marginTop: 5,
             flexDirection: "row",
             justifyContent: "center",
-            padding: 5,
         },
         radioIndividual: {
             alignItems: "center",
@@ -123,7 +120,8 @@ const useStyles = () =>
             display: "flex",
         },
         submitButtonStyle: {
-            margin: 20,
+            marginLeft: 10,
+            marginRight: 10,
         },
     });
 

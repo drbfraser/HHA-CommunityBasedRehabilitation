@@ -40,6 +40,8 @@ const useStyles = () =>
             fontSize: 20,
             alignItems: "center",
             alignContent: "center",
+            display: "flex",
+            justifyContent: "center",
             fontWeight: "bold",
         },
         riskRequirementStyle: {
@@ -68,7 +70,7 @@ const useStyles = () =>
         modalStyle: {
             height: 470,
             marginHorizontal: 20,
-            marginTop: 140,
+            marginTop: 100,
             marginBottom: 100,
             display: "flex",
             backgroundColor: "white",

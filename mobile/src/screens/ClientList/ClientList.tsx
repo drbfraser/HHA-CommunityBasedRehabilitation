@@ -64,7 +64,7 @@ const ClientList = () => {
 
     const columnList = { 0: "ID", 1: "Name", 2: "Zone", 3: "Health", 4: "Education", 5: "Social" };
 
-    const clientSortby = (option: string) => {
+    const clientSortBy = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
     };
 
@@ -94,7 +94,7 @@ const ClientList = () => {
             return (
                 <DataTable.Title
                     style={props.style}
-                    onPress={() => clientSortby(props.thisColumnSortOption)}
+                    onPress={() => clientSortBy(props.thisColumnSortOption)}
                     sortDirection={arrowDirectionController(
                         props.thisColumnSortOption,
                         sortOption,

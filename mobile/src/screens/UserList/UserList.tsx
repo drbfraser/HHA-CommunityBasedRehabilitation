@@ -61,7 +61,7 @@ const UserList = () => {
         showSelectedColumn;
     };
 
-    const userSortby = (option: string) => {
+    const userSortBy = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
     };
 
@@ -88,7 +88,6 @@ const UserList = () => {
     const isFocused = useIsFocused();
 
     const showSelectedColumn = () => {
-        console.log(selectedColumn);
         columnShowingList.forEach((element, index) => {
             if (selectedColumn.includes(String(index))) {
                 element(true);
@@ -115,7 +114,7 @@ const UserList = () => {
             return (
                 <DataTable.Title
                     style={props.style}
-                    onPress={() => userSortby(props.thisColumnSortOption)}
+                    onPress={() => userSortBy(props.thisColumnSortOption)}
                     sortDirection={arrowDirectionController(
                         props.thisColumnSortOption,
                         sortOption,

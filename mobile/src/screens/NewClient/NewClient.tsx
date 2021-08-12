@@ -10,12 +10,13 @@ import {
 } from "@cbr/common";
 import { useNavigation } from "@react-navigation/native";
 import { Formik, FormikProps } from "formik";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Button, Card, Divider } from "react-native-paper";
+import { Button, Card, Divider, TouchableRipple } from "react-native-paper";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
+import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
 import FormikTextInput from "../../components/FormikTextInput/FormikTextInput";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import { FieldError } from "../../util/formikUtil";
@@ -78,6 +79,7 @@ const NewClient = () => {
     const navigation = useNavigation<AppStackNavProp>();
     const styles = useStyles();
     const scrollRef = React.createRef<KeyboardAwareScrollView>();
+    const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
 
     const scrollToTop = useCallback(
         () => scrollRef?.current?.scrollToPosition(0, 0, false),
@@ -98,13 +100,24 @@ const NewClient = () => {
                     {(formikProps) => (
                         <View style={styles.container}>
                             <View style={styles.imageContainer}>
-                                <Card.Cover
-                                    style={styles.image}
-                                    source={{
-                                        uri: "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png",
-                                    }}
-                                />
+                                <TouchableRipple onPress={() => setShowImagePickerModal(true)}>
+                                    <Card.Cover
+                                        style={styles.image}
+                                        source={{
+                                            uri: formikProps.values.picture
+                                                ? formikProps.values.picture
+                                                : "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png",
+                                        }}
+                                    />
+                                </TouchableRipple>
                             </View>
+                            <FormikImageModal
+                                field={ClientField.picture}
+                                fieldLabels={clientFieldLabels}
+                                formikProps={formikProps}
+                                visible={showImagePickerModal}
+                                onDismiss={() => setShowImagePickerModal(false)}
+                            />
                             <TextCheckBox
                                 field={ClientField.interviewConsent}
                                 label={clientFieldLabels[ClientField.interviewConsent]}

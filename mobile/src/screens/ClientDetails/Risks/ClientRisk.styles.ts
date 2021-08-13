@@ -79,9 +79,10 @@ const useStyles = () =>
             alignItems: "center",
         },
         riskTextStyle: {
-            alignContent: "flex-start",
-            height: 80,
-            width: 320,
+            minHeight: 100,
+            minWidth: 320,
+            maxHeight: 100,
+            maxWidth: 320,
             borderBottomLeftRadius: 5,
             borderBottomRightRadius: 5,
             borderTopRightRadius: 5,

@@ -29,6 +29,7 @@ const useStyles = () =>
         },
         riskTitleStyle: {
             marginTop: 10,
+            marginLeft: 10,
             fontSize: 32,
             justifyContent: "center",
             fontWeight: "bold",
@@ -37,6 +38,8 @@ const useStyles = () =>
         riskHeaderStyle: {
             marginTop: 14,
             marginBottom: 2,
+            marginLeft: 15,
+            marginRight: 15,
             fontSize: 20,
             alignItems: "center",
             alignContent: "center",
@@ -46,6 +49,8 @@ const useStyles = () =>
         },
         riskRequirementStyle: {
             fontSize: 16,
+            marginLeft: 20,
+            marginRight: 20,
             justifyContent: "flex-start",
         },
         clientDetailsFinalView: {

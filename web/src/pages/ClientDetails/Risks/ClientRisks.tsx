@@ -22,9 +22,9 @@ import { riskTypes } from "util/riskIcon";
 import { IClient } from "@cbr/common/util/clients";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 
-import { fieldLabels, FormField, validationSchema } from "./riskFormFields";
+import { fieldLabels, FormField, validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
 
-import { handleSubmit } from "./riskFormFieldHandler";
+import { handleSubmit } from "@cbr/common/forms/Risks/riskFormFieldHandler";
 import { Skeleton } from "@material-ui/lab";
 
 interface IProps {

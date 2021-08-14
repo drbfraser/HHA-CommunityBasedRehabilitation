@@ -70,6 +70,9 @@ export const invalidateAllCachedAPIInternal = async (
 const INVALIDATION_EVENT = "cacheInvalidation";
 const DEFAULT_FETCH_TIMEOUT_MILLIS = 15000;
 
+/**
+ * @internal
+ */
 export class APICacheData<TValue, TLoading, TError> {
     /**
      * This placeholder value will be used if the cached API data isn't ready on the first render of
@@ -79,10 +82,16 @@ export class APICacheData<TValue, TLoading, TError> {
 
     readonly errorValue: Readonly<TError>;
 
-    get promise(): Promise<ICachedAPIResult<TValue, TError>> | undefined {
+    get promise(): Promise<Readonly<ICachedAPIResult<TValue, TError>>> | undefined {
         return this._promise;
     }
 
+    /**
+     * The promise for an attempt at refreshing the cache, If this is undefined, it means the cache
+     * has been invalidated, and a refresh attempt should be made at the next retrieval.
+     *
+     * Promises are created by {@link createCacheLoadPromise}.
+     */
     private _promise: Promise<ICachedAPIResult<TValue, TError>> | undefined;
 
     /**
@@ -92,7 +101,7 @@ export class APICacheData<TValue, TLoading, TError> {
      * @see CommonConfiguration.useKeyValStorageForCachedAPIBackup
      * @see getCachedValueInner
      */
-    private readonly cacheBackupKey: string;
+    readonly cacheBackupKey: string;
     private readonly doFetch: (abortController: AbortController) => Promise<Response>;
     /**
      * A function to transform the response data into the `TValue` type.
@@ -128,6 +137,9 @@ export class APICacheData<TValue, TLoading, TError> {
 
     private _value: TValue | undefined;
 
+    /**
+     * @internal Outside callers should only be using this in tests.
+     */
     get value(): TValue | undefined {
         return this._value;
     }
@@ -138,6 +150,21 @@ export class APICacheData<TValue, TLoading, TError> {
 
     removeInvalidationListener(listener: InvalidationListener) {
         this.invalidationEventEmitter.removeListener(INVALIDATION_EVENT, listener);
+    }
+
+    private async clearExistingPromise() {
+        const currentPromise = this._promise;
+        if (currentPromise) {
+            // If we invalidate while a promise is still active, invalidation might not do anything,
+            // e.g. if clearBackup is true, we might run the removeItem code below; however, the
+            // leftover promise might still need to run `setItem`, resulting in the backup not being
+            // invalidated at all. Could be an issue on logout.
+            //
+            // So we abort it and then wait for it to resolve.
+            this.abortController.abort();
+            await currentPromise;
+        }
+        this._promise = undefined;
     }
 
     /**
@@ -152,7 +179,8 @@ export class APICacheData<TValue, TLoading, TError> {
      * effect if {@link CommonConfiguration.useKeyValStorageForCachedAPIBackup} is set.
      * @param reFetch Whether to re-fetch the value from the server. By default, this is false.
      * @param notifyListeners Whether to notify listeners that the cache has been invalidated.
-     * This is useful when logging out to avoid React state updates. By default, this is true.
+     * This is useful to set to false when logging out to avoid React state updates. By default,
+     * this is true.
      */
     async invalidate(
         clearValue: boolean,
@@ -160,26 +188,19 @@ export class APICacheData<TValue, TLoading, TError> {
         reFetch: boolean = false,
         notifyListeners: boolean = true
     ): Promise<void> {
-        if (this._promise) {
-            // If we invalidate while a promise is still active, invalidation might not do anything,
-            // e.g. if clearBackup is true, we might run the removeItem code below; however, the
-            // leftover promise might still need to run `setItem`, resulting in the backup not being
-            // invalidated at all. Could be an issue on logout.
-            await this._promise;
-        }
-        this._promise = undefined;
+        await this.clearExistingPromise();
 
         if (clearValue) {
             this._value = undefined;
         }
         if (clearBackup && commonConfiguration.useKeyValStorageForCachedAPIBackup) {
-            await commonConfiguration.keyValStorageProvider
-                .removeItem(this.cacheBackupKey)
-                .catch((e) =>
-                    console.log(
-                        `invalidate(${this.cacheBackupKey}): error clearing value in backup: ${e}`
-                    )
+            try {
+                await commonConfiguration.keyValStorageProvider.removeItem(this.cacheBackupKey);
+            } catch (e) {
+                console.error(
+                    `invalidate(${this.cacheBackupKey}): error clearing value in backup: ${e}`
                 );
+            }
         }
 
         if (reFetch) {
@@ -213,11 +234,7 @@ export class APICacheData<TValue, TLoading, TError> {
      */
     async getCachedValue(refreshValue: boolean = false): Promise<TValue | TError> {
         if (refreshValue) {
-            if (this._promise) {
-                // Prevent race conditions.
-                await this._promise;
-            }
-            this._promise = undefined;
+            await this.clearExistingPromise();
         }
 
         const result = await this.getCachedValueInner();
@@ -235,13 +252,11 @@ export class APICacheData<TValue, TLoading, TError> {
             useEffect(() => {
                 isMounted.current = true;
 
-                if (this.isInvalidated) {
-                    this.getCachedValueInner().then((v) => {
-                        if (isMounted.current) {
-                            setValue(v.value);
-                        }
-                    });
-                }
+                this.getCachedValueInner().then((v) => {
+                    if (isMounted.current) {
+                        setValue(v.value);
+                    }
+                });
 
                 if (!listenForChanges) {
                     return () => {
@@ -267,10 +282,6 @@ export class APICacheData<TValue, TLoading, TError> {
         };
     }
 
-    get isInvalidated(): boolean {
-        return this._promise === undefined;
-    }
-
     private notifyListeners() {
         this.invalidationEventEmitter.emit(INVALIDATION_EVENT);
     }
@@ -287,20 +298,18 @@ export class APICacheData<TValue, TLoading, TError> {
             return currentPromise;
         }
 
+        const newPromise = this.createCacheLoadPromise();
+        this._promise = newPromise;
+        return newPromise;
+    }
+
+    private async createCacheLoadPromise(): Promise<ICachedAPIResult<TValue, TError>> {
         let abortController = this.abortController;
         if (abortController.signal.aborted) {
             abortController = new AbortController();
             this.abortController = abortController;
         }
 
-        const newPromise = this.createCacheLoadPromise(abortController);
-        this._promise = newPromise;
-        return newPromise;
-    }
-
-    private async createCacheLoadPromise(
-        abortController: AbortController
-    ): Promise<ICachedAPIResult<TValue, TError>> {
         try {
             const timeoutId: any = setTimeout(() => abortController.abort(), this.fetchTimeoutMs);
             let data: any;
@@ -316,16 +325,24 @@ export class APICacheData<TValue, TLoading, TError> {
             this._value = transformedData;
 
             const result = this.makeCachedAPIResult(true, transformedData);
-            return commonConfiguration.useKeyValStorageForCachedAPIBackup
-                ? commonConfiguration.keyValStorageProvider
-                      .setItem(this.cacheBackupKey, JSON.stringify(data))
-                      .catch((e) => {
-                          console.error(
-                              `cachedAPIGetInner(${this.cacheBackupKey}): Error saving result to key-value storage: ${e}`
-                          );
-                      })
-                      .then(() => result)
-                : result;
+            if (commonConfiguration.useKeyValStorageForCachedAPIBackup) {
+                if (abortController.signal.aborted) {
+                    console.warn(`cachedAPIGet(${this.cacheBackupKey}): previous promise aborted`);
+                    return this.makeCachedAPIResult(false, this.errorValue);
+                }
+
+                try {
+                    await commonConfiguration.keyValStorageProvider.setItem(
+                        this.cacheBackupKey,
+                        JSON.stringify(data)
+                    );
+                } catch (e) {
+                    console.error(
+                        `cachedAPIGetInner(${this.cacheBackupKey}): Error saving result to key-value storage: ${e}`
+                    );
+                }
+            }
+            return result;
         } catch (e) {
             // Invalidate to force subsequent calls to attempt another network call
             // to get a fresh value. We only set the promise to undefined here; don't
@@ -333,47 +350,36 @@ export class APICacheData<TValue, TLoading, TError> {
             // attempt.
             this._promise = undefined;
 
+            const baseErrorMsg = `cachedAPIGet(${this.cacheBackupKey}): API fetch failed (${e})`;
             const existingValue = this._value;
             if (existingValue) {
-                console.log(
-                    `cachedAPIGet(${this.cacheBackupKey}): API fetch failed (${e}); using existing value`
-                );
+                console.error(`${baseErrorMsg}; using existing value`);
                 return this.makeCachedAPIResult(false, existingValue);
             }
 
             if (commonConfiguration.useKeyValStorageForCachedAPIBackup) {
-                return this.loadBackupValue();
+                try {
+                    const backup = await commonConfiguration.keyValStorageProvider.getItem(
+                        this.cacheBackupKey
+                    );
+                    if (backup) {
+                        const transformedBackup = this.transformData(JSON.parse(backup));
+                        this._value = transformedBackup;
+                        console.error(`${baseErrorMsg}; using backup`);
+                        return this.makeCachedAPIResult(false, transformedBackup);
+                    } else {
+                        console.error(`${baseErrorMsg} and no backup; using error value"`);
+                        return this.makeCachedAPIResult(false, this.errorValue);
+                    }
+                } catch (backupError) {
+                    console.error(
+                        `${baseErrorMsg} and backup retrieval failed due to ${backupError}; using error value`
+                    );
+                    return this.makeCachedAPIResult(false, this.errorValue);
+                }
             }
 
-            console.log(
-                `cachedAPIGet(${this.cacheBackupKey}): API fetch failed (${e}); using error value`
-            );
-            return this.makeCachedAPIResult(false, this.errorValue);
-        }
-    }
-
-    /**
-     * Loads a backup value for the cache for use when the device is offline / can't connect to
-     * the server.
-     */
-    private async loadBackupValue(): Promise<ICachedAPIResult<TValue, TError>> {
-        const baseErrorMsg = `cachedAPIGet(${this.cacheBackupKey}): API fetch failed`;
-        try {
-            const cachedItem = await commonConfiguration.keyValStorageProvider.getItem(
-                this.cacheBackupKey
-            );
-            if (cachedItem) {
-                this._value = this.transformData(JSON.parse(cachedItem));
-                console.log(baseErrorMsg + "; using backup");
-                return this.makeCachedAPIResult(false, this._value);
-            } else {
-                console.log(baseErrorMsg + " and no backup; using error value");
-                return this.makeCachedAPIResult(false, this.errorValue);
-            }
-        } catch (e) {
-            console.error(
-                baseErrorMsg + ` and backup retrieval failed due to ${e}; using error value`
-            );
+            console.error(`${baseErrorMsg}; using error value`);
             return this.makeCachedAPIResult(false, this.errorValue);
         }
     }

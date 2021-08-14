@@ -1,5 +1,5 @@
-import { IRisk } from "@cbr/common/util/risks";
-import { Endpoint, apiFetch } from "@cbr/common/util/endpoints";
+import { IRisk } from "../../util/risks";
+import { apiFetch, Endpoint } from "../../util/endpoints";
 
 const updateRisk = async (updatedRisk: string) => {
     const init: RequestInit = {
@@ -24,7 +24,6 @@ const wasChangeMade = (values: IRisk, initialValues: IRisk) => {
             return true;
         }
     }
-
     return false;
 };
 

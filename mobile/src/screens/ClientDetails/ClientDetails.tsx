@@ -9,6 +9,8 @@ import {
     TClientValues,
     themeColors,
     timestampToDate,
+    IRisk,
+    RiskType,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
@@ -35,9 +37,7 @@ const ClientDetails = (props: ClientProps) => {
     const [loading, setLoading] = useState(true);
     const isFocused = useIsFocused();
 
-    //Main Client Variables
     const [client, setClient] = useState<IClient>();
-
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
             {
@@ -73,6 +73,7 @@ const ClientDetails = (props: ClientProps) => {
                 otherDisability: client.other_disability,
                 picture: client.picture,
             };
+
             return clientFormProps;
         } else {
             return clientInitialValues;
@@ -223,9 +224,22 @@ const ClientDetails = (props: ClientProps) => {
                             )}
                         </Formik>
                     </Card>
+                    <Text style={styles.cardSectionTitle}>Client Risks</Text>
                     <Divider />
-                    <ClientRisk editMode={true}></ClientRisk>
+                    <ClientRisk
+                        clientRisks={client?.risks || []}
+                        presentRiskType={RiskType.HEALTH}
+                    />
                     <Divider />
+                    <ClientRisk
+                        clientRisks={client?.risks || []}
+                        presentRiskType={RiskType.EDUCATION}
+                    />
+                    <Divider />
+                    <ClientRisk
+                        clientRisks={client?.risks || []}
+                        presentRiskType={RiskType.SOCIAL}
+                    />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>

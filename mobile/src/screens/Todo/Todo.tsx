@@ -9,75 +9,82 @@ import { useCurrentUser, useDisabilities, useZones } from "@cbr/common";
 import { StackScreenName } from "../../util/StackScreenName";
 
 const Todo = () => {
-    const styles = useStyles();
-    const authContext = useContext(AuthContext);
+    // const styles = useStyles();
+    // const authContext = useContext(AuthContext);
 
-    useEffect(() => {
-        authContext.requireLoggedIn(true);
-    }, []);
-    const navigation = useNavigation<AppStackNavProp>();
-    const logoutAlert = () =>
-        Alert.alert("Alert", "Do you want to logout?", [
-            {
-                text: "Don't logout",
-                style: "cancel",
-            },
-            { text: "Logout", onPress: () => authContext.logout() },
-        ]);
+    // useEffect(() => {
+    //     authContext.requireLoggedIn(true);
+    // }, []);
+    // const navigation = useNavigation<AppStackNavProp>();
+    // const logoutAlert = () =>
+    //     Alert.alert("Alert", "Do you want to logout?", [
+    //         {
+    //             text: "Don't logout",
+    //             style: "cancel",
+    //         },
+    //         { text: "Logout", onPress: () => authContext.logout() },
+    //     ]);
 
-    const zones = useZones();
-    const disabilities = useDisabilities();
-    const currentUser = useCurrentUser();
+    // const zones = useZones();
+    // const disabilities = useDisabilities();
+    // const currentUser = useCurrentUser();
 
-    const [userId, setUserId] = useState<string>();
-
+    // const [userId, setUserId] = useState<string>();
+    const [count, setCount] = useState(0);
     return (
-        <View style={styles.container}>
-            <Title>This is a placeholder component screen.</Title>
-            <Text>Due to be removed, once the app reaches completion!</Text>
-            <Button
-                mode="contained"
-                onPress={() => {
-                    logoutAlert();
-                }}
-            >
-                Logout
-            </Button>
+        // <View style={styles.container}>
+        //     <Title>This is a placeholder component screen.</Title>
+        //     <Text>Due to be removed, once the app reaches completion!</Text>
+        //     <Button
+        //         mode="contained"
+        //         onPress={() => {
+        //             logoutAlert();
+        //         }}
+        //     >
+        //         Logout
+        //     </Button>
 
-            <Text>Zones hook: {JSON.stringify(Array.from(zones))}</Text>
-            <Text>Disabilities hook: {JSON.stringify(Array.from(disabilities))}</Text>
-            <Text>Current user hook: {JSON.stringify(currentUser)}</Text>
+        //     <Text>Zones hook: {JSON.stringify(Array.from(zones))}</Text>
+        //     <Text>Disabilities hook: {JSON.stringify(Array.from(disabilities))}</Text>
+        //     <Text>Current user hook: {JSON.stringify(currentUser)}</Text>
 
-            {/* TODO: Remove this when admin user list is created */}
-            <TextInput
-                style={styles.userIdTextInput}
-                value={userId}
-                onChangeText={setUserId}
-                onSubmitEditing={() => {
-                    if (userId) {
-                        navigation.navigate(StackScreenName.ADMIN_VIEW, { userID: Number(userId) });
-                    }
-                }}
-                keyboardType="number-pad"
-                label="User ID to open"
-            />
+        //     {/* TODO: Remove this when admin user list is created */}
+        //     <TextInput
+        //         style={styles.userIdTextInput}
+        //         value={userId}
+        //         onChangeText={setUserId}
+        //         onSubmitEditing={() => {
+        //             if (userId) {
+        //                 navigation.navigate(StackScreenName.ADMIN_VIEW, { userID: Number(userId) });
+        //             }
+        //         }}
+        //         keyboardType="number-pad"
+        //         label="User ID to open"
+        //     />
 
-            {/* TODO: Remove this when admin user list is created */}
-            <Button
-                mode="contained"
-                disabled={!userId}
-                onPress={() => {
-                    if (userId) {
-                        navigation.navigate(StackScreenName.ADMIN_VIEW, { userID: Number(userId) });
-                    }
-                }}
-            >
-                View user as admin
-            </Button>
+        //     {/* TODO: Remove this when admin user list is created */}
+        //     <Button
+        //         mode="contained"
+        //         disabled={!userId}
+        //         onPress={() => {
+        //             if (userId) {
+        //                 navigation.navigate(StackScreenName.ADMIN_VIEW, { userID: Number(userId) });
+        //             }
+        //         }}
+        //     >
+        //         View user as admin
+        //     </Button>
 
-            {/* TODO: Remove this when admin user list is created */}
-            <Button mode="contained" onPress={() => navigation.navigate(StackScreenName.ADMIN_NEW)}>
-                Create new user
+        //     {/* TODO: Remove this when admin user list is created */}
+        //     <Button mode="contained" onPress={() => navigation.navigate(StackScreenName.ADMIN_NEW)}>
+        //         Create new user
+        //     </Button>
+        // </View>
+        <View>
+            <Text>You clicked {count} times</Text>
+
+            <Button icon="camera" mode="contained" onPress={() => setCount(count + 1)}>
+                Press me
             </Button>
         </View>
     );

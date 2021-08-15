@@ -115,11 +115,7 @@ const UserList = () => {
                 <DataTable.Title
                     style={props.style}
                     onPress={() => userSortBy(props.thisColumnSortOption)}
-                    sortDirection={arrowDirectionController(
-                        props.thisColumnSortOption,
-                        sortOption,
-                        sortDirection
-                    )}
+                    sortDirection={userArrowDirectionController(props.thisColumnSortOption)}
                 >
                     {props.label}
                 </DataTable.Title>
@@ -143,7 +139,7 @@ const UserList = () => {
                     <Picker
                         style={styles.select}
                         selectedValue={searchQuery}
-                        onValueChange={(itemValue, itemIndex) => setSearchQuery(itemValue)}
+                        onValueChange={(itemValue) => setSearchQuery(itemValue)}
                     >
                         <Picker.Item label="N/A" value="" />
                         {Array.from(zones).map(([id, name]) => (

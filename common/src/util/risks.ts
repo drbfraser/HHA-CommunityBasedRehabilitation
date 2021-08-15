@@ -66,7 +66,3 @@ export const riskTypes: { [key: string]: IRiskType } = {
         name: "Social",
     },
 };
-
-export interface IRiskType {
-    name: string;
-}

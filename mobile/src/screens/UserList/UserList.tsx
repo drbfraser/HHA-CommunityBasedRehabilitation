@@ -261,22 +261,14 @@ const UserList = () => {
                                 )}
                                 {showNameColumn ? (
                                     <View style={styles.column_name}>
-                                        <WrappedText
-                                            text={item.full_name}
-                                            viewStyle={styles.wrappedView}
-                                            textStyle={styles.text}
-                                        />
+                                        <WrappedText text={item.full_name} />
                                     </View>
                                 ) : (
                                     <View></View>
                                 )}
                                 {showZoneColumn ? (
                                     <View style={styles.column_zone}>
-                                        <WrappedText
-                                            text={item.zone}
-                                            viewStyle={styles.wrappedView}
-                                            textStyle={styles.text}
-                                        />
+                                        <WrappedText text={item.zone} />
                                     </View>
                                 ) : (
                                     <View></View>

@@ -111,11 +111,7 @@ const ClientList = () => {
 
     const showSelectedColumn = () => {
         columnShowingList.forEach((element, index) => {
-            if (selectedColumn.includes(String(index))) {
-                element(true);
-            } else {
-                element(false);
-            }
+            selectedColumn.includes(String(index)) ? element(true) : element(false);
         });
     };
 
@@ -128,7 +124,6 @@ const ClientList = () => {
     useEffect(() => {
         showSelectedColumn();
     }, [selectedColumn]);
-    useEffect(() => {}, []);
     return (
         <View style={styles.container}>
             <View style={styles.row}>
@@ -232,19 +227,19 @@ const ClientList = () => {
                             thisColumnSortOption={SortOptions.ZONE}
                         />
                         <ShowTitle
-                            label={riskTypes.HEALTH.Icon("#000000")}
+                            label={riskTypes.HEALTH.Icon(themeColors.riskBlack)}
                             style={styles.column_icons}
                             showTheTitle={showHealthColumn}
                             thisColumnSortOption={SortOptions.HEALTH}
                         />
                         <ShowTitle
-                            label={riskTypes.EDUCAT.Icon("#000000")}
+                            label={riskTypes.EDUCAT.Icon(themeColors.riskBlack)}
                             style={styles.column_icons}
                             showTheTitle={showEducationColumn}
                             thisColumnSortOption={SortOptions.EDUCATION}
                         />
                         <ShowTitle
-                            label={riskTypes.SOCIAL.Icon("#000000")}
+                            label={riskTypes.SOCIAL.Icon(themeColors.riskBlack)}
                             style={styles.column_icons}
                             showTheTitle={showSocialColumn}
                             thisColumnSortOption={SortOptions.SOCIAL}
@@ -271,11 +266,7 @@ const ClientList = () => {
 
                                 {showNameColumn ? (
                                     <View style={styles.column_name}>
-                                        <WrappedText
-                                            text={item.full_name}
-                                            viewStyle={styles.wrappedView}
-                                            textStyle={styles.text}
-                                        />
+                                        <WrappedText text={item.full_name} />
                                     </View>
                                 ) : (
                                     <View></View>
@@ -283,11 +274,7 @@ const ClientList = () => {
 
                                 {showZoneColumn ? (
                                     <View style={styles.column_zone}>
-                                        <WrappedText
-                                            text={item.zone}
-                                            viewStyle={styles.wrappedView}
-                                            textStyle={styles.text}
-                                        />
+                                        <WrappedText text={item.zone} />
                                     </View>
                                 ) : (
                                     <View></View>

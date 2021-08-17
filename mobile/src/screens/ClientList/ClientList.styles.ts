@@ -26,7 +26,7 @@ const useStyles = () =>
             marginTop: 70,
             marginBottom: 70,
             display: "flex",
-            backgroundColor: "white",
+            backgroundColor: themeColors.white,
             borderRadius: 10,
             justifyContent: "center",
         },
@@ -51,7 +51,7 @@ const useStyles = () =>
         column_zone: {
             flex: 1.5,
         },
-        column_icons: {
+        columnIcons: {
             flex: 0.8,
         },
         wrappedView: {

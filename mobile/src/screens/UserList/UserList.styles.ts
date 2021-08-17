@@ -1,3 +1,4 @@
+import { themeColors } from "@cbr/common";
 import { StyleSheet } from "react-native";
 
 const useStyles = () =>
@@ -26,7 +27,7 @@ const useStyles = () =>
             marginTop: 70,
             marginBottom: 70,
             display: "flex",
-            backgroundColor: "white",
+            backgroundColor: themeColors.white,
             borderRadius: 10,
             justifyContent: "center",
         },

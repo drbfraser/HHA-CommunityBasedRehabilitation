@@ -89,11 +89,7 @@ const UserList = () => {
 
     const showSelectedColumn = () => {
         columnShowingList.forEach((element, index) => {
-            if (selectedColumn.includes(String(index))) {
-                element(true);
-            } else {
-                element(false);
-            }
+            element(selectedColumn.includes(String(index)));
         });
     };
 

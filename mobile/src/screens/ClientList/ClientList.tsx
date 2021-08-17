@@ -111,7 +111,7 @@ const ClientList = () => {
 
     const showSelectedColumn = () => {
         columnShowingList.forEach((element, index) => {
-            selectedColumn.includes(String(index)) ? element(true) : element(false);
+            element(selectedColumn.includes(String(index)));
         });
     };
 
@@ -228,19 +228,19 @@ const ClientList = () => {
                         />
                         <ShowTitle
                             label={riskTypes.HEALTH.Icon(themeColors.riskBlack)}
-                            style={styles.column_icons}
+                            style={styles.columnIcons}
                             showTheTitle={showHealthColumn}
                             thisColumnSortOption={SortOptions.HEALTH}
                         />
                         <ShowTitle
                             label={riskTypes.EDUCAT.Icon(themeColors.riskBlack)}
-                            style={styles.column_icons}
+                            style={styles.columnIcons}
                             showTheTitle={showEducationColumn}
                             thisColumnSortOption={SortOptions.EDUCATION}
                         />
                         <ShowTitle
                             label={riskTypes.SOCIAL.Icon(themeColors.riskBlack)}
-                            style={styles.column_icons}
+                            style={styles.columnIcons}
                             showTheTitle={showSocialColumn}
                             thisColumnSortOption={SortOptions.SOCIAL}
                         />
@@ -281,21 +281,21 @@ const ClientList = () => {
                                 )}
 
                                 {showHealthColumn ? (
-                                    <DataTable.Cell style={styles.column_icons}>
+                                    <DataTable.Cell style={styles.columnIcons}>
                                         {riskTypes.CIRCLE.Icon(item.HealthLevel)}
                                     </DataTable.Cell>
                                 ) : (
                                     <View></View>
                                 )}
                                 {showEducationColumn ? (
-                                    <DataTable.Cell style={styles.column_icons}>
+                                    <DataTable.Cell style={styles.columnIcons}>
                                         {riskTypes.CIRCLE.Icon(item.EducationLevel)}
                                     </DataTable.Cell>
                                 ) : (
                                     <View></View>
                                 )}
                                 {showSocialColumn ? (
-                                    <DataTable.Cell style={styles.column_icons}>
+                                    <DataTable.Cell style={styles.columnIcons}>
                                         {riskTypes.CIRCLE.Icon(item.SocialLevel)}
                                     </DataTable.Cell>
                                 ) : (

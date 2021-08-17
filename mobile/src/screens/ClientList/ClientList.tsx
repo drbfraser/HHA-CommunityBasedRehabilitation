@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { Text, View, Switch } from "react-native";
+import { Text, View, Switch, StyleProp, ViewStyle } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { DataTable } from "react-native-paper";
+import { Modal, DataTable, IconButton, Portal } from "react-native-paper";
 import useStyles from "./ClientList.styles";
 import { ClientListRow, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
 import { riskTypes } from "../../util/riskIcon";
@@ -21,6 +21,7 @@ import {
     TSortDirection,
 } from "../../util/listFunctions";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
+import CustomMultiPicker from "react-native-multiple-select-list";
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
@@ -32,6 +33,37 @@ const ClientList = () => {
     const [sortOption, setSortOption] = useState("");
     const zones = useZones();
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
+    const isFocused = useIsFocused();
+
+    const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
+
+    const [showIDColumn, setShowIDColumn] = useState(true);
+    const [showNameColumn, setShowNameColumn] = useState(true);
+    const [showZoneColumn, setShowZoneColumn] = useState(true);
+    const [showHealthColumn, setShowHealthColumn] = useState(true);
+    const [showEducationColumn, setShowEducationColumn] = useState(true);
+    const [showSocialColumn, setShowSocialColumn] = useState(true);
+    const [selectedColumn, setSelectedColumn] = useState<String[]>(["0", "1", "2", "3", "4", "5"]);
+    const columnShowingList = [
+        setShowIDColumn,
+        setShowNameColumn,
+        setShowZoneColumn,
+        setShowHealthColumn,
+        setShowEducationColumn,
+        setShowSocialColumn,
+    ];
+
+    const openColumnBuilderMenu = () => {
+        setShowColumnBuilderMenu(true);
+        showSelectedColumn;
+    };
+    const closeColumnBuilderMenu = () => {
+        setShowColumnBuilderMenu(false);
+        showSelectedColumn;
+    };
+
+    const columnList = { 0: "ID", 1: "Name", 2: "Zone", 3: "Health", 4: "Education", 5: "Social" };
+
     const clientSortBy = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
     };
@@ -52,7 +84,37 @@ const ClientList = () => {
         setClientList(exampleClient);
     };
 
-    const isFocused = useIsFocused();
+    const ShowTitle = (props: {
+        label: string | JSX.Element;
+        style: StyleProp<ViewStyle>;
+        showTheTitle: boolean;
+        thisColumnSortOption: SortOptions;
+    }) => {
+        if (props.showTheTitle) {
+            return (
+                <DataTable.Title
+                    style={props.style}
+                    onPress={() => clientSortBy(props.thisColumnSortOption)}
+                    sortDirection={arrowDirectionController(
+                        props.thisColumnSortOption,
+                        sortOption,
+                        sortDirection
+                    )}
+                >
+                    {props.label}
+                </DataTable.Title>
+            );
+        } else {
+            return <View></View>;
+        }
+    };
+
+    const showSelectedColumn = () => {
+        columnShowingList.forEach((element, index) => {
+            element(selectedColumn.includes(String(index)));
+        });
+    };
+
     useEffect(() => {
         if (isFocused) {
             newClientGet();
@@ -60,13 +122,8 @@ const ClientList = () => {
     }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection, isFocused]);
 
     useEffect(() => {
-        var exampleClient = clientList;
-        if (sortDirection !== "None") {
-            exampleClient = exampleClient.sort(clientListScreenComparator);
-        }
-        setClientList(exampleClient);
-    }, [sortOption, sortDirection]);
-
+        showSelectedColumn();
+    }, [selectedColumn]);
     return (
         <View style={styles.container}>
             <View style={styles.row}>
@@ -89,12 +146,43 @@ const ClientList = () => {
                         value={searchQuery}
                     />
                 )}
+                <IconButton
+                    icon="dots-vertical"
+                    color={themeColors.borderGray}
+                    size={20}
+                    style={styles.columnBuilderButton}
+                    onPress={openColumnBuilderMenu}
+                />
+                <Portal>
+                    <Modal
+                        visible={showColumnBuilderMenu}
+                        onDismiss={closeColumnBuilderMenu}
+                        style={styles.colonBuilderChecklist}
+                    >
+                        <CustomMultiPicker
+                            options={columnList}
+                            multiple={true}
+                            placeholder={"Select columns"}
+                            placeholderTextColor={themeColors.blueBgLight}
+                            returnValue={"value"}
+                            callback={(label) => {
+                                setSelectedColumn(label);
+                                showSelectedColumn();
+                            }}
+                            rowBackgroundColor={themeColors.blueBgLight}
+                            iconSize={30}
+                            selectedIconName={"checkmark-circle"}
+                            unselectedIconName={"radio-button-off"}
+                            selected={selectedColumn.map(String)}
+                        />
+                    </Modal>
+                </Portal>
             </View>
             <View style={styles.row}>
                 <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>My Clients</Text>
                 <Switch
-                    style={{ flex: 0.2 }}
-                    trackColor={{ false: themeColors.yellow, true: themeColors.yellow }}
+                    style={styles.switch}
+                    trackColor={{ false: themeColors.white, true: themeColors.yellow }}
                     thumbColor={allClientsMode ? themeColors.white : themeColors.white}
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={setAllClientsMode}
@@ -120,72 +208,42 @@ const ClientList = () => {
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>
-                        <DataTable.Title
+                        <ShowTitle
+                            label="ID"
                             style={styles.column_id}
-                            onPress={() => clientSortBy(SortOptions.ID)}
-                            sortDirection={arrowDirectionController(
-                                SortOptions.ID,
-                                sortOption,
-                                sortDirection
-                            )}
-                        >
-                            ID
-                        </DataTable.Title>
-                        <DataTable.Title
+                            showTheTitle={showIDColumn}
+                            thisColumnSortOption={SortOptions.ID}
+                        />
+                        <ShowTitle
+                            label="Name"
                             style={styles.column_name}
-                            onPress={() => clientSortBy(SortOptions.NAME)}
-                            sortDirection={arrowDirectionController(
-                                SortOptions.NAME,
-                                sortOption,
-                                sortDirection
-                            )}
-                        >
-                            Name
-                        </DataTable.Title>
-                        <DataTable.Title
+                            showTheTitle={showNameColumn}
+                            thisColumnSortOption={SortOptions.NAME}
+                        />
+                        <ShowTitle
+                            label="Zone"
                             style={styles.column_zone}
-                            onPress={() => clientSortBy(SortOptions.ZONE)}
-                            sortDirection={arrowDirectionController(
-                                SortOptions.ZONE,
-                                sortOption,
-                                sortDirection
-                            )}
-                        >
-                            Zone
-                        </DataTable.Title>
-                        <DataTable.Title
-                            style={styles.column_icons}
-                            onPress={() => clientSortBy(SortOptions.HEALTH)}
-                            sortDirection={arrowDirectionController(
-                                SortOptions.HEALTH,
-                                sortOption,
-                                sortDirection
-                            )}
-                        >
-                            {riskTypes.HEALTH.Icon(themeColors.riskBlack)}
-                        </DataTable.Title>
-                        <DataTable.Title
-                            style={styles.column_icons}
-                            onPress={() => clientSortBy(SortOptions.EDUCATION)}
-                            sortDirection={arrowDirectionController(
-                                SortOptions.EDUCATION,
-                                sortOption,
-                                sortDirection
-                            )}
-                        >
-                            {riskTypes.EDUCAT.Icon(themeColors.riskBlack)}
-                        </DataTable.Title>
-                        <DataTable.Title
-                            style={styles.column_icons}
-                            onPress={() => clientSortBy(SortOptions.SOCIAL)}
-                            sortDirection={arrowDirectionController(
-                                SortOptions.SOCIAL,
-                                sortOption,
-                                sortDirection
-                            )}
-                        >
-                            {riskTypes.SOCIAL.Icon(themeColors.riskBlack)}
-                        </DataTable.Title>
+                            showTheTitle={showZoneColumn}
+                            thisColumnSortOption={SortOptions.ZONE}
+                        />
+                        <ShowTitle
+                            label={riskTypes.HEALTH.Icon(themeColors.riskBlack)}
+                            style={styles.columnIcons}
+                            showTheTitle={showHealthColumn}
+                            thisColumnSortOption={SortOptions.HEALTH}
+                        />
+                        <ShowTitle
+                            label={riskTypes.EDUCAT.Icon(themeColors.riskBlack)}
+                            style={styles.columnIcons}
+                            showTheTitle={showEducationColumn}
+                            thisColumnSortOption={SortOptions.EDUCATION}
+                        />
+                        <ShowTitle
+                            label={riskTypes.SOCIAL.Icon(themeColors.riskBlack)}
+                            style={styles.columnIcons}
+                            showTheTitle={showSocialColumn}
+                            thisColumnSortOption={SortOptions.SOCIAL}
+                        />
                     </DataTable.Header>
                     {clientList.map((item) => {
                         return (
@@ -198,22 +256,51 @@ const ClientList = () => {
                                     });
                                 }}
                             >
-                                <DataTable.Cell style={styles.column_id}>{item.id}</DataTable.Cell>
-                                <View style={styles.column_name}>
-                                    <WrappedText text={item.full_name} />
-                                </View>
-                                <View style={styles.column_zone}>
-                                    <WrappedText text={item.zone} />
-                                </View>
-                                <DataTable.Cell style={styles.column_icons}>
-                                    {riskTypes.CIRCLE.Icon(item.HealthLevel)}
-                                </DataTable.Cell>
-                                <DataTable.Cell style={styles.column_icons}>
-                                    {riskTypes.CIRCLE.Icon(item.EducationLevel)}
-                                </DataTable.Cell>
-                                <DataTable.Cell style={styles.column_icons}>
-                                    {riskTypes.CIRCLE.Icon(item.SocialLevel)}
-                                </DataTable.Cell>
+                                {showIDColumn ? (
+                                    <DataTable.Cell style={styles.column_id}>
+                                        {item.id}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
+
+                                {showNameColumn ? (
+                                    <View style={styles.column_name}>
+                                        <WrappedText text={item.full_name} />
+                                    </View>
+                                ) : (
+                                    <View></View>
+                                )}
+
+                                {showZoneColumn ? (
+                                    <View style={styles.column_zone}>
+                                        <WrappedText text={item.zone} />
+                                    </View>
+                                ) : (
+                                    <View></View>
+                                )}
+
+                                {showHealthColumn ? (
+                                    <DataTable.Cell style={styles.columnIcons}>
+                                        {riskTypes.CIRCLE.Icon(item.HealthLevel)}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
+                                {showEducationColumn ? (
+                                    <DataTable.Cell style={styles.columnIcons}>
+                                        {riskTypes.CIRCLE.Icon(item.EducationLevel)}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
+                                {showSocialColumn ? (
+                                    <DataTable.Cell style={styles.columnIcons}>
+                                        {riskTypes.CIRCLE.Icon(item.SocialLevel)}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
                             </DataTable.Row>
                         );
                     })}

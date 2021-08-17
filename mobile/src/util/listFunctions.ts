@@ -91,7 +91,7 @@ export const clientComparator = (
             break;
         }
         case SortOptions.NAME: {
-            result = a.full_name > b.full_name ? 1 : -1;
+            result = a.full_name.toLowerCase() > b.full_name.toLowerCase() ? 1 : -1;
             break;
         }
         case SortOptions.ZONE: {
@@ -127,7 +127,7 @@ export const referralComparator = (
     let result = 0;
     switch (referralSortOption) {
         case SortOptions.NAME: {
-            result = a.full_name > b.full_name ? 1 : -1;
+            result = a.full_name.toLowerCase() > b.full_name.toLowerCase() ? 1 : -1;
             break;
         }
         case SortOptions.TYPE: {
@@ -155,7 +155,7 @@ export const userComparator = (
             break;
         }
         case SortOptions.NAME: {
-            result = a.full_name > b.full_name ? 1 : -1;
+            result = a.full_name.toLowerCase() > b.full_name.toLowerCase() ? 1 : -1;
             break;
         }
         case SortOptions.ZONE: {

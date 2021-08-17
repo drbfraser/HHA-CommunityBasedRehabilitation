@@ -1,3 +1,4 @@
+import { themeColors } from "@cbr/common";
 import { StyleSheet } from "react-native";
 
 const useStyles = () =>
@@ -15,8 +16,26 @@ const useStyles = () =>
             flex: 1,
         },
         search: {
-            flex: 2,
+            flex: 1,
         },
+        columnBuilderButton: {
+            flex: 0.2,
+        },
+        colonBuilderChecklist: {
+            marginHorizontal: 40,
+            marginTop: 70,
+            marginBottom: 70,
+            display: "flex",
+            backgroundColor: themeColors.white,
+            borderRadius: 10,
+            justifyContent: "center",
+        },
+        switch: { flex: 0.2 },
+        switchButtonAndText: {
+            flexDirection: "row",
+            justifyContent: "flex-start",
+        },
+
         row: {
             flexDirection: "row",
             display: "flex",
@@ -32,7 +51,7 @@ const useStyles = () =>
         column_zone: {
             flex: 1.5,
         },
-        column_icons: {
+        columnIcons: {
             flex: 0.8,
         },
         wrappedView: {
@@ -43,6 +62,12 @@ const useStyles = () =>
         },
         text: {
             flexShrink: 1,
+        },
+        viewWrapText: {
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "flex-start",
+            padding: 5,
         },
     });
 

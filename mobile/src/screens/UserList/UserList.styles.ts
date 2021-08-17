@@ -1,3 +1,4 @@
+import { themeColors } from "@cbr/common";
 import { StyleSheet } from "react-native";
 
 const useStyles = () =>
@@ -17,6 +18,18 @@ const useStyles = () =>
             marginLeft: 15,
             marginTop: 5,
             marginRight: 15,
+        },
+        columnBuilderButton: {
+            flex: 0.2,
+        },
+        colonBuilderChecklist: {
+            marginHorizontal: 40,
+            marginTop: 70,
+            marginBottom: 70,
+            display: "flex",
+            backgroundColor: themeColors.white,
+            borderRadius: 10,
+            justifyContent: "center",
         },
         select: {
             flex: 1,

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View } from "react-native";
-import { Text, IconButton } from "react-native-paper";
+import { StyleProp, View, ViewStyle } from "react-native";
+import { Text, IconButton, Portal, Modal } from "react-native-paper";
 import useStyles from "./UserList.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { AppStackNavProp } from "../../util/stackScreens";
@@ -21,6 +21,7 @@ import {
     userComparator,
     TSortDirection,
 } from "../../util/listFunctions";
+import CustomMultiPicker from "react-native-multiple-select-list";
 
 const UserList = () => {
     const styles = useStyles();
@@ -33,6 +34,32 @@ const UserList = () => {
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
     const [sortOption, setSortOption] = useState("");
     const [sortDirection, setIsSortDirection] = useState<TSortDirection>("None");
+
+    const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
+
+    const [showIDColumn, setShowIDColumn] = useState(true);
+    const [showNameColumn, setShowNameColumn] = useState(true);
+    const [showZoneColumn, setShowZoneColumn] = useState(true);
+    const [showRoleColumn, setShowRoleColumn] = useState(true);
+    const [showStatusColumn, setShowStatusColumn] = useState(true);
+
+    const [selectedColumn, setSelectedColumn] = useState<String[]>(["0", "1", "2", "3", "4"]);
+    const columnShowingList = [
+        setShowIDColumn,
+        setShowNameColumn,
+        setShowZoneColumn,
+        setShowRoleColumn,
+        setShowStatusColumn,
+    ];
+    const columnList = { 0: "ID", 1: "Name", 2: "Zone", 3: "Role", 4: "Statue" };
+    const openColumnBuilderMenu = () => {
+        setShowColumnBuilderMenu(true);
+        showSelectedColumn;
+    };
+    const closeColumnBuilderMenu = () => {
+        setShowColumnBuilderMenu(false);
+        showSelectedColumn;
+    };
 
     const userSortBy = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
@@ -59,10 +86,40 @@ const UserList = () => {
         setUserList(fetchedUserList);
     };
     const isFocused = useIsFocused();
+
+    const showSelectedColumn = () => {
+        columnShowingList.forEach((element, index) => {
+            element(selectedColumn.includes(String(index)));
+        });
+    };
+
     useEffect(() => {
         authContext.requireLoggedIn(true);
         newUserListGet();
     }, [sortDirection, sortOption, searchQuery, selectedSearchOption, isFocused]);
+    useEffect(() => {
+        showSelectedColumn();
+    }, [selectedColumn]);
+    const ShowTitle = (props: {
+        label: string | JSX.Element;
+        style: StyleProp<ViewStyle>;
+        showTheTitle: boolean;
+        thisColumnSortOption: SortOptions;
+    }) => {
+        if (props.showTheTitle) {
+            return (
+                <DataTable.Title
+                    style={props.style}
+                    onPress={() => userSortBy(props.thisColumnSortOption)}
+                    sortDirection={userArrowDirectionController(props.thisColumnSortOption)}
+                >
+                    {props.label}
+                </DataTable.Title>
+            );
+        } else {
+            return <View></View>;
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -78,7 +135,7 @@ const UserList = () => {
                     <Picker
                         style={styles.select}
                         selectedValue={searchQuery}
-                        onValueChange={(itemValue, itemIndex) => setSearchQuery(itemValue)}
+                        onValueChange={(itemValue) => setSearchQuery(itemValue)}
                     >
                         <Picker.Item label="N/A" value="" />
                         {Array.from(zones).map(([id, name]) => (
@@ -110,45 +167,71 @@ const UserList = () => {
                     <Picker.Item label="Name" value={SearchOption.NAME} />
                     <Picker.Item label="Zone" value={SearchOption.ZONE} />
                 </Picker>
+                <IconButton
+                    icon="dots-vertical"
+                    color={themeColors.borderGray}
+                    size={20}
+                    style={styles.columnBuilderButton}
+                    onPress={openColumnBuilderMenu}
+                />
+                <Portal>
+                    <Modal
+                        visible={showColumnBuilderMenu}
+                        onDismiss={closeColumnBuilderMenu}
+                        style={styles.colonBuilderChecklist}
+                    >
+                        <CustomMultiPicker
+                            options={columnList}
+                            multiple={true}
+                            placeholder={"Select columns"}
+                            placeholderTextColor={themeColors.blueBgLight}
+                            returnValue={"value"}
+                            callback={(label) => {
+                                setSelectedColumn(label);
+                                showSelectedColumn();
+                            }}
+                            rowBackgroundColor={themeColors.blueBgLight}
+                            iconSize={30}
+                            selectedIconName={"checkmark-circle"}
+                            unselectedIconName={"radio-button-off"}
+                            selected={selectedColumn.map(String)}
+                        />
+                    </Modal>
+                </Portal>
             </View>
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>
-                        <DataTable.Title
+                        <ShowTitle
+                            label="ID"
                             style={styles.column_id}
-                            onPress={() => userSortBy(SortOptions.ID)}
-                            sortDirection={userArrowDirectionController(SortOptions.ID)}
-                        >
-                            ID
-                        </DataTable.Title>
-                        <DataTable.Title
+                            showTheTitle={showIDColumn}
+                            thisColumnSortOption={SortOptions.ID}
+                        />
+                        <ShowTitle
+                            label="Name"
                             style={styles.column_name}
-                            onPress={() => userSortBy(SortOptions.NAME)}
-                            sortDirection={userArrowDirectionController(SortOptions.NAME)}
-                        >
-                            Name
-                        </DataTable.Title>
-                        <DataTable.Title
+                            showTheTitle={showNameColumn}
+                            thisColumnSortOption={SortOptions.NAME}
+                        />
+                        <ShowTitle
+                            label="Zone"
                             style={styles.column_zone}
-                            onPress={() => userSortBy(SortOptions.ZONE)}
-                            sortDirection={userArrowDirectionController(SortOptions.ZONE)}
-                        >
-                            Zone
-                        </DataTable.Title>
-                        <DataTable.Title
+                            showTheTitle={showZoneColumn}
+                            thisColumnSortOption={SortOptions.ZONE}
+                        />
+                        <ShowTitle
+                            label="Role"
                             style={styles.column_role}
-                            onPress={() => userSortBy(SortOptions.ROLE)}
-                            sortDirection={userArrowDirectionController(SortOptions.ROLE)}
-                        >
-                            Role
-                        </DataTable.Title>
-                        <DataTable.Title
+                            showTheTitle={showRoleColumn}
+                            thisColumnSortOption={SortOptions.ROLE}
+                        />
+                        <ShowTitle
+                            label="Status"
                             style={styles.column_status}
-                            onPress={() => userSortBy(SortOptions.STATUS)}
-                            sortDirection={userArrowDirectionController(SortOptions.STATUS)}
-                        >
-                            Status
-                        </DataTable.Title>
+                            showTheTitle={showStatusColumn}
+                            thisColumnSortOption={SortOptions.STATUS}
+                        />
                     </DataTable.Header>
                     {userList.map((item) => {
                         return (
@@ -161,19 +244,41 @@ const UserList = () => {
                                     });
                                 }}
                             >
-                                <DataTable.Cell style={styles.column_id}>{item.id}</DataTable.Cell>
-                                <View style={styles.column_name}>
-                                    <WrappedText text={item.full_name} />
-                                </View>
-                                <View style={styles.column_zone}>
-                                    <WrappedText text={item.zone} />
-                                </View>
-                                <DataTable.Cell style={styles.column_role}>
-                                    {item.role}
-                                </DataTable.Cell>
-                                <DataTable.Cell style={styles.column_status}>
-                                    {item.status}
-                                </DataTable.Cell>
+                                {showIDColumn ? (
+                                    <DataTable.Cell style={styles.column_id}>
+                                        {item.id}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
+                                {showNameColumn ? (
+                                    <View style={styles.column_name}>
+                                        <WrappedText text={item.full_name} />
+                                    </View>
+                                ) : (
+                                    <View></View>
+                                )}
+                                {showZoneColumn ? (
+                                    <View style={styles.column_zone}>
+                                        <WrappedText text={item.zone} />
+                                    </View>
+                                ) : (
+                                    <View></View>
+                                )}
+                                {showRoleColumn ? (
+                                    <DataTable.Cell style={styles.column_role}>
+                                        {item.role}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
+                                {showStatusColumn ? (
+                                    <DataTable.Cell style={styles.column_status}>
+                                        {item.status}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
                             </DataTable.Row>
                         );
                     })}

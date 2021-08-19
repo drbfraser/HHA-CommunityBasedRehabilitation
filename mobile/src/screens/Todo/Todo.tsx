@@ -30,7 +30,7 @@ const Todo = () => {
     const currentUser = useCurrentUser();
 
     const [userId, setUserId] = useState<string>();
-
+    const [count, setCount] = useState(0);
     return (
         <View style={styles.container}>
             <Title>This is a placeholder component screen.</Title>

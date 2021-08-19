@@ -19,6 +19,7 @@ import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/Form
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
 import FormikTextInput from "../../components/FormikTextInput/FormikTextInput";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
+import defaultProfilePicture from "../../util/defaultProfilePicture";
 import { FieldError } from "../../util/formikUtil";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { handleSubmit } from "./formHandler";
@@ -103,11 +104,13 @@ const NewClient = () => {
                                 <TouchableRipple onPress={() => setShowImagePickerModal(true)}>
                                     <Card.Cover
                                         style={styles.image}
-                                        source={{
-                                            uri: formikProps.values.picture
-                                                ? formikProps.values.picture
-                                                : "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png",
-                                        }}
+                                        source={
+                                            formikProps.values.picture
+                                                ? {
+                                                      uri: formikProps.values.picture,
+                                                  }
+                                                : defaultProfilePicture
+                                        }
                                     />
                                 </TouchableRipple>
                             </View>

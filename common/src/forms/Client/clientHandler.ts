@@ -65,11 +65,6 @@ export const handleNewClientSubmit = async (
 
     const formData = objectToFormData(newClient);
 
-    if (values.picture) {
-        const clientProfilePicture = await (await fetch(values.picture)).blob();
-        formData.append("picture", clientProfilePicture, ".png");
-    }
-
     try {
         const client: IClient = await addClient(formData);
         return client;

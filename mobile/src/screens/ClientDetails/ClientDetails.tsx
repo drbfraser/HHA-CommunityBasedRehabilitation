@@ -25,6 +25,7 @@ import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import { Formik, FormikHelpers } from "formik";
 import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
+import defaultProfilePicture from "../../util/defaultProfilePicture";
 
 interface ClientProps {
     clientID: number;
@@ -168,9 +169,7 @@ const ClientDetails = (props: ClientProps) => {
                     <Card style={styles.clientCardContainerStyles}>
                         <Card.Cover
                             style={styles.clientCardImageStyle}
-                            source={{
-                                uri: "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png",
-                            }}
+                            source={defaultProfilePicture}
                         />
                         <Button
                             mode="contained"

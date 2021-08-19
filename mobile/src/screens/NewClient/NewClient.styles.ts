@@ -10,6 +10,8 @@ const useStyles = () =>
             paddingHorizontal: 50,
         },
         image: {
+            backgroundColor: themeColors.white,
+            borderRadius: 30,
             resizeMode: "contain",
             width: "100%",
             height: "auto",

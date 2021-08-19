@@ -3,6 +3,7 @@ import { FormikHelpers } from "formik";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
 
+// TODO: profile picture does not upload correctly to server
 export const handleSubmit = async (
     values: TClientValues,
     helpers: FormikHelpers<TClientValues>,

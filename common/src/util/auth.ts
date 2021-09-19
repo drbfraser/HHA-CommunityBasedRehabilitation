@@ -56,18 +56,24 @@ const requestTokens = async (
     endpoint: Endpoint.LOGIN | Endpoint.LOGIN_REFRESH,
     postBody: string
 ): Promise<AuthTokens> => {
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), 10000); // timeout value in ms
+
     const init: RequestInit = {
         method: "POST",
         body: postBody,
         headers: {
             "Content-Type": "application/json",
         },
+        signal: abortController.signal,
     };
 
     try {
         const resp = await fetch(commonConfiguration.apiUrl + endpoint, init).catch(
             rejectWithWrappedError
         );
+
+        clearTimeout(timeoutId); // clears timeout if request completes sooner
 
         if (!resp.ok) {
             throw new APIFetchFailError(

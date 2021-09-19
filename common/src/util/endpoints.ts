@@ -134,6 +134,10 @@ export const apiFetchByRequest = async (
         request.headers.set("Content-Type", "application/json");
     }
 
+    const abortController: AbortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), 10000); // timeout value in ms
+    customInit.signal = abortController.signal;
+
     return fetch(request, customInit)
         .then(async (resp) => {
             if (!resp.ok) {
@@ -144,6 +148,7 @@ export const apiFetchByRequest = async (
                     new APIFetchFailError(message, resp.status, await jsonPromise)
                 );
             }
+            clearTimeout(timeoutId); // clears timeout if request completes sooner
 
             return resp;
         })

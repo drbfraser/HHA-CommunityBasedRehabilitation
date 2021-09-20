@@ -10,7 +10,7 @@ import { commonConfiguration } from "../../init";
  * for rejection reason if applicable.
  */
 const rejectWithWrappedError = async (e: any): Promise<Response> => {
-    if (e.name === "AbortError" && e instanceof DOMException) {
+    if (e.name === "AbortError") {
         return Promise.reject<Response>(
             commonConfiguration.fetchErrorWrapper && e instanceof Error
                 ? await commonConfiguration.fetchErrorWrapper(Error(`The request has timed out.`))

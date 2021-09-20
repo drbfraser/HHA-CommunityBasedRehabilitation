@@ -11,6 +11,7 @@ import {
     setRefreshToken,
 } from "./internal/tokens";
 import rejectWithWrappedError from "./internal/rejectWithWrappedError";
+import { DEFAULT_FETCH_TIMEOUT_MILLIS } from "../constants"
 
 /**
  * Validates the given token to check if it's valid for use.
@@ -57,7 +58,7 @@ const requestTokens = async (
     postBody: string
 ): Promise<AuthTokens> => {
     const abortController = new AbortController();
-    const timeoutId = setTimeout(() => abortController.abort(), 10000); // timeout value in ms
+    const timeoutId = setTimeout(() => abortController.abort(), DEFAULT_FETCH_TIMEOUT_MILLIS); // timeout value in ms
 
     const init: RequestInit = {
         method: "POST",
@@ -94,8 +95,12 @@ const requestTokens = async (
             );
         }
     } catch (e) {
-        console.error(e);
-        throw e;
+      console.error(e);
+        if (e.name === 'AbortError' && e instanceof DOMException) {
+          throw new Error(`The request has timed out.`);
+        } else {
+          throw e;
+        }
     }
 };
 

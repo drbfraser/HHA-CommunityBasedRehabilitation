@@ -72,7 +72,6 @@
         "react-native-svg": "12.1.0",
         "react-native-unimodules": "~0.13.3",
         "react-native-vector-icons": "^8.1.0",
-        "react-native-web": "^0.17.1",
         "react-native-wizard": "^2.1.0",
         "react-native-woodpicker": "^0.3.7",
         "react-navigation": "^4.4.4",

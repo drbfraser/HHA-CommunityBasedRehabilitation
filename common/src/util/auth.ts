@@ -11,6 +11,7 @@ import {
     setRefreshToken,
 } from "./internal/tokens";
 import rejectWithWrappedError from "./internal/rejectWithWrappedError";
+import { DEFAULT_FETCH_TIMEOUT_MILLIS } from "../constants";
 
 /**
  * Validates the given token to check if it's valid for use.
@@ -56,18 +57,24 @@ const requestTokens = async (
     endpoint: Endpoint.LOGIN | Endpoint.LOGIN_REFRESH,
     postBody: string
 ): Promise<AuthTokens> => {
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), DEFAULT_FETCH_TIMEOUT_MILLIS); // timeout value in ms
+
     const init: RequestInit = {
         method: "POST",
         body: postBody,
         headers: {
             "Content-Type": "application/json",
         },
+        signal: abortController.signal,
     };
 
     try {
         const resp = await fetch(commonConfiguration.apiUrl + endpoint, init).catch(
             rejectWithWrappedError
         );
+
+        clearTimeout(timeoutId); // clears timeout if request completes sooner
 
         if (!resp.ok) {
             throw new APIFetchFailError(
@@ -89,7 +96,11 @@ const requestTokens = async (
         }
     } catch (e) {
         console.error(e);
-        throw e;
+        if (e.name === "AbortError" && e instanceof DOMException) {
+            throw new Error(`The request has timed out.`);
+        } else {
+            throw e;
+        }
     }
 };
 

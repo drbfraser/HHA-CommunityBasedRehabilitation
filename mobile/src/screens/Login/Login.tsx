@@ -69,8 +69,13 @@ const Login = () => {
             await login(usernameToUse, password);
             // Navigation is handled by App component as it updates the AuthState.
         } catch (e) {
-            const errorMessage = e instanceof APIFetchFailError && e.details ? e.details : `${e}`;
-            setStatus({ status: "failed", error: errorMessage });
+            if (e.name === "AbortError") {
+                setStatus({ status: "failed", error: `The request has timed out.` });
+            } else {
+                const errorMessage =
+                    e instanceof APIFetchFailError && e.details ? e.details : `${e}`;
+                setStatus({ status: "failed", error: errorMessage });
+            }
         }
     };
 

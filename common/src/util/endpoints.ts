@@ -2,7 +2,7 @@ import { getAuthToken } from "./auth";
 import { commonConfiguration } from "../init";
 import buildFormErrorInternal from "./internal/buildFormError";
 import rejectWithWrappedError from "./internal/rejectWithWrappedError";
-import { DEFAULT_FETCH_TIMEOUT_MILLIS } from "../constants"
+import { DEFAULT_FETCH_TIMEOUT_MILLIS } from "../constants";
 
 export enum Endpoint {
     LOGIN = "login",

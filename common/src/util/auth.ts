@@ -11,7 +11,7 @@ import {
     setRefreshToken,
 } from "./internal/tokens";
 import rejectWithWrappedError from "./internal/rejectWithWrappedError";
-import { DEFAULT_FETCH_TIMEOUT_MILLIS } from "../constants"
+import { DEFAULT_FETCH_TIMEOUT_MILLIS } from "../constants";
 
 /**
  * Validates the given token to check if it's valid for use.
@@ -95,11 +95,11 @@ const requestTokens = async (
             );
         }
     } catch (e) {
-      console.error(e);
-        if (e.name === 'AbortError' && e instanceof DOMException) {
-          throw new Error(`The request has timed out.`);
+        console.error(e);
+        if (e.name === "AbortError" && e instanceof DOMException) {
+            throw new Error(`The request has timed out.`);
         } else {
-          throw e;
+            throw e;
         }
     }
 };

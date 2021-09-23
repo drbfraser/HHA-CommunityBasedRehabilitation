@@ -16,7 +16,7 @@ const rejectWithWrappedError = async (e: any): Promise<Response> => {
                 ? await commonConfiguration.fetchErrorWrapper(Error(`The request has timed out.`))
                 : Error(`The request has timed out.`)
         );
-    };
+    }
 
     return Promise.reject<Response>(
         commonConfiguration.fetchErrorWrapper && e instanceof Error

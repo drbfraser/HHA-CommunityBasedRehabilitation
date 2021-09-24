@@ -38,8 +38,6 @@ import {
     serviceTypes,
 } from "@cbr/common/forms/Referral/referralFields";
 
-import ImageUploading, { ImageListType } from "react-images-uploading";
-
 interface IFormProps {
     formikProps: FormikProps<any>;
 }
@@ -90,18 +88,7 @@ const ReferralServiceForm = (
 
 const WheelchairForm = (props: IFormProps) => {
     const styles = useStyles();
-    const [images, setImages] = React.useState([]);
-    const maxNumber = 69;
-  
-    const onChange = (
-      imageList: ImageListType,
-      addUpdateIndex: number[] | undefined
-    ) => {
-      // data for submit
-      console.log(imageList, addUpdateIndex);
-      setImages(imageList as never[]);
-    };
-
+    
     return (
         <div>
             <FormLabel>What type of wheelchair user?</FormLabel>
@@ -161,30 +148,15 @@ const WheelchairForm = (props: IFormProps) => {
             {props.formikProps.values[ReferralFormField.wheelchairOwned] &&
                 props.formikProps.values[ReferralFormField.wheelchairRepairable] && (
                     <><Alert severity="info">Please bring wheelchair to the center</Alert>
-                    <ImageUploading
-                    multiple
-                    value ={images}
-                    onChange={onChange}
-                    maxNumber={maxNumber}>
-                        {({
-                            imageList,
-                            onImageUpload,
-                            onImageRemoveAll,
-                            onImageRemove
-                        })=>(
-                            <div className ="upload-wrapper"> 
-                                <button type ="button" onClick ={onImageUpload}> Choose Images </button>
-                                &nbsp;
-                                <button type ="button" onClick={onImageRemoveAll}>Remove All</button>
-                                {imageList.map((image,index) =>(
-                                    <div key ={index} className="image-item">
-                                        <img src={image.dataURL} alt="" width="100" />
-                                        <button onClick={() => onImageRemove(index)}>Remove</button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </ImageUploading>
+                    <br/>
+                    <img src ={props.formikProps.values[ReferralFormField.file]} width="100px"></img><br/>
+                    <input
+                        type ='file'
+                        name={ReferralFormField.file}
+                        onChange={(event)=>{
+                            props.formikProps.setFieldValue(ReferralFormField.file,URL.createObjectURL(event.target.files![0]))
+                        }}
+                    ></input>
                     </>
                 )}
         </div>

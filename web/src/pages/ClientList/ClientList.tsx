@@ -1,5 +1,6 @@
 import React from "react";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { CSVLink } from "react-csv";
+import { useCallback, useEffect, useState, useRef, useMemo } from "react";
 import {
     CellParams,
     CellValue,
@@ -192,6 +193,40 @@ const ClientList = () => {
         requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption, allClientsMode);
     }, [searchValue, searchOption, allClientsMode, requestClientRowsDebounced]);
 
+    const data = () => {
+      // if (!open || !stats || !zones.size || !disabilities.size) {
+      //     return "Data not ready";
+      // }
+
+      const rows = [];
+
+      rows.push(["***Client List***"]);
+      rows.push(["ID", "Name", "Zone", "Health", "Education", "Social"]);
+    //   ...Object.entries(riskTypes).map(([value, { name }]) => ({
+    //     field: value,
+    //     headerName: name,
+    //     flex: 0.7,
+    //     renderHeader: RenderRiskHeader,
+    //     renderCell: RenderBadge,
+    //     sortComparator: riskComparator,
+    //     hide: riskColumnStates[value].hide,
+    //     hideFunction: riskColumnStates[value].hideFunction,
+    // }))
+    // ...Object.entries(riskTypes).forEach((v) => {
+    //       rows.push([
+    //           // zones.get(v.zone_id),
+    //           // v.total,
+    //           // v.health_count,
+    //           // v.educat_count,
+    //           // v.social_count,
+    //       ]);
+    //   });
+
+      // rows.push([""]);
+
+      return rows;
+    };
+
     return (
         <div className={styles.root}>
             <div className={styles.switch}>
@@ -305,6 +340,15 @@ const ClientList = () => {
                     },
                 ]}
             />
+            {console.log(riskTypes)}
+            {/* <div className={styles.downloadSVC}>
+                <Typography variant="body1">
+                    <CSVLink filename="CBRStats.csv" data={data}>
+                        Download statistics
+                    </CSVLink>{" "}
+                    as a CSV file.
+                </Typography>
+            </div> */}
         </div>
     );
 };

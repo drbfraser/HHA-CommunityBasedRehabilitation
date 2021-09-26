@@ -37,7 +37,7 @@ import {
     wheelchairValidationSchema,
     serviceTypes,
 } from "@cbr/common/forms/Referral/referralFields";
-import Thumb from "components/WheelChairPhotoView/Thumb";
+import {Thumb} from "components/WheelChairPhotoView/Thumb";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -150,11 +150,11 @@ const WheelchairForm = (props: IFormProps) => {
                 props.formikProps.values[ReferralFormField.wheelchairRepairable] && (
                     <><Alert severity="info">Please bring wheelchair to the center</Alert>
                     <br/>
-                    <Thumb thumb={props.formikProps.values[ReferralFormField.file]}/><br/>
+                    <Thumb file={props.formikProps.values[ReferralFormField.wheelChairImage]}/><br/>
                     <Field
                         component={SimpleFileUpload}
                         type='file'
-                        name={ReferralFormField.file}
+                        name={ReferralFormField.wheelChairImage}
                     />
                     </>
                 )}

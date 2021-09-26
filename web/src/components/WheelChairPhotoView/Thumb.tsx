@@ -1,39 +1,30 @@
-import React from "react"
+import React from "react";
+import { useEffect, useState } from "react"
 
-export default class Thumb extends React.Component<{thumb: any}>{
+interface Iprops {
+    file: any | null;
+}
 
-    state = {
-        loading: false,
-        thumbs: undefined
-    }
-    
-    componentWillReceiveProps = ()=>{
+export const Thumb = (props: Iprops) => {
 
-        this.setState({loading: true},()=>{
-            let reader= new FileReader();
+    const [thumb, setThumb] = useState<string | undefined>(undefined);
+
+    useEffect(()=>{
+        if(props.file !== null){
+            
+            let reader = new FileReader();
 
             reader.onload = () =>{
-                this.setState(()=>({
-                    loading: false,
-                    thumbs: reader.result
-                }))
+                setThumb(reader.result as string)
             }
-            
-            if(this.props.thumb !== null)
-            {
-                console.log(this.props.thumb)
-                reader.readAsDataURL(this.props.thumb)
-            }
-        })
-    }
+            reader.readAsDataURL(props.file)
+        }  
+    },[props.file])
 
-    render(){
-        
-        return(
-            <>
-            <br/>
-            <img alt="" src={this.state.thumbs} width="200 px"/>
-            </>
-        )
-    }
+    return(
+        <>
+        <br/>
+        <img alt="" src={thumb} width="200 px"/>
+        </> 
+    )
 }

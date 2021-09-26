@@ -8,7 +8,7 @@ export default class Thumb extends React.Component<{thumb: any}>{
     }
     
     componentWillReceiveProps = ()=>{
-        
+
         this.setState({loading: true},()=>{
             let reader= new FileReader();
 
@@ -18,8 +18,12 @@ export default class Thumb extends React.Component<{thumb: any}>{
                     thumbs: reader.result
                 }))
             }
-            console.log(this.props.thumb)
-            reader.readAsDataURL(this.props.thumb)
+            
+            if(this.props.thumb !== null)
+            {
+                console.log(this.props.thumb)
+                reader.readAsDataURL(this.props.thumb)
+            }
         })
     }
 

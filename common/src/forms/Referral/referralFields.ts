@@ -57,7 +57,7 @@ export const referralInitialValues = {
     [ReferralFormField.client]: 0,
     [ReferralFormField.wheelchairExperience]: WheelchairExperience.BASIC,
     [ReferralFormField.hipWidth]: "",
-    [ReferralFormField.wheelChairImage]: undefined,
+    [ReferralFormField.wheelChairImage]: null,
     [ReferralFormField.wheelchair]: false,
     [ReferralFormField.wheelchairOwned]: false,
     [ReferralFormField.wheelchairRepairable]: false,

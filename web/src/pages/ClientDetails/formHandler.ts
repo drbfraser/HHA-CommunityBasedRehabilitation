@@ -10,7 +10,7 @@ import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/di
 import { TFormValues } from "./formFields";
 import { IClient } from "@cbr/common/util/clients";
 import { appendPicture } from "../../util/clientSubmission";
-import { fieldLabels } from "../NewClient/formFields";
+import { clientFieldLabels } from "@cbr/common/forms/Client/clientFields";
 
 const updateClient = async (clientInfo: FormData, clientId: number): Promise<IClient> => {
     const init: RequestInit = {
@@ -61,7 +61,7 @@ export const handleSubmit = async (
     } catch (e) {
         const initialMessage = "Encountered an error while trying to edit the client!";
         const detailedError =
-            e instanceof APIFetchFailError ? e.buildFormError(fieldLabels) : `${e}`;
+            e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);
     } finally {
         helpers.setSubmitting(false);

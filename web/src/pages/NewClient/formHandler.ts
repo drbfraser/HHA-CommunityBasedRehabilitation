@@ -1,5 +1,5 @@
 import { FormikHelpers } from "formik";
-import { fieldLabels, TFormValues } from "./formFields";
+import { clientFieldLabels, TClientValues } from "@cbr/common/forms/Client/clientFields";
 import {
     apiFetch,
     APIFetchFailError,
@@ -27,7 +27,7 @@ const addClient = async (clientInfo: FormData) => {
 };
 
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
-export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
+export const handleSubmit = async (values: TClientValues, helpers: FormikHelpers<TClientValues>) => {
     try {
         const disabilities = await getDisabilities();
 
@@ -79,7 +79,7 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
     } catch (e) {
         const initialMessage = "Encountered an error while trying to create the client!";
         const detailedError =
-            e instanceof APIFetchFailError ? e.buildFormError(fieldLabels) : `${e}`;
+            e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);
     } finally {
         helpers.setSubmitting(false);

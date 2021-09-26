@@ -26,6 +26,7 @@ export enum ClientField {
     socialRequirements = "socialRequirements",
     socialGoals = "socialGoals",
     picture = "picture",
+    pictureChanged = "pictureChanged",
 }
 
 export const clientFieldLabels = {
@@ -66,7 +67,6 @@ export const clientInitialValues = {
     [ClientField.caregiverPhone]: "",
     [ClientField.caregiverName]: "",
     [ClientField.caregiverEmail]: "",
-    [ClientField.picture]: "",
     [ClientField.disability]: [] as number[],
     [ClientField.otherDisability]: "",
     [ClientField.interviewConsent]: false,
@@ -79,6 +79,8 @@ export const clientInitialValues = {
     [ClientField.socialRisk]: "",
     [ClientField.socialRequirements]: "",
     [ClientField.socialGoals]: "",
+    [ClientField.picture]: "",
+    [ClientField.pictureChanged]: false,
 };
 
 export type TClientValues = typeof clientInitialValues;

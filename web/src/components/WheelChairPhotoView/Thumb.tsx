@@ -10,7 +10,7 @@ export const Thumb = (props: Iprops) => {
     const [thumb, setThumb] = useState<string | undefined>(undefined);
 
     useEffect(()=>{
-        if(props.file !== null){
+        if(props.file !== undefined){
             
             let reader = new FileReader();
 

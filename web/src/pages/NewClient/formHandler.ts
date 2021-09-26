@@ -71,6 +71,7 @@ export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<T
         const formData = objectToFormData(newClient);
 
         if (values.pictureChanged && values.picture) {
+            console.log(`value of picture is ${values.picture}`)
             await appendPicture(formData, values.picture, null);
         }
 

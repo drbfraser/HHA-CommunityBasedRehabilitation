@@ -193,39 +193,21 @@ const ClientList = () => {
         requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption, allClientsMode);
     }, [searchValue, searchOption, allClientsMode, requestClientRowsDebounced]);
 
-    const data = () => {
-      // if (!open || !stats || !zones.size || !disabilities.size) {
-      //     return "Data not ready";
-      // }
+    // const data = () => {
+    //   return [
+    //     ["firstname", "lastname", "email"],
+    //     ["Ahmed", "Tomi", "ah@smthing.co.com"],
+    //     ["Raed", "Labes", "rl@smthing.co.com"],
+    //     ["Yezzi", "Min l3b", "ymin@cocococo.com"]
+    //   ];
+    // }
 
-      const rows = [];
-
-      rows.push(["***Client List***"]);
-      rows.push(["ID", "Name", "Zone", "Health", "Education", "Social"]);
-    //   ...Object.entries(riskTypes).map(([value, { name }]) => ({
-    //     field: value,
-    //     headerName: name,
-    //     flex: 0.7,
-    //     renderHeader: RenderRiskHeader,
-    //     renderCell: RenderBadge,
-    //     sortComparator: riskComparator,
-    //     hide: riskColumnStates[value].hide,
-    //     hideFunction: riskColumnStates[value].hideFunction,
-    // }))
-    // ...Object.entries(riskTypes).forEach((v) => {
-    //       rows.push([
-    //           // zones.get(v.zone_id),
-    //           // v.total,
-    //           // v.health_count,
-    //           // v.educat_count,
-    //           // v.social_count,
-    //       ]);
-    //   });
-
-      // rows.push([""]);
-
-      return rows;
-    };
+    const data = [
+        ["firstname", "lastname", "email"],
+        ["Ahmed", "Tomi", "ah@smthing.co.com"],
+        ["Raed", "Labes", "rl@smthing.co.com"],
+        ["Yezzi", "Min l3b", "ymin@cocococo.com"]
+      ];
 
     return (
         <div className={styles.root}>
@@ -340,14 +322,19 @@ const ClientList = () => {
                     },
                 ]}
             />
-            {console.log(riskTypes)}
-            {/* <div className={styles.downloadSVC}>
-                <Typography variant="body1">
-                    <CSVLink filename="CBRStats.csv" data={data}>
-                        Download statistics
-                    </CSVLink>{" "}
-                    as a CSV file.
-                </Typography>
+            {console.log("--------------------------------------------------------")}
+            {rows.forEach((rows) => {
+              console.log(" "+rows.id+" "+rows.name);
+            })}
+            {console.log("--------------------------------------------------------")}
+            <div className={styles.downloadSVC}>
+              {/* <button>Download CSV</button> */}
+              <CSVLink filename="Report.csv" data={data}>
+                Download me
+              </CSVLink>
+            </div>
+            {/* <div>
+              <CSVLink {...csvReport}>Export to CSV</CSVLink>
             </div> */}
         </div>
     );

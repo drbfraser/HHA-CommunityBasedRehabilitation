@@ -223,6 +223,7 @@ class Referral(models.Model):
 
     picture = models.ImageField(
         upload_to=rename_file,
+        storage=OverwriteStorage(),
         blank=True,
     )  # if picture available
 

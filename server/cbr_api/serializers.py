@@ -239,6 +239,7 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
             "orthotic",
             "orthotic_injury_location",
             "services_other",
+            "picture"
         ]
 
         read_only_fields = [

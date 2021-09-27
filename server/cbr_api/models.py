@@ -217,7 +217,7 @@ class Referral(models.Model):
         new_filename = (
             f"referral-{self.pk}{file_ext}"
             if self.pk is not None
-            else f"temp-{get_random_string(10)}-{file_root}{file_ext}"
+            else f"referral-{get_random_string(10)}-{file_root}{file_ext}"
         )
         return os.path.join(referral_picture_upload_dir, new_filename)
 
@@ -230,6 +230,27 @@ class Referral(models.Model):
     client = models.ForeignKey(
         Client, related_name="referrals", on_delete=models.CASCADE
     )
+
+    def save(self, *args, **kwargs):
+        self.modified_date = int(time.time())
+        # The image might need to be renamed if this is a new client, since a new client would be missing the
+        # autoincrement primary key (id).
+        needs_image_rename = (
+            self.pk is None
+            and self.picture.name is not None
+            and len(self.picture.name) > 0
+        )
+
+        super().save(*args, **kwargs)
+        if needs_image_rename and self.pk is not None:
+            # Save a second time so that the picture gets a proper name and not a temporary name.
+            old_file_path = self.picture.path
+            self.picture.save(self.picture.name, self.picture.file)
+            # The picture should now have the expected name from the rename_file function.
+            # However, this saves it as a new file and doesn't delete the old, temp file.
+            # Delete the temp file (sanity check to make sure it's really a temp file)
+            if old_file_path != self.picture.path:
+                os.remove(old_file_path)
 
     class Experience(models.TextChoices):
         BASIC = "BAS", _("Basic")

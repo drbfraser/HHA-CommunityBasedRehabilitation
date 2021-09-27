@@ -12,7 +12,7 @@ import {
     Stepper,
 } from "@material-ui/core";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { CheckboxWithLabel, RadioGroup, SimpleFileUpload, TextField } from "formik-material-ui";
+import { CheckboxWithLabel, RadioGroup,TextField } from "formik-material-ui";
 import React, { useState } from "react";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import {
@@ -37,7 +37,7 @@ import {
     wheelchairValidationSchema,
     serviceTypes,
 } from "@cbr/common/forms/Referral/referralFields";
-import {Thumb} from "components/WheelChairPhotoView/Thumb";
+import {PhotoView} from "components/WheelChairPhotoView/PhotoView";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -150,12 +150,12 @@ const WheelchairForm = (props: IFormProps) => {
                 props.formikProps.values[ReferralFormField.wheelchairRepairable] && (
                     <><Alert severity="info">Please bring wheelchair to the center</Alert>
                     <br/>
-                    <Thumb file={props.formikProps.values[ReferralFormField.wheelChairImage]}/><br/>
-                    <Field
-                        component={SimpleFileUpload}
-                        type='file'
-                        name={ReferralFormField.wheelChairImage}
-                    />
+                    <PhotoView
+                        onPictureChange={(pictureURL)=>{
+                            console.log(`picture URL is ${pictureURL}`)
+                            props.formikProps.setFieldValue(ReferralFormField.wheelChairImage,pictureURL)
+                        }}
+                    ></PhotoView>
                     </>
                 )}
         </div>

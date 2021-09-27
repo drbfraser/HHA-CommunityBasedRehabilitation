@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useStyles } from "../NewClient/ClientForm.styles";
-
 import { Field, Form, Formik, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
-
-import { fieldLabels, FormField, TFormValues, validationSchema } from "./formFields";
-
+import {
+    clientFieldLabels,
+    ClientField,
+    clientDetailsValidationSchema,
+    TClientFormValues,
+} from "@cbr/common/forms/Client/clientFields";
 import {
     Accordion,
     AccordionDetails,
@@ -15,7 +17,6 @@ import {
     Grid,
     MenuItem,
 } from "@material-ui/core";
-
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { handleCancel, handleSubmit } from "./formHandler";
 import { genders, IClient } from "@cbr/common/util/clients";
@@ -38,15 +39,15 @@ const ClientInfoForm = (props: IProps) => {
     return (
         <Formik
             initialValues={
-                { ...props.clientInfo, [FormField.pictureChanged]: false } as TFormValues
+                { ...props.clientInfo, [ClientField.pictureChanged]: false } as TClientFormValues
             }
-            validationSchema={validationSchema}
-            onReset={(values: TFormValues, formikHelpers) => {
-                formikHelpers.setFieldValue(FormField.pictureChanged, false);
+            validationSchema={clientDetailsValidationSchema}
+            onReset={(values: TClientFormValues, formikHelpers) => {
+                formikHelpers.setFieldValue(ClientField.pictureChanged, false);
             }}
-            onSubmit={(values: TFormValues, formikHelpers) => {
+            onSubmit={(values: TClientFormValues, formikHelpers) => {
                 handleSubmit(values, formikHelpers, setIsEditing)
-                    .then(() => formikHelpers.setFieldValue(FormField.pictureChanged, false))
+                    .then(() => formikHelpers.setFieldValue(ClientField.pictureChanged, false))
                     .catch((e) =>
                         alert(
                             `Encountered an error while trying to edit the client! ${
@@ -56,15 +57,20 @@ const ClientInfoForm = (props: IProps) => {
                     );
             }}
         >
-            {({ isSubmitting, resetForm, setFieldValue, values }: FormikProps<TFormValues>) => (
+            {({
+                isSubmitting,
+                resetForm,
+                setFieldValue,
+                values,
+            }: FormikProps<TClientFormValues>) => (
                 <Grid container direction="row" justify="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
                         <ProfilePicCard
                             clientId={props.clientInfo.id}
                             isEditing={isEditing}
                             onPictureChange={(newPictureURL) => {
-                                setFieldValue(FormField.picture, newPictureURL);
-                                setFieldValue(FormField.pictureChanged, true);
+                                setFieldValue(ClientField.picture, newPictureURL);
+                                setFieldValue(ClientField.pictureChanged, true);
                             }}
                             picture={values.picture}
                         />
@@ -120,10 +126,10 @@ const ClientInfoForm = (props: IProps) => {
                                     <Field
                                         className={styles.disabledTextField}
                                         component={TextField}
-                                        name={FormField.first_name}
+                                        name={ClientField.first_name}
                                         variant="outlined"
                                         disabled={!isEditing}
-                                        label={fieldLabels[FormField.first_name]}
+                                        label={clientFieldLabels[ClientField.firstName]}
                                         required
                                         fullWidth
                                     />
@@ -132,10 +138,10 @@ const ClientInfoForm = (props: IProps) => {
                                     <Field
                                         component={TextField}
                                         className={styles.disabledTextField}
-                                        name={FormField.last_name}
+                                        name={ClientField.last_name}
                                         variant="outlined"
                                         disabled={!isEditing}
-                                        label={fieldLabels[FormField.last_name]}
+                                        label={clientFieldLabels[ClientField.lastName]}
                                         required
                                         fullWidth
                                     />
@@ -150,8 +156,8 @@ const ClientInfoForm = (props: IProps) => {
                                         disabled={!isEditing}
                                         variant="outlined"
                                         InputLabelProps={{ shrink: true }}
-                                        label={fieldLabels[FormField.birth_date]}
-                                        name={FormField.birth_date}
+                                        label={clientFieldLabels[ClientField.birthDate]}
+                                        name={ClientField.birth_date}
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -167,8 +173,8 @@ const ClientInfoForm = (props: IProps) => {
                                             disabled={!isEditing}
                                             required
                                             variant="outlined"
-                                            label={fieldLabels[FormField.gender]}
-                                            name={FormField.gender}
+                                            label={clientFieldLabels[ClientField.gender]}
+                                            name={ClientField.gender}
                                         >
                                             {Object.entries(genders).map(([value, name]) => (
                                                 <MenuItem key={value} value={value}>
@@ -184,8 +190,8 @@ const ClientInfoForm = (props: IProps) => {
                                         variant="outlined"
                                         disabled={!isEditing}
                                         className={styles.disabledTextField}
-                                        name={FormField.village}
-                                        label={fieldLabels[FormField.village]}
+                                        name={ClientField.village}
+                                        label={clientFieldLabels[ClientField.village]}
                                         required
                                         fullWidth
                                     />
@@ -200,8 +206,8 @@ const ClientInfoForm = (props: IProps) => {
                                             className={styles.disabledTextField}
                                             variant="outlined"
                                             required
-                                            label={fieldLabels[FormField.zone]}
-                                            name={FormField.zone}
+                                            label={clientFieldLabels[ClientField.zone]}
+                                            name={ClientField.zone}
                                         >
                                             {Array.from(zones).map(([id, name]) => (
                                                 <MenuItem key={id} value={id}>
@@ -216,9 +222,9 @@ const ClientInfoForm = (props: IProps) => {
                                         component={TextField}
                                         disabled={!isEditing}
                                         className={styles.disabledTextField}
-                                        name={FormField.phone_number}
+                                        name={ClientField.phone_number}
                                         variant="outlined"
-                                        label={fieldLabels[FormField.phone_number]}
+                                        label={clientFieldLabels[ClientField.phoneNumber]}
                                         fullWidth
                                     />
                                 </Grid>
@@ -232,9 +238,9 @@ const ClientInfoForm = (props: IProps) => {
                                         }}
                                         className={styles.disabledTextField}
                                         disabled={!isEditing}
-                                        label={fieldLabels[FormField.disability]}
+                                        label={clientFieldLabels[ClientField.disability]}
                                         required
-                                        name={FormField.disability}
+                                        name={ClientField.disability}
                                         variant="outlined"
                                     >
                                         {Array.from(disabilities).map(([id, name]) => (
@@ -243,7 +249,7 @@ const ClientInfoForm = (props: IProps) => {
                                             </MenuItem>
                                         ))}
                                     </Field>
-                                    {(values[FormField.disability] as number[]).includes(
+                                    {(values[ClientField.disability] as number[]).includes(
                                         getOtherDisabilityId(disabilities)
                                     ) && (
                                         <div>
@@ -252,10 +258,12 @@ const ClientInfoForm = (props: IProps) => {
                                                 component={TextField}
                                                 className={styles.disabledTextField}
                                                 fullWidth
-                                                label={fieldLabels[FormField.other_disability]}
+                                                label={
+                                                    clientFieldLabels[ClientField.otherDisability]
+                                                }
                                                 disabled={!isEditing}
                                                 required
-                                                name={FormField.other_disability}
+                                                name={ClientField.other_disability}
                                                 variant="outlined"
                                             />
                                         </div>
@@ -267,9 +275,9 @@ const ClientInfoForm = (props: IProps) => {
                                         type="checkbox"
                                         disabled={!isEditing}
                                         className={styles.disabledTextField}
-                                        name={FormField.caregiver_present}
+                                        name={ClientField.caregiver_present}
                                         Label={{
-                                            label: fieldLabels[FormField.caregiver_present],
+                                            label: clientFieldLabels[ClientField.caregiverPresent],
                                         }}
                                     />
                                 </Grid>
@@ -289,11 +297,11 @@ const ClientInfoForm = (props: IProps) => {
                                                             className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
                                                             component={TextField}
                                                             disabled={!isEditing}
-                                                            name={FormField.caregiver_name}
+                                                            name={ClientField.caregiver_name}
                                                             variant="outlined"
                                                             label={
-                                                                fieldLabels[
-                                                                    FormField.caregiver_name
+                                                                clientFieldLabels[
+                                                                    ClientField.caregiverName
                                                                 ]
                                                             }
                                                             fullWidth
@@ -303,12 +311,12 @@ const ClientInfoForm = (props: IProps) => {
                                                         <Field
                                                             className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
                                                             component={TextField}
-                                                            name={FormField.caregiver_email}
+                                                            name={ClientField.caregiver_email}
                                                             disabled={!isEditing}
                                                             variant="outlined"
                                                             label={
-                                                                fieldLabels[
-                                                                    FormField.caregiver_email
+                                                                clientFieldLabels[
+                                                                    ClientField.caregiverEmail
                                                                 ]
                                                             }
                                                             fullWidth
@@ -318,12 +326,12 @@ const ClientInfoForm = (props: IProps) => {
                                                         <Field
                                                             className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
                                                             component={TextField}
-                                                            name={FormField.caregiver_phone}
+                                                            name={ClientField.caregiver_phone}
                                                             disabled={!isEditing}
                                                             variant="outlined"
                                                             label={
-                                                                fieldLabels[
-                                                                    FormField.caregiver_phone
+                                                                clientFieldLabels[
+                                                                    ClientField.caregiverPhone
                                                                 ]
                                                             }
                                                             fullWidth

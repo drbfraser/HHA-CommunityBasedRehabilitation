@@ -7,7 +7,7 @@ import {
 } from "@cbr/common/util/endpoints";
 import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
-import { TFormValues } from "./formFields";
+import { TClientFormValues } from "@cbr/common/forms/Client/clientFields";
 import { IClient } from "@cbr/common/util/clients";
 import { appendPicture } from "../../util/clientSubmission";
 import { clientFieldLabels } from "@cbr/common/forms/Client/clientFields";
@@ -24,8 +24,8 @@ const updateClient = async (clientInfo: FormData, clientId: number): Promise<ICl
  * @throws Error if submission fails
  */
 export const handleSubmit = async (
-    values: TFormValues,
-    helpers: FormikHelpers<TFormValues>,
+    values: TClientFormValues,
+    helpers: FormikHelpers<TClientFormValues>,
     setIsEditing: (isEditing: boolean) => void
 ) => {
     try {

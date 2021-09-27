@@ -98,6 +98,7 @@ class RiskLevel(models.TextChoices):
 
 
 client_picture_upload_dir = "images/clients"
+referral_picture_upload_dir ="images/referrals"
 
 
 class Client(models.Model):
@@ -218,7 +219,7 @@ class Referral(models.Model):
             if self.pk is not None
             else f"temp-{get_random_string(10)}-{file_root}{file_ext}"
         )
-        return os.path.join(client_picture_upload_dir, new_filename)
+        return os.path.join(referral_picture_upload_dir, new_filename)
 
     picture = models.ImageField(
         upload_to=rename_file,

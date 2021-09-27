@@ -8,6 +8,7 @@ export interface IReferral {
     outcome: string;
     wheelchair: boolean;
     wheelchair_experience: WheelchairExperience;
+    picture: string,
     hip_width: number;
     wheelchair_owned: boolean;
     wheelchair_repairable: boolean;

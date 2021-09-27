@@ -152,8 +152,7 @@ const WheelchairForm = (props: IFormProps) => {
                     <br/>
                     <PhotoView
                         onPictureChange={(pictureURL)=>{
-                            console.log(`picture URL is ${pictureURL}`)
-                            props.formikProps.setFieldValue(ReferralFormField.wheelChairImage,pictureURL)
+                            props.formikProps.setFieldValue(ReferralFormField.picture,pictureURL)
                         }}
                     ></PhotoView>
                     </>

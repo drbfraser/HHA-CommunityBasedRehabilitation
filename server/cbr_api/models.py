@@ -53,8 +53,7 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(_("last name"), max_length=50)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     phone_number = models.CharField(max_length=50, blank=True)
-    role = models.CharField(
-        max_length=3, choices=Role.choices, default=Role.WORKER)
+    role = models.CharField(max_length=3, choices=Role.choices, default=Role.WORKER)
     is_active = models.BooleanField(
         _("active"),
         default=True,
@@ -182,8 +181,7 @@ class Client(models.Model):
 
 
 class ClientRisk(models.Model):
-    client = models.ForeignKey(
-        Client, related_name="risks", on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, related_name="risks", on_delete=models.CASCADE)
     timestamp = models.BigIntegerField()
     risk_type = RiskType.getField()
     risk_level = RiskLevel.getField()
@@ -192,8 +190,7 @@ class ClientRisk(models.Model):
 
 
 class Visit(models.Model):
-    client = models.ForeignKey(
-        Client, related_name="visits", on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, related_name="visits", on_delete=models.CASCADE)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name="visits", on_delete=models.PROTECT
     )
@@ -208,8 +205,7 @@ class Visit(models.Model):
 
 
 class Referral(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.PROTECT)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_referred = models.BigIntegerField()
     date_resolved = models.BigIntegerField(default=0)
     resolved = models.BooleanField(default=False)
@@ -294,8 +290,7 @@ class Outcome(models.Model):
         ONGOING = "GO", _("Ongoing")
         CONCLUDED = "CON", _("Concluded")
 
-    visit = models.ForeignKey(
-        Visit, related_name="outcomes", on_delete=models.CASCADE)
+    visit = models.ForeignKey(Visit, related_name="outcomes", on_delete=models.CASCADE)
     risk_type = RiskType.getField()
     goal_met = models.CharField(max_length=3, choices=Goal.choices)
     outcome = models.TextField(blank=True)
@@ -380,8 +375,7 @@ class BaselineSurvey(models.Model):
     # Livelihood
     work = models.BooleanField()
     work_what = models.CharField(max_length=50, blank=True)
-    work_status = models.CharField(
-        max_length=5, choices=Employment.choices, blank=True)
+    work_status = models.CharField(max_length=5, choices=Employment.choices, blank=True)
     work_meet_financial_needs = models.BooleanField()
     work_affected_by_disability = models.BooleanField()
     work_want = models.BooleanField()

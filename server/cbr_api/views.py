@@ -126,8 +126,7 @@ class ClientImage(AuthenticatedObjectDownloadView):
 
     @extend_schema(
         description="Gets the profile picture for a client if it exists.",
-        responses={(200, "image/*"): OpenApiTypes.BINARY,
-                   304: None, 404: None},
+        responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
     )
     @cache_control(max_age=1209600, no_cache=True, private=True)
     def get(self, request, pk):
@@ -206,12 +205,12 @@ class ReferralImage(AuthenticatedObjectDownloadView):
 
     @extend_schema(
         description="Gets the wheelchair image of referral if it exists.",
-        responses={(200, "image/*"): OpenApiTypes.BINARY,
-                   304: None, 404: None},
+        responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
     )
     @cache_control(max_age=1209600, no_cache=True, private=True)
     def get(self, request, pk):
         if DEBUG:
+
             def super_get(self_new, request_new, pk_new):
                 return super().get(self_new, request_new, pk_new)
 

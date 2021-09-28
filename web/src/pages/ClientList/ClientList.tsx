@@ -1,6 +1,7 @@
 import React from "react";
 import { CSVLink } from "react-csv";
-import { useCallback, useEffect, useState, useRef, useMemo } from "react";
+import { Button } from "@material-ui/core";
+import { useCallback, useEffect, useState, useRef } from "react";
 import {
     CellParams,
     CellValue,
@@ -193,22 +194,6 @@ const ClientList = () => {
         requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption, allClientsMode);
     }, [searchValue, searchOption, allClientsMode, requestClientRowsDebounced]);
 
-    // const data = () => {
-    //   return [
-    //     ["firstname", "lastname", "email"],
-    //     ["Ahmed", "Tomi", "ah@smthing.co.com"],
-    //     ["Raed", "Labes", "rl@smthing.co.com"],
-    //     ["Yezzi", "Min l3b", "ymin@cocococo.com"]
-    //   ];
-    // }
-
-    const data = [
-        ["firstname", "lastname", "email"],
-        ["Ahmed", "Tomi", "ah@smthing.co.com"],
-        ["Raed", "Labes", "rl@smthing.co.com"],
-        ["Yezzi", "Min l3b", "ymin@cocococo.com"]
-      ];
-
     return (
         <div className={styles.root}>
             <div className={styles.switch}>
@@ -322,20 +307,13 @@ const ClientList = () => {
                     },
                 ]}
             />
-            {console.log("--------------------------------------------------------")}
-            {rows.forEach((rows) => {
-              console.log(" "+rows.id+" "+rows.name);
-            })}
-            {console.log("--------------------------------------------------------")}
             <div className={styles.downloadSVC}>
-              {/* <button>Download CSV</button> */}
-              <CSVLink filename="Report.csv" data={data}>
-                Download me
-              </CSVLink>
+                <CSVLink filename="ClientList.csv" data={rows}>
+                  <button className={styles.downloadSVCButton}>
+                    EXPORT TO CSV
+                  </button>
+                </CSVLink>
             </div>
-            {/* <div>
-              <CSVLink {...csvReport}>Export to CSV</CSVLink>
-            </div> */}
         </div>
     );
 };

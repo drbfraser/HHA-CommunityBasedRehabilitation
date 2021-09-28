@@ -18,6 +18,7 @@ export const Thumb = (props:Iprops) =>{
             .then((resp)=>resp.blob())
             .then((blob)=>{
                 console.log(blob)
+                setThumb(URL.createObjectURL(blob))
             })
             
         }

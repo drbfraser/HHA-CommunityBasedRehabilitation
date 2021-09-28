@@ -203,12 +203,17 @@ class ReferralImage(AuthenticatedObjectDownloadView):
     file_field = "picture"
 
     @extend_schema(
-        description="Gets the profile picture for a referral if it exists.",
+        description="Gets the profile picture for a client if it exists.",
         responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
     )
     @cache_control(max_age=1209600, no_cache=True, private=True)
     def get(self, request, pk):
-        
+        if DEBUG:
+            def super_get(self_new, request_new, pk_new):
+                return super().get(self_new, request_new, pk_new)
+
+            return super_get(self, request, pk)
+
         referral = models.Referral.objects.get(pk=pk)
         if referral:
             if len(referral.picture.name) <= 0:

@@ -28,6 +28,7 @@ import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import * as Yup from "yup";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { Thumb } from "components/WheelChairPhotoView/Thumb";
 
 interface IEntryProps {
     referral: IReferral;
@@ -38,7 +39,6 @@ interface IEntryProps {
 const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) => {
     const [open, setOpen] = useState(false);
     const styles = useStyles();
-
     const Summary = ({ clickable }: { clickable: boolean }) => {
         const ReasonChip = ({ label }: { label: string }) => (
             <Chip label={label} clickable={clickable} color="primary" variant="outlined" />
@@ -55,7 +55,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                 {referral.wheelchair && <ReasonChip label="Wheelchair" />}{" "}
                 {referral.physiotherapy && <ReasonChip label="Physiotherapy" />}{" "}
                 {referral.prosthetic && <ReasonChip label="Prosthetic" />}{" "}
-                {referral.orthotic && <ReasonChip label="Orthotic" />}{" "}
+                {referral.orthotic && <ReasonChip label="Orthotic" />}{" "}      
             </>
         );
     };
@@ -150,6 +150,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                         <b>Wheelchair Repairable?</b>{" "}
                         {referral.wheelchair_repairable ? "Yes" : "No"}
                         <br />
+                        <Thumb Id={referral.id} Url={referral.picture}></Thumb>
                         <br />
                     </>
                 )}

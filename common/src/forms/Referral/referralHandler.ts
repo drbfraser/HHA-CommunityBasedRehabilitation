@@ -3,6 +3,7 @@ import { ReferralFormField, ReferralFormValues } from "./referralFields";
 import { apiFetch, Endpoint, objectToFormData } from "../../util/endpoints";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
 import { appendPicture } from "../../util/clientImageSubmission";
+import { appendPic } from "../../util/referralImageSubmission";
 
 const addReferral = async (referralInfo: FormData) => {
     const init: RequestInit = {
@@ -52,7 +53,7 @@ export const referralHandleSubmit = async (values: ReferralFormValues) => {
 
     const referralObj = objectToFormData(newReferral)
     if(values[ReferralFormField.picture]){
-        await appendPicture(referralObj,values[ReferralFormField.picture],null)
+        await appendPic(referralObj,values[ReferralFormField.picture])
     }
     
     return await addReferral(referralObj);

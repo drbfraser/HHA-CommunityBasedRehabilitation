@@ -15,7 +15,7 @@ export const PhotoView = (props: Iprops) => {
         <br/>
         <input
             type="file"
-            accept="image/*"
+            accept= "image/*"
             onChange={(event)=>{
                 const files = event.target.files;
                 if(!files){

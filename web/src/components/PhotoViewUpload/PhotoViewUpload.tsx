@@ -86,13 +86,13 @@ export const ProfilePicCard = (props: IProps) => {
             dispatchImgSrcState({ newImgSrc: props.picture });
         } else if (props.clientId && !props.isEditing) {
             const abortController = new AbortController();
-
             // Note that we refetch the image if the client state changes (and we don't have a local
             // blob to use)
             apiFetch(Endpoint.CLIENT_PICTURE, `${props.clientId}`)
                 .then((resp) => resp.blob())
                 .then((blob) => {
                     hasLoadedImage.current = true;
+                    console.log(blob)
                     dispatchImgSrcState({ newImgSrc: URL.createObjectURL(blob) });
                 })
                 .catch((e) => console.error(e));

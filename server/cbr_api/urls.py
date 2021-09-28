@@ -42,6 +42,11 @@ urlpatterns = [
     path("referral/<int:pk>", views.ReferralDetail.as_view(), name="referral-detail"),
     path("referrals", views.ReferralList.as_view(), name="referral-list"),
     path(
+        "referral/picture/<int:pk>",
+        views.ReferralImage.as_view(),
+        name="referral-picture",
+    ),
+    path(
         "referrals/outstanding",
         views.ReferralOutstanding.as_view(),
         name="referral-outstanding",

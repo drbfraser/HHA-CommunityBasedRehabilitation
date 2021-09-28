@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='referral',
             name='picture',
-            field=models.ImageField(blank=True, storage=cbr_api.storage.OverwriteStorage(), upload_to=cbr_api.models.Referral.rename_file),
+            field=models.ImageField(blank=True, storage=cbr_api.storage.OverwriteStorage(
+            ), upload_to=cbr_api.models.Referral.rename_file),
         ),
     ]

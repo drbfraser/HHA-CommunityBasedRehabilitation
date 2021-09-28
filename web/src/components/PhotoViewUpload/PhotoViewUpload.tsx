@@ -92,7 +92,7 @@ export const ProfilePicCard = (props: IProps) => {
                 .then((resp) => resp.blob())
                 .then((blob) => {
                     hasLoadedImage.current = true;
-                    console.log(blob)
+                    console.log(blob);
                     dispatchImgSrcState({ newImgSrc: URL.createObjectURL(blob) });
                 })
                 .catch((e) => console.error(e));

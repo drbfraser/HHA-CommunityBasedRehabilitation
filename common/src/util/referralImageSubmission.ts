@@ -1,12 +1,8 @@
-export const appendPic = async (
-    formData: FormData,
-    pictureUrl: string,
-) => {
+export const appendPic = async (formData: FormData, pictureUrl: string) => {
     const referralPictureFetch = await fetch(pictureUrl);
     const contentType = referralPictureFetch.headers.get("Content-Type");
 
-    // If needed, fall back to PNG so that the upload can continue; the server will figure out the
-    // image type. The cropper library by default makes PNGs anyway.
+    // Modified from ClientImageSubmission without Id props
     const imageExtension = contentType?.includes("image/")
         ? contentType
               .split(";")
@@ -15,9 +11,5 @@ export const appendPic = async (
               ?.split("/")[1]
         : "png";
 
-    formData.append(
-        "picture",
-        await referralPictureFetch.blob(),
-         `referral-new.${imageExtension}`
-    );
+    formData.append("picture", await referralPictureFetch.blob(), `referral-new.${imageExtension}`);
 };

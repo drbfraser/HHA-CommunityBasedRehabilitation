@@ -2,6 +2,7 @@ import { getAuthToken } from "./auth";
 import { commonConfiguration } from "../init";
 import buildFormErrorInternal from "./internal/buildFormError";
 import rejectWithWrappedError from "./internal/rejectWithWrappedError";
+import { DEFAULT_FETCH_TIMEOUT_MILLIS } from "../constants";
 
 export enum Endpoint {
     LOGIN = "login",
@@ -134,6 +135,10 @@ export const apiFetchByRequest = async (
         request.headers.set("Content-Type", "application/json");
     }
 
+    const abortController: AbortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), DEFAULT_FETCH_TIMEOUT_MILLIS); // timeout value in ms
+    customInit.signal = abortController.signal;
+
     return fetch(request, customInit)
         .then(async (resp) => {
             if (!resp.ok) {
@@ -144,6 +149,7 @@ export const apiFetchByRequest = async (
                     new APIFetchFailError(message, resp.status, await jsonPromise)
                 );
             }
+            clearTimeout(timeoutId); // clears timeout if request completes sooner
 
             return resp;
         })

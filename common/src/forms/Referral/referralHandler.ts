@@ -1,4 +1,3 @@
-
 import { ReferralFormField, ReferralFormValues } from "./referralFields";
 import { apiFetch, Endpoint, objectToFormData } from "../../util/endpoints";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
@@ -18,7 +17,7 @@ const addReferral = async (referralInfo: FormData) => {
 
 export const referralHandleSubmit = async (values: ReferralFormValues) => {
     const disabilities = await getDisabilities();
-    const newReferral ={
+    const newReferral = {
         client: values[ReferralFormField.client],
         wheelchair: values[ReferralFormField.wheelchair],
         wheelchair_experience: values[ReferralFormField.wheelchair]
@@ -51,10 +50,12 @@ export const referralHandleSubmit = async (values: ReferralFormValues) => {
             : "",
     };
 
-    const referralObj = objectToFormData(newReferral)
-    if(values[ReferralFormField.picture]){
-        await appendPic(referralObj,values[ReferralFormField.picture])
+    const referralObj = objectToFormData(newReferral);
+
+    //if referral picture exist, then attached into form data
+    if (values[ReferralFormField.picture]) {
+        await appendPic(referralObj, values[ReferralFormField.picture]);
     }
-    
+
     return await addReferral(referralObj);
 };

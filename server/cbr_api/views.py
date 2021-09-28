@@ -126,7 +126,8 @@ class ClientImage(AuthenticatedObjectDownloadView):
 
     @extend_schema(
         description="Gets the profile picture for a client if it exists.",
-        responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
+        responses={(200, "image/*"): OpenApiTypes.BINARY,
+                   304: None, 404: None},
     )
     @cache_control(max_age=1209600, no_cache=True, private=True)
     def get(self, request, pk):
@@ -198,13 +199,15 @@ class VisitDetail(generics.RetrieveAPIView):
     queryset = models.Visit.objects.all()
     serializer_class = serializers.DetailedVisitSerializer
 
+
 class ReferralImage(AuthenticatedObjectDownloadView):
     model = models.Referral
     file_field = "picture"
 
     @extend_schema(
-        description="Gets the profile picture for a client if it exists.",
-        responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
+        description="Gets the wheelchair image of referral if it exists.",
+        responses={(200, "image/*"): OpenApiTypes.BINARY,
+                   304: None, 404: None},
     )
     @cache_control(max_age=1209600, no_cache=True, private=True)
     def get(self, request, pk):

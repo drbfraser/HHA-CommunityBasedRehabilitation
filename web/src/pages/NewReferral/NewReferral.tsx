@@ -12,7 +12,7 @@ import {
     Stepper,
 } from "@material-ui/core";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { CheckboxWithLabel, RadioGroup,TextField } from "formik-material-ui";
+import { CheckboxWithLabel, RadioGroup, TextField } from "formik-material-ui";
 import React, { useState } from "react";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import {
@@ -37,7 +37,7 @@ import {
     wheelchairValidationSchema,
     serviceTypes,
 } from "@cbr/common/forms/Referral/referralFields";
-import {PhotoView} from "components/WheelChairPhotoView/PhotoView";
+import { PhotoView } from "components/ReferralPhotoView/PhotoView";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -89,7 +89,7 @@ const ReferralServiceForm = (
 
 const WheelchairForm = (props: IFormProps) => {
     const styles = useStyles();
-    
+
     return (
         <div>
             <FormLabel>What type of wheelchair user?</FormLabel>
@@ -148,13 +148,17 @@ const WheelchairForm = (props: IFormProps) => {
             </div>
             {props.formikProps.values[ReferralFormField.wheelchairOwned] &&
                 props.formikProps.values[ReferralFormField.wheelchairRepairable] && (
-                    <><Alert severity="info">Please bring wheelchair to the center</Alert>
-                    <br/>
-                    <PhotoView
-                        onPictureChange={(pictureURL)=>{
-                            props.formikProps.setFieldValue(ReferralFormField.picture,pictureURL)
-                        }}
-                    ></PhotoView>
+                    <>
+                        <Alert severity="info">Please bring wheelchair to the center</Alert>
+                        <br />
+                        <PhotoView
+                            onPictureChange={(pictureURL) => {
+                                props.formikProps.setFieldValue(
+                                    ReferralFormField.picture,
+                                    pictureURL
+                                );
+                            }}
+                        ></PhotoView>
                     </>
                 )}
         </div>

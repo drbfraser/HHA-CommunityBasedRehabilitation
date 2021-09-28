@@ -28,7 +28,7 @@ import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import * as Yup from "yup";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-import { Thumb } from "components/WheelChairPhotoView/Thumb";
+import { Thumb } from "components/ReferralPhotoView/Thumb";
 
 interface IEntryProps {
     referral: IReferral;
@@ -55,7 +55,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                 {referral.wheelchair && <ReasonChip label="Wheelchair" />}{" "}
                 {referral.physiotherapy && <ReasonChip label="Physiotherapy" />}{" "}
                 {referral.prosthetic && <ReasonChip label="Prosthetic" />}{" "}
-                {referral.orthotic && <ReasonChip label="Orthotic" />}{" "}      
+                {referral.orthotic && <ReasonChip label="Orthotic" />}{" "}
             </>
         );
     };

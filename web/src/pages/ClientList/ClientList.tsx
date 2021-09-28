@@ -308,9 +308,7 @@ const ClientList = () => {
             />
             <div className={styles.downloadSVC}>
                 <CSVLink filename="ClientList.csv" data={rows}>
-                  <button className={styles.downloadSVCButton}>
-                    EXPORT TO CSV
-                  </button>
+                    <button className={styles.downloadSVCButton}>EXPORT TO CSV</button>
                 </CSVLink>
             </div>
         </div>

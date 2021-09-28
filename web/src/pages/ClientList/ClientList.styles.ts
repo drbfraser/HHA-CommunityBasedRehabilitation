@@ -18,13 +18,13 @@ export const useStyles = makeStyles(
             display: "flex",
         },
         downloadSVC: {
-          position: "relative",
-          left: "10px",
-          top: "-38px",
+            position: "relative",
+            left: "10px",
+            top: "-38px",
         },
         downloadSVCButton: {
-          borderRadius: "7px 7px",
-          backgroundColor: "#DCDCDC",
+            borderRadius: "7px 7px",
+            backgroundColor: "#DCDCDC",
         },
         // mobile width
         [mediaMobile]: {

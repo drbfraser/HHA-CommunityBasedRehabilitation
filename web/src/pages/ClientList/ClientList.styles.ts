@@ -23,7 +23,7 @@ export const useStyles = makeStyles(
             top: "-42px",
         },
         downloadSVCLink: {
-          textDecoration : "none",
+            textDecoration: "none",
         },
         // mobile width
         [mediaMobile]: {

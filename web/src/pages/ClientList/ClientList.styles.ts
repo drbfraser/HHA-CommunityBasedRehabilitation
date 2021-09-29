@@ -19,12 +19,11 @@ export const useStyles = makeStyles(
         },
         downloadSVC: {
             position: "relative",
-            left: "10px",
-            top: "-38px",
+            left: "15px",
+            top: "-42px",
         },
-        downloadSVCButton: {
-            borderRadius: "7px 7px",
-            backgroundColor: "#DCDCDC",
+        downloadSVCLink: {
+          textDecoration : "none",
         },
         // mobile width
         [mediaMobile]: {

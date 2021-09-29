@@ -2,10 +2,10 @@ import React from "react";
 import { CSVLink } from "react-csv";
 import { useCallback, useEffect, useState, useRef } from "react";
 import {
+    DataGrid,
     CellParams,
     CellValue,
     ColParams,
-    DataGrid,
     DensityTypes,
     GridOverlay,
     RowParams,
@@ -23,6 +23,7 @@ import {
     Switch,
     Typography,
     debounce,
+    Button,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
@@ -307,8 +308,12 @@ const ClientList = () => {
                 ]}
             />
             <div className={styles.downloadSVC}>
-                <CSVLink filename="ClientList.csv" data={rows}>
-                    <button className={styles.downloadSVCButton}>EXPORT TO CSV</button>
+                <CSVLink 
+                  filename="ClientList.csv" 
+                  data={rows} 
+                  className={styles.downloadSVCLink}
+                >
+                    <Button variant="outlined">EXPORT TO CSV </Button>
                 </CSVLink>
             </div>
         </div>

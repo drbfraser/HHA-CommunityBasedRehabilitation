@@ -133,6 +133,16 @@ const ClientList = () => {
         },
     };
 
+    const sortClientsById = (rows: RowsProp) => {
+        let sortById: RowsProp = rows.slice(0);
+
+        sortById.sort((a: any, b: any) => {
+            return a.id - b.id;
+        });
+
+        return sortById;
+    };
+
     const columns = [
         {
             field: "id",
@@ -308,12 +318,13 @@ const ClientList = () => {
                 ]}
             />
             <div className={styles.downloadSVC}>
-                <CSVLink 
-                  filename="ClientList.csv" 
-                  data={rows} 
-                  className={styles.downloadSVCLink}
+                <CSVLink
+                    filename="ClientList.csv"
+                    data={sortClientsById(rows)}
+                    className={styles.downloadSVCLink}
                 >
                     <Button variant="outlined">EXPORT TO CSV </Button>
+                    {console.log(rows)}
                 </CSVLink>
             </div>
         </div>

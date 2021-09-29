@@ -2,10 +2,10 @@ import React from "react";
 import { CSVLink } from "react-csv";
 import { useCallback, useEffect, useState, useRef } from "react";
 import {
-    DataGrid,
     CellParams,
     CellValue,
     ColParams,
+    DataGrid,
     DensityTypes,
     GridOverlay,
     RowParams,
@@ -324,7 +324,6 @@ const ClientList = () => {
                     className={styles.downloadSVCLink}
                 >
                     <Button variant="outlined">EXPORT TO CSV </Button>
-                    {console.log(rows)}
                 </CSVLink>
             </div>
         </div>

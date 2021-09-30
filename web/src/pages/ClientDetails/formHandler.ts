@@ -9,7 +9,7 @@ import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
 import { TClientFormValues } from "@cbr/common/forms/Client/clientFields";
 import { IClient } from "@cbr/common/util/clients";
-import { appendPicture } from "../../util/clientSubmission";
+import { appendPicture } from "@cbr/common/util/clients";
 import { clientFieldLabels } from "@cbr/common/forms/Client/clientFields";
 
 const updateClient = async (clientInfo: FormData, clientId: number): Promise<IClient> => {

@@ -4,7 +4,7 @@ import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import history from "util/history";
+import history from "@cbr/common/util/history";
 import { FormControl, MenuItem } from "@material-ui/core";
 import { handleNewUserSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { userRoles } from "@cbr/common/util/users";

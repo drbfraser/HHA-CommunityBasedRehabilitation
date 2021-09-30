@@ -3,7 +3,8 @@ import { timestampFromFormDate } from "../../util/dates";
 import { apiFetch, APIFetchFailError, Endpoint, objectToFormData } from "../../util/endpoints";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
 import { clientFieldLabels, TClientValues } from "./clientFields";
-import { IClient } from "../../util/clients";
+import { appendPicture, IClient } from "../../util/clients";
+import history from "../../util/history";
 
 const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {
@@ -66,7 +67,12 @@ export const handleNewClientSubmit = async (
     const formData = objectToFormData(newClient);
 
     try {
+        if (values.pictureChanged && values.picture) {
+            await appendPicture(formData, values.picture, null);
+        }
+
         const client: IClient = await addClient(formData);
+        history.push(`/client/${client.id}`);
         return client;
     } catch (e) {
         const initialMessage = "Encountered an error while trying to create the client!";
@@ -74,5 +80,11 @@ export const handleNewClientSubmit = async (
             e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);
         helpers.setSubmitting(false);
+    }
+};
+
+export const handleReset = (resetForm: () => void) => {
+    if (window.confirm("Are you sure you want to clear the form?")) {
+        resetForm();
     }
 };

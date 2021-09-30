@@ -17,11 +17,11 @@ import {
     newClientValidationSchema,
 } from "@cbr/common/forms/Client/clientFields";
 import { riskLevels } from "@cbr/common/util/risks";
-import { handleSubmit, handleReset } from "./formHandler";
 import { genders } from "@cbr/common/util/clients";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
+import { handleNewClientSubmit, handleReset } from "@cbr/common/forms/Client/clientHandler";
 
 const ClientForm = () => {
     const styles = useStyles();
@@ -32,7 +32,7 @@ const ClientForm = () => {
         <Formik
             initialValues={clientInitialValues}
             validationSchema={newClientValidationSchema}
-            onSubmit={handleSubmit}
+            onSubmit={handleNewClientSubmit}
         >
             {({ values, isSubmitting, resetForm, touched, setFieldValue }) => (
                 <Grid container direction="row" justify="flex-start" spacing={2}>

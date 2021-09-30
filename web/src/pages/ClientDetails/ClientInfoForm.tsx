@@ -22,7 +22,7 @@ import { handleCancel, handleSubmit } from "./formHandler";
 import { genders, IClient } from "@cbr/common/util/clients";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
-import history from "util/history";
+import history from "@cbr/common/util/history";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
 

@@ -1,6 +1,5 @@
 import { Validation } from "../../util/validations";
 import * as Yup from "yup";
-import { IClient } from "../../util/clients";
 
 export enum ClientField {
     firstName = "firstName",
@@ -28,17 +27,6 @@ export enum ClientField {
     socialGoals = "socialGoals",
     picture = "picture",
     pictureChanged = "pictureChanged",
-
-    // Required to match DB attributes to display client details in web app
-    first_name = "first_name",
-    last_name = "last_name",
-    birth_date = "birth_date",
-    phone_number = "phone_number",
-    other_disability = "other_disability",
-    caregiver_present = "caregiver_present",
-    caregiver_name = "caregiver_name",
-    caregiver_phone = "caregiver_phone",
-    caregiver_email = "caregiver_email",
 }
 
 export const clientFieldLabels = {
@@ -96,8 +84,6 @@ export const clientInitialValues = {
 };
 
 export type TClientValues = typeof clientInitialValues;
-
-export type TClientFormValues = IClient & { [ClientField.pictureChanged]: boolean };
 
 export const clientDetailsValidationSchema = () =>
     Yup.object().shape({

@@ -1,5 +1,6 @@
 import { Validation } from "../../util/validations";
 import * as Yup from "yup";
+import { IClient } from "../../util/clients";
 
 export enum ClientField {
     firstName = "firstName",
@@ -27,6 +28,35 @@ export enum ClientField {
     socialGoals = "socialGoals",
     picture = "picture",
     pictureChanged = "pictureChanged",
+
+    // Required to match DB attributes to display client details in web app
+    first_name = "first_name",
+    last_name = "last_name",
+    birth_date = "birth_date",
+    phone_number = "phone_number",
+    other_disability = "other_disability",
+    caregiver_present = "caregiver_present",
+    caregiver_name = "caregiver_name",
+    caregiver_phone = "caregiver_phone",
+    caregiver_email = "caregiver_email",
+}
+
+export enum ClientDetailsFields {
+    first_name = "first_name",
+    last_name = "last_name",
+    birth_date = "birth_date",
+    gender = "gender",
+    village = "village",
+    zone = "zone",
+    phone_number = "phone_number",
+    caregiver_present = "caregiver_present",
+    caregiver_phone = "caregiver_phone",
+    caregiver_email = "caregiver_email",
+    caregiver_name = "caregiver_name",
+    disability = "disability",
+    picture = "picture",
+    pictureChanged = "pictureChanged",
+    other_disability = "other_disability",
 }
 
 export const clientFieldLabels = {
@@ -53,6 +83,22 @@ export const clientFieldLabels = {
     [ClientField.socialRisk]: "Social Risk",
     [ClientField.socialRequirements]: "Social Requirement(s)",
     [ClientField.socialGoals]: "Social Goal(s)",
+};
+
+export const updateClientfieldLabels = {
+  [ClientField.first_name]: "First Name",
+  [ClientField.last_name]: "Last Name",
+  [ClientField.birth_date]: "Birthdate",
+  [ClientField.village]: "Village",
+  [ClientField.gender]: "Gender",
+  [ClientField.zone]: "Zone",
+  [ClientField.phone_number]: "Phone Number",
+  [ClientField.caregiver_present]: "Caregiver Present?",
+  [ClientField.caregiver_name]: "Caregiver Name",
+  [ClientField.caregiver_phone]: "Caregiver Phone Number",
+  [ClientField.caregiver_email]: "Caregiver Email",
+  [ClientField.disability]: "Disabilities",
+  [ClientField.other_disability]: "Other Disabilities",
 };
 
 export const clientInitialValues = {
@@ -84,6 +130,8 @@ export const clientInitialValues = {
 };
 
 export type TClientValues = typeof clientInitialValues;
+
+export type TClientFormValues = IClient & { [ClientField.pictureChanged]: boolean };
 
 export const clientDetailsValidationSchema = () =>
     Yup.object().shape({

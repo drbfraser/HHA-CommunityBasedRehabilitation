@@ -30,7 +30,6 @@ const addClient = async (clientInfo: FormData) => {
 export const handleSubmit = async (values: TFormValues, helpers: FormikHelpers<TFormValues>) => {
     try {
         const disabilities = await getDisabilities();
-
         const newClient = {
             birth_date: timestampFromFormDate(values.birthDate),
             disability: values.disability,

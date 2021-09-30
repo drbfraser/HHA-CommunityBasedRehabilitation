@@ -34,7 +34,6 @@ const ClientInfoForm = (props: IProps) => {
     const zones = useZones();
     const disabilities = useDisabilities();
     const [isEditing, setIsEditing] = useState<boolean>(false);
-
     return (
         <Formik
             initialValues={

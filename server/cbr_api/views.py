@@ -199,6 +199,38 @@ class VisitDetail(generics.RetrieveAPIView):
     serializer_class = serializers.DetailedVisitSerializer
 
 
+class ReferralImage(AuthenticatedObjectDownloadView):
+    model = models.Referral
+    file_field = "picture"
+
+    @extend_schema(
+        description="Gets the wheelchair image of referral if it exists.",
+        responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
+    )
+    @cache_control(max_age=1209600, no_cache=True, private=True)
+    def get(self, request, pk):
+        if DEBUG:
+
+            def super_get(self_new, request_new, pk_new):
+                return super().get(self_new, request_new, pk_new)
+
+            return super_get(self, request, pk)
+
+        referral = models.Referral.objects.get(pk=pk)
+        if referral:
+            if len(referral.picture.name) <= 0:
+                return HttpResponseNotFound()
+
+            dir_name, file_name = os.path.split(referral.picture.name)
+            response = HttpResponse()
+            # Redirect the image request to Caddy.
+            response["X-Accel-Redirect"] = referral.picture.name
+            response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+            return response
+        else:
+            return HttpResponseNotFound()
+
+
 class ReferralList(generics.CreateAPIView):
     queryset = models.Referral.objects.all()
     serializer_class = serializers.DetailedReferralSerializer

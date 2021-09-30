@@ -135,59 +135,52 @@ export type TClientFormValues = IClient & { [ClientField.pictureChanged]: boolea
 
 export const clientDetailsValidationSchema = () =>
     Yup.object().shape({
-        [ClientField.firstName]: Yup.string()
-            .label(clientFieldLabels[ClientField.firstName])
-            .trim()
+        [ClientField.first_name]: Yup.string()
+            .label(updateClientfieldLabels[ClientField.first_name])
             .required()
             .max(50),
-        [ClientField.lastName]: Yup.string()
-            .label(clientFieldLabels[ClientField.lastName])
-            .trim()
+        [ClientField.last_name]: Yup.string()
+            .label(updateClientfieldLabels[ClientField.last_name])
             .required()
             .max(50),
-        [ClientField.birthDate]: Yup.date()
-            .label(clientFieldLabels[ClientField.birthDate])
+        [ClientField.birth_date]: Yup.date()
+            .label(updateClientfieldLabels[ClientField.birth_date])
             .max(new Date(), "Birthdate cannot be in the future")
             .required(),
-        [ClientField.phoneNumber]: Yup.string()
-            .label(clientFieldLabels[ClientField.phoneNumber])
+        [ClientField.phone_number]: Yup.string()
+            .label(updateClientfieldLabels[ClientField.phone_number])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
-        [ClientField.disability]: Yup.array()
-            .label(clientFieldLabels[ClientField.disability])
-            .min(1, "Disability is required")
-            .required(),
-        [ClientField.otherDisability]: Yup.string()
-            .label(clientFieldLabels[ClientField.otherDisability])
+        [ClientField.disability]: Yup.array().label(updateClientfieldLabels[ClientField.disability]).required(),
+        [ClientField.other_disability]: Yup.string()
+            .label(updateClientfieldLabels[ClientField.other_disability])
+            .trim()
             .test(
                 "require-if-other-selected",
                 "Other Disability is required",
-                async (otherDisability, schema) =>
+                async (other_disability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
-                    (otherDisability !== undefined && otherDisability.length > 0)
+                    (other_disability !== undefined && other_disability.length > 0)
             )
             .test(
                 "require-if-other-selected",
                 "Other Disability must be at most 100 characters",
-                async (otherDisability, schema) =>
+                async (other_disability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
-                    (otherDisability !== undefined && otherDisability.length <= 100)
+                    (other_disability !== undefined && other_disability.length <= 100)
             ),
-        [ClientField.gender]: Yup.string().label(clientFieldLabels[ClientField.gender]).required(),
-        [ClientField.village]: Yup.string()
-            .label(clientFieldLabels[ClientField.village])
-            .trim()
-            .required(),
-        [ClientField.zone]: Yup.string().label(clientFieldLabels[ClientField.zone]).required(),
-        [ClientField.caregiverPhone]: Yup.string()
-            .label(clientFieldLabels[ClientField.caregiverPhone])
+        [ClientField.gender]: Yup.string().label(updateClientfieldLabels[ClientField.gender]).required(),
+        [ClientField.village]: Yup.string().label(updateClientfieldLabels[ClientField.village]).required(),
+        [ClientField.zone]: Yup.string().label(updateClientfieldLabels[ClientField.zone]).required(),
+        [ClientField.caregiver_name]: Yup.string()
+            .label(updateClientfieldLabels[ClientField.caregiver_name])
+            .max(101),
+        [ClientField.caregiver_phone]: Yup.string()
+            .label(updateClientfieldLabels[ClientField.caregiver_phone])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid"),
-        [ClientField.caregiverName]: Yup.string()
-            .label(clientFieldLabels[ClientField.caregiverName])
-            .max(101),
-        [ClientField.caregiverEmail]: Yup.string()
-            .label(clientFieldLabels[ClientField.caregiverEmail])
+        [ClientField.caregiver_email]: Yup.string()
+            .label(updateClientfieldLabels[ClientField.caregiver_email])
             .max(50)
             .matches(Validation.emailRegExp, "Email Address is not valid"),
     });

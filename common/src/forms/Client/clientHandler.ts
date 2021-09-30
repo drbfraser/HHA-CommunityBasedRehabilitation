@@ -11,8 +11,6 @@ const addClient = async (clientInfo: FormData) => {
         body: clientInfo,
     };
 
-    console.log(`common client info is ${clientInfo}`);
-
     return await apiFetch(Endpoint.CLIENTS, "", init)
         .then((res) => {
             return res.json();

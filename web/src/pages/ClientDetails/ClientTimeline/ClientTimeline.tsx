@@ -21,40 +21,42 @@ const ClientTimeline = ({ client, refreshClient }: IProps) => {
     const dateFormatter = getDateFormatterFromReference(client?.created_date);
     const numEntriesToShow = 10;
 
-    const timelineItems = client ? [
-        ...client.visits.slice().map((v) => ({
-            timestamp: v.date_visited,
-            Component: (
-                <VisitEntry
-                    key={`visit${v.id}`}
-                    visitSummary={v}
-                    dateFormatter={dateFormatter}
-                />
-            ),
-        })),
-        ...client.referrals.slice().map((r) => ({
-            timestamp: r.date_referred,
-            Component: (
-                <ReferralEntry
-                    key={`referral${r.id}`}
-                    referral={r}
-                    refreshClient={refreshClient}
-                    dateFormatter={dateFormatter}
-                />
-            ),
-        })),
-        ...client.baseline_surveys.slice().map((s) => ({
-            timestamp: s.survey_date,
-            Component: (
-                <BaseSurveyEntry
-                    key={`survey${s.id}`}
-                    survey={s}
-                    dateFormatter={dateFormatter}
-                />
-            ),
-        })),
-    ].sort((a, b) => b.timestamp - a.timestamp) : [];
-    
+    const timelineItems = client
+        ? [
+              ...client.visits.slice().map((v) => ({
+                  timestamp: v.date_visited,
+                  Component: (
+                      <VisitEntry
+                          key={`visit${v.id}`}
+                          visitSummary={v}
+                          dateFormatter={dateFormatter}
+                      />
+                  ),
+              })),
+              ...client.referrals.slice().map((r) => ({
+                  timestamp: r.date_referred,
+                  Component: (
+                      <ReferralEntry
+                          key={`referral${r.id}`}
+                          referral={r}
+                          refreshClient={refreshClient}
+                          dateFormatter={dateFormatter}
+                      />
+                  ),
+              })),
+              ...client.baseline_surveys.slice().map((s) => ({
+                  timestamp: s.survey_date,
+                  Component: (
+                      <BaseSurveyEntry
+                          key={`survey${s.id}`}
+                          survey={s}
+                          dateFormatter={dateFormatter}
+                      />
+                  ),
+              })),
+          ].sort((a, b) => b.timestamp - a.timestamp)
+        : [];
+
     const topTimelineItems = timelineItems?.slice(0, numEntriesToShow);
     const [showAllEntries, setShowAllEntries] = useState<boolean>(false);
 
@@ -62,14 +64,16 @@ const ClientTimeline = ({ client, refreshClient }: IProps) => {
         <Timeline className={timelineStyles.timeline}>
             {client && timelineItems && topTimelineItems ? (
                 <>
-                    {!showAllEntries || timelineItems.length < numEntriesToShow ? (
-                        topTimelineItems.map((entry) => entry.Component)
-                    ) : timelineItems.map((entry) => entry.Component)}
-                    {(!showAllEntries && timelineItems.length > numEntriesToShow) &&
-                        <ShowMoreEntry onClick={() => {
-                            setShowAllEntries(true)
-                        }}/>
-                    }
+                    {!showAllEntries || timelineItems.length < numEntriesToShow
+                        ? topTimelineItems.map((entry) => entry.Component)
+                        : timelineItems.map((entry) => entry.Component)}
+                    {!showAllEntries && timelineItems.length > numEntriesToShow && (
+                        <ShowMoreEntry
+                            onClick={() => {
+                                setShowAllEntries(true);
+                            }}
+                        />
+                    )}
                     <ClientCreatedEntry createdDate={dateFormatter(client.created_date)} />
                 </>
             ) : (

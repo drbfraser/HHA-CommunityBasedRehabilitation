@@ -22,9 +22,9 @@ const ShowMoreEntry = ({ onClick }: IProps) => {
 
     return (
         <TimelineItem>
-            <TimelineOppositeContent className={timelineStyles.date}/>
+            <TimelineOppositeContent className={timelineStyles.date} />
             <TimelineSeparator>
-            <TimelineConnector />
+                <TimelineConnector />
                 <TimelineDot color="primary" variant="outlined">
                     <Icon color="primary" fontSize="small" />
                 </TimelineDot>
@@ -32,14 +32,12 @@ const ShowMoreEntry = ({ onClick }: IProps) => {
             </TimelineSeparator>
             <TimelineContent>
                 <div
-                    className={
-                        timelineStyles.showMore + ` ${timelineStyles.showMoreClickable}`
-                    }
-                    style={{color: 'white', fontWeight: 700}}
+                    className={timelineStyles.showMore + ` ${timelineStyles.showMoreClickable}`}
+                    style={{ color: "white", fontWeight: 700 }}
                     onClick={onClick}
                 >
                     {"Show more "}
-                    {<ArrowDropDown style={{marginBottom: "-7px"}}/>}
+                    {<ArrowDropDown style={{ marginBottom: "-7px" }} />}
                 </div>
             </TimelineContent>
         </TimelineItem>

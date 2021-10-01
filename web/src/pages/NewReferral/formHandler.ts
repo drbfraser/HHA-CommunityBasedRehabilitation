@@ -12,7 +12,8 @@ export const handleSubmit = async (
     setSubmissionError: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
     try {
-        await referralHandleSubmit(values);
+        const source = "web";
+        await referralHandleSubmit(values, source);
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);

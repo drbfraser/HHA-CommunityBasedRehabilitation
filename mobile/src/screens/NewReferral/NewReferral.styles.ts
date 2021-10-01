@@ -9,12 +9,28 @@ const useStyles = () =>
             marginLeft: 30,
             marginRight: 30,
         },
+        imageContainer: {
+            paddingHorizontal: 50,
+        },
+        image: {
+            backgroundColor: themeColors.white,
+            borderRadius: 30,
+            resizeMode: "contain",
+            width: "100%",
+            height: "auto",
+            aspectRatio: 1,
+        },
         checkBoxText: {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
             paddingVertical: 10,
             paddingRight: 50,
+        },
+        uploadButton: {
+            alignItems: "center",
+            backgroundColor: "#DDDDDD",
+            padding: 10,
         },
         nextButton: {
             position: "absolute",

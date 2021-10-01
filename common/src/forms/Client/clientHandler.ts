@@ -66,7 +66,6 @@ export const handleNewClientSubmit = async (
 
     const formData = objectToFormData(newClient);
     if (values.picture) {
-        console.log("using common");
         await appendMobilePict(formData, values.picture);
     }
 

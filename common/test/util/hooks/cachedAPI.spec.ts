@@ -312,6 +312,7 @@ describe("cachedAPI.ts", () => {
     });
 
     describe("APICacheData.fetchTimeout", () => {
+        jest.setTimeout(6000); // extend duration of this test for a timeout to occur
         it("should timeout", async () => {
             const cache = createTestCache(TEST_CACHE_KEY, 500);
             const listener = jest.fn(() => {});
@@ -328,7 +329,7 @@ describe("cachedAPI.ts", () => {
             let slowResponse = true;
             mockGet(TEST_FAKE_ENDPOINT, async () => {
                 if (slowResponse) {
-                    await sleep(2000);
+                    await sleep(5000);
                 }
                 return {
                     status: 200,

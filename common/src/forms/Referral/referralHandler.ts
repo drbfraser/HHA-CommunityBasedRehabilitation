@@ -1,9 +1,10 @@
-import { FormikHelpers } from "formik";
 import { ReferralFormField, ReferralFormValues } from "./referralFields";
-import { apiFetch, Endpoint } from "../../util/endpoints";
+import { apiFetch, Endpoint, objectToFormData } from "../../util/endpoints";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
+import { appendPicture } from "../../util/clientImageSubmission";
+import { appendPic } from "../../util/referralImageSubmission";
 
-const addReferral = async (referralInfo: string) => {
+const addReferral = async (referralInfo: FormData) => {
     const init: RequestInit = {
         method: "POST",
         body: referralInfo,
@@ -16,8 +17,7 @@ const addReferral = async (referralInfo: string) => {
 
 export const referralHandleSubmit = async (values: ReferralFormValues) => {
     const disabilities = await getDisabilities();
-
-    const newReferral = JSON.stringify({
+    const newReferral = {
         client: values[ReferralFormField.client],
         wheelchair: values[ReferralFormField.wheelchair],
         wheelchair_experience: values[ReferralFormField.wheelchair]
@@ -48,7 +48,14 @@ export const referralHandleSubmit = async (values: ReferralFormValues) => {
         services_other: values[ReferralFormField.servicesOther]
             ? values[ReferralFormField.otherDescription]
             : "",
-    });
+    };
 
-    return await addReferral(newReferral);
+    const referralObj = objectToFormData(newReferral);
+
+    //if referral picture exist, then attached into form data
+    if (values[ReferralFormField.picture]) {
+        await appendPic(referralObj, values[ReferralFormField.picture]);
+    }
+
+    return await addReferral(referralObj);
 };

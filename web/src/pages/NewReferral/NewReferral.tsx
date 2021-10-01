@@ -37,6 +37,7 @@ import {
     wheelchairValidationSchema,
     serviceTypes,
 } from "@cbr/common/forms/Referral/referralFields";
+import { PhotoView } from "components/ReferralPhotoView/PhotoView";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -147,7 +148,18 @@ const WheelchairForm = (props: IFormProps) => {
             </div>
             {props.formikProps.values[ReferralFormField.wheelchairOwned] &&
                 props.formikProps.values[ReferralFormField.wheelchairRepairable] && (
-                    <Alert severity="info">Please bring wheelchair to the center</Alert>
+                    <>
+                        <Alert severity="info">Please bring wheelchair to the center</Alert>
+                        <br />
+                        <PhotoView
+                            onPictureChange={(pictureURL) => {
+                                props.formikProps.setFieldValue(
+                                    ReferralFormField.picture,
+                                    pictureURL
+                                );
+                            }}
+                        ></PhotoView>
+                    </>
                 )}
         </div>
     );

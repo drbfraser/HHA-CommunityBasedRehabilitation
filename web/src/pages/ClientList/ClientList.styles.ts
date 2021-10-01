@@ -19,8 +19,8 @@ export const useStyles = makeStyles(
         },
         downloadSVC: {
             position: "relative",
-            left: "15px",
-            top: "-42px",
+            left: "0px",
+            top: "-41px",
         },
         downloadSVCLink: {
             textDecoration: "none",

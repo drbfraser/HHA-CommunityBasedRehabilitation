@@ -323,7 +323,9 @@ const ClientList = () => {
                     data={sortClientsById(rows)}
                     className={styles.downloadSVCLink}
                 >
-                    <Button variant="outlined">EXPORT TO CSV </Button>
+                    <Button variant="outlined" size="small">
+                        EXPORT TO CSV{" "}
+                    </Button>
                 </CSVLink>
             </div>
         </div>

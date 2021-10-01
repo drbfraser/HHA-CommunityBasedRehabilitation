@@ -19,6 +19,7 @@ interface IProps {
 const ClientTimeline = ({ client, refreshClient }: IProps) => {
     const timelineStyles = useTimelineStyles();
     const dateFormatter = getDateFormatterFromReference(client?.created_date);
+    const [showAllEntries, setShowAllEntries] = useState<boolean>(false);
     const numEntriesToShow = 10;
 
     const timelineItems = client
@@ -58,7 +59,6 @@ const ClientTimeline = ({ client, refreshClient }: IProps) => {
         : [];
 
     const topTimelineItems = timelineItems?.slice(0, numEntriesToShow);
-    const [showAllEntries, setShowAllEntries] = useState<boolean>(false);
 
     return (
         <Timeline className={timelineStyles.timeline}>

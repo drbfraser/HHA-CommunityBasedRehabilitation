@@ -100,7 +100,6 @@ export const handleNewClientSubmit = async (
   setIsEditing: (isEditing: boolean) => void
 ) => {
   try {
-    console.log("handle update client submit function")
       const disabilities = await getDisabilities();
       const updatedValues: Partial<IClient> = {
           first_name: values.first_name,
@@ -123,7 +122,6 @@ export const handleNewClientSubmit = async (
       };
 
       const formData = objectToFormData(updatedValues);
-      console.log("Updated form data", formData)
 
       if (values.pictureChanged && values.picture) {
           await appendPicture(formData, values.picture, values.id);

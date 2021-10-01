@@ -1,6 +1,6 @@
 import { Validation } from "../../util/validations";
 import * as Yup from "yup";
-import { IClient } from "../../util/clients";
+import { Gender, IClient } from "../../util/clients";
 
 export enum ClientField {
     firstName = "firstName",
@@ -86,36 +86,36 @@ export const clientFieldLabels = {
 };
 
 export const updateClientfieldLabels = {
-  [ClientField.first_name]: "First Name",
-  [ClientField.last_name]: "Last Name",
-  [ClientField.birth_date]: "Birthdate",
-  [ClientField.village]: "Village",
-  [ClientField.gender]: "Gender",
-  [ClientField.zone]: "Zone",
-  [ClientField.phone_number]: "Phone Number",
-  [ClientField.caregiver_present]: "Caregiver Present?",
-  [ClientField.caregiver_name]: "Caregiver Name",
-  [ClientField.caregiver_phone]: "Caregiver Phone Number",
-  [ClientField.caregiver_email]: "Caregiver Email",
-  [ClientField.disability]: "Disabilities",
-  [ClientField.other_disability]: "Other Disabilities",
+    [ClientField.first_name]: "First Name",
+    [ClientField.last_name]: "Last Name",
+    [ClientField.birth_date]: "Birthdate",
+    [ClientField.village]: "Village",
+    [ClientField.gender]: "Gender",
+    [ClientField.zone]: "Zone",
+    [ClientField.phone_number]: "Phone Number",
+    [ClientField.caregiver_present]: "Caregiver Present?",
+    [ClientField.caregiver_name]: "Caregiver Name",
+    [ClientField.caregiver_phone]: "Caregiver Phone Number",
+    [ClientField.caregiver_email]: "Caregiver Email",
+    [ClientField.disability]: "Disabilities",
+    [ClientField.other_disability]: "Other Disabilities",
 };
 
 export const clientInitialValues = {
     [ClientField.firstName]: "",
     [ClientField.lastName]: "",
     [ClientField.birthDate]: "",
-    [ClientField.gender]: "",
+    [ClientField.gender]: "" as Gender,
     [ClientField.village]: "",
-    [ClientField.zone]: "" as number | string,
+    [ClientField.zone]: undefined as number | undefined,
     [ClientField.phoneNumber]: "",
+    [ClientField.interviewConsent]: false,
     [ClientField.caregiverPresent]: false,
     [ClientField.caregiverPhone]: "",
     [ClientField.caregiverName]: "",
     [ClientField.caregiverEmail]: "",
     [ClientField.disability]: [] as number[],
     [ClientField.otherDisability]: "",
-    [ClientField.interviewConsent]: false,
     [ClientField.healthRisk]: "",
     [ClientField.healthRequirements]: "",
     [ClientField.healthGoals]: "",
@@ -151,7 +151,9 @@ export const clientDetailsValidationSchema = () =>
             .label(updateClientfieldLabels[ClientField.phone_number])
             .max(50)
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
-        [ClientField.disability]: Yup.array().label(updateClientfieldLabels[ClientField.disability]).required(),
+        [ClientField.disability]: Yup.array()
+            .label(updateClientfieldLabels[ClientField.disability])
+            .required(),
         [ClientField.other_disability]: Yup.string()
             .label(updateClientfieldLabels[ClientField.other_disability])
             .trim()
@@ -169,9 +171,15 @@ export const clientDetailsValidationSchema = () =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
                     (other_disability !== undefined && other_disability.length <= 100)
             ),
-        [ClientField.gender]: Yup.string().label(updateClientfieldLabels[ClientField.gender]).required(),
-        [ClientField.village]: Yup.string().label(updateClientfieldLabels[ClientField.village]).required(),
-        [ClientField.zone]: Yup.string().label(updateClientfieldLabels[ClientField.zone]).required(),
+        [ClientField.gender]: Yup.string()
+            .label(updateClientfieldLabels[ClientField.gender])
+            .required(),
+        [ClientField.village]: Yup.string()
+            .label(updateClientfieldLabels[ClientField.village])
+            .required(),
+        [ClientField.zone]: Yup.string()
+            .label(updateClientfieldLabels[ClientField.zone])
+            .required(),
         [ClientField.caregiver_name]: Yup.string()
             .label(updateClientfieldLabels[ClientField.caregiver_name])
             .max(101),
@@ -186,44 +194,96 @@ export const clientDetailsValidationSchema = () =>
     });
 
 export const newClientValidationSchema = () =>
-    clientDetailsValidationSchema().concat(
-        Yup.object().shape({
-            [ClientField.interviewConsent]: Yup.boolean()
-                .label(clientFieldLabels[ClientField.interviewConsent])
-                .oneOf([true], "Consent to Interview is required")
-                .required("Consent to Interview is required"),
-            [ClientField.healthRisk]: Yup.string()
-                .label(clientFieldLabels[ClientField.healthRisk])
-                .required(),
-            [ClientField.healthRequirements]: Yup.string()
-                .label(clientFieldLabels[ClientField.healthRequirements])
-                .trim()
-                .required(),
-            [ClientField.healthGoals]: Yup.string()
-                .label(clientFieldLabels[ClientField.healthGoals])
-                .trim()
-                .required(),
-            [ClientField.educationRisk]: Yup.string()
-                .label(clientFieldLabels[ClientField.educationRisk])
-                .required(),
-            [ClientField.educationRequirements]: Yup.string()
-                .label(clientFieldLabels[ClientField.educationRequirements])
-                .trim()
-                .required(),
-            [ClientField.educationGoals]: Yup.string()
-                .label(clientFieldLabels[ClientField.educationGoals])
-                .trim()
-                .required(),
-            [ClientField.socialRisk]: Yup.string()
-                .label(clientFieldLabels[ClientField.socialRisk])
-                .required(),
-            [ClientField.socialRequirements]: Yup.string()
-                .label(clientFieldLabels[ClientField.socialRequirements])
-                .trim()
-                .required(),
-            [ClientField.socialGoals]: Yup.string()
-                .label(clientFieldLabels[ClientField.socialGoals])
-                .trim()
-                .required(),
-        })
-    );
+    Yup.object().shape({
+        [ClientField.firstName]: Yup.string()
+            .label(clientFieldLabels[ClientField.firstName])
+            .trim()
+            .required()
+            .max(50),
+        [ClientField.lastName]: Yup.string()
+            .label(clientFieldLabels[ClientField.lastName])
+            .trim()
+            .required()
+            .max(50),
+        [ClientField.birthDate]: Yup.date()
+            .label(clientFieldLabels[ClientField.birthDate])
+            .max(new Date(), "Birthdate cannot be in the future")
+            .required(),
+        [ClientField.phoneNumber]: Yup.string()
+            .label(clientFieldLabels[ClientField.phoneNumber])
+            .max(50)
+            .matches(Validation.phoneRegExp, "Phone number is not valid."),
+        [ClientField.disability]: Yup.array()
+            .label(clientFieldLabels[ClientField.disability])
+            .required(),
+        [ClientField.otherDisability]: Yup.string()
+            .label(clientFieldLabels[ClientField.otherDisability])
+            .test(
+                "require-if-other-selected",
+                "Other Disability is required",
+                async (otherDisability, schema) =>
+                    !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
+                    (otherDisability !== undefined && otherDisability.length > 0)
+            )
+            .test(
+                "require-if-other-selected",
+                "Other Disability must be at most 100 characters",
+                async (otherDisability, schema) =>
+                    !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
+                    (otherDisability !== undefined && otherDisability.length <= 100)
+            ),
+        [ClientField.gender]: Yup.string().label(clientFieldLabels[ClientField.gender]).required(),
+        [ClientField.village]: Yup.string()
+            .label(clientFieldLabels[ClientField.village])
+            .trim()
+            .required(),
+        [ClientField.zone]: Yup.string().label(clientFieldLabels[ClientField.zone]).required(),
+        [ClientField.healthRisk]: Yup.string()
+            .label(clientFieldLabels[ClientField.healthRisk])
+            .required(),
+        [ClientField.healthRequirements]: Yup.string()
+            .label(clientFieldLabels[ClientField.healthRequirements])
+            .trim()
+            .required(),
+        [ClientField.healthGoals]: Yup.string()
+            .label(clientFieldLabels[ClientField.healthGoals])
+            .trim()
+            .required(),
+        [ClientField.educationRisk]: Yup.string()
+            .label(clientFieldLabels[ClientField.educationRisk])
+            .required(),
+        [ClientField.educationRequirements]: Yup.string()
+            .label(clientFieldLabels[ClientField.educationRequirements])
+            .trim()
+            .required(),
+        [ClientField.educationGoals]: Yup.string()
+            .label(clientFieldLabels[ClientField.educationGoals])
+            .trim()
+            .required(),
+        [ClientField.socialRisk]: Yup.string()
+            .label(clientFieldLabels[ClientField.socialRisk])
+            .required(),
+        [ClientField.socialRequirements]: Yup.string()
+            .label(clientFieldLabels[ClientField.socialRequirements])
+            .trim()
+            .required(),
+        [ClientField.socialGoals]: Yup.string()
+            .label(clientFieldLabels[ClientField.socialGoals])
+            .trim()
+            .required(),
+        [ClientField.interviewConsent]: Yup.boolean()
+            .label(clientFieldLabels[ClientField.interviewConsent])
+            .oneOf([true], "Consent to Interview is required")
+            .required("Consent to Interview is required"),
+        [ClientField.caregiverPhone]: Yup.string()
+            .label(clientFieldLabels[ClientField.caregiverPhone])
+            .max(50)
+            .matches(Validation.phoneRegExp, "Phone number is not valid"),
+        [ClientField.caregiverName]: Yup.string()
+            .label(clientFieldLabels[ClientField.caregiverName])
+            .max(101),
+        [ClientField.caregiverEmail]: Yup.string()
+            .label(clientFieldLabels[ClientField.caregiverEmail])
+            .max(50)
+            .matches(Validation.emailRegExp, "Email Address is not valid"),
+    });

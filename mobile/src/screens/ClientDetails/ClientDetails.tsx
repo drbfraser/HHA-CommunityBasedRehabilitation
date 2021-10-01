@@ -11,6 +11,8 @@ import {
     timestampToDate,
     IRisk,
     RiskType,
+    apiFetch,
+    Endpoint,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
@@ -37,7 +39,8 @@ const ClientDetails = (props: ClientProps) => {
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
     const isFocused = useIsFocused();
-
+    const [hasImage, setHasImage] = useState<boolean>(false);
+    const [uri, setUri] = useState<string>("");
     const [client, setClient] = useState<IClient>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
@@ -52,6 +55,18 @@ const ClientDetails = (props: ClientProps) => {
 
     const getClientDetails = async () => {
         const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
+        if (presentClient.picture !== null) {
+            apiFetch(Endpoint.CLIENT_PICTURE, `${presentClient.id}`)
+                .then((resp) => resp.blob())
+                .then((blob) => {
+                    let reader = new FileReader();
+                    reader.onload = () => {
+                        setUri(reader.result as string);
+                        setHasImage(true);
+                    };
+                    reader.readAsDataURL(blob);
+                });
+        }
         setClient(presentClient);
     };
 
@@ -151,8 +166,7 @@ const ClientDetails = (props: ClientProps) => {
                 caregiver_phone: values.caregiverPhone ?? client.caregiver_phone,
                 disability: values.disability ?? client.disability,
                 other_disability: values.otherDisability ?? client.other_disability,
-                picture:
-                    "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
+                picture: values.picture ?? client.picture,
             };
             handleSubmit(updatedIClient).finally(() => formikHelpers.setSubmitting(false));
         }
@@ -167,10 +181,15 @@ const ClientDetails = (props: ClientProps) => {
             ) : (
                 <View style={styles.clientDetailContainer}>
                     <Card style={styles.clientCardContainerStyles}>
-                        <Card.Cover
-                            style={styles.clientCardImageStyle}
-                            source={defaultProfilePicture}
-                        />
+                        {hasImage ? (
+                            <Card.Cover style={styles.clientCardImageStyle} source={{ uri: uri }} />
+                        ) : (
+                            <Card.Cover
+                                style={styles.clientCardImageStyle}
+                                source={defaultProfilePicture}
+                            />
+                        )}
+
                         <Button
                             mode="contained"
                             style={styles.clientButtons}

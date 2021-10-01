@@ -9,7 +9,7 @@ import {
 import history from "../../util/history";
 import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { getDisabilities, getOtherDisabilityId } from "@cbr/common/util/hooks/disabilities";
-import { appendPicture } from "../../util/clientSubmission";
+import { appendPicture } from "@cbr/common/util/clientImageSubmission";
 
 const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {

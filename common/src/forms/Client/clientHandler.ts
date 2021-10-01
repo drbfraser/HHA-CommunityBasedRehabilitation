@@ -4,6 +4,7 @@ import { apiFetch, APIFetchFailError, Endpoint, objectToFormData } from "../../u
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
 import { clientFieldLabels, TClientValues } from "./clientFields";
 import { IClient } from "../../util/clients";
+import { appendMobilePict } from "src/util/mobileImageSubmisson";
 
 const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {
@@ -64,6 +65,9 @@ export const handleNewClientSubmit = async (
     };
 
     const formData = objectToFormData(newClient);
+    if (values.picture) {
+        await appendMobilePict(formData, values.picture);
+    }
 
     try {
         const client: IClient = await addClient(formData);

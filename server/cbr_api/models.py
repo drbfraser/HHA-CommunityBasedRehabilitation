@@ -143,7 +143,7 @@ class Client(models.Model):
         upload_to=rename_file,
         storage=OverwriteStorage(),
         blank=True,
-        validators=[filesize_validator],
+        # validators=[filesize_validator],
     )  # if picture available
     caregiver_present = models.BooleanField(default=False)
 

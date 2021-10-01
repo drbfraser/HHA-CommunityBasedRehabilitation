@@ -6,6 +6,9 @@ export const appendPicture = async (
     const clientProfilePictureFetch = await fetch(pictureUrl);
     const contentType = clientProfilePictureFetch.headers.get("Content-Type");
 
+    let blob = await clientProfilePictureFetch.blob();
+    console.log(blob);
+
     // If needed, fall back to PNG so that the upload can continue; the server will figure out the
     // image type. The cropper library by default makes PNGs anyway.
     const imageExtension = contentType?.includes("image/")
@@ -18,7 +21,7 @@ export const appendPicture = async (
 
     formData.append(
         "picture",
-        await clientProfilePictureFetch.blob(),
+        blob,
         clientId ? `client-${clientId}.${imageExtension}` : `client-new.${imageExtension}`
     );
 };

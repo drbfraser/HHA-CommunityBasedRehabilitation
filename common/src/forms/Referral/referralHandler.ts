@@ -54,11 +54,9 @@ export const referralHandleSubmit = async (values: ReferralFormValues, source: s
 
     //if referral picture exist, then attached into form data
     if (values[ReferralFormField.picture]) {
-        console.log(`source is ${source}`);
         if (source === "web") {
             await appendPic(referralObj, values[ReferralFormField.picture]);
         } else {
-            console.log(`source is ${source}`);
             await appendMobilePict(referralObj, values[ReferralFormField.picture]);
         }
     }

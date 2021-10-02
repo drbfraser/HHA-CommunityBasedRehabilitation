@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { themeColors } from "@cbr/common/util/colors";
 
 export const useTimelineStyles = makeStyles(
     {
@@ -16,6 +17,21 @@ export const useTimelineStyles = makeStyles(
             "& .MuiChip-root": {
                 margin: "2px 0",
             },
+        },
+        showMore: {
+            margin: 10,
+            marginRight: 0,
+            padding: "8px 10px",
+            border: "1px solid #aaa",
+            borderRadius: 5,
+            fontSize: "120%",
+            "& .MuiChip-root": {
+                margin: "2px 0",
+            },
+            backgroundColor: themeColors.blueBgDark,
+        },
+        showMoreClickable: {
+            cursor: "pointer",
         },
         clickable: {
             cursor: "pointer",

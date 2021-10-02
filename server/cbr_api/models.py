@@ -32,7 +32,7 @@ class UserCBRManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, password, **extra_fields):
-        self.create_user(username, password, **extra_fields)
+        return self.create_user(username, password, is_superuser=True, **extra_fields)
 
 
 class UserCBR(AbstractBaseUser, PermissionsMixin):
@@ -70,6 +70,12 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
         "role",
     ]
 
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        # All admins are staff
+        return self.role == self.Role.ADMIN
+
     class Meta:
         verbose_name = _("user")
         verbose_name_plural = _("users")
@@ -81,6 +87,7 @@ class RiskType(models.TextChoices):
     SOCIAL = "SOCIAL", _("Social")
     EDUCAT = "EDUCAT", _("Education")
 
+    @staticmethod
     def getField():
         return models.CharField(
             max_length=6, choices=RiskType.choices, default="HEALTH"
@@ -93,6 +100,7 @@ class RiskLevel(models.TextChoices):
     HIGH = "HI", _("High")
     CRITICAL = "CR", _("Critical")
 
+    @staticmethod
     def getField():
         return models.CharField(max_length=2, choices=RiskLevel.choices, default="LO")
 

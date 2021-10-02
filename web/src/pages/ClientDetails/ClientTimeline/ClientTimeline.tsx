@@ -22,8 +22,9 @@ const ClientTimeline = ({ client, refreshClient }: IProps) => {
     const [showAllEntries, setShowAllEntries] = useState<boolean>(false);
     const numEntriesToShow = 10;
 
-    const timelineItems = client
-        ? [
+    const timelineItems = !client
+        ? []
+        : [
               ...client.visits.slice().map((v) => ({
                   timestamp: v.date_visited,
                   Component: (
@@ -55,16 +56,15 @@ const ClientTimeline = ({ client, refreshClient }: IProps) => {
                       />
                   ),
               })),
-          ].sort((a, b) => b.timestamp - a.timestamp)
-        : [];
+          ].sort((a, b) => b.timestamp - a.timestamp);
 
-    const topTimelineItems = timelineItems?.slice(0, numEntriesToShow);
+    const topTimelineItems = !timelineItems ? [] : timelineItems.slice(0, numEntriesToShow);
 
     return (
         <Timeline className={timelineStyles.timeline}>
-            {client && timelineItems && topTimelineItems ? (
+            {client ? (
                 <>
-                    {!showAllEntries || timelineItems.length < numEntriesToShow
+                    {!showAllEntries
                         ? topTimelineItems.map((entry) => entry.Component)
                         : timelineItems.map((entry) => entry.Component)}
                     {!showAllEntries && timelineItems.length > numEntriesToShow && (

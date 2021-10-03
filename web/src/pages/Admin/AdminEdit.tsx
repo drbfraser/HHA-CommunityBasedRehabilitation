@@ -18,7 +18,7 @@ import {
     adminUserFieldLabels,
     IRouteParams,
 } from "@cbr/common/forms/Admin/adminFields";
-import history from "util/history";
+import history from "@cbr/common/util/history";
 
 const AdminEdit = () => {
     const styles = useStyles();

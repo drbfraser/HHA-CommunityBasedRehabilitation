@@ -17,7 +17,7 @@ import {
     adminPasswordInitialValues,
     adminEditPasswordValidationSchema,
 } from "@cbr/common/forms/Admin/adminFields";
-import history from "util/history";
+import history from "@cbr/common/util/history";
 
 const AdminPasswordEdit = () => {
     const styles = useStyles();

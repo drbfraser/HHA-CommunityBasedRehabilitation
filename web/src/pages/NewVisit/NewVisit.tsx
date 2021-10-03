@@ -29,7 +29,7 @@ import {
 
 import { handleSubmit } from "./formHandler";
 import { useStyles } from "./NewVisit.styles";
-import history from "../../util/history";
+import history from "@cbr/common/util/history";
 import { IRisk } from "@cbr/common/util/risks";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IClient } from "@cbr/common/util/clients";

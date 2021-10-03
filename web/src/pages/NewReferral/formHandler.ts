@@ -2,7 +2,7 @@ import { FormikHelpers } from "formik";
 import { referralFieldLabels, ReferralFormValues } from "@cbr/common/forms/Referral/referralFields";
 import { referralHandleSubmit } from "@cbr/common/forms/Referral/referralHandler";
 
-import history from "../../util/history";
+import history from "@cbr/common/util/history";
 import React from "react";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
 

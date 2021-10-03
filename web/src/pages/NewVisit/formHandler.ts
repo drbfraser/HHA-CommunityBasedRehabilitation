@@ -1,5 +1,5 @@
 import { FormikHelpers } from "formik";
-import history from "util/history";
+import history from "@cbr/common/util/history";
 import { visitFieldLabels, TVisitFormValues } from "@cbr/common/forms/newVisit/visitFormFields";
 import { handleSubmitVisitForm } from "@cbr/common/forms/newVisit/visitFormHandler";
 import React from "react";

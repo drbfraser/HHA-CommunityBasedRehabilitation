@@ -5,7 +5,7 @@ import { defaultPagePath, pagesForUser } from "util/pages";
 import Login from "pages/Login/Login";
 import Typography from "@material-ui/core/Typography";
 import { useStyles } from "App.styles";
-import history from "util/history";
+import history from "@cbr/common/util/history";
 import { useIsLoggedIn } from "./util/hooks/loginState";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 

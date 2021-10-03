@@ -178,50 +178,12 @@ const ClientDetails = (props: ClientProps) => {
 
     return (
         <ScrollView style={styles.scrollViewStyles}>
-            <Divider />
-            <Text style={styles.cardSectionTitle}>Client Details</Text>
-            <Divider />
             {loading ? (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color={themeColors.blueAccent} />
                 </View>
             ) : (
                 <View style={styles.clientDetailContainer}>
-                    <Card style={styles.clientCardContainerStyles}>
-                        <Button
-                            mode="contained"
-                            style={styles.clientButtons}
-                            onPress={() => {
-                                navigation.navigate(StackScreenName.REFERRAL, {
-                                    clientID: props.route.params.clientID,
-                                });
-                            }}
-                        >
-                            New Referral
-                        </Button>
-                        <Button
-                            mode="contained"
-                            style={styles.clientButtons}
-                            onPress={() => {
-                                navigation.navigate(StackScreenName.BASE_SURVEY, {
-                                    clientID: props.route.params.clientID,
-                                });
-                            }}
-                        >
-                            Baseline Survey
-                        </Button>
-                        <Button
-                            mode="contained"
-                            style={styles.clientButtons}
-                            onPress={() => {
-                                navigation.navigate(StackScreenName.VISIT, {
-                                    clientID: props.route.params.clientID,
-                                });
-                            }}
-                        >
-                            New Visit
-                        </Button>
-                    </Card>
                     <Card style={styles.clientDetailsContainerStyles}>
                         <Formik
                             initialValues={getClientFormInitialValues()}
@@ -258,6 +220,44 @@ const ClientDetails = (props: ClientProps) => {
                                         }}
                                         onDismiss={() => setShowImagePickerModal(false)}
                                     />
+                                    <Card style={styles.clientCardContainerStyles}>
+                                        <Button
+                                            mode="contained"
+                                            style={styles.clientButtons}
+                                            onPress={() => {
+                                                navigation.navigate(StackScreenName.REFERRAL, {
+                                                    clientID: props.route.params.clientID,
+                                                });
+                                            }}
+                                        >
+                                            New Referral
+                                        </Button>
+                                        <Button
+                                            mode="contained"
+                                            style={styles.clientButtons}
+                                            onPress={() => {
+                                                navigation.navigate(StackScreenName.BASE_SURVEY, {
+                                                    clientID: props.route.params.clientID,
+                                                });
+                                            }}
+                                        >
+                                            Baseline Survey
+                                        </Button>
+                                        <Button
+                                            mode="contained"
+                                            style={styles.clientButtons}
+                                            onPress={() => {
+                                                navigation.navigate(StackScreenName.VISIT, {
+                                                    clientID: props.route.params.clientID,
+                                                });
+                                            }}
+                                        >
+                                            New Visit
+                                        </Button>
+                                    </Card>
+                                    <Divider />
+                                    <Text style={styles.cardSectionTitle}>Client Details</Text>
+                                    <Divider />
                                     <ClientForm
                                         clientId={client?.id}
                                         formikProps={formikProps}

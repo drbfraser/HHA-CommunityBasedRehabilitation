@@ -40,7 +40,7 @@ export const RecentActivity = (props: IActivityProps) => {
                           />
                       );
                   })}
-            {!showAllEntries && (timelineItems.length > NUM_ACTIVITIES_TO_SHOW) && (
+            {!showAllEntries && timelineItems.length > NUM_ACTIVITIES_TO_SHOW && (
                 <TouchableOpacity
                     onPress={() => {
                         setShowAllEntries(true);

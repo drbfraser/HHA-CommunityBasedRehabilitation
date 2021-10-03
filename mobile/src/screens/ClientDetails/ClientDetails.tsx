@@ -41,6 +41,7 @@ interface ClientProps {
 const ClientDetails = (props: ClientProps) => {
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
+    const [touchDisable, setTouchDisable] = useState<boolean>(true);
     const isFocused = useIsFocused();
     const [hasImage, setHasImage] = useState<boolean>(false);
     const [uri, setUri] = useState<string>("");
@@ -194,6 +195,7 @@ const ClientDetails = (props: ClientProps) => {
                                 <View style={styles.container}>
                                     <View style={styles.imageContainer}>
                                         <TouchableRipple
+                                            disabled={touchDisable}
                                             onPress={() => setShowImagePickerModal(true)}
                                         >
                                             {hasImage ? (
@@ -262,6 +264,9 @@ const ClientDetails = (props: ClientProps) => {
                                         clientId={client?.id}
                                         formikProps={formikProps}
                                         isNewClient={false}
+                                        touchDisable={(touched) => {
+                                            setTouchDisable(touched);
+                                        }}
                                     />
                                 </View>
                             )}

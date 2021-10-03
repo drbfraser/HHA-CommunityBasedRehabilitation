@@ -3,7 +3,8 @@ import * as React from "react";
 import { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { TimelineDate } from "./TimelineDate";
-import Timeline, { IActivity, ActivityType } from "./Timeline";
+import Timeline, { IActivity } from "./Timeline";
+import { NUM_ACTIVITIES_TO_SHOW, SHOW_MORE_ACTIVITY } from "./TimelineConstants";
 
 interface IActivityProps {
     clientVisits: IVisitSummary[];
@@ -13,17 +14,10 @@ interface IActivityProps {
 }
 
 export const RecentActivity = (props: IActivityProps) => {
-    const showMoreActivity = {
-        id: -1,
-        type: ActivityType.SHOWMORE,
-        date: -1,
-    };
-
     const [showAllEntries, setShowAllEntries] = useState<boolean>(false);
-    const numEntriesToShow = 1;
 
     const timelineItems = props.activity;
-    const topTimelineItems = timelineItems.slice(0, numEntriesToShow);
+    const topTimelineItems = timelineItems.slice(0, NUM_ACTIVITIES_TO_SHOW);
 
     return (
         <View>
@@ -46,7 +40,7 @@ export const RecentActivity = (props: IActivityProps) => {
                           />
                       );
                   })}
-            {!showAllEntries && timelineItems.length > numEntriesToShow && (
+            {!showAllEntries && (timelineItems.length > NUM_ACTIVITIES_TO_SHOW) && (
                 <TouchableOpacity
                     onPress={() => {
                         setShowAllEntries(true);
@@ -54,7 +48,7 @@ export const RecentActivity = (props: IActivityProps) => {
                 >
                     <Timeline
                         key={"showMore"}
-                        activity={showMoreActivity}
+                        activity={SHOW_MORE_ACTIVITY}
                         refreshClient={() => {}}
                     />
                 </TouchableOpacity>

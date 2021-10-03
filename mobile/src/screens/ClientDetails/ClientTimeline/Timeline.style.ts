@@ -21,17 +21,17 @@ const useStyles = () =>
             justifyContent: "center",
             borderRadius: 100,
         },
-        arrowButton: {
-            width: 50,
-            height: 50,
-            justifyContent: "center",
-        },
         logoButtonDark: {
             width: 44,
             height: 44,
             justifyContent: "center",
             borderRadius: 100,
             backgroundColor: "#273364",
+        },
+        arrowButton: {
+            width: 50,
+            height: 50,
+            justifyContent: "center",
         },
         verticleLine: {
             height: 18,

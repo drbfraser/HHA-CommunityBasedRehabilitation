@@ -212,7 +212,11 @@ const Timeline = (props: ISummaryProps) => {
                         </View>
                         <View style={styles.subItem}>
                             <Text style={styles.subItemTextDark}>Show More</Text>
-                            <Button style={styles.arrowButton} icon={"chevron-double-down"} compact={true} />
+                            <Button
+                                style={styles.arrowButton}
+                                icon={"chevron-double-down"}
+                                compact={true}
+                            />
                         </View>
                     </View>
                     <View style={styles.dividerStyle} />

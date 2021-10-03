@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
+import { Button, Card, Divider, ActivityIndicator, TouchableRipple } from "react-native-paper";
 import {
     clientDetailsValidationSchema,
     clientInitialValues,
@@ -13,6 +13,8 @@ import {
     RiskType,
     apiFetch,
     Endpoint,
+    ClientField,
+    clientFieldLabels,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
@@ -28,6 +30,7 @@ import { StackScreenName } from "../../util/StackScreenName";
 import { Formik, FormikHelpers } from "formik";
 import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 import defaultProfilePicture from "../../util/defaultProfilePicture";
+import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
 
 interface ClientProps {
     clientID: number;
@@ -41,6 +44,7 @@ const ClientDetails = (props: ClientProps) => {
     const isFocused = useIsFocused();
     const [hasImage, setHasImage] = useState<boolean>(false);
     const [uri, setUri] = useState<string>("");
+    const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const [client, setClient] = useState<IClient>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
@@ -174,6 +178,9 @@ const ClientDetails = (props: ClientProps) => {
 
     return (
         <ScrollView style={styles.scrollViewStyles}>
+            <Divider />
+            <Text style={styles.cardSectionTitle}>Client Details</Text>
+            <Divider />
             {loading ? (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color={themeColors.blueAccent} />
@@ -181,15 +188,6 @@ const ClientDetails = (props: ClientProps) => {
             ) : (
                 <View style={styles.clientDetailContainer}>
                     <Card style={styles.clientCardContainerStyles}>
-                        {hasImage ? (
-                            <Card.Cover style={styles.clientCardImageStyle} source={{ uri: uri }} />
-                        ) : (
-                            <Card.Cover
-                                style={styles.clientCardImageStyle}
-                                source={defaultProfilePicture}
-                            />
-                        )}
-
                         <Button
                             mode="contained"
                             style={styles.clientButtons}
@@ -224,9 +222,6 @@ const ClientDetails = (props: ClientProps) => {
                             New Visit
                         </Button>
                     </Card>
-                    <Divider />
-                    <Text style={styles.cardSectionTitle}>Client Details</Text>
-                    <Divider />
                     <Card style={styles.clientDetailsContainerStyles}>
                         <Formik
                             initialValues={getClientFormInitialValues()}
@@ -234,11 +229,40 @@ const ClientDetails = (props: ClientProps) => {
                             onSubmit={handleFormSubmit}
                         >
                             {(formikProps) => (
-                                <ClientForm
-                                    clientId={client?.id}
-                                    formikProps={formikProps}
-                                    isNewClient={false}
-                                />
+                                <View style={styles.container}>
+                                    <View style={styles.imageContainer}>
+                                        <TouchableRipple
+                                            onPress={() => setShowImagePickerModal(true)}
+                                        >
+                                            {hasImage ? (
+                                                <Card.Cover
+                                                    style={styles.clientCardImageStyle}
+                                                    source={{ uri: uri }}
+                                                />
+                                            ) : (
+                                                <Card.Cover
+                                                    style={styles.clientCardImageStyle}
+                                                    source={defaultProfilePicture}
+                                                />
+                                            )}
+                                        </TouchableRipple>
+                                    </View>
+                                    <FormikImageModal
+                                        field={ClientField.picture}
+                                        fieldLabels={clientFieldLabels}
+                                        formikProps={formikProps}
+                                        visible={showImagePickerModal}
+                                        onPictureChange={(url) => {
+                                            setUri(url);
+                                        }}
+                                        onDismiss={() => setShowImagePickerModal(false)}
+                                    />
+                                    <ClientForm
+                                        clientId={client?.id}
+                                        formikProps={formikProps}
+                                        isNewClient={false}
+                                    />
+                                </View>
                             )}
                         </Formik>
                     </Card>

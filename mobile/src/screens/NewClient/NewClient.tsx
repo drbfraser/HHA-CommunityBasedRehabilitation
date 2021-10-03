@@ -119,6 +119,7 @@ const NewClient = () => {
                                 fieldLabels={clientFieldLabels}
                                 formikProps={formikProps}
                                 visible={showImagePickerModal}
+                                onPictureChange={() => {}}
                                 onDismiss={() => setShowImagePickerModal(false)}
                             />
                             <TextCheckBox

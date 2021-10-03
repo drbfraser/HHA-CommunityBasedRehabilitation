@@ -108,6 +108,7 @@ const WheelchairForm = (props: IFormProps) => {
                             fieldLabels={referralFieldLabels}
                             formikProps={props.formikProps}
                             visible={showImagePickerModal}
+                            onPictureChange={() => {}}
                             onDismiss={() => setShowImagePickerModal(false)}
                         />
                     </View>

@@ -254,6 +254,7 @@ const ClientDetails = (props: ClientProps) => {
                                         visible={showImagePickerModal}
                                         onPictureChange={(url) => {
                                             setUri(url);
+                                            setHasImage(true);
                                         }}
                                         onDismiss={() => setShowImagePickerModal(false)}
                                     />

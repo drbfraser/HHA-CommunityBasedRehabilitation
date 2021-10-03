@@ -1,5 +1,5 @@
 import { FormikHelpers } from "formik";
-import history from "util/history";
+import history from "@cbr/common/util/history";
 import { baseFieldLabels, BaseFormValues } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
 import { baseSurveyHandleSubmitForm } from "@cbr/common/forms/BaseSurvey/baseSurveyHandler";
 import React from "react";

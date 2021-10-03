@@ -19,7 +19,7 @@ import {
     getPassChangeErrorMessageFromSubmissionError,
     handleSubmitChangePassword,
 } from "@cbr/common/forms/UserProfile/userProfileHandler";
-import history from "../../util/history";
+import history from "@cbr/common/util/history";
 
 const handleCancel = () => history.goBack();
 

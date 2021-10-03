@@ -22,7 +22,7 @@ import {
 } from "@cbr/common/util/referrals";
 import { handleSubmit } from "./formHandler";
 import { ArrowBack } from "@material-ui/icons";
-import history from "../../util/history";
+import history from "@cbr/common/util/history";
 import { useParams } from "react-router-dom";
 import { useStyles } from "./NewReferral.styles";
 import { Alert } from "@material-ui/lab";

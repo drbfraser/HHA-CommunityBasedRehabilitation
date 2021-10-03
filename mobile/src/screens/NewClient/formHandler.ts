@@ -11,7 +11,7 @@ export const handleSubmit = async (
     scrollToTop: () => void
 ) => {
     helpers.setSubmitting(true);
-    return handleNewClientSubmit(values, helpers).then((res) => {
+    return handleNewMobileClientSubmit(values, helpers, "mobile").then((res) => {
         if (res) {
             scrollToTop();
             navigation.navigate(StackScreenName.CLIENT, {

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator, TouchableRipple } from "react-native-paper";
 import {
-    clientDetailsValidationSchema,
     clientInitialValues,
     Gender,
     IClient,
@@ -15,6 +14,7 @@ import {
     Endpoint,
     ClientField,
     clientFieldLabels,
+    mobileClientDetailsValidationSchema,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
@@ -192,7 +192,7 @@ const ClientDetails = (props: ClientProps) => {
                     <Card style={styles.clientDetailsContainerStyles}>
                         <Formik
                             initialValues={getClientFormInitialValues()}
-                            validationSchema={clientDetailsValidationSchema}
+                            validationSchema={mobileClientDetailsValidationSchema}
                             onSubmit={handleFormSubmit}
                         >
                             {(formikProps) => (
@@ -277,7 +277,9 @@ const ClientDetails = (props: ClientProps) => {
                                             setTouchDisable(touched);
                                         }}
                                         imageSave={() => {
-                                            setOriginaluri(uri);
+                                            if (imageChange) {
+                                                setOriginaluri(uri);
+                                            }
                                         }}
                                         resetImage={() => {
                                             setImageChange(false);

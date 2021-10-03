@@ -1,4 +1,5 @@
 import React from "react";
+import { CSVLink } from "react-csv";
 import { useCallback, useEffect, useState, useRef } from "react";
 import {
     CellParams,
@@ -22,6 +23,7 @@ import {
     Switch,
     Typography,
     debounce,
+    Button,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
@@ -129,6 +131,16 @@ const ClientList = () => {
             hide: isSocialHidden,
             hideFunction: setSocialHidden,
         },
+    };
+
+    const sortClientsById = (rows: RowsProp) => {
+        let sortById: RowsProp = rows.slice(0);
+
+        sortById.sort((a: any, b: any) => {
+            return a.id - b.id;
+        });
+
+        return sortById;
     };
 
     const columns = [
@@ -305,6 +317,17 @@ const ClientList = () => {
                     },
                 ]}
             />
+            <div className={styles.downloadSVC}>
+                <CSVLink
+                    filename="ClientList.csv"
+                    data={sortClientsById(rows)}
+                    className={styles.downloadSVCLink}
+                >
+                    <Button variant="outlined" size="small">
+                        EXPORT TO CSV{" "}
+                    </Button>
+                </CSVLink>
+            </div>
         </div>
     );
 };

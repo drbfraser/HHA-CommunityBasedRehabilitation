@@ -17,6 +17,14 @@ export const useStyles = makeStyles(
             justifyContent: "flex-end",
             display: "flex",
         },
+        downloadSVC: {
+            position: "relative",
+            left: "0px",
+            top: "-41px",
+        },
+        downloadSVCLink: {
+            textDecoration: "none",
+        },
         // mobile width
         [mediaMobile]: {
             root: {

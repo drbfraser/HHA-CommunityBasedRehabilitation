@@ -138,7 +138,6 @@ const NewClient = () => {
                                 isNewClient={true}
                                 formikProps={formikProps}
                                 disabled={!formikProps.values.interviewConsent}
-                                touchDisable={() => {}}
                             />
                             <Divider style={styles.divider} />
                             {Object.keys(RiskType).map((riskType) => (

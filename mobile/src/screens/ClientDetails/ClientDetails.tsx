@@ -43,8 +43,11 @@ const ClientDetails = (props: ClientProps) => {
     const [loading, setLoading] = useState(true);
     const [touchDisable, setTouchDisable] = useState<boolean>(true);
     const isFocused = useIsFocused();
-    const [hasImage, setHasImage] = useState<boolean>(false);
+
+    const [imageChange, setImageChange] = useState<boolean>(false);
     const [uri, setUri] = useState<string>("");
+    const [originaluri, setOriginaluri] = useState<string>("");
+
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const [client, setClient] = useState<IClient>();
     const errorAlert = () =>
@@ -66,8 +69,7 @@ const ClientDetails = (props: ClientProps) => {
                 .then((blob) => {
                     let reader = new FileReader();
                     reader.onload = () => {
-                        setUri(reader.result as string);
-                        setHasImage(true);
+                        setOriginaluri(reader.result as string);
                     };
                     reader.readAsDataURL(blob);
                 });
@@ -173,7 +175,9 @@ const ClientDetails = (props: ClientProps) => {
                 other_disability: values.otherDisability ?? client.other_disability,
                 picture: values.picture ?? client.picture,
             };
-            handleSubmit(updatedIClient).finally(() => formikHelpers.setSubmitting(false));
+            handleSubmit(updatedIClient, undefined, imageChange).finally(() =>
+                formikHelpers.setSubmitting(false)
+            );
         }
     };
 
@@ -198,10 +202,15 @@ const ClientDetails = (props: ClientProps) => {
                                             disabled={touchDisable}
                                             onPress={() => setShowImagePickerModal(true)}
                                         >
-                                            {hasImage ? (
+                                            {imageChange ? (
                                                 <Card.Cover
                                                     style={styles.clientCardImageStyle}
                                                     source={{ uri: uri }}
+                                                />
+                                            ) : originaluri !== "" ? (
+                                                <Card.Cover
+                                                    style={styles.clientCardImageStyle}
+                                                    source={{ uri: originaluri }}
                                                 />
                                             ) : (
                                                 <Card.Cover
@@ -218,7 +227,7 @@ const ClientDetails = (props: ClientProps) => {
                                         visible={showImagePickerModal}
                                         onPictureChange={(url) => {
                                             setUri(url);
-                                            setHasImage(true);
+                                            setImageChange(true);
                                         }}
                                         onDismiss={() => setShowImagePickerModal(false)}
                                     />
@@ -266,6 +275,12 @@ const ClientDetails = (props: ClientProps) => {
                                         isNewClient={false}
                                         touchDisable={(touched) => {
                                             setTouchDisable(touched);
+                                        }}
+                                        imageSave={() => {
+                                            setOriginaluri(uri);
+                                        }}
+                                        resetImage={() => {
+                                            setImageChange(false);
                                         }}
                                     />
                                 </View>

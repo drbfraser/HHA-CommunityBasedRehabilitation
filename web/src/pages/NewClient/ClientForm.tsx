@@ -10,13 +10,18 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-import { fieldLabels, FormField, initialValues, validationSchema } from "./formFields";
+import {
+    clientFieldLabels,
+    ClientField,
+    clientInitialValues,
+    newClientValidationSchema,
+} from "@cbr/common/forms/Client/clientFields";
 import { riskLevels } from "@cbr/common/util/risks";
-import { handleSubmit, handleReset } from "./formHandler";
 import { genders } from "@cbr/common/util/clients";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
+import { handleNewClientSubmit, handleReset } from "@cbr/common/forms/Client/clientHandler";
 
 const ClientForm = () => {
     const styles = useStyles();
@@ -25,9 +30,9 @@ const ClientForm = () => {
 
     return (
         <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
+            initialValues={clientInitialValues}
+            validationSchema={newClientValidationSchema}
+            onSubmit={handleNewClientSubmit}
         >
             {({ values, isSubmitting, resetForm, touched, setFieldValue }) => (
                 <Grid container direction="row" justify="flex-start" spacing={2}>
@@ -35,8 +40,8 @@ const ClientForm = () => {
                         <Field
                             component={CheckboxWithLabel}
                             type="checkbox"
-                            name={FormField.interviewConsent}
-                            Label={{ label: fieldLabels[FormField.interviewConsent] }}
+                            name={ClientField.interviewConsent}
+                            Label={{ label: clientFieldLabels[ClientField.interviewConsent] }}
                         />
                     </Grid>
                     {values.interviewConsent ? (
@@ -45,8 +50,8 @@ const ClientForm = () => {
                                 <ProfilePicCard
                                     isEditing={true}
                                     onPictureChange={(newPictureURL) => {
-                                        setFieldValue(FormField.picture, newPictureURL);
-                                        setFieldValue(FormField.pictureChanged, true);
+                                        setFieldValue(ClientField.picture, newPictureURL);
+                                        setFieldValue(ClientField.pictureChanged, true);
                                     }}
                                     picture={values.picture}
                                 />
@@ -57,9 +62,9 @@ const ClientForm = () => {
                                         <Grid item md={6} xs={12}>
                                             <Field
                                                 component={TextField}
-                                                name={FormField.firstName}
+                                                name={ClientField.firstName}
                                                 variant="outlined"
-                                                label={fieldLabels[FormField.firstName]}
+                                                label={clientFieldLabels[ClientField.firstName]}
                                                 required
                                                 fullWidth
                                             />
@@ -67,9 +72,9 @@ const ClientForm = () => {
                                         <Grid item md={6} xs={12}>
                                             <Field
                                                 component={TextField}
-                                                name={FormField.lastName}
+                                                name={ClientField.lastName}
                                                 variant="outlined"
-                                                label={fieldLabels[FormField.lastName]}
+                                                label={clientFieldLabels[ClientField.lastName]}
                                                 required
                                                 fullWidth
                                             />
@@ -82,8 +87,8 @@ const ClientForm = () => {
                                                 type="date"
                                                 variant="outlined"
                                                 InputLabelProps={{ shrink: true }}
-                                                label={fieldLabels[FormField.birthDate]}
-                                                name={FormField.birthDate}
+                                                label={clientFieldLabels[ClientField.birthDate]}
+                                                name={ClientField.birthDate}
                                             />
                                         </Grid>
                                         <Grid item md={6} xs={12}>
@@ -94,8 +99,8 @@ const ClientForm = () => {
                                                     select
                                                     required
                                                     variant="outlined"
-                                                    label={fieldLabels[FormField.gender]}
-                                                    name={FormField.gender}
+                                                    label={clientFieldLabels[ClientField.gender]}
+                                                    name={ClientField.gender}
                                                 >
                                                     {Object.entries(genders).map(
                                                         ([value, name]) => (
@@ -111,8 +116,8 @@ const ClientForm = () => {
                                             <Field
                                                 component={TextField}
                                                 variant="outlined"
-                                                name={FormField.village}
-                                                label={fieldLabels[FormField.village]}
+                                                name={ClientField.village}
+                                                label={clientFieldLabels[ClientField.village]}
                                                 required
                                                 fullWidth
                                             />
@@ -125,8 +130,8 @@ const ClientForm = () => {
                                                     select
                                                     variant="outlined"
                                                     required
-                                                    label={fieldLabels[FormField.zone]}
-                                                    name={FormField.zone}
+                                                    label={clientFieldLabels[ClientField.zone]}
+                                                    name={ClientField.zone}
                                                 >
                                                     {Array.from(zones).map(([id, name]) => (
                                                         <MenuItem key={id} value={id}>
@@ -139,9 +144,9 @@ const ClientForm = () => {
                                         <Grid item md={6} xs={12}>
                                             <Field
                                                 component={TextField}
-                                                name={FormField.phoneNumber}
+                                                name={ClientField.phoneNumber}
                                                 variant="outlined"
-                                                label={fieldLabels[FormField.phoneNumber]}
+                                                label={clientFieldLabels[ClientField.phoneNumber]}
                                                 fullWidth
                                             />
                                         </Grid>
@@ -153,9 +158,9 @@ const ClientForm = () => {
                                                 SelectProps={{
                                                     multiple: true,
                                                 }}
-                                                label={fieldLabels[FormField.disability]}
+                                                label={clientFieldLabels[ClientField.disability]}
                                                 required
-                                                name={FormField.disability}
+                                                name={ClientField.disability}
                                                 variant="outlined"
                                             >
                                                 {Array.from(disabilities).map(([id, name]) => (
@@ -164,7 +169,7 @@ const ClientForm = () => {
                                                     </MenuItem>
                                                 ))}
                                             </Field>
-                                            {(values[FormField.disability] as number[]).includes(
+                                            {(values[ClientField.disability] as number[]).includes(
                                                 getOtherDisabilityId(disabilities)
                                             ) && (
                                                 <div>
@@ -173,10 +178,12 @@ const ClientForm = () => {
                                                         component={TextField}
                                                         fullWidth
                                                         label={
-                                                            fieldLabels[FormField.otherDisability]
+                                                            clientFieldLabels[
+                                                                ClientField.otherDisability
+                                                            ]
                                                         }
                                                         required
-                                                        name={FormField.otherDisability}
+                                                        name={ClientField.otherDisability}
                                                         variant="outlined"
                                                     />
                                                 </div>
@@ -186,9 +193,11 @@ const ClientForm = () => {
                                             <Field
                                                 component={CheckboxWithLabel}
                                                 type="checkbox"
-                                                name={FormField.caregiverPresent}
+                                                name={ClientField.caregiverPresent}
                                                 Label={{
-                                                    label: fieldLabels[FormField.caregiverPresent],
+                                                    label: clientFieldLabels[
+                                                        ClientField.caregiverPresent
+                                                    ],
                                                 }}
                                             />
                                         </Grid>
@@ -215,11 +224,12 @@ const ClientForm = () => {
                                                                         styles.caregiverInputField
                                                                     }
                                                                     component={TextField}
-                                                                    name={FormField.caregiverName}
+                                                                    name={ClientField.caregiverName}
                                                                     variant="outlined"
                                                                     label={
-                                                                        fieldLabels[
-                                                                            FormField.caregiverName
+                                                                        clientFieldLabels[
+                                                                            ClientField
+                                                                                .caregiverName
                                                                         ]
                                                                     }
                                                                     fullWidth
@@ -229,11 +239,14 @@ const ClientForm = () => {
                                                                 <Field
                                                                     className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
                                                                     component={TextField}
-                                                                    name={FormField.caregiverEmail}
+                                                                    name={
+                                                                        ClientField.caregiverEmail
+                                                                    }
                                                                     variant="outlined"
                                                                     label={
-                                                                        fieldLabels[
-                                                                            FormField.caregiverEmail
+                                                                        clientFieldLabels[
+                                                                            ClientField
+                                                                                .caregiverEmail
                                                                         ]
                                                                     }
                                                                     fullWidth
@@ -245,11 +258,14 @@ const ClientForm = () => {
                                                                         styles.caregiverInputField
                                                                     }
                                                                     component={TextField}
-                                                                    name={FormField.caregiverPhone}
+                                                                    name={
+                                                                        ClientField.caregiverPhone
+                                                                    }
                                                                     variant="outlined"
                                                                     label={
-                                                                        fieldLabels[
-                                                                            FormField.caregiverPhone
+                                                                        clientFieldLabels[
+                                                                            ClientField
+                                                                                .caregiverPhone
                                                                         ]
                                                                     }
                                                                     fullWidth
@@ -274,8 +290,10 @@ const ClientForm = () => {
                                                     select
                                                     required
                                                     variant="outlined"
-                                                    label={fieldLabels[FormField.healthRisk]}
-                                                    name={FormField.healthRisk}
+                                                    label={
+                                                        clientFieldLabels[ClientField.healthRisk]
+                                                    }
+                                                    name={ClientField.healthRisk}
                                                 >
                                                     {Object.entries(riskLevels).map(
                                                         ([value, { name }]) => (
@@ -296,8 +314,12 @@ const ClientForm = () => {
                                                 required
                                                 rows={4}
                                                 variant="outlined"
-                                                label={fieldLabels[FormField.healthRequirements]}
-                                                name={FormField.healthRequirements}
+                                                label={
+                                                    clientFieldLabels[
+                                                        ClientField.healthRequirements
+                                                    ]
+                                                }
+                                                name={ClientField.healthRequirements}
                                             />
                                         </Grid>
 
@@ -309,8 +331,8 @@ const ClientForm = () => {
                                                 rows={4}
                                                 required
                                                 variant="outlined"
-                                                label={fieldLabels[FormField.healthGoals]}
-                                                name={FormField.healthGoals}
+                                                label={clientFieldLabels[ClientField.healthGoals]}
+                                                name={ClientField.healthGoals}
                                             />
                                         </Grid>
 
@@ -321,8 +343,10 @@ const ClientForm = () => {
                                                     select
                                                     required
                                                     variant="outlined"
-                                                    label={fieldLabels[FormField.educationRisk]}
-                                                    name={FormField.educationRisk}
+                                                    label={
+                                                        clientFieldLabels[ClientField.educationRisk]
+                                                    }
+                                                    name={ClientField.educationRisk}
                                                 >
                                                     {Object.entries(riskLevels).map(
                                                         ([value, { name }]) => (
@@ -343,8 +367,12 @@ const ClientForm = () => {
                                                 rows={4}
                                                 required
                                                 variant="outlined"
-                                                label={fieldLabels[FormField.educationRequirements]}
-                                                name={FormField.educationRequirements}
+                                                label={
+                                                    clientFieldLabels[
+                                                        ClientField.educationRequirements
+                                                    ]
+                                                }
+                                                name={ClientField.educationRequirements}
                                             />
                                         </Grid>
 
@@ -356,8 +384,10 @@ const ClientForm = () => {
                                                 required
                                                 rows={4}
                                                 variant="outlined"
-                                                label={fieldLabels[FormField.educationGoals]}
-                                                name={FormField.educationGoals}
+                                                label={
+                                                    clientFieldLabels[ClientField.educationGoals]
+                                                }
+                                                name={ClientField.educationGoals}
                                             />
                                         </Grid>
 
@@ -368,8 +398,10 @@ const ClientForm = () => {
                                                     select
                                                     variant="outlined"
                                                     required
-                                                    label={fieldLabels[FormField.socialRisk]}
-                                                    name={FormField.socialRisk}
+                                                    label={
+                                                        clientFieldLabels[ClientField.socialRisk]
+                                                    }
+                                                    name={ClientField.socialRisk}
                                                 >
                                                     {Object.entries(riskLevels).map(
                                                         ([value, { name }]) => (
@@ -390,8 +422,12 @@ const ClientForm = () => {
                                                 required
                                                 rows={4}
                                                 variant="outlined"
-                                                label={fieldLabels[FormField.socialRequirements]}
-                                                name={FormField.socialRequirements}
+                                                label={
+                                                    clientFieldLabels[
+                                                        ClientField.socialRequirements
+                                                    ]
+                                                }
+                                                name={ClientField.socialRequirements}
                                             />
                                         </Grid>
 
@@ -403,8 +439,8 @@ const ClientForm = () => {
                                                 multiline
                                                 rows={4}
                                                 variant="outlined"
-                                                label={fieldLabels[FormField.socialGoals]}
-                                                name={FormField.socialGoals}
+                                                label={clientFieldLabels[ClientField.socialGoals]}
+                                                name={ClientField.socialGoals}
                                             />
                                         </Grid>
                                         <br />

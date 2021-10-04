@@ -1,4 +1,4 @@
-import { handleNewClientSubmit, TClientValues } from "@cbr/common";
+import { handleNewMobileClientSubmit, TClientValues } from "@cbr/common";
 import { FormikHelpers } from "formik";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
@@ -11,7 +11,7 @@ export const handleSubmit = async (
     scrollToTop: () => void
 ) => {
     helpers.setSubmitting(true);
-    return handleNewMobileClientSubmit(values, helpers, "mobile").then((res) => {
+    return handleNewMobileClientSubmit(values, helpers).then((res) => {
         if (res) {
             scrollToTop();
             navigation.navigate(StackScreenName.CLIENT, {

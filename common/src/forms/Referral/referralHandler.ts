@@ -1,8 +1,8 @@
 import { ReferralFormField, ReferralFormValues } from "./referralFields";
 import { apiFetch, Endpoint, objectToFormData } from "../../util/endpoints";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
-import { appendPicture } from "../../util/clientImageSubmission";
 import { appendPic } from "../../util/referralImageSubmission";
+import { appendMobilePict } from "../../util/mobileImageSubmisson";
 
 const addReferral = async (referralInfo: FormData) => {
     const init: RequestInit = {
@@ -15,7 +15,7 @@ const addReferral = async (referralInfo: FormData) => {
         .then((res) => res);
 };
 
-export const referralHandleSubmit = async (values: ReferralFormValues) => {
+export const referralHandleSubmit = async (values: ReferralFormValues, source: string) => {
     const disabilities = await getDisabilities();
     const newReferral = {
         client: values[ReferralFormField.client],
@@ -54,7 +54,11 @@ export const referralHandleSubmit = async (values: ReferralFormValues) => {
 
     //if referral picture exist, then attached into form data
     if (values[ReferralFormField.picture]) {
-        await appendPic(referralObj, values[ReferralFormField.picture]);
+        if (source === "web") {
+            await appendPic(referralObj, values[ReferralFormField.picture]);
+        } else {
+            await appendMobilePict(referralObj, values[ReferralFormField.picture]);
+        }
     }
 
     return await addReferral(referralObj);

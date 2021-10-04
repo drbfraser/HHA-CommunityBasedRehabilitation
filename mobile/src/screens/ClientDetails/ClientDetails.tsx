@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { Button, Card, Divider, ActivityIndicator } from "react-native-paper";
+import { Button, Card, Divider, ActivityIndicator, TouchableRipple } from "react-native-paper";
 import {
-    clientDetailsValidationSchema,
     clientInitialValues,
     Gender,
     IClient,
@@ -11,6 +10,11 @@ import {
     timestampToDate,
     IRisk,
     RiskType,
+    apiFetch,
+    Endpoint,
+    ClientField,
+    clientFieldLabels,
+    mobileClientDetailsValidationSchema,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
@@ -26,6 +30,7 @@ import { StackScreenName } from "../../util/StackScreenName";
 import { Formik, FormikHelpers } from "formik";
 import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 import defaultProfilePicture from "../../util/defaultProfilePicture";
+import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
 
 interface ClientProps {
     clientID: number;
@@ -36,8 +41,14 @@ interface ClientProps {
 const ClientDetails = (props: ClientProps) => {
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
+    const [touchDisable, setTouchDisable] = useState<boolean>(true);
     const isFocused = useIsFocused();
 
+    const [imageChange, setImageChange] = useState<boolean>(false);
+    const [uri, setUri] = useState<string>("");
+    const [originaluri, setOriginaluri] = useState<string>("");
+
+    const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const [client, setClient] = useState<IClient>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
@@ -52,6 +63,17 @@ const ClientDetails = (props: ClientProps) => {
 
     const getClientDetails = async () => {
         const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
+        if (presentClient.picture !== null) {
+            apiFetch(Endpoint.CLIENT_PICTURE, `${presentClient.id}`)
+                .then((resp) => resp.blob())
+                .then((blob) => {
+                    let reader = new FileReader();
+                    reader.onload = () => {
+                        setOriginaluri(reader.result as string);
+                    };
+                    reader.readAsDataURL(blob);
+                });
+        }
         setClient(presentClient);
     };
 
@@ -151,10 +173,11 @@ const ClientDetails = (props: ClientProps) => {
                 caregiver_phone: values.caregiverPhone ?? client.caregiver_phone,
                 disability: values.disability ?? client.disability,
                 other_disability: values.otherDisability ?? client.other_disability,
-                picture:
-                    "https://cbrs.cradleplatform.com/api/uploads/images/7cm5m2urohgbet8ew1kjggdw2fd9ts.png", //TODO: Don't use this picture
+                picture: values.picture ?? client.picture,
             };
-            handleSubmit(updatedIClient).finally(() => formikHelpers.setSubmitting(false));
+            handleSubmit(updatedIClient, undefined, imageChange).finally(() =>
+                formikHelpers.setSubmitting(false)
+            );
         }
     };
 
@@ -166,60 +189,103 @@ const ClientDetails = (props: ClientProps) => {
                 </View>
             ) : (
                 <View style={styles.clientDetailContainer}>
-                    <Card style={styles.clientCardContainerStyles}>
-                        <Card.Cover
-                            style={styles.clientCardImageStyle}
-                            source={defaultProfilePicture}
-                        />
-                        <Button
-                            mode="contained"
-                            style={styles.clientButtons}
-                            onPress={() => {
-                                navigation.navigate(StackScreenName.REFERRAL, {
-                                    clientID: props.route.params.clientID,
-                                });
-                            }}
-                        >
-                            New Referral
-                        </Button>
-                        <Button
-                            mode="contained"
-                            style={styles.clientButtons}
-                            onPress={() => {
-                                navigation.navigate(StackScreenName.BASE_SURVEY, {
-                                    clientID: props.route.params.clientID,
-                                });
-                            }}
-                        >
-                            Baseline Survey
-                        </Button>
-                        <Button
-                            mode="contained"
-                            style={styles.clientButtons}
-                            onPress={() => {
-                                navigation.navigate(StackScreenName.VISIT, {
-                                    clientID: props.route.params.clientID,
-                                });
-                            }}
-                        >
-                            New Visit
-                        </Button>
-                    </Card>
-                    <Divider />
-                    <Text style={styles.cardSectionTitle}>Client Details</Text>
-                    <Divider />
                     <Card style={styles.clientDetailsContainerStyles}>
                         <Formik
                             initialValues={getClientFormInitialValues()}
-                            validationSchema={clientDetailsValidationSchema}
+                            validationSchema={mobileClientDetailsValidationSchema}
                             onSubmit={handleFormSubmit}
                         >
                             {(formikProps) => (
-                                <ClientForm
-                                    clientId={client?.id}
-                                    formikProps={formikProps}
-                                    isNewClient={false}
-                                />
+                                <View style={styles.container}>
+                                    <View style={styles.imageContainer}>
+                                        <TouchableRipple
+                                            disabled={touchDisable}
+                                            onPress={() => setShowImagePickerModal(true)}
+                                        >
+                                            {imageChange ? (
+                                                <Card.Cover
+                                                    style={styles.clientCardImageStyle}
+                                                    source={{ uri: uri }}
+                                                />
+                                            ) : originaluri !== "" ? (
+                                                <Card.Cover
+                                                    style={styles.clientCardImageStyle}
+                                                    source={{ uri: originaluri }}
+                                                />
+                                            ) : (
+                                                <Card.Cover
+                                                    style={styles.clientCardImageStyle}
+                                                    source={defaultProfilePicture}
+                                                />
+                                            )}
+                                        </TouchableRipple>
+                                    </View>
+                                    <FormikImageModal
+                                        field={ClientField.picture}
+                                        fieldLabels={clientFieldLabels}
+                                        formikProps={formikProps}
+                                        visible={showImagePickerModal}
+                                        onPictureChange={(url) => {
+                                            setUri(url);
+                                            setImageChange(true);
+                                        }}
+                                        onDismiss={() => setShowImagePickerModal(false)}
+                                    />
+                                    <Card style={styles.clientCardContainerStyles}>
+                                        <Button
+                                            mode="contained"
+                                            style={styles.clientButtons}
+                                            onPress={() => {
+                                                navigation.navigate(StackScreenName.REFERRAL, {
+                                                    clientID: props.route.params.clientID,
+                                                });
+                                            }}
+                                        >
+                                            New Referral
+                                        </Button>
+                                        <Button
+                                            mode="contained"
+                                            style={styles.clientButtons}
+                                            onPress={() => {
+                                                navigation.navigate(StackScreenName.BASE_SURVEY, {
+                                                    clientID: props.route.params.clientID,
+                                                });
+                                            }}
+                                        >
+                                            Baseline Survey
+                                        </Button>
+                                        <Button
+                                            mode="contained"
+                                            style={styles.clientButtons}
+                                            onPress={() => {
+                                                navigation.navigate(StackScreenName.VISIT, {
+                                                    clientID: props.route.params.clientID,
+                                                });
+                                            }}
+                                        >
+                                            New Visit
+                                        </Button>
+                                    </Card>
+                                    <Divider />
+                                    <Text style={styles.cardSectionTitle}>Client Details</Text>
+                                    <Divider />
+                                    <ClientForm
+                                        clientId={client?.id}
+                                        formikProps={formikProps}
+                                        isNewClient={false}
+                                        touchDisable={(touched) => {
+                                            setTouchDisable(touched);
+                                        }}
+                                        imageSave={() => {
+                                            if (imageChange) {
+                                                setOriginaluri(uri);
+                                            }
+                                        }}
+                                        resetImage={() => {
+                                            setImageChange(false);
+                                        }}
+                                    />
+                                </View>
                             )}
                         </Formik>
                     </Card>

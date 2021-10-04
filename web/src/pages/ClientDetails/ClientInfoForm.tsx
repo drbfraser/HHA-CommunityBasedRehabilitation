@@ -23,7 +23,7 @@ import {
     updateClientfieldLabels,
     ClientDetailsFields,
     TClientFormValues,
-    clientDetailsValidationSchema,
+    webClientDetailsValidationSchema,
 } from "@cbr/common/forms/Client/clientFields";
 
 interface IProps {
@@ -43,7 +43,7 @@ const ClientInfoForm = (props: IProps) => {
                     [ClientDetailsFields.pictureChanged]: false,
                 } as TClientFormValues
             }
-            validationSchema={clientDetailsValidationSchema}
+            validationSchema={webClientDetailsValidationSchema}
             onReset={(values: TClientFormValues, formikHelpers) => {
                 formikHelpers.setFieldValue(ClientDetailsFields.pictureChanged, false);
             }}

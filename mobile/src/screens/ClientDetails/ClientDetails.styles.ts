@@ -5,6 +5,20 @@ const windowHeight = Dimensions.get("window").height;
 
 const useStyles = () =>
     StyleSheet.create({
+        container: {
+            margin: 20,
+        },
+        imageContainer: {
+            paddingHorizontal: 50,
+        },
+        image: {
+            backgroundColor: themeColors.white,
+            borderRadius: 30,
+            resizeMode: "contain",
+            width: "100%",
+            height: "auto",
+            aspectRatio: 1,
+        },
         clientDetailContainer: {
             flex: 1,
         },

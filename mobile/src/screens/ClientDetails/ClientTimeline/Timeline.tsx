@@ -27,9 +27,9 @@ export interface IActivity {
     id: number;
     type: ActivityType;
     date: number;
-    visit?: IVisitSummary;
-    referral?: IReferral;
-    survey?: ISurvey;
+    visit: IVisitSummary | undefined;
+    referral: IReferral | undefined;
+    survey: ISurvey | undefined;
 }
 
 const Timeline = (props: ISummaryProps) => {
@@ -91,7 +91,7 @@ const Timeline = (props: ISummaryProps) => {
                                     {props.activity.visit.social_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.SOCIAL.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemDateText}>Social</Text>
+                                            <Text style={styles.subItemText}>Social</Text>
                                         </View>
                                     ) : (
                                         <></>

@@ -56,9 +56,7 @@ const Timeline = (props: ISummaryProps) => {
         >
             <View>
                 <View style={styles.container}>
-                    <Text style={{ width: "25%" }}>
-                        {timestampToDate(props.activity.date)}
-                    </Text>
+                    <Text style={{ width: "25%" }}>{timestampToDate(props.activity.date)}</Text>
                     <View style={styles.activityTypeView}>
                         <View style={styles.verticleLine}></View>
                         <Button
@@ -70,17 +68,14 @@ const Timeline = (props: ISummaryProps) => {
                         <View style={styles.verticleLine}></View>
                     </View>
                     <View>
-                        {props.activity.type === ActivityType.VISIT &&
-                        props.activity.visit ? (
+                        {props.activity.type === ActivityType.VISIT && props.activity.visit ? (
                             <View>
                                 <Text>{zone} visit</Text>
                                 <View>
                                     {props.activity.visit.educat_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.EDUCAT.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemText}>
-                                                Education
-                                            </Text>
+                                            <Text style={styles.subItemText}>Education</Text>
                                         </View>
                                     ) : (
                                         <></>
@@ -96,9 +91,7 @@ const Timeline = (props: ISummaryProps) => {
                                     {props.activity.visit.social_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.SOCIAL.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemDateText}>
-                                                Social
-                                            </Text>
+                                            <Text style={styles.subItemDateText}>Social</Text>
                                         </View>
                                     ) : (
                                         <></>
@@ -111,25 +104,21 @@ const Timeline = (props: ISummaryProps) => {
                                         style={styles.popupStyle}
                                     >
                                         <VisitEntry
-                                            visitSummary={
-                                                props.activity.visit as IVisitSummary
-                                            }
+                                            visitSummary={props.activity.visit as IVisitSummary}
                                             close={hideDetails}
                                         />
                                     </Modal>
                                 </Portal>
                             </View>
                         ) : props.activity.type === ActivityType.REFERAL &&
-                            props.activity.referral ? (
+                          props.activity.referral ? (
                             <View style={styles.subItem}>
                                 <View>
                                     <Text style={styles.subItemText}>Referral Posted</Text>
                                     <View style={styles.subItemRow}>
                                         {props.activity.referral.resolved ? (
                                             <>
-                                                <Text style={styles.subItemText}>
-                                                    Resolved
-                                                </Text>
+                                                <Text style={styles.subItemText}>Resolved</Text>
                                                 <Icon
                                                     name="check-circle"
                                                     size={15}
@@ -138,9 +127,7 @@ const Timeline = (props: ISummaryProps) => {
                                             </>
                                         ) : (
                                             <>
-                                                <Text style={styles.subItemText}>
-                                                    Unresolved
-                                                </Text>
+                                                <Text style={styles.subItemText}>Unresolved</Text>
                                                 <Icon
                                                     name="clock-o"
                                                     size={15}
@@ -155,9 +142,7 @@ const Timeline = (props: ISummaryProps) => {
                                                 style={styles.popupStyle}
                                             >
                                                 <ReferralEntry
-                                                    referral={
-                                                        props.activity.referral as IReferral
-                                                    }
+                                                    referral={props.activity.referral as IReferral}
                                                     close={hideDetails}
                                                     refreshClient={props.refreshClient}
                                                 />

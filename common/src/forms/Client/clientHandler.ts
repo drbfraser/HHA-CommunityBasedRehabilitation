@@ -29,7 +29,7 @@ const updateClient = async (clientInfo: FormData, clientId: number): Promise<ICl
     return await apiFetch(Endpoint.CLIENT, `${clientId}`, init).then((res) => res.json());
 };
 
-export const handleNewClientSubmit = async (
+export const handleNewWebClientSubmit = async (
     values: TClientValues,
     helpers: FormikHelpers<TClientValues>
 ) => {
@@ -70,7 +70,6 @@ export const handleNewClientSubmit = async (
             goal: values.educationGoals,
         },
     };
-
     const formData = objectToFormData(newClient);
 
     try {
@@ -79,9 +78,7 @@ export const handleNewClientSubmit = async (
         }
 
         const client: IClient = await addClient(formData);
-
         history.push(`/client/${client.id}`);
-
         return client;
     } catch (e) {
         const initialMessage = "Encountered an error while trying to create the client!";

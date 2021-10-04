@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {
     apiFetch,
@@ -26,7 +26,24 @@ interface IEntryProps {
 
 const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
     const styles = useStyles();
+    const [uri, setUri] = useState<string>("");
+    const [hasImage, setHasImage] = useState<boolean>(false);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (referral.picture !== null) {
+            apiFetch(Endpoint.REFERRAL_PICTURE, `${referral.id}`)
+                .then((resp) => resp.blob())
+                .then((blob) => {
+                    let reader = new FileReader();
+                    reader.onload = () => {
+                        setUri(reader.result as string);
+                        setHasImage(true);
+                    };
+                    reader.readAsDataURL(blob);
+                });
+        }
+    });
 
     const onClose = () => {
         close();
@@ -181,6 +198,14 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
                                     {referral.wheelchair_repairable ? "Yes" : "No"}
                                 </Text>
                                 <Text />
+                                {hasImage ? (
+                                    <Card.Cover
+                                        style={styles.referralCardImageStyle}
+                                        source={{ uri: uri }}
+                                    />
+                                ) : (
+                                    <></>
+                                )}
                             </>
                         )}
                         {referral.physiotherapy && (

@@ -10,6 +10,7 @@ import useStyles from "./FormikImageModal.styles";
 interface IFormikImageModal<Field extends string> extends TFormikComponentProps<Field> {
     visible: boolean;
     onDismiss: () => void;
+    onPictureChange: (newPictureURL: string) => void;
 }
 
 enum ImageSource {
@@ -70,6 +71,7 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                 });
 
                 if (!image.cancelled) {
+                    props.onPictureChange(image.uri);
                     props.formikProps.setFieldTouched(props.field, true);
                     props.formikProps.setFieldValue(props.field, image.uri);
                 }

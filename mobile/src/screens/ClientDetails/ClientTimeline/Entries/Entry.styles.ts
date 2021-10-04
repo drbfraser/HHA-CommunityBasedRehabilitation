@@ -21,6 +21,16 @@ const useStyles = () =>
             marginBottom: 15,
         },
         errorText: { color: themeColors.errorRed, paddingLeft: 15 },
+        referralCardImageStyle: {
+            backgroundColor: themeColors.white,
+            width: 128,
+            height: 128,
+            marginTop: 10,
+            marginBottom: 10,
+            shadowColor: "#FFFFFF",
+            borderRadius: 30,
+            overflow: "hidden",
+        },
         referralChip: {
             padding: 5,
             margin: 3,

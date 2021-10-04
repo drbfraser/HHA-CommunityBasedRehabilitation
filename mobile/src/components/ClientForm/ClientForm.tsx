@@ -36,6 +36,9 @@ export interface IClientFormProps {
     formikProps: FormikProps<TClientValues>;
     clientId?: number;
     disabled?: boolean;
+    touchDisable?: (editPressed: boolean) => void;
+    resetImage?: () => void;
+    imageSave?: () => void;
 }
 
 export const ClientForm = (props: IClientFormProps) => {
@@ -113,8 +116,10 @@ export const ClientForm = (props: IClientFormProps) => {
                 visible={discardDialogVisible}
                 onDismiss={() => setDiscardDialogVisible(false)}
                 onConfirm={() => {
+                    props.touchDisable!(true);
                     cancelEdit();
                     props.formikProps.resetForm();
+                    props.resetImage!();
                 }}
                 confirmButtonText="Discard"
                 dialogContent={props.isNewClient ? "Discard new client?" : "Discard your changes?"}
@@ -381,10 +386,13 @@ export const ClientForm = (props: IClientFormProps) => {
                         disabled={props.formikProps.isSubmitting}
                         onPress={() => {
                             if (fieldsDisabled) {
+                                props.touchDisable!(false);
                                 toggleButtons(true);
                             } else {
                                 if (props.formikProps.isValid) {
+                                    props.touchDisable!(true);
                                     toggleButtons(false);
+                                    props.imageSave!();
                                     props.formikProps.handleSubmit();
                                 } else {
                                     showValidationErrorToast();

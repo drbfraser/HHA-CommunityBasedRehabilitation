@@ -9,6 +9,7 @@ import {
     clientFieldLabels,
 } from "@cbr/common";
 import { timestampFromFormDate } from "@cbr/common/";
+import { appendMobilePict } from "@cbr/common/src/util/mobileImageSubmisson";
 import { Platform, ToastAndroid, AlertIOS } from "react-native";
 
 const toastSuccess = () => {
@@ -37,7 +38,11 @@ const updateClient = async (clientInfo: FormData, clientId: number) => {
         });
 };
 
-export const handleSubmit = async (values: IClient, isNewClient?: boolean) => {
+export const handleSubmit = async (
+    values: IClient,
+    isNewClient?: boolean,
+    imageChange?: boolean
+) => {
     const disabilities = await getDisabilities();
     let requestSuccess: boolean = true;
     if (isNewClient) {
@@ -65,6 +70,11 @@ export const handleSubmit = async (values: IClient, isNewClient?: boolean) => {
         };
 
         const formData = objectToFormData(updatedValues);
+
+        if (imageChange && values.picture) {
+            await appendMobilePict(formData, values.picture);
+        }
+
         try {
             await updateClient(formData, values.id);
         } catch (e) {

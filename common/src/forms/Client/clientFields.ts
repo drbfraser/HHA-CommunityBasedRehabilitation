@@ -133,7 +133,66 @@ export type TClientValues = typeof clientInitialValues;
 
 export type TClientFormValues = IClient & { [ClientField.pictureChanged]: boolean };
 
-export const clientDetailsValidationSchema = () =>
+export const mobileClientDetailsValidationSchema = () =>
+    Yup.object().shape({
+        [ClientField.firstName]: Yup.string()
+            .label(clientFieldLabels[ClientField.firstName])
+            .trim()
+            .required()
+            .max(50),
+        [ClientField.lastName]: Yup.string()
+            .label(clientFieldLabels[ClientField.lastName])
+            .trim()
+            .required()
+            .max(50),
+        [ClientField.birthDate]: Yup.date()
+            .label(clientFieldLabels[ClientField.birthDate])
+            .max(new Date(), "Birthdate cannot be in the future")
+            .required(),
+        [ClientField.phoneNumber]: Yup.string()
+            .label(clientFieldLabels[ClientField.phoneNumber])
+            .max(50)
+            .matches(Validation.phoneRegExp, "Phone number is not valid."),
+        [ClientField.disability]: Yup.array()
+            .label(clientFieldLabels[ClientField.disability])
+            .min(1, "Disability is required")
+            .required(),
+        [ClientField.otherDisability]: Yup.string()
+            .label(clientFieldLabels[ClientField.otherDisability])
+            .test(
+                "require-if-other-selected",
+                "Other Disability is required",
+                async (otherDisability, schema) =>
+                    !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
+                    (otherDisability !== undefined && otherDisability.length > 0)
+            )
+            .test(
+                "require-if-other-selected",
+                "Other Disability must be at most 100 characters",
+                async (otherDisability, schema) =>
+                    !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
+                    (otherDisability !== undefined && otherDisability.length <= 100)
+            ),
+        [ClientField.gender]: Yup.string().label(clientFieldLabels[ClientField.gender]).required(),
+        [ClientField.village]: Yup.string()
+            .label(clientFieldLabels[ClientField.village])
+            .trim()
+            .required(),
+        [ClientField.zone]: Yup.string().label(clientFieldLabels[ClientField.zone]).required(),
+        [ClientField.caregiverPhone]: Yup.string()
+            .label(clientFieldLabels[ClientField.caregiverPhone])
+            .max(50)
+            .matches(Validation.phoneRegExp, "Phone number is not valid"),
+        [ClientField.caregiverName]: Yup.string()
+            .label(clientFieldLabels[ClientField.caregiverName])
+            .max(101),
+        [ClientField.caregiverEmail]: Yup.string()
+            .label(clientFieldLabels[ClientField.caregiverEmail])
+            .max(50)
+            .matches(Validation.emailRegExp, "Email Address is not valid"),
+    });
+
+export const webClientDetailsValidationSchema = () =>
     Yup.object().shape({
         [ClientField.first_name]: Yup.string()
             .label(updateClientfieldLabels[ClientField.first_name])

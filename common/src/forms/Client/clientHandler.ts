@@ -29,12 +29,11 @@ const updateClient = async (clientInfo: FormData, clientId: number): Promise<ICl
     return await apiFetch(Endpoint.CLIENT, `${clientId}`, init).then((res) => res.json());
 };
 
-export const handleNewClientSubmit = async (
+export const handleNewWebClientSubmit = async (
     values: TClientValues,
     helpers: FormikHelpers<TClientValues>
 ) => {
     const disabilities = await getDisabilities();
-
     const newClient = {
         birth_date: Math.round(timestampFromFormDate(values.birthDate)),
         disability: values.disability,
@@ -71,7 +70,6 @@ export const handleNewClientSubmit = async (
             goal: values.educationGoals,
         },
     };
-
     const formData = objectToFormData(newClient);
 
     try {

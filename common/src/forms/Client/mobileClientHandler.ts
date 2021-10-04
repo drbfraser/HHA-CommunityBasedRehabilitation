@@ -3,7 +3,7 @@ import { timestampFromFormDate } from "../../util/dates";
 import { apiFetch, APIFetchFailError, Endpoint, objectToFormData } from "../../util/endpoints";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
 import { clientFieldLabels, TClientValues } from "./clientFields";
-import { appendPicture, IClient } from "../../util/clients";
+import { IClient } from "../../util/clients";
 import { appendMobilePict } from "../../util/mobileImageSubmisson";
 
 const addMobileClient = async (clientInfo: FormData) => {

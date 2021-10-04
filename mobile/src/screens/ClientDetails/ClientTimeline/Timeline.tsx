@@ -56,7 +56,7 @@ const Timeline = (props: ISummaryProps) => {
         >
             <View>
                 <View style={styles.container}>
-                    <Text>{timestampToDate(props.activity.date)}</Text>
+                    <Text style={{ width: "25%" }}>{timestampToDate(props.activity.date)}</Text>
                     <View style={styles.activityTypeView}>
                         <View style={styles.verticleLine}></View>
                         <Button
@@ -152,21 +152,24 @@ const Timeline = (props: ISummaryProps) => {
                                 </View>
                             </View>
                         ) : (
-                            <View style={styles.subItem}>
-                                <Text style={styles.subItemText}>Baseline Survey</Text>
-                                <Portal>
-                                    <Modal
-                                        visible={detailsVisible}
-                                        onDismiss={hideDetails}
-                                        style={styles.popupStyle}
-                                    >
-                                        <BaselineEntry
-                                            survey={props.activity.survey as ISurvey}
-                                            close={hideDetails}
-                                        />
-                                    </Modal>
-                                </Portal>
-                            </View>
+                            props.activity.type === ActivityType.SURVEY &&
+                            props.activity.survey && (
+                                <View style={styles.subItem}>
+                                    <Text style={styles.subItemText}>Baseline Survey</Text>
+                                    <Portal>
+                                        <Modal
+                                            visible={detailsVisible}
+                                            onDismiss={hideDetails}
+                                            style={styles.popupStyle}
+                                        >
+                                            <BaselineEntry
+                                                survey={props.activity.survey as ISurvey}
+                                                close={hideDetails}
+                                            />
+                                        </Modal>
+                                    </Portal>
+                                </View>
+                            )
                         )}
                     </View>
                 </View>

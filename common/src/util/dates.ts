@@ -3,8 +3,11 @@ export const timestampToDateObj = (timestamp: number) => {
 };
 
 // in format "2/27/2021" (depending on user's locale)
-export const timestampToDate = (timestamp: number) => {
-    return timestampToDateObj(timestamp).toLocaleDateString();
+export const timestampToDate = (timestamp: number, locale?: string, timezone?: string) => {
+    return timestampToDateObj(timestamp).toLocaleDateString(
+        locale ? convertLocale(locale) : undefined, 
+        timezone ? {timeZone: timezone} : undefined,
+    );
 };
 
 // in format "Mar 27, 2021, 10:13 AM" (depending on user's locale)
@@ -52,10 +55,22 @@ export function getDateFormatterFromReference(
 }
 
 // TODO: the following two functions don't properly take time zones into account
-export const timestampToFormDate = (timestamp: number) => {
-    return timestampToDateObj(timestamp).toISOString().substring(0, 10);
+export const timestampToFormDate = (timestamp: number, convertTimezone: boolean = false) => {
+    const date = timestampToDateObj(timestamp);
+
+    return !convertTimezone ? 
+        date.toISOString().substring(0, 10) :
+        new Date(Number(date) - Number(date.getTimezoneOffset() * 60000)).toISOString().substring(0, 10);
 };
 
-export const timestampFromFormDate = (formDate: string) => {
-    return new Date(formDate).getTime() / 1000;
+export const timestampFromFormDate = (formDate: string, convertTimezone: boolean = false) => {
+    const date = new Date(formDate);
+
+    return !convertTimezone ? 
+        date.getTime() / 1000 :
+        new Date(date.getTime() + date.getTimezoneOffset() * 60000).getTime() / 1000;
 };
+
+function convertLocale(locale: string) {
+    return locale.replace('_', '-');
+}

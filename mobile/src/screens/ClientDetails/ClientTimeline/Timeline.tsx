@@ -2,7 +2,7 @@ import { IReferral, ISurvey, themeColors, timestampToDate, useZones } from "@cbr
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { View, Text, TouchableOpacity, NativeModules } from "react-native";
-import * as Localization from 'expo-localization';
+import * as Localization from "expo-localization";
 import { Button, Modal, Portal } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { riskTypes } from "../../../util/riskIcon";
@@ -60,11 +60,9 @@ const Timeline = (props: ISummaryProps) => {
         >
             <View>
                 <View style={styles.container}>
-                    <Text style={{ width: "25%" }}>{timestampToDate(
-                        props.activity.date,
-                        locale,
-                        timezone
-                    )}</Text>
+                    <Text style={{ width: "25%" }}>
+                        {timestampToDate(props.activity.date, locale, timezone)}
+                    </Text>
                     <View style={styles.activityTypeView}>
                         <View style={styles.verticleLine}></View>
                         <Button

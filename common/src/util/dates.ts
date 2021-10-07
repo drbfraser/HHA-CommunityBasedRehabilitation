@@ -4,10 +4,17 @@ export const timestampToDateObj = (timestamp: number) => {
 
 // in format "2/27/2021" (depending on user's locale)
 export const timestampToDate = (timestamp: number, locale?: string, timezone?: string) => {
-    return timestampToDateObj(timestamp).toLocaleDateString(
-        locale ? convertLocale(locale) : undefined, 
-        timezone ? {timeZone: timezone} : undefined,
-    );
+    return locale && timezone
+        ? /* Stored timestamps are in GMT. Ie. When we set a date 25/10/1990, it's saved to 
+        the backend as 25/10/1990 00:00:00 GMT. When we convert it back to the client side,
+        depending on the timezone & locale, we may actually get back 24/10/1990. 
+        
+        This directly converts 25/10/1990 00:00:00 GMT to 25/10/1990 00:00:00 <user_timezone>
+        and in the properly accepted format of the client locale. */
+          timestampToDateObj(
+              timestamp + new Date(timestamp).getTimezoneOffset() * 60
+          ).toLocaleDateString(convertLocale(locale), { timeZone: timezone })
+        : timestampToDateObj(timestamp).toLocaleDateString();
 };
 
 // in format "Mar 27, 2021, 10:13 AM" (depending on user's locale)
@@ -58,19 +65,21 @@ export function getDateFormatterFromReference(
 export const timestampToFormDate = (timestamp: number, convertTimezone: boolean = false) => {
     const date = timestampToDateObj(timestamp);
 
-    return !convertTimezone ? 
-        date.toISOString().substring(0, 10) :
-        new Date(Number(date) - Number(date.getTimezoneOffset() * 60000)).toISOString().substring(0, 10);
+    return convertTimezone
+        ? new Date(Number(date) + Number(date.getTimezoneOffset() * 60000))
+              .toISOString()
+              .substring(0, 10)
+        : date.toISOString().substring(0, 10);
 };
 
 export const timestampFromFormDate = (formDate: string, convertTimezone: boolean = false) => {
     const date = new Date(formDate);
 
-    return !convertTimezone ? 
-        date.getTime() / 1000 :
-        new Date(date.getTime() + date.getTimezoneOffset() * 60000).getTime() / 1000;
+    return convertTimezone
+        ? new Date(date.getTime() + date.getTimezoneOffset() * 60000).getTime() / 1000
+        : date.getTime() / 1000;
 };
 
 function convertLocale(locale: string) {
-    return locale.replace('_', '-');
+    return locale.replace("_", "-");
 }

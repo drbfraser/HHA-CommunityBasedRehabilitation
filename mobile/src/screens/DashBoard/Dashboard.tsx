@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Text, View, NativeModules } from "react-native";
-import * as Localization from 'expo-localization';
+import * as Localization from "expo-localization";
 import { Card, DataTable } from "react-native-paper";
 import useStyles from "./Dashboard.styles";
 import { BriefReferral, fetchAllClientsFromApi, fetchReferrals } from "./DashboardRequest";

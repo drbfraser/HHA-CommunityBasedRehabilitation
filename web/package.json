@@ -19,6 +19,7 @@
         "@types/react-router-dom": "^5.1.7",
         "bootstrap": "^4.5.3",
         "craco-babel-loader": "^0.1.4",
+        "expo-localization": "^10.2.0",
         "formik": "^2.2.6",
         "formik-material-ui": "^3.0.1",
         "jwt-decode": "^3.1.2",

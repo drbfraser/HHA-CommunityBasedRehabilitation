@@ -146,8 +146,14 @@ export const ClientForm = (props: IClientFormProps) => {
             <View style={styles.clientBirthdayView}>
                 <Text style={styles.valueText}>
                     {props.formikProps.values.birthDate
-                        ? timestampToDate(timestampFromFormDate(props.formikProps.values.birthDate, true),
-)
+                        ? timestampToDate(
+                              /* If setting birthday for new client, we want to save date in GMT format 
+                              If we are displaying the birthday of an existing client, we must do locale/
+                              timezone conversion to ensure that the date format does not break. */
+                              props.isNewClient 
+                                  ? timestampFromFormDate(props.formikProps.values.birthDate)
+                                  : timestampFromFormDate(props.formikProps.values.birthDate, true)
+                          )
                         : "--/--/--"}
                 </Text>
                 <View style={styles.clientBirthdayButtons}>
@@ -169,7 +175,14 @@ export const ClientForm = (props: IClientFormProps) => {
                             value={
                                 props.formikProps.values.birthDate
                                     ? timestampToDateObj(
-                                          timestampFromFormDate(props.formikProps.values.birthDate, true),
+                                          props.isNewClient
+                                              ? timestampFromFormDate(
+                                                    props.formikProps.values.birthDate
+                                                )
+                                              : timestampFromFormDate(
+                                                    props.formikProps.values.birthDate,
+                                                    true
+                                                )
                                       )
                                     : new Date()
                             }

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { NativeModules } from "react-native";
-import * as Localization from 'expo-localization';
 import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useHistory } from "react-router-dom";
@@ -160,18 +158,16 @@ const Dashboard = () => {
         );
     };
 
-    const locale = NativeModules.I18nManager.localeIdentifier;
-    const timezone = Localization.timezone;
+    const locale = navigator.language;
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     const RenderDate = (params: ValueFormatterParams) => {
         return Number(params.value) === 0 ? (
             <Typography variant={"body2"}>No Visits</Typography>
         ) : (
-            <Typography variant={"body2"}>{timestampToDate(
-                Number(params.value),
-                locale,
-                timezone
-            )}</Typography>
+            <Typography variant={"body2"}>
+                {timestampToDate(Number(params.value), locale, timezone)}
+            </Typography>
         );
     };
 

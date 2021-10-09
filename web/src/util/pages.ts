@@ -26,6 +26,9 @@ import { IUser, UserRole } from "@cbr/common/util/users";
 import { APILoadError, TAPILoadError } from "@cbr/common/util/endpoints";
 import UserChangePassword from "pages/User/UserPasswordEdit";
 import NewSurvey from "pages/BaseSurvey/BaseSurvey";
+import Alerts from "pages/Alerts/Alerts";
+import NotificationsActive from "@material-ui/icons/NotificationsActive";
+import AlertNew from "pages/Alerts/AlertNew";
 
 export interface IPage {
     path: string;
@@ -151,6 +154,19 @@ const pages: IPage[] = [
         Component: Logout,
         showInNav: false,
     },
+    {
+        path: "/alerts",
+        name: "Alerts",
+        Component: Alerts,
+        showInNav: true,
+        Icon: NotificationsActive,
+    },
+    {
+      path: "/alert/new",
+      name: "New Alert",
+      Component: AlertNew,
+      showInNav: false,
+  },
     // must be at the bottom
     {
         path: "/",

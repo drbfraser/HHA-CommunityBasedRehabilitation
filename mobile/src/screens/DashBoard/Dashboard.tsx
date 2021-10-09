@@ -175,15 +175,13 @@ const Dashboard = () => {
                                                 style={styles.column_client_Last_visit_date}
                                             >
                                                 <Text style={styles.fontSize}>
-                                                    {Number(item.last_visit_date) !== 0 ? (
-                                                        timestampToDate(
-                                                            Number(item.last_visit_date),
-                                                            locale,
-                                                            timezone
-                                                        )
-                                                    ) : (
-                                                        "No Visits"
-                                                    )}
+                                                    {Number(item.last_visit_date) !== 0
+                                                        ? timestampToDate(
+                                                              Number(item.last_visit_date),
+                                                              locale,
+                                                              timezone
+                                                          )
+                                                        : "No Visits"}
                                                 </Text>
                                             </DataTable.Cell>
                                         </DataTable.Row>

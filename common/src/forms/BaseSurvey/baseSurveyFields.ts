@@ -209,6 +209,9 @@ export const educationValidationSchema = () =>
 export const livelihoodValidationSchema = () =>
     Yup.object().shape({
         [BaseSurveyFormField.isWorking]: Yup.boolean(),
+        [BaseSurveyFormField.meetFinanceNeeds]: Yup.boolean()
+            .label(baseFieldLabels[BaseSurveyFormField.meetFinanceNeeds])
+            .required(),
         [BaseSurveyFormField.job]: Yup.string()
             .label(baseFieldLabels[BaseSurveyFormField.job])
             .when(BaseSurveyFormField.isWorking, {

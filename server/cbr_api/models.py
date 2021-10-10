@@ -416,7 +416,6 @@ class Alert(models.Model):
       INFO = "INFO", _("Info")
       NOTICE = "NOTICE", _("Notice")
       
-    alertId = models.IntegerField
     subject = models.CharField(max_length=30)
     priority = models.CharField(max_length=9, choices=Priorities.choices)
     alert_message = models.CharField(max_length=255)

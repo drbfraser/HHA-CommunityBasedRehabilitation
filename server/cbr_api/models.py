@@ -409,3 +409,16 @@ class BaselineSurvey(models.Model):
     # Shelter and Care
     shelter_adequate = models.BooleanField()
     shelter_essential_access = models.BooleanField()
+
+class Alert(models.Model):
+    class Priorities(models.TextChoices):
+      IMPORTANT = "IMPORTANT", _("Important")
+      INFO = "INFO", _("Info")
+      NOTICE = "NOTICE", _("Notice")
+      
+    alertId = models.IntegerField
+    subject = models.CharField(max_length=30)
+    priority = models.CharField(max_length=9, choices=Priorities.choices)
+    alert_message = models.CharField(max_length=255)
+    created_by = models.ForeignKey(UserCBRManager, on_delete=models.DO_NOTHING)
+    created_date = models.BigIntegerField(default=time.time)

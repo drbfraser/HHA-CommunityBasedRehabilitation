@@ -11,6 +11,7 @@ import AdminList from "pages/AdminList/AdminList";
 import ClientList from "pages/ClientList/ClientList";
 import ClientDetails from "pages/ClientDetails/ClientDetails";
 import UserView from "pages/User/UserView";
+import AlertForm from "pages/NewAlert/AlertForm";
 import ClientForm from "pages/NewClient/ClientForm";
 import NotFound from "pages/NotFound/NotFound";
 import AdminNew from "pages/Admin/AdminNew";
@@ -150,6 +151,12 @@ const pages: IPage[] = [
         name: "Logout",
         Component: Logout,
         showInNav: false,
+    },
+    {
+        path: "/alerts/new",
+        name: "New Alert",
+        showInNav: false,
+        Component: AlertForm,
     },
     // must be at the bottom
     {

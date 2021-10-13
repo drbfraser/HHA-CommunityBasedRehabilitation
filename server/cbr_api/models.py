@@ -419,5 +419,5 @@ class Alert(models.Model):
     subject = models.CharField(max_length=30)
     priority = models.CharField(max_length=9, choices=Priorities.choices)
     alert_message = models.CharField(max_length=255)
-    created_by = models.ForeignKey(UserCBRManager, on_delete=models.DO_NOTHING)
+    created_by = models.ForeignKey(UserCBR, on_delete=models.DO_NOTHING)
     created_date = models.BigIntegerField(default=time.time)

@@ -1,10 +1,22 @@
+import { convertSecondsTo, convertMillisTo, convertMinutesTo, Time } from "./time";
+
 export const timestampToDateObj = (timestamp: number) => {
-    return new Date(timestamp * 1000);
+    return new Date(convertSecondsTo(timestamp, Time.MILLIS));
 };
 
 // in format "2/27/2021" (depending on user's locale)
-export const timestampToDate = (timestamp: number) => {
-    return timestampToDateObj(timestamp).toLocaleDateString();
+export const timestampToDate = (timestamp: number, locale?: string, timezone?: string) => {
+    return locale && timezone
+        ? /* Stored timestamps are in GMT. Ie. When we set a date 25/10/1990, it's saved to 
+        the backend as 25/10/1990 00:00:00 GMT. When we convert it back to the client side,
+        depending on the timezone & locale, we may actually get back 24/10/1990. 
+        
+        This directly converts 25/10/1990 00:00:00 GMT to 25/10/1990 00:00:00 <user_timezone>
+        and in the properly accepted format of the client locale. */
+          timestampToDateObj(
+              timestamp + convertMinutesTo(new Date(timestamp).getTimezoneOffset(), Time.SECONDS)
+          ).toLocaleDateString(convertLocale(locale), { timeZone: timezone })
+        : timestampToDateObj(timestamp).toLocaleDateString();
 };
 
 // in format "Mar 27, 2021, 10:13 AM" (depending on user's locale)
@@ -40,7 +52,7 @@ export const timestampToWeekdayTime = (timestamp: number) => {
 export function getDateFormatterFromReference(
     referenceTimestamp?: number
 ): (timestamp: number) => string {
-    const currentTimestamp = Date.now() / 1000;
+    const currentTimestamp = convertMillisTo(Date.now(), Time.SECONDS);
     const timestampDiff = (referenceTimestamp ?? 0) - currentTimestamp;
     const oneWeek = 60 * 60 * 24 * 7;
 
@@ -52,10 +64,33 @@ export function getDateFormatterFromReference(
 }
 
 // TODO: the following two functions don't properly take time zones into account
-export const timestampToFormDate = (timestamp: number) => {
-    return timestampToDateObj(timestamp).toISOString().substring(0, 10);
+export const timestampToFormDate = (timestamp: number, convertTimezone: boolean = false) => {
+    const date = timestampToDateObj(timestamp);
+    const normalizedDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+
+    return convertTimezone
+        ? new Date(
+              Number(normalizedDate) +
+                  Number(convertMinutesTo(normalizedDate.getTimezoneOffset(), Time.MILLIS))
+          )
+              .toISOString()
+              .substring(0, 10)
+        : date.toISOString().substring(0, 10);
 };
 
-export const timestampFromFormDate = (formDate: string) => {
-    return new Date(formDate).getTime() / 1000;
+export const timestampFromFormDate = (formDate: string, convertTimezone: boolean = false) => {
+    const date = new Date(formDate);
+    const normalizedDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+    const timeInMillis = convertTimezone
+        ? new Date(
+              normalizedDate.getTime() +
+                  convertMinutesTo(normalizedDate.getTimezoneOffset(), Time.MILLIS)
+          ).getTime()
+        : date.getTime();
+
+    return convertMillisTo(timeInMillis, Time.SECONDS);
 };
+
+function convertLocale(locale: string) {
+    return locale.replace("_", "-");
+}

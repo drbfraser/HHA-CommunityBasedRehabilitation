@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { Text, View } from "react-native";
+import { Text, View, NativeModules } from "react-native";
+import * as Localization from "expo-localization";
 import { Card, DataTable } from "react-native-paper";
 import useStyles from "./Dashboard.styles";
 import { BriefReferral, fetchAllClientsFromApi, fetchReferrals } from "./DashboardRequest";
@@ -85,6 +86,10 @@ const Dashboard = () => {
         getRefereals();
         //TODO alert part.
     }, [clientSortOption, referralSortOption, clientSortDirection, referralSortDirection]);
+
+    const locale = NativeModules.I18nManager.localeIdentifier;
+    const timezone = Localization.timezone;
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -170,7 +175,13 @@ const Dashboard = () => {
                                                 style={styles.column_client_Last_visit_date}
                                             >
                                                 <Text style={styles.fontSize}>
-                                                    {timestampToDate(Number(item.last_visit_date))}
+                                                    {Number(item.last_visit_date) !== 0
+                                                        ? timestampToDate(
+                                                              Number(item.last_visit_date),
+                                                              locale,
+                                                              timezone
+                                                          )
+                                                        : "No Visits"}
                                                 </Text>
                                             </DataTable.Cell>
                                         </DataTable.Row>
@@ -233,7 +244,11 @@ const Dashboard = () => {
                                             </View>
                                             <DataTable.Cell style={styles.column_referral_date}>
                                                 <Text style={styles.fontSize}>
-                                                    {timestampToDate(Number(item.date_referred))}
+                                                    {timestampToDate(
+                                                        Number(item.date_referred),
+                                                        locale,
+                                                        timezone
+                                                    )}
                                                 </Text>
                                             </DataTable.Cell>
                                         </DataTable.Row>

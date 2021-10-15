@@ -2,41 +2,31 @@ import * as Yup from "yup";
 import { Validation } from "../../util/validations";
 import { Priority, IAlert } from "../../util/alerts";
 
-export enum FormField {
+export enum alertField {
     subject = "subject",
     priority = "priority",
     body = "body",
 }
 
-export const fieldLabels = {
-    [FormField.subject]: "Subject",
-    [FormField.priority]: "Priority",
-    [FormField.body]: "Body",
+export const alertInitialValues = {
+    [alertField.subject]: "",
+    [alertField.priority]: "" as Priority,
+    [alertField.body]: "",
 };
 
-export const initialValues = {
-    [FormField.subject]: "",
-    [FormField.priority]: "" as Priority,
-    [FormField.body]: "",
-};
-
-export const clientFieldLabels = {
-  [FormField.subject]: "Last Name",
-  [FormField.priority]: "Birthdate",
-  [FormField.body]: "Village",
+export const alertFieldLabels = {
+    [alertField.subject]: "Subject",
+    [alertField.priority]: "Priority",
+    [alertField.body]: "Body",
 };
 
 export const validationSchema = () =>
     Yup.object().shape({
-        [FormField.subject]: Yup.string()
-            .label(fieldLabels[FormField.subject])
+        [alertField.subject]: Yup.string()
+            .label(alertFieldLabels[alertField.subject])
             .trim()
             .required()
             .max(50),
-        [FormField.priority]: Yup.string()
-            .label(clientFieldLabels[FormField.priority])
-            .required(),
-        [FormField.body]: Yup.string()
-            .label(fieldLabels[FormField.body])
-            .max(1000),
+        [alertField.priority]: Yup.string().label(alertFieldLabels[alertField.priority]).required(),
+        [alertField.body]: Yup.string().label(alertFieldLabels[alertField.body]).max(2000),
     });

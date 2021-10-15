@@ -66,9 +66,13 @@ export function getDateFormatterFromReference(
 // TODO: the following two functions don't properly take time zones into account
 export const timestampToFormDate = (timestamp: number, convertTimezone: boolean = false) => {
     const date = timestampToDateObj(timestamp);
+    const normalizedDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
 
     return convertTimezone
-        ? new Date(Number(date) + Number(convertMinutesTo(date.getTimezoneOffset(), Time.MILLIS)))
+        ? new Date(
+              Number(normalizedDate) +
+                  Number(convertMinutesTo(normalizedDate.getTimezoneOffset(), Time.MILLIS))
+          )
               .toISOString()
               .substring(0, 10)
         : date.toISOString().substring(0, 10);
@@ -76,9 +80,11 @@ export const timestampToFormDate = (timestamp: number, convertTimezone: boolean 
 
 export const timestampFromFormDate = (formDate: string, convertTimezone: boolean = false) => {
     const date = new Date(formDate);
+    const normalizedDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
     const timeInMillis = convertTimezone
         ? new Date(
-              date.getTime() + convertMinutesTo(date.getTimezoneOffset(), Time.MILLIS)
+              normalizedDate.getTime() +
+                  convertMinutesTo(normalizedDate.getTimezoneOffset(), Time.MILLIS)
           ).getTime()
         : date.getTime();
 

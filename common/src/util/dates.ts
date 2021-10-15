@@ -1,5 +1,7 @@
+import { convertSecondsTo, convertMillisTo, convertMinutesTo, Time } from "./time";
+
 export const timestampToDateObj = (timestamp: number) => {
-    return new Date(timestamp * 1000);
+    return new Date(convertSecondsTo(timestamp, Time.MILLIS));
 };
 
 // in format "2/27/2021" (depending on user's locale)
@@ -12,7 +14,7 @@ export const timestampToDate = (timestamp: number, locale?: string, timezone?: s
         This directly converts 25/10/1990 00:00:00 GMT to 25/10/1990 00:00:00 <user_timezone>
         and in the properly accepted format of the client locale. */
           timestampToDateObj(
-              timestamp + new Date(timestamp).getTimezoneOffset() * 60
+              timestamp + convertMinutesTo(new Date(timestamp).getTimezoneOffset(), Time.SECONDS)
           ).toLocaleDateString(convertLocale(locale), { timeZone: timezone })
         : timestampToDateObj(timestamp).toLocaleDateString();
 };
@@ -50,7 +52,7 @@ export const timestampToWeekdayTime = (timestamp: number) => {
 export function getDateFormatterFromReference(
     referenceTimestamp?: number
 ): (timestamp: number) => string {
-    const currentTimestamp = Date.now() / 1000;
+    const currentTimestamp = convertMillisTo(Date.now(), Time.SECONDS);
     const timestampDiff = (referenceTimestamp ?? 0) - currentTimestamp;
     const oneWeek = 60 * 60 * 24 * 7;
 
@@ -66,7 +68,7 @@ export const timestampToFormDate = (timestamp: number, convertTimezone: boolean 
     const date = timestampToDateObj(timestamp);
 
     return convertTimezone
-        ? new Date(Number(date) + Number(date.getTimezoneOffset() * 60000))
+        ? new Date(Number(date) + Number(convertMinutesTo(date.getTimezoneOffset(), Time.MILLIS)))
               .toISOString()
               .substring(0, 10)
         : date.toISOString().substring(0, 10);
@@ -74,10 +76,13 @@ export const timestampToFormDate = (timestamp: number, convertTimezone: boolean 
 
 export const timestampFromFormDate = (formDate: string, convertTimezone: boolean = false) => {
     const date = new Date(formDate);
+    const timeInMillis = convertTimezone
+        ? new Date(
+              date.getTime() + convertMinutesTo(date.getTimezoneOffset(), Time.MILLIS)
+          ).getTime()
+        : date.getTime();
 
-    return convertTimezone
-        ? new Date(date.getTime() + date.getTimezoneOffset() * 60000).getTime() / 1000
-        : date.getTime() / 1000;
+    return convertMillisTo(timeInMillis, Time.SECONDS);
 };
 
 function convertLocale(locale: string) {

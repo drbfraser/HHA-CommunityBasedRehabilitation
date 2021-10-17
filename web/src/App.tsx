@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import SideNav from "./components/SideNav/SideNav";
 import { defaultPagePath, pagesForUser } from "util/pages";
@@ -8,10 +8,44 @@ import { useStyles } from "App.styles";
 import history from "@cbr/common/util/history";
 import { useIsLoggedIn } from "./util/hooks/loginState";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import io from "socket.io-client";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
     const styles = useStyles();
+
+    const [socket, setSocket] = useState({});
+
+    useEffect(() => {
+        const socket = io("http://localhost:8000", {
+            transports: ["websocket"],
+            autoConnect: true,
+        });
+
+        setSocket(socket);
+
+        socket.on("connect", () => {
+            console.log("[WEB APP] CONNECTED - socketID: \n", socket.id);
+        });
+
+        socket.on("disconnect", () => {
+            console.log("[WEB APP] DISCONNECTED");
+        });
+
+        socket.on("alert", async (alert: any) => {
+            console.log(`[WEB APP] Received an Alert from Django: ${await alert.data}`);
+            socket.emit("newAlert", { data: "[WEB APP] Sending new alert from client" });
+        });
+
+        socket.on("pushAlert", async (alert: any) => {
+            console.log(`[WEB APP] Received a PUSH Alert: ${await alert.data}`);
+        });
+
+        socket.on("broadcastAlert", async (alert: any) => {
+            console.log(`[WEB APP] Received a BROADCAST Alert: ${await alert.data}`);
+        });
+    }, [setSocket]);
+
 
     const PrivateRoutes = () => {
         const user = useCurrentUser();

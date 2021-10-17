@@ -1,3 +1,6 @@
+# This file is for testing a socket server using gunicorn
+# To run: $gunicorn3 --threads 50 app:app
+
 import socketio
 
 sio = socketio.Server()

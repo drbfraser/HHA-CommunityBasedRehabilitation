@@ -13,8 +13,8 @@ django-downloadview==2.1.1
 django-rest-framework-condition==0.1.1
 
 # Dependencies for SocketIO
-enum-compat==0.0.2
-eventlet==0.25.0
+enum-compat==0.0.3
+eventlet==0.30.0
 python-engineio
 python-socketio
 pytz==2018.7

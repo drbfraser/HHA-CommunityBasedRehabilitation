@@ -14,35 +14,31 @@ import eventlet.wsgi
 
 from django.core.wsgi import get_wsgi_application
 
-async_mode = None
+eventlet.monkey_patch(socket=True, select=True)
+async_mode = 'eventlet'  # access to the long-polling and WebSocket transports
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cbr.settings")
 
 application = get_wsgi_application()
-sio = socketio.Server(async_mode=async_mode, cors_allowed_origins="*")
-application = socketio.WSGIApp(sio, application) # forwards 'non-socket' traffic to application
-thread = None
-
-eventlet.wsgi.server(eventlet.listen(('', 8080)), application)
+sio = socketio.Server(async_mode=None, cors_allowed_origins="*")
+application = socketio.WSGIApp(sio, application)
 
 @sio.on('connect')
 def connect(sid, data):
-    print('connect ', sid)
-    sio.emit('success', {'data': 'Connected'})
-    sio.broadcast.emit('hello', 'world')
+    print('\n[SocketIO Server] User connected with socketID {}.\n'.format(sid))
+    sio.emit('alert', {'data': '[SocketIO Server] User Connected.'})
     pass
 
 
 @sio.on('disconnect')
 def disconnect(sid):
-    print("disconnect from socket")
+    print("[DJANGO] User {} has disconnected.".format(sid))
     pass
 
 
 @sio.on('newAlert')
-async def newAlert(sid, data):
-    print("BE got new alert {} from {}".format(data, sid))
-    sio.emit('djangoSocketTest', {'data': 'BE SOCKET TEST message'})
+def newAlert(sid, data):
+    print("\n[DJANGO]: Received a new alert '{} from {}\n".format(data, sid))
+    sio.emit('pushAlert', {'data': 'BE pushAlert test message'})
     pass
-  
 
-sio.broadcast.emit('djangoSocketTest', {'data': 'BE SOCKET TEST message'})
+eventlet.wsgi.server(eventlet.listen(('', 8000)), application).serve_forever()

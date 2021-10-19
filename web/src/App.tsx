@@ -18,14 +18,14 @@ const App = () => {
 
     useEffect(() => {
         const socket = io("http://localhost:8000", {
-            transports: ["websocket"],
+            transports: ["websocket"], // explicitly use websockets
             autoConnect: true,
         });
 
         setSocket(socket);
 
         socket.on("connect", () => {
-            console.log("[WEB APP] CONNECTED - socketID: \n", socket.id);
+            console.log("[WEB APP] CONNECTED. socketID: \n", socket.id);
         });
 
         socket.on("disconnect", () => {
@@ -39,10 +39,6 @@ const App = () => {
 
         socket.on("pushAlert", async (alert: any) => {
             console.log(`[WEB APP] Received a PUSH Alert: ${await alert.data}`);
-        });
-
-        socket.on("broadcastAlert", async (alert: any) => {
-            console.log(`[WEB APP] Received a BROADCAST Alert: ${await alert.data}`);
         });
     }, [setSocket]);
 

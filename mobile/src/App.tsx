@@ -116,6 +116,31 @@ export default function App() {
                 // an unnecessary refetch.
                 return updateAuthStateIfNeeded(authState, setAuthState, false);
             });
+
+        // window.navigator.product === "ReactNative"; // necessary for socketIO with RN
+        const io = require("socket.io-client/dist/socket.io");
+        const socket = io("http://192.168.1.90:8000/", {
+            transports: ["websocket"], // explicitly use websockets
+            autoConnect: true,
+            jsonp: false, // avoid manipulation of DOM
+        });
+
+        socket.on("connect", () => {
+            console.log("[MOBILE APP] CONNECTED. socketID: \n", socket.id);
+        });
+
+        socket.on("disconnect", () => {
+            console.log("[MOBILE APP] DISCONNECTED");
+        });
+
+        socket.on("alert", (alert: any) => {
+            console.log(`[MOBILE APP] Received an Alert from Django: ${alert.data}`);
+            socket.emit("newAlert", { data: "[MOBILE APP] Sending new alert from client" });
+        });
+
+        socket.on("pushAlert", (alert: any) => {
+            console.log(`[MOBILE APP] Received a PUSH Alert: ${alert.data}`);
+        });
     }, []);
 
     // design inspired by https://reactnavigation.org/docs/auth-flow/

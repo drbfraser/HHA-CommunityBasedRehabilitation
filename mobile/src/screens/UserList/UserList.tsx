@@ -94,8 +94,10 @@ const UserList = () => {
     };
 
     useEffect(() => {
-        authContext.requireLoggedIn(true);
-        newUserListGet();
+        if (isFocused) {
+            authContext.requireLoggedIn(true);
+            newUserListGet();
+        }
     }, [sortDirection, sortOption, searchQuery, selectedSearchOption, isFocused]);
     useEffect(() => {
         showSelectedColumn();

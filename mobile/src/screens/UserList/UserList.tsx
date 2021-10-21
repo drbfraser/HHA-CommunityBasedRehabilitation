@@ -95,7 +95,6 @@ const UserList = () => {
     };
 
     useEffect(() => {
-        console.log(`isFocus is ${isFocused}`);
         if (isFocused) {
             if (!isAuthenticate) {
                 authContext.requireLoggedIn(true);

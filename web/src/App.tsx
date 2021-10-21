@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import SideNav from "./components/SideNav/SideNav";
 import { defaultPagePath, pagesForUser } from "util/pages";
@@ -14,34 +14,23 @@ const App = () => {
     const isLoggedIn = useIsLoggedIn();
     const styles = useStyles();
 
-    const [socket, setSocket] = useState({});
+    const API_URL =
+        process.env.NODE_ENV === "development" ? `http://${window.location.hostname}:8000` : "";
 
     useEffect(() => {
-        const socket = io("http://localhost:8000", {
+        const socket = io(`${API_URL}`, {
             transports: ["websocket"], // explicitly use websockets
             autoConnect: true,
         });
 
-        setSocket(socket);
-
         socket.on("connect", () => {
-            console.log("[WEB APP] CONNECTED. socketID: \n", socket.id);
+            console.log(`[SocketIO] Web user connected on ${API_URL}. SocketID: ${socket.id}`);
         });
 
         socket.on("disconnect", () => {
-            console.log("[WEB APP] DISCONNECTED");
+            console.log(`[SocketIO] Web user disconnected`);
         });
-
-        socket.on("alert", async (alert: any) => {
-            console.log(`[WEB APP] Received an Alert from Django: ${await alert.data}`);
-            socket.emit("newAlert", { data: "[WEB APP] Sending new alert from client" });
-        });
-
-        socket.on("pushAlert", async (alert: any) => {
-            console.log(`[WEB APP] Received a PUSH Alert: ${await alert.data}`);
-        });
-    }, [setSocket]);
-
+    }, []);
 
     const PrivateRoutes = () => {
         const user = useCurrentUser();

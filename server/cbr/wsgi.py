@@ -15,30 +15,32 @@ import eventlet.wsgi
 from django.core.wsgi import get_wsgi_application
 
 eventlet.monkey_patch(socket=True, select=True)
-async_mode = 'eventlet'  # access to the long-polling and WebSocket transports
+async_mode = "eventlet"  # access to the long-polling and WebSocket transports
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cbr.settings")
 
 application = get_wsgi_application()
 sio = socketio.Server(async_mode=None, cors_allowed_origins="*")
 application = socketio.WSGIApp(sio, application)
 
-@sio.on('connect')
+
+@sio.on("connect")
 def connect(sid, data):
-    print('\n[SocketIO Server] User connected with socketID {}.\n'.format(sid))
-    sio.emit('alert', {'sid': sid, 'data': '[SocketIO Server] User Connected.'})
+    print("\n[SocketIO Server] User connected with socketID {}.\n".format(sid))
+    sio.emit("alert", {"sid": sid, "data": "[SocketIO Server] User Connected."})
     pass
 
 
-@sio.on('disconnect')
+@sio.on("disconnect")
 def disconnect(sid):
     print("[SocketIO Server] User {} has disconnected.".format(sid))
     pass
 
 
-@sio.on('newAlert')
+@sio.on("newAlert")
 def newAlert(sid, data):
     print("\n[SocketIO Server]: Received a new alert '{} from {}\n".format(data, sid))
-    sio.emit('pushAlert', {'data': '[SocketIO Server] pushAlert test message'})
+    sio.emit("pushAlert", {"data": "[SocketIO Server] pushAlert test message"})
     pass
 
-eventlet.wsgi.server(eventlet.listen(('', 8000)), application).serve_forever()
+
+eventlet.wsgi.server(eventlet.listen(("", 8000)), application).serve_forever()

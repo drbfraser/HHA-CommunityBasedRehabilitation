@@ -410,12 +410,13 @@ class BaselineSurvey(models.Model):
     shelter_adequate = models.BooleanField()
     shelter_essential_access = models.BooleanField()
 
+
 class Alert(models.Model):
     class Priorities(models.TextChoices):
-      IMPORTANT = "IMPORTANT", _("Important")
-      INFO = "INFO", _("Info")
-      NOTICE = "NOTICE", _("Notice")
-      
+        IMPORTANT = "IMPORTANT", _("Important")
+        INFO = "INFO", _("Info")
+        NOTICE = "NOTICE", _("Notice")
+
     subject = models.CharField(max_length=30)
     priority = models.CharField(max_length=9, choices=Priorities.choices)
     alert_message = models.CharField(max_length=255)

@@ -128,7 +128,7 @@ export default function App() {
 
         socket.on("connect", () => {
             console.log(
-                `[SocketIO] Mobile connected on ${socket.io.engine.hostname}:${socket.io.engine.port}. SocketID: ${socket.id}`
+                `[SocketIO] Mobile user connected on ${socket.io.engine.hostname}:${socket.io.engine.port}. SocketID: ${socket.id}`
             );
         });
 

@@ -23,7 +23,7 @@ import Login from "./screens/Login/Login";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
 import { StackScreenName } from "./util/StackScreenName";
-import { RouteProp } from "@react-navigation/core/lib/typescript/src/types";
+import { DEV_API_URL } from "@env";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -99,6 +99,7 @@ const updateAuthStateIfNeeded = async (
 
 export default function App() {
     const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
+    const hostname = DEV_API_URL.replace(/(api)\/$/, ""); // remove '/api/'
 
     useEffect(() => {
         // Refresh disabilities, zones, current user information
@@ -117,29 +118,22 @@ export default function App() {
                 return updateAuthStateIfNeeded(authState, setAuthState, false);
             });
 
-        // window.navigator.product === "ReactNative"; // necessary for socketIO with RN
+        window.navigator.product === "ReactNative"; // necessary for socketIO with RN
         const io = require("socket.io-client/dist/socket.io");
-        const socket = io("http://192.168.1.90:8000/", {
+        const socket = io(`${hostname}`, {
             transports: ["websocket"], // explicitly use websockets
             autoConnect: true,
             jsonp: false, // avoid manipulation of DOM
         });
 
         socket.on("connect", () => {
-            console.log("[MOBILE APP] CONNECTED. socketID: \n", socket.id);
+            console.log(
+                `[SocketIO] Mobile connected on ${socket.io.engine.hostname}:${socket.io.engine.port}. SocketID: ${socket.id}`
+            );
         });
 
-        socket.on("disconnect", () => {
-            console.log("[MOBILE APP] DISCONNECTED");
-        });
-
-        socket.on("alert", (alert: any) => {
-            console.log(`[MOBILE APP] Received an Alert from Django: ${alert.data}`);
-            socket.emit("newAlert", { data: "[MOBILE APP] Sending new alert from client" });
-        });
-
-        socket.on("pushAlert", (alert: any) => {
-            console.log(`[MOBILE APP] Received a PUSH Alert: ${alert.data}`);
+        socket.on("disconnect", (socket) => {
+            console.log(`[SocketIO] Mobile user with socketID: ${socket.id} disconnected`);
         });
     }, []);
 

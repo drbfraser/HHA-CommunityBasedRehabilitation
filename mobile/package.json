@@ -47,6 +47,7 @@
         "react-is-mounted-hook": "^1.1.1",
         "react-native": "https://github.com/expo/react-native/archive/sdk-41.0.0.tar.gz",
         "react-native-checkbox-selection": "^1.1.0",
+        "react-native-dotenv": "^3.2.0",
         "react-native-dropdown-menu": "^2.0.0",
         "react-native-dropdown-picker": "^5.1.21",
         "react-native-elements": "^3.4.2",

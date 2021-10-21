@@ -25,20 +25,20 @@ application = socketio.WSGIApp(sio, application)
 @sio.on('connect')
 def connect(sid, data):
     print('\n[SocketIO Server] User connected with socketID {}.\n'.format(sid))
-    sio.emit('alert', {'data': '[SocketIO Server] User Connected.'})
+    sio.emit('alert', {'sid': sid, 'data': '[SocketIO Server] User Connected.'})
     pass
 
 
 @sio.on('disconnect')
 def disconnect(sid):
-    print("[DJANGO] User {} has disconnected.".format(sid))
+    print("[SocketIO Server] User {} has disconnected.".format(sid))
     pass
 
 
 @sio.on('newAlert')
 def newAlert(sid, data):
-    print("\n[DJANGO]: Received a new alert '{} from {}\n".format(data, sid))
-    sio.emit('pushAlert', {'data': 'BE pushAlert test message'})
+    print("\n[SocketIO Server]: Received a new alert '{} from {}\n".format(data, sid))
+    sio.emit('pushAlert', {'data': '[SocketIO Server] pushAlert test message'})
     pass
 
 eventlet.wsgi.server(eventlet.listen(('', 8000)), application).serve_forever()

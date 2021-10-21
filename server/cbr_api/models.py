@@ -1,12 +1,16 @@
+import os
 import time
 
 from django.contrib.auth.base_user import BaseUserManager
-from cbr import settings
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
+from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 
-from django.contrib.auth.validators import UnicodeUsernameValidator
+from cbr import settings
+from cbr_api.storage import OverwriteStorage
+from cbr_api.validators import FileSizeValidator
 
 
 class Zone(models.Model):
@@ -28,7 +32,7 @@ class UserCBRManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, password, **extra_fields):
-        self.create_user(username, password, **extra_fields)
+        return self.create_user(username, password, is_superuser=True, **extra_fields)
 
 
 class UserCBR(AbstractBaseUser, PermissionsMixin):
@@ -66,6 +70,12 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
         "role",
     ]
 
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        # All admins are staff
+        return self.role == self.Role.ADMIN
+
     class Meta:
         verbose_name = _("user")
         verbose_name_plural = _("users")
@@ -77,6 +87,7 @@ class RiskType(models.TextChoices):
     SOCIAL = "SOCIAL", _("Social")
     EDUCAT = "EDUCAT", _("Education")
 
+    @staticmethod
     def getField():
         return models.CharField(
             max_length=6, choices=RiskType.choices, default="HEALTH"
@@ -89,8 +100,13 @@ class RiskLevel(models.TextChoices):
     HIGH = "HI", _("High")
     CRITICAL = "CR", _("Critical")
 
+    @staticmethod
     def getField():
         return models.CharField(max_length=2, choices=RiskLevel.choices, default="LO")
+
+
+client_picture_upload_dir = "images/clients"
+referral_picture_upload_dir = "images/referrals"
 
 
 class Client(models.Model):
@@ -113,24 +129,63 @@ class Client(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT
     )
     created_date = models.BigIntegerField()
+    modified_date = models.BigIntegerField()
     longitude = models.DecimalField(max_digits=12, decimal_places=6)
     latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     village = models.CharField(max_length=50)
-    picture = models.ImageField(upload_to="images/", blank=True)  # if picture available
+
+    def rename_file(self, original_filename):
+        # file_ext includes the "."
+        file_root, file_ext = os.path.splitext(original_filename)
+        new_filename = (
+            f"client-{self.pk}{file_ext}"
+            if self.pk is not None
+            else f"temp-{get_random_string(10)}-{file_root}{file_ext}"
+        )
+        return os.path.join(client_picture_upload_dir, new_filename)
+
+    filesize_validator = FileSizeValidator(5 * 1024 * 1024)
+
+    picture = models.ImageField(
+        upload_to=rename_file,
+        storage=OverwriteStorage(),
+        blank=True,
+        # validators=[filesize_validator],
+    )  # if picture available
     caregiver_present = models.BooleanField(default=False)
 
     # ------if caregiver present-----
     caregiver_name = models.CharField(max_length=101, blank=True)
     caregiver_phone = models.CharField(max_length=50, blank=True)
     caregiver_email = models.CharField(max_length=50, blank=True)
-    caregiver_picture = models.ImageField(upload_to="images/", blank=True)
 
     # summary data to make queries more reasonable
     health_risk_level = RiskLevel.getField()
     social_risk_level = RiskLevel.getField()
     educat_risk_level = RiskLevel.getField()
     last_visit_date = models.BigIntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        self.modified_date = int(time.time())
+        # The image might need to be renamed if this is a new client, since a new client would be missing the
+        # autoincrement primary key (id).
+        needs_image_rename = (
+            self.pk is None
+            and self.picture.name is not None
+            and len(self.picture.name) > 0
+        )
+
+        super().save(*args, **kwargs)
+        if needs_image_rename and self.pk is not None:
+            # Save a second time so that the picture gets a proper name and not a temporary name.
+            old_file_path = self.picture.path
+            self.picture.save(self.picture.name, self.picture.file)
+            # The picture should now have the expected name from the rename_file function.
+            # However, this saves it as a new file and doesn't delete the old, temp file.
+            # Delete the temp file (sanity check to make sure it's really a temp file)
+            if old_file_path != self.picture.path:
+                os.remove(old_file_path)
 
 
 class ClientRisk(models.Model):
@@ -164,10 +219,46 @@ class Referral(models.Model):
     resolved = models.BooleanField(default=False)
     outcome = models.CharField(max_length=100)
 
+    def rename_file(self, original_filename):
+        # file_ext includes the "."
+        file_root, file_ext = os.path.splitext(original_filename)
+        new_filename = (
+            f"referral-{self.pk}{file_ext}"
+            if self.pk is not None
+            else f"referral-{get_random_string(10)}-{file_root}{file_ext}"
+        )
+        return os.path.join(referral_picture_upload_dir, new_filename)
+
+    picture = models.ImageField(
+        upload_to=rename_file,
+        storage=OverwriteStorage(),
+        blank=True,
+    )  # if picture available
+
     client = models.ForeignKey(
         Client, related_name="referrals", on_delete=models.CASCADE
     )
-    picture = models.ImageField(upload_to="images/", blank=True)
+
+    def save(self, *args, **kwargs):
+        self.modified_date = int(time.time())
+        # The image might need to be renamed if this is a new client, since a new client would be missing the
+        # autoincrement primary key (id).
+        needs_image_rename = (
+            self.pk is None
+            and self.picture.name is not None
+            and len(self.picture.name) > 0
+        )
+
+        super().save(*args, **kwargs)
+        if needs_image_rename and self.pk is not None:
+            # Save a second time so that the picture gets a proper name and not a temporary name.
+            old_file_path = self.picture.path
+            self.picture.save(self.picture.name, self.picture.file)
+            # The picture should now have the expected name from the rename_file function.
+            # However, this saves it as a new file and doesn't delete the old, temp file.
+            # Delete the temp file (sanity check to make sure it's really a temp file)
+            if old_file_path != self.picture.path:
+                os.remove(old_file_path)
 
     class Experience(models.TextChoices):
         BASIC = "BAS", _("Basic")

@@ -65,7 +65,7 @@ MIDDLEWARE = [
 ]
 
 SIMPLE_JWT = {
-    "REFRESH_TOKEN_LIFETIME": timedelta(hours=4),
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=24),
     "ROTATE_REFRESH_TOKENS": True,
 }
 

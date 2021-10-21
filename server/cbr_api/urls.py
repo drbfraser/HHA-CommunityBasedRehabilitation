@@ -1,9 +1,12 @@
 from django.urls import path
-from cbr_api import views
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+
+from cbr_api import models
+from cbr_api import views
+from downloadview.object import AuthenticatedObjectDownloadView
 
 urlpatterns = [
     path("login", TokenObtainPairView.as_view(), name="token-obtain-pair"),
@@ -19,6 +22,11 @@ urlpatterns = [
     ),
     path("clients", views.ClientList.as_view(), name="client-list"),
     path("client/<int:pk>", views.ClientDetail.as_view(), name="client-detail"),
+    path(
+        "client/picture/<int:pk>",
+        views.ClientImage.as_view(),
+        name="client-picture",
+    ),
     path("zones", views.ZoneList.as_view(), name="zone-list"),
     path("zone/<int:pk>", views.ZoneDetail.as_view(), name="zone-detail"),
     path("risks", views.RiskList.as_view(), name="risk-list"),
@@ -33,6 +41,11 @@ urlpatterns = [
     path("visit/<int:pk>", views.VisitDetail.as_view(), name="visit-detail"),
     path("referral/<int:pk>", views.ReferralDetail.as_view(), name="referral-detail"),
     path("referrals", views.ReferralList.as_view(), name="referral-list"),
+    path(
+        "referral/picture/<int:pk>",
+        views.ReferralImage.as_view(),
+        name="referral-picture",
+    ),
     path(
         "referrals/outstanding",
         views.ReferralOutstanding.as_view(),

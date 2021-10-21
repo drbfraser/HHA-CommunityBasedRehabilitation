@@ -30,6 +30,7 @@ const App = () => {
         socket.on("disconnect", () => {
             console.log(`[SocketIO] Web user disconnected`);
         });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const PrivateRoutes = () => {

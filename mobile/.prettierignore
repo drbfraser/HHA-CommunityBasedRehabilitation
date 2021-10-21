@@ -1,0 +1,9 @@
+.expo
+.expo-shared
+build
+dist
+public
+
+*.json
+!package.json
+!tsconfig*.json

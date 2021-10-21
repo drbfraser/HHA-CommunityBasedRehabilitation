@@ -1,12 +1,14 @@
 version: "3.7"
 services:
-    django:
-        container_name: cbr_django
-        command: python manage.py runserver 0.0.0.0:8000
-        ports:
-            - "8000:8000"
-        environment: 
-            - DEBUG=yes
-            - POSTGRES_HOST=cbr_postgres
-    postgres:
-        container_name: cbr_postgres
+  django:
+    container_name: cbr_django
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=yes
+      - POSTGRES_HOST=cbr_postgres
+  postgres:
+    container_name: cbr_postgres
+    ports:
+      - "5432:5432"

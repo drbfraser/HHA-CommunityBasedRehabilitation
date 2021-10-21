@@ -14,11 +14,13 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 ### 2. Start NPM Development Server
 
-1. Open the `client` directory in a terminal window.
+1. Open the `web` or `mobile` directory in a terminal window.
 
 2. If dependencies have been added since you last ran the project, you may need to run `npm install` first.
 
 3. Run `npm start`
+
+4. For any changes in `common` to be reflected in the either client library, run `npm run refresh-common`.
 
 ### 3. Seed Some Data
 
@@ -38,10 +40,11 @@ If at some point during development you want to re-seed the database with the ex
 
 That's it! The frontend is now running on http://localhost:3000 and the backend is running on http://localhost:8000. Both the frontend and the backend should support hot reloading.
 
+For using a local server when developing the mobile app, ensure that you have followed the mobile environment variables instructions from [SETUP.md](SETUP.md).
+
 If you seeded users in the previous step, you already have an account in the system. Use the username `venus` and password `hhaLogin` to log in, and from there you can create another user if you wish to change the username and password you use.
 
 You can also access auto-generating Swagger API documentation at http://localhost:8000/docs
-
 
 # How to Contribute
 
@@ -73,9 +76,17 @@ Once you are finished, take some time to clean up your code and make sure to tes
 
 Prior to submitting a merge request make sure to format your code - it won't pass the CI/CD pipeline without it. Note that both of these commands end in a `.` - that's important!
 
+**Common:**
+
+From within the `common` directory, run `npx prettier --write .`
+
+**Mobile:**
+
+From within the `mobile` directory, run `npx prettier --write .`
+
 **Frontend:**
 
-From within the `client` directory, run `npx prettier --write .`
+From within the `web` directory, run `npx prettier --write .`
 
 **Backend:**
 

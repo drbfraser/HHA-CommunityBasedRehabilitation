@@ -34,6 +34,7 @@ const UserList = () => {
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
     const [sortOption, setSortOption] = useState("");
     const [sortDirection, setIsSortDirection] = useState<TSortDirection>("None");
+    const [isAuthenticate, setAuthenticate] = useState<boolean>(false);
 
     const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
 
@@ -94,8 +95,13 @@ const UserList = () => {
     };
 
     useEffect(() => {
-        authContext.requireLoggedIn(true);
-        newUserListGet();
+        if (isFocused) {
+            if (!isAuthenticate) {
+                authContext.requireLoggedIn(true);
+                setAuthenticate(true);
+            }
+            newUserListGet();
+        }
     }, [sortDirection, sortOption, searchQuery, selectedSearchOption, isFocused]);
     useEffect(() => {
         showSelectedColumn();

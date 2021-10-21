@@ -158,3 +158,5 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_ROOT = "/uploads/"
 MEDIA_URL = "/api/uploads/"
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

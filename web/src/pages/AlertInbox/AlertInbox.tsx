@@ -1,35 +1,11 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
-import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
+import AlertList from "./AlertList";
 
 const AlertInbox = () => {
   return  (
     <Grid container justify="center" alignItems="flex-start" spacing={3}>
-      <Grid item xs={3} md={3}>
-        <h1> Inbox </h1>
-        <List component="nav" className="Other" aria-label="mailbox folders">
-          <ListItem button>
-            <ListItemText primary="Message Name 1" />
-          </ListItem>
-          <Divider />
-          <ListItem button divider>
-            <ListItemText primary="Message Name 2" />
-          </ListItem>
-          <ListItem button>
-            <ListItemText primary="Message Name 3" />
-          </ListItem>
-          <Divider light />
-          <ListItem button>
-            <ListItemText primary="Message Name 4" />
-          </ListItem>
-        </List>
-      </Grid>
+      <AlertList />
       <Grid item xs={9} md={9}>
           <h1>Message</h1>
           <h2>Message Name</h2>

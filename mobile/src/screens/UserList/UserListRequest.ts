@@ -25,6 +25,9 @@ export const fetchUsersFromApi = async (
     sortDirection
 ): Promise<BriefUser[]> => {
     try {
+        const FIRST_NAME = 0;
+        const LAST_NAME = 1;
+
         const urlParams = new URLSearchParams();
 
         const zones = await getZones();
@@ -46,7 +49,12 @@ export const fetchUsersFromApi = async (
                 });
             } else if (searchOption == SearchOption.NAME) {
                 resultRow = resultRow.filter((item) => {
-                    return item.full_name.includes(searchValue);
+                    let splitFullName = item.full_name.split(" ");
+
+                    return (
+                        splitFullName[FIRST_NAME].toLowerCase().match(searchValue.toLowerCase()) ||
+                        splitFullName[LAST_NAME].toLowerCase().match(searchValue.toLowerCase())
+                    );
                 });
             } else if (searchOption == SearchOption.ZONE) {
                 resultRow = resultRow.filter((item) => {

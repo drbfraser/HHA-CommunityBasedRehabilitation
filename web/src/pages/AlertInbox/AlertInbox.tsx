@@ -2,9 +2,8 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import AlertList from "./AlertList";
 import {makeStyles} from "@material-ui/core/styles";
-import Divider from '@mui/material/Divider';
 import AlertDetail from './AlertDetail';
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useState } from "react";
 
 const useStyles = makeStyles({
   testItemStyle1: {
@@ -23,12 +22,6 @@ const useStyles = makeStyles({
   }
 });
 
-// type onAlertSelectionEventType = (itemNum:string)=> void;
-
-// interface CurrProps {
-//   onAlertSelectionEventType: (itemNum:string)=> void
-// }
-
 const AlertInbox = () => {
   const style = useStyles();
   const [selectedAlert, setSelectedAlert] = useState<string>("-1");
@@ -40,15 +33,15 @@ const AlertInbox = () => {
     },
     selectAlert:selectedAlert,
   }
-  // const onAlertSelectionEvent = (itemNum:string) => {
-  //   setSelectedAlert(itemNum);
-  // }
+
+  const anotherProps= {
+    selectAlert:selectedAlert,
+  }
 
   return  (
     <Grid container justify="center" alignItems="flex-start" spacing={3}>
       <AlertList {...currProps}/>
-      {/* <Divider orientation="vertical" /> */}
-      <AlertDetail />
+      <AlertDetail {...anotherProps}/>
     </Grid>
   );
 }

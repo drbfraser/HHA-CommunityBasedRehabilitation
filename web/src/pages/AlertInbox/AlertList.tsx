@@ -1,21 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
-import ImageIcon from '@mui/icons-material/Image';
-import WorkIcon from '@mui/icons-material/Work';
-import BeachAccessIcon from '@mui/icons-material/BeachAccess';
-import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
-import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
+import { RiskLevel, riskLevels } from "@cbr/common/util/risks";
+import { FiberManualRecord } from "@material-ui/icons";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
-import alertList from "./TestAlertExampleDeleteLater";
+import testAlertExample from "./TestAlertExampleDeleteLater";
 import {makeStyles} from "@material-ui/core/styles";
-import { themeColors } from "@cbr/common/util/colors";
 
 const useStyles = makeStyles({
   listItemStyle: {
@@ -33,7 +26,6 @@ const useStyles = makeStyles({
     borderRight: "3px solid grey",
   },
   dividerStyle: {
-    // backgroundColor: "black",
     margin:"0px",
     padding:"0px",
   },
@@ -58,10 +50,6 @@ const RenderBadge = (params: String) => {
     );
 };
 
-const printHelloWorld = () => {
-  console.log("Hello!")
-}
-
 const AlertList = (currProps:Props) => {
   const style = useStyles();
 
@@ -69,9 +57,7 @@ const AlertList = (currProps:Props) => {
     <Grid item xs={3} md={3}  
       className={style.gridStyle} 
     >
-      <h1 
-        // className={style.listItemStyle2}
-      >
+      <h1 >
         Alerts
       </h1>
       <Divider variant="fullWidth" className={style.dividerStyle3}/>
@@ -82,9 +68,8 @@ const AlertList = (currProps:Props) => {
           bgcolor: 'background.paper',
           overflow: 'auto',
         }}
-        // className={style.gridStyle}
       >
-        {alertList.map(currAlert => {
+        {testAlertExample.map(currAlert => {
           return (
             <div>
               <ListItemText
@@ -101,9 +86,7 @@ const AlertList = (currProps:Props) => {
                   </React.Fragment>
                 }
                 secondary={RenderBadge(currAlert.priority)}
-                //onClick={printHelloWorld}
                 onClick={()=>currProps.onAlertSelectionEvent(currAlert.id)}
-                // className={style.listItemStyle}
                 className={currAlert.id===currProps.selectAlert? style.listItemStyle:style.listItemStyle3}
               />
 

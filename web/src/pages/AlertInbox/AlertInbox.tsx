@@ -10,7 +10,6 @@ const AlertInbox = () => {
     const alertListProps = {
         onAlertSelectionEvent: (itemNum: string) => {
             setSelectedAlert(itemNum);
-            console.log("clicked");
         },
         selectAlert: selectedAlert,
     };

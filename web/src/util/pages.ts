@@ -2,7 +2,7 @@ import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core/SvgIcon";
 import HomeIcon from "@material-ui/icons/Home";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
-import InboxIcon from '@material-ui/icons/Inbox';
+import InboxIcon from "@material-ui/icons/Inbox";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 import PersonIcon from "@material-ui/icons/Person";

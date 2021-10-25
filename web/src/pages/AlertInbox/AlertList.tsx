@@ -19,7 +19,12 @@ import { themeColors } from "@cbr/common/util/colors";
 
 const useStyles = makeStyles({
   listItemStyle: {
-    backgroundColor: "grey",
+    backgroundColor: "lightcyan",
+    border: "1px solid blue",
+    padding: "3px"
+  },
+  listItemStyle3: {
+    padding: "3px"
   },
   listItemStyle2: {
     backgroundColor: "blue",
@@ -29,11 +34,19 @@ const useStyles = makeStyles({
   },
   dividerStyle: {
     // backgroundColor: "black",
+    margin:"0px",
+    padding:"0px",
   },
   dividerStyle3: {
-    backgroundColor: "black",
+    backgroundColor: "grey",
+    height: "3px",
   }
 });
+
+type Props = {
+  onAlertSelectionEvent:(itemNum:string)=> void,
+  selectAlert:string,
+}
 
 const RenderBadge = (params: String) => {
   const risk: RiskLevel = Object(params);
@@ -49,7 +62,7 @@ const printHelloWorld = () => {
   console.log("Hello!")
 }
 
-const AlertList = () => {
+const AlertList = (currProps:Props) => {
   const style = useStyles();
 
   return (
@@ -59,7 +72,7 @@ const AlertList = () => {
       <h1 
         // className={style.listItemStyle2}
       >
-        Inbox
+        Alerts
       </h1>
       <Divider variant="fullWidth" className={style.dividerStyle3}/>
       <List
@@ -88,8 +101,10 @@ const AlertList = () => {
                   </React.Fragment>
                 }
                 secondary={RenderBadge(currAlert.priority)}
-                onClick={printHelloWorld}
+                //onClick={printHelloWorld}
+                onClick={()=>currProps.onAlertSelectionEvent(currAlert.id)}
                 // className={style.listItemStyle}
+                className={currAlert.id===currProps.selectAlert? style.listItemStyle:style.listItemStyle3}
               />
 
               <Divider

@@ -13,7 +13,27 @@ import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
-// import IAlert from "./Alert";
+import alertList from "./TestAlertExampleDeleteLater";
+import {makeStyles} from "@material-ui/core/styles";
+import { themeColors } from "@cbr/common/util/colors";
+
+const useStyles = makeStyles({
+  listItemStyle: {
+    backgroundColor: "grey",
+  },
+  listItemStyle2: {
+    backgroundColor: "blue",
+  },
+  gridStyle: {
+    borderRight: "3px solid grey",
+  },
+  dividerStyle: {
+    // backgroundColor: "black",
+  },
+  dividerStyle3: {
+    backgroundColor: "black",
+  }
+});
 
 const RenderBadge = (params: String) => {
   const risk: RiskLevel = Object(params);
@@ -30,150 +50,56 @@ const printHelloWorld = () => {
 }
 
 const AlertList = () => {
-  const [height, setHeight] = useState(0)
-  const ref = useRef(null);
-
-  useEffect(() => {
-    setHeight(ref.current.clientHeight)
-  })
+  const style = useStyles();
 
   return (
-    <Grid item xs={3} md={3} ref={ref}>
-      <h1> Inbox </h1>
+    <Grid item xs={3} md={3}  
+      className={style.gridStyle} 
+    >
+      <h1 
+        // className={style.listItemStyle2}
+      >
+        Inbox
+      </h1>
+      <Divider variant="fullWidth" className={style.dividerStyle3}/>
       <List
         sx={{
           width: '100%',
           maxWidth: 360,
           bgcolor: 'background.paper',
           overflow: 'auto',
-          maxHeight: {height},
         }}
+        // className={style.gridStyle}
       >
+        {alertList.map(currAlert => {
+          return (
+            <div>
+              <ListItemText
+                primary={
+                  <React.Fragment>
+                    <Typography
+                      sx={{ display: 'inline',fontSize: 16,fontWeight: 'medium' }}
+                      component="span"
+                      variant="body2"
+                      color="text.primary"
+                    >
+                      {currAlert.subject}
+                    </Typography>
+                  </React.Fragment>
+                }
+                secondary={RenderBadge(currAlert.priority)}
+                onClick={printHelloWorld}
+                // className={style.listItemStyle}
+              />
 
-        
-        <ListItemText
-          primary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: 'inline',fontSize: 16,fontWeight: 'medium' }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                A regular Title
-              </Typography>
-            </React.Fragment>
-          }
-          secondary={RenderBadge('ME')}
-          onClick={printHelloWorld}
-        />
-
-        <Divider variant="fullWidth" component="li" />
-
-        <ListItemText
-          primary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: 'inline',fontSize: 16,fontWeight: 'medium' }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                This is an emergency message! Tomorrow will be raining, please prepare some boats...
-              </Typography>
-            </React.Fragment>
-          }
-          secondary={RenderBadge('ME')}
-        />
-
-        <Divider variant="fullWidth" component="li" />
-
-        <ListItemText
-          primary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: 'inline',fontSize: 16,fontWeight: 'medium' }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                This is an emergency message! Tomorrow will be raining, please prepare some boats...
-              </Typography>
-            </React.Fragment>
-          }
-          secondary={RenderBadge('ME')}
-        />
-
-        <Divider variant="fullWidth" component="li" />
-          
-        <ListItemText
-          primary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: 'inline',fontSize: 16,fontWeight: 'medium' }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                This is an emergency message! Tomorrow will be raining, please prepare some boats...
-              </Typography>
-            </React.Fragment>
-          }
-          secondary={RenderBadge('ME')}
-        />
-
-<Divider variant="fullWidth" component="li" />
-          
-          <ListItemText
-            primary={
-              <React.Fragment>
-                <Typography
-                  sx={{ display: 'inline',fontSize: 16,fontWeight: 'medium' }}
-                  component="span"
-                  variant="body2"
-                  color="text.primary"
-                >
-                  This is an emergency message! Tomorrow will be raining, please prepare some boats...
-                </Typography>
-              </React.Fragment>
-            }
-            secondary={RenderBadge('ME')}
-          />
-        <Divider variant="fullWidth" component="li" />
-          
-          <ListItemText
-            primary={
-              <React.Fragment>
-                <Typography
-                  sx={{ display: 'inline',fontSize: 16,fontWeight: 'medium' }}
-                  component="span"
-                  variant="body2"
-                  color="text.primary"
-                >
-                  This is an emergency message! Tomorrow will be raining, please prepare some boats...
-                </Typography>
-              </React.Fragment>
-            }
-            secondary={RenderBadge('ME')}
-          />
-        <Divider variant="fullWidth" component="li" />
-          
-          <ListItemText
-            primary={
-              <React.Fragment>
-                <Typography
-                  sx={{ display: 'inline',fontSize: 16,fontWeight: 'medium' }}
-                  component="span"
-                  variant="body2"
-                  color="text.primary"
-                >
-                  This is an emergency message! Tomorrow will be raining, please prepare some boats...
-                </Typography>
-              </React.Fragment>
-            }
-            secondary={RenderBadge('ME')}
-          />
-      
+              <Divider
+                variant="fullWidth"
+                component="li" 
+                className={style.dividerStyle}
+              />
+            </div>
+          )
+        })}      
       </List>
     </Grid>
   );

@@ -1,14 +1,50 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import AlertList from "./AlertList";
+import {makeStyles} from "@material-ui/core/styles";
+import Divider from '@mui/material/Divider';
+
+const useStyles = makeStyles({
+  testItemStyle1: {
+    backgroundColor: "green",
+  },
+  testItemStyle2: {
+    backgroundColor: "yellow",
+  },
+  gridStyle: {
+    borderStyle: "solid",
+    borderColor: "pink",
+  },
+  dividerStyle: {
+    backgroundColor: "black",
+    
+  }
+});
 
 const AlertInbox = () => {
+  const style = useStyles();
   return  (
     <Grid container justify="center" alignItems="flex-start" spacing={3}>
       <AlertList />
-      <Grid item xs={9} md={9}>
-          <h1>Message</h1>
-          <h2>Message Name</h2>
+      {/* <Divider orientation="vertical" /> */}
+      <Grid item xs={9} md={9}  
+        // className={style.gridStyle}
+      >
+          <h1 
+            // className={style.testItemStyle1}
+          >
+            Message
+          </h1>
+
+          <Divider
+            variant="fullWidth"
+            className={style.dividerStyle}
+          />
+          <h2
+            // className={style.testItemStyle2}
+          >
+            Message Name
+          </h2>
           <p>
             Google LLC is an American multinational technology company that specializes in Internet-related services and products, which include online advertising technologies, a search engine, cloud computing, software, and hardware. 
             <br/><br/>

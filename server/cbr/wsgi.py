@@ -15,7 +15,6 @@ import eventlet.wsgi
 from django.core.wsgi import get_wsgi_application
 
 eventlet.monkey_patch(socket=True, select=True)
-async_mode = "eventlet"  # access to the long-polling and WebSocket transports
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cbr.settings")
 
 application = get_wsgi_application()

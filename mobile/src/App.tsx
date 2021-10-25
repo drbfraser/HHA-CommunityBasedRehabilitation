@@ -24,6 +24,7 @@ import { AuthState } from "./context/AuthContext/AuthState";
 import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
 import { StackScreenName } from "./util/StackScreenName";
 import { DEV_API_URL } from "@env";
+import { io } from "socket.io-client/dist/socket.io";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -118,8 +119,6 @@ export default function App() {
                 return updateAuthStateIfNeeded(authState, setAuthState, false);
             });
 
-        window.navigator.product === "ReactNative"; // necessary for socketIO with RN
-        const io = require("socket.io-client/dist/socket.io");
         const socket = io(`${hostname}`, {
             transports: ["websocket"], // explicitly use websockets
             autoConnect: true,

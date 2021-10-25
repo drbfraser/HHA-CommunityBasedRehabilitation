@@ -16,6 +16,7 @@ const App = () => {
 
     const API_URL =
         process.env.NODE_ENV === "development" ? `http://${window.location.hostname}:8000` : "";
+    // TODO: Test in staging to ensure we can access URL's from all environments.
 
     useEffect(() => {
         const socket = io(`${API_URL}`, {

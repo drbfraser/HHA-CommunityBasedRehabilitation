@@ -1,4 +1,7 @@
 import * as Yup from "yup";
+/*
+  These unused Variable will be needed later when connecting to backend API
+*/
 import { Validation } from "../../util/validations";
 import { Priority, IAlert } from "../../util/alerts";
 
@@ -28,5 +31,8 @@ export const validationSchema = () =>
             .required()
             .max(50),
         [alertField.priority]: Yup.string().label(alertFieldLabels[alertField.priority]).required(),
-        [alertField.body]: Yup.string().label(alertFieldLabels[alertField.body]).max(2000),
+        [alertField.body]: Yup.string()
+            .label(alertFieldLabels[alertField.body])
+            .max(2000)
+            .required(),
     });

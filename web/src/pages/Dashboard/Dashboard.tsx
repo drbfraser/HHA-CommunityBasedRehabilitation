@@ -158,11 +158,16 @@ const Dashboard = () => {
         );
     };
 
+    const locale = navigator.language;
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
     const RenderDate = (params: ValueFormatterParams) => {
         return Number(params.value) === 0 ? (
             <Typography variant={"body2"}>No Visits</Typography>
         ) : (
-            <Typography variant={"body2"}>{timestampToDate(Number(params.value))}</Typography>
+            <Typography variant={"body2"}>
+                {timestampToDate(Number(params.value), locale, timezone)}
+            </Typography>
         );
     };
 

@@ -17,7 +17,8 @@ import {
     mobileClientDetailsValidationSchema,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
-import { Alert, Text, View } from "react-native";
+import { Alert, Text, View, NativeModules } from "react-native";
+import * as Localization from "expo-localization";
 import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IActivity, ActivityType } from "./ClientTimeline/Timeline";
 import { ClientRisk } from "./Risks/ClientRisk";
@@ -77,13 +78,16 @@ const ClientDetails = (props: ClientProps) => {
         setClient(presentClient);
     };
 
+    const locale = NativeModules.I18nManager.localeIdentifier;
+    const timezone = Localization.timezone;
+
     const getClientFormInitialValues = () => {
         if (client) {
             const clientFormProps: TClientValues = {
                 ...clientInitialValues,
                 firstName: client.first_name,
                 lastName: client.last_name,
-                birthDate: timestampToDate(Number(client.birth_date)),
+                birthDate: timestampToDate(Number(client.birth_date), locale, timezone),
                 gender: client.gender,
                 village: client.village,
                 zone: client.zone ?? "",

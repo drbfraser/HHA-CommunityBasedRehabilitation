@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import SideNav from "./components/SideNav/SideNav";
 import { defaultPagePath, pagesForUser } from "util/pages";
@@ -8,10 +8,31 @@ import { useStyles } from "App.styles";
 import history from "@cbr/common/util/history";
 import { useIsLoggedIn } from "./util/hooks/loginState";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import io from "socket.io-client";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
     const styles = useStyles();
+
+    const API_URL =
+        process.env.NODE_ENV === "development" ? `http://${window.location.hostname}:8000` : "";
+    // TODO: Test in staging to ensure we can access URL's from all environments.
+
+    useEffect(() => {
+        const socket = io(`${API_URL}`, {
+            transports: ["websocket"], // explicitly use websockets
+            autoConnect: true,
+        });
+
+        socket.on("connect", () => {
+            console.log(`[SocketIO] Web user connected on ${API_URL}. SocketID: ${socket.id}`);
+        });
+
+        socket.on("disconnect", () => {
+            console.log(`[SocketIO] Web user disconnected`);
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const PrivateRoutes = () => {
         const user = useCurrentUser();

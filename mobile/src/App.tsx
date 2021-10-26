@@ -23,7 +23,8 @@ import Login from "./screens/Login/Login";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
 import { StackScreenName } from "./util/StackScreenName";
-import { RouteProp } from "@react-navigation/core/lib/typescript/src/types";
+import { DEV_API_URL } from "@env";
+import { io } from "socket.io-client/dist/socket.io";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -99,6 +100,7 @@ const updateAuthStateIfNeeded = async (
 
 export default function App() {
     const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
+    const hostname = DEV_API_URL.replace(/(api)\/$/, ""); // remove '/api/'
 
     useEffect(() => {
         // Refresh disabilities, zones, current user information
@@ -116,6 +118,22 @@ export default function App() {
                 // an unnecessary refetch.
                 return updateAuthStateIfNeeded(authState, setAuthState, false);
             });
+
+        const socket = io(`${hostname}`, {
+            transports: ["websocket"], // explicitly use websockets
+            autoConnect: true,
+            jsonp: false, // avoid manipulation of DOM
+        });
+
+        socket.on("connect", () => {
+            console.log(
+                `[SocketIO] Mobile user connected on ${socket.io.engine.hostname}:${socket.io.engine.port}. SocketID: ${socket.id}`
+            );
+        });
+
+        socket.on("disconnect", (socket) => {
+            console.log(`[SocketIO] Mobile user with socketID: ${socket.id} disconnected`);
+        });
     }, []);
 
     // design inspired by https://reactnavigation.org/docs/auth-flow/

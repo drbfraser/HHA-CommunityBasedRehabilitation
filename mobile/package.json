@@ -39,8 +39,10 @@
     "expo-cli": "^4.9.0",
     "expo-image-picker": "~10.1.4",
     "expo-localization": "~10.1.0",
+    "expo-splash-screen": "~0.10.2",
     "expo-status-bar": "~1.0.4",
     "expo-task-manager": "~9.1.0",
+    "expo-updates": "~0.5.4",
     "formik": "^2.2.9",
     "native-base": "^2.15.2",
     "react": "16.13.1",
@@ -73,15 +75,13 @@
     "react-native-svg": "12.1.0",
     "react-native-unimodules": "~0.13.3",
     "react-native-vector-icons": "^8.1.0",
+    "react-native-web": "~0.13.12",
     "react-native-wizard": "^2.1.0",
     "react-native-woodpicker": "^0.3.7",
     "react-navigation": "^4.4.4",
     "react-navigation-stack": "^2.10.4",
     "react-router-dom": "^5.2.0",
-    "yup": "^0.32.9",
-    "expo-splash-screen": "~0.10.2",
-    "expo-updates": "~0.5.4",
-    "react-native-web": "~0.13.12"
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

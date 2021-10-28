@@ -7,10 +7,12 @@ import { AppStackNavProp } from "../../util/stackScreens";
 import { useNavigation } from "@react-navigation/core";
 import { useCurrentUser, useDisabilities, useZones } from "@cbr/common";
 import { StackScreenName } from "../../util/StackScreenName";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 const Todo = () => {
     const styles = useStyles();
     const authContext = useContext(AuthContext);
+    const database = useDatabase();
 
     useEffect(() => {
         authContext.requireLoggedIn(true);
@@ -25,6 +27,13 @@ const Todo = () => {
             { text: "Logout", onPress: () => authContext.logout() },
         ]);
 
+    const resetDatabase = async () => {
+        await database.write(async () => {
+            await database.unsafeResetDatabase();
+            console.log("database cleared");
+        });
+    };
+
     const zones = useZones();
     const disabilities = useDisabilities();
     const currentUser = useCurrentUser();
@@ -35,6 +44,9 @@ const Todo = () => {
         <View style={styles.container}>
             <Title>This is a placeholder component screen.</Title>
             <Text>Due to be removed, once the app reaches completion!</Text>
+            <Button mode="contained" onPress={resetDatabase}>
+                Reset Local Database
+            </Button>
             <Button
                 mode="contained"
                 onPress={() => {

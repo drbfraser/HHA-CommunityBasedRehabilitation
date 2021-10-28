@@ -9,6 +9,7 @@ export default class User extends Model {
     } as const;
 
     @text("username") username;
+    @text("password") password;
     @text("first_name") firstName;
     @text("last_name") lastName;
     @text("phone_number") phoneNumber;

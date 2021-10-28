@@ -16,6 +16,7 @@ export default appSchema({
             columns: [
                 { name: "zone_id", type: "string", isIndexed: true },
                 { name: "username", type: "string" },
+                { name: "password", type: "string" },
                 { name: "first_name", type: "string" },
                 { name: "last_name", type: "string" },
                 { name: "phone_number", type: "string", isOptional: true },

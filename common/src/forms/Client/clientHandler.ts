@@ -5,21 +5,22 @@ import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabili
 import { clientFieldLabels, TClientFormValues, TClientValues } from "./clientFields";
 import { appendPicture, IClient } from "../../util/clients";
 import history from "../../util/history";
+import addClient from "../../services/clientServices";
 
-const addClient = async (clientInfo: FormData) => {
-    const init: RequestInit = {
-        method: "POST",
-        body: clientInfo,
-    };
+// const addClient = async (clientInfo: FormData) => {
+//     const init: RequestInit = {
+//         method: "POST",
+//         body: clientInfo,
+//     };
 
-    return await apiFetch(Endpoint.CLIENTS, "", init)
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            return res;
-        });
-};
+//     return await apiFetch(Endpoint.CLIENTS, "", init)
+//         .then((res) => {
+//             return res.json();
+//         })
+//         .then((res) => {
+//             return res;
+//         });
+// };
 
 const updateClient = async (clientInfo: FormData, clientId: number): Promise<IClient> => {
     const init: RequestInit = {

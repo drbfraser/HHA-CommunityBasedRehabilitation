@@ -60,7 +60,7 @@ export const handleNewUserSubmit = async (
     helpers: FormikHelpers<TNewUserValues>
 ) => {
     const newUser = JSON.stringify({
-        id: "check",
+        id: "temp",
         username: values.username,
         password: values.password,
         first_name: values.first_name,

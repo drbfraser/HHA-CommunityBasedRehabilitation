@@ -5,6 +5,7 @@ import { doLogout } from "@cbr/common/util/auth";
 const Logout = () => {
     useEffect(() => {
         doLogout();
+        window.location.reload();
     });
     return <LinearProgress />;
 };

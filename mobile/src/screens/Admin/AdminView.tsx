@@ -51,7 +51,7 @@ const AdminView = ({
                 role: result.role,
                 zone: result.zone,
                 phone_number: result.phone_number,
-                is_active: false,
+                is_active: result.is_active,
             };
             setUser(iUser);
         } catch (e) {

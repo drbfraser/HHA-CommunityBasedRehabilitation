@@ -37,11 +37,9 @@ export const handleNewUserSubmit = async (
                 user.phone_number = values.phone_number;
                 user.role = values.role;
                 user.zone = values.zone;
-                user.isActive = values.is_active;
+                user.is_active = values.is_active;
             });
         });
-        console.log("submitted");
-        console.log(newUser);
         return newUser.id;
     } finally {
         helpers.setSubmitting(false);
@@ -63,7 +61,7 @@ export const handleUserEditSubmit = async (
                 user.role = values.role;
                 user.phone_number = values.phone_number;
                 user.zone = values.zone;
-                user.isActive = values.is_active;
+                user.is_active = values.is_active;
             });
         });
         return editedUser.id;

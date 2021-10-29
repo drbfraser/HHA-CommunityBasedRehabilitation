@@ -61,7 +61,6 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
                         validationSchema={newUserValidationSchema}
                         onSubmit={(values, formikHelpers) => {
                             setSaveError(undefined);
-                            console.log(values);
                             handleNewUserSubmit(values, database, formikHelpers)
                                 .then((id) => {
                                     setHasSubmitted(true);

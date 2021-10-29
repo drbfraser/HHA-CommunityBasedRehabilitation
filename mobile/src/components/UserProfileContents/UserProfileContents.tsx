@@ -33,7 +33,6 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
     const [isPassChangedSnackbarVisible, setPassChangeSnackbarVisibility] = useState(false);
 
     const [isLogoutConfirmDialogVisible, setLogoutConfirmDialogVisibility] = useState(false);
-    console.log(`isSelf is ${isSelf}`);
     return (
         <View style={styles.container}>
             {isSelf ? (

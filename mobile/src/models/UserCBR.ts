@@ -12,7 +12,7 @@ export default class User extends Model {
     @text("phone_number") phone_number;
     @text("role") role;
     @field("zone") zone;
-    @field("is_active") isActive;
+    @field("is_active") is_active;
 
     @readonly @date("created_at") createdAt;
     @readonly @date("updated_at") updateAt;

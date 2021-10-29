@@ -69,10 +69,10 @@ const AdminEdit = ({
                         onSubmit={(values, formikHelpers) => {
                             setSaveError(undefined);
                             handleUserEditSubmit(values, database, formikHelpers)
-                                .then((user) => {
+                                .then((id) => {
                                     setHasSubmitted(true);
                                     navigation.navigate(StackScreenName.ADMIN_VIEW, {
-                                        userID: user.id,
+                                        userID: id,
                                     });
                                 })
                                 .catch((e) =>

@@ -11,7 +11,7 @@ import { Picker } from "@react-native-picker/picker";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { DataTable } from "react-native-paper";
-import BriefUser, { fetchUsersFromApi } from "./UserListRequest";
+import BriefUser, { fetchUsersFromDB } from "./UserListRequest";
 import { useIsFocused } from "@react-navigation/native";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
 import {
@@ -77,7 +77,7 @@ const UserList = () => {
     };
 
     const newUserListGet = async () => {
-        var fetchedUserList = await fetchUsersFromApi(
+        var fetchedUserList = await fetchUsersFromDB(
             selectedSearchOption,
             searchQuery,
             sortOption,

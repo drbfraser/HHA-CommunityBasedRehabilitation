@@ -16,4 +16,10 @@ export default class User extends Model {
 
     @readonly @date("created_at") createdAt;
     @readonly @date("updated_at") updateAt;
+
+    @writer async updatePassword(newPass) {
+        await this.update((user) => {
+            user.password = newPass;
+        });
+    }
 }

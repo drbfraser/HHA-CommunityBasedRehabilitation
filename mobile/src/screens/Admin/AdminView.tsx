@@ -9,6 +9,7 @@ import { StackScreenName } from "../../util/StackScreenName";
 import UserProfileContents from "../../components/UserProfileContents/UserProfileContents";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { resourceLimits } from "worker_threads";
+import { useIsFocused } from "@react-navigation/core";
 
 interface ILoadError {
     statusCode?: number;
@@ -30,6 +31,7 @@ const AdminView = ({
     const [isUserChangeSnackbarVisible, setUserChangeSnackbarVisible] = useState(false);
 
     const [user, setUser] = useState<any>();
+    const isFocused = useIsFocused();
     const [error, setErrorMessage] = useState<ILoadError>();
     const database = useDatabase();
 
@@ -62,13 +64,15 @@ const AdminView = ({
     };
 
     useEffect(() => {
-        if (route.params.userInfo) {
-            setUserChangeSnackbarVisible(true);
-            setUser(route.params.userInfo.user);
-        } else {
-            loadUser(route.params.userID, setUser, setErrorMessage);
+        if (isFocused) {
+            if (route.params.userInfo) {
+                setUserChangeSnackbarVisible(true);
+                setUser(route.params.userInfo.user);
+            } else {
+                loadUser(route.params.userID, setUser, setErrorMessage);
+            }
         }
-    }, [route.params.userInfo]);
+    }, [isFocused]);
 
     return !user || error ? (
         <View style={styles.loadingContainer}>
@@ -93,7 +97,7 @@ const AdminView = ({
         </View>
     ) : (
         <>
-            <UserProfileContents user={user} isSelf={false} />
+            <UserProfileContents user={user} isSelf={false} database={database} />
             <Snackbar
                 visible={isUserChangeSnackbarVisible}
                 duration={4000}

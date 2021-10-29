@@ -19,7 +19,7 @@ type BriefUser = {
 };
 export default BriefUser;
 
-export const fetchUsersFromApi = async (
+export const fetchUsersFromDB = async (
     searchOption,
     searchValue: string,
     sortOption,

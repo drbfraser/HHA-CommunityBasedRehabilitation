@@ -3,7 +3,7 @@ import { Text, View, Switch, StyleProp, ViewStyle } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Modal, DataTable, IconButton, Portal } from "react-native-paper";
 import useStyles from "./ClientList.styles";
-import { ClientListRow, fetchClientsFromApi as fetchClientsFromApi } from "./ClientListRequest";
+import { ClientListRow, fetchClientsFromDB } from "./ClientListRequest";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { Searchbar } from "react-native-paper";
@@ -73,7 +73,7 @@ const ClientList = () => {
     };
 
     const newClientGet = async () => {
-        var exampleClient = await fetchClientsFromApi(
+        var exampleClient = await fetchClientsFromDB(
             selectedSearchOption,
             searchQuery,
             allClientsMode

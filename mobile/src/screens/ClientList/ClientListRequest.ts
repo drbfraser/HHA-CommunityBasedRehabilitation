@@ -20,7 +20,7 @@ export type ClientListRow = {
     last_visit_date: number;
 };
 
-export const fetchClientsFromApi = async (
+export const fetchClientsFromDB = async (
     searchOption,
     searchValue: string,
     allClientsMode: boolean

@@ -1,7 +1,25 @@
 import { IUser } from "@cbr/common";
-import { TNewUserValues } from "@cbr/common/src/forms/Admin/adminFields";
+import { TAdminPasswordValues, TNewUserValues } from "@cbr/common/src/forms/Admin/adminFields";
 import { FormikHelpers } from "formik";
 import { dbType } from "../../util/watermelonDatabase";
+
+export const handleUpdatePassword = async (
+    userId: string,
+    values: TAdminPasswordValues,
+    database: dbType,
+    helpers: FormikHelpers<TAdminPasswordValues>
+) => {
+    const newPassword = JSON.stringify({
+        new_password: values.password,
+    });
+
+    try {
+        const user: any = await database.get("users").find(userId);
+        await user.updatePassword(values.confirmPassword);
+    } finally {
+        helpers.setSubmitting(false);
+    }
+};
 
 export const handleNewUserSubmit = async (
     values: TNewUserValues,

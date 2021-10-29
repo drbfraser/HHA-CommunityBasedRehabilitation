@@ -15,7 +15,6 @@ import {
     countObjectKeys,
     getPassChangeErrorMessageFromSubmissionError,
     handleSubmitChangePassword,
-    handleUpdatePassword,
     IUser,
     TAdminPasswordValues,
     TPasswordValues,
@@ -24,10 +23,13 @@ import Alert from "../Alert/Alert";
 import { useStyles } from "./ChangePasswordDialog.styles";
 import FormikTextInput from "../FormikTextInput/FormikTextInput";
 import passwordTextInputProps from "../PasswordTextInput/passwordTextInputProps";
+import { handleUpdatePassword } from "../../screens/Admin/AdminFormHandler";
+import { dbType } from "../../util/watermelonDatabase";
 
 export type Props = {
     isSelf: boolean;
     user: IUser;
+    database: dbType;
     /**
      * Callback that is called when the dialog is dismissed (user cancels or password successfully
      * changed). The {@link visible} prop needs to be updated when this is called.
@@ -39,11 +41,10 @@ export type Props = {
     visible: boolean;
 };
 
-const ChangePasswordDialog = ({ isSelf, user, onDismiss, visible }: Props) => {
+const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Props) => {
     const [submissionError, setSubmissionError] = useState<string | null>(null);
     const newPassRef = useRef<NativeTextInput>(null);
     const confirmNewPassRef = useRef<NativeTextInput>(null);
-
     const styles = useStyles();
 
     useEffect(() => {
@@ -145,7 +146,7 @@ const ChangePasswordDialog = ({ isSelf, user, onDismiss, visible }: Props) => {
                     validationSchema={adminEditPasswordValidationSchema}
                     onReset={() => setSubmissionError(null)}
                     onSubmit={async (values, formikHelpers) => {
-                        return handleUpdatePassword(user.id, values, formikHelpers)
+                        return handleUpdatePassword(user.id, values, database, formikHelpers)
                             .then(() => {
                                 setSubmissionError(null);
                                 onDismiss(true);

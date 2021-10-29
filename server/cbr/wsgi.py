@@ -9,37 +9,17 @@ https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
 
 import os
 import socketio
-import eventlet
+import eventlet # concurrent networking library
 import eventlet.wsgi
 
 from django.core.wsgi import get_wsgi_application
+from cbr.views import sio
 
-eventlet.monkey_patch(socket=True, select=True)
+eventlet.monkey_patch(socket=True, select=True) # replaces blocking function with async functions
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cbr.settings")
 
 application = get_wsgi_application()
-sio = socketio.Server(async_mode=None, cors_allowed_origins="*")
-application = socketio.WSGIApp(sio, application)
+sio_application = socketio.WSGIApp(sio, application)
 
-
-@sio.on("connect")
-def connect(sid, data):
-    print("\n[SocketIO Server] User connected with socketID {}.\n".format(sid))
-    sio.emit("alert", {"sid": sid, "data": "[SocketIO Server] User Connected."})
-    pass
-
-
-@sio.on("disconnect")
-def disconnect(sid):
-    print("[SocketIO Server] User {} has disconnected.".format(sid))
-    pass
-
-
-@sio.on("newAlert")
-def newAlert(sid, data):
-    print("\n[SocketIO Server]: Received a new alert '{} from {}\n".format(data, sid))
-    sio.emit("pushAlert", {"data": "[SocketIO Server] pushAlert test message"})
-    pass
-
-
-eventlet.wsgi.server(eventlet.listen(("", 8000)), application).serve_forever()
+# # works locally but not when deployed with gunicorn
+eventlet.wsgi.server(eventlet.listen(('', 8000)), sio_application) 

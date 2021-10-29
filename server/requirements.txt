@@ -14,7 +14,9 @@ django-rest-framework-condition==0.1.1
 # Dependencies for SocketIO
 enum-compat==0.0.3
 eventlet==0.30.0
+greenlet==1.1.2
 python-engineio
 python-socketio
 pytz==2018.7
+six==1.10.0
 # End dependencies for SocketIO

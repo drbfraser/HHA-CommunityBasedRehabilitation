@@ -63,16 +63,11 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
                             setSaveError(undefined);
                             console.log(values);
                             handleNewUserSubmit(values, database, formikHelpers)
-                                .then((user) => {
-                                    console.log("submitted");
-                                    console.log(user);
-                                    /*
+                                .then((id) => {
                                     setHasSubmitted(true);
                                     navigation.replace(StackScreenName.ADMIN_VIEW, {
-                                        userID: user.id,
-                                        userInfo: { isNewUser: true, user: user },
+                                        userID: id,
                                     });
-                                    */
                                 })
                                 .catch((e) =>
                                     setSaveError(

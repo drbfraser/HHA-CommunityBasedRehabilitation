@@ -101,7 +101,7 @@ export type StackParamList = {
         clientID: number;
     };
     [StackScreenName.ADMIN_VIEW]: {
-        userID: number;
+        userID: string;
         /**
          * For use when returning from the user edit and new user screens to prevent unnecessary
          * network calls

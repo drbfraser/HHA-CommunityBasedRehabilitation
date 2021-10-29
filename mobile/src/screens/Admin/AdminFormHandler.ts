@@ -20,7 +20,7 @@ export const handleNewUserSubmit = async (
                     (user.isActive = values.is_active);
             });
         });
-        return newUser;
+        return newUser.id;
     } finally {
         helpers.setSubmitting(false);
     }

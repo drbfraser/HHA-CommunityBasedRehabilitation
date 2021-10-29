@@ -1,37 +1,18 @@
 import { StyleSheet, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext, IAuthContext } from "../../context/AuthContext/AuthContext";
-import { Endpoint } from "@cbr/common/index";
-import { ActivityIndicator, Appbar, Button, Snackbar, Text } from "react-native-paper";
-import { apiFetch, APIFetchFailError, IUser } from "@cbr/common";
+import { ActivityIndicator, Button, Snackbar, Text } from "react-native-paper";
+import { APIFetchFailError } from "@cbr/common";
 import { StackScreenProps } from "@react-navigation/stack";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import UserProfileContents from "../../components/UserProfileContents/UserProfileContents";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 interface ILoadError {
     statusCode?: number;
     message: string;
 }
-
-const loadUser = (
-    userId: number,
-    setUser: React.Dispatch<React.SetStateAction<IUser | undefined>>,
-    setError: React.Dispatch<React.SetStateAction<ILoadError | undefined>>
-) => {
-    setError(undefined);
-    apiFetch(Endpoint.USER, `${userId}`)
-        .then((resp) => resp.json())
-        .then((userJson) => setUser(userJson))
-        .catch((e) => {
-            const msg =
-                e instanceof APIFetchFailError && e.status == 404 ? "User doesn't exist" : `${e}`;
-            setError({
-                statusCode: e instanceof APIFetchFailError ? e.status : undefined,
-                message: msg,
-            });
-        });
-};
 
 /**
  * A component for an Admin's view of a user's profile.
@@ -47,8 +28,28 @@ const AdminView = ({
 
     const [isUserChangeSnackbarVisible, setUserChangeSnackbarVisible] = useState(false);
 
-    const [user, setUser] = useState<IUser>();
+    const [user, setUser] = useState<any>();
     const [error, setErrorMessage] = useState<ILoadError>();
+    const database = useDatabase();
+
+    const loadUser = async (
+        userId: string,
+        setUser: React.Dispatch<React.SetStateAction<any | undefined>>,
+        setError: React.Dispatch<React.SetStateAction<ILoadError | undefined>>
+    ) => {
+        setError(undefined);
+        try {
+            const result = await database.get("users").find(userId);
+            setUser(result);
+        } catch (e) {
+            const msg = "User doesn't exist";
+            setError({
+                statusCode: e instanceof APIFetchFailError ? e.status : undefined,
+                message: msg,
+            });
+        }
+    };
+
     useEffect(() => {
         if (route.params.userInfo) {
             setUserChangeSnackbarVisible(true);

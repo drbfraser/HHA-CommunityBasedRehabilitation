@@ -11,7 +11,6 @@ import {
     APIFetchFailError,
     countObjectKeys,
     editUserValidationSchema,
-    handleUserEditSubmit,
     IUser,
     themeColors,
     userRolesToLabelMap,
@@ -22,6 +21,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import Alert from "../../components/Alert/Alert";
 import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { handleUserEditSubmit } from "./AdminFormHandler";
 
 const AdminEdit = ({
     navigation,
@@ -30,7 +31,7 @@ const AdminEdit = ({
     const user = route.params.user;
 
     const zones = useZones();
-
+    const database = useDatabase();
     const [saveError, setSaveError] = useState<string>();
 
     const lastNameRef = useRef<NativeTextInput>(null);
@@ -67,12 +68,11 @@ const AdminEdit = ({
                         validationSchema={editUserValidationSchema}
                         onSubmit={(values, formikHelpers) => {
                             setSaveError(undefined);
-                            handleUserEditSubmit(values, formikHelpers)
+                            handleUserEditSubmit(values, database, formikHelpers)
                                 .then((user) => {
                                     setHasSubmitted(true);
                                     navigation.navigate(StackScreenName.ADMIN_VIEW, {
                                         userID: user.id,
-                                        userInfo: { isNewUser: false, user: user },
                                     });
                                 })
                                 .catch((e) =>

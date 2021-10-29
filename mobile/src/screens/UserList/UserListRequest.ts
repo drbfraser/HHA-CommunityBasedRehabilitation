@@ -10,7 +10,7 @@ import {
 import { dbType } from "../../util/watermelonDatabase";
 
 type BriefUser = {
-    id: number;
+    id: string;
     full_name: string;
     zoneID: number;
     zone: string;
@@ -33,7 +33,6 @@ export const fetchUsersFromApi = async (
         const urlParams = new URLSearchParams();
 
         const zones = await getZones();
-        //const resp = await apiFetch(Endpoint.USERS, "?" + urlParams.toString());
         const responseRows: any = await database.get("users").query();
         var resultRow = responseRows.map((responseRow: IUser) => ({
             id: responseRow.id,

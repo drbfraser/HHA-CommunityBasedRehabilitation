@@ -249,7 +249,7 @@ const UserList = () => {
                                 key={item.id}
                                 onPress={() => {
                                     navigation.navigate(StackScreenName.ADMIN_VIEW, {
-                                        userID: Number(item.id),
+                                        userID: item.id,
                                     });
                                 }}
                             >

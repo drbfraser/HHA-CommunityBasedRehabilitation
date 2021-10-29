@@ -2,12 +2,13 @@ import { StyleSheet, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext, IAuthContext } from "../../context/AuthContext/AuthContext";
 import { ActivityIndicator, Button, Snackbar, Text } from "react-native-paper";
-import { APIFetchFailError } from "@cbr/common";
+import { APIFetchFailError, IUser } from "@cbr/common";
 import { StackScreenProps } from "@react-navigation/stack";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import UserProfileContents from "../../components/UserProfileContents/UserProfileContents";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { resourceLimits } from "worker_threads";
 
 interface ILoadError {
     statusCode?: number;
@@ -39,8 +40,18 @@ const AdminView = ({
     ) => {
         setError(undefined);
         try {
-            const result = await database.get("users").find(userId);
-            setUser(result);
+            const result: any = await database.get("users").find(userId);
+            const iUser: IUser = {
+                id: result.id,
+                username: result.username,
+                first_name: result.first_name,
+                last_name: result.last_name,
+                role: result.role,
+                zone: result.zone,
+                phone_number: result.phone_number,
+                is_active: false,
+            };
+            setUser(iUser);
         } catch (e) {
             const msg = "User doesn't exist";
             setError({

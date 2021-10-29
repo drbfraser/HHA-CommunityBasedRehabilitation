@@ -21,3 +21,5 @@ export const database = new Database({
     adapter,
     modelClasses: dbModels,
 });
+
+export type dbType = typeof database;

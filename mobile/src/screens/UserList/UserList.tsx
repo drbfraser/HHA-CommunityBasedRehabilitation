@@ -22,12 +22,14 @@ import {
     TSortDirection,
 } from "../../util/listFunctions";
 import CustomMultiPicker from "react-native-multiple-select-list";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 const UserList = () => {
     const styles = useStyles();
     const authContext = useContext(AuthContext);
     const navigation = useNavigation<AppStackNavProp>();
     const zones = useZones();
+    const database = useDatabase();
     const [userList, setUserList] = useState<BriefUser[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
@@ -79,7 +81,8 @@ const UserList = () => {
             selectedSearchOption,
             searchQuery,
             sortOption,
-            sortDirection
+            sortDirection,
+            database
         );
         if (sortDirection !== "None") {
             fetchedUserList = fetchedUserList.sort(userListScreenComparator);

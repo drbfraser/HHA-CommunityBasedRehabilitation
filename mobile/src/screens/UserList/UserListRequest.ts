@@ -7,6 +7,7 @@ import {
     UserRole,
     userRoles,
 } from "@cbr/common";
+import { dbType } from "../../util/watermelonDatabase";
 
 type BriefUser = {
     id: number;
@@ -22,7 +23,8 @@ export const fetchUsersFromApi = async (
     searchOption,
     searchValue: string,
     sortOption,
-    sortDirection
+    sortDirection,
+    database: dbType
 ): Promise<BriefUser[]> => {
     try {
         const FIRST_NAME = 0;
@@ -31,9 +33,8 @@ export const fetchUsersFromApi = async (
         const urlParams = new URLSearchParams();
 
         const zones = await getZones();
-        const resp = await apiFetch(Endpoint.USERS, "?" + urlParams.toString());
-        const responseRows: IUser[] = await resp.json();
-
+        //const resp = await apiFetch(Endpoint.USERS, "?" + urlParams.toString());
+        const responseRows: any = await database.get("users").query();
         var resultRow = responseRows.map((responseRow: IUser) => ({
             id: responseRow.id,
             full_name: responseRow.first_name + " " + responseRow.last_name,

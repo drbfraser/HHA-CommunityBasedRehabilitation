@@ -2,6 +2,7 @@ import datetime
 import imghdr
 import os
 import time
+import uuid
 from typing import Optional
 
 from django.contrib.auth.password_validation import validate_password
@@ -34,8 +35,10 @@ class UserCBRCreationSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
+        validated_data["id"] = uuid.uuid4()
         user = super().create(validated_data)
-
+        print(validated_data)
+        print(validated_data["password"])
         user.set_password(validated_data["password"])
         user.save()
 

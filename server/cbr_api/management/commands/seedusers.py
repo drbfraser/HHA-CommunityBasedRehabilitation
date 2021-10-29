@@ -10,8 +10,9 @@ class Command(BaseCommand):
         def getYearTimestamp(self, year):
             return (year - 1970) * (60 * 60 * 24 * 365)
 
-        def createUser(self, username, password, first, last, phone, role):
+        def createUser(self, id, username, password, first, last, phone, role):
             user = models.UserCBR.objects.create(
+                id=id,
                 username=username,
                 password=password,
                 first_name=first,
@@ -39,6 +40,7 @@ class Command(BaseCommand):
 
         createUser(
             self,
+            "1",
             "venus",
             "hhaLogin",
             "Venus",
@@ -48,6 +50,7 @@ class Command(BaseCommand):
         )
         createUser(
             self,
+            "2",
             "eruska",
             "hhaLogin",
             "Eliza",
@@ -57,6 +60,7 @@ class Command(BaseCommand):
         )
         createUser(
             self,
+            "3",
             "rfatimah",
             "hhaLogin",
             "Robert",
@@ -66,6 +70,7 @@ class Command(BaseCommand):
         )
         createUser(
             self,
+            "4",
             "gnye",
             "hhaLogin",
             "Guo",
@@ -75,6 +80,7 @@ class Command(BaseCommand):
         )
         createUser(
             self,
+            "5",
             "jherry",
             "hhaLogin",
             "Julia",
@@ -84,6 +90,7 @@ class Command(BaseCommand):
         )
         createUser(
             self,
+            "6",
             "tjames",
             "hhaLogin",
             "Toby",

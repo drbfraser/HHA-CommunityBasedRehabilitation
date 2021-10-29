@@ -11,6 +11,11 @@ from django.utils.translation import gettext_lazy as _
 from cbr import settings
 from cbr_api.storage import OverwriteStorage
 from cbr_api.validators import FileSizeValidator
+import uuid
+
+
+def current_milli_time():
+    return int(time.time() * 1000)
 
 
 class Zone(models.Model):
@@ -43,6 +48,7 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
 
     username_validator = UnicodeUsernameValidator()
 
+    id = models.CharField(primary_key=True, max_length=100)
     username = models.CharField(
         _("username"),
         max_length=50,

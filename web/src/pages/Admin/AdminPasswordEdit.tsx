@@ -51,7 +51,7 @@ const AdminPasswordEdit = () => {
             initialValues={adminPasswordInitialValues}
             validationSchema={adminEditPasswordValidationSchema}
             onSubmit={(values, formikHelpers) => {
-                handleUpdatePassword(Number(userId), values, formikHelpers)
+                handleUpdatePassword(userId, values, formikHelpers)
                     .then(() => history.goBack())
                     .catch((e) => {
                         const errorMessage =

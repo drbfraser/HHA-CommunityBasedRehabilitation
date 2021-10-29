@@ -14,7 +14,7 @@ const addUser = async (userInfo: string) => {
         .then((res) => res as IUser);
 };
 
-const updateUser = async (userInfo: string, userId: number) => {
+const updateUser = async (userInfo: string, userId: string) => {
     const init: RequestInit = {
         method: "PUT",
         body: userInfo,
@@ -25,7 +25,7 @@ const updateUser = async (userInfo: string, userId: number) => {
         .then((res) => res as IUser);
 };
 
-const updateUserPassword = async (userInfo: string, userId: number) => {
+const updateUserPassword = async (userInfo: string, userId: string) => {
     const init: RequestInit = {
         method: "PUT",
         body: userInfo,
@@ -35,13 +35,14 @@ const updateUserPassword = async (userInfo: string, userId: number) => {
 };
 
 export const handleUpdatePassword = async (
-    userId: number,
+    userId: string,
     values: TAdminPasswordValues,
     helpers: FormikHelpers<TAdminPasswordValues>
 ) => {
     const newPassword = JSON.stringify({
         new_password: values.password,
     });
+    console.log(newPassword);
 
     try {
         await updateUserPassword(newPassword, userId);
@@ -59,6 +60,7 @@ export const handleNewUserSubmit = async (
     helpers: FormikHelpers<TNewUserValues>
 ) => {
     const newUser = JSON.stringify({
+        id: "check",
         username: values.username,
         password: values.password,
         first_name: values.first_name,
@@ -68,7 +70,7 @@ export const handleNewUserSubmit = async (
         role: values.role,
         is_active: values.is_active,
     });
-
+    console.log(newUser);
     try {
         return await addUser(newUser);
     } finally {
@@ -81,6 +83,7 @@ export const handleNewUserSubmit = async (
  */
 export const handleUserEditSubmit = async (values: IUser, helpers: FormikHelpers<IUser>) => {
     const editUser = JSON.stringify({
+        id: values.id,
         username: values.username,
         first_name: values.first_name,
         last_name: values.last_name,

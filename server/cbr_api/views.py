@@ -72,6 +72,7 @@ class UserCurrent(generics.RetrieveAPIView):
     serializer_class = serializers.UserCBRSerializer
 
     def get_object(self):
+        print("self id is " + self.request.user.id)
         return generics.get_object_or_404(self.queryset, id=self.request.user.id)
 
 

@@ -6,7 +6,7 @@ services:
     # command: gunicorn cbr.wsgi --bind 0:8000
 
     # gunicorn command to run an eventlet server
-    command: gunicorn -k eventlet -w 1 --timeout 0 cbr.wsgi --bind 0:8000
+    command: gunicorn -k eventlet --workers 1 --timeout 0 cbr.wsgi --bind 0:8000
 
     ports:
       - "8000:8000"

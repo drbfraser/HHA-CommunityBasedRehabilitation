@@ -8,10 +8,26 @@ import { useStyles } from "App.styles";
 import history from "@cbr/common/util/history";
 import { useIsLoggedIn } from "./util/hooks/loginState";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import { API_BASE_URL } from "./util/api";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
     const styles = useStyles();
+
+    useEffect(() => {
+        const socket = io(`${API_BASE_URL}`, {
+            transports: ["websocket"],
+            autoConnect: true,
+        });
+
+        socket.on("connect", () => {
+            console.log(`[SocketIO] Web user connected on ${API_BASE_URL}. SocketID: ${socket.id}`);
+        });
+
+        socket.on("disconnect", () => {
+            console.log(`[SocketIO] Web user disconnected`);
+        });
+    }, []);
 
     const PrivateRoutes = () => {
         const user = useCurrentUser();

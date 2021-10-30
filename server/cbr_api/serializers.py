@@ -10,6 +10,7 @@ from django.core.files import File
 from rest_framework import serializers
 
 from cbr_api import models
+from cbr_api.util import current_milli_time
 
 
 # create and list
@@ -55,10 +56,14 @@ class UserCBRSerializer(serializers.ModelSerializer):
             "zone",
             "phone_number",
             "is_active",
-            "password",
             "created_at",
             "updated_at",
         )
+
+    def update(self, user, validated_data):
+        validated_data["updated_at"] = current_milli_time()
+        super().update(user, validated_data)
+        return user
 
 
 class UserPasswordSerializer(serializers.ModelSerializer):

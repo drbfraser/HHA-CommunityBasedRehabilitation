@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import SideNav from "./components/SideNav/SideNav";
 import { defaultPagePath, pagesForUser } from "util/pages";
@@ -9,6 +9,7 @@ import history from "@cbr/common/util/history";
 import { useIsLoggedIn } from "./util/hooks/loginState";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { API_BASE_URL } from "./util/api";
+import io from "socket.io-client";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();

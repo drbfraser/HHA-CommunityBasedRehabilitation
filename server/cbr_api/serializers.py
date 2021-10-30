@@ -37,8 +37,6 @@ class UserCBRCreationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data["id"] = uuid.uuid4()
         user = super().create(validated_data)
-        print(validated_data)
-        print(validated_data["password"])
         user.set_password(validated_data["password"])
         user.save()
 
@@ -57,6 +55,9 @@ class UserCBRSerializer(serializers.ModelSerializer):
             "zone",
             "phone_number",
             "is_active",
+            "password",
+            "created_at",
+            "updated_at",
         )
 
 
@@ -527,3 +528,18 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         instance.full_name = instance.first_name + " " + instance.last_name
         instance.save()
         return instance
+
+
+class multiUserSerializer(serializers.Serializer):
+    created = UserCBRSerializer(many=True)
+    updated = UserCBRSerializer(many=True)
+    deleted = UserCBRSerializer(many=True)
+
+
+class tableSerializer(serializers.Serializer):
+    users = multiUserSerializer()
+
+
+class pullResponseSerializer(serializers.Serializer):
+    changes = tableSerializer()
+    timestamp = serializers.IntegerField()

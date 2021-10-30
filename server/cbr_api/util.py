@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from hashlib import blake2b
+import time
 
 from django.core.files import File
 
@@ -50,3 +51,42 @@ def hash_client_image(image: File, close_after: bool):
     finally:
         if close_after:
             image.close()
+
+
+def current_milli_time():
+    return int(time.time() * 1000)
+
+
+class syncResp:
+    def __init__(self):
+        self.changes = {}
+        self.timestamp = current_milli_time()
+
+
+class table:
+    def __init__(self):
+        self.created = []
+        self.updated = []
+        self.deleted = []
+
+
+def modelChanges(request, model):
+
+    pulledTime = request.GET.get("last_pulled_at", "")
+
+    ## for each model(table) need to change object
+    change = table()
+    queryset = model.objects.all()
+
+    ##filter against last pulled time
+    if pulledTime != "null":
+        create_set = queryset.filter(created_at__gte=pulledTime, updated_at=0)
+        updated_set = queryset.filter(updated_at__gte=pulledTime)
+        ## add to change
+        change.created = create_set
+        change.updated = updated_set
+    ##if first pull then just add everything to created in change
+    else:
+        change.created = queryset
+
+    return change

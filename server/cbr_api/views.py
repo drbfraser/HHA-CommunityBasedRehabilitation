@@ -1,4 +1,5 @@
 import os
+import time
 
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.cache import cache_control
@@ -6,7 +7,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import generics
+from rest_framework import status
 from rest_framework_condition import condition
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from cbr.settings import DEBUG
 from cbr_api import models, serializers, filters, permissions
@@ -19,6 +23,8 @@ from cbr_api.sql import (
 )
 from cbr_api.util import client_picture_last_modified_datetime, client_image_etag
 from downloadview.object import AuthenticatedObjectDownloadView
+from cbr_api.util import syncResp
+from cbr_api.util import modelChanges
 
 
 class UserList(generics.ListCreateAPIView):
@@ -271,3 +277,11 @@ class ReferralOutstanding(generics.ListAPIView):
 
     def get_queryset(self):
         return getOutstandingReferrals()
+
+
+@api_view(["GET", "POST"])
+def sync(request):
+    reply = syncResp()
+    reply.changes["users"] = modelChanges(request, models.UserCBR)
+    serialized = serializers.pullResponseSerializer(reply)
+    return Response(serialized.data)

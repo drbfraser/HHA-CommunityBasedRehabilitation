@@ -19,9 +19,10 @@ class Command(BaseCommand):
                 last_name=last,
                 zone=random.choice(zones),
                 phone_number=phone,
-                created_date=random.randint(
+                created_at=random.randint(
                     getYearTimestamp(self, 2017), getYearTimestamp(self, 2018)
-                ),
+                )
+                * 1000,
                 is_active=True,
                 role=role,
             )

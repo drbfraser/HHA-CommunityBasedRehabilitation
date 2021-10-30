@@ -11,11 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from cbr import settings
 from cbr_api.storage import OverwriteStorage
 from cbr_api.validators import FileSizeValidator
-import uuid
-
-
-def current_milli_time():
-    return int(time.time() * 1000)
+from cbr_api.util import current_milli_time
 
 
 class Zone(models.Model):
@@ -64,8 +60,8 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
         _("active"),
         default=True,
     )
-    created_date = models.BigIntegerField(_("date created"), default=time.time)
-
+    created_at = models.BigIntegerField(_("date created"), default=current_milli_time)
+    updated_at = models.BigIntegerField(_("date created"), default=0)
     objects = UserCBRManager()
 
     USERNAME_FIELD = "username"

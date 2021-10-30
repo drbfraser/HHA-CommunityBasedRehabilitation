@@ -1,4 +1,5 @@
 from django.urls import path
+from django.conf.urls import url
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -57,4 +58,5 @@ urlpatterns = [
         views.BaselineSurveyCreate.as_view(),
         name="baseline-survey-list",
     ),
+    url(r"^sync/$", views.sync, name="sync"),
 ]

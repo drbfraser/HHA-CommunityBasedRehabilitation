@@ -280,7 +280,11 @@ class ReferralOutstanding(generics.ListAPIView):
 
 @api_view(["GET", "POST"])
 def sync(request):
-    reply = syncResp()
-    reply.changes["users"] = get_model_changes(request, models.UserCBR)
-    serialized = serializers.pullResponseSerializer(reply)
-    return Response(serialized.data)
+    if request.method == "GET":
+        reply = syncResp()
+        reply.changes["users"] = get_model_changes(request, models.UserCBR)
+        serialized = serializers.pullResponseSerializer(reply)
+        return Response(serialized.data)
+    else:
+        print(request.data)
+        return Response("okay")

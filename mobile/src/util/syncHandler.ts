@@ -24,16 +24,14 @@ export async function SyncDB(database: dbType) {
         pushChanges: async ({ changes, lastPulledAt }) => {
             console.log("starting push");
             console.log(JSON.stringify(changes));
-            const urlParams = `?last_pulled_at=${lastPulledAt}`;
+            const urlParams = `/?last_pulled_at=${lastPulledAt}`;
             const init: RequestInit = {
                 method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
                 body: JSON.stringify(changes),
             };
             const response = await apiFetch(Endpoint.SYNC, urlParams, init);
+            console.log("pushed");
+            console.log(JSON.stringify(response));
             if (!response.ok) {
                 throw new Error(await response.text());
             }

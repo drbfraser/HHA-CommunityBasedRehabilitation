@@ -10,7 +10,7 @@ from django.core.files import File
 from rest_framework import serializers
 
 from cbr_api import models
-from cbr_api.util import current_milli_time
+from cbr_api.util import current_milli_time, create_push_data
 
 
 # create and list
@@ -64,6 +64,26 @@ class UserCBRSerializer(serializers.ModelSerializer):
         validated_data["updated_at"] = current_milli_time()
         super().update(user, validated_data)
         return user
+
+
+class editUserCBRSerializer(serializers.ModelSerializer):
+
+    # disable uniquie validator for id to allow POST push sync request to update records
+    id = serializers.CharField(validators=[])
+
+    class Meta:
+        model = models.UserCBR
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "role",
+            "zone",
+            "phone_number",
+            "is_active",
+            "created_at",
+            "updated_at",
+        )
 
 
 class UserPasswordSerializer(serializers.ModelSerializer):
@@ -535,12 +555,14 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         return instance
 
 
+# ensure to use a seperate serializer to disable primary key validator as it might invalidate it
 class multiUserSerializer(serializers.Serializer):
     created = UserCBRSerializer(many=True)
-    updated = UserCBRSerializer(many=True)
+    updated = editUserCBRSerializer(many=True)
     deleted = UserCBRSerializer(many=True)
 
 
+# for each table being sync, add corresponding multi serializer under here
 class tableSerializer(serializers.Serializer):
     users = multiUserSerializer()
 
@@ -548,3 +570,11 @@ class tableSerializer(serializers.Serializer):
 class pullResponseSerializer(serializers.Serializer):
     changes = tableSerializer()
     timestamp = serializers.IntegerField()
+
+
+class pushUserSerializer(serializers.Serializer):
+    users = multiUserSerializer()
+
+    def create(self, validated_data):
+        create_push_data("users", models.UserCBR, validated_data)
+        return self

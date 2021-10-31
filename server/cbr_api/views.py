@@ -286,5 +286,10 @@ def sync(request):
         serialized = serializers.pullResponseSerializer(reply)
         return Response(serialized.data)
     else:
-        print(request.data)
-        return Response("okay")
+        user_serializer = serializers.pushUserSerializer(data=request.data)
+        if user_serializer.is_valid():
+            user_serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            print(user_serializer.errors)
+        return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -90,3 +90,20 @@ def get_model_changes(request, model):
         change.created = queryset
 
     return change
+
+
+def create_push_data(table_name, model, validated_data):
+    table_data = validated_data.get(table_name)
+    created_data = table_data.pop("created")
+    for data in created_data:
+        record = model.objects.create(**data)
+        record.id = data["id"]
+        record.created_at = data["created_at"]
+        record.update_at = data["updated_at"]
+        record.save()
+
+    updated_data = table_data.pop("updated")
+    for data in updated_data:
+        print(data)
+        data["updated_at"] = current_milli_time()
+        model.objects.filter(pk=data["id"]).update(**data)

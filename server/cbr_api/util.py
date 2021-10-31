@@ -104,6 +104,12 @@ def create_push_data(table_name, model, validated_data):
 
     updated_data = table_data.pop("updated")
     for data in updated_data:
-        print(data)
         data["updated_at"] = current_milli_time()
+        if table_name == "users":
+            if data["password"]:
+                user = model.objects.get(pk=data["id"])
+                user.set_password(data["password"])
+                user.save()
+            # remove empty field for password, so it doesnt update exisiting password
+            data.pop("password")
         model.objects.filter(pk=data["id"]).update(**data)

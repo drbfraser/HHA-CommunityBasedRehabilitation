@@ -70,6 +70,7 @@ class editUserCBRSerializer(serializers.ModelSerializer):
 
     # disable uniquie validator for id to allow POST push sync request to update records
     id = serializers.CharField(validators=[])
+    password = serializers.CharField(allow_blank=True)
 
     class Meta:
         model = models.UserCBR
@@ -77,6 +78,7 @@ class editUserCBRSerializer(serializers.ModelSerializer):
             "id",
             "first_name",
             "last_name",
+            "password",
             "role",
             "zone",
             "phone_number",

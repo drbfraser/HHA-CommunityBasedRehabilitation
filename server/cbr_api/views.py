@@ -23,8 +23,7 @@ from cbr_api.sql import (
 )
 from cbr_api.util import client_picture_last_modified_datetime, client_image_etag
 from downloadview.object import AuthenticatedObjectDownloadView
-from cbr_api.util import syncResp
-from cbr_api.util import modelChanges
+from cbr_api.util import syncResp, get_model_changes
 
 
 class UserList(generics.ListCreateAPIView):
@@ -282,6 +281,6 @@ class ReferralOutstanding(generics.ListAPIView):
 @api_view(["GET", "POST"])
 def sync(request):
     reply = syncResp()
-    reply.changes["users"] = modelChanges(request, models.UserCBR)
+    reply.changes["users"] = get_model_changes(request, models.UserCBR)
     serialized = serializers.pullResponseSerializer(reply)
     return Response(serialized.data)

@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/core";
 import { useCurrentUser, useDisabilities, useZones } from "@cbr/common";
 import { StackScreenName } from "../../util/StackScreenName";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { logger, SyncDB } from "../../util/syncHandler";
 
 const Todo = () => {
     const styles = useStyles();
@@ -44,6 +45,22 @@ const Todo = () => {
         <View style={styles.container}>
             <Title>This is a placeholder component screen.</Title>
             <Text>Due to be removed, once the app reaches completion!</Text>
+            <Button
+                mode="contained"
+                onPress={() => {
+                    SyncDB(database);
+                }}
+            >
+                Sync
+            </Button>
+            <Button
+                mode="contained"
+                onPress={() => {
+                    console.log(logger.formattedLogs);
+                }}
+            >
+                Read Sync Log
+            </Button>
             <Button mode="contained" onPress={resetDatabase}>
                 Reset Local Database
             </Button>

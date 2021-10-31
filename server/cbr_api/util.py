@@ -70,7 +70,7 @@ class table:
         self.deleted = []
 
 
-def modelChanges(request, model):
+def get_model_changes(request, model):
 
     pulledTime = request.GET.get("last_pulled_at", "")
 

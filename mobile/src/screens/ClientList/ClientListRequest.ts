@@ -29,25 +29,50 @@ export const fetchClientsFromDB = async (
     database: dbType
 ): Promise<ClientListRow[]> => {
     try {
-        console.log(`allclient mode is ${allClientsMode}`);
+        const zones = await getZones();
+        let responseRows: any;
+        const clientCollection = database.get("clients");
+
         if (searchOption === SearchOption.NAME) {
             searchOption = "full_name";
         }
-        if (searchValue) {
-            console.log(`searchvalue is ${searchValue}`);
-        }
-        const zones = await getZones();
-        let responseRows: any;
+
         if (!allClientsMode) {
             const user = await getCurrentUser();
             if (user !== APILoadError) {
-                responseRows = await database
-                    .get("clients")
-                    .query(Q.where("user_id", user.id))
-                    .fetch();
+                if (searchOption !== "") {
+                    if (searchOption === "full_name") {
+                        responseRows = await clientCollection
+                            .query(
+                                Q.where("user_id", user.id),
+                                Q.where(searchOption, Q.like(`%${searchValue}%`))
+                            )
+                            .fetch();
+                    } else {
+                        responseRows = await clientCollection
+                            .query(Q.where("user_id", user.id), Q.where(searchOption, searchValue))
+                            .fetch();
+                    }
+                } else {
+                    responseRows = await clientCollection
+                        .query(Q.where("user_id", user.id))
+                        .fetch();
+                }
             }
         } else {
-            responseRows = await database.get("clients").query();
+            if (searchOption !== "") {
+                if (searchOption === "full_name") {
+                    responseRows = await clientCollection
+                        .query(Q.where(searchOption, Q.like(`%${searchValue}%`)))
+                        .fetch();
+                } else {
+                    responseRows = await clientCollection
+                        .query(Q.where(searchOption, searchValue))
+                        .fetch();
+                }
+            } else {
+                responseRows = await clientCollection.query();
+            }
         }
 
         var resultRow = responseRows.map((responseRow: IClientSummary) => ({

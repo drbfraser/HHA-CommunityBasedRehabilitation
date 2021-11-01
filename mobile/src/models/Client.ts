@@ -27,6 +27,8 @@ export default class Client extends Model {
     @date("birth_date") birth_date;
     @field("gender") gender;
     @text("phone_number") phone_number;
+    @json("disability", sanitizeDisability) disability;
+    @text("other_disability") other_disability;
     @field("zone") zone;
     @field("village") village;
     @field("caregiver_present") caregiver_present;

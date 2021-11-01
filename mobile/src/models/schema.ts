@@ -28,6 +28,8 @@ export default appSchema({
                 { name: "birth_date", type: "number" },
                 { name: "gender", type: "string" },
                 { name: "phone_number", type: "string", isOptional: true },
+                { name: "disability", type: "string" },
+                { name: "other_disability", type: "string", isOptional: true },
                 { name: "zone", type: "number" },
                 { name: "village", type: "string" },
                 { name: "caregiver_present", type: "boolean" },

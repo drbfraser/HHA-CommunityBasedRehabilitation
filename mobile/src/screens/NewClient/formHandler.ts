@@ -14,7 +14,7 @@ const addRisk = async (client: any, type, level, req, goal) => {
         risk.requirement = req;
         risk.goal = goal;
     });
-    console.log(risk);
+    //console.log(risk);
 };
 
 const handleNewMobileClientSubmit = async (
@@ -26,9 +26,10 @@ const handleNewMobileClientSubmit = async (
     const disabilities = await getDisabilities();
     try {
         let newClient;
-        console.log(`id is ${userID}`);
+        //console.log(`id is ${userID}`);
         const currentUser = await database.get("users").find(userID);
-        console.log(currentUser);
+        //console.log(currentUser);
+        console.log(JSON.stringify(values.disability));
         await database.write(async () => {
             newClient = await database.get("clients").create((client: any) => {
                 client.user.set(currentUser);
@@ -38,11 +39,12 @@ const handleNewMobileClientSubmit = async (
                 client.birth_date = values.birthDate;
                 client.gender = values.gender;
                 client.phone_number = values.phoneNumber;
-                //client.disability = values.disability;
-                //client.other_disability = values.otherDisability;
+                client.disability = values.disability;
+                client.other_disability = values.otherDisability;
                 client.zone = values.zone;
                 client.village = values.village;
                 client.caregiver_present = values.caregiverPresent;
+                client.caregiver_name = values.caregiverName;
                 client.caregiver_phone = values.caregiverPhone;
                 client.caregiver_email = values.caregiverEmail;
                 client.health_risk_level = values.healthRisk;

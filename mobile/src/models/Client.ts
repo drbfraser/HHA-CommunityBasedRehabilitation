@@ -46,4 +46,16 @@ export default class Client extends Model {
     @relation("users", "user_id") user;
 
     @children("risks") risks;
+
+    @writer async updateRisk(type, level) {
+        await this.update((client) => {
+            if (type == "HEALTH") {
+                client.health_risk_level = level;
+            } else if (type == "SOCIAL") {
+                client.social_risk_level = level;
+            } else {
+                client.educat_risk_level = level;
+            }
+        });
+    }
 }

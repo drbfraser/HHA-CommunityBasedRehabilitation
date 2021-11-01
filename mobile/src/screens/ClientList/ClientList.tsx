@@ -22,6 +22,7 @@ import {
 } from "../../util/listFunctions";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
 import CustomMultiPicker from "react-native-multiple-select-list";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
@@ -34,6 +35,7 @@ const ClientList = () => {
     const zones = useZones();
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
     const isFocused = useIsFocused();
+    const database = useDatabase();
 
     const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
 
@@ -76,7 +78,8 @@ const ClientList = () => {
         var exampleClient = await fetchClientsFromDB(
             selectedSearchOption,
             searchQuery,
-            allClientsMode
+            allClientsMode,
+            database
         );
         if (sortDirection !== "None") {
             exampleClient = exampleClient.sort(clientListScreenComparator);

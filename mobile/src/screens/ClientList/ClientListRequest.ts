@@ -8,9 +8,10 @@ import {
     SearchOption,
     riskLevels,
 } from "@cbr/common";
+import { dbType } from "../../util/watermelonDatabase";
 
 export type ClientListRow = {
-    id: number;
+    id: string;
     full_name: string;
     zoneID: number;
     zone: string;
@@ -23,10 +24,12 @@ export type ClientListRow = {
 export const fetchClientsFromDB = async (
     searchOption,
     searchValue: string,
-    allClientsMode: boolean
+    allClientsMode: boolean,
+    database: dbType
 ): Promise<ClientListRow[]> => {
     try {
         const urlParams = new URLSearchParams();
+        console.log(`urlParma is ${urlParams}`);
         if (searchOption === SearchOption.NAME) {
             searchOption = "full_name";
         }
@@ -40,8 +43,7 @@ export const fetchClientsFromDB = async (
             }
         }
         const zones = await getZones();
-        const resp = await apiFetch(Endpoint.CLIENTS, "?" + urlParams.toString());
-        const responseRows: IClientSummary[] = await resp.json();
+        const responseRows: any = await database.get("clients").query();
         var resultRow = responseRows.map((responseRow: IClientSummary) => ({
             id: responseRow.id,
             full_name: responseRow.full_name,

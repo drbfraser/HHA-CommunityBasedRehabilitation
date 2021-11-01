@@ -20,8 +20,6 @@ const getLatestRisks = (clientRisk: IRisk[], riskType: RiskType) => {
     const latestRisk = filteredRisks.reduce(function (prev, current) {
         return prev.timestamp > current.timestamp ? prev : current;
     });
-    console.log("latest risk");
-    console.log(latestRisk);
     return latestRisk;
 };
 

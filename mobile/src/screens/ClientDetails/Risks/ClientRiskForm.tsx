@@ -64,7 +64,6 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             <Formik
                 initialValues={getRiskFormInitialValues()}
                 onSubmit={(values) => {
-                    console.log(values);
                     handleRiskSubmit(values, props.riskData, props.setRisk, database);
                 }}
                 validationSchema={validationSchema}

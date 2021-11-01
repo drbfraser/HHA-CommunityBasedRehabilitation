@@ -2,18 +2,20 @@ import { getDisabilities, TClientValues } from "@cbr/common";
 import { FormikHelpers } from "formik";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
-import { database, dbType } from "../../util/watermelonDatabase";
+import { dbType } from "../../util/watermelonDatabase";
 
 // TODO: profile picture does not upload correctly to server
 
-const addRisk = async (client: any, type, level, req, goal) => {
-    await database.get("risks").create((risk: any) => {
+export const addRisk = async (client: any, database: dbType, type, level, req, goal) => {
+    const risk = await database.get("risks").create((risk: any) => {
         risk.client.set(client);
         risk.risk_type = type;
         risk.risk_level = level;
         risk.requirement = req;
         risk.goal = goal;
+        risk.timestamp = new Date().getTime();
     });
+    return risk;
 };
 
 const handleNewMobileClientSubmit = async (
@@ -50,6 +52,7 @@ const handleNewMobileClientSubmit = async (
             });
             addRisk(
                 newClient,
+                database,
                 "HEALTH",
                 values.healthRisk,
                 values.healthRequirements,
@@ -57,6 +60,7 @@ const handleNewMobileClientSubmit = async (
             );
             addRisk(
                 newClient,
+                database,
                 "SOCIAL",
                 values.socialRisk,
                 values.socialRequirements,
@@ -64,6 +68,7 @@ const handleNewMobileClientSubmit = async (
             );
             addRisk(
                 newClient,
+                database,
                 "EDUCAT",
                 values.educationRisk,
                 values.educationRequirements,
@@ -89,8 +94,6 @@ export const handleSubmit = async (
     database: dbType,
     userID: string
 ) => {
-    console.log(`submitting these values`);
-    console.log(values);
     helpers.setSubmitting(true);
 
     return handleNewMobileClientSubmit(values, helpers, database, userID).then((res) => {

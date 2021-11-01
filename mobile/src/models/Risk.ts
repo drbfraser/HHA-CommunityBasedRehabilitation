@@ -13,8 +13,7 @@ export default class Risk extends Model {
     @text("requirement") requirement;
     @text("goal") goal;
 
-    @readonly @date("created_at") createdAt;
-    @readonly @date("updated_at") updateAt;
+    @date("timestamp") timestamp;
 
     @relation("clients", "client_id") client;
 }

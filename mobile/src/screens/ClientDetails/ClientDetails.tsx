@@ -33,8 +33,6 @@ import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 import defaultProfilePicture from "../../util/defaultProfilePicture";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
-import Model from "@nozbe/watermelondb/Model";
-import Client from "../../models/Client";
 
 interface ClientProps {
     clientID: string;
@@ -55,6 +53,7 @@ const ClientDetails = (props: ClientProps) => {
 
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const [client, setClient] = useState<any>();
+    const [risks, setRisk] = useState<any>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
             {
@@ -67,12 +66,11 @@ const ClientDetails = (props: ClientProps) => {
         ]);
 
     const getClientDetails = async () => {
-        console.log("getting client details");
         try {
             const presentClient = await database.get("clients").find(props.route.params.clientID);
             const fetchedRisk = await presentClient.risks.fetch();
-            console.log(fetchedRisk);
             setClient(presentClient);
+            setRisk(fetchedRisk);
         } catch (e) {
             console.log(e);
         }
@@ -294,6 +292,11 @@ const ClientDetails = (props: ClientProps) => {
                     </Card>
                     <Text style={styles.cardSectionTitle}>Client Risks</Text>
                     <Divider />
+                    <ClientRisk clientRisks={risks || []} presentRiskType={RiskType.HEALTH} />
+                    <Divider />
+                    <ClientRisk clientRisks={risks || []} presentRiskType={RiskType.EDUCATION} />
+                    <Divider />
+                    <ClientRisk clientRisks={risks || []} presentRiskType={RiskType.SOCIAL} />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>
@@ -315,19 +318,3 @@ const ClientDetails = (props: ClientProps) => {
 };
 
 export default ClientDetails;
-
-/*<ClientRisk
-                        clientRisks={client?.risks || []}
-                        presentRiskType={RiskType.HEALTH}
-                    />
-                    <Divider />
-                    <ClientRisk
-                        clientRisks={client?.risks || []}
-                        presentRiskType={RiskType.EDUCATION}
-                    />
-                    <Divider />
-                    <ClientRisk
-                        clientRisks={client?.risks || []}
-                        presentRiskType={RiskType.SOCIAL}
-                    />
-                    */

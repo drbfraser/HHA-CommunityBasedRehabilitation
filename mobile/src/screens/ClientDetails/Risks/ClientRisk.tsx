@@ -8,7 +8,7 @@ import { ClientRiskForm } from "./ClientRiskForm";
 import { Formik } from "formik";
 
 interface riskProps {
-    clientRisks: IRisk[];
+    clientRisks: any;
     presentRiskType: RiskType;
 }
 
@@ -20,14 +20,14 @@ const getLatestRisks = (clientRisk: IRisk[], riskType: RiskType) => {
     const latestRisk = filteredRisks.reduce(function (prev, current) {
         return prev.timestamp > current.timestamp ? prev : current;
     });
+    console.log("latest risk");
+    console.log(latestRisk);
     return latestRisk;
 };
 
 export const ClientRisk = (props: riskProps) => {
     const styles = clientStyle();
-    const [risk, setRisk] = useState<IRisk>(
-        getLatestRisks(props.clientRisks, props.presentRiskType)
-    );
+    const [risk, setRisk] = useState<any>(getLatestRisks(props.clientRisks, props.presentRiskType));
 
     return (
         <View>

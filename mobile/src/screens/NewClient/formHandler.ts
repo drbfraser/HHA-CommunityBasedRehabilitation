@@ -10,6 +10,7 @@ export const handleSubmit = async (
     navigation: AppStackNavProp,
     scrollToTop: () => void
 ) => {
+    console.log(values);
     helpers.setSubmitting(true);
     return handleNewMobileClientSubmit(values, helpers).then((res) => {
         if (res) {

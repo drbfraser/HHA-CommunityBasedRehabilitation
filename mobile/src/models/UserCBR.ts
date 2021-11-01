@@ -1,9 +1,12 @@
 import { Model } from "@nozbe/watermelondb";
-import { field, date, readonly, text } from "@nozbe/watermelondb/decorators";
+import { field, date, readonly, text, children } from "@nozbe/watermelondb/decorators";
 import { writer } from "@nozbe/watermelondb/decorators/action";
 
 export default class User extends Model {
     static table = "users";
+    static associations = {
+        clients: { type: "has_many", foreignKey: "user_id" },
+    } as const;
 
     @text("username") username;
     @text("password") password;
@@ -22,4 +25,6 @@ export default class User extends Model {
             user.password = newPass;
         });
     }
+
+    @children("clients") clients;
 }

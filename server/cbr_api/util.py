@@ -110,6 +110,6 @@ def create_push_data(table_name, model, validated_data):
                 user = model.objects.get(pk=data["id"])
                 user.set_password(data["password"])
                 user.save()
-            # remove empty field for password, so it doesnt update exisiting password
+            # remove empty field for password, so it doesnt update existing password
             data.pop("password")
         model.objects.filter(pk=data["id"]).update(**data)

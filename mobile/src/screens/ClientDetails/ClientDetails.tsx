@@ -158,28 +158,10 @@ const ClientDetails = (props: ClientProps) => {
         values: TClientValues,
         formikHelpers: FormikHelpers<TClientValues>
     ) => {
-        if (client) {
-            const updatedIClient: IClient = {
-                ...client,
-                first_name: values.firstName ?? client.first_name,
-                last_name: values.lastName ?? client.last_name,
-                birth_date: values.birthDate ?? client.birth_date,
-                gender: (values.gender as Gender) ?? client.gender,
-                village: values.village ?? client.village,
-                zone: Number(values.zone) ?? client.zone,
-                phone_number: values.phoneNumber ?? client.phone_number,
-                caregiver_present: values.caregiverPresent ?? client.caregiver_present,
-                caregiver_name: values.caregiverName ?? client.caregiver_name,
-                caregiver_email: values.caregiverEmail ?? client.caregiver_email,
-                caregiver_phone: values.caregiverPhone ?? client.caregiver_phone,
-                disability: values.disability ?? client.disability,
-                other_disability: values.otherDisability ?? client.other_disability,
-                picture: values.picture ?? client.picture,
-            };
-            handleSubmit(updatedIClient, undefined, imageChange).finally(() =>
-                formikHelpers.setSubmitting(false)
-            );
-        }
+        console.log(values);
+        handleSubmit(client, values, database, imageChange).finally(() =>
+            formikHelpers.setSubmitting(false)
+        );
     };
 
     return (

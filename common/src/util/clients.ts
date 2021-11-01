@@ -15,7 +15,7 @@ export interface IClientSummary {
 }
 
 export interface IClient {
-    id: number;
+    id: string;
     first_name: string;
     last_name: string;
     birth_date: number | string;

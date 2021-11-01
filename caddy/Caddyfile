@@ -31,3 +31,12 @@ http://{$DOMAIN}:80 {
         try_files {path} index.html
     }
 }
+
+ww*://{$DOMAIN}: 80 {
+    handle /socket.io/* {
+        reverse_proxy {$API_HOSTNAME}:8000 {
+            transparent
+            websocket
+        }
+    }
+}

@@ -89,16 +89,16 @@ export const stackScreenOptions: Record<
 export type StackParamList = {
     [StackScreenName.HOME]: undefined;
     [StackScreenName.CLIENT]: {
-        clientID: number;
+        clientID: string;
     };
     [StackScreenName.VISIT]: {
-        clientID: number;
+        clientID: string;
     };
     [StackScreenName.REFERRAL]: {
-        clientID: number;
+        clientID: string;
     };
     [StackScreenName.BASE_SURVEY]: {
-        clientID: number;
+        clientID: string;
     };
     [StackScreenName.ADMIN_VIEW]: {
         userID: string;

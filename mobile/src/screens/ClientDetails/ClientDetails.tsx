@@ -32,9 +32,12 @@ import { Formik, FormikHelpers } from "formik";
 import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 import defaultProfilePicture from "../../util/defaultProfilePicture";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
+import Model from "@nozbe/watermelondb/Model";
+import Client from "../../models/Client";
 
 interface ClientProps {
-    clientID: number;
+    clientID: string;
     route: RouteProp<StackParamList, StackScreenName.CLIENT>;
     navigation: StackNavigationProp<StackParamList, StackScreenName.CLIENT>;
 }
@@ -44,13 +47,14 @@ const ClientDetails = (props: ClientProps) => {
     const [loading, setLoading] = useState(true);
     const [touchDisable, setTouchDisable] = useState<boolean>(true);
     const isFocused = useIsFocused();
+    const database = useDatabase();
 
     const [imageChange, setImageChange] = useState<boolean>(false);
     const [uri, setUri] = useState<string>("");
     const [originaluri, setOriginaluri] = useState<string>("");
 
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
-    const [client, setClient] = useState<IClient>();
+    const [client, setClient] = useState<any>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
             {
@@ -63,19 +67,15 @@ const ClientDetails = (props: ClientProps) => {
         ]);
 
     const getClientDetails = async () => {
-        const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
-        if (presentClient.picture !== null) {
-            apiFetch(Endpoint.CLIENT_PICTURE, `${presentClient.id}`)
-                .then((resp) => resp.blob())
-                .then((blob) => {
-                    let reader = new FileReader();
-                    reader.onload = () => {
-                        setOriginaluri(reader.result as string);
-                    };
-                    reader.readAsDataURL(blob);
-                });
+        console.log("getting client details");
+        try {
+            const presentClient = await database.get("clients").find(props.route.params.clientID);
+            const fetchedRisk = await presentClient.risks.fetch();
+            console.log(fetchedRisk);
+            setClient(presentClient);
+        } catch (e) {
+            console.log(e);
         }
-        setClient(presentClient);
     };
 
     const locale = NativeModules.I18nManager.localeIdentifier;
@@ -87,7 +87,7 @@ const ClientDetails = (props: ClientProps) => {
                 ...clientInitialValues,
                 firstName: client.first_name,
                 lastName: client.last_name,
-                birthDate: timestampToDate(Number(client.birth_date), locale, timezone),
+                birthDate: client.birth_date,
                 gender: client.gender,
                 village: client.village,
                 zone: client.zone ?? "",
@@ -98,9 +98,7 @@ const ClientDetails = (props: ClientProps) => {
                 caregiverPhone: client.caregiver_phone,
                 disability: client.disability,
                 otherDisability: client.other_disability,
-                picture: client.picture,
             };
-
             return clientFormProps;
         } else {
             return clientInitialValues;
@@ -119,6 +117,7 @@ const ClientDetails = (props: ClientProps) => {
     const navigation = useNavigation<AppStackNavProp>();
     const tempActivity: IActivity[] = [];
     let presentId = 0;
+    /*
     if (client) {
         client.visits.forEach((presentVisit) => {
             tempActivity.push({
@@ -154,7 +153,7 @@ const ClientDetails = (props: ClientProps) => {
             presentId += 1;
         });
     }
-
+*/
     tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));
 
     const handleFormSubmit = (
@@ -295,20 +294,6 @@ const ClientDetails = (props: ClientProps) => {
                     </Card>
                     <Text style={styles.cardSectionTitle}>Client Risks</Text>
                     <Divider />
-                    <ClientRisk
-                        clientRisks={client?.risks || []}
-                        presentRiskType={RiskType.HEALTH}
-                    />
-                    <Divider />
-                    <ClientRisk
-                        clientRisks={client?.risks || []}
-                        presentRiskType={RiskType.EDUCATION}
-                    />
-                    <Divider />
-                    <ClientRisk
-                        clientRisks={client?.risks || []}
-                        presentRiskType={RiskType.SOCIAL}
-                    />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>
@@ -330,3 +315,19 @@ const ClientDetails = (props: ClientProps) => {
 };
 
 export default ClientDetails;
+
+/*<ClientRisk
+                        clientRisks={client?.risks || []}
+                        presentRiskType={RiskType.HEALTH}
+                    />
+                    <Divider />
+                    <ClientRisk
+                        clientRisks={client?.risks || []}
+                        presentRiskType={RiskType.EDUCATION}
+                    />
+                    <Divider />
+                    <ClientRisk
+                        clientRisks={client?.risks || []}
+                        presentRiskType={RiskType.SOCIAL}
+                    />
+                    */

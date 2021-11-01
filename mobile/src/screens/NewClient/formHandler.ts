@@ -7,14 +7,13 @@ import { database, dbType } from "../../util/watermelonDatabase";
 // TODO: profile picture does not upload correctly to server
 
 const addRisk = async (client: any, type, level, req, goal) => {
-    const risk = await database.get("risks").create((risk: any) => {
+    await database.get("risks").create((risk: any) => {
         risk.client.set(client);
         risk.risk_type = type;
         risk.risk_level = level;
         risk.requirement = req;
         risk.goal = goal;
     });
-    //console.log(risk);
 };
 
 const handleNewMobileClientSubmit = async (
@@ -26,10 +25,7 @@ const handleNewMobileClientSubmit = async (
     const disabilities = await getDisabilities();
     try {
         let newClient;
-        //console.log(`id is ${userID}`);
         const currentUser = await database.get("users").find(userID);
-        //console.log(currentUser);
-        console.log(JSON.stringify(values.disability));
         await database.write(async () => {
             newClient = await database.get("clients").create((client: any) => {
                 client.user.set(currentUser);
@@ -75,7 +71,6 @@ const handleNewMobileClientSubmit = async (
             );
         });
         console.log("new client added");
-        console.log(newClient);
         return newClient.id;
     } catch (e) {
         console.log(e);
@@ -94,17 +89,17 @@ export const handleSubmit = async (
     database: dbType,
     userID: string
 ) => {
+    console.log(`submitting these values`);
     console.log(values);
     helpers.setSubmitting(true);
 
     return handleNewMobileClientSubmit(values, helpers, database, userID).then((res) => {
         if (res) {
-            /*
             scrollToTop();
             navigation.navigate(StackScreenName.CLIENT, {
-                clientID: res.id,
+                clientID: res,
             });
-            helpers.resetForm();*/
+            helpers.resetForm();
         }
     });
 };

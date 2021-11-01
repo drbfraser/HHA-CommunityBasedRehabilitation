@@ -9,6 +9,7 @@ import {
     riskLevels,
 } from "@cbr/common";
 import { dbType } from "../../util/watermelonDatabase";
+import { Q } from "@nozbe/watermelondb";
 
 export type ClientListRow = {
     id: string;
@@ -28,22 +29,27 @@ export const fetchClientsFromDB = async (
     database: dbType
 ): Promise<ClientListRow[]> => {
     try {
-        const urlParams = new URLSearchParams();
-        console.log(`urlParma is ${urlParams}`);
+        console.log(`allclient mode is ${allClientsMode}`);
         if (searchOption === SearchOption.NAME) {
             searchOption = "full_name";
         }
         if (searchValue) {
-            urlParams.append(searchOption.toLowerCase(), searchValue);
+            console.log(`searchvalue is ${searchValue}`);
         }
+        const zones = await getZones();
+        let responseRows: any;
         if (!allClientsMode) {
             const user = await getCurrentUser();
             if (user !== APILoadError) {
-                urlParams.append("created_by_user", String(user.id));
+                responseRows = await database
+                    .get("clients")
+                    .query(Q.where("user_id", user.id))
+                    .fetch();
             }
+        } else {
+            responseRows = await database.get("clients").query();
         }
-        const zones = await getZones();
-        const responseRows: any = await database.get("clients").query();
+
         var resultRow = responseRows.map((responseRow: IClientSummary) => ({
             id: responseRow.id,
             full_name: responseRow.full_name,

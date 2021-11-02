@@ -495,6 +495,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         client = super().create(validated_data)
 
         def create_risk(data, type):
+            data["id"] = uuid.uuid4()
             data["client_id"] = client
             data["timestamp"] = current_milli_time()
             data["risk_type"] = type

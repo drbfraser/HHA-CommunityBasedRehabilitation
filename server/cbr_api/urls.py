@@ -31,7 +31,7 @@ urlpatterns = [
     path("zones", views.ZoneList.as_view(), name="zone-list"),
     path("zone/<int:pk>", views.ZoneDetail.as_view(), name="zone-detail"),
     path("risks", views.RiskList.as_view(), name="risk-list"),
-    path("risk/<int:pk>", views.RiskDetail.as_view(), name="risk-detail"),
+    path("risk/<str:pk>", views.RiskDetail.as_view(), name="risk-detail"),
     path("disabilities", views.DisabilityList.as_view(), name="disability-list"),
     path(
         "disability/<int:pk>",

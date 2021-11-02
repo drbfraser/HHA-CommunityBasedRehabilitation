@@ -1,5 +1,6 @@
 import os
 import time
+import json
 
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.cache import cache_control
@@ -23,7 +24,7 @@ from cbr_api.sql import (
 )
 from cbr_api.util import client_picture_last_modified_datetime, client_image_etag
 from downloadview.object import AuthenticatedObjectDownloadView
-from cbr_api.util import syncResp, get_model_changes
+from cbr_api.util import syncResp, get_model_changes, stringify_disability
 
 
 class UserList(generics.ListCreateAPIView):
@@ -286,6 +287,7 @@ def sync(request):
         reply.changes["clients"] = get_model_changes(request, models.Client)
         reply.changes["risks"] = get_model_changes(request, models.ClientRisk)
         serialized = serializers.pullResponseSerializer(reply)
+        stringify_disability(serialized.data)
         return Response(serialized.data)
     else:
         user_serializer = serializers.pushUserSerializer(data=request.data)

@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from hashlib import blake2b
 import time
-
+import json
 from django.core.files import File
 
 from cbr_api import models
@@ -68,6 +68,22 @@ class table:
         self.created = []
         self.updated = []
         self.deleted = []
+
+
+def disability_array_to_string(data):
+    for client_data in data:
+        client_data["disability"] = json.dumps(client_data["disability"])
+
+
+def stringify_disability(serialized_data):
+    change_data = serialized_data.get("changes")
+    if change_data:
+        client_data = change_data.get("clients")
+        if client_data:
+            created_data = client_data.get("created")
+            updated_data = client_data.get("updated")
+            disability_array_to_string(created_data)
+            disability_array_to_string(updated_data)
 
 
 def get_model_changes(request, model):

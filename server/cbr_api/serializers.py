@@ -418,15 +418,7 @@ class ClientListSerializer(serializers.ModelSerializer):
         ]
 
 
-class DisabilityField(serializers.RelatedField):
-    def to_representation(self, value):
-        return value.id
-
-
 class ClientPullSerializer(serializers.ModelSerializer):
-
-    disability = serializers.StringRelatedField(many=True)
-
     class Meta:
         model = models.Client
         fields = [

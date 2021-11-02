@@ -448,9 +448,9 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "phone_number",
             "disability",
             "other_disability",
-            "created_by_user",
-            "created_date",
-            "modified_date",
+            "cuser",
+            "created_at",
+            "updated_at",
             "longitude",
             "latitude",
             "zone",
@@ -466,16 +466,13 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = [
-            "created_by_user",
-            "created_date",
-            "modified_date",
+            "user",
+            "created_at",
+            "updated_at",
             "full_name",
         ]
 
     def create(self, validated_data):
-        current_time = int(time.time())
-        datetime.datetime.now().timestamp()
-
         # must be removed before passing validated_data into Client.objects.create
         health_data = validated_data.pop("health_risk")
         social_data = validated_data.pop("social_risk")
@@ -487,8 +484,8 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         validated_data["full_name"] = (
             validated_data["first_name"] + " " + validated_data["last_name"]
         )
-        validated_data["created_by_user"] = self.context["request"].user
-        validated_data["created_date"] = current_time
+        validated_data["user"] = self.context["request"].user
+        validated_data["created_at"] = current_milli_time()
 
         client = super().create(validated_data)
 

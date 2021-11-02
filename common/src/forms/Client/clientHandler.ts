@@ -21,7 +21,7 @@ const addClient = async (clientInfo: FormData) => {
         });
 };
 
-const updateClient = async (clientInfo: FormData, clientId: number): Promise<IClient> => {
+const updateClient = async (clientInfo: FormData, clientId: string): Promise<IClient> => {
     const init: RequestInit = {
         method: "PUT",
         body: clientInfo,

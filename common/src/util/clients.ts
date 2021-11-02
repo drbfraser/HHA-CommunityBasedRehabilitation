@@ -82,7 +82,7 @@ export const clientPrioritySort = (a: IClientSummary, b: IClientSummary) => {
 export const appendPicture = async (
     formData: FormData,
     pictureUrl: string,
-    clientId: number | undefined | null
+    clientId: string | undefined | null
 ) => {
     const clientProfilePictureFetch = await fetch(pictureUrl);
     const contentType = clientProfilePictureFetch.headers.get("Content-Type");

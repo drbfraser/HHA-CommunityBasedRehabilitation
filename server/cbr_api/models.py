@@ -116,6 +116,7 @@ class Client(models.Model):
         MALE = "M", _("Male")
         FEMALE = "F", _("Female")
 
+    id = models.CharField(primary_key=True, max_length=100)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     full_name = models.CharField(max_length=101, default="")
@@ -127,11 +128,9 @@ class Client(models.Model):
     )  # if contact info available
     disability = models.ManyToManyField(Disability)
     other_disability = models.CharField(max_length=100, blank=True)
-    created_by_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.PROTECT
-    )
-    created_date = models.BigIntegerField()
-    modified_date = models.BigIntegerField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    created_at = models.BigIntegerField()
+    updated_at = models.BigIntegerField(default=0)
     longitude = models.DecimalField(max_digits=12, decimal_places=6)
     latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)

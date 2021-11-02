@@ -77,7 +77,7 @@ class Command(BaseCommand):
             return risk
 
         def createClient(
-            self, first, last, gender, village, phone, other_disability=""
+            self, id, first, last, gender, village, phone, other_disability=""
         ):
             health_risk = random.choice(risks)
             social_risk = random.choice(risks)
@@ -87,8 +87,9 @@ class Command(BaseCommand):
             )
 
             client = models.Client.objects.create(
-                created_by_user=random.choice(users),
-                created_date=creation_date,
+                id=id,
+                user=random.choice(users),
+                created_at=creation_date,
                 first_name=first,
                 last_name=last,
                 full_name=first + " " + last,
@@ -140,15 +141,15 @@ class Command(BaseCommand):
             )
             return
 
-        createClient(self, "Dan", "Nylah", "M", "#1", "555-0001")
-        createClient(self, "Blaise", "Georg", "F", "#2", "555-0002")
-        createClient(self, "Carol", "Yaumuna", "F", "#3", "555-0003")
-        createClient(self, "Aravind", "Bartolome", "M", "#4", "555-0004")
-        createClient(self, "Ana", "Sofia", "F", "#5", "555-0005")
-        createClient(self, "Edgar", "Hirah", "M", "#6", "555-0006")
-        createClient(self, "Okan", "Alvis", "M", "#7", "555-0007")
-        createClient(self, "Beatrix", "Adem", "F", "#8", "555-0008", "Epilepsy")
-        createClient(self, "Rigel", "Lachlan", "M", "#9", "555-0009", "Dementia")
+        createClient(self, "1", "Dan", "Nylah", "M", "#1", "555-0001")
+        createClient(self, "2", "Blaise", "Georg", "F", "#2", "555-0002")
+        createClient(self, "3", "Carol", "Yaumuna", "F", "#3", "555-0003")
+        createClient(self, "4", "Aravind", "Bartolome", "M", "#4", "555-0004")
+        createClient(self, "5", "Ana", "Sofia", "F", "#5", "555-0005")
+        createClient(self, "6", "Edgar", "Hirah", "M", "#6", "555-0006")
+        createClient(self, "7", "Okan", "Alvis", "M", "#7", "555-0007")
+        createClient(self, "8", "Beatrix", "Adem", "F", "#8", "555-0008", "Epilepsy")
+        createClient(self, "9", "Rigel", "Lachlan", "M", "#9", "555-0009", "Dementia")
 
         clients = models.Client.objects.all()
 

@@ -283,6 +283,8 @@ def sync(request):
     if request.method == "GET":
         reply = syncResp()
         reply.changes["users"] = get_model_changes(request, models.UserCBR)
+        reply.changes["clients"] = get_model_changes(request, models.Client)
+        reply.changes["risks"] = get_model_changes(request, models.ClientRisk)
         serialized = serializers.pullResponseSerializer(reply)
         return Response(serialized.data)
     else:

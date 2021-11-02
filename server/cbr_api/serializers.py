@@ -418,6 +418,34 @@ class ClientListSerializer(serializers.ModelSerializer):
         ]
 
 
+class ClientPullSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Client
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "full_name",
+            "birth_date",
+            "gender",
+            "phone_number",
+            "disability",
+            "other_disability",
+            "user_id",
+            "created_at",
+            "updated_at",
+            "zone",
+            "village",
+            "caregiver_name",
+            "caregiver_phone",
+            "caregiver_email",
+            "health_risk_level",
+            "social_risk_level",
+            "educat_risk_level",
+            "last_visit_date",
+        ]
+
+
 class BaselineSurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.BaselineSurvey
@@ -521,6 +549,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "id",
             "first_name",
             "last_name",
+            "full_name",
             "birth_date",
             "gender",
             "phone_number",
@@ -569,9 +598,21 @@ class multiUserSerializer(serializers.Serializer):
     deleted = UserCBRSerializer(many=True)
 
 
+class multiClientSerializer(serializers.Serializer):
+    created = ClientPullSerializer(many=True)
+    updated = ClientPullSerializer(many=True)
+    deleted = ClientPullSerializer(many=True)
+
+class multiRiskSerializer(serializers.Serializer):
+    created = ClientCreationRiskSerializer(many=True)
+    updated = ClientCreationRiskSerializer(many=True)
+    deleted = ClientCreationRiskSerializer(many=True)
+
 # for each table being sync, add corresponding multi serializer under here
 class tableSerializer(serializers.Serializer):
     users = multiUserSerializer()
+    clients = multiClientSerializer()
+    risks = multiRiskSerializer()
 
 
 class pullResponseSerializer(serializers.Serializer):

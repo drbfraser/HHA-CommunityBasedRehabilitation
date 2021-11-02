@@ -148,7 +148,7 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
         model = models.ClientRisk
         fields = [
             "id",
-            "client",
+            "client_id",
             "timestamp",
             "risk_type",
             "risk_level",
@@ -156,7 +156,7 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
             "goal",
         ]
 
-        read_only_fields = ["client", "timestamp", "risk_type"]
+        read_only_fields = ["client_id", "timestamp", "risk_type"]
 
 
 class NormalRiskSerializer(serializers.ModelSerializer):
@@ -164,7 +164,7 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         model = models.ClientRisk
         fields = [
             "id",
-            "client",
+            "client_id",
             "timestamp",
             "risk_type",
             "risk_level",
@@ -175,13 +175,15 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         read_only_fields = ["timestamp"]
 
     def create(self, validated_data):
-        validated_data["timestamp"] = int(time.time())
+        validated_data["timestamp"] = current_milli_time()
+        validated_data["id"] = uuid.uuid4()
+        print(validated_data)
         risk = models.ClientRisk.objects.create(**validated_data)
         risk.save()
 
         type = validated_data["risk_type"]
         level = validated_data["risk_level"]
-        client = validated_data["client"]
+        client = validated_data["client_id"]
 
         if type == models.RiskType.HEALTH:
             client.health_risk_level = level
@@ -412,7 +414,7 @@ class ClientListSerializer(serializers.ModelSerializer):
             "social_risk_level",
             "educat_risk_level",
             "last_visit_date",
-            "created_by_user",
+            "user_id",
         ]
 
 
@@ -448,7 +450,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "phone_number",
             "disability",
             "other_disability",
-            "cuser",
+            "user_id",
             "created_at",
             "updated_at",
             "longitude",
@@ -466,13 +468,14 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = [
-            "user",
+            "user_id",
             "created_at",
             "updated_at",
             "full_name",
         ]
 
     def create(self, validated_data):
+        print("creating client")
         # must be removed before passing validated_data into Client.objects.create
         health_data = validated_data.pop("health_risk")
         social_data = validated_data.pop("social_risk")
@@ -484,14 +487,16 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         validated_data["full_name"] = (
             validated_data["first_name"] + " " + validated_data["last_name"]
         )
-        validated_data["user"] = self.context["request"].user
+        validated_data["id"] = uuid.uuid4()
+        validated_data["user_id"] = self.context["request"].user
         validated_data["created_at"] = current_milli_time()
-
+        print("validated data")
+        print(validated_data)
         client = super().create(validated_data)
 
         def create_risk(data, type):
-            data["client"] = client
-            data["timestamp"] = current_time
+            data["client_id"] = client
+            data["timestamp"] = current_milli_time()
             data["risk_type"] = type
             risk = models.ClientRisk.objects.create(**data)
             risk.save()
@@ -520,9 +525,9 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "phone_number",
             "disability",
             "other_disability",
-            "created_by_user",
-            "created_date",
-            "modified_date",
+            "user_id",
+            "created_at",
+            "updated_at",
             "longitude",
             "latitude",
             "zone",
@@ -538,9 +543,11 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "baseline_surveys",
         ]
 
-        read_only_fields = ["created_by_user", "created_date", "modified_date"]
+        read_only_fields = ["user_id", "created_at", "updated_at"]
 
     def update(self, instance: models.Client, validated_data):
+        validated_data["updated_at"] = current_milli_time()
+        print(validated_data)
         new_client_picture: Optional[File] = validated_data.get("picture")
         if new_client_picture:
             file_root, file_ext = os.path.splitext(new_client_picture.name)

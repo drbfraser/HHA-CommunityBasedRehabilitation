@@ -22,9 +22,9 @@ urlpatterns = [
         name="user-current-password",
     ),
     path("clients", views.ClientList.as_view(), name="client-list"),
-    path("client/<int:pk>", views.ClientDetail.as_view(), name="client-detail"),
+    path("client/<str:pk>", views.ClientDetail.as_view(), name="client-detail"),
     path(
-        "client/picture/<int:pk>",
+        "client/picture/<str:pk>",
         views.ClientImage.as_view(),
         name="client-picture",
     ),

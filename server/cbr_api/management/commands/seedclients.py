@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from cbr_api import models
 import time
 import random
+import uuid
 
 
 class Command(BaseCommand):
@@ -53,9 +54,10 @@ class Command(BaseCommand):
 
             return diff_risks
 
-        def createRisk(self, client, type, level, time):
+        def createRisk(self, id, client, type, level, time):
             risk = models.ClientRisk.objects.create(
-                client=client,
+                id=id,
+                client_id=client,
                 timestamp=time,
                 risk_type=type,
                 risk_level=level,
@@ -88,7 +90,7 @@ class Command(BaseCommand):
 
             client = models.Client.objects.create(
                 id=id,
-                user=random.choice(users),
+                user_id=random.choice(users),
                 created_at=creation_date,
                 first_name=first,
                 last_name=last,
@@ -112,9 +114,9 @@ class Command(BaseCommand):
                     models.Disability.objects.get(disability_type="Other")
                 )
 
-            createRisk(self, client, "HEALTH", health_risk, creation_date)
-            createRisk(self, client, "SOCIAL", social_risk, creation_date)
-            createRisk(self, client, "EDUCAT", educat_risk, creation_date)
+            createRisk(self, uuid.uuid4(), client, "HEALTH", health_risk, creation_date)
+            createRisk(self, uuid.uuid4(), client, "SOCIAL", social_risk, creation_date)
+            createRisk(self, uuid.uuid4(), client, "EDUCAT", educat_risk, creation_date)
 
             client.save()
 
@@ -163,6 +165,7 @@ class Command(BaseCommand):
 
                 createRisk(
                     self,
+                    uuid.uuid4(),
                     client,
                     type,
                     random.choice(getDifferentRisk(self, client, type)),

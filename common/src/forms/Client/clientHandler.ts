@@ -42,6 +42,7 @@ export const handleNewWebClientSubmit = async (
         )
             ? values.otherDisability
             : "",
+        id: "tmp",
         first_name: values.firstName,
         last_name: values.lastName,
         gender: values.gender,
@@ -55,21 +56,25 @@ export const handleNewWebClientSubmit = async (
         caregiver_phone: values.caregiverPhone,
         caregiver_email: values.caregiverEmail,
         health_risk: {
+            id: "tmp",
             risk_level: values.healthRisk,
             requirement: values.healthRequirements,
             goal: values.healthGoals,
         },
         social_risk: {
+            id: "tmp",
             risk_level: values.socialRisk,
             requirement: values.socialRequirements,
             goal: values.socialGoals,
         },
         educat_risk: {
+            id: "tmp",
             risk_level: values.educationRisk,
             requirement: values.educationRequirements,
             goal: values.educationGoals,
         },
     };
+    console.log(JSON.stringify(newClient));
     const formData = objectToFormData(newClient);
 
     try {
@@ -100,6 +105,8 @@ export const handleUpdateClientSubmit = async (
     try {
         const disabilities = await getDisabilities();
         const updatedValues: Partial<IClient> = {
+            id: values.id,
+            user_id: values.user_id,
             first_name: values.first_name,
             last_name: values.last_name,
             birth_date: timestampFromFormDate(values.birth_date as string),

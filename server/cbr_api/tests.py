@@ -15,8 +15,8 @@ class ModelsTestCase(TestCase):
 
     def quickCreateClient(self, First, Last, Gender, Contact, Zone):
         return models.Client.objects.create(
-            created_by_user=self.superuser,
-            created_date=0,
+            user_id=self.superuser,
+            created_at=0,
             first_name=First,
             last_name=Last,
             phone_number=Contact,
@@ -43,7 +43,7 @@ class ModelsTestCase(TestCase):
         self.assertEqual(john.phone_number, "604-555-4242")
 
         self.assertEqual(jane.last_name, john.last_name)
-        self.assertEqual(jane.created_by_user_id, john.created_by_user_id)
+        self.assertEqual(jane.user_id, john.user_id)
         self.assertEqual(jane.zone, john.zone)
 
         amputee = models.Disability.objects.create(disability_type="Amputee")

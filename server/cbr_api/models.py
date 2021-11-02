@@ -128,7 +128,7 @@ class Client(models.Model):
     )  # if contact info available
     disability = models.ManyToManyField(Disability)
     other_disability = models.CharField(max_length=100, blank=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     created_at = models.BigIntegerField()
     updated_at = models.BigIntegerField(default=0)
     longitude = models.DecimalField(max_digits=12, decimal_places=6)
@@ -190,7 +190,10 @@ class Client(models.Model):
 
 
 class ClientRisk(models.Model):
-    client = models.ForeignKey(Client, related_name="risks", on_delete=models.CASCADE)
+    id = models.CharField(primary_key=True, max_length=100)
+    client_id = models.ForeignKey(
+        Client, related_name="risks", on_delete=models.CASCADE
+    )
     timestamp = models.BigIntegerField()
     risk_type = RiskType.getField()
     risk_level = RiskLevel.getField()

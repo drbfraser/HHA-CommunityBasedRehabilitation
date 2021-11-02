@@ -11,7 +11,7 @@ export interface IClientSummary {
     educat_risk_level: string;
     social_risk_level: string;
     last_visit_date: number;
-    created_by_user: number;
+    user_id: number;
 }
 
 export interface IClient {
@@ -23,9 +23,9 @@ export interface IClient {
     phone_number: string;
     disability: number[];
     other_disability: string;
-    created_by_user: number;
-    created_date: number;
-    modified_date: number;
+    user_id: number;
+    created_at: number;
+    updated_at: number;
     longitude: string;
     latitude: string;
     zone: number;

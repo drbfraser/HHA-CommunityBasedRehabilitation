@@ -287,7 +287,7 @@ const ClientDetails = (props: ClientProps) => {
                             <RecentActivity
                                 clientVisits={client.visits ?? []}
                                 activity={tempActivity}
-                                clientCreateDate={client.created_date}
+                                clientCreateDate={client.created_at}
                                 refreshClient={getClientDetails}
                             />
                         )}

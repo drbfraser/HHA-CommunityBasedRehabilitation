@@ -21,6 +21,9 @@ class Zone(models.Model):
 class Disability(models.Model):
     disability_type = models.CharField(max_length=50, unique=True)
 
+    def __str__(self):
+        return str(self.id)
+
 
 class UserCBRManager(BaseUserManager):
     def create_user(self, username, password, **extra_fields):

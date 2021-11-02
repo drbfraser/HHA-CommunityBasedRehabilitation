@@ -418,7 +418,15 @@ class ClientListSerializer(serializers.ModelSerializer):
         ]
 
 
+class DisabilityField(serializers.RelatedField):
+    def to_representation(self, value):
+        return value.id
+
+
 class ClientPullSerializer(serializers.ModelSerializer):
+
+    disability = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = models.Client
         fields = [
@@ -603,10 +611,12 @@ class multiClientSerializer(serializers.Serializer):
     updated = ClientPullSerializer(many=True)
     deleted = ClientPullSerializer(many=True)
 
+
 class multiRiskSerializer(serializers.Serializer):
     created = ClientCreationRiskSerializer(many=True)
     updated = ClientCreationRiskSerializer(many=True)
     deleted = ClientCreationRiskSerializer(many=True)
+
 
 # for each table being sync, add corresponding multi serializer under here
 class tableSerializer(serializers.Serializer):

@@ -23,20 +23,15 @@ http://{$DOMAIN}:80 {
         }
     }
 
+    handle /socket.io/* {
+      reverse_proxy {$API_HOSTNAME}:8000
+    }
+
     handle {
         file_server
         root * /var/www
 
         # If there is a 404, serve index.html (required for React)
         try_files {path} index.html
-    }
-}
-
-ww*://{$DOMAIN}: 80 {
-    handle /socket.io/* {
-        reverse_proxy {$API_HOSTNAME}:8000 {
-            transparent
-            websocket
-        }
     }
 }

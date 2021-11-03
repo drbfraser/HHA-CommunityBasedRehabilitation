@@ -1,17 +1,13 @@
 import socketio
 from cbr.settings import DEBUG, ALLOWED_HOSTS
 
-cors_allowed_origins = "*" if DEBUG else ALLOWED_HOSTS
+# Set CORS propertly to ALLOWED_HOSTS from settings.py when not in debug mode
+cors_allowed_origins = "*" if DEBUG else ["https://" + host for host in ALLOWED_HOSTS]
 sio = socketio.Server(
     async_mode="eventlet",
     always_connect=True,
     cors_allowed_origins=cors_allowed_origins,
 )
-
-
-@sio.on("connection-bind")
-def connection_bind(sid, data):
-    print("[SocketIO Server] Connection Bound")
 
 
 @sio.on("connect")

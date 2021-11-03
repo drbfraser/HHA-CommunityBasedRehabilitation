@@ -1,5 +1,5 @@
 import { apiFetch, Endpoint } from "@cbr/common";
-import { synchronize } from "@nozbe/watermelondb/sync";
+import { synchronize } from "@nozbe/watermelondb/src/sync";
 import { dbType } from "./watermelonDatabase";
 
 //@ts-ignore
@@ -38,5 +38,23 @@ export async function SyncDB(database: dbType) {
         },
         migrationsEnabledAtVersion: 1,
         log: logger.newLog(),
+        conflictResolver: conflictResolver,
     });
+}
+
+function conflictResolver(table_name, raw, dirtyraw, newraw) {
+    raw._changed.split(",").forEach((column) => {
+        console.log(newraw[column]);
+        console.log(dirtyraw[column]);
+        newraw[column] = dirtyraw[column];
+    });
+
+    if (newraw["_changed"] !== "") {
+        newraw["_changed"] = "";
+    }
+    if (newraw["_status"] == "updated") {
+        newraw["_status"] = "synced";
+    }
+
+    return newraw;
 }

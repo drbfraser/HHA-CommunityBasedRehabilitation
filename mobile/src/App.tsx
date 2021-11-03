@@ -34,6 +34,17 @@ const Stack = createStackNavigator();
 const styles = globalStyle();
 const Tab = createMaterialBottomTabNavigator();
 
+const appEnv = process.env.NODE_ENV;
+
+let hostname: string;
+if (appEnv === "prod") {
+    hostname = "https://cbrp.cradleplatform.com";
+} else if (appEnv === "staging") {
+    hostname = "https://cbrs.cradleplatform.com";
+} else {
+    hostname = DEV_API_URL.replace(/(api)\/$/, ""); // remove '/api/'
+}
+
 /**
  * @see IAuthContext#requireLoggedIn
  * @return A Promise that resolves if the login was successful and rejects otherwise.
@@ -100,17 +111,6 @@ const updateAuthStateIfNeeded = async (
 
 export default function App() {
     const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
-    const appEnv = process.env.NODE_ENV;
-
-    let hostname: string;
-
-    if (appEnv === "prod") {
-        hostname = "https://cbrp.cradleplatform.com";
-    } else if (appEnv === "staging") {
-        hostname = "https://cbrs.cradleplatform.com";
-    } else {
-        hostname = DEV_API_URL.replace(/(api)\/$/, ""); // remove '/api/'
-    }
 
     useEffect(() => {
         // Refresh disabilities, zones, current user information

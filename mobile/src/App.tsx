@@ -141,8 +141,8 @@ export default function App() {
             );
         });
 
-        socket.on("disconnect", (socket) => {
-            console.log(`[SocketIO] Mobile user with socketID: ${socket.id} disconnected`);
+        socket.on("disconnect", () => {
+            console.log(`[SocketIO] Mobile user disconnected.`);
         });
     }, []);
 

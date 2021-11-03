@@ -30,6 +30,8 @@ export default appSchema({
                 { name: "phone_number", type: "string", isOptional: true },
                 { name: "disability", type: "string" },
                 { name: "other_disability", type: "string", isOptional: true },
+                { name: "longitude", type: "string", isOptional: true },
+                { name: "latitude", type: "string", isOptional: true },
                 { name: "zone", type: "number" },
                 { name: "village", type: "string" },
                 { name: "caregiver_present", type: "boolean" },

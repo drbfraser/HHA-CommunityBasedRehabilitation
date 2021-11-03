@@ -24,7 +24,12 @@ from cbr_api.sql import (
 )
 from cbr_api.util import client_picture_last_modified_datetime, client_image_etag
 from downloadview.object import AuthenticatedObjectDownloadView
-from cbr_api.util import syncResp, get_model_changes, stringify_disability
+from cbr_api.util import (
+    syncResp,
+    get_model_changes,
+    stringify_disability,
+    destringify_disability,
+)
 
 
 class UserList(generics.ListCreateAPIView):
@@ -290,10 +295,17 @@ def sync(request):
         stringify_disability(serialized.data)
         return Response(serialized.data)
     else:
+        # print(request.data)
         user_serializer = serializers.pushUserSerializer(data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+            destringify_disability(request.data)
+            client_serializer = serializers.pushClientSerializer(data=request.data)
+            if client_serializer.is_valid():
+                client_serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                print(client_serializer.errors)
         else:
             print(user_serializer.errors)
         return Response(status=status.HTTP_400_BAD_REQUEST)

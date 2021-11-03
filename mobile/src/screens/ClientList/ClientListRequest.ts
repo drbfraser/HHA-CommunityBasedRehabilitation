@@ -74,7 +74,6 @@ export const fetchClientsFromDB = async (
                 responseRows = await clientCollection.query();
             }
         }
-
         var resultRow = responseRows.map((responseRow: IClientSummary) => ({
             id: responseRow.id,
             full_name: responseRow.full_name,

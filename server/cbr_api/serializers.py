@@ -418,7 +418,7 @@ class ClientListSerializer(serializers.ModelSerializer):
         ]
 
 
-class ClientPullSerializer(serializers.ModelSerializer):
+class ClientSyncSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Client
         fields = [
@@ -431,6 +431,41 @@ class ClientPullSerializer(serializers.ModelSerializer):
             "phone_number",
             "disability",
             "other_disability",
+            "longitude",
+            "latitude",
+            "user_id",
+            "created_at",
+            "updated_at",
+            "zone",
+            "village",
+            "caregiver_name",
+            "caregiver_phone",
+            "caregiver_email",
+            "health_risk_level",
+            "social_risk_level",
+            "educat_risk_level",
+            "last_visit_date",
+        ]
+
+
+class editClientSyncSerializer(serializers.ModelSerializer):
+
+    id = serializers.CharField(validators=[])
+
+    class Meta:
+        model = models.Client
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "full_name",
+            "birth_date",
+            "gender",
+            "phone_number",
+            "disability",
+            "other_disability",
+            "longitude",
+            "latitude",
             "user_id",
             "created_at",
             "updated_at",
@@ -599,9 +634,9 @@ class multiUserSerializer(serializers.Serializer):
 
 
 class multiClientSerializer(serializers.Serializer):
-    created = ClientPullSerializer(many=True)
-    updated = ClientPullSerializer(many=True)
-    deleted = ClientPullSerializer(many=True)
+    created = ClientSyncSerializer(many=True)
+    updated = editClientSyncSerializer(many=True)
+    deleted = ClientSyncSerializer(many=True)
 
 
 class multiRiskSerializer(serializers.Serializer):
@@ -626,5 +661,17 @@ class pushUserSerializer(serializers.Serializer):
     users = multiUserSerializer()
 
     def create(self, validated_data):
+        print("user validated data")
         create_push_data("users", models.UserCBR, validated_data)
+        print("user done")
+        return self
+
+
+class pushClientSerializer(serializers.Serializer):
+    clients = multiClientSerializer()
+
+    def create(self, validated_data):
+        print("client validated data")
+        ##print(validated_data)
+        create_push_data("clients", models.Client, validated_data)
         return self

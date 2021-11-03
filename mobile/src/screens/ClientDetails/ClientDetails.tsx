@@ -158,7 +158,6 @@ const ClientDetails = (props: ClientProps) => {
         values: TClientValues,
         formikHelpers: FormikHelpers<TClientValues>
     ) => {
-        console.log(values);
         handleSubmit(client, values, database, imageChange).finally(() =>
             formikHelpers.setSubmitting(false)
         );

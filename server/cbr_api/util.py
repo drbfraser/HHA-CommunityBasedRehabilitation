@@ -86,6 +86,20 @@ def stringify_disability(serialized_data):
             disability_array_to_string(updated_data)
 
 
+def disability_string_to_array(data):
+    for client_data in data:
+        values = str.strip(client_data["disability"], "[]")
+        client_data["disability"] = list(map(int, values.split(",")))
+
+
+def destringify_disability(data):
+    if data.get("clients"):
+        created_data = data["clients"]["created"]
+        updated_data = data["clients"]["updated"]
+        disability_string_to_array(created_data)
+        disability_string_to_array(updated_data)
+
+
 def get_model_changes(request, model):
 
     pulledTime = request.GET.get("last_pulled_at", "")
@@ -116,12 +130,18 @@ def create_push_data(table_name, model, validated_data):
     table_data = validated_data.get(table_name)
     created_data = table_data.pop("created")
     for data in created_data:
+        # remove disabiltiy first then later set it back
+        if model == models.Client:
+            disability_data = data.pop("disability")
         record = model.objects.create(**data)
         record.id = data["id"]
         record.created_at = data["created_at"]
         record.update_at = data["updated_at"]
+        if disability_data:
+            record.disability.set(disability_data)
         record.save()
 
+    print("updating data")
     updated_data = table_data.pop("updated")
     for data in updated_data:
         data["updated_at"] = current_milli_time()
@@ -132,4 +152,13 @@ def create_push_data(table_name, model, validated_data):
                 user.save()
             # remove empty field for password, so it doesnt update existing password
             data.pop("password")
+        elif table_name == "clients":
+            disability_data = data.pop("disability")
+
         model.objects.filter(pk=data["id"]).update(**data)
+
+        # clears current disabiltiy and updates new disability data
+        if disability_data:
+            client = model.objects.get(pk=data["id"])
+            client.disability.clear()
+            client.disability.set(disability_data)

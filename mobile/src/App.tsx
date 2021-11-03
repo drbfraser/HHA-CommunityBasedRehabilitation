@@ -23,7 +23,8 @@ import Login from "./screens/Login/Login";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
 import { StackScreenName } from "./util/StackScreenName";
-import { RouteProp } from "@react-navigation/core/lib/typescript/src/types";
+import { DEV_API_URL } from "@env";
+import { io } from "socket.io-client/dist/socket.io";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -32,6 +33,17 @@ enableScreens();
 const Stack = createStackNavigator();
 const styles = globalStyle();
 const Tab = createMaterialBottomTabNavigator();
+
+const appEnv = process.env.NODE_ENV;
+
+let hostname: string;
+if (appEnv === "prod") {
+    hostname = "https://cbrp.cradleplatform.com";
+} else if (appEnv === "staging") {
+    hostname = "https://cbrs.cradleplatform.com";
+} else {
+    hostname = DEV_API_URL.replace(/(api)\/$/, ""); // remove '/api/'
+}
 
 /**
  * @see IAuthContext#requireLoggedIn
@@ -116,6 +128,22 @@ export default function App() {
                 // an unnecessary refetch.
                 return updateAuthStateIfNeeded(authState, setAuthState, false);
             });
+
+        const socket = io(`${hostname}`, {
+            transports: ["websocket"], // explicitly use websockets
+            autoConnect: true,
+            jsonp: false, // avoid manipulation of DOM
+        });
+
+        socket.on("connect", () => {
+            console.log(
+                `[SocketIO] Mobile user connected on ${socket.io.engine.hostname}:${socket.io.engine.port}. SocketID: ${socket.id}`
+            );
+        });
+
+        socket.on("disconnect", () => {
+            console.log(`[SocketIO] Mobile user disconnected.`);
+        });
     }, []);
 
     // design inspired by https://reactnavigation.org/docs/auth-flow/

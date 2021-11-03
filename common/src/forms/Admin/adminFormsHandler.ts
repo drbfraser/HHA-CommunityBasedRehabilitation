@@ -42,7 +42,6 @@ export const handleUpdatePassword = async (
     const newPassword = JSON.stringify({
         new_password: values.password,
     });
-    console.log(newPassword);
 
     try {
         await updateUserPassword(newPassword, userId);
@@ -70,7 +69,7 @@ export const handleNewUserSubmit = async (
         role: values.role,
         is_active: values.is_active,
     });
-    console.log(newUser);
+
     try {
         return await addUser(newUser);
     } finally {

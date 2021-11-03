@@ -44,8 +44,6 @@ export async function SyncDB(database: dbType) {
 
 function conflictResolver(table_name, raw, dirtyraw, newraw) {
     raw._changed.split(",").forEach((column) => {
-        console.log(newraw[column]);
-        console.log(dirtyraw[column]);
         newraw[column] = dirtyraw[column];
     });
 

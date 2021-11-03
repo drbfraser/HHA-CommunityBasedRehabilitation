@@ -42,17 +42,17 @@ export async function SyncDB(database: dbType) {
     });
 }
 
-function conflictResolver(table_name, raw, dirtyraw, newraw) {
+function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
     raw._changed.split(",").forEach((column) => {
-        newraw[column] = dirtyraw[column];
+        newRaw[column] = dirtyRaw[column];
     });
 
-    if (newraw["_changed"] !== "") {
-        newraw["_changed"] = "";
+    if (newRaw["_changed"] !== "") {
+        newRaw["_changed"] = "";
     }
-    if (newraw["_status"] == "updated") {
-        newraw["_status"] = "synced";
+    if (newRaw["_status"] == "updated") {
+        newRaw["_status"] = "synced";
     }
 
-    return newraw;
+    return newRaw;
 }

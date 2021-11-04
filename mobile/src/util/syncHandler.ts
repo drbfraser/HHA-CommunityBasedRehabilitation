@@ -44,9 +44,12 @@ export async function SyncDB(database: dbType) {
 
 function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
     let riskChange = false;
-
     raw._changed.split(",").forEach((column) => {
-        if (column == "health_risk_level" || "educat_risk_level" || "social_risk_level") {
+        if (
+            ["health_risk_level", "educat_risk_level", "social_risk_level"].some(
+                (a) => a === column
+            )
+        ) {
             riskChange = true;
         } else {
             newRaw[column] = dirtyRaw[column];

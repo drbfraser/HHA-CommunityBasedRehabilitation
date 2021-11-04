@@ -43,15 +43,23 @@ export async function SyncDB(database: dbType) {
 }
 
 function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
+    let riskChange = false;
+
     raw._changed.split(",").forEach((column) => {
-        newRaw[column] = dirtyRaw[column];
+        if (column == "health_risk_level" || "educat_risk_level" || "social_risk_level") {
+            riskChange = true;
+        } else {
+            newRaw[column] = dirtyRaw[column];
+        }
     });
 
-    if (newRaw["_changed"] !== "") {
-        newRaw["_changed"] = "";
-    }
-    if (newRaw["_status"] == "updated") {
-        newRaw["_status"] = "synced";
+    if (!riskChange) {
+        if (newRaw["_changed"] !== "") {
+            newRaw["_changed"] = "";
+        }
+        if (newRaw["_status"] == "updated") {
+            newRaw["_status"] = "synced";
+        }
     }
 
     return newRaw;

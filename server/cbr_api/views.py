@@ -303,7 +303,13 @@ def sync(request):
             client_serializer = serializers.pushClientSerializer(data=request.data)
             if client_serializer.is_valid():
                 client_serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
+                print(request.data.get("risks"))
+                risk_serializer = serializers.pushRiskSerializer(data=request.data)
+                if risk_serializer.is_valid():
+                    risk_serializer.save()
+                    return Response(status=status.HTTP_201_CREATED)
+                else:
+                    print(risk_serializer.errors)
             else:
                 print(client_serializer.errors)
         else:

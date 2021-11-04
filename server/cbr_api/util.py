@@ -126,22 +126,77 @@ def get_model_changes(request, model):
     return change
 
 
+def create_user_data(validated_data):
+    user_data = validated_data.get("users")
+    created_data = user_data.pop("created")
+    for data in created_data:
+        record = models.UserCBR.objects.create(**data)
+        record.created_at = data["created_at"]
+        record.update_at = data["updated_at"]
+        record.save()
+
+    updated_data = user_data.pop("updated")
+    for data in updated_data:
+        data["updated_at"] = current_milli_time()
+        if data["password"]:
+            user = models.UserCBR.objects.get(pk=data["id"])
+            user.set_password(data["password"])
+            user.save()
+            # remove empty field for password, so it doesnt update existing password
+            data.pop("password")
+        models.UserCBR.objects.filter(pk=data["id"]).update(**data)
+
+
+def create_client_data(validated_data):
+    client_data = validated_data.get("clients")
+    created_data = client_data.pop("created")
+    for data in created_data:
+        disability_data = data.pop("disability")
+        record = models.Client.objects.create(**data)
+        record.created_at = data["created_at"]
+        record.update_at = data["updated_at"]
+        record.disability.set(disability_data)
+        record.save()
+
+    updated_data = client_data.pop("updated")
+    for data in updated_data:
+        data["updated_at"] = current_milli_time()
+        disability_data = data.pop("disability")
+        models.Client.objects.filter(pk=data["id"]).update(**data)
+        # clears current disabiltiy and updates new disability data
+        client = models.Client.objects.get(pk=data["id"])
+        client.disability.clear()
+        client.disability.set(disability_data)
+
+
+def create_risk_data(validated_data):
+    risk_data = validated_data.get("risks")
+    created_data = risk_data.pop("created")
+    for data in created_data:
+        record = models.ClientRisk.objects.create(**data)
+        record.save()
+
+
 def create_push_data(table_name, model, validated_data):
     table_data = validated_data.get(table_name)
     created_data = table_data.pop("created")
     for data in created_data:
         # remove disabiltiy first then later set it back
-        if model == models.Client:
+        if table_name == "clients":
             disability_data = data.pop("disability")
         record = model.objects.create(**data)
         record.id = data["id"]
-        record.created_at = data["created_at"]
-        record.update_at = data["updated_at"]
+
+        if table_name == "risks":
+            record.timestamp = data["timestamp"]
+        else:
+            record.created_at = data["created_at"]
+            record.update_at = data["updated_at"]
+
         if disability_data:
             record.disability.set(disability_data)
         record.save()
 
-    print("updating data")
     updated_data = table_data.pop("updated")
     for data in updated_data:
         data["updated_at"] = current_milli_time()

@@ -23,7 +23,7 @@ export const handleRiskSubmit = async (
 
     try {
         let risk;
-        const client = await database.get("clients").find(values.client);
+        const client = await database.get("clients").find(values.client_id);
         await database.write(async () => {
             risk = await addRisk(
                 client,

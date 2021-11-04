@@ -40,7 +40,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
         const risk = props.riskData;
         const riskFormProps: IRisk = {
             id: risk.id,
-            client: risk.client.id,
+            client_id: risk.client.id,
             timestamp: risk.timestamp,
             risk_type: risk.risk_type,
             risk_level: risk.risk_level,

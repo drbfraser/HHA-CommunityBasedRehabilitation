@@ -68,6 +68,7 @@ const ClientDetails = (props: ClientProps) => {
     const getClientDetails = async () => {
         try {
             const presentClient = await database.get("clients").find(props.route.params.clientID);
+            console.log(presentClient);
             const fetchedRisk = await presentClient.risks.fetch();
             setClient(presentClient);
             setRisk(fetchedRisk);

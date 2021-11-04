@@ -10,7 +10,12 @@ from django.core.files import File
 from rest_framework import serializers
 
 from cbr_api import models
-from cbr_api.util import current_milli_time, create_push_data
+from cbr_api.util import (
+    current_milli_time,
+    create_client_data,
+    create_user_data,
+    create_risk_data,
+)
 
 
 # create and list
@@ -175,9 +180,9 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         read_only_fields = ["timestamp"]
 
     def create(self, validated_data):
-        validated_data["timestamp"] = current_milli_time()
+        current_time = current_milli_time()
+        validated_data["timestamp"] = current_time
         validated_data["id"] = uuid.uuid4()
-        print(validated_data)
         risk = models.ClientRisk.objects.create(**validated_data)
         risk.save()
 
@@ -191,10 +196,24 @@ class NormalRiskSerializer(serializers.ModelSerializer):
             client.social_risk_level = level
         elif type == models.RiskType.EDUCAT:
             client.educat_risk_level = level
-
+        client.update_at = current_time
         client.save()
 
         return risk
+
+
+class ClientRiskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ClientRisk
+        fields = [
+            "id",
+            "client_id",
+            "timestamp",
+            "risk_type",
+            "risk_level",
+            "requirement",
+            "goal",
+        ]
 
 
 class ImprovementSerializer(serializers.ModelSerializer):
@@ -640,9 +659,9 @@ class multiClientSerializer(serializers.Serializer):
 
 
 class multiRiskSerializer(serializers.Serializer):
-    created = ClientCreationRiskSerializer(many=True)
-    updated = ClientCreationRiskSerializer(many=True)
-    deleted = ClientCreationRiskSerializer(many=True)
+    created = ClientRiskSerializer(many=True)
+    updated = ClientRiskSerializer(many=True)
+    deleted = ClientRiskSerializer(many=True)
 
 
 # for each table being sync, add corresponding multi serializer under here
@@ -662,7 +681,7 @@ class pushUserSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         print("user validated data")
-        create_push_data("users", models.UserCBR, validated_data)
+        create_user_data(validated_data)
         print("user done")
         return self
 
@@ -672,6 +691,16 @@ class pushClientSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         print("client validated data")
-        ##print(validated_data)
-        create_push_data("clients", models.Client, validated_data)
+        create_client_data(validated_data)
+        print("clients done")
+        return self
+
+
+class pushRiskSerializer(serializers.Serializer):
+    risks = multiRiskSerializer()
+
+    def create(self, validated_data):
+        print("risk validated data")
+        create_risk_data(validated_data)
+        print("risks done")
         return self

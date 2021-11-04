@@ -31,7 +31,6 @@ const concatenateReferralType = (row: IOutstandingReferral) => {
 
 export const fetchAllClientsFromDB = async (database: dbType): Promise<ClientListRow[]> => {
     try {
-        console.log("fetching from db");
         const zones = await getZones();
         const tempClients: any = await database.get("clients").query();
         const resultRows = tempClients

@@ -77,7 +77,6 @@ const handleNewMobileClientSubmit = async (
                 values.educationGoals
             );
         });
-        console.log("new client added");
         return newClient.id;
     } catch (e) {
         console.log(e);

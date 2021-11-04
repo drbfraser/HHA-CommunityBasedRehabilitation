@@ -9,7 +9,7 @@ import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { timestampToDate } from "@cbr/common";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ClientListRow } from "../ClientList/ClientListRequest";
 import {
     arrowDirectionController,
@@ -29,6 +29,7 @@ const Dashboard = () => {
 
     const [referralSortOption, setReferralSortOption] = useState("");
     const [referralSortDirection, setReferralIsSortDirection] = useState<TSortDirection>("None");
+    const isFocused = useIsFocused();
     const database = useDatabase();
 
     const dashBoardClientComparator = (a: ClientListRow, b: ClientListRow): number => {
@@ -84,10 +85,18 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        getNewClient();
-        getRefereals();
+        if (isFocused) {
+            getNewClient();
+            getRefereals();
+        }
         //TODO alert part.
-    }, [clientSortOption, referralSortOption, clientSortDirection, referralSortDirection]);
+    }, [
+        clientSortOption,
+        referralSortOption,
+        clientSortDirection,
+        referralSortDirection,
+        isFocused,
+    ]);
 
     const locale = NativeModules.I18nManager.localeIdentifier;
     const timezone = Localization.timezone;

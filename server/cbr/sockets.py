@@ -17,15 +17,20 @@ sio.maxConnections = MAX_SOCKET_CONNECTION_LIMIT
 # Set a prooperty in the socketIO server to keep track of how many clients are currently connected
 sio.numCurrentConnections = 0
 
+
 @sio.on("connect")
 def connect(sid, environ):
-  sio.numCurrentConnections = sio.numCurrentConnections + 1
-  sio.emit("alert", {"sid": sid, "data": "[SocketIO Server] User Connected."})
-  print("[SocketIO Server] User connected with socketID {}.".format(sid))
+    sio.numCurrentConnections = sio.numCurrentConnections + 1
+    sio.emit("alert", {"sid": sid, "data": "[SocketIO Server] User Connected."})
+    print("[SocketIO Server] User connected with socketID {}.".format(sid))
 
-  if sio.numCurrentConnections > sio.maxConnections:
-    print("[SocketIO Server] Connection limit reached, disconnecting user with socketID {}.\n".format(sid))
-    sio.disconnect(sid)
+    if sio.numCurrentConnections > sio.maxConnections:
+        print(
+            "[SocketIO Server] Connection limit reached, disconnecting user with socketID {}.\n".format(
+                sid
+            )
+        )
+        sio.disconnect(sid)
 
 
 @sio.on("disconnect")

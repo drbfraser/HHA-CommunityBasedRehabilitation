@@ -61,5 +61,5 @@ export const referralHandleSubmit = async (values: ReferralFormValues, source: s
         }
     }
 
-    return await addReferral(referralObj);
+    return source === "web" ? await addReferral(referralObj) : newReferral;
 };

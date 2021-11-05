@@ -6,6 +6,7 @@ export default class User extends Model {
     static table = "users";
     static associations = {
         clients: { type: "has_many", foreignKey: "user_id" },
+        referrals: { type: "has_many", foreignKey: "user" },
     } as const;
 
     @text("username") username;

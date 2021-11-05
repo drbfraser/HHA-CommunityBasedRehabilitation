@@ -31,7 +31,8 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (referral.picture !== null) {
+        /* TODO: set referral pictures for mobile and remove undefined */
+        if (referral.picture !== null && referral.picture !== undefined) {
             apiFetch(Endpoint.REFERRAL_PICTURE, `${referral.id}`)
                 .then((resp) => resp.blob())
                 .then((blob) => {

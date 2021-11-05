@@ -10,7 +10,7 @@ from django.core.files import File
 from rest_framework import serializers
 
 from cbr_api import models
-from cbr_api.util import current_milli_time, create_push_data
+from cbr_api.util import current_milli_time, create_push_data, create_push_referral
 
 
 # create and list
@@ -232,6 +232,7 @@ class UpdateReferralSerializer(serializers.ModelSerializer):
             "date_resolved",
             "resolved",
             "outcome",
+            "updated_at"
         ]
 
         read_only_fields = ["date_resolved"]
@@ -239,12 +240,13 @@ class UpdateReferralSerializer(serializers.ModelSerializer):
     def update(self, referral, validated_data):
         super().update(referral, validated_data)
         referral.resolved = validated_data["resolved"]
+        current_time = int(time.time())
         if validated_data["resolved"] == True:
-            current_time = int(time.time())
             referral.date_resolved = current_time
         else:
             referral.date_resolved = 0
         referral.outcome = validated_data["outcome"]
+        referral.updated_at = current_time
         referral.save()
         return referral
 
@@ -273,6 +275,8 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
             "orthotic_injury_location",
             "services_other",
             "picture",
+            "created_at",
+            "updated_at"
         ]
 
         read_only_fields = [
@@ -281,15 +285,46 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
             "date_referred",
             "date_resolved",
             "resolved",
+            "created_at",
+            "updated_at"
         ]
 
     def create(self, validated_data):
         current_time = int(time.time())
         validated_data["date_referred"] = current_time
+        validated_date["created_at"] = current_time
         validated_data["user"] = self.context["request"].user
         referrals = models.Referral.objects.create(**validated_data)
         referrals.save()
         return referrals
+
+
+class ReferralPullSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Referral
+        fields = [
+            "id",
+            "client",
+            "date_referred",
+            "date_resolved",
+            "resolved",
+            "outcome",
+            "wheelchair",
+            "wheelchair_experience",
+            "hip_width",
+            "wheelchair_owned",
+            "wheelchair_repairable",
+            "physiotherapy",
+            "condition",
+            "prosthetic",
+            "prosthetic_injury_location",
+            "orthotic",
+            "orthotic_injury_location",
+            "services_other",
+            "picture",
+            "created_at",
+            "updated_at",
+        ]
 
 
 class OutstandingReferralSerializer(serializers.Serializer):
@@ -610,11 +645,17 @@ class multiRiskSerializer(serializers.Serializer):
     deleted = ClientCreationRiskSerializer(many=True)
 
 
+class multiReferralSerializer(serializers.Serializer):
+    created = ReferralPullSerializer(many=True)
+    updated = UpdateReferralSerializer(many=True)
+    deleted = ReferralPullSerializer(many=True)
+
 # for each table being sync, add corresponding multi serializer under here
 class tableSerializer(serializers.Serializer):
     users = multiUserSerializer()
     clients = multiClientSerializer()
     risks = multiRiskSerializer()
+    referrals = multiReferralSerializer()
 
 
 class pullResponseSerializer(serializers.Serializer):
@@ -627,4 +668,11 @@ class pushUserSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         create_push_data("users", models.UserCBR, validated_data)
+        return self
+
+class pushReferralSerializer(serializers.Serializer):
+    referrals = multiReferralSerializer()
+
+    def create(self, validated_data):
+        create_push_referral("referrals", models.Referral, validated_data, self.context["user"])
         return self

@@ -286,14 +286,25 @@ def sync(request):
         reply.changes["users"] = get_model_changes(request, models.UserCBR)
         reply.changes["clients"] = get_model_changes(request, models.Client)
         reply.changes["risks"] = get_model_changes(request, models.ClientRisk)
+        reply.changes["referrals"] = get_model_changes(request, models.Referral)
         serialized = serializers.pullResponseSerializer(reply)
         stringify_disability(serialized.data)
         return Response(serialized.data)
     else:
+        push_failed = False
         user_serializer = serializers.pushUserSerializer(data=request.data)
+        referral_serializer = serializers.pushReferralSerializer(data=request.data, context={"user": request.user})
+        
         if user_serializer.is_valid():
             user_serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
         else:
+            push_failed = True
             print(user_serializer.errors)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if referral_serializer.is_valid():
+                referral_serializer.save()  
+        else:
+            push_failed = True
+            print(referral_serializer.errors)
+        
+        return Response(status=status.HTTP_201_CREATED) if not push_failed else Response(status=status.HTTP_201_CREATED)

@@ -1,5 +1,6 @@
 import { Model } from "@nozbe/watermelondb";
 import { field, date, text, relation } from "@nozbe/watermelondb/decorators";
+import { writer } from "@nozbe/watermelondb/decorators/action";
 
 export default class Referral extends Model {
     static table = "referrals";
@@ -11,7 +12,7 @@ export default class Referral extends Model {
     @date("date_referred") date_referred;
     @date("date_resolved") date_resolved;
     @field("resolved") resolved;
-    @field("outcome") outcome;
+    @text("outcome") outcome;
     // @text("picture") picture;
     @field("wheelchair") wheelchair;
     @text("wheelchair_experience") wheelchair_experience;
@@ -30,4 +31,12 @@ export default class Referral extends Model {
 
     @relation("clients", "client") client;
     @relation("users", "user") user;
+
+    @writer async updateReferral(outcome) {
+        await this.update((referral) => {
+            referral.resolved = true;
+            referral.outcome = outcome;
+            referral.date_resolved = new Date().getTime() / 1000;
+        })
+    }
 }

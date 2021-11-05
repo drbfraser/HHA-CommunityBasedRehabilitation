@@ -11,6 +11,7 @@ import useStyles from "./Timeline.style";
 import BaselineEntry from "./Entries/BaselineEntry";
 import ReferralEntry from "./Entries/ReferralEntry";
 import VisitEntry from "./Entries/VisitEntry";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 import { useIsFocused } from "@react-navigation/native";
 interface ISummaryProps {
@@ -149,6 +150,7 @@ const Timeline = (props: ISummaryProps) => {
                                             >
                                                 <ReferralEntry
                                                     referral={props.activity.referral as IReferral}
+                                                    database={useDatabase()}
                                                     close={hideDetails}
                                                     refreshClient={props.refreshClient}
                                                 />

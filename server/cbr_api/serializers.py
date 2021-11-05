@@ -240,13 +240,13 @@ class UpdateReferralSerializer(serializers.ModelSerializer):
     def update(self, referral, validated_data):
         super().update(referral, validated_data)
         referral.resolved = validated_data["resolved"]
-        current_time = int(time.time())
         if validated_data["resolved"] == True:
+            current_time = int(time.time())
             referral.date_resolved = current_time
         else:
             referral.date_resolved = 0
         referral.outcome = validated_data["outcome"]
-        referral.updated_at = current_time
+        referral.updated_at = current_milli_time()
         referral.save()
         return referral
 
@@ -280,6 +280,7 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = [
+            "id",
             "user",
             "outcome",
             "date_referred",
@@ -291,8 +292,9 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         current_time = int(time.time())
+        validated_data["id"] = uuid.uuid4()
         validated_data["date_referred"] = current_time
-        validated_date["created_at"] = current_time
+        validated_data["created_at"] = current_milli_time()
         validated_data["user"] = self.context["request"].user
         referrals = models.Referral.objects.create(**validated_data)
         referrals.save()
@@ -324,6 +326,20 @@ class ReferralPullSerializer(serializers.ModelSerializer):
             "picture",
             "created_at",
             "updated_at",
+        ]
+
+
+class ReferralUpdateSerializer(serializers.ModelSerializer):
+    # disable unique validator for id to allow POST push sync request to update records
+    id = serializers.CharField(validators=[])
+    class Meta:
+        model = models.Referral
+        fields = [
+            "id",
+            "date_resolved",
+            "resolved",
+            "outcome",
+            "updated_at"
         ]
 
 
@@ -647,7 +663,7 @@ class multiRiskSerializer(serializers.Serializer):
 
 class multiReferralSerializer(serializers.Serializer):
     created = ReferralPullSerializer(many=True)
-    updated = UpdateReferralSerializer(many=True)
+    updated = ReferralUpdateSerializer(many=True)
     deleted = ReferralPullSerializer(many=True)
 
 # for each table being sync, add corresponding multi serializer under here

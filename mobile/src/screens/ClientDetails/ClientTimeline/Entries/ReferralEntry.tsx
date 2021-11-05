@@ -17,14 +17,16 @@ import { ScrollView, View } from "react-native";
 import * as Yup from "yup";
 import { Formik, FormikProps } from "formik";
 import FormikTextInput from "../../../../components/FormikTextInput/FormikTextInput";
+import { dbType } from "../../../../util/watermelonDatabase";
 
 interface IEntryProps {
     referral: IReferral;
+    database: dbType,
     close: () => void;
     refreshClient: () => void;
 }
 
-const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
+const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps) => {
     const styles = useStyles();
     const [uri, setUri] = useState<string>("");
     const [hasImage, setHasImage] = useState<boolean>(false);
@@ -84,14 +86,9 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
                 .required(),
         });
 
-        const handleSubmit = (values: typeof initialValues) => {
-            apiFetch(Endpoint.REFERRAL, `${referral.id}`, {
-                method: "PUT",
-                body: JSON.stringify({
-                    resolved: true,
-                    [OutcomeField.outcome]: values[OutcomeField.outcome],
-                }),
-            })
+        const handleSubmit = async (values: typeof initialValues) => {
+            const referralToUpdate = await database.get("referrals").find((referral.id).toString());
+            await referralToUpdate.updateReferral(values[OutcomeField.outcome])
                 .then(() => handleUpdate())
                 .catch(() => {
                     alert(

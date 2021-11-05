@@ -61,7 +61,7 @@ export default appSchema({
                 { name: "date_referred", type: "number" },
                 { name: "date_resolved", type: "number" },
                 { name: "resolved", type: "boolean" },
-                { name: "outcome", type: "number" },
+                { name: "outcome", type: "string" },
                 // { name: "picture", type: "number" },
                 { name: "wheelchair", type: "boolean" },
                 { name: "wheelchair_experience", type: "string" },

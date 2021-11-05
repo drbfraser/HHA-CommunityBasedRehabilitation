@@ -19,7 +19,7 @@ export const handleSubmit = async (
             Object.assign(referral, referralInfo);
             referral.client.set(client);
             referral.date_referred = new Date().getTime() / 1000;
-            referral.created_at = new Date().getTime() / 1000;
+            referral.created_at = new Date().getTime();
         });
     });
 };

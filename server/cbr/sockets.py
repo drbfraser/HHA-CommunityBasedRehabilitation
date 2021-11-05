@@ -1,8 +1,10 @@
 import socketio
 from cbr.settings import DEBUG, ALLOWED_HOSTS
 
+# The maximum allowable number of clients that can connect to the socketIO concurrently.
+# If this limit is reached, the next client that tries to connect will be disconnected.
 MAX_SOCKET_CONNECTION_LIMIT = 50
-CONNECTION_COUNT = 0
+CONNECTION_COUNT = 0 # A counter for the number of clients connected to the socketIO server
 
 cors_allowed_origins = "*" if DEBUG else ALLOWED_HOSTS
 sio = socketio.Server(
@@ -10,8 +12,9 @@ sio = socketio.Server(
     always_connect=True,
     cors_allowed_origins=cors_allowed_origins,
 )
-sio.maxConnections = MAX_SOCKET_CONNECTION_LIMIT # Max number of connections
 
+# Set a property in the socket server to hold a maximum number of connections
+sio.maxConnections = MAX_SOCKET_CONNECTION_LIMIT
 
 @sio.on("connect")
 def connect(sid, environ):

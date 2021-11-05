@@ -38,7 +38,6 @@ const Dashboard = () => {
     const [referralError, setReferralError] = useState<string>();
 
     useEffect(() => {
-        console.log("fetching client and referrals");
         const fetchClients = async () => {
             setClientError(undefined);
             try {

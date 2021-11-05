@@ -74,7 +74,7 @@ const ClientTimeline = ({ client, refreshClient }: IProps) => {
                             }}
                         />
                     )}
-                    <ClientCreatedEntry createdDate={dateFormatter(client.created_at / 1000)} />
+                    <ClientCreatedEntry createdDate={dateFormatter(client.created_at)} />
                 </>
             ) : (
                 [1, 2, 3, 4].map((i) => <SkeletonEntry key={i} />)

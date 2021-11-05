@@ -31,7 +31,9 @@ class Command(BaseCommand):
         disabilities.exclude(disability_type="Other")
 
         def getYearTimestamp(self, year, days):
-            return ((year - 1970) * (60 * 60 * 24 * 365)) + (days * 60 * 60 * 24)
+            return (
+                ((year - 1970) * (60 * 60 * 24 * 365)) + (days * 60 * 60 * 24)
+            ) * 1000
 
         def getDifferentRisk(self, client, type):
             diff_risks = ["LO", "ME", "HI", "CR"]

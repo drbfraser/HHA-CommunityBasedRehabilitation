@@ -15,6 +15,7 @@ import {
     ClientField,
     clientFieldLabels,
     mobileClientDetailsValidationSchema,
+    timestampFromFormDate,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View, NativeModules } from "react-native";
@@ -286,7 +287,7 @@ const ClientDetails = (props: ClientProps) => {
                             <RecentActivity
                                 clientVisits={client.visits ?? []}
                                 activity={tempActivity}
-                                clientCreateDate={client.created_at}
+                                clientCreateDate={client.createdAt}
                                 refreshClient={getClientDetails}
                             />
                         )}

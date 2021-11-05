@@ -1,7 +1,7 @@
 import { convertSecondsTo, convertMillisTo, convertMinutesTo, Time } from "./time";
 
 export const timestampToDateObj = (timestamp: number) => {
-    return new Date(convertSecondsTo(timestamp, Time.MILLIS));
+    return new Date(timestamp);
 };
 
 // in format "2/27/2021" (depending on user's locale)
@@ -88,7 +88,11 @@ export const timestampFromFormDate = (formDate: string, convertTimezone: boolean
           ).getTime()
         : date.getTime();
 
-    return convertMillisTo(timeInMillis, Time.SECONDS);
+    return timeInMillis;
+};
+
+export const formatDate = (date: Date, locale: string, timezone: string) => {
+    return date.toLocaleDateString(convertLocale(locale), { timeZone: timezone });
 };
 
 function convertLocale(locale: string) {

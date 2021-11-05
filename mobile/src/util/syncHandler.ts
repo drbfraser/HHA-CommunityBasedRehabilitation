@@ -73,7 +73,6 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
         }
     });
 
-    console.log(`riskchange is ${riskChange}`);
     if (!riskChange) {
         if (newRaw["_changed"] !== "") {
             newRaw["_changed"] = "";

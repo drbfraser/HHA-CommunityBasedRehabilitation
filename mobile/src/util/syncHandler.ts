@@ -64,13 +64,16 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 )
             ) {
                 let riskType = column.split("_")[0];
-                riskChange = riskResolver(raw, dirtyRaw, newRaw, column, `${riskType}_timestamp`);
+                if (riskResolver(raw, dirtyRaw, newRaw, column, `${riskType}_timestamp`)) {
+                    riskChange = true;
+                }
             } else {
                 newRaw[column] = dirtyRaw[column];
             }
         }
     });
 
+    console.log(`riskchange is ${riskChange}`);
     if (!riskChange) {
         if (newRaw["_changed"] !== "") {
             newRaw["_changed"] = "";

@@ -6,14 +6,14 @@ import { dbType } from "../../util/watermelonDatabase";
 
 // TODO: profile picture does not upload correctly to server
 
-export const addRisk = async (client: any, database: dbType, type, level, req, goal) => {
+export const addRisk = async (client: any, database: dbType, type, level, req, goal, time) => {
     const risk = await database.get("risks").create((risk: any) => {
         risk.client.set(client);
         risk.risk_type = type;
         risk.risk_level = level;
         risk.requirement = req;
         risk.goal = goal;
-        risk.timestamp = new Date().getTime();
+        risk.timestamp = time;
     });
     return risk;
 };
@@ -58,7 +58,8 @@ const handleNewMobileClientSubmit = async (
                 "HEALTH",
                 values.healthRisk,
                 values.healthRequirements,
-                values.healthGoals
+                values.healthGoals,
+                newClient.createdAt
             );
             addRisk(
                 newClient,
@@ -66,7 +67,8 @@ const handleNewMobileClientSubmit = async (
                 "SOCIAL",
                 values.socialRisk,
                 values.socialRequirements,
-                values.socialGoals
+                values.socialGoals,
+                newClient.createdAt
             );
             addRisk(
                 newClient,
@@ -74,9 +76,11 @@ const handleNewMobileClientSubmit = async (
                 "EDUCAT",
                 values.educationRisk,
                 values.educationRequirements,
-                values.educationGoals
+                values.educationGoals,
+                newClient.createdAt
             );
         });
+        await newClient.newRiskTime();
         return newClient.id;
     } catch (e) {
         console.log(e);

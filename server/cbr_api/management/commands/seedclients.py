@@ -106,6 +106,9 @@ class Command(BaseCommand):
                 health_risk_level=health_risk,
                 social_risk_level=social_risk,
                 educat_risk_level=educat_risk,
+                health_timestamp=creation_date,
+                social_timestamp=creation_date,
+                educat_timestamp=creation_date,
             )
             client.disability.add(random.choice(disabilities))
 

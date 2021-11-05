@@ -166,8 +166,11 @@ class Client(models.Model):
 
     # summary data to make queries more reasonable
     health_risk_level = RiskLevel.getField()
+    health_timestamp = models.BigIntegerField(default=0)
     social_risk_level = RiskLevel.getField()
+    social_timestamp = models.BigIntegerField(default=0)
     educat_risk_level = RiskLevel.getField()
+    educat_timestamp = models.BigIntegerField(default=0)
     last_visit_date = models.BigIntegerField(default=0)
 
     def save(self, *args, **kwargs):

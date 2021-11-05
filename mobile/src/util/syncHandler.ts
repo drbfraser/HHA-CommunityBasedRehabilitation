@@ -42,17 +42,32 @@ export async function SyncDB(database: dbType) {
     });
 }
 
+function riskResolver(raw, dirtyRaw, newRaw, column, timestamp) {
+    if (raw[timestamp] > dirtyRaw[timestamp]) {
+        return true;
+    } else {
+        newRaw[column] = dirtyRaw[column];
+        newRaw[timestamp] = dirtyRaw[timestamp];
+        return false;
+    }
+}
+
 function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
     let riskChange = false;
     raw._changed.split(",").forEach((column) => {
         if (
-            ["health_risk_level", "educat_risk_level", "social_risk_level"].some(
-                (a) => a === column
-            )
+            ["health_timestamp", "educat_timestamp", "social_timestamp"].some((a) => a !== column)
         ) {
-            riskChange = true;
-        } else {
-            newRaw[column] = dirtyRaw[column];
+            if (
+                ["health_risk_level", "educat_risk_level", "social_risk_level"].some(
+                    (a) => a === column
+                )
+            ) {
+                let riskType = column.split("_")[0];
+                riskChange = riskResolver(raw, dirtyRaw, newRaw, column, `${riskType}_timestamp`);
+            } else {
+                newRaw[column] = dirtyRaw[column];
+            }
         }
     });
 

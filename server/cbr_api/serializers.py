@@ -192,11 +192,14 @@ class NormalRiskSerializer(serializers.ModelSerializer):
 
         if type == models.RiskType.HEALTH:
             client.health_risk_level = level
+            client.health_timestamp = current_time
         elif type == models.RiskType.SOCIAL:
             client.social_risk_level = level
+            client.social_timestamp = current_time
         elif type == models.RiskType.EDUCAT:
             client.educat_risk_level = level
-        client.update_at = current_time
+            client.educat_timestamp = current_time
+        client.updated_at = current_time
         client.save()
 
         return risk
@@ -461,8 +464,11 @@ class ClientSyncSerializer(serializers.ModelSerializer):
             "caregiver_phone",
             "caregiver_email",
             "health_risk_level",
+            "health_timestamp",
             "social_risk_level",
+            "social_timestamp",
             "educat_risk_level",
+            "educat_timestamp",
             "last_visit_date",
         ]
 
@@ -494,8 +500,11 @@ class editClientSyncSerializer(serializers.ModelSerializer):
             "caregiver_phone",
             "caregiver_email",
             "health_risk_level",
+            "health_timestamp",
             "social_risk_level",
+            "social_timestamp",
             "educat_risk_level",
+            "educat_timestamp",
             "last_visit_date",
         ]
 
@@ -558,6 +567,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         print("creating client")
+        current_time = current_milli_time()
         # must be removed before passing validated_data into Client.objects.create
         health_data = validated_data.pop("health_risk")
         social_data = validated_data.pop("social_risk")
@@ -566,27 +576,32 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         validated_data["health_risk_level"] = health_data["risk_level"]
         validated_data["social_risk_level"] = social_data["risk_level"]
         validated_data["educat_risk_level"] = educat_data["risk_level"]
+
+        validated_data["health_timestamp"] = current_time
+        validated_data["social_timestamp"] = current_time
+        validated_data["educat_timestamp"] = current_time
+
         validated_data["full_name"] = (
             validated_data["first_name"] + " " + validated_data["last_name"]
         )
         validated_data["id"] = uuid.uuid4()
         validated_data["user_id"] = self.context["request"].user
-        validated_data["created_at"] = current_milli_time()
+        validated_data["created_at"] = current_time
         print("validated data")
         print(validated_data)
         client = super().create(validated_data)
 
-        def create_risk(data, type):
+        def create_risk(data, type, time):
             data["id"] = uuid.uuid4()
             data["client_id"] = client
-            data["timestamp"] = current_milli_time()
+            data["timestamp"] = time
             data["risk_type"] = type
             risk = models.ClientRisk.objects.create(**data)
             risk.save()
 
-        create_risk(health_data, models.RiskType.HEALTH)
-        create_risk(social_data, models.RiskType.SOCIAL)
-        create_risk(educat_data, models.RiskType.EDUCAT)
+        create_risk(health_data, models.RiskType.HEALTH, current_time)
+        create_risk(social_data, models.RiskType.SOCIAL, current_time)
+        create_risk(educat_data, models.RiskType.EDUCAT, current_time)
 
         return client
 

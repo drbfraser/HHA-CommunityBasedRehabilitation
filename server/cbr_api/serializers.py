@@ -328,6 +328,12 @@ class ReferralPullSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
+        extra_kwargs = {
+            'outcome': {
+                'allow_blank': True,
+            }
+        }
+
 
 class ReferralUpdateSerializer(serializers.ModelSerializer):
     # disable unique validator for id to allow POST push sync request to update records

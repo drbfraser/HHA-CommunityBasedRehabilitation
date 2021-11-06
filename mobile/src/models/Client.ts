@@ -33,6 +33,7 @@ export default class Client extends Model {
     @field("latitude") latitude;
     @field("zone") zone;
     @field("village") village;
+    @field("picture") picture;
     @field("caregiver_present") caregiver_present;
     @text("caregiver_name") caregiver_name;
     @text("caregiver_phone") caregiver_phone;

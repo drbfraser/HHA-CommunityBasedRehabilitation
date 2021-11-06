@@ -4,6 +4,7 @@ import { dbType } from "./watermelonDatabase";
 
 //@ts-ignore
 import SyncLogger from "@nozbe/watermelondb/sync/SyncLogger";
+import { stringify } from "querystring";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
@@ -18,7 +19,10 @@ export async function SyncDB(database: dbType) {
             }
 
             const { changes, timestamp } = await response.json();
-            console.log(JSON.stringify({ changes, timestamp }));
+            //console.log(JSON.stringify({ changes, timestamp }));
+            await getImage(changes);
+            //console.log("DONE FETCHING IMAGES");
+            //console.log(JSON.stringify(changes["clients"]["created"][0].first_name));
             return { changes, timestamp };
         },
         pushChanges: async ({ changes, lastPulledAt }) => {
@@ -40,6 +44,27 @@ export async function SyncDB(database: dbType) {
         log: logger.newLog(),
         conflictResolver: conflictResolver,
     });
+}
+
+async function getImage(changes) {
+    const createdChanges = changes["clients"]["created"];
+    await Promise.all(
+        createdChanges.map(async (element) => {
+            if (element.picture != null) {
+                //console.log("fetching");
+                await apiFetch(Endpoint.CLIENT_PICTURE, `${element.id}`)
+                    .then((resp) => resp.blob())
+                    .then((blob) => {
+                        let reader = new FileReader();
+                        reader.onload = () => {
+                            //element.full_name = "CHANGED";
+                            element.picture = reader.result as string;
+                        };
+                        reader.readAsDataURL(blob);
+                    });
+            }
+        })
+    );
 }
 
 function riskResolver(raw, dirtyRaw, newRaw, column, timestamp) {

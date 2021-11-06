@@ -34,6 +34,7 @@ export default appSchema({
                 { name: "latitude", type: "string", isOptional: true },
                 { name: "zone", type: "number" },
                 { name: "village", type: "string" },
+                { name: "picture", type: "string", isOptional: true },
                 { name: "caregiver_present", type: "boolean" },
                 { name: "caregiver_name", type: "string", isOptional: true },
                 { name: "caregiver_phone", type: "string", isOptional: true },

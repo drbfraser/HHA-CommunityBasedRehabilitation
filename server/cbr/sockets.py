@@ -5,7 +5,8 @@ from cbr.settings import DEBUG, ALLOWED_HOSTS
 # If this limit is reached, the next client that tries to connect will be disconnected.
 MAX_SOCKET_CONNECTION_LIMIT = 50
 
-cors_allowed_origins = "*" if DEBUG else ALLOWED_HOSTS
+# Set CORS propertly to ALLOWED_HOSTS from settings.py when not in debug mode
+cors_allowed_origins = "*" if DEBUG else ["https://" + host for host in ALLOWED_HOSTS]
 sio = socketio.Server(
     async_mode="eventlet",
     always_connect=True,

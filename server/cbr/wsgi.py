@@ -11,10 +11,10 @@ import os
 import socketio
 import eventlet  # concurrent networking library
 import eventlet.wsgi
-from cbr.settings import DEBUG
 
 from django.core.wsgi import get_wsgi_application
-from cbr.views import sio
+from cbr.settings import DEBUG
+from cbr.sockets import sio
 
 # replaces blocking function with async functions
 eventlet.monkey_patch(socket=True, select=True)

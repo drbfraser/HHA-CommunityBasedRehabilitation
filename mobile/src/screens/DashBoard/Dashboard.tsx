@@ -20,6 +20,7 @@ import {
     TSortDirection,
 } from "../../util/listFunctions";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 const Dashboard = () => {
     const styles = useStyles();
@@ -63,7 +64,7 @@ const Dashboard = () => {
     };
 
     const [clientList, setClientList] = useState<ClientListRow[]>([]);
-    const [referralList, setreferralList] = useState<BriefReferral[]>([]);
+    const [referralList, setReferralList] = useState<BriefReferral[]>([]);
     const navigation = useNavigation();
     const getNewClient = async () => {
         var fetchedClientList = await fetchAllClientsFromApi();
@@ -73,17 +74,18 @@ const Dashboard = () => {
         setClientList(fetchedClientList);
     };
 
-    const getRefereals = async () => {
-        var fetchedReferrals = await fetchReferrals();
+    const database = useDatabase();
+    const getReferrals = async () => {
+        let fetchedReferrals: BriefReferral[] = await fetchReferrals(database);
         if (referralSortDirection !== "None") {
             fetchedReferrals = fetchedReferrals.sort(dashBoardReferralComparator);
         }
-        setreferralList(fetchedReferrals);
+        setReferralList(fetchedReferrals);
     };
 
     useEffect(() => {
         getNewClient();
-        getRefereals();
+        getReferrals();
         //TODO alert part.
     }, [clientSortOption, referralSortOption, clientSortDirection, referralSortDirection]);
 

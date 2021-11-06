@@ -7,8 +7,10 @@ import {
     relation,
     children,
     json,
+    lazy,
 } from "@nozbe/watermelondb/decorators";
 import { writer } from "@nozbe/watermelondb/decorators/action";
+import { Q } from '@nozbe/watermelondb'
 
 const sanitizeDisability = (rawDisability) => {
     return Array.isArray(rawDisability) ? rawDisability.map(Number) : [];
@@ -48,6 +50,13 @@ export default class Client extends Model {
 
     @children("risks") risks;
     @children("referrals") referrals;
+
+    @lazy outstandingReferrals = this.collections.get("referrals").query(
+        Q.where("client", this.id),
+        Q.and(
+            Q.where("resolved", Q.eq(false))
+        )
+    );
 
     @writer async updateRisk(type, level) {
         await this.update((client) => {

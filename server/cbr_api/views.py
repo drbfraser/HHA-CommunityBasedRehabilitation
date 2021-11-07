@@ -296,7 +296,6 @@ def sync(request):
         stringify_disability(serialized.data)
         return Response(serialized.data)
     else:
-        # print(request.data)
         user_serializer = serializers.pushUserSerializer(data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()

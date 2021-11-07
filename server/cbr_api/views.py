@@ -29,6 +29,7 @@ from cbr_api.util import (
     get_model_changes,
     stringify_disability,
     destringify_disability,
+    decode_image
 )
 
 
@@ -300,6 +301,7 @@ def sync(request):
         if user_serializer.is_valid():
             user_serializer.save()
             destringify_disability(request.data)
+            decode_image(request.data["clients"])
             client_serializer = serializers.pushClientSerializer(data=request.data)
             if client_serializer.is_valid():
                 client_serializer.save()

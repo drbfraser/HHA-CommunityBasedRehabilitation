@@ -1,9 +1,11 @@
 import os
+import base64
 from datetime import datetime
 from hashlib import blake2b
 import time
 import json
 from django.core.files import File
+from django.core.files.base import ContentFile
 
 from cbr_api import models
 
@@ -98,6 +100,24 @@ def destringify_disability(data):
         updated_data = data["clients"]["updated"]
         disability_string_to_array(created_data)
         disability_string_to_array(updated_data)
+
+def base64_to_data(data):
+    format, imgstr = data.split(';base64,') 
+    ext = format.split('/')[-1] 
+    return ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+
+def decode_image(data):
+    create_data = data.get("created")
+    for client in create_data:
+        if client["picture"]:
+            client["picture"] = base64_to_data(client["picture"])
+    # for updated, only convert base64 and convert to raw data if image was locally change, else pop out of data
+    updated_data = data.get("updated")
+    for client in updated_data:
+        if "picture" in client["_changed"]:
+            client["picture"] = base64_to_data(client["picture"])
+        else:
+            client.pop("picture")
 
 
 def get_model_changes(request, model):

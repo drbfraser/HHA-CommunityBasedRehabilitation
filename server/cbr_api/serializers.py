@@ -498,6 +498,7 @@ class editClientSyncSerializer(serializers.ModelSerializer):
             "updated_at",
             "zone",
             "village",
+            "picture",
             "caregiver_present",
             "caregiver_name",
             "caregiver_phone",

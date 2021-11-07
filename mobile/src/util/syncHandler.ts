@@ -21,7 +21,7 @@ export async function SyncDB(database: dbType) {
             const { changes, timestamp } = await response.json();
             //console.log(JSON.stringify({ changes, timestamp }));
             await getImage(changes);
-            //console.log("DONE FETCHING IMAGES");
+            console.log("DONE FETCHING IMAGES");
             //console.log(JSON.stringify(changes["clients"]["created"][0].first_name));
             return { changes, timestamp };
         },
@@ -47,11 +47,15 @@ export async function SyncDB(database: dbType) {
 }
 
 async function getImage(changes) {
-    const createdChanges = changes["clients"]["created"];
+    await getClientImage(changes["clients"]["created"]);
+    await getClientImage(changes["clients"]["updated"]);
+}
+
+async function getClientImage(changes) {
     await Promise.all(
-        createdChanges.map(async (element) => {
+        changes.map(async (element) => {
             if (element.picture != null) {
-                //console.log("fetching");
+                console.log(`fetching ${element.id}`);
                 await apiFetch(Endpoint.CLIENT_PICTURE, `${element.id}`)
                     .then((resp) => resp.blob())
                     .then((blob) => {

@@ -42,6 +42,7 @@ export const handleSubmit = async (
                 client.other_disability = values.otherDisability;
                 client.zone = values.zone;
                 client.village = values.village;
+                client.picture = values.picture;
                 client.caregiver_present = values.caregiverPresent;
                 client.caregiver_name = values.caregiverName;
                 client.caregiver_phone = values.caregiverPhone;

@@ -19,7 +19,7 @@ export async function SyncDB(database: dbType) {
             }
 
             const { changes, timestamp } = await response.json();
-            //console.log(JSON.stringify({ changes, timestamp }));
+            console.log(JSON.stringify({ changes, timestamp }));
             await getImage(changes);
             console.log("DONE FETCHING IMAGES");
             //console.log(JSON.stringify(changes["clients"]["created"][0].first_name));

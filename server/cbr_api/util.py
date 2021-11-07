@@ -10,7 +10,7 @@ from cbr_api import models
 
 def client_last_modified_datetime(request, pk, *args):
     return datetime.fromtimestamp(
-        models.Client.objects.filter(id=pk).first().modified_date
+        models.Client.objects.filter(id=pk).first().updated_at
     )
 
 

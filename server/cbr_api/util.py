@@ -115,11 +115,12 @@ def decode_image(data):
     for client in create_data:
         if client["picture"]:
             client["picture"] = base64_to_data(client["picture"])
+        else:
+            client.pop("picture")
     # for updated, only convert base64 and convert to raw data if image was locally change, else pop out of data
     updated_data = data.get("updated")
     for client in updated_data:
         if "picture" in client["_changed"]:
-            print("updating client image")
             client["picture"] = base64_to_data(client["picture"])
         else:
             client.pop("picture")
@@ -190,18 +191,10 @@ def create_client_data(validated_data):
         new_client_picture: Optional[File] = data.get("picture")
         if new_client_picture:
             file_root, file_ext = os.path.splitext(new_client_picture.name)
-            print("file root")
-            print(file_root)
-            print("file ext")
-            print(file_ext)
             actual_image_type: Optional[str] = imghdr.what(new_client_picture.file)
             if actual_image_type and actual_image_type != file_ext.removeprefix("."):
                 new_client_picture.name = f"{file_root}.{actual_image_type}"
             image_data = data.pop("picture")
-            print(image_data)
-        print("post client picture")
-        print(new_client_picture)
-        print(data)
         models.Client.objects.filter(pk=data["id"]).update(**data)
         # clears current disabiltiy and updates new disability data
         client = models.Client.objects.get(pk=data["id"])

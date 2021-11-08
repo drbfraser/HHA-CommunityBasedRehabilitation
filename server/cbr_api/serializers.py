@@ -649,20 +649,13 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ["user_id", "created_at", "updated_at"]
 
     def update(self, instance: models.Client, validated_data):
-        print("instance")
-        print(instance)
         validated_data["updated_at"] = current_milli_time()
-        print(validated_data)
         new_client_picture: Optional[File] = validated_data.get("picture")
-        print("getting new client picture")
-        print(new_client_picture)
         if new_client_picture:
             file_root, file_ext = os.path.splitext(new_client_picture.name)
             actual_image_type: Optional[str] = imghdr.what(new_client_picture.file)
             if actual_image_type and actual_image_type != file_ext.removeprefix("."):
                 new_client_picture.name = f"{file_root}.{actual_image_type}"
-        print("post client picture")
-        print(new_client_picture)
 
         super().update(instance, validated_data)
         instance.full_name = instance.first_name + " " + instance.last_name

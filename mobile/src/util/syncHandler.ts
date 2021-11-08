@@ -82,7 +82,7 @@ function riskResolver(raw, dirtyRaw, newRaw, column, timestamp) {
 }
 
 function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
-    let riskChange = false;
+    let localChange = false;
     raw._changed.split(",").forEach((column) => {
         if (
             ["health_timestamp", "educat_timestamp", "social_timestamp"].some((a) => a !== column)
@@ -94,7 +94,14 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
             ) {
                 let riskType = column.split("_")[0];
                 if (riskResolver(raw, dirtyRaw, newRaw, column, `${riskType}_timestamp`)) {
-                    riskChange = true;
+                    localChange = true;
+                }
+            } else if (column === "picture") {
+                // if server image is nuLl, then will push local changes up instead
+                if (dirtyRaw[column] == null) {
+                    localChange = true;
+                } else {
+                    newRaw[column] = dirtyRaw[column];
                 }
             } else {
                 newRaw[column] = dirtyRaw[column];
@@ -102,7 +109,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
         }
     });
 
-    if (!riskChange) {
+    if (!localChange) {
         if (newRaw["_changed"] !== "") {
             newRaw["_changed"] = "";
         }

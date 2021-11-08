@@ -60,6 +60,7 @@ const ImprovementField = (props: {
     ) {
         // Since this component is dynamically generated we need to set its initial values
         props.formikProps.setFieldValue(`${fieldName}`, {
+            [ImprovementFormField.id]: "tmp",
             [ImprovementFormField.enabled]: false,
             [ImprovementFormField.description]: "",
             [ImprovementFormField.riskType]: props.visitType,
@@ -195,6 +196,7 @@ const VisitReasonStep = (
 
         if (checked) {
             formikProps.setFieldValue(`${VisitFormField.outcomes}.${visitType}`, {
+                [OutcomeFormField.id]: "tmp",
                 [OutcomeFormField.riskType]: visitType,
                 [OutcomeFormField.goalStatus]: GoalStatus.ongoing,
                 [OutcomeFormField.outcome]: "",
@@ -301,7 +303,7 @@ const NewVisit = () => {
             handleSubmit(values, helpers, setSubmissionError);
         } else {
             if (activeStep === 0) {
-                helpers.setFieldValue(`${[VisitFormField.client]}`, clientId);
+                helpers.setFieldValue(`${[VisitFormField.client_id]}`, clientId);
             }
             setActiveStep(activeStep + 1);
             helpers.setSubmitting(false);

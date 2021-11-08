@@ -224,13 +224,13 @@ class ImprovementSerializer(serializers.ModelSerializer):
         model = models.Improvement
         fields = [
             "id",
-            "visit",
+            "visit_id",
             "risk_type",
             "provided",
             "desc",
         ]
 
-        read_only_fields = ["visit"]
+        read_only_fields = ["visit_id"]
 
 
 class OutcomeSerializer(serializers.ModelSerializer):
@@ -238,13 +238,13 @@ class OutcomeSerializer(serializers.ModelSerializer):
         model = models.Outcome
         fields = [
             "id",
-            "visit",
+            "visit_id",
             "risk_type",
             "goal_met",
             "outcome",
         ]
 
-        read_only_fields = ["visit"]
+        read_only_fields = ["visit_id"]
 
 
 class UpdateReferralSerializer(serializers.ModelSerializer):
@@ -333,9 +333,9 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         model = models.Visit
         fields = [
             "id",
-            "user",
-            "client",
-            "date_visited",
+            "user_id",
+            "client_id",
+            "created_at",
             "health_visit",
             "educat_visit",
             "social_visit",
@@ -347,30 +347,33 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             "outcomes",
         ]
 
-        read_only_fields = ["user", "date_visited"]
+        read_only_fields = ["user_id", "created_at"]
 
     def create(self, validated_data):
-        current_time = int(time.time())
+        current_time = current_milli_time()
 
         improvement_dataset = validated_data.pop("improvements")
         outcome_dataset = validated_data.pop("outcomes")
 
-        validated_data["user"] = self.context["request"].user
-        validated_data["date_visited"] = current_time
+        validated_data["id"] = uuid.uuid4()
+        validated_data["user_id"] = self.context["request"].user
+        validated_data["created_at"] = current_time
         visit = models.Visit.objects.create(**validated_data)
         visit.save()
 
-        client = validated_data["client"]
+        client = validated_data["client_id"]
         client.last_visit_date = current_time
         client.save()
 
         for improvement_data in improvement_dataset:
-            improvement_data["visit"] = visit
+            improvement_data["id"] = uuid.uuid4()
+            improvement_data["visit_id"] = visit
             improvement = models.Improvement.objects.create(**improvement_data)
             improvement.save()
 
         for outcome_data in outcome_dataset:
-            outcome_data["visit"] = visit
+            outcome_data["id"] = uuid.uuid4()
+            outcome_data["visit_id"] = visit
             outcome = models.Outcome.objects.create(**outcome_data)
             outcome.save()
 
@@ -382,9 +385,9 @@ class SummaryVisitSerializer(serializers.ModelSerializer):
         model = models.Visit
         fields = [
             "id",
-            "user",
-            "client",
-            "date_visited",
+            "user_id",
+            "client_id",
+            "created_at",
             "health_visit",
             "educat_visit",
             "social_visit",

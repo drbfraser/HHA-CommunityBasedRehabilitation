@@ -209,11 +209,14 @@ class ClientRisk(models.Model):
 
 
 class Visit(models.Model):
-    client = models.ForeignKey(Client, related_name="visits", on_delete=models.CASCADE)
-    user = models.ForeignKey(
+    id = models.CharField(primary_key=True, max_length=100)
+    client_id = models.ForeignKey(
+        Client, related_name="visits", on_delete=models.CASCADE
+    )
+    user_id = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name="visits", on_delete=models.PROTECT
     )
-    date_visited = models.BigIntegerField()
+    created_at = models.BigIntegerField()
     health_visit = models.BooleanField(default=False)
     educat_visit = models.BooleanField(default=False)
     social_visit = models.BooleanField(default=False)
@@ -309,14 +312,18 @@ class Outcome(models.Model):
         ONGOING = "GO", _("Ongoing")
         CONCLUDED = "CON", _("Concluded")
 
-    visit = models.ForeignKey(Visit, related_name="outcomes", on_delete=models.CASCADE)
+    id = models.CharField(primary_key=True, max_length=100)
+    visit_id = models.ForeignKey(
+        Visit, related_name="outcomes", on_delete=models.CASCADE
+    )
     risk_type = RiskType.getField()
     goal_met = models.CharField(max_length=3, choices=Goal.choices)
     outcome = models.TextField(blank=True)
 
 
 class Improvement(models.Model):
-    visit = models.ForeignKey(
+    id = models.CharField(primary_key=True, max_length=100)
+    visit_id = models.ForeignKey(
         Visit, related_name="improvements", on_delete=models.CASCADE
     )
     risk_type = RiskType.getField()

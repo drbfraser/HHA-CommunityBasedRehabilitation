@@ -21,7 +21,8 @@ const addVisit = async (visitInfo: string) => {
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
 export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
     const newVisit = JSON.stringify({
-        client: values[VisitFormField.client],
+        id: "tmp",
+        client_id: values[VisitFormField.client_id],
         health_visit: values[VisitFormField.health],
         educat_visit: values[VisitFormField.education],
         social_visit: values[VisitFormField.social],

@@ -7,7 +7,7 @@ export enum GoalStatus {
 }
 
 export enum VisitFormField {
-    client = "client",
+    client_id = "client",
     village = "village",
     zone = "zone",
     health = "HEALTH",
@@ -18,12 +18,14 @@ export enum VisitFormField {
 }
 
 export enum OutcomeFormField {
+    id = "id",
     riskType = "risk_type",
     outcome = "outcome",
     goalStatus = "goal_met",
 }
 
 export enum ImprovementFormField {
+    id = "id",
     enabled = "enabled",
     riskType = "risk_type",
     provided = "provided",
@@ -31,7 +33,7 @@ export enum ImprovementFormField {
 }
 
 export const visitFieldLabels = {
-    [VisitFormField.client]: "Client",
+    [VisitFormField.client_id]: "Client",
     [VisitFormField.village]: "Village",
     [VisitFormField.zone]: "Zone",
     [VisitFormField.health]: "Health",
@@ -47,7 +49,7 @@ export const visitFieldLabels = {
 };
 
 export const visitInitialValues = {
-    [VisitFormField.client]: "",
+    [VisitFormField.client_id]: "",
     [VisitFormField.village]: "",
     [VisitFormField.zone]: "",
     [VisitFormField.health]: false,

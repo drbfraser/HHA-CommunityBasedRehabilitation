@@ -1,3 +1,4 @@
+import uuid
 from django.core.management.base import BaseCommand
 from cbr_api import models
 import time
@@ -28,11 +29,12 @@ class Command(BaseCommand):
         clients = models.Client.objects.all()
 
         def getYearTimestamp(self, year):
-            return (year - 1970) * (60 * 60 * 24 * 365)
+            return ((year - 1970) * (60 * 60 * 24 * 365)) * 1000
 
         def createImprovement(self, visit, type):
             return models.Improvement.objects.create(
-                visit=visit,
+                id=uuid.uuid4(),
+                visit_id=visit,
                 risk_type=type,
                 provided=random.choice(provides),
                 desc="Provided the client with additional services and assistance to improve their health, social, and educational conditions.",
@@ -40,7 +42,8 @@ class Command(BaseCommand):
 
         def createOutcome(self, visit, type):
             return models.Outcome.objects.create(
-                visit=visit,
+                id=uuid.uuid4(),
+                visit_id=visit,
                 risk_type=type,
                 goal_met=random.choice(results),
                 outcome=random.choice(outcomes),
@@ -58,9 +61,10 @@ class Command(BaseCommand):
             client.save()
 
             visit = models.Visit.objects.create(
-                user=random.choice(users),
-                client=client,
-                date_visited=date_visited,
+                id=uuid.uuid4(),
+                user_id=random.choice(users),
+                client_id=client,
+                created_at=date_visited,
                 longitude=0.0,
                 latitude=0.0,
                 zone=random.choice(zones),

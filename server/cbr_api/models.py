@@ -175,6 +175,8 @@ class Client(models.Model):
     last_visit_date = models.BigIntegerField(default=0)
 
     def save(self, *args, **kwargs):
+        print("saving image")
+        print(self.picture.name)
         self.modified_date = int(time.time())
         # The image might need to be renamed if this is a new client, since a new client would be missing the
         # autoincrement primary key (id).

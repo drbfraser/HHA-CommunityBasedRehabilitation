@@ -71,8 +71,8 @@ export default appSchema({
                 { name: "social_visit", type: "boolean" },
                 { name: "longitude", type: "number", isOptional: true },
                 { name: "latitude", type: "number", isOptional: true },
-                { name: "zone", type: "string" },
-                { name: " village", type: "string" },
+                { name: "zone", type: "number" },
+                { name: "village", type: "string" },
                 { name: "created_at", type: "number" },
             ],
         }),
@@ -81,6 +81,7 @@ export default appSchema({
             columns: [
                 { name: "visit_id", type: "string", isIndexed: true },
                 { name: "risk_type", type: "string" },
+                { name: "goal_met", type: "string" },
                 { name: "outcome", type: "string" },
             ],
         }),

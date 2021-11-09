@@ -25,4 +25,25 @@ export default class Visit extends Model {
     @relation("users", "user_id") user;
     @children("outcomes") outcomes;
     @children("improvements") improvements;
+
+    @writer async addVisitSpec(riskType: boolean, improvement: any, outcome: any) {
+        if (riskType) {
+            improvement.forEach(async (element) => {
+                if (element.enabled) {
+                    await this.collections.get("improvements").create((improv: any) => {
+                        improv.visit.set(this);
+                        improv.risk_type = element.risk_type;
+                        improv.provided = element.provided;
+                        improv.desc = element.desc;
+                    });
+                }
+            });
+            await this.collections.get("outcomes").create((o: any) => {
+                o.visit.set(this);
+                o.risk_type = outcome.risk_type;
+                o.goal_met = outcome.goal_met;
+                o.outcome = outcome.outcome;
+            });
+        }
+    }
 }

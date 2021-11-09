@@ -8,6 +8,7 @@ export default class Outcome extends Model {
     } as const;
 
     @field("risk_type") risk_type;
+    @field("goal_met") goal_met;
     @text("outcome") outcome;
 
     @relation("visits", "visit_id") visit;

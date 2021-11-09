@@ -55,6 +55,7 @@ const ClientDetails = (props: ClientProps) => {
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const [client, setClient] = useState<any>();
     const [risks, setRisk] = useState<any>();
+    const [visits, setVisits] = useState<any>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
             {
@@ -71,9 +72,12 @@ const ClientDetails = (props: ClientProps) => {
             const presentClient: any = await database
                 .get("clients")
                 .find(props.route.params.clientID);
+            console.log(presentClient);
             const fetchedRisk = await presentClient.risks.fetch();
+            const fetchedVisits = await presentClient.visits.fetch();
             setClient(presentClient);
             setRisk(fetchedRisk);
+            setVisits(fetchedVisits);
             if (presentClient.picture != null) {
                 setOriginaluri(presentClient.picture);
             }
@@ -122,19 +126,20 @@ const ClientDetails = (props: ClientProps) => {
     const navigation = useNavigation<AppStackNavProp>();
     const tempActivity: IActivity[] = [];
     let presentId = 0;
-    /*
-    if (client) {
-        client.visits.forEach((presentVisit) => {
+
+    if (visits) {
+        visits.forEach((presentVisit) => {
             tempActivity.push({
                 id: presentId,
                 type: ActivityType.VISIT,
-                date: presentVisit.date_visited,
+                date: presentVisit.created_at,
                 visit: presentVisit,
                 referral: undefined,
                 survey: undefined,
             });
             presentId += 1;
         });
+        /*
         client.referrals.forEach((presentRef) => {
             tempActivity.push({
                 id: presentId,
@@ -157,8 +162,9 @@ const ClientDetails = (props: ClientProps) => {
             });
             presentId += 1;
         });
+        */
     }
-*/
+
     tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));
 
     const handleFormSubmit = (

@@ -77,4 +77,10 @@ export default class Client extends Model {
             client.social_timestamp = this.createdAt;
         });
     }
+
+    @writer async updateVisitTime(visitTime) {
+        await this.update((client) => {
+            client.last_visit_date = visitTime;
+        });
+    }
 }

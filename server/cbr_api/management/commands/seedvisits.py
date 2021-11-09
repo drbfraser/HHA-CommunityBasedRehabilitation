@@ -31,20 +31,22 @@ class Command(BaseCommand):
         def getYearTimestamp(self, year):
             return ((year - 1970) * (60 * 60 * 24 * 365)) * 1000
 
-        def createImprovement(self, visit, type):
+        def createImprovement(self, visit, type, date):
             return models.Improvement.objects.create(
                 id=uuid.uuid4(),
                 visit_id=visit,
                 risk_type=type,
+                created_at=date,
                 provided=random.choice(provides),
                 desc="Provided the client with additional services and assistance to improve their health, social, and educational conditions.",
             )
 
-        def createOutcome(self, visit, type):
+        def createOutcome(self, visit, type, date):
             return models.Outcome.objects.create(
                 id=uuid.uuid4(),
                 visit_id=visit,
                 risk_type=type,
+                created_at=date,
                 goal_met=random.choice(results),
                 outcome=random.choice(outcomes),
             )
@@ -73,8 +75,8 @@ class Command(BaseCommand):
                 social_visit=social,
                 educat_visit=educat,
             )
-            visit.improvements.add(createImprovement(self, visit, type))
-            visit.outcomes.add(createOutcome(self, visit, type))
+            visit.improvements.add(createImprovement(self, visit, type, date_visited))
+            visit.outcomes.add(createOutcome(self, visit, type, date_visited))
             return visit
 
         if models.Visit.objects.all().count() > 0:

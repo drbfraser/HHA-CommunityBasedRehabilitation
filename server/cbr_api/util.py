@@ -136,15 +136,22 @@ def get_model_changes(request, model):
 
     ##filter against last pulled time
     if pulledTime != "null":
-        if model != models.ClientRisk:
+        if model == models.ClientRisk:
+            create_set = queryset.filter(timestamp__gte=pulledTime)
+            change.created = create_set
+        elif (
+            model == models.Visit
+            or model == models.Outcome
+            or model == models.Improvement
+        ):
+            create_set = queryset.filter(created_at__gte=pulledTime)
+            change.created = create_set
+        else:
             create_set = queryset.filter(created_at__gte=pulledTime, updated_at=0)
             updated_set = queryset.filter(updated_at__gte=pulledTime)
             ## add to change
             change.created = create_set
             change.updated = updated_set
-        else:
-            create_set = queryset.filter(timestamp__gte=pulledTime)
-            change.created = create_set
     ##if first pull then just add everything to created in change
     else:
         change.created = queryset

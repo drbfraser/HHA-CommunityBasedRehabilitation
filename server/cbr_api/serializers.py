@@ -222,15 +222,15 @@ class ClientRiskSerializer(serializers.ModelSerializer):
 class ImprovementSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Improvement
-        fields = [
-            "id",
-            "visit_id",
-            "risk_type",
-            "provided",
-            "desc",
-        ]
+        fields = ["id", "visit_id", "risk_type", "provided", "desc", "created_at"]
 
-        read_only_fields = ["visit_id"]
+        read_only_fields = ["visit_id", "created_at"]
+
+
+class ImprovementSyncSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Improvement
+        fields = "__all__"
 
 
 class OutcomeSerializer(serializers.ModelSerializer):
@@ -242,9 +242,16 @@ class OutcomeSerializer(serializers.ModelSerializer):
             "risk_type",
             "goal_met",
             "outcome",
+            "created_at",
         ]
 
-        read_only_fields = ["visit_id"]
+        read_only_fields = ["visit_id", "created_at"]
+
+
+class OutcomeSyncSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Outcome
+        fields = "__all__"
 
 
 class UpdateReferralSerializer(serializers.ModelSerializer):
@@ -368,12 +375,14 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         for improvement_data in improvement_dataset:
             improvement_data["id"] = uuid.uuid4()
             improvement_data["visit_id"] = visit
+            improvement_data["created_at"] = current_time
             improvement = models.Improvement.objects.create(**improvement_data)
             improvement.save()
 
         for outcome_data in outcome_dataset:
             outcome_data["id"] = uuid.uuid4()
             outcome_data["visit_id"] = visit
+            outcome_data["created_at"] = current_time
             outcome = models.Outcome.objects.create(**outcome_data)
             outcome.save()
 
@@ -685,11 +694,32 @@ class multiRiskSerializer(serializers.Serializer):
     deleted = ClientRiskSerializer(many=True)
 
 
+class multiVisitSerializer(serializers.Serializer):
+    created = SummaryVisitSerializer(many=True)
+    updated = SummaryVisitSerializer(many=True)
+    deleted = SummaryVisitSerializer(many=True)
+
+
+class multiOutcomeSerializer(serializers.Serializer):
+    created = OutcomeSyncSerializer(many=True)
+    updated = OutcomeSyncSerializer(many=True)
+    deleted = OutcomeSyncSerializer(many=True)
+
+
+class multiImprovSerializer(serializers.Serializer):
+    created = ImprovementSyncSerializer(many=True)
+    updated = ImprovementSyncSerializer(many=True)
+    deleted = ImprovementSyncSerializer(many=True)
+
+
 # for each table being sync, add corresponding multi serializer under here
 class tableSerializer(serializers.Serializer):
     users = multiUserSerializer()
     clients = multiClientSerializer()
     risks = multiRiskSerializer()
+    visits = multiVisitSerializer()
+    outcomes = multiOutcomeSerializer()
+    improvements = multiImprovSerializer()
 
 
 class pullResponseSerializer(serializers.Serializer):

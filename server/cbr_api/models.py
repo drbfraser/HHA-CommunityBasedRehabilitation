@@ -319,6 +319,7 @@ class Outcome(models.Model):
     risk_type = RiskType.getField()
     goal_met = models.CharField(max_length=3, choices=Goal.choices)
     outcome = models.TextField(blank=True)
+    created_at = models.BigIntegerField(default=current_milli_time)
 
 
 class Improvement(models.Model):
@@ -329,6 +330,7 @@ class Improvement(models.Model):
     risk_type = RiskType.getField()
     provided = models.CharField(max_length=50)
     desc = models.TextField()
+    created_at = models.BigIntegerField(default=current_milli_time)
 
 
 class BaselineSurvey(models.Model):

@@ -212,11 +212,11 @@ def create_client_data(validated_data):
         client.disability.set(disability_data)
 
 
-def create_risk_data(validated_data):
-    risk_data = validated_data.get("risks")
-    created_data = risk_data.pop("created")
+def create_generic_data(table_name, model, validated_data):
+    table_data = validated_data.get(table_name)
+    created_data = table_data.pop("created")
     for data in created_data:
-        record = models.ClientRisk.objects.create(**data)
+        record = model.objects.create(**data)
         record.save()
 
 

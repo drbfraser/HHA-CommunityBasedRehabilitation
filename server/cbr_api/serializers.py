@@ -14,7 +14,7 @@ from cbr_api.util import (
     current_milli_time,
     create_client_data,
     create_user_data,
-    create_risk_data,
+    create_generic_data,
 )
 
 
@@ -752,6 +752,30 @@ class pushRiskSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         print("risk validated data")
-        create_risk_data(validated_data)
+        create_generic_data("risks", models.ClientRisk, validated_data)
         print("risks done")
+        return self
+
+
+class pushVisitSerializer(serializers.Serializer):
+    visits = multiVisitSerializer()
+
+    def create(self, validated_data):
+        print("visit validated data")
+        create_generic_data("visits", models.Visit, validated_data)
+        print("visit done")
+        return self
+
+
+class pushOutcomeImprovementSerializer(serializers.Serializer):
+    outcomes = multiOutcomeSerializer()
+    improvements = multiImprovSerializer()
+
+    def create(self, validated_data):
+        print("outcome validated data")
+        create_generic_data("outcomes", models.Outcome, validated_data)
+        print("outcome done")
+        print("improvement validated data")
+        create_generic_data("improvements", models.Improvement, validated_data)
+        print("improvement done")
         return self

@@ -72,7 +72,6 @@ const ClientDetails = (props: ClientProps) => {
             const presentClient: any = await database
                 .get("clients")
                 .find(props.route.params.clientID);
-            console.log(presentClient);
             const fetchedRisk = await presentClient.risks.fetch();
             const fetchedVisits = await presentClient.visits.fetch();
             setClient(presentClient);
@@ -132,7 +131,7 @@ const ClientDetails = (props: ClientProps) => {
             tempActivity.push({
                 id: presentId,
                 type: ActivityType.VISIT,
-                date: presentVisit.created_at,
+                date: presentVisit.createdAt,
                 visit: presentVisit,
                 referral: undefined,
                 survey: undefined,

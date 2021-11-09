@@ -119,6 +119,7 @@ export const apiFetch = async (
     urlParams: string = "",
     customInit: RequestInit = {}
 ): Promise<Response> => {
+  console.log("FLAG 1");
     return apiFetchByRequest(createApiFetchRequest(endpoint, urlParams), customInit);
 };
 
@@ -139,6 +140,9 @@ export const apiFetchByRequest = async (
     const abortController: AbortController = new AbortController();
     const timeoutId = setTimeout(() => abortController.abort(), DEFAULT_FETCH_TIMEOUT_MILLIS); // timeout value in ms
     customInit.signal = abortController.signal;
+
+    console.log("-----3-----");
+    console.log(request);
 
     return fetch(request, customInit)
         .then(async (resp) => {

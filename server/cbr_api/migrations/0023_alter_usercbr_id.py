@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0022_alter_client_picture'),
+        ("cbr_api", "0022_alter_client_picture"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='usercbr',
-            name='id',
+            model_name="usercbr",
+            name="id",
             field=models.CharField(max_length=100, primary_key=True, serialize=False),
         ),
     ]

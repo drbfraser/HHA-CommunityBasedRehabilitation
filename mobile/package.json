@@ -1,5 +1,5 @@
 {
-    "main": "src/index.ts",
+    "main": "./index.ts",
     "scripts": {
         "start": "react-native start",
         "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz && expo r -c",

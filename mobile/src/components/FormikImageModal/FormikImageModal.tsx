@@ -65,15 +65,17 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                         : ImagePicker.launchImageLibraryAsync;
                 const image = await imagePicker({
                     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                    base64: true,
                     allowsEditing: true,
                     aspect: [1, 1],
                     quality: 1,
                 });
 
                 if (!image.cancelled) {
-                    props.onPictureChange(image.uri);
+                    const uri = `data:image/jpeg;base64,${image.base64}`;
+                    props.onPictureChange(uri);
                     props.formikProps.setFieldTouched(props.field, true);
-                    props.formikProps.setFieldValue(props.field, image.uri);
+                    props.formikProps.setFieldValue(props.field, uri);
                 }
             }
             props.onDismiss();

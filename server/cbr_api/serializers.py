@@ -460,6 +460,7 @@ class ClientSyncSerializer(serializers.ModelSerializer):
             "updated_at",
             "zone",
             "village",
+            "picture",
             "caregiver_present",
             "caregiver_name",
             "caregiver_phone",
@@ -497,6 +498,7 @@ class editClientSyncSerializer(serializers.ModelSerializer):
             "updated_at",
             "zone",
             "village",
+            "picture",
             "caregiver_present",
             "caregiver_name",
             "caregiver_phone",
@@ -648,7 +650,6 @@ class ClientDetailSerializer(serializers.ModelSerializer):
 
     def update(self, instance: models.Client, validated_data):
         validated_data["updated_at"] = current_milli_time()
-        print(validated_data)
         new_client_picture: Optional[File] = validated_data.get("picture")
         if new_client_picture:
             file_root, file_ext = os.path.splitext(new_client_picture.name)

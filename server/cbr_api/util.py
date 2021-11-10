@@ -1,16 +1,20 @@
+import imghdr
 import os
+import base64
 from datetime import datetime
 from hashlib import blake2b
 import time
 import json
+from typing import Optional
 from django.core.files import File
+from django.core.files.base import ContentFile
 
 from cbr_api import models
 
 
 def client_last_modified_datetime(request, pk, *args):
     return datetime.fromtimestamp(
-        models.Client.objects.filter(id=pk).first().modified_date
+        models.Client.objects.filter(id=pk).first().updated_at
     )
 
 
@@ -100,6 +104,28 @@ def destringify_disability(data):
         disability_string_to_array(updated_data)
 
 
+def base64_to_data(data):
+    format, imgstr = data.split(";base64,")
+    ext = format.split("/")[-1]
+    return ContentFile(base64.b64decode(imgstr), name="temp." + ext)
+
+
+def decode_image(data):
+    create_data = data.get("created")
+    for client in create_data:
+        if client["picture"]:
+            client["picture"] = base64_to_data(client["picture"])
+        else:
+            client.pop("picture")
+    # for updated, only convert base64 and convert to raw data if image was locally change, else pop out of data
+    updated_data = data.get("updated")
+    for client in updated_data:
+        if "picture" in client["_changed"]:
+            client["picture"] = base64_to_data(client["picture"])
+        else:
+            client.pop("picture")
+
+
 def get_model_changes(request, model):
 
     pulledTime = request.GET.get("last_pulled_at", "")
@@ -162,9 +188,19 @@ def create_client_data(validated_data):
     for data in updated_data:
         data["updated_at"] = current_milli_time()
         disability_data = data.pop("disability")
+        new_client_picture: Optional[File] = data.get("picture")
+        if new_client_picture:
+            file_root, file_ext = os.path.splitext(new_client_picture.name)
+            actual_image_type: Optional[str] = imghdr.what(new_client_picture.file)
+            if actual_image_type and actual_image_type != file_ext.removeprefix("."):
+                new_client_picture.name = f"{file_root}.{actual_image_type}"
+            image_data = data.pop("picture")
         models.Client.objects.filter(pk=data["id"]).update(**data)
         # clears current disabiltiy and updates new disability data
         client = models.Client.objects.get(pk=data["id"])
+        if new_client_picture:
+            client.picture = image_data
+            client.save()
         client.disability.clear()
         client.disability.set(disability_data)
 

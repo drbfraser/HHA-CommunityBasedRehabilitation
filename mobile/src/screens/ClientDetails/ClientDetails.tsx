@@ -68,10 +68,15 @@ const ClientDetails = (props: ClientProps) => {
 
     const getClientDetails = async () => {
         try {
-            const presentClient = await database.get("clients").find(props.route.params.clientID);
+            const presentClient: any = await database
+                .get("clients")
+                .find(props.route.params.clientID);
             const fetchedRisk = await presentClient.risks.fetch();
             setClient(presentClient);
             setRisk(fetchedRisk);
+            if (presentClient.picture != null) {
+                setOriginaluri(presentClient.picture);
+            }
         } catch (e) {
             console.log(e);
         }
@@ -89,6 +94,7 @@ const ClientDetails = (props: ClientProps) => {
                 birthDate: client.birth_date,
                 gender: client.gender,
                 village: client.village,
+                picture: client.picture,
                 zone: client.zone ?? "",
                 phoneNumber: client.phone_number,
                 caregiverPresent: client.caregiver_present,

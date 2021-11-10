@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "corsheaders",
     "cbr_api.apps.CbrApiConfig",
+    "django_cleanup.apps.CleanupConfig",
 ]
 
 MIDDLEWARE = [

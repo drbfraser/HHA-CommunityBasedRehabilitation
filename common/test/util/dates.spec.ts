@@ -42,10 +42,10 @@ describe("dates.ts", () => {
             // note: these are all based on UTC date, so we can just test it without
             // worrying about timezone of the computer running the tests
             expect(timestampToFormDate(0)).toBe("1970-01-01");
-            expect(timestampToFormDate(1111111111)).toBe("2005-03-18");
-            expect(timestampToFormDate(1611111111)).toBe("2021-01-20");
+            expect(timestampToFormDate(1111111111000)).toBe("2005-03-18");
+            expect(timestampToFormDate(1611111111000)).toBe("2021-01-20");
             // leap year
-            expect(timestampToFormDate(1709218988)).toBe("2024-02-29");
+            expect(timestampToFormDate(1709218988000)).toBe("2024-02-29");
         });
     });
 });

@@ -136,15 +136,22 @@ def get_model_changes(request, model):
 
     ##filter against last pulled time
     if pulledTime != "null":
-        if model != models.ClientRisk:
+        if model == models.ClientRisk:
+            create_set = queryset.filter(timestamp__gte=pulledTime)
+            change.created = create_set
+        elif (
+            model == models.Visit
+            or model == models.Outcome
+            or model == models.Improvement
+        ):
+            create_set = queryset.filter(created_at__gte=pulledTime)
+            change.created = create_set
+        else:
             create_set = queryset.filter(created_at__gte=pulledTime, updated_at=0)
             updated_set = queryset.filter(updated_at__gte=pulledTime)
             ## add to change
             change.created = create_set
             change.updated = updated_set
-        else:
-            create_set = queryset.filter(timestamp__gte=pulledTime)
-            change.created = create_set
     ##if first pull then just add everything to created in change
     else:
         change.created = queryset
@@ -205,11 +212,11 @@ def create_client_data(validated_data):
         client.disability.set(disability_data)
 
 
-def create_risk_data(validated_data):
-    risk_data = validated_data.get("risks")
-    created_data = risk_data.pop("created")
+def create_generic_data(table_name, model, validated_data):
+    table_data = validated_data.get(table_name)
+    created_data = table_data.pop("created")
     for data in created_data:
-        record = models.ClientRisk.objects.create(**data)
+        record = model.objects.create(**data)
         record.save()
 
 

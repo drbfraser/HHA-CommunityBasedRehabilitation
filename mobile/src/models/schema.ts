@@ -61,5 +61,38 @@ export default appSchema({
                 { name: "timestamp", type: "number" },
             ],
         }),
+        tableSchema({
+            name: "visits",
+            columns: [
+                { name: "client_id", type: "string", isIndexed: true },
+                { name: "user_id", type: "string" },
+                { name: "health_visit", type: "boolean" },
+                { name: "educat_visit", type: "boolean" },
+                { name: "social_visit", type: "boolean" },
+                { name: "longitude", type: "string", isOptional: true },
+                { name: "latitude", type: "string", isOptional: true },
+                { name: "zone", type: "number" },
+                { name: "village", type: "string" },
+                { name: "created_at", type: "number" },
+            ],
+        }),
+        tableSchema({
+            name: "outcomes",
+            columns: [
+                { name: "visit_id", type: "string", isIndexed: true },
+                { name: "risk_type", type: "string" },
+                { name: "goal_met", type: "string" },
+                { name: "outcome", type: "string" },
+            ],
+        }),
+        tableSchema({
+            name: "improvements",
+            columns: [
+                { name: "visit_id", type: "string", isIndexed: true },
+                { name: "risk_type", type: "string" },
+                { name: "provided", type: "string" },
+                { name: "desc", type: "string" },
+            ],
+        }),
     ],
 });

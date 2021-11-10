@@ -26,7 +26,7 @@ const ClientTimeline = ({ client, refreshClient }: IProps) => {
         ? []
         : [
               ...client.visits.slice().map((v) => ({
-                  timestamp: v.date_visited,
+                  timestamp: v.created_at,
                   Component: (
                       <VisitEntry
                           key={`visit${v.id}`}

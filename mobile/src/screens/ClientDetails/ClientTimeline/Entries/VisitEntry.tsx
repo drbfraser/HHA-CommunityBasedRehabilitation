@@ -15,6 +15,7 @@ import { ActivityIndicator, Button, Card, Chip, Dialog, List, Text } from "react
 import useStyles from "./Entry.styles";
 import { ScrollView, View } from "react-native";
 import DataCard from "../../../../components/DataCard/DataCard";
+import { database } from "../../../../util/watermelonDatabase";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -22,13 +23,20 @@ interface IEntryProps {
 }
 
 const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
-    const [visit, setVisit] = useState<IVisit>();
-    const onOpen = () => {
+    const [visit, setVisit] = useState<any>();
+    const [visitOutcomes, setVisitOutcome] = useState<any>();
+    const [visitImprovements, setVisitImprovement] = useState<any>();
+    let visitcreationDate;
+    //console.log(visitSummary);
+    const onOpen = async () => {
         if (!visit) {
-            apiFetch(Endpoint.VISIT, `${visitSummary.id}`)
-                .then((resp) => resp.json())
-                .then((resp) => setVisit(resp as IVisit))
-                .catch(() => setLoadingError(true));
+            const fetchedVisit: any = await database.get("visits").find(visitSummary.id);
+
+            const fetchedOutcome = await fetchedVisit.outcomes.fetch();
+            const fetchedImprov = await fetchedVisit.improvements.fetch();
+            setVisitOutcome(fetchedOutcome);
+            setVisitImprovement(fetchedImprov);
+            setVisit(fetchedVisit);
         }
     };
     useEffect(() => {
@@ -60,14 +68,14 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
         }
 
         const DetailAccordion = ({ type }: { type: RiskType }) => {
-            const improvements = visit.improvements
+            const improvements = visitImprovements
                 .filter((i) => i.risk_type === type)
                 .map((i) => ({
                     title: i.provided,
                     desc: i.desc,
                 }));
 
-            const outcomes = visit.outcomes
+            const outcomes = visitOutcomes
                 .filter((o) => o.risk_type === type)
                 .map((o) => ({
                     title: outcomeGoalMets[o.goal_met].name,
@@ -108,7 +116,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                     <Card.Content>
                         <Text>
                             <Text style={styles.labelBold}>Visit Date:</Text>{" "}
-                            {timestampToDateTime(visit.date_visited)}
+                            {timestampToDateTime(visit.createdAt)}
                             {"\n"}
                             <Text style={styles.labelBold}>Village:</Text> {visit.village}
                         </Text>

@@ -292,10 +292,14 @@ def sync(request):
         reply.changes["users"] = get_model_changes(request, models.UserCBR)
         reply.changes["clients"] = get_model_changes(request, models.Client)
         reply.changes["risks"] = get_model_changes(request, models.ClientRisk)
+        reply.changes["visits"] = get_model_changes(request, models.Visit)
+        reply.changes["outcomes"] = get_model_changes(request, models.Outcome)
+        reply.changes["improvements"] = get_model_changes(request, models.Improvement)
         serialized = serializers.pullResponseSerializer(reply)
         stringify_disability(serialized.data)
         return Response(serialized.data)
     else:
+        print(request.data)
         user_serializer = serializers.pushUserSerializer(data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()
@@ -305,11 +309,27 @@ def sync(request):
             client_serializer = serializers.pushClientSerializer(data=request.data)
             if client_serializer.is_valid():
                 client_serializer.save()
-                print(request.data.get("risks"))
                 risk_serializer = serializers.pushRiskSerializer(data=request.data)
                 if risk_serializer.is_valid():
                     risk_serializer.save()
-                    return Response(status=status.HTTP_201_CREATED)
+                    print(request.data.get("visits"))
+                    visit_serializer = serializers.pushVisitSerializer(
+                        data=request.data
+                    )
+                    if visit_serializer.is_valid():
+                        visit_serializer.save()
+                        outcome_improvment_serializer = (
+                            serializers.pushOutcomeImprovementSerializer(
+                                data=request.data
+                            )
+                        )
+                        if outcome_improvment_serializer.is_valid():
+                            outcome_improvment_serializer.save()
+                            return Response(status=status.HTTP_201_CREATED)
+                        else:
+                            print(outcome_improvment_serializer.errors)
+                    else:
+                        print(visit_serializer.errors)
                 else:
                     print(risk_serializer.errors)
             else:

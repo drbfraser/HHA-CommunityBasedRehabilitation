@@ -96,6 +96,13 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 if (riskResolver(raw, dirtyRaw, newRaw, column, `${riskType}_timestamp`)) {
                     localChange = true;
                 }
+            } else if (column === "last_visit_date") {
+                // if local last visit date is greater than server last visit date, then take local version
+                if (raw[column] > dirtyRaw[column]) {
+                    localChange = true;
+                } else {
+                    newRaw[column] = dirtyRaw[column];
+                }
             } else if (column === "picture") {
                 // if server image is nuLl, then will push local changes up instead
                 if (dirtyRaw[column] == null) {

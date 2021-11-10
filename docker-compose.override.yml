@@ -6,6 +6,7 @@ services:
     ports:
       - "8000:8000"
     environment:
+      - LISTEN_PORT=8000
       - DEBUG=yes
       - POSTGRES_HOST=cbr_postgres
   postgres:

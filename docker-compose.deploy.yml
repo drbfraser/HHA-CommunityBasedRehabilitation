@@ -3,7 +3,7 @@ services:
   django:
     container_name: ${COMPOSE_PROJECT_NAME}_django
     restart: always
-    command: gunicorn cbr.wsgi --bind 0:8000
+    command: gunicorn -k eventlet --workers 1 cbr.wsgi --bind 0:8000
     user: ${GITLAB_RUNNER_UID_GID}
     environment:
       - DOMAIN=${DOMAIN}

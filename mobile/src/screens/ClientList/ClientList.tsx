@@ -39,15 +39,13 @@ const ClientList = () => {
 
     const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
 
-    const [showIDColumn, setShowIDColumn] = useState(true);
     const [showNameColumn, setShowNameColumn] = useState(true);
     const [showZoneColumn, setShowZoneColumn] = useState(true);
     const [showHealthColumn, setShowHealthColumn] = useState(true);
     const [showEducationColumn, setShowEducationColumn] = useState(true);
     const [showSocialColumn, setShowSocialColumn] = useState(true);
-    const [selectedColumn, setSelectedColumn] = useState<String[]>(["0", "1", "2", "3", "4", "5"]);
+    const [selectedColumn, setSelectedColumn] = useState<String[]>(["0", "1", "2", "3", "4"]);
     const columnShowingList = [
-        setShowIDColumn,
         setShowNameColumn,
         setShowZoneColumn,
         setShowHealthColumn,
@@ -64,7 +62,7 @@ const ClientList = () => {
         showSelectedColumn;
     };
 
-    const columnList = { 0: "ID", 1: "Name", 2: "Zone", 3: "Health", 4: "Education", 5: "Social" };
+    const columnList = { 0: "Name", 1: "Zone", 2: "Health", 3: "Education", 4: "Social" };
 
     const clientSortBy = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
@@ -203,7 +201,6 @@ const ClientList = () => {
                     }}
                 >
                     <Picker.Item label="N/A" value="" />
-                    <Picker.Item label="ID" value={SearchOption.ID} />
                     <Picker.Item label="Name" value={SearchOption.NAME} />
                     <Picker.Item label="Zone" value={SearchOption.ZONE} />
                 </Picker>
@@ -211,12 +208,6 @@ const ClientList = () => {
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>
-                        <ShowTitle
-                            label="ID"
-                            style={styles.column_id}
-                            showTheTitle={showIDColumn}
-                            thisColumnSortOption={SortOptions.ID}
-                        />
                         <ShowTitle
                             label="Name"
                             style={styles.column_name}
@@ -259,14 +250,6 @@ const ClientList = () => {
                                     });
                                 }}
                             >
-                                {showIDColumn ? (
-                                    <DataTable.Cell style={styles.column_id}>
-                                        {item.id}
-                                    </DataTable.Cell>
-                                ) : (
-                                    <View></View>
-                                )}
-
                                 {showNameColumn ? (
                                     <View style={styles.column_name}>
                                         <WrappedText text={item.full_name} />

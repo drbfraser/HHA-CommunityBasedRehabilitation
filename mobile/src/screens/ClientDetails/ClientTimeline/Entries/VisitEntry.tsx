@@ -27,7 +27,6 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
     const [visitOutcomes, setVisitOutcome] = useState<any>();
     const [visitImprovements, setVisitImprovement] = useState<any>();
     let visitcreationDate;
-    //console.log(visitSummary);
     const onOpen = async () => {
         if (!visit) {
             const fetchedVisit: any = await database.get("visits").find(visitSummary.id);

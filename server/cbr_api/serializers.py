@@ -582,7 +582,6 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        print("creating client")
         current_time = current_milli_time()
         # must be removed before passing validated_data into Client.objects.create
         health_data = validated_data.pop("health_risk")
@@ -603,8 +602,6 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         validated_data["id"] = uuid.uuid4()
         validated_data["user_id"] = self.context["request"].user
         validated_data["created_at"] = current_time
-        print("validated data")
-        print(validated_data)
         client = super().create(validated_data)
 
         def create_risk(data, type, time):
@@ -731,9 +728,7 @@ class pushUserSerializer(serializers.Serializer):
     users = multiUserSerializer()
 
     def create(self, validated_data):
-        print("user validated data")
         create_user_data(validated_data)
-        print("user done")
         return self
 
 
@@ -741,9 +736,7 @@ class pushClientSerializer(serializers.Serializer):
     clients = multiClientSerializer()
 
     def create(self, validated_data):
-        print("client validated data")
         create_client_data(validated_data)
-        print("clients done")
         return self
 
 
@@ -751,9 +744,7 @@ class pushRiskSerializer(serializers.Serializer):
     risks = multiRiskSerializer()
 
     def create(self, validated_data):
-        print("risk validated data")
         create_generic_data("risks", models.ClientRisk, validated_data)
-        print("risks done")
         return self
 
 
@@ -761,9 +752,7 @@ class pushVisitSerializer(serializers.Serializer):
     visits = multiVisitSerializer()
 
     def create(self, validated_data):
-        print("visit validated data")
         create_generic_data("visits", models.Visit, validated_data)
-        print("visit done")
         return self
 
 
@@ -772,10 +761,6 @@ class pushOutcomeImprovementSerializer(serializers.Serializer):
     improvements = multiImprovSerializer()
 
     def create(self, validated_data):
-        print("outcome validated data")
         create_generic_data("outcomes", models.Outcome, validated_data)
-        print("outcome done")
-        print("improvement validated data")
         create_generic_data("improvements", models.Improvement, validated_data)
-        print("improvement done")
         return self

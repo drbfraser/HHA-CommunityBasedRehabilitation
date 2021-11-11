@@ -84,7 +84,6 @@ class UserCurrent(generics.RetrieveAPIView):
     serializer_class = serializers.UserCBRSerializer
 
     def get_object(self):
-        print("self id is " + self.request.user.id)
         return generics.get_object_or_404(self.queryset, id=self.request.user.id)
 
 
@@ -299,20 +298,17 @@ def sync(request):
         stringify_disability(serialized.data)
         return Response(serialized.data)
     else:
-        print(request.data)
         user_serializer = serializers.pushUserSerializer(data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()
             destringify_disability(request.data)
             decode_image(request.data["clients"])
-            print(request.data["clients"])
             client_serializer = serializers.pushClientSerializer(data=request.data)
             if client_serializer.is_valid():
                 client_serializer.save()
                 risk_serializer = serializers.pushRiskSerializer(data=request.data)
                 if risk_serializer.is_valid():
                     risk_serializer.save()
-                    print(request.data.get("visits"))
                     visit_serializer = serializers.pushVisitSerializer(
                         data=request.data
                     )

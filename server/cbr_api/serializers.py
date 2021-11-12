@@ -527,7 +527,6 @@ class ClientDetailSerializer(serializers.ModelSerializer):
 
 
 class AlertSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Alert
         fields = (

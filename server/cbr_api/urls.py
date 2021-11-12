@@ -4,7 +4,6 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from cbr_api import models
 from cbr_api import views
 from downloadview.object import AuthenticatedObjectDownloadView
 

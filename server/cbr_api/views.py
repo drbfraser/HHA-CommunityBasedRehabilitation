@@ -272,14 +272,25 @@ class ReferralOutstanding(generics.ListAPIView):
         return getOutstandingReferrals()
 
 
-class AlertCreate(generics.CreateAPIView):
+class AlertList(generics.ListCreateAPIView):
     queryset = models.Alert.objects.all()
-    serializer_class = serializers.AlertSerializer
 
+    @extend_schema(responses=serializers.AlertListSerializer)
+    def get(self, request):
+        return super().get(request)
 
-class AlertList(generics.ListAPIView):
-    queryset = models.Alert.objects.all()
-    serializer_class = serializers.AlertSerializer
+    @extend_schema(
+        request=serializers.AlertSerializer,
+        responses=serializers.AlertSerializer,
+    )
+    def post(self, request):        
+        return super().post(request)
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return serializers.AlertListSerializer
+        elif self.request.method == "POST":
+            return serializers.AlertSerializer
 
 
 class AlertDetail(generics.RetrieveAPIView):

@@ -547,3 +547,15 @@ class AlertSerializer(serializers.ModelSerializer):
 
         alert.save()
         return alert
+
+class AlertListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Alert
+        fields = [
+            "id",
+            "subject",
+            "priority",
+            "alert_message",
+            "created_by_user",
+            "created_date",
+        ]

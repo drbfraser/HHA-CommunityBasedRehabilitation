@@ -413,9 +413,9 @@ class BaselineSurvey(models.Model):
 
 class Alert(models.Model):
     class Priorities(models.TextChoices):
-        HIGH = "HIGH", _("High")
-        MEDIUM = "MEDIUM", _("Medium")
-        LOW = "LOW", _("Low")
+        HIGH = "H", _("High")
+        MEDIUM = "M", _("Medium")
+        LOW = "L", _("Low")
 
     priority = models.CharField(max_length=9, choices=Priorities.choices)
     subject = models.CharField(max_length=50)

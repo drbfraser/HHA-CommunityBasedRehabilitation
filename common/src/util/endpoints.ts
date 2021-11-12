@@ -26,6 +26,8 @@ export enum Endpoint {
     STATS = "stats",
     BASELINE_SURVEY = "baselinesurveys",
     USER_PASSWORD = "user/password/",
+    ALERTS = "alerts",
+    ALERT = "alert/",
 }
 
 export const APILoadError = "APILoadError";

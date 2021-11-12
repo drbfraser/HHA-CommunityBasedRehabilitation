@@ -147,8 +147,10 @@ def get_model_changes(request, model):
             create_set = queryset.filter(created_at__gte=pulledTime)
             change.created = create_set
         else:
-            create_set = queryset.filter(created_at__gte=pulledTime, updated_at=0)
-            updated_set = queryset.filter(updated_at__gte=pulledTime)
+            create_set = queryset.filter(created_at__gte=pulledTime)
+            updated_set = queryset.filter(
+                created_at__lt=pulledTime, updated_at__gte=pulledTime
+            )
             ## add to change
             change.created = create_set
             change.updated = updated_set

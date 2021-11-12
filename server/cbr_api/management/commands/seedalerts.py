@@ -43,7 +43,7 @@ class Command(BaseCommand):
         createAlert(
             self,
             models.Alert.Priorities.LOW,
-            "LOWLOW Alert Test",
+            "LOW Alert Test",
             "Friendly reminder to all workers: free ice cream today!",
         )
 

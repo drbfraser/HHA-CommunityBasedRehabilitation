@@ -15,6 +15,7 @@ from cbr_api.util import (
     create_client_data,
     create_user_data,
     create_risk_data,
+    create_survey_data,
 )
 
 
@@ -516,16 +517,23 @@ class BaselineSurveySerializer(serializers.ModelSerializer):
         model = models.BaselineSurvey
         fields = "__all__"
 
-        read_only_fields = ["user", "survey_date"]
+        read_only_fields = ["id", "user", "survey_date", "created_at", "updated_at"]
 
     def create(self, validated_data):
-        current_time = int(time.time())
-        validated_data["survey_date"] = current_time
+        validated_data["id"] = uuid.uuid4()
+        validated_data["survey_date"] = current_milli_time()
+        validated_data["created_at"] = current_milli_time()
         validated_data["user"] = self.context["request"].user
         baseline_survey = models.BaselineSurvey.objects.create(**validated_data)
         baseline_survey.save()
         return baseline_survey
 
+class BaselineSurveySyncSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.BaselineSurvey
+        fields = "__all__"
+
+        read_only_fields = ["user"]
 
 class ClientCreateSerializer(serializers.ModelSerializer):
     health_risk = ClientCreationRiskSerializer(many=False, write_only=True)
@@ -681,11 +689,18 @@ class multiRiskSerializer(serializers.Serializer):
     deleted = ClientRiskSerializer(many=True)
 
 
+class multiBaselineSurveySerializer(serializers.Serializer):
+    created = BaselineSurveySyncSerializer(many=True)
+    updated = BaselineSurveySyncSerializer(many=True)
+    deleted = BaselineSurveySyncSerializer(many=True)
+
+
 # for each table being sync, add corresponding multi serializer under here
 class tableSerializer(serializers.Serializer):
     users = multiUserSerializer()
     clients = multiClientSerializer()
     risks = multiRiskSerializer()
+    surveys = multiBaselineSurveySerializer()
 
 
 class pullResponseSerializer(serializers.Serializer):
@@ -720,4 +735,12 @@ class pushRiskSerializer(serializers.Serializer):
         print("risk validated data")
         create_risk_data(validated_data)
         print("risks done")
+        return self
+
+
+class pushBaselineSurveySerializer(serializers.Serializer):
+    surveys = multiBaselineSurveySerializer()
+
+    def create(self, validated_data):
+        create_survey_data(validated_data, self.context["user"])
         return self

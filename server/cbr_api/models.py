@@ -324,6 +324,7 @@ class Improvement(models.Model):
 
 
 class BaselineSurvey(models.Model):
+    id = models.CharField(primary_key=True, max_length=100)
     client = models.ForeignKey(
         Client, related_name="baseline_surveys", on_delete=models.CASCADE
     )
@@ -419,3 +420,5 @@ class BaselineSurvey(models.Model):
     # Shelter and Care
     shelter_adequate = models.BooleanField()
     shelter_essential_access = models.BooleanField()
+    created_at = models.BigIntegerField(_("date created"), default=current_milli_time)
+    updated_at = models.BigIntegerField(_("date updated"), default=0)

@@ -16,6 +16,7 @@ import {
     clientFieldLabels,
     mobileClientDetailsValidationSchema,
     timestampFromFormDate,
+    ISurvey,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View, NativeModules } from "react-native";
@@ -55,6 +56,7 @@ const ClientDetails = (props: ClientProps) => {
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const [client, setClient] = useState<any>();
     const [risks, setRisk] = useState<any>();
+    const [surveys, setSurveys] = useState<any>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
             {
@@ -69,9 +71,11 @@ const ClientDetails = (props: ClientProps) => {
     const getClientDetails = async () => {
         try {
             const presentClient = await database.get("clients").find(props.route.params.clientID);
+            const presentClientSurveys = await presentClient.surveys.fetch();
             const fetchedRisk = await presentClient.risks.fetch();
             setClient(presentClient);
             setRisk(fetchedRisk);
+            setSurveys(presentClientSurveys);
         } catch (e) {
             console.log(e);
         }
@@ -116,43 +120,44 @@ const ClientDetails = (props: ClientProps) => {
     const navigation = useNavigation<AppStackNavProp>();
     const tempActivity: IActivity[] = [];
     let presentId = 0;
-    /*
+
     if (client) {
-        client.visits.forEach((presentVisit) => {
-            tempActivity.push({
-                id: presentId,
-                type: ActivityType.VISIT,
-                date: presentVisit.date_visited,
-                visit: presentVisit,
-                referral: undefined,
-                survey: undefined,
-            });
-            presentId += 1;
-        });
-        client.referrals.forEach((presentRef) => {
-            tempActivity.push({
-                id: presentId,
-                type: ActivityType.REFERAL,
-                date: presentRef.date_referred,
-                visit: undefined,
-                referral: presentRef,
-                survey: undefined,
-            });
-            presentId += 1;
-        });
-        client.baseline_surveys.forEach((presentSurvey) => {
+        // client.visits.forEach((presentVisit) => {
+        //     tempActivity.push({
+        //         id: presentId,
+        //         type: ActivityType.VISIT,
+        //         date: presentVisit.date_visited,
+        //         visit: presentVisit,
+        //         referral: undefined,
+        //         survey: undefined,
+        //     });
+        //     presentId += 1;
+        // });
+        // client.referrals.forEach((presentRef) => {
+        //     tempActivity.push({
+        //         id: presentId,
+        //         type: ActivityType.REFERAL,
+        //         date: presentRef.date_referred,
+        //         visit: undefined,
+        //         referral: presentRef,
+        //         survey: undefined,
+        //     });
+        //     presentId += 1;
+        // });
+        surveys && Object.keys(surveys).forEach(key => {
+            const survey: ISurvey = surveys[key];
             tempActivity.push({
                 id: presentId,
                 type: ActivityType.SURVEY,
-                date: presentSurvey.survey_date,
+                date: survey.survey_date,
                 visit: undefined,
                 referral: undefined,
-                survey: presentSurvey,
+                survey: survey
             });
             presentId += 1;
         });
     }
-*/
+
     tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));
 
     const handleFormSubmit = (

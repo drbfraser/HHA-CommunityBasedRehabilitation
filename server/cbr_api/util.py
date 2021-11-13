@@ -177,6 +177,17 @@ def create_risk_data(validated_data):
         record.save()
 
 
+def create_survey_data(validated_data, user):
+    survey_data = validated_data.get("surveys")
+    created_data = survey_data.pop("created")
+    for data in created_data:
+        data["user"] = models.UserCBR.objects.get(username=user)
+        record = models.BaselineSurvey.objects.create(**data)
+        record.created_at = data["created_at"]
+        record.update_at = data["updated_at"]
+        record.save()
+
+
 def create_push_data(table_name, model, validated_data):
     table_data = validated_data.get(table_name)
     created_data = table_data.pop("created")

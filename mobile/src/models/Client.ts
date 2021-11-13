@@ -19,6 +19,7 @@ export default class Client extends Model {
     static associations = {
         users: { type: "belongs_to", key: "user_id" },
         risks: { type: "has_many", foreignKey: "client_id" },
+        surveys: { type: "has_many", foreignKey: "client" },
     } as const;
 
     @text("first_name") first_name;
@@ -51,6 +52,7 @@ export default class Client extends Model {
     @relation("users", "user_id") user;
 
     @children("risks") risks;
+    @children("surveys") surveys;
 
     @writer async updateRisk(type, level, time) {
         await this.update((client) => {

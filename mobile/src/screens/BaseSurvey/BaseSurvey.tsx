@@ -35,6 +35,7 @@ import { StackScreenName } from "../../util/StackScreenName";
 import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import ConsentForm from "./SurveyForm/ConsentForm";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 interface ISurvey {
     label: string;
@@ -62,10 +63,11 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
         setStep(step - 1);
     };
 
+    const database = useDatabase();
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
-            handleSubmit(values, helpers)
+            handleSubmit(values, database, helpers)
                 .then(() => {
                     setHasSubmitted(true);
                     props.navigation.navigate(StackScreenName.CLIENT, {

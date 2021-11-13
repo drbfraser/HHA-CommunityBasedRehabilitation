@@ -291,6 +291,7 @@ def sync(request):
         reply.changes["users"] = get_model_changes(request, models.UserCBR)
         reply.changes["clients"] = get_model_changes(request, models.Client)
         reply.changes["risks"] = get_model_changes(request, models.ClientRisk)
+        reply.changes["surveys"] = get_model_changes(request, models.BaselineSurvey)
         serialized = serializers.pullResponseSerializer(reply)
         stringify_disability(serialized.data)
         return Response(serialized.data)
@@ -307,7 +308,12 @@ def sync(request):
                 risk_serializer = serializers.pushRiskSerializer(data=request.data)
                 if risk_serializer.is_valid():
                     risk_serializer.save()
-                    return Response(status=status.HTTP_201_CREATED)
+                    survey_serializer = serializers.pushBaselineSurveySerializer(data=request.data, context={"user": request.user})
+                    if survey_serializer.is_valid():
+                        survey_serializer.save()
+                        return Response(status=status.HTTP_201_CREATED)
+                    else:
+                        print(survey_serializer.errors)
                 else:
                     print(risk_serializer.errors)
             else:

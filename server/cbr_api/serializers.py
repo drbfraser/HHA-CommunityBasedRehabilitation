@@ -548,6 +548,7 @@ class AlertSerializer(serializers.ModelSerializer):
         alert.save()
         return alert
 
+
 class AlertListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Alert

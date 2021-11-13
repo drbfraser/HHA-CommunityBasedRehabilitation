@@ -25,7 +25,7 @@ const AlertForm = () => {
             validationSchema={validationSchema}
             onSubmit={handleNewWebAlertSubmit}
         >
-            {({ resetForm }) => (
+            {({ values, resetForm, isSubmitting }) => (
                 <Grid container justify="center" alignItems="flex-start">
                     <Grid container direction="row" justify="flex-start" spacing={1}>
                         <Grid item md={8} xs={8}>
@@ -94,7 +94,12 @@ const AlertForm = () => {
                                             Save
                                         </Button>
                                         &nbsp;
-                                        <Button variant="outlined" color="success" type="submit">
+                                        <Button
+                                            variant="outlined"
+                                            color="success"
+                                            type="submit"
+                                            onClick={() => handleNewWebAlertSubmit(values)}
+                                        >
                                             Send
                                         </Button>
                                     </Grid>

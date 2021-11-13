@@ -19,7 +19,7 @@ const AlertInbox = () => {
         selectAlert: selectedAlert,
     };
 
-    // TODO: Use case needs to be modified to display alerts properly in the 
+    // TODO: Use case needs to be modified to display alerts properly in the
     // frontend. This is just a placeholder for testing the alerts endpoint.
     useEffect(() => {
         const fetchAlerts = async () => {

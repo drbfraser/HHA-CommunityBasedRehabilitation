@@ -283,7 +283,7 @@ class AlertList(generics.ListCreateAPIView):
         request=serializers.AlertSerializer,
         responses=serializers.AlertSerializer,
     )
-    def post(self, request):        
+    def post(self, request):
         return super().post(request)
 
     def get_serializer_class(self):

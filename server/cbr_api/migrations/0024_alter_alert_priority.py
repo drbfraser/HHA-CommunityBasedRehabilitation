@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0023_alert'),
+        ("cbr_api", "0023_alert"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='alert',
-            name='priority',
-            field=models.CharField(choices=[('H', 'High'), ('M', 'Medium'), ('L', 'Low')], max_length=9),
+            model_name="alert",
+            name="priority",
+            field=models.CharField(
+                choices=[("H", "High"), ("M", "Medium"), ("L", "Low")], max_length=9
+            ),
         ),
     ]

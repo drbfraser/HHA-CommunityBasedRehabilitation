@@ -2,7 +2,6 @@ import React from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
-import { timestampToFormDate } from "@cbr/common/util/dates";
 
 export interface IDateRange {
     from: string;

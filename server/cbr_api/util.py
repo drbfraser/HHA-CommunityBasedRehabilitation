@@ -136,24 +136,17 @@ def get_model_changes(request, model):
 
     ##filter against last pulled time
     if pulledTime != "null":
-        if model == models.ClientRisk:
-            create_set = queryset.filter(timestamp__gte=pulledTime)
-            change.created = create_set
-        elif (
-            model == models.Visit
-            or model == models.Outcome
-            or model == models.Improvement
-        ):
-            create_set = queryset.filter(created_at__gte=pulledTime)
-            change.created = create_set
-        else:
-            create_set = queryset.filter(created_at__gte=pulledTime)
+        if model == models.Client:
+            create_set = queryset.filter(server_created_at__gt=pulledTime)
             updated_set = queryset.filter(
-                created_at__lt=pulledTime, updated_at__gte=pulledTime
+                server_created_at__lte=pulledTime, updated_at__gt=pulledTime
             )
             ## add to change
             change.created = create_set
             change.updated = updated_set
+        else:
+            create_set = queryset.filter(server_created_at__gt=pulledTime)
+            change.created = create_set
     ##if first pull then just add everything to created in change
     else:
         change.created = queryset
@@ -161,18 +154,19 @@ def get_model_changes(request, model):
     return change
 
 
-def create_user_data(validated_data):
+def create_user_data(validated_data, sync_time):
     user_data = validated_data.get("users")
     created_data = user_data.pop("created")
     for data in created_data:
         record = models.UserCBR.objects.create(**data)
         record.created_at = data["created_at"]
         record.update_at = data["updated_at"]
+        record.server_created_at = sync_time
         record.save()
 
     updated_data = user_data.pop("updated")
     for data in updated_data:
-        data["updated_at"] = current_milli_time()
+        data["updated_at"] = sync_time
         if data["password"]:
             user = models.UserCBR.objects.get(pk=data["id"])
             user.set_password(data["password"])
@@ -182,7 +176,7 @@ def create_user_data(validated_data):
         models.UserCBR.objects.filter(pk=data["id"]).update(**data)
 
 
-def create_client_data(validated_data):
+def create_client_data(validated_data, sync_time):
     client_data = validated_data.get("clients")
     created_data = client_data.pop("created")
     for data in created_data:
@@ -190,12 +184,13 @@ def create_client_data(validated_data):
         record = models.Client.objects.create(**data)
         record.created_at = data["created_at"]
         record.update_at = data["updated_at"]
+        record.server_created_at = sync_time
         record.disability.set(disability_data)
         record.save()
 
     updated_data = client_data.pop("updated")
     for data in updated_data:
-        data["updated_at"] = current_milli_time()
+        data["updated_at"] = sync_time
         disability_data = data.pop("disability")
         new_client_picture: Optional[File] = data.get("picture")
         if new_client_picture:
@@ -214,11 +209,12 @@ def create_client_data(validated_data):
         client.disability.set(disability_data)
 
 
-def create_generic_data(table_name, model, validated_data):
+def create_generic_data(table_name, model, validated_data, sync_time):
     table_data = validated_data.get(table_name)
     created_data = table_data.pop("created")
     for data in created_data:
         record = model.objects.create(**data)
+        record.server_created_at = sync_time
         record.save()
 
 

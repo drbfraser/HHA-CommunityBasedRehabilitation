@@ -182,6 +182,7 @@ class NormalRiskSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         current_time = current_milli_time()
         validated_data["timestamp"] = current_time
+        validated_data["server_created_at"] = current_time
         validated_data["id"] = uuid.uuid4()
         risk = models.ClientRisk.objects.create(**validated_data)
         risk.save()
@@ -230,7 +231,7 @@ class ImprovementSerializer(serializers.ModelSerializer):
 class ImprovementSyncSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Improvement
-        fields = "__all__"
+        fields = ["id", "visit_id", "risk_type", "provided", "desc", "created_at"]
 
 
 class OutcomeSerializer(serializers.ModelSerializer):
@@ -251,7 +252,14 @@ class OutcomeSerializer(serializers.ModelSerializer):
 class OutcomeSyncSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Outcome
-        fields = "__all__"
+        fields = [
+            "id",
+            "visit_id",
+            "risk_type",
+            "goal_met",
+            "outcome",
+            "created_at",
+        ]
 
 
 class UpdateReferralSerializer(serializers.ModelSerializer):
@@ -365,6 +373,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         validated_data["id"] = uuid.uuid4()
         validated_data["user_id"] = self.context["request"].user
         validated_data["created_at"] = current_time
+        validated_data["server_created_at"] = current_time
         visit = models.Visit.objects.create(**validated_data)
         visit.save()
 
@@ -376,6 +385,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             improvement_data["id"] = uuid.uuid4()
             improvement_data["visit_id"] = visit
             improvement_data["created_at"] = current_time
+            improvement_data["server_created_at"] = current_time
             improvement = models.Improvement.objects.create(**improvement_data)
             improvement.save()
 
@@ -383,6 +393,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             outcome_data["id"] = uuid.uuid4()
             outcome_data["visit_id"] = visit
             outcome_data["created_at"] = current_time
+            outcome_data["server_created_at"] = current_time
             outcome = models.Outcome.objects.create(**outcome_data)
             outcome.save()
 
@@ -560,6 +571,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "user_id",
             "created_at",
             "updated_at",
+            "server_created_at",
             "longitude",
             "latitude",
             "zone",
@@ -578,6 +590,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "user_id",
             "created_at",
             "updated_at",
+            "server_created_at",
             "full_name",
         ]
 
@@ -602,12 +615,14 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         validated_data["id"] = uuid.uuid4()
         validated_data["user_id"] = self.context["request"].user
         validated_data["created_at"] = current_time
+        validated_data["server_created_at"] = current_time
         client = super().create(validated_data)
 
         def create_risk(data, type, time):
             data["id"] = uuid.uuid4()
             data["client_id"] = client
             data["timestamp"] = time
+            data["server_created_at"] = time
             data["risk_type"] = type
             risk = models.ClientRisk.objects.create(**data)
             risk.save()
@@ -728,7 +743,7 @@ class pushUserSerializer(serializers.Serializer):
     users = multiUserSerializer()
 
     def create(self, validated_data):
-        create_user_data(validated_data)
+        create_user_data(validated_data, self.context.get("sync_time"))
         return self
 
 
@@ -736,7 +751,7 @@ class pushClientSerializer(serializers.Serializer):
     clients = multiClientSerializer()
 
     def create(self, validated_data):
-        create_client_data(validated_data)
+        create_client_data(validated_data, self.context.get("sync_time"))
         return self
 
 
@@ -744,7 +759,9 @@ class pushRiskSerializer(serializers.Serializer):
     risks = multiRiskSerializer()
 
     def create(self, validated_data):
-        create_generic_data("risks", models.ClientRisk, validated_data)
+        create_generic_data(
+            "risks", models.ClientRisk, validated_data, self.context.get("sync_time")
+        )
         return self
 
 
@@ -752,7 +769,9 @@ class pushVisitSerializer(serializers.Serializer):
     visits = multiVisitSerializer()
 
     def create(self, validated_data):
-        create_generic_data("visits", models.Visit, validated_data)
+        create_generic_data(
+            "visits", models.Visit, validated_data, self.context.get("sync_time")
+        )
         return self
 
 
@@ -761,6 +780,13 @@ class pushOutcomeImprovementSerializer(serializers.Serializer):
     improvements = multiImprovSerializer()
 
     def create(self, validated_data):
-        create_generic_data("outcomes", models.Outcome, validated_data)
-        create_generic_data("improvements", models.Improvement, validated_data)
+        create_generic_data(
+            "outcomes", models.Outcome, validated_data, self.context.get("sync_time")
+        )
+        create_generic_data(
+            "improvements",
+            models.Improvement,
+            validated_data,
+            self.context.get("sync_time"),
+        )
         return self

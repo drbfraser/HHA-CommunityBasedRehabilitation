@@ -37,6 +37,7 @@ class Command(BaseCommand):
                 visit_id=visit,
                 risk_type=type,
                 created_at=date,
+                server_created_at=date,
                 provided=random.choice(provides),
                 desc="Provided the client with additional services and assistance to improve their health, social, and educational conditions.",
             )
@@ -47,6 +48,7 @@ class Command(BaseCommand):
                 visit_id=visit,
                 risk_type=type,
                 created_at=date,
+                server_created_at=date,
                 goal_met=random.choice(results),
                 outcome=random.choice(outcomes),
             )
@@ -67,6 +69,7 @@ class Command(BaseCommand):
                 user_id=random.choice(users),
                 client_id=client,
                 created_at=date_visited,
+                server_created_at=date_visited,
                 longitude=0.0,
                 latitude=0.0,
                 zone=random.choice(zones),

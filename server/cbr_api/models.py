@@ -64,6 +64,7 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
         default=True,
     )
     created_at = models.BigIntegerField(_("date created"), default=current_milli_time)
+    server_created_at = models.BigIntegerField(default=current_milli_time)
     updated_at = models.BigIntegerField(_("date created"), default=0)
     objects = UserCBRManager()
 
@@ -134,6 +135,7 @@ class Client(models.Model):
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     created_at = models.BigIntegerField()
     updated_at = models.BigIntegerField(default=0)
+    server_created_at = models.BigIntegerField(default=0)
     longitude = models.DecimalField(max_digits=12, decimal_places=6)
     latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
@@ -202,6 +204,7 @@ class ClientRisk(models.Model):
         Client, related_name="risks", on_delete=models.CASCADE
     )
     timestamp = models.BigIntegerField()
+    server_created_at = models.BigIntegerField(default=0)
     risk_type = RiskType.getField()
     risk_level = RiskLevel.getField()
     requirement = models.TextField()
@@ -217,6 +220,7 @@ class Visit(models.Model):
         settings.AUTH_USER_MODEL, related_name="visits", on_delete=models.PROTECT
     )
     created_at = models.BigIntegerField()
+    server_created_at = models.BigIntegerField(default=0)
     health_visit = models.BooleanField(default=False)
     educat_visit = models.BooleanField(default=False)
     social_visit = models.BooleanField(default=False)
@@ -320,6 +324,7 @@ class Outcome(models.Model):
     goal_met = models.CharField(max_length=3, choices=Goal.choices)
     outcome = models.TextField(blank=True)
     created_at = models.BigIntegerField(default=current_milli_time)
+    server_created_at = models.BigIntegerField(default=current_milli_time)
 
 
 class Improvement(models.Model):
@@ -331,6 +336,7 @@ class Improvement(models.Model):
     provided = models.CharField(max_length=50)
     desc = models.TextField()
     created_at = models.BigIntegerField(default=current_milli_time)
+    server_created_at = models.BigIntegerField(default=current_milli_time)
 
 
 class BaselineSurvey(models.Model):

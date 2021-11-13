@@ -298,25 +298,32 @@ def sync(request):
         stringify_disability(serialized.data)
         return Response(serialized.data)
     else:
-        user_serializer = serializers.pushUserSerializer(data=request.data)
+        sync_time = request.GET.get("last_pulled_at", "")
+        user_serializer = serializers.pushUserSerializer(
+            data=request.data, context={"sync_time": sync_time}
+        )
         if user_serializer.is_valid():
             user_serializer.save()
             destringify_disability(request.data)
             decode_image(request.data["clients"])
-            client_serializer = serializers.pushClientSerializer(data=request.data)
+            client_serializer = serializers.pushClientSerializer(
+                data=request.data, context={"sync_time": sync_time}
+            )
             if client_serializer.is_valid():
                 client_serializer.save()
-                risk_serializer = serializers.pushRiskSerializer(data=request.data)
+                risk_serializer = serializers.pushRiskSerializer(
+                    data=request.data, context={"sync_time": sync_time}
+                )
                 if risk_serializer.is_valid():
                     risk_serializer.save()
                     visit_serializer = serializers.pushVisitSerializer(
-                        data=request.data
+                        data=request.data, context={"sync_time": sync_time}
                     )
                     if visit_serializer.is_valid():
                         visit_serializer.save()
                         outcome_improvment_serializer = (
                             serializers.pushOutcomeImprovementSerializer(
-                                data=request.data
+                                data=request.data, context={"sync_time": sync_time}
                             )
                         )
                         if outcome_improvment_serializer.is_valid():

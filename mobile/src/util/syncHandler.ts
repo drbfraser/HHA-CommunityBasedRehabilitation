@@ -58,7 +58,6 @@ async function getClientImage(changes) {
                     .then((blob) => {
                         let reader = new FileReader();
                         reader.onload = () => {
-                            //element.full_name = "CHANGED";
                             element.picture = reader.result as string;
                         };
                         reader.readAsDataURL(blob);
@@ -101,7 +100,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                     newRaw[column] = dirtyRaw[column];
                 }
             } else if (column === "picture") {
-                // if server image is nuLl, then will push local changes up instead
+                // if server image is null, then will push local changes up instead
                 if (dirtyRaw[column] == null) {
                     localChange = true;
                 } else {

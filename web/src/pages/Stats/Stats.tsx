@@ -21,6 +21,7 @@ const Stats = () => {
     const [exportOpen, setExportOpen] = useState(false);
     const [stats, setStats] = useState<IStats>();
     const [errorLoading, setErrorLoading] = useState(false);
+    const milliSecondPerDay = 86400000;
 
     const FilterBar = () => (
         <div style={{ textAlign: "center" }}>
@@ -68,7 +69,14 @@ const Stats = () => {
             const fieldVal = dateRange[field as keyof IDateRange];
 
             if (fieldVal) {
-                urlParams.append(field, String(timestampFromFormDate(fieldVal)));
+                if (field === "from") {
+                    urlParams.append(field, String(timestampFromFormDate(fieldVal)));
+                } else {
+                    urlParams.append(
+                        field,
+                        String(timestampFromFormDate(fieldVal) + milliSecondPerDay)
+                    );
+                }
             }
         });
 

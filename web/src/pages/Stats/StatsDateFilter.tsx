@@ -23,7 +23,6 @@ interface IProps {
 
 const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
     const handleSubmit = (values: IDateRange) => {
-        values.to = timestampToFormDate(Date.parse(values.to) + 86400000);
         setRange({ ...values });
         onClose();
     };

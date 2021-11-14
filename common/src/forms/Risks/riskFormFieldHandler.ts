@@ -41,7 +41,6 @@ export const handleSubmit = async (
         goal: values.goal,
         requirement: values.requirement,
     });
-
     try {
         const risk = await updateRisk(updatedRisk);
         setRisk(risk);

@@ -24,7 +24,13 @@ from cbr_api.sql import (
 )
 from cbr_api.util import client_picture_last_modified_datetime, client_image_etag
 from downloadview.object import AuthenticatedObjectDownloadView
-from cbr_api.util import syncResp, get_model_changes, stringify_disability
+from cbr_api.util import (
+    syncResp,
+    get_model_changes,
+    stringify_disability,
+    destringify_disability,
+    decode_image,
+)
 
 
 class UserList(generics.ListCreateAPIView):
@@ -78,7 +84,6 @@ class UserCurrent(generics.RetrieveAPIView):
     serializer_class = serializers.UserCBRSerializer
 
     def get_object(self):
-        print("self id is " + self.request.user.id)
         return generics.get_object_or_404(self.queryset, id=self.request.user.id)
 
 
@@ -287,24 +292,68 @@ def sync(request):
         reply.changes["clients"] = get_model_changes(request, models.Client)
         reply.changes["risks"] = get_model_changes(request, models.ClientRisk)
         reply.changes["referrals"] = get_model_changes(request, models.Referral)
+        reply.changes["surveys"] = get_model_changes(request, models.BaselineSurvey)
+        reply.changes["visits"] = get_model_changes(request, models.Visit)
+        reply.changes["outcomes"] = get_model_changes(request, models.Outcome)
+        reply.changes["improvements"] = get_model_changes(request, models.Improvement)
         serialized = serializers.pullResponseSerializer(reply)
         stringify_disability(serialized.data)
         return Response(serialized.data)
     else:
-        push_failed = False
-        user_serializer = serializers.pushUserSerializer(data=request.data)
-        referral_serializer = serializers.pushReferralSerializer(data=request.data, context={"user": request.user})
-        
+        sync_time = request.GET.get("last_pulled_at", "")
+        user_serializer = serializers.pushUserSerializer(
+            data=request.data, context={"sync_time": sync_time}
+        )
         if user_serializer.is_valid():
             user_serializer.save()
+            destringify_disability(request.data)
+            decode_image(request.data["clients"])
+            client_serializer = serializers.pushClientSerializer(
+                data=request.data, context={"sync_time": sync_time}
+            )
+            if client_serializer.is_valid():
+                client_serializer.save()
+                risk_serializer = serializers.pushRiskSerializer(
+                    data=request.data, context={"sync_time": sync_time}
+                )
+                if risk_serializer.is_valid():
+                    risk_serializer.save()
+                    referral_serializer = serializers.pushReferralSerializer(
+                        data=request.data, 
+                        context={"sync_time": sync_time, "user": request.user}
+                    )
+                    if referral_serializer.is_valid():
+                        referral_serializer.save()
+                        survey_serializer = serializers.pushBaselineSurveySerializer(
+                            data=request.data,
+                            context={"sync_time": sync_time, "user": request.user},
+                        )
+                        if survey_serializer.is_valid():
+                            survey_serializer.save()
+                            visit_serializer = serializers.pushVisitSerializer(
+                                data=request.data, context={"sync_time": sync_time}
+                            )
+                            if visit_serializer.is_valid():
+                                visit_serializer.save()
+                                outcome_improvment_serializer = (
+                                    serializers.pushOutcomeImprovementSerializer(
+                                        data=request.data, context={"sync_time": sync_time}
+                                    )
+                                )
+                                if outcome_improvment_serializer.is_valid():
+                                    outcome_improvment_serializer.save()
+                                    return Response(status=status.HTTP_201_CREATED)
+                                else:
+                                    print(outcome_improvment_serializer.errors)
+                            else:
+                                print(visit_serializer.errors)
+                        else:
+                            print(survey_serializer.errors)
+                    else:
+                        print(referral_serializer.errors)
+                else:
+                    print(risk_serializer.errors)
+                print(client_serializer.errors)
         else:
-            push_failed = True
             print(user_serializer.errors)
-
-        if referral_serializer.is_valid():
-                referral_serializer.save()  
-        else:
-            push_failed = True
-            print(referral_serializer.errors)
-        
-        return Response(status=status.HTTP_201_CREATED) if not push_failed else Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)

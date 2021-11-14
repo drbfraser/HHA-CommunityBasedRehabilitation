@@ -7,6 +7,7 @@ import {
 } from "@cbr/common";
 import { IClientSummary } from "@cbr/common";
 import { riskLevels } from "@cbr/common";
+import { dbType } from "../../util/watermelonDatabase";
 import { ClientListRow } from "../ClientList/ClientListRequest";
 import { dbType } from "../../util/watermelonDatabase";
 
@@ -29,13 +30,10 @@ const concatenateReferralType = (referral: IOutstandingReferral) => {
     return referralTypes.join(", ");
 };
 
-export const fetchAllClientsFromApi = async (): Promise<ClientListRow[]> => {
+export const fetchAllClientsFromDB = async (database: dbType): Promise<ClientListRow[]> => {
     try {
         const zones = await getZones();
-        const tempClients = await apiFetch(Endpoint.CLIENTS)
-            .then((resp) => resp.json())
-            .catch((err) => alert("Error occured while trying to load priority clients!"));
-
+        const tempClients: any = await database.get("clients").query();
         const resultRows = tempClients
             .sort(clientPrioritySort)
             .slice(0, 5)

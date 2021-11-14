@@ -9,7 +9,7 @@ import ShowMore from "./ShowMore";
 interface IActivityProps {
     clientVisits: IVisitSummary[];
     activity: IActivity[];
-    clientCreateDate: number;
+    clientCreateDate: Date;
     refreshClient: () => void;
 }
 

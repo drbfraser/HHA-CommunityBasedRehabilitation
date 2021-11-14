@@ -5,7 +5,7 @@ export interface IFormProps {
 }
 
 export enum BaseSurveyFormField {
-    client = "client",
+    client_id = "client_id",
     surveyConsent = "give_consent",
 
     health = "health",
@@ -63,7 +63,7 @@ export const baseServicesTypes = [
 ];
 
 export const baseFieldLabels = {
-    [BaseSurveyFormField.client]: "Client",
+    [BaseSurveyFormField.client_id]: "Client",
     [BaseSurveyFormField.surveyConsent]: "I give the consent to take the baseline survey",
     [BaseSurveyFormField.rateLevel]: "Health Level",
     [BaseSurveyFormField.health]: "Health",
@@ -122,7 +122,7 @@ export const baseFieldLabels = {
 };
 
 export const baseInitialValues = {
-    [BaseSurveyFormField.client]: 0,
+    [BaseSurveyFormField.client_id]: 0,
     [BaseSurveyFormField.surveyConsent]: false,
 
     [BaseSurveyFormField.rateLevel]: "",

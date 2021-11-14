@@ -74,7 +74,7 @@ export const handleNewWebClientSubmit = async (
             goal: values.educationGoals,
         },
     };
-    console.log(JSON.stringify(newClient));
+
     const formData = objectToFormData(newClient);
 
     try {

@@ -31,7 +31,9 @@ class Command(BaseCommand):
         disabilities.exclude(disability_type="Other")
 
         def getYearTimestamp(self, year, days):
-            return ((year - 1970) * (60 * 60 * 24 * 365)) + (days * 60 * 60 * 24)
+            return (
+                ((year - 1970) * (60 * 60 * 24 * 365)) + (days * 60 * 60 * 24)
+            ) * 1000
 
         def getDifferentRisk(self, client, type):
             diff_risks = ["LO", "ME", "HI", "CR"]
@@ -59,6 +61,7 @@ class Command(BaseCommand):
                 id=id,
                 client_id=client,
                 timestamp=time,
+                server_created_at=time,
                 risk_type=type,
                 risk_level=level,
                 requirement=random.choice(requirements),
@@ -92,6 +95,7 @@ class Command(BaseCommand):
                 id=id,
                 user_id=random.choice(users),
                 created_at=creation_date,
+                server_created_at=creation_date,
                 first_name=first,
                 last_name=last,
                 full_name=first + " " + last,
@@ -106,6 +110,9 @@ class Command(BaseCommand):
                 health_risk_level=health_risk,
                 social_risk_level=social_risk,
                 educat_risk_level=educat_risk,
+                health_timestamp=creation_date,
+                social_timestamp=creation_date,
+                educat_timestamp=creation_date,
             )
             client.disability.add(random.choice(disabilities))
 

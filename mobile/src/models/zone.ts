@@ -11,7 +11,7 @@ export default class Zone extends Model {
     @text("zone_name") zoneName;
 
     @readonly @date("created_at") createdAt;
-    @readonly @date("updated_at") updateAt;
+    @readonly @date("updated_at") updatedAt;
 
     @children("users") users;
 }

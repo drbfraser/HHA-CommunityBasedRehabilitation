@@ -22,6 +22,8 @@ export default class Client extends Model {
         users: { type: "belongs_to", key: "user_id" },
         risks: { type: "has_many", foreignKey: "client_id" },
         referrals: { type: "has_many", foreignKey: "client" },
+        surveys: { type: "has_many", foreignKey: "client_id" },
+        visits: { type: "has_many", foreignKey: "client_id" },
     } as const;
 
     @text("first_name") first_name;
@@ -32,24 +34,32 @@ export default class Client extends Model {
     @text("phone_number") phone_number;
     @json("disability", sanitizeDisability) disability;
     @text("other_disability") other_disability;
+    @field("longitude") longitude;
+    @field("latitude") latitude;
     @field("zone") zone;
     @field("village") village;
+    @field("picture") picture;
     @field("caregiver_present") caregiver_present;
     @text("caregiver_name") caregiver_name;
     @text("caregiver_phone") caregiver_phone;
     @text("caregiver_email") caregiver_email;
     @text("health_risk_level") health_risk_level;
+    @date("health_timestamp") health_timestamp;
     @text("social_risk_level") social_risk_level;
+    @date("social_timestamp") social_timestamp;
     @text("educat_risk_level") educat_risk_level;
+    @date("educat_timestamp") educat_timestamp;
     @date("last_visit_date") last_visit_date;
 
     @readonly @date("created_at") createdAt;
-    @readonly @date("updated_at") updateAt;
+    @readonly @date("updated_at") updatedAt;
 
     @relation("users", "user_id") user;
 
     @children("risks") risks;
     @children("referrals") referrals;
+    @children("surveys") surveys;
+    @children("visits") visits;
 
     @lazy outstandingReferrals = this.collections.get("referrals").query(
         Q.where("client", this.id),
@@ -58,15 +68,32 @@ export default class Client extends Model {
         )
     );
 
-    @writer async updateRisk(type, level) {
+    @writer async updateRisk(type, level, time) {
         await this.update((client) => {
             if (type == "HEALTH") {
                 client.health_risk_level = level;
+                client.health_timestamp = time;
             } else if (type == "SOCIAL") {
                 client.social_risk_level = level;
+                client.social_timestamp = time;
             } else {
                 client.educat_risk_level = level;
+                client.educat_timestamp = time;
             }
+        });
+    }
+
+    @writer async newRiskTime() {
+        await this.update((client) => {
+            client.educat_timestamp = this.createdAt;
+            client.health_timestamp = this.createdAt;
+            client.social_timestamp = this.createdAt;
+        });
+    }
+
+    @writer async updateVisitTime(visitTime) {
+        await this.update((client) => {
+            client.last_visit_date = visitTime;
         });
     }
 }

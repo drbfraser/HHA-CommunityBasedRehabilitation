@@ -23,7 +23,8 @@ export const handleRiskSubmit = async (
 
     try {
         let risk;
-        const client = await database.get("clients").find(values.client);
+        const client = await database.get("clients").find(values.client_id);
+        const currentTime = new Date().getTime();
         await database.write(async () => {
             risk = await addRisk(
                 client,
@@ -31,10 +32,12 @@ export const handleRiskSubmit = async (
                 values.risk_type,
                 values.risk_level,
                 values.requirement,
-                values.goal
+                values.goal,
+                currentTime
             );
         });
-        await client.updateRisk(values.risk_type, values.risk_level);
+
+        await client.updateRisk(values.risk_type, values.risk_level, currentTime);
         setRisk(risk);
     } catch (e) {
         alert("Encountered an error while trying to update the client's risk");

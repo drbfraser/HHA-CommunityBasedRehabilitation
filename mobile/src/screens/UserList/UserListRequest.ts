@@ -43,11 +43,7 @@ export const fetchUsersFromDB = async (
             status: responseRow.is_active ? "Active" : "Disabled",
         }));
         if (searchValue.length != 0) {
-            if (searchOption == SearchOption.ID) {
-                resultRow = resultRow.filter((item) => {
-                    return String(item.id) == searchValue;
-                });
-            } else if (searchOption == SearchOption.NAME) {
+            if (searchOption == SearchOption.NAME) {
                 resultRow = resultRow.filter((item) => {
                     let splitFullName = item.full_name.split(" ");
 

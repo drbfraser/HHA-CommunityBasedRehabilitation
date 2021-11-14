@@ -6,14 +6,14 @@ import { dbType } from "../../util/watermelonDatabase";
 
 // TODO: profile picture does not upload correctly to server
 
-export const addRisk = async (client: any, database: dbType, type, level, req, goal) => {
+export const addRisk = async (client: any, database: dbType, type, level, req, goal, time) => {
     const risk = await database.get("risks").create((risk: any) => {
         risk.client.set(client);
         risk.risk_type = type;
         risk.risk_level = level;
         risk.requirement = req;
         risk.goal = goal;
-        risk.timestamp = new Date().getTime();
+        risk.timestamp = time;
     });
     return risk;
 };
@@ -37,10 +37,13 @@ const handleNewMobileClientSubmit = async (
                 client.birth_date = values.birthDate;
                 client.gender = values.gender;
                 client.phone_number = values.phoneNumber;
+                client.longitude = "0.0";
+                client.latitude = "0.0";
                 client.disability = values.disability;
                 client.other_disability = values.otherDisability;
                 client.zone = values.zone;
                 client.village = values.village;
+                client.picture = values.picture;
                 client.caregiver_present = values.caregiverPresent;
                 client.caregiver_name = values.caregiverName;
                 client.caregiver_phone = values.caregiverPhone;
@@ -56,7 +59,8 @@ const handleNewMobileClientSubmit = async (
                 "HEALTH",
                 values.healthRisk,
                 values.healthRequirements,
-                values.healthGoals
+                values.healthGoals,
+                newClient.createdAt
             );
             addRisk(
                 newClient,
@@ -64,7 +68,8 @@ const handleNewMobileClientSubmit = async (
                 "SOCIAL",
                 values.socialRisk,
                 values.socialRequirements,
-                values.socialGoals
+                values.socialGoals,
+                newClient.createdAt
             );
             addRisk(
                 newClient,
@@ -72,10 +77,11 @@ const handleNewMobileClientSubmit = async (
                 "EDUCAT",
                 values.educationRisk,
                 values.educationRequirements,
-                values.educationGoals
+                values.educationGoals,
+                newClient.createdAt
             );
         });
-        console.log("new client added");
+        await newClient.newRiskTime();
         return newClient.id;
     } catch (e) {
         console.log(e);

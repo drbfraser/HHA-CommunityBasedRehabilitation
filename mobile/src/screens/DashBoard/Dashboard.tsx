@@ -3,13 +3,13 @@ import { Text, View, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
 import { Card, DataTable } from "react-native-paper";
 import useStyles from "./Dashboard.styles";
-import { BriefReferral, fetchAllClientsFromApi, fetchReferrals } from "./DashboardRequest";
+import { BriefReferral, fetchAllClientsFromDB, fetchReferrals } from "./DashboardRequest";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { timestampToDate } from "@cbr/common";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ClientListRow } from "../ClientList/ClientListRequest";
 import {
     arrowDirectionController,
@@ -29,6 +29,8 @@ const Dashboard = () => {
 
     const [referralSortOption, setReferralSortOption] = useState("");
     const [referralSortDirection, setReferralIsSortDirection] = useState<TSortDirection>("None");
+    const isFocused = useIsFocused();
+    const database = useDatabase();
 
     const dashBoardClientComparator = (a: ClientListRow, b: ClientListRow): number => {
         return clientComparator(a, b, clientSortOption, clientSortDirection);
@@ -67,14 +69,13 @@ const Dashboard = () => {
     const [referralList, setReferralList] = useState<BriefReferral[]>([]);
     const navigation = useNavigation();
     const getNewClient = async () => {
-        var fetchedClientList = await fetchAllClientsFromApi();
+        var fetchedClientList = await fetchAllClientsFromDB(database);
         if (clientSortDirection !== "None") {
             fetchedClientList = fetchedClientList.sort(dashBoardClientComparator);
         }
         setClientList(fetchedClientList);
     };
 
-    const database = useDatabase();
     const getReferrals = async () => {
         let fetchedReferrals: BriefReferral[] = await fetchReferrals(database);
         if (referralSortDirection !== "None") {
@@ -84,10 +85,18 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        getNewClient();
-        getReferrals();
+        if (isFocused) {
+            getNewClient();
+            getReferrals();
+        }
         //TODO alert part.
-    }, [clientSortOption, referralSortOption, clientSortDirection, referralSortDirection]);
+    }, [
+        clientSortOption,
+        referralSortOption,
+        clientSortDirection,
+        referralSortDirection,
+        isFocused,
+    ]);
 
     const locale = NativeModules.I18nManager.localeIdentifier;
     const timezone = Localization.timezone;

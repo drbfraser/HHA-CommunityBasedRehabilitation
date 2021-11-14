@@ -64,6 +64,7 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
         default=True,
     )
     created_at = models.BigIntegerField(_("date created"), default=current_milli_time)
+    server_created_at = models.BigIntegerField(default=current_milli_time)
     updated_at = models.BigIntegerField(_("date created"), default=0)
     objects = UserCBRManager()
 
@@ -134,6 +135,7 @@ class Client(models.Model):
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     created_at = models.BigIntegerField()
     updated_at = models.BigIntegerField(default=0)
+    server_created_at = models.BigIntegerField(default=0)
     longitude = models.DecimalField(max_digits=12, decimal_places=6)
     latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
@@ -155,6 +157,7 @@ class Client(models.Model):
         upload_to=rename_file,
         storage=OverwriteStorage(),
         blank=True,
+        null=True,
         # validators=[filesize_validator],
     )  # if picture available
     caregiver_present = models.BooleanField(default=False)
@@ -166,8 +169,11 @@ class Client(models.Model):
 
     # summary data to make queries more reasonable
     health_risk_level = RiskLevel.getField()
+    health_timestamp = models.BigIntegerField(default=0)
     social_risk_level = RiskLevel.getField()
+    social_timestamp = models.BigIntegerField(default=0)
     educat_risk_level = RiskLevel.getField()
+    educat_timestamp = models.BigIntegerField(default=0)
     last_visit_date = models.BigIntegerField(default=0)
 
     def save(self, *args, **kwargs):
@@ -198,6 +204,7 @@ class ClientRisk(models.Model):
         Client, related_name="risks", on_delete=models.CASCADE
     )
     timestamp = models.BigIntegerField()
+    server_created_at = models.BigIntegerField(default=0)
     risk_type = RiskType.getField()
     risk_level = RiskLevel.getField()
     requirement = models.TextField()
@@ -205,11 +212,15 @@ class ClientRisk(models.Model):
 
 
 class Visit(models.Model):
-    client = models.ForeignKey(Client, related_name="visits", on_delete=models.CASCADE)
-    user = models.ForeignKey(
+    id = models.CharField(primary_key=True, max_length=100)
+    client_id = models.ForeignKey(
+        Client, related_name="visits", on_delete=models.CASCADE
+    )
+    user_id = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name="visits", on_delete=models.PROTECT
     )
-    date_visited = models.BigIntegerField()
+    created_at = models.BigIntegerField()
+    server_created_at = models.BigIntegerField(default=0)
     health_visit = models.BooleanField(default=False)
     educat_visit = models.BooleanField(default=False)
     social_visit = models.BooleanField(default=False)
@@ -308,26 +319,35 @@ class Outcome(models.Model):
         ONGOING = "GO", _("Ongoing")
         CONCLUDED = "CON", _("Concluded")
 
-    visit = models.ForeignKey(Visit, related_name="outcomes", on_delete=models.CASCADE)
+    id = models.CharField(primary_key=True, max_length=100)
+    visit_id = models.ForeignKey(
+        Visit, related_name="outcomes", on_delete=models.CASCADE
+    )
     risk_type = RiskType.getField()
     goal_met = models.CharField(max_length=3, choices=Goal.choices)
     outcome = models.TextField(blank=True)
+    created_at = models.BigIntegerField(default=current_milli_time)
+    server_created_at = models.BigIntegerField(default=current_milli_time)
 
 
 class Improvement(models.Model):
-    visit = models.ForeignKey(
+    id = models.CharField(primary_key=True, max_length=100)
+    visit_id = models.ForeignKey(
         Visit, related_name="improvements", on_delete=models.CASCADE
     )
     risk_type = RiskType.getField()
     provided = models.CharField(max_length=50)
     desc = models.TextField()
+    created_at = models.BigIntegerField(default=current_milli_time)
+    server_created_at = models.BigIntegerField(default=current_milli_time)
 
 
 class BaselineSurvey(models.Model):
-    client = models.ForeignKey(
+    id = models.CharField(primary_key=True, max_length=100)
+    client_id = models.ForeignKey(
         Client, related_name="baseline_surveys", on_delete=models.CASCADE
     )
-    user = models.ForeignKey(
+    user_id = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="baselinesurveys",
         on_delete=models.PROTECT,
@@ -419,3 +439,6 @@ class BaselineSurvey(models.Model):
     # Shelter and Care
     shelter_adequate = models.BooleanField()
     shelter_essential_access = models.BooleanField()
+
+    created_at = models.BigIntegerField(_("date created"), default=current_milli_time)
+    server_created_at = models.BigIntegerField(default=current_milli_time)

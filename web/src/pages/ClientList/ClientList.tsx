@@ -92,7 +92,6 @@ const RenderNoRowsOverlay = () => {
 const ClientList = () => {
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
-    const [isIdHidden, setIdHidden] = useState<boolean>(false);
     const [isNameHidden, setNameHidden] = useState<boolean>(false);
     const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
     const [isHealthHidden, setHealthHidden] = useState<boolean>(false);
@@ -144,14 +143,6 @@ const ClientList = () => {
     };
 
     const columns = [
-        {
-            field: "id",
-            headerName: "ID",
-            flex: 0.55,
-            renderCell: RenderText,
-            hide: isIdHidden,
-            hideFunction: setIdHidden,
-        },
         {
             field: "name",
             headerName: "Name",

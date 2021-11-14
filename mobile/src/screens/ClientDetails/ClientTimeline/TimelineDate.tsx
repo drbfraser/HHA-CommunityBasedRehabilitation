@@ -1,4 +1,4 @@
-import { IReferral, ISurvey, themeColors, timestampToDate } from "@cbr/common";
+import { formatDate, IReferral, ISurvey, themeColors, timestampToDate } from "@cbr/common";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { View, Text, NativeModules } from "react-native";
@@ -7,7 +7,7 @@ import { Button } from "react-native-paper";
 import useStyles from "./Timeline.style";
 
 interface SummaryProps {
-    date: number;
+    date: Date;
 }
 
 const locale = NativeModules.I18nManager.localeIdentifier;
@@ -18,7 +18,7 @@ export const TimelineDate = (props: SummaryProps) => {
 
     return (
         <View style={styles.container}>
-            <Text>{timestampToDate(props.date, locale, timezone)}</Text>
+            <Text>{formatDate(props.date, locale, timezone)}</Text>
             <View style={styles.activityTypeView}>
                 <View style={styles.verticleLine} />
                 <Button

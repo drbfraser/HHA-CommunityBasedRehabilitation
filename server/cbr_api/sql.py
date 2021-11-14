@@ -38,7 +38,7 @@ def getVisitStats(user_id, from_time, to_time):
         FROM cbr_api_visit
     """
 
-    sql += getStatsWhere(user_id, "date_visited", from_time, to_time)
+    sql += getStatsWhere(user_id, "created_at", from_time, to_time)
     sql += " GROUP BY zone_id ORDER BY zone_id"
 
     from django.db import connection

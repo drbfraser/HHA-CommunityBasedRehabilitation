@@ -1,4 +1,4 @@
-import { IReferral, ISurvey, themeColors, timestampToDate, useZones } from "@cbr/common";
+import { formatDate, IReferral, ISurvey, themeColors, useZones } from "@cbr/common";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { View, Text, TouchableOpacity, NativeModules } from "react-native";
@@ -62,7 +62,7 @@ const Timeline = (props: ISummaryProps) => {
             <View>
                 <View style={styles.container}>
                     <Text style={{ width: "25%" }}>
-                        {timestampToDate(props.activity.date, locale, timezone)}
+                        {formatDate(new Date(props.activity.date), locale, timezone)}
                     </Text>
                     <View style={styles.activityTypeView}>
                         <View style={styles.verticleLine}></View>

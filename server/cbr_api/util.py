@@ -136,7 +136,7 @@ def get_model_changes(request, model):
 
     ##filter against last pulled time
     if pulledTime != "null":
-        if model == models.Client:
+        if model == models.Client or model == models.Referral:
             create_set = queryset.filter(server_created_at__gt=pulledTime)
             updated_set = queryset.filter(
                 server_created_at__lte=pulledTime, updated_at__gt=pulledTime
@@ -243,4 +243,4 @@ def create_referral_data(validated_data, user, sync_time):
     updated_data = table_data.pop("updated")
     for data in updated_data:
         data["updated_at"] = sync_time
-        model.objects.filter(pk=data["id"]).update(**data)
+        models.Referral.objects.filter(pk=data["id"]).update(**data)

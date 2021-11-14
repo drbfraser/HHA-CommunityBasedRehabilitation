@@ -4,6 +4,7 @@ const useStyles = () =>
     StyleSheet.create({
         container: {
             flex: 1,
+            marginStart: 10,
             alignItems: "center",
             justifyContent: "center",
         },

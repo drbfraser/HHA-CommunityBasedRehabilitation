@@ -4,110 +4,105 @@ import { Button, Text, TextInput, Title } from "react-native-paper";
 import useStyles from "./Todo.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { AppStackNavProp } from "../../util/stackScreens";
-import { useNavigation } from "@react-navigation/core";
-import { useCurrentUser, useDisabilities, useZones } from "@cbr/common";
-import { StackScreenName } from "../../util/StackScreenName";
+import { useIsFocused, useNavigation } from "@react-navigation/core";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
-import { logger, SyncDB } from "../../util/syncHandler";
+import {
+    VictoryBar,
+    VictoryChart,
+    VictoryTheme,
+    VictoryZoomContainer,
+    VictoryAxis,
+} from "victory-native";
+import { themeColors, useZones } from "@cbr/common";
+import { Q } from "@nozbe/watermelondb";
+import { start } from "repl";
+
+export type VisitStat = {
+    zonename: string;
+    visitcount: number;
+};
 
 const Todo = () => {
+    const data: VisitStat[] = [];
     const styles = useStyles();
     const authContext = useContext(AuthContext);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [visitData, setVisitData] = useState(data);
     const database = useDatabase();
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         authContext.requireLoggedIn(true);
     }, []);
     const navigation = useNavigation<AppStackNavProp>();
-    const logoutAlert = () =>
-        Alert.alert("Alert", "Do you want to logout?", [
-            {
-                text: "Don't logout",
-                style: "cancel",
-            },
-            { text: "Logout", onPress: () => authContext.logout() },
-        ]);
+    const zones = useZones();
 
-    const resetDatabase = async () => {
-        await database.write(async () => {
-            await database.unsafeResetDatabase();
-            console.log("database cleared");
-        });
+    const getStats = async () => {
+        for (const zone of zones) {
+            const count = await database.get("visits").query(Q.where("zone", zone[0])).fetchCount();
+            if (count !== 0) {
+                var record: VisitStat = { zonename: zone[1], visitcount: count };
+                data.push(record);
+                setVisitData(data);
+            }
+        }
     };
 
-    const zones = useZones();
-    const disabilities = useDisabilities();
-    const currentUser = useCurrentUser();
+    useEffect(() => {
+        if (isFocused) {
+            getStats()
+                .catch(() => {})
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
+    }, [isFocused]);
 
-    const [userId, setUserId] = useState<string>();
-    const [count, setCount] = useState(0);
     return (
         <View style={styles.container}>
-            <Title>This is a placeholder component screen.</Title>
-            <Text>Due to be removed, once the app reaches completion!</Text>
-            <Button
-                mode="contained"
-                onPress={() => {
-                    SyncDB(database);
-                }}
-            >
-                Sync
-            </Button>
-            <Button
-                mode="contained"
-                onPress={() => {
-                    console.log(logger.formattedLogs);
-                }}
-            >
-                Read Sync Log
-            </Button>
-            <Button mode="contained" onPress={resetDatabase}>
-                Reset Local Database
-            </Button>
-            <Button
-                mode="contained"
-                onPress={() => {
-                    logoutAlert();
-                }}
-            >
-                Logout
-            </Button>
-
-            <Text>Zones hook: {JSON.stringify(Array.from(zones))}</Text>
-            <Text>Disabilities hook: {JSON.stringify(Array.from(disabilities))}</Text>
-            <Text>Current user hook: {JSON.stringify(currentUser)}</Text>
-
-            {/* TODO: Remove this when admin user list is created */}
-            <TextInput
-                style={styles.userIdTextInput}
-                value={userId}
-                onChangeText={setUserId}
-                onSubmitEditing={() => {
-                    if (userId) {
-                        navigation.navigate(StackScreenName.ADMIN_VIEW, { userID: Number(userId) });
-                    }
-                }}
-                keyboardType="number-pad"
-                label="User ID to open"
-            />
-
-            {/* TODO: Remove this when admin user list is created */}
-            <Button
-                mode="contained"
-                disabled={!userId}
-                onPress={() => {
-                    if (userId) {
-                        navigation.navigate(StackScreenName.ADMIN_VIEW, { userID: Number(userId) });
-                    }
-                }}
-            >
-                View user as admin
-            </Button>
-
-            {/* TODO: Remove this when admin user list is created */}
-            <Button mode="contained" onPress={() => navigation.navigate(StackScreenName.ADMIN_NEW)}>
-                Create new user
-            </Button>
+            <Title>Stats</Title>
+            {!loading ? (
+                <VictoryChart
+                    animate={{
+                        duration: 500,
+                        onLoad: { duration: 500 },
+                    }}
+                    domainPadding={10}
+                    padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
+                    containerComponent={<VictoryZoomContainer />}
+                    theme={VictoryTheme.material}
+                >
+                    <VictoryAxis
+                        style={{
+                            axisLabel: { fontSize: 12 },
+                            tickLabels: {
+                                fontSize: 12,
+                            },
+                            grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                        }}
+                        dependentAxis
+                    />
+                    <VictoryAxis
+                        style={{
+                            axisLabel: { fontSize: 10 },
+                            tickLabels: {
+                                fontSize: 10,
+                            },
+                        }}
+                    />
+                    <VictoryBar
+                        horizontal
+                        barRatio={0.8}
+                        style={{ data: { fill: themeColors.blueAccent } }}
+                        alignment="middle"
+                        data={visitData}
+                        x="zonename"
+                        y="visitcount"
+                    />
+                </VictoryChart>
+            ) : (
+                <Text>Not data</Text>
+            )}
         </View>
     );
 };

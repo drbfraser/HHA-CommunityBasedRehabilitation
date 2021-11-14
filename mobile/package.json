@@ -74,7 +74,7 @@
         "react-native-screens": "~3.0.0",
         "react-native-select-multiple": "^2.1.0",
         "react-native-skeleton-placeholder": "^5.0.0",
-        "react-native-svg": "12.1.0",
+        "react-native-svg": "^12.1.0",
         "react-native-unimodules": "~0.13.3",
         "react-native-vector-icons": "^8.1.0",
         "react-native-web": "~0.13.12",
@@ -84,6 +84,7 @@
         "react-navigation-stack": "^2.10.4",
         "react-router-dom": "^5.2.0",
         "socket.io-client": "^4.3.2",
+        "victory-native": "^36.2.0",
         "yup": "^0.32.9"
     },
     "devDependencies": {

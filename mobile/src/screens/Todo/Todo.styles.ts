@@ -1,16 +1,33 @@
+import { themeColors } from "@cbr/common/src/util/colors";
 import { StyleSheet } from "react-native";
 
 const useStyles = () =>
     StyleSheet.create({
-        container: {
-            flex: 1,
-            marginStart: 10,
+        title: {
+            fontSize: 30,
+        },
+        row: {
+            flexDirection: "row",
+            display: "flex",
             alignItems: "center",
             justifyContent: "center",
         },
-        userIdTextInput: {
-            alignSelf: "stretch",
-            marginHorizontal: 10,
+        scrollViewStyles: {
+            marginHorizontal: 5,
+        },
+        container: {
+            flex: 1,
+        },
+        graphContainer: {
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+        },
+        cardSectionTitle: {
+            textAlign: "center",
+            marginTop: 14,
+            marginBottom: 14,
+            fontSize: 32,
         },
     });
 

@@ -29,6 +29,7 @@ from cbr_api.util import (
     get_model_changes,
     stringify_disability,
     destringify_disability,
+    decode_image,
 )
 
 
@@ -83,7 +84,6 @@ class UserCurrent(generics.RetrieveAPIView):
     serializer_class = serializers.UserCBRSerializer
 
     def get_object(self):
-        print("self id is " + self.request.user.id)
         return generics.get_object_or_404(self.queryset, id=self.request.user.id)
 
 
@@ -292,26 +292,51 @@ def sync(request):
         reply.changes["clients"] = get_model_changes(request, models.Client)
         reply.changes["risks"] = get_model_changes(request, models.ClientRisk)
         reply.changes["surveys"] = get_model_changes(request, models.BaselineSurvey)
+        reply.changes["visits"] = get_model_changes(request, models.Visit)
+        reply.changes["outcomes"] = get_model_changes(request, models.Outcome)
+        reply.changes["improvements"] = get_model_changes(request, models.Improvement)
         serialized = serializers.pullResponseSerializer(reply)
         stringify_disability(serialized.data)
         return Response(serialized.data)
     else:
-        # print(request.data)
-        user_serializer = serializers.pushUserSerializer(data=request.data)
+        sync_time = request.GET.get("last_pulled_at", "")
+        user_serializer = serializers.pushUserSerializer(
+            data=request.data, context={"sync_time": sync_time}
+        )
         if user_serializer.is_valid():
             user_serializer.save()
             destringify_disability(request.data)
-            client_serializer = serializers.pushClientSerializer(data=request.data)
+            decode_image(request.data["clients"])
+            client_serializer = serializers.pushClientSerializer(
+                data=request.data, context={"sync_time": sync_time}
+            )
             if client_serializer.is_valid():
                 client_serializer.save()
-                print(request.data.get("risks"))
-                risk_serializer = serializers.pushRiskSerializer(data=request.data)
+                risk_serializer = serializers.pushRiskSerializer(
+                    data=request.data, context={"sync_time": sync_time}
+                )
                 if risk_serializer.is_valid():
                     risk_serializer.save()
                     survey_serializer = serializers.pushBaselineSurveySerializer(data=request.data, context={"user": request.user})
                     if survey_serializer.is_valid():
                         survey_serializer.save()
-                        return Response(status=status.HTTP_201_CREATED)
+                        visit_serializer = serializers.pushVisitSerializer(
+                            data=request.data, context={"sync_time": sync_time}
+                        )
+                        if visit_serializer.is_valid():
+                            visit_serializer.save()
+                            outcome_improvment_serializer = (
+                                serializers.pushOutcomeImprovementSerializer(
+                                    data=request.data, context={"sync_time": sync_time}
+                                )
+                            )
+                            if outcome_improvment_serializer.is_valid():
+                                outcome_improvment_serializer.save()
+                                return Response(status=status.HTTP_201_CREATED)
+                            else:
+                                print(outcome_improvment_serializer.errors)
+                        else:
+                            print(visit_serializer.errors)
                     else:
                         print(survey_serializer.errors)
                 else:

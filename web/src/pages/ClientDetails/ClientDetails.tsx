@@ -31,7 +31,6 @@ const ClientDetails = () => {
             .then((client: IClient) => {
                 client.birth_date = timestampToFormDate(client.birth_date as number, true);
                 client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
-
                 setClientInfo(client);
             })
             .catch(() => setLoadingError(true));

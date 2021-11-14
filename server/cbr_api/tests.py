@@ -1,5 +1,6 @@
 from django.test import TestCase
 from cbr_api import models
+import uuid
 
 
 class ModelsTestCase(TestCase):
@@ -15,6 +16,7 @@ class ModelsTestCase(TestCase):
 
     def quickCreateClient(self, First, Last, Gender, Contact, Zone):
         return models.Client.objects.create(
+            id=uuid.uuid4(),
             user_id=self.superuser,
             created_at=0,
             first_name=First,

@@ -6,42 +6,42 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0024_auto_20211030_1140'),
+        ("cbr_api", "0024_auto_20211030_1140"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='client',
-            old_name='created_date',
-            new_name='created_at',
+            model_name="client",
+            old_name="created_date",
+            new_name="created_at",
         ),
         migrations.RenameField(
-            model_name='client',
-            old_name='created_by_user',
-            new_name='user_id',
+            model_name="client",
+            old_name="created_by_user",
+            new_name="user_id",
         ),
         migrations.RenameField(
-            model_name='clientrisk',
-            old_name='client',
-            new_name='client_id',
+            model_name="clientrisk",
+            old_name="client",
+            new_name="client_id",
         ),
         migrations.RemoveField(
-            model_name='client',
-            name='modified_date',
+            model_name="client",
+            name="modified_date",
         ),
         migrations.AddField(
-            model_name='client',
-            name='updated_at',
+            model_name="client",
+            name="updated_at",
             field=models.BigIntegerField(default=0),
         ),
         migrations.AlterField(
-            model_name='client',
-            name='id',
+            model_name="client",
+            name="id",
             field=models.CharField(max_length=100, primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='clientrisk',
-            name='id',
+            model_name="clientrisk",
+            name="id",
             field=models.CharField(max_length=100, primary_key=True, serialize=False),
         ),
     ]

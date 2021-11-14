@@ -4,6 +4,7 @@ import { dbType } from "./watermelonDatabase";
 
 //@ts-ignore
 import SyncLogger from "@nozbe/watermelondb/sync/SyncLogger";
+import { stringify } from "querystring";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
@@ -19,6 +20,7 @@ export async function SyncDB(database: dbType) {
 
             const { changes, timestamp } = await response.json();
             console.log(JSON.stringify({ changes, timestamp }));
+            await getImage(changes);
             return { changes, timestamp };
         },
         pushChanges: async ({ changes, lastPulledAt }) => {
@@ -42,6 +44,29 @@ export async function SyncDB(database: dbType) {
     });
 }
 
+async function getImage(changes) {
+    await getClientImage(changes["clients"]["created"]);
+    await getClientImage(changes["clients"]["updated"]);
+}
+
+async function getClientImage(changes) {
+    await Promise.all(
+        changes.map(async (element) => {
+            if (element.picture != null) {
+                await apiFetch(Endpoint.CLIENT_PICTURE, `${element.id}`)
+                    .then((resp) => resp.blob())
+                    .then((blob) => {
+                        let reader = new FileReader();
+                        reader.onload = () => {
+                            element.picture = reader.result as string;
+                        };
+                        reader.readAsDataURL(blob);
+                    });
+            }
+        })
+    );
+}
+
 function riskResolver(raw, dirtyRaw, newRaw, column, timestamp) {
     if (raw[timestamp] > dirtyRaw[timestamp]) {
         return true;
@@ -53,7 +78,7 @@ function riskResolver(raw, dirtyRaw, newRaw, column, timestamp) {
 }
 
 function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
-    let riskChange = false;
+    let localChange = false;
     raw._changed.split(",").forEach((column) => {
         if (
             ["health_timestamp", "educat_timestamp", "social_timestamp"].some((a) => a !== column)
@@ -65,7 +90,21 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
             ) {
                 let riskType = column.split("_")[0];
                 if (riskResolver(raw, dirtyRaw, newRaw, column, `${riskType}_timestamp`)) {
-                    riskChange = true;
+                    localChange = true;
+                }
+            } else if (column === "last_visit_date") {
+                // if local last visit date is greater than server last visit date, then take local version
+                if (raw[column] > dirtyRaw[column]) {
+                    localChange = true;
+                } else {
+                    newRaw[column] = dirtyRaw[column];
+                }
+            } else if (column === "picture") {
+                // if server image is null, then will push local changes up instead
+                if (dirtyRaw[column] == null) {
+                    localChange = true;
+                } else {
+                    newRaw[column] = dirtyRaw[column];
                 }
             } else {
                 newRaw[column] = dirtyRaw[column];
@@ -73,7 +112,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
         }
     });
 
-    if (!riskChange) {
+    if (!localChange) {
         if (newRaw["_changed"] !== "") {
             newRaw["_changed"] = "";
         }

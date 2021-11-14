@@ -58,7 +58,6 @@ const AdminList = () => {
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
     const [loading, setLoading] = useState<boolean>(true);
-    const [isIdHidden, setIdHidden] = useState<boolean>(false);
     const [isNameHidden, setNameHidden] = useState<boolean>(false);
     const [isRoleHidden, setRoleHidden] = useState<boolean>(false);
     const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
@@ -85,14 +84,6 @@ const AdminList = () => {
     const onOptionsClose = () => setOptionsAnchorEl(null);
 
     const columns = [
-        {
-            field: "id",
-            headerName: "ID",
-            flex: 0.55,
-            renderCell: RenderText,
-            hide: isIdHidden,
-            hideFunction: setIdHidden,
-        },
         {
             field: "name",
             headerName: "Name",
@@ -148,11 +139,6 @@ const AdminList = () => {
                 (r) =>
                     r.name.toLowerCase().startsWith(searchValue) ||
                     r.last_name.toLowerCase().startsWith(searchValue)
-            );
-            setFilteredRows(filteredRows);
-        } else if (searchOption === SearchOption.ID) {
-            const filteredRows: RowsProp = serverRows.filter((r) =>
-                r.id.toString().startsWith(searchValue)
             );
             setFilteredRows(filteredRows);
         } else if (searchOption === SearchOption.ZONE) {

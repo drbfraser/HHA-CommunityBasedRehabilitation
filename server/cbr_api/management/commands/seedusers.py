@@ -11,6 +11,11 @@ class Command(BaseCommand):
             return (year - 1970) * (60 * 60 * 24 * 365)
 
         def createUser(self, id, username, password, first, last, phone, role):
+            creation_date = (
+                random.randint(
+                    getYearTimestamp(self, 2017), getYearTimestamp(self, 2018)
+                )
+            ) * 1000
             user = models.UserCBR.objects.create(
                 id=id,
                 username=username,
@@ -19,10 +24,8 @@ class Command(BaseCommand):
                 last_name=last,
                 zone=random.choice(zones),
                 phone_number=phone,
-                created_at=random.randint(
-                    getYearTimestamp(self, 2017), getYearTimestamp(self, 2018)
-                )
-                * 1000,
+                created_at=creation_date,
+                server_created_at=creation_date,
                 is_active=True,
                 role=role,
             )

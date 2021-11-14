@@ -7,22 +7,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0023_alter_usercbr_id'),
+        ("cbr_api", "0023_alter_usercbr_id"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='usercbr',
-            name='created_date',
+            model_name="usercbr",
+            name="created_date",
         ),
         migrations.AddField(
-            model_name='usercbr',
-            name='created_at',
-            field=models.BigIntegerField(default=cbr_api.util.current_milli_time, verbose_name='date created'),
+            model_name="usercbr",
+            name="created_at",
+            field=models.BigIntegerField(
+                default=cbr_api.util.current_milli_time, verbose_name="date created"
+            ),
         ),
         migrations.AddField(
-            model_name='usercbr',
-            name='updated_at',
-            field=models.BigIntegerField(default=0, verbose_name='date created'),
+            model_name="usercbr",
+            name="updated_at",
+            field=models.BigIntegerField(default=0, verbose_name="date created"),
         ),
     ]

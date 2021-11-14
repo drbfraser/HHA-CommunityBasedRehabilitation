@@ -40,21 +40,19 @@ const UserList = () => {
 
     const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
 
-    const [showIDColumn, setShowIDColumn] = useState(true);
     const [showNameColumn, setShowNameColumn] = useState(true);
     const [showZoneColumn, setShowZoneColumn] = useState(true);
     const [showRoleColumn, setShowRoleColumn] = useState(true);
     const [showStatusColumn, setShowStatusColumn] = useState(true);
 
-    const [selectedColumn, setSelectedColumn] = useState<String[]>(["0", "1", "2", "3", "4"]);
+    const [selectedColumn, setSelectedColumn] = useState<String[]>(["0", "1", "2", "3"]);
     const columnShowingList = [
-        setShowIDColumn,
         setShowNameColumn,
         setShowZoneColumn,
         setShowRoleColumn,
         setShowStatusColumn,
     ];
-    const columnList = { 0: "ID", 1: "Name", 2: "Zone", 3: "Role", 4: "Statue" };
+    const columnList = { 0: "Name", 1: "Zone", 2: "Role", 3: "Statue" };
     const openColumnBuilderMenu = () => {
         setShowColumnBuilderMenu(true);
         showSelectedColumn;
@@ -172,7 +170,6 @@ const UserList = () => {
                     }}
                 >
                     <Picker.Item label="N/A" value="" />
-                    <Picker.Item label="ID" value={SearchOption.ID} />
                     <Picker.Item label="Name" value={SearchOption.NAME} />
                     <Picker.Item label="Zone" value={SearchOption.ZONE} />
                 </Picker>
@@ -212,12 +209,6 @@ const UserList = () => {
                 <DataTable>
                     <DataTable.Header style={styles.item}>
                         <ShowTitle
-                            label="ID"
-                            style={styles.column_id}
-                            showTheTitle={showIDColumn}
-                            thisColumnSortOption={SortOptions.ID}
-                        />
-                        <ShowTitle
                             label="Name"
                             style={styles.column_name}
                             showTheTitle={showNameColumn}
@@ -253,13 +244,6 @@ const UserList = () => {
                                     });
                                 }}
                             >
-                                {showIDColumn ? (
-                                    <DataTable.Cell style={styles.column_id}>
-                                        {item.id}
-                                    </DataTable.Cell>
-                                ) : (
-                                    <View></View>
-                                )}
                                 {showNameColumn ? (
                                     <View style={styles.column_name}>
                                         <WrappedText text={item.full_name} />

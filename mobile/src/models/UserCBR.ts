@@ -7,6 +7,7 @@ export default class User extends Model {
     static associations = {
         clients: { type: "has_many", foreignKey: "user_id" },
         surveys: { type: "has_many", foreignKey: "user" },
+        visits: { type: "has_many", foreignKey: "user_id" },
     } as const;
 
     @text("username") username;
@@ -29,4 +30,5 @@ export default class User extends Model {
 
     @children("clients") clients;
     @children("surveys") surveys;
+    @children("visits") visits;
 }

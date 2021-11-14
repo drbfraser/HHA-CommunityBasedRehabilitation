@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Divider, HelperText, Text, TextInput } from "react-native-paper";
 import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
@@ -18,6 +18,7 @@ import {
     provisionals,
     themeColors,
     TZoneMap,
+    useCurrentUser,
     useZones,
     visitFieldLabels,
     VisitFormField,
@@ -35,13 +36,15 @@ import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewVisi
 import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { AuthContext } from "../../context/AuthContext/AuthContext";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
 }
 
 interface INewVisitProps {
-    clientID: number;
+    clientID: string;
     route: RouteProp<StackParamList, StackScreenName.VISIT>;
     navigation: StackNavigationProp<StackParamList, StackScreenName.VISIT>;
 }
@@ -315,6 +318,9 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[]) => {
 };
 
 const NewVisit = (props: INewVisitProps) => {
+    const authContext = useContext(AuthContext);
+    const user =
+        authContext.authState.state === "loggedIn" ? authContext.authState.currentUser : null;
     const [loadingError, setLoadingError] = useState(false);
     const styles = useStyles();
     const zones = useZones();
@@ -327,17 +333,26 @@ const NewVisit = (props: INewVisitProps) => {
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
     const [saveError, setSaveError] = useState<string>();
     const clientId = props.route.params.clientID;
+    const database = useDatabase();
+
+    const getClientDetails = async () => {
+        try {
+            const fetchedClient: any = await database.get("clients").find(clientId);
+            fetchedClient.risks.fetch().then((risk) => {
+                risk.sort((a: any, b: any) => b.timestamp - a.timestamp);
+                setRisks(risk);
+            });
+        } catch (e) {
+            setLoadingError(true);
+        }
+    };
 
     useEffect(() => {
-        apiFetch(Endpoint.CLIENT, `${clientId}`)
-            .then((resp) => resp.json())
-            .then((client: IClient) => {
-                client.risks.sort((a: IRisk, b: IRisk) => b.timestamp - a.timestamp);
-                setRisks(client.risks);
-            })
-            .catch(() => {
-                setLoadingError(true);
-            });
+        authContext.requireLoggedIn(true);
+    }, []);
+
+    useEffect(() => {
+        getClientDetails();
     }, [clientId]);
 
     const visitSteps = [
@@ -371,7 +386,7 @@ const NewVisit = (props: INewVisitProps) => {
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
-            handleSubmit(values, helpers)
+            handleSubmit(values, helpers, user!.id, database)
                 .then(() => {
                     setHasSubmitted(true);
                     props.navigation.navigate(StackScreenName.CLIENT, {
@@ -388,7 +403,7 @@ const NewVisit = (props: INewVisitProps) => {
             setCheckedSteps([]);
         } else {
             if (activeStep === 0) {
-                helpers.setFieldValue(`${[VisitFormField.client]}`, `${clientId}`);
+                helpers.setFieldValue(`${[VisitFormField.client_id]}`, `${clientId}`);
             }
             if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
                 checkedSteps.push(enabledSteps[activeStep - 1]);

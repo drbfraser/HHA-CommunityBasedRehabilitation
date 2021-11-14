@@ -6,11 +6,7 @@ import App from "./App";
 import { initializeCommon, KeyValStorageProvider } from "@cbr/common/init";
 import { loginState } from "./util/hooks/loginState";
 import { invalidateAllCachedAPI } from "@cbr/common/util/hooks/cachedAPI";
-
-const API_URL =
-    process.env.NODE_ENV === "development"
-        ? `http://${window.location.hostname}:8000/api/`
-        : "/api/";
+import { API_URL } from "./util/api";
 
 const localStorageProvider: KeyValStorageProvider = {
     getItem: async (key: string) => {

@@ -57,6 +57,7 @@ const ClientDetails = (props: ClientProps) => {
     const [client, setClient] = useState<any>();
     const [risks, setRisk] = useState<any>();
     const [surveys, setSurveys] = useState<any>();
+    const [visits, setVisits] = useState<any>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
             {
@@ -70,12 +71,19 @@ const ClientDetails = (props: ClientProps) => {
 
     const getClientDetails = async () => {
         try {
-            const presentClient = await database.get("clients").find(props.route.params.clientID);
-            const presentClientSurveys = await presentClient.surveys.fetch();
+            const presentClient: any = await database
+                .get("clients")
+                .find(props.route.params.clientID);
             const fetchedRisk = await presentClient.risks.fetch();
+            const presentClientSurveys = await presentClient.surveys.fetch();
+            const fetchedVisits = await presentClient.visits.fetch();
             setClient(presentClient);
             setRisk(fetchedRisk);
             setSurveys(presentClientSurveys);
+            setVisits(fetchedVisits);
+            if (presentClient.picture != null) {
+                setOriginaluri(presentClient.picture);
+            }
         } catch (e) {
             console.log(e);
         }
@@ -93,6 +101,7 @@ const ClientDetails = (props: ClientProps) => {
                 birthDate: client.birth_date,
                 gender: client.gender,
                 village: client.village,
+                picture: client.picture,
                 zone: client.zone ?? "",
                 phoneNumber: client.phone_number,
                 caregiverPresent: client.caregiver_present,
@@ -121,38 +130,29 @@ const ClientDetails = (props: ClientProps) => {
     const tempActivity: IActivity[] = [];
     let presentId = 0;
 
-    if (client) {
-        // client.visits.forEach((presentVisit) => {
-        //     tempActivity.push({
-        //         id: presentId,
-        //         type: ActivityType.VISIT,
-        //         date: presentVisit.date_visited,
-        //         visit: presentVisit,
-        //         referral: undefined,
-        //         survey: undefined,
-        //     });
-        //     presentId += 1;
-        // });
-        // client.referrals.forEach((presentRef) => {
-        //     tempActivity.push({
-        //         id: presentId,
-        //         type: ActivityType.REFERAL,
-        //         date: presentRef.date_referred,
-        //         visit: undefined,
-        //         referral: presentRef,
-        //         survey: undefined,
-        //     });
-        //     presentId += 1;
-        // });
-        surveys && Object.keys(surveys).forEach(key => {
-            const survey: ISurvey = surveys[key];
+    if (surveys) {
+        surveys.forEach((presentSurvey) => {
             tempActivity.push({
                 id: presentId,
                 type: ActivityType.SURVEY,
-                date: survey.survey_date,
+                date: presentSurvey.survey_date,
                 visit: undefined,
                 referral: undefined,
-                survey: survey
+                survey: presentSurvey,
+            });
+            presentId += 1;
+        })
+    }
+
+    if (visits) {
+        visits.forEach((presentVisit) => {
+            tempActivity.push({
+                id: presentId,
+                type: ActivityType.VISIT,
+                date: presentVisit.createdAt,
+                visit: presentVisit,
+                referral: undefined,
+                survey: undefined,
             });
             presentId += 1;
         });

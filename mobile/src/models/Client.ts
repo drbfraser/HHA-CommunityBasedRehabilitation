@@ -20,6 +20,7 @@ export default class Client extends Model {
         users: { type: "belongs_to", key: "user_id" },
         risks: { type: "has_many", foreignKey: "client_id" },
         surveys: { type: "has_many", foreignKey: "client" },
+        visits: { type: "has_many", foreignKey: "client_id" },
     } as const;
 
     @text("first_name") first_name;
@@ -34,6 +35,7 @@ export default class Client extends Model {
     @field("latitude") latitude;
     @field("zone") zone;
     @field("village") village;
+    @field("picture") picture;
     @field("caregiver_present") caregiver_present;
     @text("caregiver_name") caregiver_name;
     @text("caregiver_phone") caregiver_phone;
@@ -53,6 +55,7 @@ export default class Client extends Model {
 
     @children("risks") risks;
     @children("surveys") surveys;
+    @children("visits") visits;
 
     @writer async updateRisk(type, level, time) {
         await this.update((client) => {
@@ -74,6 +77,12 @@ export default class Client extends Model {
             client.educat_timestamp = this.createdAt;
             client.health_timestamp = this.createdAt;
             client.social_timestamp = this.createdAt;
+        });
+    }
+
+    @writer async updateVisitTime(visitTime) {
+        await this.update((client) => {
+            client.last_visit_date = visitTime;
         });
     }
 }

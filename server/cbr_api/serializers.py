@@ -14,8 +14,8 @@ from cbr_api.util import (
     current_milli_time,
     create_client_data,
     create_user_data,
-    create_risk_data,
     create_survey_data,
+    create_generic_data,
 )
 
 
@@ -183,6 +183,7 @@ class NormalRiskSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         current_time = current_milli_time()
         validated_data["timestamp"] = current_time
+        validated_data["server_created_at"] = current_time
         validated_data["id"] = uuid.uuid4()
         risk = models.ClientRisk.objects.create(**validated_data)
         risk.save()
@@ -223,15 +224,15 @@ class ClientRiskSerializer(serializers.ModelSerializer):
 class ImprovementSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Improvement
-        fields = [
-            "id",
-            "visit",
-            "risk_type",
-            "provided",
-            "desc",
-        ]
+        fields = ["id", "visit_id", "risk_type", "provided", "desc", "created_at"]
 
-        read_only_fields = ["visit"]
+        read_only_fields = ["visit_id", "created_at"]
+
+
+class ImprovementSyncSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Improvement
+        fields = ["id", "visit_id", "risk_type", "provided", "desc", "created_at"]
 
 
 class OutcomeSerializer(serializers.ModelSerializer):
@@ -239,13 +240,27 @@ class OutcomeSerializer(serializers.ModelSerializer):
         model = models.Outcome
         fields = [
             "id",
-            "visit",
+            "visit_id",
             "risk_type",
             "goal_met",
             "outcome",
+            "created_at",
         ]
 
-        read_only_fields = ["visit"]
+        read_only_fields = ["visit_id", "created_at"]
+
+
+class OutcomeSyncSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Outcome
+        fields = [
+            "id",
+            "visit_id",
+            "risk_type",
+            "goal_met",
+            "outcome",
+            "created_at",
+        ]
 
 
 class UpdateReferralSerializer(serializers.ModelSerializer):
@@ -334,9 +349,9 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         model = models.Visit
         fields = [
             "id",
-            "user",
-            "client",
-            "date_visited",
+            "user_id",
+            "client_id",
+            "created_at",
             "health_visit",
             "educat_visit",
             "social_visit",
@@ -348,30 +363,38 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             "outcomes",
         ]
 
-        read_only_fields = ["user", "date_visited"]
+        read_only_fields = ["user_id", "created_at"]
 
     def create(self, validated_data):
-        current_time = int(time.time())
+        current_time = current_milli_time()
 
         improvement_dataset = validated_data.pop("improvements")
         outcome_dataset = validated_data.pop("outcomes")
 
-        validated_data["user"] = self.context["request"].user
-        validated_data["date_visited"] = current_time
+        validated_data["id"] = uuid.uuid4()
+        validated_data["user_id"] = self.context["request"].user
+        validated_data["created_at"] = current_time
+        validated_data["server_created_at"] = current_time
         visit = models.Visit.objects.create(**validated_data)
         visit.save()
 
-        client = validated_data["client"]
+        client = validated_data["client_id"]
         client.last_visit_date = current_time
         client.save()
 
         for improvement_data in improvement_dataset:
-            improvement_data["visit"] = visit
+            improvement_data["id"] = uuid.uuid4()
+            improvement_data["visit_id"] = visit
+            improvement_data["created_at"] = current_time
+            improvement_data["server_created_at"] = current_time
             improvement = models.Improvement.objects.create(**improvement_data)
             improvement.save()
 
         for outcome_data in outcome_dataset:
-            outcome_data["visit"] = visit
+            outcome_data["id"] = uuid.uuid4()
+            outcome_data["visit_id"] = visit
+            outcome_data["created_at"] = current_time
+            outcome_data["server_created_at"] = current_time
             outcome = models.Outcome.objects.create(**outcome_data)
             outcome.save()
 
@@ -383,9 +406,9 @@ class SummaryVisitSerializer(serializers.ModelSerializer):
         model = models.Visit
         fields = [
             "id",
-            "user",
-            "client",
-            "date_visited",
+            "user_id",
+            "client_id",
+            "created_at",
             "health_visit",
             "educat_visit",
             "social_visit",
@@ -461,6 +484,7 @@ class ClientSyncSerializer(serializers.ModelSerializer):
             "updated_at",
             "zone",
             "village",
+            "picture",
             "caregiver_present",
             "caregiver_name",
             "caregiver_phone",
@@ -498,6 +522,7 @@ class editClientSyncSerializer(serializers.ModelSerializer):
             "updated_at",
             "zone",
             "village",
+            "picture",
             "caregiver_present",
             "caregiver_name",
             "caregiver_phone",
@@ -554,6 +579,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "user_id",
             "created_at",
             "updated_at",
+            "server_created_at",
             "longitude",
             "latitude",
             "zone",
@@ -572,11 +598,11 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "user_id",
             "created_at",
             "updated_at",
+            "server_created_at",
             "full_name",
         ]
 
     def create(self, validated_data):
-        print("creating client")
         current_time = current_milli_time()
         # must be removed before passing validated_data into Client.objects.create
         health_data = validated_data.pop("health_risk")
@@ -597,14 +623,14 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         validated_data["id"] = uuid.uuid4()
         validated_data["user_id"] = self.context["request"].user
         validated_data["created_at"] = current_time
-        print("validated data")
-        print(validated_data)
+        validated_data["server_created_at"] = current_time
         client = super().create(validated_data)
 
         def create_risk(data, type, time):
             data["id"] = uuid.uuid4()
             data["client_id"] = client
             data["timestamp"] = time
+            data["server_created_at"] = time
             data["risk_type"] = type
             risk = models.ClientRisk.objects.create(**data)
             risk.save()
@@ -656,7 +682,6 @@ class ClientDetailSerializer(serializers.ModelSerializer):
 
     def update(self, instance: models.Client, validated_data):
         validated_data["updated_at"] = current_milli_time()
-        print(validated_data)
         new_client_picture: Optional[File] = validated_data.get("picture")
         if new_client_picture:
             file_root, file_ext = os.path.splitext(new_client_picture.name)
@@ -693,6 +718,22 @@ class multiBaselineSurveySerializer(serializers.Serializer):
     created = BaselineSurveySyncSerializer(many=True)
     updated = BaselineSurveySyncSerializer(many=True)
     deleted = BaselineSurveySyncSerializer(many=True)
+class multiVisitSerializer(serializers.Serializer):
+    created = SummaryVisitSerializer(many=True)
+    updated = SummaryVisitSerializer(many=True)
+    deleted = SummaryVisitSerializer(many=True)
+
+
+class multiOutcomeSerializer(serializers.Serializer):
+    created = OutcomeSyncSerializer(many=True)
+    updated = OutcomeSyncSerializer(many=True)
+    deleted = OutcomeSyncSerializer(many=True)
+
+
+class multiImprovSerializer(serializers.Serializer):
+    created = ImprovementSyncSerializer(many=True)
+    updated = ImprovementSyncSerializer(many=True)
+    deleted = ImprovementSyncSerializer(many=True)
 
 
 # for each table being sync, add corresponding multi serializer under here
@@ -701,6 +742,9 @@ class tableSerializer(serializers.Serializer):
     clients = multiClientSerializer()
     risks = multiRiskSerializer()
     surveys = multiBaselineSurveySerializer()
+    visits = multiVisitSerializer()
+    outcomes = multiOutcomeSerializer()
+    improvements = multiImprovSerializer()
 
 
 class pullResponseSerializer(serializers.Serializer):
@@ -712,9 +756,7 @@ class pushUserSerializer(serializers.Serializer):
     users = multiUserSerializer()
 
     def create(self, validated_data):
-        print("user validated data")
-        create_user_data(validated_data)
-        print("user done")
+        create_user_data(validated_data, self.context.get("sync_time"))
         return self
 
 
@@ -722,9 +764,7 @@ class pushClientSerializer(serializers.Serializer):
     clients = multiClientSerializer()
 
     def create(self, validated_data):
-        print("client validated data")
-        create_client_data(validated_data)
-        print("clients done")
+        create_client_data(validated_data, self.context.get("sync_time"))
         return self
 
 
@@ -732,9 +772,36 @@ class pushRiskSerializer(serializers.Serializer):
     risks = multiRiskSerializer()
 
     def create(self, validated_data):
-        print("risk validated data")
-        create_risk_data(validated_data)
-        print("risks done")
+        create_generic_data(
+            "risks", models.ClientRisk, validated_data, self.context.get("sync_time")
+        )
+        return self
+
+
+class pushVisitSerializer(serializers.Serializer):
+    visits = multiVisitSerializer()
+
+    def create(self, validated_data):
+        create_generic_data(
+            "visits", models.Visit, validated_data, self.context.get("sync_time")
+        )
+        return self
+
+
+class pushOutcomeImprovementSerializer(serializers.Serializer):
+    outcomes = multiOutcomeSerializer()
+    improvements = multiImprovSerializer()
+
+    def create(self, validated_data):
+        create_generic_data(
+            "outcomes", models.Outcome, validated_data, self.context.get("sync_time")
+        )
+        create_generic_data(
+            "improvements",
+            models.Improvement,
+            validated_data,
+            self.context.get("sync_time"),
+        )
         return self
 
 

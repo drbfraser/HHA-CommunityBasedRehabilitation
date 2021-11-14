@@ -1,10 +1,10 @@
 import { RiskType } from "./risks";
 
 export interface IVisitSummary {
-    id: number;
-    user: number;
-    client: number;
-    date_visited: number;
+    id: string;
+    user_id: string;
+    client_id: string;
+    created_at: number;
     health_visit: boolean;
     educat_visit: boolean;
     social_visit: boolean;
@@ -15,10 +15,10 @@ export interface IVisitSummary {
 }
 
 export interface IVisit {
-    id: number;
-    user: number;
-    client: number;
-    date_visited: number;
+    id: string;
+    user_id: string;
+    client_id: string;
+    created_at: number;
     health_visit: boolean;
     educat_visit: boolean;
     social_visit: boolean;
@@ -31,16 +31,16 @@ export interface IVisit {
 }
 
 export interface IVisitImprovement {
-    id: number;
-    visit: number;
+    id: string;
+    visit_id: string;
     risk_type: RiskType;
     provided: string;
     desc: string;
 }
 
 export interface IVisitOutcome {
-    id: number;
-    visit: number;
+    id: string;
+    visit_id: string;
     risk_type: RiskType;
     goal_met: OutcomeGoalMet;
     outcome: string;

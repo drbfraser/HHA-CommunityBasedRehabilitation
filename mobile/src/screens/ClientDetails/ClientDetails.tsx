@@ -141,7 +141,7 @@ const ClientDetails = (props: ClientProps) => {
                 survey: presentSurvey,
             });
             presentId += 1;
-        })
+        });
     }
 
     if (visits) {

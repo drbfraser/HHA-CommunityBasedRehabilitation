@@ -1,11 +1,5 @@
 import { Model } from "@nozbe/watermelondb";
-import {
-    field,
-    date,
-    text,
-    readonly,
-    relation,
-} from "@nozbe/watermelondb/decorators";
+import { field, date, text, readonly, relation } from "@nozbe/watermelondb/decorators";
 
 export default class BaselineSurvey extends Model {
     static table = "surveys";

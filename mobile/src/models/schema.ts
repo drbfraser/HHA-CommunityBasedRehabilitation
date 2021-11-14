@@ -101,7 +101,7 @@ export default appSchema({
                 { name: "shelter_adequate", type: "boolean" },
                 { name: "shelter_essential_access", type: "boolean" },
                 { name: "created_at", type: "number" },
-            ]
+            ],
         }),
         tableSchema({
             name: "visits",

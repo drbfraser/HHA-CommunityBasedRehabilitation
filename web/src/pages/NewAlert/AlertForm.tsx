@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import { priorities } from "@cbr/common/util/alerts";
 import MenuItem from "@material-ui/core/MenuItem";
 import { TextField } from "formik-material-ui";
-import { Field, Formik } from "formik";
+import { Field, Formik, Form } from "formik";
 import FormControl from "@material-ui/core/FormControl";
 import {
     alertFieldLabels,
@@ -25,10 +25,11 @@ const AlertForm = () => {
             validationSchema={validationSchema}
             onSubmit={handleNewWebAlertSubmit}
         >
-            {({ resetForm }) => (
+            {({ values, isSubmitting, resetForm, touched, setFieldValue }) => (
+              <Form>
                 <Grid container justify="center" alignItems="flex-start">
                     <Grid container direction="row" justify="flex-start" spacing={1}>
-                        <Grid item md={8} xs={8}>
+                    <Grid item md={8} xs={8}>
                             <Field
                                 component={TextField}
                                 name={alertField.subject}
@@ -68,8 +69,8 @@ const AlertForm = () => {
                                 rows={12}
                                 required
                                 variant="outlined"
-                                label={alertFieldLabels[alertField.body]}
-                                name={alertField.body}
+                                label={alertFieldLabels[alertField.alert_message]}
+                                name={alertField.alert_message}
                             />
                         </Grid>
 
@@ -94,15 +95,22 @@ const AlertForm = () => {
                                             Save
                                         </Button>
                                         &nbsp;
-                                        <Button variant="outlined" color="success" type="submit">
-                                            Send
+                                        <Button 
+                                          variant="outlined" 
+                                          color="success" 
+                                          type="submit"
+                                          disabled={isSubmitting}
+                                        >
+                                            Submit
                                         </Button>
                                     </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
+                        
                     </Grid>
                 </Grid>
+              </Form>
             )}
         </Formik>
     );

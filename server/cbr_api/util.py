@@ -233,7 +233,7 @@ def create_referral_data(validated_data, user, sync_time):
     created_data = table_data.pop("created")
 
     for data in created_data:
-        data["user"] = models.UserCBR.objects.get(username=user)
+        data["user_id"] = models.UserCBR.objects.get(username=user)
         record = models.Referral.objects.create(**data)
         record.created_at = data["created_at"]
         record.update_at = data["updated_at"]

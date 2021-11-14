@@ -92,7 +92,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                 .then(() => handleUpdate())
                 .catch(() => {
                     alert(
-                        "Something went wrong when submitting the outcome and resovleing the referral. Please try that again."
+                        "Something went wrong when submitting the outcome and resolving the referral. Please try that again."
                     );
                 });
         };

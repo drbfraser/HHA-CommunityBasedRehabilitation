@@ -7,7 +7,6 @@ import {
 } from "@cbr/common";
 import { IClientSummary } from "@cbr/common";
 import { riskLevels } from "@cbr/common";
-import { dbType } from "../../util/watermelonDatabase";
 import { ClientListRow } from "../ClientList/ClientListRequest";
 import { dbType } from "../../util/watermelonDatabase";
 

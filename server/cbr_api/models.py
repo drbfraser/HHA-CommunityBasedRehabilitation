@@ -232,13 +232,14 @@ class Visit(models.Model):
 
 class Referral(models.Model):
     id = models.CharField(primary_key=True, max_length=100)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_referred = models.BigIntegerField()
     date_resolved = models.BigIntegerField(default=0)
     resolved = models.BooleanField(default=False)
     outcome = models.CharField(max_length=100)
     created_at = models.BigIntegerField(_("date created"), default=current_milli_time)
     updated_at = models.BigIntegerField(_("date updated"), default=0)
+    server_created_at = models.BigIntegerField(default=current_milli_time)
 
     def rename_file(self, original_filename):
         # file_ext includes the "."
@@ -256,7 +257,7 @@ class Referral(models.Model):
         blank=True,
     )  # if picture available
 
-    client = models.ForeignKey(
+    client_id = models.ForeignKey(
         Client, related_name="referrals", on_delete=models.CASCADE
     )
 

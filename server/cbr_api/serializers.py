@@ -14,7 +14,7 @@ from cbr_api.util import (
     current_milli_time,
     create_client_data,
     create_user_data,
-    create_referral_data
+    create_referral_data,
     create_survey_data,
     create_generic_data,
 )
@@ -280,7 +280,7 @@ class UpdateReferralSerializer(serializers.ModelSerializer):
         super().update(referral, validated_data)
         referral.resolved = validated_data["resolved"]
         if validated_data["resolved"] == True:
-            current_time = int(time.time())
+            current_time = current_milli_time()
             referral.date_resolved = current_time
         else:
             referral.date_resolved = 0
@@ -295,57 +295,8 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
         model = models.Referral
         fields = [
             "id",
-            "user",
-            "client",
-            "date_referred",
-            "date_resolved",
-            "resolved",
-            "outcome",
-            "wheelchair",
-            "wheelchair_experience",
-            "hip_width",
-            "wheelchair_owned",
-            "wheelchair_repairable",
-            "physiotherapy",
-            "condition",
-            "prosthetic",
-            "prosthetic_injury_location",
-            "orthotic",
-            "orthotic_injury_location",
-            "services_other",
-            "picture",
-            "created_at",
-            "updated_at"
-        ]
-
-        read_only_fields = [
-            "id",
-            "user",
-            "outcome",
-            "date_referred",
-            "date_resolved",
-            "resolved",
-            "created_at",
-            "updated_at"
-        ]
-
-    def create(self, validated_data):
-        current_time = int(time.time())
-        validated_data["id"] = uuid.uuid4()
-        validated_data["date_referred"] = current_time
-        validated_data["created_at"] = current_milli_time()
-        validated_data["user"] = self.context["request"].user
-        referrals = models.Referral.objects.create(**validated_data)
-        referrals.save()
-        return referrals
-
-
-class ReferralPullSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Referral
-        fields = [
-            "id",
-            "client",
+            "user_id",
+            "client_id",
             "date_referred",
             "date_resolved",
             "resolved",
@@ -365,6 +316,59 @@ class ReferralPullSerializer(serializers.ModelSerializer):
             "picture",
             "created_at",
             "updated_at",
+            "server_created_at"
+        ]
+
+        read_only_fields = [
+            "id",
+            "user_id",
+            "outcome",
+            "date_referred",
+            "date_resolved",
+            "resolved",
+            "created_at",
+            "updated_at",
+            "server_created_at"
+        ]
+
+    def create(self, validated_data):
+        current_time = current_milli_time()
+        validated_data["id"] = uuid.uuid4()
+        validated_data["user_id"] = self.context["request"].user
+        validated_data["date_referred"] = current_time
+        validated_data["created_at"] = current_time
+        validated_data["server_created_at"] = current_time
+        referrals = models.Referral.objects.create(**validated_data)
+        referrals.save()
+        return referrals
+
+
+class ReferralSyncSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Referral
+        fields = [
+            "id",
+            "client_id",
+            "date_referred",
+            "date_resolved",
+            "resolved",
+            "outcome",
+            "wheelchair",
+            "wheelchair_experience",
+            "hip_width",
+            "wheelchair_owned",
+            "wheelchair_repairable",
+            "physiotherapy",
+            "condition",
+            "prosthetic",
+            "prosthetic_injury_location",
+            "orthotic",
+            "orthotic_injury_location",
+            "services_other",
+            "picture",
+            "created_at",
+            "updated_at",
+            "server_created_at",
         ]
 
         extra_kwargs = {
@@ -807,9 +811,9 @@ class multiImprovSerializer(serializers.Serializer):
 
 
 class multiReferralSerializer(serializers.Serializer):
-    created = ReferralPullSerializer(many=True)
+    created = ReferralSyncSerializer(many=True)
     updated = ReferralUpdateSerializer(many=True)
-    deleted = ReferralPullSerializer(many=True)
+    deleted = ReferralSyncSerializer(many=True)
 
 # for each table being sync, add corresponding multi serializer under here
 class tableSerializer(serializers.Serializer):

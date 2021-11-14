@@ -8,7 +8,7 @@ export interface ReferralFormProps {
 }
 
 export enum ReferralFormField {
-    client = "client",
+    client_id = "client_id",
     wheelchair = "wheelchair",
     wheelchairExperience = "wheelchair_experience",
     picture = "picture",
@@ -35,7 +35,7 @@ export const referralServicesTypes = [
 ];
 
 export const referralFieldLabels = {
-    [ReferralFormField.client]: "Client",
+    [ReferralFormField.client_id]: "Client",
     [ReferralFormField.wheelchair]: "Wheelchair",
     [ReferralFormField.wheelchairExperience]: "Wheelchair Experience",
     [ReferralFormField.picture]: "picture",
@@ -54,7 +54,7 @@ export const referralFieldLabels = {
 };
 
 export const referralInitialValues = {
-    [ReferralFormField.client]: 0,
+    [ReferralFormField.client_id]: 0,
     [ReferralFormField.wheelchairExperience]: WheelchairExperience.BASIC,
     [ReferralFormField.hipWidth]: "",
     [ReferralFormField.picture]: "",

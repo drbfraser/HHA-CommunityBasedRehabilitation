@@ -5,12 +5,12 @@ import { writer } from "@nozbe/watermelondb/decorators/action";
 export default class Referral extends Model {
     static table = "referrals";
     static associations = {
-        clients: { type: "belongs_to", key: "client" },
-        users: { type: "belongs_to", key: "user" },
+        clients: { type: "belongs_to", key: "client_id" },
+        users: { type: "belongs_to", key: "user_id" },
     } as const;
 
-    @date("date_referred") date_referred;
-    @date("date_resolved") date_resolved;
+    @field("date_referred") date_referred;
+    @field("date_resolved") date_resolved;
     @field("resolved") resolved;
     @text("outcome") outcome;
     // @text("picture") picture;
@@ -29,14 +29,14 @@ export default class Referral extends Model {
     @date("created_at") created_at;
     @date("updated_at") updated_at;
 
-    @relation("clients", "client") client;
-    @relation("users", "user") user;
+    @relation("clients", "client_id") client;
+    @relation("users", "user_id") user;
 
     @writer async updateReferral(outcome) {
         await this.update((referral) => {
             referral.resolved = true;
             referral.outcome = outcome;
-            referral.date_resolved = new Date().getTime() / 1000;
+            referral.date_resolved = new Date().getTime();
         });
     };
 }

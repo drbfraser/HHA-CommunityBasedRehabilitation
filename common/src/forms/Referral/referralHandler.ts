@@ -18,7 +18,7 @@ const addReferral = async (referralInfo: FormData) => {
 export const referralHandleSubmit = async (values: ReferralFormValues, source: string) => {
     const disabilities = await getDisabilities();
     const newReferral = {
-        client: values[ReferralFormField.client],
+        client_id: values[ReferralFormField.client_id],
         wheelchair: values[ReferralFormField.wheelchair],
         wheelchair_experience: values[ReferralFormField.wheelchair]
             ? values[ReferralFormField.wheelchairExperience]

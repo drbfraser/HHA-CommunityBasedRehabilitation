@@ -12,8 +12,6 @@ import {
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View, NativeModules } from "react-native";
-import * as Localization from "expo-localization";
-import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IActivity, ActivityType } from "./ClientTimeline/Timeline";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
@@ -83,9 +81,6 @@ const ClientDetails = (props: ClientProps) => {
             console.log(e);
         }
     };
-
-    const locale = NativeModules.I18nManager.localeIdentifier;
-    const timezone = Localization.timezone;
 
     const getClientFormInitialValues = () => {
         if (client) {

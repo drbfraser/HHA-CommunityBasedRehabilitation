@@ -21,7 +21,7 @@ export default class Client extends Model {
     static associations = {
         users: { type: "belongs_to", key: "user_id" },
         risks: { type: "has_many", foreignKey: "client_id" },
-        referrals: { type: "has_many", foreignKey: "client" },
+        referrals: { type: "has_many", foreignKey: "client_id" },
         surveys: { type: "has_many", foreignKey: "client_id" },
         visits: { type: "has_many", foreignKey: "client_id" },
     } as const;
@@ -62,7 +62,7 @@ export default class Client extends Model {
     @children("visits") visits;
 
     @lazy outstandingReferrals = this.collections.get("referrals").query(
-        Q.where("client", this.id),
+        Q.where("client_id", this.id),
         Q.and(
             Q.where("resolved", Q.eq(false))
         )

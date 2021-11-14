@@ -130,7 +130,7 @@ const NewReferral = (props: INewReferralProps) => {
                 }
                 checkedSteps.push(ReferralFormField.orthotic);
                 checkedSteps.push(ReferralFormField.prosthetic);
-                helpers.setFieldValue(`${[ReferralFormField.client]}`, clientId);
+                helpers.setFieldValue(`${[ReferralFormField.client_id]}`, clientId);
             }
             if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
                 checkedSteps.push(enabledSteps[activeStep - 1]);

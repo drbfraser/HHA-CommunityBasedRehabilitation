@@ -17,9 +17,9 @@ const addSurvey = async (surveyInfo: string) => {
     });
 };
 
-export const baseSurveyHandleSubmitForm = async (values: BaseFormValues, source: string = "web") => {
+export const baseSurveyHandleSubmitForm = async (values: BaseFormValues, source: string) => {
     const surveyInfo = {
-        client: values[BaseSurveyFormField.client],
+        client_id: values[BaseSurveyFormField.client_id],
         health: values[BaseSurveyFormField.rateLevel],
         health_have_rehabilitation_access: values[BaseSurveyFormField.getService],
         health_need_rehabilitation_access: values[BaseSurveyFormField.needService],

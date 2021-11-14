@@ -88,7 +88,7 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
                         stepChecked.push(false);
                     }
                 }
-                helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, clientId);
+                helpers.setFieldValue(`${[BaseSurveyFormField.client_id]}`, clientId);
             }
             console.log(step);
             if ((step === 0 || step === 1 || step === 4) && !stepChecked[step]) {

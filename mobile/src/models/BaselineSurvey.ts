@@ -10,8 +10,8 @@ import {
 export default class BaselineSurvey extends Model {
     static table = "surveys";
     static associations = {
-        clients: { type: "belongs_to", key: "client" },
-        users: { type: "belongs_to", key: "user" },
+        clients: { type: "belongs_to", key: "client_id" },
+        users: { type: "belongs_to", key: "user_id" },
     } as const;
 
     @field("survey_date") survey_date;
@@ -50,8 +50,7 @@ export default class BaselineSurvey extends Model {
     @field("shelter_essential_access") shelter_essential_access;
 
     @readonly @date("created_at") createdAt;
-    @readonly @date("updated_at") updatedAt;
 
-    @relation("clients", "client") client;
-    @relation("users", "user") user;
+    @relation("clients", "client_id") client;
+    @relation("users", "user_id") user;
 }

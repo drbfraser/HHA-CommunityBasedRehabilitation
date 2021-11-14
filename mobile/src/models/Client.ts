@@ -19,7 +19,7 @@ export default class Client extends Model {
     static associations = {
         users: { type: "belongs_to", key: "user_id" },
         risks: { type: "has_many", foreignKey: "client_id" },
-        surveys: { type: "has_many", foreignKey: "client" },
+        surveys: { type: "has_many", foreignKey: "client_id" },
         visits: { type: "has_many", foreignKey: "client_id" },
     } as const;
 

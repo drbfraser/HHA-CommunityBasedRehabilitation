@@ -64,8 +64,8 @@ export default appSchema({
         tableSchema({
             name: "surveys",
             columns: [
-                { name: "client", type: "string", isIndexed: true },
-                { name: "user", type: "string", isIndexed: true },
+                { name: "client_id", type: "string", isIndexed: true },
+                { name: "user_id", type: "string", isIndexed: true },
                 { name: "survey_date", type: "number" },
                 { name: "health", type: "string" },
                 { name: "health_have_rehabilitation_access", type: "boolean" },
@@ -101,7 +101,6 @@ export default appSchema({
                 { name: "shelter_adequate", type: "boolean" },
                 { name: "shelter_essential_access", type: "boolean" },
                 { name: "created_at", type: "number" },
-                { name: "updated_at", type: "number" },
             ]
         }),
         tableSchema({

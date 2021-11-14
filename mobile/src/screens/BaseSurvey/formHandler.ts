@@ -13,9 +13,9 @@ export const handleSubmit = async (
 
     const surveyInfo = await baseSurveyHandleSubmitForm(values, source);
     await database.write(async () => {
-        const client = await database.get("clients").find(values[BaseSurveyFormField.client].toString());
+        const client = await database.get("clients").find(values[BaseSurveyFormField.client_id].toString());
         await database.get("surveys").create((survey: any) => {
-            delete surveyInfo.client; /* We want to set this relation ourselves */
+            delete surveyInfo.client_id; /* We want to set this relation ourselves */
 
             Object.assign(survey, surveyInfo);
             survey.client.set(client);

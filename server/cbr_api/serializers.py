@@ -542,13 +542,15 @@ class BaselineSurveySerializer(serializers.ModelSerializer):
         model = models.BaselineSurvey
         fields = "__all__"
 
-        read_only_fields = ["id", "user", "survey_date", "created_at", "updated_at"]
+        read_only_fields = ["id", "user_id", "survey_date", "created_at", "server_created_at"]
 
     def create(self, validated_data):
+        current_time = current_milli_time()
         validated_data["id"] = uuid.uuid4()
-        validated_data["survey_date"] = current_milli_time()
-        validated_data["created_at"] = current_milli_time()
-        validated_data["user"] = self.context["request"].user
+        validated_data["survey_date"] = current_time
+        validated_data["created_at"] = current_time
+        validated_data["server_created_at"] = current_time
+        validated_data["user_id"] = self.context["request"].user
         baseline_survey = models.BaselineSurvey.objects.create(**validated_data)
         baseline_survey.save()
         return baseline_survey
@@ -558,7 +560,7 @@ class BaselineSurveySyncSerializer(serializers.ModelSerializer):
         model = models.BaselineSurvey
         fields = "__all__"
 
-        read_only_fields = ["user"]
+        read_only_fields = ["user_id"]
 
 class ClientCreateSerializer(serializers.ModelSerializer):
     health_risk = ClientCreationRiskSerializer(many=False, write_only=True)
@@ -809,5 +811,5 @@ class pushBaselineSurveySerializer(serializers.Serializer):
     surveys = multiBaselineSurveySerializer()
 
     def create(self, validated_data):
-        create_survey_data(validated_data, self.context["user"])
+        create_survey_data(validated_data, self.context["user"], self.context.get("sync_time"))
         return self

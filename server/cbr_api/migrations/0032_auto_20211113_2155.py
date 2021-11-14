@@ -6,18 +6,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0031_merge_0027_auto_20211113_0103_0030_auto_20211112_1951'),
+        ("cbr_api", "0031_merge_0027_auto_20211113_0103_0030_auto_20211112_1951"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='baselinesurvey',
-            old_name='client',
-            new_name='client_id',
+            model_name="baselinesurvey",
+            old_name="client",
+            new_name="client_id",
         ),
         migrations.RenameField(
-            model_name='baselinesurvey',
-            old_name='user',
-            new_name='user_id',
+            model_name="baselinesurvey",
+            old_name="user",
+            new_name="user_id",
         ),
     ]

@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0033_baselinesurvey_server_created_at'),
+        ("cbr_api", "0033_baselinesurvey_server_created_at"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='baselinesurvey',
-            name='updated_at',
+            model_name="baselinesurvey",
+            name="updated_at",
         ),
     ]

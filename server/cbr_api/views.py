@@ -318,11 +318,8 @@ def sync(request):
                 if risk_serializer.is_valid():
                     risk_serializer.save()
                     survey_serializer = serializers.pushBaselineSurveySerializer(
-                        data=request.data, 
-                        context={
-                            "sync_time": sync_time, 
-                            "user": request.user
-                        }
+                        data=request.data,
+                        context={"sync_time": sync_time, "user": request.user},
                     )
                     if survey_serializer.is_valid():
                         survey_serializer.save()

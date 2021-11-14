@@ -47,6 +47,8 @@ const Timeline = (props: ISummaryProps) => {
     const locale = NativeModules.I18nManager.localeIdentifier;
     const timezone = Localization.timezone;
 
+    const database = useDatabase();
+
     useEffect(() => {
         if (props.activity.type === ActivityType.VISIT) setIcon("walk");
         if (props.activity.type === ActivityType.REFERAL) setIcon("navigation");
@@ -150,7 +152,7 @@ const Timeline = (props: ISummaryProps) => {
                                             >
                                                 <ReferralEntry
                                                     referral={props.activity.referral as IReferral}
-                                                    database={useDatabase()}
+                                                    database={database}
                                                     close={hideDetails}
                                                     refreshClient={props.refreshClient}
                                                 />

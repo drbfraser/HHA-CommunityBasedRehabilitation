@@ -219,6 +219,5 @@ def create_survey_data(validated_data, user, sync_time):
     for data in created_data:
         data["user_id"] = models.UserCBR.objects.get(username=user)
         record = models.BaselineSurvey.objects.create(**data)
-        record.created_at = data["created_at"]
         record.server_created_at = sync_time
         record.save()

@@ -122,7 +122,6 @@ export default appSchema({
                 { name: BaseSurveyField.empowerment_influence_others, type: "boolean" },
                 { name: BaseSurveyField.shelter_adequate, type: "boolean" },
                 { name: BaseSurveyField.shelter_essential_access, type: "boolean" },
-                { name: mobileGenericField.created_at, type: "number" },
             ],
         }),
         tableSchema({

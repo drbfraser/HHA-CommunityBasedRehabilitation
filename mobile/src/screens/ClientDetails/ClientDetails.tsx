@@ -77,11 +77,11 @@ const ClientDetails = (props: ClientProps) => {
                 .get(modelName.clients)
                 .find(props.route.params.clientID);
             const fetchedRisk = await presentClient.risks.fetch();
-            const presentClientSurveys = await presentClient.surveys.fetch();
+            const fetchedSurveys = await presentClient.surveys.fetch();
             const fetchedVisits = await presentClient.visits.fetch();
             setClient(presentClient);
             setRisk(fetchedRisk);
-            setSurveys(presentClientSurveys);
+            setSurveys(fetchedSurveys);
             setVisits(fetchedVisits);
             if (presentClient.picture != null) {
                 setOriginaluri(presentClient.picture);
@@ -90,9 +90,6 @@ const ClientDetails = (props: ClientProps) => {
             console.log(e);
         }
     };
-
-    const locale = NativeModules.I18nManager.localeIdentifier;
-    const timezone = Localization.timezone;
 
     const getClientFormInitialValues = () => {
         if (client) {

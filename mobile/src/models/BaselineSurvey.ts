@@ -1,7 +1,7 @@
 import { BaseSurveyField } from "@cbr/common";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 import { Model } from "@nozbe/watermelondb";
-import { field, date, text, relation } from "@nozbe/watermelondb/decorators";
+import { field, date, text, relation, readonly } from "@nozbe/watermelondb/decorators";
 
 export default class BaselineSurvey extends Model {
     static table = "surveys";
@@ -45,7 +45,7 @@ export default class BaselineSurvey extends Model {
     @field(BaseSurveyField.shelter_adequate) shelter_adequate;
     @field(BaseSurveyField.shelter_essential_access) shelter_essential_access;
 
-    @date(mobileGenericField.created_at) created_at;
+    @readonly @date(mobileGenericField.created_at) created_at;
 
     @relation(modelName.clients, tableKey.client_id) client;
     @relation(modelName.users, tableKey.user_id) user;

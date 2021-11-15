@@ -318,6 +318,7 @@ def sync(request):
                 )
                 if risk_serializer.is_valid():
                     risk_serializer.save()
+                    decode_image(request.data["referrals"])
                     referral_serializer = serializers.pushReferralSerializer(
                         data=request.data, 
                         context={"sync_time": sync_time, "user": request.user}

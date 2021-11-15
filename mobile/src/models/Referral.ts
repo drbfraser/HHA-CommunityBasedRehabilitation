@@ -13,7 +13,7 @@ export default class Referral extends Model {
     @field("date_resolved") date_resolved;
     @field("resolved") resolved;
     @text("outcome") outcome;
-    // @text("picture") picture;
+    @field("picture") picture;
     @field("wheelchair") wheelchair;
     @text("wheelchair_experience") wheelchair_experience;
     @field("hip_width") hip_width;

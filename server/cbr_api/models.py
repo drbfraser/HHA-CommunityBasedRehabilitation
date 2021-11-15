@@ -255,6 +255,7 @@ class Referral(models.Model):
         upload_to=rename_file,
         storage=OverwriteStorage(),
         blank=True,
+        null=True,
     )  # if picture available
 
     client_id = models.ForeignKey(

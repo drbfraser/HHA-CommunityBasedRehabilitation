@@ -33,18 +33,9 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        /* TODO: set referral pictures for mobile and remove undefined */
-        if (referral.picture !== null && referral.picture !== undefined) {
-            apiFetch(Endpoint.REFERRAL_PICTURE, `${referral.id}`)
-                .then((resp) => resp.blob())
-                .then((blob) => {
-                    let reader = new FileReader();
-                    reader.onload = () => {
-                        setUri(reader.result as string);
-                        setHasImage(true);
-                    };
-                    reader.readAsDataURL(blob);
-                });
+        if (referral.picture && referral.picture !== null) {
+            setUri(referral.picture);
+            setHasImage(true);
         }
     });
 

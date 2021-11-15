@@ -34,7 +34,6 @@ export const handleSubmit = async (
 ) => {
     if (!wasChangeMade(values, initialValues)) return;
     const updatedRisk = JSON.stringify({
-        id: "tmp",
         client_id: values.client_id,
         risk_type: values.risk_type,
         risk_level: values.risk_level,

@@ -1,4 +1,5 @@
 import { IRisk } from "@cbr/common";
+import { modelName } from "../../../models/constant";
 import { dbType } from "../../../util/watermelonDatabase";
 import { addRisk } from "../../NewClient/formHandler";
 
@@ -23,7 +24,7 @@ export const handleRiskSubmit = async (
 
     try {
         let risk;
-        const client = await database.get("clients").find(values.client_id);
+        const client = await database.get(modelName.clients).find(values.client_id);
         const currentTime = new Date().getTime();
         await database.write(async () => {
             risk = await addRisk(

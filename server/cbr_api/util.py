@@ -1,4 +1,3 @@
-import imghdr
 import os
 import base64
 from datetime import datetime
@@ -194,10 +193,6 @@ def create_client_data(validated_data, sync_time):
         disability_data = data.pop("disability")
         new_client_picture: Optional[File] = data.get("picture")
         if new_client_picture:
-            file_root, file_ext = os.path.splitext(new_client_picture.name)
-            actual_image_type: Optional[str] = imghdr.what(new_client_picture.file)
-            if actual_image_type and actual_image_type != file_ext.removeprefix("."):
-                new_client_picture.name = f"{file_root}.{actual_image_type}"
             image_data = data.pop("picture")
         models.Client.objects.filter(pk=data["id"]).update(**data)
         # clears current disabiltiy and updates new disability data

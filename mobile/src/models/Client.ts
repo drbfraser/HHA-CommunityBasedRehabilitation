@@ -1,3 +1,5 @@
+import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
+import { RiskType } from "@cbr/common/src/util/risks";
 import { Model } from "@nozbe/watermelondb";
 import {
     field,
@@ -9,65 +11,73 @@ import {
     json,
 } from "@nozbe/watermelondb/decorators";
 import { writer } from "@nozbe/watermelondb/decorators/action";
+import { mobileGenericField, modelName, tableKey } from "./constant";
 
 const sanitizeDisability = (rawDisability) => {
     return Array.isArray(rawDisability) ? rawDisability.map(Number) : [];
 };
 
 export default class Client extends Model {
-    static table = "clients";
+    static table = modelName.clients;
     static associations = {
-        users: { type: "belongs_to", key: "user_id" },
-        risks: { type: "has_many", foreignKey: "client_id" },
-        surveys: { type: "has_many", foreignKey: "client_id" },
-        visits: { type: "has_many", foreignKey: "client_id" },
+        users: { type: mobileGenericField.belongs_to, key: tableKey.user_id },
+        surveys: { type: mobileGenericField.has_many, foreignKey: tableKey.client_id },
+        risks: { type: mobileGenericField.has_many, foreignKey: tableKey.client_id },
+        visits: { type: mobileGenericField.has_many, foreignKey: tableKey.client_id },
     } as const;
 
-    @text("first_name") first_name;
-    @text("last_name") last_name;
-    @text("full_name") full_name;
-    @date("birth_date") birth_date;
-    @field("gender") gender;
-    @text("phone_number") phone_number;
-    @json("disability", sanitizeDisability) disability;
-    @text("other_disability") other_disability;
-    @field("longitude") longitude;
-    @field("latitude") latitude;
-    @field("zone") zone;
-    @field("village") village;
-    @field("picture") picture;
-    @field("caregiver_present") caregiver_present;
-    @text("caregiver_name") caregiver_name;
-    @text("caregiver_phone") caregiver_phone;
-    @text("caregiver_email") caregiver_email;
-    @text("health_risk_level") health_risk_level;
-    @date("health_timestamp") health_timestamp;
-    @text("social_risk_level") social_risk_level;
-    @date("social_timestamp") social_timestamp;
-    @text("educat_risk_level") educat_risk_level;
-    @date("educat_timestamp") educat_timestamp;
-    @date("last_visit_date") last_visit_date;
+    @text(ClientField.first_name) first_name;
+    @text(ClientField.last_name) last_name;
+    @text(ClientField.full_name) full_name;
+    @date(ClientField.birth_date) birth_date;
+    @field(ClientField.gender) gender;
+    @text(ClientField.phone_number) phone_number;
+    @json(ClientField.disability, sanitizeDisability) disability;
+    @text(ClientField.other_disability) other_disability;
+    @field(ClientField.longitude) longitude;
+    @field(ClientField.latitude) latitude;
+    @field(ClientField.zone) zone;
+    @field(ClientField.village) village;
+    @field(ClientField.picture) picture;
+    @field(ClientField.caregiver_present) caregiver_present;
+    @text(ClientField.caregiver_name) caregiver_name;
 
-    @readonly @date("created_at") createdAt;
-    @readonly @date("updated_at") updatedAt;
+    @text(ClientField.caregiver_phone) caregiver_phone;
+    @text(ClientField.caregiver_email) caregiver_email;
+    @text(ClientField.health_risk_level) health_risk_level;
+    @date(ClientField.health_timestamp) health_timestamp;
+    @text(ClientField.social_risk_level) social_risk_level;
+    @date(ClientField.social_timestamp) social_timestamp;
+    @text(ClientField.educat_risk_level) educat_risk_level;
+    @date(ClientField.educat_timestamp) educat_timestamp;
+    @date(ClientField.last_visit_date) last_visit_date;
 
-    @relation("users", "user_id") user;
+    @readonly @date(mobileGenericField.created_at) createdAt;
+    @readonly @date(mobileGenericField.updated_at) updatedAt;
 
-    @children("risks") risks;
-    @children("surveys") surveys;
-    @children("visits") visits;
+    @relation(modelName.users, tableKey.user_id) user;
+
+    @children(modelName.risks) risks;
+    @children(modelName.surveys) surveys;
+    @children(modelName.visits) visits;
 
     @writer async updateRisk(type, level, time) {
         await this.update((client) => {
-            if (type == "HEALTH") {
-                client.health_risk_level = level;
-                client.health_timestamp = time;
-            } else if (type == "SOCIAL") {
-                client.social_risk_level = level;
-                client.social_timestamp = time;
-            } else {
-                client.educat_risk_level = level;
-                client.educat_timestamp = time;
+            switch (type) {
+                case RiskType.HEALTH:
+                    client.health_risk_level = level;
+                    client.health_timestamp = time;
+                    break;
+
+                case RiskType.SOCIAL:
+                    client.social_risk_level = level;
+                    client.social_timestamp = time;
+                    break;
+
+                case RiskType.EDUCATION:
+                    client.educat_risk_level = level;
+                    client.educat_timestamp = time;
+                    break;
             }
         });
     }

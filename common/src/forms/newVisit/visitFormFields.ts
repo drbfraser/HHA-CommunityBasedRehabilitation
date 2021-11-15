@@ -1,5 +1,15 @@
 import * as Yup from "yup";
 
+export enum VisitField {
+    health_visit = "health_visit",
+    educat_visit = "educat_visit",
+    social_visit = "social_visit",
+    longitude = "longitude",
+    latitude = "latitude",
+    zone = "zone",
+    village = "village",
+}
+
 export enum GoalStatus {
     cancelled = "CAN",
     ongoing = "GO",

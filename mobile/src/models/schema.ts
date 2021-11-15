@@ -1,4 +1,10 @@
-import { AdminField, ImprovementFormField, OutcomeFormField, VisitField, BaseSurveyFields } from "@cbr/common";
+import {
+    AdminField,
+    ImprovementFormField,
+    OutcomeFormField,
+    VisitField,
+    BaseSurveyFields,
+} from "@cbr/common";
 import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 import { FormField } from "@cbr/common/src/forms/Risks/riskFormFields";
 import { appSchema, tableSchema } from "@nozbe/watermelondb";
@@ -77,11 +83,19 @@ export default appSchema({
                 { name: BaseSurveyFields.health_have_assistive_device, type: "boolean" },
                 { name: BaseSurveyFields.health_working_assistive_device, type: "boolean" },
                 { name: BaseSurveyFields.health_need_assistive_device, type: "boolean" },
-                { name: BaseSurveyFields.health_assistive_device_type, type: "string", isOptional: true },
+                {
+                    name: BaseSurveyFields.health_assistive_device_type,
+                    type: "string",
+                    isOptional: true,
+                },
                 { name: BaseSurveyFields.health_services_satisfaction, type: "string" },
                 { name: BaseSurveyFields.school_currently_attend, type: "boolean" },
                 { name: BaseSurveyFields.school_grade, type: "number" },
-                { name: BaseSurveyFields.school_not_attend_reason, type: "string", isOptional: true },
+                {
+                    name: BaseSurveyFields.school_not_attend_reason,
+                    type: "string",
+                    isOptional: true,
+                },
                 { name: BaseSurveyFields.school_ever_attend, type: "boolean" },
                 { name: BaseSurveyFields.school_want_attend, type: "boolean" },
                 { name: BaseSurveyFields.social_community_valued, type: "boolean" },
@@ -99,7 +113,11 @@ export default appSchema({
                 { name: BaseSurveyFields.food_enough_monthly, type: "boolean" },
                 { name: BaseSurveyFields.food_enough_for_child, type: "string", isOptional: true },
                 { name: BaseSurveyFields.empowerment_organization_member, type: "boolean" },
-                { name: BaseSurveyFields.empowerment_organization, type: "string", isOptional: true },
+                {
+                    name: BaseSurveyFields.empowerment_organization,
+                    type: "string",
+                    isOptional: true,
+                },
                 { name: BaseSurveyFields.empowerment_rights_awareness, type: "boolean" },
                 { name: BaseSurveyFields.empowerment_influence_others, type: "boolean" },
                 { name: BaseSurveyFields.shelter_adequate, type: "boolean" },

@@ -1,10 +1,4 @@
-import {
-    apiFetch,
-    clientPrioritySort,
-    Endpoint,
-    getZones,
-    IOutstandingReferral,
-} from "@cbr/common";
+import { clientPrioritySort, getZones, IOutstandingReferral } from "@cbr/common";
 import { IClientSummary } from "@cbr/common";
 import { riskLevels } from "@cbr/common";
 import { modelName } from "../../models/constant";
@@ -67,7 +61,7 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
     let fetchReferrals;
 
     await database
-        .get("clients")
+        .get(modelName.clients)
         .query()
         .fetch()
         .then((fetchedClients) => {

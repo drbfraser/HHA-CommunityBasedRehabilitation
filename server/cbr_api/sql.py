@@ -85,7 +85,7 @@ def getStatsWhere(user_id, time_col, from_time, to_time):
     where = []
 
     if user_id is not None:
-        # it seems that '_id' is automatically appended to the end of foreign key column names. 
+        # it seems that '_id' is automatically appended to the end of foreign key column names.
         # So user_id -> user_id_id
         where.append(f"user_id_id={str(user_id)}")
 
@@ -113,8 +113,8 @@ def getOutstandingReferrals():
             ON c.id = r.client_id_id
             WHERE r.resolved=False
         """
-        ) 
-        # it seems that '_id' is automatically appended to the end of foreign key column names. 
+        )
+        # it seems that '_id' is automatically appended to the end of foreign key column names.
         # So client_id -> client_id_id
 
         columns = [col[0] for col in cursor.description]

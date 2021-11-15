@@ -1,5 +1,6 @@
 import { ReferralFormField, ReferralFormValues, referralHandleSubmit } from "@cbr/common";
 import { FormikHelpers } from "formik";
+import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
 
 export const handleSubmit = async (
@@ -13,9 +14,9 @@ export const handleSubmit = async (
     const referralInfo = await referralHandleSubmit(values, source);
     await database.write(async () => {
         const client = await database
-            .get("clients")
+            .get(modelName.clients)
             .find(values[ReferralFormField.client_id].toString());
-        await database.get("referrals").create((referral: any) => {
+        await database.get(modelName.referrals).create((referral: any) => {
             delete referralInfo.client_id; /* We want to set this relation ourselves */
 
             Object.assign(referral, referralInfo);

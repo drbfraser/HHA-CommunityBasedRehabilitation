@@ -7,6 +7,7 @@ export interface ReferralFormProps {
     formikProps: FormikProps<any>;
 }
 
+/* Fields specifically used in schema & model of local DB */
 export enum ReferralField {
     date_referred = "date_referred",
     date_resolved = "date_resolved",

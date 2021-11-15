@@ -4,6 +4,7 @@ import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import testAlertExample from "./TestAlertExampleDeleteLater";
 import Typography from "@material-ui/core/Typography";
+import { IAlert } from "./Alert";
 
 const useStyles = makeStyles({
     dividerStyle: {
@@ -13,21 +14,21 @@ const useStyles = makeStyles({
 });
 
 type Props = {
-    selectAlert: string;
+    selectAlert: number;
 };
 
 interface Alert {
-    id: string;
+    id: number;
     subject: string;
     priority: string;
     body: string;
 }
 
-const AlertDetail = (alertListProps: Props) => {
+const AlertDetail = (alertDetailProps: Props, alertData: IAlert[]) => {
     const style = useStyles();
 
-    const selectedItem: Array<Alert> = testAlertExample.filter((alert) => {
-        return alert.id === alertListProps.selectAlert;
+    const selectedItem: Array<IAlert> = alertData.filter((alert) => {
+        return alert.id === alertDetailProps.selectAlert;
     });
 
     /* TODO: this part will be changed to accordion in the next iteration */
@@ -37,11 +38,11 @@ const AlertDetail = (alertListProps: Props) => {
 
             <Divider variant="fullWidth" className={style.dividerStyle} />
 
-            <h2>{selectedItem.length === 0 ? "" : selectedItem[0].subject}</h2>
+            <h2>{selectedItem.length === 0 ? "" : selectedItem[0].Subject}</h2>
             <Typography>
-                {selectedItem.length === 0 || selectedItem[0].body === ""
+                {selectedItem.length === 0 || selectedItem[0].Body === ""
                     ? "Empty"
-                    : selectedItem[0].body}
+                    : selectedItem[0].Body}
             </Typography>
         </Grid>
     );

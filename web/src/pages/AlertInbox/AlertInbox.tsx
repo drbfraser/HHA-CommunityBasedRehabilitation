@@ -4,15 +4,24 @@ import AlertList from "./AlertList";
 import AlertDetail from "./AlertDetail";
 import { useState } from "react";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { IAlert } from "./Alert";
+
+// type AlertDetailProps = {
+//   onAlertSelectionEvent: (itemNum: number) => void;
+//   selectAlert: number;
+// };
 
 const AlertInbox = () => {
-    const [selectedAlert, setSelectedAlert] = useState<string>("-1");
+    const [selectedAlert, setSelectedAlert] = useState<number>(-1);
+    const [alertData, setAlertData] = useState<IAlert[]>([]);
+
+
 
     const alertListProps = {
-        onAlertSelectionEvent: (itemNum: string) => {
+        onAlertSelectionEvent: (itemNum: number) => {
             setSelectedAlert(itemNum);
         },
-        selectAlert: selectedAlert,
+        //selectAlert: selectedAlert,
     };
 
     const alertDetailProps = {
@@ -24,8 +33,7 @@ const AlertInbox = () => {
     useEffect(() => {
         const fetchAlerts = async () => {
             try {
-                const tempAlerts: any[] = await (await apiFetch(Endpoint.ALERTS)).json();
-                console.log(tempAlerts);
+                setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
             } catch (e) {
                 console.log(`Error fetching Alerts: ${e}`);
             }
@@ -35,8 +43,8 @@ const AlertInbox = () => {
 
     return (
         <Grid container justify="center" alignItems="flex-start" spacing={3}>
-            <AlertList {...alertListProps} />
-            <AlertDetail {...alertDetailProps} />
+            <AlertList alertListProps={alertListProps} alertData={alertData} />
+            <AlertDetail alertDetailProps={alertDetailProps} alertData={alertData} />
         </Grid>
     );
 };

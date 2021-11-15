@@ -9,6 +9,7 @@ import { FiberManualRecord } from "@material-ui/icons";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import testAlertExample from "./TestAlertExampleDeleteLater";
 import { makeStyles } from "@material-ui/core/styles";
+import { IAlert } from "./Alert";
 
 const useStyles = makeStyles({
     selectedListItemStyle: {
@@ -33,8 +34,8 @@ const useStyles = makeStyles({
 });
 
 type AlertDetailProps = {
-    onAlertSelectionEvent: (itemNum: string) => void;
-    selectAlert: string;
+    onAlertSelectionEvent: (itemNum: number) => void;
+    selectAlert: number;
 };
 
 /* TODO: This function is not working as expected, will improve it in the next iteration */
@@ -48,7 +49,7 @@ const RenderBadge = (params: String) => {
     );
 };
 
-const AlertList = (alertDetailProps: AlertDetailProps) => {
+const AlertList = (alertDetailProps: AlertDetailProps, alertData: IAlert[]) => {
     const style = useStyles();
 
     return (
@@ -63,7 +64,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                     overflow: "auto",
                 }}
             >
-                {testAlertExample.map((currAlert) => {
+                {alertData.map((currAlert) => {
                     return (
                         <div>
                             <ListItemText
@@ -79,11 +80,11 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                             variant="body2"
                                             color="text.primary"
                                         >
-                                            {currAlert.subject}
+                                            {currAlert.Subject}
                                         </Typography>
                                     </React.Fragment>
                                 }
-                                secondary={RenderBadge(currAlert.priority)}
+                                secondary={RenderBadge(currAlert.Priority)}
                                 onClick={() => alertDetailProps.onAlertSelectionEvent(currAlert.id)}
                                 className={
                                     currAlert.id === alertDetailProps.selectAlert

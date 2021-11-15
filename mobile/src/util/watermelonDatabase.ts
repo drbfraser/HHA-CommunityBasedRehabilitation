@@ -9,12 +9,6 @@ const adapter = new SQLiteAdapter({
     schema,
     migrations,
     jsi: false,
-    //onsetuperror does not work with ts, must use js to use
-    /*
-    onSetUpError: (_error) => {
-        // Database failed to load -- offer the user to reload the app or log out
-    },
-    */
 });
 
 export const database = new Database({

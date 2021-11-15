@@ -31,7 +31,7 @@ const AdminView = ({
 
     const [isUserChangeSnackbarVisible, setUserChangeSnackbarVisible] = useState(false);
 
-    const [user, setUser] = useState<any>();
+    const [user, setUser] = useState<IUser>();
     const isFocused = useIsFocused();
     const [error, setErrorMessage] = useState<ILoadError>();
     const database = useDatabase();
@@ -56,10 +56,9 @@ const AdminView = ({
             };
             setUser(iUser);
         } catch (e) {
-            const msg = "User doesn't exist";
             setError({
                 statusCode: e instanceof APIFetchFailError ? e.status : undefined,
-                message: msg,
+                message: "User doesn't exist",
             });
         }
     };

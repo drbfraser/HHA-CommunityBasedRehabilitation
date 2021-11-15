@@ -34,7 +34,7 @@ import { showValidationErrorToast } from "../../util/validationToast";
 export interface IClientFormProps {
     isNewClient: boolean;
     formikProps: FormikProps<TClientValues>;
-    clientId?: number;
+    clientId?: string;
     disabled?: boolean;
     touchDisable?: (editPressed: boolean) => void;
     resetImage?: () => void;

@@ -16,6 +16,7 @@ import {
     clientFieldLabels,
     mobileClientDetailsValidationSchema,
     timestampFromFormDate,
+    IVisit,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View, NativeModules } from "react-native";
@@ -55,7 +56,7 @@ const ClientDetails = (props: ClientProps) => {
 
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const [client, setClient] = useState<any>();
-    const [risks, setRisk] = useState<any>();
+    const [risks, setRisk] = useState<IRisk[]>();
     const [visits, setVisits] = useState<any>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
@@ -139,30 +140,6 @@ const ClientDetails = (props: ClientProps) => {
             });
             presentId += 1;
         });
-        /*
-        client.referrals.forEach((presentRef) => {
-            tempActivity.push({
-                id: presentId,
-                type: ActivityType.REFERAL,
-                date: presentRef.date_referred,
-                visit: undefined,
-                referral: presentRef,
-                survey: undefined,
-            });
-            presentId += 1;
-        });
-        client.baseline_surveys.forEach((presentSurvey) => {
-            tempActivity.push({
-                id: presentId,
-                type: ActivityType.SURVEY,
-                date: presentSurvey.survey_date,
-                visit: undefined,
-                referral: undefined,
-                survey: presentSurvey,
-            });
-            presentId += 1;
-        });
-        */
     }
 
     tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));

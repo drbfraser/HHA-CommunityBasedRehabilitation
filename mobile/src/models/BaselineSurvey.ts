@@ -45,8 +45,6 @@ export default class BaselineSurvey extends Model {
     @field(BaseSurveyField.shelter_adequate) shelter_adequate;
     @field(BaseSurveyField.shelter_essential_access) shelter_essential_access;
 
-    @readonly @date(mobileGenericField.created_at) created_at;
-
     @relation(modelName.clients, tableKey.client_id) client;
     @relation(modelName.users, tableKey.user_id) user;
 }

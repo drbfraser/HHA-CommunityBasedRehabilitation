@@ -442,5 +442,4 @@ class BaselineSurvey(models.Model):
     shelter_adequate = models.BooleanField()
     shelter_essential_access = models.BooleanField()
 
-    created_at = models.BigIntegerField(_("date created"), default=current_milli_time)
     server_created_at = models.BigIntegerField(default=current_milli_time)

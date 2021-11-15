@@ -599,7 +599,6 @@ class BaselineSurveySerializer(serializers.ModelSerializer):
             "id",
             "user_id",
             "survey_date",
-            "created_at",
             "server_created_at",
         ]
 
@@ -607,7 +606,6 @@ class BaselineSurveySerializer(serializers.ModelSerializer):
         current_time = current_milli_time()
         validated_data["id"] = uuid.uuid4()
         validated_data["survey_date"] = current_time
-        validated_data["created_at"] = current_time
         validated_data["server_created_at"] = current_time
         validated_data["user_id"] = self.context["request"].user
         baseline_survey = models.BaselineSurvey.objects.create(**validated_data)

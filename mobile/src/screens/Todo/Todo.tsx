@@ -30,7 +30,6 @@ export type PieStat = {
 const Todo = () => {
     const data: VisitStat[] = [];
     const pieData: PieStat[] = [];
-
     const styles = useStyles();
     const authContext = useContext(AuthContext);
     const [loading, setLoading] = useState<boolean>(true);
@@ -60,25 +59,28 @@ const Todo = () => {
             if (count !== 0) {
                 var record: VisitStat = { name: zone[1], count: count };
                 data.push(record);
-                setVisitData(data);
             }
         }
+        setVisitData(data);
     };
 
     const RiskStats = async () => {
+        console.log("getting new riskstats");
         const visitType = ["health_visit", "social_visit", "educat_visit"];
         const visitName = ["Health", "Social", "Education"];
         var index = 0;
         for (const type of visitType) {
             const count = await database.get("visits").query(Q.where(type, true)).fetchCount();
             if (count !== 0) {
+                console.log(`${visitName[index]} has ${count} record`);
                 var record = { x: visitName[index], y: count };
                 pieData.push(record);
-                setRiskData(pieData);
             }
             index++;
         }
-        return pieData;
+        setRiskData(pieData);
+        console.log("setting new risk data");
+        console.log(riskData);
     };
 
     useEffect(() => {
@@ -90,6 +92,8 @@ const Todo = () => {
                     RiskStats()
                         .catch(() => {})
                         .finally(() => {
+                            console.log(riskData);
+                            console.log(`setting pie data`);
                             setGraphicData(riskData);
                         });
                 });
@@ -108,10 +112,7 @@ const Todo = () => {
                         <Text style={styles.cardSectionTitle}>Visits</Text>
 
                         <VictoryChart
-                            animate={{
-                                duration: 500,
-                                onLoad: { duration: 500 },
-                            }}
+                            animate={{ duration: 500 }}
                             domainPadding={10}
                             padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
                             containerComponent={<VictoryZoomContainer />}

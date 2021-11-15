@@ -9,7 +9,7 @@ import { FiberManualRecord } from "@material-ui/icons";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { makeStyles } from "@material-ui/core/styles";
 import { PriorityLevel } from "./Alert";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { Time } from "@cbr/common/util/time";
 
@@ -36,12 +36,12 @@ const useStyles = makeStyles({
 });
 
 interface IAlert {
-  id: number;
-  subject: string;
-  priority: PriorityLevel;
-  alert_message: string;
-  created_by_user: number;
-  created_date: Time;
+    id: number;
+    subject: string;
+    priority: PriorityLevel;
+    alert_message: string;
+    created_by_user: number;
+    created_date: Time;
 }
 
 type AlertDetailProps = {
@@ -49,19 +49,18 @@ type AlertDetailProps = {
     selectAlert: number;
 };
 
-
 const RenderBadge = (params: String) => {
     let risk: RiskLevel;
 
     /*
       TODO: this should be improved, make Priority icons seperate from Risk Icons
     */
-    if(params==='M') {
-      risk = RiskLevel.MEDIUM;
-    } else if(params==='H') {
-      risk = RiskLevel.HIGH;
+    if (params === "M") {
+        risk = RiskLevel.MEDIUM;
+    } else if (params === "H") {
+        risk = RiskLevel.HIGH;
     } else {
-      risk = RiskLevel.LOW;
+        risk = RiskLevel.LOW;
     }
 
     /* TODO: This function is not working as expected */
@@ -77,17 +76,16 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
     const [alertData, setAlertData] = useState<IAlert[]>([]);
 
     useEffect(() => {
-      const fetchAlerts = async () => {
-          try {
-            const tempAlerts: IAlert[]= (await (await apiFetch(Endpoint.ALERTS)).json());
-            setAlertData(tempAlerts);
-          } catch (e) {
-              console.log(`Error fetching Alerts: ${e}`);
-          }
-      };
-      fetchAlerts();
+        const fetchAlerts = async () => {
+            try {
+                const tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
+                setAlertData(tempAlerts);
+            } catch (e) {
+                console.log(`Error fetching Alerts: ${e}`);
+            }
+        };
+        fetchAlerts();
     }, []);
-
 
     return (
         <Grid item xs={12} md={3} className={style.gridStyle}>

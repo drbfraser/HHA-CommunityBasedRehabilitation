@@ -1,8 +1,4 @@
 import * as Yup from "yup";
-/*
-  These unused Variable will be needed later when connecting to backend API
-*/
-import { Validation } from "../../util/validations";
 import { Priority, IAlert } from "../../util/alerts";
 
 export enum alertField {

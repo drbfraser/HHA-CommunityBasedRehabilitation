@@ -20,7 +20,6 @@ const AlertInbox = () => {
 
     return (
         <Grid container justify="center" alignItems="flex-start" spacing={3}>
-
             <AlertList {...alertListProps} />
             <AlertDetail {...alertDetailProps} />
             {/* TODO: 

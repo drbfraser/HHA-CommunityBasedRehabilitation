@@ -2,10 +2,9 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
-import testAlertExample from "./TestAlertExampleDeleteLater";
 import Typography from "@material-ui/core/Typography";
 import { IAlert } from "./Alert";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 
 const useStyles = makeStyles({
@@ -29,16 +28,15 @@ const AlertDetail = (alertDetailProps: Props) => {
       This part should belong to its parent component, but I am still learning how to implement that
     */
     useEffect(() => {
-      const fetchAlerts = async () => {
-          try {
-              setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
-          } catch (e) {
-              console.log(`Error fetching Alerts: ${e}`);
-          }
-      };
-      fetchAlerts();
+        const fetchAlerts = async () => {
+            try {
+                setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
+            } catch (e) {
+                console.log(`Error fetching Alerts: ${e}`);
+            }
+        };
+        fetchAlerts();
     }, []);
-
 
     const selectedItem: Array<any> = alertData.filter((alert) => {
         return alert.id === alertDetailProps.selectAlert;

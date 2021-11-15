@@ -12,8 +12,6 @@ const addClient = async (clientInfo: FormData) => {
         body: clientInfo,
     };
 
-    console.log("FLAG --- 1");
-
     return await apiFetch(Endpoint.CLIENTS, "", init)
         .then((res) => {
             return res.json();

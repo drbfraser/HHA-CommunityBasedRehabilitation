@@ -101,7 +101,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
             >
                 {alertData.map((currAlert) => {
                     return (
-                        <div>
+                        <div key={currAlert.id}>
                             <ListItemText
                                 primary={
                                     <React.Fragment>

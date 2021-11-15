@@ -23,7 +23,6 @@ export const handleSubmit = async (
             referral.client.set(client);
             referral.picture = values[ReferralFormField.picture];
             referral.date_referred = new Date().getTime();
-            referral.created_at = new Date().getTime();
         });
     });
 };

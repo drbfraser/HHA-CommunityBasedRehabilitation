@@ -5,7 +5,7 @@ export interface IFormProps {
 }
 
 /* Fields specifically used in schema & model of local DB */
-export enum BaseSurveyFields {
+export enum BaseSurveyField {
     survey_date = "survey_date",
     health = "health",
     health_have_rehabilitation_access = "health_have_rehabilitation_access",

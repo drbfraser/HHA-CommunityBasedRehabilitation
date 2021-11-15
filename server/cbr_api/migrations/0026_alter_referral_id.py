@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0025_auto_20211101_2110'),
+        ("cbr_api", "0025_auto_20211101_2110"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='referral',
-            name='id',
+            model_name="referral",
+            name="id",
             field=models.CharField(max_length=100, primary_key=True, serialize=False),
         ),
     ]

@@ -320,8 +320,8 @@ def sync(request):
                     risk_serializer.save()
                     decode_image(request.data["referrals"])
                     referral_serializer = serializers.pushReferralSerializer(
-                        data=request.data, 
-                        context={"sync_time": sync_time, "user": request.user}
+                        data=request.data,
+                        context={"sync_time": sync_time, "user": request.user},
                     )
                     if referral_serializer.is_valid():
                         referral_serializer.save()
@@ -338,7 +338,8 @@ def sync(request):
                                 visit_serializer.save()
                                 outcome_improvment_serializer = (
                                     serializers.pushOutcomeImprovementSerializer(
-                                        data=request.data, context={"sync_time": sync_time}
+                                        data=request.data,
+                                        context={"sync_time": sync_time},
                                     )
                                 )
                                 if outcome_improvment_serializer.is_valid():

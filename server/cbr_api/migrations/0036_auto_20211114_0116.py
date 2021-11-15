@@ -7,23 +7,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0035_merge_20211114_0057'),
+        ("cbr_api", "0035_merge_20211114_0057"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='referral',
-            old_name='client',
-            new_name='client_id',
+            model_name="referral",
+            old_name="client",
+            new_name="client_id",
         ),
         migrations.RenameField(
-            model_name='referral',
-            old_name='user',
-            new_name='user_id',
+            model_name="referral",
+            old_name="user",
+            new_name="user_id",
         ),
         migrations.AddField(
-            model_name='referral',
-            name='server_created_at',
+            model_name="referral",
+            name="server_created_at",
             field=models.BigIntegerField(default=cbr_api.util.current_milli_time),
         ),
     ]

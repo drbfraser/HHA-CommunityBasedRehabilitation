@@ -228,6 +228,7 @@ def create_survey_data(validated_data, user, sync_time):
         record.server_created_at = sync_time
         record.save()
 
+
 def create_referral_data(validated_data, user, sync_time):
     table_data = validated_data.get("referrals")
     created_data = table_data.pop("created")

@@ -21,7 +21,7 @@ import { dbType } from "../../../../util/watermelonDatabase";
 
 interface IEntryProps {
     referral: IReferral;
-    database: dbType,
+    database: dbType;
     close: () => void;
     refreshClient: () => void;
 }
@@ -78,8 +78,9 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
         });
 
         const handleSubmit = async (values: typeof initialValues) => {
-            const referralToUpdate = await database.get("referrals").find((referral.id).toString());
-            await referralToUpdate.updateReferral(values[OutcomeField.outcome])
+            const referralToUpdate = await database.get("referrals").find(referral.id.toString());
+            await referralToUpdate
+                .updateReferral(values[OutcomeField.outcome])
                 .then(() => handleUpdate())
                 .catch(() => {
                     alert(

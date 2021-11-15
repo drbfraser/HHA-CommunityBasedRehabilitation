@@ -20,11 +20,21 @@ export type BriefReferral = {
 
 const concatenateReferralType = (referral: IOutstandingReferral) => {
     const referralTypes: String[] = [];
-    if (referral.orthotic) { referralTypes.push("Orthotic"); };
-    if (referral.physiotherapy) { referralTypes.push("Physiotherapy"); };
-    if (referral.prosthetic) { referralTypes.push("Prosthetic"); };
-    if (referral.wheelchair) { referralTypes.push("Wheelchair"); };
-    if (referral.services_other) { referralTypes.push(referral.services_other); };
+    if (referral.orthotic) {
+        referralTypes.push("Orthotic");
+    }
+    if (referral.physiotherapy) {
+        referralTypes.push("Physiotherapy");
+    }
+    if (referral.prosthetic) {
+        referralTypes.push("Prosthetic");
+    }
+    if (referral.wheelchair) {
+        referralTypes.push("Wheelchair");
+    }
+    if (referral.services_other) {
+        referralTypes.push(referral.services_other);
+    }
 
     return referralTypes.join(", ");
 };
@@ -55,39 +65,40 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
     let clientReferrals: Array<BriefReferral> = [];
     let fetchReferrals;
 
-    await database.get("clients").query().fetch().then((fetchedClients) => {
-        let clientCount = 0;
+    await database
+        .get("clients")
+        .query()
+        .fetch()
+        .then((fetchedClients) => {
+            let clientCount = 0;
 
-        fetchReferrals = new Promise ((resolve) => {
-            fetchedClients.forEach(async (client) => {
-                const referrals = await client.outstandingReferrals.fetch();
-                if (referrals.length > 0) {
-                    referrals.forEach(referral => {
-                        const currReferral: BriefReferral = {
-                            id: referral.id,
-                            client_id: client.id,
-                            full_name: client.full_name,
-                            type: concatenateReferralType(referral),
-                            date_referred: referral.date_referred,
-                        }
-        
-                        clientReferrals.push(currReferral);
-                    });
-                }
+            fetchReferrals = new Promise((resolve) => {
+                fetchedClients.forEach(async (client) => {
+                    const referrals = await client.outstandingReferrals.fetch();
+                    if (referrals.length > 0) {
+                        referrals.forEach((referral) => {
+                            const currReferral: BriefReferral = {
+                                id: referral.id,
+                                client_id: client.id,
+                                full_name: client.full_name,
+                                type: concatenateReferralType(referral),
+                                date_referred: referral.date_referred,
+                            };
 
-                clientCount++;
-                if (clientCount == fetchedClients.length) {
-                    resolve();
-                }
+                            clientReferrals.push(currReferral);
+                        });
+                    }
+
+                    clientCount++;
+                    if (clientCount == fetchedClients.length) {
+                        resolve();
+                    }
+                });
             });
-        })
-    });
+        });
 
     await fetchReferrals;
     return clientReferrals
-            .sort(
-                (a: BriefReferral, b: BriefReferral) =>
-                    b.date_referred - a.date_referred
-            )
-            .slice(0, 5); /* Display 5 most recent outstanding referrals */
-}
+        .sort((a: BriefReferral, b: BriefReferral) => b.date_referred - a.date_referred)
+        .slice(0, 5); /* Display 5 most recent outstanding referrals */
+};

@@ -6,9 +6,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0027_auto_20211104_2231'),
-        ('cbr_api', '0034_remove_baselinesurvey_updated_at'),
+        ("cbr_api", "0027_auto_20211104_2231"),
+        ("cbr_api", "0034_remove_baselinesurvey_updated_at"),
     ]
 
-    operations = [
-    ]
+    operations = []

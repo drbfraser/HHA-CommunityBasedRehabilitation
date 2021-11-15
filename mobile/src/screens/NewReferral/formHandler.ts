@@ -12,7 +12,9 @@ export const handleSubmit = async (
 
     const referralInfo = await referralHandleSubmit(values, source);
     await database.write(async () => {
-        const client = await database.get("clients").find(values[ReferralFormField.client_id].toString());
+        const client = await database
+            .get("clients")
+            .find(values[ReferralFormField.client_id].toString());
         await database.get("referrals").create((referral: any) => {
             delete referralInfo.client_id; /* We want to set this relation ourselves */
 

@@ -10,7 +10,7 @@ import {
     lazy,
 } from "@nozbe/watermelondb/decorators";
 import { writer } from "@nozbe/watermelondb/decorators/action";
-import { Q } from '@nozbe/watermelondb'
+import { Q } from "@nozbe/watermelondb";
 
 const sanitizeDisability = (rawDisability) => {
     return Array.isArray(rawDisability) ? rawDisability.map(Number) : [];
@@ -61,12 +61,9 @@ export default class Client extends Model {
     @children("surveys") surveys;
     @children("visits") visits;
 
-    @lazy outstandingReferrals = this.collections.get("referrals").query(
-        Q.where("client_id", this.id),
-        Q.and(
-            Q.where("resolved", Q.eq(false))
-        )
-    );
+    @lazy outstandingReferrals = this.collections
+        .get("referrals")
+        .query(Q.where("client_id", this.id), Q.and(Q.where("resolved", Q.eq(false))));
 
     @writer async updateRisk(type, level, time) {
         await this.update((client) => {

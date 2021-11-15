@@ -38,5 +38,5 @@ export default class Referral extends Model {
             referral.outcome = outcome;
             referral.date_resolved = new Date().getTime();
         });
-    };
+    }
 }

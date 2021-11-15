@@ -9,6 +9,8 @@ import {
     ClientField,
     clientFieldLabels,
     mobileClientDetailsValidationSchema,
+    ISurvey,
+    IRisk,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View, NativeModules } from "react-native";
@@ -25,6 +27,7 @@ import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 import defaultProfilePicture from "../../util/defaultProfilePicture";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { modelName } from "../../models/constant";
 
 interface ClientProps {
     clientID: string;
@@ -45,9 +48,9 @@ const ClientDetails = (props: ClientProps) => {
 
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const [client, setClient] = useState<any>();
-    const [risks, setRisk] = useState<any>();
+    const [risks, setRisk] = useState<IRisk[]>();
     const [referrals, setReferrals] = useState<any>();
-    const [surveys, setSurveys] = useState<any>();
+    const [surveys, setSurveys] = useState<ISurvey[]>();
     const [visits, setVisits] = useState<any>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
@@ -63,16 +66,16 @@ const ClientDetails = (props: ClientProps) => {
     const getClientDetails = async () => {
         try {
             const presentClient: any = await database
-                .get("clients")
+                .get(modelName.clients)
                 .find(props.route.params.clientID);
             const fetchedRisk = await presentClient.risks.fetch();
-            const presentClientReferrals = await presentClient.referrals.fetch();
-            const presentClientSurveys = await presentClient.surveys.fetch();
+            const fetchedReferrals = await presentClient.referrals.fetch();
+            const fetchedSurveys = await presentClient.surveys.fetch();
             const fetchedVisits = await presentClient.visits.fetch();
             setClient(presentClient);
             setRisk(fetchedRisk);
-            setReferrals(presentClientReferrals);
-            setSurveys(presentClientSurveys);
+            setReferrals(fetchedReferrals);
+            setSurveys(fetchedSurveys);
             setVisits(fetchedVisits);
             if (presentClient.picture != null) {
                 setOriginaluri(presentClient.picture);

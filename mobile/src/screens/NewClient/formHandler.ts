@@ -1,5 +1,6 @@
 import { getDisabilities, TClientValues } from "@cbr/common";
 import { FormikHelpers } from "formik";
+import { modelName } from "../../models/constant";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { dbType } from "../../util/watermelonDatabase";
@@ -7,7 +8,7 @@ import { dbType } from "../../util/watermelonDatabase";
 // TODO: profile picture does not upload correctly to server
 
 export const addRisk = async (client: any, database: dbType, type, level, req, goal, time) => {
-    const risk = await database.get("risks").create((risk: any) => {
+    const risk = await database.get(modelName.risks).create((risk: any) => {
         risk.client.set(client);
         risk.risk_type = type;
         risk.risk_level = level;
@@ -27,9 +28,9 @@ const handleNewMobileClientSubmit = async (
     const disabilities = await getDisabilities();
     try {
         let newClient;
-        const currentUser = await database.get("users").find(userID);
+        const currentUser = await database.get(modelName.users).find(userID);
         await database.write(async () => {
-            newClient = await database.get("clients").create((client: any) => {
+            newClient = await database.get(modelName.clients).create((client: any) => {
                 client.user.set(currentUser);
                 client.first_name = values.firstName;
                 client.last_name = values.lastName;

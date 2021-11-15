@@ -10,6 +10,7 @@ import {
 } from "@cbr/common";
 import { dbType } from "../../util/watermelonDatabase";
 import { Q } from "@nozbe/watermelondb";
+import { modelName } from "../../models/constant";
 
 export type ClientListRow = {
     id: string;
@@ -31,7 +32,7 @@ export const fetchClientsFromDB = async (
     try {
         const zones = await getZones();
         let responseRows: any;
-        const clientCollection = database.get("clients");
+        const clientCollection = database.get(modelName.clients);
 
         if (searchOption === SearchOption.NAME) {
             searchOption = "full_name";

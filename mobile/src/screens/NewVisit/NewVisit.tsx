@@ -38,6 +38,7 @@ import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/Confir
 import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
+import { modelName } from "../../models/constant";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -337,7 +338,7 @@ const NewVisit = (props: INewVisitProps) => {
 
     const getClientDetails = async () => {
         try {
-            const fetchedClient: any = await database.get("clients").find(clientId);
+            const fetchedClient: any = await database.get(modelName.clients).find(clientId);
             fetchedClient.risks.fetch().then((risk) => {
                 risk.sort((a: any, b: any) => b.timestamp - a.timestamp);
                 setRisks(risk);

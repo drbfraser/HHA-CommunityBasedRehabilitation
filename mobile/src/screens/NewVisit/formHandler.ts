@@ -2,6 +2,7 @@ import { FormikHelpers } from "formik";
 import { TVisitFormValues } from "@cbr/common/src/forms/newVisit/visitFormFields";
 import { handleSubmitVisitForm } from "@cbr/common/src/forms/newVisit/visitFormHandler";
 import { dbType } from "../../util/watermelonDatabase";
+import { modelName } from "../../models/constant";
 
 export const handleSubmit = async (
     values: TVisitFormValues,
@@ -11,11 +12,11 @@ export const handleSubmit = async (
 ) => {
     helpers.setSubmitting(true);
     try {
-        const currentUser = await database.get("users").find(userID);
-        const currentClient: any = await database.get("clients").find(values.client);
+        const currentUser = await database.get(modelName.users).find(userID);
+        const currentClient: any = await database.get(modelName.clients).find(values.client);
         let visit;
         await database.write(async () => {
-            visit = await database.get("visits").create((visit: any) => {
+            visit = await database.get(modelName.visits).create((visit: any) => {
                 visit.user.set(currentUser);
                 visit.client.set(currentClient);
                 visit.health_visit = values.HEALTH;

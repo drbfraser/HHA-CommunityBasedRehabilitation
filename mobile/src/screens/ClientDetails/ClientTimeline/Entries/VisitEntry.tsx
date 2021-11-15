@@ -16,6 +16,7 @@ import useStyles from "./Entry.styles";
 import { ScrollView, View } from "react-native";
 import DataCard from "../../../../components/DataCard/DataCard";
 import { database } from "../../../../util/watermelonDatabase";
+import { modelName } from "../../../../models/constant";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -23,19 +24,32 @@ interface IEntryProps {
 }
 
 const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
-    const [visit, setVisit] = useState<any>();
+    const [visit, setVisit] = useState<IVisit>();
     const [visitOutcomes, setVisitOutcome] = useState<any>();
     const [visitImprovements, setVisitImprovement] = useState<any>();
-    let visitcreationDate;
     const onOpen = async () => {
         if (!visit) {
-            const fetchedVisit: any = await database.get("visits").find(visitSummary.id);
-
+            const fetchedVisit: any = await database.get(modelName.visits).find(visitSummary.id);
+            const iVisit: IVisit = {
+                id: fetchedVisit.id,
+                user_id: fetchedVisit.user_id,
+                client_id: fetchedVisit.client_id,
+                created_at: fetchedVisit.createdAt,
+                health_visit: fetchedVisit.health_visit,
+                educat_visit: fetchedVisit.educat_visit,
+                social_visit: fetchedVisit.social_visit,
+                longitude: fetchedVisit.longitude,
+                latitude: fetchedVisit.latitude,
+                zone: fetchedVisit.zone,
+                village: fetchedVisit.zone,
+                improvements: [],
+                outcomes: [],
+            };
             const fetchedOutcome = await fetchedVisit.outcomes.fetch();
             const fetchedImprov = await fetchedVisit.improvements.fetch();
             setVisitOutcome(fetchedOutcome);
             setVisitImprovement(fetchedImprov);
-            setVisit(fetchedVisit);
+            setVisit(iVisit);
         }
     };
     useEffect(() => {
@@ -115,7 +129,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                     <Card.Content>
                         <Text>
                             <Text style={styles.labelBold}>Visit Date:</Text>{" "}
-                            {timestampToDateTime(visit.createdAt)}
+                            {timestampToDateTime(visit.created_at)}
                             {"\n"}
                             <Text style={styles.labelBold}>Village:</Text> {visit.village}
                         </Text>

@@ -4,6 +4,44 @@ export interface IFormProps {
     formikProps: FormikProps<any>;
 }
 
+/* Fields specifically used in schema & model of local DB */
+export enum BaseSurveyFields {
+    survey_date = "survey_date",
+    health = "health",
+    health_have_rehabilitation_access = "health_have_rehabilitation_access",
+    health_need_rehabilitation_access = "health_need_rehabilitation_access",
+    health_have_assistive_device = "health_have_assistive_device",
+    health_working_assistive_device = "health_working_assistive_device",
+    health_need_assistive_device = "health_need_assistive_device",
+    health_services_satisfaction = "health_services_satisfaction",
+    health_assistive_device_type = "health_assistive_device_type",
+    school_currently_attend = "school_currently_attend",
+    school_grade = "school_grade",
+    school_not_attend_reason = "school_not_attend_reason",
+    school_ever_attend = "school_ever_attend",
+    school_want_attend = "school_want_attend",
+    social_community_valued = "social_community_valued",
+    social_independent = "social_independent",
+    social_able_participate = "social_able_participate",
+    social_affected_by_disability = "social_affected_by_disability",
+    social_discrimination = "social_discrimination",
+    work = "work",
+    work_what = "work_what",
+    work_status = "work_status",
+    work_meet_financial_needs = "work_meet_financial_needs",
+    work_affected_by_disability = "work_affected_by_disability",
+    work_want = "work_want",
+    food_security = "food_security",
+    food_enough_monthly = "food_enough_monthly",
+    food_enough_for_child = "food_enough_for_child",
+    empowerment_organization_member = "empowerment_organization_member",
+    empowerment_organization = "empowerment_organization",
+    empowerment_rights_awareness = "empowerment_rights_awareness",
+    empowerment_influence_others = "empowerment_influence_others",
+    shelter_adequate = "shelter_adequate",
+    shelter_essential_access = "shelter_essential_access",
+}
+
 export enum BaseSurveyFormField {
     client_id = "client_id",
     surveyConsent = "give_consent",
@@ -56,6 +94,7 @@ export enum BaseSurveyFormField {
     haveShelter = "have_shelter",
     accessItem = "access_item",
 }
+
 export const baseServicesTypes = [
     BaseSurveyFormField.health,
     BaseSurveyFormField.education,

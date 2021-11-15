@@ -8,7 +8,7 @@ import { ClientRiskForm } from "./ClientRiskForm";
 import { Formik } from "formik";
 
 interface riskProps {
-    clientRisks: any;
+    clientRisks: IRisk[];
     presentRiskType: RiskType;
 }
 

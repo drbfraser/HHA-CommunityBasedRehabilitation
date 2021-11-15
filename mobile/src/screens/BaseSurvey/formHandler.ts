@@ -4,6 +4,7 @@ import {
     BaseSurveyFormField,
 } from "@cbr/common/src/forms/BaseSurvey/baseSurveyFields";
 import { baseSurveyHandleSubmitForm } from "@cbr/common/src/forms/BaseSurvey/baseSurveyHandler";
+import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
 
 export const handleSubmit = async (
@@ -17,13 +18,14 @@ export const handleSubmit = async (
     const surveyInfo = await baseSurveyHandleSubmitForm(values, source);
     await database.write(async () => {
         const client = await database
-            .get("clients")
+            .get(modelName.clients)
             .find(values[BaseSurveyFormField.client_id].toString());
-        await database.get("surveys").create((survey: any) => {
+        await database.get(modelName.surveys).create((survey: any) => {
             delete surveyInfo.client_id; /* We want to set this relation ourselves */
 
             Object.assign(survey, surveyInfo);
             survey.client.set(client);
+            survey.school_grade = parseInt(surveyInfo.school_grade);
             survey.survey_date = new Date().getTime();
             survey.created_at = new Date().getTime();
         });

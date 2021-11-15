@@ -42,7 +42,6 @@ export const handleNewWebClientSubmit = async (
         )
             ? values.otherDisability
             : "",
-        id: "tmp",
         first_name: values.firstName,
         last_name: values.lastName,
         gender: values.gender,
@@ -56,19 +55,16 @@ export const handleNewWebClientSubmit = async (
         caregiver_phone: values.caregiverPhone,
         caregiver_email: values.caregiverEmail,
         health_risk: {
-            id: "tmp",
             risk_level: values.healthRisk,
             requirement: values.healthRequirements,
             goal: values.healthGoals,
         },
         social_risk: {
-            id: "tmp",
             risk_level: values.socialRisk,
             requirement: values.socialRequirements,
             goal: values.socialGoals,
         },
         educat_risk: {
-            id: "tmp",
             risk_level: values.educationRisk,
             requirement: values.educationRequirements,
             goal: values.educationGoals,

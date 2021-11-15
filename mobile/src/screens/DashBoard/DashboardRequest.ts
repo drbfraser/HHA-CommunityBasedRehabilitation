@@ -7,6 +7,7 @@ import {
 } from "@cbr/common";
 import { IClientSummary } from "@cbr/common";
 import { riskLevels } from "@cbr/common";
+import { modelName } from "../../models/constant";
 import { ClientListRow } from "../ClientList/ClientListRequest";
 import { dbType } from "../../util/watermelonDatabase";
 
@@ -42,7 +43,7 @@ const concatenateReferralType = (referral: IOutstandingReferral) => {
 export const fetchAllClientsFromDB = async (database: dbType): Promise<ClientListRow[]> => {
     try {
         const zones = await getZones();
-        const tempClients: any = await database.get("clients").query();
+        const tempClients: any = await database.get(modelName.clients).query();
         const resultRows = tempClients
             .sort(clientPrioritySort)
             .slice(0, 5)

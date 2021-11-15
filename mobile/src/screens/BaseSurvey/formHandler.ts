@@ -27,7 +27,6 @@ export const handleSubmit = async (
             survey.client.set(client);
             survey.school_grade = parseInt(surveyInfo.school_grade);
             survey.survey_date = new Date().getTime();
-            survey.created_at = new Date().getTime();
         });
     });
 };

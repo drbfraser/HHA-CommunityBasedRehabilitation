@@ -7,6 +7,26 @@ export interface ReferralFormProps {
     formikProps: FormikProps<any>;
 }
 
+export enum ReferralField {
+    date_referred = "date_referred",
+    date_resolved = "date_resolved",
+    resolved = "resolved",
+    outcome = "outcome",
+    picture = "picture",
+    wheelchair = "wheelchair",
+    wheelchair_experience = "wheelchair_experience",
+    hip_width = "hip_width",
+    wheelchair_owned = "wheelchair_owned",
+    wheelchair_repairable = "wheelchair_repairable",
+    physiotherapy = "physiotherapy",
+    condition = "condition",
+    prosthetic = "prosthetic",
+    prosthetic_injury_location = "prosthetic_injury_location",
+    orthotic = "orthotic",
+    orthotic_injury_location = "orthotic_injury_location",
+    services_other = "services_other",
+}
+
 export enum ReferralFormField {
     client_id = "client_id",
     wheelchair = "wheelchair",

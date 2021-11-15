@@ -1,15 +1,17 @@
+import { OutcomeFormField } from "@cbr/common";
 import { Model } from "@nozbe/watermelondb";
 import { field, text, relation } from "@nozbe/watermelondb/decorators";
+import { mobileGenericField, modelName, tableKey } from "./constant";
 
 export default class Outcome extends Model {
-    static table = "outcomes";
+    static table = modelName.outcomes;
     static associations = {
-        visits: { type: "belongs_to", key: "visit_id" },
+        visits: { type: mobileGenericField.belongs_to, key: tableKey.visit_id },
     } as const;
 
-    @field("risk_type") risk_type;
-    @field("goal_met") goal_met;
-    @text("outcome") outcome;
+    @field(OutcomeFormField.riskType) risk_type;
+    @field(OutcomeFormField.goalStatus) goal_met;
+    @text(OutcomeFormField.outcome) outcome;
 
-    @relation("visits", "visit_id") visit;
+    @relation(modelName.visits, tableKey.visit_id) visit;
 }

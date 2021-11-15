@@ -34,6 +34,7 @@ import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 import defaultProfilePicture from "../../util/defaultProfilePicture";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { modelName } from "../../models/constant";
 
 interface ClientProps {
     clientID: string;
@@ -70,7 +71,7 @@ const ClientDetails = (props: ClientProps) => {
     const getClientDetails = async () => {
         try {
             const presentClient: any = await database
-                .get("clients")
+                .get(modelName.clients)
                 .find(props.route.params.clientID);
             const fetchedRisk = await presentClient.risks.fetch();
             const fetchedVisits = await presentClient.visits.fetch();

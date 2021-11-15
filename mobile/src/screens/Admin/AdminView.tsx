@@ -10,6 +10,7 @@ import UserProfileContents from "../../components/UserProfileContents/UserProfil
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { resourceLimits } from "worker_threads";
 import { useIsFocused } from "@react-navigation/core";
+import { modelName } from "../../models/constant";
 
 interface ILoadError {
     statusCode?: number;
@@ -42,7 +43,7 @@ const AdminView = ({
     ) => {
         setError(undefined);
         try {
-            const result: any = await database.get("users").find(userId);
+            const result: any = await database.get(modelName.users).find(userId);
             const iUser: IUser = {
                 id: result.id,
                 username: result.username,

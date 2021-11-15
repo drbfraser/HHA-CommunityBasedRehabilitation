@@ -16,6 +16,7 @@ import useStyles from "./Entry.styles";
 import { ScrollView, View } from "react-native";
 import DataCard from "../../../../components/DataCard/DataCard";
 import { database } from "../../../../util/watermelonDatabase";
+import { modelName } from "../../../../models/constant";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -29,7 +30,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
     let visitcreationDate;
     const onOpen = async () => {
         if (!visit) {
-            const fetchedVisit: any = await database.get("visits").find(visitSummary.id);
+            const fetchedVisit: any = await database.get(modelName.visits).find(visitSummary.id);
 
             const fetchedOutcome = await fetchedVisit.outcomes.fetch();
             const fetchedImprov = await fetchedVisit.improvements.fetch();

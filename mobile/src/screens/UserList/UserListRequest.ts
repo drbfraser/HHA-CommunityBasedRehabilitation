@@ -7,6 +7,7 @@ import {
     UserRole,
     userRoles,
 } from "@cbr/common";
+import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
 
 type BriefUser = {
@@ -33,7 +34,7 @@ export const fetchUsersFromDB = async (
         const urlParams = new URLSearchParams();
 
         const zones = await getZones();
-        const responseRows: any = await database.get("users").query();
+        const responseRows: any = await database.get(modelName.users).query();
         var resultRow = responseRows.map((responseRow: IUser) => ({
             id: responseRow.id,
             full_name: responseRow.first_name + " " + responseRow.last_name,

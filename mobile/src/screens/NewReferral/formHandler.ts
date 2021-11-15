@@ -21,6 +21,7 @@ export const handleSubmit = async (
 
             Object.assign(referral, referralInfo);
             referral.client.set(client);
+            referral.hip_width = parseInt(referralInfo.hip_width);
             referral.picture = values[ReferralFormField.picture];
             referral.date_referred = new Date().getTime();
         });

@@ -310,7 +310,6 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
             "orthotic_injury_location",
             "services_other",
             "picture",
-            "created_at",
             "updated_at",
             "server_created_at",
         ]
@@ -322,7 +321,6 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
             "date_referred",
             "date_resolved",
             "resolved",
-            "created_at",
             "updated_at",
             "server_created_at",
         ]
@@ -332,7 +330,6 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
         validated_data["id"] = uuid.uuid4()
         validated_data["user_id"] = self.context["request"].user
         validated_data["date_referred"] = current_time
-        validated_data["created_at"] = current_time
         validated_data["server_created_at"] = current_time
         referrals = models.Referral.objects.create(**validated_data)
         referrals.save()
@@ -362,7 +359,6 @@ class ReferralSyncSerializer(serializers.ModelSerializer):
             "orthotic_injury_location",
             "services_other",
             "picture",
-            "created_at",
             "updated_at",
             "server_created_at",
         ]

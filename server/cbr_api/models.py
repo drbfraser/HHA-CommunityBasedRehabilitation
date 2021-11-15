@@ -237,7 +237,6 @@ class Referral(models.Model):
     date_resolved = models.BigIntegerField(default=0)
     resolved = models.BooleanField(default=False)
     outcome = models.CharField(max_length=100)
-    created_at = models.BigIntegerField(_("date created"), default=current_milli_time)
     updated_at = models.BigIntegerField(_("date updated"), default=0)
     server_created_at = models.BigIntegerField(default=current_milli_time)
 

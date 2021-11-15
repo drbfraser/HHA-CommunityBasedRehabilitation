@@ -94,7 +94,6 @@ export default appSchema({
                 { name: ReferralField.orthotic, type: "boolean" },
                 { name: ReferralField.orthotic_injury_location, type: "string" },
                 { name: ReferralField.services_other, type: "string" },
-                { name: mobileGenericField.created_at, type: "number" },
                 { name: mobileGenericField.updated_at, type: "number" },
             ],
         }),

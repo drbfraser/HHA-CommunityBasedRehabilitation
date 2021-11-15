@@ -1,7 +1,7 @@
 import { BaseSurveyField } from "@cbr/common";
-import { mobileGenericField, modelName, tableKey } from "./constant";
+import { modelName, tableKey } from "./constant";
 import { Model } from "@nozbe/watermelondb";
-import { field, date, text, relation, readonly } from "@nozbe/watermelondb/decorators";
+import { field, text, relation } from "@nozbe/watermelondb/decorators";
 
 export default class BaselineSurvey extends Model {
     static table = "surveys";

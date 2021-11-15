@@ -29,8 +29,7 @@ export default class Referral extends Model {
     @text(ReferralField.orthotic_injury_location) orthotic_injury_location;
     @text(ReferralField.services_other) services_other;
 
-    @readonly @date(mobileGenericField.created_at) created_at;
-    @readonly @date(mobileGenericField.updated_at) updated_at;
+    @readonly @date(mobileGenericField.updated_at) updatedAt;
 
     @relation(modelName.clients, tableKey.client_id) client;
     @relation(modelName.users, tableKey.user_id) user;

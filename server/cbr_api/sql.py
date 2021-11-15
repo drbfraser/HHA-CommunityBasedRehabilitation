@@ -85,7 +85,7 @@ def getStatsWhere(user_id, time_col, from_time, to_time):
     where = []
 
     if user_id is not None:
-        where.append(f"user_id={str(user_id)}")
+        where.append(f"user_id_id={str(user_id)}")
 
     if from_time is not None:
         where.append(f"{time_col}>={str(from_time)}")

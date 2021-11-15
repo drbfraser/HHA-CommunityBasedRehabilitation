@@ -4,6 +4,7 @@ export interface IFormProps {
     formikProps: FormikProps<any>;
 }
 
+/* Fields specifically used in schema & model of local DB */
 export enum BaseSurveyFields {
     survey_date = "survey_date",
     health = "health",

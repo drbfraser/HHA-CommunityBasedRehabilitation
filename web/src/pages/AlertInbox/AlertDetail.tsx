@@ -5,6 +5,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import testAlertExample from "./TestAlertExampleDeleteLater";
 import Typography from "@material-ui/core/Typography";
 import { IAlert } from "./Alert";
+import { useState,useEffect } from "react";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 
 const useStyles = makeStyles({
     dividerStyle: {
@@ -17,32 +19,43 @@ type Props = {
     selectAlert: number;
 };
 
-interface Alert {
-    id: number;
-    subject: string;
-    priority: string;
-    body: string;
-}
-
-const AlertDetail = (alertDetailProps: Props, alertData: IAlert[]) => {
+const AlertDetail = (alertDetailProps: Props) => {
     const style = useStyles();
 
-    const selectedItem: Array<IAlert> = alertData.filter((alert) => {
+    const [alertData, setAlertData] = useState<IAlert[]>([]);
+
+    /* 
+    TODO
+      This part should belong to its parent component, but I am still learning how to implement that
+    */
+    useEffect(() => {
+      const fetchAlerts = async () => {
+          try {
+              setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
+          } catch (e) {
+              console.log(`Error fetching Alerts: ${e}`);
+          }
+      };
+      fetchAlerts();
+    }, []);
+
+
+    const selectedItem: Array<any> = alertData.filter((alert) => {
         return alert.id === alertDetailProps.selectAlert;
     });
 
-    /* TODO: this part will be changed to accordion in the next iteration */
+    /* TODO: Delete Button */
     return (
         <Grid item xs={12} md={9}>
             <h1>Details</h1>
 
             <Divider variant="fullWidth" className={style.dividerStyle} />
 
-            <h2>{selectedItem.length === 0 ? "" : selectedItem[0].Subject}</h2>
+            <h2>{selectedItem.length === 0 ? "" : selectedItem[0].subject}</h2>
             <Typography>
-                {selectedItem.length === 0 || selectedItem[0].Body === ""
+                {selectedItem.length === 0 || selectedItem[0].alert_message === ""
                     ? "Empty"
-                    : selectedItem[0].Body}
+                    : selectedItem[0].alert_message}
             </Typography>
         </Grid>
     );

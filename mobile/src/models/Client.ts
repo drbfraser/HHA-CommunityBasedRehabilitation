@@ -66,8 +66,8 @@ export default class Client extends Model {
     @children(modelName.visits) visits;
 
     @lazy outstandingReferrals = this.collections
-        .get("referrals")
-        .query(Q.where("client_id", this.id), Q.and(Q.where("resolved", Q.eq(false))));
+        .get(modelName.referrals)
+        .query(Q.where(tableKey.client_id, this.id), Q.and(Q.where("resolved", Q.eq(false))));
 
     @writer async updateRisk(type, level, time) {
         await this.update((client) => {

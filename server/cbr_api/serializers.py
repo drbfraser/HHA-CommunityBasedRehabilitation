@@ -39,6 +39,7 @@ class UserCBRCreationSerializer(serializers.ModelSerializer):
             "phone_number",
             "is_active",
         )
+        read_only_fields = ["id"]
 
     def create(self, validated_data):
         validated_data["id"] = uuid.uuid4()
@@ -161,7 +162,7 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
             "goal",
         ]
 
-        read_only_fields = ["client_id", "timestamp", "risk_type"]
+        read_only_fields = ["id", "client_id", "timestamp", "risk_type"]
 
 
 class NormalRiskSerializer(serializers.ModelSerializer):
@@ -177,7 +178,7 @@ class NormalRiskSerializer(serializers.ModelSerializer):
             "goal",
         ]
 
-        read_only_fields = ["timestamp"]
+        read_only_fields = ["id", "timestamp"]
 
     def create(self, validated_data):
         current_time = current_milli_time()
@@ -362,7 +363,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             "outcomes",
         ]
 
-        read_only_fields = ["user_id", "created_at"]
+        read_only_fields = ["id", "user_id", "created_at"]
 
     def create(self, validated_data):
         current_time = current_milli_time()
@@ -587,6 +588,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = [
+            "id",
             "user_id",
             "created_at",
             "updated_at",

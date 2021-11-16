@@ -9,6 +9,7 @@ import ChangePasswordDialog from "./ChangePasswordDialog";
 import { useNavigation } from "@react-navigation/core";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
+import { dbType } from "../../util/watermelonDatabase";
 
 export interface Props {
     user: IUser | null;
@@ -17,9 +18,10 @@ export interface Props {
      * will be visible and other properties only visible through admin view will be hidden.
      */
     isSelf: boolean;
+    database: dbType;
 }
 
-const UserProfileContents = ({ user, isSelf }: Props) => {
+const UserProfileContents = ({ user, isSelf, database }: Props) => {
     const styles = useStyles();
     const navigation = useNavigation<AppStackNavProp>();
 
@@ -31,7 +33,6 @@ const UserProfileContents = ({ user, isSelf }: Props) => {
     const [isPassChangedSnackbarVisible, setPassChangeSnackbarVisibility] = useState(false);
 
     const [isLogoutConfirmDialogVisible, setLogoutConfirmDialogVisibility] = useState(false);
-
     return (
         <View style={styles.container}>
             {isSelf ? (
@@ -82,6 +83,7 @@ const UserProfileContents = ({ user, isSelf }: Props) => {
                             <ChangePasswordDialog
                                 user={user}
                                 isSelf={isSelf}
+                                database={database}
                                 visible={isPassChangeDialogVisible}
                                 onDismiss={(isSubmitSuccess) => {
                                     setPassChangeDialogVisibility(false);

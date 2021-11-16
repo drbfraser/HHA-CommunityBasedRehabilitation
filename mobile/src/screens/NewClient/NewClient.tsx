@@ -8,9 +8,10 @@ import {
     RiskType,
     TClientValues,
 } from "@cbr/common";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { useNavigation } from "@react-navigation/native";
 import { Formik, FormikProps } from "formik";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Button, Card, Divider, TouchableRipple } from "react-native-paper";
@@ -24,6 +25,7 @@ import { FieldError } from "../../util/formikUtil";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { handleSubmit } from "./formHandler";
 import useStyles from "./NewClient.styles";
+import { AuthContext } from "../../context/AuthContext/AuthContext";
 
 const riskMap: Map<RiskLevel, string> = new Map(
     Object.entries(riskLevels).map(([riskKey, riskLevel]) => [riskKey as RiskLevel, riskLevel.name])
@@ -77,8 +79,15 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
 };
 
 const NewClient = () => {
+    const authContext = useContext(AuthContext);
+    useEffect(() => {
+        authContext.requireLoggedIn(true);
+    }, []);
+    const user =
+        authContext.authState.state === "loggedIn" ? authContext.authState.currentUser : null;
     const navigation = useNavigation<AppStackNavProp>();
     const styles = useStyles();
+    const database = useDatabase();
     const scrollRef = React.createRef<KeyboardAwareScrollView>();
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
 
@@ -94,7 +103,7 @@ const NewClient = () => {
                     initialValues={clientInitialValues}
                     validationSchema={newClientValidationSchema}
                     onSubmit={(values, helpers) =>
-                        handleSubmit(values, helpers, navigation, scrollToTop)
+                        handleSubmit(values, helpers, navigation, scrollToTop, database, user!.id)
                     }
                     enableReinitialize
                 >

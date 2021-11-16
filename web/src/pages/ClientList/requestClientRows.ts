@@ -30,7 +30,7 @@ const requestClientRows = async (
         if (!allClientsMode) {
             const user = await getCurrentUser();
             if (user !== APILoadError) {
-                urlParams.append("created_by_user", String(user.id));
+                urlParams.append("user_id", String(user.id));
             }
         }
 

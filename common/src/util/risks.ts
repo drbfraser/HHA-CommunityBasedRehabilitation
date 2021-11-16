@@ -1,7 +1,7 @@
 import { themeColors } from "./colors";
 export interface IRisk {
-    id: number;
-    client: number;
+    id: string;
+    client_id: string;
     timestamp: number;
     risk_type: RiskType;
     risk_level: RiskLevel;

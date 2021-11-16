@@ -1,7 +1,7 @@
 import { apiFetch, APIFetchFailError, Endpoint } from "./endpoints";
 
 export interface IUser {
-    id: number;
+    id: string;
     username: string;
     first_name: string;
     last_name: string;

@@ -11,7 +11,7 @@ import { Picker } from "@react-native-picker/picker";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { DataTable } from "react-native-paper";
-import BriefUser, { fetchUsersFromApi } from "./UserListRequest";
+import BriefUser, { fetchUsersFromDB } from "./UserListRequest";
 import { useIsFocused } from "@react-navigation/native";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
 import {
@@ -22,12 +22,14 @@ import {
     TSortDirection,
 } from "../../util/listFunctions";
 import CustomMultiPicker from "react-native-multiple-select-list";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 const UserList = () => {
     const styles = useStyles();
     const authContext = useContext(AuthContext);
     const navigation = useNavigation<AppStackNavProp>();
     const zones = useZones();
+    const database = useDatabase();
     const [userList, setUserList] = useState<BriefUser[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
@@ -38,21 +40,19 @@ const UserList = () => {
 
     const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
 
-    const [showIDColumn, setShowIDColumn] = useState(true);
     const [showNameColumn, setShowNameColumn] = useState(true);
     const [showZoneColumn, setShowZoneColumn] = useState(true);
     const [showRoleColumn, setShowRoleColumn] = useState(true);
     const [showStatusColumn, setShowStatusColumn] = useState(true);
 
-    const [selectedColumn, setSelectedColumn] = useState<String[]>(["0", "1", "2", "3", "4"]);
+    const [selectedColumn, setSelectedColumn] = useState<String[]>(["0", "1", "2", "3"]);
     const columnShowingList = [
-        setShowIDColumn,
         setShowNameColumn,
         setShowZoneColumn,
         setShowRoleColumn,
         setShowStatusColumn,
     ];
-    const columnList = { 0: "ID", 1: "Name", 2: "Zone", 3: "Role", 4: "Statue" };
+    const columnList = { 0: "Name", 1: "Zone", 2: "Role", 3: "Statue" };
     const openColumnBuilderMenu = () => {
         setShowColumnBuilderMenu(true);
         showSelectedColumn;
@@ -75,11 +75,12 @@ const UserList = () => {
     };
 
     const newUserListGet = async () => {
-        var fetchedUserList = await fetchUsersFromApi(
+        var fetchedUserList = await fetchUsersFromDB(
             selectedSearchOption,
             searchQuery,
             sortOption,
-            sortDirection
+            sortDirection,
+            database
         );
         if (sortDirection !== "None") {
             fetchedUserList = fetchedUserList.sort(userListScreenComparator);
@@ -169,7 +170,6 @@ const UserList = () => {
                     }}
                 >
                     <Picker.Item label="N/A" value="" />
-                    <Picker.Item label="ID" value={SearchOption.ID} />
                     <Picker.Item label="Name" value={SearchOption.NAME} />
                     <Picker.Item label="Zone" value={SearchOption.ZONE} />
                 </Picker>
@@ -209,12 +209,6 @@ const UserList = () => {
                 <DataTable>
                     <DataTable.Header style={styles.item}>
                         <ShowTitle
-                            label="ID"
-                            style={styles.column_id}
-                            showTheTitle={showIDColumn}
-                            thisColumnSortOption={SortOptions.ID}
-                        />
-                        <ShowTitle
                             label="Name"
                             style={styles.column_name}
                             showTheTitle={showNameColumn}
@@ -246,17 +240,10 @@ const UserList = () => {
                                 key={item.id}
                                 onPress={() => {
                                     navigation.navigate(StackScreenName.ADMIN_VIEW, {
-                                        userID: Number(item.id),
+                                        userID: item.id,
                                     });
                                 }}
                             >
-                                {showIDColumn ? (
-                                    <DataTable.Cell style={styles.column_id}>
-                                        {item.id}
-                                    </DataTable.Cell>
-                                ) : (
-                                    <View></View>
-                                )}
                                 {showNameColumn ? (
                                     <View style={styles.column_name}>
                                         <WrappedText text={item.full_name} />

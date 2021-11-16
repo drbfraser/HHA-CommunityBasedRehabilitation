@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from cbr_api import models
 import time
 import random
+import uuid
 
 
 class Command(BaseCommand):
@@ -30,7 +31,9 @@ class Command(BaseCommand):
         disabilities.exclude(disability_type="Other")
 
         def getYearTimestamp(self, year, days):
-            return ((year - 1970) * (60 * 60 * 24 * 365)) + (days * 60 * 60 * 24)
+            return (
+                ((year - 1970) * (60 * 60 * 24 * 365)) + (days * 60 * 60 * 24)
+            ) * 1000
 
         def getDifferentRisk(self, client, type):
             diff_risks = ["LO", "ME", "HI", "CR"]
@@ -53,10 +56,12 @@ class Command(BaseCommand):
 
             return diff_risks
 
-        def createRisk(self, client, type, level, time):
+        def createRisk(self, id, client, type, level, time):
             risk = models.ClientRisk.objects.create(
-                client=client,
+                id=id,
+                client_id=client,
                 timestamp=time,
+                server_created_at=time,
                 risk_type=type,
                 risk_level=level,
                 requirement=random.choice(requirements),
@@ -77,7 +82,7 @@ class Command(BaseCommand):
             return risk
 
         def createClient(
-            self, first, last, gender, village, phone, other_disability=""
+            self, id, first, last, gender, village, phone, other_disability=""
         ):
             health_risk = random.choice(risks)
             social_risk = random.choice(risks)
@@ -87,8 +92,10 @@ class Command(BaseCommand):
             )
 
             client = models.Client.objects.create(
-                created_by_user=random.choice(users),
-                created_date=creation_date,
+                id=id,
+                user_id=random.choice(users),
+                created_at=creation_date,
+                server_created_at=creation_date,
                 first_name=first,
                 last_name=last,
                 full_name=first + " " + last,
@@ -103,6 +110,9 @@ class Command(BaseCommand):
                 health_risk_level=health_risk,
                 social_risk_level=social_risk,
                 educat_risk_level=educat_risk,
+                health_timestamp=creation_date,
+                social_timestamp=creation_date,
+                educat_timestamp=creation_date,
             )
             client.disability.add(random.choice(disabilities))
 
@@ -111,9 +121,9 @@ class Command(BaseCommand):
                     models.Disability.objects.get(disability_type="Other")
                 )
 
-            createRisk(self, client, "HEALTH", health_risk, creation_date)
-            createRisk(self, client, "SOCIAL", social_risk, creation_date)
-            createRisk(self, client, "EDUCAT", educat_risk, creation_date)
+            createRisk(self, uuid.uuid4(), client, "HEALTH", health_risk, creation_date)
+            createRisk(self, uuid.uuid4(), client, "SOCIAL", social_risk, creation_date)
+            createRisk(self, uuid.uuid4(), client, "EDUCAT", educat_risk, creation_date)
 
             client.save()
 
@@ -140,15 +150,15 @@ class Command(BaseCommand):
             )
             return
 
-        createClient(self, "Dan", "Nylah", "M", "#1", "555-0001")
-        createClient(self, "Blaise", "Georg", "F", "#2", "555-0002")
-        createClient(self, "Carol", "Yaumuna", "F", "#3", "555-0003")
-        createClient(self, "Aravind", "Bartolome", "M", "#4", "555-0004")
-        createClient(self, "Ana", "Sofia", "F", "#5", "555-0005")
-        createClient(self, "Edgar", "Hirah", "M", "#6", "555-0006")
-        createClient(self, "Okan", "Alvis", "M", "#7", "555-0007")
-        createClient(self, "Beatrix", "Adem", "F", "#8", "555-0008", "Epilepsy")
-        createClient(self, "Rigel", "Lachlan", "M", "#9", "555-0009", "Dementia")
+        createClient(self, "1", "Dan", "Nylah", "M", "#1", "555-0001")
+        createClient(self, "2", "Blaise", "Georg", "F", "#2", "555-0002")
+        createClient(self, "3", "Carol", "Yaumuna", "F", "#3", "555-0003")
+        createClient(self, "4", "Aravind", "Bartolome", "M", "#4", "555-0004")
+        createClient(self, "5", "Ana", "Sofia", "F", "#5", "555-0005")
+        createClient(self, "6", "Edgar", "Hirah", "M", "#6", "555-0006")
+        createClient(self, "7", "Okan", "Alvis", "M", "#7", "555-0007")
+        createClient(self, "8", "Beatrix", "Adem", "F", "#8", "555-0008", "Epilepsy")
+        createClient(self, "9", "Rigel", "Lachlan", "M", "#9", "555-0009", "Dementia")
 
         clients = models.Client.objects.all()
 
@@ -162,6 +172,7 @@ class Command(BaseCommand):
 
                 createRisk(
                     self,
+                    uuid.uuid4(),
                     client,
                     type,
                     random.choice(getDifferentRisk(self, client, type)),

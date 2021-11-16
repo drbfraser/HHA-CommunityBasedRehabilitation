@@ -15,6 +15,8 @@ import {
     ClientField,
     clientFieldLabels,
     mobileClientDetailsValidationSchema,
+    timestampFromFormDate,
+    IVisit,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View, NativeModules } from "react-native";
@@ -32,9 +34,11 @@ import { Formik, FormikHelpers } from "formik";
 import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 import defaultProfilePicture from "../../util/defaultProfilePicture";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { modelName } from "../../models/constant";
 
 interface ClientProps {
-    clientID: number;
+    clientID: string;
     route: RouteProp<StackParamList, StackScreenName.CLIENT>;
     navigation: StackNavigationProp<StackParamList, StackScreenName.CLIENT>;
 }
@@ -44,13 +48,16 @@ const ClientDetails = (props: ClientProps) => {
     const [loading, setLoading] = useState(true);
     const [touchDisable, setTouchDisable] = useState<boolean>(true);
     const isFocused = useIsFocused();
+    const database = useDatabase();
 
     const [imageChange, setImageChange] = useState<boolean>(false);
     const [uri, setUri] = useState<string>("");
     const [originaluri, setOriginaluri] = useState<string>("");
 
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
-    const [client, setClient] = useState<IClient>();
+    const [client, setClient] = useState<any>();
+    const [risks, setRisk] = useState<IRisk[]>();
+    const [visits, setVisits] = useState<any>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
             {
@@ -63,19 +70,21 @@ const ClientDetails = (props: ClientProps) => {
         ]);
 
     const getClientDetails = async () => {
-        const presentClient = await fetchClientDetailsFromApi(props.route.params.clientID);
-        if (presentClient.picture !== null) {
-            apiFetch(Endpoint.CLIENT_PICTURE, `${presentClient.id}`)
-                .then((resp) => resp.blob())
-                .then((blob) => {
-                    let reader = new FileReader();
-                    reader.onload = () => {
-                        setOriginaluri(reader.result as string);
-                    };
-                    reader.readAsDataURL(blob);
-                });
+        try {
+            const presentClient: any = await database
+                .get(modelName.clients)
+                .find(props.route.params.clientID);
+            const fetchedRisk = await presentClient.risks.fetch();
+            const fetchedVisits = await presentClient.visits.fetch();
+            setClient(presentClient);
+            setRisk(fetchedRisk);
+            setVisits(fetchedVisits);
+            if (presentClient.picture != null) {
+                setOriginaluri(presentClient.picture);
+            }
+        } catch (e) {
+            console.log(e);
         }
-        setClient(presentClient);
     };
 
     const locale = NativeModules.I18nManager.localeIdentifier;
@@ -87,9 +96,10 @@ const ClientDetails = (props: ClientProps) => {
                 ...clientInitialValues,
                 firstName: client.first_name,
                 lastName: client.last_name,
-                birthDate: timestampToDate(Number(client.birth_date), locale, timezone),
+                birthDate: client.birth_date,
                 gender: client.gender,
                 village: client.village,
+                picture: client.picture,
                 zone: client.zone ?? "",
                 phoneNumber: client.phone_number,
                 caregiverPresent: client.caregiver_present,
@@ -98,9 +108,7 @@ const ClientDetails = (props: ClientProps) => {
                 caregiverPhone: client.caregiver_phone,
                 disability: client.disability,
                 otherDisability: client.other_disability,
-                picture: client.picture,
             };
-
             return clientFormProps;
         } else {
             return clientInitialValues;
@@ -119,37 +127,16 @@ const ClientDetails = (props: ClientProps) => {
     const navigation = useNavigation<AppStackNavProp>();
     const tempActivity: IActivity[] = [];
     let presentId = 0;
-    if (client) {
-        client.visits.forEach((presentVisit) => {
+
+    if (visits) {
+        visits.forEach((presentVisit) => {
             tempActivity.push({
                 id: presentId,
                 type: ActivityType.VISIT,
-                date: presentVisit.date_visited,
+                date: presentVisit.createdAt,
                 visit: presentVisit,
                 referral: undefined,
                 survey: undefined,
-            });
-            presentId += 1;
-        });
-        client.referrals.forEach((presentRef) => {
-            tempActivity.push({
-                id: presentId,
-                type: ActivityType.REFERAL,
-                date: presentRef.date_referred,
-                visit: undefined,
-                referral: presentRef,
-                survey: undefined,
-            });
-            presentId += 1;
-        });
-        client.baseline_surveys.forEach((presentSurvey) => {
-            tempActivity.push({
-                id: presentId,
-                type: ActivityType.SURVEY,
-                date: presentSurvey.survey_date,
-                visit: undefined,
-                referral: undefined,
-                survey: presentSurvey,
             });
             presentId += 1;
         });
@@ -161,28 +148,9 @@ const ClientDetails = (props: ClientProps) => {
         values: TClientValues,
         formikHelpers: FormikHelpers<TClientValues>
     ) => {
-        if (client) {
-            const updatedIClient: IClient = {
-                ...client,
-                first_name: values.firstName ?? client.first_name,
-                last_name: values.lastName ?? client.last_name,
-                birth_date: values.birthDate ?? client.birth_date,
-                gender: (values.gender as Gender) ?? client.gender,
-                village: values.village ?? client.village,
-                zone: Number(values.zone) ?? client.zone,
-                phone_number: values.phoneNumber ?? client.phone_number,
-                caregiver_present: values.caregiverPresent ?? client.caregiver_present,
-                caregiver_name: values.caregiverName ?? client.caregiver_name,
-                caregiver_email: values.caregiverEmail ?? client.caregiver_email,
-                caregiver_phone: values.caregiverPhone ?? client.caregiver_phone,
-                disability: values.disability ?? client.disability,
-                other_disability: values.otherDisability ?? client.other_disability,
-                picture: values.picture ?? client.picture,
-            };
-            handleSubmit(updatedIClient, undefined, imageChange).finally(() =>
-                formikHelpers.setSubmitting(false)
-            );
-        }
+        handleSubmit(client, values, database, imageChange).finally(() =>
+            formikHelpers.setSubmitting(false)
+        );
     };
 
     return (
@@ -295,20 +263,11 @@ const ClientDetails = (props: ClientProps) => {
                     </Card>
                     <Text style={styles.cardSectionTitle}>Client Risks</Text>
                     <Divider />
-                    <ClientRisk
-                        clientRisks={client?.risks || []}
-                        presentRiskType={RiskType.HEALTH}
-                    />
+                    <ClientRisk clientRisks={risks || []} presentRiskType={RiskType.HEALTH} />
                     <Divider />
-                    <ClientRisk
-                        clientRisks={client?.risks || []}
-                        presentRiskType={RiskType.EDUCATION}
-                    />
+                    <ClientRisk clientRisks={risks || []} presentRiskType={RiskType.EDUCATION} />
                     <Divider />
-                    <ClientRisk
-                        clientRisks={client?.risks || []}
-                        presentRiskType={RiskType.SOCIAL}
-                    />
+                    <ClientRisk clientRisks={risks || []} presentRiskType={RiskType.SOCIAL} />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>
@@ -317,7 +276,7 @@ const ClientDetails = (props: ClientProps) => {
                             <RecentActivity
                                 clientVisits={client.visits ?? []}
                                 activity={tempActivity}
-                                clientCreateDate={client.created_date}
+                                clientCreateDate={client.createdAt}
                                 refreshClient={getClientDetails}
                             />
                         )}

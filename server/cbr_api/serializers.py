@@ -2,6 +2,7 @@ import datetime
 import imghdr
 import os
 import time
+import uuid
 from typing import Optional
 
 from django.contrib.auth.password_validation import validate_password
@@ -9,6 +10,12 @@ from django.core.files import File
 from rest_framework import serializers
 
 from cbr_api import models
+from cbr_api.util import (
+    current_milli_time,
+    create_client_data,
+    create_user_data,
+    create_generic_data,
+)
 
 
 # create and list
@@ -32,10 +39,11 @@ class UserCBRCreationSerializer(serializers.ModelSerializer):
             "phone_number",
             "is_active",
         )
+        read_only_fields = ["id"]
 
     def create(self, validated_data):
+        validated_data["id"] = uuid.uuid4()
         user = super().create(validated_data)
-
         user.set_password(validated_data["password"])
         user.save()
 
@@ -54,6 +62,35 @@ class UserCBRSerializer(serializers.ModelSerializer):
             "zone",
             "phone_number",
             "is_active",
+            "created_at",
+            "updated_at",
+        )
+
+    def update(self, user, validated_data):
+        validated_data["updated_at"] = current_milli_time()
+        super().update(user, validated_data)
+        return user
+
+
+class editUserCBRSerializer(serializers.ModelSerializer):
+
+    # disable uniquie validator for id to allow POST push sync request to update records
+    id = serializers.CharField(validators=[])
+    password = serializers.CharField(allow_blank=True)
+
+    class Meta:
+        model = models.UserCBR
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "password",
+            "role",
+            "zone",
+            "phone_number",
+            "is_active",
+            "created_at",
+            "updated_at",
         )
 
 
@@ -117,7 +154,7 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
         model = models.ClientRisk
         fields = [
             "id",
-            "client",
+            "client_id",
             "timestamp",
             "risk_type",
             "risk_level",
@@ -125,7 +162,7 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
             "goal",
         ]
 
-        read_only_fields = ["client", "timestamp", "risk_type"]
+        read_only_fields = ["id", "client_id", "timestamp", "risk_type"]
 
 
 class NormalRiskSerializer(serializers.ModelSerializer):
@@ -133,7 +170,7 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         model = models.ClientRisk
         fields = [
             "id",
-            "client",
+            "client_id",
             "timestamp",
             "risk_type",
             "risk_level",
@@ -141,41 +178,61 @@ class NormalRiskSerializer(serializers.ModelSerializer):
             "goal",
         ]
 
-        read_only_fields = ["timestamp"]
+        read_only_fields = ["id", "timestamp"]
 
     def create(self, validated_data):
-        validated_data["timestamp"] = int(time.time())
+        current_time = current_milli_time()
+        validated_data["timestamp"] = current_time
+        validated_data["server_created_at"] = current_time
+        validated_data["id"] = uuid.uuid4()
         risk = models.ClientRisk.objects.create(**validated_data)
         risk.save()
 
         type = validated_data["risk_type"]
         level = validated_data["risk_level"]
-        client = validated_data["client"]
+        client = validated_data["client_id"]
 
         if type == models.RiskType.HEALTH:
             client.health_risk_level = level
+            client.health_timestamp = current_time
         elif type == models.RiskType.SOCIAL:
             client.social_risk_level = level
+            client.social_timestamp = current_time
         elif type == models.RiskType.EDUCAT:
             client.educat_risk_level = level
-
+            client.educat_timestamp = current_time
+        client.updated_at = current_time
         client.save()
 
         return risk
 
 
+class ClientRiskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ClientRisk
+        fields = [
+            "id",
+            "client_id",
+            "timestamp",
+            "risk_type",
+            "risk_level",
+            "requirement",
+            "goal",
+        ]
+
+
 class ImprovementSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Improvement
-        fields = [
-            "id",
-            "visit",
-            "risk_type",
-            "provided",
-            "desc",
-        ]
+        fields = ["id", "visit_id", "risk_type", "provided", "desc", "created_at"]
 
-        read_only_fields = ["visit"]
+        read_only_fields = ["visit_id", "created_at"]
+
+
+class ImprovementSyncSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Improvement
+        fields = ["id", "visit_id", "risk_type", "provided", "desc", "created_at"]
 
 
 class OutcomeSerializer(serializers.ModelSerializer):
@@ -183,13 +240,27 @@ class OutcomeSerializer(serializers.ModelSerializer):
         model = models.Outcome
         fields = [
             "id",
-            "visit",
+            "visit_id",
             "risk_type",
             "goal_met",
             "outcome",
+            "created_at",
         ]
 
-        read_only_fields = ["visit"]
+        read_only_fields = ["visit_id", "created_at"]
+
+
+class OutcomeSyncSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Outcome
+        fields = [
+            "id",
+            "visit_id",
+            "risk_type",
+            "goal_met",
+            "outcome",
+            "created_at",
+        ]
 
 
 class UpdateReferralSerializer(serializers.ModelSerializer):
@@ -278,9 +349,9 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         model = models.Visit
         fields = [
             "id",
-            "user",
-            "client",
-            "date_visited",
+            "user_id",
+            "client_id",
+            "created_at",
             "health_visit",
             "educat_visit",
             "social_visit",
@@ -292,30 +363,38 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             "outcomes",
         ]
 
-        read_only_fields = ["user", "date_visited"]
+        read_only_fields = ["id", "user_id", "created_at"]
 
     def create(self, validated_data):
-        current_time = int(time.time())
+        current_time = current_milli_time()
 
         improvement_dataset = validated_data.pop("improvements")
         outcome_dataset = validated_data.pop("outcomes")
 
-        validated_data["user"] = self.context["request"].user
-        validated_data["date_visited"] = current_time
+        validated_data["id"] = uuid.uuid4()
+        validated_data["user_id"] = self.context["request"].user
+        validated_data["created_at"] = current_time
+        validated_data["server_created_at"] = current_time
         visit = models.Visit.objects.create(**validated_data)
         visit.save()
 
-        client = validated_data["client"]
+        client = validated_data["client_id"]
         client.last_visit_date = current_time
         client.save()
 
         for improvement_data in improvement_dataset:
-            improvement_data["visit"] = visit
+            improvement_data["id"] = uuid.uuid4()
+            improvement_data["visit_id"] = visit
+            improvement_data["created_at"] = current_time
+            improvement_data["server_created_at"] = current_time
             improvement = models.Improvement.objects.create(**improvement_data)
             improvement.save()
 
         for outcome_data in outcome_dataset:
-            outcome_data["visit"] = visit
+            outcome_data["id"] = uuid.uuid4()
+            outcome_data["visit_id"] = visit
+            outcome_data["created_at"] = current_time
+            outcome_data["server_created_at"] = current_time
             outcome = models.Outcome.objects.create(**outcome_data)
             outcome.save()
 
@@ -327,9 +406,9 @@ class SummaryVisitSerializer(serializers.ModelSerializer):
         model = models.Visit
         fields = [
             "id",
-            "user",
-            "client",
-            "date_visited",
+            "user_id",
+            "client_id",
+            "created_at",
             "health_visit",
             "educat_visit",
             "social_visit",
@@ -381,7 +460,80 @@ class ClientListSerializer(serializers.ModelSerializer):
             "social_risk_level",
             "educat_risk_level",
             "last_visit_date",
-            "created_by_user",
+            "user_id",
+        ]
+
+
+class ClientSyncSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Client
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "full_name",
+            "birth_date",
+            "gender",
+            "phone_number",
+            "disability",
+            "other_disability",
+            "longitude",
+            "latitude",
+            "user_id",
+            "created_at",
+            "updated_at",
+            "zone",
+            "village",
+            "picture",
+            "caregiver_present",
+            "caregiver_name",
+            "caregiver_phone",
+            "caregiver_email",
+            "health_risk_level",
+            "health_timestamp",
+            "social_risk_level",
+            "social_timestamp",
+            "educat_risk_level",
+            "educat_timestamp",
+            "last_visit_date",
+        ]
+
+
+class editClientSyncSerializer(serializers.ModelSerializer):
+
+    id = serializers.CharField(validators=[])
+
+    class Meta:
+        model = models.Client
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "full_name",
+            "birth_date",
+            "gender",
+            "phone_number",
+            "disability",
+            "other_disability",
+            "longitude",
+            "latitude",
+            "user_id",
+            "created_at",
+            "updated_at",
+            "zone",
+            "village",
+            "picture",
+            "caregiver_present",
+            "caregiver_name",
+            "caregiver_phone",
+            "caregiver_email",
+            "health_risk_level",
+            "health_timestamp",
+            "social_risk_level",
+            "social_timestamp",
+            "educat_risk_level",
+            "educat_timestamp",
+            "last_visit_date",
         ]
 
 
@@ -417,9 +569,10 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "phone_number",
             "disability",
             "other_disability",
-            "created_by_user",
-            "created_date",
-            "modified_date",
+            "user_id",
+            "created_at",
+            "updated_at",
+            "server_created_at",
             "longitude",
             "latitude",
             "zone",
@@ -435,16 +588,16 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = [
-            "created_by_user",
-            "created_date",
-            "modified_date",
+            "id",
+            "user_id",
+            "created_at",
+            "updated_at",
+            "server_created_at",
             "full_name",
         ]
 
     def create(self, validated_data):
-        current_time = int(time.time())
-        datetime.datetime.now().timestamp()
-
+        current_time = current_milli_time()
         # must be removed before passing validated_data into Client.objects.create
         health_data = validated_data.pop("health_risk")
         social_data = validated_data.pop("social_risk")
@@ -453,24 +606,32 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         validated_data["health_risk_level"] = health_data["risk_level"]
         validated_data["social_risk_level"] = social_data["risk_level"]
         validated_data["educat_risk_level"] = educat_data["risk_level"]
+
+        validated_data["health_timestamp"] = current_time
+        validated_data["social_timestamp"] = current_time
+        validated_data["educat_timestamp"] = current_time
+
         validated_data["full_name"] = (
             validated_data["first_name"] + " " + validated_data["last_name"]
         )
-        validated_data["created_by_user"] = self.context["request"].user
-        validated_data["created_date"] = current_time
-
+        validated_data["id"] = uuid.uuid4()
+        validated_data["user_id"] = self.context["request"].user
+        validated_data["created_at"] = current_time
+        validated_data["server_created_at"] = current_time
         client = super().create(validated_data)
 
-        def create_risk(data, type):
-            data["client"] = client
-            data["timestamp"] = current_time
+        def create_risk(data, type, time):
+            data["id"] = uuid.uuid4()
+            data["client_id"] = client
+            data["timestamp"] = time
+            data["server_created_at"] = time
             data["risk_type"] = type
             risk = models.ClientRisk.objects.create(**data)
             risk.save()
 
-        create_risk(health_data, models.RiskType.HEALTH)
-        create_risk(social_data, models.RiskType.SOCIAL)
-        create_risk(educat_data, models.RiskType.EDUCAT)
+        create_risk(health_data, models.RiskType.HEALTH, current_time)
+        create_risk(social_data, models.RiskType.SOCIAL, current_time)
+        create_risk(educat_data, models.RiskType.EDUCAT, current_time)
 
         return client
 
@@ -487,14 +648,15 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "id",
             "first_name",
             "last_name",
+            "full_name",
             "birth_date",
             "gender",
             "phone_number",
             "disability",
             "other_disability",
-            "created_by_user",
-            "created_date",
-            "modified_date",
+            "user_id",
+            "created_at",
+            "updated_at",
             "longitude",
             "latitude",
             "zone",
@@ -510,9 +672,10 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "baseline_surveys",
         ]
 
-        read_only_fields = ["created_by_user", "created_date", "modified_date"]
+        read_only_fields = ["user_id", "created_at", "updated_at"]
 
     def update(self, instance: models.Client, validated_data):
+        validated_data["updated_at"] = current_milli_time()
         new_client_picture: Optional[File] = validated_data.get("picture")
         if new_client_picture:
             file_root, file_ext = os.path.splitext(new_client_picture.name)
@@ -560,3 +723,108 @@ class AlertListSerializer(serializers.ModelSerializer):
             "created_by_user",
             "created_date",
         ]
+
+
+# ensure to use a seperate serializer to disable primary key validator as it might invalidate it
+class multiUserSerializer(serializers.Serializer):
+    created = UserCBRSerializer(many=True)
+    updated = editUserCBRSerializer(many=True)
+    deleted = UserCBRSerializer(many=True)
+
+
+class multiClientSerializer(serializers.Serializer):
+    created = ClientSyncSerializer(many=True)
+    updated = editClientSyncSerializer(many=True)
+    deleted = ClientSyncSerializer(many=True)
+
+
+class multiRiskSerializer(serializers.Serializer):
+    created = ClientRiskSerializer(many=True)
+    updated = ClientRiskSerializer(many=True)
+    deleted = ClientRiskSerializer(many=True)
+
+
+class multiVisitSerializer(serializers.Serializer):
+    created = SummaryVisitSerializer(many=True)
+    updated = SummaryVisitSerializer(many=True)
+    deleted = SummaryVisitSerializer(many=True)
+
+
+class multiOutcomeSerializer(serializers.Serializer):
+    created = OutcomeSyncSerializer(many=True)
+    updated = OutcomeSyncSerializer(many=True)
+    deleted = OutcomeSyncSerializer(many=True)
+
+
+class multiImprovSerializer(serializers.Serializer):
+    created = ImprovementSyncSerializer(many=True)
+    updated = ImprovementSyncSerializer(many=True)
+    deleted = ImprovementSyncSerializer(many=True)
+
+
+# for each table being sync, add corresponding multi serializer under here
+class tableSerializer(serializers.Serializer):
+    users = multiUserSerializer()
+    clients = multiClientSerializer()
+    risks = multiRiskSerializer()
+    visits = multiVisitSerializer()
+    outcomes = multiOutcomeSerializer()
+    improvements = multiImprovSerializer()
+
+
+class pullResponseSerializer(serializers.Serializer):
+    changes = tableSerializer()
+    timestamp = serializers.IntegerField()
+
+
+class pushUserSerializer(serializers.Serializer):
+    users = multiUserSerializer()
+
+    def create(self, validated_data):
+        create_user_data(validated_data, self.context.get("sync_time"))
+        return self
+
+
+class pushClientSerializer(serializers.Serializer):
+    clients = multiClientSerializer()
+
+    def create(self, validated_data):
+        create_client_data(validated_data, self.context.get("sync_time"))
+        return self
+
+
+class pushRiskSerializer(serializers.Serializer):
+    risks = multiRiskSerializer()
+
+    def create(self, validated_data):
+        create_generic_data(
+            "risks", models.ClientRisk, validated_data, self.context.get("sync_time")
+        )
+        return self
+
+
+class pushVisitSerializer(serializers.Serializer):
+    visits = multiVisitSerializer()
+
+    def create(self, validated_data):
+        create_generic_data(
+            "visits", models.Visit, validated_data, self.context.get("sync_time")
+        )
+        return self
+
+
+class pushOutcomeImprovementSerializer(serializers.Serializer):
+    outcomes = multiOutcomeSerializer()
+    improvements = multiImprovSerializer()
+
+    def create(self, validated_data):
+        create_generic_data(
+            "outcomes", models.Outcome, validated_data, self.context.get("sync_time")
+        )
+        create_generic_data(
+            "improvements",
+            models.Improvement,
+            validated_data,
+            self.context.get("sync_time"),
+        )
+        return self

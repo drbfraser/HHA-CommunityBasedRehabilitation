@@ -22,7 +22,7 @@ interface IProps {
     /**
      * The client ID if this image is for an existing client.
      */
-    clientId?: number;
+    clientId?: string;
     onPictureChange: (newPictureURL: string) => void;
     /**
      * Indicates either a base64 image starting with `data:image/png;base64` or a (non-accessible)

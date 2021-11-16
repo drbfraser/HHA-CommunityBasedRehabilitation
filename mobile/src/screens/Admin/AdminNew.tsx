@@ -11,7 +11,6 @@ import {
     adminUserInitialValues,
     APIFetchFailError,
     countObjectKeys,
-    handleNewUserSubmit,
     newUserValidationSchema,
     themeColors,
     TNewUserValues,
@@ -24,8 +23,11 @@ import Alert from "../../components/Alert/Alert";
 import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import passwordTextInputProps from "../../components/PasswordTextInput/passwordTextInputProps";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { handleNewUserSubmit } from "./AdminFormHandler";
 
 const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenName.ADMIN_NEW>) => {
+    const database = useDatabase();
     const zones = useZones();
     const [saveError, setSaveError] = useState<string>();
     const passwordRef = useRef<NativeTextInput>(null);
@@ -59,12 +61,11 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
                         validationSchema={newUserValidationSchema}
                         onSubmit={(values, formikHelpers) => {
                             setSaveError(undefined);
-                            handleNewUserSubmit(values, formikHelpers)
-                                .then((user) => {
+                            handleNewUserSubmit(values, database, formikHelpers)
+                                .then((id) => {
                                     setHasSubmitted(true);
                                     navigation.replace(StackScreenName.ADMIN_VIEW, {
-                                        userID: user.id,
-                                        userInfo: { isNewUser: true, user: user },
+                                        userID: id,
                                     });
                                 })
                                 .catch((e) =>

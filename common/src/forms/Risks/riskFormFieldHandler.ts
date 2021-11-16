@@ -33,15 +33,13 @@ export const handleSubmit = async (
     setRisk: (risk: IRisk) => void
 ) => {
     if (!wasChangeMade(values, initialValues)) return;
-
     const updatedRisk = JSON.stringify({
-        client: values.client,
+        client_id: values.client_id,
         risk_type: values.risk_type,
         risk_level: values.risk_level,
         goal: values.goal,
         requirement: values.requirement,
     });
-
     try {
         const risk = await updateRisk(updatedRisk);
         setRisk(risk);

@@ -11,11 +11,11 @@ export interface IClientSummary {
     educat_risk_level: string;
     social_risk_level: string;
     last_visit_date: number;
-    created_by_user: number;
+    user_id: number;
 }
 
 export interface IClient {
-    id: number;
+    id: string;
     first_name: string;
     last_name: string;
     birth_date: number | string;
@@ -23,9 +23,9 @@ export interface IClient {
     phone_number: string;
     disability: number[];
     other_disability: string;
-    created_by_user: number;
-    created_date: number;
-    modified_date: number;
+    user_id: number;
+    created_at: number;
+    updated_at: number;
     longitude: string;
     latitude: string;
     zone: number;
@@ -82,7 +82,7 @@ export const clientPrioritySort = (a: IClientSummary, b: IClientSummary) => {
 export const appendPicture = async (
     formData: FormData,
     pictureUrl: string,
-    clientId: number | undefined | null
+    clientId: string | undefined | null
 ) => {
     const clientProfilePictureFetch = await fetch(pictureUrl);
     const contentType = clientProfilePictureFetch.headers.get("Content-Type");

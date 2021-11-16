@@ -211,3 +211,13 @@ def create_generic_data(table_name, model, validated_data, sync_time):
         record = model.objects.create(**data)
         record.server_created_at = sync_time
         record.save()
+
+
+def create_survey_data(validated_data, user, sync_time):
+    survey_data = validated_data.get("surveys")
+    created_data = survey_data.pop("created")
+    for data in created_data:
+        data["user_id"] = models.UserCBR.objects.get(username=user)
+        record = models.BaselineSurvey.objects.create(**data)
+        record.server_created_at = sync_time
+        record.save()

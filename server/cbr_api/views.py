@@ -317,6 +317,7 @@ def sync(request):
         reply.changes["users"] = get_model_changes(request, models.UserCBR)
         reply.changes["clients"] = get_model_changes(request, models.Client)
         reply.changes["risks"] = get_model_changes(request, models.ClientRisk)
+        reply.changes["surveys"] = get_model_changes(request, models.BaselineSurvey)
         reply.changes["visits"] = get_model_changes(request, models.Visit)
         reply.changes["outcomes"] = get_model_changes(request, models.Outcome)
         reply.changes["improvements"] = get_model_changes(request, models.Improvement)
@@ -342,23 +343,31 @@ def sync(request):
                 )
                 if risk_serializer.is_valid():
                     risk_serializer.save()
-                    visit_serializer = serializers.pushVisitSerializer(
-                        data=request.data, context={"sync_time": sync_time}
+                    survey_serializer = serializers.pushBaselineSurveySerializer(
+                        data=request.data,
+                        context={"sync_time": sync_time, "user": request.user},
                     )
-                    if visit_serializer.is_valid():
-                        visit_serializer.save()
-                        outcome_improvment_serializer = (
-                            serializers.pushOutcomeImprovementSerializer(
-                                data=request.data, context={"sync_time": sync_time}
-                            )
+                    if survey_serializer.is_valid():
+                        survey_serializer.save()
+                        visit_serializer = serializers.pushVisitSerializer(
+                            data=request.data, context={"sync_time": sync_time}
                         )
-                        if outcome_improvment_serializer.is_valid():
-                            outcome_improvment_serializer.save()
-                            return Response(status=status.HTTP_201_CREATED)
+                        if visit_serializer.is_valid():
+                            visit_serializer.save()
+                            outcome_improvment_serializer = (
+                                serializers.pushOutcomeImprovementSerializer(
+                                    data=request.data, context={"sync_time": sync_time}
+                                )
+                            )
+                            if outcome_improvment_serializer.is_valid():
+                                outcome_improvment_serializer.save()
+                                return Response(status=status.HTTP_201_CREATED)
+                            else:
+                                print(outcome_improvment_serializer.errors)
                         else:
-                            print(outcome_improvment_serializer.errors)
+                            print(visit_serializer.errors)
                     else:
-                        print(visit_serializer.errors)
+                        print(survey_serializer.errors)
                 else:
                     print(risk_serializer.errors)
             else:

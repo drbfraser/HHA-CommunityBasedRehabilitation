@@ -14,6 +14,7 @@ from cbr_api.util import (
     current_milli_time,
     create_client_data,
     create_user_data,
+    create_survey_data,
     create_generic_data,
 )
 
@@ -542,15 +543,30 @@ class BaselineSurveySerializer(serializers.ModelSerializer):
         model = models.BaselineSurvey
         fields = "__all__"
 
-        read_only_fields = ["user", "survey_date"]
+        read_only_fields = [
+            "id",
+            "user_id",
+            "survey_date",
+            "server_created_at",
+        ]
 
     def create(self, validated_data):
-        current_time = int(time.time())
+        current_time = current_milli_time()
+        validated_data["id"] = uuid.uuid4()
         validated_data["survey_date"] = current_time
-        validated_data["user"] = self.context["request"].user
+        validated_data["server_created_at"] = current_time
+        validated_data["user_id"] = self.context["request"].user
         baseline_survey = models.BaselineSurvey.objects.create(**validated_data)
         baseline_survey.save()
         return baseline_survey
+
+
+class BaselineSurveySyncSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.BaselineSurvey
+        fields = "__all__"
+
+        read_only_fields = ["user_id"]
 
 
 class ClientCreateSerializer(serializers.ModelSerializer):
@@ -744,6 +760,12 @@ class multiRiskSerializer(serializers.Serializer):
     deleted = ClientRiskSerializer(many=True)
 
 
+class multiBaselineSurveySerializer(serializers.Serializer):
+    created = BaselineSurveySyncSerializer(many=True)
+    updated = BaselineSurveySyncSerializer(many=True)
+    deleted = BaselineSurveySyncSerializer(many=True)
+
+
 class multiVisitSerializer(serializers.Serializer):
     created = SummaryVisitSerializer(many=True)
     updated = SummaryVisitSerializer(many=True)
@@ -767,6 +789,7 @@ class tableSerializer(serializers.Serializer):
     users = multiUserSerializer()
     clients = multiClientSerializer()
     risks = multiRiskSerializer()
+    surveys = multiBaselineSurveySerializer()
     visits = multiVisitSerializer()
     outcomes = multiOutcomeSerializer()
     improvements = multiImprovSerializer()
@@ -826,5 +849,15 @@ class pushOutcomeImprovementSerializer(serializers.Serializer):
             models.Improvement,
             validated_data,
             self.context.get("sync_time"),
+        )
+        return self
+
+
+class pushBaselineSurveySerializer(serializers.Serializer):
+    surveys = multiBaselineSurveySerializer()
+
+    def create(self, validated_data):
+        create_survey_data(
+            validated_data, self.context["user"], self.context.get("sync_time")
         )
         return self

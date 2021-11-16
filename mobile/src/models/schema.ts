@@ -1,4 +1,10 @@
-import { AdminField, ImprovementFormField, OutcomeFormField, VisitField } from "@cbr/common";
+import {
+    AdminField,
+    ImprovementFormField,
+    OutcomeFormField,
+    VisitField,
+    BaseSurveyField,
+} from "@cbr/common";
 import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 import { FormField } from "@cbr/common/src/forms/Risks/riskFormFields";
 import { appSchema, tableSchema } from "@nozbe/watermelondb";
@@ -63,6 +69,59 @@ export default appSchema({
                 { name: FormField.requirement, type: "string" },
                 { name: FormField.goal, type: "string" },
                 { name: FormField.timestamp, type: "number" },
+            ],
+        }),
+        tableSchema({
+            name: "surveys",
+            columns: [
+                { name: tableKey.client_id, type: "string", isIndexed: true },
+                { name: tableKey.user_id, type: "string", isIndexed: true },
+                { name: BaseSurveyField.survey_date, type: "number" },
+                { name: BaseSurveyField.health, type: "string" },
+                { name: BaseSurveyField.health_have_rehabilitation_access, type: "boolean" },
+                { name: BaseSurveyField.health_need_rehabilitation_access, type: "boolean" },
+                { name: BaseSurveyField.health_have_assistive_device, type: "boolean" },
+                { name: BaseSurveyField.health_working_assistive_device, type: "boolean" },
+                { name: BaseSurveyField.health_need_assistive_device, type: "boolean" },
+                {
+                    name: BaseSurveyField.health_assistive_device_type,
+                    type: "string",
+                    isOptional: true,
+                },
+                { name: BaseSurveyField.health_services_satisfaction, type: "string" },
+                { name: BaseSurveyField.school_currently_attend, type: "boolean" },
+                { name: BaseSurveyField.school_grade, type: "number" },
+                {
+                    name: BaseSurveyField.school_not_attend_reason,
+                    type: "string",
+                    isOptional: true,
+                },
+                { name: BaseSurveyField.school_ever_attend, type: "boolean" },
+                { name: BaseSurveyField.school_want_attend, type: "boolean" },
+                { name: BaseSurveyField.social_community_valued, type: "boolean" },
+                { name: BaseSurveyField.social_independent, type: "boolean" },
+                { name: BaseSurveyField.social_able_participate, type: "boolean" },
+                { name: BaseSurveyField.social_affected_by_disability, type: "boolean" },
+                { name: BaseSurveyField.social_discrimination, type: "boolean" },
+                { name: BaseSurveyField.work, type: "boolean" },
+                { name: BaseSurveyField.work_what, type: "string", isOptional: true },
+                { name: BaseSurveyField.work_status, type: "string", isOptional: true },
+                { name: BaseSurveyField.work_meet_financial_needs, type: "boolean" },
+                { name: BaseSurveyField.work_affected_by_disability, type: "boolean" },
+                { name: BaseSurveyField.work_want, type: "boolean" },
+                { name: BaseSurveyField.food_security, type: "string" },
+                { name: BaseSurveyField.food_enough_monthly, type: "boolean" },
+                { name: BaseSurveyField.food_enough_for_child, type: "string", isOptional: true },
+                { name: BaseSurveyField.empowerment_organization_member, type: "boolean" },
+                {
+                    name: BaseSurveyField.empowerment_organization,
+                    type: "string",
+                    isOptional: true,
+                },
+                { name: BaseSurveyField.empowerment_rights_awareness, type: "boolean" },
+                { name: BaseSurveyField.empowerment_influence_others, type: "boolean" },
+                { name: BaseSurveyField.shelter_adequate, type: "boolean" },
+                { name: BaseSurveyField.shelter_essential_access, type: "boolean" },
             ],
         }),
         tableSchema({

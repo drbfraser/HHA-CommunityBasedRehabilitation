@@ -319,7 +319,7 @@ const NewReferral = () => {
             handleSubmit(values, helpers, setSubmissionError);
         } else {
             if (activeStep === 0) {
-                helpers.setFieldValue(`${[ReferralFormField.client]}`, clientId);
+                helpers.setFieldValue(`${[ReferralFormField.client_id]}`, clientId);
             }
             setActiveStep(activeStep + 1);
             helpers.setSubmitting(false);

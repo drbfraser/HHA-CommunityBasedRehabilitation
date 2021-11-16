@@ -85,6 +85,8 @@ def getStatsWhere(user_id, time_col, from_time, to_time):
     where = []
 
     if user_id is not None:
+        # it seems that '_id' is automatically appended to the end of foreign key column names.
+        # So user_id -> user_id_id
         where.append(f"user_id_id={str(user_id)}")
 
     if from_time is not None:
@@ -108,10 +110,12 @@ def getOutstandingReferrals():
             SELECT c.id, c.full_name, r.services_other, r.physiotherapy, r.wheelchair, r.prosthetic, r.orthotic, r.date_referred
             FROM cbr_api_referral as r
             INNER JOIN cbr_api_client as c
-            ON c.id = r.client_id
+            ON c.id = r.client_id_id
             WHERE r.resolved=False
         """
         )
+        # it seems that '_id' is automatically appended to the end of foreign key column names.
+        # So client_id -> client_id_id
 
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]

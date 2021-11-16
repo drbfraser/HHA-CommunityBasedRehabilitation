@@ -1,6 +1,7 @@
 export enum modelName {
     users = "users",
     clients = "clients",
+    referrals = "referrals",
     surveys = "surveys",
     visits = "visits",
     risks = "risks",

@@ -17,31 +17,25 @@ import { ScrollView, View } from "react-native";
 import * as Yup from "yup";
 import { Formik, FormikProps } from "formik";
 import FormikTextInput from "../../../../components/FormikTextInput/FormikTextInput";
+import { dbType } from "../../../../util/watermelonDatabase";
 
 interface IEntryProps {
     referral: IReferral;
+    database: dbType;
     close: () => void;
     refreshClient: () => void;
 }
 
-const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
+const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps) => {
     const styles = useStyles();
     const [uri, setUri] = useState<string>("");
     const [hasImage, setHasImage] = useState<boolean>(false);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (referral.picture !== null) {
-            apiFetch(Endpoint.REFERRAL_PICTURE, `${referral.id}`)
-                .then((resp) => resp.blob())
-                .then((blob) => {
-                    let reader = new FileReader();
-                    reader.onload = () => {
-                        setUri(reader.result as string);
-                        setHasImage(true);
-                    };
-                    reader.readAsDataURL(blob);
-                });
+        if (referral.picture && referral.picture !== null) {
+            setUri(referral.picture);
+            setHasImage(true);
         }
     });
 
@@ -83,18 +77,14 @@ const ReferralEntry = ({ referral, close, refreshClient }: IEntryProps) => {
                 .required(),
         });
 
-        const handleSubmit = (values: typeof initialValues) => {
-            apiFetch(Endpoint.REFERRAL, `${referral.id}`, {
-                method: "PUT",
-                body: JSON.stringify({
-                    resolved: true,
-                    [OutcomeField.outcome]: values[OutcomeField.outcome],
-                }),
-            })
+        const handleSubmit = async (values: typeof initialValues) => {
+            const referralToUpdate = await database.get("referrals").find(referral.id.toString());
+            await referralToUpdate
+                .updateReferral(values[OutcomeField.outcome])
                 .then(() => handleUpdate())
                 .catch(() => {
                     alert(
-                        "Something went wrong when submitting the outcome and resovleing the referral. Please try that again."
+                        "Something went wrong when submitting the outcome and resolving the referral. Please try that again."
                     );
                 });
         };

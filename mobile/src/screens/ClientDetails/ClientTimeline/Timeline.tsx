@@ -11,6 +11,7 @@ import useStyles from "./Timeline.style";
 import BaselineEntry from "./Entries/BaselineEntry";
 import ReferralEntry from "./Entries/ReferralEntry";
 import VisitEntry from "./Entries/VisitEntry";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 import { useIsFocused } from "@react-navigation/native";
 interface ISummaryProps {
@@ -45,6 +46,8 @@ const Timeline = (props: ISummaryProps) => {
 
     const locale = NativeModules.I18nManager.localeIdentifier;
     const timezone = Localization.timezone;
+
+    const database = useDatabase();
 
     useEffect(() => {
         if (props.activity.type === ActivityType.VISIT) setIcon("walk");
@@ -149,6 +152,7 @@ const Timeline = (props: ISummaryProps) => {
                                             >
                                                 <ReferralEntry
                                                     referral={props.activity.referral as IReferral}
+                                                    database={database}
                                                     close={hideDetails}
                                                     refreshClient={props.refreshClient}
                                                 />

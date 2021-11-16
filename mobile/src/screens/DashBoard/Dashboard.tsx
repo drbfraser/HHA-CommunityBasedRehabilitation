@@ -66,7 +66,7 @@ const Dashboard = () => {
     };
 
     const [clientList, setClientList] = useState<ClientListRow[]>([]);
-    const [referralList, setreferralList] = useState<BriefReferral[]>([]);
+    const [referralList, setReferralList] = useState<BriefReferral[]>([]);
     const navigation = useNavigation();
     const getNewClient = async () => {
         var fetchedClientList = await fetchAllClientsFromDB(database);
@@ -76,18 +76,18 @@ const Dashboard = () => {
         setClientList(fetchedClientList);
     };
 
-    const getRefereals = async () => {
-        var fetchedReferrals = await fetchReferrals();
+    const getReferrals = async () => {
+        let fetchedReferrals: BriefReferral[] = await fetchReferrals(database);
         if (referralSortDirection !== "None") {
             fetchedReferrals = fetchedReferrals.sort(dashBoardReferralComparator);
         }
-        setreferralList(fetchedReferrals);
+        setReferralList(fetchedReferrals);
     };
 
     useEffect(() => {
         if (isFocused) {
             getNewClient();
-            getRefereals();
+            getReferrals();
         }
         //TODO alert part.
     }, [

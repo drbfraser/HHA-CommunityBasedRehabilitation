@@ -4,6 +4,7 @@ import {
     OutcomeFormField,
     VisitField,
     BaseSurveyField,
+    ReferralField,
 } from "@cbr/common";
 import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 import { FormField } from "@cbr/common/src/forms/Risks/riskFormFields";
@@ -69,6 +70,31 @@ export default appSchema({
                 { name: FormField.requirement, type: "string" },
                 { name: FormField.goal, type: "string" },
                 { name: FormField.timestamp, type: "number" },
+            ],
+        }),
+        tableSchema({
+            name: "referrals",
+            columns: [
+                { name: tableKey.client_id, type: "string", isIndexed: true },
+                { name: tableKey.user_id, type: "string", isIndexed: true },
+                { name: ReferralField.date_referred, type: "number" },
+                { name: ReferralField.date_resolved, type: "number" },
+                { name: ReferralField.resolved, type: "boolean" },
+                { name: ReferralField.outcome, type: "string" },
+                { name: ReferralField.picture, type: "string", isOptional: true },
+                { name: ReferralField.wheelchair, type: "boolean" },
+                { name: ReferralField.wheelchair_experience, type: "string" },
+                { name: ReferralField.hip_width, type: "number" },
+                { name: ReferralField.wheelchair_owned, type: "boolean" },
+                { name: ReferralField.wheelchair_repairable, type: "boolean" },
+                { name: ReferralField.physiotherapy, type: "boolean" },
+                { name: ReferralField.condition, type: "string" },
+                { name: ReferralField.prosthetic, type: "boolean" },
+                { name: ReferralField.prosthetic_injury_location, type: "string" },
+                { name: ReferralField.orthotic, type: "boolean" },
+                { name: ReferralField.orthotic_injury_location, type: "string" },
+                { name: ReferralField.services_other, type: "string" },
+                { name: mobileGenericField.updated_at, type: "number" },
             ],
         }),
         tableSchema({

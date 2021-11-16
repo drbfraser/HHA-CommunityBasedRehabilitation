@@ -439,6 +439,7 @@ class BaselineSurvey(models.Model):
 
     server_created_at = models.BigIntegerField(default=current_milli_time)
 
+
 class Alert(models.Model):
     class Priorities(models.TextChoices):
         HIGH = "H", _("High")

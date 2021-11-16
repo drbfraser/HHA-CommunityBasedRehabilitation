@@ -135,7 +135,7 @@ def get_model_changes(request, model):
 
     ##filter against last pulled time
     if pulledTime != "null":
-        if model == models.Client or model == models.Referral:
+        if model == models.Client or model == models.UserCBR or model == models.Referral:
             create_set = queryset.filter(server_created_at__gt=pulledTime)
             updated_set = queryset.filter(
                 server_created_at__lte=pulledTime, updated_at__gt=pulledTime

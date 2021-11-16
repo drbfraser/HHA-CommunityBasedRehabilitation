@@ -4,7 +4,6 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from cbr_api import models
 from cbr_api import views
 from downloadview.object import AuthenticatedObjectDownloadView
 
@@ -57,4 +56,6 @@ urlpatterns = [
         views.BaselineSurveyCreate.as_view(),
         name="baseline-survey-list",
     ),
+    path("alerts", views.AlertList.as_view(), name="alert-list"),
+    path("alert/<int:pk>", views.AlertDetail.as_view(), name="alert-detail"),
 ]

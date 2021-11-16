@@ -99,6 +99,10 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                     overflow: "auto",
                 }}
             >
+                {/*
+                TODO:
+                  sort the alerts
+              */}
                 {alertData.map((currAlert) => {
                     return (
                         <div key={currAlert.id}>

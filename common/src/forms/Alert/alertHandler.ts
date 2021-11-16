@@ -23,6 +23,11 @@ export const handleNewWebAlertSubmit = async (
     values: TAlertValues,
     helpers: FormikHelpers<TAlertValues>
 ) => {
+    /*
+    TODO:
+    need to keep a parameter showing the userID of the user who is using the system in the top layer.
+    Then this userID will be availuable for every page rendered.
+  */
     const newAlert = {
         subject: values.subject,
         priority: values.priority,

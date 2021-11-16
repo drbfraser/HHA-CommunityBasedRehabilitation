@@ -9,8 +9,10 @@ import {
     relation,
     children,
     json,
+    lazy,
 } from "@nozbe/watermelondb/decorators";
 import { writer } from "@nozbe/watermelondb/decorators/action";
+import { Q } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 
 const sanitizeDisability = (rawDisability) => {
@@ -21,8 +23,9 @@ export default class Client extends Model {
     static table = modelName.clients;
     static associations = {
         users: { type: mobileGenericField.belongs_to, key: tableKey.user_id },
-        surveys: { type: mobileGenericField.has_many, foreignKey: tableKey.client_id },
         risks: { type: mobileGenericField.has_many, foreignKey: tableKey.client_id },
+        referrals: { type: mobileGenericField.has_many, foreignKey: tableKey.client_id },
+        surveys: { type: mobileGenericField.has_many, foreignKey: tableKey.client_id },
         visits: { type: mobileGenericField.has_many, foreignKey: tableKey.client_id },
     } as const;
 
@@ -58,8 +61,13 @@ export default class Client extends Model {
     @relation(modelName.users, tableKey.user_id) user;
 
     @children(modelName.risks) risks;
+    @children(modelName.referrals) referrals;
     @children(modelName.surveys) surveys;
     @children(modelName.visits) visits;
+
+    @lazy outstandingReferrals = this.collections
+        .get(modelName.referrals)
+        .query(Q.where(tableKey.client_id, this.id), Q.and(Q.where("resolved", Q.eq(false))));
 
     @writer async updateRisk(type, level, time) {
         await this.update((client) => {

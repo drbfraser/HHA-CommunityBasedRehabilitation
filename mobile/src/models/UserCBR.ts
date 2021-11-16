@@ -8,6 +8,7 @@ export default class User extends Model {
     static table = modelName.users;
     static associations = {
         clients: { type: mobileGenericField.has_many, foreignKey: tableKey.user_id },
+        referrals: { type: mobileGenericField.has_many, foreignKey: tableKey.user_id },
         surveys: { type: mobileGenericField.has_many, foreignKey: tableKey.user_id },
         visits: { type: mobileGenericField.has_many, foreignKey: tableKey.user_id },
     } as const;

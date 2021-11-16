@@ -3,26 +3,17 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator, TouchableRipple } from "react-native-paper";
 import {
     clientInitialValues,
-    Gender,
-    IClient,
     TClientValues,
     themeColors,
-    timestampToDate,
-    IRisk,
     RiskType,
-    apiFetch,
-    Endpoint,
     ClientField,
     clientFieldLabels,
     mobileClientDetailsValidationSchema,
-    timestampFromFormDate,
     ISurvey,
-    IVisit,
+    IRisk,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View, NativeModules } from "react-native";
-import * as Localization from "expo-localization";
-import { fetchClientDetailsFromApi } from "./ClientRequests";
 import { IActivity, ActivityType } from "./ClientTimeline/Timeline";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
@@ -58,6 +49,7 @@ const ClientDetails = (props: ClientProps) => {
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const [client, setClient] = useState<any>();
     const [risks, setRisk] = useState<IRisk[]>();
+    const [referrals, setReferrals] = useState<any>();
     const [surveys, setSurveys] = useState<ISurvey[]>();
     const [visits, setVisits] = useState<any>();
     const errorAlert = () =>
@@ -77,10 +69,12 @@ const ClientDetails = (props: ClientProps) => {
                 .get(modelName.clients)
                 .find(props.route.params.clientID);
             const fetchedRisk = await presentClient.risks.fetch();
+            const fetchedReferrals = await presentClient.referrals.fetch();
             const fetchedSurveys = await presentClient.surveys.fetch();
             const fetchedVisits = await presentClient.visits.fetch();
             setClient(presentClient);
             setRisk(fetchedRisk);
+            setReferrals(fetchedReferrals);
             setSurveys(fetchedSurveys);
             setVisits(fetchedVisits);
             if (presentClient.picture != null) {
@@ -128,6 +122,20 @@ const ClientDetails = (props: ClientProps) => {
     const navigation = useNavigation<AppStackNavProp>();
     const tempActivity: IActivity[] = [];
     let presentId = 0;
+
+    if (referrals) {
+        referrals.forEach((presentReferral) => {
+            tempActivity.push({
+                id: presentId,
+                type: ActivityType.REFERAL,
+                date: presentReferral.date_referred,
+                visit: undefined,
+                referral: presentReferral,
+                survey: undefined,
+            });
+            presentId += 1;
+        });
+    }
 
     if (surveys) {
         surveys.forEach((presentSurvey) => {

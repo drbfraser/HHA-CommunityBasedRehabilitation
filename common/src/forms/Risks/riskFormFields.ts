@@ -1,9 +1,11 @@
 import * as Yup from "yup";
 
 export enum FormField {
+    risk_type = "risk_type",
     risk_level = "risk_level",
     requirement = "requirement",
     goal = "goal",
+    timestamp = "timestamp",
 }
 
 export const fieldLabels = {

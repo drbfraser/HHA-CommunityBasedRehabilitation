@@ -23,7 +23,9 @@ import Login from "./screens/Login/Login";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
 import { StackScreenName } from "./util/StackScreenName";
-import { DEV_API_URL } from "@env";
+import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
+import { database } from "./util/watermelonDatabase";
+import { DEV_API_URL } from "react-native-dotenv";
 import { io } from "socket.io-client/dist/socket.io";
 
 // Ensure we use FragmentActivity on Android
@@ -179,32 +181,34 @@ export default function App() {
             <Provider theme={theme}>
                 <NavigationContainer theme={theme}>
                     <AuthContext.Provider value={authContext}>
-                        <Stack.Navigator>
-                            {authState.state === "loggedIn" ? (
-                                Object.values(StackScreenName).map((name) => (
+                        <DatabaseProvider database={database}>
+                            <Stack.Navigator>
+                                {authState.state === "loggedIn" ? (
+                                    Object.values(StackScreenName).map((name) => (
+                                        <Stack.Screen
+                                            key={name}
+                                            name={name}
+                                            component={stackScreenProps[name]}
+                                            // @ts-ignore
+                                            options={stackScreenOptions[name]}
+                                        />
+                                    ))
+                                ) : authState.state === "loggedOut" ||
+                                  authState.state === "previouslyLoggedIn" ? (
                                     <Stack.Screen
-                                        key={name}
-                                        name={name}
-                                        component={stackScreenProps[name]}
-                                        // @ts-ignore
-                                        options={stackScreenOptions[name]}
+                                        name="Login"
+                                        component={Login}
+                                        options={{ headerShown: false }}
                                     />
-                                ))
-                            ) : authState.state === "loggedOut" ||
-                              authState.state === "previouslyLoggedIn" ? (
-                                <Stack.Screen
-                                    name="Login"
-                                    component={Login}
-                                    options={{ headerShown: false }}
-                                />
-                            ) : (
-                                <Stack.Screen
-                                    name="Loading"
-                                    component={Loading}
-                                    options={{ headerShown: false }}
-                                />
-                            )}
-                        </Stack.Navigator>
+                                ) : (
+                                    <Stack.Screen
+                                        name="Loading"
+                                        component={Loading}
+                                        options={{ headerShown: false }}
+                                    />
+                                )}
+                            </Stack.Navigator>
+                        </DatabaseProvider>
                     </AuthContext.Provider>
                 </NavigationContainer>
             </Provider>

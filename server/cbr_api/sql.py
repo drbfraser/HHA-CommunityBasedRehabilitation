@@ -38,7 +38,7 @@ def getVisitStats(user_id, from_time, to_time):
         FROM cbr_api_visit
     """
 
-    sql += getStatsWhere(user_id, "date_visited", from_time, to_time)
+    sql += getStatsWhere(user_id, "created_at", from_time, to_time)
     sql += " GROUP BY zone_id ORDER BY zone_id"
 
     from django.db import connection
@@ -85,7 +85,7 @@ def getStatsWhere(user_id, time_col, from_time, to_time):
     where = []
 
     if user_id is not None:
-        where.append(f"user_id={str(user_id)}")
+        where.append(f"user_id_id={str(user_id)}")
 
     if from_time is not None:
         where.append(f"{time_col}>={str(from_time)}")

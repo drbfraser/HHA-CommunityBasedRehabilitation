@@ -2,15 +2,16 @@ import {
     Endpoint,
     apiFetch,
     objectToFormData,
-    IClient,
     getDisabilities,
     getOtherDisabilityId,
     APIFetchFailError,
     clientFieldLabels,
+    TClientValues,
 } from "@cbr/common";
 import { timestampFromFormDate } from "@cbr/common/";
 import { appendMobilePict } from "@cbr/common/src/util/mobileImageSubmisson";
 import { Platform, ToastAndroid, AlertIOS } from "react-native";
+import { dbType } from "../../util/watermelonDatabase";
 
 const toastSuccess = () => {
     const msg = "Your changes have been made.";
@@ -21,71 +22,36 @@ const toastSuccess = () => {
     }
 };
 
-const updateClient = async (clientInfo: FormData, clientId: number) => {
-    const init: RequestInit = {
-        method: "PUT",
-        body: clientInfo,
-    };
-    return await apiFetch(Endpoint.CLIENT, `${clientId}`, init)
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            return res;
-        })
-        .then(() => {
-            toastSuccess();
-        });
-};
-
 export const handleSubmit = async (
-    values: IClient,
-    isNewClient?: boolean,
+    client: any,
+    values: TClientValues,
+    database: dbType,
     imageChange?: boolean
 ) => {
     const disabilities = await getDisabilities();
-    let requestSuccess: boolean = true;
-    if (isNewClient) {
-        // TODO: Do the new client POST request stuff here
-        return false;
-    } else {
-        const updatedValues = {
-            first_name: values.first_name,
-            last_name: values.last_name,
-            birth_date: timestampFromFormDate(values.birth_date as string),
-            gender: values.gender,
-            phone_number: values.phone_number,
-            zone: values.zone,
-            village: values.village,
-            caregiver_present: values.caregiver_present,
-            caregiver_name: values.caregiver_name,
-            caregiver_email: values.caregiver_email,
-            caregiver_phone: values.caregiver_phone,
-            longitude: values.longitude,
-            latitude: values.latitude,
-            disability: values.disability,
-            other_disability: values.disability.includes(getOtherDisabilityId(disabilities))
-                ? values.other_disability
-                : "",
-        };
+    try {
+        await database.write(async () => {
+            await client.update((client) => {
+                client.first_name = values.firstName;
+                client.last_name = values.lastName;
+                client.full_name = values.firstName + " " + values.lastName;
+                client.birth_date = values.birthDate;
+                client.gender = values.gender;
+                client.phone_number = values.phoneNumber;
+                client.disability = values.disability;
+                client.other_disability = values.otherDisability;
+                client.zone = values.zone;
+                client.village = values.village;
+                client.picture = values.picture;
+                client.caregiver_present = values.caregiverPresent;
+                client.caregiver_name = values.caregiverName;
+                client.caregiver_phone = values.caregiverPhone;
+                client.caregiver_email = values.caregiverEmail;
+            });
+        });
+    } catch (e) {
+        const initialMessage = "Encountered an error while trying to edit the client!";
 
-        const formData = objectToFormData(updatedValues);
-
-        if (imageChange && values.picture) {
-            await appendMobilePict(formData, values.picture);
-        }
-
-        try {
-            await updateClient(formData, values.id);
-        } catch (e) {
-            requestSuccess = false;
-            const initialMessage = isNewClient
-                ? "Encountered an error while trying to create the client!"
-                : "Encountered an error while trying to edit the client!";
-            const detailedError =
-                e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
-            alert(initialMessage + "\n" + detailedError);
-        }
-        return requestSuccess;
+        alert(initialMessage);
     }
 };

@@ -18,7 +18,7 @@ export enum Endpoint {
     ZONES = "zones",
     USERS = "users",
     USER = "user/",
-    USER_CURRENT = "user/current",
+    USER_CURRENT = "currentuser",
     USER_CURRENT_PASSWORD = "user/password/current",
     RISKS = "risks",
     DISABILITIES = "disabilities",
@@ -26,6 +26,7 @@ export enum Endpoint {
     STATS = "stats",
     BASELINE_SURVEY = "baselinesurveys",
     USER_PASSWORD = "user/password/",
+    SYNC = "sync",
     ALERTS = "alerts",
     ALERT = "alert/",
 }

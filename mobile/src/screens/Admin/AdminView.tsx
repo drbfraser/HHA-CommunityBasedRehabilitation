@@ -1,37 +1,21 @@
 import { StyleSheet, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext, IAuthContext } from "../../context/AuthContext/AuthContext";
-import { Endpoint } from "@cbr/common/index";
-import { ActivityIndicator, Appbar, Button, Snackbar, Text } from "react-native-paper";
-import { apiFetch, APIFetchFailError, IUser } from "@cbr/common";
+import { ActivityIndicator, Button, Snackbar, Text } from "react-native-paper";
+import { APIFetchFailError, IUser } from "@cbr/common";
 import { StackScreenProps } from "@react-navigation/stack";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import UserProfileContents from "../../components/UserProfileContents/UserProfileContents";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { resourceLimits } from "worker_threads";
+import { useIsFocused } from "@react-navigation/core";
+import { modelName } from "../../models/constant";
 
 interface ILoadError {
     statusCode?: number;
     message: string;
 }
-
-const loadUser = (
-    userId: number,
-    setUser: React.Dispatch<React.SetStateAction<IUser | undefined>>,
-    setError: React.Dispatch<React.SetStateAction<ILoadError | undefined>>
-) => {
-    setError(undefined);
-    apiFetch(Endpoint.USER, `${userId}`)
-        .then((resp) => resp.json())
-        .then((userJson) => setUser(userJson))
-        .catch((e) => {
-            const msg =
-                e instanceof APIFetchFailError && e.status == 404 ? "User doesn't exist" : `${e}`;
-            setError({
-                statusCode: e instanceof APIFetchFailError ? e.status : undefined,
-                message: msg,
-            });
-        });
-};
 
 /**
  * A component for an Admin's view of a user's profile.
@@ -48,15 +32,47 @@ const AdminView = ({
     const [isUserChangeSnackbarVisible, setUserChangeSnackbarVisible] = useState(false);
 
     const [user, setUser] = useState<IUser>();
+    const isFocused = useIsFocused();
     const [error, setErrorMessage] = useState<ILoadError>();
-    useEffect(() => {
-        if (route.params.userInfo) {
-            setUserChangeSnackbarVisible(true);
-            setUser(route.params.userInfo.user);
-        } else {
-            loadUser(route.params.userID, setUser, setErrorMessage);
+    const database = useDatabase();
+
+    const loadUser = async (
+        userId: string,
+        setUser: React.Dispatch<React.SetStateAction<any | undefined>>,
+        setError: React.Dispatch<React.SetStateAction<ILoadError | undefined>>
+    ) => {
+        setError(undefined);
+        try {
+            const result: any = await database.get(modelName.users).find(userId);
+            const iUser: IUser = {
+                id: result.id,
+                username: result.username,
+                first_name: result.first_name,
+                last_name: result.last_name,
+                role: result.role,
+                zone: result.zone,
+                phone_number: result.phone_number,
+                is_active: result.is_active,
+            };
+            setUser(iUser);
+        } catch (e) {
+            setError({
+                statusCode: e instanceof APIFetchFailError ? e.status : undefined,
+                message: "User doesn't exist",
+            });
         }
-    }, [route.params.userInfo]);
+    };
+
+    useEffect(() => {
+        if (isFocused) {
+            if (route.params.userInfo) {
+                setUserChangeSnackbarVisible(true);
+                setUser(route.params.userInfo.user);
+            } else {
+                loadUser(route.params.userID, setUser, setErrorMessage);
+            }
+        }
+    }, [isFocused]);
 
     return !user || error ? (
         <View style={styles.loadingContainer}>
@@ -81,7 +97,7 @@ const AdminView = ({
         </View>
     ) : (
         <>
-            <UserProfileContents user={user} isSelf={false} />
+            <UserProfileContents user={user} isSelf={false} database={database} />
             <Snackbar
                 visible={isUserChangeSnackbarVisible}
                 duration={4000}

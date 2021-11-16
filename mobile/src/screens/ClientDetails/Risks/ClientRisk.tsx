@@ -25,9 +25,7 @@ const getLatestRisks = (clientRisk: IRisk[], riskType: RiskType) => {
 
 export const ClientRisk = (props: riskProps) => {
     const styles = clientStyle();
-    const [risk, setRisk] = useState<IRisk>(
-        getLatestRisks(props.clientRisks, props.presentRiskType)
-    );
+    const [risk, setRisk] = useState<any>(getLatestRisks(props.clientRisks, props.presentRiskType));
 
     return (
         <View>

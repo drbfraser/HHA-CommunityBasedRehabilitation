@@ -1,4 +1,6 @@
 import os
+import time
+import json
 
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.cache import cache_control
@@ -6,7 +8,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import generics
+from rest_framework import status
 from rest_framework_condition import condition
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from cbr.settings import DEBUG
 from cbr_api import models, serializers, filters, permissions
@@ -19,6 +24,13 @@ from cbr_api.sql import (
 )
 from cbr_api.util import client_picture_last_modified_datetime, client_image_etag
 from downloadview.object import AuthenticatedObjectDownloadView
+from cbr_api.util import (
+    syncResp,
+    get_model_changes,
+    stringify_disability,
+    destringify_disability,
+    decode_image,
+)
 
 
 class UserList(generics.ListCreateAPIView):
@@ -296,3 +308,61 @@ class AlertList(generics.ListCreateAPIView):
 class AlertDetail(generics.RetrieveAPIView):
     queryset = models.Alert.objects.all()
     serializer_class = serializers.AlertSerializer
+
+
+@api_view(["GET", "POST"])
+def sync(request):
+    if request.method == "GET":
+        reply = syncResp()
+        reply.changes["users"] = get_model_changes(request, models.UserCBR)
+        reply.changes["clients"] = get_model_changes(request, models.Client)
+        reply.changes["risks"] = get_model_changes(request, models.ClientRisk)
+        reply.changes["visits"] = get_model_changes(request, models.Visit)
+        reply.changes["outcomes"] = get_model_changes(request, models.Outcome)
+        reply.changes["improvements"] = get_model_changes(request, models.Improvement)
+        serialized = serializers.pullResponseSerializer(reply)
+        stringify_disability(serialized.data)
+        return Response(serialized.data)
+    else:
+        sync_time = request.GET.get("last_pulled_at", "")
+        user_serializer = serializers.pushUserSerializer(
+            data=request.data, context={"sync_time": sync_time}
+        )
+        if user_serializer.is_valid():
+            user_serializer.save()
+            destringify_disability(request.data)
+            decode_image(request.data["clients"])
+            client_serializer = serializers.pushClientSerializer(
+                data=request.data, context={"sync_time": sync_time}
+            )
+            if client_serializer.is_valid():
+                client_serializer.save()
+                risk_serializer = serializers.pushRiskSerializer(
+                    data=request.data, context={"sync_time": sync_time}
+                )
+                if risk_serializer.is_valid():
+                    risk_serializer.save()
+                    visit_serializer = serializers.pushVisitSerializer(
+                        data=request.data, context={"sync_time": sync_time}
+                    )
+                    if visit_serializer.is_valid():
+                        visit_serializer.save()
+                        outcome_improvment_serializer = (
+                            serializers.pushOutcomeImprovementSerializer(
+                                data=request.data, context={"sync_time": sync_time}
+                            )
+                        )
+                        if outcome_improvment_serializer.is_valid():
+                            outcome_improvment_serializer.save()
+                            return Response(status=status.HTTP_201_CREATED)
+                        else:
+                            print(outcome_improvment_serializer.errors)
+                    else:
+                        print(visit_serializer.errors)
+                else:
+                    print(risk_serializer.errors)
+            else:
+                print(client_serializer.errors)
+        else:
+            print(user_serializer.errors)
+        return Response(status=status.HTTP_400_BAD_REQUEST)

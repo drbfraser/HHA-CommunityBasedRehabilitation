@@ -32,13 +32,23 @@ export enum ClientField {
     // Required to match DB attributes to display client details in web app
     first_name = "first_name",
     last_name = "last_name",
+    full_name = "full_name",
     birth_date = "birth_date",
     phone_number = "phone_number",
     other_disability = "other_disability",
+    longitude = "longitude",
+    latitude = "latitude",
     caregiver_present = "caregiver_present",
     caregiver_name = "caregiver_name",
     caregiver_phone = "caregiver_phone",
     caregiver_email = "caregiver_email",
+    health_risk_level = "health_risk_level",
+    health_timestamp = "health_timestamp",
+    social_risk_level = "social_risk_level",
+    social_timestamp = "social_timestamp",
+    educat_risk_level = "educat_risk_level",
+    educat_timestamp = "educat_timestamp",
+    last_visit_date = "last_visit_date",
 }
 
 export enum ClientDetailsFields {
@@ -274,6 +284,7 @@ export const newClientValidationSchema = () =>
             .matches(Validation.phoneRegExp, "Phone number is not valid."),
         [ClientField.disability]: Yup.array()
             .label(clientFieldLabels[ClientField.disability])
+            .min(1)
             .required(),
         [ClientField.otherDisability]: Yup.string()
             .label(clientFieldLabels[ClientField.otherDisability])

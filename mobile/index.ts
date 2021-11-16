@@ -1,10 +1,10 @@
 import { registerRootComponent } from "expo";
-import App from "./App";
+import App from "./src/App";
 import { initializeCommon, invalidateAllCachedAPI, KeyValStorageProvider } from "@cbr/common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Constants } from "react-native-unimodules";
 import NetInfo from "@react-native-community/netinfo";
-import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
+import { CacheRefreshTask } from "./src/tasks/CacheRefreshTask";
 
 const keyValStorageProvider: KeyValStorageProvider = {
     getItem(key: string): Promise<string | null> {

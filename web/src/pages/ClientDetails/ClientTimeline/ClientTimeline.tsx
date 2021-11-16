@@ -18,7 +18,7 @@ interface IProps {
 
 const ClientTimeline = ({ client, refreshClient }: IProps) => {
     const timelineStyles = useTimelineStyles();
-    const dateFormatter = getDateFormatterFromReference(client?.created_date);
+    const dateFormatter = getDateFormatterFromReference(client?.created_at);
     const [showAllEntries, setShowAllEntries] = useState<boolean>(false);
     const numEntriesToShow = 10;
 
@@ -26,7 +26,7 @@ const ClientTimeline = ({ client, refreshClient }: IProps) => {
         ? []
         : [
               ...client.visits.slice().map((v) => ({
-                  timestamp: v.date_visited,
+                  timestamp: v.created_at,
                   Component: (
                       <VisitEntry
                           key={`visit${v.id}`}
@@ -74,7 +74,7 @@ const ClientTimeline = ({ client, refreshClient }: IProps) => {
                             }}
                         />
                     )}
-                    <ClientCreatedEntry createdDate={dateFormatter(client.created_date)} />
+                    <ClientCreatedEntry createdDate={dateFormatter(client.created_at)} />
                 </>
             ) : (
                 [1, 2, 3, 4].map((i) => <SkeletonEntry key={i} />)

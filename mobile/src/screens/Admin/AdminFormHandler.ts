@@ -1,8 +1,23 @@
-import { IUser } from "@cbr/common";
+import { IUser, TPasswordValues } from "@cbr/common";
 import { TAdminPasswordValues, TNewUserValues } from "@cbr/common/src/forms/Admin/adminFields";
 import { FormikHelpers } from "formik";
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
+
+export const handleSelfChangePassword = async (
+    userId: string,
+    values: TPasswordValues,
+    database: dbType,
+    helpers: FormikHelpers<TPasswordValues>
+): Promise<void> => {
+    try {
+        const user: any = await database.get(modelName.users).find(userId);
+        await user.updatePassword(values.newPassword);
+    } catch (e) {
+        helpers.setSubmitting(false);
+        return Promise.reject(e);
+    }
+};
 
 export const handleUpdatePassword = async (
     userId: string,

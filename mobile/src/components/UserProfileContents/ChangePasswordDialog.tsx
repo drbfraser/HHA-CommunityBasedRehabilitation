@@ -23,7 +23,10 @@ import Alert from "../Alert/Alert";
 import { useStyles } from "./ChangePasswordDialog.styles";
 import FormikTextInput from "../FormikTextInput/FormikTextInput";
 import passwordTextInputProps from "../PasswordTextInput/passwordTextInputProps";
-import { handleUpdatePassword } from "../../screens/Admin/AdminFormHandler";
+import {
+    handleSelfChangePassword,
+    handleUpdatePassword,
+} from "../../screens/Admin/AdminFormHandler";
 import { dbType } from "../../util/watermelonDatabase";
 
 export type Props = {
@@ -60,7 +63,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                     validationSchema={changePassValidationSchema}
                     onReset={() => setSubmissionError(null)}
                     onSubmit={async (values, formikHelpers) => {
-                        return handleSubmitChangePassword(values, formikHelpers)
+                        return handleSelfChangePassword(user.id, values, database, formikHelpers)
                             .then(() => {
                                 setSubmissionError(null);
                                 onDismiss(true);

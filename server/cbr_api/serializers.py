@@ -689,6 +689,42 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         return instance
 
 
+class AlertSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Alert
+        fields = (
+            "id",
+            "subject",
+            "priority",
+            "alert_message",
+            "created_by_user",
+            "created_date",
+        )
+
+    def create(self, validated_data):
+        current_time = int(time.time())
+        alert = super().create(validated_data)
+
+        validated_data["created_by_user"] = self.context["request"].user
+        validated_data["created_date"] = current_time
+
+        alert.save()
+        return alert
+
+
+class AlertListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Alert
+        fields = [
+            "id",
+            "subject",
+            "priority",
+            "alert_message",
+            "created_by_user",
+            "created_date",
+        ]
+
+
 # ensure to use a seperate serializer to disable primary key validator as it might invalidate it
 class multiUserSerializer(serializers.Serializer):
     created = UserCBRSerializer(many=True)

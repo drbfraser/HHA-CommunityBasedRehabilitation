@@ -7,8 +7,11 @@ import Divider from "@mui/material/Divider";
 import { RiskLevel, riskLevels } from "@cbr/common/util/risks";
 import { FiberManualRecord } from "@material-ui/icons";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
-import testAlertExample from "./TestAlertExampleDeleteLater";
 import { makeStyles } from "@material-ui/core/styles";
+import { PriorityLevel } from "./Alert";
+import { useState, useEffect } from "react";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { Time } from "@cbr/common/util/time";
 
 const useStyles = makeStyles({
     selectedListItemStyle: {
@@ -32,15 +35,35 @@ const useStyles = makeStyles({
     },
 });
 
+interface IAlert {
+    id: number;
+    subject: string;
+    priority: PriorityLevel;
+    alert_message: string;
+    created_by_user: number;
+    created_date: Time;
+}
+
 type AlertDetailProps = {
-    onAlertSelectionEvent: (itemNum: string) => void;
-    selectAlert: string;
+    onAlertSelectionEvent: (itemNum: number) => void;
+    selectAlert: number;
 };
 
-/* TODO: This function is not working as expected, will improve it in the next iteration */
 const RenderBadge = (params: String) => {
-    const risk: RiskLevel = Object(params);
+    let risk: RiskLevel;
 
+    /*
+      TODO: this should be improved, make Priority icons seperate from Risk Icons
+    */
+    if (params === "M") {
+        risk = RiskLevel.MEDIUM;
+    } else if (params === "H") {
+        risk = RiskLevel.HIGH;
+    } else {
+        risk = RiskLevel.LOW;
+    }
+
+    /* TODO: This function is not working as expected */
     return window.innerWidth >= 20 ? (
         <RiskLevelChip clickable risk={risk} />
     ) : (
@@ -50,6 +73,19 @@ const RenderBadge = (params: String) => {
 
 const AlertList = (alertDetailProps: AlertDetailProps) => {
     const style = useStyles();
+    const [alertData, setAlertData] = useState<IAlert[]>([]);
+
+    useEffect(() => {
+        const fetchAlerts = async () => {
+            try {
+                const tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
+                setAlertData(tempAlerts);
+            } catch (e) {
+                console.log(`Error fetching Alerts: ${e}`);
+            }
+        };
+        fetchAlerts();
+    }, []);
 
     return (
         <Grid item xs={12} md={3} className={style.gridStyle}>
@@ -63,9 +99,13 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                     overflow: "auto",
                 }}
             >
-                {testAlertExample.map((currAlert) => {
+                {/*
+                TODO:
+                  sort the alerts
+              */}
+                {alertData.map((currAlert) => {
                     return (
-                        <div>
+                        <div key={currAlert.id}>
                             <ListItemText
                                 primary={
                                     <React.Fragment>

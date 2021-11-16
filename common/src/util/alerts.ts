@@ -1,5 +1,7 @@
 export interface IAlert {
+    subject: string;
     priority: Priority;
+    alert_message: string;
 }
 
 export enum Priority {

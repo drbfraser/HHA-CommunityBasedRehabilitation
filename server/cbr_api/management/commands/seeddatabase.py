@@ -11,3 +11,4 @@ class Command(BaseCommand):
         management.call_command("seedusers")
         management.call_command("seedclients")
         management.call_command("seedvisits")
+        management.call_command("seedalerts")

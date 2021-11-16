@@ -5,10 +5,10 @@ import AlertDetail from "./AlertDetail";
 import { useState } from "react";
 
 const AlertInbox = () => {
-    const [selectedAlert, setSelectedAlert] = useState<string>("-1");
+    const [selectedAlert, setSelectedAlert] = useState<number>(-1);
 
     const alertListProps = {
-        onAlertSelectionEvent: (itemNum: string) => {
+        onAlertSelectionEvent: (itemNum: number) => {
             setSelectedAlert(itemNum);
         },
         selectAlert: selectedAlert,
@@ -22,6 +22,11 @@ const AlertInbox = () => {
         <Grid container justify="center" alignItems="flex-start" spacing={3}>
             <AlertList {...alertListProps} />
             <AlertDetail {...alertDetailProps} />
+            {/* TODO: 
+              API call should be placed in this component, need to check how to pass those as props
+            */}
+            {/* <AlertList alertListProps={alertListProps} alertData={alertData} />
+            <AlertDetail alertDetailProps={alertDetailProps} alertData={alertData} /> */}
         </Grid>
     );
 };

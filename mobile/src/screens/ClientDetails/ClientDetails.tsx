@@ -16,6 +16,7 @@ import {
     clientFieldLabels,
     mobileClientDetailsValidationSchema,
     timestampFromFormDate,
+    ISurvey,
     IVisit,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
@@ -57,6 +58,7 @@ const ClientDetails = (props: ClientProps) => {
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const [client, setClient] = useState<any>();
     const [risks, setRisk] = useState<IRisk[]>();
+    const [surveys, setSurveys] = useState<ISurvey[]>();
     const [visits, setVisits] = useState<any>();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
@@ -75,9 +77,11 @@ const ClientDetails = (props: ClientProps) => {
                 .get(modelName.clients)
                 .find(props.route.params.clientID);
             const fetchedRisk = await presentClient.risks.fetch();
+            const fetchedSurveys = await presentClient.surveys.fetch();
             const fetchedVisits = await presentClient.visits.fetch();
             setClient(presentClient);
             setRisk(fetchedRisk);
+            setSurveys(fetchedSurveys);
             setVisits(fetchedVisits);
             if (presentClient.picture != null) {
                 setOriginaluri(presentClient.picture);
@@ -86,9 +90,6 @@ const ClientDetails = (props: ClientProps) => {
             console.log(e);
         }
     };
-
-    const locale = NativeModules.I18nManager.localeIdentifier;
-    const timezone = Localization.timezone;
 
     const getClientFormInitialValues = () => {
         if (client) {
@@ -127,6 +128,20 @@ const ClientDetails = (props: ClientProps) => {
     const navigation = useNavigation<AppStackNavProp>();
     const tempActivity: IActivity[] = [];
     let presentId = 0;
+
+    if (surveys) {
+        surveys.forEach((presentSurvey) => {
+            tempActivity.push({
+                id: presentId,
+                type: ActivityType.SURVEY,
+                date: presentSurvey.survey_date,
+                visit: undefined,
+                referral: undefined,
+                survey: presentSurvey,
+            });
+            presentId += 1;
+        });
+    }
 
     if (visits) {
         visits.forEach((presentVisit) => {

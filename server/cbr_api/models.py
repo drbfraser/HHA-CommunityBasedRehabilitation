@@ -340,10 +340,11 @@ class Improvement(models.Model):
 
 
 class BaselineSurvey(models.Model):
-    client = models.ForeignKey(
+    id = models.CharField(primary_key=True, max_length=100)
+    client_id = models.ForeignKey(
         Client, related_name="baseline_surveys", on_delete=models.CASCADE
     )
-    user = models.ForeignKey(
+    user_id = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="baselinesurveys",
         on_delete=models.PROTECT,
@@ -435,6 +436,8 @@ class BaselineSurvey(models.Model):
     # Shelter and Care
     shelter_adequate = models.BooleanField()
     shelter_essential_access = models.BooleanField()
+
+    server_created_at = models.BigIntegerField(default=current_milli_time)
 
 
 class Alert(models.Model):

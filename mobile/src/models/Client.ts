@@ -21,6 +21,7 @@ export default class Client extends Model {
     static table = modelName.clients;
     static associations = {
         users: { type: mobileGenericField.belongs_to, key: tableKey.user_id },
+        surveys: { type: mobileGenericField.has_many, foreignKey: tableKey.client_id },
         risks: { type: mobileGenericField.has_many, foreignKey: tableKey.client_id },
         visits: { type: mobileGenericField.has_many, foreignKey: tableKey.client_id },
     } as const;
@@ -57,6 +58,7 @@ export default class Client extends Model {
     @relation(modelName.users, tableKey.user_id) user;
 
     @children(modelName.risks) risks;
+    @children(modelName.surveys) surveys;
     @children(modelName.visits) visits;
 
     @writer async updateRisk(type, level, time) {

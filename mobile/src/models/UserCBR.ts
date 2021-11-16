@@ -8,6 +8,7 @@ export default class User extends Model {
     static table = modelName.users;
     static associations = {
         clients: { type: mobileGenericField.has_many, foreignKey: tableKey.user_id },
+        surveys: { type: mobileGenericField.has_many, foreignKey: tableKey.user_id },
         visits: { type: mobileGenericField.has_many, foreignKey: tableKey.user_id },
     } as const;
 
@@ -30,5 +31,6 @@ export default class User extends Model {
     }
 
     @children(modelName.clients) clients;
+    @children(modelName.surveys) surveys;
     @children(modelName.visits) visits;
 }

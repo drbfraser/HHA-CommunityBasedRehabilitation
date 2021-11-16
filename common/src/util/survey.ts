@@ -36,8 +36,8 @@ export interface ISurvey {
     empowerment_influence_others: boolean;
     shelter_adequate: boolean;
     shelter_essential_access: boolean;
-    client: number;
-    user: number;
+    client_id: number;
+    user_id: number;
 }
 
 export enum RateLevel {

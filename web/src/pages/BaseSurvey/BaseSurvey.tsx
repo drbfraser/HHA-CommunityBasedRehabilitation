@@ -543,7 +543,7 @@ const NewSurvey = () => {
             handleSubmit(values, helpers, setSubmissionError);
         } else {
             if (step === 0) {
-                helpers.setFieldValue(`${[BaseSurveyFormField.client]}`, clientId);
+                helpers.setFieldValue(`${[BaseSurveyFormField.client_id]}`, clientId);
             }
             setStep(step + 1);
             helpers.setSubmitting(false);

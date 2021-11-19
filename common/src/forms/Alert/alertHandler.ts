@@ -3,6 +3,7 @@ import { FormikHelpers } from "formik";
 import { apiFetch, APIFetchFailError, Endpoint, objectToFormData } from "../../util/endpoints";
 import { IAlert } from "../../util/alerts";
 import history from "../../util/history";
+import { socket } from "../../context/SocketIOContext";
 
 const addAlert = async (alertInfo: FormData): Promise<IAlert> => {
     const init: RequestInit = {
@@ -38,6 +39,8 @@ export const handleNewWebAlertSubmit = async (
     try {
         const alert: IAlert = await addAlert(formData);
         history.push("/alerts/inbox");
+        // emit socket event to the backend
+        socket.emit("newAlert", newAlert);
         return alert;
     } catch (e) {
         const initialMessage = "Encountered an error while trying to create the alert!";
@@ -58,8 +61,7 @@ export const handleDiscard = (resetForm: () => void) => {
 TODO:
   Need to discuss with team, maybe save it in the watermelon DB
 */
-export const handleSave = async (socket: any, values: any) => {
-    socket.emit("newAlert", values);
+export const handleSave = async (values: any) => {
     // validate the input
     // call backend
 };

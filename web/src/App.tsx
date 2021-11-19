@@ -8,7 +8,7 @@ import { useStyles } from "App.styles";
 import history from "@cbr/common/util/history";
 import { useIsLoggedIn } from "./util/hooks/loginState";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
-import { socket, SocketContext } from "SocketIOContext/SocketIOContext";
+import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();

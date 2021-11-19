@@ -17,6 +17,7 @@ import {
     handleNewWebAlertSubmit,
     handleSave,
 } from "@cbr/common/forms/Alert/alertHandler";
+import { socket } from "SocketIOContext/SocketIOContext";
 
 const AlertForm = () => {
     return (
@@ -90,7 +91,7 @@ const AlertForm = () => {
                                             <Button
                                                 variant="outlined"
                                                 color="primary"
-                                                onClick={() => handleSave()}
+                                                onClick={() => handleSave(socket, values)}
                                             >
                                                 Save
                                             </Button>

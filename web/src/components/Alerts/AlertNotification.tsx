@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Collapse, IconButton } from "@material-ui/core";
+import { Box, Collapse, IconButton, Typography } from "@material-ui/core";
 import CloseIcon from "@mui/icons-material/Close";
 import { Alert } from "@material-ui/lab";
 
@@ -22,8 +22,10 @@ const AlertNotification = (props: any) => {
                         </IconButton>
                     }
                 >
-                    New message! — <b>{props.alertInfo["subject"]}:</b> "
-                    {props.alertInfo["alert_message"]}"
+                    <Typography variant="body1">
+                        New message! — <b>{props.alertInfo["subject"]}:</b> "
+                        {props.alertInfo["alert_message"]}"
+                    </Typography>
                 </Alert>
             </Collapse>
         </Box>

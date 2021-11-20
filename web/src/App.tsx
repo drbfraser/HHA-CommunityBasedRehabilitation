@@ -9,9 +9,6 @@ import history from "@cbr/common/util/history";
 import { useIsLoggedIn } from "./util/hooks/loginState";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
-import { Alert } from "@material-ui/lab";
-import { Box, Collapse, IconButton } from "@material-ui/core";
-import CloseIcon from "@mui/icons-material/Close";
 import AlertNotification from "./components/Alerts/AlertNotification";
 
 const App = () => {
@@ -36,7 +33,6 @@ const App = () => {
                                 ) : (
                                     <></>
                                 )}
-                                {/* {open ? <AlertPopup alertInfo={alert} /> : <></>} */}
                                 <Typography variant="h1" className={styles.pageTitle}>
                                     {page.name}
                                 </Typography>

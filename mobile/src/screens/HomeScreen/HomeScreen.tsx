@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Provider } from "react-native-paper";
 import theme from "../../util/theme.styles";
 import { StackParamList } from "../../util/stackScreens";
@@ -12,6 +12,8 @@ import { screens } from "../../util/screens";
 import { StackScreenName } from "../../util/StackScreenName";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { SyncStackModal } from "../SyncStackModal/SyncStackModal";
+import { checkUnsyncedChanges } from "../../util/syncHandler";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
 
 interface IHomeScreenProps {
     navigation: StackNavigationProp<StackParamList, StackScreenName.HOME>;
@@ -36,10 +38,8 @@ const HomeScreen = (props: IHomeScreenProps) => {
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const Tab = createMaterialBottomTabNavigator();
     const { authState } = useContext(AuthContext);
-
-    const handleSheetChanges = useCallback((index: number) => {
-        console.log("handleSheetChanges", index);
-    }, []);
+    const syncAlert = useContext(SyncContext);
+    console.log(syncAlert.unSyncedChanges);
 
     return (
         <BottomSheetModalProvider>
@@ -49,23 +49,44 @@ const HomeScreen = (props: IHomeScreenProps) => {
                         authState.state === "loggedIn" || authState.state === "previouslyLoggedIn"
                             ? authState.currentUser
                             : undefined
-                    ).map((screen) => (
-                        <Tab.Screen
-                            key={screen.name}
-                            name={screen.name}
-                            component={screen.Component}
-                            listeners={({ navigation, route }) => ({
-                                tabPress: (e) => {
-                                    if (route.name == "Sync") {
-                                        console.log("prevented");
-                                        e.preventDefault();
-                                        setModalVisible(true);
-                                    }
-                                },
-                            })}
-                            options={{ tabBarIcon: screen.iconName }}
-                        />
-                    ))}
+                    ).map((screen) =>
+                        screen.name == "Sync" ? (
+                            <Tab.Screen
+                                key={screen.name}
+                                name={screen.name}
+                                component={screen.Component}
+                                listeners={({ navigation, route }) => ({
+                                    tabPress: (e) => {
+                                        if (route.name == "Sync") {
+                                            console.log("prevented");
+                                            e.preventDefault();
+                                            setModalVisible(true);
+                                        }
+                                    },
+                                })}
+                                options={{
+                                    tabBarIcon: screen.iconName,
+                                    tabBarBadge: syncAlert.unSyncedChanges,
+                                }}
+                            />
+                        ) : (
+                            <Tab.Screen
+                                key={screen.name}
+                                name={screen.name}
+                                component={screen.Component}
+                                listeners={({ navigation, route }) => ({
+                                    tabPress: (e) => {
+                                        if (route.name == "Sync") {
+                                            console.log("prevented");
+                                            e.preventDefault();
+                                            setModalVisible(true);
+                                        }
+                                    },
+                                })}
+                                options={{ tabBarIcon: screen.iconName }}
+                            />
+                        )
+                    )}
                 </Tab.Navigator>
                 <SyncStackModal
                     visible={modalVisible}

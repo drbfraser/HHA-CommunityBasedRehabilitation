@@ -12,8 +12,7 @@ import { hasUnsyncedChanges } from "@nozbe/watermelondb/sync";
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
 export async function checkUnsyncedChanges() {
-    const result = await hasUnsyncedChanges({ database });
-    console.log(`from utli has unsynced change is ${result}`);
+    return await hasUnsyncedChanges({ database });
 }
 
 export async function SyncDB(database: dbType) {

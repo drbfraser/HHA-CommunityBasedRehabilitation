@@ -25,7 +25,7 @@ export const SyncStackModal = (props: StackModal) => {
         if (props.visible) {
             bottomSheetModalRef.current?.present();
         }
-    });
+    }, [props.visible]);
 
     return (
         <BottomSheetModal

@@ -36,7 +36,7 @@ export const screens: IScreen[] = [
     {
         name: "Sync",
         Component: SyncStackModal,
-        iconName: "database-sync",
+        iconName: "sync-alert",
     },
     {
         name: "Stats",

@@ -6,12 +6,14 @@ const useStyles = () =>
             backgroundColor: "black",
         },
         contentContainer: {
-            flex: 1,
-            marginBottom: 10,
+            flex: 0.6,
+            flexDirection: "row",
+            justifyContent: "space-around",
             padding: 10,
         },
         buttonContainer: {
-            padding: 2,
+            flex: 0.3,
+            alignItems: "center",
         },
     });
 

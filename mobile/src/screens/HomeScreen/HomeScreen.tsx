@@ -65,7 +65,6 @@ const HomeScreen = (props: IHomeScreenProps) => {
                             listeners={({ navigation, route }) => ({
                                 tabPress: (e) => {
                                     if (route.name == "Sync") {
-                                        console.log("prevented");
                                         e.preventDefault();
                                         setModalVisible(true);
                                     }

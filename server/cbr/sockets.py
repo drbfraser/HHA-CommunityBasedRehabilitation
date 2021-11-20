@@ -43,9 +43,14 @@ def disconnect(sid):
 @sio.on("newAlert")
 def newAlert(sid, data):
     print("[SocketIO Server]: Received a new alert '{} from {}".format(data, sid))
-    # when room arg is omitted from emit, the event is sent to all connected clients
-    sio.emit("broadcastAlert", {
-      "subject": data["subject"],
-      "priority": data["priority"],
-      "alert_message": data["alert_message"],
-      })
+    # when 'room' arg is omitted from emit, the event is sent to all connected clients
+    # Alternatively, use the 'broadcast=True' arg to send to all connected clients
+    sio.emit(
+        "broadcastAlert",
+        {
+            "subject": data["subject"],
+            "priority": data["priority"],
+            "alert_message": data["alert_message"],
+        },
+        skip_sid=sid,  # exclude the sid that sent the new alert
+    )

@@ -48,14 +48,6 @@ const Todo = () => {
             <Button
                 mode="contained"
                 onPress={() => {
-                    SyncDB(database);
-                }}
-            >
-                Sync
-            </Button>
-            <Button
-                mode="contained"
-                onPress={() => {
                     console.log(logger.formattedLogs);
                 }}
             >

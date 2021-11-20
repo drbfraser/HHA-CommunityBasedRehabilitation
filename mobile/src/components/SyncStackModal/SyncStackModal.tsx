@@ -8,6 +8,7 @@ import CustomBackdrop from "./CustomBackDrop";
 import useStyles from "./SyncModal.styles";
 import { Icon, withBadge } from "react-native-elements";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { SyncModalIcon } from "./ModalIcon";
 
 interface StackModal {
     visible: boolean;
@@ -19,9 +20,9 @@ const SyncIcon = () => {
     const syncAlert = useContext(SyncContext);
     const BadgedIcon = withBadge("")(Icon);
     if (syncAlert.unSyncedChanges) {
-        return <BadgedIcon type="material-community" name="database-sync" color="white" />;
+        return <BadgedIcon type="material-community" name={SyncModalIcon.syncIcon} color="white" />;
     }
-    return <Icon type="material-community" name="database-sync" color="white" />;
+    return <Icon type="material-community" name={SyncModalIcon.syncIcon} color="white" />;
 };
 
 export const SyncStackModal = (props: StackModal) => {
@@ -65,7 +66,7 @@ export const SyncStackModal = (props: StackModal) => {
 
                 <Button
                     mode="contained"
-                    icon="bell"
+                    icon={SyncModalIcon.alert}
                     style={styles.buttonContainer}
                     onPress={() => {
                         bottomSheetModalRef.current?.dismiss();

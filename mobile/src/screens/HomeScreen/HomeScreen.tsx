@@ -1,5 +1,4 @@
-import React, { useContext, useCallback, useEffect, useMemo, useRef } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import React, { useContext, useCallback, useState } from "react";
 import { Provider } from "react-native-paper";
 import theme from "../../util/theme.styles";
 import { StackParamList } from "../../util/stackScreens";
@@ -11,7 +10,8 @@ import { themeColors } from "@cbr/common/src/util/colors";
 import { IUser, TAPILoadError, APILoadError, useZones } from "@cbr/common";
 import { screens } from "../../util/screens";
 import { StackScreenName } from "../../util/StackScreenName";
-import { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { SyncStackModal } from "../SyncStackModal/SyncStackModal";
 
 interface IHomeScreenProps {
     navigation: StackNavigationProp<StackParamList, StackScreenName.HOME>;
@@ -33,9 +33,7 @@ const screensForUser = (user: IUser | TAPILoadError | undefined) => {
 
 const HomeScreen = (props: IHomeScreenProps) => {
     const styles = useStyles();
-    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-    const snapPoints = useMemo(() => ["25%", "50%"], []);
-
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
     const Tab = createMaterialBottomTabNavigator();
     const { authState } = useContext(AuthContext);
 
@@ -58,10 +56,10 @@ const HomeScreen = (props: IHomeScreenProps) => {
                             component={screen.Component}
                             listeners={({ navigation, route }) => ({
                                 tabPress: (e) => {
-                                    if (route.name == "Profile") {
+                                    if (route.name == "Sync") {
                                         console.log("prevented");
                                         e.preventDefault();
-                                        bottomSheetModalRef.current?.present();
+                                        setModalVisible(true);
                                     }
                                 },
                             })}
@@ -69,16 +67,12 @@ const HomeScreen = (props: IHomeScreenProps) => {
                         />
                     ))}
                 </Tab.Navigator>
-                <BottomSheetModal
-                    ref={bottomSheetModalRef}
-                    index={1}
-                    snapPoints={snapPoints}
-                    onChange={handleSheetChanges}
-                >
-                    <View style={styles.contentContainer}>
-                        <Text>Placeholder to put sync button and/or alert navigation</Text>
-                    </View>
-                </BottomSheetModal>
+                <SyncStackModal
+                    visible={modalVisible}
+                    onModalDimss={(newVisibility) => {
+                        setModalVisible(newVisibility);
+                    }}
+                />
             </Provider>
         </BottomSheetModalProvider>
     );

@@ -6,7 +6,7 @@ import Profile from "../screens/Profile/Profile";
 import UserList from "../screens/UserList/UserList";
 import Dashboard from "../screens/DashBoard/Dashboard";
 import NewClient from "../screens/NewClient/NewClient";
-import { stackModal } from "../screens/StackModal/stackModal";
+import { SyncStackModal } from "../screens/SyncStackModal/SyncStackModal";
 
 export interface IScreen {
     name: string;
@@ -32,9 +32,9 @@ export const screens: IScreen[] = [
         iconName: "format-list-bulleted",
     },
     {
-        name: "Profile",
-        Component: stackModal,
-        iconName: "account",
+        name: "Sync",
+        Component: SyncStackModal,
+        iconName: "database-sync",
     },
     {
         name: "Stats",

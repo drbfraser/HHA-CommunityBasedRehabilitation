@@ -1,25 +1,31 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useIsFocused } from "@react-navigation/core";
 
-export const stackModal = () => {
-    const isFocused = useIsFocused();
-    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+interface StackModal {
+    visible: boolean;
+    onModalDimss: (newVisibility: boolean) => void;
+}
 
+export const SyncStackModal = (props: StackModal) => {
     // variables
     const snapPoints = useMemo(() => ["25%", "50%"], []);
-
-    useEffect(() => {
-        console.log(`isFocused is ${isFocused}`);
-        if (isFocused) {
-            bottomSheetModalRef.current?.present();
-        }
-    }, [isFocused]);
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+    const [modalVisible, setModalVisible] = useState<boolean>(props.visible);
 
     const handleSheetChanges = useCallback((index: number) => {
         console.log("handleSheetChanges", index);
+        if (index == -1) {
+            console.log("dismissing");
+            props.onModalDimss(false);
+        }
     }, []);
+
+    useEffect(() => {
+        if (props.visible) {
+            bottomSheetModalRef.current?.present();
+        }
+    });
 
     return (
         <BottomSheetModal

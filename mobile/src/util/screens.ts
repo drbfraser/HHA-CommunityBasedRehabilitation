@@ -6,7 +6,7 @@ import Profile from "../screens/Profile/Profile";
 import UserList from "../screens/UserList/UserList";
 import Dashboard from "../screens/DashBoard/Dashboard";
 import NewClient from "../screens/NewClient/NewClient";
-import { SyncStackModal } from "../screens/SyncStackModal/SyncStackModal";
+import { SyncStackModal } from "../components/SyncStackModal/SyncStackModal";
 
 export interface IScreen {
     name: string;

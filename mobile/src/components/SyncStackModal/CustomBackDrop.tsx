@@ -1,11 +1,7 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { BottomSheetModal, useBottomSheet } from "@gorhom/bottom-sheet";
-import { Button } from "react-native-paper";
-import { AppStackNavProp } from "../../util/stackScreens";
-import { StackScreenName } from "../../util/StackScreenName";
-import bottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet";
+import { useBottomSheet } from "@gorhom/bottom-sheet";
 import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
+import React, { memo, useCallback, useMemo, useRef } from "react";
+import { TapGestureHandler, TapGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import Animated, {
     Extrapolate,
     interpolate,
@@ -14,18 +10,12 @@ import Animated, {
     useAnimatedReaction,
     useAnimatedStyle,
 } from "react-native-reanimated";
-import { TapGestureHandler, TapGestureHandlerGestureEvent } from "react-native-gesture-handler";
-
-interface StackModal {
-    visible: boolean;
-    onModalDimss: (newVisibility: boolean) => void;
-    navigation: AppStackNavProp;
-}
+import useStyles from "./SyncModal.styles";
 
 // Revised from source Code
 const BottomSheetBackdropComponent = ({
     animatedIndex,
-    opacity = 0.5,
+    opacity = 0.6,
     appearsOnIndex = 0,
     disappearsOnIndex = -1,
     enableTouchThrough = false,
@@ -35,6 +25,8 @@ const BottomSheetBackdropComponent = ({
 }: BottomSheetDefaultBackdropProps) => {
     //#region hooks
     const { snapToIndex, close } = useBottomSheet();
+    const styles = useStyles();
+
     //#endregion
 
     //#region variables
@@ -125,70 +117,6 @@ const BottomSheetBackdropComponent = ({
     );
 };
 
-const BottomSheetBackdrop = memo(BottomSheetBackdropComponent);
+const CustomBackdrop = memo(BottomSheetBackdropComponent);
 
-export const SyncStackModal = (props: StackModal) => {
-    // variables
-    const snapPoints = useMemo(() => ["25%", "50%"], []);
-    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-    const handleSheetChanges = useCallback((index: number) => {
-        if (index == -1) {
-            console.log("dismissing");
-            props.onModalDimss(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (props.visible) {
-            bottomSheetModalRef.current?.present();
-        }
-    }, [props.visible]);
-
-    return (
-        <BottomSheetModal
-            ref={bottomSheetModalRef}
-            index={0}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}
-            backdropComponent={BottomSheetBackdrop}
-        >
-            <View style={styles.contentContainer}>
-                <Button
-                    mode="contained"
-                    style={styles.buttonContainer}
-                    onPress={() => {
-                        bottomSheetModalRef.current?.dismiss();
-                        props.navigation.navigate(StackScreenName.SYNC);
-                    }}
-                >
-                    Sync
-                </Button>
-                <Button
-                    mode="contained"
-                    style={styles.buttonContainer}
-                    onPress={() => {
-                        bottomSheetModalRef.current?.dismiss();
-                        props.navigation.navigate(StackScreenName.SYNC);
-                    }}
-                >
-                    Alert
-                </Button>
-            </View>
-        </BottomSheetModal>
-    );
-};
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: "black",
-    },
-    contentContainer: {
-        flex: 1,
-        marginBottom: 10,
-        padding: 10,
-    },
-    buttonContainer: {
-        padding: 2,
-    },
-});
+export default CustomBackdrop;

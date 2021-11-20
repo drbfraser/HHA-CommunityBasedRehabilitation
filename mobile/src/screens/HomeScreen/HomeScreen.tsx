@@ -11,7 +11,7 @@ import { IUser, TAPILoadError, APILoadError, useZones } from "@cbr/common";
 import { screens } from "../../util/screens";
 import { StackScreenName } from "../../util/StackScreenName";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { SyncStackModal } from "../SyncStackModal/SyncStackModal";
+import { SyncStackModal } from "../../components/SyncStackModal/SyncStackModal";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useNavigation } from "@react-navigation/native";

@@ -39,54 +39,39 @@ const HomeScreen = (props: IHomeScreenProps) => {
     const Tab = createMaterialBottomTabNavigator();
     const { authState } = useContext(AuthContext);
     const syncAlert = useContext(SyncContext);
-    console.log(syncAlert.unSyncedChanges);
+    const screenList = screensForUser(
+        authState.state === "loggedIn" || authState.state === "previouslyLoggedIn"
+            ? authState.currentUser
+            : undefined
+    );
+
+    screenList.forEach((screen) => {
+        if (screen.name == "Sync") {
+            screen.iconBadge = syncAlert.unSyncedChanges;
+        }
+    });
 
     return (
         <BottomSheetModalProvider>
             <Provider theme={theme}>
                 <Tab.Navigator>
-                    {screensForUser(
-                        authState.state === "loggedIn" || authState.state === "previouslyLoggedIn"
-                            ? authState.currentUser
-                            : undefined
-                    ).map((screen) =>
-                        screen.name == "Sync" ? (
-                            <Tab.Screen
-                                key={screen.name}
-                                name={screen.name}
-                                component={screen.Component}
-                                listeners={({ navigation, route }) => ({
-                                    tabPress: (e) => {
-                                        if (route.name == "Sync") {
-                                            console.log("prevented");
-                                            e.preventDefault();
-                                            setModalVisible(true);
-                                        }
-                                    },
-                                })}
-                                options={{
-                                    tabBarIcon: screen.iconName,
-                                    tabBarBadge: syncAlert.unSyncedChanges,
-                                }}
-                            />
-                        ) : (
-                            <Tab.Screen
-                                key={screen.name}
-                                name={screen.name}
-                                component={screen.Component}
-                                listeners={({ navigation, route }) => ({
-                                    tabPress: (e) => {
-                                        if (route.name == "Sync") {
-                                            console.log("prevented");
-                                            e.preventDefault();
-                                            setModalVisible(true);
-                                        }
-                                    },
-                                })}
-                                options={{ tabBarIcon: screen.iconName }}
-                            />
-                        )
-                    )}
+                    {screenList.map((screen) => (
+                        <Tab.Screen
+                            key={screen.name}
+                            name={screen.name}
+                            component={screen.Component}
+                            listeners={({ navigation, route }) => ({
+                                tabPress: (e) => {
+                                    if (route.name == "Sync") {
+                                        console.log("prevented");
+                                        e.preventDefault();
+                                        setModalVisible(true);
+                                    }
+                                },
+                            })}
+                            options={{ tabBarIcon: screen.iconName, tabBarBadge: screen.iconBadge }}
+                        />
+                    ))}
                 </Tab.Navigator>
                 <SyncStackModal
                     visible={modalVisible}

@@ -13,6 +13,8 @@ export interface IScreen {
     roles?: UserRole[];
     Component: React.ComponentType<any>;
     iconName?: string;
+    iconBadge?: boolean;
+    disableSync?: boolean;
 }
 
 export const screens: IScreen[] = [

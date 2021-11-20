@@ -15,6 +15,13 @@ const SideNavIcon = ({ page, active }: IProps) => {
     // fix issue with findDOMNode in strict mode
     const NoTransition = ({ children }: any) => children;
 
+    const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
+
+    useEffect(() => {
+        // TODO: Get number of user's unread alerts and setNewAlertCount
+        setUnreadAlertsCount(15);
+    }, []);
+
     function IconInfo(props: any) {
         return (
             <Link to={props.page.path}>
@@ -35,7 +42,7 @@ const SideNavIcon = ({ page, active }: IProps) => {
 
     return page.name === "Inbox" ? (
         <Badge
-            badgeContent={newAlertCount}
+            badgeContent={unreadAlertsCount}
             max={9}
             className={styles.notificationBadge}
             color="error"

@@ -23,6 +23,8 @@ import {
 } from "../../util/listFunctions";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { checkUnsyncedChanges } from "../../util/syncHandler";
 
 const UserList = () => {
     const styles = useStyles();
@@ -37,6 +39,7 @@ const UserList = () => {
     const [sortOption, setSortOption] = useState("");
     const [sortDirection, setIsSortDirection] = useState<TSortDirection>("None");
     const [isAuthenticate, setAuthenticate] = useState<boolean>(false);
+    const { setUnSyncedChanges } = useContext(SyncContext);
 
     const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
 
@@ -101,6 +104,9 @@ const UserList = () => {
                 authContext.requireLoggedIn(true);
                 setAuthenticate(true);
             }
+            checkUnsyncedChanges().then((res) => {
+                setUnSyncedChanges(res);
+            });
             newUserListGet();
         }
     }, [sortDirection, sortOption, searchQuery, selectedSearchOption, isFocused]);

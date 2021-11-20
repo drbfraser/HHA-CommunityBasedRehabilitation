@@ -9,7 +9,7 @@ import {
     TClientValues,
 } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { Formik, FormikProps } from "formik";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
@@ -26,6 +26,8 @@ import { AppStackNavProp } from "../../util/stackScreens";
 import { handleSubmit } from "./formHandler";
 import useStyles from "./NewClient.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { checkUnsyncedChanges } from "../../util/syncHandler";
 
 const riskMap: Map<RiskLevel, string> = new Map(
     Object.entries(riskLevels).map(([riskKey, riskLevel]) => [riskKey as RiskLevel, riskLevel.name])
@@ -88,6 +90,8 @@ const NewClient = () => {
     const navigation = useNavigation<AppStackNavProp>();
     const styles = useStyles();
     const database = useDatabase();
+    const isFocused = useIsFocused();
+    const { setUnSyncedChanges } = useContext(SyncContext);
     const scrollRef = React.createRef<KeyboardAwareScrollView>();
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
 
@@ -95,6 +99,14 @@ const NewClient = () => {
         () => scrollRef?.current?.scrollToPosition(0, 0, false),
         [scrollRef]
     );
+
+    useEffect(() => {
+        if (isFocused) {
+            checkUnsyncedChanges().then((res) => {
+                setUnSyncedChanges(res);
+            });
+        }
+    }, [isFocused]);
 
     return (
         <SafeAreaView>

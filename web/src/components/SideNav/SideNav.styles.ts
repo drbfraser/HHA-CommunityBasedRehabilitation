@@ -57,10 +57,10 @@ export const useStyles = makeStyles(
                 display: "none",
             },
             notificationBadge: {
-              "& .MuiBadge-badge": {
-                  right: 10,
-              },
-          },
+                "& .MuiBadge-badge": {
+                    right: 10,
+                },
+            },
         },
     },
     { index: 1 }

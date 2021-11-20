@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import SideNav from "./components/SideNav/SideNav";
 import { defaultPagePath, pagesForUser } from "util/pages";
@@ -9,10 +9,17 @@ import history from "@cbr/common/util/history";
 import { useIsLoggedIn } from "./util/hooks/loginState";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
+import { Alert } from "@material-ui/lab";
+import { Box, Collapse, IconButton } from "@material-ui/core";
+import CloseIcon from "@mui/icons-material/Close";
+import AlertNotification from "./components/Alerts/AlertNotification";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
     const styles = useStyles();
+
+    const [open, setOpen] = React.useState(false);
+    const [alert, setAlert] = React.useState();
 
     const PrivateRoutes = () => {
         const user = useCurrentUser();
@@ -24,6 +31,12 @@ const App = () => {
                     <Switch>
                         {pagesForUser(user).map((page) => (
                             <Route key={page.path} exact={page.exact ?? true} path={page.path}>
+                                {open ? (
+                                    <AlertNotification alertInfo={alert} setOpen={setOpen} />
+                                ) : (
+                                    <></>
+                                )}
+                                {/* {open ? <AlertPopup alertInfo={alert} /> : <></>} */}
                                 <Typography variant="h1" className={styles.pageTitle}>
                                     {page.name}
                                 </Typography>
@@ -37,6 +50,13 @@ const App = () => {
             </div>
         );
     };
+
+    useEffect(() => {
+        socket.on("broadcastAlert", (data) => {
+            setAlert(data);
+            setOpen(true);
+        });
+    }, []);
 
     return (
         <Router history={history}>

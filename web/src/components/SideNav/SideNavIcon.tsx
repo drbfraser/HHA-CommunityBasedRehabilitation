@@ -19,6 +19,8 @@ const SideNavIcon = ({ page, active }: IProps) => {
 
     useEffect(() => {
         // TODO: Get number of user's unread alerts and setNewAlertCount
+        // Requires implementation of method to track alerts that have not
+        // yet been read by a user.
         setUnreadAlertsCount(15);
     }, []);
 

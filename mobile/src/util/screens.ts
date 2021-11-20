@@ -6,6 +6,7 @@ import Profile from "../screens/Profile/Profile";
 import UserList from "../screens/UserList/UserList";
 import Dashboard from "../screens/DashBoard/Dashboard";
 import NewClient from "../screens/NewClient/NewClient";
+import { stackModal } from "../screens/StackModal/stackModal";
 
 export interface IScreen {
     name: string;
@@ -32,7 +33,7 @@ export const screens: IScreen[] = [
     },
     {
         name: "Profile",
-        Component: Profile,
+        Component: stackModal,
         iconName: "account",
     },
     {

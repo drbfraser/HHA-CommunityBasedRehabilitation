@@ -1,12 +1,20 @@
 import { apiFetch, Endpoint } from "@cbr/common";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
-import { dbType } from "./watermelonDatabase";
+import { database, dbType } from "./watermelonDatabase";
 
 //@ts-ignore
 import SyncLogger from "@nozbe/watermelondb/sync/SyncLogger";
 import { stringify } from "querystring";
 
+//@ts-ignore
+import { hasUnsyncedChanges } from "@nozbe/watermelondb/sync";
+
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
+
+export async function checkUnsyncedChanges() {
+    const result = await hasUnsyncedChanges({ database });
+    console.log(`from utli has unsynced change is ${result}`);
+}
 
 export async function SyncDB(database: dbType) {
     await synchronize({

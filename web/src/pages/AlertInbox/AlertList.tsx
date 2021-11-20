@@ -79,7 +79,9 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
         const fetchAlerts = async () => {
             try {
                 let tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
-                tempAlerts = tempAlerts.sort(function(a,b){return b.created_date-a.created_date});
+                tempAlerts = tempAlerts.sort(function (a, b) {
+                    return b.created_date - a.created_date;
+                });
                 setAlertData(tempAlerts);
             } catch (e) {
                 console.log(`Error fetching Alerts: ${e}`);

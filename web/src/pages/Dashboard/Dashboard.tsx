@@ -36,6 +36,7 @@ const Dashboard = () => {
 
     const [clientError, setClientError] = useState<string>();
     const [referralError, setReferralError] = useState<string>();
+    const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
 
     useEffect(() => {
         const fetchClients = async () => {
@@ -108,8 +109,19 @@ const Dashboard = () => {
             return referralTypes.join(", ");
         };
 
+        const fetchAlerts = async () => {
+            try {
+                const alertsList = await (await apiFetch(Endpoint.ALERTS)).json();
+                // TODO: only want unread alerts
+                setUnreadAlertsCount(alertsList.length);
+            } catch (e) {
+                setReferralError(e instanceof Error ? e.message : `${e}`);
+            }
+        };
+
         fetchClients();
         fetchReferrals();
+        fetchAlerts();
     }, []);
 
     const RenderBadge = (params: ValueFormatterParams) => {
@@ -237,8 +249,9 @@ const Dashboard = () => {
     return (
         <>
             <Alert severity="info">
-                {/* TODO: Update message alert once message alert functionality is implemented. */}
-                <Typography variant="body1">You have 0 new messages from an admin.</Typography>
+                <Typography variant="body1">
+                    You have <b>{unreadAlertsCount}</b> new messages in your inbox.
+                </Typography>
             </Alert>
             {(clientError || referralError) && (
                 <>

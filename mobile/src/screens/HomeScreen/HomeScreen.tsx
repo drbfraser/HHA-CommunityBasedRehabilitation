@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Provider } from "react-native-paper";
 import theme from "../../util/theme.styles";
-import { StackParamList } from "../../util/stackScreens";
+import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -14,6 +14,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { SyncStackModal } from "../SyncStackModal/SyncStackModal";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { useNavigation } from "@react-navigation/native";
 
 interface IHomeScreenProps {
     navigation: StackNavigationProp<StackParamList, StackScreenName.HOME>;
@@ -37,6 +38,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
     const styles = useStyles();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const Tab = createMaterialBottomTabNavigator();
+    const navigation = useNavigation<AppStackNavProp>();
     const { authState } = useContext(AuthContext);
     const syncAlert = useContext(SyncContext);
     const screenList = screensForUser(
@@ -78,6 +80,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
                     onModalDimss={(newVisibility) => {
                         setModalVisible(newVisibility);
                     }}
+                    navigation={navigation}
                 />
             </Provider>
         </BottomSheetModalProvider>

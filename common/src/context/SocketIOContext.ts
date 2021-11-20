@@ -12,8 +12,6 @@ if (appEnv === "production") {
     url = `http://${window.location.hostname}:8000`
 }
 
-console.log(url)
-
 export const socket = io(`${url}`, {
   transports: ["websocket"],
   autoConnect: true,

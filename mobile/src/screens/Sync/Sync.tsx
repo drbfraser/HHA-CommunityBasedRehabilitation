@@ -32,6 +32,8 @@ const Sync = () => {
         remoteChanges: 0,
         localChanges: 0,
     });
+    console.log(`auto Sync is ${autoSync}`);
+    console.log(`cellular Sync  is ${cellularSync}`);
 
     const resetDatabase = async () => {
         Alert.alert("Alert", "Are you sure you want to reset local database", [
@@ -88,14 +90,14 @@ const Sync = () => {
         } catch (e) {}
     };
 
-    const storeAutoSync = async () => {
+    const storeAutoSync = async (value: boolean) => {
         try {
-            await AsyncStorage.setItem("autoSyncPref", autoSync.toString());
+            await AsyncStorage.setItem("autoSyncPref", value.toString());
         } catch (e) {}
     };
-    const storeCellularSync = async () => {
+    const storeCellularSync = async (value: boolean) => {
         try {
-            await AsyncStorage.setItem("celluarSyncPref", cellularSync.toString());
+            await AsyncStorage.setItem("cellularSyncPref", value.toString());
         } catch (e) {}
     };
 
@@ -181,7 +183,7 @@ const Sync = () => {
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={(value) => {
                             setAutoSync(value);
-                            storeAutoSync();
+                            storeAutoSync(value);
                         }}
                         value={autoSync}
                     ></Switch>
@@ -197,7 +199,7 @@ const Sync = () => {
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={(value) => {
                             setCellularSync(value);
-                            storeCellularSync();
+                            storeCellularSync(value);
                         }}
                         value={cellularSync}
                     ></Switch>

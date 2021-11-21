@@ -43,7 +43,6 @@ const useStyles = () =>
         },
         search: {
             flex: 2,
-            marginLeft: 60,
         },
         item: {
             padding: 3,

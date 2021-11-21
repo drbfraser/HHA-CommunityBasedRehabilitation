@@ -16,6 +16,10 @@ const useStyles = () =>
             flex: 1,
             alignItems: "center",
         },
+        buttonContainer: {
+            flex: 0.3,
+            alignItems: "center",
+        },
     });
 
 export default useStyles;

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Provider } from "react-native-paper";
+import { Button, Provider } from "react-native-paper";
 import theme from "../../util/theme.styles";
 import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
@@ -11,14 +11,25 @@ import { IUser, TAPILoadError, APILoadError, useZones } from "@cbr/common";
 import { screens } from "../../util/screens";
 import { StackScreenName } from "../../util/StackScreenName";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { SyncStackModal } from "../../components/SyncStackModal/SyncStackModal";
+import { TabModal } from "../../components/TabModal/TabModal";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useNavigation } from "@react-navigation/native";
+import { Icon, withBadge } from "react-native-elements";
+import { SyncModalIcon } from "./ModalIcon";
 
 interface IHomeScreenProps {
     navigation: StackNavigationProp<StackParamList, StackScreenName.HOME>;
 }
+
+const SyncIcon = () => {
+    const syncAlert = useContext(SyncContext);
+    const BadgedIcon = withBadge("")(Icon);
+    if (syncAlert.unSyncedChanges) {
+        return <BadgedIcon type="material-community" name={SyncModalIcon.syncIcon} color="white" />;
+    }
+    return <Icon type="material-community" name={SyncModalIcon.syncIcon} color="white" />;
+};
 
 const screensForUser = (user: IUser | TAPILoadError | undefined) => {
     return screens.filter((screen) => {
@@ -74,13 +85,35 @@ const HomeScreen = (props: IHomeScreenProps) => {
                         />
                     ))}
                 </Tab.Navigator>
-                <SyncStackModal
+                <TabModal
                     visible={modalVisible}
                     onModalDimss={(newVisibility) => {
                         setModalVisible(newVisibility);
                     }}
                     navigation={navigation}
-                />
+                >
+                    <Button
+                        mode="contained"
+                        icon={SyncIcon}
+                        style={styles.buttonContainer}
+                        onPress={() => {
+                            props.navigation.navigate(StackScreenName.SYNC);
+                        }}
+                    >
+                        Sync
+                    </Button>
+
+                    <Button
+                        mode="contained"
+                        icon={SyncModalIcon.alert}
+                        style={styles.buttonContainer}
+                        onPress={() => {
+                            // to add Alert Page
+                        }}
+                    >
+                        Alerts
+                    </Button>
+                </TabModal>
             </Provider>
         </BottomSheetModalProvider>
     );

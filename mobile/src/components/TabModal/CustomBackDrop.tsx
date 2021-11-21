@@ -10,7 +10,7 @@ import Animated, {
     useAnimatedReaction,
     useAnimatedStyle,
 } from "react-native-reanimated";
-import useStyles from "./SyncModal.styles";
+import useStyles from "./TabModal.styles";
 
 // Revised from source Code
 const BottomSheetBackdropComponent = ({

@@ -6,7 +6,7 @@ import Profile from "../screens/Profile/Profile";
 import UserList from "../screens/UserList/UserList";
 import Dashboard from "../screens/DashBoard/Dashboard";
 import NewClient from "../screens/NewClient/NewClient";
-import { SyncStackModal } from "../components/SyncStackModal/SyncStackModal";
+import { TabModal } from "../components/TabModal/TabModal";
 
 export interface IScreen {
     name: string;
@@ -35,8 +35,14 @@ export const screens: IScreen[] = [
     },
     {
         name: "Sync",
-        Component: SyncStackModal,
+        Component: TabModal,
         iconName: "sync-alert",
+    },
+    {
+        name: "Profile",
+        roles: [UserRole.CLINICIAN, UserRole.WORKER],
+        Component: Profile,
+        iconName: "account",
     },
     {
         name: "Stats",

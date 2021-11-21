@@ -11,10 +11,6 @@ const useStyles = () =>
             justifyContent: "space-around",
             padding: 10,
         },
-        buttonContainer: {
-            flex: 0.3,
-            alignItems: "center",
-        },
     });
 
 export default useStyles;

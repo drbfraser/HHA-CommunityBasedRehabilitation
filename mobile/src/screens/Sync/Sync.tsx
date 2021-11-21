@@ -3,9 +3,8 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/core";
 import React, { useContext, useEffect, useState } from "react";
-import { Alert, SafeAreaView, ScrollView, View } from "react-native";
-import { Button, Divider, Title, Text, Card, Switch } from "react-native-paper";
-import { color } from "react-native-reanimated";
+import { Alert, SafeAreaView, View } from "react-native";
+import { Button, Divider, Text, Card, Switch } from "react-native-paper";
 import SyncAlert from "../../components/SyncAlert/SyncAlert";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { SyncDB, logger } from "../../util/syncHandler";
@@ -32,8 +31,6 @@ const Sync = () => {
         remoteChanges: 0,
         localChanges: 0,
     });
-    console.log(`auto Sync is ${autoSync}`);
-    console.log(`cellular Sync  is ${cellularSync}`);
 
     const resetDatabase = async () => {
         Alert.alert("Alert", "Are you sure you want to reset local database", [
@@ -140,7 +137,7 @@ const Sync = () => {
                     style={styles.resetBtbContainer}
                     onPress={resetDatabase}
                 >
-                    Reset Local Database
+                    Clear Local
                 </Button>
             </View>
             <Divider />

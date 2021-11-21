@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StyleProp, View, ViewStyle } from "react-native";
-import { Text, IconButton, Portal, Modal } from "react-native-paper";
+import { Text, IconButton, Portal, Modal, Button } from "react-native-paper";
 import useStyles from "./UserList.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { useNavigation } from "@react-navigation/core";
-import { SearchOption, themeColors, useZones } from "@cbr/common";
+import { SearchOption, themeColors, useCurrentUser, useZones } from "@cbr/common";
 import { StackScreenName } from "../../util/StackScreenName";
 import { Picker } from "@react-native-picker/picker";
 import { Searchbar } from "react-native-paper";
@@ -32,6 +32,7 @@ const UserList = () => {
     const navigation = useNavigation<AppStackNavProp>();
     const zones = useZones();
     const database = useDatabase();
+    const currentUser = useCurrentUser();
     const [userList, setUserList] = useState<BriefUser[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
@@ -137,13 +138,6 @@ const UserList = () => {
     return (
         <View style={styles.container}>
             <View style={styles.row}>
-                <IconButton
-                    color={themeColors.bluePale}
-                    icon="account-plus"
-                    onPress={() => navigation.navigate(StackScreenName.ADMIN_NEW)}
-                >
-                    Create new user
-                </IconButton>
                 {selectedSearchOption === SearchOption.ZONE ? (
                     <Picker
                         style={styles.select}
@@ -252,7 +246,14 @@ const UserList = () => {
                             >
                                 {showNameColumn ? (
                                     <View style={styles.column_name}>
-                                        <WrappedText text={item.full_name} />
+                                        {item.id == currentUser.id ? (
+                                            <WrappedText
+                                                text={item.full_name}
+                                                icon="verified-user"
+                                            />
+                                        ) : (
+                                            <WrappedText text={item.full_name} />
+                                        )}
                                     </View>
                                 ) : (
                                     <View></View>

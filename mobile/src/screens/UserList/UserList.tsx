@@ -25,6 +25,7 @@ import CustomMultiPicker from "react-native-multiple-select-list";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
+import { Icon } from "react-native-elements";
 
 const UserList = () => {
     const styles = useStyles();
@@ -56,7 +57,7 @@ const UserList = () => {
         setShowRoleColumn,
         setShowStatusColumn,
     ];
-    const columnList = { 0: "Name", 1: "Zone", 2: "Role", 3: "Statue" };
+    const columnList = { 0: "Name", 1: "Zone", 2: "Role", 3: "Status" };
     const openColumnBuilderMenu = () => {
         setShowColumnBuilderMenu(true);
         showSelectedColumn;
@@ -208,6 +209,7 @@ const UserList = () => {
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>
+                        <DataTable.Title style={styles.column_icon}>{}</DataTable.Title>
                         <ShowTitle
                             label="Name"
                             style={styles.column_name}
@@ -244,16 +246,16 @@ const UserList = () => {
                                     });
                                 }}
                             >
+                                <View style={styles.column_icon}>
+                                    {item.id == currentUser!.id ? (
+                                        <Icon type="font-awesome-5" name="user-circle" />
+                                    ) : (
+                                        <></>
+                                    )}
+                                </View>
                                 {showNameColumn ? (
                                     <View style={styles.column_name}>
-                                        {item.id == currentUser.id ? (
-                                            <WrappedText
-                                                text={item.full_name}
-                                                icon="verified-user"
-                                            />
-                                        ) : (
-                                            <WrappedText text={item.full_name} />
-                                        )}
+                                        <WrappedText text={item.full_name} />
                                     </View>
                                 ) : (
                                     <View></View>

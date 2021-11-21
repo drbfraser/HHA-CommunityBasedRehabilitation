@@ -28,7 +28,6 @@ export const TabModal = (props: StackModal) => {
 
     useEffect(() => {
         if (!isFocused) {
-            console.log("Modal not in focus");
             bottomSheetModalRef.current?.dismiss();
         }
     }, [isFocused]);

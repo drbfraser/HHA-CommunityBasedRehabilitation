@@ -761,6 +761,7 @@ class AlertSerializer(serializers.ModelSerializer):
             "subject",
             "priority",
             "alert_message",
+            "unread_by_users",
             "created_by_user",
             "created_date",
         )
@@ -784,6 +785,7 @@ class AlertListSerializer(serializers.ModelSerializer):
             "subject",
             "priority",
             "alert_message",
+            "unread_by_users",
             "created_by_user",
             "created_date",
         ]

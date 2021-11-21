@@ -1,4 +1,6 @@
+import { themeColors } from "@cbr/common";
 import { StyleSheet } from "react-native";
+import theme from "../../util/theme.styles";
 
 const useStyles = () =>
     StyleSheet.create({
@@ -9,7 +11,7 @@ const useStyles = () =>
             flex: 1,
         },
         groupContainer: {
-            flex: 0.4,
+            flex: 1,
             padding: 10,
             justifyContent: "space-around",
         },
@@ -17,13 +19,14 @@ const useStyles = () =>
             backgroundColor: "white",
         },
         resetBtnLabel: {
-            color: "red",
+            color: themeColors.errorRed,
         },
         cardSectionTitle: {
             textAlign: "center",
             marginTop: 14,
             marginBottom: 14,
             fontSize: 28,
+            color: themeColors.blueBgDark,
         },
         CardStyle: {
             display: "flex",
@@ -35,11 +38,13 @@ const useStyles = () =>
         },
         row: {
             flexDirection: "row",
+            height: 40,
             justifyContent: "space-between",
         },
         stats: {
-            color: "grey",
+            color: themeColors.borderGray,
         },
+        switch: { flex: 0.2 },
     });
 
 export default useStyles;

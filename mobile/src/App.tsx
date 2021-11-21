@@ -115,6 +115,8 @@ const updateAuthStateIfNeeded = async (
 export default function App() {
     const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
     const [syncAlert, setSyncAlert] = useState<boolean>(false);
+    const [autoSync, setAutoSync] = useState<boolean>(true);
+    const [celluarSync, setCelluarSync] = useState<boolean>(false);
 
     useEffect(() => {
         // Refresh disabilities, zones, current user information
@@ -184,7 +186,14 @@ export default function App() {
                 <NavigationContainer theme={theme}>
                     <AuthContext.Provider value={authContext}>
                         <SyncContext.Provider
-                            value={{ unSyncedChanges: syncAlert, setUnSyncedChanges: setSyncAlert }}
+                            value={{
+                                unSyncedChanges: syncAlert,
+                                setUnSyncedChanges: setSyncAlert,
+                                autoSync: autoSync,
+                                setAutoSync: setAutoSync,
+                                cellularSync: celluarSync,
+                                setCellularSync: setCelluarSync,
+                            }}
                         >
                             <DatabaseProvider database={database}>
                                 <Stack.Navigator>

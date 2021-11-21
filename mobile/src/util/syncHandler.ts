@@ -8,6 +8,8 @@ import { stringify } from "querystring";
 
 //@ts-ignore
 import { hasUnsyncedChanges } from "@nozbe/watermelondb/sync";
+import { ISync } from "../screens/Sync/Sync";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
@@ -48,7 +50,23 @@ export async function SyncDB(database: dbType) {
         migrationsEnabledAtVersion: 1,
         log: logger.newLog(),
         conflictResolver: conflictResolver,
+    }).then(() => {
+        storeStats();
     });
+}
+
+async function storeStats() {
+    const len = logger.logs.length;
+    if (len != 0) {
+        let newStats: ISync = {
+            lastPulledTime: logger.logs[len - 1].newLastPulledAt,
+            remoteChanges: logger.logs[len - 1].remoteChangeCount,
+            localChanges: logger.logs[len - 1].localChangeCount,
+        };
+        try {
+            await AsyncStorage.setItem("SyncStats", JSON.stringify(newStats));
+        } catch (e) {}
+    }
 }
 
 async function getImage(changes) {

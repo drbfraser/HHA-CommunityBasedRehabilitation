@@ -1,16 +1,17 @@
-import { timestampToDateTime } from "@cbr/common";
+import { themeColors, timestampToDateTime } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/core";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Alert, SafeAreaView, ScrollView, View } from "react-native";
-import { Button, Divider, Title, Text, Card } from "react-native-paper";
+import { Button, Divider, Title, Text, Card, Switch } from "react-native-paper";
 import { color } from "react-native-reanimated";
 import SyncAlert from "../../components/SyncAlert/SyncAlert";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { SyncDB, logger } from "../../util/syncHandler";
 import useStyles from "./Sync.styles";
 
-interface ISync {
+export interface ISync {
     lastPulledTime: number;
     remoteChanges: number;
     localChanges: number;
@@ -22,6 +23,7 @@ const Sync = () => {
     const [alertMessage, setAlertMessage] = useState<string>();
     const [alertStatus, setAlertStatus] = useState<boolean>();
     const [showSyncModal, setSyncModal] = useState<boolean>(false);
+    const { autoSync, setAutoSync, cellularSync, setCellularSync } = useContext(SyncContext);
 
     const [loading, setLoading] = useState<boolean>(true);
     const isFocused = useIsFocused();
@@ -58,7 +60,6 @@ const Sync = () => {
                 localChanges: logger.logs[len - 1].localChangeCount,
             };
             setStats(newStats);
-            storeStats(newStats);
         }
     };
 
@@ -70,12 +71,6 @@ const Sync = () => {
             localChanges: 0,
         };
         setStats(newStats);
-    };
-
-    const storeStats = async (newStats: ISync) => {
-        try {
-            await AsyncStorage.setItem("SyncStats", JSON.stringify(newStats));
-        } catch (e) {}
     };
 
     const retreiveStats = async () => {
@@ -90,6 +85,17 @@ const Sync = () => {
                 };
                 setStats(newStats);
             }
+        } catch (e) {}
+    };
+
+    const storeAutoSync = async () => {
+        try {
+            await AsyncStorage.setItem("autoSyncPref", autoSync.toString());
+        } catch (e) {}
+    };
+    const storeCellularSync = async () => {
+        try {
+            await AsyncStorage.setItem("celluarSyncPref", cellularSync.toString());
         } catch (e) {}
     };
 
@@ -161,7 +167,42 @@ const Sync = () => {
                     <></>
                 )}
             </Card>
-
+            <Divider />
+            <Text style={styles.cardSectionTitle}>Sync Settings</Text>
+            <Card style={styles.CardStyle}>
+                <View style={styles.row}>
+                    <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>
+                        Automatic Syncing
+                    </Text>
+                    <Switch
+                        style={styles.switch}
+                        trackColor={{ false: themeColors.white, true: themeColors.yellow }}
+                        thumbColor={autoSync ? themeColors.white : themeColors.white}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={(value) => {
+                            setAutoSync(value);
+                            storeAutoSync();
+                        }}
+                        value={autoSync}
+                    ></Switch>
+                </View>
+                <View style={styles.row}>
+                    <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>
+                        Sync over Cellular
+                    </Text>
+                    <Switch
+                        style={styles.switch}
+                        trackColor={{ false: themeColors.white, true: themeColors.yellow }}
+                        thumbColor={cellularSync ? themeColors.white : themeColors.white}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={(value) => {
+                            setCellularSync(value);
+                            storeCellularSync();
+                        }}
+                        value={cellularSync}
+                    ></Switch>
+                </View>
+            </Card>
             <SyncAlert
                 displayMode={alertStatus ? "success" : "failed"}
                 displayMsg={alertMessage}

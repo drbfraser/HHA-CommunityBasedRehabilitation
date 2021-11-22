@@ -181,6 +181,9 @@ const Todo = () => {
                         <View style={styles.btnRow}>
                             <Button
                                 mode="contained"
+                                style={{
+                                    backgroundColor: !showVisit ? "grey" : themeColors.blueBgDark,
+                                }}
                                 onPress={() => {
                                     if (!showVisit) {
                                         setShowVisit(true);
@@ -193,6 +196,11 @@ const Todo = () => {
                             </Button>
                             <Button
                                 mode="contained"
+                                style={{
+                                    backgroundColor: !showReferral
+                                        ? "grey"
+                                        : themeColors.blueBgDark,
+                                }}
                                 onPress={() => {
                                     if (!showReferral) {
                                         setShowVisit(false);
@@ -205,6 +213,11 @@ const Todo = () => {
                             </Button>
                             <Button
                                 mode="contained"
+                                style={{
+                                    backgroundColor: !showDisabilites
+                                        ? "grey"
+                                        : themeColors.blueBgDark,
+                                }}
                                 onPress={() => {
                                     if (!showDisabilites) {
                                         setShowVisit(false);

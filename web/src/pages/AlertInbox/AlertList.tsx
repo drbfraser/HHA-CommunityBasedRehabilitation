@@ -35,11 +35,12 @@ const useStyles = makeStyles({
     },
 });
 
-interface IAlert {
+export interface IAlert {
     id: number;
     subject: string;
     priority: PriorityLevel;
     alert_message: string;
+    unread_by_users: string[];
     created_by_user: number;
     created_date: Time;
 }

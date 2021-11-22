@@ -5,6 +5,7 @@ import json
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
@@ -454,15 +455,9 @@ class Alert(models.Model):
     priority = models.CharField(max_length=9, choices=Priorities.choices)
     subject = models.CharField(max_length=50)
     alert_message = models.CharField(max_length=2000)
-    unread_by_users = models.TextField(blank=True)
+    unread_by_users = ArrayField(models.TextField(blank=True))
     created_by_user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT
     )
     created_date = models.BigIntegerField(_("date created"), default=time.time)
 
-    # Methods to automatically convert to and from a JSON string
-    def set_unread_by_users(self, x):
-        self.unread_by_users = json.dumps(x)
-
-    def get_unread_by_users(self):
-        return json.loads(self.unread_by_users)

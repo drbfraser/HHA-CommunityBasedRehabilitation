@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Alert, SafeAreaView, ScrollView, View } from "react-native";
-import { Button, Divider, Text, TextInput, Title } from "react-native-paper";
+import { Button, Divider, Text } from "react-native-paper";
 import useStyles from "./Todo.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { AppStackNavProp } from "../../util/stackScreens";
@@ -171,215 +171,209 @@ const Todo = () => {
     }, [isFocused]);
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView style={styles.scrollViewStyles}>
-                <View style={styles.row}>
-                    <Text style={styles.title}>Statistic</Text>
-                </View>
-                {!loading ? (
-                    <>
-                        <View style={styles.btnRow}>
-                            <Button
-                                mode="contained"
-                                style={{
-                                    backgroundColor: !showVisit ? "grey" : themeColors.blueBgDark,
-                                }}
-                                onPress={() => {
-                                    if (!showVisit) {
-                                        setShowVisit(true);
-                                        setShowReferral(false);
-                                        setShowDisabilites(false);
-                                    }
-                                }}
+        <ScrollView>
+            <View style={styles.row}>
+                <Text style={styles.title}>Statistic</Text>
+            </View>
+            {!loading ? (
+                <>
+                    <View style={styles.btnRow}>
+                        <Button
+                            mode="contained"
+                            style={{
+                                backgroundColor: !showVisit ? "grey" : themeColors.blueBgDark,
+                            }}
+                            onPress={() => {
+                                if (!showVisit) {
+                                    setShowVisit(true);
+                                    setShowReferral(false);
+                                    setShowDisabilites(false);
+                                }
+                            }}
+                        >
+                            {"Visits"}
+                        </Button>
+                        <Button
+                            mode="contained"
+                            style={{
+                                backgroundColor: !showReferral ? "grey" : themeColors.blueBgDark,
+                            }}
+                            onPress={() => {
+                                if (!showReferral) {
+                                    setShowVisit(false);
+                                    setShowReferral(true);
+                                    setShowDisabilites(false);
+                                }
+                            }}
+                        >
+                            {"Referral"}
+                        </Button>
+                        <Button
+                            mode="contained"
+                            style={{
+                                backgroundColor: !showDisabilites ? "grey" : themeColors.blueBgDark,
+                            }}
+                            onPress={() => {
+                                if (!showDisabilites) {
+                                    setShowVisit(false);
+                                    setShowReferral(false);
+                                    setShowDisabilites(true);
+                                }
+                            }}
+                        >
+                            {"Disabilites"}
+                        </Button>
+                    </View>
+                    {showVisit ? (
+                        <>
+                            <Divider />
+                            <Text style={styles.cardSectionTitle}>Visits</Text>
+                            <VictoryChart
+                                animate={{ duration: 500 }}
+                                domainPadding={10}
+                                padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
+                                containerComponent={<VictoryZoomContainer />}
+                                theme={VictoryTheme.material}
                             >
-                                {"Visits"}
-                            </Button>
-                            <Button
-                                mode="contained"
-                                style={{
-                                    backgroundColor: !showReferral
-                                        ? "grey"
-                                        : themeColors.blueBgDark,
-                                }}
-                                onPress={() => {
-                                    if (!showReferral) {
-                                        setShowVisit(false);
-                                        setShowReferral(true);
-                                        setShowDisabilites(false);
-                                    }
-                                }}
-                            >
-                                {"Referral"}
-                            </Button>
-                            <Button
-                                mode="contained"
-                                style={{
-                                    backgroundColor: !showDisabilites
-                                        ? "grey"
-                                        : themeColors.blueBgDark,
-                                }}
-                                onPress={() => {
-                                    if (!showDisabilites) {
-                                        setShowVisit(false);
-                                        setShowReferral(false);
-                                        setShowDisabilites(true);
-                                    }
-                                }}
-                            >
-                                {"Disabilites"}
-                            </Button>
-                        </View>
-                        {showVisit ? (
-                            <>
-                                <Divider />
-                                <Text style={styles.cardSectionTitle}>Visits</Text>
-                                <VictoryChart
-                                    animate={{ duration: 500 }}
-                                    domainPadding={10}
-                                    padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
-                                    containerComponent={<VictoryZoomContainer />}
-                                    theme={VictoryTheme.material}
-                                >
-                                    <VictoryAxis
-                                        style={{
-                                            axisLabel: { fontSize: 12 },
-                                            tickLabels: {
-                                                fontSize: 12,
-                                            },
-                                            grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
-                                        }}
-                                        dependentAxis
-                                    />
-                                    <VictoryAxis
-                                        style={{
-                                            axisLabel: { fontSize: 10 },
-                                            tickLabels: {
-                                                fontSize: 10,
-                                            },
-                                        }}
-                                    />
-                                    <VictoryBar
-                                        horizontal
-                                        barRatio={0.8}
-                                        style={{ data: { fill: themeColors.blueAccent } }}
-                                        alignment="middle"
-                                        data={visitData}
-                                        x="name"
-                                        y="count"
-                                    />
-                                </VictoryChart>
-                                <Divider />
-                                <View style={styles.graphContainer}>
-                                    <VictoryPie
-                                        data={graphicData}
-                                        colorScale={graphicColor}
-                                        width={350}
-                                        height={250}
-                                        animate={{ easing: "exp" }}
-                                        innerRadius={30}
-                                    />
-                                </View>
-                            </>
-                        ) : (
-                            <></>
-                        )}
+                                <VictoryAxis
+                                    style={{
+                                        axisLabel: { fontSize: 12 },
+                                        tickLabels: {
+                                            fontSize: 12,
+                                        },
+                                        grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                                    }}
+                                    dependentAxis
+                                />
+                                <VictoryAxis
+                                    style={{
+                                        axisLabel: { fontSize: 10 },
+                                        tickLabels: {
+                                            fontSize: 10,
+                                        },
+                                    }}
+                                />
+                                <VictoryBar
+                                    horizontal
+                                    barRatio={0.8}
+                                    style={{ data: { fill: themeColors.blueAccent } }}
+                                    alignment="middle"
+                                    data={visitData}
+                                    x="name"
+                                    y="count"
+                                />
+                            </VictoryChart>
+                            <Divider />
+                            <View style={styles.graphContainer}>
+                                <VictoryPie
+                                    data={graphicData}
+                                    colorScale={graphicColor}
+                                    width={350}
+                                    height={250}
+                                    animate={{ easing: "exp" }}
+                                    innerRadius={30}
+                                />
+                            </View>
+                        </>
+                    ) : (
+                        <></>
+                    )}
 
-                        {showReferral ? (
-                            <>
-                                <Divider />
-                                <Text style={styles.cardSectionTitle}>Referrals</Text>
-                                <VictoryChart
-                                    animate={{ duration: 500 }}
-                                    domainPadding={10}
-                                    containerComponent={<VictoryZoomContainer />}
-                                    theme={VictoryTheme.material}
-                                >
-                                    <VictoryLegend
-                                        x={280}
-                                        y={0}
-                                        gutter={50}
-                                        style={{ title: { fontSize: 20 } }}
-                                        data={[
-                                            {
-                                                name: "Unresolved",
-                                                symbol: { fill: themeColors.riskRed },
-                                            },
-                                            {
-                                                name: "Resolved",
-                                                symbol: { fill: themeColors.riskGreen },
-                                            },
-                                        ]}
-                                    />
-                                    <VictoryGroup offset={20} colorScale={"qualitative"}>
-                                        <VictoryBar
-                                            barRatio={0.5}
-                                            style={{ data: { fill: themeColors.riskRed } }}
-                                            data={unresolvedRef}
-                                            x="name"
-                                            y="count"
-                                        />
-                                        <VictoryBar
-                                            barRatio={0.5}
-                                            style={{ data: { fill: themeColors.riskGreen } }}
-                                            data={resolvedRef}
-                                            x="name"
-                                            y="count"
-                                        />
-                                    </VictoryGroup>
-                                </VictoryChart>
-                            </>
-                        ) : (
-                            <></>
-                        )}
-                        {showDisabilites ? (
-                            <>
-                                <Divider />
-                                <Text style={styles.cardSectionTitle}>Disabilities</Text>
-                                <VictoryChart
-                                    animate={{ duration: 500 }}
-                                    domainPadding={10}
-                                    padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
-                                    containerComponent={<VictoryZoomContainer />}
-                                    theme={VictoryTheme.material}
-                                >
-                                    <VictoryAxis
-                                        style={{
-                                            axisLabel: { fontSize: 12 },
-                                            tickLabels: {
-                                                fontSize: 12,
-                                            },
-                                            grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
-                                        }}
-                                        dependentAxis
-                                    />
-                                    <VictoryAxis
-                                        style={{
-                                            axisLabel: { fontSize: 10 },
-                                            tickLabels: {
-                                                fontSize: 10,
-                                            },
-                                        }}
-                                    />
+                    {showReferral ? (
+                        <>
+                            <Divider />
+                            <Text style={styles.cardSectionTitle}>Referrals</Text>
+                            <VictoryChart
+                                animate={{ duration: 500 }}
+                                domainPadding={10}
+                                containerComponent={<VictoryZoomContainer />}
+                                theme={VictoryTheme.material}
+                            >
+                                <VictoryLegend
+                                    x={280}
+                                    y={0}
+                                    gutter={50}
+                                    style={{ title: { fontSize: 20 } }}
+                                    data={[
+                                        {
+                                            name: "Unresolved",
+                                            symbol: { fill: themeColors.riskRed },
+                                        },
+                                        {
+                                            name: "Resolved",
+                                            symbol: { fill: themeColors.riskGreen },
+                                        },
+                                    ]}
+                                />
+                                <VictoryGroup offset={20} colorScale={"qualitative"}>
                                     <VictoryBar
-                                        horizontal
-                                        barRatio={0.8}
-                                        style={{ data: { fill: themeColors.blueAccent } }}
-                                        alignment="middle"
-                                        data={disabilityData}
+                                        barRatio={0.5}
+                                        style={{ data: { fill: themeColors.riskRed } }}
+                                        data={unresolvedRef}
                                         x="name"
                                         y="count"
                                     />
-                                </VictoryChart>
-                            </>
-                        ) : (
-                            <></>
-                        )}
-                    </>
-                ) : (
-                    <></>
-                )}
-            </ScrollView>
-        </SafeAreaView>
+                                    <VictoryBar
+                                        barRatio={0.5}
+                                        style={{ data: { fill: themeColors.riskGreen } }}
+                                        data={resolvedRef}
+                                        x="name"
+                                        y="count"
+                                    />
+                                </VictoryGroup>
+                            </VictoryChart>
+                        </>
+                    ) : (
+                        <></>
+                    )}
+                    {showDisabilites ? (
+                        <>
+                            <Divider />
+                            <Text style={styles.cardSectionTitle}>Disabilities</Text>
+                            <VictoryChart
+                                animate={{ duration: 500 }}
+                                domainPadding={10}
+                                padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
+                                containerComponent={<VictoryZoomContainer />}
+                                theme={VictoryTheme.material}
+                            >
+                                <VictoryAxis
+                                    style={{
+                                        axisLabel: { fontSize: 12 },
+                                        tickLabels: {
+                                            fontSize: 12,
+                                        },
+                                        grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                                    }}
+                                    dependentAxis
+                                />
+                                <VictoryAxis
+                                    style={{
+                                        axisLabel: { fontSize: 10 },
+                                        tickLabels: {
+                                            fontSize: 10,
+                                        },
+                                    }}
+                                />
+                                <VictoryBar
+                                    horizontal
+                                    barRatio={0.8}
+                                    style={{ data: { fill: themeColors.blueAccent } }}
+                                    alignment="middle"
+                                    data={disabilityData}
+                                    x="name"
+                                    y="count"
+                                />
+                            </VictoryChart>
+                        </>
+                    ) : (
+                        <></>
+                    )}
+                </>
+            ) : (
+                <></>
+            )}
+        </ScrollView>
     );
 };
 

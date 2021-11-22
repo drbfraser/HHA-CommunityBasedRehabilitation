@@ -5,6 +5,7 @@ const useStyles = () =>
     StyleSheet.create({
         title: {
             fontSize: 30,
+            color: themeColors.borderGray,
         },
         row: {
             flexDirection: "row",
@@ -13,6 +14,7 @@ const useStyles = () =>
             justifyContent: "center",
         },
         btnRow: {
+            padding: 10,
             flexDirection: "row",
             display: "flex",
             alignItems: "center",

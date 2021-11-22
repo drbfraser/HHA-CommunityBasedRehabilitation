@@ -4,6 +4,10 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IPage } from "util/pages";
 import { useStyles } from "./SideNav.styles";
+import { IAlert } from "../../../src/pages/AlertInbox/AlertList";
+import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
+import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import { Alert } from "@material-ui/lab";
 
 interface IProps {
     page: IPage;
@@ -14,15 +18,39 @@ const SideNavIcon = ({ page, active }: IProps) => {
     const styles = useStyles();
     // fix issue with findDOMNode in strict mode
     const NoTransition = ({ children }: any) => children;
-
+    const user = useCurrentUser();
     const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
 
     useEffect(() => {
-        // TODO: Get number of user's unread alerts and setNewAlertCount
-        // Requires implementation of method to track alerts that have not
-        // yet been read by a user.
-        setUnreadAlertsCount(15);
+        const getUnreadAlertsByUserID = async (): Promise<void> => {
+            let res = await fetchAlerts();
+            if (!res) {
+                setUnreadAlertsCount(0);
+            } else {
+                if (user === APILoadError || user === undefined) {
+                    <Alert severity="error">
+                        Something went wrong. Please go back and try again.
+                    </Alert>;
+                } else {
+                    let unreadAlerts: IAlert[] = res.filter((alert) =>
+                        alert.unread_by_users.includes(JSON.stringify(user.id))
+                    );
+                    setUnreadAlertsCount(unreadAlerts.length);
+                }
+            }
+        };
+        
+        getUnreadAlertsByUserID();
     }, []);
+
+    const fetchAlerts = async () => {
+        try {
+            const alertsList: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
+            return alertsList;
+        } catch (e) {
+            console.log(`Error fetching Alerts: ${e}`);
+        }
+    };
 
     function IconInfo(props: any) {
         return (

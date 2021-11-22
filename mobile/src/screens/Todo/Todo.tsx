@@ -34,7 +34,6 @@ const Todo = () => {
     const authContext = useContext(AuthContext);
     const [loading, setLoading] = useState<boolean>(true);
     const [visitData, setVisitData] = useState(data);
-    const [riskData, setRiskData] = useState(pieData);
     const [graphicData, setGraphicData] = useState<any>([
         { x: "", y: 0 },
         { x: "", y: 0 },
@@ -78,9 +77,6 @@ const Todo = () => {
             }
             index++;
         }
-        setRiskData(pieData);
-        console.log("setting new risk data");
-        console.log(riskData);
     };
 
     useEffect(() => {
@@ -89,13 +85,10 @@ const Todo = () => {
                 .catch(() => {})
                 .finally(() => {
                     setLoading(false);
-                    RiskStats()
-                        .catch(() => {})
-                        .finally(() => {
-                            console.log(riskData);
-                            console.log(`setting pie data`);
-                            setGraphicData(riskData);
-                        });
+                    RiskStats().then(() => {
+                        console.log(pieData);
+                        setGraphicData(pieData);
+                    });
                 });
         }
     }, [isFocused]);

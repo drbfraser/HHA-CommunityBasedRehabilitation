@@ -14,6 +14,7 @@ import {
     VictoryAxis,
     VictoryPie,
     VictoryGroup,
+    VictoryLegend,
 } from "victory-native";
 import {
     ReferralField,
@@ -25,7 +26,7 @@ import {
 } from "@cbr/common";
 import { Q } from "@nozbe/watermelondb";
 
-export type VisitStat = {
+export type BarStat = {
     name: string;
     count: number;
 };
@@ -35,18 +36,16 @@ export type PieStat = {
     y: number;
 };
 
-export type ReferralStat = {
-    name: string;
-    count: number;
-};
-
 const Todo = () => {
-    const fetchVisitData: VisitStat[] = [];
+    const fetchVisitData: BarStat[] = [];
     const pieData: PieStat[] = [];
-    const fetchUnResovledReferralData: ReferralStat[] = [];
-    const fetchResovledReferralData: ReferralStat[] = [];
+    const fetchUnResovledReferralData: BarStat[] = [];
+    const fetchResovledReferralData: BarStat[] = [];
     const styles = useStyles();
     const authContext = useContext(AuthContext);
+    const [showVisit, setShowVisit] = useState<boolean>(true);
+    const [showReferral, setShowReferral] = useState<boolean>(false);
+    const [showDisabilites, setShowDisabilites] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [visitData, setVisitData] = useState(fetchVisitData);
     const [unresolvedRef, setUnresolvedRef] = useState(fetchUnResovledReferralData);
@@ -73,7 +72,7 @@ const Todo = () => {
         for (const zone of zones) {
             const count = await database.get("visits").query(Q.where("zone", zone[0])).fetchCount();
             if (count !== 0) {
-                var record: VisitStat = { name: zone[1], count: count };
+                var record: BarStat = { name: zone[1], count: count };
                 fetchVisitData.push(record);
             }
         }
@@ -109,7 +108,7 @@ const Todo = () => {
                     .fetchCount();
             }
 
-            var record: ReferralStat = {
+            var record: BarStat = {
                 name: referralFieldLabels[type],
                 count: count,
             };
@@ -125,6 +124,8 @@ const Todo = () => {
             setUnresolvedRef(fetchUnResovledReferralData);
         }
     };
+
+    const DisabilityStat = async () => {};
 
     useEffect(() => {
         if (isFocused) {
@@ -149,8 +150,116 @@ const Todo = () => {
                 </View>
                 {!loading ? (
                     <>
+                        <View style={styles.btnRow}>
+                            <Button mode="contained"> Visits</Button>
+                            <Button mode="contained"> Referral</Button>
+                            <Button mode="contained"> Disabilites</Button>
+                        </View>
+                        {showVisit ? (
+                            <>
+                                <Divider />
+                                <Text style={styles.cardSectionTitle}>Visits</Text>
+                                <VictoryChart
+                                    animate={{ duration: 500 }}
+                                    domainPadding={10}
+                                    padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
+                                    containerComponent={<VictoryZoomContainer />}
+                                    theme={VictoryTheme.material}
+                                >
+                                    <VictoryAxis
+                                        style={{
+                                            axisLabel: { fontSize: 12 },
+                                            tickLabels: {
+                                                fontSize: 12,
+                                            },
+                                            grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                                        }}
+                                        dependentAxis
+                                    />
+                                    <VictoryAxis
+                                        style={{
+                                            axisLabel: { fontSize: 10 },
+                                            tickLabels: {
+                                                fontSize: 10,
+                                            },
+                                        }}
+                                    />
+                                    <VictoryBar
+                                        horizontal
+                                        barRatio={0.8}
+                                        style={{ data: { fill: themeColors.blueAccent } }}
+                                        alignment="middle"
+                                        data={visitData}
+                                        x="name"
+                                        y="count"
+                                    />
+                                </VictoryChart>
+                                <Divider />
+                                <View style={styles.graphContainer}>
+                                    <VictoryPie
+                                        data={graphicData}
+                                        colorScale={graphicColor}
+                                        width={350}
+                                        height={250}
+                                        animate={{ easing: "exp" }}
+                                        innerRadius={30}
+                                    />
+                                </View>
+                            </>
+                        ) : (
+                            <></>
+                        )}
+
+                        {showReferral ? (
+                            <>
+                                <Divider />
+                                <Text style={styles.cardSectionTitle}>Referrals</Text>
+                                <VictoryChart
+                                    animate={{ duration: 500 }}
+                                    domainPadding={10}
+                                    containerComponent={<VictoryZoomContainer />}
+                                    theme={VictoryTheme.material}
+                                >
+                                    <VictoryLegend
+                                        x={280}
+                                        y={0}
+                                        gutter={50}
+                                        style={{ title: { fontSize: 20 } }}
+                                        data={[
+                                            {
+                                                name: "Unresolved",
+                                                symbol: { fill: themeColors.riskRed },
+                                            },
+                                            {
+                                                name: "Resolved",
+                                                symbol: { fill: themeColors.riskGreen },
+                                            },
+                                        ]}
+                                    />
+                                    <VictoryGroup offset={20} colorScale={"qualitative"}>
+                                        <VictoryBar
+                                            barRatio={0.5}
+                                            style={{ data: { fill: themeColors.riskRed } }}
+                                            data={unresolvedRef}
+                                            x="name"
+                                            y="count"
+                                        />
+                                        <VictoryBar
+                                            barRatio={0.5}
+                                            style={{ data: { fill: themeColors.riskGreen } }}
+                                            data={resolvedRef}
+                                            x="name"
+                                            y="count"
+                                        />
+                                    </VictoryGroup>
+                                </VictoryChart>
+                            </>
+                        ) : (
+                            <></>
+                        )}
+
                         <Divider />
-                        <Text style={styles.cardSectionTitle}>Visits</Text>
+                        <Text style={styles.cardSectionTitle}>Disabilities</Text>
                         <VictoryChart
                             animate={{ duration: 500 }}
                             domainPadding={10}
@@ -185,42 +294,6 @@ const Todo = () => {
                                 x="name"
                                 y="count"
                             />
-                        </VictoryChart>
-                        <Divider />
-                        <View style={styles.graphContainer}>
-                            <VictoryPie
-                                data={graphicData}
-                                colorScale={graphicColor}
-                                width={350}
-                                height={250}
-                                animate={{ easing: "exp" }}
-                                innerRadius={30}
-                            />
-                        </View>
-                        <Divider />
-                        <Text style={styles.cardSectionTitle}>Referrals</Text>
-                        <VictoryChart
-                            animate={{ duration: 500 }}
-                            domainPadding={10}
-                            containerComponent={<VictoryZoomContainer />}
-                            theme={VictoryTheme.material}
-                        >
-                            <VictoryGroup offset={20} colorScale={"qualitative"}>
-                                <VictoryBar
-                                    barRatio={0.5}
-                                    style={{ data: { fill: themeColors.riskRed } }}
-                                    data={unresolvedRef}
-                                    x="name"
-                                    y="count"
-                                />
-                                <VictoryBar
-                                    barRatio={0.5}
-                                    style={{ data: { fill: themeColors.riskGreen } }}
-                                    data={resolvedRef}
-                                    x="name"
-                                    y="count"
-                                />
-                            </VictoryGroup>
                         </VictoryChart>
                     </>
                 ) : (

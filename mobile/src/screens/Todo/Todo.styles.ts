@@ -12,6 +12,12 @@ const useStyles = () =>
             alignItems: "center",
             justifyContent: "center",
         },
+        btnRow: {
+            flexDirection: "row",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+        },
         scrollViewStyles: {
             marginHorizontal: 5,
         },

@@ -14,7 +14,7 @@ import {
     VictoryAxis,
     VictoryPie,
 } from "victory-native";
-import { themeColors, useZones } from "@cbr/common";
+import { referralFieldLabels, serviceTypes, themeColors, useZones } from "@cbr/common";
 import { Q } from "@nozbe/watermelondb";
 
 export type VisitStat = {
@@ -25,6 +25,11 @@ export type VisitStat = {
 export type PieStat = {
     x: string;
     y: number;
+};
+
+export type ReferralStat = {
+    name: string;
+    count: number;
 };
 
 const Todo = () => {
@@ -79,6 +84,12 @@ const Todo = () => {
         }
     };
 
+    const referralStats = async () => {
+        serviceTypes.map((serviceType) => {
+            console.log(referralFieldLabels[serviceType]);
+        });
+    };
+
     useEffect(() => {
         if (isFocused) {
             VisitStats()
@@ -88,6 +99,7 @@ const Todo = () => {
                     RiskStats().then(() => {
                         console.log(pieData);
                         setGraphicData(pieData);
+                        referralStats();
                     });
                 });
         }
@@ -103,7 +115,6 @@ const Todo = () => {
                     <>
                         <Divider />
                         <Text style={styles.cardSectionTitle}>Visits</Text>
-
                         <VictoryChart
                             animate={{ duration: 500 }}
                             domainPadding={10}
@@ -150,6 +161,42 @@ const Todo = () => {
                                 innerRadius={30}
                             />
                         </View>
+                        <Divider />
+                        <Text style={styles.cardSectionTitle}>Referrals</Text>
+                        <VictoryChart
+                            animate={{ duration: 500 }}
+                            domainPadding={10}
+                            padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
+                            containerComponent={<VictoryZoomContainer />}
+                            theme={VictoryTheme.material}
+                        >
+                            <VictoryAxis
+                                style={{
+                                    axisLabel: { fontSize: 12 },
+                                    tickLabels: {
+                                        fontSize: 12,
+                                    },
+                                    grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                                }}
+                                dependentAxis
+                            />
+                            <VictoryAxis
+                                style={{
+                                    axisLabel: { fontSize: 10 },
+                                    tickLabels: {
+                                        fontSize: 10,
+                                    },
+                                }}
+                            />
+                            <VictoryBar
+                                barRatio={0.8}
+                                style={{ data: { fill: themeColors.blueAccent } }}
+                                alignment="middle"
+                                data={visitData}
+                                x="name"
+                                y="count"
+                            />
+                        </VictoryChart>
                     </>
                 ) : (
                     <Text>Not data</Text>

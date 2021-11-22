@@ -2,7 +2,6 @@ import React from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
-import { timestampToFormDate } from "@cbr/common/util/dates";
 
 export interface IDateRange {
     from: string;
@@ -23,7 +22,6 @@ interface IProps {
 
 const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
     const handleSubmit = (values: IDateRange) => {
-        values.to = timestampToFormDate(Date.parse(values.to) + 86400000);
         setRange({ ...values });
         onClose();
     };

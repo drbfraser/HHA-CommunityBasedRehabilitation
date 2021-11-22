@@ -1,7 +1,23 @@
-import { IUser } from "@cbr/common";
+import { IUser, TPasswordValues } from "@cbr/common";
 import { TAdminPasswordValues, TNewUserValues } from "@cbr/common/src/forms/Admin/adminFields";
 import { FormikHelpers } from "formik";
+import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
+
+export const handleSelfChangePassword = async (
+    userId: string,
+    values: TPasswordValues,
+    database: dbType,
+    helpers: FormikHelpers<TPasswordValues>
+): Promise<void> => {
+    try {
+        const user: any = await database.get(modelName.users).find(userId);
+        await user.updatePassword(values.newPassword);
+    } catch (e) {
+        helpers.setSubmitting(false);
+        return Promise.reject(e);
+    }
+};
 
 export const handleUpdatePassword = async (
     userId: string,
@@ -14,7 +30,7 @@ export const handleUpdatePassword = async (
     });
 
     try {
-        const user: any = await database.get("users").find(userId);
+        const user: any = await database.get(modelName.users).find(userId);
         await user.updatePassword(values.confirmPassword);
     } finally {
         helpers.setSubmitting(false);
@@ -29,7 +45,7 @@ export const handleNewUserSubmit = async (
     try {
         let newUser;
         await database.write(async () => {
-            newUser = await database.get("users").create((user: any) => {
+            newUser = await database.get(modelName.users).create((user: any) => {
                 user.username = values.username;
                 user.password = values.password;
                 user.first_name = values.first_name;
@@ -54,7 +70,7 @@ export const handleUserEditSubmit = async (
     try {
         let editedUser;
         await database.write(async () => {
-            editedUser = await database.get("users").find(values.id);
+            editedUser = await database.get(modelName.users).find(values.id);
             await editedUser.update((user: any) => {
                 user.first_name = values.first_name;
                 user.last_name = values.last_name;

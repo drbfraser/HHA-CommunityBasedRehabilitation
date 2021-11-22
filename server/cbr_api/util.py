@@ -1,4 +1,3 @@
-import imghdr
 import os
 import base64
 from datetime import datetime
@@ -136,7 +135,11 @@ def get_model_changes(request, model):
 
     ##filter against last pulled time
     if pulledTime != "null":
-        if model == models.Client:
+        if (
+            model == models.Client
+            or model == models.UserCBR
+            or model == models.Referral
+        ):
             create_set = queryset.filter(server_created_at__gt=pulledTime)
             updated_set = queryset.filter(
                 server_created_at__lte=pulledTime, updated_at__gt=pulledTime
@@ -194,10 +197,6 @@ def create_client_data(validated_data, sync_time):
         disability_data = data.pop("disability")
         new_client_picture: Optional[File] = data.get("picture")
         if new_client_picture:
-            file_root, file_ext = os.path.splitext(new_client_picture.name)
-            actual_image_type: Optional[str] = imghdr.what(new_client_picture.file)
-            if actual_image_type and actual_image_type != file_ext.removeprefix("."):
-                new_client_picture.name = f"{file_root}.{actual_image_type}"
             image_data = data.pop("picture")
         models.Client.objects.filter(pk=data["id"]).update(**data)
         # clears current disabiltiy and updates new disability data
@@ -218,43 +217,28 @@ def create_generic_data(table_name, model, validated_data, sync_time):
         record.save()
 
 
-def create_push_data(table_name, model, validated_data):
-    table_data = validated_data.get(table_name)
-    created_data = table_data.pop("created")
+def create_survey_data(validated_data, user, sync_time):
+    survey_data = validated_data.get("surveys")
+    created_data = survey_data.pop("created")
     for data in created_data:
-        # remove disabiltiy first then later set it back
-        if table_name == "clients":
-            disability_data = data.pop("disability")
-        record = model.objects.create(**data)
-        record.id = data["id"]
+        data["user_id"] = models.UserCBR.objects.get(username=user)
+        record = models.BaselineSurvey.objects.create(**data)
+        record.server_created_at = sync_time
+        record.save()
 
-        if table_name == "risks":
-            record.timestamp = data["timestamp"]
-        else:
-            record.created_at = data["created_at"]
-            record.update_at = data["updated_at"]
 
-        if disability_data:
-            record.disability.set(disability_data)
+def create_referral_data(validated_data, user, sync_time):
+    table_data = validated_data.get("referrals")
+    created_data = table_data.pop("created")
+
+    for data in created_data:
+        data["user_id"] = models.UserCBR.objects.get(username=user)
+        record = models.Referral.objects.create(**data)
+        record.update_at = data["updated_at"]
+        record.server_created_at = sync_time
         record.save()
 
     updated_data = table_data.pop("updated")
     for data in updated_data:
-        data["updated_at"] = current_milli_time()
-        if table_name == "users":
-            if data["password"]:
-                user = model.objects.get(pk=data["id"])
-                user.set_password(data["password"])
-                user.save()
-            # remove empty field for password, so it doesnt update existing password
-            data.pop("password")
-        elif table_name == "clients":
-            disability_data = data.pop("disability")
-
-        model.objects.filter(pk=data["id"]).update(**data)
-
-        # clears current disabiltiy and updates new disability data
-        if disability_data:
-            client = model.objects.get(pk=data["id"])
-            client.disability.clear()
-            client.disability.set(disability_data)
+        data["updated_at"] = sync_time
+        models.Referral.objects.filter(pk=data["id"]).update(**data)

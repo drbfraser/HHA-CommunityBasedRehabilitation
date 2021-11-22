@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "corsheaders",
     "cbr_api.apps.CbrApiConfig",
+    # Automatically deletes old file for FileField and ImageField.
     "django_cleanup.apps.CleanupConfig",
 ]
 

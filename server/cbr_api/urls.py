@@ -5,7 +5,6 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from cbr_api import models
 from cbr_api import views
 from downloadview.object import AuthenticatedObjectDownloadView
 
@@ -40,10 +39,10 @@ urlpatterns = [
     ),
     path("visits", views.VisitList.as_view(), name="visit-list"),
     path("visit/<str:pk>", views.VisitDetail.as_view(), name="visit-detail"),
-    path("referral/<int:pk>", views.ReferralDetail.as_view(), name="referral-detail"),
+    path("referral/<str:pk>", views.ReferralDetail.as_view(), name="referral-detail"),
     path("referrals", views.ReferralList.as_view(), name="referral-list"),
     path(
-        "referral/picture/<int:pk>",
+        "referral/picture/<str:pk>",
         views.ReferralImage.as_view(),
         name="referral-picture",
     ),
@@ -58,5 +57,7 @@ urlpatterns = [
         views.BaselineSurveyCreate.as_view(),
         name="baseline-survey-list",
     ),
+    path("alerts", views.AlertList.as_view(), name="alert-list"),
+    path("alert/<int:pk>", views.AlertDetail.as_view(), name="alert-detail"),
     url(r"^sync/$", views.sync, name="sync"),
 ]

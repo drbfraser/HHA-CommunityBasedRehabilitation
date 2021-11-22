@@ -17,9 +17,9 @@ const addSurvey = async (surveyInfo: string) => {
     });
 };
 
-export const baseSurveyHandleSubmitForm = async (values: BaseFormValues) => {
-    const newSurvey = JSON.stringify({
-        client: values[BaseSurveyFormField.client],
+export const baseSurveyHandleSubmitForm = async (values: BaseFormValues, source: string) => {
+    const surveyInfo = {
+        client_id: values[BaseSurveyFormField.client_id],
         health: values[BaseSurveyFormField.rateLevel],
         health_have_rehabilitation_access: values[BaseSurveyFormField.getService],
         health_need_rehabilitation_access: values[BaseSurveyFormField.needService],
@@ -67,7 +67,9 @@ export const baseSurveyHandleSubmitForm = async (values: BaseFormValues) => {
         empowerment_influence_others: values[BaseSurveyFormField.ableInfluence],
         shelter_adequate: values[BaseSurveyFormField.haveShelter],
         shelter_essential_access: values[BaseSurveyFormField.accessItem],
-    });
+    };
 
-    return await addSurvey(newSurvey);
+    const newSurvey = JSON.stringify(surveyInfo);
+
+    return source === "web" ? await addSurvey(newSurvey) : surveyInfo;
 };

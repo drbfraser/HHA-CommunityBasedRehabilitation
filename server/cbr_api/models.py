@@ -231,11 +231,14 @@ class Visit(models.Model):
 
 
 class Referral(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    id = models.CharField(primary_key=True, max_length=100)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_referred = models.BigIntegerField()
     date_resolved = models.BigIntegerField(default=0)
     resolved = models.BooleanField(default=False)
     outcome = models.CharField(max_length=100)
+    updated_at = models.BigIntegerField(_("date updated"), default=0)
+    server_created_at = models.BigIntegerField(default=current_milli_time)
 
     def rename_file(self, original_filename):
         # file_ext includes the "."
@@ -251,9 +254,10 @@ class Referral(models.Model):
         upload_to=rename_file,
         storage=OverwriteStorage(),
         blank=True,
+        null=True,
     )  # if picture available
 
-    client = models.ForeignKey(
+    client_id = models.ForeignKey(
         Client, related_name="referrals", on_delete=models.CASCADE
     )
 
@@ -340,10 +344,11 @@ class Improvement(models.Model):
 
 
 class BaselineSurvey(models.Model):
-    client = models.ForeignKey(
+    id = models.CharField(primary_key=True, max_length=100)
+    client_id = models.ForeignKey(
         Client, related_name="baseline_surveys", on_delete=models.CASCADE
     )
-    user = models.ForeignKey(
+    user_id = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="baselinesurveys",
         on_delete=models.PROTECT,
@@ -435,3 +440,20 @@ class BaselineSurvey(models.Model):
     # Shelter and Care
     shelter_adequate = models.BooleanField()
     shelter_essential_access = models.BooleanField()
+
+    server_created_at = models.BigIntegerField(default=current_milli_time)
+
+
+class Alert(models.Model):
+    class Priorities(models.TextChoices):
+        HIGH = "H", _("High")
+        MEDIUM = "M", _("Medium")
+        LOW = "L", _("Low")
+
+    priority = models.CharField(max_length=9, choices=Priorities.choices)
+    subject = models.CharField(max_length=50)
+    alert_message = models.CharField(max_length=2000)
+    created_by_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT
+    )
+    created_date = models.BigIntegerField(_("date created"), default=time.time)

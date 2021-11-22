@@ -11,7 +11,8 @@ export const handleSubmit = async (
     setSubmissionError: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
     try {
-        await baseSurveyHandleSubmitForm(values);
+        const source = "web";
+        await baseSurveyHandleSubmitForm(values, source);
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);

@@ -32,6 +32,7 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 interface INewReferralProps {
     clientID: number;
@@ -101,10 +102,11 @@ const NewReferral = (props: INewReferralProps) => {
         props.setErrors({});
     };
 
+    const database = useDatabase();
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
-            handleSubmit(values, helpers)
+            handleSubmit(values, database, helpers)
                 .then(() => {
                     setHasSubmitted(true);
                     props.navigation.navigate(StackScreenName.CLIENT, {
@@ -128,7 +130,7 @@ const NewReferral = (props: INewReferralProps) => {
                 }
                 checkedSteps.push(ReferralFormField.orthotic);
                 checkedSteps.push(ReferralFormField.prosthetic);
-                helpers.setFieldValue(`${[ReferralFormField.client]}`, clientId);
+                helpers.setFieldValue(`${[ReferralFormField.client_id]}`, clientId);
             }
             if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
                 checkedSteps.push(enabledSteps[activeStep - 1]);

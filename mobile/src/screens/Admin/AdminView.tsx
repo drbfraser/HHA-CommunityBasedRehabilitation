@@ -10,6 +10,7 @@ import UserProfileContents from "../../components/UserProfileContents/UserProfil
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { resourceLimits } from "worker_threads";
 import { useIsFocused } from "@react-navigation/core";
+import { modelName } from "../../models/constant";
 
 interface ILoadError {
     statusCode?: number;
@@ -30,7 +31,7 @@ const AdminView = ({
 
     const [isUserChangeSnackbarVisible, setUserChangeSnackbarVisible] = useState(false);
 
-    const [user, setUser] = useState<any>();
+    const [user, setUser] = useState<IUser>();
     const isFocused = useIsFocused();
     const [error, setErrorMessage] = useState<ILoadError>();
     const database = useDatabase();
@@ -42,7 +43,7 @@ const AdminView = ({
     ) => {
         setError(undefined);
         try {
-            const result: any = await database.get("users").find(userId);
+            const result: any = await database.get(modelName.users).find(userId);
             const iUser: IUser = {
                 id: result.id,
                 username: result.username,
@@ -55,10 +56,9 @@ const AdminView = ({
             };
             setUser(iUser);
         } catch (e) {
-            const msg = "User doesn't exist";
             setError({
                 statusCode: e instanceof APIFetchFailError ? e.status : undefined,
-                message: msg,
+                message: "User doesn't exist",
             });
         }
     };

@@ -284,6 +284,32 @@ class ReferralOutstanding(generics.ListAPIView):
         return getOutstandingReferrals()
 
 
+class AlertList(generics.ListCreateAPIView):
+    queryset = models.Alert.objects.all()
+
+    @extend_schema(responses=serializers.AlertListSerializer)
+    def get(self, request):
+        return super().get(request)
+
+    @extend_schema(
+        request=serializers.AlertSerializer,
+        responses=serializers.AlertSerializer,
+    )
+    def post(self, request):
+        return super().post(request)
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return serializers.AlertListSerializer
+        elif self.request.method == "POST":
+            return serializers.AlertSerializer
+
+
+class AlertDetail(generics.RetrieveAPIView):
+    queryset = models.Alert.objects.all()
+    serializer_class = serializers.AlertSerializer
+
+
 @api_view(["GET", "POST"])
 def sync(request):
     if request.method == "GET":
@@ -291,6 +317,8 @@ def sync(request):
         reply.changes["users"] = get_model_changes(request, models.UserCBR)
         reply.changes["clients"] = get_model_changes(request, models.Client)
         reply.changes["risks"] = get_model_changes(request, models.ClientRisk)
+        reply.changes["referrals"] = get_model_changes(request, models.Referral)
+        reply.changes["surveys"] = get_model_changes(request, models.BaselineSurvey)
         reply.changes["visits"] = get_model_changes(request, models.Visit)
         reply.changes["outcomes"] = get_model_changes(request, models.Outcome)
         reply.changes["improvements"] = get_model_changes(request, models.Improvement)
@@ -316,26 +344,43 @@ def sync(request):
                 )
                 if risk_serializer.is_valid():
                     risk_serializer.save()
-                    visit_serializer = serializers.pushVisitSerializer(
-                        data=request.data, context={"sync_time": sync_time}
+                    decode_image(request.data["referrals"])
+                    referral_serializer = serializers.pushReferralSerializer(
+                        data=request.data,
+                        context={"sync_time": sync_time, "user": request.user},
                     )
-                    if visit_serializer.is_valid():
-                        visit_serializer.save()
-                        outcome_improvment_serializer = (
-                            serializers.pushOutcomeImprovementSerializer(
+                    if referral_serializer.is_valid():
+                        referral_serializer.save()
+                        survey_serializer = serializers.pushBaselineSurveySerializer(
+                            data=request.data,
+                            context={"sync_time": sync_time, "user": request.user},
+                        )
+                        if survey_serializer.is_valid():
+                            survey_serializer.save()
+                            visit_serializer = serializers.pushVisitSerializer(
                                 data=request.data, context={"sync_time": sync_time}
                             )
-                        )
-                        if outcome_improvment_serializer.is_valid():
-                            outcome_improvment_serializer.save()
-                            return Response(status=status.HTTP_201_CREATED)
+                            if visit_serializer.is_valid():
+                                visit_serializer.save()
+                                outcome_improvment_serializer = (
+                                    serializers.pushOutcomeImprovementSerializer(
+                                        data=request.data,
+                                        context={"sync_time": sync_time},
+                                    )
+                                )
+                                if outcome_improvment_serializer.is_valid():
+                                    outcome_improvment_serializer.save()
+                                    return Response(status=status.HTTP_201_CREATED)
+                                else:
+                                    print(outcome_improvment_serializer.errors)
+                            else:
+                                print(visit_serializer.errors)
                         else:
-                            print(outcome_improvment_serializer.errors)
+                            print(survey_serializer.errors)
                     else:
-                        print(visit_serializer.errors)
+                        print(referral_serializer.errors)
                 else:
                     print(risk_serializer.errors)
-            else:
                 print(client_serializer.errors)
         else:
             print(user_serializer.errors)

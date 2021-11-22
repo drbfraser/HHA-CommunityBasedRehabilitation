@@ -7,8 +7,29 @@ export interface ReferralFormProps {
     formikProps: FormikProps<any>;
 }
 
+/* Fields specifically used in schema & model of local DB */
+export enum ReferralField {
+    date_referred = "date_referred",
+    date_resolved = "date_resolved",
+    resolved = "resolved",
+    outcome = "outcome",
+    picture = "picture",
+    wheelchair = "wheelchair",
+    wheelchair_experience = "wheelchair_experience",
+    hip_width = "hip_width",
+    wheelchair_owned = "wheelchair_owned",
+    wheelchair_repairable = "wheelchair_repairable",
+    physiotherapy = "physiotherapy",
+    condition = "condition",
+    prosthetic = "prosthetic",
+    prosthetic_injury_location = "prosthetic_injury_location",
+    orthotic = "orthotic",
+    orthotic_injury_location = "orthotic_injury_location",
+    services_other = "services_other",
+}
+
 export enum ReferralFormField {
-    client = "client",
+    client_id = "client_id",
     wheelchair = "wheelchair",
     wheelchairExperience = "wheelchair_experience",
     picture = "picture",
@@ -35,7 +56,7 @@ export const referralServicesTypes = [
 ];
 
 export const referralFieldLabels = {
-    [ReferralFormField.client]: "Client",
+    [ReferralFormField.client_id]: "Client",
     [ReferralFormField.wheelchair]: "Wheelchair",
     [ReferralFormField.wheelchairExperience]: "Wheelchair Experience",
     [ReferralFormField.picture]: "picture",
@@ -54,7 +75,7 @@ export const referralFieldLabels = {
 };
 
 export const referralInitialValues = {
-    [ReferralFormField.client]: 0,
+    [ReferralFormField.client_id]: 0,
     [ReferralFormField.wheelchairExperience]: WheelchairExperience.BASIC,
     [ReferralFormField.hipWidth]: "",
     [ReferralFormField.picture]: "",

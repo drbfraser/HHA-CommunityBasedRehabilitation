@@ -45,15 +45,17 @@ export async function SyncDB(database: dbType) {
 }
 
 async function getImage(changes) {
-    await getClientImage(changes["clients"]["created"]);
-    await getClientImage(changes["clients"]["updated"]);
+    await getImageData(changes["clients"]["created"], Endpoint.CLIENT_PICTURE);
+    await getImageData(changes["clients"]["updated"], Endpoint.CLIENT_PICTURE);
+    await getImageData(changes["referrals"]["created"], Endpoint.REFERRAL_PICTURE);
+    await getImageData(changes["referrals"]["updated"], Endpoint.REFERRAL_PICTURE);
 }
 
-async function getClientImage(changes) {
+async function getImageData(changes, endpoint) {
     await Promise.all(
         changes.map(async (element) => {
             if (element.picture != null) {
-                await apiFetch(Endpoint.CLIENT_PICTURE, `${element.id}`)
+                await apiFetch(endpoint, `${element.id}`)
                     .then((resp) => resp.blob())
                     .then((blob) => {
                         let reader = new FileReader();

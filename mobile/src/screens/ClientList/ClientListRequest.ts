@@ -10,6 +10,7 @@ import {
 } from "@cbr/common";
 import { dbType } from "../../util/watermelonDatabase";
 import { Q } from "@nozbe/watermelondb";
+import { modelName, tableKey } from "../../models/constant";
 
 export type ClientListRow = {
     id: string;
@@ -31,7 +32,7 @@ export const fetchClientsFromDB = async (
     try {
         const zones = await getZones();
         let responseRows: any;
-        const clientCollection = database.get("clients");
+        const clientCollection = database.get(modelName.clients);
 
         if (searchOption === SearchOption.NAME) {
             searchOption = "full_name";
@@ -44,18 +45,21 @@ export const fetchClientsFromDB = async (
                     if (searchOption === "full_name") {
                         responseRows = await clientCollection
                             .query(
-                                Q.where("user_id", user.id),
+                                Q.where(tableKey.user_id, user.id),
                                 Q.where(searchOption, Q.like(`%${searchValue}%`))
                             )
                             .fetch();
                     } else {
                         responseRows = await clientCollection
-                            .query(Q.where("user_id", user.id), Q.where(searchOption, searchValue))
+                            .query(
+                                Q.where(tableKey.user_id, user.id),
+                                Q.where(searchOption, searchValue)
+                            )
                             .fetch();
                     }
                 } else {
                     responseRows = await clientCollection
-                        .query(Q.where("user_id", user.id))
+                        .query(Q.where(tableKey.user_id, user.id))
                         .fetch();
                 }
             }

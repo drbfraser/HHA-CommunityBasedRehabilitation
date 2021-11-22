@@ -11,7 +11,6 @@ const addAlert = async (alertInfo: FormData): Promise<IAlert> => {
         body: alertInfo,
     };
 
-
     return await apiFetch(Endpoint.ALERTS, "", init)
         .then((res) => {
             return res.json();

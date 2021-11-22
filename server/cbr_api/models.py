@@ -452,6 +452,7 @@ class Alert(models.Model):
         MEDIUM = "M", _("Medium")
         LOW = "L", _("Low")
 
+    id = models.CharField(primary_key=True, max_length=100)
     priority = models.CharField(max_length=9, choices=Priorities.choices)
     subject = models.CharField(max_length=50)
     alert_message = models.CharField(max_length=2000)

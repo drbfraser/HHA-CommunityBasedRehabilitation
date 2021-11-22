@@ -766,13 +766,21 @@ class AlertSerializer(serializers.ModelSerializer):
             "created_date",
         )
 
+        read_only_fields = ["id"]
+
     def create(self, validated_data):
         current_time = int(time.time())
-        alert = super().create(validated_data)
-
+        validated_data["id"] = uuid.uuid4()
         validated_data["created_by_user"] = self.context["request"].user
         validated_data["created_date"] = current_time
+        
+        alert = super().create(validated_data)
+        alert.save()
+        return alert
 
+    def update(self, alert, validated_data):
+        super().update(alert, validated_data)
+        alert.unread_by_users = validated_data["unread_by_users"]
         alert.save()
         return alert
 

@@ -17,11 +17,13 @@ import {
     VictoryLegend,
 } from "victory-native";
 import {
+    ClientField,
     ReferralField,
     referralFieldLabels,
     ReferralFormField,
     serviceTypes,
     themeColors,
+    useDisabilities,
     useZones,
 } from "@cbr/common";
 import { Q } from "@nozbe/watermelondb";
@@ -41,30 +43,32 @@ const Todo = () => {
     const pieData: PieStat[] = [];
     const fetchUnResovledReferralData: BarStat[] = [];
     const fetchResovledReferralData: BarStat[] = [];
+    const fetchDisabilityData: BarStat[] = [];
     const styles = useStyles();
+    const database = useDatabase();
+    const isFocused = useIsFocused();
+    const zones = useZones();
+    const disabilityMap = useDisabilities();
     const authContext = useContext(AuthContext);
     const [showVisit, setShowVisit] = useState<boolean>(true);
     const [showReferral, setShowReferral] = useState<boolean>(false);
     const [showDisabilites, setShowDisabilites] = useState<boolean>(false);
+
     const [loading, setLoading] = useState<boolean>(true);
+
     const [visitData, setVisitData] = useState(fetchVisitData);
     const [unresolvedRef, setUnresolvedRef] = useState(fetchUnResovledReferralData);
     const [resolvedRef, setResolvedRef] = useState(fetchResovledReferralData);
+    const [disabilityData, setDisabilityData] = useState(fetchDisabilityData);
     const [graphicData, setGraphicData] = useState<any>([
         { x: "", y: 0 },
         { x: "", y: 0 },
         { x: "", y: 0 },
     ]);
 
-    const database = useDatabase();
-    const isFocused = useIsFocused();
-
     useEffect(() => {
         authContext.requireLoggedIn(true);
     }, []);
-    const navigation = useNavigation<AppStackNavProp>();
-
-    const zones = useZones();
 
     const graphicColor = [themeColors.hhaGreen, themeColors.hhaPurple, themeColors.hhaBlue];
 
@@ -125,7 +129,30 @@ const Todo = () => {
         }
     };
 
-    const DisabilityStat = async () => {};
+    const DisabilityStat = async () => {
+        for (const type of disabilityMap) {
+            const count = await database
+                .get("clients")
+                .query(
+                    Q.or(
+                        Q.where(ClientField.disability, `[${type[0]}]`),
+                        Q.where(ClientField.disability, Q.like(`[${type[0]},%`)),
+                        Q.where(ClientField.disability, Q.like(`%,${type[0]},%`)),
+                        Q.where(ClientField.disability, Q.like(`%, ${type[0]}]`)),
+                        Q.where(ClientField.disability, Q.like(`%,${type[0]}]`))
+                    )
+                )
+                .fetchCount();
+            if (count != 0) {
+                var record: BarStat = {
+                    name: type[1],
+                    count: count,
+                };
+                fetchDisabilityData.push(record);
+            }
+        }
+        setDisabilityData(fetchDisabilityData);
+    };
 
     useEffect(() => {
         if (isFocused) {
@@ -137,6 +164,7 @@ const Todo = () => {
                         setGraphicData(pieData);
                         referralStats(false);
                         referralStats(true);
+                        DisabilityStat();
                     });
                 });
         }
@@ -151,9 +179,42 @@ const Todo = () => {
                 {!loading ? (
                     <>
                         <View style={styles.btnRow}>
-                            <Button mode="contained"> Visits</Button>
-                            <Button mode="contained"> Referral</Button>
-                            <Button mode="contained"> Disabilites</Button>
+                            <Button
+                                mode="contained"
+                                onPress={() => {
+                                    if (!showVisit) {
+                                        setShowVisit(true);
+                                        setShowReferral(false);
+                                        setShowDisabilites(false);
+                                    }
+                                }}
+                            >
+                                {"Visits"}
+                            </Button>
+                            <Button
+                                mode="contained"
+                                onPress={() => {
+                                    if (!showReferral) {
+                                        setShowVisit(false);
+                                        setShowReferral(true);
+                                        setShowDisabilites(false);
+                                    }
+                                }}
+                            >
+                                {"Referral"}
+                            </Button>
+                            <Button
+                                mode="contained"
+                                onPress={() => {
+                                    if (!showDisabilites) {
+                                        setShowVisit(false);
+                                        setShowReferral(false);
+                                        setShowDisabilites(true);
+                                    }
+                                }}
+                            >
+                                {"Disabilites"}
+                            </Button>
                         </View>
                         {showVisit ? (
                             <>
@@ -257,47 +318,52 @@ const Todo = () => {
                         ) : (
                             <></>
                         )}
-
-                        <Divider />
-                        <Text style={styles.cardSectionTitle}>Disabilities</Text>
-                        <VictoryChart
-                            animate={{ duration: 500 }}
-                            domainPadding={10}
-                            padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
-                            containerComponent={<VictoryZoomContainer />}
-                            theme={VictoryTheme.material}
-                        >
-                            <VictoryAxis
-                                style={{
-                                    axisLabel: { fontSize: 12 },
-                                    tickLabels: {
-                                        fontSize: 12,
-                                    },
-                                    grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
-                                }}
-                                dependentAxis
-                            />
-                            <VictoryAxis
-                                style={{
-                                    axisLabel: { fontSize: 10 },
-                                    tickLabels: {
-                                        fontSize: 10,
-                                    },
-                                }}
-                            />
-                            <VictoryBar
-                                horizontal
-                                barRatio={0.8}
-                                style={{ data: { fill: themeColors.blueAccent } }}
-                                alignment="middle"
-                                data={visitData}
-                                x="name"
-                                y="count"
-                            />
-                        </VictoryChart>
+                        {showDisabilites ? (
+                            <>
+                                <Divider />
+                                <Text style={styles.cardSectionTitle}>Disabilities</Text>
+                                <VictoryChart
+                                    animate={{ duration: 500 }}
+                                    domainPadding={10}
+                                    padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
+                                    containerComponent={<VictoryZoomContainer />}
+                                    theme={VictoryTheme.material}
+                                >
+                                    <VictoryAxis
+                                        style={{
+                                            axisLabel: { fontSize: 12 },
+                                            tickLabels: {
+                                                fontSize: 12,
+                                            },
+                                            grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                                        }}
+                                        dependentAxis
+                                    />
+                                    <VictoryAxis
+                                        style={{
+                                            axisLabel: { fontSize: 10 },
+                                            tickLabels: {
+                                                fontSize: 10,
+                                            },
+                                        }}
+                                    />
+                                    <VictoryBar
+                                        horizontal
+                                        barRatio={0.8}
+                                        style={{ data: { fill: themeColors.blueAccent } }}
+                                        alignment="middle"
+                                        data={disabilityData}
+                                        x="name"
+                                        y="count"
+                                    />
+                                </VictoryChart>
+                            </>
+                        ) : (
+                            <></>
+                        )}
                     </>
                 ) : (
-                    <Text>Not data</Text>
+                    <></>
                 )}
             </ScrollView>
         </SafeAreaView>

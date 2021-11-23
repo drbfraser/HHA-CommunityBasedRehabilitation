@@ -61,6 +61,7 @@ const Todo = () => {
 
     const [zoneOption, setZoneOption] = useState<string>("all zone");
     const [visitData, setVisitData] = useState(fetchVisitData);
+    const [visitCount, setVisitCount] = useState<number>(0);
     const [graphicData, setGraphicData] = useState<any>([
         { x: "", y: 0 },
         { x: "", y: 0 },
@@ -82,13 +83,16 @@ const Todo = () => {
     const graphicColor = [themeColors.hhaGreen, themeColors.hhaPurple, themeColors.hhaBlue];
 
     const VisitStats = async () => {
+        let sum = 0;
         for (const zone of zones) {
             const count = await database.get("visits").query(Q.where("zone", zone[0])).fetchCount();
             if (count !== 0) {
+                sum = sum + count;
                 var record: BarStat = { name: zone[1], count: count };
                 fetchVisitData.push(record);
             }
         }
+        setVisitCount(sum);
         setVisitData(fetchVisitData);
     };
 
@@ -303,8 +307,19 @@ const Todo = () => {
                                     innerRadius={30}
                                 />
                             </View>
+                            <Text style={styles.chartTitle}>By Zone</Text>
+                            <Text style={styles.graphStat}>
+                                <Text style={{ fontWeight: "bold" }}>Total Visits: </Text>
+                                <Text>{visitCount}</Text>
+                            </Text>
+                            {zoneOption === "all zone" ? (
+                                <Text style={styles.graphStat}>
+                                    {"Click bar to filter by zone"}
+                                </Text>
+                            ) : (
+                                <></>
+                            )}
                             <Svg>
-                                <Text style={styles.chartTitle}>By Zone</Text>
                                 <VictoryChart
                                     animate={{ duration: 500 }}
                                     domainPadding={10}

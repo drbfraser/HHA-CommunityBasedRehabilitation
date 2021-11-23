@@ -25,8 +25,10 @@ import {
     themeColors,
     useDisabilities,
     useZones,
+    VisitField,
 } from "@cbr/common";
 import { Q } from "@nozbe/watermelondb";
+import Svg from "react-native-svg";
 
 export type BarStat = {
     name: string;
@@ -40,7 +42,7 @@ export type PieStat = {
 
 const Todo = () => {
     const fetchVisitData: BarStat[] = [];
-    const pieData: PieStat[] = [];
+    let pieData: PieStat[] = [];
     const fetchUnResovledReferralData: BarStat[] = [];
     const fetchResovledReferralData: BarStat[] = [];
     const fetchDisabilityData: BarStat[] = [];
@@ -88,12 +90,21 @@ const Todo = () => {
         setVisitData(fetchVisitData);
     };
 
-    const RiskStats = async () => {
+    const RiskStats = async (zoneCode?: number) => {
         const visitType = ["health_visit", "social_visit", "educat_visit"];
         const visitName = ["Health", "Social", "Education"];
         var index = 0;
+        pieData = [];
         for (const type of visitType) {
-            const count = await database.get("visits").query(Q.where(type, true)).fetchCount();
+            let count;
+            if (zoneCode) {
+                count = await database
+                    .get("visits")
+                    .query(Q.where(type, true), Q.where(VisitField.zone, zoneCode))
+                    .fetchCount();
+            } else {
+                count = await database.get("visits").query(Q.where(type, true)).fetchCount();
+            }
             if (count !== 0) {
                 var record = { x: visitName[index], y: count };
                 pieData.push(record);
@@ -165,6 +176,18 @@ const Todo = () => {
             .fetchCount();
         setDisabilityCount(clientCount);
         setDisabilityData(fetchDisabilityData);
+    };
+
+    const filterVisitByZone = async (zone: string) => {
+        let zoneCode;
+        for (const element of zones) {
+            if (element[1] === zone) {
+                zoneCode = element[0];
+            }
+        }
+        RiskStats(zoneCode).then(() => {
+            setGraphicData(pieData);
+        });
     };
 
     useEffect(() => {
@@ -241,42 +264,8 @@ const Todo = () => {
                         <>
                             <Divider />
                             <Text style={styles.cardSectionTitle}>Visits</Text>
-                            <VictoryChart
-                                animate={{ duration: 500 }}
-                                domainPadding={10}
-                                padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
-                                containerComponent={<VictoryZoomContainer />}
-                                theme={VictoryTheme.material}
-                            >
-                                <VictoryAxis
-                                    style={{
-                                        axisLabel: { fontSize: 12 },
-                                        tickLabels: {
-                                            fontSize: 12,
-                                        },
-                                        grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
-                                    }}
-                                    dependentAxis
-                                />
-                                <VictoryAxis
-                                    style={{
-                                        axisLabel: { fontSize: 10 },
-                                        tickLabels: {
-                                            fontSize: 10,
-                                        },
-                                    }}
-                                />
-                                <VictoryBar
-                                    horizontal
-                                    barRatio={0.8}
-                                    style={{ data: { fill: themeColors.blueAccent } }}
-                                    alignment="middle"
-                                    data={visitData}
-                                    x="name"
-                                    y="count"
-                                />
-                            </VictoryChart>
                             <Divider />
+                            <Text style={styles.graphStat}>By Type</Text>
                             <View style={styles.graphContainer}>
                                 <VictoryPie
                                     data={graphicData}
@@ -287,6 +276,63 @@ const Todo = () => {
                                     innerRadius={30}
                                 />
                             </View>
+                            <Svg>
+                                <Text style={styles.graphStat}>By Zone</Text>
+                                <VictoryChart
+                                    animate={{ duration: 500 }}
+                                    domainPadding={10}
+                                    padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
+                                    containerComponent={<VictoryZoomContainer />}
+                                    theme={VictoryTheme.material}
+                                >
+                                    <VictoryAxis
+                                        style={{
+                                            axisLabel: { fontSize: 12 },
+                                            tickLabels: {
+                                                fontSize: 12,
+                                            },
+                                            grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                                        }}
+                                        dependentAxis
+                                    />
+                                    <VictoryAxis
+                                        style={{
+                                            axisLabel: { fontSize: 10 },
+                                            tickLabels: {
+                                                fontSize: 10,
+                                            },
+                                        }}
+                                    />
+                                    <VictoryBar
+                                        horizontal
+                                        barRatio={0.8}
+                                        style={{ data: { fill: themeColors.blueAccent } }}
+                                        alignment="middle"
+                                        data={visitData}
+                                        events={[
+                                            {
+                                                target: "data",
+                                                eventHandlers: {
+                                                    onPressIn: () => {
+                                                        return [
+                                                            {
+                                                                target: "data",
+                                                                mutation: (props) => {
+                                                                    filterVisitByZone(
+                                                                        props.datum.name
+                                                                    );
+                                                                },
+                                                            },
+                                                        ];
+                                                    },
+                                                },
+                                            },
+                                        ]}
+                                        x="name"
+                                        y="count"
+                                    />
+                                </VictoryChart>
+                            </Svg>
                         </>
                     ) : (
                         <></>

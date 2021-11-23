@@ -68,7 +68,6 @@ const ClientDetails = (props: ClientProps) => {
             const presentClient: any = await database
                 .get(modelName.clients)
                 .find(props.route.params.clientID);
-            console.log(presentClient);
             const fetchedRisk = await presentClient.risks.fetch();
             const fetchedReferrals = await presentClient.referrals.fetch();
             const fetchedSurveys = await presentClient.surveys.fetch();

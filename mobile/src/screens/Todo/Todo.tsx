@@ -138,7 +138,6 @@ const Todo = () => {
     };
 
     const DisabilityStat = async () => {
-        let sum = 0;
         for (const type of disabilityMap) {
             const count = await database
                 .get("clients")
@@ -153,7 +152,6 @@ const Todo = () => {
                 )
                 .fetchCount();
             if (count != 0) {
-                sum = sum + count;
                 var record: BarStat = {
                     name: type[1],
                     count: count,
@@ -161,7 +159,11 @@ const Todo = () => {
                 fetchDisabilityData.push(record);
             }
         }
-        setDisabilityCount(sum);
+        const clientCount = await database
+            .get("clients")
+            .query(Q.where(ClientField.disability, Q.notEq("")))
+            .fetchCount();
+        setDisabilityCount(clientCount);
         setDisabilityData(fetchDisabilityData);
     };
 

@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Alert, SafeAreaView, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Button, Divider, Text } from "react-native-paper";
-import useStyles from "./Todo.styles";
+import useStyles from "./Stats.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
-import { AppStackNavProp } from "../../util/stackScreens";
-import { useIsFocused, useNavigation } from "@react-navigation/core";
+import { useIsFocused } from "@react-navigation/core";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import {
     VictoryBar,
@@ -29,7 +28,9 @@ import {
 } from "@cbr/common";
 import { Q } from "@nozbe/watermelondb";
 import Svg from "react-native-svg";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { modelName } from "../../models/constant";
+
+const allZone = "all zones";
 
 export type BarStat = {
     name: string;
@@ -41,7 +42,7 @@ export type PieStat = {
     y: number;
 };
 
-const Todo = () => {
+const Stats = () => {
     const fetchVisitData: BarStat[] = [];
     let pieData: PieStat[] = [];
     const fetchUnResovledReferralData: BarStat[] = [];
@@ -59,7 +60,7 @@ const Todo = () => {
 
     const [loading, setLoading] = useState<boolean>(true);
 
-    const [zoneOption, setZoneOption] = useState<string>("all zone");
+    const [zoneOption, setZoneOption] = useState<string>(allZone);
     const [visitData, setVisitData] = useState(fetchVisitData);
     const [visitCount, setVisitCount] = useState<number>(0);
     const [graphicData, setGraphicData] = useState<any>([
@@ -85,7 +86,10 @@ const Todo = () => {
     const VisitStats = async () => {
         let sum = 0;
         for (const zone of zones) {
-            const count = await database.get("visits").query(Q.where("zone", zone[0])).fetchCount();
+            const count = await database
+                .get(modelName.visits)
+                .query(Q.where(VisitField.zone, zone[0]))
+                .fetchCount();
             if (count !== 0) {
                 sum = sum + count;
                 var record: BarStat = { name: zone[1], count: count };
@@ -97,7 +101,11 @@ const Todo = () => {
     };
 
     const RiskStats = async (zoneCode?: number) => {
-        const visitType = ["health_visit", "social_visit", "educat_visit"];
+        const visitType = [
+            VisitField.health_visit,
+            VisitField.social_visit,
+            VisitField.educat_visit,
+        ];
         const visitName = ["Health", "Social", "Education"];
         var index = 0;
         pieData = [];
@@ -105,11 +113,14 @@ const Todo = () => {
             let count;
             if (zoneCode) {
                 count = await database
-                    .get("visits")
+                    .get(modelName.visits)
                     .query(Q.where(type, true), Q.where(VisitField.zone, zoneCode))
                     .fetchCount();
             } else {
-                count = await database.get("visits").query(Q.where(type, true)).fetchCount();
+                count = await database
+                    .get(modelName.visits)
+                    .query(Q.where(type, true))
+                    .fetchCount();
             }
             if (count !== 0) {
                 var record = { x: visitName[index], y: count };
@@ -125,12 +136,12 @@ const Todo = () => {
             let count;
             if (type != ReferralFormField.servicesOther) {
                 count = await database
-                    .get("referrals")
+                    .get(modelName.referrals)
                     .query(Q.where(type, true), Q.where(ReferralField.resolved, resolved))
                     .fetchCount();
             } else {
                 count = await database
-                    .get("referrals")
+                    .get(modelName.referrals)
                     .query(Q.where(type, Q.notEq("")), Q.where(ReferralField.resolved, resolved))
                     .fetchCount();
             }
@@ -157,7 +168,7 @@ const Todo = () => {
     const DisabilityStat = async () => {
         for (const type of disabilityMap) {
             const count = await database
-                .get("clients")
+                .get(modelName.clients)
                 .query(
                     Q.or(
                         Q.where(ClientField.disability, `[${type[0]}]`),
@@ -177,7 +188,7 @@ const Todo = () => {
             }
         }
         const clientCount = await database
-            .get("clients")
+            .get(modelName.clients)
             .query(Q.where(ClientField.disability, Q.notEq("")))
             .fetchCount();
         setDisabilityCount(clientCount);
@@ -198,7 +209,7 @@ const Todo = () => {
             });
         } else {
             RiskStats().then(() => {
-                setZoneOption("all zone");
+                setZoneOption(allZone);
                 setGraphicData(pieData);
             });
         }
@@ -284,7 +295,7 @@ const Todo = () => {
                                 <Text>Showing data for </Text>
                                 <Text style={{ fontWeight: "bold" }}>{zoneOption}</Text>
                             </Text>
-                            {zoneOption !== "all zone" ? (
+                            {zoneOption !== allZone ? (
                                 <Button
                                     style={styles.filterBtn}
                                     mode="contained"
@@ -312,9 +323,9 @@ const Todo = () => {
                                 <Text style={{ fontWeight: "bold" }}>Total Visits: </Text>
                                 <Text>{visitCount}</Text>
                             </Text>
-                            {zoneOption === "all zone" ? (
+                            {zoneOption === allZone ? (
                                 <Text style={styles.graphStat}>
-                                    {"Click bar to filter by zone"}
+                                    {"Click on bar to filter by zone"}
                                 </Text>
                             ) : (
                                 <></>
@@ -492,4 +503,4 @@ const Todo = () => {
     );
 };
 
-export default Todo;
+export default Stats;

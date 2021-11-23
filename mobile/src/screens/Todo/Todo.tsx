@@ -57,14 +57,19 @@ const Todo = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     const [visitData, setVisitData] = useState(fetchVisitData);
-    const [unresolvedRef, setUnresolvedRef] = useState(fetchUnResovledReferralData);
-    const [resolvedRef, setResolvedRef] = useState(fetchResovledReferralData);
-    const [disabilityData, setDisabilityData] = useState(fetchDisabilityData);
     const [graphicData, setGraphicData] = useState<any>([
         { x: "", y: 0 },
         { x: "", y: 0 },
         { x: "", y: 0 },
     ]);
+
+    const [resolvedCount, setResolvedCount] = useState<number>(0);
+    const [unresolvedCount, setUnresolvedCount] = useState<number>(0);
+    const [unresolvedRef, setUnresolvedRef] = useState(fetchUnResovledReferralData);
+    const [resolvedRef, setResolvedRef] = useState(fetchResovledReferralData);
+
+    const [disabilityData, setDisabilityData] = useState(fetchDisabilityData);
+    const [disabilityCount, setDisabilityCount] = useState<number>(0);
 
     useEffect(() => {
         authContext.requireLoggedIn(true);
@@ -98,6 +103,7 @@ const Todo = () => {
     };
 
     const referralStats = async (resolved: boolean) => {
+        let sum = 0;
         for (const type of serviceTypes) {
             let count;
             if (type != ReferralFormField.servicesOther) {
@@ -111,7 +117,7 @@ const Todo = () => {
                     .query(Q.where(type, Q.notEq("")), Q.where(ReferralField.resolved, resolved))
                     .fetchCount();
             }
-
+            sum = sum + count;
             var record: BarStat = {
                 name: referralFieldLabels[type],
                 count: count,
@@ -123,13 +129,16 @@ const Todo = () => {
             }
         }
         if (resolved) {
+            setResolvedCount(sum);
             setResolvedRef(fetchResovledReferralData);
         } else {
+            setUnresolvedCount(sum);
             setUnresolvedRef(fetchUnResovledReferralData);
         }
     };
 
     const DisabilityStat = async () => {
+        let sum = 0;
         for (const type of disabilityMap) {
             const count = await database
                 .get("clients")
@@ -144,6 +153,7 @@ const Todo = () => {
                 )
                 .fetchCount();
             if (count != 0) {
+                sum = sum + count;
                 var record: BarStat = {
                     name: type[1],
                     count: count,
@@ -151,6 +161,7 @@ const Todo = () => {
                 fetchDisabilityData.push(record);
             }
         }
+        setDisabilityCount(sum);
         setDisabilityData(fetchDisabilityData);
     };
 
@@ -283,6 +294,14 @@ const Todo = () => {
                         <>
                             <Divider />
                             <Text style={styles.cardSectionTitle}>Referrals</Text>
+                            <Text style={styles.graphStat}>
+                                <Text style={{ fontWeight: "bold" }}>Total Unresolved: </Text>
+                                <Text>{unresolvedCount}</Text>
+                            </Text>
+                            <Text style={styles.graphStat}>
+                                <Text style={{ fontWeight: "bold" }}>Total Resolved: </Text>
+                                <Text>{resolvedCount}</Text>
+                            </Text>
                             <VictoryChart
                                 animate={{ duration: 500 }}
                                 domainPadding={10}
@@ -330,6 +349,12 @@ const Todo = () => {
                         <>
                             <Divider />
                             <Text style={styles.cardSectionTitle}>Disabilities</Text>
+                            <Text style={styles.graphStat}>
+                                <Text style={{ fontWeight: "bold" }}>
+                                    Clients with Disabilities:{" "}
+                                </Text>
+                                <Text>{disabilityCount}</Text>
+                            </Text>
                             <VictoryChart
                                 animate={{ duration: 500 }}
                                 domainPadding={10}

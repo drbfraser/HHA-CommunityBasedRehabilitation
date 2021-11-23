@@ -7,6 +7,9 @@ const useStyles = () =>
             fontSize: 30,
             color: themeColors.borderGray,
         },
+        graphStat: {
+            textAlign: "center",
+        },
         row: {
             flexDirection: "row",
             display: "flex",

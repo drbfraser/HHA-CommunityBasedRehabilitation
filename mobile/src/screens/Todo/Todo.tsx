@@ -29,6 +29,7 @@ import {
 } from "@cbr/common";
 import { Q } from "@nozbe/watermelondb";
 import Svg from "react-native-svg";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export type BarStat = {
     name: string;
@@ -58,6 +59,7 @@ const Todo = () => {
 
     const [loading, setLoading] = useState<boolean>(true);
 
+    const [zoneOption, setZoneOption] = useState<string>("all zone");
     const [visitData, setVisitData] = useState(fetchVisitData);
     const [graphicData, setGraphicData] = useState<any>([
         { x: "", y: 0 },
@@ -178,16 +180,24 @@ const Todo = () => {
         setDisabilityData(fetchDisabilityData);
     };
 
-    const filterVisitByZone = async (zone: string) => {
-        let zoneCode;
-        for (const element of zones) {
-            if (element[1] === zone) {
-                zoneCode = element[0];
+    const filterVisitByZone = async (zone?: string) => {
+        if (zone) {
+            let zoneCode;
+            for (const element of zones) {
+                if (element[1] === zone) {
+                    zoneCode = element[0];
+                }
             }
+            RiskStats(zoneCode).then(() => {
+                setZoneOption(zone);
+                setGraphicData(pieData);
+            });
+        } else {
+            RiskStats().then(() => {
+                setZoneOption("all zone");
+                setGraphicData(pieData);
+            });
         }
-        RiskStats(zoneCode).then(() => {
-            setGraphicData(pieData);
-        });
     };
 
     useEffect(() => {
@@ -265,7 +275,24 @@ const Todo = () => {
                             <Divider />
                             <Text style={styles.cardSectionTitle}>Visits</Text>
                             <Divider />
-                            <Text style={styles.graphStat}>By Type</Text>
+                            <Text style={styles.chartTitle}>By Type</Text>
+                            <Text style={styles.graphStat}>
+                                <Text>Showing data for </Text>
+                                <Text style={{ fontWeight: "bold" }}>{zoneOption}</Text>
+                            </Text>
+                            {zoneOption !== "all zone" ? (
+                                <Button
+                                    style={styles.filterBtn}
+                                    mode="contained"
+                                    onPress={() => {
+                                        filterVisitByZone();
+                                    }}
+                                >
+                                    View All Zone
+                                </Button>
+                            ) : (
+                                <></>
+                            )}
                             <View style={styles.graphContainer}>
                                 <VictoryPie
                                     data={graphicData}
@@ -277,7 +304,7 @@ const Todo = () => {
                                 />
                             </View>
                             <Svg>
-                                <Text style={styles.graphStat}>By Zone</Text>
+                                <Text style={styles.chartTitle}>By Zone</Text>
                                 <VictoryChart
                                     animate={{ duration: 500 }}
                                     domainPadding={10}

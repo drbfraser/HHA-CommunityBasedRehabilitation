@@ -7,8 +7,23 @@ const useStyles = () =>
             fontSize: 30,
             color: themeColors.borderGray,
         },
+        link: {
+            textAlign: "center",
+            color: themeColors.blueAccent,
+        },
+        chartTitle: {
+            fontWeight: "bold",
+            textAlign: "center",
+            fontSize: 15,
+        },
         graphStat: {
             textAlign: "center",
+            fontSize: 15,
+        },
+        filterBtn: {
+            alignSelf: "center",
+            width: 200,
+            backgroundColor: themeColors.blueAccent,
         },
         row: {
             flexDirection: "row",

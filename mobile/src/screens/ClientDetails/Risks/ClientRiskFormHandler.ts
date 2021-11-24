@@ -43,9 +43,9 @@ export const handleRiskSubmit = async (
         await client.updateRisk(values.risk_type, values.risk_level, currentTime);
         setRisk(risk);
 
-        NetInfo.fetch().then((connectionInfo: NetInfoState) => {
-            if (connectionInfo?.isInternetReachable && connectionInfo?.type == NetInfoStateType.wifi) {
-                SyncDB(database);
+        NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
+            if (connectionInfo?.type == NetInfoStateType.wifi && connectionInfo?.isInternetReachable) {
+                await SyncDB(database);
             }
         });
     } catch (e) {

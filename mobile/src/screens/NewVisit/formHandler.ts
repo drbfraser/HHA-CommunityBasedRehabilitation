@@ -34,9 +34,9 @@ export const handleSubmit = async (
         await visit.addVisitSpec(values.EDUCAT, values.improvements.EDUCAT, values.outcomes.EDUCAT);
         await visit.addVisitSpec(values.SOCIAL, values.improvements.SOCIAL, values.outcomes.SOCIAL);
 
-        NetInfo.fetch().then((connectionInfo: NetInfoState) => {
-            if (connectionInfo?.isInternetReachable && connectionInfo?.type == NetInfoStateType.wifi) {
-                SyncDB(database);
+        NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
+            if (connectionInfo?.type == NetInfoStateType.wifi && connectionInfo?.isInternetReachable) {
+                await SyncDB(database);
             }
         });
     } catch (e) {

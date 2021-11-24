@@ -29,9 +29,9 @@ export const handleSubmit = async (
         });
     });
 
-    NetInfo.fetch().then((connectionInfo: NetInfoState) => {
-        if (connectionInfo?.isInternetReachable && connectionInfo?.type == NetInfoStateType.wifi) {
-            SyncDB(database);
+    NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
+        if (connectionInfo?.type == NetInfoStateType.wifi && connectionInfo?.isInternetReachable) {
+            await SyncDB(database);
         }
     });
 };

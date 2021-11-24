@@ -13,6 +13,9 @@ const useStyles = () =>
         groupContainer: {
             flex: 1,
             padding: 10,
+        },
+        btnContainer: {
+            flex: 1,
             justifyContent: "space-around",
         },
         resetBtbContainer: {
@@ -30,9 +33,6 @@ const useStyles = () =>
         },
         CardStyle: {
             display: "flex",
-            justifyContent: "space-between",
-            marginTop: 20,
-            marginBottom: 20,
             padding: 20,
             borderRadius: 20,
         },

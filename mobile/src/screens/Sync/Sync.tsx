@@ -110,98 +110,100 @@ const Sync = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.groupContainer}>
                 <Text style={styles.cardSectionTitle}>Database </Text>
-                <Button
-                    icon="database-sync"
-                    mode="contained"
-                    onPress={() => {
-                        try {
-                            SyncDB(database).then(() => {
-                                setAlertStatus(true);
-                                setAlertMessage("Synchronization Complete");
+                <View style={styles.btnContainer}>
+                    <Button
+                        icon="database-sync"
+                        mode="contained"
+                        onPress={() => {
+                            try {
+                                SyncDB(database).then(() => {
+                                    setAlertStatus(true);
+                                    setAlertMessage("Synchronization Complete");
+                                    setSyncModal(true);
+                                    updateStats();
+                                });
+                            } catch (e) {
+                                setAlertStatus(false);
+                                setAlertMessage("Synchronization Failure");
                                 setSyncModal(true);
-                                updateStats();
-                            });
-                        } catch (e) {
-                            setAlertStatus(false);
-                            setAlertMessage("Synchronization Failure");
-                            setSyncModal(true);
-                        }
-                    }}
-                >
-                    Server Sync
-                </Button>
-                <Button
-                    icon="lock-reset"
-                    mode="contained"
-                    labelStyle={styles.resetBtnLabel}
-                    style={styles.resetBtbContainer}
-                    onPress={resetDatabase}
-                >
-                    Clear Local
-                </Button>
+                            }
+                        }}
+                    >
+                        Server Sync
+                    </Button>
+                    <Button
+                        icon="lock-reset"
+                        mode="contained"
+                        labelStyle={styles.resetBtnLabel}
+                        style={styles.resetBtbContainer}
+                        onPress={resetDatabase}
+                    >
+                        Clear Local
+                    </Button>
+                </View>
+                <Divider />
+                <Text style={styles.cardSectionTitle}>Sync Statistics</Text>
+                <Card style={styles.CardStyle}>
+                    {!loading ? (
+                        <>
+                            <View style={styles.row}>
+                                <Text style={styles.stats}> Last Pulled at:</Text>
+                                {stats.lastPulledTime != 0 ? (
+                                    <Text>{timestampToDateTime(stats.lastPulledTime)}</Text>
+                                ) : (
+                                    <Text>Never Synced</Text>
+                                )}
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.stats}> Local Changes:</Text>
+                                <Text> {stats.localChanges}</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.stats}> Remote Changes:</Text>
+                                <Text>{stats.remoteChanges}</Text>
+                            </View>
+                        </>
+                    ) : (
+                        <></>
+                    )}
+                </Card>
+                <Divider />
+                <Text style={styles.cardSectionTitle}>Sync Settings</Text>
+                <Card style={styles.CardStyle}>
+                    <View style={styles.row}>
+                        <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>
+                            Automatic Syncing
+                        </Text>
+                        <Switch
+                            style={styles.switch}
+                            trackColor={{ false: themeColors.white, true: themeColors.yellow }}
+                            thumbColor={autoSync ? themeColors.white : themeColors.white}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={(value) => {
+                                setAutoSync(value);
+                                storeAutoSync(value);
+                            }}
+                            value={autoSync}
+                        ></Switch>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>
+                            Sync over Cellular
+                        </Text>
+                        <Switch
+                            style={styles.switch}
+                            trackColor={{ false: themeColors.white, true: themeColors.yellow }}
+                            thumbColor={cellularSync ? themeColors.white : themeColors.white}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={(value) => {
+                                setCellularSync(value);
+                                storeCellularSync(value);
+                            }}
+                            value={cellularSync}
+                        ></Switch>
+                    </View>
+                </Card>
             </View>
-            <Divider />
-            <Text style={styles.cardSectionTitle}>Sync Statistics</Text>
-            <Card style={styles.CardStyle}>
-                {!loading ? (
-                    <>
-                        <View style={styles.row}>
-                            <Text style={styles.stats}> Last Pulled at:</Text>
-                            {stats.lastPulledTime != 0 ? (
-                                <Text>{timestampToDateTime(stats.lastPulledTime)}</Text>
-                            ) : (
-                                <Text>Never Synced</Text>
-                            )}
-                        </View>
-                        <View style={styles.row}>
-                            <Text style={styles.stats}> Local Changes:</Text>
-                            <Text> {stats.localChanges}</Text>
-                        </View>
-                        <View style={styles.row}>
-                            <Text style={styles.stats}> Remote Changes:</Text>
-                            <Text>{stats.remoteChanges}</Text>
-                        </View>
-                    </>
-                ) : (
-                    <></>
-                )}
-            </Card>
-            <Divider />
-            <Text style={styles.cardSectionTitle}>Sync Settings</Text>
-            <Card style={styles.CardStyle}>
-                <View style={styles.row}>
-                    <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>
-                        Automatic Syncing
-                    </Text>
-                    <Switch
-                        style={styles.switch}
-                        trackColor={{ false: themeColors.white, true: themeColors.yellow }}
-                        thumbColor={autoSync ? themeColors.white : themeColors.white}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={(value) => {
-                            setAutoSync(value);
-                            storeAutoSync(value);
-                        }}
-                        value={autoSync}
-                    ></Switch>
-                </View>
-                <View style={styles.row}>
-                    <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>
-                        Sync over Cellular
-                    </Text>
-                    <Switch
-                        style={styles.switch}
-                        trackColor={{ false: themeColors.white, true: themeColors.yellow }}
-                        thumbColor={cellularSync ? themeColors.white : themeColors.white}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={(value) => {
-                            setCellularSync(value);
-                            storeCellularSync(value);
-                        }}
-                        value={cellularSync}
-                    ></Switch>
-                </View>
-            </Card>
             <SyncAlert
                 displayMode={alertStatus ? "success" : "failed"}
                 displayMsg={alertMessage}

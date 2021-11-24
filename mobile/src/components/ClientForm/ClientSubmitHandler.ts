@@ -1,26 +1,9 @@
 import {
-    Endpoint,
-    apiFetch,
-    objectToFormData,
-    getDisabilities,
-    getOtherDisabilityId,
-    APIFetchFailError,
-    clientFieldLabels,
     TClientValues,
 } from "@cbr/common";
-import { timestampFromFormDate } from "@cbr/common/";
-import { appendMobilePict } from "@cbr/common/src/util/mobileImageSubmisson";
-import { Platform, ToastAndroid, AlertIOS } from "react-native";
 import { dbType } from "../../util/watermelonDatabase";
-
-const toastSuccess = () => {
-    const msg = "Your changes have been made.";
-    if (Platform.OS === "android") {
-        ToastAndroid.show(msg, ToastAndroid.SHORT);
-    } else {
-        AlertIOS.alert(msg);
-    }
-};
+import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
+import { SyncDB } from "../../util/syncHandler";
 
 export const handleSubmit = async (
     client: any,
@@ -28,7 +11,6 @@ export const handleSubmit = async (
     database: dbType,
     imageChange?: boolean
 ) => {
-    const disabilities = await getDisabilities();
     try {
         await database.write(async () => {
             await client.update((client) => {
@@ -48,6 +30,12 @@ export const handleSubmit = async (
                 client.caregiver_phone = values.caregiverPhone;
                 client.caregiver_email = values.caregiverEmail;
             });
+        });
+
+        NetInfo.fetch().then((connectionInfo: NetInfoState) => {
+            if (connectionInfo?.isInternetReachable && connectionInfo?.type == NetInfoStateType.wifi) {
+                SyncDB(database);
+            }
         });
     } catch (e) {
         const initialMessage = "Encountered an error while trying to edit the client!";

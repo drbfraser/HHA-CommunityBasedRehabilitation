@@ -4,6 +4,8 @@ import { modelName } from "../../models/constant";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { dbType } from "../../util/watermelonDatabase";
+import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
+import { SyncDB } from "../../util/syncHandler";
 
 // TODO: profile picture does not upload correctly to server
 
@@ -83,6 +85,13 @@ const handleNewMobileClientSubmit = async (
             );
         });
         await newClient.newRiskTime();
+
+        NetInfo.fetch().then((connectionInfo: NetInfoState) => {
+            if (connectionInfo?.isInternetReachable && connectionInfo?.type == NetInfoStateType.wifi) {
+                SyncDB(database);
+            }
+        });
+        
         return newClient.id;
     } catch (e) {
         console.log(e);

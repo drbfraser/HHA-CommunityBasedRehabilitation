@@ -2,6 +2,8 @@ import { ReferralFormField, ReferralFormValues, referralHandleSubmit } from "@cb
 import { FormikHelpers } from "formik";
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
+import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
+import { SyncDB } from "../../util/syncHandler";
 
 export const handleSubmit = async (
     values: ReferralFormValues,
@@ -25,5 +27,11 @@ export const handleSubmit = async (
             referral.picture = values[ReferralFormField.picture];
             referral.date_referred = new Date().getTime();
         });
+    });
+
+    NetInfo.fetch().then((connectionInfo: NetInfoState) => {
+        if (connectionInfo?.isInternetReachable && connectionInfo?.type == NetInfoStateType.wifi) {
+            SyncDB(database);
+        }
     });
 };

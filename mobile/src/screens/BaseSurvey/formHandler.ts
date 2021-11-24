@@ -6,6 +6,8 @@ import {
 import { baseSurveyHandleSubmitForm } from "@cbr/common/src/forms/BaseSurvey/baseSurveyHandler";
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
+import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
+import { SyncDB } from "../../util/syncHandler";
 
 export const handleSubmit = async (
     values: BaseFormValues,
@@ -28,5 +30,11 @@ export const handleSubmit = async (
             survey.school_grade = parseInt(surveyInfo.school_grade);
             survey.survey_date = new Date().getTime();
         });
+    });
+
+    NetInfo.fetch().then((connectionInfo: NetInfoState) => {
+        if (connectionInfo?.isInternetReachable && connectionInfo?.type == NetInfoStateType.wifi) {
+            SyncDB(database);
+        }
     });
 };

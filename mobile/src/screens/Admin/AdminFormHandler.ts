@@ -3,6 +3,8 @@ import { TAdminPasswordValues, TNewUserValues } from "@cbr/common/src/forms/Admi
 import { FormikHelpers } from "formik";
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
+import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
+import { SyncDB } from "../../util/syncHandler";
 
 export const handleSelfChangePassword = async (
     userId: string,
@@ -56,6 +58,13 @@ export const handleNewUserSubmit = async (
                 user.is_active = values.is_active;
             });
         });
+
+        NetInfo.fetch().then((connectionInfo: NetInfoState) => {
+            if (connectionInfo?.isInternetReachable && connectionInfo?.type == NetInfoStateType.wifi) {
+                SyncDB(database);
+            }
+        });
+        
         return newUser.id;
     } finally {
         helpers.setSubmitting(false);
@@ -80,6 +89,13 @@ export const handleUserEditSubmit = async (
                 user.is_active = values.is_active;
             });
         });
+
+        NetInfo.fetch().then((connectionInfo: NetInfoState) => {
+            if (connectionInfo?.isInternetReachable && connectionInfo?.type == NetInfoStateType.wifi) {
+                SyncDB(database);
+            }
+        });
+        
         return editedUser.id;
     } finally {
         helpers.setSubmitting(false);

@@ -1,8 +1,9 @@
 import { FormikHelpers } from "formik";
 import { TVisitFormValues } from "@cbr/common/src/forms/newVisit/visitFormFields";
-import { handleSubmitVisitForm } from "@cbr/common/src/forms/newVisit/visitFormHandler";
 import { dbType } from "../../util/watermelonDatabase";
 import { modelName } from "../../models/constant";
+import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
+import { SyncDB } from "../../util/syncHandler";
 
 export const handleSubmit = async (
     values: TVisitFormValues,
@@ -32,6 +33,12 @@ export const handleSubmit = async (
         await visit.addVisitSpec(values.HEALTH, values.improvements.HEALTH, values.outcomes.HEALTH);
         await visit.addVisitSpec(values.EDUCAT, values.improvements.EDUCAT, values.outcomes.EDUCAT);
         await visit.addVisitSpec(values.SOCIAL, values.improvements.SOCIAL, values.outcomes.SOCIAL);
+
+        NetInfo.fetch().then((connectionInfo: NetInfoState) => {
+            if (connectionInfo?.isInternetReachable && connectionInfo?.type == NetInfoStateType.wifi) {
+                SyncDB(database);
+            }
+        });
     } catch (e) {
         helpers.setSubmitting(false);
         throw e;

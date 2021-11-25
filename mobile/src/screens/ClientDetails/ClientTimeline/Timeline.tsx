@@ -1,4 +1,4 @@
-import { IReferral, ISurvey, themeColors, timestampToDate, useZones } from "@cbr/common";
+import { formatDate, IReferral, ISurvey, themeColors, useZones } from "@cbr/common";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { View, Text, TouchableOpacity, NativeModules } from "react-native";
@@ -11,6 +11,7 @@ import useStyles from "./Timeline.style";
 import BaselineEntry from "./Entries/BaselineEntry";
 import ReferralEntry from "./Entries/ReferralEntry";
 import VisitEntry from "./Entries/VisitEntry";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 import { useIsFocused } from "@react-navigation/native";
 interface ISummaryProps {
@@ -46,6 +47,8 @@ const Timeline = (props: ISummaryProps) => {
     const locale = NativeModules.I18nManager.localeIdentifier;
     const timezone = Localization.timezone;
 
+    const database = useDatabase();
+
     useEffect(() => {
         if (props.activity.type === ActivityType.VISIT) setIcon("walk");
         if (props.activity.type === ActivityType.REFERAL) setIcon("navigation");
@@ -61,7 +64,7 @@ const Timeline = (props: ISummaryProps) => {
             <View>
                 <View style={styles.container}>
                     <Text style={{ width: "25%" }}>
-                        {timestampToDate(props.activity.date, locale, timezone)}
+                        {formatDate(new Date(props.activity.date), locale, timezone)}
                     </Text>
                     <View style={styles.activityTypeView}>
                         <View style={styles.verticleLine}></View>
@@ -149,6 +152,7 @@ const Timeline = (props: ISummaryProps) => {
                                             >
                                                 <ReferralEntry
                                                     referral={props.activity.referral as IReferral}
+                                                    database={database}
                                                     close={hideDetails}
                                                     refreshClient={props.refreshClient}
                                                 />

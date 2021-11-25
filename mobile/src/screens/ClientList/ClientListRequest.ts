@@ -8,9 +8,12 @@ import {
     SearchOption,
     riskLevels,
 } from "@cbr/common";
+import { dbType } from "../../util/watermelonDatabase";
+import { Q } from "@nozbe/watermelondb";
+import { modelName, tableKey } from "../../models/constant";
 
 export type ClientListRow = {
-    id: number;
+    id: string;
     full_name: string;
     zoneID: number;
     zone: string;
@@ -20,28 +23,61 @@ export type ClientListRow = {
     last_visit_date: number;
 };
 
-export const fetchClientsFromApi = async (
+export const fetchClientsFromDB = async (
     searchOption,
     searchValue: string,
-    allClientsMode: boolean
+    allClientsMode: boolean,
+    database: dbType
 ): Promise<ClientListRow[]> => {
     try {
-        const urlParams = new URLSearchParams();
+        const zones = await getZones();
+        let responseRows: any;
+        const clientCollection = database.get(modelName.clients);
+
         if (searchOption === SearchOption.NAME) {
             searchOption = "full_name";
         }
-        if (searchValue) {
-            urlParams.append(searchOption.toLowerCase(), searchValue);
-        }
+
         if (!allClientsMode) {
             const user = await getCurrentUser();
             if (user !== APILoadError) {
-                urlParams.append("created_by_user", String(user.id));
+                if (searchOption !== "") {
+                    if (searchOption === "full_name") {
+                        responseRows = await clientCollection
+                            .query(
+                                Q.where(tableKey.user_id, user.id),
+                                Q.where(searchOption, Q.like(`%${searchValue}%`))
+                            )
+                            .fetch();
+                    } else {
+                        responseRows = await clientCollection
+                            .query(
+                                Q.where(tableKey.user_id, user.id),
+                                Q.where(searchOption, searchValue)
+                            )
+                            .fetch();
+                    }
+                } else {
+                    responseRows = await clientCollection
+                        .query(Q.where(tableKey.user_id, user.id))
+                        .fetch();
+                }
+            }
+        } else {
+            if (searchOption !== "") {
+                if (searchOption === "full_name") {
+                    responseRows = await clientCollection
+                        .query(Q.where(searchOption, Q.like(`%${searchValue}%`)))
+                        .fetch();
+                } else {
+                    responseRows = await clientCollection
+                        .query(Q.where(searchOption, searchValue))
+                        .fetch();
+                }
+            } else {
+                responseRows = await clientCollection.query();
             }
         }
-        const zones = await getZones();
-        const resp = await apiFetch(Endpoint.CLIENTS, "?" + urlParams.toString());
-        const responseRows: IClientSummary[] = await resp.json();
         var resultRow = responseRows.map((responseRow: IClientSummary) => ({
             id: responseRow.id,
             full_name: responseRow.full_name,

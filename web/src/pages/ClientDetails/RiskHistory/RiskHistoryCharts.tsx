@@ -66,7 +66,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
     const styles = useStyles();
     const chartHeight = 300;
     const [chartData, setChartData] = useState<IChartData>();
-    const dateFormatter = getDateFormatterFromReference(client?.created_date);
+    const dateFormatter = getDateFormatterFromReference(client?.created_at);
 
     useEffect(() => {
         if (client) {

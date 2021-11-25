@@ -11,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from cbr import settings
 from cbr_api.storage import OverwriteStorage
 from cbr_api.validators import FileSizeValidator
+from cbr_api.util import current_milli_time
 
 
 class Zone(models.Model):
@@ -19,6 +20,9 @@ class Zone(models.Model):
 
 class Disability(models.Model):
     disability_type = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return str(self.id)
 
 
 class UserCBRManager(BaseUserManager):
@@ -43,6 +47,7 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
 
     username_validator = UnicodeUsernameValidator()
 
+    id = models.CharField(primary_key=True, max_length=100)
     username = models.CharField(
         _("username"),
         max_length=50,
@@ -58,8 +63,9 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
         _("active"),
         default=True,
     )
-    created_date = models.BigIntegerField(_("date created"), default=time.time)
-
+    created_at = models.BigIntegerField(_("date created"), default=current_milli_time)
+    server_created_at = models.BigIntegerField(default=current_milli_time)
+    updated_at = models.BigIntegerField(_("date created"), default=0)
     objects = UserCBRManager()
 
     USERNAME_FIELD = "username"
@@ -114,6 +120,7 @@ class Client(models.Model):
         MALE = "M", _("Male")
         FEMALE = "F", _("Female")
 
+    id = models.CharField(primary_key=True, max_length=100)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     full_name = models.CharField(max_length=101, default="")
@@ -125,11 +132,10 @@ class Client(models.Model):
     )  # if contact info available
     disability = models.ManyToManyField(Disability)
     other_disability = models.CharField(max_length=100, blank=True)
-    created_by_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.PROTECT
-    )
-    created_date = models.BigIntegerField()
-    modified_date = models.BigIntegerField()
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    created_at = models.BigIntegerField()
+    updated_at = models.BigIntegerField(default=0)
+    server_created_at = models.BigIntegerField(default=0)
     longitude = models.DecimalField(max_digits=12, decimal_places=6)
     latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
@@ -151,6 +157,7 @@ class Client(models.Model):
         upload_to=rename_file,
         storage=OverwriteStorage(),
         blank=True,
+        null=True,
         # validators=[filesize_validator],
     )  # if picture available
     caregiver_present = models.BooleanField(default=False)
@@ -162,8 +169,11 @@ class Client(models.Model):
 
     # summary data to make queries more reasonable
     health_risk_level = RiskLevel.getField()
+    health_timestamp = models.BigIntegerField(default=0)
     social_risk_level = RiskLevel.getField()
+    social_timestamp = models.BigIntegerField(default=0)
     educat_risk_level = RiskLevel.getField()
+    educat_timestamp = models.BigIntegerField(default=0)
     last_visit_date = models.BigIntegerField(default=0)
 
     def save(self, *args, **kwargs):
@@ -189,8 +199,12 @@ class Client(models.Model):
 
 
 class ClientRisk(models.Model):
-    client = models.ForeignKey(Client, related_name="risks", on_delete=models.CASCADE)
+    id = models.CharField(primary_key=True, max_length=100)
+    client_id = models.ForeignKey(
+        Client, related_name="risks", on_delete=models.CASCADE
+    )
     timestamp = models.BigIntegerField()
+    server_created_at = models.BigIntegerField(default=0)
     risk_type = RiskType.getField()
     risk_level = RiskLevel.getField()
     requirement = models.TextField()
@@ -198,11 +212,15 @@ class ClientRisk(models.Model):
 
 
 class Visit(models.Model):
-    client = models.ForeignKey(Client, related_name="visits", on_delete=models.CASCADE)
-    user = models.ForeignKey(
+    id = models.CharField(primary_key=True, max_length=100)
+    client_id = models.ForeignKey(
+        Client, related_name="visits", on_delete=models.CASCADE
+    )
+    user_id = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name="visits", on_delete=models.PROTECT
     )
-    date_visited = models.BigIntegerField()
+    created_at = models.BigIntegerField()
+    server_created_at = models.BigIntegerField(default=0)
     health_visit = models.BooleanField(default=False)
     educat_visit = models.BooleanField(default=False)
     social_visit = models.BooleanField(default=False)
@@ -213,11 +231,14 @@ class Visit(models.Model):
 
 
 class Referral(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    id = models.CharField(primary_key=True, max_length=100)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_referred = models.BigIntegerField()
     date_resolved = models.BigIntegerField(default=0)
     resolved = models.BooleanField(default=False)
     outcome = models.CharField(max_length=100)
+    updated_at = models.BigIntegerField(_("date updated"), default=0)
+    server_created_at = models.BigIntegerField(default=current_milli_time)
 
     def rename_file(self, original_filename):
         # file_ext includes the "."
@@ -233,9 +254,10 @@ class Referral(models.Model):
         upload_to=rename_file,
         storage=OverwriteStorage(),
         blank=True,
+        null=True,
     )  # if picture available
 
-    client = models.ForeignKey(
+    client_id = models.ForeignKey(
         Client, related_name="referrals", on_delete=models.CASCADE
     )
 
@@ -298,26 +320,35 @@ class Outcome(models.Model):
         ONGOING = "GO", _("Ongoing")
         CONCLUDED = "CON", _("Concluded")
 
-    visit = models.ForeignKey(Visit, related_name="outcomes", on_delete=models.CASCADE)
+    id = models.CharField(primary_key=True, max_length=100)
+    visit_id = models.ForeignKey(
+        Visit, related_name="outcomes", on_delete=models.CASCADE
+    )
     risk_type = RiskType.getField()
     goal_met = models.CharField(max_length=3, choices=Goal.choices)
     outcome = models.TextField(blank=True)
+    created_at = models.BigIntegerField(default=current_milli_time)
+    server_created_at = models.BigIntegerField(default=current_milli_time)
 
 
 class Improvement(models.Model):
-    visit = models.ForeignKey(
+    id = models.CharField(primary_key=True, max_length=100)
+    visit_id = models.ForeignKey(
         Visit, related_name="improvements", on_delete=models.CASCADE
     )
     risk_type = RiskType.getField()
     provided = models.CharField(max_length=50)
     desc = models.TextField()
+    created_at = models.BigIntegerField(default=current_milli_time)
+    server_created_at = models.BigIntegerField(default=current_milli_time)
 
 
 class BaselineSurvey(models.Model):
-    client = models.ForeignKey(
+    id = models.CharField(primary_key=True, max_length=100)
+    client_id = models.ForeignKey(
         Client, related_name="baseline_surveys", on_delete=models.CASCADE
     )
-    user = models.ForeignKey(
+    user_id = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="baselinesurveys",
         on_delete=models.PROTECT,
@@ -409,3 +440,20 @@ class BaselineSurvey(models.Model):
     # Shelter and Care
     shelter_adequate = models.BooleanField()
     shelter_essential_access = models.BooleanField()
+
+    server_created_at = models.BigIntegerField(default=current_milli_time)
+
+
+class Alert(models.Model):
+    class Priorities(models.TextChoices):
+        HIGH = "H", _("High")
+        MEDIUM = "M", _("Medium")
+        LOW = "L", _("Low")
+
+    priority = models.CharField(max_length=9, choices=Priorities.choices)
+    subject = models.CharField(max_length=50)
+    alert_message = models.CharField(max_length=2000)
+    created_by_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT
+    )
+    created_date = models.BigIntegerField(_("date created"), default=time.time)

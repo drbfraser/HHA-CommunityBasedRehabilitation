@@ -38,7 +38,7 @@ def getVisitStats(user_id, from_time, to_time):
         FROM cbr_api_visit
     """
 
-    sql += getStatsWhere(user_id, "date_visited", from_time, to_time)
+    sql += getStatsWhere(user_id, "created_at", from_time, to_time)
     sql += " GROUP BY zone_id ORDER BY zone_id"
 
     from django.db import connection
@@ -85,7 +85,9 @@ def getStatsWhere(user_id, time_col, from_time, to_time):
     where = []
 
     if user_id is not None:
-        where.append(f"user_id={str(user_id)}")
+        # it seems that '_id' is automatically appended to the end of foreign key column names.
+        # So user_id -> user_id_id
+        where.append(f"user_id_id={str(user_id)}")
 
     if from_time is not None:
         where.append(f"{time_col}>={str(from_time)}")
@@ -108,10 +110,12 @@ def getOutstandingReferrals():
             SELECT c.id, c.full_name, r.services_other, r.physiotherapy, r.wheelchair, r.prosthetic, r.orthotic, r.date_referred
             FROM cbr_api_referral as r
             INNER JOIN cbr_api_client as c
-            ON c.id = r.client_id
+            ON c.id = r.client_id_id
             WHERE r.resolved=False
         """
         )
+        # it seems that '_id' is automatically appended to the end of foreign key column names.
+        # So client_id -> client_id_id
 
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]

@@ -15,6 +15,8 @@ import { ActivityIndicator, Button, Card, Chip, Dialog, List, Text } from "react
 import useStyles from "./Entry.styles";
 import { ScrollView, View } from "react-native";
 import DataCard from "../../../../components/DataCard/DataCard";
+import { database } from "../../../../util/watermelonDatabase";
+import { modelName } from "../../../../models/constant";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -23,12 +25,31 @@ interface IEntryProps {
 
 const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
     const [visit, setVisit] = useState<IVisit>();
-    const onOpen = () => {
+    const [visitOutcomes, setVisitOutcome] = useState<any>();
+    const [visitImprovements, setVisitImprovement] = useState<any>();
+    const onOpen = async () => {
         if (!visit) {
-            apiFetch(Endpoint.VISIT, `${visitSummary.id}`)
-                .then((resp) => resp.json())
-                .then((resp) => setVisit(resp as IVisit))
-                .catch(() => setLoadingError(true));
+            const fetchedVisit: any = await database.get(modelName.visits).find(visitSummary.id);
+            const iVisit: IVisit = {
+                id: fetchedVisit.id,
+                user_id: fetchedVisit.user_id,
+                client_id: fetchedVisit.client_id,
+                created_at: fetchedVisit.createdAt,
+                health_visit: fetchedVisit.health_visit,
+                educat_visit: fetchedVisit.educat_visit,
+                social_visit: fetchedVisit.social_visit,
+                longitude: fetchedVisit.longitude,
+                latitude: fetchedVisit.latitude,
+                zone: fetchedVisit.zone,
+                village: fetchedVisit.zone,
+                improvements: [],
+                outcomes: [],
+            };
+            const fetchedOutcome = await fetchedVisit.outcomes.fetch();
+            const fetchedImprov = await fetchedVisit.improvements.fetch();
+            setVisitOutcome(fetchedOutcome);
+            setVisitImprovement(fetchedImprov);
+            setVisit(iVisit);
         }
     };
     useEffect(() => {
@@ -60,14 +81,14 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
         }
 
         const DetailAccordion = ({ type }: { type: RiskType }) => {
-            const improvements = visit.improvements
+            const improvements = visitImprovements
                 .filter((i) => i.risk_type === type)
                 .map((i) => ({
                     title: i.provided,
                     desc: i.desc,
                 }));
 
-            const outcomes = visit.outcomes
+            const outcomes = visitOutcomes
                 .filter((o) => o.risk_type === type)
                 .map((o) => ({
                     title: outcomeGoalMets[o.goal_met].name,
@@ -108,7 +129,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                     <Card.Content>
                         <Text>
                             <Text style={styles.labelBold}>Visit Date:</Text>{" "}
-                            {timestampToDateTime(visit.date_visited)}
+                            {timestampToDateTime(visit.created_at)}
                             {"\n"}
                             <Text style={styles.labelBold}>Village:</Text> {visit.village}
                         </Text>

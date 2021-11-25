@@ -277,7 +277,6 @@ export class APICacheData<TValue, TLoading, TError> {
                     this.removeInvalidationListener(listener);
                 };
             }, []);
-
             return value ?? this.loadingValue;
         };
     }

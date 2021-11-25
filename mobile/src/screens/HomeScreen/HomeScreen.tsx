@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Provider } from "react-native-paper";
 import theme from "../../util/theme.styles";
 import { StackParamList } from "../../util/stackScreens";
@@ -7,7 +7,7 @@ import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { StackNavigationProp } from "@react-navigation/stack";
 import useStyles from "./HomeScreen.style";
 import { themeColors } from "@cbr/common/src/util/colors";
-import { IUser, TAPILoadError, APILoadError } from "@cbr/common";
+import { IUser, TAPILoadError, APILoadError, useZones } from "@cbr/common";
 import { screens } from "../../util/screens";
 import { StackScreenName } from "../../util/StackScreenName";
 

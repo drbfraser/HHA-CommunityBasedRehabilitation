@@ -21,7 +21,7 @@ const addClient = async (clientInfo: FormData) => {
         });
 };
 
-const updateClient = async (clientInfo: FormData, clientId: number): Promise<IClient> => {
+const updateClient = async (clientInfo: FormData, clientId: string): Promise<IClient> => {
     const init: RequestInit = {
         method: "PUT",
         body: clientInfo,
@@ -70,6 +70,7 @@ export const handleNewWebClientSubmit = async (
             goal: values.educationGoals,
         },
     };
+
     const formData = objectToFormData(newClient);
 
     try {
@@ -100,6 +101,8 @@ export const handleUpdateClientSubmit = async (
     try {
         const disabilities = await getDisabilities();
         const updatedValues: Partial<IClient> = {
+            id: values.id,
+            user_id: values.user_id,
             first_name: values.first_name,
             last_name: values.last_name,
             birth_date: timestampFromFormDate(values.birth_date as string),

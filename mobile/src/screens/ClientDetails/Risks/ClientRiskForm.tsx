@@ -7,7 +7,6 @@ import useStyles, { riskStyles } from "./ClientRisk.styles";
 import {
     fieldLabels,
     FormField,
-    handleSubmit,
     IRisk,
     RiskLevel,
     riskLevels,
@@ -15,10 +14,12 @@ import {
     validationSchema,
 } from "@cbr/common";
 import { Formik } from "formik";
+import { handleRiskSubmit } from "./ClientRiskFormHandler";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 export interface ClientRiskFormProps {
-    riskData: IRisk;
-    setRisk: (risk: IRisk) => void;
+    riskData: any;
+    setRisk: (risk: any) => void;
 }
 
 export const toastValidationError = () => {
@@ -33,6 +34,22 @@ export const toastValidationError = () => {
 export const ClientRiskForm = (props: ClientRiskFormProps) => {
     const styles = useStyles();
     const [showModal, setShowModal] = useState(false);
+    const database = useDatabase();
+
+    const getRiskFormInitialValues = () => {
+        const risk = props.riskData;
+        const riskFormProps: IRisk = {
+            id: risk.id,
+            client_id: risk.client.id,
+            timestamp: risk.timestamp,
+            risk_type: risk.risk_type,
+            risk_level: risk.risk_level,
+            requirement: risk.requirement,
+            goal: risk.goal,
+        };
+        return riskFormProps;
+    };
+
     return (
         <View style={styles.riskModalStyle}>
             <Button
@@ -45,9 +62,9 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 Update
             </Button>
             <Formik
-                initialValues={props.riskData}
+                initialValues={getRiskFormInitialValues()}
                 onSubmit={(values) => {
-                    handleSubmit(values, props.riskData, props.setRisk);
+                    handleRiskSubmit(values, props.riskData, props.setRisk, database);
                 }}
                 validationSchema={validationSchema}
             >

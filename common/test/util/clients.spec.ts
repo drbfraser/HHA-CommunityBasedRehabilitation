@@ -8,7 +8,7 @@ const unusedClientSummaryProps: Omit<
     id: 0,
     full_name: "",
     zone: 0,
-    created_by_user: 1,
+    user_id: 1,
 };
 
 const createClientWithAllRisksAsGivenLevel = (riskLevel: RiskLevel): IClientSummary => {

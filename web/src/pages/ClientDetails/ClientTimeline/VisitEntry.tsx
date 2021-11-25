@@ -40,7 +40,6 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
 
     const onOpen = () => {
         setOpen(true);
-
         if (!visit) {
             apiFetch(Endpoint.VISIT, `${visitSummary.id}`)
                 .then((resp) => resp.json())
@@ -128,7 +127,7 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
             <>
                 <Card variant="outlined">
                     <CardContent>
-                        <b>Visit Date:</b> {timestampToDateTime(visit.date_visited)}
+                        <b>Visit Date:</b> {timestampToDateTime(visit.created_at)}
                         <br />
                         <b>Village:</b> {visit.village}
                     </CardContent>
@@ -144,7 +143,7 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
     return (
         <>
             <TimelineEntry
-                date={dateFormatter(visitSummary.date_visited)}
+                date={dateFormatter(visitSummary.created_at)}
                 content={<Summary clickable={true} />}
                 DotIcon={EmojiPeopleIcon}
                 onClick={onOpen}

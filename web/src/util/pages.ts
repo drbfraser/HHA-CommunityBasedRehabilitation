@@ -1,6 +1,8 @@
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core/SvgIcon";
 import HomeIcon from "@material-ui/icons/Home";
+import AddAlertIcon from "@material-ui/icons/AddAlert";
+import InboxIcon from "@material-ui/icons/Inbox";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 import PersonIcon from "@material-ui/icons/Person";
@@ -11,6 +13,8 @@ import AdminList from "pages/AdminList/AdminList";
 import ClientList from "pages/ClientList/ClientList";
 import ClientDetails from "pages/ClientDetails/ClientDetails";
 import UserView from "pages/User/UserView";
+import AlertForm from "pages/NewAlert/AlertForm";
+import AlertInbox from "pages/AlertInbox/AlertInbox";
 import ClientForm from "pages/NewClient/ClientForm";
 import NotFound from "pages/NotFound/NotFound";
 import AdminNew from "pages/Admin/AdminNew";
@@ -150,6 +154,20 @@ const pages: IPage[] = [
         name: "Logout",
         Component: Logout,
         showInNav: false,
+    },
+    {
+        path: "/alerts/new",
+        name: "New Alert",
+        showInNav: true,
+        Component: AlertForm,
+        Icon: AddAlertIcon,
+    },
+    {
+        path: "/alerts/inbox",
+        name: "Inbox",
+        showInNav: true,
+        Component: AlertInbox,
+        Icon: InboxIcon,
     },
     // must be at the bottom
     {

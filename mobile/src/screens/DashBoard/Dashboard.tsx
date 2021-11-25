@@ -3,13 +3,13 @@ import { Text, View, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
 import { Card, DataTable } from "react-native-paper";
 import useStyles from "./Dashboard.styles";
-import { BriefReferral, fetchAllClientsFromApi, fetchReferrals } from "./DashboardRequest";
+import { BriefReferral, fetchAllClientsFromDB, fetchReferrals } from "./DashboardRequest";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { timestampToDate } from "@cbr/common";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ClientListRow } from "../ClientList/ClientListRequest";
 import {
     arrowDirectionController,
@@ -20,6 +20,7 @@ import {
     TSortDirection,
 } from "../../util/listFunctions";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 const Dashboard = () => {
     const styles = useStyles();
@@ -28,6 +29,8 @@ const Dashboard = () => {
 
     const [referralSortOption, setReferralSortOption] = useState("");
     const [referralSortDirection, setReferralIsSortDirection] = useState<TSortDirection>("None");
+    const isFocused = useIsFocused();
+    const database = useDatabase();
 
     const dashBoardClientComparator = (a: ClientListRow, b: ClientListRow): number => {
         return clientComparator(a, b, clientSortOption, clientSortDirection);
@@ -63,29 +66,37 @@ const Dashboard = () => {
     };
 
     const [clientList, setClientList] = useState<ClientListRow[]>([]);
-    const [referralList, setreferralList] = useState<BriefReferral[]>([]);
+    const [referralList, setReferralList] = useState<BriefReferral[]>([]);
     const navigation = useNavigation();
     const getNewClient = async () => {
-        var fetchedClientList = await fetchAllClientsFromApi();
+        var fetchedClientList = await fetchAllClientsFromDB(database);
         if (clientSortDirection !== "None") {
             fetchedClientList = fetchedClientList.sort(dashBoardClientComparator);
         }
         setClientList(fetchedClientList);
     };
 
-    const getRefereals = async () => {
-        var fetchedReferrals = await fetchReferrals();
+    const getReferrals = async () => {
+        let fetchedReferrals: BriefReferral[] = await fetchReferrals(database);
         if (referralSortDirection !== "None") {
             fetchedReferrals = fetchedReferrals.sort(dashBoardReferralComparator);
         }
-        setreferralList(fetchedReferrals);
+        setReferralList(fetchedReferrals);
     };
 
     useEffect(() => {
-        getNewClient();
-        getRefereals();
+        if (isFocused) {
+            getNewClient();
+            getReferrals();
+        }
         //TODO alert part.
-    }, [clientSortOption, referralSortOption, clientSortDirection, referralSortDirection]);
+    }, [
+        clientSortOption,
+        referralSortOption,
+        clientSortDirection,
+        referralSortDirection,
+        isFocused,
+    ]);
 
     const locale = NativeModules.I18nManager.localeIdentifier;
     const timezone = Localization.timezone;

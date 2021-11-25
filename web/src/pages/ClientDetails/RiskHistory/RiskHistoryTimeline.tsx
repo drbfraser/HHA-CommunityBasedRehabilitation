@@ -18,7 +18,7 @@ interface IProps {
 
 const RiskHistoryTimeline = ({ client }: IProps) => {
     const timelineStyles = useTimelineStyles();
-    const dateFormatter = getDateFormatterFromReference(client?.created_date);
+    const dateFormatter = getDateFormatterFromReference(client?.created_at);
 
     interface IEntryProps {
         risk: IRisk;
@@ -86,10 +86,10 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
                             <RiskEntry
                                 key={risk.id}
                                 risk={risk}
-                                isInitial={risk.timestamp === client.created_date}
+                                isInitial={risk.timestamp === client.created_at}
                             />
                         ))}
-                    <ClientCreatedEntry createdDate={dateFormatter(client.created_date)} />
+                    <ClientCreatedEntry createdDate={dateFormatter(client.created_at)} />
                 </>
             ) : (
                 [1, 2, 3, 4].map((i) => <SkeletonEntry key={i} />)

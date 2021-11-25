@@ -23,7 +23,10 @@ import Login from "./screens/Login/Login";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
 import { StackScreenName } from "./util/StackScreenName";
-import { RouteProp } from "@react-navigation/core/lib/typescript/src/types";
+import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
+import { database } from "./util/watermelonDatabase";
+import { DEV_API_URL } from "react-native-dotenv";
+import { io } from "socket.io-client/dist/socket.io";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -32,6 +35,17 @@ enableScreens();
 const Stack = createStackNavigator();
 const styles = globalStyle();
 const Tab = createMaterialBottomTabNavigator();
+
+const appEnv = process.env.NODE_ENV;
+
+let hostname: string;
+if (appEnv === "prod") {
+    hostname = "https://cbrp.cradleplatform.com";
+} else if (appEnv === "staging") {
+    hostname = "https://cbrs.cradleplatform.com";
+} else {
+    hostname = DEV_API_URL.replace(/(api)\/$/, ""); // remove '/api/'
+}
 
 /**
  * @see IAuthContext#requireLoggedIn
@@ -116,6 +130,22 @@ export default function App() {
                 // an unnecessary refetch.
                 return updateAuthStateIfNeeded(authState, setAuthState, false);
             });
+
+        const socket = io(`${hostname}`, {
+            transports: ["websocket"], // explicitly use websockets
+            autoConnect: true,
+            jsonp: false, // avoid manipulation of DOM
+        });
+
+        socket.on("connect", () => {
+            console.log(
+                `[SocketIO] Mobile user connected on ${socket.io.engine.hostname}:${socket.io.engine.port}. SocketID: ${socket.id}`
+            );
+        });
+
+        socket.on("disconnect", () => {
+            console.log(`[SocketIO] Mobile user disconnected.`);
+        });
     }, []);
 
     // design inspired by https://reactnavigation.org/docs/auth-flow/
@@ -151,32 +181,34 @@ export default function App() {
             <Provider theme={theme}>
                 <NavigationContainer theme={theme}>
                     <AuthContext.Provider value={authContext}>
-                        <Stack.Navigator>
-                            {authState.state === "loggedIn" ? (
-                                Object.values(StackScreenName).map((name) => (
+                        <DatabaseProvider database={database}>
+                            <Stack.Navigator>
+                                {authState.state === "loggedIn" ? (
+                                    Object.values(StackScreenName).map((name) => (
+                                        <Stack.Screen
+                                            key={name}
+                                            name={name}
+                                            component={stackScreenProps[name]}
+                                            // @ts-ignore
+                                            options={stackScreenOptions[name]}
+                                        />
+                                    ))
+                                ) : authState.state === "loggedOut" ||
+                                  authState.state === "previouslyLoggedIn" ? (
                                     <Stack.Screen
-                                        key={name}
-                                        name={name}
-                                        component={stackScreenProps[name]}
-                                        // @ts-ignore
-                                        options={stackScreenOptions[name]}
+                                        name="Login"
+                                        component={Login}
+                                        options={{ headerShown: false }}
                                     />
-                                ))
-                            ) : authState.state === "loggedOut" ||
-                              authState.state === "previouslyLoggedIn" ? (
-                                <Stack.Screen
-                                    name="Login"
-                                    component={Login}
-                                    options={{ headerShown: false }}
-                                />
-                            ) : (
-                                <Stack.Screen
-                                    name="Loading"
-                                    component={Loading}
-                                    options={{ headerShown: false }}
-                                />
-                            )}
-                        </Stack.Navigator>
+                                ) : (
+                                    <Stack.Screen
+                                        name="Loading"
+                                        component={Loading}
+                                        options={{ headerShown: false }}
+                                    />
+                                )}
+                            </Stack.Navigator>
+                        </DatabaseProvider>
                     </AuthContext.Provider>
                 </NavigationContainer>
             </Provider>

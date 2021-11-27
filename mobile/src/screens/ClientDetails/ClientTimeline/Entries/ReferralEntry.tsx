@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {
-    apiFetch,
     countObjectKeys,
-    Endpoint,
     IReferral,
     orthoticInjuryLocations,
     prostheticInjuryLocations,
@@ -18,6 +16,7 @@ import * as Yup from "yup";
 import { Formik, FormikProps } from "formik";
 import FormikTextInput from "../../../../components/FormikTextInput/FormikTextInput";
 import { dbType } from "../../../../util/watermelonDatabase";
+import { AutoSyncDB } from "../../../../util/syncHandler";
 
 interface IEntryProps {
     referral: IReferral;
@@ -87,6 +86,8 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         "Something went wrong when submitting the outcome and resolving the referral. Please try that again."
                     );
                 });
+
+            AutoSyncDB(database);
         };
 
         return (

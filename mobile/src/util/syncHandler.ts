@@ -1,12 +1,20 @@
 import { apiFetch, Endpoint } from "@cbr/common";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
+import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
 import { dbType } from "./watermelonDatabase";
 
 //@ts-ignore
 import SyncLogger from "@nozbe/watermelondb/sync/SyncLogger";
-import { stringify } from "querystring";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
+
+export async function AutoSyncDB(database: dbType) {
+    NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
+        if (connectionInfo?.type == NetInfoStateType.wifi && connectionInfo?.isInternetReachable) {
+            await SyncDB(database);
+        }
+    });
+}
 
 export async function SyncDB(database: dbType) {
     await synchronize({

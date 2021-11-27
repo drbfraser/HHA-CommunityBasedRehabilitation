@@ -2,8 +2,7 @@ import { IRisk } from "@cbr/common";
 import { modelName } from "../../../models/constant";
 import { dbType } from "../../../util/watermelonDatabase";
 import { addRisk } from "../../NewClient/formHandler";
-import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
-import { SyncDB } from "../../../util/syncHandler";
+import { AutoSyncDB } from "../../../util/syncHandler";
 
 const wasChangeMade = (values: IRisk, initialValues: IRisk) => {
     const keysToCheck = ["risk_level", "requirement", "goal"] as (keyof IRisk)[];
@@ -43,11 +42,7 @@ export const handleRiskSubmit = async (
         await client.updateRisk(values.risk_type, values.risk_level, currentTime);
         setRisk(risk);
 
-        NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
-            if (connectionInfo?.type == NetInfoStateType.wifi && connectionInfo?.isInternetReachable) {
-                await SyncDB(database);
-            }
-        });
+        AutoSyncDB(database);
     } catch (e) {
         alert("Encountered an error while trying to update the client's risk");
     }

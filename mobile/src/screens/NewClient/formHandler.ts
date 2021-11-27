@@ -1,11 +1,10 @@
-import { getDisabilities, TClientValues } from "@cbr/common";
+import { TClientValues } from "@cbr/common";
 import { FormikHelpers } from "formik";
 import { modelName } from "../../models/constant";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { dbType } from "../../util/watermelonDatabase";
-import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
-import { SyncDB } from "../../util/syncHandler";
+import { AutoSyncDB } from "../../util/syncHandler";
 
 // TODO: profile picture does not upload correctly to server
 
@@ -27,7 +26,6 @@ const handleNewMobileClientSubmit = async (
     database: dbType,
     userID: string
 ) => {
-    const disabilities = await getDisabilities();
     try {
         let newClient;
         const currentUser = await database.get(modelName.users).find(userID);
@@ -86,11 +84,7 @@ const handleNewMobileClientSubmit = async (
         });
         await newClient.newRiskTime();
 
-        NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
-            if (connectionInfo?.type == NetInfoStateType.wifi && connectionInfo?.isInternetReachable) {
-                await SyncDB(database);
-            }
-        });
+        AutoSyncDB(database);
 
         return newClient.id;
     } catch (e) {

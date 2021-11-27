@@ -6,8 +6,7 @@ import {
 import { baseSurveyHandleSubmitForm } from "@cbr/common/src/forms/BaseSurvey/baseSurveyHandler";
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
-import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
-import { SyncDB } from "../../util/syncHandler";
+import { AutoSyncDB } from "../../util/syncHandler";
 
 export const handleSubmit = async (
     values: BaseFormValues,
@@ -32,9 +31,5 @@ export const handleSubmit = async (
         });
     });
 
-    NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
-        if (connectionInfo?.type == NetInfoStateType.wifi && connectionInfo?.isInternetReachable) {
-            await SyncDB(database);
-        }
-    });
+    AutoSyncDB(database);
 };

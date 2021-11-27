@@ -179,7 +179,6 @@ export default function App() {
         [authState]
     );
 
-    console.log("STATE IS: " + authState.state);
     if (authState.state === "loggedIn") {
         SyncDatabaseTask.autoSyncDatabase(database);
     }

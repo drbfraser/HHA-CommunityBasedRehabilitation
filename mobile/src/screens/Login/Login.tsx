@@ -71,7 +71,6 @@ const Login = () => {
         try {
             await login(usernameToUse, password);
             // Initialize scheduled sync once logged in
-            console.log("RE INIT TASK AFTER LOGIN");
             SyncDatabaseTask.autoSyncDatabase(database);
             // Navigation is handled by App component as it updates the AuthState.
         } catch (e) {

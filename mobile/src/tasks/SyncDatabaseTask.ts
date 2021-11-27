@@ -1,18 +1,13 @@
 import BackgroundTimer from "react-native-background-timer";
-import NetInfo, { NetInfoStateType, NetInfoState, NetInfoSubscription } from "@react-native-community/netinfo";
+import NetInfo, {
+    NetInfoStateType,
+    NetInfoState,
+    NetInfoSubscription,
+} from "@react-native-community/netinfo";
 import { dbType } from "../util/watermelonDatabase";
 import { SyncDB } from "../util/syncHandler";
 import { Mutex } from "async-mutex";
 import { Alert } from "react-native";
-
-const syncAlert = () =>
-    Alert.alert(
-      "Notice",
-      "The local database is performing hourly sync",
-      [
-        { text: "OK", onPress: () => console.log("Sync Alert Dismissed") }
-      ]
-    );
 
 export namespace SyncDatabaseTask {
     const TASK_TAG = "[SyncDatabaseTask]";
@@ -21,43 +16,40 @@ export namespace SyncDatabaseTask {
     const syncMutex = new Mutex();
 
     let netInfoState: NetInfoState;
-    
-    const netInfoUnsubscribe: NetInfoSubscription =  NetInfo.addEventListener((connectionState) => {
+
+    const netInfoUnsubscribe: NetInfoSubscription = NetInfo.addEventListener((connectionState) => {
         /* Subscrube to Network state updates and update state */
         /* Calling function again will unsubscribe from updates */
         netInfoState = connectionState;
     });
 
-    let intervalId = -1;
+    /* For testing that sync occurs after internet disconnection & reconnection */
+    const syncAlert = () => {
+        Alert.alert("Sync Notice", `Sync completed on connection: ${netInfoState.type}`, [
+            { text: "OK", onPress: () => console.log("Sync Alert Dismissed") },
+        ]);
+    };
+
     export const autoSyncDatabase = (database: dbType) => {
-        console.log("$$$$$$$")
-        console.log(intervalId);
-        if (intervalId == -1) {
-            intervalId = BackgroundTimer.setInterval(async () => {
-                if (netInfoState?.isInternetReachable && netInfoState?.type == NetInfoStateType.wifi) {
-                    console.log(`${TASK_TAG}: Syncing local DB with remote`);
+        /* Remove running timer, if it exists */
+        BackgroundTimer.stopBackgroundTimer();
 
-                    syncMutex.runExclusive(() => {
-                        syncAlert();
-                        SyncDB(database);
-                    });
-                }
+        BackgroundTimer.runBackgroundTimer(async () => {
+            if (netInfoState?.type == NetInfoStateType.wifi && netInfoState?.isInternetReachable) {
+                console.log(`${TASK_TAG}: Syncing local DB with remote`);
 
-            }, 30000);
-
-            console.log("#####");
-            console.log(intervalId);
-        }
-    }
+                syncMutex.runExclusive(async () => {
+                    await SyncDB(database);
+                    syncAlert();
+                });
+            }
+        }, SYNC_INTERVAL_MILLISECONDS);
+    };
 
     export const deactivateAutoSync = () => {
-        console.log(`${TASK_TAG}: Stopped schedule local DB sync`);
-        BackgroundTimer.clearInterval(intervalId);
-        intervalId = -1;
+        console.log(`${TASK_TAG}: Stopped scheduled local DB sync`);
 
+        BackgroundTimer.stopBackgroundTimer();
         netInfoUnsubscribe();
-        
-        console.log("%%%%%%%");
-        console.log(intervalId);
-    }
+    };
 }

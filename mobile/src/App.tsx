@@ -135,9 +135,14 @@ export default function App() {
                 // current user information so pass false for tryUpdateUserInfoFromServer to avoid
                 // an unnecessary refetch.
                 const autoSyncPref = await AsyncStorage.getItem(SyncSettings.AutoSyncPref);
-                setAutoSync(autoSyncPref === "true");
+                if (autoSyncPref != null) {
+                    setAutoSync(autoSyncPref === "true");
+                }
+
                 const cellularSyncPref = await AsyncStorage.getItem(SyncSettings.CellularPref);
-                setCelluarSync(cellularSyncPref === "true");
+                if (cellularSyncPref != null) {
+                    setCelluarSync(cellularSyncPref === "true");
+                }
 
                 return updateAuthStateIfNeeded(authState, setAuthState, false);
             });

@@ -138,12 +138,10 @@ export default function App() {
                 if (autoSyncPref != null) {
                     setAutoSync(autoSyncPref === "true");
                 }
-
                 const cellularSyncPref = await AsyncStorage.getItem(SyncSettings.CellularPref);
                 if (cellularSyncPref != null) {
                     setCelluarSync(cellularSyncPref === "true");
                 }
-
                 return updateAuthStateIfNeeded(authState, setAuthState, false);
             });
 

@@ -1,7 +1,6 @@
 import { themeColors, timestampToDateTime } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useIsFocused } from "@react-navigation/core";
 import React, { useContext, useEffect, useState } from "react";
 import { Alert, SafeAreaView, View } from "react-native";
 import { Button, Divider, Text, Card, Switch } from "react-native-paper";
@@ -28,15 +27,11 @@ const Sync = () => {
     const netInfo = useNetInfo();
 
     const [loading, setLoading] = useState<boolean>(true);
-    const isFocused = useIsFocused();
     const [stats, setStats] = useState<ISync>({
         lastPulledTime: 0,
         remoteChanges: 0,
         localChanges: 0,
     });
-
-    console.log(`auto sync is ${autoSync}`);
-    console.log(`cellular sync is ${cellularSync}`);
 
     const resetDatabase = async () => {
         Alert.alert("Alert", "Are you sure you want to reset local database", [

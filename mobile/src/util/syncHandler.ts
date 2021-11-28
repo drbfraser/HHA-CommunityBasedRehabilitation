@@ -1,4 +1,4 @@
-import { apiFetch, Endpoint } from "@cbr/common";
+import { apiFetch, ClientField, Endpoint } from "@cbr/common";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
 import { database, dbType } from "./watermelonDatabase";
 
@@ -10,6 +10,8 @@ import { stringify } from "querystring";
 import { hasUnsyncedChanges } from "@nozbe/watermelondb/sync";
 import { ISync } from "../screens/Sync/Sync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SyncSettings } from "../screens/Sync/PrefConstants";
+import { modelName } from "../models/constant";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
@@ -64,16 +66,16 @@ async function storeStats() {
             localChanges: logger.logs[len - 1].localChangeCount,
         };
         try {
-            await AsyncStorage.setItem("SyncStats", JSON.stringify(newStats));
+            await AsyncStorage.setItem(SyncSettings.SyncStats, JSON.stringify(newStats));
         } catch (e) {}
     }
 }
 
 async function getImage(changes) {
-    await getImageData(changes["clients"]["created"], Endpoint.CLIENT_PICTURE);
-    await getImageData(changes["clients"]["updated"], Endpoint.CLIENT_PICTURE);
-    await getImageData(changes["referrals"]["created"], Endpoint.REFERRAL_PICTURE);
-    await getImageData(changes["referrals"]["updated"], Endpoint.REFERRAL_PICTURE);
+    await getImageData(changes[modelName.clients]["created"], Endpoint.CLIENT_PICTURE);
+    await getImageData(changes[modelName.clients]["updated"], Endpoint.CLIENT_PICTURE);
+    await getImageData(changes[modelName.referrals]["created"], Endpoint.REFERRAL_PICTURE);
+    await getImageData(changes[modelName.referrals]["updated"], Endpoint.REFERRAL_PICTURE);
 }
 
 async function getImageData(changes, endpoint) {
@@ -108,12 +110,18 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
     let localChange = false;
     raw._changed.split(",").forEach((column) => {
         if (
-            ["health_timestamp", "educat_timestamp", "social_timestamp"].some((a) => a !== column)
+            [
+                ClientField.health_timestamp,
+                ClientField.educat_timestamp,
+                ClientField.social_timestamp,
+            ].some((a) => a !== column)
         ) {
             if (
-                ["health_risk_level", "educat_risk_level", "social_risk_level"].some(
-                    (a) => a === column
-                )
+                [
+                    ClientField.health_risk_level,
+                    ClientField.educat_risk_level,
+                    ClientField.social_risk_level,
+                ].some((a) => a === column)
             ) {
                 let riskType = column.split("_")[0];
                 if (riskResolver(raw, dirtyRaw, newRaw, column, `${riskType}_timestamp`)) {

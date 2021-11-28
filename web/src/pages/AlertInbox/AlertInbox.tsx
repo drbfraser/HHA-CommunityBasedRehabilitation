@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import AlertList from "./AlertList";
 import AlertDetail from "./AlertDetail";
 import { useState } from "react";
+import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import { APILoadError } from "@cbr/common/util/endpoints";
 
 const AlertInbox = () => {
     const [selectedAlert, setSelectedAlert] = useState<number>(-1);
+    const [userID, setUserID] = useState<string>("unknown");
 
     const alertListProps = {
         onAlertSelectionEvent: (itemNum: number) => {
@@ -14,8 +17,19 @@ const AlertInbox = () => {
         selectAlert: selectedAlert,
     };
 
+    useEffect(() => {
+        const getUserProfile = async () => {
+            let user = await getCurrentUser();
+            if (user !== APILoadError) {
+                setUserID(user.id);
+            }
+        };
+        getUserProfile();
+    }, []);
+
     const alertDetailProps = {
         selectAlert: selectedAlert,
+        userID: userID,
     };
 
     return (

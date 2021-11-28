@@ -3,9 +3,11 @@ import Grid from "@material-ui/core/Grid";
 import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { IAlert } from "./Alert";
+import { IAlert, IAlertModel } from "./Alert";
 import { useState, useEffect } from "react";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
+import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import { handleUpdateAlertSubmit } from "@cbr/common/forms/Alert/alertHandler";
 
 const useStyles = makeStyles({
     dividerStyle: {
@@ -16,23 +18,30 @@ const useStyles = makeStyles({
 
 type Props = {
     selectAlert: number;
+    userID: string;
 };
 
 const AlertDetail = (alertDetailProps: Props) => {
     const style = useStyles();
 
-    const [alertData, setAlertData] = useState<IAlert[]>([]);
-
+    const [alertData, setAlertData] = useState<IAlertModel[]>([]);
+    
     /* 
     TODO
-      This part should belong to its parent component, but I am still learning how to implement that
+    This part should belong to its parent component, but I am still learning how to implement that
     */
+   useEffect(() => {
+     const fetchAlerts = async () => {
+       try {
+         setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
+        } catch (e) {
+          console.log(`Error fetching Alerts: ${e}`);
+        }
+      };
+      fetchAlerts();
+    }, []);
+    
     useEffect(() => {
-        const fetchAlerts = async () => {
-            try {
-                setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
-            } catch (e) {
-                console.log(`Error fetching Alerts: ${e}`);
             }
         };
         fetchAlerts();

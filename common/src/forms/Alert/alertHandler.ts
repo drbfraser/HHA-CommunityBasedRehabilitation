@@ -1,10 +1,17 @@
-import { TAlertValues, alertFieldLabels } from "./alertFields";
-import { FormikHelpers } from "formik";
-import { apiFetch, APIFetchFailError, Endpoint, objectToFormData } from "../../util/endpoints";
+import { TAlertValues, alertFieldLabels, TAlertUpdateValues } from "./alertFields";
+import { FormikHelpers, validateYupSchema } from "formik";
+import {
+    apiFetch,
+    APIFetchFailError,
+    APILoadError,
+    Endpoint,
+    objectToFormData,
+} from "../../util/endpoints";
 import { IAlert } from "../../util/alerts";
 import history from "../../util/history";
 import { socket } from "../../context/SocketIOContext";
 import { IUser } from "../../util/users";
+import { getCurrentUser } from "../../util/hooks/currentUser";
 
 const addAlert = async (alertInfo: FormData): Promise<IAlert> => {
     const init: RequestInit = {
@@ -21,6 +28,14 @@ const addAlert = async (alertInfo: FormData): Promise<IAlert> => {
         });
 };
 
+const updateAlert = async (alertInfo: FormData, alertId: string): Promise<IAlert> => {
+    const init: RequestInit = {
+        method: "PUT",
+        body: alertInfo,
+    };
+    return await apiFetch(Endpoint.ALERT, `${alertId}`, init).then((res) => res.json());
+};
+
 export const handleNewWebAlertSubmit = async (
     values: TAlertValues,
     helpers: FormikHelpers<TAlertValues>
@@ -30,6 +45,11 @@ export const handleNewWebAlertSubmit = async (
     need to keep a parameter showing the userID of the user who is using the system in the top layer.
     Then this userID will be availuable for every page rendered.
   */
+
+    // TODO: replace with Richards MR#98
+    let user = await getCurrentUser();
+    let userID: string = user !== APILoadError ? user.id : "unknown";
+
     let usersList: string[];
     try {
         // Add all users as having unread the alert initially
@@ -37,21 +57,21 @@ export const handleNewWebAlertSubmit = async (
         let users = await res.json();
         // Reduces list of users to an array of userIDs
         usersList = users.reduce((acc: string, value: IUser) => {
-          if (value.id && value.id != '1') { // TODO: get userID from context instead of hard coding
-            acc = acc.concat(value.id)
-          }
-          return acc
-        }, [])
-
+            if (value.id && value.id != userID) {
+                acc = acc.concat(value.id);
+            }
+            return acc;
+        }, []);
     } catch (e) {
         throw new Error(`Error retreiving users. ${e}`);
     }
+
     const newAlert = {
         subject: values.subject,
         priority: values.priority,
         alert_message: values.alert_message,
         unread_by_users: usersList ? usersList : [],
-        created_by_user: "1", // TODO: get userID from context instead of hard coding
+        created_by_user: userID,
     };
 
     const formData = objectToFormData(newAlert);
@@ -61,7 +81,6 @@ export const handleNewWebAlertSubmit = async (
         socket.emit("newAlert", newAlert); // emit socket event to the backend
 
         return alert;
-
     } catch (e) {
         const initialMessage = "Encountered an error while trying to create the alert!";
         const detailedError =
@@ -84,4 +103,26 @@ TODO:
 export const handleSave = async (values: any) => {
     // validate the input
     // call backend
+};
+
+export const handleUpdateAlertSubmit = async (
+    values: TAlertUpdateValues,
+) => {
+    try {
+        const updateValues: Partial<IAlert> = {
+          subject: values.subject,
+          priority: values.priority,
+          alert_message: values.alert_message,
+          unread_by_users: values.unread_by_users,
+          created_by_user: values.created_by_user,
+        };
+
+        const formData = objectToFormData(updateValues);
+        await updateAlert(formData, values.id);
+    } catch (e) {
+        const initialMessage = "Encountered an error while trying to update the alert!";
+        const detailedError =
+            e instanceof APIFetchFailError ? e.buildFormError(alertFieldLabels) : `${e}`;
+        alert(initialMessage + "\n" + detailedError);
+      } 
 };

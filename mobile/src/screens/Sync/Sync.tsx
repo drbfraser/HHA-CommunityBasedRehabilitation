@@ -8,6 +8,8 @@ import { Button, Divider, Text, Card, Switch } from "react-native-paper";
 import SyncAlert from "../../components/SyncAlert/SyncAlert";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { SyncDB, logger } from "../../util/syncHandler";
+import { SyncSettings } from "./PrefConstants";
+import { useNetInfo } from "@react-native-community/netinfo";
 import useStyles from "./Sync.styles";
 
 export interface ISync {
@@ -23,6 +25,7 @@ const Sync = () => {
     const [alertStatus, setAlertStatus] = useState<boolean>();
     const [showSyncModal, setSyncModal] = useState<boolean>(false);
     const { autoSync, setAutoSync, cellularSync, setCellularSync } = useContext(SyncContext);
+    const netInfo = useNetInfo();
 
     const [loading, setLoading] = useState<boolean>(true);
     const isFocused = useIsFocused();
@@ -31,6 +34,9 @@ const Sync = () => {
         remoteChanges: 0,
         localChanges: 0,
     });
+
+    console.log(`auto sync is ${autoSync}`);
+    console.log(`cellular sync is ${cellularSync}`);
 
     const resetDatabase = async () => {
         Alert.alert("Alert", "Are you sure you want to reset local database", [
@@ -63,7 +69,7 @@ const Sync = () => {
     };
 
     const clearStats = async () => {
-        await AsyncStorage.removeItem("SyncStats");
+        await AsyncStorage.removeItem(SyncSettings.SyncStats);
         let newStats: ISync = {
             lastPulledTime: 0,
             remoteChanges: 0,
@@ -74,7 +80,7 @@ const Sync = () => {
 
     const retreiveStats = async () => {
         try {
-            const value = await AsyncStorage.getItem("SyncStats");
+            const value = await AsyncStorage.getItem(SyncSettings.SyncStats);
             if (value != null) {
                 const result = JSON.parse(value);
                 let newStats: ISync = {
@@ -89,12 +95,12 @@ const Sync = () => {
 
     const storeAutoSync = async (value: boolean) => {
         try {
-            await AsyncStorage.setItem("autoSyncPref", value.toString());
+            await AsyncStorage.setItem(SyncSettings.AutoSyncPref, value.toString());
         } catch (e) {}
     };
     const storeCellularSync = async (value: boolean) => {
         try {
-            await AsyncStorage.setItem("cellularSyncPref", value.toString());
+            await AsyncStorage.setItem(SyncSettings.CellularPref, value.toString());
         } catch (e) {}
     };
 
@@ -114,6 +120,13 @@ const Sync = () => {
                     <Button
                         icon="database-sync"
                         mode="contained"
+                        disabled={
+                            !netInfo.isConnected
+                                ? true
+                                : netInfo.type == "cellular" && !cellularSync
+                                ? true
+                                : false
+                        }
                         onPress={() => {
                             try {
                                 SyncDB(database).then(() => {

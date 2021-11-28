@@ -29,6 +29,7 @@ import { DEV_API_URL } from "react-native-dotenv";
 import { io } from "socket.io-client/dist/socket.io";
 import { SyncContext } from "./context/SyncContext/SyncContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SyncSettings } from "./screens/Sync/PrefConstants";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -133,9 +134,9 @@ export default function App() {
                 // Resolve the auth state. invalidateAllCachedAPI already tries to refetch the
                 // current user information so pass false for tryUpdateUserInfoFromServer to avoid
                 // an unnecessary refetch.
-                const autoSyncPref = await AsyncStorage.getItem("autoSyncPref");
+                const autoSyncPref = await AsyncStorage.getItem(SyncSettings.AutoSyncPref);
                 setAutoSync(autoSyncPref === "true");
-                const cellularSyncPref = await AsyncStorage.getItem("cellularSyncPref");
+                const cellularSyncPref = await AsyncStorage.getItem(SyncSettings.CellularPref);
                 setCelluarSync(cellularSyncPref === "true");
 
                 return updateAuthStateIfNeeded(authState, setAuthState, false);

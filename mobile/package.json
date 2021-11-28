@@ -1,5 +1,4 @@
 {
-    "main": "./index.ts",
     "scripts": {
         "start": "react-native start",
         "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz && expo r -c",
@@ -27,7 +26,6 @@
         "@react-native-community/datetimepicker": "^3.2.0",
         "@react-native-community/masked-view": "0.1.10",
         "@react-native-community/netinfo": "6.0.0",
-        "@react-native-masked-view/masked-view": "^0.2.6",
         "@react-native-picker/picker": "1.9.11",
         "@react-navigation/material-bottom-tabs": "^5.3.15",
         "@react-navigation/native": "^5.9.4",

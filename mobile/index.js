@@ -6,14 +6,14 @@ import { Constants } from "react-native-unimodules";
 import NetInfo from "@react-native-community/netinfo";
 import { CacheRefreshTask } from "./src/tasks/CacheRefreshTask";
 
-const keyValStorageProvider: KeyValStorageProvider = {
-    getItem(key: string): Promise<string | null> {
+const keyValStorageProvider = {
+    getItem(key) {
         return AsyncStorage.getItem(key);
     },
-    setItem(key: string, value: string): Promise<void> {
+    setItem(key, value) {
         return AsyncStorage.setItem(key, value);
     },
-    removeItem(key: string): Promise<void> {
+    removeItem(key) {
         return AsyncStorage.removeItem(key);
     },
 };
@@ -36,7 +36,7 @@ initializeCommon({
         });
         // TODO: Delete all other stored data in the app including client data, referrals, etc.
     },
-    fetchErrorWrapper: async (e: Error): Promise<Error> => {
+    fetchErrorWrapper: async (e) => {
         if (e.message === "Network request failed") {
             const netInfoState = await NetInfo.fetch();
             return new Error(

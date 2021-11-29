@@ -8,7 +8,7 @@ import { RiskLevel, riskLevels } from "@cbr/common/util/risks";
 import { FiberManualRecord } from "@material-ui/icons";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { makeStyles } from "@material-ui/core/styles";
-import { PriorityLevel } from "./Alert";
+import { PriorityLevel } from "@cbr/common/util/alerts";
 import { useState, useEffect } from "react";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { Time } from "@cbr/common/util/time";
@@ -56,9 +56,9 @@ const RenderBadge = (params: String) => {
     /*
       TODO: this should be improved, make Priority icons seperate from Risk Icons
     */
-    if (params === "M") {
+    if (params === "ME") {
         risk = RiskLevel.MEDIUM;
-    } else if (params === "H") {
+    } else if (params === "HI") {
         risk = RiskLevel.HIGH;
     } else {
         risk = RiskLevel.LOW;

@@ -58,6 +58,6 @@ urlpatterns = [
         name="baseline-survey-list",
     ),
     path("alerts", views.AlertList.as_view(), name="alert-list"),
-    path("alert/<str:pk>", views.AlertDetail.as_view(), name="alert-detail"),
+    path("alert/<int:pk>", views.AlertDetail.as_view(), name="alert-detail"),
     url(r"^sync/$", views.sync, name="sync"),
 ]

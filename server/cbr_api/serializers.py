@@ -770,7 +770,6 @@ class AlertSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         current_time = int(time.time())
-        validated_data["id"] = uuid.uuid4()
         validated_data["created_by_user"] = self.context["request"].user
         validated_data["created_date"] = current_time
         

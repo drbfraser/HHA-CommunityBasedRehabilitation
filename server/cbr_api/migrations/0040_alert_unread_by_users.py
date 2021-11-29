@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0039_remove_referral_created_at'),
+        ("cbr_api", "0039_remove_referral_created_at"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='alert',
-            name='unread_by_users',
+            model_name="alert",
+            name="unread_by_users",
             field=models.TextField(blank=True),
         ),
     ]

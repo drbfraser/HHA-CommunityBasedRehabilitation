@@ -7,18 +7,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0040_alert_unread_by_users'),
+        ("cbr_api", "0040_alert_unread_by_users"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='alert',
-            name='id',
+            model_name="alert",
+            name="id",
             field=models.CharField(max_length=100, primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='alert',
-            name='unread_by_users',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.TextField(blank=True), size=None),
+            model_name="alert",
+            name="unread_by_users",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.TextField(blank=True), size=None
+            ),
         ),
     ]

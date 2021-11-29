@@ -772,7 +772,7 @@ class AlertSerializer(serializers.ModelSerializer):
         current_time = int(time.time())
         validated_data["created_by_user"] = self.context["request"].user
         validated_data["created_date"] = current_time
-        
+
         alert = super().create(validated_data)
         alert.save()
         return alert

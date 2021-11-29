@@ -26,13 +26,13 @@ export const alertFieldLabels = {
 };
 
 export const alertUpdateValues = {
-  [alertField.id]: "",
-  [alertField.subject]: "",
-  [alertField.priority]: "" as PriorityLevel,
-  [alertField.alert_message]: "",
-  [alertField.unread_by_users]: "",
-  [alertField.created_by_user]: "",
-  [alertField.date_created]: "",
+    [alertField.id]: "",
+    [alertField.subject]: "",
+    [alertField.priority]: "" as PriorityLevel,
+    [alertField.alert_message]: "",
+    [alertField.unread_by_users]: "",
+    [alertField.created_by_user]: "",
+    [alertField.date_created]: "",
 };
 
 export type TAlertUpdateValues = IAlert;

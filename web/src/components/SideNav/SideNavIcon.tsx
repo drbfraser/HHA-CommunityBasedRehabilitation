@@ -39,7 +39,7 @@ const SideNavIcon = ({ page, active }: IProps) => {
                 }
             }
         };
-        
+
         getUnreadAlertsByUserID();
     }, []);
 

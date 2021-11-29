@@ -20,7 +20,11 @@ class Command(BaseCommand):
                 priority=priority,
                 subject=subject,
                 alert_message=alert_message,
-                unread_by_users=[random.choice(userIDs), random.choice(userIDs), random.choice(userIDs)],
+                unread_by_users=[
+                    random.choice(userIDs),
+                    random.choice(userIDs),
+                    random.choice(userIDs),
+                ],
                 created_by_user=random.choice(users),
                 created_date=random.randint(
                     getYearTimestamp(self, 2017), getYearTimestamp(self, 2018)

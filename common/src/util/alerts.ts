@@ -9,9 +9,9 @@ export interface IAlert {
 }
 
 export enum PriorityLevel {
-  LOW = "LO",
-  MEDIUM = "ME",
-  HIGH = "HI",
+    LOW = "LO",
+    MEDIUM = "ME",
+    HIGH = "HI",
 }
 
 export const priorities = {

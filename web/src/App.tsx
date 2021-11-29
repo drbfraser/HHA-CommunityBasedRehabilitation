@@ -28,11 +28,7 @@ const App = () => {
                     <Switch>
                         {pagesForUser(user).map((page) => (
                             <Route key={page.path} exact={page.exact ?? true} path={page.path}>
-                                {open ? (
-                                    <AlertNotification alertInfo={alert} setOpen={setOpen} />
-                                ) : (
-                                    <></>
-                                )}
+                                {open && <AlertNotification alertInfo={alert} setOpen={setOpen} />}
                                 <Typography variant="h1" className={styles.pageTitle}>
                                     {page.name}
                                 </Typography>
@@ -50,8 +46,8 @@ const App = () => {
     useEffect(() => {
         socket.on("broadcastAlert", (data) => {
             setAlert(data);
-            setOpen(true);
         });
+        return () => { setOpen(false) }
     }, []);
 
     return (

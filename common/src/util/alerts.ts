@@ -1,21 +1,21 @@
 export interface IAlert {
     id: string;
     subject: string;
-    priority: Priority;
+    priority: PriorityLevel;
     alert_message: string;
     unread_by_users: string;
     created_by_user: string;
     created_date: string;
 }
 
-export enum Priority {
-    HIGH = "H",
-    MEDIUM = "M",
-    LOW = "L",
+export enum PriorityLevel {
+  LOW = "LO",
+  MEDIUM = "ME",
+  HIGH = "HI",
 }
 
 export const priorities = {
-    [Priority.HIGH]: "High",
-    [Priority.MEDIUM]: "Medium",
-    [Priority.LOW]: "Low",
+    [PriorityLevel.HIGH]: "High",
+    [PriorityLevel.MEDIUM]: "Medium",
+    [PriorityLevel.LOW]: "Low",
 };

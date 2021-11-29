@@ -3,10 +3,9 @@ import Grid from "@material-ui/core/Grid";
 import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { IAlert, IAlertModel } from "./Alert";
+import { IAlert } from "@cbr/common/util/alerts";
 import { useState, useEffect } from "react";
-import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
-import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { handleUpdateAlertSubmit } from "@cbr/common/forms/Alert/alertHandler";
 
 const useStyles = makeStyles({
@@ -23,32 +22,55 @@ type Props = {
 
 const AlertDetail = (alertDetailProps: Props) => {
     const style = useStyles();
+    const [alertData, setAlertData] = useState<IAlert[]>([]);
 
-    const [alertData, setAlertData] = useState<IAlertModel[]>([]);
-    
     /* 
     TODO
     This part should belong to its parent component, but I am still learning how to implement that
     */
-   useEffect(() => {
-     const fetchAlerts = async () => {
-       try {
-         setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
-        } catch (e) {
-          console.log(`Error fetching Alerts: ${e}`);
-        }
-      };
-      fetchAlerts();
-    }, []);
-    
     useEffect(() => {
+        const fetchAlerts = async () => {
+            try {
+                setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
+            } catch (e) {
+                console.log(`Error fetching Alerts: ${e}`);
             }
         };
         fetchAlerts();
     }, []);
 
+    useEffect(() => {
+        const updateAlertUnreadUsersList = async () => {
+            try {
+                // Find the selected alert in the alertData list by ID
+                let selectedAlertData: IAlert | undefined = alertData.find(
+                    ({ id }) => id.toString() === alertDetailProps.selectAlert.toString()
+                );
+
+                let updateAlert: IAlert;
+                if (selectedAlertData) {
+                    updateAlert = {
+                        id: selectedAlertData.id,
+                        subject: selectedAlertData.subject,
+                        priority: selectedAlertData.priority,
+                        alert_message: selectedAlertData.alert_message,
+                        unread_by_users: selectedAlertData.unread_by_users,
+                        created_by_user: selectedAlertData.created_by_user,
+                        created_date: selectedAlertData.created_date,
+                    };
+
+                    await handleUpdateAlertSubmit(updateAlert);
+                }
+            } catch (e) {
+                console.log(`Error updating the Alert: ${e}`);
+            }
+        };
+
+        updateAlertUnreadUsersList();
+    }, [alertDetailProps, alertData]);
+
     const selectedItem: Array<any> = alertData.filter((alert) => {
-        return alert.id === alertDetailProps.selectAlert;
+        return alert.id.toString() === alertDetailProps.selectAlert.toString();
     });
 
     /* TODO: Delete Button */

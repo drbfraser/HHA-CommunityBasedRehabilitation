@@ -40,13 +40,6 @@ export const handleNewWebAlertSubmit = async (
     values: TAlertValues,
     helpers: FormikHelpers<TAlertValues>
 ) => {
-    /*
-    TODO:
-    need to keep a parameter showing the userID of the user who is using the system in the top layer.
-    Then this userID will be availuable for every page rendered.
-  */
-
-    // TODO: replace with Richards MR#98
     let user = await getCurrentUser();
     let userID: string = user !== APILoadError ? user.id : "unknown";
 
@@ -105,16 +98,14 @@ export const handleSave = async (values: any) => {
     // call backend
 };
 
-export const handleUpdateAlertSubmit = async (
-    values: TAlertUpdateValues,
-) => {
+export const handleUpdateAlertSubmit = async (values: TAlertUpdateValues) => {
     try {
         const updateValues: Partial<IAlert> = {
-          subject: values.subject,
-          priority: values.priority,
-          alert_message: values.alert_message,
-          unread_by_users: values.unread_by_users,
-          created_by_user: values.created_by_user,
+            subject: values.subject,
+            priority: values.priority,
+            alert_message: values.alert_message,
+            unread_by_users: values.unread_by_users,
+            created_by_user: values.created_by_user,
         };
 
         const formData = objectToFormData(updateValues);
@@ -124,5 +115,5 @@ export const handleUpdateAlertSubmit = async (
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(alertFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);
-      } 
+    }
 };

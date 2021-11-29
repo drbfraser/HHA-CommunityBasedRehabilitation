@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { Priority, IAlert } from "../../util/alerts";
+import { PriorityLevel, IAlert } from "../../util/alerts";
 
 export enum alertField {
     id = "id",
@@ -13,7 +13,7 @@ export enum alertField {
 
 export const alertInitialValues = {
     [alertField.subject]: "",
-    [alertField.priority]: "" as Priority,
+    [alertField.priority]: "" as PriorityLevel,
     [alertField.alert_message]: "",
 };
 
@@ -28,7 +28,7 @@ export const alertFieldLabels = {
 export const alertUpdateValues = {
   [alertField.id]: "",
   [alertField.subject]: "",
-  [alertField.priority]: "" as Priority,
+  [alertField.priority]: "" as PriorityLevel,
   [alertField.alert_message]: "",
   [alertField.unread_by_users]: "",
   [alertField.created_by_user]: "",

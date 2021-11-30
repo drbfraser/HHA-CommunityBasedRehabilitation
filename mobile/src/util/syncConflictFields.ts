@@ -1,4 +1,4 @@
-import { ClientField, AdminField } from "@cbr/common";
+import { ClientField, AdminField, ReferralField } from "@cbr/common";
 
 const clientConflictFields = new Set([
     ClientField.birth_date,
@@ -19,7 +19,7 @@ const clientConflictFields = new Set([
     ClientField.zone,
 ]);
 
-const referralConflictFields = new Set(["outcome"]);
+const referralConflictFields = new Set([ReferralField.outcome]);
 
 const userConflictFields = new Set([
     AdminField.first_name,
@@ -33,4 +33,8 @@ export const conflictFields = {
     clients: clientConflictFields,
     referrals: referralConflictFields,
     users: userConflictFields,
+};
+
+export const referralLabels = {
+    outcome: "Referral Outcome",
 };

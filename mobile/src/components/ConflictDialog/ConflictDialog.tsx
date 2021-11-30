@@ -8,23 +8,35 @@ import useStyles from "./ConflictDialog.styles";
 import { RootState } from "../../redux/index";
 import { clearSyncConflicts } from "../../redux/actions";
 import { useSelector, useDispatch } from 'react-redux';
+import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { modelName } from "../../models/constant";
 
 const ConflictDialog = () => {
     const styles = useStyles();
+    const dispatch = useDispatch();
+    const database = useDatabase();
 
     const currState: RootState = useSelector((state: RootState) => state);
     const noConflicts: boolean = currState.conflicts.cleared;
-    let clientConflicts: Object = currState.conflicts.clientConflicts;
     const userConflicts: Object = currState.conflicts.userConflicts;
+    const clientConflicts: Object = currState.conflicts.clientConflicts;
 
+    const clients = Object.keys(clientConflicts);
+    clients.map(async (key) => {
+        if (!clientConflicts[key].name) {
+            /* Entry was added without name ie. Referral conflict */
+            const client = await database.get(modelName.clients).find(key);
+            clientConflicts[key].name = client.full_name;
+        }
+    });
+
+    const [dialogVisible, setDialogVisible] = useState<boolean>(!noConflicts);
+    
     useEffect(() => {
         if (!noConflicts) {
             setDialogVisible(true);
         }
     }, [currState]);
-
-    const dispatch = useDispatch();
-    const [dialogVisible, setDialogVisible] = useState(!noConflicts);
 
     const onClose = () => {
         dispatch(clearSyncConflicts());
@@ -51,19 +63,11 @@ const ConflictDialog = () => {
                                         <View>
                                         <Text style={styles.conflictName} key={clientConflicts[key]}>{clientConflicts[key].name}</Text>
                                         {clientConflicts[key].rejected.map((rej) => {
-                                            return <Text style={styles.conflictContent}>{rej.column}: {rej.rejChange}</Text>
+                                            return <Text style={styles.conflictContent} key={rej.column}>{rej.column}: {rej.rejChange}</Text>
                                         })}
                                         </View>
                                     );
                                 })}
-                                
-                                <Text style={styles.conflictName}>John Smith</Text>
-                                <Text style={styles.conflictContent}>First Name: Johnny</Text>
-                                <Text style={styles.conflictContent}>Last Name: Smithe</Text>
-                                <Text style={styles.conflictName}>Jane Smith</Text>
-                                <Text style={styles.conflictContent}>First Name: Johnny</Text>
-                                <Text style={styles.conflictContent}>Last Name: Smithe</Text>
-                                <Text></Text>
                             </List.Accordion>
                             <List.Accordion
                                 theme={{ colors: { background: themeColors.blueBgLight } }}
@@ -74,19 +78,11 @@ const ConflictDialog = () => {
                                         <View>
                                         <Text style={styles.conflictName} key={userConflicts[key]}>{userConflicts[key].name}</Text>
                                         {userConflicts[key].rejected.map((rej) => {
-                                            return <Text style={styles.conflictContent}>{rej.column}: {rej.rejChange}</Text>
+                                            return <Text style={styles.conflictContent} key={rej.column}>{rej.column}: {rej.rejChange}</Text>
                                         })}
                                         </View>
                                     );
                                 })}
-
-                                <Text style={styles.conflictName}>John Smith</Text>
-                                <Text style={styles.conflictContent}>First Name: Johnny</Text>
-                                <Text style={styles.conflictContent}>Last Name: Smithe</Text>
-                                <Text style={styles.conflictName}>Jane Smith</Text>
-                                <Text style={styles.conflictContent}>First Name: Johnny</Text>
-                                <Text style={styles.conflictContent}>Last Name: Smithe</Text>
-                                <Text></Text>
                             </List.Accordion>
                         </ScrollView>
                 </Dialog.Content>

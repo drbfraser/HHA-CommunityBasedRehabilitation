@@ -9,7 +9,7 @@ export const addSyncConflicts = (clientConflicts, userConflicts) => ({
     type: "ADD_CONFLICTS",
     payload: {
         clientConflicts,
-        userConflicts
+        userConflicts,
     },
 });
 

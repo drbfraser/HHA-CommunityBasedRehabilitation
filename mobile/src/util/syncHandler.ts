@@ -1,5 +1,5 @@
 import { apiFetch, Endpoint, updateClientfieldLabels, adminUserFieldLabels } from "@cbr/common";
-import { conflictFields } from "./syncConflictFields";
+import { conflictFields, referralLabels } from "./syncConflictFields";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
 import { dbType } from "./watermelonDatabase";
 
@@ -102,6 +102,19 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                     column: updateClientfieldLabels[column],
                     rejChange: newRaw[column],
                 });
+            } else if (tableName == "referrals") {
+                /* Referral conflicts are also stored under client ID object 
+                   Full client name will be retrieved during component rendering */
+                if (!clientConflicts[raw.client_id]) {
+                    clientConflicts[raw.client_id] = {
+                        rejected: [],
+                    };
+                }
+
+                clientConflicts[raw.client_id].rejected.push({
+                    column: referralLabels[column],
+                    rejChange: newRaw[column],
+                });
             } else if (tableName == "users") {
                 if (!userConflicts[raw.id]) {
                     userConflicts[raw.id] = {
@@ -138,16 +151,16 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 if (raw[column] > dirtyRaw[column]) {
                     localChange = true;
                 } else {
-                    newRaw[column] = dirtyRaw[column];
                     recordConflict(column, raw, newRaw);
+                    newRaw[column] = dirtyRaw[column];
                 }
             } else if (column === "picture") {
                 // if server image is null, then will push local changes up instead
                 if (dirtyRaw[column] == null) {
                     localChange = true;
                 } else {
-                    newRaw[column] = dirtyRaw[column];
                     recordConflict(column, raw, newRaw);
+                    newRaw[column] = dirtyRaw[column];
                 }
             } else if (column === "disability") {
                 /* Server stores disabilities as [1, 2, ....] whereas
@@ -156,15 +169,13 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 if (newRaw[column].replace(",", ", ") == dirtyRaw[column]) {
                     localChange = true;
                 } else {
-                    newRaw[column] = dirtyRaw[column];
                     recordConflict(column, raw, newRaw);
-
-                    
+                    newRaw[column] = dirtyRaw[column];
                 }
             } else {
                 /* This is always server-side wins unless in cases specified above */
-                newRaw[column] = dirtyRaw[column];
                 recordConflict(column, raw, newRaw);
+                newRaw[column] = dirtyRaw[column];
             }
         }
     });

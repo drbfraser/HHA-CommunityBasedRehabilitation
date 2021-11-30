@@ -8,6 +8,7 @@ export const initialConnectionState = {
 export const initialConflictsState = {
     cleared: true as boolean,
     clientConflicts: {} as Object,
+    referralConflicts: {} as Object,
     userConflicts: {} as Object,
 }
 

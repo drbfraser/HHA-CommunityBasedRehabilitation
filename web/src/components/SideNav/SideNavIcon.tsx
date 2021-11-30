@@ -28,7 +28,6 @@ const SideNavIcon = ({ page, active }: IProps) => {
         if (res) {
             if (user === APILoadError || user === undefined) {
                 <Alert severity="error">Something went wrong. Please go back and try again.</Alert>;
-                setUnreadAlertsCount(0);
             } else {
                 let unreadAlerts: IAlert[] = res.filter((alert) =>
                     alert.unread_by_users.includes(user.id)
@@ -44,6 +43,7 @@ const SideNavIcon = ({ page, active }: IProps) => {
     socket.on("updateUnreadList", () => {
         updateUnreadAlertsNotification();
     });
+
     useEffect(() => {
         updateUnreadAlertsNotification();
     }, [user]);

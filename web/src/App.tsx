@@ -46,8 +46,11 @@ const App = () => {
     useEffect(() => {
         socket.on("broadcastAlert", (data) => {
             setAlert(data);
+            setOpen(true);
         });
-        return () => { setOpen(false) }
+        return () => {
+            setOpen(false);
+        };
     }, []);
 
     return (

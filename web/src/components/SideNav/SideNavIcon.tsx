@@ -1,6 +1,6 @@
 import { Badge } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IPage } from "util/pages";
 import { useStyles } from "./SideNav.styles";
@@ -23,7 +23,7 @@ const SideNavIcon = ({ page, active }: IProps) => {
     const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
 
     // Function fetches alerts to check how many unread alert's this user has and sets the state accordingly
-    const updateUnreadAlertsNotification = async () => {
+    const updateUnreadAlertsNotification = useCallback(async () => {
         let res = await fetchAlerts();
         if (res) {
             if (user === APILoadError || user === undefined) {
@@ -35,7 +35,8 @@ const SideNavIcon = ({ page, active }: IProps) => {
                 setUnreadAlertsCount(unreadAlerts.length);
             }
         }
-    };
+    }, [user]);
+
     socket.on("broadcastAlert", () => {
         updateUnreadAlertsNotification();
     });
@@ -46,7 +47,7 @@ const SideNavIcon = ({ page, active }: IProps) => {
 
     useEffect(() => {
         updateUnreadAlertsNotification();
-    }, [user]);
+    }, [updateUnreadAlertsNotification, user]);
 
     const fetchAlerts = async () => {
         try {

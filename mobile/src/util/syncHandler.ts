@@ -4,7 +4,6 @@ import { dbType } from "./watermelonDatabase";
 
 //@ts-ignore
 import SyncLogger from "@nozbe/watermelondb/sync/SyncLogger";
-import { stringify } from "querystring";
 
 import { store } from '../redux/store';
 import { addSyncConflicts } from '../redux/actions';
@@ -101,6 +100,7 @@ const clientConflictFields = new Set([
     ClientField.village,
     ClientField.zone,
 ]);
+
 const userConflictFields = new Set([
     AdminField.first_name,
     AdminField.last_name,

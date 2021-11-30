@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Provider } from "react-native-paper";
+import { Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import theme from "./util/theme.styles";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -28,6 +28,9 @@ import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
 import { database } from "./util/watermelonDatabase";
 import { DEV_API_URL } from "react-native-dotenv";
 import { io } from "socket.io-client/dist/socket.io";
+
+import { Provider as StoreProvider } from "react-redux";
+import { store } from './redux/store';
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -185,40 +188,42 @@ export default function App() {
 
     return (
         <SafeAreaView style={styles.safeApp}>
-            <Provider theme={theme}>
-                <NavigationContainer theme={theme}>
-                    <AuthContext.Provider value={authContext}>
-                        <DatabaseProvider database={database}>
-                            <Stack.Navigator>
-                                {authState.state === "loggedIn" ? (
-                                    Object.values(StackScreenName).map((name) => (
+            <StoreProvider store={store}>
+                <PaperProvider theme={theme}>
+                    <NavigationContainer theme={theme}>
+                        <AuthContext.Provider value={authContext}>
+                            <DatabaseProvider database={database}>
+                                <Stack.Navigator>
+                                    {authState.state === "loggedIn" ? (
+                                        Object.values(StackScreenName).map((name) => (
+                                            <Stack.Screen
+                                                key={name}
+                                                name={name}
+                                                component={stackScreenProps[name]}
+                                                // @ts-ignore
+                                                options={stackScreenOptions[name]}
+                                            />
+                                        ))
+                                    ) : authState.state === "loggedOut" ||
+                                    authState.state === "previouslyLoggedIn" ? (
                                         <Stack.Screen
-                                            key={name}
-                                            name={name}
-                                            component={stackScreenProps[name]}
-                                            // @ts-ignore
-                                            options={stackScreenOptions[name]}
+                                            name="Login"
+                                            component={Login}
+                                            options={{ headerShown: false }}
                                         />
-                                    ))
-                                ) : authState.state === "loggedOut" ||
-                                  authState.state === "previouslyLoggedIn" ? (
-                                    <Stack.Screen
-                                        name="Login"
-                                        component={Login}
-                                        options={{ headerShown: false }}
-                                    />
-                                ) : (
-                                    <Stack.Screen
-                                        name="Loading"
-                                        component={Loading}
-                                        options={{ headerShown: false }}
-                                    />
-                                )}
-                            </Stack.Navigator>
-                        </DatabaseProvider>
-                    </AuthContext.Provider>
-                </NavigationContainer>
-            </Provider>
+                                    ) : (
+                                        <Stack.Screen
+                                            name="Loading"
+                                            component={Loading}
+                                            options={{ headerShown: false }}
+                                        />
+                                    )}
+                                </Stack.Navigator>
+                            </DatabaseProvider>
+                        </AuthContext.Provider>
+                    </NavigationContainer>
+                </PaperProvider>
+            </StoreProvider>
         </SafeAreaView>
     );
 }

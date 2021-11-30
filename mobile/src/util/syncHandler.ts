@@ -1,10 +1,13 @@
-import { apiFetch, Endpoint } from "@cbr/common";
+import { apiFetch, Endpoint, ClientField, updateClientfieldLabels, AdminField, adminUserFieldLabels } from "@cbr/common";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
 import { dbType } from "./watermelonDatabase";
 
 //@ts-ignore
 import SyncLogger from "@nozbe/watermelondb/sync/SyncLogger";
 import { stringify } from "querystring";
+
+import { store } from '../redux/store';
+import { addSyncConflicts } from '../redux/actions';
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
@@ -79,8 +82,75 @@ function riskResolver(raw, dirtyRaw, newRaw, column, timestamp) {
     }
 }
 
+const referralConflictFields = new Set(["outcome"]);
+const clientConflictFields = new Set([
+    ClientField.birth_date,
+    ClientField.caregiver_email,
+    ClientField.caregiver_name,
+    ClientField.caregiver_phone,
+    ClientField.caregiver_present,
+    ClientField.disability,
+    ClientField.educat_risk_level,
+    ClientField.first_name,
+    ClientField.gender,
+    ClientField.health_risk_level,
+    ClientField.last_name,
+    ClientField.other_disability,
+    ClientField.phone_number,
+    ClientField.social_risk_level,
+    ClientField.village,
+    ClientField.zone,
+]);
+const userConflictFields = new Set([
+    AdminField.first_name,
+    AdminField.last_name,
+    AdminField.phone_number,
+    AdminField.role,
+    AdminField.zone,
+]);
+
+const conflictFields = {
+    clients: clientConflictFields,
+    referrals: referralConflictFields,
+    users: userConflictFields,
+};
+
 function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
     let localChange = false;
+
+    let clientConflicts = {};
+    let userConflicts = {};
+
+    const recordConflict = (column, raw, newRaw) => {
+        if (conflictFields[tableName].has(column)) {
+            if (tableName == "clients") {
+                if (!clientConflicts[raw.id]) {
+                    clientConflicts[raw.id] = {
+                        name: raw.full_name,
+                        rejected: [],
+                    };
+                }
+
+                clientConflicts[raw.id].rejected.push({
+                    column: updateClientfieldLabels[column],
+                    rejChange: newRaw[column],
+                });
+            } else if (tableName == "users") {
+                if (!userConflicts[raw.id]) {
+                    userConflicts[raw.id] = {
+                        name: `${raw.first_name} ${raw.last_name}`,
+                        rejected: [],
+                    };
+                }
+
+                userConflicts[raw.id].rejected.push({
+                    column: adminUserFieldLabels[column],
+                    rejChange: newRaw[column],
+                });
+            }
+        }
+    };
+
     raw._changed.split(",").forEach((column) => {
         if (
             ["health_timestamp", "educat_timestamp", "social_timestamp"].some((a) => a !== column)
@@ -93,6 +163,8 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 let riskType = column.split("_")[0];
                 if (riskResolver(raw, dirtyRaw, newRaw, column, `${riskType}_timestamp`)) {
                     localChange = true;
+                } else {
+                    recordConflict(column, raw, newRaw);
                 }
             } else if (column === "last_visit_date") {
                 // if local last visit date is greater than server last visit date, then take local version
@@ -100,6 +172,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                     localChange = true;
                 } else {
                     newRaw[column] = dirtyRaw[column];
+                    recordConflict(column, raw, newRaw);
                 }
             } else if (column === "picture") {
                 // if server image is null, then will push local changes up instead
@@ -107,9 +180,24 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                     localChange = true;
                 } else {
                     newRaw[column] = dirtyRaw[column];
+                    recordConflict(column, raw, newRaw);
+                }
+            } else if (column === "disability") {
+                /* Server stores disabilities as [1, 2, ....] whereas
+                   local stores disabilities as [1,2,...] so there is 
+                   always a 'conflict' */
+                if (newRaw[column].replace(",", ", ") == dirtyRaw[column]) {
+                    localChange = true;
+                } else {
+                    newRaw[column] = dirtyRaw[column];
+                    recordConflict(column, raw, newRaw);
+
+                    
                 }
             } else {
+                /* This is always server-side wins unless in cases specified above */
                 newRaw[column] = dirtyRaw[column];
+                recordConflict(column, raw, newRaw);
             }
         }
     });
@@ -122,6 +210,8 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
             newRaw["_status"] = "synced";
         }
     }
+
+    store.dispatch(addSyncConflicts(clientConflicts, userConflicts));
 
     return newRaw;
 }

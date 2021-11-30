@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { Text, View, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
-import { Card, DataTable } from "react-native-paper";
+import { Card, DataTable, Button, Portal, List, Dialog } from "react-native-paper";
 import useStyles from "./Dashboard.styles";
 import { BriefReferral, fetchAllClientsFromDB, fetchReferrals } from "./DashboardRequest";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { timestampToDate } from "@cbr/common";
+import { timestampToDate, themeColors } from "@cbr/common";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ClientListRow } from "../ClientList/ClientListRequest";
@@ -21,6 +21,10 @@ import {
 } from "../../util/listFunctions";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+
+import { RootState } from "../../redux/index";
+import { clearSyncConflicts } from "../../redux/actions";
+import { useSelector, useDispatch } from 'react-redux';
 
 const Dashboard = () => {
     const styles = useStyles();
@@ -101,13 +105,104 @@ const Dashboard = () => {
     const locale = NativeModules.I18nManager.localeIdentifier;
     const timezone = Localization.timezone;
 
+    const currState: RootState = useSelector((state: RootState) => state);
+    const noConflicts: boolean = currState.conflicts.cleared;
+    let clientConflicts: Object = currState.conflicts.clientConflicts;
+    const userConflicts: Object = currState.conflicts.userConflicts;
+
+    useEffect(() => {
+        if (!noConflicts) {
+            setDialogVisible(true);
+        }
+    }, [currState]);
+
+    const dispatch = useDispatch();
+    const [dialogVisible, setDialogVisible] = useState(!noConflicts);
+
+    const onClose = () => {
+        dispatch(clearSyncConflicts());
+        setDialogVisible(false);
+    }
+
     return (
         <SafeAreaView style={styles.container}>
+            {!noConflicts ? (
+                <Portal>
+                <Dialog visible={dialogVisible} style={styles.conflictDialog} onDismiss={onClose}>
+                    <Dialog.Title style={styles.conflictDialogTitle}>
+                        <Text>Sync Conflicts</Text>
+                    </Dialog.Title>
+                    <Dialog.Content style={styles.conflictDialogContent}>
+                            <Text style={styles.conflictMessage}>
+                                The following changes could not be saved to the server due to change conflict.
+                            </Text>
+                            <ScrollView>
+                                <List.Accordion
+                                    theme={{ colors: { background: themeColors.blueBgLight } }}
+                                    title={"Client Conflicts"}
+                                >
+                                    {Object.keys(clientConflicts).map((key) => {
+                                        return (
+                                            <View>
+                                            <Text style={styles.conflictName} key={clientConflicts[key]}>{clientConflicts[key].name}</Text>
+                                            {clientConflicts[key].rejected.map((rej) => {
+                                                return <Text style={styles.conflictContent}>{rej.column}: {rej.rejChange}</Text>
+                                            })}
+                                            </View>
+                                        );
+                                    })}
+                                    
+                                    <Text style={styles.conflictName}>John Smith</Text>
+                                    <Text style={styles.conflictContent}>First Name: Johnny</Text>
+                                    <Text style={styles.conflictContent}>Last Name: Smithe</Text>
+                                    <Text style={styles.conflictName}>Jane Smith</Text>
+                                    <Text style={styles.conflictContent}>First Name: Johnny</Text>
+                                    <Text style={styles.conflictContent}>Last Name: Smithe</Text>
+                                    <Text></Text>
+                                </List.Accordion>
+                                <List.Accordion
+                                    theme={{ colors: { background: themeColors.blueBgLight } }}
+                                    title={"User Conflicts"}
+                                >
+                                    {Object.keys(userConflicts).map((key) => {
+                                        return (
+                                            <View>
+                                            <Text style={styles.conflictName} key={userConflicts[key]}>{userConflicts[key].name}</Text>
+                                            {userConflicts[key].rejected.map((rej) => {
+                                                return <Text style={styles.conflictContent}>{rej.column}: {rej.rejChange}</Text>
+                                            })}
+                                            </View>
+                                        );
+                                    })}
+
+                                    <Text style={styles.conflictName}>John Smith</Text>
+                                    <Text style={styles.conflictContent}>First Name: Johnny</Text>
+                                    <Text style={styles.conflictContent}>Last Name: Smithe</Text>
+                                    <Text style={styles.conflictName}>Jane Smith</Text>
+                                    <Text style={styles.conflictContent}>First Name: Johnny</Text>
+                                    <Text style={styles.conflictContent}>Last Name: Smithe</Text>
+                                    <Text></Text>
+                                </List.Accordion>
+                            </ScrollView>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button
+                            style={styles.closeBtn}
+                            onPress={onClose}
+                            color={themeColors.blueBgDark}
+                        >
+                            OK
+                        </Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
+            ) : null}
             <ScrollView>
                 <View style={styles.row}>
                     <Text style={styles.title}>Dashboard</Text>
                 </View>
                 <View>
+                <Button>abcd</Button>
                     <Card>
                         <Card.Title title="Priority Clients"></Card.Title>
                         <ScrollView>

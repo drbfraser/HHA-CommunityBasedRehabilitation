@@ -1,4 +1,5 @@
-import { apiFetch, Endpoint, ClientField, updateClientfieldLabels, AdminField, adminUserFieldLabels } from "@cbr/common";
+import { apiFetch, Endpoint, updateClientfieldLabels, adminUserFieldLabels } from "@cbr/common";
+import { conflictFields } from "./syncConflictFields";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
 import { dbType } from "./watermelonDatabase";
 
@@ -80,40 +81,6 @@ function riskResolver(raw, dirtyRaw, newRaw, column, timestamp) {
         return false;
     }
 }
-
-const referralConflictFields = new Set(["outcome"]);
-const clientConflictFields = new Set([
-    ClientField.birth_date,
-    ClientField.caregiver_email,
-    ClientField.caregiver_name,
-    ClientField.caregiver_phone,
-    ClientField.caregiver_present,
-    ClientField.disability,
-    ClientField.educat_risk_level,
-    ClientField.first_name,
-    ClientField.gender,
-    ClientField.health_risk_level,
-    ClientField.last_name,
-    ClientField.other_disability,
-    ClientField.phone_number,
-    ClientField.social_risk_level,
-    ClientField.village,
-    ClientField.zone,
-]);
-
-const userConflictFields = new Set([
-    AdminField.first_name,
-    AdminField.last_name,
-    AdminField.phone_number,
-    AdminField.role,
-    AdminField.zone,
-]);
-
-const conflictFields = {
-    clients: clientConflictFields,
-    referrals: referralConflictFields,
-    users: userConflictFields,
-};
 
 function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
     let localChange = false;

@@ -6,7 +6,7 @@ import { Cancel, CheckCircle, FiberManualRecord } from "@material-ui/icons";
 import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { IRiskType, riskTypes } from "util/riskIcon";
 import { clientPrioritySort, IClientSummary } from "@cbr/common/util/clients";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { timestampToDate } from "@cbr/common/util/dates";
 import { IOutstandingReferral } from "@cbr/common/util/referrals";
@@ -23,6 +23,9 @@ import {
     RowsProp,
     RowData,
 } from "@material-ui/data-grid";
+import { IAlert } from "@cbr/common/util/alerts";
+import { IUser } from "@cbr/common/util/users";
+import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
 
 const Dashboard = () => {
     const dataGridStyle = useDataGridStyles();
@@ -112,8 +115,15 @@ const Dashboard = () => {
         const fetchAlerts = async () => {
             try {
                 const alertsList = await (await apiFetch(Endpoint.ALERTS)).json();
-                // TODO: only want unread alerts
-                setUnreadAlertsCount(alertsList.length);
+                const user: IUser | typeof APILoadError = await getCurrentUser();
+
+                if (user !== APILoadError) {
+                    let userID = user.id;
+                    let unreadAlerts: IAlert[] = alertsList.filter((alert: IAlert) =>
+                        alert.unread_by_users.includes(userID)
+                    );
+                    setUnreadAlertsCount(unreadAlerts.length);
+                }
             } catch (e) {
                 setReferralError(e instanceof Error ? e.message : `${e}`);
             }

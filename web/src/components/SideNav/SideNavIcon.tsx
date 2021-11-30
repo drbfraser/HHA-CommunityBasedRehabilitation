@@ -8,6 +8,7 @@ import { IAlert } from "../../../src/pages/AlertInbox/AlertList";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { Alert } from "@material-ui/lab";
+import { socket } from "@cbr/common/context/SocketIOContext";
 
 interface IProps {
     page: IPage;
@@ -21,27 +22,31 @@ const SideNavIcon = ({ page, active }: IProps) => {
     const user = useCurrentUser();
     const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
 
-    useEffect(() => {
-        const getUnreadAlertsByUserID = async (): Promise<void> => {
-            let res = await fetchAlerts();
-            if (!res) {
+    // Function fetches alerts to check how many unread alert's this user has and sets the state accordingly
+    const updateUnreadAlertsNotification = async () => {
+        let res = await fetchAlerts();
+        if (res) {
+            if (user === APILoadError || user === undefined) {
+                <Alert severity="error">Something went wrong. Please go back and try again.</Alert>;
                 setUnreadAlertsCount(0);
             } else {
-                if (user === APILoadError || user === undefined) {
-                    <Alert severity="error">
-                        Something went wrong. Please go back and try again.
-                    </Alert>;
-                } else {
-                    let unreadAlerts: IAlert[] = res.filter((alert) =>
-                        alert.unread_by_users.includes(JSON.stringify(user.id))
-                    );
-                    setUnreadAlertsCount(unreadAlerts.length);
-                }
+                let unreadAlerts: IAlert[] = res.filter((alert) =>
+                    alert.unread_by_users.includes(user.id)
+                );
+                setUnreadAlertsCount(unreadAlerts.length);
             }
-        };
+        }
+    };
+    socket.on("broadcastAlert", () => {
+        updateUnreadAlertsNotification();
+    });
 
-        getUnreadAlertsByUserID();
-    }, []);
+    socket.on("updateUnreadList", () => {
+        updateUnreadAlertsNotification();
+    });
+    useEffect(() => {
+        updateUnreadAlertsNotification();
+    }, [user]);
 
     const fetchAlerts = async () => {
         try {

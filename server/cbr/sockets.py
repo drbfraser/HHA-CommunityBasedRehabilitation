@@ -54,3 +54,8 @@ def newAlert(sid, data):
         },
         skip_sid=sid,  # exclude the sid that sent the new alert
     )
+
+
+@sio.on("alertViewed")
+def alertViewed(sid, data):
+    sio.emit("updateUnreadList", data)

@@ -100,16 +100,26 @@ export const handleSave = async (values: any) => {
 
 export const handleUpdateAlertSubmit = async (values: TAlertUpdateValues) => {
     try {
+        let user = await getCurrentUser();
+        let userID: string = user !== APILoadError ? user.id : "unknown";
+        // remove this user from the list of unread users
+        let list = values.unread_by_users;
+        let updatedUnreadUserList = Object.values(values.unread_by_users).filter(
+            (user) => user != userID
+        );
+
         const updateValues: Partial<IAlert> = {
             subject: values.subject,
             priority: values.priority,
             alert_message: values.alert_message,
-            unread_by_users: values.unread_by_users,
+            unread_by_users: updatedUnreadUserList.toString(),
             created_by_user: values.created_by_user,
         };
 
         const formData = objectToFormData(updateValues);
         await updateAlert(formData, values.id);
+        socket.emit("alertViewed", updateValues); // emit socket event to the backend
+
     } catch (e) {
         const initialMessage = "Encountered an error while trying to update the alert!";
         const detailedError =

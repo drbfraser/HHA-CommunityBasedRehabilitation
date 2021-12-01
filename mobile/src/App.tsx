@@ -194,7 +194,7 @@ export default function App() {
         [authState]
     );
 
-    if (authState.state === "loggedIn") {
+    if (authState.state === "loggedIn" && autoSync) {
         AutoSyncDB(database, autoSync, cellularSync).then(() => {
             SyncDatabaseTask.autoSyncDatabase(database, autoSync, cellularSync);
         });

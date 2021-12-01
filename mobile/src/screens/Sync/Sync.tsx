@@ -6,10 +6,11 @@ import { Alert, SafeAreaView, View } from "react-native";
 import { Button, Divider, Text, Card, Switch } from "react-native-paper";
 import SyncAlert from "../../components/SyncAlert/SyncAlert";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
-import { SyncDB, logger } from "../../util/syncHandler";
+import { SyncDB, logger, AutoSyncDB } from "../../util/syncHandler";
 import { SyncSettings } from "./PrefConstants";
 import { useNetInfo } from "@react-native-community/netinfo";
 import useStyles from "./Sync.styles";
+import { SyncDatabaseTask } from "../../tasks/SyncDatabaseTask";
 
 export interface ISync {
     lastPulledTime: number;
@@ -188,6 +189,9 @@ const Sync = () => {
                             thumbColor={autoSync ? themeColors.white : themeColors.white}
                             ios_backgroundColor="#3e3e3e"
                             onValueChange={(value) => {
+                                if (value == false) {
+                                    SyncDatabaseTask.deactivateAutoSync();
+                                }
                                 setAutoSync(value);
                                 storeAutoSync(value);
                             }}

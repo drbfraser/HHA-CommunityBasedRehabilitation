@@ -25,12 +25,13 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
             case NetInfoStateType.cellular:
                 if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
                     await SyncDB(database);
-                    break;
                 }
+                break;
             case NetInfoStateType.wifi:
                 if (autoSync && connectionInfo?.isInternetReachable) {
                     await SyncDB(database);
                 }
+                break;
         }
     });
 }

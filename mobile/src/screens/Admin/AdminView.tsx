@@ -25,9 +25,6 @@ const AdminView = ({
     route,
 }: StackScreenProps<StackParamList, StackScreenName.ADMIN_VIEW>) => {
     const authContext = useContext<IAuthContext>(AuthContext);
-    useEffect(() => {
-        authContext.requireLoggedIn(true);
-    }, []);
 
     const [isUserChangeSnackbarVisible, setUserChangeSnackbarVisible] = useState(false);
 

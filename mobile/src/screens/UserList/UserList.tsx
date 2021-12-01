@@ -102,10 +102,6 @@ const UserList = () => {
 
     useEffect(() => {
         if (isFocused) {
-            if (!isAuthenticate) {
-                authContext.requireLoggedIn(true);
-                setAuthenticate(true);
-            }
             checkUnsyncedChanges().then((res) => {
                 setUnSyncedChanges(res);
             });

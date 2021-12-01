@@ -1,11 +1,7 @@
 import BackgroundTimer from "react-native-background-timer";
-import NetInfo, {
-    NetInfoStateType,
-    NetInfoState,
-    NetInfoSubscription,
-} from "@react-native-community/netinfo";
+import NetInfo, { NetInfoState, NetInfoSubscription } from "@react-native-community/netinfo";
 import { dbType } from "../util/watermelonDatabase";
-import { SyncDB } from "../util/syncHandler";
+import { AutoSyncDB, SyncDB } from "../util/syncHandler";
 import { Mutex } from "async-mutex";
 import { Alert } from "react-native";
 
@@ -24,25 +20,28 @@ export namespace SyncDatabaseTask {
     });
 
     /* For testing that sync occurs after internet disconnection & reconnection */
-    const syncAlert = () => {
-        Alert.alert("Sync Notice", `Sync completed on connection: ${netInfoState.type}`, [
-            { text: "OK", onPress: () => console.log("Sync Alert Dismissed") },
-        ]);
+    const syncAlert = (autoSync: boolean, cellularSync: boolean) => {
+        Alert.alert(
+            "Sync Notice",
+            `Sync completed on connection: ${netInfoState.type} autosync is ${autoSync} and celluluar sync is ${cellularSync}`,
+            [{ text: "OK", onPress: () => console.log("Sync Alert Dismissed") }]
+        );
     };
 
-    export const autoSyncDatabase = (database: dbType) => {
+    export const autoSyncDatabase = async (
+        database: dbType,
+        autoSync: boolean,
+        cellularSync: boolean
+    ) => {
         /* Remove running timer, if it exists */
         BackgroundTimer.stopBackgroundTimer();
-
+        console.log(`schedule auto Sync Database`);
         BackgroundTimer.runBackgroundTimer(async () => {
-            if (netInfoState?.type == NetInfoStateType.wifi && netInfoState?.isInternetReachable) {
-                console.log(`${TASK_TAG}: Syncing local DB with remote`);
-
-                syncMutex.runExclusive(async () => {
-                    await SyncDB(database);
-                    syncAlert();
-                });
-            }
+            console.log(`${TASK_TAG}: Syncing local DB with remote`);
+            syncMutex.runExclusive(async () => {
+                await AutoSyncDB(database, autoSync, cellularSync);
+                syncAlert(autoSync, cellularSync);
+            });
         }, SYNC_INTERVAL_MILLISECONDS);
     };
 

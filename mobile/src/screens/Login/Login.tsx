@@ -13,6 +13,8 @@ import { APIFetchFailError } from "@cbr/common";
 import { useNavigation } from "@react-navigation/core";
 import { SyncDatabaseTask } from "../../tasks/SyncDatabaseTask";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { SyncDB } from "../../util/syncHandler";
 
 interface IBaseLoginStatus {
     status: "initial" | "submitting";
@@ -33,6 +35,7 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [status, setStatus] = useState<LoginStatus>({ status: "initial" });
+    const { autoSync, cellularSync } = useContext(SyncContext);
 
     const navigation = useNavigation();
 
@@ -71,7 +74,6 @@ const Login = () => {
         try {
             await login(usernameToUse, password);
             // Initialize scheduled sync once logged in
-            SyncDatabaseTask.autoSyncDatabase(database);
             // Navigation is handled by App component as it updates the AuthState.
         } catch (e) {
             if (e.name === "AbortError") {

@@ -31,6 +31,7 @@ import { io } from "socket.io-client/dist/socket.io";
 import { SyncContext } from "./context/SyncContext/SyncContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SyncSettings } from "./screens/Sync/PrefConstants";
+import { AutoSyncDB } from "./util/syncHandler";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -119,7 +120,7 @@ export default function App() {
     const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
     const [syncAlert, setSyncAlert] = useState<boolean>(false);
     const [autoSync, setAutoSync] = useState<boolean>(true);
-    const [celluarSync, setCelluarSync] = useState<boolean>(false);
+    const [cellularSync, setCellularSync] = useState<boolean>(false);
 
     useEffect(() => {
         // Refresh disabilities, zones, current user information
@@ -141,7 +142,7 @@ export default function App() {
                 }
                 const cellularSyncPref = await AsyncStorage.getItem(SyncSettings.CellularPref);
                 if (cellularSyncPref != null) {
-                    setCelluarSync(cellularSyncPref === "true");
+                    setCellularSync(cellularSyncPref === "true");
                 }
                 return updateAuthStateIfNeeded(authState, setAuthState, false);
             });
@@ -194,7 +195,9 @@ export default function App() {
     );
 
     if (authState.state === "loggedIn") {
-        SyncDatabaseTask.autoSyncDatabase(database);
+        AutoSyncDB(database, autoSync, cellularSync).then(() => {
+            SyncDatabaseTask.autoSyncDatabase(database, autoSync, cellularSync);
+        });
     }
 
     return (
@@ -208,8 +211,8 @@ export default function App() {
                                 setUnSyncedChanges: setSyncAlert,
                                 autoSync: autoSync,
                                 setAutoSync: setAutoSync,
-                                cellularSync: celluarSync,
-                                setCellularSync: setCelluarSync,
+                                cellularSync: cellularSync,
+                                setCellularSync: setCellularSync,
                             }}
                         >
                             <DatabaseProvider database={database}>

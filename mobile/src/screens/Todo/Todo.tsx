@@ -14,10 +14,6 @@ const Todo = () => {
     const styles = useStyles();
     const authContext = useContext(AuthContext);
     const database = useDatabase();
-
-    useEffect(() => {
-        authContext.requireLoggedIn(true);
-    }, []);
     const navigation = useNavigation<AppStackNavProp>();
     const logoutAlert = () =>
         Alert.alert("Alert", "Do you want to logout?", [

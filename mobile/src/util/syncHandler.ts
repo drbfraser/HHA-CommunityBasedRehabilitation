@@ -20,18 +20,15 @@ export async function checkUnsyncedChanges() {
 }
 
 export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSync: boolean) {
-    console.log(`autosyncing.....`);
     NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
         switch (connectionInfo?.type) {
             case NetInfoStateType.cellular:
                 if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
-                    console.log(`cellular sync....`);
                     await SyncDB(database);
                     break;
                 }
             case NetInfoStateType.wifi:
                 if (autoSync && connectionInfo?.isInternetReachable) {
-                    console.log(`wifi syncing...`);
                     await SyncDB(database);
                 }
         }

@@ -22,6 +22,7 @@ import Loading from "./screens/Loading/Loading";
 import Login from "./screens/Login/Login";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
+import { SyncDatabaseTask } from "./tasks/SyncDatabaseTask";
 import { StackScreenName } from "./util/StackScreenName";
 import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
 import { database } from "./util/watermelonDatabase";
@@ -178,6 +179,8 @@ export default function App() {
                 return await updateAuthStateIfNeeded(authState, setAuthState, false);
             },
             logout: async () => {
+                // Stop performing scheduled sync on log out
+                SyncDatabaseTask.deactivateAutoSync();
                 // BackgroundFetch is unregistered in the logout callback
                 await doLogout();
                 setAuthState({ state: "loggedOut" });
@@ -189,6 +192,10 @@ export default function App() {
         }),
         [authState]
     );
+
+    if (authState.state === "loggedIn") {
+        SyncDatabaseTask.autoSyncDatabase(database);
+    }
 
     return (
         <SafeAreaView style={styles.safeApp}>

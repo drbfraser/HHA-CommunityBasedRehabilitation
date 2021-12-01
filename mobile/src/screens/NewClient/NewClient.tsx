@@ -94,6 +94,7 @@ const NewClient = () => {
     const { setUnSyncedChanges } = useContext(SyncContext);
     const scrollRef = React.createRef<KeyboardAwareScrollView>();
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
+    const { autoSync, cellularSync } = useContext(SyncContext);
 
     const scrollToTop = useCallback(
         () => scrollRef?.current?.scrollToPosition(0, 0, false),
@@ -115,7 +116,16 @@ const NewClient = () => {
                     initialValues={clientInitialValues}
                     validationSchema={newClientValidationSchema}
                     onSubmit={(values, helpers) =>
-                        handleSubmit(values, helpers, navigation, scrollToTop, database, user!.id)
+                        handleSubmit(
+                            values,
+                            helpers,
+                            navigation,
+                            scrollToTop,
+                            database,
+                            user!.id,
+                            autoSync,
+                            cellularSync
+                        )
                     }
                     enableReinitialize
                 >

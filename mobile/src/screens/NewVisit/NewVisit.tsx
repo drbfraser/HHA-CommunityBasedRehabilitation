@@ -39,6 +39,7 @@ import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/Form
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { modelName } from "../../models/constant";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -335,6 +336,7 @@ const NewVisit = (props: INewVisitProps) => {
     const [saveError, setSaveError] = useState<string>();
     const clientId = props.route.params.clientID;
     const database = useDatabase();
+    const { autoSync, cellularSync } = useContext(SyncContext);
 
     const getClientDetails = async () => {
         try {
@@ -387,7 +389,7 @@ const NewVisit = (props: INewVisitProps) => {
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
-            handleSubmit(values, helpers, user!.id, database)
+            handleSubmit(values, helpers, user!.id, database, autoSync, cellularSync)
                 .then(() => {
                     setHasSubmitted(true);
                     props.navigation.navigate(StackScreenName.CLIENT, {

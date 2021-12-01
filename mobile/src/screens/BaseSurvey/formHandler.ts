@@ -6,11 +6,14 @@ import {
 import { baseSurveyHandleSubmitForm } from "@cbr/common/src/forms/BaseSurvey/baseSurveyHandler";
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
+import { AutoSyncDB } from "../../util/syncHandler";
 
 export const handleSubmit = async (
     values: BaseFormValues,
     database: dbType,
-    helpers: FormikHelpers<BaseFormValues>
+    helpers: FormikHelpers<BaseFormValues>,
+    autoSync: boolean,
+    cellularSync: boolean
 ) => {
     const source = "mobile";
     helpers.setSubmitting(true);
@@ -29,4 +32,6 @@ export const handleSubmit = async (
             survey.survey_date = new Date().getTime();
         });
     });
+
+    AutoSyncDB(database, autoSync, cellularSync);
 };

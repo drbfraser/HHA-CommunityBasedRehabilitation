@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator, TouchableRipple } from "react-native-paper";
 import {
@@ -28,6 +28,7 @@ import defaultProfilePicture from "../../util/defaultProfilePicture";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { modelName } from "../../models/constant";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
 
 interface ClientProps {
     clientID: string;
@@ -41,6 +42,7 @@ const ClientDetails = (props: ClientProps) => {
     const [touchDisable, setTouchDisable] = useState<boolean>(true);
     const isFocused = useIsFocused();
     const database = useDatabase();
+    const { autoSync, cellularSync } = useContext(SyncContext);
 
     const [imageChange, setImageChange] = useState<boolean>(false);
     const [uri, setUri] = useState<string>("");
@@ -171,7 +173,7 @@ const ClientDetails = (props: ClientProps) => {
         values: TClientValues,
         formikHelpers: FormikHelpers<TClientValues>
     ) => {
-        handleSubmit(client, values, database, imageChange).finally(() =>
+        handleSubmit(client, values, database, autoSync, cellularSync, imageChange).finally(() =>
             formikHelpers.setSubmitting(false)
         );
     };

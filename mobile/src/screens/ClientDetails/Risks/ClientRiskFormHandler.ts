@@ -2,6 +2,7 @@ import { IRisk } from "@cbr/common";
 import { modelName } from "../../../models/constant";
 import { dbType } from "../../../util/watermelonDatabase";
 import { addRisk } from "../../NewClient/formHandler";
+import { AutoSyncDB } from "../../../util/syncHandler";
 
 const wasChangeMade = (values: IRisk, initialValues: IRisk) => {
     const keysToCheck = ["risk_level", "requirement", "goal"] as (keyof IRisk)[];
@@ -18,7 +19,9 @@ export const handleRiskSubmit = async (
     values: IRisk,
     initialValues: IRisk,
     setRisk: (risk: IRisk) => void,
-    database: dbType
+    database: dbType,
+    autoSync: boolean,
+    cellularSync: boolean
 ) => {
     if (!wasChangeMade(values, initialValues)) return;
 
@@ -40,6 +43,8 @@ export const handleRiskSubmit = async (
 
         await client.updateRisk(values.risk_type, values.risk_level, currentTime);
         setRisk(risk);
+
+        AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {
         alert("Encountered an error while trying to update the client's risk");
     }

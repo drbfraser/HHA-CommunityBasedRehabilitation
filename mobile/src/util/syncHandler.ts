@@ -1,10 +1,10 @@
 import { apiFetch, ClientField, Endpoint } from "@cbr/common";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
 import { database, dbType } from "./watermelonDatabase";
+import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
 
 //@ts-ignore
 import SyncLogger from "@nozbe/watermelondb/sync/SyncLogger";
-import { stringify } from "querystring";
 
 //@ts-ignore
 import { hasUnsyncedChanges } from "@nozbe/watermelondb/sync";
@@ -17,6 +17,25 @@ export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory 
 
 export async function checkUnsyncedChanges() {
     return await hasUnsyncedChanges({ database });
+}
+
+export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSync: boolean) {
+    console.log(`autosyncing.....`);
+    NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
+        switch (connectionInfo?.type) {
+            case NetInfoStateType.cellular:
+                if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
+                    console.log(`cellular sync....`);
+                    await SyncDB(database);
+                    break;
+                }
+            case NetInfoStateType.wifi:
+                if (autoSync && connectionInfo?.isInternetReachable) {
+                    console.log(`wifi syncing...`);
+                    await SyncDB(database);
+                }
+        }
+    });
 }
 
 export async function SyncDB(database: dbType) {

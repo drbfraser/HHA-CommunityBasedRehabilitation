@@ -9,6 +9,7 @@ import ChangePasswordDialog from "./ChangePasswordDialog";
 import { useNavigation } from "@react-navigation/core";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
+import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { dbType } from "../../util/watermelonDatabase";
 
 export interface Props {
@@ -35,6 +36,7 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
     const [isLogoutConfirmDialogVisible, setLogoutConfirmDialogVisibility] = useState(false);
     return (
         <View style={styles.container}>
+            <ConflictDialog />
             {isSelf ? (
                 <Portal>
                     <Dialog

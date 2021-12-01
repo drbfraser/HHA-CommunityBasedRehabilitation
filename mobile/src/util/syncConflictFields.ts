@@ -10,6 +10,9 @@ export type SyncConflict = {
     rejected: Array<RejectedColumn>,
 }
 
+export const userConflictKey = "userConflicts";
+export const clientConflictKey = "clientConflicts";
+
 const clientConflictFields = new Set([
     ClientField.birth_date,
     ClientField.caregiver_email,

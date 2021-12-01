@@ -10,7 +10,7 @@ import { clearSyncConflicts } from "../../redux/actions";
 import { useSelector, useDispatch } from 'react-redux';
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { modelName } from "../../models/constant";
-import { SyncConflict } from "../../util/syncConflictFields";
+import { SyncConflict, clientConflictKey, userConflictKey } from "../../util/syncConflictFields";
 
 const ConflictDialog = () => {
     const styles = useStyles();
@@ -77,7 +77,7 @@ const ConflictDialog = () => {
                             >
                                 {[...clientConflicts.keys()].map((id) => {
                                     return (
-                                        <View>
+                                        <View key={clientConflictKey}>
                                         <Text style={styles.conflictName} key={id}>{clientConflicts.get(id)?.name}</Text>
                                         {clientConflicts.get(id)!.rejected.map((rej) => {
                                             const keyId = `${id}+${rej.column}`;
@@ -94,7 +94,7 @@ const ConflictDialog = () => {
                             >
                                 {[...userConflicts.keys()].map((id) => {
                                     return (
-                                        <View>
+                                        <View key={userConflictKey}>
                                         <Text style={styles.conflictName} key={id}>{userConflicts.get(id)?.name}</Text>
                                         {userConflicts.get(id)!.rejected.map((rej) => {
                                             const keyId = `${id}+${rej.column}`;

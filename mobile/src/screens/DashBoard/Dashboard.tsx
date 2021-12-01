@@ -110,7 +110,6 @@ const Dashboard = () => {
                     <Text style={styles.title}>Dashboard</Text>
                 </View>
                 <View>
-                <Button>abcd</Button>
                     <Card>
                         <Card.Title title="Priority Clients"></Card.Title>
                         <ScrollView>

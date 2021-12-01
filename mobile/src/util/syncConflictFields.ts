@@ -1,5 +1,15 @@
 import { ClientField, AdminField, ReferralField } from "@cbr/common";
 
+type RejectedColumn = {
+    column: string,
+    rejChange: string,
+};
+
+export type SyncConflict = {
+    name: string, /* Client or user name */
+    rejected: Array<RejectedColumn>,
+}
+
 const clientConflictFields = new Set([
     ClientField.birth_date,
     ClientField.caregiver_email,

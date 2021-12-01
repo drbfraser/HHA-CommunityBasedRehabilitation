@@ -1,5 +1,5 @@
 import { apiFetch, Endpoint, updateClientfieldLabels, adminUserFieldLabels } from "@cbr/common";
-import { conflictFields, referralLabels } from "./syncConflictFields";
+import { conflictFields, referralLabels, SyncConflict } from "./syncConflictFields";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
 import { dbType } from "./watermelonDatabase";
 
@@ -85,45 +85,46 @@ function riskResolver(raw, dirtyRaw, newRaw, column, timestamp) {
 function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
     let localChange = false;
 
-    let clientConflicts = {};
-    let userConflicts = {};
+    let clientConflicts: Map<string, SyncConflict> = new Map();
+    let userConflicts: Map<string, SyncConflict> = new Map();
 
     const recordConflict = (column, raw, newRaw) => {
         if (conflictFields[tableName].has(column)) {
             if (tableName == "clients") {
-                if (!clientConflicts[raw.id]) {
-                    clientConflicts[raw.id] = {
+                if (!clientConflicts.has(raw.id)) {
+                    clientConflicts.set(raw.id, {
                         name: raw.full_name,
                         rejected: [],
-                    };
+                    });
                 }
 
-                clientConflicts[raw.id].rejected.push({
+                clientConflicts.get(raw.id)?.rejected.push({
                     column: updateClientfieldLabels[column],
                     rejChange: newRaw[column],
                 });
             } else if (tableName == "referrals") {
                 /* Referral conflicts are also stored under client ID object 
                    Full client name will be retrieved during component rendering */
-                if (!clientConflicts[raw.client_id]) {
-                    clientConflicts[raw.client_id] = {
+                if (!clientConflicts.has(raw.client_id)) {
+                    clientConflicts.set(raw.client_id, {
+                        name: "",
                         rejected: [],
-                    };
+                    });
                 }
 
-                clientConflicts[raw.client_id].rejected.push({
+                clientConflicts.get(raw.client_id)?.rejected.push({
                     column: referralLabels[column],
                     rejChange: newRaw[column],
                 });
             } else if (tableName == "users") {
-                if (!userConflicts[raw.id]) {
-                    userConflicts[raw.id] = {
+                if (!userConflicts.has(raw.id)) {
+                    userConflicts.set(raw.id, {
                         name: `${raw.first_name} ${raw.last_name}`,
                         rejected: [],
-                    };
+                    });
                 }
 
-                userConflicts[raw.id].rejected.push({
+                userConflicts.get(raw.id)?.rejected.push({
                     column: adminUserFieldLabels[column],
                     rejChange: newRaw[column],
                 });

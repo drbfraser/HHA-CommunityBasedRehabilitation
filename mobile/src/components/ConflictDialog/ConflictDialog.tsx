@@ -10,6 +10,7 @@ import { clearSyncConflicts } from "../../redux/actions";
 import { useSelector, useDispatch } from 'react-redux';
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { modelName } from "../../models/constant";
+import { SyncConflict } from "../../util/syncConflictFields";
 
 const ConflictDialog = () => {
     const styles = useStyles();
@@ -19,33 +20,30 @@ const ConflictDialog = () => {
     const currState: RootState = useSelector((state: RootState) => state);
     const noConflicts: boolean = currState.conflicts.cleared;
 
-    const [clientConflicts, setClientConflicts] = useState<Object>({});
-    const [numClientConflicts, setNumClientConflicts] = useState<Number>(0);
-    const [userConflicts, setUserConflicts] = useState<Object>({});
-    const [numUserConflicts, setNumUserConflicts] = useState<Number>(0);
-
+    const [clientConflicts, setClientConflicts] = useState<Map<string, SyncConflict>>(new Map());
+    const [userConflicts, setUserConflicts] = useState<Map<string, SyncConflict>>(new Map());
     const [dialogVisible, setDialogVisible] = useState<boolean>(false);
 
     const updateNames = async () => {
-        const clientIds = Object.keys(currState.conflicts.clientConflicts);
-        const clients = currState.conflicts.clientConflicts;
-        Promise.all(clientIds.map(async (key) => {
-            if (!clients[key].name) {
-                /* Entry was added without name ie. Referral conflict */
-                const client = await database.get(modelName.clients).find(key);
-                clients[key].name = client.full_name;
+        const clientIds: Array<string> = [...currState.conflicts.clientConflicts.keys()];
+        const clients: Map<string, SyncConflict> = currState.conflicts.clientConflicts;
+
+        Promise.all(clientIds.map(async (id) => {
+            if (!clients.get(id)?.name) {
+                /* We may need to retrieve client name for referral conflicts
+                   since that is not stored in the local referral table */
+                const client = await database.get(modelName.clients).find(id);
+                clients.get(id)!.name = client.full_name;
             }
         })).then(() => {
             setClientConflicts(clients);
-            setNumClientConflicts(Object.keys(clients).length);
             setUserConflicts(currState.conflicts.userConflicts);
-            setNumUserConflicts(Object.keys(currState.conflicts.userConflicts).length);
         });
     }
     
     useEffect(() => {
         if (!noConflicts) {
-            if (numClientConflicts > 0 || numUserConflicts > 0) {
+            if (clientConflicts.size > 0 || userConflicts.size > 0) {
                 setDialogVisible(true);
             } else {
                 updateNames();
@@ -58,10 +56,8 @@ const ConflictDialog = () => {
 
         /* Reset state defaults */
         setDialogVisible(false);
-        setClientConflicts({});
-        setNumClientConflicts(0);
-        setUserConflicts({});
-        setNumUserConflicts(0);
+        setClientConflicts(new Map());
+        setUserConflicts(new Map());
     }
 
     return (
@@ -75,32 +71,34 @@ const ConflictDialog = () => {
                             The following changes could not be saved to the server due to change conflict.
                         </Text>
                         <ScrollView>
-                            {numClientConflicts > 0 && <List.Accordion
+                            {clientConflicts.size > 0 && <List.Accordion
                                 theme={{ colors: { background: themeColors.blueBgLight } }}
                                 title={"Client Conflicts"}
                             >
-                                {Object.keys(clientConflicts).map((key) => {
+                                {[...clientConflicts.keys()].map((id) => {
                                     return (
                                         <View>
-                                        <Text style={styles.conflictName} key={clientConflicts[key]}>{clientConflicts[key].name}</Text>
-                                        {clientConflicts[key].rejected.map((rej) => {
-                                            return <Text style={styles.conflictContent} key={rej.column}>{rej.column}: {rej.rejChange}</Text>
+                                        <Text style={styles.conflictName} key={id}>{clientConflicts.get(id)?.name}</Text>
+                                        {clientConflicts.get(id)!.rejected.map((rej) => {
+                                            const keyId = `${id}+${rej.column}`;
+                                            return <Text style={styles.conflictContent} key={keyId}>{rej.column}: {rej.rejChange}</Text>
                                         })}
                                         </View>
                                     );
                                 })}
                                 <Text></Text>
                             </List.Accordion>}
-                            {numUserConflicts > 0 && <List.Accordion
+                            {userConflicts.size > 0 && <List.Accordion
                                 theme={{ colors: { background: themeColors.blueBgLight } }}
                                 title={"User Conflicts"}
                             >
-                                {Object.keys(userConflicts).map((key) => {
+                                {[...userConflicts.keys()].map((id) => {
                                     return (
                                         <View>
-                                        <Text style={styles.conflictName} key={userConflicts[key]}>{userConflicts[key].name}</Text>
-                                        {userConflicts[key].rejected.map((rej) => {
-                                            return <Text style={styles.conflictContent} key={rej.column}>{rej.column}: {rej.rejChange}</Text>
+                                        <Text style={styles.conflictName} key={id}>{userConflicts.get(id)?.name}</Text>
+                                        {userConflicts.get(id)!.rejected.map((rej) => {
+                                            const keyId = `${id}+${rej.column}`;
+                                            return <Text style={styles.conflictContent} key={keyId}>{rej.column}: {rej.rejChange}</Text>
                                         })}
                                         </View>
                                     );

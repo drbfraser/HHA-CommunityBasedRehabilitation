@@ -1,5 +1,6 @@
 import { ConnectionChangeType, AddConflictsType, ClearConflictsType } from './actions';
 import { SET_CONNECTION, ADD_CONFLICTS, CLEAR_CONFLICTS } from './actionTypes';
+import { SyncConflict } from '../util/syncConflictFields';
 
 export const initialConnectionState = {
     isOnline: false as boolean,
@@ -7,35 +8,10 @@ export const initialConnectionState = {
 
 export const initialConflictsState = {
     cleared: true as boolean,
-    clientConflicts: {} as Object,
-    referralConflicts: {} as Object,
-    userConflicts: {} as Object,
+    clientConflicts: new Map() as Map<string, SyncConflict>,
+    userConflicts: new Map() as Map<string, SyncConflict>,
 }
 
-/*
-    clientConflicts: {
-        id: {
-            name: string
-            rejected: [
-                {
-                    columns: string,
-                    rejectedChange: string,
-                },
-                {
-                    columns: string,
-                    rejectedChange: string,
-                },
-                {
-                    columns: string,
-                    rejectedChange: string,
-                }
-            ],
-        }
-    }
-
-    I think we should also just include referral 
-    outcome w client conflicts if possible
-*/
 
 export function connectionReducer(
     state = initialConnectionState, 
@@ -59,8 +35,24 @@ export function conflictsReducer(
 ) {
     switch (action.type) {
         case ADD_CONFLICTS: {
-            const clientConflicts = action.payload.clientConflicts;
-            const userConflicts = action.payload.userConflicts;
+            let oldClientConflicts = state.clientConflicts;
+            let oldUserConflicts = state.userConflicts;
+            let clientConflicts = action.payload.clientConflicts;
+            let userConflicts = action.payload.userConflicts;
+
+            if (!state.cleared) {
+                /* Consolidate rejected columns for conflicts in Client & Referral table
+                   where both changes pertain to the same client. Otherwise, previous 
+                   state changes are overwritten. */
+                [...clientConflicts.keys()].forEach((id) => {
+                    if (oldClientConflicts.has(id)) {
+                        clientConflicts.get(id).rejected = [...oldClientConflicts.get(id)!.rejected, ...clientConflicts.get(id).rejected];
+                    }
+                });
+
+                clientConflicts = new Map([...oldClientConflicts, ...clientConflicts]);
+                userConflicts = new Map([...oldUserConflicts, ...userConflicts]);
+            }
 
             state = Object.assign({}, {
                 ...state,
@@ -75,8 +67,8 @@ export function conflictsReducer(
             state = Object.assign({}, state, {
                 ...state,
                 cleared: true,
-                clientConflicts: {},
-                userConflicts: {},
+                clientConflicts: new Map(),
+                userConflicts: new Map(),
             });
 
             return state;

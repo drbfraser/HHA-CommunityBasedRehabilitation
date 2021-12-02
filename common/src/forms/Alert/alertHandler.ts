@@ -1,5 +1,5 @@
 import { TAlertValues, alertFieldLabels, TAlertUpdateValues } from "./alertFields";
-import { FormikHelpers, validateYupSchema } from "formik";
+import { FormikHelpers } from "formik";
 import {
     apiFetch,
     APIFetchFailError,
@@ -40,32 +40,35 @@ export const handleNewWebAlertSubmit = async (
     values: TAlertValues,
     helpers: FormikHelpers<TAlertValues>
 ) => {
-    let user = await getCurrentUser();
-    let userID: string = user !== APILoadError ? user.id : "unknown";
-
+    const user: IUser | typeof APILoadError = await getCurrentUser();
+    let newAlert;
     let usersList: string[];
-    try {
-        // Add all users as having unread the alert initially
-        let res = await apiFetch(Endpoint.USERS, "");
-        let users = await res.json();
-        // Reduces list of users to an array of userIDs
-        usersList = users.reduce((acc: string, value: IUser) => {
-            if (value.id && value.id != userID) {
-                acc = acc.concat(value.id);
-            }
-            return acc;
-        }, []);
-    } catch (e) {
-        throw new Error(`Error retreiving users. ${e}`);
-    }
+    if (user !== APILoadError) {
+        try {
+            // Add all users as having unread the alert initially
+            let res = await apiFetch(Endpoint.USERS, "");
+            let users = await res.json();
+            // Reduces list of users to an array of userIDs
+            usersList = users.reduce((acc: string, value: IUser) => {
+                if (value.id && value.id != user.id) {
+                    acc = acc.concat(value.id);
+                }
+                return acc;
+            }, []);
+        } catch (e) {
+            throw new Error(`Error retreiving users. ${e}`);
+        }
 
-    const newAlert = {
-        subject: values.subject,
-        priority: values.priority,
-        alert_message: values.alert_message,
-        unread_by_users: usersList ? usersList : [],
-        created_by_user: userID,
-    };
+        newAlert = {
+            subject: values.subject,
+            priority: values.priority,
+            alert_message: values.alert_message,
+            unread_by_users: usersList ? usersList : [],
+            created_by_user: user.id,
+        };
+    } else {
+        throw new Error("API Load Error");
+    }
 
     const formData = objectToFormData(newAlert);
     try {

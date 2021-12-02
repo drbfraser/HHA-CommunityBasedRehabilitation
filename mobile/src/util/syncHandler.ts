@@ -1,5 +1,5 @@
 import { apiFetch, Endpoint, updateClientfieldLabels, adminUserFieldLabels } from "@cbr/common";
-import { conflictFields, referralLabels, SyncConflict } from "./syncConflictFields";
+import { conflictFields, referralLabels, SyncConflict } from "./syncConflictConstants";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
 import { dbType } from "./watermelonDatabase";
 
@@ -99,7 +99,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 }
 
                 clientConflicts.get(raw.id)?.rejected.push({
-                    column: updateClientfieldLabels[column],
+                    column: (column == "picture") ? "picture" : updateClientfieldLabels[column],
                     rejChange: newRaw[column],
                 });
             } else if (tableName == "referrals") {

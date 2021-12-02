@@ -41,8 +41,18 @@ const useStyles = () =>
         },
         conflictContent: {
             color: "grey",
+            fontWeight: "bold",
             marginLeft: 5,
             marginRight: 5,
+        },
+        conflictPicture: {
+            backgroundColor: themeColors.white,
+            width: 150,
+            height: 150,
+            marginTop: 10,
+            marginBottom: 10,
+            borderRadius: 20,
+            overflow: "hidden",
         }
     });
 

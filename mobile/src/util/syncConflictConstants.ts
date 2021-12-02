@@ -10,8 +10,8 @@ export type SyncConflict = {
     rejected: Array<RejectedColumn>,
 }
 
-export const userConflictKey = "userConflicts";
-export const clientConflictKey = "clientConflicts";
+export const userConflictTitle = "User Conflicts";
+export const clientConflictTitle = "Client Conflicts";
 
 const clientConflictFields = new Set([
     ClientField.birth_date,
@@ -27,6 +27,7 @@ const clientConflictFields = new Set([
     ClientField.last_name,
     ClientField.other_disability,
     ClientField.phone_number,
+    ClientField.picture,
     ClientField.social_risk_level,
     ClientField.village,
     ClientField.zone,

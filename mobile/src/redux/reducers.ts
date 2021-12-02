@@ -1,6 +1,6 @@
 import { ConnectionChangeType, AddConflictsType, ClearConflictsType } from './actions';
 import { SET_CONNECTION, ADD_CONFLICTS, CLEAR_CONFLICTS } from './actionTypes';
-import { SyncConflict } from '../util/syncConflictFields';
+import { SyncConflict } from '../util/syncConflictConstants';
 
 export const initialConnectionState = {
     isOnline: false as boolean,

@@ -38,6 +38,8 @@ interface ICropperModal {
 
 const DEFAULT_IMAGE_PATH = "/images/profile_pic_icon.png";
 
+export const MAX_FILE_SIZE = 500000;
+
 type TReducerAction = { newImgSrc: string };
 
 const imgSrcReducer: Reducer<string, TReducerAction> = (prevImgSrc, { newImgSrc }): string => {
@@ -211,8 +213,7 @@ export const ProfilePicCard = (props: IProps) => {
         const reader = new FileReader();
 
         let target_file;
-        if (files[0].size >= 500000) {
-            window.alert("image will be resize as size exceed 500 kb");
+        if (files[0].size >= MAX_FILE_SIZE) {
             const options = {
                 maxSizeMB: 1,
                 maxWidthOrHeight: 500,

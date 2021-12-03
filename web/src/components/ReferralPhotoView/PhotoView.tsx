@@ -1,5 +1,6 @@
 import { FormLabel } from "@material-ui/core";
 import imageCompression from "browser-image-compression";
+import { MAX_FILE_SIZE } from "components/PhotoViewUpload/PhotoViewUpload";
 import React from "react";
 import { useState } from "react";
 
@@ -35,8 +36,7 @@ export const PhotoView = (props: Iprops) => {
                     }
                     console.log(files[0].size);
                     let target_file;
-                    if (files[0].size >= 500000) {
-                        window.alert("image will be resize as size exceed 500 kb");
+                    if (files[0].size >= MAX_FILE_SIZE) {
                         const options = {
                             maxSizeMB: 1,
                             maxWidthOrHeight: 500,

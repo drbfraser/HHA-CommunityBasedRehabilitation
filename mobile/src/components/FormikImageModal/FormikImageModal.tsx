@@ -22,6 +22,8 @@ enum ImageSource {
 
 const ANIMATION_TIMING = 400;
 
+const MAX_FILE_SIZE = 500000;
+
 const FormikImageModal = (props: IFormikImageModal<string>) => {
     const styles = useStyles();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -81,8 +83,8 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                 if (!image.cancelled) {
                     const fileInfo = await getFileInfo(image.uri);
                     let uri;
-                    if (fileInfo.size && fileInfo.size >= 500000) {
-                        const finalUri = await manipulateAsync(
+                    if (fileInfo.size && fileInfo.size >= MAX_FILE_SIZE) {
+                        const resizedUri = await manipulateAsync(
                             `data:image/jpeg;base64,${image.base64}`,
                             [{ resize: { width: 300 } }],
                             {
@@ -90,8 +92,7 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                                 base64: true,
                             }
                         );
-                        uri = `data:image/jpeg;base64,${finalUri.base64}`;
-                        const newInfo = await getFileInfo(finalUri.uri);
+                        uri = `data:image/jpeg;base64,${resizedUri.base64}`;
                     } else {
                         uri = `data:image/jpeg;base64,${image.base64}`;
                     }

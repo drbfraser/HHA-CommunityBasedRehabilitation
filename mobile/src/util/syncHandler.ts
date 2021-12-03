@@ -106,7 +106,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
 
                 clientConflicts.get(newRaw.id)?.rejected.push({
                     column: getCleanClientColumn(column),
-                    rejChange: getRejectedChange(column, raw[column]),
+                    rejChange: getRejectedChange(column, raw[column]).toString(),
                 });
             } else if (tableName == "referrals") {
                 /* Referral conflicts are also stored under client ID object 
@@ -120,7 +120,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
 
                 clientConflicts.get(newRaw.client_id)?.rejected.push({
                     column: referralLabels[column],
-                    rejChange: raw[column],
+                    rejChange: raw[column].toString(),
                 });
             } else if (tableName == "users") {
                 if (!userConflicts.has(newRaw.id)) {
@@ -132,7 +132,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
 
                 userConflicts.get(newRaw.id)?.rejected.push({
                     column: adminUserFieldLabels[column],
-                    rejChange: raw[column],
+                    rejChange: raw[column].toString(),
                 });
             }
         }

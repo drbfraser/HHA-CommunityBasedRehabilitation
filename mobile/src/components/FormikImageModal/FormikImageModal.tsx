@@ -6,6 +6,8 @@ import { Platform, View, Text, Animated, Dimensions } from "react-native";
 import { ActivityIndicator, Button, Modal, Portal, Title } from "react-native-paper";
 import { TFormikComponentProps } from "../../util/formikUtil";
 import useStyles from "./FormikImageModal.styles";
+import * as FileSystem from "expo-file-system";
+import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
 
 interface IFormikImageModal<Field extends string> extends TFormikComponentProps<Field> {
     visible: boolean;
@@ -49,6 +51,11 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
         transform: [{ translateY: modalY.current }],
     };
 
+    const getFileInfo = async (fileURI: string) => {
+        const fileInfo = await FileSystem.getInfoAsync(fileURI);
+        return fileInfo;
+    };
+
     const pickImage = async (imageSource: ImageSource) => {
         setIsLoading(true);
         if (Platform.OS !== "web") {
@@ -68,11 +75,27 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                     base64: true,
                     allowsEditing: true,
                     aspect: [1, 1],
-                    quality: 1,
+                    quality: 0.7,
                 });
 
                 if (!image.cancelled) {
-                    const uri = `data:image/jpeg;base64,${image.base64}`;
+                    const fileInfo = await getFileInfo(image.uri);
+                    let uri;
+                    if (fileInfo.size && fileInfo.size >= 500000) {
+                        const finalUri = await manipulateAsync(
+                            `data:image/jpeg;base64,${image.base64}`,
+                            [{ resize: { width: 300 } }],
+                            {
+                                compress: 0.7,
+                                base64: true,
+                            }
+                        );
+                        uri = `data:image/jpeg;base64,${finalUri.base64}`;
+                        const newInfo = await getFileInfo(finalUri.uri);
+                    } else {
+                        uri = `data:image/jpeg;base64,${image.base64}`;
+                    }
+
                     props.onPictureChange(uri);
                     props.formikProps.setFieldTouched(props.field, true);
                     props.formikProps.setFieldValue(props.field, uri);

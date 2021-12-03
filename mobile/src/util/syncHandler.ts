@@ -6,8 +6,8 @@ import { dbType } from "./watermelonDatabase";
 //@ts-ignore
 import SyncLogger from "@nozbe/watermelondb/sync/SyncLogger";
 
-import { store } from '../redux/store';
-import { addSyncConflicts } from '../redux/actions';
+import { store } from "../redux/store";
+import { addSyncConflicts } from "../redux/actions";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
@@ -88,43 +88,43 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
     let clientConflicts: Map<string, SyncConflict> = new Map();
     let userConflicts: Map<string, SyncConflict> = new Map();
 
-    const recordConflict = (column, raw, newRaw) => {
+    const recordConflict = (column) => {
         if (conflictFields[tableName].has(column)) {
             if (tableName == "clients") {
-                if (!clientConflicts.has(raw.id)) {
-                    clientConflicts.set(raw.id, {
-                        name: raw.full_name,
+                if (!clientConflicts.has(newRaw.id)) {
+                    clientConflicts.set(newRaw.id, {
+                        name: dirtyRaw.full_name,
                         rejected: [],
                     });
                 }
 
-                clientConflicts.get(raw.id)?.rejected.push({
-                    column: (column == "picture") ? "picture" : updateClientfieldLabels[column],
+                clientConflicts.get(newRaw.id)?.rejected.push({
+                    column: column == "picture" ? "picture" : updateClientfieldLabels[column],
                     rejChange: newRaw[column],
                 });
             } else if (tableName == "referrals") {
                 /* Referral conflicts are also stored under client ID object 
                    Full client name will be retrieved during component rendering */
-                if (!clientConflicts.has(raw.client_id)) {
-                    clientConflicts.set(raw.client_id, {
+                if (!clientConflicts.has(newRaw.client_id)) {
+                    clientConflicts.set(newRaw.client_id, {
                         name: "",
                         rejected: [],
                     });
                 }
 
-                clientConflicts.get(raw.client_id)?.rejected.push({
+                clientConflicts.get(newRaw.client_id)?.rejected.push({
                     column: referralLabels[column],
                     rejChange: newRaw[column],
                 });
             } else if (tableName == "users") {
-                if (!userConflicts.has(raw.id)) {
-                    userConflicts.set(raw.id, {
-                        name: `${raw.first_name} ${raw.last_name}`,
+                if (!userConflicts.has(newRaw.id)) {
+                    userConflicts.set(newRaw.id, {
+                        name: `${dirtyRaw.first_name} ${dirtyRaw.last_name}`,
                         rejected: [],
                     });
                 }
 
-                userConflicts.get(raw.id)?.rejected.push({
+                userConflicts.get(newRaw.id)?.rejected.push({
                     column: adminUserFieldLabels[column],
                     rejChange: newRaw[column],
                 });
@@ -145,14 +145,14 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 if (riskResolver(raw, dirtyRaw, newRaw, column, `${riskType}_timestamp`)) {
                     localChange = true;
                 } else {
-                    recordConflict(column, raw, newRaw);
+                    recordConflict(column);
                 }
             } else if (column === "last_visit_date") {
                 // if local last visit date is greater than server last visit date, then take local version
                 if (raw[column] > dirtyRaw[column]) {
                     localChange = true;
                 } else {
-                    recordConflict(column, raw, newRaw);
+                    recordConflict(column);
                     newRaw[column] = dirtyRaw[column];
                 }
             } else if (column === "picture") {
@@ -160,7 +160,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 if (dirtyRaw[column] == null) {
                     localChange = true;
                 } else {
-                    recordConflict(column, raw, newRaw);
+                    recordConflict(column);
                     newRaw[column] = dirtyRaw[column];
                 }
             } else if (column === "disability") {
@@ -170,12 +170,12 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 if (newRaw[column].replace(",", ", ") == dirtyRaw[column]) {
                     localChange = true;
                 } else {
-                    recordConflict(column, raw, newRaw);
+                    recordConflict(column);
                     newRaw[column] = dirtyRaw[column];
                 }
             } else {
                 /* This is always server-side wins unless in cases specified above */
-                recordConflict(column, raw, newRaw);
+                recordConflict(column);
                 newRaw[column] = dirtyRaw[column];
             }
         }

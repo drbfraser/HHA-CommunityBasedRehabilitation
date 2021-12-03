@@ -7,10 +7,14 @@ import { themeColors } from "@cbr/common";
 import useStyles from "./ConflictDialog.styles";
 import { RootState } from "../../redux/index";
 import { clearSyncConflicts } from "../../redux/actions";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { modelName } from "../../models/constant";
-import { SyncConflict, userConflictTitle, clientConflictTitle } from "../../util/syncConflictConstants";
+import {
+    SyncConflict,
+    userConflictTitle,
+    clientConflictTitle,
+} from "../../util/syncConflictConstants";
 
 const ConflictDialog = () => {
     const styles = useStyles();
@@ -28,19 +32,21 @@ const ConflictDialog = () => {
         const clientIds: Array<string> = [...currState.conflicts.clientConflicts.keys()];
         const clients: Map<string, SyncConflict> = currState.conflicts.clientConflicts;
 
-        Promise.all(clientIds.map(async (id) => {
-            if (!clients.get(id)?.name) {
-                /* We may need to retrieve client name for referral conflicts
+        Promise.all(
+            clientIds.map(async (id) => {
+                if (!clients.get(id)?.name) {
+                    /* We may need to retrieve client name for referral conflicts
                    since that is not stored in the local referral table */
-                const client = await database.get(modelName.clients).find(id);
-                clients.get(id)!.name = client.full_name;
-            }
-        })).then(() => {
+                    const client = await database.get(modelName.clients).find(id);
+                    clients.get(id)!.name = client.full_name;
+                }
+            })
+        ).then(() => {
             setClientConflicts(clients);
             setUserConflicts(currState.conflicts.userConflicts);
         });
-    }
-    
+    };
+
     useEffect(() => {
         if (!noConflicts) {
             if (clientConflicts.size > 0 || userConflicts.size > 0) {
@@ -58,7 +64,7 @@ const ConflictDialog = () => {
         setDialogVisible(false);
         setClientConflicts(new Map());
         setUserConflicts(new Map());
-    }
+    };
 
     return (
         <Portal>
@@ -67,67 +73,90 @@ const ConflictDialog = () => {
                     <Text>Sync Conflicts</Text>
                 </Dialog.Title>
                 <Dialog.Content style={styles.conflictDialogContent}>
-                        <Text style={styles.conflictMessage}>
-                            The following changes could not be saved to the server due to change conflict.
-                        </Text>
-                        <ScrollView>
-                            {clientConflicts.size > 0 && <List.Accordion
+                    <Text style={styles.conflictMessage}>
+                        The following changes could not be saved to the server due to change
+                        conflict.
+                    </Text>
+                    <ScrollView>
+                        {clientConflicts.size > 0 && (
+                            <List.Accordion
                                 theme={{ colors: { background: themeColors.blueBgLight } }}
                                 title={clientConflictTitle}
                             >
                                 {[...clientConflicts.keys()].map((id) => {
                                     return (
                                         <View key={`client_${id}`}>
-                                            <Text style={styles.conflictName}>{clientConflicts.get(id)?.name}</Text>
+                                            <Text style={styles.conflictName}>
+                                                {clientConflicts.get(id)?.name}
+                                            </Text>
                                             {clientConflicts.get(id)!.rejected.map((rej) => {
                                                 const keyId = `${id}_${rej.column}`;
-                                                return (rej.column == "picture") ? (
+                                                return rej.column == "picture" ? (
                                                     <View key={keyId}>
-                                                        <Text style={styles.conflictContent}>Client Photo: </Text>
+                                                        <Text style={styles.conflictContentBold}>
+                                                            Client Photo:{" "}
+                                                        </Text>
                                                         <Image
                                                             style={styles.conflictPicture}
-                                                            source={{ uri: rej.rejChange}}
+                                                            source={{ uri: rej.rejChange }}
                                                         />
                                                     </View>
                                                 ) : (
                                                     <View key={keyId}>
                                                         <Text>
-                                                            <Text style={styles.conflictContent}>{rej.column}: </Text>
-                                                            <Text>{rej.rejChange}</Text>
+                                                            <Text
+                                                                style={styles.conflictContentBold}
+                                                            >
+                                                                {rej.column}:{" "}
+                                                            </Text>
+                                                            <Text style={styles.conflictContent}>
+                                                                {rej.rejChange}
+                                                            </Text>
                                                         </Text>
                                                     </View>
-                                                )
+                                                );
                                             })}
                                         </View>
                                     );
                                 })}
                                 <Text></Text>
-                            </List.Accordion>}
-                            {userConflicts.size > 0 && <List.Accordion
+                            </List.Accordion>
+                        )}
+                        {userConflicts.size > 0 && (
+                            <List.Accordion
                                 theme={{ colors: { background: themeColors.blueBgLight } }}
                                 title={userConflictTitle}
                             >
                                 {[...userConflicts.keys()].map((id) => {
                                     return (
                                         <View key={`user_${id}`}>
-                                            <Text style={styles.conflictName}>{userConflicts.get(id)?.name}</Text>
+                                            <Text style={styles.conflictName}>
+                                                {userConflicts.get(id)?.name}
+                                            </Text>
                                             {userConflicts.get(id)!.rejected.map((rej) => {
                                                 const keyId = `${id}_${rej.column}`;
                                                 return (
                                                     <View key={keyId}>
                                                         <Text>
-                                                            <Text style={styles.conflictContent}>{rej.column}: </Text>
-                                                            <Text>{rej.rejChange}</Text>
+                                                            <Text
+                                                                style={styles.conflictContentBold}
+                                                            >
+                                                                {rej.column}:{" "}
+                                                            </Text>
+                                                            <Text style={styles.conflictContent}>
+                                                                {rej.rejChange}
+                                                            </Text>
                                                         </Text>
                                                     </View>
-                                                )
+                                                );
                                             })}
                                         </View>
                                     );
                                 })}
                                 <Text></Text>
-                            </List.Accordion>}
-                        </ScrollView>
+                            </List.Accordion>
+                        )}
+                    </ScrollView>
                 </Dialog.Content>
                 <Dialog.Actions>
                     <Button
@@ -141,6 +170,6 @@ const ConflictDialog = () => {
             </Dialog>
         </Portal>
     );
-}
+};
 
 export default ConflictDialog;

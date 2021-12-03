@@ -1,36 +1,15 @@
-import { ConnectionChangeType, AddConflictsType, ClearConflictsType } from './actions';
-import { SET_CONNECTION, ADD_CONFLICTS, CLEAR_CONFLICTS } from './actionTypes';
-import { SyncConflict } from '../util/syncConflictConstants';
-
-export const initialConnectionState = {
-    isOnline: false as boolean,
-}
+import { AddConflictsType, ClearConflictsType } from "./actions";
+import { ADD_CONFLICTS, CLEAR_CONFLICTS } from "./actionTypes";
+import { SyncConflict } from "../util/syncConflictConstants";
 
 export const initialConflictsState = {
     cleared: true as boolean,
     clientConflicts: new Map() as Map<string, SyncConflict>,
     userConflicts: new Map() as Map<string, SyncConflict>,
-}
-
-
-export function connectionReducer(
-    state = initialConnectionState, 
-    action: ReturnType<ConnectionChangeType>
-) {
-    switch (action.type) {
-        case SET_CONNECTION: {
-            return {
-                ...state,
-                isOnline: action.payload.isOnline,
-            }
-        }
-        default:
-            return state;
-    }
-}
+};
 
 export function conflictsReducer(
-    state = initialConflictsState, 
+    state = initialConflictsState,
     action: ReturnType<AddConflictsType> | ReturnType<ClearConflictsType>
 ) {
     switch (action.type) {
@@ -46,7 +25,10 @@ export function conflictsReducer(
                    state changes are overwritten. */
                 [...clientConflicts.keys()].forEach((id) => {
                     if (oldClientConflicts.has(id)) {
-                        clientConflicts.get(id).rejected = [...oldClientConflicts.get(id)!.rejected, ...clientConflicts.get(id).rejected];
+                        clientConflicts.get(id).rejected = [
+                            ...oldClientConflicts.get(id)!.rejected,
+                            ...clientConflicts.get(id).rejected,
+                        ];
                     }
                 });
 
@@ -54,22 +36,20 @@ export function conflictsReducer(
                 userConflicts = new Map([...oldUserConflicts, ...userConflicts]);
             }
 
-            state = Object.assign({}, {
-                ...state,
-                cleared: false,
-                clientConflicts,
-                userConflicts,
-            });
+            state = {
+                    cleared: false,
+                    clientConflicts,
+                    userConflicts,
+                };
 
             return state;
         }
         case CLEAR_CONFLICTS: {
-            state = Object.assign({}, state, {
-                ...state,
+            state = {
                 cleared: true,
                 clientConflicts: new Map(),
                 userConflicts: new Map(),
-            });
+            };
 
             return state;
         }

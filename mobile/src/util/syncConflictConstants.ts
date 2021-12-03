@@ -1,14 +1,14 @@
 import { ClientField, AdminField, ReferralField } from "@cbr/common";
 
 type RejectedColumn = {
-    column: string,
-    rejChange: string,
+    column: string;
+    rejChange: string;
 };
 
 export type SyncConflict = {
-    name: string, /* Client or user name */
-    rejected: Array<RejectedColumn>,
-}
+    name: string /* Client or user name */;
+    rejected: Array<RejectedColumn>;
+};
 
 export const userConflictTitle = "User Conflicts";
 export const clientConflictTitle = "Client Conflicts";

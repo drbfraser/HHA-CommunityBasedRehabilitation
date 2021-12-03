@@ -10,25 +10,25 @@ const useStyles = () =>
             bottom: 10,
         },
         conflictDialog: {
-            maxHeight: 500, 
-            top: -45
+            maxHeight: 500,
+            top: -45,
         },
         conflictDialogTitle: {
-            alignSelf: "center"
-        }, 
+            alignSelf: "center",
+        },
         conflictDialogContent: {
-            alignSelf: "center", 
+            alignSelf: "center",
             maxHeight: 400,
             width: "100%",
-            bottom: 10
+            bottom: 10,
         },
         conflictMessage: {
             textAlign: "center",
-            marginBottom: 25
+            marginBottom: 25,
         },
         conflictName: {
             alignSelf: "flex-start",
-            color: themeColors.blueBgDark, 
+            color: themeColors.blueBgDark,
             fontSize: 14,
             fontWeight: "bold",
             padding: 5,
@@ -37,13 +37,14 @@ const useStyles = () =>
             marginBottom: 10,
             borderWidth: 2,
             borderRadius: 10,
-            borderColor: themeColors.blueBgDark
+            borderColor: themeColors.blueBgDark,
+        },
+        conflictContentBold: {
+            color: "grey",
+            fontWeight: "bold",
         },
         conflictContent: {
             color: "grey",
-            fontWeight: "bold",
-            marginLeft: 5,
-            marginRight: 5,
         },
         conflictPicture: {
             backgroundColor: themeColors.white,
@@ -53,7 +54,7 @@ const useStyles = () =>
             marginBottom: 10,
             borderRadius: 20,
             overflow: "hidden",
-        }
+        },
     });
 
 export default useStyles;

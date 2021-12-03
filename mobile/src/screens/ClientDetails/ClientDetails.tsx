@@ -30,7 +30,6 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { modelName } from "../../models/constant";
 import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 
-
 interface ClientProps {
     clientID: string;
     route: RouteProp<StackParamList, StackScreenName.CLIENT>;

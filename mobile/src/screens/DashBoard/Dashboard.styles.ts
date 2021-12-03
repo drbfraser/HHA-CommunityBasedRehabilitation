@@ -60,7 +60,7 @@ const useStyles = () =>
         column_referral_date: {
             flex: 1,
             padding: 5,
-        }
+        },
     });
 
 export default useStyles;

@@ -30,7 +30,7 @@ import { DEV_API_URL } from "react-native-dotenv";
 import { io } from "socket.io-client/dist/socket.io";
 
 import { Provider as StoreProvider } from "react-redux";
-import { store } from './redux/store';
+import { store } from "./redux/store";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -205,7 +205,7 @@ export default function App() {
                                             />
                                         ))
                                     ) : authState.state === "loggedOut" ||
-                                    authState.state === "previouslyLoggedIn" ? (
+                                      authState.state === "previouslyLoggedIn" ? (
                                         <Stack.Screen
                                             name="Login"
                                             component={Login}

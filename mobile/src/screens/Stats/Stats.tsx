@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Button, Divider, Text } from "react-native-paper";
 import useStyles from "./Stats.styles";
-import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { useIsFocused } from "@react-navigation/core";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import {
@@ -53,7 +52,6 @@ const Stats = () => {
     const isFocused = useIsFocused();
     const zones = useZones();
     const disabilityMap = useDisabilities();
-    const authContext = useContext(AuthContext);
     const [showVisit, setShowVisit] = useState<boolean>(true);
     const [showReferral, setShowReferral] = useState<boolean>(false);
     const [showDisabilites, setShowDisabilites] = useState<boolean>(false);
@@ -76,10 +74,6 @@ const Stats = () => {
 
     const [disabilityData, setDisabilityData] = useState(fetchDisabilityData);
     const [disabilityCount, setDisabilityCount] = useState<number>(0);
-
-    useEffect(() => {
-        authContext.requireLoggedIn(true);
-    }, []);
 
     const graphicColor = [themeColors.hhaGreen, themeColors.hhaPurple, themeColors.hhaBlue];
 

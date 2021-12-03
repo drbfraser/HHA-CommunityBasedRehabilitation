@@ -34,7 +34,6 @@ export const PhotoView = (props: Iprops) => {
                     if (!files) {
                         return;
                     }
-                    console.log(files[0].size);
                     let target_file;
                     if (files[0].size >= MAX_FILE_SIZE) {
                         const options = {

@@ -1,13 +1,13 @@
 import BackgroundTimer from "react-native-background-timer";
 import NetInfo, { NetInfoState, NetInfoSubscription } from "@react-native-community/netinfo";
 import { dbType } from "../util/watermelonDatabase";
-import { AutoSyncDB, SyncDB } from "../util/syncHandler";
+import { AutoSyncDB } from "../util/syncHandler";
 import { Mutex } from "async-mutex";
 import { Alert } from "react-native";
 
 export namespace SyncDatabaseTask {
     const TASK_TAG = "[SyncDatabaseTask]";
-    const SYNC_INTERVAL_MILLISECONDS = 60 * 60 * 1000; /* 1 hour sync interval */
+    const SYNC_INTERVAL_MILLISECONDS = 30 * 1000; /* 1 hour sync interval */
 
     const syncMutex = new Mutex();
 
@@ -28,7 +28,7 @@ export namespace SyncDatabaseTask {
         );
     };
 
-    export const autoSyncDatabase = async (
+    export const scheduleAutoSync = async (
         database: dbType,
         autoSync: boolean,
         cellularSync: boolean

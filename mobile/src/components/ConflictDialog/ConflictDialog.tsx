@@ -91,7 +91,7 @@ const ConflictDialog = () => {
                                             </Text>
                                             {clientConflicts.get(id)!.rejected.map((rej) => {
                                                 const keyId = `${id}_${rej.column}`;
-                                                return rej.column == "picture" ? (
+                                                return rej.column == "Picture" ? (
                                                     <View key={keyId}>
                                                         <Text style={styles.conflictContentBold}>
                                                             Client Photo:{" "}

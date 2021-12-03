@@ -1,4 +1,4 @@
-import { ClientField, AdminField, ReferralField } from "@cbr/common";
+import { ClientField, AdminField, ReferralField, updateClientfieldLabels } from "@cbr/common";
 
 type RejectedColumn = {
     column: string;
@@ -12,6 +12,21 @@ export type SyncConflict = {
 
 export const userConflictTitle = "User Conflicts";
 export const clientConflictTitle = "Client Conflicts";
+
+export const getCleanClientColumn = (column) => {
+    switch (column) {
+        case ClientField.picture:
+            return "Picture";
+        case ClientField.educat_risk_level:
+            return "Education Risk Level";
+        case ClientField.health_risk_level:
+            return "Health Risk Level";
+        case ClientField.social_risk_level:
+            return "Social Risk Level";
+        default:
+            return updateClientfieldLabels[column];
+    }
+};
 
 const clientConflictFields = new Set([
     ClientField.birth_date,

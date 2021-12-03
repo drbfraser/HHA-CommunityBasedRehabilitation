@@ -37,10 +37,10 @@ export function conflictsReducer(
             }
 
             state = {
-                    cleared: false,
-                    clientConflicts,
-                    userConflicts,
-                };
+                cleared: false,
+                clientConflicts,
+                userConflicts,
+            };
 
             return state;
         }

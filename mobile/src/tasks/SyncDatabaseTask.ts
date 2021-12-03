@@ -7,7 +7,7 @@ import { Alert } from "react-native";
 
 export namespace SyncDatabaseTask {
     const TASK_TAG = "[SyncDatabaseTask]";
-    const SYNC_INTERVAL_MILLISECONDS = 30 * 1000; /* 1 hour sync interval */
+    const SYNC_INTERVAL_MILLISECONDS = 60 * 60 * 1000; /* 1 hour sync interval */
 
     const syncMutex = new Mutex();
 
@@ -19,15 +19,6 @@ export namespace SyncDatabaseTask {
         netInfoState = connectionState;
     });
 
-    /* For testing that sync occurs after internet disconnection & reconnection */
-    const syncAlert = (autoSync: boolean, cellularSync: boolean) => {
-        Alert.alert(
-            "Sync Notice",
-            `Sync completed on connection: ${netInfoState.type} autosync is ${autoSync} and celluluar sync is ${cellularSync}`,
-            [{ text: "OK", onPress: () => console.log("Sync Alert Dismissed") }]
-        );
-    };
-
     export const scheduleAutoSync = async (
         database: dbType,
         autoSync: boolean,
@@ -35,12 +26,11 @@ export namespace SyncDatabaseTask {
     ) => {
         /* Remove running timer, if it exists */
         BackgroundTimer.stopBackgroundTimer();
-        console.log(`schedule auto Sync Database`);
+        console.log(`Scheduling Auto Sync`);
         BackgroundTimer.runBackgroundTimer(async () => {
             console.log(`${TASK_TAG}: Syncing local DB with remote`);
             syncMutex.runExclusive(async () => {
                 await AutoSyncDB(database, autoSync, cellularSync);
-                syncAlert(autoSync, cellularSync);
             });
         }, SYNC_INTERVAL_MILLISECONDS);
     };

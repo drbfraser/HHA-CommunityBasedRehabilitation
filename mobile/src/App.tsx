@@ -121,6 +121,7 @@ export default function App() {
     const [syncAlert, setSyncAlert] = useState<boolean>(false);
     const [autoSync, setAutoSync] = useState<boolean>(true);
     const [cellularSync, setCellularSync] = useState<boolean>(false);
+    const [screenRefresh, setScreenRefresh] = useState<boolean>(false);
 
     useEffect(() => {
         // Refresh disabilities, zones, current user information
@@ -196,6 +197,7 @@ export default function App() {
 
     if (authState.state === "loggedIn" && autoSync) {
         AutoSyncDB(database, autoSync, cellularSync).then(() => {
+            setScreenRefresh(true);
             SyncDatabaseTask.autoSyncDatabase(database, autoSync, cellularSync);
         });
     }
@@ -213,6 +215,8 @@ export default function App() {
                                 setAutoSync: setAutoSync,
                                 cellularSync: cellularSync,
                                 setCellularSync: setCellularSync,
+                                screenRefresh: screenRefresh,
+                                setScreenRefresh: setScreenRefresh,
                             }}
                         >
                             <DatabaseProvider database={database}>

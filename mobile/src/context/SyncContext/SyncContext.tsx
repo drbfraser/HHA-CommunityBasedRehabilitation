@@ -7,4 +7,6 @@ export const SyncContext = createContext({
     setAutoSync: (change) => {},
     cellularSync: false,
     setCellularSync: (change) => {},
+    screenRefresh: false,
+    setScreenRefresh: (change) => {},
 });

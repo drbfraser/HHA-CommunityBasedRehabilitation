@@ -11,10 +11,6 @@ import { SMALL_WIDTH } from "../../util/theme.styles";
 import passwordTextInputProps from "../../components/PasswordTextInput/passwordTextInputProps";
 import { APIFetchFailError } from "@cbr/common";
 import { useNavigation } from "@react-navigation/core";
-import { SyncDatabaseTask } from "../../tasks/SyncDatabaseTask";
-import { useDatabase } from "@nozbe/watermelondb/hooks";
-import { SyncContext } from "../../context/SyncContext/SyncContext";
-import { SyncDB } from "../../util/syncHandler";
 
 interface IBaseLoginStatus {
     status: "initial" | "submitting";
@@ -30,12 +26,10 @@ type LoginStatus = ILoginStatusFailed | IBaseLoginStatus;
 const Login = () => {
     const theme = useTheme();
     const styles = useStyles();
-    const database = useDatabase();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [status, setStatus] = useState<LoginStatus>({ status: "initial" });
-    const { autoSync, cellularSync } = useContext(SyncContext);
 
     const navigation = useNavigation();
 

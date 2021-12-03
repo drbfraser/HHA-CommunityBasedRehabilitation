@@ -4,6 +4,7 @@ import {
     referralLabels,
     SyncConflict,
     getCleanClientColumn,
+    getRejectedChange,
 } from "./syncConflictConstants";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
 import { dbType } from "./watermelonDatabase";
@@ -105,7 +106,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
 
                 clientConflicts.get(newRaw.id)?.rejected.push({
                     column: getCleanClientColumn(column),
-                    rejChange: newRaw[column],
+                    rejChange: getRejectedChange(column, raw[column]),
                 });
             } else if (tableName == "referrals") {
                 /* Referral conflicts are also stored under client ID object 
@@ -119,7 +120,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
 
                 clientConflicts.get(newRaw.client_id)?.rejected.push({
                     column: referralLabels[column],
-                    rejChange: newRaw[column],
+                    rejChange: raw[column],
                 });
             } else if (tableName == "users") {
                 if (!userConflicts.has(newRaw.id)) {
@@ -131,7 +132,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
 
                 userConflicts.get(newRaw.id)?.rejected.push({
                     column: adminUserFieldLabels[column],
-                    rejChange: newRaw[column],
+                    rejChange: raw[column],
                 });
             }
         }

@@ -11,15 +11,21 @@ import { useSelector, useDispatch } from "react-redux";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { modelName } from "../../models/constant";
 import {
+    RejectedColumn,
     SyncConflict,
     userConflictTitle,
     clientConflictTitle,
 } from "../../util/syncConflictConstants";
+import { objectFromMap } from "../../util/ObjectFromMap";
+import { useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 
 const ConflictDialog = () => {
     const styles = useStyles();
     const dispatch = useDispatch();
     const database = useDatabase();
+
+    const disabilityMap = useDisabilities();
+    const disabilityObj = objectFromMap(disabilityMap);
 
     const currState: RootState = useSelector((state: RootState) => state);
     const noConflicts: boolean = currState.conflicts.cleared;
@@ -39,6 +45,24 @@ const ConflictDialog = () => {
                    since that is not stored in the local referral table */
                     const client = await database.get(modelName.clients).find(id);
                     clients.get(id)!.name = client.full_name;
+                }
+
+                let disabilities: RejectedColumn | undefined = clients
+                    .get(id)
+                    ?.rejected.find((rej) => {
+                        return rej.column == "Disabilities";
+                    });
+
+                /* Get actual disability names rather than numerical array */
+                if (disabilities) {
+                    let disabilitiesArr: Array<string> = disabilities.rejChange
+                        .substr(1, disabilities.rejChange.length - 2)
+                        .split(",");
+                    disabilities.rejChange = disabilitiesArr
+                        .map((disability) => {
+                            return disabilityObj[disability];
+                        })
+                        .join(", ");
                 }
             })
         ).then(() => {

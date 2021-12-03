@@ -1,6 +1,12 @@
-import { ClientField, AdminField, ReferralField, updateClientfieldLabels } from "@cbr/common";
+import {
+    ClientField,
+    AdminField,
+    ReferralField,
+    updateClientfieldLabels,
+    timestampToFormDate,
+} from "@cbr/common";
 
-type RejectedColumn = {
+export type RejectedColumn = {
     column: string;
     rejChange: string;
 };
@@ -25,6 +31,15 @@ export const getCleanClientColumn = (column) => {
             return "Social Risk Level";
         default:
             return updateClientfieldLabels[column];
+    }
+};
+
+export const getRejectedChange = (column, change) => {
+    switch (column) {
+        case ClientField.birth_date:
+            return timestampToFormDate(change as number, true);
+        default:
+            return change;
     }
 };
 

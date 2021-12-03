@@ -116,11 +116,11 @@ const Dashboard = () => {
         fetchReferrals();
     }, []);
 
-    useEffect(()=>{
-      const fetchAlerts = async () => {
-        try {
-            const alertsList = await (await apiFetch(Endpoint.ALERTS)).json();
-            const user: IUser | typeof APILoadError = await getCurrentUser();
+    useEffect(() => {
+        const fetchAlerts = async () => {
+            try {
+                const alertsList = await (await apiFetch(Endpoint.ALERTS)).json();
+                const user: IUser | typeof APILoadError = await getCurrentUser();
 
                 if (user !== APILoadError) {
                     let userID = user.id;
@@ -133,8 +133,8 @@ const Dashboard = () => {
                 setReferralError(e instanceof Error ? e.message : `${e}`);
             }
         };
-      fetchAlerts();
-    }, [unreadAlertsCount])
+        fetchAlerts();
+    }, [unreadAlertsCount]);
 
     const RenderBadge = (params: ValueFormatterParams) => {
         const risk: RiskLevel = Object(params.value);

@@ -1,6 +1,4 @@
 import os
-import time
-import json
 
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.cache import cache_control
@@ -308,12 +306,6 @@ class AlertList(generics.ListCreateAPIView):
 class AlertDetail(generics.RetrieveUpdateAPIView):
     queryset = models.Alert.objects.all()
     serializer_class = serializers.AlertSerializer
-
-    @extend_schema(
-        responses=serializers.AlertSerializer,
-    )
-    def get(self, alert, pk):
-        return super().get(alert)
 
     @extend_schema(
         request=serializers.AlertSerializer,

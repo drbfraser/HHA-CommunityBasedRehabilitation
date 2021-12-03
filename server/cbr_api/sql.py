@@ -130,10 +130,13 @@ def getUnreadAlertListByUserId(user_id):
             SELECT COUNT(DISTINCT id) as total
             FROM cbr_api_alert
             WHERE %s=ANY(cbr_api_alert.unread_by_users)
-        """, [user_id]
+        """,
+            [user_id],
         )
 
         columns = [col[0] for col in cursor.description]
         # return results as a dictionary instead of a list of values
-        unread_alerts_count = [dict(zip(columns, row)) for row in cursor.fetchall()][0]['total']
+        unread_alerts_count = [dict(zip(columns, row)) for row in cursor.fetchall()][0][
+            "total"
+        ]
         return unread_alerts_count

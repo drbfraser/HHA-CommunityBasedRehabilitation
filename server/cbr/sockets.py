@@ -1,3 +1,4 @@
+from cbr_api.sql import getUnreadAlertListByUserId
 import socketio
 from cbr.settings import DEBUG, ALLOWED_HOSTS
 
@@ -58,4 +59,4 @@ def newAlert(sid, data):
 
 @sio.on("alertViewed")
 def alertViewed(sid, data):
-    sio.emit("updateUnreadList", data)
+    sio.emit("updateUnreadList", getUnreadAlertListByUserId(data["currentUser"]))

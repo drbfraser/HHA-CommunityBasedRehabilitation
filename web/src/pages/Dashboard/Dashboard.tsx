@@ -112,10 +112,15 @@ const Dashboard = () => {
             return referralTypes.join(", ");
         };
 
-        const fetchAlerts = async () => {
-            try {
-                const alertsList = await (await apiFetch(Endpoint.ALERTS)).json();
-                const user: IUser | typeof APILoadError = await getCurrentUser();
+        fetchClients();
+        fetchReferrals();
+    }, []);
+
+    useEffect(()=>{
+      const fetchAlerts = async () => {
+        try {
+            const alertsList = await (await apiFetch(Endpoint.ALERTS)).json();
+            const user: IUser | typeof APILoadError = await getCurrentUser();
 
                 if (user !== APILoadError) {
                     let userID = user.id;
@@ -128,11 +133,8 @@ const Dashboard = () => {
                 setReferralError(e instanceof Error ? e.message : `${e}`);
             }
         };
-
-        fetchClients();
-        fetchReferrals();
-        fetchAlerts();
-    }, []);
+      fetchAlerts();
+    }, [unreadAlertsCount])
 
     const RenderBadge = (params: ValueFormatterParams) => {
         const risk: RiskLevel = Object(params.value);

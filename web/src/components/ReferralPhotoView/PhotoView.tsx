@@ -1,4 +1,5 @@
 import { FormLabel } from "@material-ui/core";
+import imageCompression from "browser-image-compression";
 import React from "react";
 import { useState } from "react";
 
@@ -27,12 +28,25 @@ export const PhotoView = (props: Iprops) => {
             <input
                 type="file"
                 accept="image/*"
-                onChange={(event) => {
+                onChange={async (event) => {
                     const files = event.target.files;
                     if (!files) {
                         return;
                     }
-
+                    console.log(files[0].size);
+                    let target_file;
+                    if (files[0].size >= 500000) {
+                        window.alert("image will be resize as size exceed 500 kb");
+                        const options = {
+                            maxSizeMB: 1,
+                            maxWidthOrHeight: 500,
+                            initialQuality: 0.5,
+                            useWebWorker: true,
+                        };
+                        target_file = await imageCompression(files[0], options);
+                    } else {
+                        target_file = files[0];
+                    }
                     let reader = new FileReader();
                     reader.onload = () => {
                         const image = (reader.result as ArrayBuffer) ?? undefined;
@@ -42,7 +56,7 @@ export const PhotoView = (props: Iprops) => {
                         setUpload(true);
                     };
 
-                    reader.readAsArrayBuffer(files[0]);
+                    reader.readAsArrayBuffer(target_file);
                 }}
             ></input>
         </>

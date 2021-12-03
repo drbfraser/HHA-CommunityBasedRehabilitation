@@ -224,7 +224,6 @@ export const ProfilePicCard = (props: IProps) => {
             target_file = files[0];
         }
 
-        console.log(`final file size is ${target_file.size}`);
         reader.onload = () => {
             const cropperPicture = (reader.result as ArrayBuffer) ?? undefined;
             if (cropperPicture) {

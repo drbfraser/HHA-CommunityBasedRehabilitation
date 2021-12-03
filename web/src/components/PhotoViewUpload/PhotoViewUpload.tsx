@@ -16,6 +16,7 @@ import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import useIsMounted from "react-is-mounted-hook";
+import imageCompression from "browser-image-compression";
 
 interface IProps {
     isEditing: boolean;
@@ -199,7 +200,7 @@ export const ProfilePicCard = (props: IProps) => {
         );
     };
 
-    const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onSelectFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
 
         const files = e.target.files;
@@ -209,6 +210,21 @@ export const ProfilePicCard = (props: IProps) => {
 
         const reader = new FileReader();
 
+        let target_file;
+        if (files[0].size >= 500000) {
+            window.alert("image will be resize as size exceed 500 kb");
+            const options = {
+                maxSizeMB: 1,
+                maxWidthOrHeight: 500,
+                initialQuality: 0.7,
+                useWebWorker: true,
+            };
+            target_file = await imageCompression(files[0], options);
+        } else {
+            target_file = files[0];
+        }
+
+        console.log(`final file size is ${target_file.size}`);
         reader.onload = () => {
             const cropperPicture = (reader.result as ArrayBuffer) ?? undefined;
             if (cropperPicture) {
@@ -219,7 +235,7 @@ export const ProfilePicCard = (props: IProps) => {
             }
         };
 
-        reader.readAsArrayBuffer(files[0]);
+        reader.readAsArrayBuffer(target_file);
         setCropModalOpen(true);
 
         // Allow image reuse when selecting in file picker again.

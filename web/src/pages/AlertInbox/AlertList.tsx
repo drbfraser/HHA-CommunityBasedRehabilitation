@@ -78,7 +78,10 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
     useEffect(() => {
         const fetchAlerts = async () => {
             try {
-                const tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
+                let tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
+                tempAlerts = tempAlerts.sort(function (a, b) {
+                    return b.created_date - a.created_date;
+                });
                 setAlertData(tempAlerts);
             } catch (e) {
                 console.log(`Error fetching Alerts: ${e}`);
@@ -99,10 +102,6 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                     overflow: "auto",
                 }}
             >
-                {/*
-                TODO:
-                  sort the alerts
-              */}
                 {alertData.map((currAlert) => {
                     return (
                         <div key={currAlert.id}>

@@ -3,18 +3,8 @@ import Grid from "@material-ui/core/Grid";
 import AlertList from "./AlertList";
 import AlertDetail from "./AlertDetail";
 import { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles({
-    dividerStyle: {
-        backgroundColor: "grey",
-        height: "3px",
-    },
-});
 
 const AlertInbox = () => {
-    const style = useStyles();
-
     const [selectedAlert, setSelectedAlert] = useState<number>(-1);
 
     const alertListProps = {

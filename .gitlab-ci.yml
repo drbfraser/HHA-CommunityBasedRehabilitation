@@ -68,7 +68,7 @@ build web:
         - .gitlab-ci.yml
       when: always
     # build on deployments
-    - if: "$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
+    - if: "$CI_COMMIT_BRANCH == $DEVELOPMENT_BRANCH || $CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH"
       when: always
   before_script:
     - npm install -g npm@$NPM_VERSION
@@ -80,7 +80,7 @@ build web:
     - npx prettier --check .
     - GENERATE_SOURCEMAP=false npm run build
   after_script:
-    - tar -czvf web_build.tar.gz web/build
+    - cd web/build && tar -czvf ../../web_build.tar.gz .
   artifacts:
     expire_in: 1 week
     paths:
@@ -147,7 +147,7 @@ test common:
 
 test caddy:
   stage: test
-  image: caddy:2.4.3
+  image: caddy:2.4.6
   tags:
     - docker
   needs: []
@@ -163,8 +163,6 @@ test caddy:
 .deploy-script: &deploy-script
   - cp /var/cbr/.env ./.env
   - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
-  - rm -rf web/build
-  - tar -xvf web_build.tar.gz
   - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
   - bash -c 'sleep 10'
   - docker exec cbr_django python manage.py migrate

@@ -1,20 +1,20 @@
 version: "3.7"
 services:
   django:
+    build:
+      dockerfile: Dockerfile.deploy
     restart: always
     command: gunicorn -k eventlet --workers 1 cbr.wsgi --bind 0:8000
-    user: ${GITLAB_RUNNER_UID_GID}
     environment:
       - DOMAIN=${DOMAIN}
   postgres:
     restart: always
   caddy:
     container_name: cbr_caddy
-    image: caddy:2.4.6
+    build:
+      context: .
+      dockerfile: caddy/Dockerfile
     restart: always
-    volumes:
-      - ./caddy:/etc/caddy
-      - ./web/build:/var/www
     ports:
       - "80:80"
       - "443:443"

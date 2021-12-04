@@ -4,7 +4,7 @@ stages:
   - deploy
 
 variables:
-  DEV_BRANCH: "update-deploy-structure"
+  DEV_BRANCH: "main"
   STAGING_BRANCH: "staging"
   PROD_BRANCH: "production"
   NPM_VERSION: "7.19.0"

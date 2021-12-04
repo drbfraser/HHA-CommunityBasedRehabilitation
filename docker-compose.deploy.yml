@@ -1,25 +1,23 @@
 version: "3.7"
 services:
   django:
-    container_name: ${COMPOSE_PROJECT_NAME}_django
     restart: always
     command: gunicorn -k eventlet --workers 1 cbr.wsgi --bind 0:8000
     user: ${GITLAB_RUNNER_UID_GID}
     environment:
       - DOMAIN=${DOMAIN}
-      - POSTGRES_HOST=${COMPOSE_PROJECT_NAME}_postgres
   postgres:
-    container_name: ${COMPOSE_PROJECT_NAME}_postgres
     restart: always
   caddy:
-    container_name: ${COMPOSE_PROJECT_NAME}_caddy
-    image: caddy:2.4.3
+    container_name: cbr_caddy
+    image: caddy:2.4.6
     restart: always
     volumes:
       - ./caddy:/etc/caddy
       - ./web/build:/var/www
     ports:
-      - "${PORT}:80"
+      - "80:80"
+      - "443:443"
     environment:
       - DOMAIN=${DOMAIN}
-      - API_HOSTNAME=${COMPOSE_PROJECT_NAME}_django
+      - API_HOSTNAME=cbr_django

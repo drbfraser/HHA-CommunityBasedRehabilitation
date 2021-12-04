@@ -1,5 +1,4 @@
-# Serve over HTTP because CBR instances are behind a reverse proxy
-http://{$DOMAIN}:80 {
+{$DOMAIN} {
     encode gzip
 
     header {

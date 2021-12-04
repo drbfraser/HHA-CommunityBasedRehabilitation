@@ -4,8 +4,9 @@ stages:
   - deploy
 
 variables:
-  STAGING_BRANCH: "main"
-  PROD_BRANCH: "prod"
+  DEVELOPMENT_BRANCH: "update-deploy-structure"
+  STAGING_BRANCH: "staging"
+  PRODUCTION_BRANCH: "production"
   NPM_VERSION: "7.19.0"
 
 build common:
@@ -159,33 +160,50 @@ test caddy:
   script:
     - caddy validate --config caddy/Caddyfile
 
-.deploy-docker: &deploy-docker
-  - source ./.env
+.deploy-script: &deploy-script
+  - cp /var/cbr/.env ./.env
   - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
   - rm -rf web/build
   - tar -xvf web_build.tar.gz
   - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
   - bash -c 'sleep 10'
-  - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+  - docker exec cbr_django python manage.py migrate
 
-deploy staging:
+deploy development:
+  environment:
+    name: development
+    url: https://cbrd.cradleplatform.com
   stage: deploy
   tags:
-    - shell
+    - deploy-development
+  rules:
+    - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $DEVELOPMENT_BRANCH"
+      when: on_success
+  script:
+    - *deploy-script
+
+deploy staging:
+  environment:
+    name: staging
+    url: https://cbrs.cradleplatform.com
+  stage: deploy
+  tags:
+    - deploy-staging
   rules:
     - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $STAGING_BRANCH"
       when: on_success
   script:
-    - cp /var/cbr/staging.env ./.env
-    - *deploy-docker
+    - *deploy-script
 
-deploy prod:
+deploy production:
+  environment:
+    name: production
+    url: https://cbr.hopehealthaction.org
   stage: deploy
   tags:
-    - shell-prod
+    - deploy-production
   rules:
-    - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $PROD_BRANCH"
+    - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH"
       when: manual
   script:
-    - cp /var/cbr/prod.env ./.env
-    - *deploy-docker
+    - *deploy-script

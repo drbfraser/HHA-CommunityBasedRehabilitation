@@ -157,6 +157,8 @@ test caddy:
         - caddy/**/*
         - .gitlab-ci.yml
       when: always
+  variables:
+    DOMAIN: "example.com"
   script:
     - caddy validate --config caddy/Caddyfile
 

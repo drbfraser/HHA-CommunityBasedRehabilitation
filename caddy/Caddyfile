@@ -9,22 +9,11 @@ http://{$DOMAIN}:80 {
     }
 
     handle /api/* {
-        reverse_proxy {$API_HOSTNAME}:8000 {
-            # Serve `/var/www-uploads/$PATH` when the backend sends a
-            # response with the header `X-Accel-Redirect $PATH`.
-            @accel header X-Accel-Redirect *
-            handle_response @accel {
-                root * /var/www-uploads
-                rewrite {http.reverse_proxy.header.X-Accel-Redirect}
-                header Cache-Control {http.reverse_proxy.header.Cache-Control}
-                header ?Content-Disposition {http.reverse_proxy.header.Content-Disposition}
-                file_server
-            }
-        }
+        reverse_proxy {$API_HOSTNAME}:8000
     }
 
     handle /socket.io/* {
-      reverse_proxy {$API_HOSTNAME}:8000
+        reverse_proxy {$API_HOSTNAME}:8000
     }
 
     handle {

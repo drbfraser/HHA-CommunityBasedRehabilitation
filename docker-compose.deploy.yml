@@ -18,7 +18,6 @@ services:
     volumes:
       - ./caddy:/etc/caddy
       - ./web/build:/var/www
-      - django_uploads:/var/www-uploads
     ports:
       - "${PORT}:80"
     environment:

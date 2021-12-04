@@ -196,13 +196,19 @@ export default function App() {
     );
 
     useEffect(() => {
+        if (autoSync) {
+            SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
+        }
+    }, [autoSync]);
+
+    useEffect(() => {
         if (authState.state === "loggedIn" && autoSync) {
             AutoSyncDB(database, autoSync, cellularSync).then(() => {
                 setScreenRefresh(true);
                 SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
             });
         }
-    }, [authState, autoSync]);
+    }, [authState]);
 
     return (
         <SafeAreaView style={styles.safeApp}>

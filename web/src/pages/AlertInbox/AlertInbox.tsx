@@ -6,17 +6,13 @@ import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
-  dividerStyle: {
-      backgroundColor: "grey",
-      height: "3px",
-  },
-  gridStyle: {
-      backgroundColor:"red",
-  },
+    dividerStyle: {
+        backgroundColor: "grey",
+        height: "3px",
+    },
 });
 
 const AlertInbox = () => {
-
     const style = useStyles();
 
     const [selectedAlert, setSelectedAlert] = useState<number>(-1);
@@ -33,7 +29,7 @@ const AlertInbox = () => {
     };
 
     return (
-        <Grid container justify="center" alignItems="flex-start" spacing={3}  className={style.gridStyle}>
+        <Grid container justify="center" alignItems="flex-start" spacing={3}>
             <AlertList {...alertListProps} />
             <AlertDetail {...alertDetailProps} />
             {/* TODO: 

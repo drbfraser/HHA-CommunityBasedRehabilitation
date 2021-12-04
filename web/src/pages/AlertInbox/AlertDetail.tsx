@@ -12,9 +12,6 @@ const useStyles = makeStyles({
         backgroundColor: "grey",
         height: "3px",
     },
-    gridStyle: {
-        backgroundColor:"lightgreen",
-    },
 });
 
 type Props = {
@@ -47,7 +44,7 @@ const AlertDetail = (alertDetailProps: Props) => {
 
     /* TODO: Delete Button */
     return (
-        <Grid item xs={9} className={style.gridStyle}>
+        <Grid item xs={9}>
             <h1>Details</h1>
 
             <Divider variant="fullWidth" className={style.dividerStyle} />

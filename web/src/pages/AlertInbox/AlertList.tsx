@@ -24,7 +24,6 @@ const useStyles = makeStyles({
     },
     gridStyle: {
         borderRight: "3px solid grey",
-        backgroundColor:"lightblue",
     },
     dividerStyle: {
         margin: "0px",

@@ -12,6 +12,7 @@ import { PriorityLevel } from "@cbr/common/util/alerts";
 import { useState, useEffect } from "react";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { Time } from "@cbr/common/util/time";
+import { socket } from "@cbr/common/context/SocketIOContext";
 
 const useStyles = makeStyles({
     selectedListItemStyle: {
@@ -48,6 +49,7 @@ export interface IAlert {
 type AlertDetailProps = {
     onAlertSelectionEvent: (itemNum: number) => void;
     selectAlert: number;
+    userID: string;
 };
 
 const RenderBadge = (params: String) => {
@@ -75,6 +77,15 @@ const RenderBadge = (params: String) => {
 const AlertList = (alertDetailProps: AlertDetailProps) => {
     const style = useStyles();
     const [alertData, setAlertData] = useState<IAlert[]>([]);
+    // For the purposes of tracking changes to a user's unread alerts
+    const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
+
+    socket.on("updateUnreadList", (unreadAlerts) => {
+        if (unreadAlertsCount !== unreadAlerts) {
+            // update state only if the number of unread alerts for this user has changed
+            setUnreadAlertsCount(unreadAlertsCount);
+        }
+    });
 
     useEffect(() => {
         const fetchAlerts = async () => {
@@ -89,7 +100,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
             }
         };
         fetchAlerts();
-    }, []);
+    }, [unreadAlertsCount]);
 
     return (
         <Grid item xs={12} md={3} className={style.gridStyle}>
@@ -113,7 +124,11 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                             sx={{
                                                 display: "inline",
                                                 fontSize: 16,
-                                                fontWeight: "medium",
+                                                fontWeight: currAlert.unread_by_users.includes(
+                                                    alertDetailProps.userID
+                                                )
+                                                    ? "bold"
+                                                    : "small",
                                             }}
                                             component="span"
                                             variant="body2"

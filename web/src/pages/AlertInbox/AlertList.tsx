@@ -24,6 +24,7 @@ const useStyles = makeStyles({
     },
     gridStyle: {
         borderRight: "3px solid grey",
+        backgroundColor:"lightblue",
     },
     dividerStyle: {
         margin: "0px",
@@ -91,7 +92,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
     }, []);
 
     return (
-        <Grid item xs={12} md={3} className={style.gridStyle}>
+        <Grid item xs={3} className={style.gridStyle}>
             <h1>Alerts</h1>
             <Divider variant="fullWidth" className={style.tableTopAndContentDividerStyle} />
             <List
@@ -117,6 +118,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                             component="span"
                                             variant="body2"
                                             color="text.primary"
+                                            noWrap={false}
                                         >
                                             {currAlert.subject}
                                         </Typography>

@@ -4,9 +4,9 @@ stages:
   - deploy
 
 variables:
-  DEVELOPMENT_BRANCH: "update-deploy-structure"
+  DEV_BRANCH: "update-deploy-structure"
   STAGING_BRANCH: "staging"
-  PRODUCTION_BRANCH: "production"
+  PROD_BRANCH: "production"
   NPM_VERSION: "7.19.0"
 
 build common:
@@ -68,7 +68,7 @@ build web:
         - .gitlab-ci.yml
       when: always
     # build on deployments
-    - if: "$CI_COMMIT_BRANCH == $DEVELOPMENT_BRANCH || $CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH"
+    - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: always
   before_script:
     - npm install -g npm@$NPM_VERSION
@@ -101,7 +101,7 @@ build server:
         - server/**/*
         - .gitlab-ci.yml
       when: always
-    - if: "$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
+    - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: always
   variables:
     DOMAIN: "example.com"
@@ -175,7 +175,7 @@ deploy development:
   tags:
     - deploy-development
   rules:
-    - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $DEVELOPMENT_BRANCH"
+    - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $DEV_BRANCH"
       when: on_success
   script:
     - *deploy-script
@@ -201,7 +201,7 @@ deploy production:
   tags:
     - deploy-production
   rules:
-    - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH"
+    - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: manual
   script:
     - *deploy-script

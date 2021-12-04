@@ -94,10 +94,10 @@ export default function AlertInbox(props: Props) {
 
   return (
     <Box sx={{ display: 'flex' }}>
-    {/* // <Box sx={{ 
-    //   display: 'relative'
-    //   ,top:200,left:200
-    // }}> */}
+      <Box sx={{ 
+        display: 'relative'
+        ,top:200,left:200
+    }}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -106,7 +106,7 @@ export default function AlertInbox(props: Props) {
           ml: { sm: `${drawerWidth}px` },
           // top:200,left:200
         }}
-      >
+      > 
         <Toolbar>
           <IconButton
             color="inherit"
@@ -114,7 +114,7 @@ export default function AlertInbox(props: Props) {
             edge="start"
             onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { sm: 'none' } }}
-          >
+          > 
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
@@ -122,6 +122,8 @@ export default function AlertInbox(props: Props) {
           </Typography>
         </Toolbar>
       </AppBar>
+    </Box>
+
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 }
@@ -131,6 +133,7 @@ export default function AlertInbox(props: Props) {
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
+          anchor='right'
           container={container}
           variant="temporary"
           open={mobileOpen}
@@ -161,6 +164,7 @@ export default function AlertInbox(props: Props) {
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
       >
         <Toolbar />
+
         <Typography paragraph>
           {alertData.length === 0 || alertData[0].alert_message === ""
                       ? "Empty"

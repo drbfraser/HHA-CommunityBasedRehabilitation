@@ -21,3 +21,8 @@ services:
     environment:
       - DOMAIN=${DOMAIN}
       - API_HOSTNAME=cbr_django
+    volumes:
+      - cbr_caddy_data:/data
+
+volumes:
+  cbr_caddy_data:

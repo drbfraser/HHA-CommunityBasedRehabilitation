@@ -82,8 +82,8 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
 
     socket.on("updateUnreadList", (unreadAlerts) => {
         if (unreadAlertsCount !== unreadAlerts) {
-            // update state only if the number of unread alerts for this user has changed
-            setUnreadAlertsCount(unreadAlertsCount);
+            // update state oonly if the number of unread alerts have changed
+            setUnreadAlertsCount(unreadAlerts);
         }
     });
 

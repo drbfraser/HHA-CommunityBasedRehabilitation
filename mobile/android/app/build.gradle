@@ -155,9 +155,9 @@ android {
             keyPassword 'android'
         }
          release {
-        storeFile file('mock_release.keystore')
+        storeFile file('cbr_release.keystore')
         storePassword 'hhaLogin'
-        keyAlias 'mock_release'
+        keyAlias 'cbr_release'
         keyPassword 'hhaLogin'
         }
     }

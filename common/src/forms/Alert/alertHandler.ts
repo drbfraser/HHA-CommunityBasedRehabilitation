@@ -64,7 +64,3 @@ export const handleDiscard = (resetForm: () => void) => {
         resetForm();
     }
 };
-
-export const handleSave = async () => {
-  // TODO: Handler for save button
-};

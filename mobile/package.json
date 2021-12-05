@@ -1,14 +1,10 @@
 {
     "scripts": {
         "start": "react-native start",
-        "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz && expo r -c",
-        "build-android-apk": "APP_ENV=prod expo build:android -t apk",
-        "build-android-app-bundle": "APP_ENV=prod expo build:android -t app-bundle",
-        "publish-expo": "APP_ENV=prod expo publish",
         "android": "react-native run-android",
         "ios": "react-native run-ios",
-        "web": "expo start --web",
-        "eject": "expo eject"
+        "build": "node build.js",
+        "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz"
     },
     "dependencies": {
         "@cbr/common": "file:cbr-common-1.0.0.tgz",

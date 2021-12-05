@@ -34,11 +34,11 @@ To specify a custom server for development builds of the mobile app, create a fi
 the `mobile` directory, containing the following:
 
 ```
-DEV_API_URL="http://<some hostname or IP>/api/"
+LOCAL_URL="http://<some hostname or IP>"
 ```
 
-This is optional. If you do not specify `DEV_API_URL`, the staging server is used by default on development builds. Note
-that `DEV_API_URL` is ignored when running a production or staging build. Running Expo using `npm start` or `expo start`
+This is optional. If you do not specify `LOCAL_URL`, the staging server is used by default on development builds. Note
+that `LOCAL_URL` is ignored when running a production or staging build. Running Expo using `npm start` or `expo start`
 in the `mobile` directory will be considered a development build.
 
 If you are going to be using an IP address, you will need to specify the port (8000) in the URL.
@@ -54,7 +54,7 @@ If you are going to be using an IP address, you will need to specify the port (8
   [the emulator's virtual router uses that as an alias for localhost / `127.0.0.1` on your computer](https://developer.android.com/studio/run/emulator-networking#networkaddresses):
 
   ```
-  DEV_API_URL="http://10.0.2.2:8000/api/"
+  LOCAL_URL="http://10.0.2.2:8000"
   ```
 
 To validate that your specified API URL is being used for a development build, run `expo config --type public` (or print out the API URL in the app to the console). If you need to change the URL

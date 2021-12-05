@@ -1,8 +1,7 @@
 import { registerRootComponent } from "expo";
 import App from "./src/App";
-import { initializeCommon, invalidateAllCachedAPI, KeyValStorageProvider } from "@cbr/common";
+import { initializeCommon, invalidateAllCachedAPI } from "@cbr/common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Constants } from "react-native-unimodules";
 import NetInfo from "@react-native-community/netinfo";
 import { CacheRefreshTask } from "./src/tasks/CacheRefreshTask";
 
@@ -18,10 +17,26 @@ const keyValStorageProvider = {
     },
 };
 
+const BASE_URLS = {
+    local: process.env.LOCAL_URL ?? "",
+    dev: "https://cbrd.cradleplatform.com",
+    staging: "https://cbrs.cradleplatform.com",
+    prod: "https://cbr.hopehealthaction.org",
+};
+
+const DEFAULT_APP_ENV = "dev";
+let appEnv = process.env.APP_ENV ?? DEFAULT_APP_ENV;
+
+if (appEnv === "local" && !BASE_URLS.local) {
+    appEnv = DEFAULT_APP_ENV;
+}
+
+const BASE_URL = BASE_URLS[appEnv];
+const API_URL = `${BASE_URL}/api/`;
+
 initializeCommon({
-    // Note: Constants will not be available if we eject from Expo's managed workflow.
-    // @ts-ignore
-    apiUrl: Constants.manifest.extra.apiUrl,
+    apiUrl: API_URL,
+    socketIOUrl: BASE_URL,
     keyValStorageProvider: keyValStorageProvider,
     useKeyValStorageForCachedAPIBackup: true,
     // We don't want to logout when the user is offline and doesn't have internet (no internet means

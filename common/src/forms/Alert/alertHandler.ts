@@ -65,8 +65,6 @@ export const handleDiscard = (resetForm: () => void) => {
     }
 };
 
-/*
-TODO:
-  Need to discuss with team, maybe save it in the watermelon DB
-*/
-export const handleSave = async () => {};
+export const handleSave = async () => {
+  // TODO: Handler for save button
+};

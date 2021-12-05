@@ -12,11 +12,7 @@ import {
     alertInitialValues,
     validationSchema,
 } from "@cbr/common/forms/Alert/alertFields";
-import {
-    handleDiscard,
-    handleNewWebAlertSubmit,
-    handleSave,
-} from "@cbr/common/forms/Alert/alertHandler";
+import { handleDiscard, handleNewWebAlertSubmit } from "@cbr/common/forms/Alert/alertHandler";
 
 const AlertForm = () => {
     return (

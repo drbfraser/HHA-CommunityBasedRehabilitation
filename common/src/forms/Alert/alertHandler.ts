@@ -69,7 +69,4 @@ export const handleDiscard = (resetForm: () => void) => {
 TODO:
   Need to discuss with team, maybe save it in the watermelon DB
 */
-export const handleSave = async () => {
-    // validate the input
-    // call backend
-};
+export const handleSave = async () => {};

@@ -87,13 +87,15 @@ const AlertForm = () => {
                                     </Grid>
                                     <Grid item md={4} xs={8}>
                                         <Grid container justify="flex-end">
+                                            {/* 
+                                            // Save functionality is not yet implemented, therefore the save button is disabled
                                             <Button
                                                 variant="outlined"
                                                 color="primary"
                                                 onClick={() => handleSave()}
                                             >
                                                 Save
-                                            </Button>
+                                            </Button> */}
                                             &nbsp;
                                             <Button
                                                 variant="outlined"

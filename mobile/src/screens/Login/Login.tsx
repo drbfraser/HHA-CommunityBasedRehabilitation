@@ -11,7 +11,6 @@ import { SMALL_WIDTH } from "../../util/theme.styles";
 import passwordTextInputProps from "../../components/PasswordTextInput/passwordTextInputProps";
 import { APIFetchFailError } from "@cbr/common";
 import { useNavigation } from "@react-navigation/core";
-import { SyncDatabaseTask } from "../../tasks/SyncDatabaseTask";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 interface IBaseLoginStatus {

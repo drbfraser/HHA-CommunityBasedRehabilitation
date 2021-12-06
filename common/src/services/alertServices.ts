@@ -1,6 +1,5 @@
-import { apiFetch, Endpoint,createApiFetchRequest } from "../util/endpoints";
+import { Endpoint } from "../util/endpoints";
 import { getAuthToken } from "../util/auth";
-import { commonConfiguration } from "../init";
 import { RequestConfigBuilder } from  "./tools/RequestConfigBuilder";
 import { Time } from "@cbr/common/util/time";
 
@@ -31,30 +30,15 @@ const alertServices = {
             return Promise.reject("unable to get an access token");
         }
 
-        const config = await RequestConfigBuilder.buildConfig('get','', 'alerts','');
-
-        console.log("1. ------")
-        console.log(config);
-        console.log("2. ------")
-        // const tempAlerts: IAlert[] = (await axios({
-        //   method:'get',
-        //   headers: {
-        //     Authorization: `Bearer ${authToken}`,
-        //     'Content-Type':'application/json'
-        //   },
-        //   url:'http://localhost:8000/api/alerts'
-        // })).data; 
+        const config = await RequestConfigBuilder.buildConfig('get','', Endpoint.ALERTS,'');
 
         const tempAlerts: IAlert[] = (await axios(config)).data;
 
-        console.log("FLAG 10-----");
-        console.log(tempAlerts);
-        console.log("FLAG 11-----");
         return tempAlerts;
     } catch (e) {
         console.log(`Error fetching Alerts: ${e}`);
     }
-}
+  }
 }
 
 export default alertServices;

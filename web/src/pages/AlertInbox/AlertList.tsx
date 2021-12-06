@@ -10,9 +10,7 @@ import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { makeStyles } from "@material-ui/core/styles";
 import { PriorityLevel } from "./Alert";
 import { useState, useEffect } from "react";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { Time } from "@cbr/common/util/time";
-import { getAuthToken } from "@cbr/common/util/auth";
 import alertServices from "@cbr/common/services/alertServices";
 
 declare var require: any
@@ -82,69 +80,19 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
     const [alertData, setAlertData] = useState<IAlert[]>([]);
 
     useEffect(() => {
-      console.log(" ~~~FLAG 2~~~ ");
         const fetchAlerts = async () => {
             try {
-                // const tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
-                
-                /* IMPORTANT!!! */
                 const tempAlerts: IAlert[] | undefined  = await alertServices.showAlerts();
 
-                // const tempAlerts: any = addAlerts();
-                
-                // const authToken = await getAuthToken();
-                // if (authToken === null) {
-                //     return Promise.reject("unable to get an access token");
-                // }
-                
-                // const tempAlerts: IAlert[] = (await axios({
-                //   method:'get',
-                //   headers: {
-                //     Authorization: `Bearer ${authToken}`,
-                //     'Content-Type':'application/json'
-                //   },
-                //   url:'http://localhost:8000/api/alerts'
-                // })).data; 
-
-                // console.log(" ~~~FLAG 3~~~ ");
                 if(tempAlerts !== undefined) {
-                  console.log('------------------------');
-                  console.log(tempAlerts);
-                  console.log('------------------------');
                   setAlertData(tempAlerts);
                 }
-                
             } catch (e) {
                 console.log(`Error fetching Alerts: ${e}`);
             }
         };
 
-      /*
-        const fetchAlerts2 = async () => { 
-          try {
-            const authToken = await getAuthToken();
-            if (authToken === null) {
-                return Promise.reject("unable to get an access token");
-            }
-
-            // request.headers.set("Authorization", `Bearer ${authToken}`);
-            const {data} = await axios({
-              method:'get',
-              headers: {
-                Authorization: `Bearer ${authToken}`,
-              },
-              url:'http://localhost:8000/api/currentuser'
-            }); 
-            console.log("---------- DATA ----------");
-            console.log(data);
-          } catch (e) {
-            console.log('Error Message!!');
-          }
-        };
-      */
-
         fetchAlerts();
-        // fetchAlerts2();
     }, []);
 
     return (

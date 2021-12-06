@@ -16,7 +16,7 @@ import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import useIsMounted from "react-is-mounted-hook";
-import imageCompression from "browser-image-compression";
+import { helperImgCompress } from "components/ReferralPhotoView/imgCompressHelper";
 
 interface IProps {
     isEditing: boolean;
@@ -37,8 +37,6 @@ interface ICropperModal {
 }
 
 const DEFAULT_IMAGE_PATH = "/images/profile_pic_icon.png";
-
-export const MAX_FILE_SIZE = 500000;
 
 type TReducerAction = { newImgSrc: string };
 
@@ -212,18 +210,7 @@ export const ProfilePicCard = (props: IProps) => {
 
         const reader = new FileReader();
 
-        let target_file;
-        if (files[0].size >= MAX_FILE_SIZE) {
-            const options = {
-                maxSizeMB: 1,
-                maxWidthOrHeight: 500,
-                initialQuality: 0.7,
-                useWebWorker: true,
-            };
-            target_file = await imageCompression(files[0], options);
-        } else {
-            target_file = files[0];
-        }
+        let target_file = await helperImgCompress(files[0]);
 
         reader.onload = () => {
             const cropperPicture = (reader.result as ArrayBuffer) ?? undefined;

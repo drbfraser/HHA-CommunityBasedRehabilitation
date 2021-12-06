@@ -1,8 +1,7 @@
 import { FormLabel } from "@material-ui/core";
-import imageCompression from "browser-image-compression";
-import { MAX_FILE_SIZE } from "components/PhotoViewUpload/PhotoViewUpload";
 import React from "react";
 import { useState } from "react";
+import { helperImgCompress } from "./imgCompressHelper";
 
 interface Iprops {
     onPictureChange: (newPictureURL: string) => void;
@@ -34,18 +33,8 @@ export const PhotoView = (props: Iprops) => {
                     if (!files) {
                         return;
                     }
-                    let target_file;
-                    if (files[0].size >= MAX_FILE_SIZE) {
-                        const options = {
-                            maxSizeMB: 1,
-                            maxWidthOrHeight: 500,
-                            initialQuality: 0.5,
-                            useWebWorker: true,
-                        };
-                        target_file = await imageCompression(files[0], options);
-                    } else {
-                        target_file = files[0];
-                    }
+
+                    let target_file = await helperImgCompress(files[0]);
                     let reader = new FileReader();
                     reader.onload = () => {
                         const image = (reader.result as ArrayBuffer) ?? undefined;

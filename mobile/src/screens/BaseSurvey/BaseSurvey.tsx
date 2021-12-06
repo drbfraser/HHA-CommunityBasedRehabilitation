@@ -60,7 +60,6 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
     const [saveError, setSaveError] = useState<string>();
     const { autoSync, cellularSync } = useContext(SyncContext);
     const prevStep = () => {
-        console.log(stepChecked);
         setStep(step - 1);
     };
 

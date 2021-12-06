@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
             model_name="alert",
             name="unread_by_users",
             field=django.contrib.postgres.fields.ArrayField(
-                base_field=models.TextField(blank=True), size=None
+                base_field=models.TextField(blank=True), default=list, size=None
             ),
         ),
     ]

@@ -16,7 +16,11 @@ class Migration(migrations.Migration):
             name="id",
             field=models.CharField(max_length=100, primary_key=True, serialize=False),
         ),
-        migrations.AlterField(
+        migrations.RemoveField(
+            model_name="alert",
+            name="unread_by_users",
+        ),
+        migrations.AddField(
             model_name="alert",
             name="unread_by_users",
             field=django.contrib.postgres.fields.ArrayField(

@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { Time } from "@cbr/common/util/time";
 import { getAuthToken } from "@cbr/common/util/auth";
+import alertServices from "@cbr/common/services/alertServices";
 
 declare var require: any
 
@@ -81,9 +82,15 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
     const [alertData, setAlertData] = useState<IAlert[]>([]);
 
     useEffect(() => {
+      console.log(" ~~~FLAG 2~~~ ");
         const fetchAlerts = async () => {
             try {
-                const tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
+                // const tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
+                
+                /* IMPORTANT!!! */
+                const tempAlerts: IAlert[] | undefined  = await alertServices.showAlerts();
+
+                // const tempAlerts: any = addAlerts();
                 
                 // const authToken = await getAuthToken();
                 // if (authToken === null) {
@@ -96,12 +103,17 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                 //     Authorization: `Bearer ${authToken}`,
                 //     'Content-Type':'application/json'
                 //   },
-                //   url:'http://localhost:8000/api/alert/'
+                //   url:'http://localhost:8000/api/alerts'
                 // })).data; 
 
-                // console.log("RESULT: ");
-
-                setAlertData(tempAlerts);
+                // console.log(" ~~~FLAG 3~~~ ");
+                if(tempAlerts !== undefined) {
+                  console.log('------------------------');
+                  console.log(tempAlerts);
+                  console.log('------------------------');
+                  setAlertData(tempAlerts);
+                }
+                
             } catch (e) {
                 console.log(`Error fetching Alerts: ${e}`);
             }

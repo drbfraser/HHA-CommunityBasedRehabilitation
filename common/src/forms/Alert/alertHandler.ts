@@ -31,25 +31,25 @@ const addAlert = async (alertInfo: FormData) => {
         //let tempAlerts: IAlert[]
 
         try {
-          const tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
+      //    const tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
           
-      //     const authToken = await getAuthToken();
-      //     if (authToken === null) {
-      //         return Promise.reject("unable to get an access token");
-      //     }
+          const authToken = await getAuthToken();
+          if (authToken === null) {
+              return Promise.reject("unable to get an access token");
+          }
           
-      //     tempAlerts = (await axios({
-      //       method:'post',
-      //       headers: {
-      //         Authorization: `Bearer ${authToken}`,
-      //       },
-      //       url:'http://localhost:8000/api/alert/1',
-      //       body: alertInfo,
-      //     })).data; 
+          const tempAlerts = (await axios({
+            method:'post',
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+            url:'http://localhost:8000/api/alert/1',
+            body: alertInfo,
+          })).data; 
 
-      //     console.log("RESULT: ");
-      //     console.log(tempAlerts);
-      //     return tempAlerts;
+          console.log("RESULT: ");
+          console.log(tempAlerts);
+      //    return tempAlerts;
         } catch (e) {
           console.log(`Error fetching Alerts: ${e}`);
           // return tempAlerts;

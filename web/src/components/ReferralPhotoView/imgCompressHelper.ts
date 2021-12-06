@@ -1,8 +1,8 @@
 import imageCompression from "browser-image-compression";
 
 export const helperImgCompress = async (imgFile: File) => {
-    const MAX_FILE_SIZE = 500000;
-
+    const MAX_FILE_SIZE = 100000;
+    console.log(imgFile.size);
     if (imgFile.size >= MAX_FILE_SIZE) {
         const options = {
             maxSizeMB: 1,

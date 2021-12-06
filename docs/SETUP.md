@@ -34,10 +34,13 @@ To specify a custom server for development builds of the mobile app, create a fi
 the `mobile` directory, containing the following:
 
 ```
-LOCAL_URL="http://<some hostname or IP>"
+APP_ENV="local"
+LOCAL_URL="http://<some hostname or IP>" (Optional)
 ```
 
-This is optional. If you do not specify `LOCAL_URL`, the staging server is used by default on development builds. Note
+APP_ENV specified to local will allow the use of the LOCAL_URL,if APP_ENV is not specified, the development server will be used by default
+
+This is optional. If you do not specify `LOCAL_URL`, the developement server is used by default on development builds. Note
 that `LOCAL_URL` is ignored when running a production or staging build. Running Expo using `npm start` or `expo start`
 in the `mobile` directory will be considered a development build.
 

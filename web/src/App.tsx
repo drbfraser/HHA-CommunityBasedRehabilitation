@@ -10,13 +10,14 @@ import { useIsLoggedIn } from "./util/hooks/loginState";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
 import AlertNotification from "./components/Alerts/AlertNotification";
+import { IAlert } from "@cbr/common/util/alerts";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
     const styles = useStyles();
 
-    const [open, setOpen] = React.useState(false);
-    const [alert, setAlert] = React.useState();
+    const [open, setOpen] = React.useState<boolean>(false);
+    const [alert, setAlert] = React.useState<IAlert>();
 
     const PrivateRoutes = () => {
         const user = useCurrentUser();

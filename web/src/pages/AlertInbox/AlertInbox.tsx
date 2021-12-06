@@ -19,7 +19,7 @@ const AlertInbox = () => {
 
     useEffect(() => {
         const getUserProfile = async () => {
-            let user = await getCurrentUser();
+            let user: IUser | typeof APILoadError = await getCurrentUser();
             if (user !== APILoadError) {
                 setUserID(user.id);
             }

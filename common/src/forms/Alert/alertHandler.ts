@@ -103,7 +103,7 @@ export const handleSave = async (values: any) => {
 
 export const handleUpdateAlertSubmit = async (values: TAlertUpdateValues) => {
     try {
-        let user = await getCurrentUser();
+        const user: IUser | typeof APILoadError = await getCurrentUser();
         let userID: string = user !== APILoadError ? user.id : "unknown";
         // remove this user from the list of unread users
         let updatedUnreadUserList = Object.values(values.unread_by_users).filter(

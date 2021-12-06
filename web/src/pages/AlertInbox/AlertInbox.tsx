@@ -20,8 +20,12 @@ const AlertInbox = () => {
 
     return (
         <Grid container justify="center" alignItems="flex-start" spacing={3}>
+            {/*
+            comment them out for testing
             <AlertList {...alertListProps} />
             <AlertDetail {...alertDetailProps} />
+            */}
+
             {/* TODO: 
               API call should be placed in this component, need to check how to pass those as props
             */}

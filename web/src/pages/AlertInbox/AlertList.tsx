@@ -12,6 +12,11 @@ import { PriorityLevel } from "./Alert";
 import { useState, useEffect } from "react";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { Time } from "@cbr/common/util/time";
+import { getAuthToken } from "@cbr/common/util/auth";
+
+declare var require: any
+
+const axios = require('axios');
 
 const useStyles = makeStyles({
     selectedListItemStyle: {
@@ -79,12 +84,55 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
         const fetchAlerts = async () => {
             try {
                 const tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
+                
+                // const authToken = await getAuthToken();
+                // if (authToken === null) {
+                //     return Promise.reject("unable to get an access token");
+                // }
+                
+                // const tempAlerts: IAlert[] = (await axios({
+                //   method:'get',
+                //   headers: {
+                //     Authorization: `Bearer ${authToken}`,
+                //     'Content-Type':'application/json'
+                //   },
+                //   url:'http://localhost:8000/api/alert/'
+                // })).data; 
+
+                // console.log("RESULT: ");
+
                 setAlertData(tempAlerts);
             } catch (e) {
                 console.log(`Error fetching Alerts: ${e}`);
             }
         };
+
+      /*
+        const fetchAlerts2 = async () => { 
+          try {
+            const authToken = await getAuthToken();
+            if (authToken === null) {
+                return Promise.reject("unable to get an access token");
+            }
+
+            // request.headers.set("Authorization", `Bearer ${authToken}`);
+            const {data} = await axios({
+              method:'get',
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+              url:'http://localhost:8000/api/currentuser'
+            }); 
+            console.log("---------- DATA ----------");
+            console.log(data);
+          } catch (e) {
+            console.log('Error Message!!');
+          }
+        };
+      */
+
         fetchAlerts();
+        // fetchAlerts2();
     }, []);
 
     return (

@@ -31,6 +31,9 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
 
+import android.database.CursorWindow;
+import java.lang.reflect.Field;
+
 public class MainApplication extends Application implements ReactApplication {
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
     new BasePackageList().getPackageList()
@@ -93,6 +96,16 @@ public class MainApplication extends Application implements ReactApplication {
     }
 
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    
+    try {
+      Field field = CursorWindow.class.getDeclaredField("sCursorWindowSize");
+      field.setAccessible(true);
+      field.set(null, 100 * 1024 * 1024); //the 100MB is the new size
+    } catch (Exception e) {
+      if (BuildConfig.DEBUG) {
+        e.printStackTrace();
+      }
+    }
   }
 
   /**

@@ -1,12 +1,31 @@
-import { AddConflictsType, ClearConflictsType } from "./actions";
-import { ADD_CONFLICTS, CLEAR_CONFLICTS } from "./actionTypes";
+import { AddConflictsType, ClearConflictsType, AutoSyncScheduledType } from "./actions";
+import { ADD_CONFLICTS, CLEAR_CONFLICTS, SCHEDULE_AUTO_SYNC } from "./actionTypes";
 import { SyncConflict } from "../util/syncConflictConstants";
+
+export const initialSyncScheduledState = {
+    scheduled: false as boolean,
+};
 
 export const initialConflictsState = {
     cleared: true as boolean,
     clientConflicts: new Map() as Map<string, SyncConflict>,
     userConflicts: new Map() as Map<string, SyncConflict>,
 };
+
+export function syncScheduledReducer(
+    state = initialSyncScheduledState,
+    action: ReturnType<AutoSyncScheduledType>
+) {
+    switch (action.type) {
+        case SCHEDULE_AUTO_SYNC: {
+            state = {
+                scheduled: action.payload.scheduled,
+            };
+        }
+        default:
+            return state;
+    }
+}
 
 export function conflictsReducer(
     state = initialConflictsState,

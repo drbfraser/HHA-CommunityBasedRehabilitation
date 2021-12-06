@@ -163,14 +163,14 @@ export default function App() {
                     CacheRefreshTask.registerBackgroundFetch(),
                     // This will fetch all cached API data so that they're pre-loaded.
                     invalidateAllCachedAPI("login"),
+                    // Initialize scheduled sync once logged in
+                    SyncDatabaseTask.autoSyncDatabase(database),
                 ]);
 
                 return await updateAuthStateIfNeeded(authState, setAuthState, false);
             },
             logout: async () => {
-                // Stop performing scheduled sync on log out
-                SyncDatabaseTask.deactivateAutoSync();
-                // BackgroundFetch is unregistered in the logout callback
+                // BackgroundFetch is unregistered & Sync is unscheduled in the logout callback
                 await doLogout();
                 setAuthState({ state: "loggedOut" });
             },
@@ -182,7 +182,11 @@ export default function App() {
         [authState]
     );
 
-    if (authState.state === "loggedIn") {
+    const syncScheduled = store.getState().syncScheduled.scheduled;
+    if (authState.state === "loggedIn" && !syncScheduled) {
+        /* Normally, sync is schedule upon user login to the app
+        Re-schedule sync if new instance of app is launched, but user is 
+        still logged in (ie. their refresh token has not yet expired) */
         SyncDatabaseTask.autoSyncDatabase(database);
     }
 

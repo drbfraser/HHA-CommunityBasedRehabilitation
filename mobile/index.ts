@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Constants } from "react-native-unimodules";
 import NetInfo from "@react-native-community/netinfo";
 import { CacheRefreshTask } from "./src/tasks/CacheRefreshTask";
+import { SyncDatabaseTask } from "./src/tasks/SyncDatabaseTask";
 
 const keyValStorageProvider: KeyValStorageProvider = {
     getItem(key: string): Promise<string | null> {
@@ -34,6 +35,7 @@ initializeCommon({
         await invalidateAllCachedAPI("logout").catch((e) => {
             console.error(`Error while invalidating all cached API during logout: ${e}`);
         });
+        SyncDatabaseTask.deactivateAutoSync();
         // TODO: Delete all other stored data in the app including client data, referrals, etc.
     },
     fetchErrorWrapper: async (e: Error): Promise<Error> => {

@@ -5,6 +5,7 @@ import AlertDetail from "./AlertDetail";
 import { useState } from "react";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
+import { IUser } from "@cbr/common/util/users";
 
 const AlertInbox = () => {
     const [selectedAlert, setSelectedAlert] = useState<number>(-1);

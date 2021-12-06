@@ -6,6 +6,7 @@ import {
     getCleanClientColumn,
     getRejectedChange,
 } from "./syncConflictConstants";
+import { modelName } from "../models/constant";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
 import { dbType } from "./watermelonDatabase";
 
@@ -96,7 +97,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
 
     const recordConflict = (column) => {
         if (conflictFields[tableName].has(column)) {
-            if (tableName == "clients") {
+            if (tableName == modelName.clients) {
                 if (!clientConflicts.has(newRaw.id)) {
                     clientConflicts.set(newRaw.id, {
                         name: dirtyRaw.full_name,
@@ -108,7 +109,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                     column: getCleanClientColumn(column),
                     rejChange: getRejectedChange(column, raw[column]).toString(),
                 });
-            } else if (tableName == "referrals") {
+            } else if (tableName == modelName.referrals) {
                 /* Referral conflicts are also stored under client ID object 
                    Full client name will be retrieved during component rendering */
                 if (!clientConflicts.has(newRaw.client_id)) {
@@ -122,7 +123,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                     column: referralLabels[column],
                     rejChange: raw[column].toString(),
                 });
-            } else if (tableName == "users") {
+            } else if (tableName == modelName.users) {
                 if (!userConflicts.has(newRaw.id)) {
                     userConflicts.set(newRaw.id, {
                         name: `${dirtyRaw.first_name} ${dirtyRaw.last_name}`,

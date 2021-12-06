@@ -107,9 +107,15 @@ const ConflictDialog = () => {
                                 theme={{ colors: { background: themeColors.blueBgLight } }}
                                 title={clientConflictTitle}
                             >
-                                {[...clientConflicts.keys()].map((id) => {
+                                {[...clientConflicts.keys()].map((id, ind) => {
                                     return (
-                                        <View key={`client_${id}`}>
+                                        <View
+                                            key={`client_${id}`}
+                                            style={{
+                                                marginBottom:
+                                                    ind == clientConflicts.size - 1 ? 15 : 0,
+                                            }}
+                                        >
                                             <Text style={styles.conflictName}>
                                                 {clientConflicts.get(id)?.name}
                                             </Text>
@@ -143,7 +149,6 @@ const ConflictDialog = () => {
                                         </View>
                                     );
                                 })}
-                                <Text></Text>
                             </List.Accordion>
                         )}
                         {userConflicts.size > 0 && (
@@ -151,9 +156,15 @@ const ConflictDialog = () => {
                                 theme={{ colors: { background: themeColors.blueBgLight } }}
                                 title={userConflictTitle}
                             >
-                                {[...userConflicts.keys()].map((id) => {
+                                {[...userConflicts.keys()].map((id, ind) => {
                                     return (
-                                        <View key={`user_${id}`}>
+                                        <View
+                                            key={`user_${id}`}
+                                            style={{
+                                                marginBottom:
+                                                    ind == userConflicts.size - 1 ? 15 : 0,
+                                            }}
+                                        >
                                             <Text style={styles.conflictName}>
                                                 {userConflicts.get(id)?.name}
                                             </Text>
@@ -177,7 +188,6 @@ const ConflictDialog = () => {
                                         </View>
                                     );
                                 })}
-                                <Text></Text>
                             </List.Accordion>
                         )}
                     </ScrollView>

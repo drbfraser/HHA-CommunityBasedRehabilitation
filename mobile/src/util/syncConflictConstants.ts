@@ -35,12 +35,7 @@ export const getCleanClientColumn = (column) => {
 };
 
 export const getRejectedChange = (column, change) => {
-    switch (column) {
-        case ClientField.birth_date:
-            return timestampToFormDate(change as number, true);
-        default:
-            return change;
-    }
+    return column == ClientField.birth_date ? timestampToFormDate(change as number, true) : change;
 };
 
 const clientConflictFields = new Set([

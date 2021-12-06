@@ -30,19 +30,25 @@ const alertServices = {
         if (authToken === null) {
             return Promise.reject("unable to get an access token");
         }
-        console.log("FLAG 9 -----");
 
-        const tempAlerts: IAlert[] = (await axios({
-          method:'get',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            'Content-Type':'application/json'
-          },
-          url:'http://localhost:8000/api/alerts'
-        })).data; 
+        const config = await RequestConfigBuilder.buildConfig('get','', 'alerts','');
+
+        console.log("1. ------")
+        console.log(config);
+        console.log("2. ------")
+        // const tempAlerts: IAlert[] = (await axios({
+        //   method:'get',
+        //   headers: {
+        //     Authorization: `Bearer ${authToken}`,
+        //     'Content-Type':'application/json'
+        //   },
+        //   url:'http://localhost:8000/api/alerts'
+        // })).data; 
+
+        const tempAlerts: IAlert[] = (await axios(config)).data;
 
         console.log("FLAG 10-----");
-
+        console.log(tempAlerts);
         console.log("FLAG 11-----");
         return tempAlerts;
     } catch (e) {

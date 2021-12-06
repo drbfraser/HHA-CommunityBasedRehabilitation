@@ -1,4 +1,5 @@
 import { Endpoint } from "../../util/endpoints";
+import { getAuthToken } from "../../util/auth";
 
 interface Config {
   init: RequestInit,
@@ -28,8 +29,21 @@ export class ConfigEntity {
 }
 
 export const RequestConfigBuilder = {
-  buildConfig: (httpMethod:string, body:any, endpoint:Endpoint ,userId:string) => {
+  buildConfig: async (httpMethod:string, body:any, endpoint: string ,userId:string) => {
 
-    return new ConfigEntity(userId, httpMethod, endpoint, body);
+    const authToken = await getAuthToken();
+    if (authToken === null) {
+        return Promise.reject("unable to get an access token");
+    }
+
+    // return new ConfigEntity(userId, httpMethod, endpoint, body);
+    return {
+      method:`${httpMethod}`,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type':'application/json'
+      },
+      url:`http://localhost:8000/api/${endpoint}`
+    };
   }
 }

@@ -18,10 +18,20 @@ const useStyles = () =>
             flex: 1,
             justifyContent: "space-around",
         },
+        syncBtbContainer: {
+            height: 60,
+            justifyContent: "center",
+        },
         resetBtbContainer: {
             backgroundColor: "white",
+            height: 60,
+            justifyContent: "center",
+        },
+        syncBtnLabel: {
+            fontSize: 18,
         },
         resetBtnLabel: {
+            fontSize: 18,
             color: themeColors.errorRed,
         },
         cardSectionTitle: {

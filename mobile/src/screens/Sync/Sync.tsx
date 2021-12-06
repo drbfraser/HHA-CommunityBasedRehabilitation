@@ -116,6 +116,8 @@ const Sync = () => {
                     <Button
                         icon="database-sync"
                         mode="contained"
+                        labelStyle={styles.syncBtnLabel}
+                        style={styles.syncBtbContainer}
                         disabled={
                             !netInfo.isConnected
                                 ? true

@@ -26,7 +26,7 @@ export namespace SyncDatabaseTask {
     ) => {
         /* Remove running timer, if it exists */
         BackgroundTimer.stopBackgroundTimer();
-        console.log(`Scheduling Auto Sync`);
+        console.log(`${TASK_TAG}: Scheduling Auto Sync`);
         BackgroundTimer.runBackgroundTimer(async () => {
             console.log(`${TASK_TAG}: Syncing local DB with remote`);
             syncMutex.runExclusive(async () => {

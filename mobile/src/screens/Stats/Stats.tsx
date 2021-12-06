@@ -52,8 +52,8 @@ const Stats = () => {
     const isFocused = useIsFocused();
     const zones = useZones();
     const disabilityMap = useDisabilities();
-    const [showVisit, setShowVisit] = useState<boolean>(true);
-    const [showReferral, setShowReferral] = useState<boolean>(false);
+    const [showVisits, setShowVisits] = useState<boolean>(true);
+    const [showReferrals, setShowReferrals] = useState<boolean>(false);
     const [showDisabilites, setShowDisabilites] = useState<boolean>(false);
 
     const [loading, setLoading] = useState<boolean>(true);
@@ -236,12 +236,12 @@ const Stats = () => {
                         <Button
                             mode="contained"
                             style={{
-                                backgroundColor: !showVisit ? "grey" : themeColors.blueBgDark,
+                                backgroundColor: !showVisits ? "grey" : themeColors.blueBgDark,
                             }}
                             onPress={() => {
-                                if (!showVisit) {
-                                    setShowVisit(true);
-                                    setShowReferral(false);
+                                if (!showVisits) {
+                                    setShowVisits(true);
+                                    setShowReferrals(false);
                                     setShowDisabilites(false);
                                 }
                             }}
@@ -251,12 +251,12 @@ const Stats = () => {
                         <Button
                             mode="contained"
                             style={{
-                                backgroundColor: !showReferral ? "grey" : themeColors.blueBgDark,
+                                backgroundColor: !showReferrals ? "grey" : themeColors.blueBgDark,
                             }}
                             onPress={() => {
-                                if (!showReferral) {
-                                    setShowVisit(false);
-                                    setShowReferral(true);
+                                if (!showReferrals) {
+                                    setShowVisits(false);
+                                    setShowReferrals(true);
                                     setShowDisabilites(false);
                                 }
                             }}
@@ -270,8 +270,8 @@ const Stats = () => {
                             }}
                             onPress={() => {
                                 if (!showDisabilites) {
-                                    setShowVisit(false);
-                                    setShowReferral(false);
+                                    setShowVisits(false);
+                                    setShowReferrals(false);
                                     setShowDisabilites(true);
                                 }
                             }}
@@ -279,7 +279,7 @@ const Stats = () => {
                             {"Disabilites"}
                         </Button>
                     </View>
-                    {showVisit ? (
+                    {showVisits ? (
                         <>
                             <Divider />
                             <Text style={styles.cardSectionTitle}>Visits</Text>
@@ -385,7 +385,7 @@ const Stats = () => {
                         <></>
                     )}
 
-                    {showReferral ? (
+                    {showReferrals ? (
                         <>
                             <Divider />
                             <Text style={styles.cardSectionTitle}>Referrals</Text>

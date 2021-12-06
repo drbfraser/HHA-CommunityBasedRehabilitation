@@ -455,7 +455,7 @@ class Alert(models.Model):
     priority = models.CharField(max_length=9, choices=Priorities.choices)
     subject = models.CharField(max_length=50)
     alert_message = models.CharField(max_length=2000)
-    unread_by_users = ArrayField(models.TextField(blank=True), default=list)
+    unread_by_users = ArrayField(models.TextField(blank=True))
     created_by_user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT
     )

@@ -13,6 +13,7 @@ import { ParamListBase } from "@react-navigation/routers";
 import React from "react";
 import NewVisit from "../screens/NewVisit/NewVisit";
 import DefaultHeader from "../components/DefaultHeader/DefaultHeader";
+import Sync from "../screens/Sync/Sync";
 
 export const stackScreenProps: Record<StackScreenName, (any: any) => JSX.Element> = {
     [StackScreenName.HOME]: HomeScreen,
@@ -23,6 +24,7 @@ export const stackScreenProps: Record<StackScreenName, (any: any) => JSX.Element
     [StackScreenName.VISIT]: NewVisit,
     [StackScreenName.REFERRAL]: NewReferral,
     [StackScreenName.BASE_SURVEY]: BaseSurvey,
+    [StackScreenName.SYNC]: Sync,
 };
 
 type TStackNavigationOptions<ParamList extends ParamListBase, RouteName extends keyof ParamList> =
@@ -84,6 +86,10 @@ export const stackScreenOptions: Record<
             `Client ID: ${(route as TAppRouteProp<StackScreenName.BASE_SURVEY>).params.clientID}`
         ),
     }),
+    [StackScreenName.SYNC]: {
+        headerShown: true,
+        header: DefaultHeader("Synchronization"),
+    },
 };
 
 export type StackParamList = {
@@ -112,6 +118,7 @@ export type StackParamList = {
         user: IUser;
     };
     [StackScreenName.ADMIN_NEW]: undefined;
+    [StackScreenName.SYNC]: undefined;
 };
 
 export type AppStackNavProp = StackNavigationProp<StackParamList>;

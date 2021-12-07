@@ -1,5 +1,5 @@
 import { Button, Dialog } from "react-native-paper";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Formik, FormikProps } from "formik";
 import { TextInput as NativeTextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -28,6 +28,7 @@ import {
     handleUpdatePassword,
 } from "../../screens/Admin/AdminFormHandler";
 import { dbType } from "../../util/watermelonDatabase";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
 
 export type Props = {
     isSelf: boolean;
@@ -49,7 +50,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
     const newPassRef = useRef<NativeTextInput>(null);
     const confirmNewPassRef = useRef<NativeTextInput>(null);
     const styles = useStyles();
-
+    const { autoSync, cellularSync } = useContext(SyncContext);
     useEffect(() => {
         setSubmissionError(null);
     }, [visible]);
@@ -63,7 +64,14 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                     validationSchema={changePassValidationSchema}
                     onReset={() => setSubmissionError(null)}
                     onSubmit={async (values, formikHelpers) => {
-                        return handleSelfChangePassword(user.id, values, database, formikHelpers)
+                        return handleSelfChangePassword(
+                            user.id,
+                            values,
+                            database,
+                            formikHelpers,
+                            autoSync,
+                            cellularSync
+                        )
                             .then(() => {
                                 setSubmissionError(null);
                                 onDismiss(true);
@@ -149,7 +157,14 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                     validationSchema={adminEditPasswordValidationSchema}
                     onReset={() => setSubmissionError(null)}
                     onSubmit={async (values, formikHelpers) => {
-                        return handleUpdatePassword(user.id, values, database, formikHelpers)
+                        return handleUpdatePassword(
+                            user.id,
+                            values,
+                            database,
+                            formikHelpers,
+                            autoSync,
+                            cellularSync
+                        )
                             .then(() => {
                                 setSubmissionError(null);
                                 onDismiss(true);

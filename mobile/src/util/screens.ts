@@ -6,12 +6,15 @@ import Profile from "../screens/Profile/Profile";
 import UserList from "../screens/UserList/UserList";
 import Dashboard from "../screens/DashBoard/Dashboard";
 import NewClient from "../screens/NewClient/NewClient";
+import { TabModal } from "../components/TabModal/TabModal";
 
 export interface IScreen {
     name: string;
     roles?: UserRole[];
     Component: React.ComponentType<any>;
     iconName?: string;
+    iconBadge?: boolean;
+    disableSync?: boolean;
 }
 
 export const screens: IScreen[] = [
@@ -31,7 +34,13 @@ export const screens: IScreen[] = [
         iconName: "format-list-bulleted",
     },
     {
+        name: "Sync",
+        Component: TabModal,
+        iconName: "sync-alert",
+    },
+    {
         name: "Profile",
+        roles: [UserRole.CLINICIAN, UserRole.WORKER],
         Component: Profile,
         iconName: "account",
     },

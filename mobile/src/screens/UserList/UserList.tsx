@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StyleProp, View, ViewStyle } from "react-native";
-import { Text, IconButton, Portal, Modal } from "react-native-paper";
+import { Text, IconButton, Portal, Modal, Button } from "react-native-paper";
 import useStyles from "./UserList.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { useNavigation } from "@react-navigation/core";
-import { SearchOption, themeColors, useZones } from "@cbr/common";
+import { SearchOption, themeColors, useCurrentUser, useZones } from "@cbr/common";
 import { StackScreenName } from "../../util/StackScreenName";
 import { Picker } from "@react-native-picker/picker";
 import { Searchbar } from "react-native-paper";
@@ -23,6 +23,9 @@ import {
 } from "../../util/listFunctions";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { checkUnsyncedChanges } from "../../util/syncHandler";
+import { Icon } from "react-native-elements";
 
 const UserList = () => {
     const styles = useStyles();
@@ -30,6 +33,7 @@ const UserList = () => {
     const navigation = useNavigation<AppStackNavProp>();
     const zones = useZones();
     const database = useDatabase();
+    const currentUser = useCurrentUser();
     const [userList, setUserList] = useState<BriefUser[]>([]);
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
@@ -37,6 +41,7 @@ const UserList = () => {
     const [sortOption, setSortOption] = useState("");
     const [sortDirection, setIsSortDirection] = useState<TSortDirection>("None");
     const [isAuthenticate, setAuthenticate] = useState<boolean>(false);
+    const { setUnSyncedChanges } = useContext(SyncContext);
 
     const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
 
@@ -52,7 +57,7 @@ const UserList = () => {
         setShowRoleColumn,
         setShowStatusColumn,
     ];
-    const columnList = { 0: "Name", 1: "Zone", 2: "Role", 3: "Statue" };
+    const columnList = { 0: "Name", 1: "Zone", 2: "Role", 3: "Status" };
     const openColumnBuilderMenu = () => {
         setShowColumnBuilderMenu(true);
         showSelectedColumn;
@@ -97,10 +102,9 @@ const UserList = () => {
 
     useEffect(() => {
         if (isFocused) {
-            if (!isAuthenticate) {
-                authContext.requireLoggedIn(true);
-                setAuthenticate(true);
-            }
+            checkUnsyncedChanges().then((res) => {
+                setUnSyncedChanges(res);
+            });
             newUserListGet();
         }
     }, [sortDirection, sortOption, searchQuery, selectedSearchOption, isFocused]);
@@ -131,13 +135,6 @@ const UserList = () => {
     return (
         <View style={styles.container}>
             <View style={styles.row}>
-                <IconButton
-                    color={themeColors.bluePale}
-                    icon="account-plus"
-                    onPress={() => navigation.navigate(StackScreenName.ADMIN_NEW)}
-                >
-                    Create new user
-                </IconButton>
                 {selectedSearchOption === SearchOption.ZONE ? (
                     <Picker
                         style={styles.select}
@@ -208,6 +205,7 @@ const UserList = () => {
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>
+                        <DataTable.Title style={styles.column_icon}>{}</DataTable.Title>
                         <ShowTitle
                             label="Name"
                             style={styles.column_name}
@@ -244,6 +242,13 @@ const UserList = () => {
                                     });
                                 }}
                             >
+                                <View style={styles.column_icon}>
+                                    {item.id == currentUser!.id ? (
+                                        <Icon type="font-awesome-5" name="user-circle" />
+                                    ) : (
+                                        <></>
+                                    )}
+                                </View>
                                 {showNameColumn ? (
                                     <View style={styles.column_name}>
                                         <WrappedText text={item.full_name} />

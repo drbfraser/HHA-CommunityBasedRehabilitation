@@ -2,7 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Formik, FormikProps } from "formik";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Button } from "react-native-paper";
 import { StyleSheet, TextInput as NativeTextInput, View } from "react-native";
 import {
@@ -25,6 +25,7 @@ import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/Confir
 import passwordTextInputProps from "../../components/PasswordTextInput/passwordTextInputProps";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { handleNewUserSubmit } from "./AdminFormHandler";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
 
 const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenName.ADMIN_NEW>) => {
     const database = useDatabase();
@@ -35,6 +36,7 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
     const firstNameRef = useRef<NativeTextInput>(null);
     const lastNameRef = useRef<NativeTextInput>(null);
     const phoneNumberRef = useRef<NativeTextInput>(null);
+    const { autoSync, cellularSync } = useContext(SyncContext);
 
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -61,7 +63,13 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
                         validationSchema={newUserValidationSchema}
                         onSubmit={(values, formikHelpers) => {
                             setSaveError(undefined);
-                            handleNewUserSubmit(values, database, formikHelpers)
+                            handleNewUserSubmit(
+                                values,
+                                database,
+                                formikHelpers,
+                                autoSync,
+                                cellularSync
+                            )
                                 .then((id) => {
                                     setHasSubmitted(true);
                                     navigation.replace(StackScreenName.ADMIN_VIEW, {

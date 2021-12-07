@@ -3,16 +3,20 @@ import { TAdminPasswordValues, TNewUserValues } from "@cbr/common/src/forms/Admi
 import { FormikHelpers } from "formik";
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
+import { AutoSyncDB } from "../../util/syncHandler";
 
 export const handleSelfChangePassword = async (
     userId: string,
     values: TPasswordValues,
     database: dbType,
-    helpers: FormikHelpers<TPasswordValues>
+    helpers: FormikHelpers<TPasswordValues>,
+    autoSync: boolean,
+    cellularSync: boolean
 ): Promise<void> => {
     try {
         const user: any = await database.get(modelName.users).find(userId);
         await user.updatePassword(values.newPassword);
+        AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {
         helpers.setSubmitting(false);
         return Promise.reject(e);
@@ -23,7 +27,9 @@ export const handleUpdatePassword = async (
     userId: string,
     values: TAdminPasswordValues,
     database: dbType,
-    helpers: FormikHelpers<TAdminPasswordValues>
+    helpers: FormikHelpers<TAdminPasswordValues>,
+    autoSync: boolean,
+    cellularSync: boolean
 ) => {
     const newPassword = JSON.stringify({
         new_password: values.password,
@@ -32,6 +38,7 @@ export const handleUpdatePassword = async (
     try {
         const user: any = await database.get(modelName.users).find(userId);
         await user.updatePassword(values.confirmPassword);
+        AutoSyncDB(database, autoSync, cellularSync);
     } finally {
         helpers.setSubmitting(false);
     }
@@ -40,7 +47,9 @@ export const handleUpdatePassword = async (
 export const handleNewUserSubmit = async (
     values: TNewUserValues,
     database: dbType,
-    helpers: FormikHelpers<TNewUserValues>
+    helpers: FormikHelpers<TNewUserValues>,
+    autoSync: boolean,
+    cellularSync: boolean
 ) => {
     try {
         let newUser;
@@ -56,6 +65,9 @@ export const handleNewUserSubmit = async (
                 user.is_active = values.is_active;
             });
         });
+
+        AutoSyncDB(database, autoSync, cellularSync);
+
         return newUser.id;
     } finally {
         helpers.setSubmitting(false);
@@ -65,7 +77,9 @@ export const handleNewUserSubmit = async (
 export const handleUserEditSubmit = async (
     values: IUser,
     database: dbType,
-    helpers: FormikHelpers<IUser>
+    helpers: FormikHelpers<IUser>,
+    autoSync: boolean,
+    cellularSync: boolean
 ) => {
     try {
         let editedUser;
@@ -80,6 +94,9 @@ export const handleUserEditSubmit = async (
                 user.is_active = values.is_active;
             });
         });
+
+        AutoSyncDB(database, autoSync, cellularSync);
+
         return editedUser.id;
     } finally {
         helpers.setSubmitting(false);

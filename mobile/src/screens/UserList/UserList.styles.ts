@@ -43,7 +43,6 @@ const useStyles = () =>
         },
         search: {
             flex: 2,
-            marginLeft: 60,
         },
         item: {
             padding: 3,
@@ -51,20 +50,21 @@ const useStyles = () =>
             alignItems: "center",
             justifyContent: "center",
         },
-        column_id: {
-            flex: 0.4,
+        column_icon: {
+            flex: 0.5,
+            justifyContent: "center",
         },
         column_name: {
-            flex: 1,
+            flex: 1.5,
         },
         column_zone: {
-            flex: 1,
+            flex: 1.5,
         },
         column_role: {
-            flex: 0.7,
+            flex: 0.75,
         },
         column_status: {
-            flex: 0.7,
+            flex: 0.75,
         },
         wrappedView: {
             flexDirection: "row",

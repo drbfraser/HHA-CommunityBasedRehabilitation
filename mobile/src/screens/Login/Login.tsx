@@ -67,7 +67,6 @@ const Login = () => {
         setStatus({ status: "submitting" });
         try {
             await login(usernameToUse, password);
-            // Initialize scheduled sync once logged in
             // Navigation is handled by App component as it updates the AuthState.
         } catch (e) {
             if (e.name === "AbortError") {

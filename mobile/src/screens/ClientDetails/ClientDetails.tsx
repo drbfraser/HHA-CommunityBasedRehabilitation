@@ -28,6 +28,7 @@ import defaultProfilePicture from "../../util/defaultProfilePicture";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { modelName } from "../../models/constant";
+import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 
 interface ClientProps {
@@ -180,6 +181,7 @@ const ClientDetails = (props: ClientProps) => {
 
     return (
         <ScrollView style={styles.scrollViewStyles}>
+            <ConflictDialog />
             {loading ? (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color={themeColors.blueAccent} />

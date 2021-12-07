@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Text, View, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
-import { Card, DataTable } from "react-native-paper";
+import { Card, DataTable, Button } from "react-native-paper";
 import useStyles from "./Dashboard.styles";
 import { BriefReferral, fetchAllClientsFromDB, fetchReferrals } from "./DashboardRequest";
 import { riskTypes } from "../../util/riskIcon";
@@ -20,6 +20,7 @@ import {
     TSortDirection,
 } from "../../util/listFunctions";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
+import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
@@ -110,6 +111,7 @@ const Dashboard = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <ConflictDialog />
             <ScrollView>
                 <View style={styles.row}>
                     <Text style={styles.title}>Dashboard</Text>

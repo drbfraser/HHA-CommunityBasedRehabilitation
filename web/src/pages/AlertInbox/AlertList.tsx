@@ -13,10 +13,6 @@ import { useState, useEffect } from "react";
 import { Time } from "@cbr/common/util/time";
 import { alertServices } from "@cbr/common/services/alertServices";
 
-declare var require: any;
-
-const axios = require("axios");
-
 const useStyles = makeStyles({
     selectedListItemStyle: {
         backgroundColor: "lightcyan",

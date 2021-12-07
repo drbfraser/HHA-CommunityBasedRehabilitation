@@ -1,8 +1,7 @@
 import { combineReducers } from "redux";
-import { conflictsReducer, syncScheduledReducer } from "./reducers";
+import { conflictsReducer } from "./reducers";
 
 const rootReducer = combineReducers({
-    syncScheduled: syncScheduledReducer,
     conflicts: conflictsReducer,
 });
 

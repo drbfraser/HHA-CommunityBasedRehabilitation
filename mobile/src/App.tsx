@@ -22,7 +22,6 @@ import Loading from "./screens/Loading/Loading";
 import Login from "./screens/Login/Login";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
-import { SyncDatabaseTask } from "./tasks/SyncDatabaseTask";
 import { StackScreenName } from "./util/StackScreenName";
 import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
 import { database } from "./util/watermelonDatabase";
@@ -163,8 +162,6 @@ export default function App() {
                     CacheRefreshTask.registerBackgroundFetch(),
                     // This will fetch all cached API data so that they're pre-loaded.
                     invalidateAllCachedAPI("login"),
-                    // Initialize scheduled sync once logged in
-                    SyncDatabaseTask.autoSyncDatabase(database),
                 ]);
 
                 return await updateAuthStateIfNeeded(authState, setAuthState, false);
@@ -181,14 +178,6 @@ export default function App() {
         }),
         [authState]
     );
-
-    const syncScheduled = store.getState().syncScheduled.scheduled;
-    if (authState.state === "loggedIn" && !syncScheduled) {
-        /* Normally, sync is schedule upon user login to the app
-        Re-schedule sync if new instance of app is launched, but user is 
-        still logged in (ie. their refresh token has not yet expired) */
-        SyncDatabaseTask.autoSyncDatabase(database);
-    }
 
     return (
         <SafeAreaView style={styles.safeApp}>

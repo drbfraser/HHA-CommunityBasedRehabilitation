@@ -1,8 +1,17 @@
-import { TAlertValues, alertFieldLabels } from "./alertFields";
+import { TAlertValues, alertFieldLabels, TAlertUpdateValues } from "./alertFields";
 import { FormikHelpers } from "formik";
-import { apiFetch, APIFetchFailError, Endpoint, objectToFormData } from "../../util/endpoints";
+import {
+    apiFetch,
+    APIFetchFailError,
+    APILoadError,
+    Endpoint,
+    objectToFormData,
+} from "../../util/endpoints";
 import { IAlert } from "../../util/alerts";
 import history from "../../util/history";
+import { socket } from "../../context/SocketIOContext";
+import { IUser } from "../../util/users";
+import { getCurrentUser } from "../../util/hooks/currentUser";
 
 const addAlert = async (alertInfo: FormData): Promise<IAlert> => {
     const init: RequestInit = {
@@ -19,25 +28,54 @@ const addAlert = async (alertInfo: FormData): Promise<IAlert> => {
         });
 };
 
+const updateAlert = async (alertInfo: FormData, alertId: string): Promise<IAlert> => {
+    const init: RequestInit = {
+        method: "PUT",
+        body: alertInfo,
+    };
+    return await apiFetch(Endpoint.ALERT, `${alertId}`, init).then((res) => res.json());
+};
+
 export const handleNewWebAlertSubmit = async (
     values: TAlertValues,
     helpers: FormikHelpers<TAlertValues>
 ) => {
-    /*
-    TODO:
-    need to keep a parameter showing the userID of the user who is using the system in the top layer.
-    Then this userID will be availuable for every page rendered.
-  */
-    const newAlert = {
-        subject: values.subject,
-        priority: values.priority,
-        alert_message: values.alert_message,
-        created_by_user: "1",
-    };
+    const user: IUser | typeof APILoadError = await getCurrentUser();
+    let newAlert;
+    let usersList: string[];
+    if (user !== APILoadError) {
+        try {
+            // Add all users as having unread the alert initially
+            let res = await apiFetch(Endpoint.USERS, "");
+            let users = await res.json();
+            // Reduces list of users to an array of userIDs
+            usersList = users.reduce((acc: string, value: IUser) => {
+                if (value.id && value.id != user.id) {
+                    acc = acc.concat(value.id);
+                }
+                return acc;
+            }, []);
+        } catch (e) {
+            throw new Error(`Error retreiving users. ${e}`);
+        }
+
+        newAlert = {
+            subject: values.subject,
+            priority: values.priority,
+            alert_message: values.alert_message,
+            unread_by_users: usersList ? usersList : [],
+            created_by_user: user.id,
+        };
+    } else {
+        throw new Error("API Load Error");
+    }
+
     const formData = objectToFormData(newAlert);
     try {
         const alert: IAlert = await addAlert(formData);
         history.push("/alerts/inbox");
+        socket.emit("newAlert", newAlert); // emit socket event to the backend
+
         return alert;
     } catch (e) {
         const initialMessage = "Encountered an error while trying to create the alert!";
@@ -58,7 +96,35 @@ export const handleDiscard = (resetForm: () => void) => {
 TODO:
   Need to discuss with team, maybe save it in the watermelon DB
 */
-export const handleSave = async () => {
+export const handleSave = async (values: any) => {
     // validate the input
     // call backend
+};
+
+export const handleUpdateAlertSubmit = async (values: TAlertUpdateValues) => {
+    try {
+        const user: IUser | typeof APILoadError = await getCurrentUser();
+        let userID: string = user !== APILoadError ? user.id : "unknown";
+        // remove this user from the list of unread users
+        let updatedUnreadUserList = Object.values(values.unread_by_users).filter(
+            (user) => user != userID
+        );
+
+        const updateValues: Partial<IAlert> = {
+            subject: values.subject,
+            priority: values.priority,
+            alert_message: values.alert_message,
+            unread_by_users: updatedUnreadUserList.toString(),
+            created_by_user: values.created_by_user,
+        };
+
+        const formData = objectToFormData(updateValues);
+        await updateAlert(formData, values.id);
+        socket.emit("alertViewed", { ...updateValues, currentUser: userID }); // emit socket event to the backend
+    } catch (e) {
+        const initialMessage = "Encountered an error while trying to update the alert!";
+        const detailedError =
+            e instanceof APIFetchFailError ? e.buildFormError(alertFieldLabels) : `${e}`;
+        alert(initialMessage + "\n" + detailedError);
+    }
 };

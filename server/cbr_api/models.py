@@ -1,9 +1,11 @@
 import os
 import time
+import json
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
@@ -446,13 +448,14 @@ class BaselineSurvey(models.Model):
 
 class Alert(models.Model):
     class Priorities(models.TextChoices):
-        HIGH = "H", _("High")
-        MEDIUM = "M", _("Medium")
-        LOW = "L", _("Low")
+        HIGH = "HI", _("High")
+        MEDIUM = "ME", _("Medium")
+        LOW = "LO", _("Low")
 
     priority = models.CharField(max_length=9, choices=Priorities.choices)
     subject = models.CharField(max_length=50)
     alert_message = models.CharField(max_length=2000)
+    unread_by_users = ArrayField(models.TextField(blank=True), default=list)
     created_by_user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT
     )

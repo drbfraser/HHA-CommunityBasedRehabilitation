@@ -8,7 +8,7 @@ import { RiskLevel, riskLevels } from "@cbr/common/util/risks";
 import { FiberManualRecord } from "@material-ui/icons";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { makeStyles } from "@material-ui/core/styles";
-import { PriorityLevel } from "./Alert";
+import { PriorityLevel } from "@cbr/common/util/alerts";
 import { useState, useEffect } from "react";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { Time } from "@cbr/common/util/time";
@@ -35,11 +35,12 @@ const useStyles = makeStyles({
     },
 });
 
-interface IAlert {
+export interface IAlert {
     id: number;
     subject: string;
     priority: PriorityLevel;
     alert_message: string;
+    unread_by_users: string[];
     created_by_user: number;
     created_date: Time;
 }
@@ -55,9 +56,9 @@ const RenderBadge = (params: String) => {
     /*
       TODO: this should be improved, make Priority icons seperate from Risk Icons
     */
-    if (params === "M") {
+    if (params === "ME") {
         risk = RiskLevel.MEDIUM;
-    } else if (params === "H") {
+    } else if (params === "HI") {
         risk = RiskLevel.HIGH;
     } else {
         risk = RiskLevel.LOW;
@@ -78,7 +79,10 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
     useEffect(() => {
         const fetchAlerts = async () => {
             try {
-                const tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
+                let tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
+                tempAlerts = tempAlerts.sort(function (a, b) {
+                    return b.created_date - a.created_date;
+                });
                 setAlertData(tempAlerts);
             } catch (e) {
                 console.log(`Error fetching Alerts: ${e}`);
@@ -99,10 +103,6 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                     overflow: "auto",
                 }}
             >
-                {/*
-                TODO:
-                  sort the alerts
-              */}
                 {alertData.map((currAlert) => {
                     return (
                         <div key={currAlert.id}>

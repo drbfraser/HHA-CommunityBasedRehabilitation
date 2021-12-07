@@ -14,9 +14,9 @@ urlpatterns = [
     path("users", views.UserList.as_view(), name="user-list"),
     path("user/<str:pk>", views.UserDetail.as_view(), name="user-detail"),
     path("user/password/<str:pk>", views.UserPassword.as_view(), name="user-password"),
-    path("currentuser/", views.UserCurrent.as_view(), name="user-current"),
+    path("currentuser", views.UserCurrent.as_view(), name="user-current"),
     path(
-        "user/password/current",
+        "currentuser/password",
         views.UserCurrentPassword.as_view(),
         name="user-current-password",
     ),

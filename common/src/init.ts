@@ -6,7 +6,8 @@ export interface KeyValStorageProvider {
 
 export interface CommonConfiguration {
     /** The API url for connecting to the server. Should include `/api/` at the end. */
-    readonly apiUrl: String;
+    readonly apiUrl: string;
+    readonly socketIOUrl: string;
     /**
      * A provider interface for storing auth tokens and backups of cached API data if
      * {@link useKeyValStorageForCachedAPIBackup} is set.

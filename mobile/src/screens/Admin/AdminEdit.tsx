@@ -2,7 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Formik, FormikProps } from "formik";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Button, Subheading, Text } from "react-native-paper";
 import { Keyboard, StyleSheet, TextInput as NativeTextInput, View } from "react-native";
 import {
@@ -23,6 +23,7 @@ import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/Form
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { handleUserEditSubmit } from "./AdminFormHandler";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
 
 const AdminEdit = ({
     navigation,
@@ -38,6 +39,8 @@ const AdminEdit = ({
     const phoneNumberRef = useRef<NativeTextInput>(null);
 
     const [hasSubmitted, setHasSubmitted] = useState(false);
+
+    const { autoSync, cellularSync } = useContext(SyncContext);
 
     return (
         <>
@@ -68,7 +71,13 @@ const AdminEdit = ({
                         validationSchema={editUserValidationSchema}
                         onSubmit={(values, formikHelpers) => {
                             setSaveError(undefined);
-                            handleUserEditSubmit(values, database, formikHelpers)
+                            handleUserEditSubmit(
+                                values,
+                                database,
+                                formikHelpers,
+                                autoSync,
+                                cellularSync
+                            )
                                 .then((id) => {
                                     setHasSubmitted(true);
                                     navigation.navigate(StackScreenName.ADMIN_VIEW, {

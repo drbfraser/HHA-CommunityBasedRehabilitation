@@ -1,14 +1,16 @@
 import { FormikHelpers } from "formik";
 import { TVisitFormValues } from "@cbr/common/src/forms/newVisit/visitFormFields";
-import { handleSubmitVisitForm } from "@cbr/common/src/forms/newVisit/visitFormHandler";
 import { dbType } from "../../util/watermelonDatabase";
 import { modelName } from "../../models/constant";
+import { AutoSyncDB } from "../../util/syncHandler";
 
 export const handleSubmit = async (
     values: TVisitFormValues,
     helpers: FormikHelpers<TVisitFormValues>,
     userID: string,
-    database: dbType
+    database: dbType,
+    autoSync: boolean,
+    cellularSync: boolean
 ) => {
     helpers.setSubmitting(true);
     try {
@@ -32,6 +34,8 @@ export const handleSubmit = async (
         await visit.addVisitSpec(values.HEALTH, values.improvements.HEALTH, values.outcomes.HEALTH);
         await visit.addVisitSpec(values.EDUCAT, values.improvements.EDUCAT, values.outcomes.EDUCAT);
         await visit.addVisitSpec(values.SOCIAL, values.improvements.SOCIAL, values.outcomes.SOCIAL);
+
+        AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {
         helpers.setSubmitting(false);
         throw e;

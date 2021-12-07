@@ -1,6 +1,4 @@
 import os
-import time
-import json
 
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.cache import cache_control
@@ -305,9 +303,20 @@ class AlertList(generics.ListCreateAPIView):
             return serializers.AlertSerializer
 
 
-class AlertDetail(generics.RetrieveAPIView):
+class AlertDetail(generics.RetrieveUpdateAPIView):
     queryset = models.Alert.objects.all()
     serializer_class = serializers.AlertSerializer
+
+    @extend_schema(
+        request=serializers.AlertSerializer,
+        responses=serializers.AlertSerializer,
+    )
+    def put(self, alert, pk):
+        return super().put(alert)
+
+    def get_serializer_class(self):
+        if self.request.method == "PUT":
+            return serializers.AlertSerializer
 
 
 @api_view(["GET", "POST"])
@@ -327,61 +336,71 @@ def sync(request):
         return Response(serialized.data)
     else:
         sync_time = request.GET.get("last_pulled_at", "")
+
+        def validation_fail(serializer):
+            print(serializer.error)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         user_serializer = serializers.pushUserSerializer(
             data=request.data, context={"sync_time": sync_time}
         )
         if user_serializer.is_valid():
             user_serializer.save()
-            destringify_disability(request.data)
-            decode_image(request.data["clients"])
-            client_serializer = serializers.pushClientSerializer(
-                data=request.data, context={"sync_time": sync_time}
-            )
-            if client_serializer.is_valid():
-                client_serializer.save()
-                risk_serializer = serializers.pushRiskSerializer(
-                    data=request.data, context={"sync_time": sync_time}
-                )
-                if risk_serializer.is_valid():
-                    risk_serializer.save()
-                    decode_image(request.data["referrals"])
-                    referral_serializer = serializers.pushReferralSerializer(
-                        data=request.data,
-                        context={"sync_time": sync_time, "user": request.user},
-                    )
-                    if referral_serializer.is_valid():
-                        referral_serializer.save()
-                        survey_serializer = serializers.pushBaselineSurveySerializer(
-                            data=request.data,
-                            context={"sync_time": sync_time, "user": request.user},
-                        )
-                        if survey_serializer.is_valid():
-                            survey_serializer.save()
-                            visit_serializer = serializers.pushVisitSerializer(
-                                data=request.data, context={"sync_time": sync_time}
-                            )
-                            if visit_serializer.is_valid():
-                                visit_serializer.save()
-                                outcome_improvment_serializer = (
-                                    serializers.pushOutcomeImprovementSerializer(
-                                        data=request.data,
-                                        context={"sync_time": sync_time},
-                                    )
-                                )
-                                if outcome_improvment_serializer.is_valid():
-                                    outcome_improvment_serializer.save()
-                                    return Response(status=status.HTTP_201_CREATED)
-                                else:
-                                    print(outcome_improvment_serializer.errors)
-                            else:
-                                print(visit_serializer.errors)
-                        else:
-                            print(survey_serializer.errors)
-                    else:
-                        print(referral_serializer.errors)
-                else:
-                    print(risk_serializer.errors)
-                print(client_serializer.errors)
         else:
-            print(user_serializer.errors)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            validation_fail(user_serializer)
+
+        destringify_disability(request.data)
+        decode_image(request.data["clients"])
+        client_serializer = serializers.pushClientSerializer(
+            data=request.data, context={"sync_time": sync_time}
+        )
+        if client_serializer.is_valid():
+            client_serializer.save()
+        else:
+            validation_fail(client_serializer)
+
+        risk_serializer = serializers.pushRiskSerializer(
+            data=request.data, context={"sync_time": sync_time}
+        )
+        if risk_serializer.is_valid():
+            risk_serializer.save()
+        else:
+            validation_fail(risk_serializer)
+
+        decode_image(request.data["referrals"])
+        referral_serializer = serializers.pushReferralSerializer(
+            data=request.data,
+            context={"sync_time": sync_time, "user": request.user},
+        )
+        if referral_serializer.is_valid():
+            referral_serializer.save()
+        else:
+            validation_fail(referral_serializer)
+
+        survey_serializer = serializers.pushBaselineSurveySerializer(
+            data=request.data,
+            context={"sync_time": sync_time, "user": request.user},
+        )
+        if survey_serializer.is_valid():
+            survey_serializer.save()
+        else:
+            validation_fail(survey_serializer)
+
+        visit_serializer = serializers.pushVisitSerializer(
+            data=request.data, context={"sync_time": sync_time}
+        )
+        if visit_serializer.is_valid():
+            visit_serializer.save()
+        else:
+            validation_fail(visit_serializer)
+
+        outcome_improvment_serializer = serializers.pushOutcomeImprovementSerializer(
+            data=request.data,
+            context={"sync_time": sync_time},
+        )
+        if outcome_improvment_serializer.is_valid():
+            outcome_improvment_serializer.save()
+        else:
+            validation_fail(outcome_improvment_serializer)
+
+        return Response(status=status.HTTP_201_CREATED)

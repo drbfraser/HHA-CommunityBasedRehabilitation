@@ -25,17 +25,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.environ.get("DEBUG", "") == "yes":
-    DEBUG = True
+DEBUG = os.environ.get("DEBUG", "") == "yes"
+
+if DEBUG:
     ALLOWED_HOSTS = ["*"]
     CORS_ALLOW_ALL_ORIGINS = True
 else:
-    DEBUG = False
     ALLOWED_HOSTS = [os.environ["DOMAIN"]]
     CORS_ALLOW_ALL_ORIGINS = False
     USE_X_FORWARDED_HOST = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+            },
+        },
+        "root": {
+            "handlers": ["console"],
+            "level": "WARNING",
+        },
+    }
 
 # Application definition
 
@@ -156,6 +168,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
-
 MEDIA_ROOT = "/uploads/"
-MEDIA_URL = "/api/uploads/"

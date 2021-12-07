@@ -10,7 +10,9 @@ const Profile = () => {
     }, []);
     const user =
         authContext.authState.state === "loggedIn" ? authContext.authState.currentUser : null;
+
     const database = useDatabase();
+
     return <UserProfileContents user={user} isSelf={true} database={database} />;
 };
 

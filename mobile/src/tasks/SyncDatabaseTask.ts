@@ -1,11 +1,7 @@
 import BackgroundTimer from "react-native-background-timer";
-import NetInfo, {
-    NetInfoStateType,
-    NetInfoState,
-    NetInfoSubscription,
-} from "@react-native-community/netinfo";
+import NetInfo, { NetInfoState, NetInfoSubscription } from "@react-native-community/netinfo";
 import { dbType } from "../util/watermelonDatabase";
-import { SyncDB } from "../util/syncHandler";
+import { AutoSyncDB } from "../util/syncHandler";
 import { Mutex } from "async-mutex";
 import { store } from "../redux/store";
 
@@ -23,18 +19,19 @@ export namespace SyncDatabaseTask {
         netInfoState = connectionState;
     });
 
-    export const autoSyncDatabase = (database: dbType) => {
+    export const scheduleAutoSync = async (
+        database: dbType,
+        autoSync: boolean,
+        cellularSync: boolean
+    ) => {
         /* Remove running timer, if it exists */
         BackgroundTimer.stopBackgroundTimer();
-
+        console.log(`${TASK_TAG}: Scheduling Auto Sync`);
         BackgroundTimer.runBackgroundTimer(async () => {
-            if (netInfoState?.type == NetInfoStateType.wifi && netInfoState?.isInternetReachable) {
-                console.log(`${TASK_TAG}: Syncing local DB with remote`);
-
-                syncMutex.runExclusive(async () => {
-                    await SyncDB(database);
-                });
-            }
+            console.log(`${TASK_TAG}: Syncing local DB with remote`);
+            syncMutex.runExclusive(async () => {
+                await AutoSyncDB(database, autoSync, cellularSync);
+            });
         }, SYNC_INTERVAL_MILLISECONDS);
     };
 

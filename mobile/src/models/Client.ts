@@ -14,6 +14,7 @@ import {
 import { writer } from "@nozbe/watermelondb/decorators/action";
 import { Q } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
+import { ReferralField } from "@cbr/common";
 
 const sanitizeDisability = (rawDisability) => {
     return Array.isArray(rawDisability) ? rawDisability.map(Number) : [];
@@ -67,7 +68,10 @@ export default class Client extends Model {
 
     @lazy outstandingReferrals = this.collections
         .get(modelName.referrals)
-        .query(Q.where(tableKey.client_id, this.id), Q.and(Q.where("resolved", Q.eq(false))));
+        .query(
+            Q.where(tableKey.client_id, this.id),
+            Q.and(Q.where(ReferralField.resolved, Q.eq(false)))
+        );
 
     @writer async updateRisk(type, level, time) {
         await this.update((client) => {

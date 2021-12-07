@@ -11,6 +11,7 @@ import { AppStackNavProp } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { dbType } from "../../util/watermelonDatabase";
+import { logger, SyncDB } from "../../util/syncHandler";
 
 export interface Props {
     user: IUser | null;
@@ -34,6 +35,13 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
     const [isPassChangedSnackbarVisible, setPassChangeSnackbarVisibility] = useState(false);
 
     const [isLogoutConfirmDialogVisible, setLogoutConfirmDialogVisibility] = useState(false);
+
+    const resetDatabase = async () => {
+        await database.write(async () => {
+            await database.unsafeResetDatabase();
+            console.log("database cleared");
+        });
+    };
     return (
         <View style={styles.container}>
             <ConflictDialog />
@@ -115,32 +123,26 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                             <Subheading style={styles.profileInfoHeader}>Phone number</Subheading>
                             <Text style={styles.profileInfoText}>{user.phone_number}</Text>
 
-                            {!isSelf ? (
-                                <>
-                                    <Subheading style={styles.profileInfoHeader}>Type</Subheading>
-                                    <Text style={styles.profileInfoText}>
-                                        {userRoles[user.role].name}
-                                    </Text>
+                            <Subheading style={styles.profileInfoHeader}>Type</Subheading>
+                            <Text style={styles.profileInfoText}>{userRoles[user.role].name}</Text>
 
-                                    <Subheading style={styles.profileInfoHeader}>Status</Subheading>
-                                    <Text style={styles.profileInfoText}>
-                                        {user.is_active ? "Active" : "Disabled"}
-                                    </Text>
+                            <Subheading style={styles.profileInfoHeader}>Status</Subheading>
+                            <Text style={styles.profileInfoText}>
+                                {user.is_active ? "Active" : "Disabled"}
+                            </Text>
 
-                                    <Button
-                                        style={styles.button}
-                                        icon="account-edit"
-                                        mode="text"
-                                        onPress={() => {
-                                            navigation.navigate(StackScreenName.ADMIN_EDIT, {
-                                                user: user,
-                                            });
-                                        }}
-                                    >
-                                        Edit
-                                    </Button>
-                                </>
-                            ) : null}
+                            <Button
+                                style={styles.button}
+                                icon="account-edit"
+                                mode="text"
+                                onPress={() => {
+                                    navigation.navigate(StackScreenName.ADMIN_EDIT, {
+                                        user: user,
+                                    });
+                                }}
+                            >
+                                Edit
+                            </Button>
 
                             <Button
                                 style={styles.button}
@@ -155,6 +157,7 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
 
                             {isSelf ? (
                                 <Button
+                                    icon="logout"
                                     style={styles.button}
                                     mode="contained"
                                     onPress={() => setLogoutConfirmDialogVisibility(true)}

@@ -9,6 +9,7 @@ import { stackScreenOptions, stackScreenProps } from "./util/stackScreens";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import {
     APILoadError,
+    commonConfiguration,
     doLogin,
     doLogout,
     getAuthToken,
@@ -25,7 +26,6 @@ import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
 import { StackScreenName } from "./util/StackScreenName";
 import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
 import { database } from "./util/watermelonDatabase";
-import { DEV_API_URL } from "react-native-dotenv";
 import { io } from "socket.io-client/dist/socket.io";
 
 // Ensure we use FragmentActivity on Android
@@ -35,17 +35,6 @@ enableScreens();
 const Stack = createStackNavigator();
 const styles = globalStyle();
 const Tab = createMaterialBottomTabNavigator();
-
-const appEnv = process.env.NODE_ENV;
-
-let hostname: string;
-if (appEnv === "prod") {
-    hostname = "https://cbrp.cradleplatform.com";
-} else if (appEnv === "staging") {
-    hostname = "https://cbrs.cradleplatform.com";
-} else {
-    hostname = DEV_API_URL.replace(/(api)\/$/, ""); // remove '/api/'
-}
 
 /**
  * @see IAuthContext#requireLoggedIn
@@ -131,7 +120,7 @@ export default function App() {
                 return updateAuthStateIfNeeded(authState, setAuthState, false);
             });
 
-        const socket = io(`${hostname}`, {
+        const socket = io(`${commonConfiguration.socketIOUrl}`, {
             transports: ["websocket"], // explicitly use websockets
             autoConnect: true,
             jsonp: false, // avoid manipulation of DOM

@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { themeColors } from "@cbr/common";
 
 const useStyles = () =>
     StyleSheet.create({

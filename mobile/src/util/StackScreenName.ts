@@ -7,4 +7,5 @@ export enum StackScreenName {
     ADMIN_NEW = "AdminNew",
     REFERRAL = "NewReferral",
     VISIT = "NewVisit",
+    SYNC = "Sync,",
 }

@@ -16,6 +16,7 @@ const AlertInbox = () => {
             setSelectedAlert(itemNum);
         },
         selectAlert: selectedAlert,
+        userID: userID,
     };
 
     useEffect(() => {

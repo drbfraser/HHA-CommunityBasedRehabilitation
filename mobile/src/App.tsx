@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Provider } from "react-native-paper";
+import React, { createContext, useEffect, useMemo, useState } from "react";
+import { Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import theme from "./util/theme.styles";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -27,6 +27,13 @@ import { StackScreenName } from "./util/StackScreenName";
 import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
 import { database } from "./util/watermelonDatabase";
 import { io } from "socket.io-client/dist/socket.io";
+import { SyncDatabaseTask } from "./tasks/SyncDatabaseTask";
+import { SyncContext } from "./context/SyncContext/SyncContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SyncSettings } from "./screens/Sync/PrefConstants";
+import { AutoSyncDB } from "./util/syncHandler";
+import { Provider as StoreProvider } from "react-redux";
+import { store } from "./redux/store";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -102,6 +109,10 @@ const updateAuthStateIfNeeded = async (
 
 export default function App() {
     const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
+    const [syncAlert, setSyncAlert] = useState<boolean>(false);
+    const [autoSync, setAutoSync] = useState<boolean>(true);
+    const [cellularSync, setCellularSync] = useState<boolean>(false);
+    const [screenRefresh, setScreenRefresh] = useState<boolean>(false);
 
     useEffect(() => {
         // Refresh disabilities, zones, current user information
@@ -113,10 +124,18 @@ export default function App() {
                 }
             })
             .catch((e) => console.error(`App init: error during initialization: ${e}`))
-            .finally(() => {
+            .finally(async () => {
                 // Resolve the auth state. invalidateAllCachedAPI already tries to refetch the
                 // current user information so pass false for tryUpdateUserInfoFromServer to avoid
                 // an unnecessary refetch.
+                const autoSyncPref = await AsyncStorage.getItem(SyncSettings.AutoSyncPref);
+                if (autoSyncPref != null) {
+                    setAutoSync(autoSyncPref === "true");
+                }
+                const cellularSyncPref = await AsyncStorage.getItem(SyncSettings.CellularPref);
+                if (cellularSyncPref != null) {
+                    setCellularSync(cellularSyncPref === "true");
+                }
                 return updateAuthStateIfNeeded(authState, setAuthState, false);
             });
 
@@ -153,7 +172,7 @@ export default function App() {
                 return await updateAuthStateIfNeeded(authState, setAuthState, false);
             },
             logout: async () => {
-                // BackgroundFetch is unregistered in the logout callback
+                // BackgroundFetch is unregistered & Sync is unscheduled in the logout callback
                 await doLogout();
                 setAuthState({ state: "loggedOut" });
             },
@@ -165,42 +184,72 @@ export default function App() {
         [authState]
     );
 
+    useEffect(() => {
+        if (autoSync) {
+            SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
+        }
+    }, [autoSync]);
+
+    useEffect(() => {
+        if (authState.state === "loggedIn" && autoSync) {
+            AutoSyncDB(database, autoSync, cellularSync).then(() => {
+                setScreenRefresh(true);
+                SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
+            });
+        }
+    }, [authState]);
+
     return (
         <SafeAreaView style={styles.safeApp}>
-            <Provider theme={theme}>
-                <NavigationContainer theme={theme}>
-                    <AuthContext.Provider value={authContext}>
-                        <DatabaseProvider database={database}>
-                            <Stack.Navigator>
-                                {authState.state === "loggedIn" ? (
-                                    Object.values(StackScreenName).map((name) => (
-                                        <Stack.Screen
-                                            key={name}
-                                            name={name}
-                                            component={stackScreenProps[name]}
-                                            // @ts-ignore
-                                            options={stackScreenOptions[name]}
-                                        />
-                                    ))
-                                ) : authState.state === "loggedOut" ||
-                                  authState.state === "previouslyLoggedIn" ? (
-                                    <Stack.Screen
-                                        name="Login"
-                                        component={Login}
-                                        options={{ headerShown: false }}
-                                    />
-                                ) : (
-                                    <Stack.Screen
-                                        name="Loading"
-                                        component={Loading}
-                                        options={{ headerShown: false }}
-                                    />
-                                )}
-                            </Stack.Navigator>
-                        </DatabaseProvider>
-                    </AuthContext.Provider>
-                </NavigationContainer>
-            </Provider>
+            <StoreProvider store={store}>
+                <PaperProvider theme={theme}>
+                    <NavigationContainer theme={theme}>
+                        <AuthContext.Provider value={authContext}>
+                            <SyncContext.Provider
+                                value={{
+                                    unSyncedChanges: syncAlert,
+                                    setUnSyncedChanges: setSyncAlert,
+                                    autoSync: autoSync,
+                                    setAutoSync: setAutoSync,
+                                    cellularSync: cellularSync,
+                                    setCellularSync: setCellularSync,
+                                    screenRefresh: screenRefresh,
+                                    setScreenRefresh: setScreenRefresh,
+                                }}
+                            >
+                                <DatabaseProvider database={database}>
+                                    <Stack.Navigator>
+                                        {authState.state === "loggedIn" ? (
+                                            Object.values(StackScreenName).map((name) => (
+                                                <Stack.Screen
+                                                    key={name}
+                                                    name={name}
+                                                    component={stackScreenProps[name]}
+                                                    // @ts-ignore
+                                                    options={stackScreenOptions[name]}
+                                                />
+                                            ))
+                                        ) : authState.state === "loggedOut" ||
+                                          authState.state === "previouslyLoggedIn" ? (
+                                            <Stack.Screen
+                                                name="Login"
+                                                component={Login}
+                                                options={{ headerShown: false }}
+                                            />
+                                        ) : (
+                                            <Stack.Screen
+                                                name="Loading"
+                                                component={Loading}
+                                                options={{ headerShown: false }}
+                                            />
+                                        )}
+                                    </Stack.Navigator>
+                                </DatabaseProvider>
+                            </SyncContext.Provider>
+                        </AuthContext.Provider>
+                    </NavigationContainer>
+                </PaperProvider>
+            </StoreProvider>
         </SafeAreaView>
     );
 }

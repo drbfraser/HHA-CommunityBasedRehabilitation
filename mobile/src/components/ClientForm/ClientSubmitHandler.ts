@@ -1,34 +1,15 @@
-import {
-    Endpoint,
-    apiFetch,
-    objectToFormData,
-    getDisabilities,
-    getOtherDisabilityId,
-    APIFetchFailError,
-    clientFieldLabels,
-    TClientValues,
-} from "@cbr/common";
-import { timestampFromFormDate } from "@cbr/common/";
-import { appendMobilePict } from "@cbr/common/src/util/mobileImageSubmisson";
-import { Platform, ToastAndroid, AlertIOS } from "react-native";
+import { TClientValues } from "@cbr/common";
 import { dbType } from "../../util/watermelonDatabase";
-
-const toastSuccess = () => {
-    const msg = "Your changes have been made.";
-    if (Platform.OS === "android") {
-        ToastAndroid.show(msg, ToastAndroid.SHORT);
-    } else {
-        AlertIOS.alert(msg);
-    }
-};
+import { AutoSyncDB } from "../../util/syncHandler";
 
 export const handleSubmit = async (
     client: any,
     values: TClientValues,
     database: dbType,
+    autoSync: boolean,
+    cellularSync: boolean,
     imageChange?: boolean
 ) => {
-    const disabilities = await getDisabilities();
     try {
         await database.write(async () => {
             await client.update((client) => {
@@ -49,6 +30,8 @@ export const handleSubmit = async (
                 client.caregiver_email = values.caregiverEmail;
             });
         });
+
+        AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {
         const initialMessage = "Encountered an error while trying to edit the client!";
 

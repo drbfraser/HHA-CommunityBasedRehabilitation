@@ -1,12 +1,40 @@
-import { apiFetch, Endpoint } from "@cbr/common";
+import { apiFetch, ClientField, Endpoint } from "@cbr/common";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
-import { dbType } from "./watermelonDatabase";
+import { database, dbType } from "./watermelonDatabase";
+import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
 
 //@ts-ignore
 import SyncLogger from "@nozbe/watermelondb/sync/SyncLogger";
-import { stringify } from "querystring";
+
+//@ts-ignore
+import { hasUnsyncedChanges } from "@nozbe/watermelondb/sync";
+import { ISync } from "../screens/Sync/Sync";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SyncSettings } from "../screens/Sync/PrefConstants";
+import { modelName } from "../models/constant";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
+
+export async function checkUnsyncedChanges() {
+    return await hasUnsyncedChanges({ database });
+}
+
+export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSync: boolean) {
+    await NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
+        switch (connectionInfo?.type) {
+            case NetInfoStateType.cellular:
+                if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
+                    await SyncDB(database);
+                }
+                break;
+            case NetInfoStateType.wifi:
+                if (autoSync && connectionInfo?.isInternetReachable) {
+                    await SyncDB(database);
+                }
+                break;
+        }
+    });
+}
 
 export async function SyncDB(database: dbType) {
     await synchronize({
@@ -41,14 +69,30 @@ export async function SyncDB(database: dbType) {
         migrationsEnabledAtVersion: 1,
         log: logger.newLog(),
         conflictResolver: conflictResolver,
+    }).then(() => {
+        storeStats();
     });
 }
 
+async function storeStats() {
+    const len = logger.logs.length;
+    if (len != 0) {
+        let newStats: ISync = {
+            lastPulledTime: logger.logs[len - 1].newLastPulledAt,
+            remoteChanges: logger.logs[len - 1].remoteChangeCount,
+            localChanges: logger.logs[len - 1].localChangeCount,
+        };
+        try {
+            await AsyncStorage.setItem(SyncSettings.SyncStats, JSON.stringify(newStats));
+        } catch (e) {}
+    }
+}
+
 async function getImage(changes) {
-    await getImageData(changes["clients"]["created"], Endpoint.CLIENT_PICTURE);
-    await getImageData(changes["clients"]["updated"], Endpoint.CLIENT_PICTURE);
-    await getImageData(changes["referrals"]["created"], Endpoint.REFERRAL_PICTURE);
-    await getImageData(changes["referrals"]["updated"], Endpoint.REFERRAL_PICTURE);
+    await getImageData(changes[modelName.clients]["created"], Endpoint.CLIENT_PICTURE);
+    await getImageData(changes[modelName.clients]["updated"], Endpoint.CLIENT_PICTURE);
+    await getImageData(changes[modelName.referrals]["created"], Endpoint.REFERRAL_PICTURE);
+    await getImageData(changes[modelName.referrals]["updated"], Endpoint.REFERRAL_PICTURE);
 }
 
 async function getImageData(changes, endpoint) {
@@ -83,12 +127,18 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
     let localChange = false;
     raw._changed.split(",").forEach((column) => {
         if (
-            ["health_timestamp", "educat_timestamp", "social_timestamp"].some((a) => a !== column)
+            [
+                ClientField.health_timestamp,
+                ClientField.educat_timestamp,
+                ClientField.social_timestamp,
+            ].some((a) => a !== column)
         ) {
             if (
-                ["health_risk_level", "educat_risk_level", "social_risk_level"].some(
-                    (a) => a === column
-                )
+                [
+                    ClientField.health_risk_level,
+                    ClientField.educat_risk_level,
+                    ClientField.social_risk_level,
+                ].some((a) => a === column)
             ) {
                 let riskType = column.split("_")[0];
                 if (riskResolver(raw, dirtyRaw, newRaw, column, `${riskType}_timestamp`)) {

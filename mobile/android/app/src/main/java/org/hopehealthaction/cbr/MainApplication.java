@@ -31,6 +31,9 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
 
+import com.facebook.react.bridge.JSIModulePackage; 
+import com.swmansion.reanimated.ReanimatedJSIModulePackage; 
+
 public class MainApplication extends Application implements ReactApplication {
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
     new BasePackageList().getPackageList()

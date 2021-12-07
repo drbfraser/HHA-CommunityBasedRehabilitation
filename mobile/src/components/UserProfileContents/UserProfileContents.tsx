@@ -121,32 +121,26 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                             <Subheading style={styles.profileInfoHeader}>Phone number</Subheading>
                             <Text style={styles.profileInfoText}>{user.phone_number}</Text>
 
-                            {!isSelf ? (
-                                <>
-                                    <Subheading style={styles.profileInfoHeader}>Type</Subheading>
-                                    <Text style={styles.profileInfoText}>
-                                        {userRoles[user.role].name}
-                                    </Text>
+                            <Subheading style={styles.profileInfoHeader}>Type</Subheading>
+                            <Text style={styles.profileInfoText}>{userRoles[user.role].name}</Text>
 
-                                    <Subheading style={styles.profileInfoHeader}>Status</Subheading>
-                                    <Text style={styles.profileInfoText}>
-                                        {user.is_active ? "Active" : "Disabled"}
-                                    </Text>
+                            <Subheading style={styles.profileInfoHeader}>Status</Subheading>
+                            <Text style={styles.profileInfoText}>
+                                {user.is_active ? "Active" : "Disabled"}
+                            </Text>
 
-                                    <Button
-                                        style={styles.button}
-                                        icon="account-edit"
-                                        mode="text"
-                                        onPress={() => {
-                                            navigation.navigate(StackScreenName.ADMIN_EDIT, {
-                                                user: user,
-                                            });
-                                        }}
-                                    >
-                                        Edit
-                                    </Button>
-                                </>
-                            ) : null}
+                            <Button
+                                style={styles.button}
+                                icon="account-edit"
+                                mode="text"
+                                onPress={() => {
+                                    navigation.navigate(StackScreenName.ADMIN_EDIT, {
+                                        user: user,
+                                    });
+                                }}
+                            >
+                                Edit
+                            </Button>
 
                             <Button
                                 style={styles.button}
@@ -160,35 +154,14 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                             </Button>
 
                             {isSelf ? (
-                                <>
-                                    <Button
-                                        mode="contained"
-                                        onPress={() => {
-                                            SyncDB(database);
-                                        }}
-                                    >
-                                        Sync
-                                    </Button>
-                                    <Button
-                                        mode="contained"
-                                        onPress={() => {
-                                            console.log(logger.formattedLogs);
-                                        }}
-                                    >
-                                        Read Sync Log
-                                    </Button>
-                                    <Button mode="contained" onPress={resetDatabase}>
-                                        Reset Local Database
-                                    </Button>
-
-                                    <Button
-                                        style={styles.button}
-                                        mode="contained"
-                                        onPress={() => setLogoutConfirmDialogVisibility(true)}
-                                    >
-                                        Logout
-                                    </Button>
-                                </>
+                                <Button
+                                    icon="logout"
+                                    style={styles.button}
+                                    mode="contained"
+                                    onPress={() => setLogoutConfirmDialogVisibility(true)}
+                                >
+                                    Logout
+                                </Button>
                             ) : null}
                         </View>
                     </>

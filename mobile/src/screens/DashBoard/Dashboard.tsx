@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Text, View, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
 import { Card, DataTable } from "react-native-paper";
@@ -21,6 +21,8 @@ import {
 } from "../../util/listFunctions";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { checkUnsyncedChanges } from "../../util/syncHandler";
 
 const Dashboard = () => {
     const styles = useStyles();
@@ -31,6 +33,7 @@ const Dashboard = () => {
     const [referralSortDirection, setReferralIsSortDirection] = useState<TSortDirection>("None");
     const isFocused = useIsFocused();
     const database = useDatabase();
+    const { setUnSyncedChanges, screenRefresh, setScreenRefresh } = useContext(SyncContext);
 
     const dashBoardClientComparator = (a: ClientListRow, b: ClientListRow): number => {
         return clientComparator(a, b, clientSortOption, clientSortDirection);
@@ -85,9 +88,12 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        if (isFocused) {
+        if (isFocused && screenRefresh) {
             getNewClient();
             getReferrals();
+            checkUnsyncedChanges().then((res) => {
+                setUnSyncedChanges(res);
+            });
         }
         //TODO alert part.
     }, [
@@ -96,6 +102,7 @@ const Dashboard = () => {
         clientSortDirection,
         referralSortDirection,
         isFocused,
+        screenRefresh,
     ]);
 
     const locale = NativeModules.I18nManager.localeIdentifier;

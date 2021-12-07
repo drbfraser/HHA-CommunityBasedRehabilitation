@@ -75,7 +75,7 @@ const AlertDetail = (alertDetailProps: Props) => {
 
     /* TODO: Delete Button */
     return (
-        <Grid item xs={12} md={9}>
+        <Grid item xs={9}>
             <h1>Details</h1>
 
             <Divider variant="fullWidth" className={style.dividerStyle} />

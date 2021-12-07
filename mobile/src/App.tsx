@@ -230,7 +230,7 @@ export default function App() {
                                                 />
                                             ))
                                         ) : authState.state === "loggedOut" ||
-                                        authState.state === "previouslyLoggedIn" ? (
+                                          authState.state === "previouslyLoggedIn" ? (
                                             <Stack.Screen
                                                 name="Login"
                                                 component={Login}

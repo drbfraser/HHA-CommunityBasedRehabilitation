@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import SideNav from "./components/SideNav/SideNav";
 import { defaultPagePath, pagesForUser } from "util/pages";
@@ -16,8 +16,8 @@ const App = () => {
     const isLoggedIn = useIsLoggedIn();
     const styles = useStyles();
 
-    const [open, setOpen] = React.useState<boolean>(false);
-    const [alert, setAlert] = React.useState<IAlert>();
+    const [open, setOpen] = useState<boolean>(false);
+    const [alert, setAlert] = useState<Partial<IAlert>>();
 
     const PrivateRoutes = () => {
         const user = useCurrentUser();

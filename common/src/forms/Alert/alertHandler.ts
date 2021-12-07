@@ -92,15 +92,6 @@ export const handleDiscard = (resetForm: () => void) => {
     }
 };
 
-/*
-TODO:
-  Need to discuss with team, maybe save it in the watermelon DB
-*/
-export const handleSave = async (values: any) => {
-    // validate the input
-    // call backend
-};
-
 export const handleUpdateAlertSubmit = async (values: TAlertUpdateValues) => {
     try {
         const user: IUser | typeof APILoadError = await getCurrentUser();

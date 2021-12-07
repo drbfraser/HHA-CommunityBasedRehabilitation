@@ -1,4 +1,11 @@
-import { apiFetch, ClientField, Endpoint } from "@cbr/common";
+import { apiFetch, ClientField, Endpoint, adminUserFieldLabels } from "@cbr/common";
+import {
+    conflictFields,
+    referralLabels,
+    SyncConflict,
+    getCleanClientColumn,
+    getRejectedChange,
+} from "./syncConflictConstants";
 import { synchronize } from "@nozbe/watermelondb/src/sync";
 import { database, dbType } from "./watermelonDatabase";
 import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
@@ -6,6 +13,8 @@ import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community
 //@ts-ignore
 import SyncLogger from "@nozbe/watermelondb/sync/SyncLogger";
 
+import { store } from "../redux/store";
+import { addSyncConflicts } from "../redux/actions";
 //@ts-ignore
 import { hasUnsyncedChanges } from "@nozbe/watermelondb/sync";
 import { ISync } from "../screens/Sync/Sync";
@@ -125,6 +134,54 @@ function riskResolver(raw, dirtyRaw, newRaw, column, timestamp) {
 
 function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
     let localChange = false;
+
+    let clientConflicts: Map<string, SyncConflict> = new Map();
+    let userConflicts: Map<string, SyncConflict> = new Map();
+
+    const recordConflict = (column) => {
+        if (conflictFields[tableName].has(column)) {
+            if (tableName == modelName.clients) {
+                if (!clientConflicts.has(newRaw.id)) {
+                    clientConflicts.set(newRaw.id, {
+                        name: dirtyRaw.full_name,
+                        rejected: [],
+                    });
+                }
+
+                clientConflicts.get(newRaw.id)?.rejected.push({
+                    column: getCleanClientColumn(column),
+                    rejChange: getRejectedChange(column, raw[column]).toString(),
+                });
+            } else if (tableName == modelName.referrals) {
+                /* Referral conflicts are also stored under client ID object 
+                   Full client name will be retrieved during component rendering */
+                if (!clientConflicts.has(newRaw.client_id)) {
+                    clientConflicts.set(newRaw.client_id, {
+                        name: "",
+                        rejected: [],
+                    });
+                }
+
+                clientConflicts.get(newRaw.client_id)?.rejected.push({
+                    column: referralLabels[column],
+                    rejChange: raw[column].toString(),
+                });
+            } else if (tableName == modelName.users) {
+                if (!userConflicts.has(newRaw.id)) {
+                    userConflicts.set(newRaw.id, {
+                        name: `${dirtyRaw.first_name} ${dirtyRaw.last_name}`,
+                        rejected: [],
+                    });
+                }
+
+                userConflicts.get(newRaw.id)?.rejected.push({
+                    column: adminUserFieldLabels[column],
+                    rejChange: raw[column].toString(),
+                });
+            }
+        }
+    };
+
     raw._changed.split(",").forEach((column) => {
         if (
             [
@@ -143,6 +200,8 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 let riskType = column.split("_")[0];
                 if (riskResolver(raw, dirtyRaw, newRaw, column, `${riskType}_timestamp`)) {
                     localChange = true;
+                } else {
+                    recordConflict(column);
                 }
             } else if (column === "last_visit_date") {
                 // if local last visit date is greater than server last visit date, then take local version
@@ -156,9 +215,22 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 if (dirtyRaw[column] == null) {
                     localChange = true;
                 } else {
+                    recordConflict(column);
+                    newRaw[column] = dirtyRaw[column];
+                }
+            } else if (column === "disability") {
+                /* Server stores disabilities as [1, 2, ....] whereas
+                   local stores disabilities as [1,2,...] so there is 
+                   always a 'conflict' */
+                if (newRaw[column].replace(",", ", ") == dirtyRaw[column]) {
+                    localChange = true;
+                } else {
+                    recordConflict(column);
                     newRaw[column] = dirtyRaw[column];
                 }
             } else {
+                /* This is always server-side wins unless in cases specified above */
+                recordConflict(column);
                 newRaw[column] = dirtyRaw[column];
             }
         }
@@ -172,6 +244,8 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
             newRaw["_status"] = "synced";
         }
     }
+
+    store.dispatch(addSyncConflicts(clientConflicts, userConflicts));
 
     return newRaw;
 }

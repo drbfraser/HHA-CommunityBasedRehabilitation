@@ -79,7 +79,9 @@
         "react-native-woodpicker": "^0.3.7",
         "react-navigation": "^4.4.4",
         "react-navigation-stack": "^2.10.4",
+        "react-redux": "^7.2.6",
         "react-router-dom": "^5.2.0",
+        "redux": "^4.1.2",
         "socket.io-client": "^4.3.2",
         "victory-native": "^36.2.0",
         "yup": "^0.32.9"

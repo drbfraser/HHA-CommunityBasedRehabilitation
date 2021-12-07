@@ -3,7 +3,6 @@ import NetInfo, { NetInfoState, NetInfoSubscription } from "@react-native-commun
 import { dbType } from "../util/watermelonDatabase";
 import { AutoSyncDB } from "../util/syncHandler";
 import { Mutex } from "async-mutex";
-import { store } from "../redux/store";
 
 export namespace SyncDatabaseTask {
     const TASK_TAG = "[SyncDatabaseTask]";

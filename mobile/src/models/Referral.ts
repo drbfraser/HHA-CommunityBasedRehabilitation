@@ -5,10 +5,10 @@ import { field, date, text, relation, readonly } from "@nozbe/watermelondb/decor
 import { writer } from "@nozbe/watermelondb/decorators/action";
 
 export default class Referral extends Model {
-    static table = "referrals";
+    static table = modelName.referrals;
     static associations = {
-        clients: { type: "belongs_to", key: "client_id" },
-        users: { type: "belongs_to", key: "user_id" },
+        clients: { type: mobileGenericField.belongs_to, key: tableKey.client_id },
+        users: { type: mobileGenericField.belongs_to, key: tableKey.user_id },
     } as const;
 
     @field(ReferralField.date_referred) date_referred;

@@ -1,13 +1,13 @@
 import { BaseSurveyField } from "@cbr/common";
-import { modelName, tableKey } from "./constant";
+import { mobileGenericField, modelName, tableKey } from "./constant";
 import { Model } from "@nozbe/watermelondb";
 import { field, text, relation } from "@nozbe/watermelondb/decorators";
 
 export default class BaselineSurvey extends Model {
-    static table = "surveys";
+    static table = modelName.surveys;
     static associations = {
-        clients: { type: "belongs_to", key: "client_id" },
-        users: { type: "belongs_to", key: "user_id" },
+        clients: { type: mobileGenericField.belongs_to, key: tableKey.client_id },
+        users: { type: mobileGenericField.belongs_to, key: tableKey.user_id },
     } as const;
 
     @field(BaseSurveyField.survey_date) survey_date;

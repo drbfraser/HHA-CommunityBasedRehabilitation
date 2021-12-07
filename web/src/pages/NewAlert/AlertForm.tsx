@@ -90,7 +90,7 @@ const AlertForm = () => {
                                             <Button
                                                 variant="outlined"
                                                 color="primary"
-                                                onClick={() => handleSave()}
+                                                onClick={() => handleSave(values)}
                                             >
                                                 Save
                                             </Button>

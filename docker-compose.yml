@@ -1,27 +1,26 @@
 version: "3.7"
 services:
   django:
+    container_name: cbr_django
     build:
       context: ./server
     environment:
+      - POSTGRES_HOST=cbr_postgres
       - POSTGRES_DB=cbr
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - SECRET_KEY=${SECRET_KEY}
-    volumes:
-      - ./server:/code
-      - django_uploads:/uploads
     depends_on:
       - postgres
   postgres:
+    container_name: cbr_postgres
     image: postgres:13.1-alpine
     environment:
       - POSTGRES_DB=cbr
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - cbr_postgres_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
-  django_uploads:
+  cbr_postgres_data:

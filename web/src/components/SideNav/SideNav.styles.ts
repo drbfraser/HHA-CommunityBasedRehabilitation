@@ -40,6 +40,13 @@ export const useStyles = makeStyles(
             padding: 10,
             backgroundColor: "rgba(255, 255, 255, 0.1)",
         },
+        notificationBadge: {
+            justifyContent: "center",
+            "& .MuiBadge-badge": {
+                right: 20,
+                top: 15,
+            },
+        },
         "@media (max-width: 800px)": {
             container: {
                 flexDirection: "row",
@@ -48,6 +55,11 @@ export const useStyles = makeStyles(
             },
             hhaIcon: {
                 display: "none",
+            },
+            notificationBadge: {
+                "& .MuiBadge-badge": {
+                    right: 10,
+                },
             },
         },
     },

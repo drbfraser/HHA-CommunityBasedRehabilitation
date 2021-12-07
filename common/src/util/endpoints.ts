@@ -144,7 +144,6 @@ export const apiFetchByRequest = async (
     const timeoutId = setTimeout(() => abortController.abort(), DEFAULT_FETCH_TIMEOUT_MILLIS); // timeout value in ms
     customInit.signal = abortController.signal;
 
-    
     console.log("PART 1 :");
     console.log(request);
     // console.log("PART 2 :");

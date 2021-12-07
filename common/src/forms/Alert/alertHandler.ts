@@ -5,12 +5,12 @@ import { IAlert } from "../../util/alerts";
 import history from "../../util/history";
 import { getAuthToken } from "../../util/auth";
 
-declare var require: any
+declare var require: any;
 
-const axios = require('axios');
+const axios = require("axios");
 
 const addAlert = async (alertInfo: FormData) => {
-// const addAlert = async (alertInfo: FormData): Promise<IAlert> => {
+    // const addAlert = async (alertInfo: FormData): Promise<IAlert> => {
     // const init: RequestInit = {
     //     method: "POST",
     //     body: alertInfo,
@@ -27,34 +27,34 @@ const addAlert = async (alertInfo: FormData) => {
     //         return res;
     //     });
 
-    
-        //let tempAlerts: IAlert[]
+    //let tempAlerts: IAlert[]
 
-        try {
-      //    const tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
-          
-          const authToken = await getAuthToken();
-          if (authToken === null) {
-              return Promise.reject("unable to get an access token");
-          }
-          
-          const tempAlerts = (await axios({
-            method:'post',
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-            url:'http://localhost:8000/api/alert/1',
-            body: alertInfo,
-          })).data; 
+    try {
+        //    const tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
 
-          console.log("RESULT: ");
-          console.log(tempAlerts);
-      //    return tempAlerts;
-        } catch (e) {
-          console.log(`Error fetching Alerts: ${e}`);
-          // return tempAlerts;
-      }
-    
+        const authToken = await getAuthToken();
+        if (authToken === null) {
+            return Promise.reject("unable to get an access token");
+        }
+
+        const tempAlerts = (
+            await axios({
+                method: "post",
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                },
+                url: "http://localhost:8000/api/alert/1",
+                body: alertInfo,
+            })
+        ).data;
+
+        console.log("RESULT: ");
+        console.log(tempAlerts);
+        //    return tempAlerts;
+    } catch (e) {
+        console.log(`Error fetching Alerts: ${e}`);
+        // return tempAlerts;
+    }
 
     // const init: RequestInit = {
     //     method: "POST",
@@ -68,8 +68,6 @@ const addAlert = async (alertInfo: FormData) => {
     //     .then((res) => {
     //         return res;
     //     });
-
-
 };
 
 export const handleNewWebAlertSubmit = async (

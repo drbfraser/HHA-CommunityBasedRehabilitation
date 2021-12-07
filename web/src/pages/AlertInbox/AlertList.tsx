@@ -13,9 +13,9 @@ import { useState, useEffect } from "react";
 import { Time } from "@cbr/common/util/time";
 import alertServices from "@cbr/common/services/alertServices";
 
-declare var require: any
+declare var require: any;
 
-const axios = require('axios');
+const axios = require("axios");
 
 const useStyles = makeStyles({
     selectedListItemStyle: {
@@ -82,10 +82,10 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
     useEffect(() => {
         const fetchAlerts = async () => {
             try {
-                const tempAlerts: IAlert[] | undefined  = await alertServices.showAlerts();
+                const tempAlerts: IAlert[] | undefined = await alertServices.showAlerts();
 
-                if(tempAlerts !== undefined) {
-                  setAlertData(tempAlerts);
+                if (tempAlerts !== undefined) {
+                    setAlertData(tempAlerts);
                 }
             } catch (e) {
                 console.log(`Error fetching Alerts: ${e}`);

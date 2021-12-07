@@ -1,18 +1,39 @@
 import React from "react";
 import io from "socket.io-client";
 
-const appEnv = process.env.NODE_ENV;
+const BASE_URLS: any = {
+  local: process.env.LOCAL_URL ?? "",
+  dev: "https://cbrd.cradleplatform.com",
+  staging: "https://cbrs.cradleplatform.com",
+  prod: "https://cbr.hopehealthaction.org",
+};
 
-let url: string;
-if (appEnv === "production") {
-    url = "https://cbrp.cradleplatform.com";
-} else if (appEnv === "test") {
-    // staging
-    url = "https://cbrs.cradleplatform.com";
-} else {
-    url = `http://${window.location.hostname}:8000`;
+const DEFAULT_APP_ENV = "dev";
+let appEnv = process.env.APP_ENV ?? DEFAULT_APP_ENV;
+
+if (appEnv === "local" && !BASE_URLS.local) {
+  appEnv = DEFAULT_APP_ENV;
 }
 
+let url: string;
+switch(appEnv) {
+  case "production":
+    url = BASE_URLS['prod'];
+    break;
+
+  case "test": // staging
+    url = BASE_URLS['staging'];
+    break;
+
+  case "dev":
+    url = BASE_URLS['dev'];
+    break;
+
+  default:
+    url = "http://localhost:8000";
+    break;
+}
+  
 export const socket = io(`${url}`, {
     transports: ["websocket"],
     autoConnect: true,

@@ -32,6 +32,7 @@
         "expo": "~41.0.1",
         "expo-background-fetch": "~9.1.0",
         "expo-cli": "^4.9.0",
+        "expo-image-manipulator": "~9.1.0",
         "expo-image-picker": "~10.1.4",
         "expo-localization": "~10.1.0",
         "expo-splash-screen": "~0.10.2",

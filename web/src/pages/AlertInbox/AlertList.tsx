@@ -8,7 +8,7 @@ import { RiskLevel, riskLevels } from "@cbr/common/util/risks";
 import { FiberManualRecord } from "@material-ui/icons";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { makeStyles } from "@material-ui/core/styles";
-import { PriorityLevel } from "./Alert";
+import { PriorityLevel } from "@cbr/common/util/alerts";
 import { useState, useEffect } from "react";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { Time } from "@cbr/common/util/time";
@@ -35,11 +35,12 @@ const useStyles = makeStyles({
     },
 });
 
-interface IAlert {
+export interface IAlert {
     id: number;
     subject: string;
     priority: PriorityLevel;
     alert_message: string;
+    unread_by_users: string[];
     created_by_user: number;
     created_date: Time;
 }
@@ -55,9 +56,9 @@ const RenderBadge = (params: String) => {
     /*
       TODO: this should be improved, make Priority icons seperate from Risk Icons
     */
-    if (params === "M") {
+    if (params === "ME") {
         risk = RiskLevel.MEDIUM;
-    } else if (params === "H") {
+    } else if (params === "HI") {
         risk = RiskLevel.HIGH;
     } else {
         risk = RiskLevel.LOW;
@@ -91,7 +92,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
     }, []);
 
     return (
-        <Grid item xs={12} md={3} className={style.gridStyle}>
+        <Grid item xs={3} className={style.gridStyle}>
             <h1>Alerts</h1>
             <Divider variant="fullWidth" className={style.tableTopAndContentDividerStyle} />
             <List
@@ -117,6 +118,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                             component="span"
                                             variant="body2"
                                             color="text.primary"
+                                            noWrap={false}
                                         >
                                             {currAlert.subject}
                                         </Typography>

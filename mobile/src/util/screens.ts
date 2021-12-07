@@ -1,6 +1,6 @@
 import React from "react";
 import { UserRole } from "@cbr/common";
-import Todo from "../screens/Todo/Todo";
+import Stats from "../screens/Stats/Stats";
 import ClientList from "../screens/ClientList/ClientList";
 import Profile from "../screens/Profile/Profile";
 import UserList from "../screens/UserList/UserList";
@@ -47,7 +47,7 @@ export const screens: IScreen[] = [
     {
         name: "Stats",
         roles: [UserRole.ADMIN],
-        Component: Todo,
+        Component: Stats,
         iconName: "chart-bar",
     },
     {

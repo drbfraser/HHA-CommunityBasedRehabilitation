@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/core";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import { dbType } from "../../util/watermelonDatabase";
+import { logger, SyncDB } from "../../util/syncHandler";
 
 export interface Props {
     user: IUser | null;
@@ -33,6 +34,13 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
     const [isPassChangedSnackbarVisible, setPassChangeSnackbarVisibility] = useState(false);
 
     const [isLogoutConfirmDialogVisible, setLogoutConfirmDialogVisibility] = useState(false);
+
+    const resetDatabase = async () => {
+        await database.write(async () => {
+            await database.unsafeResetDatabase();
+            console.log("database cleared");
+        });
+    };
     return (
         <View style={styles.container}>
             {isSelf ? (

@@ -73,7 +73,7 @@ export default appSchema({
             ],
         }),
         tableSchema({
-            name: "referrals",
+            name: modelName.referrals,
             columns: [
                 { name: tableKey.client_id, type: "string", isIndexed: true },
                 { name: tableKey.user_id, type: "string", isIndexed: true },
@@ -98,7 +98,7 @@ export default appSchema({
             ],
         }),
         tableSchema({
-            name: "surveys",
+            name: modelName.surveys,
             columns: [
                 { name: tableKey.client_id, type: "string", isIndexed: true },
                 { name: tableKey.user_id, type: "string", isIndexed: true },

@@ -1,11 +1,16 @@
 from django.core.management.base import BaseCommand
 from cbr_api import models
 import random
+import uuid
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
         users = models.UserCBR.objects.all()
+
+        userIDs = []
+        for user in users:
+            userIDs.append(user.id)
 
         def getYearTimestamp(self, year):
             return (year - 1970) * (60 * 60 * 24 * 365)
@@ -15,6 +20,11 @@ class Command(BaseCommand):
                 priority=priority,
                 subject=subject,
                 alert_message=alert_message,
+                unread_by_users=[
+                    random.choice(userIDs),
+                    random.choice(userIDs),
+                    random.choice(userIDs),
+                ],
                 created_by_user=random.choice(users),
                 created_date=random.randint(
                     getYearTimestamp(self, 2017), getYearTimestamp(self, 2018)

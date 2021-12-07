@@ -4,8 +4,9 @@ stages:
   - deploy
 
 variables:
-  STAGING_BRANCH: "main"
-  PROD_BRANCH: "prod"
+  DEV_BRANCH: "main"
+  STAGING_BRANCH: "staging"
+  PROD_BRANCH: "production"
   NPM_VERSION: "7.19.0"
 
 build common:
@@ -67,7 +68,7 @@ build web:
         - .gitlab-ci.yml
       when: always
     # build on deployments
-    - if: "$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
+    - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: always
   before_script:
     - npm install -g npm@$NPM_VERSION
@@ -79,7 +80,7 @@ build web:
     - npx prettier --check .
     - GENERATE_SOURCEMAP=false npm run build
   after_script:
-    - tar -czvf web_build.tar.gz web/build
+    - cd web/build && tar -czvf ../../web_build.tar.gz .
   artifacts:
     expire_in: 1 week
     paths:
@@ -100,7 +101,7 @@ build server:
         - server/**/*
         - .gitlab-ci.yml
       when: always
-    - if: "$CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
+    - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: always
   variables:
     DOMAIN: "example.com"
@@ -146,7 +147,7 @@ test common:
 
 test caddy:
   stage: test
-  image: caddy:2.4.3
+  image: caddy:2.4.6
   tags:
     - docker
   needs: []
@@ -156,36 +157,53 @@ test caddy:
         - caddy/**/*
         - .gitlab-ci.yml
       when: always
+  variables:
+    DOMAIN: "example.com"
   script:
     - caddy validate --config caddy/Caddyfile
 
-.deploy-docker: &deploy-docker
-  - source ./.env
+.deploy-script: &deploy-script
+  - cp /var/cbr/.env ./.env
   - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml build
-  - rm -rf web/build
-  - tar -xvf web_build.tar.gz
   - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up --force-recreate -d
   - bash -c 'sleep 10'
-  - docker exec ${COMPOSE_PROJECT_NAME}_django python manage.py migrate
+  - docker exec cbr_django python manage.py migrate
 
-deploy staging:
+deploy development:
+  environment:
+    name: development
+    url: https://cbrd.cradleplatform.com
   stage: deploy
   tags:
-    - shell
+    - deploy-development
+  rules:
+    - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $DEV_BRANCH"
+      when: on_success
+  script:
+    - *deploy-script
+
+deploy staging:
+  environment:
+    name: staging
+    url: https://cbrs.cradleplatform.com
+  stage: deploy
+  tags:
+    - deploy-staging
   rules:
     - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $STAGING_BRANCH"
       when: on_success
   script:
-    - cp /var/cbr/staging.env ./.env
-    - *deploy-docker
+    - *deploy-script
 
-deploy prod:
+deploy production:
+  environment:
+    name: production
+    url: https://cbr.hopehealthaction.org
   stage: deploy
   tags:
-    - shell-prod
+    - deploy-production
   rules:
     - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: manual
   script:
-    - cp /var/cbr/prod.env ./.env
-    - *deploy-docker
+    - *deploy-script

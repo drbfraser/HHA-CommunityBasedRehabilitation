@@ -10,7 +10,7 @@ if (appEnv === "production") {
     // staging
     url = "https://cbrs.cradleplatform.com";
 } else {
-    url = `http://${window.location.hostname}:8000`;
+    url = `http://localhost:8000`;
 }
 
 export const socket = io(`${url}`, {

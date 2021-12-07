@@ -26,11 +26,6 @@ interface IAlert {
 export const alertServices = {
     showAlerts: async () => {
         try {
-            const authToken = await getAuthToken();
-            if (authToken === null) {
-                return Promise.reject("unable to get an access token");
-            }
-
             const config = await RequestConfigBuilder.buildConfig("get", "", Endpoint.ALERTS, "");
 
             const tempAlerts: IAlert[] = (await axios(config)).data;

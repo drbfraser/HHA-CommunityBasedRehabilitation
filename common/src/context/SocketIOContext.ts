@@ -1,17 +1,10 @@
 import React from "react";
 import io from "socket.io-client";
+import { commonConfiguration } from "../init";
 
-const appEnv = process.env.NODE_ENV;
-
-let url: string;
-if (appEnv === "production") {
-    url = "https://cbrp.cradleplatform.com";
-} else if (appEnv === "test") {
-    // staging
-    url = "https://cbrs.cradleplatform.com";
-} else {
-    url = `http://${window.location.hostname}:8000`;
-}
+let url = commonConfiguration?.socketIOUrl
+    ? commonConfiguration.socketIOUrl
+    : "http://localhost:8000";
 
 export const socket = io(`${url}`, {
     transports: ["websocket"],

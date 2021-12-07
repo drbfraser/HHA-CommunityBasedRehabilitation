@@ -158,6 +158,7 @@ const pages: IPage[] = [
     {
         path: "/alerts/new",
         name: "New Alert",
+        roles: [UserRole.ADMIN],
         showInNav: true,
         Component: AlertForm,
         Icon: AddAlertIcon,

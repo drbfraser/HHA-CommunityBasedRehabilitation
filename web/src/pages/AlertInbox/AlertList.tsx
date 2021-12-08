@@ -8,10 +8,11 @@ import { RiskLevel, riskLevels } from "@cbr/common/util/risks";
 import { FiberManualRecord } from "@material-ui/icons";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { makeStyles } from "@material-ui/core/styles";
-import { PriorityLevel } from "./Alert";
+import { PriorityLevel } from "@cbr/common/util/alerts";
 import { useState, useEffect } from "react";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { Time } from "@cbr/common/util/time";
+import { alertServices } from "@cbr/common/services/alertServices";
+import { socket } from "@cbr/common/context/SocketIOContext";
 
 const useStyles = makeStyles({
     selectedListItemStyle: {
@@ -35,11 +36,12 @@ const useStyles = makeStyles({
     },
 });
 
-interface IAlert {
+export interface IAlert {
     id: number;
     subject: string;
     priority: PriorityLevel;
     alert_message: string;
+    unread_by_users: string[];
     created_by_user: number;
     created_date: Time;
 }
@@ -47,6 +49,7 @@ interface IAlert {
 type AlertDetailProps = {
     onAlertSelectionEvent: (itemNum: number) => void;
     selectAlert: number;
+    userID: string;
 };
 
 const RenderBadge = (params: String) => {
@@ -55,9 +58,9 @@ const RenderBadge = (params: String) => {
     /*
       TODO: this should be improved, make Priority icons seperate from Risk Icons
     */
-    if (params === "M") {
+    if (params === "ME") {
         risk = RiskLevel.MEDIUM;
-    } else if (params === "H") {
+    } else if (params === "HI") {
         risk = RiskLevel.HIGH;
     } else {
         risk = RiskLevel.LOW;
@@ -74,24 +77,36 @@ const RenderBadge = (params: String) => {
 const AlertList = (alertDetailProps: AlertDetailProps) => {
     const style = useStyles();
     const [alertData, setAlertData] = useState<IAlert[]>([]);
+    // For the purposes of tracking changes to a user's unread alerts
+    const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
+
+    socket.on("updateUnreadList", (unreadAlerts) => {
+        if (unreadAlertsCount !== unreadAlerts) {
+            // update state oonly if the number of unread alerts have changed
+            setUnreadAlertsCount(unreadAlerts);
+        }
+    });
 
     useEffect(() => {
         const fetchAlerts = async () => {
             try {
-                let tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
-                tempAlerts = tempAlerts.sort(function (a, b) {
-                    return b.created_date - a.created_date;
-                });
-                setAlertData(tempAlerts);
+                let tempAlerts: IAlert[] | undefined = await alertServices.showAlerts();
+
+                if (tempAlerts !== undefined) {
+                    tempAlerts = tempAlerts.sort(function (a, b) {
+                        return b.created_date - a.created_date;
+                    });
+                    setAlertData(tempAlerts);
+                }
             } catch (e) {
                 console.log(`Error fetching Alerts: ${e}`);
             }
         };
         fetchAlerts();
-    }, []);
+    }, [unreadAlertsCount]);
 
     return (
-        <Grid item xs={12} md={3} className={style.gridStyle}>
+        <Grid item xs={3} className={style.gridStyle}>
             <h1>Alerts</h1>
             <Divider variant="fullWidth" className={style.tableTopAndContentDividerStyle} />
             <List
@@ -112,11 +127,16 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                             sx={{
                                                 display: "inline",
                                                 fontSize: 16,
-                                                fontWeight: "medium",
+                                                fontWeight: currAlert.unread_by_users.includes(
+                                                    alertDetailProps.userID
+                                                )
+                                                    ? "bold"
+                                                    : "small",
                                             }}
                                             component="span"
                                             variant="body2"
                                             color="text.primary"
+                                            noWrap={false}
                                         >
                                             {currAlert.subject}
                                         </Typography>

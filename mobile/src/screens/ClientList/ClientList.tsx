@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Text, View, Switch, StyleProp, ViewStyle } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Modal, DataTable, IconButton, Portal } from "react-native-paper";
@@ -23,6 +23,8 @@ import {
 import { WrappedText } from "../../components/WrappedText/WrappedText";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { checkUnsyncedChanges } from "../../util/syncHandler";
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
@@ -36,6 +38,7 @@ const ClientList = () => {
     const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query);
     const isFocused = useIsFocused();
     const database = useDatabase();
+    const { setUnSyncedChanges } = useContext(SyncContext);
 
     const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
 
@@ -119,6 +122,9 @@ const ClientList = () => {
     useEffect(() => {
         if (isFocused) {
             newClientGet();
+            checkUnsyncedChanges().then((res) => {
+                setUnSyncedChanges(res);
+            });
         }
     }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection, isFocused]);
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Component, Dispatch, SetStateAction } from "react";
+import { Component, Dispatch, SetStateAction, useContext } from "react";
 import { View, TextInput as NativeText, Platform, ToastAndroid, AlertIOS } from "react-native";
 import { Button, Modal, Portal, TextInput, Text, Menu, RadioButton } from "react-native-paper";
 import { useState } from "react";
@@ -16,6 +16,7 @@ import {
 import { Formik } from "formik";
 import { handleRiskSubmit } from "./ClientRiskFormHandler";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { SyncContext } from "../../../context/SyncContext/SyncContext";
 
 export interface ClientRiskFormProps {
     riskData: any;
@@ -35,6 +36,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
     const styles = useStyles();
     const [showModal, setShowModal] = useState(false);
     const database = useDatabase();
+    const { autoSync, cellularSync } = useContext(SyncContext);
 
     const getRiskFormInitialValues = () => {
         const risk = props.riskData;
@@ -64,7 +66,14 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             <Formik
                 initialValues={getRiskFormInitialValues()}
                 onSubmit={(values) => {
-                    handleRiskSubmit(values, props.riskData, props.setRisk, database);
+                    handleRiskSubmit(
+                        values,
+                        props.riskData,
+                        props.setRisk,
+                        database,
+                        autoSync,
+                        cellularSync
+                    );
                 }}
                 validationSchema={validationSchema}
             >

@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext, IAuthContext } from "../../context/AuthContext/AuthContext";
 import { ActivityIndicator, Button, Snackbar, Text } from "react-native-paper";
-import { APIFetchFailError, IUser } from "@cbr/common";
+import { APIFetchFailError, IUser, useCurrentUser } from "@cbr/common";
 import { StackScreenProps } from "@react-navigation/stack";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
@@ -25,9 +25,6 @@ const AdminView = ({
     route,
 }: StackScreenProps<StackParamList, StackScreenName.ADMIN_VIEW>) => {
     const authContext = useContext<IAuthContext>(AuthContext);
-    useEffect(() => {
-        authContext.requireLoggedIn(true);
-    }, []);
 
     const [isUserChangeSnackbarVisible, setUserChangeSnackbarVisible] = useState(false);
 
@@ -35,6 +32,7 @@ const AdminView = ({
     const isFocused = useIsFocused();
     const [error, setErrorMessage] = useState<ILoadError>();
     const database = useDatabase();
+    const currentUser = useCurrentUser();
 
     const loadUser = async (
         userId: string,
@@ -97,7 +95,11 @@ const AdminView = ({
         </View>
     ) : (
         <>
-            <UserProfileContents user={user} isSelf={false} database={database} />
+            <UserProfileContents
+                user={user}
+                isSelf={user.id == currentUser!.id ? true : false}
+                database={database}
+            />
             <Snackbar
                 visible={isUserChangeSnackbarVisible}
                 duration={4000}

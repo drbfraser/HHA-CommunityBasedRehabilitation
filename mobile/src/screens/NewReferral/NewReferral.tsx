@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Text, Divider, Appbar } from "react-native-paper";
 import { Formik, FormikHelpers } from "formik";
@@ -33,6 +33,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
 
 interface INewReferralProps {
     clientID: number;
@@ -84,7 +85,7 @@ const NewReferral = (props: INewReferralProps) => {
     const [checkedSteps, setCheckedSteps] = useState<ReferralFormField[]>([]);
     const [submissionError, setSubmissionError] = useState(false);
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
-
+    const { autoSync, cellularSync } = useContext(SyncContext);
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
     const prevStep = (props: any) => {
@@ -106,7 +107,7 @@ const NewReferral = (props: INewReferralProps) => {
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
-            handleSubmit(values, database, helpers)
+            handleSubmit(values, database, helpers, autoSync, cellularSync)
                 .then(() => {
                     setHasSubmitted(true);
                     props.navigation.navigate(StackScreenName.CLIENT, {

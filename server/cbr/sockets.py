@@ -1,3 +1,4 @@
+from cbr_api.sql import getUnreadAlertListByUserId
 import socketio
 from cbr.settings import DEBUG, ALLOWED_HOSTS
 
@@ -43,4 +44,19 @@ def disconnect(sid):
 @sio.on("newAlert")
 def newAlert(sid, data):
     print("[SocketIO Server]: Received a new alert '{} from {}".format(data, sid))
-    sio.emit("pushAlert", {"data": "[SocketIO Server] pushAlert test message"})
+    # when 'room' arg is omitted from emit, the event is sent to all connected clients
+    # Alternatively, use the 'broadcast=True' arg to send to all connected clients
+    sio.emit(
+        "broadcastAlert",
+        {
+            "subject": data["subject"],
+            "priority": data["priority"],
+            "alert_message": data["alert_message"],
+        },
+        skip_sid=sid,  # exclude the sid that sent the new alert
+    )
+
+
+@sio.on("alertViewed")
+def alertViewed(sid, data):
+    sio.emit("updateUnreadList", getUnreadAlertListByUserId(data["currentUser"]))

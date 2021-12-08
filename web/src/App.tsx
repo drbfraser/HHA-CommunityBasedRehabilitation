@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import SideNav from "./components/SideNav/SideNav";
 import { defaultPagePath, pagesForUser } from "util/pages";
@@ -8,27 +8,16 @@ import { useStyles } from "App.styles";
 import history from "@cbr/common/util/history";
 import { useIsLoggedIn } from "./util/hooks/loginState";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
-import { API_BASE_URL } from "./util/api";
-import io from "socket.io-client";
+import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
+import AlertNotification from "./components/Alerts/AlertNotification";
+import { IAlert } from "@cbr/common/util/alerts";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
     const styles = useStyles();
 
-    useEffect(() => {
-        const socket = io(`${API_BASE_URL}`, {
-            transports: ["websocket"],
-            autoConnect: true,
-        });
-
-        socket.on("connect", () => {
-            console.log(`[SocketIO] Web user connected on ${API_BASE_URL}. SocketID: ${socket.id}`);
-        });
-
-        socket.on("disconnect", () => {
-            console.log(`[SocketIO] Web user disconnected`);
-        });
-    }, []);
+    const [open, setOpen] = useState<boolean>(false);
+    const [alert, setAlert] = useState<Partial<IAlert>>();
 
     const PrivateRoutes = () => {
         const user = useCurrentUser();
@@ -40,6 +29,7 @@ const App = () => {
                     <Switch>
                         {pagesForUser(user).map((page) => (
                             <Route key={page.path} exact={page.exact ?? true} path={page.path}>
+                                {open && <AlertNotification alertInfo={alert} setOpen={setOpen} />}
                                 <Typography variant="h1" className={styles.pageTitle}>
                                     {page.name}
                                 </Typography>
@@ -54,17 +44,31 @@ const App = () => {
         );
     };
 
+    useEffect(() => {
+        socket.on("broadcastAlert", (data) => {
+            setAlert(data);
+            setOpen(true);
+        });
+        return () => {
+            setOpen(false);
+        };
+    }, []);
+
     return (
         <Router history={history}>
             {isLoggedIn === undefined ? (
                 <></>
             ) : (
-                <Switch>
-                    <Route exact path="/">
-                        {!isLoggedIn ? <Login /> : <Redirect to={defaultPagePath} />}
-                    </Route>
-                    <Route path="/">{isLoggedIn ? <PrivateRoutes /> : <Redirect to="/" />}</Route>
-                </Switch>
+                <SocketContext.Provider value={socket}>
+                    <Switch>
+                        <Route exact path="/">
+                            {!isLoggedIn ? <Login /> : <Redirect to={defaultPagePath} />}
+                        </Route>
+                        <Route path="/">
+                            {isLoggedIn ? <PrivateRoutes /> : <Redirect to="/" />}
+                        </Route>
+                    </Switch>
+                </SocketContext.Provider>
             )}
         </Router>
     );

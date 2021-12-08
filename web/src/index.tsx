@@ -6,7 +6,7 @@ import App from "./App";
 import { initializeCommon, KeyValStorageProvider } from "@cbr/common/init";
 import { loginState } from "./util/hooks/loginState";
 import { invalidateAllCachedAPI } from "@cbr/common/util/hooks/cachedAPI";
-import { API_URL } from "./util/api";
+import { API_BASE_URL, API_URL } from "./util/api";
 
 const localStorageProvider: KeyValStorageProvider = {
     getItem: async (key: string) => {
@@ -22,6 +22,7 @@ const localStorageProvider: KeyValStorageProvider = {
 
 initializeCommon({
     apiUrl: API_URL,
+    socketIOUrl: API_BASE_URL,
     keyValStorageProvider: localStorageProvider,
     useKeyValStorageForCachedAPIBackup: false,
     shouldLogoutOnTokenRefreshFailure: true,

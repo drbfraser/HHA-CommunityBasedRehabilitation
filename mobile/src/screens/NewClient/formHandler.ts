@@ -1,9 +1,10 @@
-import { getDisabilities, TClientValues } from "@cbr/common";
+import { TClientValues } from "@cbr/common";
 import { FormikHelpers } from "formik";
 import { modelName } from "../../models/constant";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { dbType } from "../../util/watermelonDatabase";
+import { AutoSyncDB } from "../../util/syncHandler";
 
 // TODO: profile picture does not upload correctly to server
 
@@ -23,9 +24,10 @@ const handleNewMobileClientSubmit = async (
     values: TClientValues,
     helpers: FormikHelpers<TClientValues>,
     database: dbType,
-    userID: string
+    userID: string,
+    autoSync: boolean,
+    cellularSync: boolean
 ) => {
-    const disabilities = await getDisabilities();
     try {
         let newClient;
         const currentUser = await database.get(modelName.users).find(userID);
@@ -83,6 +85,9 @@ const handleNewMobileClientSubmit = async (
             );
         });
         await newClient.newRiskTime();
+
+        AutoSyncDB(database, autoSync, cellularSync);
+
         return newClient.id;
     } catch (e) {
         console.log(e);
@@ -99,11 +104,20 @@ export const handleSubmit = async (
     navigation: AppStackNavProp,
     scrollToTop: () => void,
     database: dbType,
-    userID: string
+    userID: string,
+    autoSync: boolean,
+    cellularSync: boolean
 ) => {
     helpers.setSubmitting(true);
 
-    return handleNewMobileClientSubmit(values, helpers, database, userID).then((res) => {
+    return handleNewMobileClientSubmit(
+        values,
+        helpers,
+        database,
+        userID,
+        autoSync,
+        cellularSync
+    ).then((res) => {
         if (res) {
             scrollToTop();
             navigation.navigate(StackScreenName.CLIENT, {

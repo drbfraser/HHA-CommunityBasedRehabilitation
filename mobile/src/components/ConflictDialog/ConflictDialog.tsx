@@ -78,6 +78,8 @@ const ConflictDialog = () => {
             } else {
                 updateNames();
             }
+        } else {
+            setDialogVisible(false);
         }
     }, [currState, clientConflicts, userConflicts]);
 

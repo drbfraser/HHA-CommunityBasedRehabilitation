@@ -10,8 +10,8 @@ import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { makeStyles } from "@material-ui/core/styles";
 import { PriorityLevel } from "@cbr/common/util/alerts";
 import { useState, useEffect } from "react";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { Time } from "@cbr/common/util/time";
-import { alertServices } from "@cbr/common/services/alertServices";
 import { socket } from "@cbr/common/context/SocketIOContext";
 
 const useStyles = makeStyles({
@@ -90,14 +90,11 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
     useEffect(() => {
         const fetchAlerts = async () => {
             try {
-                let tempAlerts: IAlert[] | undefined = await alertServices.showAlerts();
-
-                if (tempAlerts !== undefined) {
-                    tempAlerts = tempAlerts.sort(function (a, b) {
-                        return b.created_date - a.created_date;
-                    });
-                    setAlertData(tempAlerts);
-                }
+                let tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
+                tempAlerts = tempAlerts.sort(function (a, b) {
+                    return b.created_date - a.created_date;
+                });
+                setAlertData(tempAlerts);
             } catch (e) {
                 console.log(`Error fetching Alerts: ${e}`);
             }

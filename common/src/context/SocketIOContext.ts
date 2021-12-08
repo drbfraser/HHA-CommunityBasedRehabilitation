@@ -1,22 +1,23 @@
+import { DefaultEventsMap } from "@socket.io/component-emitter";
 import React from "react";
-import io from "socket.io-client";
-import { commonConfiguration } from "../init";
+import io, { Socket } from "socket.io-client";
 
-let url = commonConfiguration?.socketIOUrl
-    ? commonConfiguration.socketIOUrl
-    : "http://localhost:8000";
+export let SocketContext: React.Context<any>;
+export let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
-export const socket = io(`${url}`, {
-    transports: ["websocket"],
-    autoConnect: true,
-});
+export const initSocketContext = (socketIOUrl: string) => {
+    socket = io(`${socketIOUrl}`, {
+        transports: ["websocket"],
+        autoConnect: true,
+    });
 
-socket.on("connect", () => {
-    console.log(`[SocketIO] Web user connected on ${url}. SocketID: ${socket.id}`);
-});
+    socket.on("connect", () => {
+        console.log(`[SocketIO] Web user connected on ${socketIOUrl}. SocketID: ${socket.id}`);
+    });
 
-socket.on("disconnect", () => {
-    console.log(`[SocketIO] Web user disconnected`);
-});
+    socket.on("disconnect", () => {
+        console.log(`[SocketIO] Web user disconnected`);
+    });
 
-export const SocketContext = React.createContext(socket);
+    SocketContext = React.createContext(socket);
+};

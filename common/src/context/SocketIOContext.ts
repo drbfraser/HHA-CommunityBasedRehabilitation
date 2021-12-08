@@ -9,7 +9,7 @@ if (commonConfiguration?.socketIOUrl) {
 } else {
     switch (process.env.NODE_ENV) {
         case "development":
-            url = window.location.hostname
+            url = window.location?.hostname
                 ? `http://${window.location.hostname}:8000`
                 : "http://localhost:8000";
             break;

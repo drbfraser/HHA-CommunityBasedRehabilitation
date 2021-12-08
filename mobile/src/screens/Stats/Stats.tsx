@@ -228,7 +228,7 @@ const Stats = () => {
     return (
         <ScrollView>
             <View style={styles.row}>
-                <Text style={styles.title}>Statistic</Text>
+                <Text style={styles.title}>Statistics</Text>
             </View>
             {!loading ? (
                 <>
@@ -261,7 +261,7 @@ const Stats = () => {
                                 }
                             }}
                         >
-                            {"Referral"}
+                            {"Referrals"}
                         </Button>
                         <Button
                             mode="contained"

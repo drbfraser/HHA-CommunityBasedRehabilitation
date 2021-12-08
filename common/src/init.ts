@@ -1,3 +1,5 @@
+import { initSocketContext } from "./context/SocketIOContext";
+
 export interface KeyValStorageProvider {
     readonly getItem: (key: string) => Promise<string | null>;
     readonly setItem: (key: string, value: string) => Promise<void>;
@@ -39,6 +41,7 @@ export let commonConfiguration: CommonConfiguration;
 export const initializeCommon = (config: CommonConfiguration) => {
     if (!commonConfiguration) {
         commonConfiguration = { ...config };
+        initSocketContext(config.socketIOUrl);
     } else {
         console.error("trying to initialize common twice");
     }

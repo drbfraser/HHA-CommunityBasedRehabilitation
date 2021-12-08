@@ -2,11 +2,14 @@ import { ReferralFormField, ReferralFormValues, referralHandleSubmit } from "@cb
 import { FormikHelpers } from "formik";
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
+import { AutoSyncDB } from "../../util/syncHandler";
 
 export const handleSubmit = async (
     values: ReferralFormValues,
     database: dbType,
-    helpers: FormikHelpers<ReferralFormValues>
+    helpers: FormikHelpers<ReferralFormValues>,
+    autoSync: boolean,
+    cellularSync: boolean
 ) => {
     const source = "mobile";
     helpers.setSubmitting(true);
@@ -26,4 +29,6 @@ export const handleSubmit = async (
             referral.date_referred = new Date().getTime();
         });
     });
+
+    AutoSyncDB(database, autoSync, cellularSync);
 };

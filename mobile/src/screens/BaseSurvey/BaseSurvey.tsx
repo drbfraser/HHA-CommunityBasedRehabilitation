@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Divider, Text } from "react-native-paper";
 import {
@@ -36,6 +36,7 @@ import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import ConsentForm from "./SurveyForm/ConsentForm";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
 
 interface ISurvey {
     label: string;
@@ -57,9 +58,8 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
     const isFinalStep = step === surveyTypes.length && step !== 0;
     const clientId = props.route.params.clientID;
     const [saveError, setSaveError] = useState<string>();
-
+    const { autoSync, cellularSync } = useContext(SyncContext);
     const prevStep = () => {
-        console.log(stepChecked);
         setStep(step - 1);
     };
 
@@ -67,7 +67,7 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
-            handleSubmit(values, database, helpers)
+            handleSubmit(values, database, helpers, autoSync, cellularSync)
                 .then(() => {
                     setHasSubmitted(true);
                     props.navigation.navigate(StackScreenName.CLIENT, {

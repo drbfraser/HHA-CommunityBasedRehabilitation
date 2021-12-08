@@ -1,6 +1,7 @@
 import { FormLabel } from "@material-ui/core";
 import React from "react";
 import { useState } from "react";
+import { helperImgCompress } from "./imgCompressHelper";
 
 interface Iprops {
     onPictureChange: (newPictureURL: string) => void;
@@ -27,12 +28,13 @@ export const PhotoView = (props: Iprops) => {
             <input
                 type="file"
                 accept="image/*"
-                onChange={(event) => {
+                onChange={async (event) => {
                     const files = event.target.files;
                     if (!files) {
                         return;
                     }
 
+                    let target_file = await helperImgCompress(files[0]);
                     let reader = new FileReader();
                     reader.onload = () => {
                         const image = (reader.result as ArrayBuffer) ?? undefined;
@@ -42,7 +44,7 @@ export const PhotoView = (props: Iprops) => {
                         setUpload(true);
                     };
 
-                    reader.readAsArrayBuffer(files[0]);
+                    reader.readAsArrayBuffer(target_file);
                 }}
             ></input>
         </>

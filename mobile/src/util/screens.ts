@@ -1,17 +1,20 @@
 import React from "react";
 import { UserRole } from "@cbr/common";
-import Todo from "../screens/Todo/Todo";
+import Stats from "../screens/Stats/Stats";
 import ClientList from "../screens/ClientList/ClientList";
 import Profile from "../screens/Profile/Profile";
 import UserList from "../screens/UserList/UserList";
 import Dashboard from "../screens/DashBoard/Dashboard";
 import NewClient from "../screens/NewClient/NewClient";
+import { TabModal } from "../components/TabModal/TabModal";
 
 export interface IScreen {
     name: string;
     roles?: UserRole[];
     Component: React.ComponentType<any>;
     iconName?: string;
+    iconBadge?: boolean;
+    disableSync?: boolean;
 }
 
 export const screens: IScreen[] = [
@@ -31,14 +34,20 @@ export const screens: IScreen[] = [
         iconName: "format-list-bulleted",
     },
     {
+        name: "Sync",
+        Component: TabModal,
+        iconName: "sync-alert",
+    },
+    {
         name: "Profile",
+        roles: [UserRole.CLINICIAN, UserRole.WORKER],
         Component: Profile,
         iconName: "account",
     },
     {
         name: "Stats",
         roles: [UserRole.ADMIN],
-        Component: Todo,
+        Component: Stats,
         iconName: "chart-bar",
     },
     {

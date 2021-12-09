@@ -39,7 +39,7 @@ keyPassword CBR_UPLOAD_KEY_PASSWORD
 
 cd back the mobile directory
 
-run command **_npm run build [target environment]_**, choose from one of the following environment: "local", "dev", "staging", and "prod" depending on the server you would like to connect to
+run command **_npm run build release [target environment]_**, choose from one of the following environment: "local", "dev", "staging", and "prod" depending on the server you would like to connect to
 
 The generated release APK should be located in `mobile/android/app/build/outputs/apk`
 

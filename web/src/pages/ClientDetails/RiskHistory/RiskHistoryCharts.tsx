@@ -53,7 +53,7 @@ const risksToChartData = (risks: IRisk[]) => {
 
         if (riskArray.length) {
             riskArray.push({
-                timestamp: Date.now() / 1000,
+                timestamp: Date.now(),
                 level: riskArray[riskArray.length - 1].level,
             });
         }

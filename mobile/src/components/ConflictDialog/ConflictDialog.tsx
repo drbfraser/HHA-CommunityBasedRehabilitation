@@ -100,8 +100,8 @@ const ConflictDialog = () => {
                 </Dialog.Title>
                 <Dialog.Content style={styles.conflictDialogContent}>
                     <Text style={styles.conflictMessage}>
-                        The following changes could not be saved to the server due to change
-                        conflict.
+                        The following changes could not be saved to the server due to modifications
+                        of the client or user on the CBR Wep App.
                     </Text>
                     <ScrollView>
                         {clientConflicts.size > 0 && (

@@ -100,12 +100,10 @@ const ConflictDialog = () => {
                 </Dialog.Title>
                 <Dialog.Content style={styles.conflictDialogContent}>
                     <Text style={styles.conflictMessage}>
-                        The following changes could not be synced with the server 
-                        because they have been modified by another user since your
-                        last sync. {"\n\n"} 
-                        
-                        If you would like to keep your version, you'll 
-                        need to make the following changes again:
+                        The following changes could not be synced with the server because they have
+                        been modified by another user since your last sync. {"\n\n"}
+                        If you would like to keep your version, you'll need to make the following
+                        changes again:
                     </Text>
                     <ScrollView>
                         {clientConflicts.size > 0 && (

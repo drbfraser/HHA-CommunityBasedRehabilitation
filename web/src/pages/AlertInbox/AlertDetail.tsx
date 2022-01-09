@@ -83,7 +83,7 @@ const AlertDetail = (alertDetailProps: Props) => {
             <h2>{selectedItem.length === 0 ? "" : selectedItem[0].subject}</h2>
             <Typography>
                 {selectedItem.length === 0 || selectedItem[0].alert_message === ""
-                    ? "Empty"
+                    ? "Please select an alert."
                     : selectedItem[0].alert_message}
             </Typography>
         </Grid>

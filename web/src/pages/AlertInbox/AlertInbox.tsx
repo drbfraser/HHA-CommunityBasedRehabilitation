@@ -6,10 +6,13 @@ import { useState } from "react";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
 import { IUser } from "@cbr/common/util/users";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { IAlert } from "@cbr/common/util/alerts";
 
 const AlertInbox = () => {
     const [selectedAlert, setSelectedAlert] = useState<number>(-1);
     const [userID, setUserID] = useState<string>("unknown");
+    const [alertData, setAlertData] = useState<IAlert[]>([]);
 
     const alertListProps = {
         onAlertSelectionEvent: (itemNum: number) => {
@@ -17,7 +20,22 @@ const AlertInbox = () => {
         },
         selectAlert: selectedAlert,
         userID: userID,
+        alertData: alertData,
+        onAlertSetEvent: (alertData: IAlert[]) => {
+          setAlertData(alertData);
+      },
     };
+
+    useEffect(() => {
+      const fetchAlerts = async () => {
+          try {
+              setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
+          } catch (e) {
+              console.log(`Error fetching Alerts: ${e}`);
+          }
+      };
+      fetchAlerts();
+  }, []);
 
     useEffect(() => {
         const getUserProfile = async () => {
@@ -32,6 +50,7 @@ const AlertInbox = () => {
     const alertDetailProps = {
         selectAlert: selectedAlert,
         userID: userID,
+        alertData: alertData,
     };
 
     return (

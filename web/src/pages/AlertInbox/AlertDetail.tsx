@@ -4,8 +4,7 @@ import Divider from "@mui/material/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { IAlert } from "@cbr/common/util/alerts";
-import { useState, useEffect } from "react";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { useEffect } from "react";
 import { handleUpdateAlertSubmit } from "@cbr/common/forms/Alert/alertHandler";
 
 const useStyles = makeStyles({
@@ -18,26 +17,12 @@ const useStyles = makeStyles({
 type Props = {
     selectAlert: number;
     userID: string;
+    alertData: IAlert[];
 };
 
 const AlertDetail = (alertDetailProps: Props) => {
     const style = useStyles();
-    const [alertData, setAlertData] = useState<IAlert[]>([]);
-
-    /* 
-    TODO
-    This part should belong to its parent component, but I am still learning how to implement that
-    */
-    useEffect(() => {
-        const fetchAlerts = async () => {
-            try {
-                setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
-            } catch (e) {
-                console.log(`Error fetching Alerts: ${e}`);
-            }
-        };
-        fetchAlerts();
-    }, []);
+    const {alertData} = alertDetailProps;
 
     useEffect(() => {
         const updateAlertUnreadUsersList = async () => {

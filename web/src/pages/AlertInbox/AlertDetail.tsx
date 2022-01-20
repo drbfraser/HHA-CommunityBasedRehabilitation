@@ -22,7 +22,7 @@ type Props = {
 
 const AlertDetail = (alertDetailProps: Props) => {
     const style = useStyles();
-    const {alertData} = alertDetailProps;
+    const { alertData } = alertDetailProps;
 
     useEffect(() => {
         const updateAlertUnreadUsersList = async () => {

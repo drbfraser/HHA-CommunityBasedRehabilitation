@@ -40,7 +40,7 @@ type AlertDetailProps = {
     selectAlert: number;
     userID: string;
     alertData: IAlert[];
-    onAlertSetEvent: (alertData: IAlert[])=> void;
+    onAlertSetEvent: (alertData: IAlert[]) => void;
 };
 
 const RenderBadge = (params: String) => {
@@ -67,7 +67,7 @@ const RenderBadge = (params: String) => {
 
 const AlertList = (alertDetailProps: AlertDetailProps) => {
     const style = useStyles();
-    const {alertData, onAlertSetEvent, onAlertSelectionEvent} = alertDetailProps;
+    const { alertData, onAlertSetEvent, onAlertSelectionEvent } = alertDetailProps;
     // For the purposes of tracking changes to a user's unread alerts
     const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
 

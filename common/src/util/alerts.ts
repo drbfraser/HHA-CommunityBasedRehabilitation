@@ -21,4 +21,3 @@ export const priorities = {
     [PriorityLevel.MEDIUM]: "Medium",
     [PriorityLevel.LOW]: "Low",
 };
-

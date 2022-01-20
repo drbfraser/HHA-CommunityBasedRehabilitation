@@ -22,20 +22,20 @@ const AlertInbox = () => {
         userID: userID,
         alertData: alertData,
         onAlertSetEvent: (alertData: IAlert[]) => {
-          setAlertData(alertData);
-      },
+            setAlertData(alertData);
+        },
     };
 
     useEffect(() => {
-      const fetchAlerts = async () => {
-          try {
-              setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
-          } catch (e) {
-              console.log(`Error fetching Alerts: ${e}`);
-          }
-      };
-      fetchAlerts();
-  }, []);
+        const fetchAlerts = async () => {
+            try {
+                setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
+            } catch (e) {
+                console.log(`Error fetching Alerts: ${e}`);
+            }
+        };
+        fetchAlerts();
+    }, []);
 
     useEffect(() => {
         const getUserProfile = async () => {

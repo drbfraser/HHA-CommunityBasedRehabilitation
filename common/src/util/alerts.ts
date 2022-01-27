@@ -1,11 +1,13 @@
+import { Time } from "./time";
+
 export interface IAlert {
-    id: string;
+    id: number;
     subject: string;
     priority: PriorityLevel;
     alert_message: string;
-    unread_by_users: string;
+    unread_by_users: string[];
     created_by_user: string;
-    created_date: string;
+    created_date: Time;
 }
 
 export enum PriorityLevel {

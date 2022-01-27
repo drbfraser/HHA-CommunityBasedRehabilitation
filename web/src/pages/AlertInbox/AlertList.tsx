@@ -8,11 +8,10 @@ import { RiskLevel, riskLevels } from "@cbr/common/util/risks";
 import { FiberManualRecord } from "@material-ui/icons";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { makeStyles } from "@material-ui/core/styles";
-import { PriorityLevel } from "@cbr/common/util/alerts";
 import { useState, useEffect } from "react";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-import { Time } from "@cbr/common/util/time";
 import { socket } from "@cbr/common/context/SocketIOContext";
+import { IAlert } from "@cbr/common/util/alerts";
 
 const useStyles = makeStyles({
     selectedListItemStyle: {
@@ -36,20 +35,12 @@ const useStyles = makeStyles({
     },
 });
 
-export interface IAlert {
-    id: number;
-    subject: string;
-    priority: PriorityLevel;
-    alert_message: string;
-    unread_by_users: string[];
-    created_by_user: number;
-    created_date: Time;
-}
-
 type AlertDetailProps = {
     onAlertSelectionEvent: (itemNum: number) => void;
     selectAlert: number;
     userID: string;
+    alertData: IAlert[];
+    onAlertSetEvent: (alertData: IAlert[]) => void;
 };
 
 const RenderBadge = (params: String) => {
@@ -76,7 +67,7 @@ const RenderBadge = (params: String) => {
 
 const AlertList = (alertDetailProps: AlertDetailProps) => {
     const style = useStyles();
-    const [alertData, setAlertData] = useState<IAlert[]>([]);
+    const { alertData, onAlertSetEvent } = alertDetailProps;
     // For the purposes of tracking changes to a user's unread alerts
     const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
 
@@ -94,7 +85,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                 tempAlerts = tempAlerts.sort(function (a, b) {
                     return b.created_date - a.created_date;
                 });
-                setAlertData(tempAlerts);
+                onAlertSetEvent(tempAlerts);
             } catch (e) {
                 console.log(`Error fetching Alerts: ${e}`);
             }
@@ -140,7 +131,6 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                     </React.Fragment>
                                 }
                                 secondary={RenderBadge(currAlert.priority)}
-                                onClick={() => alertDetailProps.onAlertSelectionEvent(currAlert.id)}
                                 className={
                                     currAlert.id === alertDetailProps.selectAlert
                                         ? style.selectedListItemStyle

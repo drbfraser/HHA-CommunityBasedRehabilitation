@@ -36,7 +36,7 @@ const useStyles = makeStyles({
 });
 
 type AlertDetailProps = {
-    onAlertSelectionEvent: (itemNum: number, whatever:Time) => void;
+    onAlertSelectionEvent: (itemNum: number, whatever: Time) => void;
     selectAlert: number;
     userID: string;
     alertData: IAlert[];
@@ -78,12 +78,12 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
         }
     });
 
-    const sortAlert = (alertData:IAlert[]) => {
+    const sortAlert = (alertData: IAlert[]) => {
         const tempAlerts = alertData.sort(function (a, b) {
             return b.created_date - a.created_date;
         });
         return tempAlerts;
-    }
+    };
 
     return (
         <Grid item xs={3} className={style.gridStyle}>
@@ -123,7 +123,9 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                     </React.Fragment>
                                 }
                                 secondary={RenderBadge(currAlert.priority)}
-                                onClick={() => onAlertSelectionEvent(currAlert.id,currAlert.created_date)}
+                                onClick={() =>
+                                    onAlertSelectionEvent(currAlert.id, currAlert.created_date)
+                                }
                                 className={
                                     currAlert.id === alertDetailProps.selectAlert
                                         ? style.selectedListItemStyle

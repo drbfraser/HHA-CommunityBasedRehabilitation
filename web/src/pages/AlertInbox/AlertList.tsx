@@ -11,7 +11,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IAlert } from "@cbr/common/util/alerts";
-import { Time } from "@cbr/common/util/time";
 
 const useStyles = makeStyles({
     selectedListItemStyle: {
@@ -36,7 +35,7 @@ const useStyles = makeStyles({
 });
 
 type AlertDetailProps = {
-    onAlertSelectionEvent: (itemNum: number, whatever: Time) => void;
+    onAlertSelectionEvent: (itemNum: number) => void;
     selectAlert: number;
     userID: string;
     alertData: IAlert[];
@@ -123,9 +122,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                     </React.Fragment>
                                 }
                                 secondary={RenderBadge(currAlert.priority)}
-                                onClick={() =>
-                                    onAlertSelectionEvent(currAlert.id, currAlert.created_date)
-                                }
+                                onClick={() => onAlertSelectionEvent(currAlert.id)}
                                 className={
                                     currAlert.id === alertDetailProps.selectAlert
                                         ? style.selectedListItemStyle

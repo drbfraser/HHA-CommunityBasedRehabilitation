@@ -8,7 +8,6 @@ import { APILoadError } from "@cbr/common/util/endpoints";
 import { IUser } from "@cbr/common/util/users";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IAlert } from "@cbr/common/util/alerts";
-import { Time } from "@cbr/common/util/time";
 
 const AlertInbox = () => {
     const [selectedAlert, setSelectedAlert] = useState<number>(-1);

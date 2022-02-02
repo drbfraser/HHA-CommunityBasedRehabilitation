@@ -16,9 +16,8 @@ const AlertInbox = () => {
     const [alertData, setAlertData] = useState<IAlert[]>([]);
 
     const alertListProps = {
-        onAlertSelectionEvent: (itemNum: number, created_date: Time) => {
+        onAlertSelectionEvent: (itemNum: number) => {
             setSelectedAlert(itemNum);
-            console.log(created_date);
         },
         selectAlert: selectedAlert,
         userID: userID,

@@ -8,11 +8,10 @@ import { RiskLevel, riskLevels } from "@cbr/common/util/risks";
 import { FiberManualRecord } from "@material-ui/icons";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { makeStyles } from "@material-ui/core/styles";
-import { PriorityLevel } from "@cbr/common/util/alerts";
-import { useState, useEffect } from "react";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-import { Time } from "@cbr/common/util/time";
+import { useState } from "react";
 import { socket } from "@cbr/common/context/SocketIOContext";
+import { IAlert } from "@cbr/common/util/alerts";
+import { Time } from "@cbr/common/util/time";
 
 const useStyles = makeStyles({
     selectedListItemStyle: {
@@ -36,20 +35,12 @@ const useStyles = makeStyles({
     },
 });
 
-export interface IAlert {
-    id: number;
-    subject: string;
-    priority: PriorityLevel;
-    alert_message: string;
-    unread_by_users: string[];
-    created_by_user: number;
-    created_date: Time;
-}
-
 type AlertDetailProps = {
-    onAlertSelectionEvent: (itemNum: number) => void;
+    onAlertSelectionEvent: (itemNum: number, whatever: Time) => void;
     selectAlert: number;
     userID: string;
+    alertData: IAlert[];
+    onAlertSetEvent: (alertData: IAlert[]) => void;
 };
 
 const RenderBadge = (params: String) => {
@@ -76,7 +67,7 @@ const RenderBadge = (params: String) => {
 
 const AlertList = (alertDetailProps: AlertDetailProps) => {
     const style = useStyles();
-    const [alertData, setAlertData] = useState<IAlert[]>([]);
+    const { alertData, onAlertSelectionEvent } = alertDetailProps;
     // For the purposes of tracking changes to a user's unread alerts
     const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
 
@@ -87,20 +78,12 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
         }
     });
 
-    useEffect(() => {
-        const fetchAlerts = async () => {
-            try {
-                let tempAlerts: IAlert[] = await (await apiFetch(Endpoint.ALERTS)).json();
-                tempAlerts = tempAlerts.sort(function (a, b) {
-                    return b.created_date - a.created_date;
-                });
-                setAlertData(tempAlerts);
-            } catch (e) {
-                console.log(`Error fetching Alerts: ${e}`);
-            }
-        };
-        fetchAlerts();
-    }, [unreadAlertsCount]);
+    const sortAlert = (alertData: IAlert[]) => {
+        const tempAlerts = alertData.sort(function (a, b) {
+            return b.created_date - a.created_date;
+        });
+        return tempAlerts;
+    };
 
     return (
         <Grid item xs={3} className={style.gridStyle}>
@@ -114,7 +97,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                     overflow: "auto",
                 }}
             >
-                {alertData.map((currAlert) => {
+                {sortAlert(alertData).map((currAlert) => {
                     return (
                         <div key={currAlert.id}>
                             <ListItemText
@@ -140,7 +123,9 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                     </React.Fragment>
                                 }
                                 secondary={RenderBadge(currAlert.priority)}
-                                onClick={() => alertDetailProps.onAlertSelectionEvent(currAlert.id)}
+                                onClick={() =>
+                                    onAlertSelectionEvent(currAlert.id, currAlert.created_date)
+                                }
                                 className={
                                     currAlert.id === alertDetailProps.selectAlert
                                         ? style.selectedListItemStyle

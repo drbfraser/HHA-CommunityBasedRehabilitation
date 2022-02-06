@@ -10,6 +10,12 @@ Follow this guide to install Docker: https://docs.docker.com/get-docker/
 
 Install NodeJS 14 LTS from here: https://nodejs.org/en/
 
+Follow this guide to set up a proper environment for React Native: https://reactnative.dev/docs/environment-setup/
+
+Follow this guide to install an Android emulator which can be used to run the mobile app: https://developer.android.com/studio/run/emulator/
+
+Install JDK 11 from here: https://jdk.java.net/java-se-ri/11
+
 ### 2. Clone the Repo
 
 Clone the repo using `git`. Ensure you have registered your SSH key with GitLab (out of scope of this guide).
@@ -41,8 +47,8 @@ LOCAL_URL="http://<some hostname or IP>" (Optional)
 APP_ENV specified to local will allow the use of the LOCAL_URL,if APP_ENV is not specified, the development server will be used by default
 
 This is optional. If you do not specify `LOCAL_URL`, the developement server is used by default on development builds. Note
-that `LOCAL_URL` is ignored when running a production or staging build. Running Expo using `npm start` or `expo start`
-in the `mobile` directory will be considered a development build.
+that `LOCAL_URL` is ignored when running a production or staging build. Running the app by running `npm run android` in the mobile directory
+will be considered a development build.
 
 If you are going to be using an IP address, you will need to specify the port (8000) in the URL.
 
@@ -60,14 +66,11 @@ If you are going to be using an IP address, you will need to specify the port (8
   LOCAL_URL="http://10.0.2.2:8000"
   ```
 
-To validate that your specified API URL is being used for a development build, run `expo config --type public` (or print out the API URL in the app to the console). If you need to change the URL
-while Expo is running, you will need to stop and restart Expo.
-
 ### 4. Install Required NPM Packages
 
 Navigate to `common` and run `npm install`.
 Navigate to `web` and run `npm install`.
-Navigate to `mobile`, `npm pack ../common` and run `npm install`.
+Navigate to `mobile` and run `npm run refresh-common`.
 
 ### 5. Run Django Database Migrations
 

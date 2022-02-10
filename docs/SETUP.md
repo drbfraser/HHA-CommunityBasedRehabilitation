@@ -44,7 +44,9 @@ APP_ENV="local"
 LOCAL_URL="http://<some hostname or IP>" (Optional)
 ```
 
-APP_ENV specified to local will allow the use of the LOCAL_URL,if APP_ENV is not specified, the development server will be used by default
+`APP_ENV` specified to `"local"` will allow the use of the `LOCAL_URL`, if `APP_ENV` is not specified, the development server will be used by default. Along with setting
+`APP_ENV` to `"local"`, you can also set it to `"dev"`, `"staging"`, or `"prod"`, in case you would like the mobile app to point to the development, staging, or production
+environments, respectively.
 
 This is optional. If you do not specify `LOCAL_URL`, the developement server is used by default on development builds. Note
 that `LOCAL_URL` is ignored when running a production or staging build. Running the app by running `npm run android` in the mobile directory

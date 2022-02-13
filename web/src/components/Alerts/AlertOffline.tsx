@@ -5,7 +5,7 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 
 const AlertOffline = () => {
     const [isOffline, setIsOffline] = useState(false);
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         window.addEventListener("offline", () => {

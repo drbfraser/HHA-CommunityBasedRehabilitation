@@ -14,7 +14,7 @@ const RiskLevelChip = (props: RiskChipProps) => {
     return (
         <Chip
             className={styles.chip}
-            label={riskLevel.name}
+            label={riskLevel.name?riskLevel.name:'High'}
             style={{ backgroundColor: riskLevel.color }}
             {...props}
         />

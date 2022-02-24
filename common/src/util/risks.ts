@@ -13,6 +13,7 @@ export enum RiskType {
     HEALTH = "HEALTH",
     EDUCATION = "EDUCAT",
     SOCIAL = "SOCIAL",
+    NUTRITION = "NUTRITION",
 }
 
 export enum RiskLevel {
@@ -64,5 +65,8 @@ export const riskTypes: { [key: string]: IRiskType } = {
     },
     [RiskType.SOCIAL]: {
         name: "Social",
+    },
+    [RiskType.NUTRITION]: {
+        name: "Nutrition",
     },
 };

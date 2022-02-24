@@ -18,4 +18,8 @@ export const riskTypes: { [key: string]: IRiskType } = {
         name: "Social",
         Icon: RecordVoiceOver,
     },
+    [RiskType.NUTRITION]: {
+      name: "Nutrition",
+      Icon: RecordVoiceOver,
+  },
 };

@@ -173,6 +173,19 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
+                    "nutrit_risk_level",
+                    models.CharField(
+                        choices=[
+                            ("LO", "Low"),
+                            ("ME", "Medium"),
+                            ("HI", "High"),
+                            ("CR", "Critical"),
+                        ],
+                        default="LO",
+                        max_length=2,
+                    ),
+                ),
+                (
                     "created_by_user",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
@@ -278,6 +291,7 @@ class Migration(migrations.Migration):
                             ("HEALTH", "Health"),
                             ("SOCIAL", "Social"),
                             ("EDUCAT", "Education"),
+                            ("NUTRIT", "Nutrition"),
                         ],
                         default="HEALTH",
                         max_length=6,
@@ -322,6 +336,7 @@ class Migration(migrations.Migration):
                             ("HEALTH", "Health"),
                             ("SOCIAL", "Social"),
                             ("EDUCAT", "Education"),
+                            ("NUTRIT", "Nutrition"),
                         ],
                         default="HEALTH",
                         max_length=6,
@@ -384,6 +399,7 @@ class Migration(migrations.Migration):
                             ("HEALTH", "Health"),
                             ("SOCIAL", "Social"),
                             ("EDUCAT", "Education"),
+                            ("NUTRIT", "Nutrition"),
                         ],
                         default="HEALTH",
                         max_length=6,

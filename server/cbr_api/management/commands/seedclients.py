@@ -44,6 +44,8 @@ class Command(BaseCommand):
                 client_risk_level = client.social_risk_level
             elif type == "EDUCAT":
                 client_risk_level = client.educat_risk_level
+            elif type == "NUTRIT":
+                client_risk_level = client.nutrit_risk_level
 
             if client_risk_level == "LO":
                 diff_risks.pop(0)
@@ -75,6 +77,8 @@ class Command(BaseCommand):
                 client.social_risk_level = level
             elif type == "EDUCAT":
                 client.educat_risk_level = level
+            elif type == "NUTRIT":
+                client.nutrit_risk_level = level
 
             risk.save()
             client.save()
@@ -87,6 +91,7 @@ class Command(BaseCommand):
             health_risk = random.choice(risks)
             social_risk = random.choice(risks)
             educat_risk = random.choice(risks)
+            nutrit_risk = random.choice(risks)
             creation_date = random.randint(
                 getYearTimestamp(self, 2018, 0), getYearTimestamp(self, 2019, 0)
             )
@@ -110,9 +115,11 @@ class Command(BaseCommand):
                 health_risk_level=health_risk,
                 social_risk_level=social_risk,
                 educat_risk_level=educat_risk,
+                nutrit_risk_level=nutrit_risk,
                 health_timestamp=creation_date,
                 social_timestamp=creation_date,
                 educat_timestamp=creation_date,
+                nutrit_timestamp=creation_date,
             )
             client.disability.add(random.choice(disabilities))
 
@@ -124,6 +131,7 @@ class Command(BaseCommand):
             createRisk(self, uuid.uuid4(), client, "HEALTH", health_risk, creation_date)
             createRisk(self, uuid.uuid4(), client, "SOCIAL", social_risk, creation_date)
             createRisk(self, uuid.uuid4(), client, "EDUCAT", educat_risk, creation_date)
+            createRisk(self, uuid.uuid4(), client, "NUTRIT", nutrit_risk, creation_date)
 
             client.save()
 
@@ -162,7 +170,7 @@ class Command(BaseCommand):
 
         clients = models.Client.objects.all()
 
-        risk_types = ["HEALTH", "SOCIAL", "EDUCAT"]
+        risk_types = ["HEALTH", "SOCIAL", "EDUCAT", "NUTRIT"]
 
         for client in clients:
             num_risks = random.choice(range(1, 3))

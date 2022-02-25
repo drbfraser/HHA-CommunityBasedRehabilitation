@@ -39,7 +39,7 @@ class Command(BaseCommand):
                 created_at=date,
                 server_created_at=date,
                 provided=random.choice(provides),
-                desc="Provided the client with additional services and assistance to improve their health, social, and educational conditions.",
+                desc="Provided the client with additional services and assistance to improve their health, social, educational and nutritional conditions.",
             )
 
         def createOutcome(self, visit, type, date):
@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 outcome=random.choice(outcomes),
             )
 
-        def createVisit(self, health, social, educat, type, village):
+        def createVisit(self, health, social, educat, nutrit, type, village):
             client = random.choice(clients)
 
             date_visited = random.randint(
@@ -77,6 +77,7 @@ class Command(BaseCommand):
                 health_visit=health,
                 social_visit=social,
                 educat_visit=educat,
+                nutrit_visit=nutrit,
             )
             visit.improvements.add(createImprovement(self, visit, type, date_visited))
             visit.outcomes.add(createOutcome(self, visit, type, date_visited))
@@ -113,11 +114,17 @@ class Command(BaseCommand):
         createVisit(self, True, False, False, "HEALTH", "#1")
         createVisit(self, False, True, False, "SOCIAL", "#2")
         createVisit(self, False, False, True, "EDUCAT", "#3")
+        createVisit(self, False, False, True, "NUTRIT", "#3")
+        
         createVisit(self, True, False, False, "HEALTH", "#4")
         createVisit(self, False, True, False, "SOCIAL", "#5")
         createVisit(self, False, False, True, "EDUCAT", "#6")
+        createVisit(self, False, False, True, "NUTRIT", "#3")
+        
         createVisit(self, True, False, False, "HEALTH", "#7")
         createVisit(self, False, True, False, "SOCIAL", "#8")
         createVisit(self, False, False, True, "EDUCAT", "#9")
+        createVisit(self, False, False, True, "NUTRIT", "#3")
+        
 
         self.stdout.write(self.style.SUCCESS("Visits successfully created!"))

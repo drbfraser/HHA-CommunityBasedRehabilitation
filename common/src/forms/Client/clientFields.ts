@@ -141,6 +141,9 @@ export const clientInitialValues = {
     [ClientField.socialRisk]: "",
     [ClientField.socialRequirements]: "",
     [ClientField.socialGoals]: "",
+    [ClientField.nutritionalRisk]: "",
+    [ClientField.nutritionalRequirements]: "",
+    [ClientField.nutritionalGoals]: "",
     [ClientField.picture]: "",
     [ClientField.pictureChanged]: false,
 };

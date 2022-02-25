@@ -22,6 +22,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="visit",
+            name="nutrit_visit",
+            field=models.BooleanField(default=False),
+        ),
+        migrations.AddField(
+            model_name="visit",
             name="health_visit",
             field=models.BooleanField(default=False),
         ),

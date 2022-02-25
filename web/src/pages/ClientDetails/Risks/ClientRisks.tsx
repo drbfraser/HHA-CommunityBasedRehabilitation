@@ -201,6 +201,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                 {Object.keys(riskTypes).map((type) => {
                     const risk = clientInfo?.risks.find((r) => r.risk_type === type);
 
+                    /* TODO: MARK here, Nutrion related content should be under RISK LEVELS after backend is ready */
                     return (
                         <Grid item md={4} xs={12} key={type}>
                             {risk ? <RiskCard risk={risk} /> : <SkeletonRiskCard />}

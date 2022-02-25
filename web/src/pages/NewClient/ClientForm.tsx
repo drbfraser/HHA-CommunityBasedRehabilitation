@@ -443,6 +443,59 @@ const ClientForm = () => {
                                                 name={ClientField.socialGoals}
                                             />
                                         </Grid>
+                                        {/* NUTRITION */}
+                                        <Grid item md={6} xs={12}>
+                                            <FormControl fullWidth variant="outlined">
+                                                <Field
+                                                    component={TextField}
+                                                    select
+                                                    variant="outlined"
+                                                    required
+                                                    label={
+                                                        clientFieldLabels[ClientField.nutritionalRisk]
+                                                    }
+                                                    name={ClientField.nutritionalRisk}
+                                                >
+                                                    {Object.entries(riskLevels).map(
+                                                        ([value, { name }]) => (
+                                                            <MenuItem key={value} value={value}>
+                                                                {name}
+                                                            </MenuItem>
+                                                        )
+                                                    )}
+                                                </Field>
+                                            </FormControl>
+                                        </Grid>
+
+                                        <Grid item md={8} xs={12}>
+                                            <Field
+                                                component={TextField}
+                                                fullWidth
+                                                multiline
+                                                required
+                                                rows={4}
+                                                variant="outlined"
+                                                label={
+                                                    clientFieldLabels[
+                                                        ClientField.nutritionalRequirements
+                                                    ]
+                                                }
+                                                name={ClientField.nutritionalRequirements}
+                                            />
+                                        </Grid>
+
+                                        <Grid item md={8} xs={12}>
+                                            <Field
+                                                component={TextField}
+                                                fullWidth
+                                                required
+                                                multiline
+                                                rows={4}
+                                                variant="outlined"
+                                                label={clientFieldLabels[ClientField.nutritionalGoals]}
+                                                name={ClientField.nutritionalGoals}
+                                            />
+                                        </Grid>
                                         <br />
                                         <Grid
                                             item

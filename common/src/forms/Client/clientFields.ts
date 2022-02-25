@@ -26,6 +26,9 @@ export enum ClientField {
     socialRisk = "socialRisk",
     socialRequirements = "socialRequirements",
     socialGoals = "socialGoals",
+    nutritionalRisk = "nutritionalRisk",
+    nutritionalRequirements = "nutritionalRequirements",
+    nutritionalGoals = "nutritionalGoals",
     picture = "picture",
     pictureChanged = "pictureChanged",
 
@@ -93,6 +96,9 @@ export const clientFieldLabels = {
     [ClientField.socialRisk]: "Social Risk",
     [ClientField.socialRequirements]: "Social Requirement(s)",
     [ClientField.socialGoals]: "Social Goal(s)",
+    [ClientField.nutritionalRisk]: "Nutritional Risk",
+    [ClientField.nutritionalRequirements]: "Nutritional Requirement(s)",
+    [ClientField.nutritionalGoals]: "Nutritional Goal(s)",
 };
 
 export const updateClientfieldLabels = {

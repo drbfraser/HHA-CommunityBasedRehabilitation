@@ -24,6 +24,7 @@ interface IChartData {
     [RiskType.HEALTH]: IDataPoint[];
     [RiskType.EDUCATION]: IDataPoint[];
     [RiskType.SOCIAL]: IDataPoint[];
+    [RiskType.NUTRITION]: IDataPoint[];
 }
 
 interface IDataPoint {
@@ -36,6 +37,7 @@ const risksToChartData = (risks: IRisk[]) => {
         [RiskType.HEALTH]: [],
         [RiskType.EDUCATION]: [],
         [RiskType.SOCIAL]: [],
+        [RiskType.NUTRITION]: [],
     };
 
     risks.sort((a, b) => a.timestamp - b.timestamp);

@@ -97,6 +97,7 @@ const ClientList = () => {
     const [isHealthHidden, setHealthHidden] = useState<boolean>(false);
     const [isEducationHidden, setEducationHidden] = useState<boolean>(false);
     const [isSocialHidden, setSocialHidden] = useState<boolean>(false);
+    const [isNutritionHidden, setNutritionHidden] = useState<boolean>(false);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
@@ -129,6 +130,10 @@ const ClientList = () => {
         [RiskType.SOCIAL]: {
             hide: isSocialHidden,
             hideFunction: setSocialHidden,
+        },
+        [RiskType.NUTRITION]: {
+            hide: isNutritionHidden,
+            hideFunction: setNutritionHidden,
         },
     };
 

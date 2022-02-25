@@ -139,7 +139,11 @@ const Dashboard = () => {
     /* TODO I have changed it with an existance check, need to reverse it when backend is ready */
     const RenderBadge = (params: ValueFormatterParams) => {
         const risk: RiskLevel = Object(params.value);
-        return <FiberManualRecord style={{ color: riskLevels[risk]?riskLevels[risk].color:'red' }} />;
+        return (
+            <FiberManualRecord
+                style={{ color: riskLevels[risk] ? riskLevels[risk].color : "red" }}
+            />
+        );
     };
 
     const RenderText = (params: ValueFormatterParams) => {

@@ -132,9 +132,9 @@ const ClientList = () => {
             hideFunction: setSocialHidden,
         },
         [RiskType.NUTRITION]: {
-          hide: isNutritionHidden,
-          hideFunction: setNutritionHidden,
-      },
+            hide: isNutritionHidden,
+            hideFunction: setNutritionHidden,
+        },
     };
 
     const sortClientsById = (rows: RowsProp) => {

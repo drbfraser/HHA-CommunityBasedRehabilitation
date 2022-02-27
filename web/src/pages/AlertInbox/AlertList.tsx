@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IAlert } from "@cbr/common/util/alerts";
+import { Time } from "@cbr/common/util/time";
 
 const useStyles = makeStyles({
     selectedListItemStyle: {
@@ -84,6 +85,10 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
         return tempAlerts;
     };
 
+    const convertTimeToDate = (time: Time) => {
+        return new Date(parseInt(time.toString()) * 1000).toLocaleDateString("en-US");
+    };
+
     return (
         <Grid item xs={3} className={style.gridStyle}>
             <h1>Alerts</h1>
@@ -101,11 +106,31 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                         <div key={currAlert.id}>
                             <ListItemText
                                 primary={
-                                    <React.Fragment>
+                                    <div>
+                                        <React.Fragment>
+                                            <Typography
+                                                sx={{
+                                                    display: "inline",
+                                                    fontSize: 18,
+                                                    fontWeight: currAlert.unread_by_users.includes(
+                                                        alertDetailProps.userID
+                                                    )
+                                                        ? "bold"
+                                                        : "small",
+                                                }}
+                                                component="span"
+                                                variant="body2"
+                                                color="text.primary"
+                                                noWrap={false}
+                                            >
+                                                {currAlert.subject}
+                                            </Typography>
+                                        </React.Fragment>
+                                        {"  "}
                                         <Typography
                                             sx={{
                                                 display: "inline",
-                                                fontSize: 16,
+                                                fontSize: 14,
                                                 fontWeight: currAlert.unread_by_users.includes(
                                                     alertDetailProps.userID
                                                 )
@@ -114,14 +139,35 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                             }}
                                             component="span"
                                             variant="body2"
-                                            color="text.primary"
+                                            color="#01579b"
                                             noWrap={false}
                                         >
-                                            {currAlert.subject}
+                                            {currAlert.created_by_user}
                                         </Typography>
-                                    </React.Fragment>
+                                    </div>
                                 }
-                                secondary={RenderBadge(currAlert.priority)}
+                                secondary={
+                                    <div>
+                                        {RenderBadge(currAlert.priority)}{" "}
+                                        <Typography
+                                            sx={{
+                                                display: "inline",
+                                                fontSize: 14,
+                                                fontWeight: currAlert.unread_by_users.includes(
+                                                    alertDetailProps.userID
+                                                )
+                                                    ? "bold"
+                                                    : "small",
+                                            }}
+                                            component="span"
+                                            variant="body2"
+                                            color="#616161"
+                                            noWrap={false}
+                                        >
+                                            {convertTimeToDate(currAlert.created_date)}
+                                        </Typography>
+                                    </div>
+                                }
                                 onClick={() => onAlertSelectionEvent(currAlert.id)}
                                 className={
                                     currAlert.id === alertDetailProps.selectAlert

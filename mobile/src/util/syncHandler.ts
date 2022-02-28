@@ -188,12 +188,14 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 ClientField.health_timestamp,
                 ClientField.educat_timestamp,
                 ClientField.social_timestamp,
+                ClientField.nutrit_timestamp,
             ].some((a) => a !== column)
         ) {
             if (
                 [
                     ClientField.health_risk_level,
                     ClientField.educat_risk_level,
+                    ClientField.nutrit_risk_level,
                     ClientField.social_risk_level,
                 ].some((a) => a === column)
             ) {

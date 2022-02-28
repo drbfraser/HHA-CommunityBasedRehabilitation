@@ -54,6 +54,8 @@ export default class Client extends Model {
     @date(ClientField.social_timestamp) social_timestamp;
     @text(ClientField.educat_risk_level) educat_risk_level;
     @date(ClientField.educat_timestamp) educat_timestamp;
+    @text(ClientField.nutrit_risk_level) nutrit_risk_level;
+    @date(ClientField.nutrit_timestamp) nutrit_timestamp;
     @date(ClientField.last_visit_date) last_visit_date;
 
     @readonly @date(mobileGenericField.created_at) createdAt;
@@ -90,6 +92,11 @@ export default class Client extends Model {
                     client.educat_risk_level = level;
                     client.educat_timestamp = time;
                     break;
+
+                case RiskType.EDUCATION:
+                    client.nutrit_risk_level = level;
+                    client.nutrit_timestamp = time;
+                    break;
             }
         });
     }
@@ -99,6 +106,7 @@ export default class Client extends Model {
             client.educat_timestamp = this.createdAt;
             client.health_timestamp = this.createdAt;
             client.social_timestamp = this.createdAt;
+            client.nutrit_timestamp = this.createdAt;
         });
     }
 

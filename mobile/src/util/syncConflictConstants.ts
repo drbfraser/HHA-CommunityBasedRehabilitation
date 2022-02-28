@@ -29,6 +29,8 @@ export const getCleanClientColumn = (column) => {
             return "Health Risk Level";
         case ClientField.social_risk_level:
             return "Social Risk Level";
+        case ClientField.nutrit_risk_level:
+            return "Nutrition Risk Level";
         default:
             return updateClientfieldLabels[column];
     }
@@ -46,6 +48,7 @@ const clientConflictFields = new Set([
     ClientField.caregiver_present,
     ClientField.disability,
     ClientField.educat_risk_level,
+    ClientField.nutrit_risk_level,
     ClientField.first_name,
     ClientField.gender,
     ClientField.health_risk_level,

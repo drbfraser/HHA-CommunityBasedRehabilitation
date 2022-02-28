@@ -51,6 +51,8 @@ export enum ClientField {
     social_timestamp = "social_timestamp",
     educat_risk_level = "educat_risk_level",
     educat_timestamp = "educat_timestamp",
+    nutrit_risk_level = "nutrit_risk_level",
+    nutrit_timestamp = "nutrit_timestamp",
     last_visit_date = "last_visit_date",
 }
 

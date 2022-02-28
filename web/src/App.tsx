@@ -11,6 +11,7 @@ import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
 import AlertNotification from "./components/Alerts/AlertNotification";
 import { IAlert } from "@cbr/common/util/alerts";
+import AlertOffline from "./components/Alerts/AlertOffline";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
@@ -56,6 +57,7 @@ const App = () => {
 
     return (
         <Router history={history}>
+            <AlertOffline />
             {isLoggedIn === undefined ? (
                 <></>
             ) : (

@@ -172,7 +172,7 @@ test caddy:
 deploy development:
   environment:
     name: development
-    url: https://cbrd.cradleplatform.com
+    url: https://cbr-dev.cmpt.sfu.ca
   stage: deploy
   tags:
     - deploy-development
@@ -185,7 +185,7 @@ deploy development:
 deploy staging:
   environment:
     name: staging
-    url: https://cbrs.cradleplatform.com
+    url: https://cbr-stg.cmpt.sfu.ca
   stage: deploy
   tags:
     - deploy-staging

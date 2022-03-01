@@ -160,7 +160,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                             color="#616161"
                                             noWrap={false}
                                         >
-                                            {timestampToDate(currAlert.created_date*1000)}
+                                            {timestampToDate(currAlert.created_date * 1000)}
                                         </Typography>
                                     </div>
                                 }

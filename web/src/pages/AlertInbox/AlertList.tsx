@@ -11,7 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IAlert } from "@cbr/common/util/alerts";
-import { Time } from "@cbr/common/util/time";
+import { timestampToDate } from "@cbr/common/util/dates";
 
 const useStyles = makeStyles({
     selectedListItemStyle: {
@@ -83,10 +83,6 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
             return b.created_date - a.created_date;
         });
         return tempAlerts;
-    };
-
-    const convertTimeToDate = (time: Time) => {
-        return new Date(parseInt(time.toString()) * 1000).toLocaleDateString("en-US");
     };
 
     return (
@@ -164,7 +160,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                             color="#616161"
                                             noWrap={false}
                                         >
-                                            {convertTimeToDate(currAlert.created_date)}
+                                            {timestampToDate(currAlert.created_date * 1000)}
                                         </Typography>
                                     </div>
                                 }

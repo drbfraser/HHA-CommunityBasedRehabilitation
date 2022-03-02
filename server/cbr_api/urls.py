@@ -60,4 +60,5 @@ urlpatterns = [
     path("alerts", views.AlertList.as_view(), name="alert-list"),
     path("alert/<int:pk>", views.AlertDetail.as_view(), name="alert-detail"),
     url(r"^sync/$", views.sync, name="sync"),
+    url(r"^versioncheck/$", views.version_check, name="version-check")
 ]

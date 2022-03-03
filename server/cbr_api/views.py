@@ -405,13 +405,18 @@ def sync(request):
 
         return Response(status=status.HTTP_201_CREATED)
 
+
 @api_view(["POST"])
 def version_check(request):
-    if request.method == "POST":
-        print(request.data)
-        print(os.environ["API_VERSION"])
+    serializer = serializers.VersionCheckSerializer(data=request.data)
 
-        return Response(status=status.HTTP_200_OK)
-        
-    else:
+    if not serializer.is_valid():
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    mobile_major_version = serializer.data["api_version"].split(".")[0]
+    server_major_version = os.environ["API_VERSION"].split(".")[0]
+
+    if mobile_major_version == server_major_version:
+        return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_403_FORBIDDEN)

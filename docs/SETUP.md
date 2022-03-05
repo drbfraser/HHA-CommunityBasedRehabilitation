@@ -26,7 +26,7 @@ POSTGRES_USER=user
 POSTGRES_PASSWORD=password
 ```
 
-The secret key, username and password are for your local development environment only - feel free to change them. Ensure you don't commit the `.env` file!
+The secret key, username, and password are for your local development environment only - feel free to change them. Ensure you don't commit the `.env` file!
 
 #### Mobile app
 

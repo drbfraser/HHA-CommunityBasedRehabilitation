@@ -28,6 +28,7 @@ from cbr_api.util import (
     stringify_disability,
     destringify_disability,
     decode_image,
+    api_versions_compatible,
 )
 
 
@@ -321,6 +322,14 @@ class AlertDetail(generics.RetrieveUpdateAPIView):
 
 @api_view(["GET", "POST"])
 def sync(request):
+    version_serializer = serializers.VersionCheckSerializer(data=request.data)
+
+    if not version_serializer.is_valid():
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if not api_versions_compatible(version_serializer.data["api_version"]):
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     if request.method == "GET":
         reply = syncResp()
         reply.changes["users"] = get_model_changes(request, models.UserCBR)
@@ -413,10 +422,7 @@ def version_check(request):
     if not serializer.is_valid():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    mobile_major_version = serializer.data["api_version"].split(".")[0]
-    server_major_version = os.environ["API_VERSION"].split(".")[0]
-
-    if mobile_major_version == server_major_version:
+    if api_versions_compatible(serializer.data["api_version"]):
         return Response(status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_403_FORBIDDEN)

@@ -24,10 +24,9 @@ Create a file named `.env` in the root project directory. It should contain the 
 SECRET_KEY=secretkey
 POSTGRES_USER=user
 POSTGRES_PASSWORD=password
-API_VERSION=1.0.0
 ```
 
-The secret key, username, password and API version are for your local development environment only - feel free to change them. Ensure you don't commit the `.env` file!
+The secret key, username, and password are for your local development environment only - feel free to change them. Ensure you don't commit the `.env` file!
 
 #### Mobile app
 

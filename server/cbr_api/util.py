@@ -10,6 +10,7 @@ from django.core.files.base import ContentFile
 
 from cbr_api import models
 
+API_VERSION = "1.0.0"
 
 def client_last_modified_datetime(request, pk, *args):
     return datetime.fromtimestamp(
@@ -242,3 +243,9 @@ def create_referral_data(validated_data, user, sync_time):
     for data in updated_data:
         data["updated_at"] = sync_time
         models.Referral.objects.filter(pk=data["id"]).update(**data)
+
+def api_versions_compatible(mobile_version):
+    mobile_major_version = mobile_version.split(".")[0]
+    server_major_version = API_VERSION.split(".")[0]
+
+    return mobile_major_version == server_major_version

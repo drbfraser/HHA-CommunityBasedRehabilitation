@@ -322,12 +322,12 @@ class AlertDetail(generics.RetrieveUpdateAPIView):
 
 @api_view(["GET", "POST"])
 def sync(request):
-    version_serializer = serializers.VersionCheckSerializer(data=request.data)
+    mobileApiVersion = request.GET.get("api_version")
 
-    if not version_serializer.is_valid():
+    if mobileApiVersion == None:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    if not api_versions_compatible(version_serializer.data["api_version"]):
+    if not api_versions_compatible(mobileApiVersion):
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     if request.method == "GET":

@@ -324,10 +324,7 @@ class AlertDetail(generics.RetrieveUpdateAPIView):
 def sync(request):
     mobileApiVersion = request.GET.get("api_version")
 
-    if mobileApiVersion == None:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    if not api_versions_compatible(mobileApiVersion):
+    if mobileApiVersion == None or not api_versions_compatible(mobileApiVersion):
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     if request.method == "GET":

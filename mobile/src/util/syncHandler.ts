@@ -1,4 +1,10 @@
-import { apiFetch, ClientField, Endpoint, adminUserFieldLabels } from "@cbr/common";
+import {
+    apiFetch,
+    ClientField,
+    Endpoint,
+    adminUserFieldLabels,
+    APIFetchFailError,
+} from "@cbr/common";
 import {
     conflictFields,
     referralLabels,
@@ -21,6 +27,7 @@ import { ISync } from "../screens/Sync/Sync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SyncSettings } from "../screens/Sync/PrefConstants";
 import { modelName } from "../models/constant";
+import { showIncompatibleVersionAlert } from "./incompatibleVersionAlert";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
@@ -32,17 +39,23 @@ export async function checkUnsyncedChanges() {
 
 export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSync: boolean) {
     await NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
-        switch (connectionInfo?.type) {
-            case NetInfoStateType.cellular:
-                if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
-                    await SyncDB(database);
-                }
-                break;
-            case NetInfoStateType.wifi:
-                if (autoSync && connectionInfo?.isInternetReachable) {
-                    await SyncDB(database);
-                }
-                break;
+        try {
+            switch (connectionInfo?.type) {
+                case NetInfoStateType.cellular:
+                    if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
+                        await SyncDB(database);
+                    }
+                    break;
+                case NetInfoStateType.wifi:
+                    if (autoSync && connectionInfo?.isInternetReachable) {
+                        await SyncDB(database);
+                    }
+                    break;
+            }
+        } catch (e) {
+            if (e instanceof APIFetchFailError && e.status === 403) {
+                showIncompatibleVersionAlert();
+            }
         }
     });
 }

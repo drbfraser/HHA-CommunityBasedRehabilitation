@@ -60,10 +60,13 @@ const Dashboard = () => {
                             [RiskType.HEALTH]: row.health_risk_level,
                             [RiskType.EDUCATION]: row.educat_risk_level,
                             [RiskType.SOCIAL]: row.social_risk_level,
+                            [RiskType.NUTRITION]: row.nutrit_risk_level,
                             last_visit_date: row.last_visit_date,
                         };
                     });
-
+                console.log('-----------priorityClientsSTART-----------');
+                console.log(tempClients);
+                console.log('-----------priorityClientsEND-----------');
                 setClients(priorityClients);
             } catch (e) {
                 setClientError(e instanceof Error ? e.message : `${e}`);

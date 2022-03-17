@@ -10,6 +10,7 @@ export interface IClientSummary {
     health_risk_level: string;
     educat_risk_level: string;
     social_risk_level: string;
+    nutrit_risk_level: string;
     last_visit_date: number;
     user_id: number;
 }

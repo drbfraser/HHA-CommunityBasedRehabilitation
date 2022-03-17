@@ -1,4 +1,10 @@
-import { apiFetch, ClientField, Endpoint, adminUserFieldLabels } from "@cbr/common";
+import {
+    apiFetch,
+    ClientField,
+    Endpoint,
+    adminUserFieldLabels,
+    APIFetchFailError,
+} from "@cbr/common";
 import {
     conflictFields,
     referralLabels,
@@ -21,8 +27,11 @@ import { ISync } from "../screens/Sync/Sync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SyncSettings } from "../screens/Sync/PrefConstants";
 import { modelName } from "../models/constant";
+import { showIncompatibleVersionAlert } from "./incompatibleVersionAlert";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
+
+export const mobileApiVersion: string = "1.0.0";
 
 export async function checkUnsyncedChanges() {
     return await hasUnsyncedChanges({ database });
@@ -30,17 +39,23 @@ export async function checkUnsyncedChanges() {
 
 export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSync: boolean) {
     await NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
-        switch (connectionInfo?.type) {
-            case NetInfoStateType.cellular:
-                if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
-                    await SyncDB(database);
-                }
-                break;
-            case NetInfoStateType.wifi:
-                if (autoSync && connectionInfo?.isInternetReachable) {
-                    await SyncDB(database);
-                }
-                break;
+        try {
+            switch (connectionInfo?.type) {
+                case NetInfoStateType.cellular:
+                    if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
+                        await SyncDB(database);
+                    }
+                    break;
+                case NetInfoStateType.wifi:
+                    if (autoSync && connectionInfo?.isInternetReachable) {
+                        await SyncDB(database);
+                    }
+                    break;
+            }
+        } catch (e) {
+            if (e instanceof APIFetchFailError && e.status === 403) {
+                showIncompatibleVersionAlert();
+            }
         }
     });
 }
@@ -49,7 +64,7 @@ export async function SyncDB(database: dbType) {
     await synchronize({
         database,
         pullChanges: async ({ lastPulledAt }) => {
-            const urlParams = `?last_pulled_at=${lastPulledAt}`;
+            const urlParams = `?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
             const response = await apiFetch(Endpoint.SYNC, urlParams);
             if (!response.ok) {
                 throw new Error(await response.text());
@@ -63,7 +78,7 @@ export async function SyncDB(database: dbType) {
         pushChanges: async ({ changes, lastPulledAt }) => {
             console.log("starting push");
             console.log(JSON.stringify(changes));
-            const urlParams = `/?last_pulled_at=${lastPulledAt}`;
+            const urlParams = `/?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
             const init: RequestInit = {
                 method: "POST",
                 body: JSON.stringify(changes),

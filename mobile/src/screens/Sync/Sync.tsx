@@ -1,4 +1,4 @@
-import { themeColors, timestampToDateTime } from "@cbr/common";
+import { themeColors, timestampToDateTime, APIFetchFailError } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useContext, useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { SyncSettings } from "./PrefConstants";
 import { useNetInfo } from "@react-native-community/netinfo";
 import useStyles from "./Sync.styles";
 import { SyncDatabaseTask } from "../../tasks/SyncDatabaseTask";
+import { showIncompatibleVersionAlert } from "../../util/incompatibleVersionAlert";
 
 export interface ISync {
     lastPulledTime: number;
@@ -127,12 +128,18 @@ const Sync = () => {
                         }
                         onPress={() => {
                             try {
-                                SyncDB(database).then(() => {
-                                    setAlertStatus(true);
-                                    setAlertMessage("Synchronization Complete");
-                                    setSyncModal(true);
-                                    updateStats();
-                                });
+                                SyncDB(database)
+                                    .then(() => {
+                                        setAlertStatus(true);
+                                        setAlertMessage("Synchronization Complete");
+                                        setSyncModal(true);
+                                        updateStats();
+                                    })
+                                    .catch((e) => {
+                                        if (e instanceof APIFetchFailError && e.status === 403) {
+                                            showIncompatibleVersionAlert();
+                                        }
+                                    });
                             } catch (e) {
                                 setAlertStatus(false);
                                 setAlertMessage("Synchronization Failure");

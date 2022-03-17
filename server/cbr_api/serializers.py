@@ -203,9 +203,9 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         elif type == models.RiskType.EDUCAT:
             client.educat_risk_level = level
             client.educat_timestamp = current_time
-        elif type == models.RiskType.NUTRIT:
-            client.nutrit_risk_level = level
-            client.nutrit_timestamp = current_time
+        # elif type == models.RiskType.NUTRIT:
+        #     client.nutrit_risk_level = level
+        #     client.nutrit_timestamp = current_time
         client.updated_at = current_time
         client.save()
 

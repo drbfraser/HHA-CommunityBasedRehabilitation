@@ -172,19 +172,19 @@ class Migration(migrations.Migration):
                         max_length=2,
                     ),
                 ),
-                (
-                    "nutrit_risk_level",
-                    models.CharField(
-                        choices=[
-                            ("LO", "Low"),
-                            ("ME", "Medium"),
-                            ("HI", "High"),
-                            ("CR", "Critical"),
-                        ],
-                        default="LO",
-                        max_length=2,
-                    ),
-                ),
+                # (
+                #     "nutrit_risk_level",
+                #     models.CharField(
+                #         choices=[
+                #             ("LO", "Low"),
+                #             ("ME", "Medium"),
+                #             ("HI", "High"),
+                #             ("CR", "Critical"),
+                #         ],
+                #         default="LO",
+                #         max_length=2,
+                #     ),
+                # ),
                 (
                     "created_by_user",
                     models.ForeignKey(

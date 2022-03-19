@@ -102,6 +102,11 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                             ) : (
                                 <></>
                             )}
+                            {formikProps.values.risk_type === RiskType.NUTRITION ? (
+                                <Text style={styles.riskHeaderStyle}>Update Nutrition Risk</Text>
+                            ) : (
+                                <></>
+                            )}
                             <RadioButton.Group
                                 onValueChange={(newValue) =>
                                     formikProps.setFieldValue(FormField.risk_level, newValue)

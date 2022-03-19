@@ -50,7 +50,7 @@ const risksToChartData = (risks: IRisk[]) => {
     });
 
     // add data for the current time
-    [RiskType.HEALTH, RiskType.EDUCATION, RiskType.SOCIAL].forEach((riskType) => {
+    [RiskType.HEALTH, RiskType.EDUCATION, RiskType.SOCIAL, RiskType.NUTRITION].forEach((riskType) => {
         const riskArray = dataObj[riskType];
 
         if (riskArray.length) {
@@ -113,7 +113,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
 
     return (
         <Grid container>
-            {[RiskType.HEALTH, RiskType.EDUCATION, RiskType.SOCIAL].map((riskType) => (
+            {[RiskType.HEALTH, RiskType.EDUCATION, RiskType.SOCIAL, RiskType.NUTRITION].map((riskType) => (
                 <Grid key={riskType} item md={4} xs={12}>
                     <Typography variant="h5" className={styles.textCenter}>
                         {riskTypes[riskType].name} Risk

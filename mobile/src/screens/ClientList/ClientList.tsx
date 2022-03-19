@@ -47,12 +47,14 @@ const ClientList = () => {
     const [showHealthColumn, setShowHealthColumn] = useState(true);
     const [showEducationColumn, setShowEducationColumn] = useState(true);
     const [showSocialColumn, setShowSocialColumn] = useState(true);
+    const [showNutritionColumn, setShowNutritionColumn] = useState(true);
     const [selectedColumn, setSelectedColumn] = useState<String[]>(["0", "1", "2", "3", "4"]);
     const columnShowingList = [
         setShowNameColumn,
         setShowZoneColumn,
         setShowHealthColumn,
         setShowEducationColumn,
+        setShowNutritionColumn,
         setShowSocialColumn,
     ];
 
@@ -65,7 +67,7 @@ const ClientList = () => {
         showSelectedColumn;
     };
 
-    const columnList = { 0: "Name", 1: "Zone", 2: "Health", 3: "Education", 4: "Social" };
+    const columnList = { 0: "Name", 1: "Zone", 2: "Health", 3: "Education", 4: "Social", 5: "Nutrition" };
 
     const clientSortBy = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);
@@ -244,6 +246,12 @@ const ClientList = () => {
                             showTheTitle={showSocialColumn}
                             thisColumnSortOption={SortOptions.SOCIAL}
                         />
+                        <ShowTitle
+                            label={riskTypes.NUTRIT.Icon(themeColors.riskBlack)}
+                            style={styles.columnIcons}
+                            showTheTitle={showNutritionColumn}
+                            thisColumnSortOption={SortOptions.NUTRITION}
+                        />
                     </DataTable.Header>
                     {clientList.map((item) => {
                         return (
@@ -289,6 +297,13 @@ const ClientList = () => {
                                 {showSocialColumn ? (
                                     <DataTable.Cell style={styles.columnIcons}>
                                         {riskTypes.CIRCLE.Icon(item.SocialLevel)}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
+                                {showNutritionColumn ? (
+                                    <DataTable.Cell style={styles.columnIcons}>
+                                        {riskTypes.CIRCLE.Icon(item.NutritionLevel)}
                                     </DataTable.Cell>
                                 ) : (
                                     <View></View>

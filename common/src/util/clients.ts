@@ -54,6 +54,7 @@ export enum SortOptions {
     HEALTH = "health",
     EDUCATION = "education",
     SOCIAL = "social",
+    NUTRITION = "nutrition",
 }
 
 export const genders = {
@@ -63,7 +64,7 @@ export const genders = {
 
 export const clientPrioritySort = (a: IClientSummary, b: IClientSummary) => {
     const getCombinedRisk = (c: IClientSummary) =>
-        [c.health_risk_level, c.educat_risk_level, c.social_risk_level].reduce(
+        [c.health_risk_level, c.educat_risk_level, c.social_risk_level,c.nutrit_risk_level].reduce(
             (sum, r) => sum + riskLevels[r].level,
             0
         );

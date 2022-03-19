@@ -69,6 +69,11 @@ export const handleNewWebClientSubmit = async (
             requirement: values.educationRequirements,
             goal: values.educationGoals,
         },
+        nutrit_risk: {
+            risk_level: values.nutritRisk,
+            requirement: values.nutritRequirements,
+            goal: values.nutritGoals,
+        },
     };
 
     const formData = objectToFormData(newClient);

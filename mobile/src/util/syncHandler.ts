@@ -31,7 +31,7 @@ import { showIncompatibleVersionAlert } from "./incompatibleVersionAlert";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
-export const mobileApiVersion: string = "1.0.0";
+export const mobileApiVersion: string = "2.0.0";
 
 export async function checkUnsyncedChanges() {
     return await hasUnsyncedChanges({ database });
@@ -94,8 +94,37 @@ export async function SyncDB(database: dbType) {
         log: logger.newLog(),
         conflictResolver: conflictResolver,
     }).then(() => {
+        updateLastVersionSynced();
         storeStats();
     });
+}
+
+async function preSyncOperations(database: dbType) {
+    try {
+        if (!await lastVersionSyncedIsCurrentVersion()) {
+            await database.write(async () => {
+                await database.unsafeResetDatabase();
+            });
+        }
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+async function lastVersionSyncedIsCurrentVersion() {
+    let lastVersionSynced = await AsyncStorage.getItem(SyncSettings.VersionLastSynced);
+
+    return (lastVersionSynced !== null && lastVersionSynced === mobileApiVersion);
+}
+
+async function updateLastVersionSynced() {
+    try {
+        if (await lastVersionSyncedIsCurrentVersion()) {
+            await AsyncStorage.setItem(SyncSettings.VersionLastSynced, mobileApiVersion);
+        }
+    } catch(e) {
+        console.error(e);
+    }
 }
 
 async function storeStats() {

@@ -4,7 +4,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { themeColors } from "@cbr/common";
 
-export default function SyncAlert({ displayMode, displayMsg, visibility, dismissAlert }) {
+export default function SyncAlert({ displayMode, displayMsg, displaySubtitle, visibility, dismissAlert }) {
     return (
         <View>
             <Modal visible={visibility} animationType={"fade"} transparent={true}>
@@ -20,7 +20,7 @@ export default function SyncAlert({ displayMode, displayMsg, visibility, dismiss
                         style={{
                             alignItems: "center",
                             backgroundColor: "white",
-                            height: 200,
+                            height: 235,
                             width: "90%",
                             borderWidth: 1,
                             borderColor: "#fff",
@@ -42,7 +42,14 @@ export default function SyncAlert({ displayMode, displayMsg, visibility, dismiss
                                     <MaterialIcons name="cancel" color={"red"} size={80} />
                                 </>
                             )}
-                            <Text style={{ fontSize: 18, marginTop: 5 }}>{displayMsg}</Text>
+                            {displaySubtitle !== "" ? (
+                                <>
+                                    <Text style={{ fontSize: 18, marginTop: 5 }}>{displayMsg}</Text>
+                                    <Text style={{ fontSize: 14, marginTop: 5, textAlign: "center" }}>{displaySubtitle}</Text>
+                                </>
+                            ) : (
+                                <Text style={{ fontSize: 18, marginTop: 24 }}>{displayMsg}</Text>
+                            )}
                         </View>
 
                         <TouchableOpacity

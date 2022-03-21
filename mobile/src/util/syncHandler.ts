@@ -43,11 +43,13 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
             switch (connectionInfo?.type) {
                 case NetInfoStateType.cellular:
                     if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
+                        // await preSyncOperations(database);
                         await SyncDB(database);
                     }
                     break;
                 case NetInfoStateType.wifi:
                     if (autoSync && connectionInfo?.isInternetReachable) {
+                        // await preSyncOperations(database);
                         await SyncDB(database);
                     }
                     break;
@@ -94,17 +96,19 @@ export async function SyncDB(database: dbType) {
         log: logger.newLog(),
         conflictResolver: conflictResolver,
     }).then(() => {
-        updateLastVersionSynced();
+        // updateLastVersionSynced();
         storeStats();
     });
 }
 
-async function preSyncOperations(database: dbType) {
+export async function preSyncOperations(database: dbType) {
     try {
         if (!await lastVersionSyncedIsCurrentVersion()) {
             await database.write(async () => {
                 await database.unsafeResetDatabase();
             });
+
+            await AsyncStorage.removeItem(SyncSettings.SyncStats);
         }
     } catch(e) {
         console.error(e);
@@ -119,7 +123,7 @@ async function lastVersionSyncedIsCurrentVersion() {
 
 async function updateLastVersionSynced() {
     try {
-        if (await lastVersionSyncedIsCurrentVersion()) {
+        if (!await lastVersionSyncedIsCurrentVersion()) {
             await AsyncStorage.setItem(SyncSettings.VersionLastSynced, mobileApiVersion);
         }
     } catch(e) {

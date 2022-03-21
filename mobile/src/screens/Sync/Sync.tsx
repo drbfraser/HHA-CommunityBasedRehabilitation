@@ -6,12 +6,11 @@ import { Alert, SafeAreaView, View } from "react-native";
 import { Button, Divider, Text, Card, Switch } from "react-native-paper";
 import SyncAlert from "../../components/SyncAlert/SyncAlert";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
-import { SyncDB, logger, AutoSyncDB } from "../../util/syncHandler";
+import { SyncDB, logger, AutoSyncDB, preSyncOperations } from "../../util/syncHandler";
 import { SyncSettings } from "./PrefConstants";
 import { useNetInfo } from "@react-native-community/netinfo";
 import useStyles from "./Sync.styles";
 import { SyncDatabaseTask } from "../../tasks/SyncDatabaseTask";
-import { showIncompatibleVersionAlert } from "../../util/incompatibleVersionAlert";
 
 export interface ISync {
     lastPulledTime: number;
@@ -23,6 +22,7 @@ const Sync = () => {
     const styles = useStyles();
     const database = useDatabase();
     const [alertMessage, setAlertMessage] = useState<string>();
+    const [alertSubtitle, setAlertSubtitle] =  useState<string>("");
     const [alertStatus, setAlertStatus] = useState<boolean>();
     const [showSyncModal, setSyncModal] = useState<boolean>(false);
     const { autoSync, setAutoSync, cellularSync, setCellularSync } = useContext(SyncContext);
@@ -35,6 +35,12 @@ const Sync = () => {
         localChanges: 0,
     });
 
+    const resetAlertSubtitleIfVisible = () => {
+        if (alertSubtitle !== "") {
+            setAlertSubtitle("");
+        }
+    };
+
     const resetDatabase = async () => {
         Alert.alert("Alert", "Are you sure you want to reset local database", [
             { text: "Cancel", style: "cancel" },
@@ -46,6 +52,7 @@ const Sync = () => {
                     });
                     setAlertStatus(true);
                     setAlertMessage("Database Reset");
+                    resetAlertSubtitleIfVisible();
                     setSyncModal(true);
                     clearStats();
                 },
@@ -126,23 +133,24 @@ const Sync = () => {
                                 ? true
                                 : false
                         }
-                        onPress={() => {
+                        onPress={async () => {
                             try {
-                                SyncDB(database)
-                                    .then(() => {
-                                        setAlertStatus(true);
-                                        setAlertMessage("Synchronization Complete");
-                                        setSyncModal(true);
-                                        updateStats();
-                                    })
-                                    .catch((e) => {
-                                        if (e instanceof APIFetchFailError && e.status === 403) {
-                                            showIncompatibleVersionAlert();
-                                        }
-                                    });
+                                // await preSyncOperations(database);
+                                await SyncDB(database);
+
+                                setAlertStatus(true);
+                                setAlertMessage("Synchronization Complete");
+                                resetAlertSubtitleIfVisible();
+                                setSyncModal(true);
+                                updateStats();
                             } catch (e) {
                                 setAlertStatus(false);
                                 setAlertMessage("Synchronization Failure");
+
+                                if (e instanceof APIFetchFailError && e.status === 403) {
+                                    setAlertSubtitle("Please download the latest update for HHA CBR from the Google Play Store.");
+                                }
+                                
                                 setSyncModal(true);
                             }
                         }}
@@ -228,6 +236,7 @@ const Sync = () => {
             <SyncAlert
                 displayMode={alertStatus ? "success" : "failed"}
                 displayMsg={alertMessage}
+                displaySubtitle={alertSubtitle}
                 visibility={showSyncModal}
                 dismissAlert={setSyncModal}
             />

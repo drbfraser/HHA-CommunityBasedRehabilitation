@@ -6,13 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0043_client_nutrit_timestamp'),
+        ("cbr_api", "0043_client_nutrit_timestamp"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='client',
-            name='nutrit_risk_level',
-            field=models.CharField(choices=[('LO', 'Low'), ('ME', 'Medium'), ('HI', 'High'), ('CR', 'Critical')], default='LO', max_length=2),
+            model_name="client",
+            name="nutrit_risk_level",
+            field=models.CharField(
+                choices=[
+                    ("LO", "Low"),
+                    ("ME", "Medium"),
+                    ("HI", "High"),
+                    ("CR", "Critical"),
+                ],
+                default="LO",
+                max_length=2,
+            ),
         ),
     ]

@@ -67,7 +67,14 @@ const ClientList = () => {
         showSelectedColumn;
     };
 
-    const columnList = { 0: "Name", 1: "Zone", 2: "Health", 3: "Education", 4: "Social", 5: "Nutrition" };
+    const columnList = {
+        0: "Name",
+        1: "Zone",
+        2: "Health",
+        3: "Education",
+        4: "Social",
+        5: "Nutrition",
+    };
 
     const clientSortBy = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setIsSortDirection);

@@ -54,7 +54,7 @@ class Command(BaseCommand):
             )
 
         def createVisit(self, health, social, educat, nutrit, type, village):
-            console.log("createVisit is called in seedvisits 1");
+            console.log("createVisit is called in seedvisits 1")
             client = random.choice(clients)
 
             date_visited = random.randint(
@@ -80,11 +80,11 @@ class Command(BaseCommand):
                 educat_visit=educat,
                 nutrit_visit=nutrit,
             )
-            console.log("createVisit is called in seedvisits 2");
+            console.log("createVisit is called in seedvisits 2")
             visit.improvements.add(createImprovement(self, visit, type, date_visited))
-            console.log("createVisit is called in seedvisits");
+            console.log("createVisit is called in seedvisits")
             visit.outcomes.add(createOutcome(self, visit, type, date_visited))
-            console.log("createVisit is called in seedvisits 3");
+            console.log("createVisit is called in seedvisits 3")
             return visit
 
         if models.Visit.objects.all().count() > 0:

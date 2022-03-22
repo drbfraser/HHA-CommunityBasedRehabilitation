@@ -133,7 +133,6 @@ class Command(BaseCommand):
             createRisk(self, uuid.uuid4(), client, "EDUCAT", educat_risk, creation_date)
             createRisk(self, uuid.uuid4(), client, "NUTRIT", nutrit_risk, creation_date)
 
-
             client.save()
 
             return client
@@ -171,7 +170,7 @@ class Command(BaseCommand):
 
         clients = models.Client.objects.all()
 
-        risk_types = ["HEALTH", "SOCIAL", "EDUCAT","NUTRIT"]
+        risk_types = ["HEALTH", "SOCIAL", "EDUCAT", "NUTRIT"]
 
         for client in clients:
             num_risks = random.choice(range(1, 3))

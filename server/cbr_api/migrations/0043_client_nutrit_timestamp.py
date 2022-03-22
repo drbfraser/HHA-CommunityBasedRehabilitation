@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0042_auto_20211128_1438'),
+        ("cbr_api", "0042_auto_20211128_1438"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='client',
-            name='nutrit_timestamp',
+            model_name="client",
+            name="nutrit_timestamp",
             field=models.BigIntegerField(default=0),
         ),
     ]

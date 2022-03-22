@@ -32,7 +32,7 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
                 v.health_count,
                 v.educat_count,
                 v.social_count,
-                // v.nutrit_count,
+                v.nutrit_count,
             ]);
         });
 

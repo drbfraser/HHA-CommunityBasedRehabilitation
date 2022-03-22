@@ -481,7 +481,7 @@ class AdminStatsVisitsSerializer(serializers.Serializer):
     health_count = serializers.IntegerField()
     educat_count = serializers.IntegerField()
     social_count = serializers.IntegerField()
-    # nutrit_count = serializers.IntegerField()
+    nutrit_count = serializers.IntegerField()
 
 
 class AdminStatsReferralSerializer(serializers.Serializer):

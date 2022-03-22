@@ -9,11 +9,19 @@ const addVisit = async (visitInfo: string) => {
         body: visitInfo,
     };
 
+    console.log("------ visitInfo ------")
+    console.log(visitInfo)
+    console.log("------ ------ ------")
+
     return await apiFetch(Endpoint.VISITS, "", init)
         .then((res) => {
+            console.log("res.json() = ")
+            // console.log(res.json());
             return res.json();
         })
         .then((res) => {
+            console.log("res = ")
+            // console.log(res);
             return res;
         });
 };
@@ -25,6 +33,7 @@ export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
         health_visit: values[VisitFormField.health],
         educat_visit: values[VisitFormField.education],
         social_visit: values[VisitFormField.social],
+        nutrit_visit: values[VisitFormField.nutrition],
         zone: values[VisitFormField.zone],
         village: values[VisitFormField.village],
         longitude: 0.0,

@@ -9,6 +9,7 @@ export interface IStatsVisit {
     health_count: number;
     educat_count: number;
     social_count: number;
+    // nutrit_count: number;
 }
 
 export interface IStatsReferral {

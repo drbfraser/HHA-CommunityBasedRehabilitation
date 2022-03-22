@@ -40,6 +40,7 @@ const visitTypes: VisitFormField[] = [
     VisitFormField.health,
     VisitFormField.education,
     VisitFormField.social,
+    VisitFormField.nutrition,
 ];
 
 const ImprovementField = (props: {
@@ -280,6 +281,7 @@ const NewVisit = () => {
             })
             .catch(() => {
                 setLoadingError(true);
+                console.log("apiFetch Failed!");
             });
     }, [clientId]);
 
@@ -300,14 +302,18 @@ const NewVisit = () => {
 
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
+            console.log("new submit - 1");
             handleSubmit(values, helpers, setSubmissionError);
+            console.log("new submit - 2");
         } else {
+            console.log("new visit - 1");
             if (activeStep === 0) {
                 helpers.setFieldValue(`${[VisitFormField.client_id]}`, clientId);
             }
             setActiveStep(activeStep + 1);
             helpers.setSubmitting(false);
             helpers.setTouched({});
+            console.log("new visit - 2");
         }
     };
 
@@ -359,7 +365,8 @@ const NewVisit = () => {
                                             !(
                                                 formikProps.values[VisitFormField.health] ||
                                                 formikProps.values[VisitFormField.education] ||
-                                                formikProps.values[VisitFormField.social]
+                                                formikProps.values[VisitFormField.social] ||
+                                                formikProps.values[VisitFormField.nutrition]
                                             )
                                         )}
                                     >

@@ -394,6 +394,7 @@ class OutstandingReferralSerializer(serializers.Serializer):
 
 
 class DetailedVisitSerializer(serializers.ModelSerializer):
+    print("---- CREATE is called 1 ----")
     improvements = ImprovementSerializer(many=True)
     outcomes = OutcomeSerializer(many=True)
 
@@ -407,6 +408,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             "health_visit",
             "educat_visit",
             "social_visit",
+            "nutrit_visit",
             "longitude",
             "latitude",
             "zone",
@@ -418,6 +420,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "user_id", "created_at"]
 
     def create(self, validated_data):
+        print("---- CREATE is called 2 ----")
         current_time = current_milli_time()
 
         improvement_dataset = validated_data.pop("improvements")
@@ -464,6 +467,7 @@ class SummaryVisitSerializer(serializers.ModelSerializer):
             "health_visit",
             "educat_visit",
             "social_visit",
+            "nutrit_visit",
             "longitude",
             "latitude",
             "zone",
@@ -477,6 +481,7 @@ class AdminStatsVisitsSerializer(serializers.Serializer):
     health_count = serializers.IntegerField()
     educat_count = serializers.IntegerField()
     social_count = serializers.IntegerField()
+    # nutrit_count = serializers.IntegerField()
 
 
 class AdminStatsReferralSerializer(serializers.Serializer):

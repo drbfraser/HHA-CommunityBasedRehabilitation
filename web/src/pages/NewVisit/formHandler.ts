@@ -12,11 +12,14 @@ export const handleSubmit = async (
 ) => {
     try {
         await handleSubmitVisitForm(values);
+        console.log("success");
         history.goBack();
     } catch (e) {
         helpers.setSubmitting(false);
         setSubmissionError(
             e instanceof APIFetchFailError ? e.buildFormError(visitFieldLabels) : `${e}`
         );
+        console.log("failed");
+        console.log(e);
     }
 };

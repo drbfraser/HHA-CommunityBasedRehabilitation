@@ -26,6 +26,7 @@ export const riskTypes: { [key: string]: IRiskType } = {
     },
     [RiskType.NUTRITION]: {
         name: "Nutrition",
+        // FIX LATER
         Icon: (color: string) => riskIcon("account-voice", color),
     },
     CIRCLE: {

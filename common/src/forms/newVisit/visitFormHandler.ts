@@ -9,19 +9,11 @@ const addVisit = async (visitInfo: string) => {
         body: visitInfo,
     };
 
-    console.log("------ visitInfo ------")
-    console.log(visitInfo)
-    console.log("------ ------ ------")
-
     return await apiFetch(Endpoint.VISITS, "", init)
         .then((res) => {
-            console.log("res.json() = ")
-            // console.log(res.json());
             return res.json();
         })
         .then((res) => {
-            console.log("res = ")
-            // console.log(res);
             return res;
         });
 };

@@ -6,7 +6,7 @@ import { Alert, SafeAreaView, View } from "react-native";
 import { Button, Divider, Text, Card, Switch } from "react-native-paper";
 import SyncAlert from "../../components/SyncAlert/SyncAlert";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
-import { SyncDB, logger, AutoSyncDB, preSyncOperations } from "../../util/syncHandler";
+import { SyncDB, logger, AutoSyncDB, preSyncOperations, lastVersionSyncedIsCurrentVersion } from "../../util/syncHandler";
 import { SyncSettings } from "./PrefConstants";
 import { useNetInfo } from "@react-native-community/netinfo";
 import useStyles from "./Sync.styles";
@@ -135,14 +135,17 @@ const Sync = () => {
                         }
                         onPress={async () => {
                             try {
-                                // await preSyncOperations(database);
-                                await SyncDB(database);
+                                if (!await lastVersionSyncedIsCurrentVersion()) {
 
-                                setAlertStatus(true);
-                                setAlertMessage("Synchronization Complete");
-                                resetAlertSubtitleIfVisible();
-                                setSyncModal(true);
-                                updateStats();
+                                } else {
+                                    await SyncDB(database);
+
+                                    setAlertStatus(true);
+                                    setAlertMessage("Synchronization Complete");
+                                    resetAlertSubtitleIfVisible();
+                                    setSyncModal(true);
+                                    updateStats();
+                                }
                             } catch (e) {
                                 setAlertStatus(false);
                                 setAlertMessage("Synchronization Failure");

@@ -4,7 +4,13 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { themeColors } from "@cbr/common";
 
-export default function SyncAlert({ displayMode, displayMsg, displaySubtitle, visibility, dismissAlert }) {
+export default function SyncAlert({
+    displayMode,
+    displayMsg,
+    displaySubtitle,
+    visibility,
+    dismissAlert,
+}) {
     return (
         <View>
             <Modal visible={visibility} animationType={"fade"} transparent={true}>
@@ -45,7 +51,11 @@ export default function SyncAlert({ displayMode, displayMsg, displaySubtitle, vi
                             {displaySubtitle !== "" ? (
                                 <>
                                     <Text style={{ fontSize: 18, marginTop: 5 }}>{displayMsg}</Text>
-                                    <Text style={{ fontSize: 14, marginTop: 5, textAlign: "center" }}>{displaySubtitle}</Text>
+                                    <Text
+                                        style={{ fontSize: 14, marginTop: 5, textAlign: "center" }}
+                                    >
+                                        {displaySubtitle}
+                                    </Text>
                                 </>
                             ) : (
                                 <Text style={{ fontSize: 18, marginTop: 24 }}>{displayMsg}</Text>

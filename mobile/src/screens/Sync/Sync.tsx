@@ -6,11 +6,18 @@ import { Alert, SafeAreaView, View } from "react-native";
 import { Button, Divider, Text, Card, Switch } from "react-native-paper";
 import SyncAlert from "../../components/SyncAlert/SyncAlert";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
-import { SyncDB, logger, AutoSyncDB, preSyncOperations, lastVersionSyncedIsCurrentVersion } from "../../util/syncHandler";
+import {
+    SyncDB,
+    logger,
+    AutoSyncDB,
+    preSyncOperations,
+    lastVersionSyncedIsCurrentVersion,
+} from "../../util/syncHandler";
 import { SyncSettings } from "./PrefConstants";
 import { useNetInfo } from "@react-native-community/netinfo";
 import useStyles from "./Sync.styles";
 import { SyncDatabaseTask } from "../../tasks/SyncDatabaseTask";
+import SyncUpdateAlert from "../../components/SyncUpdateAlert.tsx/SyncUpdateAlert";
 
 export interface ISync {
     lastPulledTime: number;
@@ -22,9 +29,10 @@ const Sync = () => {
     const styles = useStyles();
     const database = useDatabase();
     const [alertMessage, setAlertMessage] = useState<string>();
-    const [alertSubtitle, setAlertSubtitle] =  useState<string>("");
+    const [alertSubtitle, setAlertSubtitle] = useState<string>("");
     const [alertStatus, setAlertStatus] = useState<boolean>();
     const [showSyncModal, setSyncModal] = useState<boolean>(false);
+    const [showSyncUpdateModal, setSyncUpdateModal] = useState<boolean>(false);
     const { autoSync, setAutoSync, cellularSync, setCellularSync } = useContext(SyncContext);
     const netInfo = useNetInfo();
 
@@ -135,8 +143,8 @@ const Sync = () => {
                         }
                         onPress={async () => {
                             try {
-                                if (!await lastVersionSyncedIsCurrentVersion()) {
-
+                                if (!(await lastVersionSyncedIsCurrentVersion())) {
+                                    setSyncUpdateModal(true);
                                 } else {
                                     await SyncDB(database);
 
@@ -151,9 +159,11 @@ const Sync = () => {
                                 setAlertMessage("Synchronization Failure");
 
                                 if (e instanceof APIFetchFailError && e.status === 403) {
-                                    setAlertSubtitle("Please download the latest update for HHA CBR from the Google Play Store.");
+                                    setAlertSubtitle(
+                                        "Please download the latest update for HHA CBR from the Google Play Store."
+                                    );
                                 }
-                                
+
                                 setSyncModal(true);
                             }
                         }}
@@ -243,6 +253,7 @@ const Sync = () => {
                 visibility={showSyncModal}
                 dismissAlert={setSyncModal}
             />
+            <SyncUpdateAlert visibility={showSyncUpdateModal} dismissAlert={setSyncUpdateModal} />
         </SafeAreaView>
     );
 };

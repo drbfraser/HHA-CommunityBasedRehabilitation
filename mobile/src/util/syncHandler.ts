@@ -43,7 +43,7 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
             switch (connectionInfo?.type) {
                 case NetInfoStateType.cellular:
                     if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
-                        if (!await lastVersionSyncedIsCurrentVersion()) {
+                        if (!(await lastVersionSyncedIsCurrentVersion())) {
                             showAutoSyncFailedAlert();
                         } else {
                             await SyncDB(database);
@@ -52,7 +52,7 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
                     break;
                 case NetInfoStateType.wifi:
                     if (autoSync && connectionInfo?.isInternetReachable) {
-                        if (!await lastVersionSyncedIsCurrentVersion()) {
+                        if (!(await lastVersionSyncedIsCurrentVersion())) {
                             showAutoSyncFailedAlert();
                         } else {
                             await SyncDB(database);
@@ -112,14 +112,14 @@ export async function SyncDB(database: dbType) {
 
 export async function preSyncOperations(database: dbType) {
     try {
-        if (!await lastVersionSyncedIsCurrentVersion()) {
+        if (!(await lastVersionSyncedIsCurrentVersion())) {
             await database.write(async () => {
                 await database.unsafeResetDatabase();
             });
 
             await AsyncStorage.removeItem(SyncSettings.SyncStats);
         }
-    } catch(e) {
+    } catch (e) {
         console.error(e);
     }
 }
@@ -134,15 +134,15 @@ function showAutoSyncFailedAlert() {
 export async function lastVersionSyncedIsCurrentVersion() {
     let lastVersionSynced = await AsyncStorage.getItem(SyncSettings.VersionLastSynced);
 
-    return (lastVersionSynced !== null && lastVersionSynced === mobileApiVersion);
+    return lastVersionSynced !== null && lastVersionSynced === mobileApiVersion;
 }
 
 async function updateLastVersionSynced() {
     try {
-        if (!await lastVersionSyncedIsCurrentVersion()) {
+        if (!(await lastVersionSyncedIsCurrentVersion())) {
             await AsyncStorage.setItem(SyncSettings.VersionLastSynced, mobileApiVersion);
         }
-    } catch(e) {
+    } catch (e) {
         console.error(e);
     }
 }

@@ -10,7 +10,6 @@ import {
     SyncDB,
     logger,
     AutoSyncDB,
-    preSyncOperations,
     lastVersionSyncedIsCurrentVersion,
 } from "../../util/syncHandler";
 import { SyncSettings } from "./PrefConstants";
@@ -116,6 +115,45 @@ const Sync = () => {
         } catch (e) {}
     };
 
+    const performSync = async () => {
+        await SyncDB(database);
+
+        setAlertStatus(true);
+        setAlertMessage("Synchronization Complete");
+        resetAlertSubtitleIfVisible();
+        setSyncModal(true);
+        updateStats();
+    };
+
+    const handleSyncError = (e) => {
+        setAlertStatus(false);
+        setAlertMessage("Synchronization Failure");
+
+        if (e instanceof APIFetchFailError && e.status === 403) {
+            setAlertSubtitle(
+                "Please download the latest update for HHA CBR from the Google Play Store."
+            );
+        }
+
+        setSyncModal(true);
+    };
+
+    const onSyncUpdateModalShutdown = async () => {
+        setSyncUpdateModal(false);
+
+        try {
+            await resetDatabaseAndSync();
+        } catch (e) {}
+    };
+
+    const resetDatabaseAndSync = async () => {
+        await database.write(async () => {
+            await database.unsafeResetDatabase();
+        });
+
+        await performSync();
+    };
+
     useEffect(() => {
         if (loading) {
             retreiveStats().then(() => {
@@ -146,25 +184,10 @@ const Sync = () => {
                                 if (!(await lastVersionSyncedIsCurrentVersion())) {
                                     setSyncUpdateModal(true);
                                 } else {
-                                    await SyncDB(database);
-
-                                    setAlertStatus(true);
-                                    setAlertMessage("Synchronization Complete");
-                                    resetAlertSubtitleIfVisible();
-                                    setSyncModal(true);
-                                    updateStats();
+                                    await performSync();
                                 }
                             } catch (e) {
-                                setAlertStatus(false);
-                                setAlertMessage("Synchronization Failure");
-
-                                if (e instanceof APIFetchFailError && e.status === 403) {
-                                    setAlertSubtitle(
-                                        "Please download the latest update for HHA CBR from the Google Play Store."
-                                    );
-                                }
-
-                                setSyncModal(true);
+                                handleSyncError(e);
                             }
                         }}
                     >
@@ -253,7 +276,11 @@ const Sync = () => {
                 visibility={showSyncModal}
                 dismissAlert={setSyncModal}
             />
-            <SyncUpdateAlert visibility={showSyncUpdateModal} dismissAlert={setSyncUpdateModal} />
+            <SyncUpdateAlert
+                visibility={showSyncUpdateModal}
+                dismissAlert={setSyncUpdateModal}
+                onConfirm={onSyncUpdateModalShutdown}
+            />
         </SafeAreaView>
     );
 };

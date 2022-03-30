@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, Text, View, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import { themeColors } from "@cbr/common";
 
-export default function SyncUpdateAlert({ visibility, dismissAlert }) {
+export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm }) {
     const [syncConfirmed, setSyncConfirmed] = useState<boolean>(false);
 
     const styles = StyleSheet.create({
@@ -121,7 +121,7 @@ export default function SyncUpdateAlert({ visibility, dismissAlert }) {
                                                 : styles.disabledButton
                                         }
                                         disabled={!syncConfirmed}
-                                        onPress={() => {}}
+                                        onPress={() => onConfirm()}
                                     >
                                         <Text style={{ color: "white" }}>CONFIRM</Text>
                                     </TouchableOpacity>

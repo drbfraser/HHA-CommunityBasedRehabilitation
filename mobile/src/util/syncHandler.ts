@@ -105,7 +105,7 @@ export async function SyncDB(database: dbType) {
         log: logger.newLog(),
         conflictResolver: conflictResolver,
     }).then(() => {
-        // updateLastVersionSynced();
+        updateLastVersionSynced();
         storeStats();
     });
 }

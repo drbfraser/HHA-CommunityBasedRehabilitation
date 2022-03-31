@@ -292,6 +292,11 @@ const NewReferral = () => {
             Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.orthotic),
             validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.orthotic),
         },
+        [ReferralFormField.hhaNutritionAndAgricultureProject]: {
+            label: `${referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]} Visit`,
+            Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.hhaNutritionAndAgricultureProject),
+            validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.hhaNutritionAndAgricultureProject),
+        },
         [ReferralFormField.servicesOther]: {
             label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,
             Form: OtherServicesForm,

@@ -18,6 +18,11 @@ export interface IReferral {
     prosthetic_injury_location: InjuryLocation;
     orthotic: boolean;
     orthotic_injury_location: InjuryLocation;
+
+    hha_nutrition_and_agriculture_project: boolean;
+    emergency_food_aid: boolean;
+    agriculture_livelihood_program_enrollment: boolean;
+
     services_other: string;
 }
 

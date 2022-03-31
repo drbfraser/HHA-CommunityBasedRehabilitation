@@ -43,6 +43,11 @@ export enum ReferralFormField {
     prostheticInjuryLocation = "prosthetic_injury_location",
     orthotic = "orthotic",
     orthoticInjuryLocation = "orthotic_injury_location",
+
+    hhaNutritionAndAgricultureProject = "hha_nutrition_and_agriculture_project",
+    emergencyFoodAidRequired = "emergency_food_aid",
+    agricultureLivelihoodProgramEnrollment = "agriculture_livelihood_program_enrollment",
+    
     servicesOther = "services_other",
     otherDescription = "other_description",
 }
@@ -52,6 +57,9 @@ export const referralServicesTypes = [
     ReferralFormField.physiotherapy,
     ReferralFormField.prosthetic,
     ReferralFormField.orthotic,
+
+    ReferralFormField.hhaNutritionAndAgricultureProject,
+
     ReferralFormField.servicesOther,
 ];
 
@@ -70,6 +78,11 @@ export const referralFieldLabels = {
     [ReferralFormField.prostheticInjuryLocation]: "Prosthetic Injury Location",
     [ReferralFormField.orthotic]: "Orthotic",
     [ReferralFormField.orthoticInjuryLocation]: "Orthotic Injury Location",
+
+    [ReferralFormField.hhaNutritionAndAgricultureProject]: "HHA Nutrition/Agriculture Project",
+    [ReferralFormField.emergencyFoodAidRequired]: "Emergency Food Aid",
+    [ReferralFormField.agricultureLivelihoodProgramEnrollment]: "Agriculture Livelihood Program Enrollment",
+
     [ReferralFormField.servicesOther]: "Other Services",
     [ReferralFormField.otherDescription]: "Service Description",
 };
@@ -89,6 +102,11 @@ export const referralInitialValues = {
     [ReferralFormField.prostheticInjuryLocation]: InjuryLocation.BELOW,
     [ReferralFormField.orthotic]: false,
     [ReferralFormField.orthoticInjuryLocation]: InjuryLocation.BELOW,
+
+    [ReferralFormField.hhaNutritionAndAgricultureProject]: false,
+    [ReferralFormField.emergencyFoodAidRequired]: false,
+    [ReferralFormField.agricultureLivelihoodProgramEnrollment]: false,
+
     [ReferralFormField.servicesOther]: false,
     [ReferralFormField.otherDescription]: "",
 };
@@ -155,6 +173,7 @@ export const serviceTypes: ReferralFormField[] = [
     ReferralFormField.physiotherapy,
     ReferralFormField.prosthetic,
     ReferralFormField.orthotic,
+    ReferralFormField.hhaNutritionAndAgricultureProject,
     ReferralFormField.servicesOther,
 ];
 

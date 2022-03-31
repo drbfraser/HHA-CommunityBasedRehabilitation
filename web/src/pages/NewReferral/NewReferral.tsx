@@ -239,6 +239,32 @@ const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormFiel
     );
 };
 
+const NutritionForm = (props: IFormProps) => {
+  // const styles = useStyles();
+  // const disabilities = useDisabilities();
+
+  return (
+      <div>
+          <FormLabel>What condition does the client have?</FormLabel>
+          <br />
+          <br />
+          <div className={styles.fieldIndent}>
+            <Field
+              component={CheckboxWithLabel}
+              type="checkbox"
+              key={referralFieldLabels[ReferralFormField.emergencyFoodAidRequired]}
+              name={referralFieldLabels[ReferralFormField.emergencyFoodAidRequired]}
+              Label={referralFieldLabels[ReferralFormField.emergencyFoodAidRequired]}
+              onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                  // props.formikProps.handleChange(event);
+                  // onCheckboxChange(event.currentTarget.checked, serviceType);
+              }}
+          />
+          </div>
+      </div>
+  );
+};
+
 const OtherServicesForm = () => {
     const styles = useStyles();
 

@@ -248,7 +248,7 @@ const NutritionForm = (props: IFormProps) => {
           <FormLabel>What condition does the client have?</FormLabel>
           <br />
           <br />
-          <div className={styles.fieldIndent}>
+          <div>
             <Field
               component={CheckboxWithLabel}
               type="checkbox"

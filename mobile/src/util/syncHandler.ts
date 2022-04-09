@@ -27,11 +27,11 @@ import { ISync } from "../screens/Sync/Sync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SyncSettings } from "../screens/Sync/PrefConstants";
 import { modelName } from "../models/constant";
-import { showIncompatibleVersionAlert } from "./incompatibleVersionAlert";
+import { showGenericAlert } from "./genericAlert";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
-export const mobileApiVersion: string = "1.0.0";
+export const mobileApiVersion: string = "2.0.0";
 
 export async function checkUnsyncedChanges() {
     return await hasUnsyncedChanges({ database });
@@ -43,18 +43,29 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
             switch (connectionInfo?.type) {
                 case NetInfoStateType.cellular:
                     if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
-                        await SyncDB(database);
+                        if (!(await lastVersionSyncedIsCurrentVersion())) {
+                            showAutoSyncFailedAlert();
+                        } else {
+                            await SyncDB(database);
+                        }
                     }
                     break;
                 case NetInfoStateType.wifi:
                     if (autoSync && connectionInfo?.isInternetReachable) {
-                        await SyncDB(database);
+                        if (!(await lastVersionSyncedIsCurrentVersion())) {
+                            showAutoSyncFailedAlert();
+                        } else {
+                            await SyncDB(database);
+                        }
                     }
                     break;
             }
         } catch (e) {
             if (e instanceof APIFetchFailError && e.status === 403) {
-                showIncompatibleVersionAlert();
+                showGenericAlert(
+                    "Sync Is Not Compatible With Your Current Version Of CBR",
+                    "Please install the newest update of CBR on the Google Play Store."
+                );
             }
         }
     });
@@ -94,8 +105,46 @@ export async function SyncDB(database: dbType) {
         log: logger.newLog(),
         conflictResolver: conflictResolver,
     }).then(() => {
+        updateLastVersionSynced();
         storeStats();
     });
+}
+
+export async function preSyncOperations(database: dbType) {
+    try {
+        if (!(await lastVersionSyncedIsCurrentVersion())) {
+            await database.write(async () => {
+                await database.unsafeResetDatabase();
+            });
+
+            await AsyncStorage.removeItem(SyncSettings.SyncStats);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+function showAutoSyncFailedAlert() {
+    showGenericAlert(
+        "Automatic Sync Failed",
+        "Please perform a manual sync to resolve this issue."
+    );
+}
+
+export async function lastVersionSyncedIsCurrentVersion() {
+    let lastVersionSynced = await AsyncStorage.getItem(SyncSettings.VersionLastSynced);
+
+    return lastVersionSynced !== null && lastVersionSynced === mobileApiVersion;
+}
+
+async function updateLastVersionSynced() {
+    try {
+        if (!(await lastVersionSyncedIsCurrentVersion())) {
+            await AsyncStorage.setItem(SyncSettings.VersionLastSynced, mobileApiVersion);
+        }
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 async function storeStats() {

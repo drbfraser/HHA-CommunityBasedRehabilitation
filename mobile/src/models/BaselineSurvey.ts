@@ -2,8 +2,10 @@ import { BaseSurveyField } from "@cbr/common";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 import { Model } from "@nozbe/watermelondb";
 import { field, text, relation } from "@nozbe/watermelondb/decorators";
+import Client from "./Client";
+import { SyncableModel } from "./interfaces/SyncableModel";
 
-export default class BaselineSurvey extends Model {
+export default class BaselineSurvey extends Model implements SyncableModel {
     static table = modelName.surveys;
     static associations = {
         clients: { type: mobileGenericField.belongs_to, key: tableKey.client_id },
@@ -47,4 +49,10 @@ export default class BaselineSurvey extends Model {
 
     @relation(modelName.clients, tableKey.client_id) client;
     @relation(modelName.users, tableKey.user_id) user;
+
+    getBriefIdentifier = (): string => {
+        const fetchedClient: Client = this.client.fetch();
+
+        return `Survey belonging to ${fetchedClient.getBriefIdentifier()}`;
+    }
 }

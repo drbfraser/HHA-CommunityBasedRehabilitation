@@ -3,6 +3,7 @@ import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common";
 import { mobileApiVersion } from "../../util/syncHandler";
 import { Modal, Text, View, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import { themeColors } from "@cbr/common";
+import LocalChangeList from "./LocalChangeList";
 
 export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm }) {
     const [syncConfirmed, setSyncConfirmed] = useState<boolean>(false);
@@ -106,6 +107,7 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                                 <Text style={styles.modalText}>
                                     You should use the web app to recreate any local changes.
                                 </Text>
+                                <LocalChangeList />
                                 <Text style={styles.modalText}>
                                     Note that this will only affect local data, any settings that
                                     have previously been set will be unaffected.

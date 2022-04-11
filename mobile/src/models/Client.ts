@@ -110,6 +110,6 @@ export default class Client extends Model implements SyncableModel {
     }
 
     getBriefIdentifier = (): string => {
-        return `Client with full name ${this.full_name}`;
-    }
+        return `Client with name ${this.full_name}`;
+    };
 }

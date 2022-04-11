@@ -44,9 +44,9 @@ export default class Referral extends Model implements SyncableModel {
         });
     }
 
-    getBriefIdentifier = (): string => {
-        const fetchedClient: Client = this.client.fetch();
+    getBriefIdentifier = async (): Promise<string> => {
+        const fetchedClient: Client = await this.client.fetch();
 
         return `Referral belonging to ${fetchedClient.getBriefIdentifier()}`;
-    }
+    };
 }

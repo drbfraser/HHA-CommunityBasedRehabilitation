@@ -50,9 +50,9 @@ export default class BaselineSurvey extends Model implements SyncableModel {
     @relation(modelName.clients, tableKey.client_id) client;
     @relation(modelName.users, tableKey.user_id) user;
 
-    getBriefIdentifier = (): string => {
-        const fetchedClient: Client = this.client.fetch();
+    getBriefIdentifier = async (): Promise<string> => {
+        const fetchedClient: Client = await this.client.fetch();
 
         return `Survey belonging to ${fetchedClient.getBriefIdentifier()}`;
-    }
+    };
 }

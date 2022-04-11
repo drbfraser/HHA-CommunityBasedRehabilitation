@@ -17,9 +17,10 @@ export default class Improvement extends Model implements SyncableModel {
 
     @relation(modelName.visits, tableKey.visit_id) visit;
 
-    getBriefIdentifier = (): string => {
-        const fetchedVisit: Visit = this.visit.fetch();
+    getBriefIdentifier = async (): Promise<string> => {
+        const fetchedVisit: Visit = await this.visit.fetch();
+        const visitIdentifier: string = await fetchedVisit.getBriefIdentifier();
 
-        return `Improvement belonging to ${fetchedVisit.getBriefIdentifier()}`;
-    }
+        return `Improvement from ${visitIdentifier}`;
+    };
 }

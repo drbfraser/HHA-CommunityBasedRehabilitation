@@ -38,5 +38,5 @@ export default class User extends Model implements SyncableModel {
 
     getBriefIdentifier = (): string => {
         return `User with username ${this.username}`;
-    }
+    };
 }

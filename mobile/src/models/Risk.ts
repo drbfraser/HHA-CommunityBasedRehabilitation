@@ -20,9 +20,9 @@ export default class Risk extends Model implements SyncableModel {
 
     @relation(modelName.clients, tableKey.client_id) client;
 
-    getBriefIdentifier = (): string => {
-        const fetchedClient: Client = this.client.fetch;
+    getBriefIdentifier = async (): Promise<string> => {
+        const fetchedClient: Client = await this.client.fetch;
 
         return `Risk belonging to ${fetchedClient.getBriefIdentifier()}`;
-    }
+    };
 }

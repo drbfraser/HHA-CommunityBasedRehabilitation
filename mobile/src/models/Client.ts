@@ -15,12 +15,13 @@ import { writer } from "@nozbe/watermelondb/decorators/action";
 import { Q } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 import { ReferralField } from "@cbr/common";
+import { SyncableModel } from "./interfaces/SyncableModel";
 
 const sanitizeDisability = (rawDisability) => {
     return Array.isArray(rawDisability) ? rawDisability.map(Number) : [];
 };
 
-export default class Client extends Model {
+export default class Client extends Model implements SyncableModel {
     static table = modelName.clients;
     static associations = {
         users: { type: mobileGenericField.belongs_to, key: tableKey.user_id },
@@ -107,4 +108,8 @@ export default class Client extends Model {
             client.last_visit_date = visitTime;
         });
     }
+
+    getBriefIdentifier = (): string => {
+        return `Client with name ${this.full_name}`;
+    };
 }

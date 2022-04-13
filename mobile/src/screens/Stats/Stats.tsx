@@ -99,8 +99,9 @@ const Stats = () => {
             VisitField.health_visit,
             VisitField.social_visit,
             VisitField.educat_visit,
+            VisitField.nutrit_visit,
         ];
-        const visitName = ["Health", "Social", "Education"];
+        const visitName = ["Health", "Social", "Education", "Nutrition"];
         var index = 0;
         pieData = [];
         for (const type of visitType) {

@@ -160,6 +160,7 @@ export default appSchema({
                 { name: VisitField.health_visit, type: "boolean" },
                 { name: VisitField.educat_visit, type: "boolean" },
                 { name: VisitField.social_visit, type: "boolean" },
+                { name: VisitField.nutrit_visit, type: "boolean" },
                 { name: VisitField.longitude, type: "string", isOptional: true },
                 { name: VisitField.latitude, type: "string", isOptional: true },
                 { name: VisitField.zone, type: "number" },

@@ -70,9 +70,9 @@ export const handleNewWebClientSubmit = async (
             goal: values.educationGoals,
         },
         nutrit_risk: {
-            risk_level: values.nutritRisk,
-            requirement: values.nutritRequirements,
-            goal: values.nutritGoals,
+            risk_level: values.nutritionRisk,
+            requirement: values.nutritionRequirements,
+            goal: values.nutritionGoals,
         },
     };
 

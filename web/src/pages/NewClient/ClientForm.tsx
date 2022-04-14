@@ -452,9 +452,9 @@ const ClientForm = () => {
                                                     variant="outlined"
                                                     required
                                                     label={
-                                                        clientFieldLabels[ClientField.nutritRisk]
+                                                        clientFieldLabels[ClientField.nutritionRisk]
                                                     }
-                                                    name={ClientField.nutritRisk}
+                                                    name={ClientField.nutritionRisk}
                                                 >
                                                     {Object.entries(riskLevels).map(
                                                         ([value, { name }]) => (
@@ -477,10 +477,10 @@ const ClientForm = () => {
                                                 variant="outlined"
                                                 label={
                                                     clientFieldLabels[
-                                                        ClientField.nutritRequirements
+                                                        ClientField.nutritionRequirements
                                                     ]
                                                 }
-                                                name={ClientField.nutritRequirements}
+                                                name={ClientField.nutritionRequirements}
                                             />
                                         </Grid>
 
@@ -492,8 +492,10 @@ const ClientForm = () => {
                                                 multiline
                                                 rows={4}
                                                 variant="outlined"
-                                                label={clientFieldLabels[ClientField.nutritGoals]}
-                                                name={ClientField.nutritGoals}
+                                                label={
+                                                    clientFieldLabels[ClientField.nutritionGoals]
+                                                }
+                                                name={ClientField.nutritionGoals}
                                             />
                                         </Grid>
                                         <br />

@@ -45,7 +45,7 @@ const createPossibleClientsWithASingleExtremeRisk = (riskLevel: RiskLevel): ICli
 describe("clients.ts", () => {
     describe("clientPrioritySort", () => {
         it("should sort correctly by risk level if they're different", () => {
-            // 1 high > 3 mediums, as specified by customer
+            // 1 high = 4 mediums, need to confirm with the customer
             const clientsWithOneHighRisk: IClientSummary[] =
                 createPossibleClientsWithASingleExtremeRisk(RiskLevel.HIGH);
             const clientWithThreeMediumRisk = createClientWithAllRisksAsGivenLevel(

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0044_client_nutrit_risk_level'),
+        ("cbr_api", "0044_client_nutrit_risk_level"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='visit',
-            name='nutrit_visit',
+            model_name="visit",
+            name="nutrit_visit",
             field=models.BooleanField(default=False),
         ),
     ]

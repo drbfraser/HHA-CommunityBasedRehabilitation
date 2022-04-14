@@ -75,11 +75,6 @@ const ClientDetails = () => {
                 </Grid>
             </Grid>
 
-            {console.log("--------- HIGHLIGHT1 ---------")}
-            
-            {console.log(clientInfo)}
-
-            {console.log("--------- HIGHLIGHT2 ---------")}
             <ClientRisks clientInfo={clientInfo} />
 
             <Grid item xs={12}>

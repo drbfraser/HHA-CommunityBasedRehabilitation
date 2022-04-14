@@ -28,15 +28,6 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
     const RiskEntry = ({ risk, isInitial }: IEntryProps) => {
         const [expanded, setExpanded] = useState(false);
         const riskType = riskTypes[risk.risk_type];
-        
-        console.log("risk.risk_type = " );
-        console.log(risk.risk_type);
-
-        console.log("riskTypes = " );
-        console.log(riskTypes);
-
-        console.log("riskType = " );
-        console.log(riskType);
 
         const Summary = ({ clickable }: { clickable?: boolean }) => (
             <>

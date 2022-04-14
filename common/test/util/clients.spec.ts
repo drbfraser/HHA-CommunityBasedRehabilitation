@@ -3,7 +3,11 @@ import { RiskLevel } from "../../src/util/risks";
 
 const unusedClientSummaryProps: Omit<
     IClientSummary,
-    "health_risk_level" | "educat_risk_level" | "social_risk_level" | "nutrit_risk_level" | "last_visit_date"
+    | "health_risk_level"
+    | "educat_risk_level"
+    | "social_risk_level"
+    | "nutrit_risk_level"
+    | "last_visit_date"
 > = {
     id: 0,
     full_name: "",

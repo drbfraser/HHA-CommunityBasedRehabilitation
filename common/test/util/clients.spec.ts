@@ -21,7 +21,7 @@ const createClientWithAllRisksAsGivenLevel = (riskLevel: RiskLevel): IClientSumm
         health_risk_level: riskLevel,
         educat_risk_level: riskLevel,
         social_risk_level: riskLevel,
-        nutrit_risk_level: riskLevel,
+        nutrit_risk_level: RiskLevel.LOW,
         last_visit_date: 0,
     };
 };
@@ -45,7 +45,7 @@ const createPossibleClientsWithASingleExtremeRisk = (riskLevel: RiskLevel): ICli
 describe("clients.ts", () => {
     describe("clientPrioritySort", () => {
         it("should sort correctly by risk level if they're different", () => {
-            // 1 high = 4 mediums, need to confirm with the customer
+            // 1 high > 3 mediums, as specified by customer
             const clientsWithOneHighRisk: IClientSummary[] =
                 createPossibleClientsWithASingleExtremeRisk(RiskLevel.HIGH);
             const clientWithThreeMediumRisk = createClientWithAllRisksAsGivenLevel(
@@ -54,8 +54,12 @@ describe("clients.ts", () => {
 
             // descending order
             for (const highRiskClient of clientsWithOneHighRisk) {
-                expect(clientPrioritySort(clientWithThreeMediumRisk, highRiskClient)).toBe(0);
-                expect(clientPrioritySort(highRiskClient, clientWithThreeMediumRisk)).toBe(0);
+                expect(
+                    clientPrioritySort(clientWithThreeMediumRisk, highRiskClient)
+                ).toBeGreaterThan(0);
+                expect(clientPrioritySort(highRiskClient, clientWithThreeMediumRisk)).toBeLessThan(
+                    0
+                );
             }
 
             // 1 critical > 3 highs, as specified by customer

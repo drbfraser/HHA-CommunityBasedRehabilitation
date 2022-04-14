@@ -54,12 +54,8 @@ describe("clients.ts", () => {
 
             // descending order
             for (const highRiskClient of clientsWithOneHighRisk) {
-                expect(
-                    clientPrioritySort(clientWithThreeMediumRisk, highRiskClient)
-                ).toBe(0);
-                expect(clientPrioritySort(highRiskClient, clientWithThreeMediumRisk)).toBeLessThan(
-                    0
-                );
+                expect(clientPrioritySort(clientWithThreeMediumRisk, highRiskClient)).toBe(0);
+                expect(clientPrioritySort(highRiskClient, clientWithThreeMediumRisk)).toBe(0);
             }
 
             // 1 critical > 3 highs, as specified by customer

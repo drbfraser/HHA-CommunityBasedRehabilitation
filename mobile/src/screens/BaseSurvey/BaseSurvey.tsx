@@ -130,6 +130,11 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
             validationSchema: livelihoodValidationSchema,
         },
         {
+            label: "Food and Nutrition",
+            Form: (formikProps) => FoodForm(formikProps),
+            validationSchema: foodValidationSchema,
+        },
+        {
             label: "Empowerment",
             Form: (formikProps) => EmpowermentForm(formikProps),
             validationSchema: empowermentValidationSchema,

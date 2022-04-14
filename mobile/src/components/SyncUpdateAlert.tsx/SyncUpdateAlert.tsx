@@ -3,6 +3,8 @@ import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common";
 import { mobileApiVersion } from "../../util/syncHandler";
 import { Modal, Text, View, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import { themeColors } from "@cbr/common";
+import LocalChangeList from "./LocalChangeList";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm }) {
     const [syncConfirmed, setSyncConfirmed] = useState<boolean>(false);
@@ -21,10 +23,10 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
         },
         buttonText: {
             color: "white",
-            fontSize: 16,
+            fontSize: 15,
         },
         modalText: {
-            fontSize: 16,
+            fontSize: 15,
             marginTop: 10,
             paddingHorizontal: 10,
             color: "black",
@@ -95,7 +97,7 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                         }}
                     >
                         {upToDateWithServer ? (
-                            <>
+                            <ScrollView>
                                 <Text style={styles.headerText}>HHA CBR is Updating!</Text>
                                 <Text style={styles.modalText}>
                                     Our servers are undergoing major changes. As a result, any old
@@ -104,8 +106,10 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                                     be destroyed.
                                 </Text>
                                 <Text style={styles.modalText}>
-                                    You should use the web app to recreate any local changes.
+                                    You should use the web app to recreate any local changes, any
+                                    changes on the following entities will be lost:
                                 </Text>
+                                <LocalChangeList />
                                 <Text style={styles.modalText}>
                                     Note that this will only affect local data, any settings that
                                     have previously been set will be unaffected.
@@ -118,19 +122,21 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                                     If you understand and would still like to proceed with the sync,
                                     type "clear local data" to confirm.
                                 </Text>
-                                <TextInput
-                                    style={{
-                                        marginTop: 20,
-                                        marginBottom: 10,
-                                        borderWidth: 1,
-                                        borderColor: themeColors.borderGray,
-                                        borderRadius: 4,
-                                        fontSize: 16,
-                                        width: "90%",
-                                        paddingVertical: 4,
-                                    }}
-                                    onChangeText={(text) => setSyncConfirmed(text == KEY)}
-                                />
+                                <View style={{ alignItems: "center" }}>
+                                    <TextInput
+                                        style={{
+                                            marginTop: 20,
+                                            marginBottom: 10,
+                                            borderWidth: 1,
+                                            borderColor: themeColors.borderGray,
+                                            borderRadius: 4,
+                                            fontSize: 16,
+                                            width: "90%",
+                                            paddingVertical: 4,
+                                        }}
+                                        onChangeText={(text) => setSyncConfirmed(text == KEY)}
+                                    />
+                                </View>
                                 <View
                                     style={{
                                         flexDirection: "row",
@@ -164,7 +170,7 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                                         </View>
                                     </View>
                                 </View>
-                            </>
+                            </ScrollView>
                         ) : (
                             <>
                                 <Text style={styles.headerText}>

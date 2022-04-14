@@ -1,3 +1,4 @@
+from curses.ascii import isdigit
 import datetime
 import imghdr
 import os
@@ -954,3 +955,19 @@ class pushReferralSerializer(serializers.Serializer):
             validated_data, self.context["user"], self.context.get("sync_time")
         )
         return self
+
+
+class VersionCheckSerializer(serializers.Serializer):
+    api_version = serializers.CharField(required=True)
+
+    def validate(self, data):
+        version_levels = data["api_version"].split(".")
+
+        if len(version_levels) != 3:
+            raise serializers.ValidationError("Error!")
+
+        for level in version_levels:
+            if not isdigit(level):
+                raise serializers.ValidationError("Error!")
+
+        return data

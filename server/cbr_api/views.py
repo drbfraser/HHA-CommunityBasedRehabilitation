@@ -113,12 +113,15 @@ class ClientList(generics.ListCreateAPIView):
         responses=serializers.ClientCreateSerializer,
     )
     def post(self, request):
+        print("POST 1")
         return super().post(request)
 
     def get_serializer_class(self):
         if self.request.method == "GET":
+            print("GET 1")
             return serializers.ClientListSerializer
         elif self.request.method == "POST":
+            print("POST 2")
             return serializers.ClientCreateSerializer
 
     filter_backends = (DjangoFilterBackend,)

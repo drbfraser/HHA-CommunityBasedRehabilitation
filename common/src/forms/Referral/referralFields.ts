@@ -160,6 +160,16 @@ export const prostheticOrthoticValidationSchema = (serviceType: ReferralFormFiel
             .required(),
     });
 
+export const phhaNutritionAndAgricultureProjectValidationSchema = (serviceType: ReferralFormField) =>
+    Yup.object().shape({
+      [ReferralFormField.agricultureLivelihoodProgramEnrollment]: Yup.boolean()
+          .label(referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment])
+          .required(),
+      [ReferralFormField.emergencyFoodAidRequired]: Yup.boolean()
+          .label(referralFieldLabels[ReferralFormField.emergencyFoodAidRequired])
+          .required(),
+    });
+
 export const otherServicesValidationSchema = () =>
     Yup.object().shape({
         [ReferralFormField.otherDescription]: Yup.string()

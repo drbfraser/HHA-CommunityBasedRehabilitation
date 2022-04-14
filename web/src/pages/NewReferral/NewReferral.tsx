@@ -35,6 +35,7 @@ import {
     physiotherapyValidationSchema,
     prostheticOrthoticValidationSchema,
     wheelchairValidationSchema,
+    phhaNutritionAndAgricultureProjectValidationSchema,
     serviceTypes,
 } from "@cbr/common/forms/Referral/referralFields";
 import { PhotoView } from "components/ReferralPhotoView/PhotoView";
@@ -254,10 +255,9 @@ const NutritionForm = (props: IFormProps) => {
               key={ReferralFormField.emergencyFoodAidRequired}
               name={ReferralFormField.emergencyFoodAidRequired}
               Label={{ label: referralFieldLabels[ReferralFormField.emergencyFoodAidRequired] }}
-              // onChange={(event: React.FormEvent<HTMLInputElement>) => {
-              //     props.formikProps.handleChange(event);
-              //     onCheckboxChange(event.currentTarget.checked, serviceType);
-              // }}
+              onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                  props.formikProps.handleChange(event);
+              }}
           />
           <br />
           <Field
@@ -266,10 +266,9 @@ const NutritionForm = (props: IFormProps) => {
               key={ReferralFormField.agricultureLivelihoodProgramEnrollment}
               name={ReferralFormField.agricultureLivelihoodProgramEnrollment}
               Label={{ label: referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment] }}
-              // onChange={(event: React.FormEvent<HTMLInputElement>) => {
-              //     props.formikProps.handleChange(event);
-              //     onCheckboxChange(event.currentTarget.checked, serviceType);
-              // }}
+              onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                  props.formikProps.handleChange(event);
+              }}
           />
           </div>
       </div>
@@ -332,7 +331,7 @@ const NewReferral = () => {
         [ReferralFormField.hhaNutritionAndAgricultureProject]: {
             label: `${referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]} Visit`,
             Form: NutritionForm,
-            validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.hhaNutritionAndAgricultureProject),
+            validationSchema: () => phhaNutritionAndAgricultureProjectValidationSchema(ReferralFormField.hhaNutritionAndAgricultureProject),
         },
         [ReferralFormField.servicesOther]: {
             label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,

@@ -20,6 +20,7 @@ export type ClientListRow = {
     HealthLevel: string;
     EducationLevel: string;
     SocialLevel: string;
+    NutritionLevel: string;
     last_visit_date: number;
 };
 
@@ -85,6 +86,7 @@ export const fetchClientsFromDB = async (
             zone: zones.get(responseRow.zone) ?? "",
             HealthLevel: riskLevels[responseRow.health_risk_level].color,
             EducationLevel: riskLevels[responseRow.educat_risk_level].color,
+            NutritionLevel: riskLevels[responseRow.nutrit_risk_level].color,
             SocialLevel: riskLevels[responseRow.social_risk_level].color,
             last_visit_date: responseRow.last_visit_date,
         }));

@@ -204,6 +204,9 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         elif type == models.RiskType.EDUCAT:
             client.educat_risk_level = level
             client.educat_timestamp = current_time
+        elif type == models.RiskType.NUTRIT:
+            client.nutrit_risk_level = level
+            client.nutrit_timestamp = current_time
         client.updated_at = current_time
         client.save()
 
@@ -392,6 +395,7 @@ class OutstandingReferralSerializer(serializers.Serializer):
 
 
 class DetailedVisitSerializer(serializers.ModelSerializer):
+    print("---- CREATE is called 1 ----")
     improvements = ImprovementSerializer(many=True)
     outcomes = OutcomeSerializer(many=True)
 
@@ -405,6 +409,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             "health_visit",
             "educat_visit",
             "social_visit",
+            "nutrit_visit",
             "longitude",
             "latitude",
             "zone",
@@ -416,6 +421,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "user_id", "created_at"]
 
     def create(self, validated_data):
+        print("---- CREATE is called 2 ----")
         current_time = current_milli_time()
 
         improvement_dataset = validated_data.pop("improvements")
@@ -462,6 +468,7 @@ class SummaryVisitSerializer(serializers.ModelSerializer):
             "health_visit",
             "educat_visit",
             "social_visit",
+            "nutrit_visit",
             "longitude",
             "latitude",
             "zone",
@@ -475,6 +482,7 @@ class AdminStatsVisitsSerializer(serializers.Serializer):
     health_count = serializers.IntegerField()
     educat_count = serializers.IntegerField()
     social_count = serializers.IntegerField()
+    nutrit_count = serializers.IntegerField()
 
 
 class AdminStatsReferralSerializer(serializers.Serializer):
@@ -509,6 +517,7 @@ class ClientListSerializer(serializers.ModelSerializer):
             "health_risk_level",
             "social_risk_level",
             "educat_risk_level",
+            "nutrit_risk_level",
             "last_visit_date",
             "user_id",
         ]
@@ -545,6 +554,8 @@ class ClientSyncSerializer(serializers.ModelSerializer):
             "social_timestamp",
             "educat_risk_level",
             "educat_timestamp",
+            "nutrit_risk_level",
+            "nutrit_timestamp",
             "last_visit_date",
         ]
 
@@ -583,6 +594,8 @@ class editClientSyncSerializer(serializers.ModelSerializer):
             "social_timestamp",
             "educat_risk_level",
             "educat_timestamp",
+            "nutrit_risk_level",
+            "nutrit_timestamp",
             "last_visit_date",
         ]
 
@@ -622,6 +635,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
     health_risk = ClientCreationRiskSerializer(many=False, write_only=True)
     social_risk = ClientCreationRiskSerializer(many=False, write_only=True)
     educat_risk = ClientCreationRiskSerializer(many=False, write_only=True)
+    nutrit_risk = ClientCreationRiskSerializer(many=False, write_only=True)
 
     class Meta:
         model = models.Client
@@ -650,6 +664,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "health_risk",
             "social_risk",
             "educat_risk",
+            "nutrit_risk",
         ]
 
         read_only_fields = [
@@ -667,14 +682,17 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         health_data = validated_data.pop("health_risk")
         social_data = validated_data.pop("social_risk")
         educat_data = validated_data.pop("educat_risk")
+        nutrit_data = validated_data.pop("nutrit_risk")
 
         validated_data["health_risk_level"] = health_data["risk_level"]
         validated_data["social_risk_level"] = social_data["risk_level"]
         validated_data["educat_risk_level"] = educat_data["risk_level"]
+        validated_data["nutrit_risk_level"] = nutrit_data["risk_level"]
 
         validated_data["health_timestamp"] = current_time
         validated_data["social_timestamp"] = current_time
         validated_data["educat_timestamp"] = current_time
+        validated_data["nutrit_timestamp"] = current_time
 
         validated_data["full_name"] = (
             validated_data["first_name"] + " " + validated_data["last_name"]
@@ -697,6 +715,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         create_risk(health_data, models.RiskType.HEALTH, current_time)
         create_risk(social_data, models.RiskType.SOCIAL, current_time)
         create_risk(educat_data, models.RiskType.EDUCAT, current_time)
+        create_risk(nutrit_data, models.RiskType.NUTRIT, current_time)
 
         return client
 

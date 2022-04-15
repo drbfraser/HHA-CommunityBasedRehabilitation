@@ -94,6 +94,7 @@ class RiskType(models.TextChoices):
     HEALTH = "HEALTH", _("Health")
     SOCIAL = "SOCIAL", _("Social")
     EDUCAT = "EDUCAT", _("Education")
+    NUTRIT = "NUTRIT", _("Nutrition")
 
     @staticmethod
     def getField():
@@ -176,6 +177,8 @@ class Client(models.Model):
     social_timestamp = models.BigIntegerField(default=0)
     educat_risk_level = RiskLevel.getField()
     educat_timestamp = models.BigIntegerField(default=0)
+    nutrit_risk_level = RiskLevel.getField()
+    nutrit_timestamp = models.BigIntegerField(default=0)
     last_visit_date = models.BigIntegerField(default=0)
 
     def save(self, *args, **kwargs):
@@ -226,6 +229,7 @@ class Visit(models.Model):
     health_visit = models.BooleanField(default=False)
     educat_visit = models.BooleanField(default=False)
     social_visit = models.BooleanField(default=False)
+    nutrit_visit = models.BooleanField(default=False)
     longitude = models.DecimalField(max_digits=22, decimal_places=16)
     latitude = models.DecimalField(max_digits=22, decimal_places=16)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)

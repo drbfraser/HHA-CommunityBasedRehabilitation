@@ -75,7 +75,7 @@ const Stats = () => {
     const [disabilityData, setDisabilityData] = useState(fetchDisabilityData);
     const [disabilityCount, setDisabilityCount] = useState<number>(0);
 
-    const graphicColor = [themeColors.hhaGreen, themeColors.hhaPurple, themeColors.hhaBlue];
+    const graphicColor = [themeColors.hhaGreen, themeColors.hhaPurple, themeColors.hhaBlue, themeColors.yellow];
 
     const VisitStats = async () => {
         let sum = 0;

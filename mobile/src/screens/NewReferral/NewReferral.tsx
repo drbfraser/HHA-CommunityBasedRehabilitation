@@ -135,14 +135,19 @@ const NewReferral = (props: INewReferralProps) => {
                 checkedSteps.push(ReferralFormField.prosthetic);
                 helpers.setFieldValue(`${[ReferralFormField.client_id]}`, clientId);
             }
+
+
             if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
                 checkedSteps.push(enabledSteps[activeStep - 1]);
             }
             setCheckedSteps([...new Set(checkedSteps)]);
 
+
+
             if (
                 (enabledSteps[activeStep] !== ReferralFormField.prosthetic &&
-                    enabledSteps[activeStep] !== ReferralFormField.orthotic) ||
+                    enabledSteps[activeStep] !== ReferralFormField.orthotic &&
+                    enabledSteps[activeStep] !== ReferralFormField.agricultureLivelihoodProgramEnrollment) ||
                 !checkedSteps.includes(enabledSteps[activeStep - 1])
             ) {
                 helpers.setTouched({});
@@ -178,7 +183,7 @@ const NewReferral = (props: INewReferralProps) => {
         },
         [ReferralFormField.hhaNutritionAndAgricultureProject]: {
             label: `${referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]} Visit`,
-            Form: HHANutritionAndAgricultureProjectForm,
+            Form: (formikProps) => HHANutritionAndAgricultureProjectForm(formikProps),
             validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
         },
         [ReferralFormField.servicesOther]: {
@@ -227,6 +232,7 @@ const NewReferral = (props: INewReferralProps) => {
                             )}
 
                             <ProgressSteps key={referralSteps} {...progressStepsStyle}>
+
                                 {referralSteps.map((surveyStep, index) => (
                                     <ProgressStep
                                         key={index}
@@ -239,14 +245,15 @@ const NewReferral = (props: INewReferralProps) => {
                                         }}
                                         nextBtnDisabled={
                                             formikProps.isSubmitting ||
-                                            enabledSteps.length === 0 ||
-                                            (enabledSteps[activeStep - 1] !== undefined &&
-                                                (!checkedSteps.includes(
-                                                    enabledSteps[activeStep - 1]
-                                                )
-                                                    ? countObjectKeys(formikProps.errors) !== 0 ||
-                                                      countObjectKeys(formikProps.touched) === 0
-                                                    : countObjectKeys(formikProps.errors) !== 0))
+                                            enabledSteps.length === 0  ||
+                                            false
+                                            // (enabledSteps[activeStep - 1] !== undefined &&
+                                            //     (!checkedSteps.includes(
+                                            //         enabledSteps[activeStep - 1]
+                                            //     )
+                                            //         ? countObjectKeys(formikProps.errors) !== 0 ||
+                                            //           countObjectKeys(formikProps.touched) === 0
+                                            //         : countObjectKeys(formikProps.errors) !== 0))
                                         }
                                         previousBtnDisabled={formikProps.isSubmitting}
                                         onPrevious={() => prevStep(formikProps)}

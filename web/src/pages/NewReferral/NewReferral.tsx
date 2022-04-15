@@ -35,7 +35,7 @@ import {
     physiotherapyValidationSchema,
     prostheticOrthoticValidationSchema,
     wheelchairValidationSchema,
-    phhaNutritionAndAgricultureProjectValidationSchema,
+    hhaNutritionAndAgricultureProjectValidationSchema,
     serviceTypes,
 } from "@cbr/common/forms/Referral/referralFields";
 import { PhotoView } from "components/ReferralPhotoView/PhotoView";
@@ -331,7 +331,7 @@ const NewReferral = () => {
         [ReferralFormField.hhaNutritionAndAgricultureProject]: {
             label: `${referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]} Visit`,
             Form: NutritionForm,
-            validationSchema: phhaNutritionAndAgricultureProjectValidationSchema,
+            validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
         },
         [ReferralFormField.servicesOther]: {
             label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,

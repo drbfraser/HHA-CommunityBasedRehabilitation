@@ -25,6 +25,11 @@ export enum ReferralField {
     prosthetic_injury_location = "prosthetic_injury_location",
     orthotic = "orthotic",
     orthotic_injury_location = "orthotic_injury_location",
+
+    hha_nutrition_and_agriculture_project = "hha_nutrition_and_agriculture_project",
+    emergency_food_aid = "emergency_food_aid",
+    agriculture_livelihood_program_enrollment = "agriculture_livelihood_program_enrollment",
+
     services_other = "services_other",
 }
 
@@ -160,7 +165,7 @@ export const prostheticOrthoticValidationSchema = (serviceType: ReferralFormFiel
             .required(),
     });
 
-export const phhaNutritionAndAgricultureProjectValidationSchema = () =>
+export const hhaNutritionAndAgricultureProjectValidationSchema = () =>
     Yup.object().shape({
       [ReferralFormField.agricultureLivelihoodProgramEnrollment]: Yup.boolean()
           .label(referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment])

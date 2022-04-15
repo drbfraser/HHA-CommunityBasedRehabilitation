@@ -17,12 +17,18 @@ const HHANutritionAndAgricultureProjectForm = (props: IFormProps) => {
                 label={referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment]}
                 value={props.formikProps.values[ReferralFormField.agricultureLivelihoodProgramEnrollment]}
                 setFieldValue={props.formikProps.setFieldValue}
+                onChange={() => {
+                    props.formikProps.setFieldTouched(`agricultureLivelihoodProgramEnrollment`, true);
+                }}
             />
             <TextCheckBox
                 field={ReferralFormField.emergencyFoodAidRequired}
                 label={referralFieldLabels[ReferralFormField.emergencyFoodAidRequired]}
                 value={props.formikProps.values[ReferralFormField.emergencyFoodAidRequired]}
                 setFieldValue={props.formikProps.setFieldValue}
+                onChange={() => {
+                    props.formikProps.setFieldTouched(`emergencyFoodAidRequired`, true);
+                }}
             />
             
         </View>

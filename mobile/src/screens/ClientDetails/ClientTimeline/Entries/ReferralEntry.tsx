@@ -152,6 +152,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         {referral.physiotherapy && <ReasonChip label="Physiotherapy" />}
                         {referral.prosthetic && <ReasonChip label="Prosthetic" />}
                         {referral.orthotic && <ReasonChip label="Orthotic" />}
+                        {referral.agriculture_livelihood_program_enrollment && <ReasonChip label="Agriculture and livelihood program" />}
                     </Dialog.Title>
                     <Dialog.Content>
                         <Text>
@@ -226,6 +227,19 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                 <Text>
                                     <Text style={styles.labelBold}>Orthotic Injury Location: </Text>
                                     {orthoticInjuryLocations[referral.orthotic_injury_location]}
+                                </Text>
+                                <Text />
+                            </>
+                        )}
+                        {referral.hha_nutrition_and_agriculture_project && (
+                            <>
+                                <Text>
+                                    <Text style={styles.labelBold}>Agiriculture and Livelihood program enrolled: </Text>
+                                    {referral.agriculture_livelihood_program_enrollment ? "Yes" : "No"} 
+                                </Text>
+                                <Text>
+                                    <Text style={styles.labelBold}>Emergency Food Aid Required? </Text>
+                                    {referral.emergency_food_aid ? "Yes" : "No"}
                                 </Text>
                                 <Text />
                             </>

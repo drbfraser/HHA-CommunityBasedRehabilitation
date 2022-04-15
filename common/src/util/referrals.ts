@@ -34,6 +34,7 @@ export interface IOutstandingReferral {
     physiotherapy: boolean;
     prosthetic: boolean;
     orthotic: boolean;
+    hha_nutrition_and_agriculture_project:boolean;
     services_other: string;
 }
 
@@ -41,6 +42,7 @@ export enum ReferralTypes {
     WHEELCHAIR = "wheelchair",
     PROSTHETIC = "prosthetic",
     ORTHOTIC = "orthotic",
+    HHANAP = "hha_nutrition_and_agriculture_project",
 }
 
 export enum InjuryLocation {

@@ -331,7 +331,7 @@ const NewReferral = () => {
         [ReferralFormField.hhaNutritionAndAgricultureProject]: {
             label: `${referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]} Visit`,
             Form: NutritionForm,
-            validationSchema: () => phhaNutritionAndAgricultureProjectValidationSchema(ReferralFormField.hhaNutritionAndAgricultureProject),
+            validationSchema: phhaNutritionAndAgricultureProjectValidationSchema,
         },
         [ReferralFormField.servicesOther]: {
             label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,

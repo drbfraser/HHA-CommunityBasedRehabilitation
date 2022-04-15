@@ -160,7 +160,7 @@ export const prostheticOrthoticValidationSchema = (serviceType: ReferralFormFiel
             .required(),
     });
 
-export const phhaNutritionAndAgricultureProjectValidationSchema = (serviceType: ReferralFormField) =>
+export const phhaNutritionAndAgricultureProjectValidationSchema = () =>
     Yup.object().shape({
       [ReferralFormField.agricultureLivelihoodProgramEnrollment]: Yup.boolean()
           .label(referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment])

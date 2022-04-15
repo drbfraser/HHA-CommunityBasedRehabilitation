@@ -131,6 +131,7 @@ const NewReferral = (props: INewReferralProps) => {
                 }
                 checkedSteps.push(ReferralFormField.orthotic);
                 checkedSteps.push(ReferralFormField.prosthetic);
+                checkedSteps.push(ReferralFormField.hhaNutritionAndAgricultureProject);
                 helpers.setFieldValue(`${[ReferralFormField.client_id]}`, clientId);
             }
 

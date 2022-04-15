@@ -37,8 +37,10 @@ export const ClientRisk = (props: riskProps) => {
                             <Text style={styles.riskTitleStyle}>Health</Text>
                         ) : risk.risk_type === RiskType.EDUCATION ? (
                             <Text style={styles.riskTitleStyle}>Education</Text>
-                        ) : (
+                        ) : risk.risk_type === RiskType.SOCIAL ? (
                             <Text style={styles.riskTitleStyle}>Social</Text>
+                        ) : (
+                            <Text style={styles.riskTitleStyle}>Nutrition</Text>
                         )}
                         <Text
                             style={riskStyles(riskLevels[risk.risk_level].color).riskSubtitleStyle}

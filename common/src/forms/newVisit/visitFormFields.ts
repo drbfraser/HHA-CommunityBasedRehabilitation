@@ -4,6 +4,7 @@ export enum VisitField {
     health_visit = "health_visit",
     educat_visit = "educat_visit",
     social_visit = "social_visit",
+    nutrit_visit = "nutrit_visit",
     longitude = "longitude",
     latitude = "latitude",
     zone = "zone",
@@ -23,6 +24,7 @@ export enum VisitFormField {
     health = "HEALTH",
     education = "EDUCAT",
     social = "SOCIAL",
+    nutrition = "NUTRIT",
     outcomes = "outcomes",
     improvements = "improvements",
 }
@@ -49,6 +51,7 @@ export const visitFieldLabels = {
     [VisitFormField.health]: "Health",
     [VisitFormField.education]: "Education",
     [VisitFormField.social]: "Social",
+    [VisitFormField.nutrition]: "Nutrition",
     [VisitFormField.improvements]: "Improvements",
     [VisitFormField.outcomes]: "Outcomes",
     [ImprovementFormField.description]: "Description",
@@ -65,15 +68,18 @@ export const visitInitialValues = {
     [VisitFormField.health]: false,
     [VisitFormField.education]: false,
     [VisitFormField.social]: false,
+    [VisitFormField.nutrition]: false,
     [VisitFormField.outcomes]: {
         [VisitFormField.health]: undefined,
         [VisitFormField.education]: undefined,
         [VisitFormField.social]: undefined,
+        [VisitFormField.nutrition]: undefined,
     },
     [VisitFormField.improvements]: {
         [VisitFormField.health]: [],
         [VisitFormField.education]: [],
         [VisitFormField.social]: [],
+        [VisitFormField.nutrition]: [],
     },
 };
 
@@ -100,6 +106,12 @@ export const provisionals: { [key: string]: string[] } = {
         "Encouragement",
         "Referral to Other Organization",
     ],
+    [VisitFormField.nutrition]: [
+        "Advice",
+        "Advocacy",
+        "Encouragement",
+        "Referral to Other Organization",
+    ],
 };
 
 export type TVisitFormValues = typeof visitInitialValues;
@@ -113,6 +125,7 @@ export const initialValidationSchema = () =>
         [VisitFormField.health]: Yup.boolean().label(visitFieldLabels[VisitFormField.health]),
         [VisitFormField.education]: Yup.boolean().label(visitFieldLabels[VisitFormField.education]),
         [VisitFormField.social]: Yup.boolean().label(visitFieldLabels[VisitFormField.social]),
+        [VisitFormField.nutrition]: Yup.boolean().label(visitFieldLabels[VisitFormField.nutrition]),
     });
 
 export const visitTypeValidationSchema = (visitType: VisitFormField) =>

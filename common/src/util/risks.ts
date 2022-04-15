@@ -13,7 +13,7 @@ export enum RiskType {
     HEALTH = "HEALTH",
     EDUCATION = "EDUCAT",
     SOCIAL = "SOCIAL",
-    NUTRITION = "NUTRITION",
+    NUTRITION = "NUTRIT",
 }
 
 export enum RiskLevel {

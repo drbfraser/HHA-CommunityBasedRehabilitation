@@ -201,11 +201,13 @@ class RiskDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class VisitList(generics.CreateAPIView):
+    print("! -- VisitList")
     queryset = models.Visit.objects.all()
     serializer_class = serializers.DetailedVisitSerializer
 
 
 class VisitDetail(generics.RetrieveAPIView):
+    print("! -- VisitDetail")
     queryset = models.Visit.objects.all()
     serializer_class = serializers.DetailedVisitSerializer
 

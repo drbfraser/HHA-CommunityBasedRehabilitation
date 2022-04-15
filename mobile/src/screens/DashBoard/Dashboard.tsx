@@ -158,6 +158,13 @@ const Dashboard = () => {
                                         {riskTypes.SOCIAL.Icon("#000000")}
                                     </DataTable.Title>
                                     <DataTable.Title
+                                        style={styles.column_client_icon}
+                                        onPress={() => clientSortBy("nutrition")}
+                                        sortDirection={clientArrowDirectionController("nutrition")}
+                                    >
+                                        {riskTypes.NUTRIT.Icon("#000000")}
+                                    </DataTable.Title>
+                                    <DataTable.Title
                                         style={styles.column_client_Last_visit_date}
                                         onPress={() => clientSortBy("date")}
                                         sortDirection={clientArrowDirectionController("date")}
@@ -190,6 +197,9 @@ const Dashboard = () => {
                                             </DataTable.Cell>
                                             <DataTable.Cell style={styles.column_client_icon}>
                                                 {riskTypes.CIRCLE.Icon(item.SocialLevel)}
+                                            </DataTable.Cell>
+                                            <DataTable.Cell style={styles.column_client_icon}>
+                                                {riskTypes.CIRCLE.Icon(item.NutritionLevel)}
                                             </DataTable.Cell>
                                             <DataTable.Cell
                                                 style={styles.column_client_Last_visit_date}

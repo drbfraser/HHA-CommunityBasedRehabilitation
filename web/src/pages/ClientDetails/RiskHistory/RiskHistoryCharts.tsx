@@ -43,23 +43,31 @@ const risksToChartData = (risks: IRisk[]) => {
     risks.sort((a, b) => a.timestamp - b.timestamp);
 
     risks.forEach((risk) => {
+        // TODO: REMOVE when working on visit
+        // if(risk.risk_type!==RiskType.NUTRITION) {
         dataObj[risk.risk_type].push({
             timestamp: risk.timestamp,
             level: risk.risk_level,
         });
+        //}
     });
 
     // add data for the current time
-    [RiskType.HEALTH, RiskType.EDUCATION, RiskType.SOCIAL].forEach((riskType) => {
-        const riskArray = dataObj[riskType];
+    [RiskType.HEALTH, RiskType.EDUCATION, RiskType.SOCIAL, RiskType.NUTRITION].forEach(
+        (riskType) => {
+            // TODO: REMOVE when working on visit
+            // if(riskType!==RiskType.NUTRITION) {
+            const riskArray = dataObj[riskType];
 
-        if (riskArray.length) {
-            riskArray.push({
-                timestamp: Date.now(),
-                level: riskArray[riskArray.length - 1].level,
-            });
+            if (riskArray.length) {
+                riskArray.push({
+                    timestamp: Date.now(),
+                    level: riskArray[riskArray.length - 1].level,
+                });
+            }
+            //}
         }
-    });
+    );
 
     return dataObj;
 };
@@ -113,23 +121,29 @@ const RiskHistoryCharts = ({ client }: IProps) => {
 
     return (
         <Grid container>
-            {[RiskType.HEALTH, RiskType.EDUCATION, RiskType.SOCIAL].map((riskType) => (
-                <Grid key={riskType} item md={4} xs={12}>
-                    <Typography variant="h5" className={styles.textCenter}>
-                        {riskTypes[riskType].name} Risk
-                    </Typography>
+            {[RiskType.HEALTH, RiskType.EDUCATION, RiskType.SOCIAL, RiskType.NUTRITION].map(
+                (riskType) => (
+                    // TODO: REMOVE when working on visit
+                    //(riskType!==RiskType.NUTRITION) ?
 
-                    {chartData && chartData[riskType].length ? (
-                        <RiskChart riskType={riskType} data={chartData[riskType]} />
-                    ) : (
-                        <Skeleton
-                            variant="rect"
-                            height={chartHeight}
-                            className={styles.chartSkeleton}
-                        />
-                    )}
-                </Grid>
-            ))}
+                    <Grid key={riskType} item md={4} xs={12}>
+                        <Typography variant="h5" className={styles.textCenter}>
+                            {riskTypes[riskType].name} Risk
+                        </Typography>
+
+                        {chartData && chartData[riskType].length ? (
+                            <RiskChart riskType={riskType} data={chartData[riskType]} />
+                        ) : (
+                            <Skeleton
+                                variant="rect"
+                                height={chartHeight}
+                                className={styles.chartSkeleton}
+                            />
+                        )}
+                    </Grid>
+                    //:<></>
+                )
+            )}
         </Grid>
     );
 };

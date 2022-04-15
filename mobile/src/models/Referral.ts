@@ -28,10 +28,6 @@ export default class Referral extends Model {
     @field(ReferralField.orthotic) orthotic;
     @text(ReferralField.orthotic_injury_location) orthotic_injury_location;
 
-    @field(ReferralField.hha_nutrition_and_agriculture_project) hha_nutrition_and_agriculture_project;
-    @field(ReferralField.emergency_food_aid) emergency_food_aid;
-    @field(ReferralField.agriculture_livelihood_program_enrollment) agriculture_livelihood_program_enrollment;
-
     @text(ReferralField.services_other) services_other;
 
     @readonly @date(mobileGenericField.updated_at) updatedAt;

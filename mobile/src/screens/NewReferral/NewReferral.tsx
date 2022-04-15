@@ -17,13 +17,11 @@ import {
     physiotherapyValidationSchema,
     prostheticOrthoticValidationSchema,
     wheelchairValidationSchema,
-    hhaNutritionAndAgricultureProjectValidationSchema,
     APIFetchFailError,
     countObjectKeys,
 } from "@cbr/common";
 import WheelchairForm from "./ReferralForm/WheelchairForm";
 import PhysiotherapyForm from "./ReferralForm/PhysiotherapyForm";
-import HHANutritionAndAgricultureProjectForm from "./ReferralForm/HHANutritionAndAgricultureProjectForm";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewReferral.styles";
 import ProstheticOrthoticForm from "./ReferralForm/ProstheticOrthoticForm";
 import OtherServicesForm from "./ReferralForm/OtherServicesForm";
@@ -146,8 +144,7 @@ const NewReferral = (props: INewReferralProps) => {
 
             if (
                 (enabledSteps[activeStep] !== ReferralFormField.prosthetic &&
-                    enabledSteps[activeStep] !== ReferralFormField.orthotic &&
-                    enabledSteps[activeStep] !== ReferralFormField.agricultureLivelihoodProgramEnrollment) ||
+                    enabledSteps[activeStep] !== ReferralFormField.orthotic ) ||
                 !checkedSteps.includes(enabledSteps[activeStep - 1])
             ) {
                 helpers.setTouched({});
@@ -180,11 +177,6 @@ const NewReferral = (props: INewReferralProps) => {
             label: `${referralFieldLabels[ReferralFormField.orthotic]} Visit`,
             Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.orthotic),
             validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.orthotic),
-        },
-        [ReferralFormField.hhaNutritionAndAgricultureProject]: {
-            label: `${referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]} Visit`,
-            Form: (formikProps) => HHANutritionAndAgricultureProjectForm(formikProps),
-            validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
         },
         [ReferralFormField.servicesOther]: {
             label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,

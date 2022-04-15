@@ -27,9 +27,6 @@ const concatenateReferralType = (referral: IOutstandingReferral) => {
     if (referral.wheelchair) {
         referralTypes.push("Wheelchair");
     }
-    if (referral.hha_nutrition_and_agriculture_project) {
-        referralTypes.push("HHA Nutrition And Agriculture Project");
-    }
     if (referral.services_other) {
         referralTypes.push(referral.services_other);
     }

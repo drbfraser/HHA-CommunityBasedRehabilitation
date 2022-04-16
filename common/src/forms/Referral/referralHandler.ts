@@ -16,8 +16,6 @@ const addReferral = async (referralInfo: FormData) => {
 };
 
 export const referralHandleSubmit = async (values: ReferralFormValues, source: string) => {
-    console.log("--------- --------- --------- --------- ---------");
-    console.log(values);
     const disabilities = await getDisabilities();
     const newReferral = {
         client_id: values[ReferralFormField.client_id],
@@ -47,13 +45,6 @@ export const referralHandleSubmit = async (values: ReferralFormValues, source: s
         orthotic_injury_location: values[ReferralFormField.orthotic]
             ? values[ReferralFormField.orthoticInjuryLocation]
             : "",
-
-        hha_nutrition_and_agriculture_project:
-            values[ReferralFormField.hhaNutritionAndAgricultureProject],
-        emergency_food_aid: values[ReferralFormField.emergencyFoodAidRequired],
-        agriculture_livelihood_program_enrollment:
-            values[ReferralFormField.agricultureLivelihoodProgramEnrollment],
-
         services_other: values[ReferralFormField.servicesOther]
             ? values[ReferralFormField.otherDescription]
             : "",

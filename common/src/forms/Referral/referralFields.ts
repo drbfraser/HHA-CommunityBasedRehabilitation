@@ -25,11 +25,6 @@ export enum ReferralField {
     prosthetic_injury_location = "prosthetic_injury_location",
     orthotic = "orthotic",
     orthotic_injury_location = "orthotic_injury_location",
-
-    hha_nutrition_and_agriculture_project = "hha_nutrition_and_agriculture_project",
-    emergency_food_aid = "emergency_food_aid",
-    agriculture_livelihood_program_enrollment = "agriculture_livelihood_program_enrollment",
-
     services_other = "services_other",
 }
 
@@ -48,11 +43,6 @@ export enum ReferralFormField {
     prostheticInjuryLocation = "prosthetic_injury_location",
     orthotic = "orthotic",
     orthoticInjuryLocation = "orthotic_injury_location",
-
-    hhaNutritionAndAgricultureProject = "hha_nutrition_and_agriculture_project",
-    emergencyFoodAidRequired = "emergency_food_aid",
-    agricultureLivelihoodProgramEnrollment = "agriculture_livelihood_program_enrollment",
-
     servicesOther = "services_other",
     otherDescription = "other_description",
 }
@@ -62,9 +52,6 @@ export const referralServicesTypes = [
     ReferralFormField.physiotherapy,
     ReferralFormField.prosthetic,
     ReferralFormField.orthotic,
-
-    ReferralFormField.hhaNutritionAndAgricultureProject,
-
     ReferralFormField.servicesOther,
 ];
 
@@ -83,13 +70,6 @@ export const referralFieldLabels = {
     [ReferralFormField.prostheticInjuryLocation]: "Prosthetic Injury Location",
     [ReferralFormField.orthotic]: "Orthotic",
     [ReferralFormField.orthoticInjuryLocation]: "Orthotic Injury Location",
-
-    [ReferralFormField.hhaNutritionAndAgricultureProject]:
-        "HHA Nutrition/Agriculture Project (NOT Supported on Mobile)",
-    [ReferralFormField.emergencyFoodAidRequired]: "Emergency Food Aid",
-    [ReferralFormField.agricultureLivelihoodProgramEnrollment]:
-        "Agriculture Livelihood Program Enrollment",
-
     [ReferralFormField.servicesOther]: "Other Services",
     [ReferralFormField.otherDescription]: "Service Description",
 };
@@ -109,11 +89,6 @@ export const referralInitialValues = {
     [ReferralFormField.prostheticInjuryLocation]: InjuryLocation.BELOW,
     [ReferralFormField.orthotic]: false,
     [ReferralFormField.orthoticInjuryLocation]: InjuryLocation.BELOW,
-
-    [ReferralFormField.hhaNutritionAndAgricultureProject]: false,
-    [ReferralFormField.emergencyFoodAidRequired]: false,
-    [ReferralFormField.agricultureLivelihoodProgramEnrollment]: false,
-
     [ReferralFormField.servicesOther]: false,
     [ReferralFormField.otherDescription]: "",
 };
@@ -167,16 +142,6 @@ export const prostheticOrthoticValidationSchema = (serviceType: ReferralFormFiel
             .required(),
     });
 
-export const hhaNutritionAndAgricultureProjectValidationSchema = () =>
-    Yup.object().shape({
-        [ReferralFormField.agricultureLivelihoodProgramEnrollment]: Yup.boolean()
-            .label(referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment])
-            .required(),
-        [ReferralFormField.emergencyFoodAidRequired]: Yup.boolean()
-            .label(referralFieldLabels[ReferralFormField.emergencyFoodAidRequired])
-            .required(),
-    });
-
 export const otherServicesValidationSchema = () =>
     Yup.object().shape({
         [ReferralFormField.otherDescription]: Yup.string()
@@ -190,7 +155,6 @@ export const serviceTypes: ReferralFormField[] = [
     ReferralFormField.physiotherapy,
     ReferralFormField.prosthetic,
     ReferralFormField.orthotic,
-    ReferralFormField.hhaNutritionAndAgricultureProject,
     ReferralFormField.servicesOther,
 ];
 

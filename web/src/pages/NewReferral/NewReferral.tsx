@@ -241,38 +241,44 @@ const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormFiel
 };
 
 const NutritionForm = (props: IFormProps) => {
-  const styles = useStyles();
-  // const disabilities = useDisabilities();
+    const styles = useStyles();
+    // const disabilities = useDisabilities();
 
-  return (
-      <div>
-          <FormLabel>What does the client need?</FormLabel>
-          <br />
-          <div className={styles.fieldIndent}>
-          <Field
-              component={CheckboxWithLabel}
-              type="checkbox"
-              key={ReferralFormField.emergencyFoodAidRequired}
-              name={ReferralFormField.emergencyFoodAidRequired}
-              Label={{ label: referralFieldLabels[ReferralFormField.emergencyFoodAidRequired] }}
-              onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                  props.formikProps.handleChange(event);
-              }}
-          />
-          <br />
-          <Field
-              component={CheckboxWithLabel}
-              type="checkbox"
-              key={ReferralFormField.agricultureLivelihoodProgramEnrollment}
-              name={ReferralFormField.agricultureLivelihoodProgramEnrollment}
-              Label={{ label: referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment] }}
-              onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                  props.formikProps.handleChange(event);
-              }}
-          />
-          </div>
-      </div>
-  );
+    return (
+        <div>
+            <FormLabel>What does the client need?</FormLabel>
+            <br />
+            <div className={styles.fieldIndent}>
+                <Field
+                    component={CheckboxWithLabel}
+                    type="checkbox"
+                    key={ReferralFormField.emergencyFoodAidRequired}
+                    name={ReferralFormField.emergencyFoodAidRequired}
+                    Label={{
+                        label: referralFieldLabels[ReferralFormField.emergencyFoodAidRequired],
+                    }}
+                    onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                        props.formikProps.handleChange(event);
+                    }}
+                />
+                <br />
+                <Field
+                    component={CheckboxWithLabel}
+                    type="checkbox"
+                    key={ReferralFormField.agricultureLivelihoodProgramEnrollment}
+                    name={ReferralFormField.agricultureLivelihoodProgramEnrollment}
+                    Label={{
+                        label: referralFieldLabels[
+                            ReferralFormField.agricultureLivelihoodProgramEnrollment
+                        ],
+                    }}
+                    onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                        props.formikProps.handleChange(event);
+                    }}
+                />
+            </div>
+        </div>
+    );
 };
 
 const OtherServicesForm = () => {
@@ -329,7 +335,9 @@ const NewReferral = () => {
             validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.orthotic),
         },
         [ReferralFormField.hhaNutritionAndAgricultureProject]: {
-            label: `${referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]} Visit`,
+            label: `${
+                referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]
+            } Visit`,
             Form: NutritionForm,
             validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
         },

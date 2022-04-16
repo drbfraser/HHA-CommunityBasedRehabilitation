@@ -16,7 +16,6 @@ import {
     orthoticInjuryLocations,
     prostheticInjuryLocations,
     wheelchairExperiences,
-
 } from "@cbr/common/util/referrals";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -57,11 +56,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                 {referral.physiotherapy && <ReasonChip label="Physiotherapy" />}{" "}
                 {referral.prosthetic && <ReasonChip label="Prosthetic" />}{" "}
                 {referral.orthotic && <ReasonChip label="Orthotic" />}{" "}
-
-
-                {referral.hha_nutrition_and_agriculture_project && <ReasonChip label="Nutrition" />}{" "} 
-
-
+                {referral.hha_nutrition_and_agriculture_project && <ReasonChip label="Nutrition" />}{" "}
             </>
         );
     };
@@ -186,10 +181,10 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                 {referral.hha_nutrition_and_agriculture_project && (
                     <>
                         <b>Emergency Food Aid Required: </b>
-                        {referral.emergency_food_aid?"Yes":"No"}
+                        {referral.emergency_food_aid ? "Yes" : "No"}
                         <br />
                         <b>Agriculture Livelihood Program Enrollment Required: </b>
-                        {referral.agriculture_livelihood_program_enrollment?"Yes":"No"}
+                        {referral.agriculture_livelihood_program_enrollment ? "Yes" : "No"}
                         <br />
                         <br />
                     </>

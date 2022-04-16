@@ -34,7 +34,7 @@ export interface IOutstandingReferral {
     physiotherapy: boolean;
     prosthetic: boolean;
     orthotic: boolean;
-    hha_nutrition_and_agriculture_project:boolean;
+    hha_nutrition_and_agriculture_project: boolean;
     services_other: string;
 }
 

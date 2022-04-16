@@ -52,7 +52,7 @@ export enum ReferralFormField {
     hhaNutritionAndAgricultureProject = "hha_nutrition_and_agriculture_project",
     emergencyFoodAidRequired = "emergency_food_aid",
     agricultureLivelihoodProgramEnrollment = "agriculture_livelihood_program_enrollment",
-    
+
     servicesOther = "services_other",
     otherDescription = "other_description",
 }
@@ -84,9 +84,11 @@ export const referralFieldLabels = {
     [ReferralFormField.orthotic]: "Orthotic",
     [ReferralFormField.orthoticInjuryLocation]: "Orthotic Injury Location",
 
-    [ReferralFormField.hhaNutritionAndAgricultureProject]: "HHA Nutrition/Agriculture Project",
+    [ReferralFormField.hhaNutritionAndAgricultureProject]:
+        "HHA Nutrition/Agriculture Project (NOT Supported on Mobile)",
     [ReferralFormField.emergencyFoodAidRequired]: "Emergency Food Aid",
-    [ReferralFormField.agricultureLivelihoodProgramEnrollment]: "Agriculture Livelihood Program Enrollment",
+    [ReferralFormField.agricultureLivelihoodProgramEnrollment]:
+        "Agriculture Livelihood Program Enrollment",
 
     [ReferralFormField.servicesOther]: "Other Services",
     [ReferralFormField.otherDescription]: "Service Description",
@@ -167,12 +169,12 @@ export const prostheticOrthoticValidationSchema = (serviceType: ReferralFormFiel
 
 export const hhaNutritionAndAgricultureProjectValidationSchema = () =>
     Yup.object().shape({
-      [ReferralFormField.agricultureLivelihoodProgramEnrollment]: Yup.boolean()
-          .label(referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment])
-          .required(),
-      [ReferralFormField.emergencyFoodAidRequired]: Yup.boolean()
-          .label(referralFieldLabels[ReferralFormField.emergencyFoodAidRequired])
-          .required(),
+        [ReferralFormField.agricultureLivelihoodProgramEnrollment]: Yup.boolean()
+            .label(referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment])
+            .required(),
+        [ReferralFormField.emergencyFoodAidRequired]: Yup.boolean()
+            .label(referralFieldLabels[ReferralFormField.emergencyFoodAidRequired])
+            .required(),
     });
 
 export const otherServicesValidationSchema = () =>

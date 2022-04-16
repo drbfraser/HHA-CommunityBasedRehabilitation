@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0045_visit_nutrit_visit'),
+        ("cbr_api", "0045_visit_nutrit_visit"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='referral',
-            name='agriculture_livelihood_program_enrollment',
+            model_name="referral",
+            name="agriculture_livelihood_program_enrollment",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='referral',
-            name='emergency_food_aid',
+            model_name="referral",
+            name="emergency_food_aid",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='referral',
-            name='hha_nutrition_and_agriculture_project',
+            model_name="referral",
+            name="hha_nutrition_and_agriculture_project",
             field=models.BooleanField(default=False),
         ),
     ]

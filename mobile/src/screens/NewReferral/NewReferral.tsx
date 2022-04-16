@@ -137,6 +137,7 @@ const NewReferral = (props: INewReferralProps) => {
                 checkedSteps.push(enabledSteps[activeStep - 1]);
             }
             setCheckedSteps([...new Set(checkedSteps)]);
+
             if (
                 (enabledSteps[activeStep] !== ReferralFormField.prosthetic &&
                     enabledSteps[activeStep] !== ReferralFormField.orthotic) ||
@@ -231,7 +232,7 @@ const NewReferral = (props: INewReferralProps) => {
                                         }}
                                         nextBtnDisabled={
                                             formikProps.isSubmitting ||
-                                            enabledSteps.length === 0  ||
+                                            enabledSteps.length === 0 ||
                                             (enabledSteps[activeStep - 1] !== undefined &&
                                                 (!checkedSteps.includes(
                                                     enabledSteps[activeStep - 1]

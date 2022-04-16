@@ -48,10 +48,12 @@ export const referralHandleSubmit = async (values: ReferralFormValues, source: s
             ? values[ReferralFormField.orthoticInjuryLocation]
             : "",
 
-        hha_nutrition_and_agriculture_project: values[ReferralFormField.hhaNutritionAndAgricultureProject],
+        hha_nutrition_and_agriculture_project:
+            values[ReferralFormField.hhaNutritionAndAgricultureProject],
         emergency_food_aid: values[ReferralFormField.emergencyFoodAidRequired],
-        agriculture_livelihood_program_enrollment: values[ReferralFormField.agricultureLivelihoodProgramEnrollment],
-        
+        agriculture_livelihood_program_enrollment:
+            values[ReferralFormField.agricultureLivelihoodProgramEnrollment],
+
         services_other: values[ReferralFormField.servicesOther]
             ? values[ReferralFormField.otherDescription]
             : "",

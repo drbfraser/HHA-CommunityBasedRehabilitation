@@ -21,7 +21,7 @@ const createClientWithAllRisksAsGivenLevel = (riskLevel: RiskLevel): IClientSumm
         health_risk_level: riskLevel,
         educat_risk_level: riskLevel,
         social_risk_level: riskLevel,
-        nutrit_risk_level: riskLevel,
+        nutrit_risk_level: RiskLevel.LOW,
         last_visit_date: 0,
     };
 };

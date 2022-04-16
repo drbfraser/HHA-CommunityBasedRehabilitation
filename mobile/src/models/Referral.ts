@@ -27,7 +27,6 @@ export default class Referral extends Model {
     @text(ReferralField.prosthetic_injury_location) prosthetic_injury_location;
     @field(ReferralField.orthotic) orthotic;
     @text(ReferralField.orthotic_injury_location) orthotic_injury_location;
-
     @text(ReferralField.services_other) services_other;
 
     @readonly @date(mobileGenericField.updated_at) updatedAt;

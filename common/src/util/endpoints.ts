@@ -29,6 +29,7 @@ export enum Endpoint {
     SYNC = "sync",
     ALERTS = "alerts",
     ALERT = "alert/",
+    VERSION_CHECK = "versioncheck/",
 }
 
 export const APILoadError = "APILoadError";

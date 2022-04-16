@@ -35,7 +35,6 @@ import {
     physiotherapyValidationSchema,
     prostheticOrthoticValidationSchema,
     wheelchairValidationSchema,
-    hhaNutritionAndAgricultureProjectValidationSchema,
     serviceTypes,
 } from "@cbr/common/forms/Referral/referralFields";
 import { PhotoView } from "components/ReferralPhotoView/PhotoView";
@@ -240,47 +239,6 @@ const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormFiel
     );
 };
 
-const NutritionForm = (props: IFormProps) => {
-    const styles = useStyles();
-    // const disabilities = useDisabilities();
-
-    return (
-        <div>
-            <FormLabel>What does the client need?</FormLabel>
-            <br />
-            <div className={styles.fieldIndent}>
-                <Field
-                    component={CheckboxWithLabel}
-                    type="checkbox"
-                    key={ReferralFormField.emergencyFoodAidRequired}
-                    name={ReferralFormField.emergencyFoodAidRequired}
-                    Label={{
-                        label: referralFieldLabels[ReferralFormField.emergencyFoodAidRequired],
-                    }}
-                    onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                        props.formikProps.handleChange(event);
-                    }}
-                />
-                <br />
-                <Field
-                    component={CheckboxWithLabel}
-                    type="checkbox"
-                    key={ReferralFormField.agricultureLivelihoodProgramEnrollment}
-                    name={ReferralFormField.agricultureLivelihoodProgramEnrollment}
-                    Label={{
-                        label: referralFieldLabels[
-                            ReferralFormField.agricultureLivelihoodProgramEnrollment
-                        ],
-                    }}
-                    onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                        props.formikProps.handleChange(event);
-                    }}
-                />
-            </div>
-        </div>
-    );
-};
-
 const OtherServicesForm = () => {
     const styles = useStyles();
 
@@ -333,13 +291,6 @@ const NewReferral = () => {
             label: `${referralFieldLabels[ReferralFormField.orthotic]} Visit`,
             Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.orthotic),
             validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.orthotic),
-        },
-        [ReferralFormField.hhaNutritionAndAgricultureProject]: {
-            label: `${
-                referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]
-            } Visit`,
-            Form: NutritionForm,
-            validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
         },
         [ReferralFormField.servicesOther]: {
             label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,

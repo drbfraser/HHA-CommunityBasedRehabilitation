@@ -317,10 +317,6 @@ class Referral(models.Model):
         max_length=3, choices=InjuryLocation.choices, blank=True
     )
 
-    hha_nutrition_and_agriculture_project = models.BooleanField(default=False)
-    emergency_food_aid = models.BooleanField(default=False)
-    agriculture_livelihood_program_enrollment = models.BooleanField(default=False)
-
     services_other = models.CharField(max_length=100, blank=True)
 
 

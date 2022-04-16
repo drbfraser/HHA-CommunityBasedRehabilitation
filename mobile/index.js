@@ -59,7 +59,7 @@ initializeCommon({
             return new Error(
                 !netInfoState.isInternetReachable
                     ? "No internet available"
-                    : "Unable to reach server" + API_URL
+                    : "Unable to reach server"
             );
         }
 

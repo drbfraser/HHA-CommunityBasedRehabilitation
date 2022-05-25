@@ -65,9 +65,16 @@ while Expo is running, you will need to stop and restart Expo.
 
 ### 4. Install Required NPM Packages
 
-Navigate to `common` and run `npm install`.
-Navigate to `web` and run `npm install`.
-Navigate to `mobile`, `npm pack ../common` and run `npm install`.
+- Navigate to `common/` and run:  
+  `npm install`
+- Navigate to `web/` and run:  
+  `npm install`
+- Navigate to `mobile/` and run:  
+  `npm pack ../common`  
+  `npm install cbr-common-1.0.0.tgz`  
+  `npm install`
+
+ The `npm install cbr-common-1.0.0.tgz` command will update the SHA in `mobile/package-lock.json` for `@cbr/common`. Without this step the build will generate an `EINTEGRITY` error. The name of this module is found by the last line of the output of the `npm pack ../common` command.
 
 ### 5. Run Django Database Migrations
 

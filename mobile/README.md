@@ -6,15 +6,23 @@ The CBR Mobile app uses the React Native framework along with [WatermelonDB](htt
 1. Install Android Studio, configure a virtual device
 2. Add Android SDK to path (to run `adb`, Android Debug Bridge)
 	- Find the location of the Android SDK: in Android Studios go to Tools > SDK Manager, at top under "Android SDK Location"
-	- Under Windows, goto Start > "Environment Variables" > Environment Variables > User variables for ... > add `D:\Users\Brian\AndroidSDK\platform-tools` (or the like). 
+	- Under Windows, goto Start > "Environment Variables" > Environment Variables > User variables for ... > Path. 
+	- Add to the end the `platform-tools/` sub-folder of the Android SDK, such as: `D:\Users\Brian\AndroidSDK\platform-tools`
+	- Close and re-open any terminals
 	- Test by running:  
 	  `$ adb`
 
-2. Install `react-native` command line tools  
+3. Set the JAVA_HOME environment variable
+	- Find the location of your installed version of the Java JDK. Likely something like `C:\Program Files\Java\jdk-11.0.5`
+	- JDK 11.0.5 is known to work; JRE 8 is known not to.
+	- Under Windows, goto Start > "Environment Variables" > Environment Variables > User variables for ... > add new entry for `JAVA_HOME`, and set to `C:\Program Files\Java\jdk-11.0.5` (or the like). 
+	- Close and re-open any active terminals
+
+4. Install `react-native` command line tools  
 	`$ npm install -g react-native-cli`
 
 
-3. Configure the project with the location of the SDK
+5. Configure the project with the location of the SDK
 	- Find SDK path: in Android Studios > Tools > SDK Manager, at top under "Android SDK Location"
 	- Create file `mobile/android/local.properties`, and setup the path such as shown below. You must escape any `\` in the path with an extra `\` (Windows).  
 		```

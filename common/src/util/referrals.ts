@@ -18,6 +18,11 @@ export interface IReferral {
     prosthetic_injury_location: InjuryLocation;
     orthotic: boolean;
     orthotic_injury_location: InjuryLocation;
+
+    hha_nutrition_and_agriculture_project: boolean;
+    emergency_food_aid: boolean;
+    agriculture_livelihood_program_enrollment: boolean;
+
     services_other: string;
 }
 
@@ -29,6 +34,7 @@ export interface IOutstandingReferral {
     physiotherapy: boolean;
     prosthetic: boolean;
     orthotic: boolean;
+    hha_nutrition_and_agriculture_project: boolean;
     services_other: string;
 }
 
@@ -36,6 +42,7 @@ export enum ReferralTypes {
     WHEELCHAIR = "wheelchair",
     PROSTHETIC = "prosthetic",
     ORTHOTIC = "orthotic",
+    HHANAP = "hha_nutrition_and_agriculture_project",
 }
 
 export enum InjuryLocation {

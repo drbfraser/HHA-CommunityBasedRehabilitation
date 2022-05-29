@@ -24,6 +24,7 @@ export const handleSubmit = async (
                 visit.health_visit = values.HEALTH;
                 visit.educat_visit = values.EDUCAT;
                 visit.social_visit = values.SOCIAL;
+                visit.nutrit_visit = values.NUTRIT;
                 visit.longitude = "0.0";
                 visit.latitude = "0.0";
                 visit.zone = values.zone;
@@ -34,6 +35,7 @@ export const handleSubmit = async (
         await visit.addVisitSpec(values.HEALTH, values.improvements.HEALTH, values.outcomes.HEALTH);
         await visit.addVisitSpec(values.EDUCAT, values.improvements.EDUCAT, values.outcomes.EDUCAT);
         await visit.addVisitSpec(values.SOCIAL, values.improvements.SOCIAL, values.outcomes.SOCIAL);
+        await visit.addVisitSpec(values.NUTRIT, values.improvements.NUTRIT, values.outcomes.NUTRIT);
 
         AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {

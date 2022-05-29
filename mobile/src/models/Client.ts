@@ -15,12 +15,13 @@ import { writer } from "@nozbe/watermelondb/decorators/action";
 import { Q } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 import { ReferralField } from "@cbr/common";
+import { SyncableModel } from "./interfaces/SyncableModel";
 
 const sanitizeDisability = (rawDisability) => {
     return Array.isArray(rawDisability) ? rawDisability.map(Number) : [];
 };
 
-export default class Client extends Model {
+export default class Client extends Model implements SyncableModel {
     static table = modelName.clients;
     static associations = {
         users: { type: mobileGenericField.belongs_to, key: tableKey.user_id },
@@ -54,6 +55,8 @@ export default class Client extends Model {
     @date(ClientField.social_timestamp) social_timestamp;
     @text(ClientField.educat_risk_level) educat_risk_level;
     @date(ClientField.educat_timestamp) educat_timestamp;
+    @text(ClientField.nutrit_risk_level) nutrit_risk_level;
+    @date(ClientField.nutrit_timestamp) nutrit_timestamp;
     @date(ClientField.last_visit_date) last_visit_date;
 
     @readonly @date(mobileGenericField.created_at) createdAt;
@@ -90,6 +93,11 @@ export default class Client extends Model {
                     client.educat_risk_level = level;
                     client.educat_timestamp = time;
                     break;
+
+                case RiskType.NUTRITION:
+                    client.nutrit_risk_level = level;
+                    client.nutrit_timestamp = time;
+                    break;
             }
         });
     }
@@ -99,6 +107,7 @@ export default class Client extends Model {
             client.educat_timestamp = this.createdAt;
             client.health_timestamp = this.createdAt;
             client.social_timestamp = this.createdAt;
+            client.nutrit_timestamp = this.createdAt;
         });
     }
 
@@ -107,4 +116,8 @@ export default class Client extends Model {
             client.last_visit_date = visitTime;
         });
     }
+
+    getBriefIdentifier = (): string => {
+        return `Client with name ${this.full_name}`;
+    };
 }

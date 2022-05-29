@@ -13,6 +13,7 @@ export enum FormField {
     health = "HEALTH",
     education = "EDUCAT",
     social = "SOCIAL",
+    nutrition = "NUTRIT",
     outcomes = "outcomes",
     improvements = "improvements",
 }
@@ -37,6 +38,7 @@ export const fieldLabels = {
     [FormField.health]: "Health",
     [FormField.education]: "Education",
     [FormField.social]: "Social",
+    [FormField.nutrition]: "Nutrition",
     [FormField.improvements]: "Improvements",
     [FormField.outcomes]: "Outcomes",
     [ImprovementFormField.description]: "Description",
@@ -53,15 +55,18 @@ export const initialValues = {
     [FormField.health]: false,
     [FormField.education]: false,
     [FormField.social]: false,
+    [FormField.nutrition]: false,
     [FormField.outcomes]: {
         [FormField.health]: undefined,
         [FormField.education]: undefined,
         [FormField.social]: undefined,
+        [FormField.nutrition]: undefined,
     },
     [FormField.improvements]: {
         [FormField.health]: [],
         [FormField.education]: [],
         [FormField.social]: [],
+        [FormField.nutrition]: [],
     },
 };
 
@@ -83,6 +88,12 @@ export const provisionals: { [key: string]: string[] } = {
         "Referral to Other Organization",
     ],
     [FormField.social]: ["Advice", "Advocacy", "Encouragement", "Referral to Other Organization"],
+    [FormField.nutrition]: [
+        "Advice",
+        "Advocacy",
+        "Encouragement",
+        "Referral to Other Organization",
+    ],
 };
 
 export type TFormValues = typeof initialValues;
@@ -94,6 +105,7 @@ export const initialValidationSchema = () =>
         [FormField.health]: Yup.boolean().label(fieldLabels[FormField.health]),
         [FormField.education]: Yup.boolean().label(fieldLabels[FormField.education]),
         [FormField.social]: Yup.boolean().label(fieldLabels[FormField.social]),
+        [FormField.nutrition]: Yup.boolean().label(fieldLabels[FormField.nutrition]),
     });
 
 export const visitTypeValidationSchema = (visitType: FormField) =>

@@ -3,8 +3,9 @@ import { Model } from "@nozbe/watermelondb";
 import { field, date, readonly, text, children } from "@nozbe/watermelondb/decorators";
 import { writer } from "@nozbe/watermelondb/decorators/action";
 import { mobileGenericField, modelName, tableKey } from "./constant";
+import { SyncableModel } from "./interfaces/SyncableModel";
 
-export default class User extends Model {
+export default class User extends Model implements SyncableModel {
     static table = modelName.users;
     static associations = {
         clients: { type: mobileGenericField.has_many, foreignKey: tableKey.user_id },
@@ -34,4 +35,8 @@ export default class User extends Model {
     @children(modelName.clients) clients;
     @children(modelName.surveys) surveys;
     @children(modelName.visits) visits;
+
+    getBriefIdentifier = (): string => {
+        return `User with username ${this.username}`;
+    };
 }

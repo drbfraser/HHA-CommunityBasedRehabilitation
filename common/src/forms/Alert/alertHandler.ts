@@ -105,12 +105,12 @@ export const handleUpdateAlertSubmit = async (values: TAlertUpdateValues) => {
             subject: values.subject,
             priority: values.priority,
             alert_message: values.alert_message,
-            unread_by_users: updatedUnreadUserList.toString(),
+            unread_by_users: updatedUnreadUserList,
             created_by_user: values.created_by_user,
         };
 
         const formData = objectToFormData(updateValues);
-        await updateAlert(formData, values.id);
+        await updateAlert(formData, values.id.toString());
         socket.emit("alertViewed", { ...updateValues, currentUser: userID }); // emit socket event to the backend
     } catch (e) {
         const initialMessage = "Encountered an error while trying to update the alert!";

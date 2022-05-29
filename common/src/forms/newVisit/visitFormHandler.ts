@@ -25,6 +25,7 @@ export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
         health_visit: values[VisitFormField.health],
         educat_visit: values[VisitFormField.education],
         social_visit: values[VisitFormField.social],
+        nutrit_visit: values[VisitFormField.nutrition],
         zone: values[VisitFormField.zone],
         village: values[VisitFormField.village],
         longitude: 0.0,

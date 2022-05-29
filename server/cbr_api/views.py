@@ -28,6 +28,7 @@ from cbr_api.util import (
     stringify_disability,
     destringify_disability,
     decode_image,
+    api_versions_compatible,
 )
 
 
@@ -113,12 +114,15 @@ class ClientList(generics.ListCreateAPIView):
         responses=serializers.ClientCreateSerializer,
     )
     def post(self, request):
+        print("POST 1")
         return super().post(request)
 
     def get_serializer_class(self):
         if self.request.method == "GET":
+            print("GET 1")
             return serializers.ClientListSerializer
         elif self.request.method == "POST":
+            print("POST 2")
             return serializers.ClientCreateSerializer
 
     filter_backends = (DjangoFilterBackend,)
@@ -200,11 +204,13 @@ class RiskDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class VisitList(generics.CreateAPIView):
+    print("! -- VisitList")
     queryset = models.Visit.objects.all()
     serializer_class = serializers.DetailedVisitSerializer
 
 
 class VisitDetail(generics.RetrieveAPIView):
+    print("! -- VisitDetail")
     queryset = models.Visit.objects.all()
     serializer_class = serializers.DetailedVisitSerializer
 
@@ -321,6 +327,11 @@ class AlertDetail(generics.RetrieveUpdateAPIView):
 
 @api_view(["GET", "POST"])
 def sync(request):
+    mobileApiVersion = request.GET.get("api_version")
+
+    if mobileApiVersion == None or not api_versions_compatible(mobileApiVersion):
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     if request.method == "GET":
         reply = syncResp()
         reply.changes["users"] = get_model_changes(request, models.UserCBR)
@@ -404,3 +415,16 @@ def sync(request):
             validation_fail(outcome_improvment_serializer)
 
         return Response(status=status.HTTP_201_CREATED)
+
+
+@api_view(["POST"])
+def version_check(request):
+    serializer = serializers.VersionCheckSerializer(data=request.data)
+
+    if not serializer.is_valid():
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if api_versions_compatible(serializer.data["api_version"]):
+        return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_403_FORBIDDEN)

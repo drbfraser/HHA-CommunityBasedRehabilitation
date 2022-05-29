@@ -68,6 +68,9 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
                 {visitSummary.social_visit && (
                     <RiskTypeChip risk={RiskType.SOCIAL} clickable={clickable} />
                 )}{" "}
+                {visitSummary.nutrit_visit && (
+                    <RiskTypeChip risk={RiskType.NUTRITION} clickable={clickable} />
+                )}{" "}
             </>
         );
     };

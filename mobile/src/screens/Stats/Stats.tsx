@@ -75,7 +75,12 @@ const Stats = () => {
     const [disabilityData, setDisabilityData] = useState(fetchDisabilityData);
     const [disabilityCount, setDisabilityCount] = useState<number>(0);
 
-    const graphicColor = [themeColors.hhaGreen, themeColors.hhaPurple, themeColors.hhaBlue];
+    const graphicColor = [
+        themeColors.hhaGreen,
+        themeColors.hhaPurple,
+        themeColors.hhaBlue,
+        themeColors.yellow,
+    ];
 
     const VisitStats = async () => {
         let sum = 0;
@@ -99,8 +104,9 @@ const Stats = () => {
             VisitField.health_visit,
             VisitField.social_visit,
             VisitField.educat_visit,
+            VisitField.nutrit_visit,
         ];
-        const visitName = ["Health", "Social", "Education"];
+        const visitName = ["Health", "Social", "Education", "Nutrition"];
         var index = 0;
         pieData = [];
         for (const type of visitType) {

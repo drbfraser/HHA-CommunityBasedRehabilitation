@@ -84,3 +84,11 @@ After the app is up and running the first time, after you make a change to the c
 -   When running the mobile app, if you see "cachedAPIGet(..): API fetch failed" it likely means that you have not started the backed Docker containers, or are not targeting the correct URL for the back-end.
 -   If you see the error "NativeModules.DatabaseBridge is not defined!", it likely means that you are trying to use Expo to run the project. However, the project has been ejected from Expo in order to work with Watermelon DB, so we cannot use the `expo start` command.
 -   If your username and password are rejected when logging in, ensure that you can log in via the web interface first. You may need to seed the database by running the populate database script to setup the default user(s).
+-   Upon doing react-native run-android, if a message below is returned, 
+   ```
+   ERROR cachedAPIGet(cache_user): API fetch failed (unable to get an access token) and no backup; using error value" 
+   ```
+   then enter this command in your terminal while running docker backend
+   ```
+   docker exec cbr_django python manage.py migrate
+   ```

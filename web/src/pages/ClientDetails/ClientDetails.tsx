@@ -76,7 +76,7 @@ const ClientDetails = () => {
             </Grid>
 
             {console.log("--------- HIGHLIGHT1 ---------")}
-            
+
             {console.log(clientInfo)}
 
             {console.log("--------- HIGHLIGHT2 ---------")}

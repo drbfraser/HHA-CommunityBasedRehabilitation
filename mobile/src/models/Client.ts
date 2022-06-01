@@ -94,9 +94,9 @@ export default class Client extends Model {
                     break;
 
                 case RiskType.NUTRITION:
-                  client.nutrit_risk_level = level;
-                  client.nutrit_timestamp = time;
-                  break;
+                    client.nutrit_risk_level = level;
+                    client.nutrit_timestamp = time;
+                    break;
             }
         });
     }

@@ -64,9 +64,9 @@ const Dashboard = () => {
                             last_visit_date: row.last_visit_date,
                         };
                     });
-                console.log('-----------priorityClientsSTART-----------');
+                console.log("-----------priorityClientsSTART-----------");
                 console.log(tempClients);
-                console.log('-----------priorityClientsEND-----------');
+                console.log("-----------priorityClientsEND-----------");
                 setClients(priorityClients);
             } catch (e) {
                 setClientError(e instanceof Error ? e.message : `${e}`);

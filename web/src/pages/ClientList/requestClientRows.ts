@@ -45,6 +45,7 @@ const requestClientRows = async (
                 [RiskType.HEALTH]: responseRow.health_risk_level,
                 [RiskType.EDUCATION]: responseRow.educat_risk_level,
                 [RiskType.SOCIAL]: responseRow.social_risk_level,
+                [RiskType.NUTRITION]: responseRow.nutrit_risk_level,
             };
         });
 

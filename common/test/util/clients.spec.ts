@@ -3,7 +3,11 @@ import { RiskLevel } from "../../src/util/risks";
 
 const unusedClientSummaryProps: Omit<
     IClientSummary,
-    "health_risk_level" | "educat_risk_level" | "social_risk_level" | "last_visit_date"
+    | "health_risk_level"
+    | "educat_risk_level"
+    | "social_risk_level"
+    | "nutrit_risk_level"
+    | "last_visit_date"
 > = {
     id: 0,
     full_name: "",
@@ -17,6 +21,7 @@ const createClientWithAllRisksAsGivenLevel = (riskLevel: RiskLevel): IClientSumm
         health_risk_level: riskLevel,
         educat_risk_level: riskLevel,
         social_risk_level: riskLevel,
+        nutrit_risk_level: RiskLevel.LOW,
         last_visit_date: 0,
     };
 };
@@ -26,12 +31,14 @@ const createPossibleClientsWithASingleExtremeRisk = (riskLevel: RiskLevel): ICli
         health_risk_level: RiskLevel.LOW,
         educat_risk_level: RiskLevel.LOW,
         social_risk_level: RiskLevel.LOW,
+        nutrit_risk_level: RiskLevel.LOW,
         last_visit_date: 0,
     };
     return [
         { ...clientWithAllLowRisks, health_risk_level: riskLevel },
         { ...clientWithAllLowRisks, educat_risk_level: riskLevel },
         { ...clientWithAllLowRisks, social_risk_level: riskLevel },
+        { ...clientWithAllLowRisks, nutrit_risk_level: riskLevel },
     ];
 };
 

@@ -24,6 +24,10 @@ export const riskTypes: { [key: string]: IRiskType } = {
         name: "Social",
         Icon: (color: string) => riskIcon("account-voice", color),
     },
+    [RiskType.NUTRITION]: {
+        name: "Nutrition",
+        Icon: (color: string) => riskIcon("silverware-fork-knife", color),
+    },
     CIRCLE: {
         name: "Circle",
         Icon: (color: string) => riskIcon("circle", color),

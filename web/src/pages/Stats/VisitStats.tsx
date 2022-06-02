@@ -57,6 +57,11 @@ const VisitStats = ({ stats }: IProps) => {
             count: getBreakdownCount("social_count"),
             color: themeColors.hhaBlue,
         },
+        {
+            label: "Nutrition",
+            count: getBreakdownCount("nutrit_count"),
+            color: themeColors.hhaBlue,
+        },
     ].filter((z) => z.count);
 
     const handleChartClick = (e: any) => {

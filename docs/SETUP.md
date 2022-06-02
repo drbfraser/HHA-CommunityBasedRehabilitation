@@ -32,7 +32,7 @@ POSTGRES_USER=user
 POSTGRES_PASSWORD=password
 ```
 
-The secret key, username and password are for your local development environment only - feel free to change them. Ensure you don't commit the `.env` file!
+The values `secretkey`, `user`, and `password` are for your local development environment only - feel free to change them. Ensure you don't commit the `.env` file!
 
 #### Mobile app
 
@@ -48,7 +48,7 @@ LOCAL_URL="http://<some hostname or IP>" (Optional)
 `APP_ENV` to `"local"`, you can also set it to `"dev"`, `"staging"`, or `"prod"`, in case you would like the mobile app to point to the development, staging, or production
 environments, respectively.
 
-This is optional. If you do not specify `LOCAL_URL`, the developement server is used by default on development builds. Note
+This is optional. If you do not specify `LOCAL_URL`, the development server is used by default on development builds. Note
 that `LOCAL_URL` is ignored when running a production or staging build. Running the app by running `npm run android` in the mobile directory
 will be considered a development build.
 
@@ -70,9 +70,14 @@ If you are going to be using an IP address, you will need to specify the port (8
 
 ### 4. Install Required NPM Packages
 
-Navigate to `common` and run `npm install`.
-Navigate to `web` and run `npm install`.
-Navigate to `mobile` and run `npm run refresh-common`.
+- Navigate to `common/` and run:  
+  `npm install`
+- Navigate to `web/` and run:  
+  `npm install`
+- Navigate to `mobile/` and run:  
+  `npm run refresh-common`
+
+ The `npm run refresh-common` command will rebuild the `common` package and reinstall it in `mobile/`. (If we did not force a reinstall of common it would generate an `EINTEGRITY` error due to a mismatch between the `common` package and cached SHA in `mobile/package-lock.json`.
 
 ### 5. Run Django Database Migrations
 

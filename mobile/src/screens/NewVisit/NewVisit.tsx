@@ -55,6 +55,7 @@ const visitTypes: VisitFormField[] = [
     VisitFormField.health,
     VisitFormField.education,
     VisitFormField.social,
+    VisitFormField.nutrition,
 ];
 
 const ImprovementField = (props: {

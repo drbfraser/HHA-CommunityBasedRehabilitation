@@ -105,6 +105,14 @@ const Timeline = (props: ISummaryProps) => {
                                     ) : (
                                         <></>
                                     )}
+                                    {props.activity.visit.nutrit_visit ? (
+                                        <View style={styles.subItem}>
+                                            {riskTypes.NUTRIT.Icon(themeColors.riskBlack)}
+                                            <Text style={styles.subItemText}>Nutrition</Text>
+                                        </View>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </View>
                                 <Portal>
                                     <Modal

@@ -2,9 +2,11 @@ import { VisitField } from "@cbr/common/src/forms/newVisit/visitFormFields";
 import { Model } from "@nozbe/watermelondb";
 import { field, date, readonly, relation, children } from "@nozbe/watermelondb/decorators";
 import { writer } from "@nozbe/watermelondb/decorators/action";
+import Client from "./Client";
 import { mobileGenericField, modelName, tableKey } from "./constant";
+import { SyncableModel } from "./interfaces/SyncableModel";
 
-export default class Visit extends Model {
+export default class Visit extends Model implements SyncableModel {
     static table = modelName.visits;
     static associations = {
         clients: { type: mobileGenericField.belongs_to, key: tableKey.client_id },
@@ -16,6 +18,7 @@ export default class Visit extends Model {
     @field(VisitField.health_visit) health_visit;
     @field(VisitField.educat_visit) educat_visit;
     @field(VisitField.social_visit) social_visit;
+    @field(VisitField.nutrit_visit) nutrit_visit;
     @field(VisitField.longitude) longitude;
     @field(VisitField.latitude) latitude;
     @field(VisitField.zone) zone;
@@ -48,4 +51,10 @@ export default class Visit extends Model {
             });
         }
     }
+
+    getBriefIdentifier = async (): Promise<string> => {
+        const fetchedClient: Client = await this.client.fetch();
+
+        return `Visit belonging to ${fetchedClient.getBriefIdentifier()}`;
+    };
 }

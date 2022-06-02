@@ -32,7 +32,7 @@ POSTGRES_USER=user
 POSTGRES_PASSWORD=password
 ```
 
-The secret key, username and password are for your local development environment only - feel free to change them. Ensure you don't commit the `.env` file!
+The secret key, username, and password are for your local development environment only - feel free to change them. Ensure you don't commit the `.env` file!
 
 #### Mobile app
 
@@ -70,9 +70,14 @@ If you are going to be using an IP address, you will need to specify the port (8
 
 ### 4. Install Required NPM Packages
 
-Navigate to `common` and run `npm install`.
-Navigate to `web` and run `npm install`.
-Navigate to `mobile` and run `npm run refresh-common`.
+- Navigate to `common/` and run:  
+  `npm install`
+- Navigate to `web/` and run:  
+  `npm install`
+- Navigate to `mobile/` and run:  
+  `npm run refresh-common`
+
+ The `npm run refresh-common` command will rebuild the `common` package and reinstall it in `mobile/`. (If we did not force a reinstall of common it would generate an `EINTEGRITY` error due to a mismatch between the `common` packageand cached SHA in `mobile/package-lock.json`.
 
 ### 5. Run Django Database Migrations
 

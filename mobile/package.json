@@ -7,7 +7,6 @@
         "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz"
     },
     "dependencies": {
-        "@cbr/common": "file:cbr-common-1.0.0.tgz",
         "@expo/vector-icons": "^12.0.0",
         "@formatjs/intl-datetimeformat": "^4.1.6",
         "@formatjs/intl-displaynames": "^5.1.6",
@@ -45,7 +44,7 @@
         "react": "16.13.1",
         "react-dom": "16.13.1",
         "react-is-mounted-hook": "^1.1.1",
-        "react-native": "0.64",
+        "react-native": "^0.63",
         "react-native-background-timer": "^2.4.1",
         "react-native-checkbox-selection": "^1.1.0",
         "react-native-dotenv": "^3.2.0",

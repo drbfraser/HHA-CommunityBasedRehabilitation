@@ -48,8 +48,7 @@ If you need to change the version of node/npm, then try:
 2. Change to mobile folder:  
    `$ cd mobile/`
 3. Package up `common/` and force a re-install, overriding whatever SHA was in the `package-lock.json` file:  
-   `$ npm pack ../common/`  
-   `$ npm install cbr-common-1.0.0.tgz`
+   `$ npm run refresh-common`
 4. Install necessary node modules:  
    `$ npm install`
 
@@ -63,7 +62,7 @@ If you need to change the version of node/npm, then try:
 3. Build and launch from mobile/ folder  
    `$ react-native run-android`
     - This command may take 10+ minutes. If it seems to hang, wait 5 minutes before concluding it's hung.
-    - For more infor os Neact Native on Android, see this [Tutorials Point guide](https://www.tutorialspoint.com/react_native/react_native_environment_setup.htm)
+    - For more info on React Native on Android, see this [Tutorials Point guide](https://www.tutorialspoint.com/react_native/react_native_environment_setup.htm)
 
 # Rebuilding app
 
@@ -75,8 +74,8 @@ After the app is up and running the first time, after you make a change to the c
 
 # Troubleshooting
 
--   After running `npm install` in the mobile/ folder, if you get an error for `EINTERGRITY` complaining about a SHA-512 mismatch, then it is likely that you need to re-run the `npm install cbr-common-1.0.0.tgz` comamnd inside the mobile/ folder to trigger it updating the SHA-512 of our custom package building built on your machine.
--   After running `npm install` in the mobile/ folder, if you get an error for `EBADPLATFORM` related to the package `fservants`, then delete `mobile/package-lock.json` and re-run `npm install` to update to a newer fservants
+-   After running `npm install` in the mobile/ folder, if you get an error for `EINTERGRITY` complaining about a SHA-512 mismatch, then it is likely that you need to re-run the `npm install cbr-common-1.0.0.tgz` command inside the mobile/ folder to trigger it updating the SHA-512 of our custom package building built on your machine.
+-   After running `npm install` in the mobile/ folder, if you get an error for `EBADPLATFORM` related to the package `fservants`, then delete `mobile/package-lock.json` and re-run `npm install` to update to a newer `fservants`
 -   After running `docker-compose up` in the project folder, if it complains that POSTGRES_USER, POSTGRES_PASSWORD, SECRET_KEY and such are not set, then:
     -   Ensure you have created the .env file in the project's root directory with those contents
     -   If in windows, ensure you are running the command via PowerShell (not Git Bash)

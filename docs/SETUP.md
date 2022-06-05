@@ -8,7 +8,13 @@ Follow this guide to install Docker: https://docs.docker.com/get-docker/
 
 - If on Windows 10 Home, you'll need to first [enable WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and then follow this guide: https://docs.docker.com/docker-for-windows/install-windows-home/
 
-Install NodeJS 14 LTS from here: https://nodejs.org/en/
+Install NodeJS 14 LTS from here: https://nodejs.org/download/release/v14.19.3/
+
+Follow this guide to set up a proper environment for React Native v0.64: https://reactnative.dev/docs/0.64/environment-setup
+
+Follow this guide to install an Android emulator which can be used to run the mobile app: https://developer.android.com/studio/run/emulator/
+
+Install JDK 11 from here: https://jdk.java.net/java-se-ri/11
 
 ### 2. Clone the Repo
 
@@ -26,7 +32,7 @@ POSTGRES_USER=user
 POSTGRES_PASSWORD=password
 ```
 
-The secret key, username, and password are for your local development environment only - feel free to change them. Ensure you don't commit the `.env` file!
+The values `secretkey`, `user`, and `password` are for your local development environment only - feel free to change them. Ensure you don't commit the `.env` file!
 
 #### Mobile app
 
@@ -38,11 +44,13 @@ APP_ENV="local"
 LOCAL_URL="http://<some hostname or IP>" (Optional)
 ```
 
-APP_ENV specified to local will allow the use of the LOCAL_URL,if APP_ENV is not specified, the development server will be used by default
+`APP_ENV` specified to `"local"` will allow the use of the `LOCAL_URL`, if `APP_ENV` is not specified, the development server will be used by default. Along with setting
+`APP_ENV` to `"local"`, you can also set it to `"dev"`, `"staging"`, or `"prod"`, in case you would like the mobile app to point to the development, staging, or production
+environments, respectively.
 
-This is optional. If you do not specify `LOCAL_URL`, the developement server is used by default on development builds. Note
-that `LOCAL_URL` is ignored when running a production or staging build. Running Expo using `npm start` or `expo start`
-in the `mobile` directory will be considered a development build.
+This is optional. If you do not specify `LOCAL_URL`, the development server is used by default on development builds. Note
+that `LOCAL_URL` is ignored when running a production or staging build. Running the app by running `npm run android` in the mobile directory
+will be considered a development build.
 
 If you are going to be using an IP address, you will need to specify the port (8000) in the URL.
 
@@ -60,9 +68,6 @@ If you are going to be using an IP address, you will need to specify the port (8
   LOCAL_URL="http://10.0.2.2:8000"
   ```
 
-To validate that your specified API URL is being used for a development build, run `expo config --type public` (or print out the API URL in the app to the console). If you need to change the URL
-while Expo is running, you will need to stop and restart Expo.
-
 ### 4. Install Required NPM Packages
 
 - Navigate to `common/` and run:  
@@ -70,11 +75,9 @@ while Expo is running, you will need to stop and restart Expo.
 - Navigate to `web/` and run:  
   `npm install`
 - Navigate to `mobile/` and run:  
-  `npm pack ../common`  
-  `npm install cbr-common-1.0.0.tgz`  
-  `npm install`
+  `npm run refresh-common`
 
- The `npm install cbr-common-1.0.0.tgz` command will update the SHA in `mobile/package-lock.json` for `@cbr/common`. Without this step the build will generate an `EINTEGRITY` error. The name of this module is found by the last line of the output of the `npm pack ../common` command.
+ The `npm run refresh-common` command will rebuild the `common` package and reinstall it in `mobile/`. (If we did not force a reinstall of common it would generate an `EINTEGRITY` error due to a mismatch between the `common` package and cached SHA in `mobile/package-lock.json`.
 
 ### 5. Run Django Database Migrations
 

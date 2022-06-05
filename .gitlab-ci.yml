@@ -207,3 +207,4 @@ deploy production:
       when: manual
   script:
     - *deploy-script
+

@@ -9,11 +9,6 @@ variables:
   PROD_BRANCH: "production"
   NPM_VERSION: "7.19.0"
 
-.default_rules:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "webide"
-
 build common:
   stage: build
   image: node:14
@@ -21,12 +16,14 @@ build common:
     - docker
   needs: []
   rules:
-    - !reference [.default_rules, rules]
     - if: "$CI_MERGE_REQUEST_ID != null"
       changes:
         - common/**/*
         - .gitlab-ci.yml
       when: always
+    # Always build/test for schedule / manual "Run Pipeline" via web
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "webide"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd common
@@ -42,13 +39,15 @@ build mobile:
     - docker
   needs: []
   rules:
-    - !reference [.default_rules, rules]
     - if: "$CI_MERGE_REQUEST_ID != null"
       changes:
         - common/**/*
         - mobile/**/*
         - .gitlab-ci.yml
       when: always
+    # Always build/test for schedule / manual "Run Pipeline" via web
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "webide"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd mobile
@@ -67,7 +66,6 @@ build web:
     - docker
   needs: []
   rules:
-    - !reference [.default_rules, rules]
     # build on merge requests if there are changes
     - if: "$CI_MERGE_REQUEST_ID != null"
       changes:
@@ -78,6 +76,9 @@ build web:
     # build on deployments
     - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: always
+    # Always build/test for schedule / manual "Run Pipeline" via web
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "webide"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd common
@@ -104,7 +105,6 @@ build server:
     - docker
   needs: []
   rules:
-    - !reference [.default_rules, rules]
     - if: "$CI_MERGE_REQUEST_ID != null"
       changes:
         - server/**/*
@@ -112,6 +112,9 @@ build server:
       when: always
     - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: always
+    # Always build/test for schedule / manual "Run Pipeline" via web
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "webide"
   variables:
     DOMAIN: "example.com"
     SECRET_KEY: "test"
@@ -135,12 +138,14 @@ test common:
     - docker
   needs: ["build common"]
   rules:
-    - !reference [.default_rules, rules]
     - if: "$CI_MERGE_REQUEST_ID != null"
       changes:
         - common/**/*
         - .gitlab-ci.yml
       when: always
+    # Always build/test for schedule / manual "Run Pipeline" via web
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "webide"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd common
@@ -162,12 +167,14 @@ test caddy:
     - docker
   needs: []
   rules:
-    - !reference [.default_rules, rules]
     - if: "$CI_MERGE_REQUEST_ID != null"
       changes:
         - caddy/**/*
         - .gitlab-ci.yml
       when: always
+    # Always build/test for schedule / manual "Run Pipeline" via web
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "webide"
   variables:
     DOMAIN: "example.com"
   script:

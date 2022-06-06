@@ -23,7 +23,7 @@ build common:
       when: always
     # Always build/test for schedule / manual "Run Pipeline" via web
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "webide"
+    - if: $CI_PIPELINE_SOURCE == "web"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd common
@@ -47,7 +47,7 @@ build mobile:
       when: always
     # Always build/test for schedule / manual "Run Pipeline" via web
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "webide"
+    - if: $CI_PIPELINE_SOURCE == "web"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd mobile
@@ -78,7 +78,7 @@ build web:
       when: always
     # Always build/test for schedule / manual "Run Pipeline" via web
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "webide"
+    - if: $CI_PIPELINE_SOURCE == "web"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd common
@@ -114,7 +114,7 @@ build server:
       when: always
     # Always build/test for schedule / manual "Run Pipeline" via web
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "webide"
+    - if: $CI_PIPELINE_SOURCE == "web"
   variables:
     DOMAIN: "example.com"
     SECRET_KEY: "test"
@@ -145,7 +145,7 @@ test common:
       when: always
     # Always build/test for schedule / manual "Run Pipeline" via web
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "webide"
+    - if: $CI_PIPELINE_SOURCE == "web"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd common
@@ -174,7 +174,7 @@ test caddy:
       when: always
     # Always build/test for schedule / manual "Run Pipeline" via web
     - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "webide"
+    - if: $CI_PIPELINE_SOURCE == "web"
   variables:
     DOMAIN: "example.com"
   script:

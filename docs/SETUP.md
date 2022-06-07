@@ -52,6 +52,12 @@ This is optional. If you do not specify `LOCAL_URL`, the development server is u
 that `LOCAL_URL` is ignored when running a production or staging build. Running the app by running `npm run android` in the mobile directory
 will be considered a development build.
 
+Note that changes to the `.env` file may not be applied if the environment variables are cached. To clear the cache and apply changes to `.env`, run the following:
+
+```
+expo r -c
+```
+
 If you are going to be using an IP address, you will need to specify the port (8000) in the URL.
 
 - If you are going to be developing the app with a physical phone:

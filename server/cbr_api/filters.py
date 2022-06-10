@@ -13,6 +13,7 @@ class ClientFilter(django_filters.FilterSet):
             "health_risk_level",
             "social_risk_level",
             "educat_risk_level",
+            "nutrit_risk_level",
             "user_id",
         ]
         filter_overrides = {

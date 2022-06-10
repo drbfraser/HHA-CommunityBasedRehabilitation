@@ -11,6 +11,7 @@ export enum SortOptions {
     HEALTH = "health",
     EDUCATION = "education",
     SOCIAL = "social",
+    NUTRITION = "nutrition",
     TYPE = "type",
     DATE = "date",
     STATUS = "status",
@@ -108,6 +109,10 @@ export const clientComparator = (
         }
         case SortOptions.SOCIAL: {
             result = getLevelByColor(a.SocialLevel) > getLevelByColor(b.SocialLevel) ? 1 : -1;
+            break;
+        }
+        case SortOptions.NUTRITION: {
+            result = getLevelByColor(a.NutritionLevel) > getLevelByColor(b.NutritionLevel) ? 1 : -1;
             break;
         }
         case SortOptions.DATE: {

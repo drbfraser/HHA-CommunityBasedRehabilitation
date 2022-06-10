@@ -38,6 +38,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 health_visit: fetchedVisit.health_visit,
                 educat_visit: fetchedVisit.educat_visit,
                 social_visit: fetchedVisit.social_visit,
+                nutrit_visit: fetchedVisit.nutrit_visit,
                 longitude: fetchedVisit.longitude,
                 latitude: fetchedVisit.latitude,
                 zone: fetchedVisit.zone,
@@ -156,6 +157,9 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                     )}{" "}
                     {visitSummary.social_visit && (
                         <SocialChip label="Social" type={RiskType.SOCIAL} />
+                    )}{" "}
+                    {visitSummary.nutrit_visit && (
+                        <SocialChip label="Nutrition" type={RiskType.NUTRITION} />
                     )}{" "}
                 </Dialog.Title>
                 <Dialog.Content>

@@ -18,5 +18,6 @@ export const handleSubmit = async (
         setSubmissionError(
             e instanceof APIFetchFailError ? e.buildFormError(visitFieldLabels) : `${e}`
         );
+        console.log(e);
     }
 };

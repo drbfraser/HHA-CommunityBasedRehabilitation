@@ -40,6 +40,7 @@ const visitTypes: VisitFormField[] = [
     VisitFormField.health,
     VisitFormField.education,
     VisitFormField.social,
+    VisitFormField.nutrition,
 ];
 
 const ImprovementField = (props: {
@@ -359,7 +360,8 @@ const NewVisit = () => {
                                             !(
                                                 formikProps.values[VisitFormField.health] ||
                                                 formikProps.values[VisitFormField.education] ||
-                                                formikProps.values[VisitFormField.social]
+                                                formikProps.values[VisitFormField.social] ||
+                                                formikProps.values[VisitFormField.nutrition]
                                             )
                                         )}
                                     >

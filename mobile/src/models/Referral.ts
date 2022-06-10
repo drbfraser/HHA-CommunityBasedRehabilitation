@@ -3,8 +3,10 @@ import { mobileGenericField, modelName, tableKey } from "./constant";
 import { Model } from "@nozbe/watermelondb";
 import { field, date, text, relation, readonly } from "@nozbe/watermelondb/decorators";
 import { writer } from "@nozbe/watermelondb/decorators/action";
+import Client from "./Client";
+import { SyncableModel } from "./interfaces/SyncableModel";
 
-export default class Referral extends Model {
+export default class Referral extends Model implements SyncableModel {
     static table = modelName.referrals;
     static associations = {
         clients: { type: mobileGenericField.belongs_to, key: tableKey.client_id },
@@ -41,4 +43,10 @@ export default class Referral extends Model {
             referral.date_resolved = new Date().getTime();
         });
     }
+
+    getBriefIdentifier = async (): Promise<string> => {
+        const fetchedClient: Client = await this.client.fetch();
+
+        return `Referral belonging to ${fetchedClient.getBriefIdentifier()}`;
+    };
 }

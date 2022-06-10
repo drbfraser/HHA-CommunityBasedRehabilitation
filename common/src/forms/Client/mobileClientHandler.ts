@@ -62,6 +62,11 @@ export const handleNewMobileClientSubmit = async (
             requirement: values.educationRequirements,
             goal: values.educationGoals,
         },
+        nutrit_risk: {
+            risk_level: values.nutritionRisk,
+            requirement: values.nutritionRequirements,
+            goal: values.nutritionGoals,
+        },
     };
 
     const formData = objectToFormData(newClient);

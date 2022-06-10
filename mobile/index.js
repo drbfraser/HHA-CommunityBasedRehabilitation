@@ -20,8 +20,8 @@ const keyValStorageProvider = {
 
 const BASE_URLS = {
     local: process.env.LOCAL_URL ?? "",
-    dev: "https://cbrd.cradleplatform.com",
-    staging: "https://cbrs.cradleplatform.com",
+    dev: "https://cbr-dev.cmpt.sfu.ca",
+    staging: "https://cbr-stg.cmpt.sfu.ca",
     prod: "https://cbr.hopehealthaction.org",
 };
 
@@ -59,7 +59,7 @@ initializeCommon({
             return new Error(
                 !netInfoState.isInternetReachable
                     ? "No internet available"
-                    : "Unable to reach server"
+                    : "Unable to reach server "
             );
         }
 

@@ -67,6 +67,7 @@ const ClientForm = () => {
                                                 label={clientFieldLabels[ClientField.firstName]}
                                                 required
                                                 fullWidth
+                                                autoComplete="off"
                                             />
                                         </Grid>
                                         <Grid item md={6} xs={12}>
@@ -77,6 +78,7 @@ const ClientForm = () => {
                                                 label={clientFieldLabels[ClientField.lastName]}
                                                 required
                                                 fullWidth
+                                                autoComplete="off"
                                             />
                                         </Grid>
                                         <Grid item md={6} xs={12}>
@@ -89,6 +91,7 @@ const ClientForm = () => {
                                                 InputLabelProps={{ shrink: true }}
                                                 label={clientFieldLabels[ClientField.birthDate]}
                                                 name={ClientField.birthDate}
+                                                autoComplete="off"
                                             />
                                         </Grid>
                                         <Grid item md={6} xs={12}>
@@ -101,6 +104,7 @@ const ClientForm = () => {
                                                     variant="outlined"
                                                     label={clientFieldLabels[ClientField.gender]}
                                                     name={ClientField.gender}
+                                                    autoComplete="off"
                                                 >
                                                     {Object.entries(genders).map(
                                                         ([value, name]) => (
@@ -120,6 +124,7 @@ const ClientForm = () => {
                                                 label={clientFieldLabels[ClientField.village]}
                                                 required
                                                 fullWidth
+                                                autoComplete="off"
                                             />
                                         </Grid>
                                         <Grid item md={6} xs={12}>
@@ -132,6 +137,7 @@ const ClientForm = () => {
                                                     required
                                                     label={clientFieldLabels[ClientField.zone]}
                                                     name={ClientField.zone}
+                                                    autoComplete="off"
                                                 >
                                                     {Array.from(zones).map(([id, name]) => (
                                                         <MenuItem key={id} value={id}>
@@ -148,6 +154,7 @@ const ClientForm = () => {
                                                 variant="outlined"
                                                 label={clientFieldLabels[ClientField.phoneNumber]}
                                                 fullWidth
+                                                autoComplete="off"
                                             />
                                         </Grid>
                                         <Grid item md={6} xs={12}>
@@ -162,6 +169,7 @@ const ClientForm = () => {
                                                 required
                                                 name={ClientField.disability}
                                                 variant="outlined"
+                                                autoComplete="off"
                                             >
                                                 {Array.from(disabilities).map(([id, name]) => (
                                                     <MenuItem key={id} value={id}>
@@ -185,6 +193,7 @@ const ClientForm = () => {
                                                         required
                                                         name={ClientField.otherDisability}
                                                         variant="outlined"
+                                                        autoComplete="off"
                                                     />
                                                 </div>
                                             )}
@@ -233,6 +242,7 @@ const ClientForm = () => {
                                                                         ]
                                                                     }
                                                                     fullWidth
+                                                                    autoComplete="off"
                                                                 />
                                                             </Grid>
                                                             <Grid item md={8} xs={12}>
@@ -250,6 +260,7 @@ const ClientForm = () => {
                                                                         ]
                                                                     }
                                                                     fullWidth
+                                                                    autoComplete="off"
                                                                 />
                                                             </Grid>
                                                             <Grid item md={8} xs={12}>
@@ -269,6 +280,7 @@ const ClientForm = () => {
                                                                         ]
                                                                     }
                                                                     fullWidth
+                                                                    autoComplete="off"
                                                                 />
                                                             </Grid>
                                                         </Grid>
@@ -294,6 +306,7 @@ const ClientForm = () => {
                                                         clientFieldLabels[ClientField.healthRisk]
                                                     }
                                                     name={ClientField.healthRisk}
+                                                    autoComplete="off"
                                                 >
                                                     {Object.entries(riskLevels).map(
                                                         ([value, { name }]) => (
@@ -320,6 +333,7 @@ const ClientForm = () => {
                                                     ]
                                                 }
                                                 name={ClientField.healthRequirements}
+                                                autoComplete="off"
                                             />
                                         </Grid>
 
@@ -333,6 +347,7 @@ const ClientForm = () => {
                                                 variant="outlined"
                                                 label={clientFieldLabels[ClientField.healthGoals]}
                                                 name={ClientField.healthGoals}
+                                                autoComplete="off"
                                             />
                                         </Grid>
 
@@ -347,6 +362,7 @@ const ClientForm = () => {
                                                         clientFieldLabels[ClientField.educationRisk]
                                                     }
                                                     name={ClientField.educationRisk}
+                                                    autoComplete="off"
                                                 >
                                                     {Object.entries(riskLevels).map(
                                                         ([value, { name }]) => (
@@ -373,6 +389,7 @@ const ClientForm = () => {
                                                     ]
                                                 }
                                                 name={ClientField.educationRequirements}
+                                                autoComplete="off"
                                             />
                                         </Grid>
 
@@ -388,6 +405,7 @@ const ClientForm = () => {
                                                     clientFieldLabels[ClientField.educationGoals]
                                                 }
                                                 name={ClientField.educationGoals}
+                                                autoComplete="off"
                                             />
                                         </Grid>
 
@@ -402,6 +420,7 @@ const ClientForm = () => {
                                                         clientFieldLabels[ClientField.socialRisk]
                                                     }
                                                     name={ClientField.socialRisk}
+                                                    autoComplete="off"
                                                 >
                                                     {Object.entries(riskLevels).map(
                                                         ([value, { name }]) => (
@@ -428,6 +447,7 @@ const ClientForm = () => {
                                                     ]
                                                 }
                                                 name={ClientField.socialRequirements}
+                                                autoComplete="off"
                                             />
                                         </Grid>
 
@@ -441,6 +461,65 @@ const ClientForm = () => {
                                                 variant="outlined"
                                                 label={clientFieldLabels[ClientField.socialGoals]}
                                                 name={ClientField.socialGoals}
+                                                autoComplete="off"
+                                            />
+                                        </Grid>
+
+                                        <Grid item md={6} xs={12}>
+                                            <FormControl fullWidth variant="outlined">
+                                                <Field
+                                                    component={TextField}
+                                                    select
+                                                    variant="outlined"
+                                                    required
+                                                    label={
+                                                        clientFieldLabels[ClientField.nutritionRisk]
+                                                    }
+                                                    name={ClientField.nutritionRisk}
+                                                    autoComplete="off"
+                                                >
+                                                    {Object.entries(riskLevels).map(
+                                                        ([value, { name }]) => (
+                                                            <MenuItem key={value} value={value}>
+                                                                {name}
+                                                            </MenuItem>
+                                                        )
+                                                    )}
+                                                </Field>
+                                            </FormControl>
+                                        </Grid>
+
+                                        <Grid item md={8} xs={12}>
+                                            <Field
+                                                component={TextField}
+                                                fullWidth
+                                                multiline
+                                                required
+                                                rows={4}
+                                                variant="outlined"
+                                                label={
+                                                    clientFieldLabels[
+                                                        ClientField.nutritionRequirements
+                                                    ]
+                                                }
+                                                name={ClientField.nutritionRequirements}
+                                                autoComplete="off"
+                                            />
+                                        </Grid>
+
+                                        <Grid item md={8} xs={12}>
+                                            <Field
+                                                component={TextField}
+                                                fullWidth
+                                                required
+                                                multiline
+                                                rows={4}
+                                                variant="outlined"
+                                                label={
+                                                    clientFieldLabels[ClientField.nutritionGoals]
+                                                }
+                                                name={ClientField.nutritionGoals}
+                                                autoComplete="off"
                                             />
                                         </Grid>
                                         <br />

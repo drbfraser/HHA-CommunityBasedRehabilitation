@@ -15,10 +15,10 @@ _Option tip: The keystore password and key alias password should be different_
 
 After creating the keystore, add/edit the ~gradle/gradle.properties files to include the following: (Replace what was written in the keystore in here)
 
-CBR_UPLOAD_STORE_FILE=**_my-upload-key_**.keystore
+CBR*UPLOAD_STORE_FILE=\*\*\_my-upload-key***.keystore
 CBR_UPLOAD_KEY_ALIAS=**_my-key-alias_**
 CBR_UPLOAD_STORE_PASSWORD=**\***
-CBR_UPLOAD_KEY_PASSWORD=**\***
+CBR_UPLOAD_KEY_PASSWORD=**\*\*\*
 
 \*Note, you may have to create the gradle.properties file if not present by using the following command in powershell if in windows C:\myFolder>type nul >gradle.properties
 

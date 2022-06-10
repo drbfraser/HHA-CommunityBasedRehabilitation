@@ -31,7 +31,7 @@ import { showGenericAlert } from "./genericAlert";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
-export const mobileApiVersion: string = "2.0.0";
+export const mobileApiVersion: string = "3.0.0";
 
 export async function checkUnsyncedChanges() {
     return await hasUnsyncedChanges({ database });

@@ -4,16 +4,17 @@ const { spawn } = require("child_process");
 
 const IS_WINDOWS = process.platform === "win32";
 const VALID_TARGETS = ["local", "dev", "staging", "prod"];
-const BUNDLE_FLAG = "--bundle"
+const BUNDLE_FLAG = "--bundle";
 
 let target = process.argv.length === 3 ? process.argv[2] : process.argv[3];
 
-let gradleCommand = process.argv.length === 4 && process.argv[2] === BUNDLE_FLAG ? "bundleRelease" : "assembleRelease"
+let gradleCommand =
+    process.argv.length === 4 && process.argv[2] === BUNDLE_FLAG
+        ? "bundleRelease"
+        : "assembleRelease";
 
 if (process.argv.length === 4 && process.argv[2] != BUNDLE_FLAG) {
-    console.error(
-        "Unrecognized argument. Usage: npm run build " + BUNDLE_FLAG + " [target]"
-    );
+    console.error("Unrecognized argument. Usage: npm run build " + BUNDLE_FLAG + " [target]");
     process.exit(1);
 }
 

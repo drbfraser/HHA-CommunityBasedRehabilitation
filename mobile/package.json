@@ -4,6 +4,7 @@
         "android": "react-native run-android",
         "ios": "react-native run-ios",
         "build": "node build.js",
+        "bundle": "node build.js --bundle",
         "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz"
     },
     "dependencies": {

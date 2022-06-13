@@ -9,6 +9,12 @@ variables:
   PROD_BRANCH: "production"
   NPM_VERSION: "7.19.0"
 
+build info:
+  # Always runs: allows pipeline execution to happen even if no other pipeline tasks run.
+  script:
+    echo "Pipeline Source:  $CI_PIPELINE_SOURCE"
+    echo "Merge Request ID: $CI_MERGE_REQUEST_ID"
+
 build common:
   stage: build
   image: node:14

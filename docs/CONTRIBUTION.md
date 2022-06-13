@@ -14,13 +14,21 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 ### 2. Start NPM Development Server
 
-1. Open the `web` or `mobile` directory in a terminal window.
+#### Web Application
+
+1. Open the `web` directory in a terminal window.
 
 2. If dependencies have been added since you last ran the project, you may need to run `npm install` first.
 
 3. Run `npm start`
 
-4. For any changes in `common` to be reflected in the either client library, run `npm run refresh-common`.
+#### Mobile Application
+
+1. Open the `mobile` directory in a terminal window
+
+2. If anything in `common` has changed since last running the project, `npm run refresh-common` must be run so that the changes will be reflected in the mobile app.
+
+3. Run `npm run android`
 
 ### 3. Seed Some Data
 

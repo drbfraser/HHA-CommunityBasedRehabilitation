@@ -15,10 +15,10 @@ _Option tip: The keystore password and key alias password should be different_
 
 After creating the keystore, add/edit the ~gradle/gradle.properties files to include the following: (Replace what was written in the keystore in here)
 
-CBR_UPLOAD_STORE_FILE=**_my-upload-key_**.keystore
+CBR*UPLOAD_STORE_FILE=\*\*\_my-upload-key***.keystore
 CBR_UPLOAD_KEY_ALIAS=**_my-key-alias_**
 CBR_UPLOAD_STORE_PASSWORD=**\***
-CBR_UPLOAD_KEY_PASSWORD=**\***
+CBR_UPLOAD_KEY_PASSWORD=**\*\*\*
 
 \*Note, you may have to create the gradle.properties file if not present by using the following command in powershell if in windows C:\myFolder>type nul >gradle.properties
 
@@ -35,13 +35,17 @@ keyPassword CBR_UPLOAD_KEY_PASSWORD
 }
 }
 
-### 4. Create the Release APK
+### 4. Create the Release APK or AAB
 
 cd back the mobile directory
 
 run command **_npm run build [target environment]_**, choose from one of the following environment: "local", "dev", "staging", and "prod" depending on the server you would like to connect to
 
 The generated release APK should be located in `mobile/android/app/build/outputs/apk`
+
+Alternatively, you may wish to build an Android App Bundle (AAB) - this is how the CBR app is uploaded to the google play store as of Summer 2022. To build the AAB run command **_npm run bundle [target environment]_**. (Note: all other setup steps for building an app bundle should be the same).
+
+The generated release AAB will be located in `mobile/android/app/build/outputs/bundle/release`
 
 ### 5. Running the Release APK
 

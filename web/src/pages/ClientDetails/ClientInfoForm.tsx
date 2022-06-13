@@ -138,6 +138,7 @@ const ClientInfoForm = (props: IProps) => {
                                         }
                                         required
                                         fullWidth
+                                        autoComplete="off"
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -152,6 +153,7 @@ const ClientInfoForm = (props: IProps) => {
                                         }
                                         required
                                         fullWidth
+                                        autoComplete="off"
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -168,6 +170,7 @@ const ClientInfoForm = (props: IProps) => {
                                             updateClientfieldLabels[ClientDetailsFields.birth_date]
                                         }
                                         name={ClientDetailsFields.birth_date}
+                                        autoComplete="off"
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -187,6 +190,7 @@ const ClientInfoForm = (props: IProps) => {
                                                 updateClientfieldLabels[ClientDetailsFields.gender]
                                             }
                                             name={ClientDetailsFields.gender}
+                                            autoComplete="off"
                                         >
                                             {Object.entries(genders).map(([value, name]) => (
                                                 <MenuItem key={value} value={value}>
@@ -206,6 +210,7 @@ const ClientInfoForm = (props: IProps) => {
                                         label={updateClientfieldLabels[ClientDetailsFields.village]}
                                         required
                                         fullWidth
+                                        autoComplete="off"
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -222,6 +227,7 @@ const ClientInfoForm = (props: IProps) => {
                                                 updateClientfieldLabels[ClientDetailsFields.zone]
                                             }
                                             name={ClientDetailsFields.zone}
+                                            autoComplete="off"
                                         >
                                             {Array.from(zones).map(([id, name]) => (
                                                 <MenuItem key={id} value={id}>
@@ -244,6 +250,7 @@ const ClientInfoForm = (props: IProps) => {
                                             ]
                                         }
                                         fullWidth
+                                        autoComplete="off"
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
@@ -262,6 +269,7 @@ const ClientInfoForm = (props: IProps) => {
                                         required
                                         name={ClientDetailsFields.disability}
                                         variant="outlined"
+                                        autoComplete="off"
                                     >
                                         {Array.from(disabilities).map(([id, name]) => (
                                             <MenuItem key={id} value={id}>
@@ -287,6 +295,7 @@ const ClientInfoForm = (props: IProps) => {
                                                 required
                                                 name={ClientDetailsFields.other_disability}
                                                 variant="outlined"
+                                                autoComplete="off"
                                             />
                                         </div>
                                     )}
@@ -332,6 +341,7 @@ const ClientInfoForm = (props: IProps) => {
                                                                 ]
                                                             }
                                                             fullWidth
+                                                            autoComplete="off"
                                                         />
                                                     </Grid>
                                                     <Grid item md={8} xs={12}>
@@ -350,6 +360,7 @@ const ClientInfoForm = (props: IProps) => {
                                                                 ]
                                                             }
                                                             fullWidth
+                                                            autoComplete="off"
                                                         />
                                                     </Grid>
                                                     <Grid item md={8} xs={12}>
@@ -368,6 +379,7 @@ const ClientInfoForm = (props: IProps) => {
                                                                 ]
                                                             }
                                                             fullWidth
+                                                            autoComplete="off"
                                                         />
                                                     </Grid>
                                                 </Grid>

@@ -45,17 +45,16 @@ release {
 
 #### Build an APK
 
-In `mobile/`, to build an APK suitable for local testing or directly installing onto an emulator/Android device, run _one_ of the following commands based on what you want to build:
-- `npm run build local`: Target your local computer.
+In `mobile/`, to build an **APK file** suitable for local testing or directly installing onto an emulator/Android device, run _one_ of the following commands based on what you want to build:
+- `npm run build local`: Target server your local computer.
 - `npm run build dev`: Target the dev server.
 - `npm run build staging`: Target the staging server.
-- `npm run build prod`: Target the production server.
 - `npm run build prod`: Target the production server.
 
 The generated .apk will be in `mobile/android/app/build/outputs/apk/release/app-release.apk`.
 
 #### Bundle an AAB
-In `mobile/`, to build an AAB file suitable for distribution to the Play store, change from "build" to "bundle". For example:
+In `mobile/`, to build an **AAB file** suitable for distribution to the Play store, change from "build" to "bundle". For example:
 - `npm run bundle prod`: Target the production server and build an AAB.
 
 The generated .aab will be in `mobile/android/app/build/outputs/bundle/release/app-release.aab`.

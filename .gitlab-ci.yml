@@ -9,7 +9,6 @@ variables:
   PROD_BRANCH: "production"
   NPM_VERSION: "7.19.0"
 
-
 build common:
   stage: build
   image: node:14

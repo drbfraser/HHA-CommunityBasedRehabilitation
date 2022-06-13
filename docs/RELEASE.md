@@ -1,6 +1,6 @@
 # RELEASE PROCEDURE
 
-# MOBILE RELEASE APK
+## MOBILE RELEASE APK
 
 ### 1. Select the branch
 
@@ -8,44 +8,56 @@ Select the branch you wish to create an release APK for mobile CBR
 
 ### 2. Setup release Keystore
 
-Following this guide to setup a release keystore: https://reactnative.dev/docs/signed-apk-android
+The Google Drive folder for the project contains the keystore needed for signing `.aab` files for upload to the Google Play store (the Play store signs the files for release). Copy the file `cbr-upload-key.keystore` into `mobile/android/app/` (should be in the same level as the debug.keystore).
 
-Follow the instruction to generate a release keystore and place into `mobile/android/app` directory level (should be in the same level as the debug.keystore)
-_Option tip: The keystore password and key alias password should be different_
+If you want to generate your own keystore instead of using the offical project one for upload, following this guide to setup a release keystore: https://reactnative.dev/docs/signed-apk-android
 
-After creating the keystore, add/edit the ~gradle/gradle.properties files to include the following: (Replace what was written in the keystore in here)
+After creating the keystore, add/edit the `~/.gradle/gradle.properties` files to include the following:
 
-CBR*UPLOAD_STORE_FILE=\*\*\_my-upload-key***.keystore
-CBR_UPLOAD_KEY_ALIAS=**_my-key-alias_**
-CBR_UPLOAD_STORE_PASSWORD=**\***
-CBR_UPLOAD_KEY_PASSWORD=**\*\*\*
+```
+CBR_UPLOAD_STORE_FILE=cbr-upload-key.keystore
+CBR_UPLOAD_KEY_ALIAS=upload
+CBR_UPLOAD_STORE_PASSWORD=<store password>
+CBR_UPLOAD_KEY_PASSWORD=<key password>
+```
 
-\*Note, you may have to create the gradle.properties file if not present by using the following command in powershell if in windows C:\myFolder>type nul >gradle.properties
+Under Windows, this will likely be `C:\Users\<your ID>\.gradle\gradle.properties`
 
 ### 3. Adding the release Signing Config
 
-within the `build.gradle` in `mobile/android/app/`, add the following within `signingConfigs`
+If not done already, then within the project file `mobile/android/app/build.gradle`, add the following within `signingConfigs`
 
+```
 release {
-if (project.hasProperty('CBR_UPLOAD_STORE_FILE')) {
-storeFile file(CBR_UPLOAD_STORE_FILE)
-storePassword CBR_UPLOAD_STORE_PASSWORD
-keyAlias CBR_UPLOAD_KEY_ALIAS
-keyPassword CBR_UPLOAD_KEY_PASSWORD
+    if (project.hasProperty('CBR_UPLOAD_STORE_FILE')) {
+        storeFile file(CBR_UPLOAD_STORE_FILE)
+        storePassword CBR_UPLOAD_STORE_PASSWORD
+        keyAlias CBR_UPLOAD_KEY_ALIAS
+        keyPassword CBR_UPLOAD_KEY_PASSWORD
+    }
 }
-}
+```
 
 ### 4. Create the Release APK
 
-cd back the mobile directory
+From the `mobile/` folder, run _one_ of the following commands based on what you want to build:
+- `npm run build local`  
+  Build an APK for testing against your local computer.
+- `npm run build dev`  
+  Build an APK for testing against the dev server (built off `main` branch).
+- `npm run build staging`  
+  Build an APK for testing against the staging server (built off `staging` branch).
+- `npm run build prod`  
+  Build an signed AAB file for uploading to the Play store, targeting the production server.
 
-run command **_npm run build [target environment]_**, choose from one of the following environment: "local", "dev", "staging", and "prod" depending on the server you would like to connect to
+The generated .apk (for "local", "dev", or "staging") should be located in `mobile/android/app/build/outputs/apk/release/app-release.apk`.
 
-The generated release APK should be located in `mobile/android/app/build/outputs/apk`
+The generated .aab (for "prod") should be located in `mobile/android/app/build/outputs/bundle/release/app-release.aab`.
 
 ### 5. Running the Release APK
 
-The APK can be installed directly to a physical device or emulator
-Alternatively, you can use the command **_react-native run-android --variant=release_** in the mobile directory and launch an emualtor
+The APK can be installed directly to a physical device or emulator; the AAB file must be uploaded to the Play store in ordered to be installed on a phone.
+
+Alternatively, you can use the command `react-native run-android --variant=release` in the mobile directory and launch an emualtor.
 
 You are done!

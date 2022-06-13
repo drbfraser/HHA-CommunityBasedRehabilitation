@@ -38,7 +38,7 @@ release {
 }
 ```
 
-### 4. Create the Release APK
+### 4. Create the Release APK or AAB
 
 From the `mobile/` folder, run _one_ of the following commands based on what you want to build:
 - `npm run build local`  
@@ -53,6 +53,10 @@ From the `mobile/` folder, run _one_ of the following commands based on what you
 The generated .apk (for "local", "dev", or "staging") should be located in `mobile/android/app/build/outputs/apk/release/app-release.apk`.
 
 The generated .aab (for "prod") should be located in `mobile/android/app/build/outputs/bundle/release/app-release.aab`.
+
+Alternatively, you may wish to build an Android App Bundle (AAB) - this is how the CBR app is uploaded to the google play store as of Summer 2022. To build the AAB run command **_npm run bundle [target environment]_**. (Note: all other setup steps for building an app bundle should be the same).
+
+The generated release AAB will be located in `mobile/android/app/build/outputs/bundle/release`
 
 ### 5. Running the Release APK
 

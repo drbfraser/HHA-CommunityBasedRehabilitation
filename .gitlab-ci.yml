@@ -21,6 +21,9 @@ build common:
         - common/**/*
         - .gitlab-ci.yml
       when: always
+    # Always build/test for schedule / manual "Run Pipeline" via web
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd common
@@ -42,6 +45,9 @@ build mobile:
         - mobile/**/*
         - .gitlab-ci.yml
       when: always
+    # Always build/test for schedule / manual "Run Pipeline" via web
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd mobile
@@ -70,6 +76,9 @@ build web:
     # build on deployments
     - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: always
+    # Always build/test for schedule / manual "Run Pipeline" via web
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd common
@@ -103,6 +112,9 @@ build server:
       when: always
     - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: always
+    # Always build/test for schedule / manual "Run Pipeline" via web
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"
   variables:
     DOMAIN: "example.com"
     SECRET_KEY: "test"
@@ -131,6 +143,9 @@ test common:
         - common/**/*
         - .gitlab-ci.yml
       when: always
+    # Always build/test for schedule / manual "Run Pipeline" via web
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd common
@@ -157,6 +172,9 @@ test caddy:
         - caddy/**/*
         - .gitlab-ci.yml
       when: always
+    # Always build/test for schedule / manual "Run Pipeline" via web
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"
   variables:
     DOMAIN: "example.com"
   script:
@@ -207,3 +225,4 @@ deploy production:
       when: manual
   script:
     - *deploy-script
+

@@ -11,9 +11,11 @@ variables:
 
 build info:
   # Always runs: allows pipeline execution to happen even if no other pipeline tasks run.
+  rules:
+    - if: "$CI_MERGE_REQUEST_ID != null"
   script:
-    echo "Pipeline Source:  $CI_PIPELINE_SOURCE"
-    echo "Merge Request ID: $CI_MERGE_REQUEST_ID"
+    echo "Pipeline Source  - $CI_PIPELINE_SOURCE"
+    echo "Merge Request ID - $CI_MERGE_REQUEST_ID"
 
 build common:
   stage: build

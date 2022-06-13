@@ -1,10 +1,13 @@
 # RELEASE PROCEDURE
 
-## MOBILE RELEASE APK
+## MOBILE RELEASE APK / AAB
+TODO:
+* Mention increasing the build number for each file uploaded to the Play store
+* Mention how to increase the API version number, as needed, to trigger full database wipes on Android to match when the server has a DB wipe
 
 ### 1. Select the branch
 
-Select the branch you wish to create an release APK for mobile CBR
+Select the branch you wish to create an release APK for mobile CBR.
 
 ### 2. Setup release Keystore
 
@@ -40,28 +43,27 @@ release {
 
 ### 4. Create the Release APK or AAB
 
-From the `mobile/` folder, run _one_ of the following commands based on what you want to build:
-- `npm run build local`  
-  Build an APK for testing against your local computer.
-- `npm run build dev`  
-  Build an APK for testing against the dev server (built off `main` branch).
-- `npm run build staging`  
-  Build an APK for testing against the staging server (built off `staging` branch).
-- `npm run build prod`  
-  Build an signed AAB file for uploading to the Play store, targeting the production server.
+#### Build an APK
 
-The generated .apk (for "local", "dev", or "staging") should be located in `mobile/android/app/build/outputs/apk/release/app-release.apk`.
+In `mobile/`, to build an APK suitable for local testing or directly installing onto an emulator/Android device, run _one_ of the following commands based on what you want to build:
+- `npm run build local`: Target your local computer.
+- `npm run build dev`: Target the dev server.
+- `npm run build staging`: Target the staging server.
+- `npm run build prod`: Target the production server.
+- `npm run build prod`: Target the production server.
 
-The generated .aab (for "prod") should be located in `mobile/android/app/build/outputs/bundle/release/app-release.aab`.
+The generated .apk will be in `mobile/android/app/build/outputs/apk/release/app-release.apk`.
 
-Alternatively, you may wish to build an Android App Bundle (AAB) - this is how the CBR app is uploaded to the google play store as of Summer 2022. To build the AAB run command **_npm run bundle [target environment]_**. (Note: all other setup steps for building an app bundle should be the same).
+#### Bundle an AAB
+In `mobile/`, to build an AAB file suitable for distribution to the Play store, change from "build" to "bundle". For example:
+- `npm run bundle prod`: Target the production server and build an AAB.
 
-The generated release AAB will be located in `mobile/android/app/build/outputs/bundle/release`
+The generated .aab will be in `mobile/android/app/build/outputs/bundle/release/app-release.aab`.
 
 ### 5. Running the Release APK
 
 The APK can be installed directly to a physical device or emulator; the AAB file must be uploaded to the Play store in ordered to be installed on a phone.
 
-Alternatively, you can use the command `react-native run-android --variant=release` in the mobile directory and launch an emualtor.
+Alternatively, you can use the command `react-native run-android --variant=release` in the `mobile/` directory and launch an emualtor. You may need to uninstall any debug versions previously installed in the emulator to be able to install the release because the signing key will have changed.
 
 You are done!

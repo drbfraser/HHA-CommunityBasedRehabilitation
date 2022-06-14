@@ -165,8 +165,12 @@ class Command(BaseCommand):
         createClient(self, uuid.uuid4(), "Ana", "Sofia", "F", "#5", "555-0005")
         createClient(self, uuid.uuid4(), "Edgar", "Hirah", "M", "#6", "555-0006")
         createClient(self, uuid.uuid4(), "Okan", "Alvis", "M", "#7", "555-0007")
-        createClient(self, uuid.uuid4(), "Beatrix", "Adem", "F", "#8", "555-0008", "Epilepsy")
-        createClient(self, uuid.uuid4(), "Rigel", "Lachlan", "M", "#9", "555-0009", "Dementia")
+        createClient(
+            self, uuid.uuid4(), "Beatrix", "Adem", "F", "#8", "555-0008", "Epilepsy"
+        )
+        createClient(
+            self, uuid.uuid4(), "Rigel", "Lachlan", "M", "#9", "555-0009", "Dementia"
+        )
 
         clients = models.Client.objects.all()
 

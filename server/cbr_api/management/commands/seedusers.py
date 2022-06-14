@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from cbr_api import models
 import random
+import uuid
 
 
 class Command(BaseCommand):
@@ -44,7 +45,7 @@ class Command(BaseCommand):
 
         createUser(
             self,
-            "1",
+            uuid.uuid4(),
             "venus",
             "hhaLogin",
             "Venus",
@@ -54,7 +55,7 @@ class Command(BaseCommand):
         )
         createUser(
             self,
-            "2",
+            uuid.uuid4(),
             "eruska",
             "hhaLogin",
             "Eliza",
@@ -64,7 +65,7 @@ class Command(BaseCommand):
         )
         createUser(
             self,
-            "3",
+            uuid.uuid4(),
             "rfatimah",
             "hhaLogin",
             "Robert",
@@ -74,7 +75,7 @@ class Command(BaseCommand):
         )
         createUser(
             self,
-            "4",
+            uuid.uuid4(),
             "gnye",
             "hhaLogin",
             "Guo",
@@ -84,7 +85,7 @@ class Command(BaseCommand):
         )
         createUser(
             self,
-            "5",
+            uuid.uuid4(),
             "jherry",
             "hhaLogin",
             "Julia",
@@ -94,7 +95,7 @@ class Command(BaseCommand):
         )
         createUser(
             self,
-            "6",
+            uuid.uuid4(),
             "tjames",
             "hhaLogin",
             "Toby",

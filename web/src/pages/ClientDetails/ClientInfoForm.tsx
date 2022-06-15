@@ -12,7 +12,7 @@ import {
     MenuItem,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { handleCancel, handleUpdateClientSubmit } from "@cbr/common/forms/Client/clientHandler";
+import { handleCancel, handleUpdateClientSubmit, handleDelete } from "@cbr/common/forms/Client/clientHandler";
 import { genders, IClient } from "@cbr/common/util/clients";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
@@ -119,6 +119,23 @@ const ClientInfoForm = (props: IProps) => {
                                     disabled={isSubmitting}
                                 >
                                     Baseline Survey
+                                </Button>
+                            </Grid>
+                            <Grid className={styles.sideFormButtonWrapper} item md={10} xs={12}>
+                                <Button
+                                    className={styles.sideFormButton}
+                                    style={{
+                                        backgroundColor: "#FF0000",
+                                    }}
+                                    color="secondary"
+                                    variant="contained"
+                                    fullWidth
+                                    onClick={() => {
+                                        handleDelete(props.clientInfo.first_name, props.clientInfo.last_name);
+                                    }}
+                                    disabled={isSubmitting}
+                                >
+                                    Delete Client
                                 </Button>
                             </Grid>
                         </Grid>

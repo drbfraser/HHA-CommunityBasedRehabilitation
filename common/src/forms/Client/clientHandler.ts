@@ -161,3 +161,15 @@ export const handleReset = (resetForm: () => void) => {
         resetForm();
     }
 };
+
+export const handleDelete = (first_name:string, last_name:string) => {
+    
+    if (
+        window.confirm(
+            "Are you sure you want to delete " + first_name + " "+ last_name + "'s information?\nClicking OK will permanently delete " + first_name + " "+ last_name + "'s information."
+        )
+    ) {
+        // resetForm();
+        // setIsEditing(false);
+    }
+};

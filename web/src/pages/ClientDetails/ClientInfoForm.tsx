@@ -12,7 +12,11 @@ import {
     MenuItem,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { handleCancel, handleUpdateClientSubmit, handleDelete } from "@cbr/common/forms/Client/clientHandler";
+import {
+    handleCancel,
+    handleUpdateClientSubmit,
+    handleDelete,
+} from "@cbr/common/forms/Client/clientHandler";
 import { genders, IClient } from "@cbr/common/util/clients";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
@@ -131,7 +135,11 @@ const ClientInfoForm = (props: IProps) => {
                                     variant="contained"
                                     fullWidth
                                     onClick={() => {
-                                        handleDelete(props.clientInfo.first_name, props.clientInfo.last_name);
+                                        handleDelete(
+                                            values.first_name,
+                                            values.last_name,
+                                            values.id
+                                        );
                                     }}
                                     disabled={isSubmitting}
                                 >

@@ -29,6 +29,15 @@ const updateClient = async (clientInfo: FormData, clientId: string): Promise<ICl
     return await apiFetch(Endpoint.CLIENT, `${clientId}`, init).then((res) => res.json());
 };
 
+const deleteClient = async (clientId: string) => {
+    const init: RequestInit = {
+        method: "DELETE",
+    };
+    return await apiFetch(Endpoint.CLIENT, `${clientId}`, init);
+};
+
+
+
 export const handleNewWebClientSubmit = async (
     values: TClientValues,
     helpers: FormikHelpers<TClientValues>
@@ -162,14 +171,14 @@ export const handleReset = (resetForm: () => void) => {
     }
 };
 
-export const handleDelete = (first_name:string, last_name:string) => {
+export const handleDelete = async(first_name:string, last_name:string, client_id:string) => {
     
     if (
         window.confirm(
             "Are you sure you want to delete " + first_name + " "+ last_name + "'s information?\nClicking OK will permanently delete " + first_name + " "+ last_name + "'s information."
         )
     ) {
-        // resetForm();
-        // setIsEditing(false);
+        await deleteClient(client_id);
+        history.push(`/clients`);
     }
 };

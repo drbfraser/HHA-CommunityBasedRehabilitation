@@ -6,10 +6,10 @@ import uuid
 import string, secrets
 import datetime, time
 
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
         zones = models.Zone.objects.all()
-
 
         def createUser(self, id, username, password, first, last, phone, role):
             millisecond = datetime.datetime.now()
@@ -44,7 +44,9 @@ class Command(BaseCommand):
         # Generate a random 20 character password
         # Source: https://docs.python.org/3/library/secrets.html#recipes-and-best-practices
         alphabet = string.ascii_letters + string.digits
-        password = ''.join(secrets.choice(alphabet) for i in range(20))  # for a 20-character password
+        password = "".join(
+            secrets.choice(alphabet) for i in range(20)
+        )  # for a 20-character password
 
         username = "tempadmin"
 
@@ -60,7 +62,14 @@ class Command(BaseCommand):
         )
 
         self.stdout.write(self.style.SUCCESS("Admin user successfully created!"))
-        self.stdout.write(self.style.SUCCESS("--> User name set to:         '" + username + "\'"))
-        self.stdout.write(self.style.SUCCESS("--> Initial password set to:  '" + password + "\'"))
-        self.stdout.write(self.style.SUCCESS("--> You *must* write this password down now! Then log-in and change it."))
-
+        self.stdout.write(
+            self.style.SUCCESS("--> User name set to:         '" + username + "'")
+        )
+        self.stdout.write(
+            self.style.SUCCESS("--> Initial password set to:  '" + password + "'")
+        )
+        self.stdout.write(
+            self.style.SUCCESS(
+                "--> You *must* write this password down now! Then log-in and change it."
+            )
+        )

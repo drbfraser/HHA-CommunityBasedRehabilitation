@@ -44,6 +44,8 @@ You'll likely want to seed some data for development purposes. This can be done 
 
 If at some point during development you want to re-seed the database with the example data again, you'll need to delete everything first. Use `docker exec -it cbr_django python manage.py flush` to clear the database, then run the seeding commands again.
 
+If the seed commands fail with an error related "relation 'cbr_api_zone' does not exist", it is likely you need to run the `docker exec cbr_django python manage.py migrate` comamnd to create the DB structure.
+
 ### 4. Start Developing!
 
 That's it! The frontend is now running on http://localhost:3000 and the backend is running on http://localhost:8000. Both the frontend and the backend should support hot reloading.

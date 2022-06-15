@@ -70,6 +70,14 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
         }
     };
 
+    const validateConfirmationText = (textInput: string) => {
+        let parsedInput = textInput.trim();
+        parsedInput = parsedInput.toLowerCase();
+
+        const confirmTextIsValid = parsedInput == KEY;
+        setSyncConfirmed(confirmTextIsValid);
+    }
+
     useEffect(() => {
         compareServerVersion();
     });
@@ -134,7 +142,7 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                                             width: "90%",
                                             paddingVertical: 4,
                                         }}
-                                        onChangeText={(text) => setSyncConfirmed(text == KEY)}
+                                        onChangeText={validateConfirmationText}
                                     />
                                 </View>
                                 <View

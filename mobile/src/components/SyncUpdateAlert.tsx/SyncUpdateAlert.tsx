@@ -76,7 +76,7 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
 
         const confirmTextIsValid = parsedInput == KEY;
         setSyncConfirmed(confirmTextIsValid);
-    }
+    };
 
     useEffect(() => {
         compareServerVersion();

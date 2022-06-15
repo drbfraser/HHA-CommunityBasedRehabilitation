@@ -13,6 +13,8 @@ class Command(BaseCommand):
         models.Zone.objects.create(zone_name="BidiBidi Zone 3")
         models.Zone.objects.create(zone_name="BidiBidi Zone 4")
         models.Zone.objects.create(zone_name="BidiBidi Zone 5")
+        models.Zone.objects.create(zone_name="Kilaji")
+        models.Zone.objects.create(zone_name="Mijale")
         models.Zone.objects.create(zone_name="Palorinya Basecamp")
         models.Zone.objects.create(zone_name="Palorinya Zone 1")
         models.Zone.objects.create(zone_name="Palorinya Zone 2")

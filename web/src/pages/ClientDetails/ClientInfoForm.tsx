@@ -135,11 +135,7 @@ const ClientInfoForm = (props: IProps) => {
                                     variant="contained"
                                     fullWidth
                                     onClick={() => {
-                                        handleDelete(
-                                            values.first_name,
-                                            values.last_name,
-                                            values.id
-                                        );
+                                        handleDelete(values);
                                     }}
                                     disabled={isSubmitting}
                                 >

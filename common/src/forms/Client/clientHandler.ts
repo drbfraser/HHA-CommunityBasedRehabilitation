@@ -171,14 +171,15 @@ export const handleReset = (resetForm: () => void) => {
     }
 };
 
-export const handleDelete = async(first_name:string, last_name:string, client_id:string) => {
+export const handleDelete = async(values: TClientFormValues) => {
     
     if (
         window.confirm(
-            "Are you sure you want to delete " + first_name + " "+ last_name + "'s information?\nClicking OK will permanently delete " + first_name + " "+ last_name + "'s information."
+            "Are you sure you want to delete " + values.first_name + " "+ values.last_name + "'s information?\n"+
+            "Clicking OK will permanently delete " + values.first_name + " "+ values.last_name + "'s information."
         )
     ) {
-        await deleteClient(client_id);
+        await deleteClient(values.id);
         history.push(`/clients`);
     }
 };

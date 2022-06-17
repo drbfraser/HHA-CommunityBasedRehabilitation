@@ -2,7 +2,7 @@ import { themeColors, timestampToDateTime, APIFetchFailError } from "@cbr/common
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useContext, useEffect, useState } from "react";
-import { Alert, SafeAreaView, View } from "react-native";
+import { Alert, SafeAreaView, View, ScrollView } from "react-native";
 import { Button, Divider, Text, Card, Switch } from "react-native-paper";
 import SyncAlert from "../../components/SyncAlert/SyncAlert";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
@@ -164,7 +164,7 @@ const Sync = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.groupContainer}>
+            <ScrollView style={styles.groupContainer}>
                 <Text style={styles.cardSectionTitle}>Database </Text>
                 <View style={styles.btnContainer}>
                     <Button
@@ -268,7 +268,7 @@ const Sync = () => {
                         ></Switch>
                     </View>
                 </Card>
-            </View>
+            </ScrollView>
             <SyncAlert
                 displayMode={alertStatus ? "success" : "failed"}
                 displayMsg={alertMessage}

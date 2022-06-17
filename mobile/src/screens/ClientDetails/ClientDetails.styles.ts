@@ -9,7 +9,7 @@ const useStyles = () =>
             margin: 20,
         },
         imageContainer: {
-            paddingHorizontal: 10,
+            flexDirection: "row",
         },
         image: {
             backgroundColor: themeColors.white,
@@ -20,7 +20,7 @@ const useStyles = () =>
             aspectRatio: 1,
         },
         clientDetailContainer: {
-            flex: 1,    
+            flex: 1,
         },
         clientButtons: {
             padding: 3,
@@ -46,7 +46,7 @@ const useStyles = () =>
         },
         clientDetailsContainerStyles: {
             marginTop: 20,
-            marginBottom: 20,           
+            marginBottom: 20,
             paddingBottom: 15,
             paddingTop: 15,
             alignItems: "center",
@@ -130,7 +130,6 @@ const useStyles = () =>
             display: "flex",
             flexDirection: "row",
             height: 40,
-            width: 150,
             marginTop: 15,
             marginBottom: 15,
         },

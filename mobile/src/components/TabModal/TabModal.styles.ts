@@ -6,7 +6,7 @@ const useStyles = () =>
             backgroundColor: "black",
         },
         contentContainer: {
-            flex: 0.6,
+            marginBottom: 10,
             flexDirection: "row",
             justifyContent: "space-around",
             padding: 10,

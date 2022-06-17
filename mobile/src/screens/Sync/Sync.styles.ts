@@ -11,16 +11,19 @@ const useStyles = () =>
             flex: 1,
         },
         groupContainer: {
-            flex: 1,
+            //flex: 1,
             padding: 10,
+            marginBottom: 10
         },
         btnContainer: {
-            flex: 1,
+            //flex: 1,
             justifyContent: "space-around",
+            marginBottom: 10
         },
         syncBtbContainer: {
             height: 60,
             justifyContent: "center",
+            marginBottom: 10
         },
         resetBtbContainer: {
             backgroundColor: "white",
@@ -45,6 +48,7 @@ const useStyles = () =>
             display: "flex",
             padding: 20,
             borderRadius: 20,
+            marginBottom: 10
         },
         row: {
             flexDirection: "row",

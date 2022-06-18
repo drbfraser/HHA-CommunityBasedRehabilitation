@@ -9,7 +9,7 @@ const useStyles = () =>
             margin: 20,
         },
         imageContainer: {
-            paddingHorizontal: 50,
+            flexDirection: "row",
         },
         image: {
             backgroundColor: themeColors.white,
@@ -130,7 +130,6 @@ const useStyles = () =>
             display: "flex",
             flexDirection: "row",
             height: 40,
-            width: 350,
             marginTop: 15,
             marginBottom: 15,
         },

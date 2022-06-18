@@ -43,7 +43,10 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
             switch (connectionInfo?.type) {
                 case NetInfoStateType.cellular:
                     if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
-                        if (!(await lastVersionSyncedIsCurrentVersion())) {
+                        if (
+                            !(await lastVersionSyncedIsCurrentVersion()) &&
+                            !(await noPreviousSyncsPerformed())
+                        ) {
                             showAutoSyncFailedAlert();
                         } else {
                             await SyncDB(database);
@@ -52,7 +55,10 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
                     break;
                 case NetInfoStateType.wifi:
                     if (autoSync && connectionInfo?.isInternetReachable) {
-                        if (!(await lastVersionSyncedIsCurrentVersion())) {
+                        if (
+                            !(await lastVersionSyncedIsCurrentVersion()) &&
+                            !(await noPreviousSyncsPerformed())
+                        ) {
                             showAutoSyncFailedAlert();
                         } else {
                             await SyncDB(database);
@@ -135,6 +141,16 @@ export async function lastVersionSyncedIsCurrentVersion() {
     let lastVersionSynced = await AsyncStorage.getItem(SyncSettings.VersionLastSynced);
 
     return lastVersionSynced !== null && lastVersionSynced === mobileApiVersion;
+}
+
+async function noPreviousSyncsPerformed(): Promise<boolean> {
+    try {
+        const lastVersionSynced = await AsyncStorage.getItem(SyncSettings.VersionLastSynced);
+        return lastVersionSynced === null;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
 }
 
 async function updateLastVersionSynced() {

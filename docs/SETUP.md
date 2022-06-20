@@ -44,7 +44,11 @@ VERSION_NAME=<VALUE>
 APP_ENV="local"
 LOCAL_URL="http://<some hostname or IP>" (Optional)
 ```
-`VERSION_NAME` is used in `mobile/android/build.gradle` and `mobile/src/screens/Sync/Sync.tsx`. The value of VERSION_NAME is `1.0.1` as of 2022-06-22
+`VERSION_NAME` is used in `mobile/android/build.gradle` and `mobile/src/screens/Sync/Sync.tsx`. The value of VERSION_NAME is `1.0.1` (no quotation marks) as of 2022-06-22
+Example:
+```
+VERSION_NAME=1.0.1
+```
 
 `APP_ENV` specified to `"local"` will allow the use of the `LOCAL_URL`, if `APP_ENV` is not specified, the development server will be used by default. Along with setting
 `APP_ENV` to `"local"`, you can also set it to `"dev"`, `"staging"`, or `"prod"`, in case you would like the mobile app to point to the development, staging, or production

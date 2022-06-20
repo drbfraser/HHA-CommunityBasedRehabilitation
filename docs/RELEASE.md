@@ -1,13 +1,18 @@
 # RELEASE PROCEDURE
 
 ## MOBILE RELEASE APK / AAB
-TODO:
-* Mention increasing the build number for each file uploaded to the Play store
-* Mention how to increase the API version number, as needed, to trigger full database wipes on Android to match when the server has a DB wipe
 
 ### 1. Select the branch
 
 Select the branch you wish to create an release APK for mobile CBR.
+
+#### 1.2: Configure Version Info
+
+Before releasing a new version of the app, you must ensure that you have updated the version information.
+
+Update the `versionName` and `versionCode` under the `defaultConfig` in `mobile/android/app/build.gradle`. It is recommended to increment the `versionCode` to the next largest integer. Also note that the `versionName` is displayed to users in the Google Play store.
+
+Also, the API version number maintained in the mobile app must match that of the server. Ensure that `mobileApiVersion` in `mobile/src/util/syncHandler.ts` matches the version specified by `API_VERSION` in `server/cbr_api/util.py`. This will likely need to be updated if a full DB wipe has occured on the server.
 
 ### 2. Setup release Keystore
 

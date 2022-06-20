@@ -192,6 +192,7 @@ const Login = () => {
                 ) : (
                     <></>
                 )}
+                <Text style={styles.versionInfo}>{process.env["VERSION_NAME"]}</Text>
             </View>
         </KeyboardAwareScrollView>
     );

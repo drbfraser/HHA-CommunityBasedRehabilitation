@@ -224,6 +224,10 @@ const Sync = () => {
                                 <Text style={styles.stats}> Remote Changes:</Text>
                                 <Text>{stats.remoteChanges}</Text>
                             </View>
+                            <View style={styles.row}>
+                                <Text style={styles.stats}> Version Name</Text>
+                                <Text>{process.env["VERSION_NAME"]}</Text>
+                            </View>
                         </>
                     ) : (
                         <></>

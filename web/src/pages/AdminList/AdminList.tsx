@@ -199,9 +199,7 @@ const AdminList = () => {
                             className={searchOptionsStyle.zoneOptions}
                             color={"primary"}
                             defaultValue={""}
-                            onChange={(event) =>
-                                setSearchValue(String(event.target.value))
-                            }
+                            onChange={(event) => setSearchValue(String(event.target.value))}
                         >
                             {Array.from(zones).map(([id, name]) => (
                                 <MenuItem key={id} value={name}>
@@ -216,10 +214,7 @@ const AdminList = () => {
                         onChange={(e) => setSearchValue(e.target.value)}
                     />
                 )}
-                <IconButton
-                    className={hideColumnsStyle.optionsButton}
-                    onClick={onOptionsClick}
-                >
+                <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
                     <MoreVert />
                 </IconButton>
                 <Popover
@@ -238,18 +233,13 @@ const AdminList = () => {
                     <div className={hideColumnsStyle.optionsContainer}>
                         {adminColumns.map((column): JSX.Element => {
                             return (
-                                <div
-                                    key={column.field}
-                                    className={hideColumnsStyle.optionsRow}
-                                >
+                                <div key={column.field} className={hideColumnsStyle.optionsRow}>
                                     <Typography component={"span"} variant={"body2"}>
                                         {column.headerName}
                                     </Typography>
                                     <Switch
                                         checked={!column.hide}
-                                        onClick={() =>
-                                            column.hideFunction(!column.hide)
-                                        }
+                                        onClick={() => column.hideFunction(!column.hide)}
                                     />
                                 </div>
                             );

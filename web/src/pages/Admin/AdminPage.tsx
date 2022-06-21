@@ -1,7 +1,7 @@
+import React from "react";
+import AdminList from "../AdminList/AdminList";
 import { Tabs, Tab, Box } from "@mui/material";
 import { Typography } from "@material-ui/core";
-import React from "react";
-import { useStyles } from "./styles";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -37,8 +37,6 @@ const TabPanel = (props: TabPanelProps) => {
 };
 
 const AdminPage = () => {
-    const styles = useStyles();
-
     const [value, setValue] = React.useState(0);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -50,24 +48,16 @@ const AdminPage = () => {
             <Box sx={{ width: "100%" }}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider", width: "100%" }}>
                     <Tabs value={value} onChange={handleTabChange} aria-label="basic tabs">
-                        <Tab label="Admins" {...a11yProps(0)} />
+                        <Tab label="Users" {...a11yProps(0)} />
                         <Tab label="Zones" {...a11yProps(1)} />
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
-                    <div className={styles.container}>
-                        <div className={styles.topContainer}>
-                            Hello
-                        </div>
-                    </div>
+                    <AdminList />
                 </TabPanel>
 
                 <TabPanel value={value} index={1}>
-                    <div className={styles.container}>
-                        <div className={styles.topContainer}>
-                            Hello again
-                        </div>
-                    </div>
+                    Zone List
                 </TabPanel>
             </Box>
         </div>

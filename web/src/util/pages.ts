@@ -9,7 +9,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 import InsertChart from "@material-ui/icons/InsertChart";
 import Logout from "pages/Logout/Logout";
-import AdminList from "pages/AdminList/AdminList";
+import AdminPage from "pages/Admin/AdminPage";
 import ClientList from "pages/ClientList/ClientList";
 import ClientDetails from "pages/ClientDetails/ClientDetails";
 import UserView from "pages/User/UserView";
@@ -118,7 +118,7 @@ const pages: IPage[] = [
         path: "/admin",
         name: "Admin",
         roles: [UserRole.ADMIN],
-        Component: AdminList,
+        Component: AdminPage,
         showInNav: true,
         Icon: SettingsIcon,
     },

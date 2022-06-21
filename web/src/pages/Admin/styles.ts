@@ -6,6 +6,10 @@ export const useStyles = makeStyles(
         container: {
             paddingLeft: 20,
         },
+        topContainer: {
+            justifyContent: "flex-end",
+            display: "flex",
+        },
         header: {
             display: "flex",
             flexDirection: "row",

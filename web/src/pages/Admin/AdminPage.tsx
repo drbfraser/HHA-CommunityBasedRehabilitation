@@ -1,5 +1,6 @@
 import React from "react";
 import AdminList from "../AdminList/AdminList";
+import ZoneList from "../ZoneList/ZoneList";
 import { Tabs, Tab, Box } from "@mui/material";
 import { Typography } from "@material-ui/core";
 
@@ -57,7 +58,7 @@ const AdminPage = () => {
                 </TabPanel>
 
                 <TabPanel value={value} index={1}>
-                    Zone List
+                    <ZoneList />
                 </TabPanel>
             </Box>
         </div>

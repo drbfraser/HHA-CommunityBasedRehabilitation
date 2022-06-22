@@ -21,6 +21,9 @@ import AdminNew from "pages/Admin/AdminNew";
 import AdminView from "pages/Admin/AdminView";
 import AdminEdit from "pages/Admin/AdminEdit";
 import AdminPasswordEdit from "pages/Admin/AdminPasswordEdit";
+import ZoneNew from "pages/Zone/ZoneNew";
+import ZoneView from "pages/Zone/ZoneView";
+import ZoneEdit from "pages/Zone/ZoneEdit";
 import ClientRiskHistory from "pages/ClientDetails/RiskHistory/ClientRiskHistory";
 import Dashboard from "pages/Dashboard/Dashboard";
 import NewVisit from "pages/NewVisit/NewVisit";
@@ -147,6 +150,13 @@ const pages: IPage[] = [
         path: "/admin/password/:userId",
         name: "Edit User Password",
         Component: AdminPasswordEdit,
+        showInNav: false,
+    },
+    {
+        path: "/zone/new",
+        name: "New Zone",
+        roles: [UserRole.ADMIN],
+        Component: ZoneNew,
         showInNav: false,
     },
     {

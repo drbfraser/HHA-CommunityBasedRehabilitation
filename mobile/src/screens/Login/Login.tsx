@@ -11,6 +11,7 @@ import { SMALL_WIDTH } from "../../util/theme.styles";
 import passwordTextInputProps from "../../components/PasswordTextInput/passwordTextInputProps";
 import { APIFetchFailError } from "@cbr/common";
 import { useNavigation } from "@react-navigation/core";
+import { VERSION_NAME } from "../Sync/Sync";
 
 interface IBaseLoginStatus {
     status: "initial" | "submitting";
@@ -26,7 +27,6 @@ type LoginStatus = ILoginStatusFailed | IBaseLoginStatus;
 const Login = () => {
     const theme = useTheme();
     const styles = useStyles();
-
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [status, setStatus] = useState<LoginStatus>({ status: "initial" });
@@ -192,7 +192,7 @@ const Login = () => {
                 ) : (
                     <></>
                 )}
-                <Text style={styles.versionInfo}>{process.env["VERSION_NAME"]}</Text>
+                <Text style={styles.versionInfo}>{VERSION_NAME}</Text>
             </View>
         </KeyboardAwareScrollView>
     );

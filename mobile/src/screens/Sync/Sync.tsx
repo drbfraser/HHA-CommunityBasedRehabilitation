@@ -23,6 +23,7 @@ export interface ISync {
     remoteChanges: number;
     localChanges: number;
 }
+export const VERSION_NAME: string = "1.0.1";
 
 const Sync = () => {
     const styles = useStyles();
@@ -34,7 +35,6 @@ const Sync = () => {
     const [showSyncUpdateModal, setSyncUpdateModal] = useState<boolean>(false);
     const { autoSync, setAutoSync, cellularSync, setCellularSync } = useContext(SyncContext);
     const netInfo = useNetInfo();
-
     const [loading, setLoading] = useState<boolean>(true);
     const [stats, setStats] = useState<ISync>({
         lastPulledTime: 0,
@@ -223,6 +223,10 @@ const Sync = () => {
                             <View style={styles.row}>
                                 <Text style={styles.stats}> Remote Changes:</Text>
                                 <Text>{stats.remoteChanges}</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.stats}> Version Name</Text>
+                                <Text>{VERSION_NAME}</Text>
                             </View>
                         </>
                     ) : (

@@ -8,6 +8,7 @@ const useStyles = () => {
     return StyleSheet.create({
         container: {
             backgroundColor: theme.colors.primary,
+            // flexDirection: "row"
         },
         alert: {
             marginVertical: 15,
@@ -24,6 +25,7 @@ const useStyles = () => {
         },
         formContainer: {
             flex: 1,
+            // flexDirection: "column",
             bottom: width <= SMALL_WIDTH ? undefined : 70,
             maxWidth: width <= SMALL_WIDTH ? undefined : "55%",
             margin: 30,
@@ -33,7 +35,15 @@ const useStyles = () => {
         loginHeader: {
             marginVertical: 10,
             fontSize: 40,
+            justifyContent: "flex-end",
             color: theme.colors.onPrimary,
+        },
+        versionInfo: {
+            margin: 10,
+            fontSize: 20,
+            color: theme.colors.onPrimary,
+            textAlign: "right",
+            // justifyContent: "flex-end",
         },
         loginAgain: {
             color: theme.colors.onPrimary,

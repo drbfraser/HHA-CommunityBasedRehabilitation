@@ -30,6 +30,8 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 3. Run `npm run android`
 
+**Note:** if versionName changes, go to mobile/android/app/build.gradle and change the value of versionName under defaultConfig AND change VERSION_NAME variable in mobile/src/screens/Sync/Sync.tsx 
+
 ### 3. Seed Some Data
 
 You'll likely want to seed some data for development purposes. This can be done with a single command, or done individually by data type. Use `docker exec cbr_django python manage.py _______` by replacing the `_______` with one of the keywords below.
@@ -119,3 +121,4 @@ During the code review process, you'll likely receive a few suggestions for thin
 Once at least one other developer has approved your merge request, all discussions are resolved and the CI/CD pipelines pass, you can merge when ready.
 
 **Note:** it is best practice for the person who made the merge request to merge it. If you are reviewing a merge request, don't merge it after approving it - the original author may still want to make a few changes or other team members might be in the process of reviewing it.
+

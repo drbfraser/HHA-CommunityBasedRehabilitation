@@ -1,4 +1,4 @@
-package org.hopehealthaction.cbr.generated;
+package org.hopehealthaction.cbrapp.generated;
 
 import java.util.Arrays;
 import java.util.List;

@@ -133,10 +133,10 @@ android {
     }
 
     defaultConfig {
-        applicationId 'org.hopehealthaction.cbr'
+        applicationId 'org.hopehealthaction.cbrapp'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
+        versionCode 5
         versionName "1.0.1"
         multiDexEnabled true
     }

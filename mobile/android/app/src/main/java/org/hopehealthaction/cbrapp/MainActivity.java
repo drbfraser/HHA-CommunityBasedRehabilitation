@@ -1,4 +1,4 @@
-package org.hopehealthaction.cbr;
+package org.hopehealthaction.cbrapp;
 import android.content.res.Configuration;
 import android.content.Intent;
 

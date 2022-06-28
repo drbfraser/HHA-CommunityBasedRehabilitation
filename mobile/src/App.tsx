@@ -21,6 +21,7 @@ import { AuthContext as AuthContext, IAuthContext } from "./context/AuthContext/
 import { enableScreens } from "react-native-screens";
 import Loading from "./screens/Loading/Loading";
 import Login from "./screens/Login/Login";
+import SwitchServer from "./screens/SwitchServer/SwitchServer";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
 import { StackScreenName } from "./util/StackScreenName";
@@ -113,6 +114,17 @@ export default function App() {
     const [autoSync, setAutoSync] = useState<boolean>(true);
     const [cellularSync, setCellularSync] = useState<boolean>(false);
     const [screenRefresh, setScreenRefresh] = useState<boolean>(false);
+
+    const notLoggedInScreens = [
+        {
+            name: "Login", 
+            component: Login
+        }, 
+        {
+            name: "SwitchServer", 
+            component: SwitchServer
+        }
+    ];
 
     useEffect(() => {
         // Refresh disabilities, zones, current user information
@@ -231,11 +243,19 @@ export default function App() {
                                             ))
                                         ) : authState.state === "loggedOut" ||
                                           authState.state === "previouslyLoggedIn" ? (
-                                            <Stack.Screen
-                                                name="Login"
-                                                component={Login}
-                                                options={{ headerShown: false }}
-                                            />
+                                            // <Stack.Screen
+                                            //     name="Login"
+                                            //     component={Login}
+                                            //     options={{ headerShown: false }}
+                                            // />
+                                            notLoggedInScreens.map(({name, component}) => (
+                                                <Stack.Screen 
+                                                    key={name}
+                                                    name={name}
+                                                    component={component}
+                                                    options={{ headerShown: false }}
+                                                />
+                                            ))
                                         ) : (
                                             <Stack.Screen
                                                 name="Loading"

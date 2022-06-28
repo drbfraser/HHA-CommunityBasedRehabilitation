@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "org.hopehealthaction.cbr",
+    package = "org.hopehealthaction.cbrapp",
 )
 
 android_resource(
     name = "res",
-    package = "org.hopehealthaction.cbr",
+    package = "org.hopehealthaction.cbrapp",
     res = "src/main/res",
 )
 

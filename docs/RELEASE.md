@@ -10,15 +10,20 @@ Select the branch you wish to create an release APK for mobile CBR.
 
 Before releasing a new version of the app, you must ensure that you have updated the version information.
 
-Update the `versionName` and `versionCode` under the `defaultConfig` in `mobile/android/app/build.gradle`. It is recommended to increment the `versionCode` to the next largest integer. Also note that the `versionName` is displayed to users in the Google Play store.
+Update the `versionName`:
+- For Android project in `mobile/android/app/build.gradle` under the `defaultConfig` (visible to user on Google Play store)
+- For our UI in `mobile/src/screens/Sync/Sync.tsx`, change `VERSION_NAME` to match (visible to user when using our app)
 
-Also, the API version number maintained in the mobile app must match that of the server. Ensure that `mobileApiVersion` in `mobile/src/util/syncHandler.ts` matches the version specified by `API_VERSION` in `server/cbr_api/util.py`. This will likely need to be updated if a full DB wipe has occured on the server.
+Update `versionCode`:
+- In `mobile/android/app/build.gradle` under the `defaultConfig`: incrementing to the next largest integer. This is used by the Play store to uniquely track each uploaded version, and must be new for each uploaded bundle.
+
+Also, the API version number maintained in the mobile app must match that of the server. Ensure that `mobileApiVersion` in `mobile/src/util/syncHandler.ts` matches the version specified by `API_VERSION` in `server/cbr_api/util.py`. This will likely need to be updated only when a full DB wipe has occurred on the server and therefore requires the mobile client to also do a complete local database wipe before syncing with the server.
 
 ### 2. Setup release Keystore
 
 The Google Drive folder for the project contains the keystore needed for signing `.aab` files for upload to the Google Play store (the Play store signs the files for release). Copy the file `cbr-upload-key.keystore` into `mobile/android/app/` (should be in the same level as the debug.keystore).
 
-If you want to generate your own keystore instead of using the offical project one for upload, following this guide to setup a release keystore: https://reactnative.dev/docs/signed-apk-android
+If you want to generate your own keystore instead of using the official project one for upload, following this guide to setup a release keystore: https://reactnative.dev/docs/signed-apk-android
 
 After creating the keystore, add/edit the `~/.gradle/gradle.properties` files to include the following:
 
@@ -68,6 +73,6 @@ The generated .aab will be in `mobile/android/app/build/outputs/bundle/release/a
 
 The APK can be installed directly to a physical device or emulator; the AAB file must be uploaded to the Play store in ordered to be installed on a phone.
 
-Alternatively, you can use the command `react-native run-android --variant=release` in the `mobile/` directory and launch an emualtor. You may need to uninstall any debug versions previously installed in the emulator to be able to install the release because the signing key will have changed.
+Alternatively, you can use the command `react-native run-android --variant=release` in the `mobile/` directory and launch an emulator. You may need to uninstall any debug versions previously installed in the emulator to be able to install the release because the signing key will have changed.
 
 You are done!

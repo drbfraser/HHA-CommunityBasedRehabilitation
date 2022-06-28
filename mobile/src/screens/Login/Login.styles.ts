@@ -8,12 +8,12 @@ const useStyles = () => {
     return StyleSheet.create({
         container: {
             backgroundColor: theme.colors.primary,
-            // flexDirection: "row"
         },
         alert: {
             marginVertical: 15,
         },
         contentContainer: {
+            flex: 1,
             flexDirection: "row",
             alignContent: "flex-start",
             justifyContent: width <= SMALL_WIDTH ? "center" : "flex-end",
@@ -25,7 +25,7 @@ const useStyles = () => {
         },
         formContainer: {
             flex: 1,
-            // flexDirection: "column",
+            flexDirection: "column",
             bottom: width <= SMALL_WIDTH ? undefined : 70,
             maxWidth: width <= SMALL_WIDTH ? undefined : "55%",
             margin: 30,
@@ -52,6 +52,12 @@ const useStyles = () => {
         logoutButton: {
             marginVertical: 10,
         },
+        settingsButtonContainer: {
+            flex: 1, 
+            justifyContent: "flex-end", 
+            alignSelf: "stretch", 
+            alignItems: "flex-end"
+        }
     });
 };
 

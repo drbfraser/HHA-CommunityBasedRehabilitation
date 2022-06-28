@@ -3,7 +3,7 @@ import { Image, TextInput as NativeTextInput, useWindowDimensions, View } from "
 import useStyles from "./Login.styles";
 import LoginBackgroundSmall from "./LoginBackgroundSmall";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Button, HelperText, Text, TextInput, Title, useTheme } from "react-native-paper";
+import { Button, IconButton, HelperText, Text, TextInput, Title, useTheme } from "react-native-paper";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
@@ -12,6 +12,7 @@ import passwordTextInputProps from "../../components/PasswordTextInput/passwordT
 import { APIFetchFailError } from "@cbr/common";
 import { useNavigation } from "@react-navigation/core";
 import { VERSION_NAME } from "../Sync/Sync";
+import { column } from "@nozbe/watermelondb/QueryDescription";
 
 interface IBaseLoginStatus {
     status: "initial" | "submitting";
@@ -195,6 +196,13 @@ const Login = () => {
                     <></>
                 )}
                 <Text style={styles.versionInfo}>{VERSION_NAME}</Text>
+                <View style={styles.settingsButtonContainer}>
+                    <IconButton
+                        icon="cog"
+                        color={theme.colors.onPrimary}
+                        onPress={() => navigation.navigate('SwitchServer')}
+                    />
+                </View>
             </View>
         </KeyboardAwareScrollView>
     );

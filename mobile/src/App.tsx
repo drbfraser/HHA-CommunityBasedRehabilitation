@@ -243,11 +243,6 @@ export default function App() {
                                             ))
                                         ) : authState.state === "loggedOut" ||
                                           authState.state === "previouslyLoggedIn" ? (
-                                            // <Stack.Screen
-                                            //     name="Login"
-                                            //     component={Login}
-                                            //     options={{ headerShown: false }}
-                                            // />
                                             notLoggedInScreens.map(({name, component}) => (
                                                 <Stack.Screen 
                                                     key={name}

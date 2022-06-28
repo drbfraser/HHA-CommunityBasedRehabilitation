@@ -35,6 +35,7 @@ import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
 import { Provider as StoreProvider } from "react-redux";
 import { store } from "./redux/store";
+import DefaultHeader from "./components/DefaultHeader/DefaultHeader";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -118,11 +119,13 @@ export default function App() {
     const notLoggedInScreens = [
         {
             name: "Login", 
-            component: Login
+            component: Login, 
+            header: false
         }, 
         {
             name: "SwitchServer", 
-            component: SwitchServer
+            component: SwitchServer, 
+            header: true
         }
     ];
 
@@ -243,12 +246,12 @@ export default function App() {
                                             ))
                                         ) : authState.state === "loggedOut" ||
                                           authState.state === "previouslyLoggedIn" ? (
-                                            notLoggedInScreens.map(({name, component}) => (
+                                            notLoggedInScreens.map(({name, component, header}) => (
                                                 <Stack.Screen 
                                                     key={name}
                                                     name={name}
                                                     component={component}
-                                                    options={{ headerShown: false }}
+                                                    options={{ headerShown: header, header: DefaultHeader(name) }}
                                                 />
                                             ))
                                         ) : (

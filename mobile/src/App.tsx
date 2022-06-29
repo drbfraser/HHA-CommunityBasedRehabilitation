@@ -20,11 +20,9 @@ import {
 import { AuthContext as AuthContext, IAuthContext } from "./context/AuthContext/AuthContext";
 import { enableScreens } from "react-native-screens";
 import Loading from "./screens/Loading/Loading";
-import Login from "./screens/Login/Login";
-import SwitchServer from "./screens/SwitchServer/SwitchServer";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
-import { StackScreenName } from "./util/StackScreenName";
+import { StackScreenName, NoAuthScreenName } from "./util/StackScreenName";
 import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
 import { database } from "./util/watermelonDatabase";
 import { io } from "socket.io-client/dist/socket.io";
@@ -35,7 +33,6 @@ import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
 import { Provider as StoreProvider } from "react-redux";
 import { store } from "./redux/store";
-import DefaultHeader from "./components/DefaultHeader/DefaultHeader";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -115,19 +112,6 @@ export default function App() {
     const [autoSync, setAutoSync] = useState<boolean>(true);
     const [cellularSync, setCellularSync] = useState<boolean>(false);
     const [screenRefresh, setScreenRefresh] = useState<boolean>(false);
-
-    const notLoggedInScreens = [
-        {
-            name: "Login", 
-            component: Login, 
-            header: false
-        }, 
-        {
-            name: "SwitchServer", 
-            component: SwitchServer, 
-            header: true
-        }
-    ];
 
     useEffect(() => {
         // Refresh disabilities, zones, current user information
@@ -246,12 +230,13 @@ export default function App() {
                                             ))
                                         ) : authState.state === "loggedOut" ||
                                           authState.state === "previouslyLoggedIn" ? (
-                                            notLoggedInScreens.map(({name, component, header}) => (
+                                            Object.values(NoAuthScreenName).map((name) => (
                                                 <Stack.Screen 
                                                     key={name}
                                                     name={name}
-                                                    component={component}
-                                                    options={{ headerShown: header, header: DefaultHeader(name) }}
+                                                    component={stackScreenProps[name]}
+                                                    // @ts-ignore
+                                                    options={stackScreenOptions[name]}
                                                 />
                                             ))
                                         ) : (

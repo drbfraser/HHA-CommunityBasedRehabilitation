@@ -1,7 +1,7 @@
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import BaseSurvey from "../screens/BaseSurvey/BaseSurvey";
 import ClientDetails from "../screens/ClientDetails/ClientDetails";
-import { StackScreenName } from "./StackScreenName";
+import { StackScreenName, NoAuthScreenName } from "./StackScreenName";
 import { StackNavigationOptions, StackNavigationProp } from "@react-navigation/stack";
 import AdminView from "../screens/Admin/AdminView";
 import AdminEdit from "../screens/Admin/AdminEdit";
@@ -14,8 +14,10 @@ import React from "react";
 import NewVisit from "../screens/NewVisit/NewVisit";
 import DefaultHeader from "../components/DefaultHeader/DefaultHeader";
 import Sync from "../screens/Sync/Sync";
+import Login from "../screens/Login/Login";
+import SwitchServer from "../screens/SwitchServer/SwitchServer";
 
-export const stackScreenProps: Record<StackScreenName, (any: any) => JSX.Element> = {
+export const stackScreenProps: Record<StackScreenName | NoAuthScreenName, (any: any) => JSX.Element> = {
     [StackScreenName.HOME]: HomeScreen,
     [StackScreenName.CLIENT]: ClientDetails,
     [StackScreenName.ADMIN_VIEW]: AdminView,
@@ -25,6 +27,8 @@ export const stackScreenProps: Record<StackScreenName, (any: any) => JSX.Element
     [StackScreenName.REFERRAL]: NewReferral,
     [StackScreenName.BASE_SURVEY]: BaseSurvey,
     [StackScreenName.SYNC]: Sync,
+    [NoAuthScreenName.LOGIN]: Login, 
+    [NoAuthScreenName.SWITCH_SERVER]: SwitchServer
 };
 
 type TStackNavigationOptions<ParamList extends ParamListBase, RouteName extends keyof ParamList> =
@@ -40,8 +44,8 @@ export type TAppRouteProp<ScreenName extends StackScreenName> = RouteProp<
 >;
 
 export const stackScreenOptions: Record<
-    StackScreenName,
-    TStackNavigationOptions<StackParamList, StackScreenName>
+    StackScreenName | NoAuthScreenName,
+    TStackNavigationOptions<StackParamList, StackScreenName | NoAuthScreenName>
 > = {
     [StackScreenName.HOME]: {
         headerShown: false,
@@ -90,6 +94,13 @@ export const stackScreenOptions: Record<
         headerShown: true,
         header: DefaultHeader("Synchronization"),
     },
+    [NoAuthScreenName.LOGIN]: {
+        headerShown: false
+    }, 
+    [NoAuthScreenName.SWITCH_SERVER]: {
+        headerShown: true, 
+        header: DefaultHeader("Switch Target Server")
+    }
 };
 
 export type StackParamList = {
@@ -119,6 +130,8 @@ export type StackParamList = {
     };
     [StackScreenName.ADMIN_NEW]: undefined;
     [StackScreenName.SYNC]: undefined;
+    [NoAuthScreenName.LOGIN]: undefined;
+    [NoAuthScreenName.SWITCH_SERVER]: undefined;
 };
 
 export type AppStackNavProp = StackNavigationProp<StackParamList>;

@@ -13,7 +13,7 @@ const useStyles = () => {
             marginVertical: 15,
         },
         contentContainer: {
-            flex: 1,
+            //flex: 1,
             flexDirection: "row",
             alignContent: "flex-start",
             justifyContent: width <= SMALL_WIDTH ? "center" : "flex-end",

@@ -60,7 +60,8 @@ const useStyles = () => {
             borderColor: themeColors.hhaGreen
         }, 
         switchServerButton: {
-            marginTop: 50
+            marginTop: 20, 
+            marginBottom: 20
         }
     });
 }

@@ -41,6 +41,10 @@ const useStyles = () => {
             backgroundColor: themeColors.riskYellow, 
             height: 35
         }, 
+        chipDisconnected: {
+            backgroundColor: themeColors.borderGray, 
+            height: 35
+        }, 
         radioButtonPassive: {
             marginBottom: 10, 
             height: 60, 

@@ -25,7 +25,7 @@ import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import { useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
-import requestUserRows from "./requestUserRows";
+import reqeustZoneRows from "./reqeustZoneRows";
 import React from "react";
 import { Cancel, MoreVert } from "@material-ui/icons";
 import { SearchOption } from "../ClientList/searchOptions";
@@ -99,7 +99,7 @@ const ZoneList = () => {
     useEffect(() => {
         const loadInitialData = async () => {
             setLoading(true);
-            await requestUserRows(setFilteredRows, setServerRows, setLoading);
+            await reqeustZoneRows(setFilteredRows, setServerRows, setLoading);
             setLoading(false);
             initialDataLoaded.current = true;
         };

@@ -6,10 +6,6 @@ import { UserRole, userRoles } from "@cbr/common/util/users";
 interface IResponseRow {
     id: number;
     zone: number;
-    first_name: string;
-    last_name: string;
-    role: UserRole;
-    is_active: boolean;
 }
 
 const requestUserRows = async (
@@ -30,11 +26,6 @@ const requestUserRows = async (
             return {
                 id: responseRow.id,
                 zone: zoneMap.get(responseRow.zone) ?? "",
-                first_name: responseRow.first_name,
-                last_name: responseRow.last_name,
-                name: responseRow.first_name + " " + responseRow.last_name,
-                role: userRoles[responseRow.role].name,
-                status: responseRow.is_active ? "Active" : "Disabled",
             };
         });
 

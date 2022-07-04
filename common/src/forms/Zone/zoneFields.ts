@@ -1,6 +1,5 @@
 import * as Yup from "yup";
 
-
 export enum ZoneField {
     zone_name = "zone_name",
 }

@@ -38,7 +38,7 @@ const RenderNoRowsOverlay = () => {
     return (
         <GridOverlay className={styles.noRows}>
             <Cancel color="primary" className={styles.noRowsIcon} />
-            <Typography color="primary">No Users Found</Typography>
+            <Typography color="primary">No Zones Found</Typography>
         </GridOverlay>
     );
 };

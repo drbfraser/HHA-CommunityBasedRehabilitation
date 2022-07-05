@@ -9,7 +9,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 import InsertChart from "@material-ui/icons/InsertChart";
 import Logout from "pages/Logout/Logout";
-import AdminList from "pages/AdminList/AdminList";
+import AdminPage from "pages/Admin/AdminPage";
 import ClientList from "pages/ClientList/ClientList";
 import ClientDetails from "pages/ClientDetails/ClientDetails";
 import UserView from "pages/User/UserView";
@@ -21,6 +21,8 @@ import AdminNew from "pages/Admin/AdminNew";
 import AdminView from "pages/Admin/AdminView";
 import AdminEdit from "pages/Admin/AdminEdit";
 import AdminPasswordEdit from "pages/Admin/AdminPasswordEdit";
+import ZoneNew from "pages/Zone/ZoneNew";
+// import ZoneEdit from "pages/Zone/ZoneEdit";
 import ClientRiskHistory from "pages/ClientDetails/RiskHistory/ClientRiskHistory";
 import Dashboard from "pages/Dashboard/Dashboard";
 import NewVisit from "pages/NewVisit/NewVisit";
@@ -118,7 +120,7 @@ const pages: IPage[] = [
         path: "/admin",
         name: "Admin",
         roles: [UserRole.ADMIN],
-        Component: AdminList,
+        Component: AdminPage,
         showInNav: true,
         Icon: SettingsIcon,
     },
@@ -147,6 +149,13 @@ const pages: IPage[] = [
         path: "/admin/password/:userId",
         name: "Edit User Password",
         Component: AdminPasswordEdit,
+        showInNav: false,
+    },
+    {
+        path: "/zone/new",
+        name: "New Zone",
+        roles: [UserRole.ADMIN],
+        Component: ZoneNew,
         showInNav: false,
     },
     {

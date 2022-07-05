@@ -29,12 +29,20 @@ const SwitchServer = () => {
 
     const switchToTestServer = (baseUrl: string) => {
         const apiUrl = `${baseUrl}/api/`;
+        terminateCurrentConnection();
         updateCommonApiUrl(apiUrl, baseUrl);
     };
 
     const switchToLiveServer = () => {
+        terminateCurrentConnection();
         updateCommonApiUrl(API_URL, BASE_URL);
     };
+
+    const terminateCurrentConnection = () => {
+        if (socket.connected) {
+            socket.disconnect();
+        }
+    }
 
     const renderCurrentServer = () => {
         const isPointingAtLive = socket.ioUrl === BASE_URL;

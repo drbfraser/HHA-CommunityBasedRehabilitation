@@ -1,14 +1,12 @@
 import { RowsProp } from "@material-ui/data-grid";
-import { getZones } from "@cbr/common/util/hooks/zones";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-import { UserRole, userRoles } from "@cbr/common/util/users";
 
 interface IResponseRow {
     id: number;
-    zone: number;
+    zone_name: number;
 }
 
-const requestUserRows = async (
+const requestZoneRows = async (
     setFilteredRows: (rows: RowsProp) => void,
     setServerRows: (rows: RowsProp) => void,
     setLoading: (loading: boolean) => void
@@ -18,17 +16,15 @@ const requestUserRows = async (
     let urlParams: string = "";
 
     try {
-        const resp = await apiFetch(Endpoint.USERS, urlParams);
+        const resp = await apiFetch(Endpoint.ZONES, urlParams);
 
         const responseRows: IResponseRow[] = await resp.json();
-        const zoneMap = await getZones();
         const rows: RowsProp = responseRows.map((responseRow) => {
             return {
                 id: responseRow.id,
-                zone: zoneMap.get(responseRow.zone) ?? "",
+                zone: responseRow.zone_name ?? "",
             };
         });
-
         setFilteredRows(rows);
         setServerRows(rows);
     } catch (e) {
@@ -39,4 +35,4 @@ const requestUserRows = async (
     setLoading(false);
 };
 
-export default requestUserRows;
+export default requestZoneRows;

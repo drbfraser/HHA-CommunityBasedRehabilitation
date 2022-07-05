@@ -1,7 +1,7 @@
 import { useStyles } from "./ZoneList.styles";
 import SearchBar from "components/SearchBar/SearchBar";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
+
+import AddLocationIcon from "@mui/icons-material/AddLocation";
 import {
     DataGrid,
     DensityTypes,
@@ -9,28 +9,15 @@ import {
     GridOverlay,
     ValueFormatterParams,
 } from "@material-ui/data-grid";
-import { Tabs, Tab, Box } from "@mui/material";
-import {
-    LinearProgress,
-    IconButton,
-    Typography,
-    Select,
-    MenuItem,
-    Popover,
-    Switch,
-} from "@material-ui/core";
+import { LinearProgress, IconButton, Typography } from "@material-ui/core";
 import { useDataGridStyles } from "styles/DataGrid.styles";
-import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
-import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import { useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import reqeustZoneRows from "./reqeustZoneRows";
 import React from "react";
-import { Cancel, MoreVert } from "@material-ui/icons";
-import { SearchOption } from "../ClientList/searchOptions";
-import { useZones } from "@cbr/common/util/hooks/zones";
-
+import { Cancel } from "@material-ui/icons";
+import { SearchOption } from "./searchOptions";
 const RenderText = (params: ValueFormatterParams) => {
     return <Typography variant={"body2"}>{params.value}</Typography>;
 };
@@ -58,31 +45,15 @@ const RenderNoRowsOverlay = () => {
 
 const ZoneList = () => {
     const [searchValue, setSearchValue] = useState<string>("");
-    const [searchOption, setSearchOption] = useState<string>(SearchOption.ZONE);
+    const [searchOption] = useState<string>(SearchOption.ZONE);
     const [loading, setLoading] = useState<boolean>(true);
     const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
     const [filteredRows, setFilteredRows] = useState<RowsProp>([]);
     const [serverRows, setServerRows] = useState<RowsProp>([]);
-    const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
-    const isOptionsOpen = Boolean(optionsAnchorEl);
-
-    const zones = useZones();
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
-    const searchOptionsStyle = useSearchOptionsStyles();
-    const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
-
-    const onRowClick = (row: any) => {
-        const user = row.row;
-        history.push("/admin/view/" + user.id);
-    };
-    const onAdminAddClick = () => history.push("/admin/new");
     const onZoneAddClick = () => history.push("/zone/new");
-    const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-        setOptionsAnchorEl(event.currentTarget);
-    const onOptionsClose = () => setOptionsAnchorEl(null);
-
     const adminColumns = [
         {
             field: "zone",
@@ -119,59 +90,11 @@ const ZoneList = () => {
         <div className={styles.container}>
             <div className={styles.topContainer}>
                 <IconButton onClick={onZoneAddClick} className={styles.icon}>
-                    <PersonAddIcon />
+                    <AddLocationIcon />
                 </IconButton>
-                <div className={searchOptionsStyle.searchOptions}>
-                    <Select
-                        color={"primary"}
-                        defaultValue={SearchOption.ZONE}
-                        value={searchOption}
-                        onChange={(event) => {
-                            setSearchValue("");
-                            setSearchOption(String(event.target.value));
-                        }}
-                    >
-                        <MenuItem key={SearchOption.ZONE} value={SearchOption.ZONE}>
-                            {SearchOption.ZONE}
-                        </MenuItem>
-                    </Select>
-                </div>
-
-                <SearchBar value={searchValue} />
-
-                <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
-                    <MoreVert />
-                </IconButton>
-                <Popover
-                    open={isOptionsOpen}
-                    anchorEl={optionsAnchorEl}
-                    onClose={onOptionsClose}
-                    anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "left",
-                    }}
-                    transformOrigin={{
-                        vertical: "top",
-                        horizontal: "center",
-                    }}
-                >
-                    <div className={hideColumnsStyle.optionsContainer}>
-                        {adminColumns.map((column): JSX.Element => {
-                            return (
-                                <div key={column.field} className={hideColumnsStyle.optionsRow}>
-                                    <Typography component={"span"} variant={"body2"}>
-                                        {column.headerName}
-                                    </Typography>
-                                    <Switch
-                                        checked={!column.hide}
-                                        onClick={() => column.hideFunction(!column.hide)}
-                                    />
-                                </div>
-                            );
-                        })}
-                    </div>
-                </Popover>
+                <SearchBar value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
             </div>
+
             <div className={styles.dataGridWrapper}>
                 <DataGrid
                     className={dataGridStyle.datagrid}
@@ -183,7 +106,6 @@ const ZoneList = () => {
                     rows={filteredRows}
                     columns={adminColumns}
                     density={DensityTypes.Comfortable}
-                    onRowClick={onRowClick}
                     pagination
                     sortModel={[
                         {

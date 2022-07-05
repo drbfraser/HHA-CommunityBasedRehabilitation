@@ -1,7 +1,6 @@
 import { useStyles } from "./AdminList.styles";
 import SearchBar from "components/SearchBar/SearchBar";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 import {
     DataGrid,
     DensityTypes,
@@ -9,7 +8,6 @@ import {
     GridOverlay,
     ValueFormatterParams,
 } from "@material-ui/data-grid";
-import { Tabs, Tab, Box } from "@mui/material";
 import {
     LinearProgress,
     IconButton,
@@ -64,7 +62,6 @@ const AdminList = () => {
     const [isRoleHidden, setRoleHidden] = useState<boolean>(false);
     const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
     const [isStatusHidden, setStatusHidden] = useState<boolean>(false);
-    const [isLastUpdatedDateHidden, setLastUpdatedDateHidden] = useState<boolean>(false);
     const [filteredRows, setFilteredRows] = useState<RowsProp>([]);
     const [serverRows, setServerRows] = useState<RowsProp>([]);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
@@ -82,7 +79,6 @@ const AdminList = () => {
         history.push("/admin/view/" + user.id);
     };
     const onAdminAddClick = () => history.push("/admin/new");
-    const onZoneAddClick = () => history.push("/admin/");
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
         setOptionsAnchorEl(event.currentTarget);
     const onOptionsClose = () => setOptionsAnchorEl(null);
@@ -119,25 +115,6 @@ const AdminList = () => {
             renderCell: RenderText,
             hide: isStatusHidden,
             hideFunction: setStatusHidden,
-        },
-    ];
-
-    const zoneColumns = [
-        {
-            field: "zone",
-            headerName: "Zone",
-            flex: 1,
-            renderCell: RenderText,
-            hide: isZoneHidden,
-            hideFunction: setZoneHidden,
-        },
-        {
-            field: "name",
-            headerName: "Last Updated Date",
-            flex: 1,
-            renderCell: RenderText,
-            hide: isLastUpdatedDateHidden,
-            hideFunction: setLastUpdatedDateHidden,
         },
     ];
 

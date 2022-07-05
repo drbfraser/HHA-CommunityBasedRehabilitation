@@ -8,7 +8,7 @@ const addZone = async (zoneInfo: string) => {
         method: "POST",
         body: zoneInfo,
     };
-
+    
     return await apiFetch(Endpoint.ZONES, "", init)
         .then((res) => res.json())
         .then((res) => res as IZone);

@@ -20,22 +20,13 @@ const SwitchServer = () => {
     const [testServerURL, setTestServerURL] = useState("");
 
     const switchServer = (server: ServerOption) => {
-        if (server === ServerOption.LIVE) {
-            switchToLiveServer();
-        } else if (server === ServerOption.TEST) {
-            switchToTestServer(testServerURL);
+        if (server !== ServerOption.NONE) {
+            const baseUrl = server === ServerOption.LIVE ? BASE_URL : testServerURL;
+            const apiUrl = `${baseUrl}/api/`;
+
+            terminateCurrentConnection();
+            updateCommonApiUrl(apiUrl, baseUrl);
         }
-    };
-
-    const switchToTestServer = (baseUrl: string) => {
-        const apiUrl = `${baseUrl}/api/`;
-        terminateCurrentConnection();
-        updateCommonApiUrl(apiUrl, baseUrl);
-    };
-
-    const switchToLiveServer = () => {
-        terminateCurrentConnection();
-        updateCommonApiUrl(API_URL, BASE_URL);
     };
 
     const terminateCurrentConnection = () => {
@@ -120,6 +111,7 @@ const SwitchServer = () => {
                 <Button 
                     style={styles.switchServerButton}
                     mode="contained"
+                    disabled={ selectedServer === ServerOption.NONE || (selectedServer === ServerOption.TEST && testServerURL === "") }
                     onPress={ () => switchServer(selectedServer) }
                 >
                     Switch Servers

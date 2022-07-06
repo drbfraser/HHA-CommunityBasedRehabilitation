@@ -78,12 +78,12 @@ const AdminList = () => {
         const user = row.row;
         history.push("/admin/view/" + user.id);
     };
-    const onAddClick = () => history.push("/admin/new");
+    const onAdminAddClick = () => history.push("/admin/new");
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
         setOptionsAnchorEl(event.currentTarget);
     const onOptionsClose = () => setOptionsAnchorEl(null);
 
-    const columns = [
+    const adminColumns = [
         {
             field: "name",
             headerName: "Name",
@@ -150,7 +150,7 @@ const AdminList = () => {
     return (
         <div className={styles.container}>
             <div className={styles.topContainer}>
-                <IconButton onClick={onAddClick} className={styles.icon}>
+                <IconButton onClick={onAdminAddClick} className={styles.icon}>
                     <PersonAddIcon />
                 </IconButton>
                 <div className={searchOptionsStyle.searchOptions}>
@@ -208,7 +208,7 @@ const AdminList = () => {
                     }}
                 >
                     <div className={hideColumnsStyle.optionsContainer}>
-                        {columns.map((column): JSX.Element => {
+                        {adminColumns.map((column): JSX.Element => {
                             return (
                                 <div key={column.field} className={hideColumnsStyle.optionsRow}>
                                     <Typography component={"span"} variant={"body2"}>
@@ -233,7 +233,7 @@ const AdminList = () => {
                         NoRowsOverlay: RenderNoRowsOverlay,
                     }}
                     rows={filteredRows}
-                    columns={columns}
+                    columns={adminColumns}
                     density={DensityTypes.Comfortable}
                     onRowClick={onRowClick}
                     pagination

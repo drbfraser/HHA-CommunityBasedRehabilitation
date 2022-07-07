@@ -3,9 +3,14 @@ import useStyles from "./SwitchServer.styles";
 import { Text, Card, Chip, Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
-import { View } from "react-native";
-import { BASE_URL, API_URL } from "../../..";
-import { SocketContext, updateCommonApiUrl } from "@cbr/common";
+import { View, Alert } from "react-native";
+import { BASE_URL } from "../../..";
+import { baseServicesTypes, SocketContext, updateCommonApiUrl } from "@cbr/common";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { SyncDB } from "../../util/syncHandler";
+import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
+import { showGenericAlert } from "../../util/genericAlert";
+import { useNavigation } from "@react-navigation/native";
 
 const SwitchServer = () => {
     enum ServerOption {
@@ -16,17 +21,49 @@ const SwitchServer = () => {
 
     const styles = useStyles();
     const socket = useContext(SocketContext);
+    const database = useDatabase();
+    const navigator = useNavigation();
     const [selectedServer, setSelectedServer] = useState(ServerOption.NONE);
     const [testServerURL, setTestServerURL] = useState("");
 
-    const switchServer = (server: ServerOption) => {
+    const switchServer = async (server: ServerOption) => {
         if (server !== ServerOption.NONE) {
             const baseUrl = server === ServerOption.LIVE ? BASE_URL : testServerURL;
             const apiUrl = `${baseUrl}/api/`;
 
-            terminateCurrentConnection();
-            updateCommonApiUrl(apiUrl, baseUrl);
+            if (baseUrl === socket.ioUrl) {
+                alert("Already connected to server: " + baseUrl);
+                return;
+            }
+
+            await NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
+                if (connectionInfo?.isConnected && connectionInfo.isWifiEnabled) {
+                    confirmSwitchServer(apiUrl, baseUrl);
+                } else {
+                    showGenericAlert(
+                        "Your device is not connected to the internet", 
+                        "You must have an internet connection via wifi to switch servers.");
+                }
+            })
         }
+    };
+
+    const confirmSwitchServer = (apiUrl: string, baseUrl: string) => {
+        Alert.alert("Alert", "Switching servers will clear all local data. Are you sure you want to proceed?", [
+            { text: "Cancel", style: "cancel" }, 
+            {
+                text: "Confirm", 
+                onPress: async () => {
+                    await database.write(async () => {
+                        await database.unsafeResetDatabase();
+                    });
+
+                    terminateCurrentConnection();
+                    updateCommonApiUrl(apiUrl, baseUrl);
+                    navigator.navigate("Login");
+                }
+            }
+        ]);
     };
 
     const terminateCurrentConnection = () => {
@@ -43,14 +80,14 @@ const SwitchServer = () => {
             : styles.chipDisconnected;
         const chipText = isConnected ? 
             isPointingAtLive ? "Live" : "Test"
-            : "No connection to"
+            : "No Connection"
 
         return (
             <Chip
                 textStyle={styles.chipText}
                 style={chipStyle}
             >
-                {chipText} Server
+                {chipText}
             </Chip>
         )
     }

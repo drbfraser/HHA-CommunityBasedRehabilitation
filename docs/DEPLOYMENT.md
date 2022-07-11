@@ -4,6 +4,8 @@ Deployments are done automatically using GitLab Runner and Docker. The following
 
 ## Install Docker
 
+<!--  TODO: UPDATE Need newer version of docker?-->
+
 ```sh
 sudo apt-get update
 

@@ -1,4 +1,4 @@
-# Deployment
+# Deployment to Dev and Staging servers
 
 Deployments are done automatically using GitLab Runner and Docker. The following steps were taken to set up each deployment environment (assuming a wiped VM / VPS).
 
@@ -61,3 +61,12 @@ POSTGRES_PASSWORD=[a secure, long password]
 ## Done!
 
 Now just trigger the deployment by merging to the appropriate branch in GitLab.
+
+
+# Deployment to Production Server
+
+To deploy to a new production server:  
+   `scripts/setup_production.sh`
+
+To update an existing production server:  
+   `scripts/update.sh`

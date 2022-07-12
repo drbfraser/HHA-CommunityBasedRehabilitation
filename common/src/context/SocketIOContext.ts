@@ -6,7 +6,7 @@ export let SocketContext: React.Context<any>;
 export let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 interface SocketInfo extends Socket<DefaultEventsMap, DefaultEventsMap> {
-    ioUrl?: string
+    ioUrl?: string;
 }
 
 export const initSocketContext = (socketIOUrl: string) => {

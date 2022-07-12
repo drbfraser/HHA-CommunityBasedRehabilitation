@@ -53,11 +53,11 @@ const useStyles = () => {
             marginVertical: 10,
         },
         settingsButtonContainer: {
-            flex: 1, 
-            justifyContent: "flex-end", 
-            alignSelf: "stretch", 
-            alignItems: "flex-end"
-        }
+            flex: 1,
+            justifyContent: "flex-end",
+            alignSelf: "stretch",
+            alignItems: "flex-end",
+        },
     });
 };
 

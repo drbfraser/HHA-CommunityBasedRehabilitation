@@ -7,10 +7,10 @@ export enum StackScreenName {
     ADMIN_NEW = "AdminNew",
     REFERRAL = "NewReferral",
     VISIT = "NewVisit",
-    SYNC = "Sync,"
+    SYNC = "Sync,",
 }
 
 export enum NoAuthScreenName {
-    LOGIN = "Login", 
-    SWITCH_SERVER = "SwitchServer"
+    LOGIN = "Login",
+    SWITCH_SERVER = "SwitchServer",
 }

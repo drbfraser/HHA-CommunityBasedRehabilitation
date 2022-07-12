@@ -3,7 +3,15 @@ import { Image, TextInput as NativeTextInput, useWindowDimensions, View } from "
 import useStyles from "./Login.styles";
 import LoginBackgroundSmall from "./LoginBackgroundSmall";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Button, IconButton, HelperText, Text, TextInput, Title, useTheme } from "react-native-paper";
+import {
+    Button,
+    IconButton,
+    HelperText,
+    Text,
+    TextInput,
+    Title,
+    useTheme,
+} from "react-native-paper";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
@@ -200,7 +208,7 @@ const Login = () => {
                     <IconButton
                         icon="cog"
                         color={theme.colors.onPrimary}
-                        onPress={() => navigation.navigate('SwitchServer')}
+                        onPress={() => navigation.navigate("SwitchServer")}
                     />
                 </View>
             </View>

@@ -17,7 +17,10 @@ import Sync from "../screens/Sync/Sync";
 import Login from "../screens/Login/Login";
 import SwitchServer from "../screens/SwitchServer/SwitchServer";
 
-export const stackScreenProps: Record<StackScreenName | NoAuthScreenName, (any: any) => JSX.Element> = {
+export const stackScreenProps: Record<
+    StackScreenName | NoAuthScreenName,
+    (any: any) => JSX.Element
+> = {
     [StackScreenName.HOME]: HomeScreen,
     [StackScreenName.CLIENT]: ClientDetails,
     [StackScreenName.ADMIN_VIEW]: AdminView,
@@ -27,8 +30,8 @@ export const stackScreenProps: Record<StackScreenName | NoAuthScreenName, (any: 
     [StackScreenName.REFERRAL]: NewReferral,
     [StackScreenName.BASE_SURVEY]: BaseSurvey,
     [StackScreenName.SYNC]: Sync,
-    [NoAuthScreenName.LOGIN]: Login, 
-    [NoAuthScreenName.SWITCH_SERVER]: SwitchServer
+    [NoAuthScreenName.LOGIN]: Login,
+    [NoAuthScreenName.SWITCH_SERVER]: SwitchServer,
 };
 
 type TStackNavigationOptions<ParamList extends ParamListBase, RouteName extends keyof ParamList> =
@@ -95,12 +98,12 @@ export const stackScreenOptions: Record<
         header: DefaultHeader("Synchronization"),
     },
     [NoAuthScreenName.LOGIN]: {
-        headerShown: false
-    }, 
+        headerShown: false,
+    },
     [NoAuthScreenName.SWITCH_SERVER]: {
-        headerShown: true, 
-        header: DefaultHeader("Switch Target Server")
-    }
+        headerShown: true,
+        header: DefaultHeader("Switch Target Server"),
+    },
 };
 
 export type StackParamList = {

@@ -231,7 +231,7 @@ export default function App() {
                                         ) : authState.state === "loggedOut" ||
                                           authState.state === "previouslyLoggedIn" ? (
                                             Object.values(NoAuthScreenName).map((name) => (
-                                                <Stack.Screen 
+                                                <Stack.Screen
                                                     key={name}
                                                     name={name}
                                                     component={stackScreenProps[name]}

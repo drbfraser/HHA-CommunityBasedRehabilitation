@@ -14,10 +14,10 @@ import { useNavigation } from "@react-navigation/native";
 
 const SwitchServer = () => {
     enum ServerOption {
-        LIVE = "Live", 
-        TEST = "Test", 
-        NONE = "None"
-    };
+        LIVE = "Live",
+        TEST = "Test",
+        NONE = "None",
+    }
 
     const styles = useStyles();
     const socket = useContext(SocketContext);
@@ -41,69 +41,72 @@ const SwitchServer = () => {
                     confirmSwitchServer(apiUrl, baseUrl);
                 } else {
                     showGenericAlert(
-                        "Your device is not connected to the internet", 
-                        "You must have an internet connection via wifi to switch servers.");
+                        "Your device is not connected to the internet",
+                        "You must have an internet connection via wifi to switch servers."
+                    );
                 }
-            })
+            });
         }
     };
 
     const confirmSwitchServer = (apiUrl: string, baseUrl: string) => {
-        Alert.alert("Alert", "Switching servers will clear all local data. Are you sure you want to proceed?", [
-            { text: "Cancel", style: "cancel" }, 
-            {
-                text: "Confirm", 
-                onPress: async () => {
-                    await database.write(async () => {
-                        await database.unsafeResetDatabase();
-                    });
+        Alert.alert(
+            "Alert",
+            "Switching servers will clear all local data. Are you sure you want to proceed?",
+            [
+                { text: "Cancel", style: "cancel" },
+                {
+                    text: "Confirm",
+                    onPress: async () => {
+                        await database.write(async () => {
+                            await database.unsafeResetDatabase();
+                        });
 
-                    terminateCurrentConnection();
-                    updateCommonApiUrl(apiUrl, baseUrl);
-                    navigator.navigate("Login");
-                }
-            }
-        ]);
+                        terminateCurrentConnection();
+                        updateCommonApiUrl(apiUrl, baseUrl);
+                        navigator.navigate("Login");
+                    },
+                },
+            ]
+        );
     };
 
     const terminateCurrentConnection = () => {
         if (socket.connected) {
             socket.disconnect();
         }
-    }
+    };
 
     const renderCurrentServer = () => {
         const isPointingAtLive = socket.ioUrl === BASE_URL;
         const isConnected = socket.connected;
-        const chipStyle = isConnected ? 
-            isPointingAtLive ? styles.chipLive : styles.chipTest
+        const chipStyle = isConnected
+            ? isPointingAtLive
+                ? styles.chipLive
+                : styles.chipTest
             : styles.chipDisconnected;
-        const chipText = isConnected ? 
-            isPointingAtLive ? "Live" : "Test"
-            : "No Connection"
+        const chipText = isConnected ? (isPointingAtLive ? "Live" : "Test") : "No Connection";
 
         return (
-            <Chip
-                textStyle={styles.chipText}
-                style={chipStyle}
-            >
+            <Chip textStyle={styles.chipText} style={chipStyle}>
                 {chipText}
             </Chip>
-        )
-    }
+        );
+    };
 
     const radioButton = (value: ServerOption) => {
-        const style = value === selectedServer ? styles.radioButtonSelected : styles.radioButtonPassive;
+        const style =
+            value === selectedServer ? styles.radioButtonSelected : styles.radioButtonPassive;
         return (
             <Button
                 style={style}
                 mode="outlined"
-                icon={ value === selectedServer ? "check" : "" }
-                onPress={ () => setSelectedServer(value) }
+                icon={value === selectedServer ? "check" : ""}
+                onPress={() => setSelectedServer(value)}
             >
                 {value} server
             </Button>
-        )
+        );
     };
 
     return (
@@ -126,9 +129,9 @@ const SwitchServer = () => {
                     {radioButton(ServerOption.LIVE)}
                     {radioButton(ServerOption.TEST)}
                 </View>
-                { selectedServer === ServerOption.TEST ? (
+                {selectedServer === ServerOption.TEST ? (
                     <View>
-                        <TextInput 
+                        <TextInput
                             label="Test Server URL"
                             error={false}
                             value={testServerURL}
@@ -140,16 +143,21 @@ const SwitchServer = () => {
                             autoCompleteType="off"
                             textContentType="URL"
                             returnKeyType="next"
-                            onSubmitEditing={ () => switchServer(selectedServer) }
+                            onSubmitEditing={() => switchServer(selectedServer)}
                         />
                     </View>
-                ) : (<View></View>)}
+                ) : (
+                    <View></View>
+                )}
 
-                <Button 
+                <Button
                     style={styles.switchServerButton}
                     mode="contained"
-                    disabled={ selectedServer === ServerOption.NONE || (selectedServer === ServerOption.TEST && testServerURL === "") }
-                    onPress={ () => switchServer(selectedServer) }
+                    disabled={
+                        selectedServer === ServerOption.NONE ||
+                        (selectedServer === ServerOption.TEST && testServerURL === "")
+                    }
+                    onPress={() => switchServer(selectedServer)}
                 >
                     Switch Servers
                 </Button>

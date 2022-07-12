@@ -6,7 +6,7 @@ stages:
 
 variables:
   DEV_BRANCH: "main"
-  STAGING_BRANCH: "staging"
+  STG_BRANCH: "staging"
   PROD_BRANCH: "production"
   NPM_VERSION: "7.19.0"
 
@@ -92,7 +92,7 @@ build web:
         - .gitlab-ci.yml
       when: always
     # build on deployments
-    - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
+    - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $STG_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: always
     # Always build/test for schedule / manual "Run Pipeline" via web
     - if: $CI_PIPELINE_SOURCE == "schedule"
@@ -130,7 +130,7 @@ build server:
         - server/**/*
         - .gitlab-ci.yml
       when: always
-    - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $STAGING_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
+    - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $STG_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH"
       when: always
     # Always build/test for schedule / manual "Run Pipeline" via web
     - if: $CI_PIPELINE_SOURCE == "schedule"
@@ -236,7 +236,7 @@ test caddy:
 #   tags:
 #     - deploy-staging
 #   rules:
-#     - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $STAGING_BRANCH"
+#     - if: "$CI_MERGE_REQUEST_ID == null && $CI_COMMIT_BRANCH == $STG_BRANCH"
 #       when: on_success
 #   script:
 #     - *deploy-script
@@ -358,11 +358,13 @@ deploy development:
   rules:
     - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH"
     # TODO: REMOVE THIS!
-    - if: $CI_PIPELINE_SOURCE != "push"
+    # - if: $CI_PIPELINE_SOURCE != "push"
   script:
-    # After images are built, deploy to dev-server & tag with "dev"
-    - *deploy-from-dockerhub
-    - *retag-and-upload-dockerhub
+    echo "COMMENTED OUT DEV DEPLOYMENT"
+    # TODO: ADD BACK IN!
+    # # After images are built, deploy to dev-server & tag with "dev"
+    # - *deploy-from-dockerhub
+    # - *retag-and-upload-dockerhub
 
 deploy staging:
   stage: deploy

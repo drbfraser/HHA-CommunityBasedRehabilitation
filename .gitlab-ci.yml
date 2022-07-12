@@ -283,6 +283,10 @@ build-docker publish-docker-images:
     #   HUB_REPO_BACKEND:   Docker Hub project name for backend
     #   HUB_REPO_FRONTEND:  Docker Hub project name for frontend / caddy
 
+    # TODO: REMOVE
+    - pwd
+    - ls -la
+
     # Build images (tagged by docker-composition*.yml using IMAGE_TAG)
     - *export_image_tag
     - docker compose -f docker-compose.yml -f docker-compose.deploy.yml build

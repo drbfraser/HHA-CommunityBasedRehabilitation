@@ -50,32 +50,33 @@ build common:
     - npx prettier --check .
     - npx tsc
 
-build mobile:
-  stage: build
-  image: node:14
-  tags:
-    - docker
-  needs: []
-  rules:
-    - if: "$CI_MERGE_REQUEST_ID != null"
-      changes:
-        - common/**/*
-        - mobile/**/*
-        - .gitlab-ci.yml
-      when: always
-    # Always build/test for schedule / manual "Run Pipeline" via web
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "web"
-  before_script:
-    - npm install -g npm@$NPM_VERSION
-    - cd mobile
-    - npm uninstall @cbr/common
-    - COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
-    - npm install $COMMON_PACK_NAME
-    - npm ci
-  script:
-    - npx prettier --check .
-    - npx expo export --public-url https://ci-build.local
+## REVISIT: UNCOMMENT THIS WHOLE SECTION
+# build mobile:
+#   stage: build
+#   image: node:14
+#   tags:
+#     - docker
+#   needs: []
+#   rules:
+#     - if: "$CI_MERGE_REQUEST_ID != null"
+#       changes:
+#         - common/**/*
+#         - mobile/**/*
+#         - .gitlab-ci.yml
+#       when: always
+#     # Always build/test for schedule / manual "Run Pipeline" via web
+#     - if: $CI_PIPELINE_SOURCE == "schedule"
+#     - if: $CI_PIPELINE_SOURCE == "web"
+#   before_script:
+#     - npm install -g npm@$NPM_VERSION
+#     - cd mobile
+#     - npm uninstall @cbr/common
+#     - COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
+#     - npm install $COMMON_PACK_NAME
+#     - npm ci
+#   script:
+#     - npx prettier --check .
+#     - npx expo export --public-url https://ci-build.local
 
 build web:
   stage: build

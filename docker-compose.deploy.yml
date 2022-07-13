@@ -36,35 +36,3 @@ services:
 
 volumes:
   cbr_caddy_data:
-
-
-# TODO: REMOVE THIS
-
-# version: "3.7"
-# services:
-  # django:
-  #   build:
-  #     dockerfile: Dockerfile.deploy
-  #   restart: always
-  #   command: gunicorn -k eventlet --workers 1 cbr.wsgi --bind 0:8000
-  #   environment:
-  #     - DOMAIN=${DOMAIN}
-  # postgres:
-  #   restart: always
-  # caddy:
-  #   container_name: cbr_caddy
-  #   build:
-  #     context: .
-  #     dockerfile: caddy/Dockerfile
-  #   restart: always
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-    # environment:
-    #   - DOMAIN=${DOMAIN}
-    #   - API_HOSTNAME=cbr_django
-#     volumes:
-#       - cbr_caddy_data:/data
-
-# volumes:
-#   cbr_caddy_data:

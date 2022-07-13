@@ -40,8 +40,6 @@ build common:
     # Always build/test for schedule / manual "Run Pipeline" via web
     - if: $CI_PIPELINE_SOURCE == "schedule"
     - if: $CI_PIPELINE_SOURCE == "web"
-    # TODO: REMOVE THIS!
-    - if: $CI_PIPELINE_SOURCE != "push"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd common
@@ -50,7 +48,6 @@ build common:
     - npx prettier --check .
     - npx tsc
 
-# REVISIT: UNCOMMENT THIS WHOLE SECTION
 build mobile:
   stage: build
   image: node:14
@@ -98,8 +95,6 @@ build web:
     # Always build/test for schedule / manual "Run Pipeline" via web
     - if: $CI_PIPELINE_SOURCE == "schedule"
     - if: $CI_PIPELINE_SOURCE == "web"
-    # TODO: REMOVE THIS!
-    - if: $CI_PIPELINE_SOURCE != "push"
   before_script:
     - npm install -g npm@$NPM_VERSION
     - cd common
@@ -136,8 +131,6 @@ build server:
     # Always build/test for schedule / manual "Run Pipeline" via web
     - if: $CI_PIPELINE_SOURCE == "schedule"
     - if: $CI_PIPELINE_SOURCE == "web"
-    # TODO: REMOVE THIS!
-    - if: $CI_PIPELINE_SOURCE != "push"
   variables:
     DOMAIN: "example.com"
     SECRET_KEY: "test"
@@ -221,8 +214,7 @@ build-docker publish-docker-images:
     - deploy-dockerhub-shell
   rules:
     - if: "$CI_COMMIT_BRANCH == $DEV_BRANCH"
-    # TODO: REMOVE THIS!
-    - if: $CI_PIPELINE_SOURCE != "push"
+    - if: $CI_PIPELINE_SOURCE == "web"
   script:
     # Required environment variables defined by GitLab's settings:
     #   HUB_USER:           Docker Hub user

@@ -27,6 +27,12 @@ echo -e "\n${BLUE}Updating and upgrading currently installed packages...${COLOR_
 apt update -y
 apt upgrade -y
 
+if [ -f /var/run/reboot-required ] 
+then
+    echo -e "\n${BLUE}Linux requires a reboot to complete install/upgrade tasts..${COLOR_OFF}"
+    echo -e "${BLUE}Please reboot ('sudo reboot') and then re-run this script to continue installation.${COLOR_OFF}"
+    exit 1
+fi
 
 echo -e "\n${BLUE}Installing needed utils...${COLOR_OFF}\n"
 
@@ -122,7 +128,7 @@ docker compose -f docker-compose.yml -f docker-compose.deploy.yml pull
 docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
 
 
-echo -e "\n${BLUE}Waiting for MySQL to start...${COLOR_OFF}"
+echo -e "\n${BLUE}Waiting for database container to start...${COLOR_OFF}"
 sleep 10;
 
 

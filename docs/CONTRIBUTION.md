@@ -6,9 +6,9 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 1. Open the project directory in a terminal window.
 
-2. If dependencies have been added since you last ran the project, you may need to run `docker-compose build` first.
+2. If dependencies have been added since you last ran the project, you may need to run `docker compose build` first.
 
-3. Run `docker-compose up`
+3. Run `docker compose up`
 
 4. If database models have changed since you last ran the project, you may need to run `docker exec cbr_django python manage.py migrate` with the Docker containers running.
 
@@ -40,7 +40,7 @@ You'll likely want to seed some data for development purposes. This can be done 
 
 - Zones: `seedzones`
 - Disabilities: `seeddisabilities`
-- Users: `seedusers`
+- Users: `seedusers` (or use `seedadminuser` to create one admin with a random password; useful for production install)
 - Clients: `seedclients`
 - Visits: `seedvisits`
 

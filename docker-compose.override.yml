@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.9"
 services:
   django:
     command: python manage.py runserver 0.0.0.0:8000

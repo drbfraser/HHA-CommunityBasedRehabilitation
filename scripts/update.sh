@@ -52,7 +52,7 @@ echo "Release tag:                $IMAGE_TAG"
 docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
 
 
-echo -e "\n${BLUE}Waiting for MySQL to start...${COLOR_OFF}"
+echo -e "\n${BLUE}Waiting for database to start...${COLOR_OFF}"
 sleep 10;
 
 

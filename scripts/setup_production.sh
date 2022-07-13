@@ -146,7 +146,7 @@ echo -e "${COLOR_OFF}"
 case $OPTION in
     1)
 
-        docker exec cbr_django python ./manage.py seedadminuser ${REPLY}
+        docker exec cbr_django python ./manage.py seedadminuser
         
         echo -e "\n${RED}** WRITE DOWN AND SAVE THE USERNAME AND PASSWORD ABOVE! **${COLOR_OFF}"
         ;;
@@ -155,7 +155,7 @@ case $OPTION in
 
         docker exec cbr_django python ./manage.py seedzones
         docker exec cbr_django python ./manage.py seeddisabilities
-        docker exec cbr_django python ./manage.py seedadminuser ${REPLY}
+        docker exec cbr_django python ./manage.py seedadminuser
         
         echo -e "\n${RED}** WRITE DOWN AND SAVE THE USERNAME AND PASSWORD ABOVE! **${COLOR_OFF}"
         ;;

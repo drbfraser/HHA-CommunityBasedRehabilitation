@@ -312,8 +312,6 @@ deploy staging:
     BRANCH_TAG: "staging"
   rules:
     - if: "$CI_COMMIT_BRANCH == $STG_BRANCH"
-    # TODO: REMOVE THIS!
-    - if: $CI_PIPELINE_SOURCE != "push"
   script:
     - *deploy-from-dockerhub
     - *retag-and-upload-dockerhub

@@ -22,7 +22,7 @@ import AdminView from "pages/Admin/AdminView";
 import AdminEdit from "pages/Admin/AdminEdit";
 import AdminPasswordEdit from "pages/Admin/AdminPasswordEdit";
 import ZoneNew from "pages/Zone/ZoneNew";
-// import ZoneEdit from "pages/Zone/ZoneEdit";
+import ZoneEdit from "pages/Zone/ZoneEdit";
 import ClientRiskHistory from "pages/ClientDetails/RiskHistory/ClientRiskHistory";
 import Dashboard from "pages/Dashboard/Dashboard";
 import NewVisit from "pages/NewVisit/NewVisit";
@@ -156,6 +156,13 @@ const pages: IPage[] = [
         name: "New Zone",
         roles: [UserRole.ADMIN],
         Component: ZoneNew,
+        showInNav: false,
+    },
+    {
+        path: "/zone/edit/:zone_name",
+        name: "Edit Zone",
+        roles: [UserRole.ADMIN],
+        Component: ZoneEdit,
         showInNav: false,
     },
     {

@@ -64,7 +64,10 @@ const ZoneList = () => {
             hideFunction: setZoneHidden,
         },
     ];
-
+    const onRowClick = (row: any) => {
+        const zone = row.row;
+        history.push("/zone/edit/" + zone.zone_name);
+    };
     const initialDataLoaded = useRef(false);
 
     useEffect(() => {
@@ -106,6 +109,7 @@ const ZoneList = () => {
                     rows={filteredRows}
                     columns={adminColumns}
                     density={DensityTypes.Comfortable}
+                    onRowClick={onRowClick}
                     pagination
                     sortModel={[
                         {

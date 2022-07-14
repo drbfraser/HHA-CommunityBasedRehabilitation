@@ -55,7 +55,7 @@ If you need to change the version of node/npm, then try:
 # Build Run mobile
 
 1. Run back-end, front-end, and DB docker containers:  
-   `$ docker-compose up`
+   `$ docker compose up`
 2. Launch an Android virtual device via Android Studio, or connect an Android phone to your computer.
     - If using a physical phone, you must enable developer mode via the settings menu, then enable USB debugging, then disconnect and reconnect the phone from the computer.
     - When the phone is first connected to the computer, after USB debugging has been enabled, then on the phone you'll need to authorize your computer to use USB debugging with your phone.
@@ -76,7 +76,7 @@ After the app is up and running the first time, after you make a change to the c
 
 -   After running `npm install` in the mobile/ folder, if you get an error for `EINTERGRITY` complaining about a SHA-512 mismatch, then it is likely that you need to re-run the `npm install cbr-common-1.0.0.tgz` command inside the mobile/ folder to trigger it updating the SHA-512 of our custom package building built on your machine.
 -   After running `npm install` in the mobile/ folder, if you get an error for `EBADPLATFORM` related to the package `fservants`, then delete `mobile/package-lock.json` and re-run `npm install` to update to a newer `fservants`
--   After running `docker-compose up` in the project folder, if it complains that POSTGRES_USER, POSTGRES_PASSWORD, SECRET_KEY and such are not set, then:
+-   After running `docker compose up` in the project folder, if it complains that POSTGRES_USER, POSTGRES_PASSWORD, SECRET_KEY and such are not set, then:
     -   Ensure you have created the .env file in the project's root directory with those contents
     -   If in windows, ensure you are running the command via PowerShell (not Git Bash)
 -   After running `react-native run-android` if you see "Could not determine the dependencies of task ':app:installDebug'.", it likely means you have not correctly created the `local.properties` file.

@@ -1,6 +1,15 @@
-version: "3.7"
+# Used for deployment to a server where we are getting images from Docker Hub
+# Overlay ontop of base config with:
+#    $ export IMAGE_TEST="v2022-05-20.ABCD1234"
+#    $ docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
+# Set IMAGE_TAG to the image desired, such as:
+#     dev
+#     staging
+#     vYYYY-MM-DD.SHA
+version: "3.9"
 services:
   django:
+    image: drbfraser/hopehealthaction_cbr_backend:$IMAGE_TAG
     build:
       dockerfile: Dockerfile.deploy
     restart: always
@@ -11,16 +20,17 @@ services:
     restart: always
   caddy:
     container_name: cbr_caddy
+    image: drbfraser/hopehealthaction_cbr_revproxy_frontend:$IMAGE_TAG
     build:
       context: .
       dockerfile: caddy/Dockerfile
     restart: always
-    ports:
-      - "80:80"
-      - "443:443"
     environment:
       - DOMAIN=${DOMAIN}
       - API_HOSTNAME=cbr_django
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
       - cbr_caddy_data:/data
 

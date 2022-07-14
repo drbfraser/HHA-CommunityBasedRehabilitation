@@ -5,3 +5,4 @@
 __pycache__
 node_modules
 .idea/
+web_build.tar.gz

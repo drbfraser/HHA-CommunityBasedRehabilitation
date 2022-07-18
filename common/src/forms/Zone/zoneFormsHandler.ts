@@ -14,13 +14,13 @@ const addZone = async (zoneInfo: string) => {
         .then((res) => res as IZone);
 };
 
-const updateZone = async (zoneInfo: string, zoneName: string) => {
+const updateZone = async (zoneInfo: string, zoneId: number) => {
     const init: RequestInit = {
         method: "PUT",
         body: zoneInfo,
     };
 
-    return await apiFetch(Endpoint.ZONES, `${zoneName}`, init)
+    return await apiFetch(Endpoint.ZONE, `${zoneId}`, init)
         .then((res) => res.json())
         .then((res) => res as IZone);
 };
@@ -47,13 +47,14 @@ export const handleNewZoneSubmit = async (
 /**
  * @return The updated user's JSON from the server.
  */
-export const handleUserEditSubmit = async (values: IZone, helpers: FormikHelpers<IZone>) => {
+export const handleZoneEditSubmit = async (values: IZone, helpers: FormikHelpers<IZone>) => {
     const editZone = JSON.stringify({
+        zoneId: values.id,
         zone: values.zone_name,
     });
 
     try {
-        return await updateZone(editZone, values.zone_name);
+        return await updateZone(editZone, values.id);
     } finally {
         helpers.setSubmitting(false);
     }

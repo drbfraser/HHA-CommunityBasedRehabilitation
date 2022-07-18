@@ -12,12 +12,13 @@ import {
 import { LinearProgress, IconButton, Typography } from "@material-ui/core";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useRef } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { useEffect, useState } from "react";
 import reqeustZoneRows from "./reqeustZoneRows";
 import React from "react";
 import { Cancel } from "@material-ui/icons";
 import { SearchOption } from "./searchOptions";
+import { IRouteParams } from "@cbr/common/forms/Zone/zoneFields";
 const RenderText = (params: ValueFormatterParams) => {
     return <Typography variant={"body2"}>{params.value}</Typography>;
 };
@@ -54,6 +55,7 @@ const ZoneList = () => {
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
     const onZoneAddClick = () => history.push("/zone/new");
+    const { zone_name } = useRouteMatch<IRouteParams>().params;
     const adminColumns = [
         {
             field: "zone",
@@ -66,7 +68,8 @@ const ZoneList = () => {
     ];
     const onRowClick = (row: any) => {
         const zone = row.row;
-        history.push("/zone/edit/" + zone.zone_name);
+        console.log(zone);
+        history.push("/zone/edit/" + zone.id);
     };
     const initialDataLoaded = useRef(false);
 

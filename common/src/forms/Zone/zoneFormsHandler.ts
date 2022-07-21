@@ -51,8 +51,7 @@ export const handleZoneEditSubmit = async (values: IZone, helpers: FormikHelpers
     const editZone = JSON.stringify({
         zone_name: values.zone_name,
     });
-    
-    
+
     try {
         return await updateZone(editZone, values.id);
     } finally {

@@ -53,7 +53,8 @@ const ZoneEdit = () => {
             validationSchema={editZoneValidationSchema}
             onSubmit={(values, formikHelpers) => {
                 handleZoneEditSubmit(values, formikHelpers)
-                    .then(() => history.goBack())
+                    .then(() => history.push("/admin"))
+                    .then(() => window.location.reload())
                     .catch((e) => {
                         const errMsg =
                             e instanceof APIFetchFailError

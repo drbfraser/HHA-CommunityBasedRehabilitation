@@ -18,6 +18,7 @@ import reqeustZoneRows from "./reqeustZoneRows";
 import React from "react";
 import { Cancel } from "@material-ui/icons";
 import { SearchOption } from "./searchOptions";
+// import { IRouteParams } from "@cbr/common/forms/Zone/zoneFields";
 const RenderText = (params: ValueFormatterParams) => {
     return <Typography variant={"body2"}>{params.value}</Typography>;
 };
@@ -54,6 +55,7 @@ const ZoneList = () => {
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
     const onZoneAddClick = () => history.push("/zone/new");
+    // const { zone_name } = useRouteMatch<IRouteParams>().params;
     const adminColumns = [
         {
             field: "zone",
@@ -64,7 +66,11 @@ const ZoneList = () => {
             hideFunction: setZoneHidden,
         },
     ];
-
+    const onRowClick = (row: any) => {
+        const zone = row.row;
+        console.log(zone);
+        history.push("/zone/edit/" + zone.id);
+    };
     const initialDataLoaded = useRef(false);
 
     useEffect(() => {
@@ -106,6 +112,7 @@ const ZoneList = () => {
                     rows={filteredRows}
                     columns={adminColumns}
                     density={DensityTypes.Comfortable}
+                    onRowClick={onRowClick}
                     pagination
                     sortModel={[
                         {

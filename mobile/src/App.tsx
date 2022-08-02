@@ -20,10 +20,9 @@ import {
 import { AuthContext as AuthContext, IAuthContext } from "./context/AuthContext/AuthContext";
 import { enableScreens } from "react-native-screens";
 import Loading from "./screens/Loading/Loading";
-import Login from "./screens/Login/Login";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
-import { StackScreenName } from "./util/StackScreenName";
+import { StackScreenName, NoAuthScreenName } from "./util/StackScreenName";
 import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
 import { database } from "./util/watermelonDatabase";
 import { io } from "socket.io-client/dist/socket.io";
@@ -231,11 +230,15 @@ export default function App() {
                                             ))
                                         ) : authState.state === "loggedOut" ||
                                           authState.state === "previouslyLoggedIn" ? (
-                                            <Stack.Screen
-                                                name="Login"
-                                                component={Login}
-                                                options={{ headerShown: false }}
-                                            />
+                                            Object.values(NoAuthScreenName).map((name) => (
+                                                <Stack.Screen
+                                                    key={name}
+                                                    name={name}
+                                                    component={stackScreenProps[name]}
+                                                    // @ts-ignore
+                                                    options={stackScreenOptions[name]}
+                                                />
+                                            ))
                                         ) : (
                                             <Stack.Screen
                                                 name="Loading"

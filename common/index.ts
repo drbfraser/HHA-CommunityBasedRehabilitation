@@ -3,6 +3,7 @@ export {
     CommonConfiguration,
     commonConfiguration,
     initializeCommon, // don't export reinitializeCommon
+    updateCommonApiUrl,
 } from "./src/init";
 export * from "./src/util/auth";
 export * from "./src/util/colors";

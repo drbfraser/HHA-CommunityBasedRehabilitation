@@ -8,8 +8,8 @@ export interface KeyValStorageProvider {
 
 export interface CommonConfiguration {
     /** The API url for connecting to the server. Should include `/api/` at the end. */
-    readonly apiUrl: string;
-    readonly socketIOUrl: string;
+    apiUrl: string;
+    socketIOUrl: string;
     /**
      * A provider interface for storing auth tokens and backups of cached API data if
      * {@link useKeyValStorageForCachedAPIBackup} is set.
@@ -45,6 +45,18 @@ export const initializeCommon = (config: CommonConfiguration) => {
     } else {
         console.error("trying to initialize common twice");
     }
+};
+
+export const updateCommonApiUrl = (apiUrl: string, socketIOUrl: string) => {
+    if (!commonConfiguration) {
+        console.error("Cannot change api url wihthout first initializing common");
+        return;
+    }
+
+    commonConfiguration.apiUrl = apiUrl;
+    commonConfiguration.socketIOUrl = socketIOUrl;
+
+    initSocketContext(socketIOUrl);
 };
 
 /**

@@ -32,8 +32,8 @@ if (appEnv === "local" && !BASE_URLS.local) {
     appEnv = DEFAULT_APP_ENV;
 }
 
-const BASE_URL = BASE_URLS[appEnv];
-const API_URL = `${BASE_URL}/api/`;
+export const BASE_URL = BASE_URLS[appEnv];
+export const API_URL = `${BASE_URL}/api/`;
 
 initializeCommon({
     apiUrl: API_URL,

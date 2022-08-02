@@ -5,35 +5,34 @@ import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import { useRouteMatch } from "react-router-dom";
-import { FormControl, MenuItem } from "@material-ui/core";
 import { useState, useEffect } from "react";
-import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
+import { handleZoneEditSubmit } from "@cbr/common/forms/Zone/zoneFormsHandler";
 import { Alert, Skeleton } from "@material-ui/lab";
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
-import { IUser, userRoles } from "@cbr/common/util/users";
+import { IZone } from "@cbr/common/util/zones";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import {
-    AdminField,
-    editUserValidationSchema,
-    adminUserFieldLabels,
+    ZoneField,
+    editZoneValidationSchema,
+    zoneFieldLabels,
     IRouteParams,
-} from "@cbr/common/forms/Admin/adminFields";
+} from "@cbr/common/forms/Zone/zoneFields";
 import history from "@cbr/common/util/history";
 
 const ZoneEdit = () => {
     const styles = useStyles();
-    const { userId } = useRouteMatch<IRouteParams>().params;
-    const [user, setUser] = useState<IUser>();
+    const { zone_name } = useRouteMatch<IRouteParams>().params;
+    const [zone, setZone] = useState<IZone>();
     const zones = useZones();
     const [loadingError, setLoadingError] = useState<string>();
 
     useEffect(() => {
         const getInfo = async () => {
             try {
-                const theUser: IUser = (await (
-                    await apiFetch(Endpoint.USER, `${userId}`)
-                ).json()) as IUser;
-                setUser(theUser);
+                const theZone: IZone = (await (
+                    await apiFetch(Endpoint.ZONE, `${zone_name}`)
+                ).json()) as IZone;
+                setZone(theZone);
             } catch (e) {
                 setLoadingError(
                     e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : `${e}`
@@ -41,24 +40,25 @@ const ZoneEdit = () => {
             }
         };
         getInfo();
-    }, [userId]);
+    }, [zone_name]);
 
     return loadingError ? (
         <Alert severity="error">
             Something went wrong trying to load that user. Please go back and try again.{" "}
             {loadingError}
         </Alert>
-    ) : user && zones.size ? (
+    ) : zone && zones.size ? (
         <Formik
-            initialValues={user}
-            validationSchema={editUserValidationSchema}
+            initialValues={zone}
+            validationSchema={editZoneValidationSchema}
             onSubmit={(values, formikHelpers) => {
-                handleUserEditSubmit(values, formikHelpers)
-                    .then(() => history.goBack())
+                handleZoneEditSubmit(values, formikHelpers)
+                    .then(() => history.push("/admin"))
+                    .then(() => window.location.reload())
                     .catch((e) => {
                         const errMsg =
                             e instanceof APIFetchFailError
-                                ? e.buildFormError(adminUserFieldLabels)
+                                ? e.buildFormError(zoneFieldLabels)
                                 : `${e}` ??
                                   "Sorry, something went wrong trying to edit that user. Please try again.";
                         alert(errMsg);
@@ -68,105 +68,20 @@ const ZoneEdit = () => {
             {({ values, setFieldValue, isSubmitting }) => (
                 <div className={styles.container}>
                     <br />
-                    <b>ID</b>
-                    <p>{userId}</p>
-                    <b>Username </b>
-                    <p>{user.username}</p>
+                    <b>ZoneName </b>
+                    <p>{zone.zone_name}</p>
                     <Form>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
-                                    name={AdminField.first_name}
+                                    name={ZoneField.zone_name}
                                     variant="outlined"
-                                    label={adminUserFieldLabels[AdminField.first_name]}
+                                    label={zoneFieldLabels[ZoneField.zone_name]}
                                     required
                                     fullWidth
                                 />
                             </Grid>
-                            <Grid item md={6} xs={12}>
-                                <Field
-                                    component={TextField}
-                                    name={AdminField.last_name}
-                                    variant="outlined"
-                                    label={adminUserFieldLabels[AdminField.last_name]}
-                                    required
-                                    fullWidth
-                                />
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <FormControl fullWidth variant="outlined">
-                                    <Field
-                                        component={TextField}
-                                        fullWidth
-                                        select
-                                        variant="outlined"
-                                        required
-                                        label={adminUserFieldLabels[AdminField.zone]}
-                                        name={AdminField.zone}
-                                    >
-                                        {Array.from(zones).map(([id, name]) => (
-                                            <MenuItem key={id} value={id}>
-                                                {name}
-                                            </MenuItem>
-                                        ))}
-                                    </Field>
-                                </FormControl>
-                            </Grid>
-
-                            <Grid item md={6} xs={12}>
-                                <Field
-                                    component={TextField}
-                                    fullWidth
-                                    required
-                                    variant="outlined"
-                                    label={adminUserFieldLabels[AdminField.phone_number]}
-                                    name={AdminField.phone_number}
-                                />
-                            </Grid>
-                            <Grid item md={6} xs={12}>
-                                <FormControl fullWidth variant="outlined">
-                                    <Field
-                                        component={TextField}
-                                        select
-                                        required
-                                        variant="outlined"
-                                        label={adminUserFieldLabels[AdminField.role]}
-                                        name={AdminField.role}
-                                    >
-                                        {Object.entries(userRoles).map(([value, { name }]) => (
-                                            <MenuItem key={value} value={value}>
-                                                {name}
-                                            </MenuItem>
-                                        ))}
-                                    </Field>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-
-                        <br />
-                        <b>Status</b>
-                        <p>{values.is_active ? "Active" : "Disabled"}</p>
-                        <br />
-                        <Grid
-                            container
-                            direction="row"
-                            spacing={2}
-                            justify="space-between"
-                            alignItems="center"
-                        >
-                            <Button
-                                variant="contained"
-                                className={
-                                    values.is_active ? styles["disableBtn"] : styles["activeBtn"]
-                                }
-                                disabled={isSubmitting}
-                                onClick={() =>
-                                    setFieldValue(AdminField.is_active, !values.is_active)
-                                }
-                            >
-                                {values.is_active ? "Disable" : "Activate"}
-                            </Button>
                             <Grid item>
                                 <Button
                                     color="primary"

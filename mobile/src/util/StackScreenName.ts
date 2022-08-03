@@ -9,3 +9,8 @@ export enum StackScreenName {
     VISIT = "NewVisit",
     SYNC = "Sync,",
 }
+
+export enum NoAuthScreenName {
+    LOGIN = "Login",
+    SWITCH_SERVER = "SwitchServer",
+}

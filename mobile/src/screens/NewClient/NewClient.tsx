@@ -189,13 +189,6 @@ const NewClient = () => {
                                         CREATE
                                     </Button>
                                 </View>
-                                <Button
-                                    labelStyle={styles.submitButtonLabel}
-                                    mode="outlined"
-                                    onPress={() => formikProps.resetForm()}
-                                >
-                                    CLEAR
-                                </Button>
                             </View>
                         </View>
                     )}

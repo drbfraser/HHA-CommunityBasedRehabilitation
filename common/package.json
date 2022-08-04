@@ -6,7 +6,7 @@
         "test-ci": "LANG=en-US jest --ci --coverage --reporters=default --reporters=jest-junit"
     },
     "devDependencies": {
-        "@testing-library/react-hooks": "^7.0.1",
+        "@testing-library/react-hooks": "^7.0.2",
         "@types/fetch-mock": "^7.3.3",
         "@types/jest": "^26.0.23",
         "@types/node": "^15.12.1",

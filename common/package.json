@@ -7,10 +7,10 @@
     },
     "devDependencies": {
         "@testing-library/react-hooks": "^7.0.2",
-        "@types/fetch-mock": "^7.3.3",
+        "@types/fetch-mock": "^7.3.5",
         "@types/jest": "^26.0.23",
         "@types/node": "^15.14.9",
-        "@types/react": "^17.0.9",
+        "@types/react": "^17.0.48",
         "base64url": "^3.0.1",
         "fetch-mock": "^7.3.9",
         "jest": "^27.0.6",

@@ -24,7 +24,7 @@
         "typescript": "~4.0.0"
     },
     "dependencies": {
-        "@types/history": "^4.7.9",
+        "@types/history": "^4.7.11",
         "async-mutex": "^0.3.1",
         "formik": "^2.2.9",
         "jwt-decode": "^3.1.2",

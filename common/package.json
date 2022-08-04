@@ -25,7 +25,7 @@
     },
     "dependencies": {
         "@types/history": "^4.7.9",
-        "async-mutex": "^0.3.1",
+        "async-mutex": "^0.3.2",
         "formik": "^2.2.9",
         "jwt-decode": "^3.1.2",
         "socket.io-client": "^4.3.2",

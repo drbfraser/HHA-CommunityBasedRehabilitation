@@ -16,11 +16,11 @@
         "jest": "^27.0.6",
         "jest-junit": "^12.2.0",
         "node-abort-controller": "^2.0.0",
-        "node-fetch": "^2.6.1",
-        "prettier": "^2.3.0",
+        "node-fetch": "^2.6.7",
+        "prettier": "^2.7.1",
         "react": "16.13.1",
         "react-test-renderer": "16.13.1",
-        "ts-jest": "^27.0.3",
+        "ts-jest": "^27.1.5",
         "typescript": "~4.0.0"
     },
     "dependencies": {
@@ -28,7 +28,7 @@
         "async-mutex": "^0.3.1",
         "formik": "^2.2.9",
         "jwt-decode": "^3.1.2",
-        "socket.io-client": "^4.3.2",
-        "yup": "^0.32.9"
+        "socket.io-client": "^4.5.1",
+        "yup": "^0.32.11"
     }
 }

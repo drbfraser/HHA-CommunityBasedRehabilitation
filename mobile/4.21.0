@@ -1,0 +1,10 @@
++ browserslist@4.21.3
++ eslint@8.21.0
++ @react-native-masked-view/masked-view@0.2.3
+added 67 packages from 47 contributors, updated 1 package and audited 2909 packages in 28.969s
+
+174 packages are looking for funding
+  run `npm fund` for details
+
+found 139 vulnerabilities (8 low, 32 moderate, 63 high, 36 critical)
+  run `npm audit fix` to fix them, or `npm audit` for details

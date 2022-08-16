@@ -1,5 +1,4 @@
-from django.urls import path
-from django.conf.urls import url
+from django.urls import path, re_path
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -59,6 +58,6 @@ urlpatterns = [
     ),
     path("alerts", views.AlertList.as_view(), name="alert-list"),
     path("alert/<int:pk>", views.AlertDetail.as_view(), name="alert-detail"),
-    url(r"^sync/$", views.sync, name="sync"),
-    url(r"^versioncheck/$", views.version_check, name="version-check"),
+    re_path(r"^sync/$", views.sync, name="sync"),
+    re_path(r"^versioncheck/$", views.version_check, name="version-check"),
 ]

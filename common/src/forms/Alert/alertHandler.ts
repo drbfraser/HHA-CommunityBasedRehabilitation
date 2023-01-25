@@ -36,6 +36,18 @@ const updateAlert = async (alertInfo: FormData, alertId: string): Promise<IAlert
     return await apiFetch(Endpoint.ALERT, `${alertId}`, init).then((res) => res.json());
 };
 
+const deleteAlert = async (alertId: string, refreshAlert: () => void): Promise<void> => {
+    const init: RequestInit = {
+        method: "DELETE",
+    };
+    return await apiFetch(Endpoint.ALERT, `${alertId}`, init).then((res) => {
+        if (!res.ok) {
+            alert("Encountered an error while trying to delete the alert!");
+        }
+        refreshAlert();
+    });
+};
+
 export const handleNewWebAlertSubmit = async (
     values: TAlertValues,
     helpers: FormikHelpers<TAlertValues>
@@ -89,6 +101,12 @@ export const handleNewWebAlertSubmit = async (
 export const handleDiscard = (resetForm: () => void) => {
     if (window.confirm("Are you sure you want to clear the form?")) {
         resetForm();
+    }
+};
+
+export const handleDeleteAlert = (alertId: string, refreshAlert: () => void) => {
+    if (window.confirm("Are you sure you want to delete this alarm?")) {
+        deleteAlert(alertId, refreshAlert);
     }
 };
 

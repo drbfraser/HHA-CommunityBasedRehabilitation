@@ -309,7 +309,7 @@ class AlertList(generics.ListCreateAPIView):
             return serializers.AlertSerializer
 
 
-class AlertDetail(generics.RetrieveUpdateAPIView):
+class AlertDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Alert.objects.all()
     serializer_class = serializers.AlertSerializer
 

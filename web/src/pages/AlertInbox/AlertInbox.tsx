@@ -47,14 +47,23 @@ const AlertInbox = () => {
         getUserProfile();
     }, []);
 
+    const refreshAlert = async () => {
+        try {
+            setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
+        } catch (e) {
+            console.log(`Error fetching Alerts: ${e}`);
+        }
+    };
+
     const alertDetailProps = {
         selectAlert: selectedAlert,
         userID: userID,
         alertData: alertData,
+        refreshAlert: refreshAlert,
     };
 
     return (
-        <Grid container justify="center" alignItems="flex-start" spacing={3}>
+        <Grid container justify="center" alignItems="stretch" spacing={3}>
             <AlertList {...alertListProps} />
             <AlertDetail {...alertDetailProps} />
             {/* TODO: 

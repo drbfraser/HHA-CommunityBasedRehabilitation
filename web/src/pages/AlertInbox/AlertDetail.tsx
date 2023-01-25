@@ -1,16 +1,25 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { IAlert } from "@cbr/common/util/alerts";
 import { useEffect } from "react";
-import { handleUpdateAlertSubmit } from "@cbr/common/forms/Alert/alertHandler";
+import { handleUpdateAlertSubmit, handleDeleteAlert } from "@cbr/common/forms/Alert/alertHandler";
 
 const useStyles = makeStyles({
     dividerStyle: {
         backgroundColor: "grey",
         height: "3px",
+    },
+    deleteButtonStyle: {
+        bottom: 0,
+        position: "absolute",
+    },
+    detailContainerStyle: {
+        position: "relative",
+        minHeight: "300px",
     },
 });
 
@@ -18,6 +27,7 @@ type Props = {
     selectAlert: number;
     userID: string;
     alertData: IAlert[];
+    refreshAlert: () => void;
 };
 
 const AlertDetail = (alertDetailProps: Props) => {
@@ -58,11 +68,9 @@ const AlertDetail = (alertDetailProps: Props) => {
         return alert.id.toString() === alertDetailProps.selectAlert.toString();
     });
 
-    /* TODO: Delete Button */
     return (
-        <Grid item xs={9}>
+        <Grid item xs={9} className={style.detailContainerStyle}>
             <h1>Details</h1>
-
             <Divider variant="fullWidth" className={style.dividerStyle} />
 
             <h2>{selectedItem.length === 0 ? "" : selectedItem[0].subject}</h2>
@@ -71,6 +79,21 @@ const AlertDetail = (alertDetailProps: Props) => {
                     ? "Please select an alert."
                     : selectedItem[0].alert_message}
             </Typography>
+            {selectedItem.length === 0 ? (
+                <></>
+            ) : (
+                <div className={style.deleteButtonStyle}>
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() =>
+                            handleDeleteAlert(selectedItem[0].id, alertDetailProps.refreshAlert)
+                        }
+                    >
+                        Discard
+                    </Button>
+                </div>
+            )}
         </Grid>
     );
 };

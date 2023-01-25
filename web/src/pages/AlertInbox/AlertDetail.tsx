@@ -90,7 +90,7 @@ const AlertDetail = (alertDetailProps: Props) => {
                             handleDeleteAlert(selectedItem[0].id, alertDetailProps.refreshAlert)
                         }
                     >
-                        Discard
+                        Delete
                     </Button>
                 </div>
             )}

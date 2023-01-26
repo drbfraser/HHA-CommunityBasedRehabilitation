@@ -12,7 +12,11 @@ import {
     MenuItem,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { handleCancel, handleUpdateClientSubmit } from "@cbr/common/forms/Client/clientHandler";
+import {
+    handleCancel,
+    handleUpdateClientSubmit,
+    handleArchiveClientRequest,
+} from "@cbr/common/forms/Client/clientHandler";
 import { genders, IClient } from "@cbr/common/util/clients";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
@@ -432,6 +436,20 @@ const ClientInfoForm = (props: IProps) => {
                                         </Button>
                                     </Grid>
                                 )}
+                                <Grid item>
+                                    <></>
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        disabled={!values.is_active || isSubmitting}
+                                        type="submit"
+                                        onClick={() => {
+                                            values.is_active = false;
+                                        }}
+                                    >
+                                        Archive
+                                    </Button>
+                                </Grid>
                             </Grid>
                         </Form>
                     </Grid>

@@ -125,6 +125,7 @@ export const handleUpdateClientSubmit = async (
             other_disability: values.disability.includes(getOtherDisabilityId(disabilities))
                 ? values.other_disability
                 : "",
+            is_active: values.is_active,
         };
 
         const formData = objectToFormData(updatedValues);
@@ -142,6 +143,21 @@ export const handleUpdateClientSubmit = async (
         alert(initialMessage + "\n" + detailedError);
     } finally {
         helpers.setSubmitting(false);
+    }
+};
+
+export const handleArchiveClientRequest = async (clientInfo: IClient) => {
+    clientInfo.is_active = false;
+
+    const formData = objectToFormData(clientInfo);
+
+    try {
+        await updateClient(formData, clientInfo.id);
+    } catch (e) {
+        const initialMessage = "Encountered an error while trying to archive the client!";
+        const detailedError =
+            e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
+        alert(initialMessage + "\n" + detailedError);
     }
 };
 

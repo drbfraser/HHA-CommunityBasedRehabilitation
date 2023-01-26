@@ -143,6 +143,7 @@ class Client(models.Model):
     latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     village = models.CharField(max_length=50)
+    is_active = models.BooleanField(default=True)
 
     def rename_file(self, original_filename):
         # file_ext includes the "."

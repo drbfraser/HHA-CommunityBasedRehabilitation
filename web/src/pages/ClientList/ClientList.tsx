@@ -21,6 +21,7 @@ import {
     Popover,
     Select,
     Switch,
+    Checkbox,
     Typography,
     debounce,
     Button,
@@ -102,6 +103,7 @@ const ClientList = () => {
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
     const [rows, setRows] = useState<RowsProp>([]);
+    const [archivedMode, setArchivedMode] = useState<boolean>(false);
 
     const zones = useZones();
     const styles = useStyles();
@@ -181,7 +183,7 @@ const ClientList = () => {
     useEffect(() => {
         const loadInitialData = async () => {
             setLoading(true);
-            await requestClientRows(setRows, setLoading, "", "", true);
+            await requestClientRows(setRows, setLoading, "", "", true, false);
             setLoading(false);
             initialDataLoaded.current = true;
         };
@@ -197,30 +199,50 @@ const ClientList = () => {
             return;
         }
 
-        requestClientRowsDebounced(setRows, setLoading, searchValue, searchOption, allClientsMode);
-    }, [searchValue, searchOption, allClientsMode, requestClientRowsDebounced]);
+        requestClientRowsDebounced(
+            setRows,
+            setLoading,
+            searchValue,
+            searchOption,
+            allClientsMode,
+            archivedMode
+        );
+    }, [searchValue, searchOption, allClientsMode, archivedMode, requestClientRowsDebounced]);
 
     return (
         <div className={styles.root}>
-            <div className={styles.switch}>
-                <Typography
-                    color={allClientsMode ? "textSecondary" : "textPrimary"}
-                    component={"span"}
-                    variant={"body2"}
-                >
-                    My Clients
-                </Typography>
-                <IOSSwitch
-                    checked={allClientsMode}
-                    onChange={(event) => setAllClientsMode(event.target.checked)}
-                />
-                <Typography
-                    color={allClientsMode ? "textPrimary" : "textSecondary"}
-                    component={"span"}
-                    variant={"body2"}
-                >
-                    All Clients
-                </Typography>
+            <div>
+                <div className={styles.switch}>
+                    <Typography
+                        color={allClientsMode ? "textSecondary" : "textPrimary"}
+                        component={"span"}
+                        variant={"body2"}
+                    >
+                        My Clients
+                    </Typography>
+                    <IOSSwitch
+                        checked={allClientsMode}
+                        onChange={(event) => setAllClientsMode(event.target.checked)}
+                    />
+                    <Typography
+                        color={allClientsMode ? "textPrimary" : "textSecondary"}
+                        component={"span"}
+                        variant={"body2"}
+                    >
+                        All Clients
+                    </Typography>
+                </div>
+                <div className={styles.checkbox}>
+                    <Typography color={"textPrimary"} component={"span"} variant={"body2"}>
+                        Show Archived
+                    </Typography>
+                    <Checkbox
+                        checked={archivedMode}
+                        onChange={(e) => {
+                            setArchivedMode(e.target.checked);
+                        }}
+                    />
+                </div>
             </div>
             <div className={styles.search}>
                 <div className={searchOptionsStyle.searchOptions}>

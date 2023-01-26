@@ -1,4 +1,4 @@
-import { RowsProp } from "@material-ui/data-grid";
+import { RowData, RowsProp } from "@material-ui/data-grid";
 import { IClientSummary } from "@cbr/common/util/clients";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
@@ -11,7 +11,8 @@ const requestClientRows = async (
     setLoading: (loading: boolean) => void,
     searchValue: string,
     searchOption: string,
-    allClientsMode: boolean
+    allClientsMode: boolean,
+    archivedMode: boolean
 ) => {
     setLoading(true);
 
@@ -36,7 +37,12 @@ const requestClientRows = async (
 
         const zones = await getZones();
         const resp = await apiFetch(Endpoint.CLIENTS, "?" + urlParams.toString());
-        const responseRows: IClientSummary[] = await resp.json();
+        let responseRows: IClientSummary[] = await resp.json();
+
+        if (!archivedMode) {
+            responseRows = responseRows.filter((client: RowData) => client.is_active);
+        }
+
         const rows: RowsProp = responseRows.map((responseRow) => {
             return {
                 id: responseRow.id,

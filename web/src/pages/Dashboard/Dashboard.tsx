@@ -49,7 +49,7 @@ const Dashboard = () => {
                     await apiFetch(Endpoint.CLIENTS)
                 ).json();
 
-                const priorityClients: RowsProp = tempClients
+                let priorityClients: RowsProp = tempClients
                     .sort(clientPrioritySort)
                     .slice(0, 5)
                     .map((row: IClientSummary) => {
@@ -62,8 +62,10 @@ const Dashboard = () => {
                             [RiskType.SOCIAL]: row.social_risk_level,
                             [RiskType.NUTRITION]: row.nutrit_risk_level,
                             last_visit_date: row.last_visit_date,
+                            is_active: row.is_active,
                         };
                     });
+                priorityClients = priorityClients.filter((client: RowData) => client.is_active);
                 setClients(priorityClients);
             } catch (e) {
                 setClientError(e instanceof Error ? e.message : `${e}`);

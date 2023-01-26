@@ -447,7 +447,7 @@ const ClientInfoForm = (props: IProps) => {
                                             values.is_active = false;
                                         }}
                                     >
-                                        Archive
+                                        {values.is_active ? "Archive" : "Archived"}
                                     </Button>
                                 </Grid>
                             </Grid>

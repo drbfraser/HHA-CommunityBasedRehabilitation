@@ -233,7 +233,11 @@ const ClientList = () => {
                     </Typography>
                 </div>
                 <div className={styles.checkbox}>
-                    <Typography color={"textPrimary"} component={"span"} variant={"body2"}>
+                    <Typography
+                        color={archivedMode ? "textPrimary" : "textSecondary"}
+                        component={"span"}
+                        variant={"body2"}
+                    >
                         Show Archived
                     </Typography>
                     <Checkbox

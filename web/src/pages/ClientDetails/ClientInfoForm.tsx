@@ -16,6 +16,7 @@ import {
     handleCancel,
     handleUpdateClientSubmit,
     handleArchiveClientRequest,
+    handleArchiveConfirmation,
 } from "@cbr/common/forms/Client/clientHandler";
 import { genders, IClient } from "@cbr/common/util/clients";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -444,7 +445,7 @@ const ClientInfoForm = (props: IProps) => {
                                         disabled={!values.is_active || isSubmitting}
                                         type="submit"
                                         onClick={() => {
-                                            values.is_active = false;
+                                            values.is_active = handleArchiveConfirmation(values);
                                         }}
                                     >
                                         {values.is_active ? "Archive" : "Archived"}

@@ -161,6 +161,18 @@ export const handleArchiveClientRequest = async (clientInfo: IClient) => {
     }
 };
 
+export const handleArchiveConfirmation = (values: TClientFormValues): boolean => {
+    if (
+        window.confirm(
+            `Are you sure you want to archive ${values.first_name} ${values.last_name}?\n`
+        )
+    ) {
+        // set is_active to false
+        return false;
+    }
+    return true;
+};
+
 export const handleCancel = (resetForm: () => void, setIsEditing: (isEditing: boolean) => void) => {
     if (
         window.confirm(

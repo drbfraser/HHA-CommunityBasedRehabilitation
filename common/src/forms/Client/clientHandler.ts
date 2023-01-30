@@ -147,21 +147,6 @@ export const handleUpdateClientSubmit = async (
     }
 };
 
-export const handleArchiveClientRequest = async (clientInfo: IClient) => {
-    clientInfo.is_active = false;
-
-    const formData = objectToFormData(clientInfo);
-
-    try {
-        await updateClient(formData, clientInfo.id);
-    } catch (e) {
-        const initialMessage = "Encountered an error while trying to archive the client!";
-        const detailedError =
-            e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
-        alert(initialMessage + "\n" + detailedError);
-    }
-};
-
 export const handleArchiveConfirmation = (
     values: TClientFormValues,
     user: IUser,

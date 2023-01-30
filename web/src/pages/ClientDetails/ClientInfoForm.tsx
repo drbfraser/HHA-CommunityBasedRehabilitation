@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStyles } from "../NewClient/ClientForm.styles";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
@@ -23,13 +23,17 @@ import { useZones } from "@cbr/common/util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import history from "@cbr/common/util/history";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
-import { APIFetchFailError } from "@cbr/common/util/endpoints";
+import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import {
     updateClientfieldLabels,
     ClientDetailsFields,
     TClientFormValues,
     webClientDetailsValidationSchema,
 } from "@cbr/common/forms/Client/clientFields";
+import { useRouteMatch } from "react-router-dom";
+import { IRouteParams } from "@cbr/common/forms/Admin/adminFields";
+import { IUser } from "@cbr/common/util/users";
+import { handleGetUserInfo } from "@cbr/common/forms/Admin/adminFormsHandler";
 
 interface IProps {
     clientInfo: IClient;
@@ -40,6 +44,26 @@ const ClientInfoForm = (props: IProps) => {
     const zones = useZones();
     const disabilities = useDisabilities();
     const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [user, setUser] = useState<IUser>();
+    const [loadingError, setLoadingError] = useState<string>();
+
+    useEffect(() => {
+        const getInfo = async () => {
+            try {
+                const theUser: IUser = (await (
+                    await apiFetch(Endpoint.USER_CURRENT)
+                ).json()) as IUser;
+                console.log(theUser);
+                setUser(theUser);
+            } catch (e) {
+                setLoadingError(
+                    e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : `${e}`
+                );
+            }
+        };
+        getInfo();
+    }, []);
+
     return (
         <Formik
             initialValues={
@@ -445,7 +469,11 @@ const ClientInfoForm = (props: IProps) => {
                                         disabled={!values.is_active || isSubmitting}
                                         type="submit"
                                         onClick={() => {
-                                            values.is_active = handleArchiveConfirmation(values);
+                                            values.is_active = handleArchiveConfirmation(
+                                                values,
+                                                user!,
+                                                loadingError
+                                            );
                                         }}
                                     >
                                         {values.is_active ? "Archive" : "Archived"}

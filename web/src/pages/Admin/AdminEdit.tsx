@@ -7,9 +7,9 @@ import Button from "@material-ui/core/Button";
 import { useRouteMatch } from "react-router-dom";
 import { FormControl, MenuItem } from "@material-ui/core";
 import { useState, useEffect } from "react";
-import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
+import { handleUserEditSubmit, handleGetUserInfo } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { Alert, Skeleton } from "@material-ui/lab";
-import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
 import { IUser, userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import {
@@ -30,9 +30,7 @@ const AdminEdit = () => {
     useEffect(() => {
         const getInfo = async () => {
             try {
-                const theUser: IUser = (await (
-                    await apiFetch(Endpoint.USER, `${userId}`)
-                ).json()) as IUser;
+                const theUser: IUser = await handleGetUserInfo(userId);
                 setUser(theUser);
             } catch (e) {
                 setLoadingError(

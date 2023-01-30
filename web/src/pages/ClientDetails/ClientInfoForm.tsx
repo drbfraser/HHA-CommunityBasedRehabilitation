@@ -15,7 +15,6 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {
     handleCancel,
     handleUpdateClientSubmit,
-    handleArchiveClientRequest,
     handleArchiveConfirmation,
 } from "@cbr/common/forms/Client/clientHandler";
 import { genders, IClient } from "@cbr/common/util/clients";
@@ -30,10 +29,7 @@ import {
     TClientFormValues,
     webClientDetailsValidationSchema,
 } from "@cbr/common/forms/Client/clientFields";
-import { useRouteMatch } from "react-router-dom";
-import { IRouteParams } from "@cbr/common/forms/Admin/adminFields";
 import { IUser } from "@cbr/common/util/users";
-import { handleGetUserInfo } from "@cbr/common/forms/Admin/adminFormsHandler";
 
 interface IProps {
     clientInfo: IClient;

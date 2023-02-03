@@ -157,16 +157,20 @@ export const handleArchiveConfirmation = (
             `Ecountered an error fetching your user information. Please try again\n${loadingError}`
         );
     } else if (user.role !== UserRole.ADMIN) {
-        window.alert("You are not authorized to archive clients. Please ask an administrator");
+        window.alert(
+            "You are not authorized to archive/dearchive clients. Please ask an administrator"
+        );
     } else if (
         window.confirm(
-            `Are you sure you want to archive ${values.first_name} ${values.last_name}?\n`
+            `Are you sure you want to ${values.is_active ? "archive" : "dearchive"} ${
+                values.first_name
+            } ${values.last_name}?\n`
         )
     ) {
-        // set is_active to false
-        return false;
+        // set is_active
+        return !values.is_active;
     }
-    return true;
+    return values.is_active;
 };
 
 export const handleCancel = (resetForm: () => void, setIsEditing: (isEditing: boolean) => void) => {

@@ -49,7 +49,6 @@ const ClientInfoForm = (props: IProps) => {
                 const theUser: IUser = (await (
                     await apiFetch(Endpoint.USER_CURRENT)
                 ).json()) as IUser;
-                console.log(theUser);
                 setUser(theUser);
             } catch (e) {
                 setLoadingError(
@@ -113,7 +112,7 @@ const ClientInfoForm = (props: IProps) => {
                                     onClick={() =>
                                         history.push(`/client/${props.clientInfo.id}/visits/new`)
                                     }
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || !values.is_active}
                                 >
                                     New Visit
                                 </Button>
@@ -127,7 +126,7 @@ const ClientInfoForm = (props: IProps) => {
                                     onClick={() =>
                                         history.push(`/client/${props.clientInfo.id}/referrals/new`)
                                     }
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || !values.is_active}
                                 >
                                     New Referral
                                 </Button>
@@ -141,7 +140,7 @@ const ClientInfoForm = (props: IProps) => {
                                     onClick={() =>
                                         history.push(`/client/${props.clientInfo.id}/surveys/new`)
                                     }
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || !values.is_active}
                                 >
                                     Baseline Survey
                                 </Button>
@@ -452,6 +451,7 @@ const ClientInfoForm = (props: IProps) => {
                                             onClick={() => {
                                                 setIsEditing(true);
                                             }}
+                                            disabled={!values.is_active}
                                         >
                                             Edit
                                         </Button>
@@ -462,7 +462,7 @@ const ClientInfoForm = (props: IProps) => {
                                     <Button
                                         variant="outlined"
                                         color="primary"
-                                        disabled={!values.is_active || isSubmitting}
+                                        disabled={isSubmitting}
                                         type="submit"
                                         onClick={() => {
                                             values.is_active = handleArchiveConfirmation(
@@ -472,7 +472,7 @@ const ClientInfoForm = (props: IProps) => {
                                             );
                                         }}
                                     >
-                                        {values.is_active ? "Archive" : "Archived"}
+                                        {values.is_active ? "Archive" : "Dearchive"}
                                     </Button>
                                 </Grid>
                             </Grid>

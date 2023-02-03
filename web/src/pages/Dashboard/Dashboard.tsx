@@ -46,10 +46,10 @@ const Dashboard = () => {
             setClientError(undefined);
             try {
                 const tempClients: IClientSummary[] = await (
-                    await apiFetch(Endpoint.CLIENTS)
+                    await apiFetch(Endpoint.CLIENTS, "?is_active=true")
                 ).json();
 
-                let priorityClients: RowsProp = tempClients
+                const priorityClients: RowsProp = tempClients
                     .sort(clientPrioritySort)
                     .slice(0, 5)
                     .map((row: IClientSummary) => {
@@ -65,7 +65,6 @@ const Dashboard = () => {
                             is_active: row.is_active,
                         };
                     });
-                priorityClients = priorityClients.filter((client: RowData) => client.is_active);
                 setClients(priorityClients);
             } catch (e) {
                 setClientError(e instanceof Error ? e.message : `${e}`);

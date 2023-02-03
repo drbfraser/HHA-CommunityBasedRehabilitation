@@ -9,7 +9,7 @@ import { Alert, Skeleton } from "@material-ui/lab";
 import { IUser, userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { IRouteParams } from "@cbr/common/forms/Admin/adminFields";
-import { handleGetUserInfo } from "@cbr/common/forms/Admin/adminFormsHandler";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 
 const AdminView = () => {
     const styles = useStyles();
@@ -30,7 +30,9 @@ const AdminView = () => {
     useEffect(() => {
         const getUser = async () => {
             try {
-                const theUser: IUser = await handleGetUserInfo(userId);
+                const theUser: IUser = (await (
+                    await apiFetch(Endpoint.USER, `${userId}`)
+                ).json()) as IUser;
                 setUser(theUser);
             } catch (e) {
                 setLoadingError(true);

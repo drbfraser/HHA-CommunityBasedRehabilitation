@@ -1,5 +1,4 @@
 import { FormikHelpers } from "formik";
-import React from "react";
 import { apiFetch, Endpoint } from "../../util/endpoints";
 import { IUser } from "../../util/users";
 import { TNewUserValues, TAdminPasswordValues } from "./adminFields";
@@ -97,8 +96,4 @@ export const handleUserEditSubmit = async (values: IUser, helpers: FormikHelpers
     } finally {
         helpers.setSubmitting(false);
     }
-};
-
-export const handleGetUserInfo = async (userId: string): Promise<IUser> => {
-    return (await (await apiFetch(Endpoint.USER, `${userId}`)).json()) as IUser;
 };

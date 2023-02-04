@@ -13,6 +13,7 @@ export interface IClientSummary {
     nutrit_risk_level: string;
     last_visit_date: number;
     user_id: number;
+    is_active: boolean;
 }
 
 export interface IClient {
@@ -40,6 +41,7 @@ export interface IClient {
     visits: IVisitSummary[];
     referrals: IReferral[];
     baseline_surveys: ISurvey[];
+    is_active: boolean;
 }
 
 export enum Gender {

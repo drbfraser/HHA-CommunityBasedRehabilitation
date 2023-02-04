@@ -10,8 +10,13 @@ export const useStyles = makeStyles(
             padding: "5px 0px 25px 0px",
         },
         switch: {
+            position: "absolute",
             float: "left",
             display: "inline-block",
+        },
+        checkbox: {
+            position: "absolute",
+            marginTop: "20px",
         },
         search: {
             justifyContent: "flex-end",

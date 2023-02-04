@@ -15,6 +15,7 @@ class ClientFilter(django_filters.FilterSet):
             "educat_risk_level",
             "nutrit_risk_level",
             "user_id",
+            "is_active",
         ]
         filter_overrides = {
             django.db.models.CharField: {

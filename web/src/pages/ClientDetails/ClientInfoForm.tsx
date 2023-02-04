@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStyles } from "../NewClient/ClientForm.styles";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
@@ -12,19 +12,24 @@ import {
     MenuItem,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { handleCancel, handleUpdateClientSubmit } from "@cbr/common/forms/Client/clientHandler";
+import {
+    handleCancel,
+    handleUpdateClientSubmit,
+    handleArchiveConfirmation,
+} from "@cbr/common/forms/Client/clientHandler";
 import { genders, IClient } from "@cbr/common/util/clients";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import history from "@cbr/common/util/history";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
-import { APIFetchFailError } from "@cbr/common/util/endpoints";
+import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import {
     updateClientfieldLabels,
     ClientDetailsFields,
     TClientFormValues,
     webClientDetailsValidationSchema,
 } from "@cbr/common/forms/Client/clientFields";
+import { IUser } from "@cbr/common/util/users";
 
 interface IProps {
     clientInfo: IClient;
@@ -35,6 +40,25 @@ const ClientInfoForm = (props: IProps) => {
     const zones = useZones();
     const disabilities = useDisabilities();
     const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [user, setUser] = useState<IUser>();
+    const [loadingError, setLoadingError] = useState<string>();
+
+    useEffect(() => {
+        const getInfo = async () => {
+            try {
+                const theUser: IUser = (await (
+                    await apiFetch(Endpoint.USER_CURRENT)
+                ).json()) as IUser;
+                setUser(theUser);
+            } catch (e) {
+                setLoadingError(
+                    e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : `${e}`
+                );
+            }
+        };
+        getInfo();
+    }, []);
+
     return (
         <Formik
             initialValues={
@@ -88,7 +112,7 @@ const ClientInfoForm = (props: IProps) => {
                                     onClick={() =>
                                         history.push(`/client/${props.clientInfo.id}/visits/new`)
                                     }
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || !values.is_active}
                                 >
                                     New Visit
                                 </Button>
@@ -102,7 +126,7 @@ const ClientInfoForm = (props: IProps) => {
                                     onClick={() =>
                                         history.push(`/client/${props.clientInfo.id}/referrals/new`)
                                     }
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || !values.is_active}
                                 >
                                     New Referral
                                 </Button>
@@ -116,7 +140,7 @@ const ClientInfoForm = (props: IProps) => {
                                     onClick={() =>
                                         history.push(`/client/${props.clientInfo.id}/surveys/new`)
                                     }
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || !values.is_active}
                                 >
                                     Baseline Survey
                                 </Button>
@@ -427,11 +451,30 @@ const ClientInfoForm = (props: IProps) => {
                                             onClick={() => {
                                                 setIsEditing(true);
                                             }}
+                                            disabled={!values.is_active}
                                         >
                                             Edit
                                         </Button>
                                     </Grid>
                                 )}
+                                <Grid item>
+                                    <></>
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        disabled={isSubmitting}
+                                        type="submit"
+                                        onClick={() => {
+                                            values.is_active = handleArchiveConfirmation(
+                                                values,
+                                                user!,
+                                                loadingError
+                                            );
+                                        }}
+                                    >
+                                        {values.is_active ? "Archive" : "Dearchive"}
+                                    </Button>
+                                </Grid>
                             </Grid>
                         </Form>
                     </Grid>

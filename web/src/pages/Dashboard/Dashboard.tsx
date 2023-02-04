@@ -46,7 +46,7 @@ const Dashboard = () => {
             setClientError(undefined);
             try {
                 const tempClients: IClientSummary[] = await (
-                    await apiFetch(Endpoint.CLIENTS)
+                    await apiFetch(Endpoint.CLIENTS, "?is_active=true")
                 ).json();
 
                 const priorityClients: RowsProp = tempClients
@@ -62,6 +62,7 @@ const Dashboard = () => {
                             [RiskType.SOCIAL]: row.social_risk_level,
                             [RiskType.NUTRITION]: row.nutrit_risk_level,
                             last_visit_date: row.last_visit_date,
+                            is_active: row.is_active,
                         };
                     });
                 setClients(priorityClients);

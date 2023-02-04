@@ -6,7 +6,15 @@ def getDisabilityStats():
             """
             SELECT disability_id,
             COUNT(*) as total
-            FROM cbr_api_client_disability GROUP BY disability_id ORDER BY disability_id
+            FROM cbr_api_client_disability
+            WHERE cbr_api_client_disability.client_id = (
+                SELECT id 
+                FROM cbr_api_client
+                WHERE cbr_api_client_disability.client_id = cbr_api_client.id AND 
+                cbr_api_client.is_active = True
+            )
+            GROUP BY disability_id 
+            ORDER BY disability_id
         """
         )
 
@@ -22,6 +30,12 @@ def getNumClientsWithDisabilities():
             """
             SELECT COUNT(DISTINCT client_id) as total
             FROM cbr_api_client_disability
+            WHERE cbr_api_client_disability.client_id = (
+                SELECT id 
+                FROM cbr_api_client
+                WHERE cbr_api_client_disability.client_id = cbr_api_client.id AND 
+                cbr_api_client.is_active = True
+            )
         """
         )
 
@@ -61,6 +75,12 @@ def getReferralStats(user_id, from_time, to_time):
         COUNT(*) filter(where orthotic) as orthotic_count,
         COUNT(*) filter(where services_other != '') as other_count
         FROM cbr_api_referral
+         WHERE cbr_api_referral.client_id_id = (
+                SELECT id 
+                FROM cbr_api_client
+                WHERE cbr_api_referral.client_id_id = cbr_api_client.id AND 
+                cbr_api_client.is_active = True
+            )
     """
 
     sql += getStatsWhere(user_id, "date_referred", from_time, to_time)

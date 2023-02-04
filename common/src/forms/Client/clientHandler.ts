@@ -5,6 +5,7 @@ import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabili
 import { clientFieldLabels, TClientFormValues, TClientValues } from "./clientFields";
 import { appendPicture, IClient } from "../../util/clients";
 import history from "../../util/history";
+import { IUser, UserRole } from "../../util/users";
 
 const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {
@@ -125,6 +126,7 @@ export const handleUpdateClientSubmit = async (
             other_disability: values.disability.includes(getOtherDisabilityId(disabilities))
                 ? values.other_disability
                 : "",
+            is_active: values.is_active,
         };
 
         const formData = objectToFormData(updatedValues);
@@ -143,6 +145,32 @@ export const handleUpdateClientSubmit = async (
     } finally {
         helpers.setSubmitting(false);
     }
+};
+
+export const handleArchiveConfirmation = (
+    values: TClientFormValues,
+    user: IUser,
+    loadingError: string | undefined
+): boolean => {
+    if (loadingError) {
+        window.alert(
+            `Ecountered an error fetching your user information. Please try again\n${loadingError}`
+        );
+    } else if (user.role !== UserRole.ADMIN) {
+        window.alert(
+            "You are not authorized to archive/dearchive clients. Please ask an administrator"
+        );
+    } else if (
+        window.confirm(
+            `Are you sure you want to ${values.is_active ? "archive" : "dearchive"} ${
+                values.first_name
+            } ${values.last_name}?\n`
+        )
+    ) {
+        // set is_active
+        return !values.is_active;
+    }
+    return values.is_active;
 };
 
 export const handleCancel = (resetForm: () => void, setIsEditing: (isEditing: boolean) => void) => {

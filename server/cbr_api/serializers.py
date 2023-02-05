@@ -523,6 +523,7 @@ class ClientListSerializer(serializers.ModelSerializer):
             "nutrit_risk_level",
             "last_visit_date",
             "user_id",
+            "is_active",
         ]
 
 
@@ -757,6 +758,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "visits",
             "referrals",
             "baseline_surveys",
+            "is_active",
         ]
 
         read_only_fields = ["user_id", "created_at", "updated_at"]

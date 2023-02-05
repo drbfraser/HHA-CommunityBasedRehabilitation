@@ -6,10 +6,10 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { Alert, Skeleton } from "@material-ui/lab";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IUser, userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { IRouteParams } from "@cbr/common/forms/Admin/adminFields";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 
 const AdminView = () => {
     const styles = useStyles();

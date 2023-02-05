@@ -11,7 +11,8 @@ const requestClientRows = async (
     setLoading: (loading: boolean) => void,
     searchValue: string,
     searchOption: string,
-    allClientsMode: boolean
+    allClientsMode: boolean,
+    archivedMode: boolean
 ) => {
     setLoading(true);
 
@@ -33,10 +34,14 @@ const requestClientRows = async (
                 urlParams.append("user_id", String(user.id));
             }
         }
+        if (!archivedMode) {
+            urlParams.append("is_active", String(true));
+        }
 
         const zones = await getZones();
         const resp = await apiFetch(Endpoint.CLIENTS, "?" + urlParams.toString());
         const responseRows: IClientSummary[] = await resp.json();
+
         const rows: RowsProp = responseRows.map((responseRow) => {
             return {
                 id: responseRow.id,

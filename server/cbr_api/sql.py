@@ -4,7 +4,7 @@ def getDisabilityStats(is_active):
         COUNT(*) as total
         FROM cbr_api_client_disability
         """
-        
+
     if is_active:
         sql += """ 
             WHERE cbr_api_client_disability.client_id = (
@@ -20,7 +20,7 @@ def getDisabilityStats(is_active):
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
-        
+
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
@@ -31,7 +31,7 @@ def getNumClientsWithDisabilities(is_active):
         FROM cbr_api_client_disability
         """
 
-    if is_active: 
+    if is_active:
         sql += """ 
             WHERE cbr_api_client_disability.client_id = (
                 SELECT id 

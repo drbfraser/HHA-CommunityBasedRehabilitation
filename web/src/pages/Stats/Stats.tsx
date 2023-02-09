@@ -12,7 +12,6 @@ import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
 import StatsUserFilter from "./StatsUserFilter";
 import VisitStats from "./VisitStats";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
-import { useStyles } from "./Stats.styles";
 
 const Stats = () => {
     const [dateFilterOpen, setDateFilterOpen] = useState(false);
@@ -25,7 +24,6 @@ const Stats = () => {
     const [errorLoading, setErrorLoading] = useState(false);
     const [archiveMode, setArchiveMode] = useState(false);
     const milliSecondPerDay = 86400000;
-    const styles = useStyles();
 
     const FilterBar = () => (
         <div style={{ textAlign: "center" }}>
@@ -133,7 +131,7 @@ const Stats = () => {
             <br />
             <Divider />
             <br />
-            <div className={styles.switch}>
+            <div>
                 <Typography
                     color={archiveMode ? "textSecondary" : "textPrimary"}
                     component={"span"}

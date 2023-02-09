@@ -56,7 +56,14 @@ const RenderRiskHeader = (params: ColParams): JSX.Element => {
 };
 
 const RenderText = (params: ValueFormatterParams) => {
-    return <Typography variant={"body2"}>{params.value}</Typography>;
+    return (
+        <Typography
+            variant={"body2"}
+            color={params.row.is_active ? "textPrimary" : "textSecondary"}
+        >
+            {params.value}
+        </Typography>
+    );
 };
 
 const RenderBadge = (params: ValueFormatterParams) => {

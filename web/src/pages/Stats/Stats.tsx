@@ -68,6 +68,7 @@ const Stats = () => {
 
     useEffect(() => {
         const urlParams = new URLSearchParams();
+        urlParams.append("is_active", String(archiveMode));
 
         ["from", "to"].forEach((field) => {
             const fieldVal = dateRange[field as keyof IDateRange];
@@ -86,10 +87,6 @@ const Stats = () => {
 
         if (user) {
             urlParams.append("user_id", String(user.id));
-        }
-
-        if (archiveMode) {
-            urlParams.append("is_active", "True");
         }
 
         apiFetch(Endpoint.STATS, `?${urlParams.toString()}`)

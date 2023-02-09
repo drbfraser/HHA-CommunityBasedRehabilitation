@@ -66,7 +66,10 @@ class AdminStats(generics.RetrieveAPIView):
 
         def get_boolean_or_none(req_body_key):
             val = self.request.GET.get(req_body_key, "")
-            return bool(val) if val != "" else None
+            if val == "true":
+                return True
+            else:
+                return False
 
         user_id = get_int_or_none("user_id")
         from_time = get_int_or_none("from")

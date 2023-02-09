@@ -164,7 +164,7 @@ export const handleArchiveConfirmation = (
         window.confirm(
             `Are you sure you want to ${values.is_active ? "archive" : "dearchive"} ${
                 values.first_name
-            } ${values.last_name}?\n`
+            } ${values.last_name}?\nYou cannot edit clients while they are archived`
         )
     ) {
         // set is_active

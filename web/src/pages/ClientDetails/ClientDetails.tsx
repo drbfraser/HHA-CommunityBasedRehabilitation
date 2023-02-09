@@ -38,7 +38,7 @@ const ClientDetails = () => {
 
     useEffect(() => {
         getClient();
-    }, [getClient]);
+    }, [getClient, clientInfo]);
 
     return loadingError ? (
         <Alert severity="error">Something went wrong loading that client. Please try again.</Alert>

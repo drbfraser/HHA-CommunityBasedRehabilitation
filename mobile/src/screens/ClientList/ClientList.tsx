@@ -25,6 +25,7 @@ import CustomMultiPicker from "react-native-multiple-select-list";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
+import { CheckBox } from "react-native-elements";
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
@@ -32,6 +33,7 @@ const ClientList = () => {
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
+    const [archivedMode, setArchivedMode] = useState<boolean>(false);
     const [sortDirection, setIsSortDirection] = useState<TSortDirection>("None");
     const [sortOption, setSortOption] = useState("");
     const zones = useZones();
@@ -219,6 +221,10 @@ const ClientList = () => {
                     <Picker.Item label="Name" value={SearchOption.NAME} />
                     <Picker.Item label="Zone" value={SearchOption.ZONE} />
                 </Picker>
+            </View>
+            <View style={styles.checkbox}>
+                <Text style={{ alignSelf: "center" }}>Show Archived</Text>
+                <CheckBox></CheckBox>
             </View>
             <ScrollView>
                 <DataTable>

@@ -53,6 +53,7 @@ class AdminStats(generics.RetrieveAPIView):
             OpenApiParameter(name="user_id", type={"type": "int"}),
             OpenApiParameter(name="from", type={"type": "int"}),
             OpenApiParameter(name="to", type={"type": "int"}),
+            OpenApiParameter(name="is_active", type={"type": "boolean"}),
         ]
     )
     def get(self, request):
@@ -63,15 +64,23 @@ class AdminStats(generics.RetrieveAPIView):
             val = self.request.GET.get(req_body_key, "")
             return int(val) if val != "" else None
 
+        def get_boolean_or_none(req_body_key):
+            val = self.request.GET.get(req_body_key, "")
+            if val == "true":
+                return True
+            else:
+                return False
+
         user_id = get_int_or_none("user_id")
         from_time = get_int_or_none("from")
         to_time = get_int_or_none("to")
+        is_active = get_boolean_or_none("is_active")
 
         referral_stats = getReferralStats(user_id, from_time, to_time)
 
         return {
-            "disabilities": getDisabilityStats(),
-            "clients_with_disabilities": getNumClientsWithDisabilities(),
+            "disabilities": getDisabilityStats(is_active),
+            "clients_with_disabilities": getNumClientsWithDisabilities(is_active),
             "visits": getVisitStats(user_id, from_time, to_time),
             "referrals_resolved": referral_stats["resolved"],
             "referrals_unresolved": referral_stats["unresolved"],

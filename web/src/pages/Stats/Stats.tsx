@@ -11,6 +11,7 @@ import ReferralStats from "./ReferralStats";
 import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
 import StatsUserFilter from "./StatsUserFilter";
 import VisitStats from "./VisitStats";
+import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 
 const Stats = () => {
     const [dateFilterOpen, setDateFilterOpen] = useState(false);
@@ -21,6 +22,7 @@ const Stats = () => {
     const [exportOpen, setExportOpen] = useState(false);
     const [stats, setStats] = useState<IStats>();
     const [errorLoading, setErrorLoading] = useState(false);
+    const [archiveMode, setArchiveMode] = useState(false);
     const milliSecondPerDay = 86400000;
 
     const FilterBar = () => (
@@ -64,6 +66,7 @@ const Stats = () => {
 
     useEffect(() => {
         const urlParams = new URLSearchParams();
+        urlParams.append("is_active", String(archiveMode));
 
         ["from", "to"].forEach((field) => {
             const fieldVal = dateRange[field as keyof IDateRange];
@@ -88,7 +91,7 @@ const Stats = () => {
             .then((resp) => resp.json())
             .then((stats) => setStats(stats))
             .catch(() => setErrorLoading(true));
-    }, [dateRange, user]);
+    }, [dateRange, user, archiveMode]);
 
     return errorLoading ? (
         <Alert severity="error">
@@ -128,7 +131,27 @@ const Stats = () => {
             <br />
             <Divider />
             <br />
-            <Typography variant="h2" align="center">
+            <div>
+                <Typography
+                    color={archiveMode ? "textSecondary" : "textPrimary"}
+                    component={"span"}
+                    variant={"body2"}
+                >
+                    All Clients
+                </Typography>
+                <IOSSwitch
+                    checked={archiveMode}
+                    onChange={(event) => setArchiveMode(event.target.checked)}
+                />
+                <Typography
+                    color={archiveMode ? "textPrimary" : "textSecondary"}
+                    component={"span"}
+                    variant={"body2"}
+                >
+                    Active Clients
+                </Typography>
+            </div>
+            <Typography variant="h2" align="center" display="block">
                 Disabilities
             </Typography>
             <Typography variant="body1" align="center">

@@ -181,6 +181,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                             variant="outlined"
                             color="primary"
                             size="small"
+                            disabled={!clientInfo?.is_active}
                             onClick={() => {
                                 setIsModalOpen(true);
                             }}

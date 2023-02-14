@@ -1,43 +1,48 @@
-def getDisabilityStats():
-    from django.db import connection
+def getDisabilityStats(is_active):
+    sql = """
+        SELECT disability_id,
+        COUNT(*) as total
+        FROM cbr_api_client_disability
+        """
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            """
-            SELECT disability_id,
-            COUNT(*) as total
-            FROM cbr_api_client_disability
+    if is_active:
+        sql += """ 
             WHERE cbr_api_client_disability.client_id = (
                 SELECT id 
                 FROM cbr_api_client
                 WHERE cbr_api_client_disability.client_id = cbr_api_client.id AND 
                 cbr_api_client.is_active = True
-            )
-            GROUP BY disability_id 
-            ORDER BY disability_id
-        """
-        )
+            ) """
+
+    sql += "GROUP BY disability_id ORDER BY disability_id"
+
+    from django.db import connection
+
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
 
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 
-def getNumClientsWithDisabilities():
-    from django.db import connection
+def getNumClientsWithDisabilities(is_active):
+    sql = """
+        SELECT COUNT(DISTINCT client_id) as total
+        FROM cbr_api_client_disability
+        """
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            """
-            SELECT COUNT(DISTINCT client_id) as total
-            FROM cbr_api_client_disability
+    if is_active:
+        sql += """ 
             WHERE cbr_api_client_disability.client_id = (
                 SELECT id 
                 FROM cbr_api_client
                 WHERE cbr_api_client_disability.client_id = cbr_api_client.id AND 
                 cbr_api_client.is_active = True
-            )
-        """
-        )
+        )"""
+    from django.db import connection
+
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
 
         return cursor.fetchone()[0]
 
@@ -75,12 +80,6 @@ def getReferralStats(user_id, from_time, to_time):
         COUNT(*) filter(where orthotic) as orthotic_count,
         COUNT(*) filter(where services_other != '') as other_count
         FROM cbr_api_referral
-         WHERE cbr_api_referral.client_id_id = (
-                SELECT id 
-                FROM cbr_api_client
-                WHERE cbr_api_referral.client_id_id = cbr_api_client.id AND 
-                cbr_api_client.is_active = True
-            )
     """
 
     sql += getStatsWhere(user_id, "date_referred", from_time, to_time)

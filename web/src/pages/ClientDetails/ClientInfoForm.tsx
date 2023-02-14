@@ -10,6 +10,7 @@ import {
     FormControl,
     Grid,
     MenuItem,
+    Typography,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {
@@ -410,6 +411,14 @@ const ClientInfoForm = (props: IProps) => {
                                             </AccordionDetails>
                                         </Accordion>
                                     </Grid>
+                                ) : (
+                                    <></>
+                                )}
+                                {!values.is_active ? (
+                                    <Typography color="textSecondary">
+                                        The client is archived. Only administrators can dearchive a
+                                        client.
+                                    </Typography>
                                 ) : (
                                     <></>
                                 )}

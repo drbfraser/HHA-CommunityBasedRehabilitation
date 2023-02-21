@@ -91,6 +91,7 @@ const ClientList = () => {
             selectedSearchOption,
             searchQuery,
             allClientsMode,
+            archivedMode,
             database
         );
         if (sortDirection !== "None") {
@@ -137,7 +138,15 @@ const ClientList = () => {
                 setUnSyncedChanges(res);
             });
         }
-    }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection, isFocused]);
+    }, [
+        selectedSearchOption,
+        searchQuery,
+        allClientsMode,
+        sortOption,
+        sortDirection,
+        isFocused,
+        archivedMode,
+    ]);
 
     useEffect(() => {
         showSelectedColumn();
@@ -224,7 +233,12 @@ const ClientList = () => {
             </View>
             <View style={styles.checkbox}>
                 <Text style={{ alignSelf: "center" }}>Show Archived</Text>
-                <CheckBox></CheckBox>
+                <CheckBox
+                    checked={archivedMode}
+                    onPress={() => {
+                        setArchivedMode(!archivedMode);
+                    }}
+                />
             </View>
             <ScrollView>
                 <DataTable>

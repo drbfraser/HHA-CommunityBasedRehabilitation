@@ -1,4 +1,4 @@
-import { ClientField } from "@cbr/common";
+import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 import { addColumns, schemaMigrations } from "@nozbe/watermelondb/Schema/migrations";
 import { modelName } from "./constant";
 
@@ -9,7 +9,7 @@ export default schemaMigrations({
             steps: [
                 addColumns({
                     table: modelName.clients,
-                    columns: [{ name: "is_active", type: "boolean" }],
+                    columns: [{ name: ClientField.is_active, type: "boolean" }],
                 }),
             ],
         },

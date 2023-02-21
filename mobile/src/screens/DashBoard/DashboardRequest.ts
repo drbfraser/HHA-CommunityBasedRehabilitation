@@ -4,6 +4,8 @@ import { riskLevels } from "@cbr/common";
 import { modelName } from "../../models/constant";
 import { ClientListRow } from "../ClientList/ClientListRequest";
 import { dbType } from "../../util/watermelonDatabase";
+import { Q } from "@nozbe/watermelondb";
+import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 
 export type BriefReferral = {
     id: string;
@@ -37,7 +39,9 @@ const concatenateReferralType = (referral: IOutstandingReferral) => {
 export const fetchAllClientsFromDB = async (database: dbType): Promise<ClientListRow[]> => {
     try {
         const zones = await getZones();
-        const tempClients: any = await database.get(modelName.clients).query();
+        const tempClients: any = await database
+            .get(modelName.clients)
+            .query(Q.where(ClientField.is_active, true));
         const resultRows = tempClients
             .sort(clientPrioritySort)
             .slice(0, 5)

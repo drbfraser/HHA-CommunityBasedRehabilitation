@@ -59,7 +59,7 @@ export default appSchema({
                 { name: ClientField.nutrit_risk_level, type: "string" },
                 { name: ClientField.nutrit_timestamp, type: "number" },
                 { name: ClientField.last_visit_date, type: "number" },
-                { name: "is_active", type: "boolean" },
+                { name: ClientField.is_active, type: "boolean" },
                 { name: mobileGenericField.created_at, type: "number" },
                 { name: mobileGenericField.updated_at, type: "number" },
             ],

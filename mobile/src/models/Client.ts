@@ -44,6 +44,7 @@ export default class Client extends Model implements SyncableModel {
     @field(ClientField.zone) zone;
     @field(ClientField.village) village;
     @field(ClientField.picture) picture;
+    @field("is_active") is_active;
     @field(ClientField.caregiver_present) caregiver_present;
     @text(ClientField.caregiver_name) caregiver_name;
 

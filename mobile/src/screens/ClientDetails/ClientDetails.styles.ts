@@ -189,7 +189,9 @@ const useStyles = () =>
             fontSize: 32,
         },
         archiveWarningStyle: {
+            width: 250,
             textAlign: "center",
+            justifyContent: "center",
         },
         activityCardContentStyle: {
             display: "flex",

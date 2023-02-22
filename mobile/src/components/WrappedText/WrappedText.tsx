@@ -5,14 +5,20 @@ import useStyles from "./WrappedText.style";
 
 interface TextProps {
     text: string;
-    is_active: boolean;
+    is_active?: boolean;
 }
 
 export const WrappedText = (props: TextProps) => {
     const styles = useStyles();
     return (
         <View style={styles.wrappedView}>
-            <Text style={props.is_active ? styles.primaryText : styles.secondaryText}>
+            <Text
+                style={
+                    props.is_active === undefined || props.is_active
+                        ? styles.primaryText
+                        : styles.secondaryText
+                }
+            >
                 {props.text}
             </Text>
         </View>

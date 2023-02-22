@@ -397,7 +397,9 @@ export const ClientForm = (props: IClientFormProps) => {
                     <Button
                         mode="contained"
                         style={styles.clientDetailsFinalButtons}
-                        disabled={props.formikProps.isSubmitting}
+                        disabled={
+                            props.formikProps.isSubmitting || !props.formikProps.values.is_active
+                        }
                         onPress={() => {
                             if (fieldsDisabled) {
                                 props.touchDisable!(false);
@@ -416,6 +418,18 @@ export const ClientForm = (props: IClientFormProps) => {
                     >
                         {fieldsDisabled ? "Edit" : "Save"}
                     </Button>
+                    {fieldsDisabled ? (
+                        <Button
+                            style={styles.clientDetailsFinalButtons}
+                            mode="contained"
+                            onPress={() => {}}
+                        >
+                            {props.formikProps.values.is_active ? "Archive" : "Dearchive"}
+                        </Button>
+                    ) : (
+                        <></>
+                    )}
+
                     {fieldsDisabled ? (
                         <></>
                     ) : (

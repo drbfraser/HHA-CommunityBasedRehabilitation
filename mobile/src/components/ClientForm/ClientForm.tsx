@@ -427,12 +427,6 @@ export const ClientForm = (props: IClientFormProps) => {
                             {props.formikProps.values.is_active ? "Archive" : "Dearchive"}
                         </Button>
                     ) : (
-                        <></>
-                    )}
-
-                    {fieldsDisabled ? (
-                        <></>
-                    ) : (
                         <Button
                             mode={cancelButtonType}
                             style={styles.clientDetailsFinalButtons}

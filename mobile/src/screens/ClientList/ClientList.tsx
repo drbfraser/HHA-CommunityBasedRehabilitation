@@ -25,7 +25,7 @@ import CustomMultiPicker from "react-native-multiple-select-list";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
-import { CheckBox } from "react-native-elements";
+import { Checkbox } from "react-native-paper";
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
@@ -233,8 +233,8 @@ const ClientList = () => {
             </View>
             <View style={styles.checkbox}>
                 <Text style={{ alignSelf: "center" }}>Show Archived</Text>
-                <CheckBox
-                    checked={archivedMode}
+                <Checkbox
+                    status={archivedMode ? "checked" : "unchecked"}
                     onPress={() => {
                         setArchivedMode(!archivedMode);
                     }}

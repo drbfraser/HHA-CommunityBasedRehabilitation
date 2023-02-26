@@ -10,6 +10,7 @@ import { Formik } from "formik";
 interface riskProps {
     clientRisks: IRisk[];
     presentRiskType: RiskType;
+    clientArchived: boolean;
 }
 
 const getLatestRisks = (clientRisk: IRisk[], riskType: RiskType) => {
@@ -59,7 +60,11 @@ export const ClientRisk = (props: riskProps) => {
                     <View style={styles.clientDetailsFinalView}></View>
 
                     <View>
-                        <ClientRiskForm riskData={risk} setRisk={setRisk} />
+                        <ClientRiskForm
+                            riskData={risk}
+                            setRisk={setRisk}
+                            clientArchived={props.clientArchived}
+                        />
                     </View>
                 </Card>
                 <Divider></Divider>

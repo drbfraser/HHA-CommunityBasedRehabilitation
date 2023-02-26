@@ -25,6 +25,7 @@ import CustomMultiPicker from "react-native-multiple-select-list";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
+import { Checkbox } from "react-native-paper";
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
@@ -32,6 +33,7 @@ const ClientList = () => {
     const [selectedSearchOption, setSearchOption] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
+    const [archivedMode, setArchivedMode] = useState<boolean>(false);
     const [sortDirection, setIsSortDirection] = useState<TSortDirection>("None");
     const [sortOption, setSortOption] = useState("");
     const zones = useZones();
@@ -89,6 +91,7 @@ const ClientList = () => {
             selectedSearchOption,
             searchQuery,
             allClientsMode,
+            archivedMode,
             database
         );
         if (sortDirection !== "None") {
@@ -135,7 +138,15 @@ const ClientList = () => {
                 setUnSyncedChanges(res);
             });
         }
-    }, [selectedSearchOption, searchQuery, allClientsMode, sortOption, sortDirection, isFocused]);
+    }, [
+        selectedSearchOption,
+        searchQuery,
+        allClientsMode,
+        sortOption,
+        sortDirection,
+        isFocused,
+        archivedMode,
+    ]);
 
     useEffect(() => {
         showSelectedColumn();
@@ -195,7 +206,7 @@ const ClientList = () => {
                 </Portal>
             </View>
             <View style={styles.row}>
-                <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>My Clients</Text>
+                <Text style={{ flex: 0.7, margin: 10 }}>My Clients</Text>
                 <Switch
                     style={styles.switch}
                     trackColor={{ false: themeColors.white, true: themeColors.yellow }}
@@ -219,6 +230,15 @@ const ClientList = () => {
                     <Picker.Item label="Name" value={SearchOption.NAME} />
                     <Picker.Item label="Zone" value={SearchOption.ZONE} />
                 </Picker>
+            </View>
+            <View style={styles.checkbox}>
+                <Text style={{ alignSelf: "center" }}>Show Archived</Text>
+                <Checkbox
+                    status={archivedMode ? "checked" : "unchecked"}
+                    onPress={() => {
+                        setArchivedMode(!archivedMode);
+                    }}
+                />
             </View>
             <ScrollView>
                 <DataTable>
@@ -260,7 +280,7 @@ const ClientList = () => {
                             thisColumnSortOption={SortOptions.NUTRITION}
                         />
                     </DataTable.Header>
-                    {clientList.map((item) => {
+                    {clientList.map((item: ClientListRow) => {
                         return (
                             <DataTable.Row
                                 style={styles.item}
@@ -273,7 +293,10 @@ const ClientList = () => {
                             >
                                 {showNameColumn ? (
                                     <View style={styles.column_name}>
-                                        <WrappedText text={item.full_name} />
+                                        <WrappedText
+                                            text={item.full_name}
+                                            is_active={item.is_active}
+                                        />
                                     </View>
                                 ) : (
                                     <View></View>
@@ -281,7 +304,7 @@ const ClientList = () => {
 
                                 {showZoneColumn ? (
                                     <View style={styles.column_zone}>
-                                        <WrappedText text={item.zone} />
+                                        <WrappedText text={item.zone} is_active={item.is_active} />
                                     </View>
                                 ) : (
                                     <View></View>

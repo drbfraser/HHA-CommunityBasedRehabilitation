@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities, getOtherDisabilityId } from "@cbr/common/src/util/hooks/disabilities";
-import { View, Platform } from "react-native";
+import { View, Platform, Alert } from "react-native";
 import { Button, Portal, Modal, Text } from "react-native-paper";
 import useStyles from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -16,6 +16,8 @@ import {
     timestampFromFormDate,
     timestampToDate,
     timestampToDateObj,
+    useCurrentUser,
+    UserRole,
 } from "@cbr/common";
 import { objectFromMap } from "../../util/ObjectFromMap";
 import { FormikProps } from "formik";
@@ -47,6 +49,7 @@ export const ClientForm = (props: IClientFormProps) => {
     const otherDisabilityId = getOtherDisabilityId(disabilityMap);
     const disabilityObj = objectFromMap(disabilityMap);
     const zoneMap = useZones();
+    const currentUser = useCurrentUser();
 
     const [fieldsDisabled, setFieldsDisabled] = useState(!props.isNewClient);
     const [cancelButtonType, setCancelButtonType] = useState<"outlined" | "contained">("outlined");
@@ -85,6 +88,35 @@ export const ClientForm = (props: IClientFormProps) => {
     const navigation = useNavigation<AppStackNavProp>();
 
     const [discardDialogVisible, setDiscardDialogVisible] = useState(false);
+    const [archiveDialogVisibleOk, setArchiveDialogVisibleOk] = useState(false);
+
+    const fetchUserErrorAlert = () =>
+        Alert.alert(
+            "Alert",
+            "Ecountered an error fetching your user information. Please try again.",
+            [
+                {
+                    text: "Return",
+                    style: "cancel",
+                    onPress: () => {},
+                },
+            ],
+            { cancelable: true }
+        );
+
+    const invalidUserAlert = () =>
+        Alert.alert(
+            "Alert",
+            "You are not authorized to archive/dearchive clients. Please ask an administrator.",
+            [
+                {
+                    text: "Return",
+                    style: "cancel",
+                    onPress: () => {},
+                },
+            ],
+            { cancelable: true }
+        );
 
     useEffect(() => {
         const title = props.isNewClient
@@ -123,6 +155,24 @@ export const ClientForm = (props: IClientFormProps) => {
                 }}
                 confirmButtonText="Discard"
                 dialogContent={props.isNewClient ? "Discard new client?" : "Discard your changes?"}
+            />
+            <ConfirmDialog
+                visible={archiveDialogVisibleOk}
+                onDismiss={() => setArchiveDialogVisibleOk(false)}
+                onConfirm={() => {
+                    props.formikProps.setFieldValue(
+                        ClientField.is_active,
+                        !props.formikProps.values.is_active
+                    );
+                    props.formikProps.handleSubmit();
+                    setArchiveDialogVisibleOk(false);
+                }}
+                confirmButtonText={props.formikProps.values.is_active ? "Archive" : "Dearchive"}
+                dialogContent={`Are you sure you want to ${
+                    props.formikProps.values.is_active ? "archive" : "dearchive"
+                } ${props.formikProps.values.firstName} ${
+                    props.formikProps.values.lastName
+                }? You cannot edit clients while they are archived`}
             />
             <FormikTextInput
                 style={styles.field}
@@ -397,7 +447,9 @@ export const ClientForm = (props: IClientFormProps) => {
                     <Button
                         mode="contained"
                         style={styles.clientDetailsFinalButtons}
-                        disabled={props.formikProps.isSubmitting}
+                        disabled={
+                            props.formikProps.isSubmitting || !props.formikProps.values.is_active
+                        }
                         onPress={() => {
                             if (fieldsDisabled) {
                                 props.touchDisable!(false);
@@ -417,7 +469,21 @@ export const ClientForm = (props: IClientFormProps) => {
                         {fieldsDisabled ? "Edit" : "Save"}
                     </Button>
                     {fieldsDisabled ? (
-                        <></>
+                        <Button
+                            style={styles.clientDetailsFinalButtons}
+                            mode="contained"
+                            onPress={() => {
+                                if (currentUser === "APILoadError" || currentUser === undefined) {
+                                    fetchUserErrorAlert();
+                                } else if (currentUser.role === UserRole.ADMIN) {
+                                    setArchiveDialogVisibleOk(true);
+                                } else {
+                                    invalidUserAlert();
+                                }
+                            }}
+                        >
+                            {props.formikProps.values.is_active ? "Archive" : "Dearchive"}
+                        </Button>
                     ) : (
                         <Button
                             mode={cancelButtonType}

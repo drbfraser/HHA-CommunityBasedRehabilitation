@@ -54,6 +54,7 @@ export enum ClientField {
     nutrit_risk_level = "nutrit_risk_level",
     nutrit_timestamp = "nutrit_timestamp",
     last_visit_date = "last_visit_date",
+    is_active = "is_active",
 }
 
 export enum ClientDetailsFields {
@@ -72,6 +73,7 @@ export enum ClientDetailsFields {
     picture = "picture",
     pictureChanged = "pictureChanged",
     other_disability = "other_disability",
+    is_active = "is_active",
 }
 
 export const clientFieldLabels = {
@@ -148,6 +150,7 @@ export const clientInitialValues = {
     [ClientField.nutritionGoals]: "",
     [ClientField.picture]: "",
     [ClientField.pictureChanged]: false,
+    [ClientField.is_active]: true,
 };
 
 export type TClientValues = typeof clientInitialValues;

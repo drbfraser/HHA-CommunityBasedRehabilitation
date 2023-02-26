@@ -21,6 +21,7 @@ import { SyncContext } from "../../../context/SyncContext/SyncContext";
 export interface ClientRiskFormProps {
     riskData: any;
     setRisk: (risk: any) => void;
+    clientArchived: boolean;
 }
 
 export const toastValidationError = () => {
@@ -57,6 +58,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             <Button
                 mode="contained"
                 style={styles.modalUpdateButton}
+                disabled={!props.clientArchived}
                 onPress={() => {
                     setShowModal(true);
                 }}

@@ -561,6 +561,7 @@ class ClientSyncSerializer(serializers.ModelSerializer):
             "nutrit_risk_level",
             "nutrit_timestamp",
             "last_visit_date",
+            "is_active",
         ]
 
 
@@ -601,6 +602,7 @@ class editClientSyncSerializer(serializers.ModelSerializer):
             "nutrit_risk_level",
             "nutrit_timestamp",
             "last_visit_date",
+            "is_active",
         ]
 
 

@@ -7,8 +7,12 @@ const useStyles = () =>
             alignItems: "center",
             padding: 5,
         },
-        text: {
+        primaryText: {
             flexShrink: 1,
+        },
+        secondaryText: {
+            flexShrink: 1,
+            color: "grey",
         },
     });
 

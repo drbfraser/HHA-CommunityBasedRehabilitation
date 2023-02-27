@@ -55,6 +55,7 @@ const useStyles = () =>
             marginBottom: 14,
             fontSize: 32,
         },
+        switch: { flex: 0.2 },
     });
 
 export default useStyles;

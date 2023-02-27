@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Button, Divider, Text } from "react-native-paper";
+import { Button, Divider, Switch, Text } from "react-native-paper";
 import useStyles from "./Stats.styles";
 import { useIsFocused } from "@react-navigation/core";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
@@ -55,6 +55,7 @@ const Stats = () => {
     const [showVisits, setShowVisits] = useState<boolean>(true);
     const [showReferrals, setShowReferrals] = useState<boolean>(false);
     const [showDisabilites, setShowDisabilites] = useState<boolean>(false);
+    const [archiveMode, setArchiveMode] = useState<boolean>(false);
 
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -167,7 +168,7 @@ const Stats = () => {
 
     const DisabilityStat = async () => {
         for (const type of disabilityMap) {
-            const count = await database
+            let count = database
                 .get(modelName.clients)
                 .query(
                     Q.or(
@@ -177,21 +178,28 @@ const Stats = () => {
                         Q.where(ClientField.disability, Q.like(`%, ${type[0]}]`)),
                         Q.where(ClientField.disability, Q.like(`%,${type[0]}]`))
                     )
-                )
-                .fetchCount();
-            if (count != 0) {
+                );
+            if (archiveMode) {
+                count = count.extend(Q.where(ClientField.is_active, true));
+            }
+            const result: number = await count.fetchCount();
+
+            if (result != 0) {
                 var record: BarStat = {
                     name: type[1],
-                    count: count,
+                    count: result,
                 };
                 fetchDisabilityData.push(record);
             }
         }
-        const clientCount = await database
+        let clientCount = database
             .get(modelName.clients)
-            .query(Q.where(ClientField.disability, Q.notEq("")))
-            .fetchCount();
-        setDisabilityCount(clientCount);
+            .query(Q.where(ClientField.disability, Q.notEq("")));
+        if (archiveMode) {
+            clientCount = clientCount.extend(Q.where(ClientField.is_active, true));
+        }
+        const result: number = await clientCount.fetchCount();
+        setDisabilityCount(result);
         setDisabilityData(fetchDisabilityData);
     };
 
@@ -229,7 +237,7 @@ const Stats = () => {
                     });
                 });
         }
-    }, [isFocused]);
+    }, [isFocused, archiveMode]);
 
     return (
         <ScrollView>
@@ -449,6 +457,16 @@ const Stats = () => {
                     {showDisabilites ? (
                         <>
                             <Divider />
+                            <View style={styles.row}>
+                                <Text>All Clients</Text>
+                                <Switch
+                                    style={styles.switch}
+                                    thumbColor={archiveMode ? themeColors.white : themeColors.white}
+                                    onValueChange={setArchiveMode}
+                                    value={archiveMode}
+                                />
+                                <Text>Active Clients</Text>
+                            </View>
                             <Text style={styles.cardSectionTitle}>Disabilities</Text>
                             <Text style={styles.graphStat}>
                                 <Text style={{ fontWeight: "bold" }}>

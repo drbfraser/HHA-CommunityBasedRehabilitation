@@ -42,6 +42,10 @@ const useStyles = () =>
             alignItems: "center",
             justifyContent: "center",
         },
+        checkbox: {
+            flexDirection: "row",
+            marginLeft: 10,
+        },
         column_id: {
             flex: 0.7,
         },

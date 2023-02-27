@@ -10,6 +10,7 @@ const useStyles = () =>
         },
         imageContainer: {
             flexDirection: "row",
+            justifyContent: "center",
         },
         image: {
             backgroundColor: themeColors.white,
@@ -126,7 +127,7 @@ const useStyles = () =>
         },
         clientDetailsFinalView: {
             alignItems: "center",
-            justifyContent: "flex-end",
+            justifyContent: "center",
             display: "flex",
             flexDirection: "row",
             height: 40,
@@ -186,6 +187,11 @@ const useStyles = () =>
             marginTop: 14,
             marginBottom: 14,
             fontSize: 32,
+        },
+        archiveWarningStyle: {
+            width: 250,
+            textAlign: "center",
+            justifyContent: "center",
         },
         activityCardContentStyle: {
             display: "flex",

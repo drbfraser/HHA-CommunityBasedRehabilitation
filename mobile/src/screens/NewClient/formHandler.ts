@@ -56,6 +56,7 @@ const handleNewMobileClientSubmit = async (
                 client.educat_risk_level = values.educationRisk;
                 client.nutrit_risk_level = values.nutritionRisk;
                 client.last_visit_date = 0;
+                client.is_active = true;
             });
             addRisk(
                 newClient,

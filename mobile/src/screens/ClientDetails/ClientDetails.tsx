@@ -106,6 +106,7 @@ const ClientDetails = (props: ClientProps) => {
                 caregiverPhone: client.caregiver_phone,
                 disability: client.disability,
                 otherDisability: client.other_disability,
+                is_active: client.is_active,
             };
             return clientFormProps;
         } else {
@@ -234,6 +235,7 @@ const ClientDetails = (props: ClientProps) => {
                                         <Button
                                             mode="contained"
                                             style={styles.clientButtons}
+                                            disabled={!formikProps.values.is_active}
                                             onPress={() => {
                                                 navigation.navigate(StackScreenName.REFERRAL, {
                                                     clientID: props.route.params.clientID,
@@ -245,6 +247,7 @@ const ClientDetails = (props: ClientProps) => {
                                         <Button
                                             mode="contained"
                                             style={styles.clientButtons}
+                                            disabled={!formikProps.values.is_active}
                                             onPress={() => {
                                                 navigation.navigate(StackScreenName.BASE_SURVEY, {
                                                     clientID: props.route.params.clientID,
@@ -256,6 +259,7 @@ const ClientDetails = (props: ClientProps) => {
                                         <Button
                                             mode="contained"
                                             style={styles.clientButtons}
+                                            disabled={!formikProps.values.is_active}
                                             onPress={() => {
                                                 navigation.navigate(StackScreenName.VISIT, {
                                                     clientID: props.route.params.clientID,
@@ -266,6 +270,14 @@ const ClientDetails = (props: ClientProps) => {
                                         </Button>
                                     </Card>
                                     <Divider />
+                                    {formikProps.values.is_active ? (
+                                        <></>
+                                    ) : (
+                                        <Text style={styles.archiveWarningStyle}>
+                                            The client is archived. Only administrators can
+                                            dearchive a client
+                                        </Text>
+                                    )}
                                     <Text style={styles.cardSectionTitle}>Client Details</Text>
                                     <Divider />
                                     <ClientForm
@@ -290,13 +302,29 @@ const ClientDetails = (props: ClientProps) => {
                     </Card>
                     <Text style={styles.cardSectionTitle}>Client Risks</Text>
                     <Divider />
-                    <ClientRisk clientRisks={risks || []} presentRiskType={RiskType.HEALTH} />
+                    <ClientRisk
+                        clientRisks={risks || []}
+                        presentRiskType={RiskType.HEALTH}
+                        clientArchived={client.is_active}
+                    />
                     <Divider />
-                    <ClientRisk clientRisks={risks || []} presentRiskType={RiskType.EDUCATION} />
+                    <ClientRisk
+                        clientRisks={risks || []}
+                        presentRiskType={RiskType.EDUCATION}
+                        clientArchived={client.is_active}
+                    />
                     <Divider />
-                    <ClientRisk clientRisks={risks || []} presentRiskType={RiskType.SOCIAL} />
+                    <ClientRisk
+                        clientRisks={risks || []}
+                        presentRiskType={RiskType.SOCIAL}
+                        clientArchived={client.is_active}
+                    />
                     <Divider />
-                    <ClientRisk clientRisks={risks || []} presentRiskType={RiskType.NUTRITION} />
+                    <ClientRisk
+                        clientRisks={risks || []}
+                        presentRiskType={RiskType.NUTRITION}
+                        clientArchived={client.is_active}
+                    />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>

@@ -73,7 +73,7 @@ build mobile:
     - npm ci
   script:
     - npx prettier --check .
-    - npx expo export
+    - npm run build dev
 
 build web:
   stage: build

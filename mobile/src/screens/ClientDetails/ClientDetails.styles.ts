@@ -130,7 +130,6 @@ const useStyles = () =>
             justifyContent: "center",
             display: "flex",
             flexDirection: "row",
-            height: 40,
             marginTop: 15,
             marginBottom: 15,
         },

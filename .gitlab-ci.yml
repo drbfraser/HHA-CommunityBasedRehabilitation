@@ -73,7 +73,7 @@ build mobile:
     - npm ci
   script:
     - npx prettier --check .
-    - npx expo export --public-url https://ci-build.local
+    - npx expo export
 
 build web:
   stage: build

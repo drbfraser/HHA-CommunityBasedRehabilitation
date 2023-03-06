@@ -107,11 +107,8 @@ const HomeScreen = (props: IHomeScreenProps) => {
                         mode="contained"
                         icon={SyncModalIcon.alert}
                         style={styles.buttonContainer}
-                        disabled={true}
                         onPress={() => {
-                            /* To be developed to add Alert for Mobile, see issues: https://csil-git1.cs.surrey.sfu.ca/415-hha_cbr/cbr-platform/-/issues/109
-                            currently disabled
-                            */
+                            props.navigation.navigate(StackScreenName.ALERTS);
                         }}
                     >
                         Alerts

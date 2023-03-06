@@ -6,6 +6,7 @@ import {
     BaseSurveyField,
     ReferralField,
 } from "@cbr/common";
+import { alertField } from "@cbr/common/src/forms/Alert/alertFields"
 import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 import { FormField } from "@cbr/common/src/forms/Risks/riskFormFields";
 import { appSchema, tableSchema } from "@nozbe/watermelondb";
@@ -185,6 +186,18 @@ export default appSchema({
                 { name: ImprovementFormField.riskType, type: "string" },
                 { name: ImprovementFormField.provided, type: "string" },
                 { name: ImprovementFormField.description, type: "string" },
+            ],
+        }),
+        tableSchema({
+            name: modelName.alerts,
+            columns: [
+                { name: tableKey.alerts_id, type: "string", isIndexed: true },
+                { name: alertField.alert_message, type: "string" },
+                { name: alertField.created_by_user, type: "string" },
+                { name: alertField.date_created, type: "string" },
+                { name: alertField.priority, type: "string" },
+                { name: alertField.subject, type: "string" },
+                { name: alertField.unread_by_users, type: "string" },
             ],
         }),
     ],

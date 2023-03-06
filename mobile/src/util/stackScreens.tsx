@@ -16,6 +16,7 @@ import DefaultHeader from "../components/DefaultHeader/DefaultHeader";
 import Sync from "../screens/Sync/Sync";
 import Login from "../screens/Login/Login";
 import SwitchServer from "../screens/SwitchServer/SwitchServer";
+import Alerts from "../screens/Alerts/Alerts";
 
 export const stackScreenProps: Record<
     StackScreenName | NoAuthScreenName,
@@ -30,6 +31,7 @@ export const stackScreenProps: Record<
     [StackScreenName.REFERRAL]: NewReferral,
     [StackScreenName.BASE_SURVEY]: BaseSurvey,
     [StackScreenName.SYNC]: Sync,
+    [StackScreenName.ALERTS]: Alerts,
     [NoAuthScreenName.LOGIN]: Login,
     [NoAuthScreenName.SWITCH_SERVER]: SwitchServer,
 };
@@ -96,6 +98,10 @@ export const stackScreenOptions: Record<
     [StackScreenName.SYNC]: {
         headerShown: true,
         header: DefaultHeader("Synchronization"),
+    },
+    [StackScreenName.ALERTS]: {
+        headerShown: true,
+        header: DefaultHeader("Alerts"),
     },
     [NoAuthScreenName.LOGIN]: {
         headerShown: false,

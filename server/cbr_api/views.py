@@ -338,7 +338,7 @@ class AlertDetail(generics.RetrieveUpdateDestroyAPIView):
 def sync(request):
     mobileApiVersion = request.GET.get("api_version")
 
-    if mobileApiVersion == None or not api_versions_compatible(mobileApiVersion):
+    if None or not api_versions_compatible(mobileApiVersion):
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     if request.method == "GET":
@@ -351,6 +351,8 @@ def sync(request):
         reply.changes["visits"] = get_model_changes(request, models.Visit)
         reply.changes["outcomes"] = get_model_changes(request, models.Outcome)
         reply.changes["improvements"] = get_model_changes(request, models.Improvement)
+        reply.changes["alerts"] = get_model_changes(request, models.Alert)
+        
         serialized = serializers.pullResponseSerializer(reply)
         stringify_disability(serialized.data)
         return Response(serialized.data)

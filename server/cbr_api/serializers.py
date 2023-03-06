@@ -824,6 +824,12 @@ class AlertListSerializer(serializers.ModelSerializer):
             "created_date",
         ]
 
+class AlertSyncSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Alert
+        fields = "__all__"
+
+        read_only_fields = ["created_by_user"]
 
 # ensure to use a seperate serializer to disable primary key validator as it might invalidate it
 class multiUserSerializer(serializers.Serializer):
@@ -831,6 +837,10 @@ class multiUserSerializer(serializers.Serializer):
     updated = editUserCBRSerializer(many=True)
     deleted = UserCBRSerializer(many=True)
 
+class multiAlertSerializer(serializers.Serializer):
+    created = AlertSyncSerializer(many=True)
+    updated = AlertSyncSerializer(many=True)
+    deleted = AlertSyncSerializer(many=True)
 
 class multiClientSerializer(serializers.Serializer):
     created = ClientSyncSerializer(many=True)

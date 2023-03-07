@@ -468,6 +468,6 @@ class Alert(models.Model):
     created_by_user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT
     )
-    created_date = models.BigIntegerField(_("date created"), default=time.time)
-    updated_at = models.BigIntegerField(_("date created"), default=0)
+    created_date = models.BigIntegerField(_("date_created"), default=time.time)
+    updated_at = models.BigIntegerField(_("date_created"), default=0)
     server_created_at = models.BigIntegerField(default=current_milli_time)

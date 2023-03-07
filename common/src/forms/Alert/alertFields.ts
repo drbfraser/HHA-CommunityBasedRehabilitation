@@ -30,7 +30,7 @@ export const alertUpdateValues = {
     [alertField.subject]: "",
     [alertField.priority]: "" as PriorityLevel,
     [alertField.alert_message]: "",
-    [alertField.unread_by_users]: "",
+    [alertField.unread_by_users]: [],
     [alertField.created_by_user]: "",
     [alertField.date_created]: "",
 };

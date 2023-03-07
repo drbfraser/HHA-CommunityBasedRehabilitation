@@ -18,6 +18,7 @@ from cbr_api.util import (
     create_referral_data,
     create_survey_data,
     create_generic_data,
+    create_alert_data,
 )
 
 
@@ -984,6 +985,16 @@ class pushReferralSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         create_referral_data(
+            validated_data, self.context["user"], self.context.get("sync_time")
+        )
+        return self
+
+
+class pushAlertSerializer(serializers.Serializer):
+    alerts = multiAlertSerializer()
+
+    def create(self, validated_data):
+        create_alert_data(
             validated_data, self.context["user"], self.context.get("sync_time")
         )
         return self

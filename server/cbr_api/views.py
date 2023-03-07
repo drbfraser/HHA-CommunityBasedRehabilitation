@@ -359,7 +359,7 @@ def sync(request):
         sync_time = request.GET.get("last_pulled_at", "")
 
         def validation_fail(serializer):
-            print(serializer.error)
+            print(serializer.errors)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         user_serializer = serializers.pushUserSerializer(
@@ -397,6 +397,15 @@ def sync(request):
             referral_serializer.save()
         else:
             validation_fail(referral_serializer)
+
+        print(request.data)
+        alert_serializer = serializers.pushAlertSerializer(
+            data=request.data, context={"sync_time": sync_time}
+        )
+        if alert_serializer.is_valid():
+            alert_serializer.save()
+        else:
+            validation_fail(alert_serializer)
 
         survey_serializer = serializers.pushBaselineSurveySerializer(
             data=request.data,

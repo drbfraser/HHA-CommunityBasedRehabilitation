@@ -791,9 +791,11 @@ class AlertSerializer(serializers.ModelSerializer):
             "unread_by_users",
             "created_by_user",
             "created_date",
+            "server_created_at",
+            "updated_at",
         )
 
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "server_created_at"]
 
     def create(self, validated_data):
         current_time = int(time.time())
@@ -812,6 +814,22 @@ class AlertSerializer(serializers.ModelSerializer):
 
 
 class AlertListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Alert
+        fields = [
+            "subject",
+            "priority",
+            "alert_message",
+            "unread_by_users",
+            "created_by_user",
+            "created_date",
+            "updated_at",
+        ]
+
+        read_only_fields = ["id", "server_created_at"]
+
+
+class AlertSyncSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Alert
         fields = [
@@ -874,6 +892,12 @@ class multiReferralSerializer(serializers.Serializer):
     deleted = ReferralSyncSerializer(many=True)
 
 
+class multiAlertSerializer(serializers.Serializer):
+    created = AlertSyncSerializer(many=True)
+    updated = AlertSyncSerializer(many=True)
+    deleted = AlertSyncSerializer(many=True)
+
+
 # for each table being sync, add corresponding multi serializer under here
 class tableSerializer(serializers.Serializer):
     users = multiUserSerializer()
@@ -884,6 +908,7 @@ class tableSerializer(serializers.Serializer):
     visits = multiVisitSerializer()
     outcomes = multiOutcomeSerializer()
     improvements = multiImprovSerializer()
+    alerts = multiAlertSerializer()
 
 
 class pullResponseSerializer(serializers.Serializer):

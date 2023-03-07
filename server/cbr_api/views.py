@@ -351,6 +351,7 @@ def sync(request):
         reply.changes["visits"] = get_model_changes(request, models.Visit)
         reply.changes["outcomes"] = get_model_changes(request, models.Outcome)
         reply.changes["improvements"] = get_model_changes(request, models.Improvement)
+        reply.changes["alerts"] = get_model_changes(request, models.Alert)
         serialized = serializers.pullResponseSerializer(reply)
         stringify_disability(serialized.data)
         return Response(serialized.data)
@@ -422,7 +423,6 @@ def sync(request):
             outcome_improvment_serializer.save()
         else:
             validation_fail(outcome_improvment_serializer)
-
         return Response(status=status.HTTP_201_CREATED)
 
 

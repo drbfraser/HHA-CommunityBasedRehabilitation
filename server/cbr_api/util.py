@@ -215,7 +215,7 @@ def create_generic_data(table_name, model, validated_data, sync_time):
     created_data = table_data.pop("created")
     for data in created_data:
         record = model.objects.create(**data)
-        record.server_created_at = sync_time
+        record.server_created_at = sync_timeA
         record.save()
 
 
@@ -244,6 +244,17 @@ def create_referral_data(validated_data, user, sync_time):
     for data in updated_data:
         data["updated_at"] = sync_time
         models.Referral.objects.filter(pk=data["id"]).update(**data)
+
+
+def create_alert_data(validated_data, sync_time):
+    table_data = validated_data.get("alerts")
+    created_data = table_data.pop("created")
+
+    for data in created_data:
+        record = models.Alert.objects.create(**data)
+        record.updated_at = data["updated_at"]
+        record.server_created_at = sync_time
+        record.save()
 
 
 def api_versions_compatible(mobile_version):

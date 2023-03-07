@@ -6,6 +6,7 @@ export enum modelName {
     visits = "visits",
     risks = "risks",
     outcomes = "outcomes",
+    alerts = "alerts",
     improvements = "improvements",
 }
 
@@ -15,6 +16,7 @@ export enum tableKey {
     visit_id = "visit_id",
     risk_id = "risk_id",
     outcome_id = "outcome_id",
+    alerts_id = "alert_id",
     improvement_id = "improvement_id",
 }
 

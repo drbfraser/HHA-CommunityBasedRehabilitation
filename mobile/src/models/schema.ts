@@ -13,7 +13,7 @@ import { appSchema, tableSchema } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 
 export default appSchema({
-    version: 2,
+    version: 3,
     tables: [
         tableSchema({
             name: modelName.users,
@@ -200,6 +200,5 @@ export default appSchema({
                 { name: alertField.unread_by_users, type: "string" },
             ],
         }),
-
     ],
 });

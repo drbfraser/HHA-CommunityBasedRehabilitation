@@ -23,7 +23,7 @@ export default class Alert extends Model implements SyncableModel {
     @text(alertField.priority) priority;
     @text(alertField.alert_message) alert_message;
     @date(alertField.date_created) date_created;
-    @json(alertField.unread_by_users, sanitizeUnreadUsers) disability;
+    @json(alertField.unread_by_users, sanitizeUnreadUsers) unread_by_users;
 
     @relation(modelName.users, "created_by_user") created_by_user;
 

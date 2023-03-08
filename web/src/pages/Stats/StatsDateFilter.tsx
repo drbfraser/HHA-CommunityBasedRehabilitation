@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 

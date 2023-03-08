@@ -107,7 +107,7 @@ def getStatsWhere(user_id, time_col, from_time, to_time):
     if user_id is not None:
         # it seems that '_id' is automatically appended to the end of foreign key column names.
         # So user_id -> user_id_id
-        where.append(f"user_id_id={str(user_id)}")
+        where.append(f"user_id_id='{user_id}'")
 
     if from_time is not None:
         where.append(f"{time_col}>={str(from_time)}")

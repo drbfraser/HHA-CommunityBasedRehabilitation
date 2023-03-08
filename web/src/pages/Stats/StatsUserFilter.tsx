@@ -6,7 +6,7 @@ import {
     DialogContent,
     DialogTitle,
     TextField,
-} from "@material-ui/core";
+} from "@mui/material";
 import { IUser } from "@cbr/common/util/users";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
 

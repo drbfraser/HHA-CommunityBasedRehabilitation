@@ -64,6 +64,10 @@ class AdminStats(generics.RetrieveAPIView):
             val = self.request.GET.get(req_body_key, "")
             return int(val) if val != "" else None
 
+        def get_str_or_none(req_body_key):
+            val = self.request.GET.get(req_body_key, "")
+            return val if val != "" else None
+
         def get_boolean_or_none(req_body_key):
             val = self.request.GET.get(req_body_key, "")
             if val == "true":
@@ -71,7 +75,7 @@ class AdminStats(generics.RetrieveAPIView):
             else:
                 return False
 
-        user_id = get_int_or_none("user_id")
+        user_id = get_str_or_none("user_id")
         from_time = get_int_or_none("from")
         to_time = get_int_or_none("to")
         is_active = get_boolean_or_none("is_active")

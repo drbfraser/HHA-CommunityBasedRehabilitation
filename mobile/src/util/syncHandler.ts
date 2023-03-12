@@ -15,6 +15,7 @@ import {
 import { synchronize } from "@nozbe/watermelondb/src/sync";
 import { database, dbType } from "./watermelonDatabase";
 import NetInfo, { NetInfoState, NetInfoStateType } from "@react-native-community/netinfo";
+import { Q } from '@nozbe/watermelondb'
 
 //@ts-ignore
 import SyncLogger from "@nozbe/watermelondb/sync/SyncLogger";
@@ -78,42 +79,51 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
 }
 
 export async function SyncDB(database: dbType) {
-    await synchronize({
-        database,
-        pullChanges: async ({ lastPulledAt }) => {
-            const urlParams = `?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
-            const response = await apiFetch(Endpoint.SYNC, urlParams);
-            if (!response.ok) {
-                throw new Error(await response.text());
-            }
+    try {
+            await synchronize({
+            database,
+            log: logger.newLog(),
+            pullChanges: async ({ lastPulledAt }) => {
+                const urlParams = `?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
+                const response = await apiFetch(Endpoint.SYNC, urlParams);
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
 
-            const { changes, timestamp } = await response.json();
-            console.log(JSON.stringify({ changes, timestamp }));
-            await getImage(changes);
-            return { changes, timestamp };
-        },
-        pushChanges: async ({ changes, lastPulledAt }) => {
-            console.log("starting push");
-            console.log(JSON.stringify(changes));
-            const urlParams = `/?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
-            const init: RequestInit = {
-                method: "POST",
-                body: JSON.stringify(changes),
-            };
-            const response = await apiFetch(Endpoint.SYNC, urlParams, init);
-            console.log("pushed");
-            console.log(JSON.stringify(response));
-            if (!response.ok) {
-                throw new Error(await response.text());
+                const { changes, timestamp } = await response.json();
+                // console.log(JSON.stringify({ changes, timestamp }));
+                await getImage(changes);
+                return { changes, timestamp };
+            },
+            pushChanges: async ({ changes, lastPulledAt }) => {
+                // console.log("starting push");
+                // console.log(JSON.stringify(changes));
+                const urlParams = `/?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
+                const init: RequestInit = {
+                    method: "POST",
+                    body: JSON.stringify(changes),
+                };
+                const response = await apiFetch(Endpoint.SYNC, urlParams, init);
+                // console.log("pushed");
+                // console.log(JSON.stringify(response));
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+            },
+            migrationsEnabledAtVersion: 3,
+            conflictResolver: conflictResolver,
+        }).then(() => {
+            console.log(JSON.stringify(database));
+            updateLastVersionSynced();
+            storeStats();
+            async () => {
+                const alerts = await database.get("alert").query(Q.where("priority", Q.notEq(null))).fetch();
+                console.log(alerts);
             }
-        },
-        migrationsEnabledAtVersion: 1,
-        log: logger.newLog(),
-        conflictResolver: conflictResolver,
-    }).then(() => {
-        updateLastVersionSynced();
-        storeStats();
-    });
+        });
+    } catch (error) {
+        console.log("WatermelonDB Sync Error: " + error);
+    }
 }
 
 export async function preSyncOperations(database: dbType) {

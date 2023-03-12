@@ -7,15 +7,13 @@ export enum modelName {
     risks = "risks",
     outcomes = "outcomes",
     improvements = "improvements",
+    alert = "alert"
 }
 
 export enum tableKey {
     user_id = "user_id",
     client_id = "client_id",
     visit_id = "visit_id",
-    risk_id = "risk_id",
-    outcome_id = "outcome_id",
-    improvement_id = "improvement_id",
 }
 
 export enum mobileGenericField {

@@ -105,6 +105,35 @@ def destringify_disability(data):
         disability_string_to_array(updated_data)
 
 
+def unread_users_array_to_string(data):
+    for alert_data in data:
+        alert_data["unread_by_users"] = json.dumps(alert_data["unread_by_users"])
+
+def stringify_unread_users(serialized_data):
+    changed_data = serialized_data.get("changes")
+    if changed_data:
+        alert_data = changed_data.get("alert")
+        if alert_data:
+            created_data = alert_data.get("created")
+            updated_data = alert_data.get("updated")
+            unread_users_array_to_string(created_data)
+            unread_users_array_to_string(updated_data)
+
+
+def alert_string_to_array(data):
+    for client_data in data:
+        values = str.strip(client_data["unread_by_users"], "[]")
+        client_data["unread_by_users"] = list(map(str, values.split(",")))
+
+
+def destringify_unread_users(data):
+    if data.get("alert"):
+        created_data = data["alert"]["created"]
+        updated_data = data["alert"]["updated"]
+        alert_string_to_array(created_data)
+        alert_string_to_array(updated_data)
+
+
 def base64_to_data(data):
     format, imgstr = data.split(";base64,")
     ext = format.split("/")[-1]

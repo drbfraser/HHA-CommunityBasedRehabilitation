@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Button, Divider, Switch, Text } from "react-native-paper";
 import useStyles from "./Stats.styles";
 import { useIsFocused } from "@react-navigation/core";
@@ -26,7 +26,6 @@ import {
     VisitField,
 } from "@cbr/common";
 import { Q } from "@nozbe/watermelondb";
-import Svg from "react-native-svg";
 import { modelName } from "../../models/constant";
 
 const allZone = "all zones";
@@ -386,7 +385,6 @@ const Stats = () => {
                                                         },
                                                     ];
                                                 },
-                                                onPressOut: () => {},
                                             },
                                         },
                                     ]}

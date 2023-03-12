@@ -26,7 +26,6 @@ import {
     VisitField,
 } from "@cbr/common";
 import { Q } from "@nozbe/watermelondb";
-import Svg from "react-native-svg";
 import { modelName } from "../../models/constant";
 
 const allZone = "all zones";
@@ -135,6 +134,10 @@ const Stats = () => {
         let sum = 0;
         for (const type of serviceTypes) {
             let count;
+            // "ReferralFormField.hhaNutritionAndAgricultureProject" is not a field in the mobile schema
+            if (type === ReferralFormField.hhaNutritionAndAgricultureProject) {
+                continue;
+            }
             if (type != ReferralFormField.servicesOther) {
                 count = await database
                     .get(modelName.referrals)
@@ -338,62 +341,57 @@ const Stats = () => {
                             ) : (
                                 <></>
                             )}
-                            <Svg>
-                                <VictoryChart
-                                    animate={{ duration: 500 }}
-                                    domainPadding={10}
-                                    padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
-                                    containerComponent={<VictoryZoomContainer />}
-                                    theme={VictoryTheme.material}
-                                >
-                                    <VictoryAxis
-                                        style={{
-                                            axisLabel: { fontSize: 12 },
-                                            tickLabels: {
-                                                fontSize: 12,
-                                            },
-                                            grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
-                                        }}
-                                        dependentAxis
-                                    />
-                                    <VictoryAxis
-                                        style={{
-                                            axisLabel: { fontSize: 10 },
-                                            tickLabels: {
-                                                fontSize: 10,
-                                            },
-                                        }}
-                                    />
-                                    <VictoryBar
-                                        horizontal
-                                        barRatio={0.8}
-                                        style={{ data: { fill: themeColors.blueAccent } }}
-                                        alignment="middle"
-                                        data={visitData}
-                                        events={[
-                                            {
-                                                target: "data",
-                                                eventHandlers: {
-                                                    onPressIn: () => {
-                                                        return [
-                                                            {
-                                                                target: "data",
-                                                                mutation: (props) => {
-                                                                    filterVisitByZone(
-                                                                        props.datum.name
-                                                                    );
-                                                                },
+                            <VictoryChart
+                                animate={{ duration: 500 }}
+                                domainPadding={10}
+                                padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
+                                theme={VictoryTheme.material}
+                            >
+                                <VictoryAxis
+                                    style={{
+                                        axisLabel: { fontSize: 12 },
+                                        tickLabels: {
+                                            fontSize: 12,
+                                        },
+                                        grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                                    }}
+                                    dependentAxis
+                                />
+                                <VictoryAxis
+                                    style={{
+                                        axisLabel: { fontSize: 10 },
+                                        tickLabels: {
+                                            fontSize: 10,
+                                        },
+                                    }}
+                                />
+                                <VictoryBar
+                                    horizontal
+                                    barRatio={0.8}
+                                    style={{ data: { fill: themeColors.blueAccent } }}
+                                    alignment="middle"
+                                    data={visitData}
+                                    events={[
+                                        {
+                                            target: "data",
+                                            eventHandlers: {
+                                                onPressIn: () => {
+                                                    return [
+                                                        {
+                                                            target: "data",
+                                                            mutation: (props) => {
+                                                                filterVisitByZone(props.datum.name);
                                                             },
-                                                        ];
-                                                    },
+                                                        },
+                                                    ];
                                                 },
                                             },
-                                        ]}
-                                        x="name"
-                                        y="count"
-                                    />
-                                </VictoryChart>
-                            </Svg>
+                                        },
+                                    ]}
+                                    x="name"
+                                    y="count"
+                                />
+                            </VictoryChart>
                         </>
                     ) : (
                         <></>

@@ -89,6 +89,9 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _("users")
         swappable = "AUTH_USER_MODEL"
 
+    def __str__(self):
+        return str(self.id)
+
 
 class RiskType(models.TextChoices):
     HEALTH = "HEALTH", _("Health")
@@ -468,4 +471,7 @@ class Alert(models.Model):
     created_by_user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT
     )
+    server_created_at = models.BigIntegerField(default=current_milli_time)
+    updated_at = models.BigIntegerField(_("date created"), default=0)
+    
     created_date = models.BigIntegerField(_("date created"), default=time.time)

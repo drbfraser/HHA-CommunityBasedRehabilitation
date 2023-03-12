@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Button, Divider, Switch, Text } from "react-native-paper";
 import useStyles from "./Stats.styles";
 import { useIsFocused } from "@react-navigation/core";
@@ -135,6 +135,10 @@ const Stats = () => {
         let sum = 0;
         for (const type of serviceTypes) {
             let count;
+            // "ReferralFormField.hhaNutritionAndAgricultureProject" is not a field in the mobile schema
+            if (type === ReferralFormField.hhaNutritionAndAgricultureProject) {
+                continue;
+            }
             if (type != ReferralFormField.servicesOther) {
                 count = await database
                     .get(modelName.referrals)
@@ -338,7 +342,8 @@ const Stats = () => {
                             ) : (
                                 <></>
                             )}
-                            <Svg>
+                            {/* Current bug with VictoryChart needs to be wrapped with TouchableOpacity so that the onPressIn event is fired */}
+                            <TouchableOpacity onPressIn={() => {}}>
                                 <VictoryChart
                                     animate={{ duration: 500 }}
                                     domainPadding={10}
@@ -393,7 +398,7 @@ const Stats = () => {
                                         y="count"
                                     />
                                 </VictoryChart>
-                            </Svg>
+                            </TouchableOpacity>
                         </>
                     ) : (
                         <></>

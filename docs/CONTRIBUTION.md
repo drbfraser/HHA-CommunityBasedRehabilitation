@@ -43,6 +43,7 @@ You'll likely want to seed some data for development purposes. This can be done 
 - Users: `seedusers` (or use `seedadminuser` to create one admin with a random password; useful for production install)
 - Clients: `seedclients`
 - Visits: `seedvisits`
+- Alerts : `seedalerts`
 
 If at some point during development you want to re-seed the database with the example data again, you'll need to delete everything first. Use `docker exec -it cbr_django python manage.py flush` to clear the database, then run the seeding commands again.
 

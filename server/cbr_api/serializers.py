@@ -992,6 +992,7 @@ class pushReferralSerializer(serializers.Serializer):
         )
         return self
 
+
 class pushAlertSerializer(serializers.Serializer):
     alert = multiAlertSerializer()
 
@@ -1000,6 +1001,7 @@ class pushAlertSerializer(serializers.Serializer):
             "alert", models.Alert, validated_data, self.context.get("sync_time")
         )
         return self
+
 
 class VersionCheckSerializer(serializers.Serializer):
     api_version = serializers.CharField(required=True)

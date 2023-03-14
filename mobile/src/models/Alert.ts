@@ -5,13 +5,11 @@ import { mobileGenericField, modelName } from "./constant";
 import { SyncableModel } from "./interfaces/SyncableModel";
 
 const sanitizedUnreadUsers = (userId: String) => {
-    console.log(userId);
     return Array.isArray(userId) ? userId.map(String) : [];
 };
 
 export default class Alert extends Model implements SyncableModel {
     static table = modelName.alert;
-
     @text(alertField.subject) subject;
     @text(alertField.priority) priority;
     @text(alertField.alert_message) alert_message;

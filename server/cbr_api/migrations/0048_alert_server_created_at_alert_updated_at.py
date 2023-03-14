@@ -7,18 +7,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0047_client_is_active'),
+        ("cbr_api", "0047_client_is_active"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='alert',
-            name='server_created_at',
+            model_name="alert",
+            name="server_created_at",
             field=models.BigIntegerField(default=cbr_api.util.current_milli_time),
         ),
         migrations.AddField(
-            model_name='alert',
-            name='updated_at',
-            field=models.BigIntegerField(default=0, verbose_name='date created'),
+            model_name="alert",
+            name="updated_at",
+            field=models.BigIntegerField(default=0, verbose_name="date created"),
         ),
     ]

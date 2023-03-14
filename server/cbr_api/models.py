@@ -464,6 +464,7 @@ class Alert(models.Model):
         MEDIUM = "ME", _("Medium")
         LOW = "LO", _("Low")
 
+    id = models.CharField(primary_key=True, max_length=100)
     priority = models.CharField(max_length=9, choices=Priorities.choices)
     subject = models.CharField(max_length=50)
     alert_message = models.CharField(max_length=2000)
@@ -473,5 +474,5 @@ class Alert(models.Model):
     )
     server_created_at = models.BigIntegerField(default=current_milli_time)
     updated_at = models.BigIntegerField(_("date created"), default=0)
-    
+
     created_date = models.BigIntegerField(_("date created"), default=time.time)

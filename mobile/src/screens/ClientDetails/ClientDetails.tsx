@@ -84,7 +84,7 @@ const ClientDetails = (props: ClientProps) => {
                 setOriginaluri(presentClient.picture);
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -192,6 +192,7 @@ const ClientDetails = (props: ClientProps) => {
                     <Card style={styles.clientDetailsContainerStyles}>
                         <Formik
                             initialValues={getClientFormInitialValues()}
+                            enableReinitialize
                             validationSchema={mobileClientDetailsValidationSchema}
                             onSubmit={handleFormSubmit}
                         >

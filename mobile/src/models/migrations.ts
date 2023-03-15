@@ -16,7 +16,7 @@ export default schemaMigrations({
                         { name: alertField.alert_message, type: "string" },
                         { name: alertField.unread_by_users, type: "string" },
                         { name: alertField.created_by_user, type: "string" },
-                        { name: alertField.date_created, type: "number" },
+                        { name: "created_date", type: "number" },
                         { name: mobileGenericField.updated_at, type: "number" },
                     ],
                 }),

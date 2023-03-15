@@ -16,10 +16,10 @@ export default class Alert extends Model implements SyncableModel {
     @text(alertField.created_by_user) created_by_user;
     @json(alertField.unread_by_users, sanitizedUnreadUsers) unread_by_users;
 
-    @readonly @date(alertField.date_created) createdAt;
+    @readonly @date("created_date") created_date;
     @readonly @date(mobileGenericField.updated_at) updatedAt;
 
     getBriefIdentifier = (): string => {
-        return `Alert with subject ${this.subject}`;
+        return `Alert with Subject: ${this.subject}`;
     };
 }

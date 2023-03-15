@@ -12,7 +12,7 @@ export const handleSubmit = async (
 ) => {
     try {
         await database.write(async () => {
-            await client.update((client) => {
+            await client.update(() => {
                 client.first_name = values.firstName;
                 client.last_name = values.lastName;
                 client.full_name = values.firstName + " " + values.lastName;

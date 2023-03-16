@@ -18,6 +18,7 @@ from cbr_api.util import (
     create_referral_data,
     create_survey_data,
     create_generic_data,
+    create_alert_data,
 )
 
 
@@ -847,6 +848,25 @@ class AlertSyncSerializer(serializers.ModelSerializer):
         read_only_fields = ["id"]
 
 
+class editAlertSyncSerializer(serializers.ModelSerializer):
+    # disable unique validator for id to allow POST push sync request to update records
+    id = serializers.CharField(validators=[])
+
+    class Meta:
+        model = models.Alert
+        fields = [
+            "id",
+            "subject",
+            "priority",
+            "alert_message",
+            "unread_by_users",
+            "created_by_user",
+            "server_created_at",
+            "updated_at",
+            "created_date",
+        ]
+
+
 # ensure to use a seperate serializer to disable primary key validator as it might invalidate it
 class multiUserSerializer(serializers.Serializer):
     created = UserCBRSerializer(many=True)
@@ -898,7 +918,7 @@ class multiReferralSerializer(serializers.Serializer):
 
 class multiAlertSerializer(serializers.Serializer):
     created = AlertSyncSerializer(many=True)
-    updated = AlertSyncSerializer(many=True)
+    updated = editAlertSyncSerializer(many=True)
     deleted = AlertSyncSerializer(many=True)
 
 
@@ -997,9 +1017,7 @@ class pushAlertSerializer(serializers.Serializer):
     alert = multiAlertSerializer()
 
     def create(self, validated_data):
-        create_generic_data(
-            "alert", models.Alert, validated_data, self.context.get("sync_time")
-        )
+        create_alert_data(validated_data, self.context.get("sync_time"))
         return self
 
 

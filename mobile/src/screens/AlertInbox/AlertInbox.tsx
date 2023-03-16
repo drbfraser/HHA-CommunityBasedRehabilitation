@@ -46,6 +46,20 @@ const AlertInbox = () => {
         }
     };
 
+    const markAsRead = async (alert) => {
+        await database
+            .write(async () => {
+                await alert.update(() => {
+                    alert.unread_by_users = alert.unread_by_users.filter(
+                        (unread_user) => unread_user !== userId
+                    );
+                });
+            })
+            .then(() => {
+                getAlerts();
+            });
+    };
+
     // const deleteAlert = async (alertId) => {
     //     await database
     //         .write(async () => {
@@ -86,6 +100,9 @@ const AlertInbox = () => {
                 }}
             >
                 <List.Accordion
+                    onPress={
+                        alert.unread_by_users.includes(userId) ? () => markAsRead(alert) : () => {}
+                    }
                     title={alert.subject}
                     key={alert.id}
                     titleStyle={{
@@ -95,11 +112,7 @@ const AlertInbox = () => {
                                 : "normal",
                     }}
                     left={() => (
-                        <Icon
-                            key={alert.id}
-                            name="chevron-down"
-                            style={{ fontWeight: "normal", position: "relative" }}
-                        />
+                        <Icon key={alert.id} name="chevron-down" style={{ fontWeight: "normal" }} />
                     )}
                     right={() => (
                         <Chip

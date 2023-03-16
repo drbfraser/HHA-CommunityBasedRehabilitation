@@ -432,6 +432,7 @@ def sync(request):
             validation_fail(outcome_improvment_serializer)
 
         destringify_unread_users(request.data)
+        print(request.data)
         alert_serializer = serializers.pushAlertSerializer(
             data=request.data,
             context={"sync_time": sync_time},

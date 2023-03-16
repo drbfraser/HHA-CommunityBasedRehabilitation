@@ -123,8 +123,9 @@ def stringify_unread_users(serialized_data):
 
 def unread_users_string_to_array(data):
     for client_data in data:
-        values = str.strip(client_data["unread_by_users"], "[]")
-        client_data["unread_by_users"] = list(map(str, values.split(",")))
+        unread_by_user_str = str.strip(client_data["unread_by_users"], "[]")
+        values = list(map(str, unread_by_user_str.split(",")))
+        client_data["unread_by_users"] = [s.replace('"', "") for s in values]
 
 
 def destringify_unread_users(data):
@@ -247,6 +248,21 @@ def create_generic_data(table_name, model, validated_data, sync_time):
         record = model.objects.create(**data)
         record.server_created_at = sync_time
         record.save()
+
+
+def create_alert_data(validated_data, sync_time):
+    table_data = validated_data.get("alert")
+    created_data = table_data.pop("created")
+    for data in created_data:
+        record = models.Alert.objects.create(**data)
+        record.server_created_at = sync_time
+        record.save()
+
+    updated_data = table_data.pop("updated")
+    for data in updated_data:
+        data["updated_at"] = sync_time
+        # data["unread_by_users"] = validated_data["unread_by_users"]
+        models.Alert.objects.filter(pk=data["id"]).update(**data)
 
 
 def create_survey_data(validated_data, user, sync_time):

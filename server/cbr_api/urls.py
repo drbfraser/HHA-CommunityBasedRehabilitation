@@ -57,7 +57,7 @@ urlpatterns = [
         name="baseline-survey-list",
     ),
     path("alerts", views.AlertList.as_view(), name="alert-list"),
-    path("alert/<int:pk>", views.AlertDetail.as_view(), name="alert-detail"),
+    path("alert/<str:pk>", views.AlertDetail.as_view(), name="alert-detail"),
     re_path(r"^sync/$", views.sync, name="sync"),
     re_path(r"^versioncheck/$", views.version_check, name="version-check"),
 ]

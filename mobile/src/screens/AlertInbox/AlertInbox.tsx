@@ -107,7 +107,7 @@ const AlertInbox = () => {
                                 : "normal",
                     }}
                     left={() => (
-                        <Icon key={alert.id} name="chevron-down" style={{ fontWeight: "normal" }} />
+                        <Icon key={alert.id} name="chevron-down" style={styles.dropdownIcon} />
                     )}
                     right={() => (
                         <Chip
@@ -122,26 +122,11 @@ const AlertInbox = () => {
                     )}
                     theme={{ colors: { background: themeColors.blueBgLight } }}
                 >
-                    <View
-                        key={alert.id}
-                        style={{
-                            borderWidth: 0.5,
-                            padding: 10,
-                            backgroundColor: "#EDEDED",
-                            borderColor: "#EDEDED",
-                        }}
-                    >
+                    <View key={alert.id} style={styles.alertMessageContainer}>
                         <Text key={alert.id}>{alert.alert_message}</Text>
                         <Button
                             color={themeColors.riskRed}
-                            style={{
-                                width: 100,
-                                margin: 10,
-                                alignSelf: "flex-end",
-                                backgroundColor: "white",
-                                borderColor: themeColors.riskRed,
-                                borderWidth: 1,
-                            }}
+                            style={styles.deleteButton}
                             mode="outlined"
                             onPress={() => openDeleteConfirmationAlert(alert)}
                         >

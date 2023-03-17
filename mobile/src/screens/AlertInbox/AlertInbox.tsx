@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, View, ScrollView, Alert } from "react-native";
-import { Chip, Text, Card, List } from "react-native-paper";
+import { Chip, Text, Card, List, Button } from "react-native-paper";
 import useStyles from "./AlertInbox.styles";
 import { APILoadError, getCurrentUser, IUser } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
@@ -10,11 +10,6 @@ import { priorities } from "@cbr/common/src/util/alerts";
 import { riskLevels } from "@cbr/common";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-/* TODO: WatermelonDB does not support DELETE requests (only supports "POST" and "GET")
-    Using "POST" to delete alerts could be dangerous and introduce bugs since "DELETE" is idempotent and "POST" is not.
-    Discuss with client on whether "DELETE" request is necessary for deleting alerts in mobile.
-    The sections for delete button have been commented out for now (just in case it is needed later).
-*/
 const AlertInbox = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [alerts, setAlerts] = useState<any>();
@@ -60,29 +55,29 @@ const AlertInbox = () => {
             });
     };
 
-    // const deleteAlert = async (alertId) => {
-    //     await database
-    //         .write(async () => {
-    //             await (await database.get(modelName.alert).find(alertId)).markAsDeleted();
-    //         })
-    //         .then(() => {
-    //             console.log("Alert with id: " + alertId + " deleted from the local database!");
-    //             getAlerts();
-    //         });
-    // };
+    const deleteAlert = async (alertId) => {
+        await database
+            .write(async () => {
+                await (await database.get(modelName.alert).find(alertId)).markAsDeleted();
+            })
+            .then(() => {
+                console.log("Alert with id: " + alertId + " deleted from the local database!");
+                getAlerts();
+            });
+    };
 
-    // const openDeleteConfirmationAlert = (alert) =>
-    //     Alert.alert(
-    //         "Delete Alert with Subject: " + alert.subject,
-    //         "Are you sure you want to delete this alert?",
-    //         [
-    //             {
-    //                 text: "Cancel",
-    //                 style: "cancel",
-    //             },
-    //             { text: "OK", onPress: () => deleteAlert(alert.id) },
-    //         ]
-    //     );
+    const openDeleteConfirmationAlert = (alert) =>
+        Alert.alert(
+            "Delete Alert with Subject: " + alert.subject,
+            "Are you sure you want to delete this alert?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                { text: "OK", onPress: () => deleteAlert(alert.id) },
+            ]
+        );
 
     useEffect(() => {
         if (loading) {
@@ -137,7 +132,7 @@ const AlertInbox = () => {
                         }}
                     >
                         <Text key={alert.id}>{alert.alert_message}</Text>
-                        {/* <Button
+                        <Button
                             color={themeColors.riskRed}
                             style={{
                                 width: 100,
@@ -151,7 +146,7 @@ const AlertInbox = () => {
                             onPress={() => openDeleteConfirmationAlert(alert)}
                         >
                             DELETE
-                        </Button> */}
+                        </Button>
                     </View>
                 </List.Accordion>
             </View>

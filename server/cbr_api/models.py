@@ -89,9 +89,6 @@ class UserCBR(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _("users")
         swappable = "AUTH_USER_MODEL"
 
-    def __str__(self):
-        return str(self.id)
-
 
 class RiskType(models.TextChoices):
     HEALTH = "HEALTH", _("Health")

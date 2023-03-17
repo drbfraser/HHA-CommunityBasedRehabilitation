@@ -44,6 +44,17 @@ const useStyles = () =>
         dropdownIcon: {
             fontWeight: "normal",
         },
+        emptyInboxContainer: {
+            alignItems: "center",
+        },
+        emptyInboxIcon: {
+            fontSize: 75,
+            color: themeColors.borderGray,
+        },
+        emptyInboxText: {
+            fontSize: 20,
+            color: themeColors.borderGray,
+        },
     });
 
 export default useStyles;

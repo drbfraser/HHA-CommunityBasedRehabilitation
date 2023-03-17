@@ -86,6 +86,17 @@ const AlertInbox = () => {
         }
     }, [loading]);
 
+    const generateAlertList = () => {
+        return alerts.length > 0 ? (
+            sortAlert(alerts).map((alert) => generateAccordion(alert))
+        ) : (
+            <View style={styles.emptyInboxContainer}>
+                <Icon name="inbox" style={styles.emptyInboxIcon} />
+                <Text style={styles.emptyInboxText}>Inbox is empty</Text>
+            </View>
+        );
+    };
+
     const generateAccordion = (alert) => {
         return (
             <View
@@ -142,9 +153,7 @@ const AlertInbox = () => {
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.groupContainer}>
                 <Text style={styles.cardSectionTitle}>Alerts</Text>
-                <Card style={styles.CardStyle}>
-                    {!loading ? sortAlert(alerts).map((alert) => generateAccordion(alert)) : <></>}
-                </Card>
+                <Card style={styles.CardStyle}>{!loading ? generateAlertList() : <></>}</Card>
             </ScrollView>
         </SafeAreaView>
     );

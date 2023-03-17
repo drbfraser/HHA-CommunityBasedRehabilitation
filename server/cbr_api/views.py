@@ -29,6 +29,9 @@ from cbr_api.util import (
     destringify_disability,
     decode_image,
     api_versions_compatible,
+    stringify_unread_users,
+    destringify_unread_users,
+    string_of_id_to_dictionary,
 )
 
 
@@ -355,14 +358,16 @@ def sync(request):
         reply.changes["visits"] = get_model_changes(request, models.Visit)
         reply.changes["outcomes"] = get_model_changes(request, models.Outcome)
         reply.changes["improvements"] = get_model_changes(request, models.Improvement)
+        reply.changes["alert"] = get_model_changes(request, models.Alert)
         serialized = serializers.pullResponseSerializer(reply)
         stringify_disability(serialized.data)
+        stringify_unread_users(serialized.data)
         return Response(serialized.data)
     else:
         sync_time = request.GET.get("last_pulled_at", "")
 
         def validation_fail(serializer):
-            print(serializer.error)
+            print(serializer.errors)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         user_serializer = serializers.pushUserSerializer(
@@ -426,6 +431,18 @@ def sync(request):
             outcome_improvment_serializer.save()
         else:
             validation_fail(outcome_improvment_serializer)
+
+        destringify_unread_users(request.data)
+        string_of_id_to_dictionary(request.data, "alert")
+
+        alert_serializer = serializers.pushAlertSerializer(
+            data=request.data,
+            context={"sync_time": sync_time},
+        )
+        if alert_serializer.is_valid():
+            alert_serializer.save()
+        else:
+            validation_fail(alert_serializer)
 
         return Response(status=status.HTTP_201_CREATED)
 

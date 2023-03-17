@@ -15,8 +15,9 @@ class Command(BaseCommand):
         def getYearTimestamp(self, year):
             return (year - 1970) * (60 * 60 * 24 * 365)
 
-        def createAlert(self, priority, subject, alert_message):
+        def createAlert(self, id, priority, subject, alert_message):
             alert = models.Alert.objects.create(
+                id=id,
                 priority=priority,
                 subject=subject,
                 alert_message=alert_message,
@@ -44,6 +45,7 @@ class Command(BaseCommand):
 
         createAlert(
             self,
+            uuid.uuid4(),
             models.Alert.Priorities.MEDIUM,
             "MEDIUM Alert Test",
             "For workers who have not yet picked up their free ice cream, you\
@@ -52,6 +54,7 @@ class Command(BaseCommand):
 
         createAlert(
             self,
+            uuid.uuid4(),
             models.Alert.Priorities.LOW,
             "LOW Alert Test",
             "Friendly reminder to all workers: free ice cream today!",
@@ -59,6 +62,7 @@ class Command(BaseCommand):
 
         createAlert(
             self,
+            uuid.uuid4(),
             models.Alert.Priorities.HIGH,
             "HIGH Alert Test",
             "Please do not forget to manually sync data from your phone when\

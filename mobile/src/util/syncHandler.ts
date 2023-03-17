@@ -78,42 +78,45 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
 }
 
 export async function SyncDB(database: dbType) {
-    await synchronize({
-        database,
-        pullChanges: async ({ lastPulledAt }) => {
-            const urlParams = `?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
-            const response = await apiFetch(Endpoint.SYNC, urlParams);
-            if (!response.ok) {
-                throw new Error(await response.text());
-            }
-
-            const { changes, timestamp } = await response.json();
-            console.log(JSON.stringify({ changes, timestamp }));
-            await getImage(changes);
-            return { changes, timestamp };
-        },
-        pushChanges: async ({ changes, lastPulledAt }) => {
-            console.log("starting push");
-            console.log(JSON.stringify(changes));
-            const urlParams = `/?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
-            const init: RequestInit = {
-                method: "POST",
-                body: JSON.stringify(changes),
-            };
-            const response = await apiFetch(Endpoint.SYNC, urlParams, init);
-            console.log("pushed");
-            console.log(JSON.stringify(response));
-            if (!response.ok) {
-                throw new Error(await response.text());
-            }
-        },
-        migrationsEnabledAtVersion: 1,
-        log: logger.newLog(),
-        conflictResolver: conflictResolver,
-    }).then(() => {
-        updateLastVersionSynced();
-        storeStats();
-    });
+    try {
+        await synchronize({
+            database,
+            log: logger.newLog(),
+            pullChanges: async ({ lastPulledAt }) => {
+                const urlParams = `?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
+                const response = await apiFetch(Endpoint.SYNC, urlParams);
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+                const { changes, timestamp } = await response.json();
+                console.log(JSON.stringify({ changes, timestamp }));
+                await getImage(changes);
+                return { changes, timestamp };
+            },
+            pushChanges: async ({ changes, lastPulledAt }) => {
+                console.log("starting push");
+                console.log(JSON.stringify(changes));
+                const urlParams = `/?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
+                const init: RequestInit = {
+                    method: "POST",
+                    body: JSON.stringify(changes),
+                };
+                const response = await apiFetch(Endpoint.SYNC, urlParams, init);
+                console.log("pushed");
+                console.log(JSON.stringify(response));
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+            },
+            migrationsEnabledAtVersion: 3,
+            conflictResolver: conflictResolver,
+        }).then(() => {
+            updateLastVersionSynced();
+            storeStats();
+        });
+    } catch (error) {
+        console.log("Encountered an error during WatermelonDB sync process!" + error);
+    }
 }
 
 export async function preSyncOperations(database: dbType) {
@@ -214,7 +217,6 @@ function riskResolver(raw, dirtyRaw, newRaw, column, timestamp) {
 
 function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
     let localChange = false;
-
     let clientConflicts: Map<string, SyncConflict> = new Map();
     let userConflicts: Map<string, SyncConflict> = new Map();
 

@@ -136,6 +136,11 @@ def destringify_unread_users(data):
         unread_users_string_to_array(updated_data)
 
 
+def string_of_id_to_dictionary(data, modelName):
+    deleted_data = data[modelName]["deleted"]
+    data[modelName]["deleted"] = [{"id": id} for id in deleted_data]
+
+
 def base64_to_data(data):
     format, imgstr = data.split(";base64,")
     ext = format.split("/")[-1]
@@ -250,7 +255,7 @@ def create_generic_data(table_name, model, validated_data, sync_time):
         record.save()
 
 
-def create_alert_data(validated_data, sync_time):
+def create_update_delete_alert_data(validated_data, sync_time):
     table_data = validated_data.get("alert")
     created_data = table_data.pop("created")
     for data in created_data:
@@ -263,6 +268,10 @@ def create_alert_data(validated_data, sync_time):
         data["updated_at"] = sync_time
         # data["unread_by_users"] = validated_data["unread_by_users"]
         models.Alert.objects.filter(pk=data["id"]).update(**data)
+
+    deleted_data = table_data.pop("deleted")
+    for data in deleted_data:
+        models.Alert.objects.filter(pk=data["id"]).delete()
 
 
 def create_survey_data(validated_data, user, sync_time):

@@ -31,6 +31,7 @@ from cbr_api.util import (
     api_versions_compatible,
     stringify_unread_users,
     destringify_unread_users,
+    string_of_id_to_dictionary,
 )
 
 
@@ -432,7 +433,8 @@ def sync(request):
             validation_fail(outcome_improvment_serializer)
 
         destringify_unread_users(request.data)
-        print(request.data)
+        string_of_id_to_dictionary(request.data, "alert")
+
         alert_serializer = serializers.pushAlertSerializer(
             data=request.data,
             context={"sync_time": sync_time},

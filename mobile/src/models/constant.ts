@@ -7,7 +7,7 @@ export enum modelName {
     risks = "risks",
     outcomes = "outcomes",
     improvements = "improvements",
-    alert = "alert"
+    alert = "alert",
 }
 
 export enum tableKey {

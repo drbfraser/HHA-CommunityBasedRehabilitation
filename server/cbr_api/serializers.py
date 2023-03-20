@@ -18,6 +18,7 @@ from cbr_api.util import (
     create_referral_data,
     create_survey_data,
     create_generic_data,
+    create_update_delete_alert_data,
 )
 
 
@@ -790,6 +791,8 @@ class AlertSerializer(serializers.ModelSerializer):
             "alert_message",
             "unread_by_users",
             "created_by_user",
+            "server_created_at",
+            "updated_at",
             "created_date",
         )
 
@@ -798,6 +801,8 @@ class AlertSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         current_time = int(time.time())
         validated_data["created_by_user"] = self.context["request"].user
+        validated_data["server_created_at"] = current_time
+        validated_data["updated_at"] = current_milli_time()
         validated_data["created_date"] = current_time
 
         alert = super().create(validated_data)
@@ -822,6 +827,54 @@ class AlertListSerializer(serializers.ModelSerializer):
             "unread_by_users",
             "created_by_user",
             "created_date",
+        ]
+
+
+class AlertSyncSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Alert
+        fields = [
+            "id",
+            "subject",
+            "priority",
+            "alert_message",
+            "unread_by_users",
+            "created_by_user",
+            "server_created_at",
+            "updated_at",
+            "created_date",
+        ]
+
+        read_only_fields = ["id"]
+
+
+class editAlertSyncSerializer(serializers.ModelSerializer):
+    # disable unique validator for id to allow POST push sync request to update records
+    id = serializers.CharField(validators=[])
+
+    class Meta:
+        model = models.Alert
+        fields = [
+            "id",
+            "subject",
+            "priority",
+            "alert_message",
+            "unread_by_users",
+            "created_by_user",
+            "server_created_at",
+            "updated_at",
+            "created_date",
+        ]
+
+
+class deleteAlertSyncSerializer(serializers.ModelSerializer):
+    # disable unique validator for id to allow POST push sync request to update records
+    id = serializers.CharField(validators=[])
+
+    class Meta:
+        model = models.Alert
+        fields = [
+            "id",
         ]
 
 
@@ -874,6 +927,12 @@ class multiReferralSerializer(serializers.Serializer):
     deleted = ReferralSyncSerializer(many=True)
 
 
+class multiAlertSerializer(serializers.Serializer):
+    created = AlertSyncSerializer(many=True)
+    updated = editAlertSyncSerializer(many=True)
+    deleted = deleteAlertSyncSerializer(many=True)
+
+
 # for each table being sync, add corresponding multi serializer under here
 class tableSerializer(serializers.Serializer):
     users = multiUserSerializer()
@@ -884,6 +943,7 @@ class tableSerializer(serializers.Serializer):
     visits = multiVisitSerializer()
     outcomes = multiOutcomeSerializer()
     improvements = multiImprovSerializer()
+    alert = multiAlertSerializer()
 
 
 class pullResponseSerializer(serializers.Serializer):
@@ -964,12 +1024,19 @@ class pushReferralSerializer(serializers.Serializer):
         return self
 
 
+class pushAlertSerializer(serializers.Serializer):
+    alert = multiAlertSerializer()
+
+    def create(self, validated_data):
+        create_update_delete_alert_data(validated_data, self.context.get("sync_time"))
+        return self
+
+
 class VersionCheckSerializer(serializers.Serializer):
     api_version = serializers.CharField(required=True)
 
     def validate(self, data):
         version_levels = data["api_version"].split(".")
-
         if len(version_levels) != 3:
             raise serializers.ValidationError("Error!")
 

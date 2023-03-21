@@ -25,7 +25,7 @@ const ClientDetails = () => {
 
     const history = useHistory();
 
-    const getClient = () => {
+    const getClient = useCallback(() => {
         apiFetch(Endpoint.CLIENT, `${clientId}`)
             .then((resp) => resp.json())
             .then((client: IClient) => {
@@ -34,11 +34,11 @@ const ClientDetails = () => {
                 setClientInfo(client);
             })
             .catch(() => setLoadingError(true));
-    };
+    }, [clientId]);
 
     useEffect(() => {
         getClient();
-    }, [clientId]);
+    }, [getClient]);
     return loadingError ? (
         <Alert severity="error">Something went wrong loading that client. Please try again.</Alert>
     ) : (

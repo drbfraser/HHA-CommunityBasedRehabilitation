@@ -18,6 +18,7 @@ export interface IStatsReferral {
     physiotherapy_count: number;
     prosthetic_count: number;
     orthotic_count: number;
+    nutrition_agriculture_count: number;
     other_count: number;
 }
 

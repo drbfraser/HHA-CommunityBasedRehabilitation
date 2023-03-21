@@ -89,7 +89,10 @@ const Stats = () => {
 
         apiFetch(Endpoint.STATS, `?${urlParams.toString()}`)
             .then((resp) => resp.json())
-            .then((stats) => setStats(stats))
+            .then((stats) => {
+                console.log(stats);
+                return setStats(stats);
+            })
             .catch(() => setErrorLoading(true));
     }, [dateRange, user, archiveMode]);
 

@@ -10,7 +10,7 @@ Follow this guide to install Docker: https://docs.docker.com/get-docker/
 
 Install NodeJS 14 LTS from here: https://nodejs.org/download/release/v14.19.3/
 
-Follow this guide to set up a proper environment for React Native v0.64: https://reactnative.dev/docs/0.64/environment-setup
+Follow this guide to set up a proper environment for React Native v0.71.3: https://reactnative.dev/docs/environment-setup
 
 Follow this guide to install an Android emulator which can be used to run the mobile app: https://developer.android.com/studio/run/emulator/
 

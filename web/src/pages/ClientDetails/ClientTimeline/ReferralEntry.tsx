@@ -123,7 +123,6 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
 
     const ReferralDialog = () => (
         <Dialog fullWidth maxWidth="sm" open={open} onClose={() => setOpen(false)}>
-            {/* {console.log("Test")} */}
             <DialogTitle>
                 <Summary clickable={false} />
             </DialogTitle>

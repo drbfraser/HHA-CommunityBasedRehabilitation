@@ -9,7 +9,7 @@ import {
     DialogContent,
     DialogTitle,
     Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import React, { useState } from "react";
 import {
     IReferral,

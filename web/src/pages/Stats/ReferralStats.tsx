@@ -23,6 +23,10 @@ const dataLabels = [
         key: "orthotic_count",
     },
     {
+        label: "Nutrition & Agriculture",
+        key: "nutrition_agriculture_count",
+    },
+    {
         label: "Other",
         key: "other_count",
     },

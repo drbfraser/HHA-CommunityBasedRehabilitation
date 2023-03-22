@@ -61,6 +61,9 @@ const useStyles = () =>
             flex: 1,
             padding: 5,
         },
+        inbox_info_alert: {
+            marginTop: 10,
+        },
     });
 
 export default useStyles;

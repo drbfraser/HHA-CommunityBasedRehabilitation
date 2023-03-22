@@ -7,7 +7,7 @@ import { BriefReferral, fetchAllClientsFromDB, fetchReferrals } from "./Dashboar
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { timestampToDate } from "@cbr/common";
+import { APILoadError, getCurrentUser, IUser, timestampToDate } from "@cbr/common";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ClientListRow } from "../ClientList/ClientListRequest";
@@ -24,6 +24,8 @@ import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
+import Alert from "../../components/Alert/Alert";
+import { modelName } from "../../models/constant";
 
 const Dashboard = () => {
     const styles = useStyles();
@@ -32,6 +34,9 @@ const Dashboard = () => {
 
     const [referralSortOption, setReferralSortOption] = useState("");
     const [referralSortDirection, setReferralIsSortDirection] = useState<TSortDirection>("None");
+    const [unreadAlertsCount, setUnreadAlertsCount] = useState<Number>(0);
+    const [userId, setUserId] = useState<string>("unknown");
+
     const isFocused = useIsFocused();
     const database = useDatabase();
     const { setUnSyncedChanges, screenRefresh, setScreenRefresh } = useContext(SyncContext);
@@ -88,7 +93,27 @@ const Dashboard = () => {
         setReferralList(fetchedReferrals);
     };
 
+    const getUserProfile = async () => {
+        let user: IUser | typeof APILoadError = await getCurrentUser();
+        if (user !== APILoadError) {
+            setUserId(user.id);
+        }
+    };
+
+    const countUnreadAlerts = async () => {
+        const fetchedAlerts: any = await database.get(modelName.alert).query().fetch();
+
+        setUnreadAlertsCount(
+            fetchedAlerts.filter((alert) => {
+                return alert.unread_by_users.includes(userId);
+            }).length
+        );
+    };
+
     useEffect(() => {
+        getUserProfile().then(() => {
+            countUnreadAlerts();
+        });
         if (isFocused && screenRefresh) {
             getNewClient();
             getReferrals();
@@ -96,7 +121,6 @@ const Dashboard = () => {
                 setUnSyncedChanges(res);
             });
         }
-        //TODO alert part.
     }, [
         clientSortOption,
         referralSortOption,
@@ -104,6 +128,7 @@ const Dashboard = () => {
         referralSortDirection,
         isFocused,
         screenRefresh,
+        userId,
     ]);
 
     const locale = NativeModules.I18nManager.localeIdentifier;
@@ -115,6 +140,17 @@ const Dashboard = () => {
             <ScrollView>
                 <View style={styles.row}>
                     <Text style={styles.title}>Dashboard</Text>
+                </View>
+                <View>
+                    {unreadAlertsCount > 0 ? (
+                        <Alert
+                            style={styles.inbox_info_alert}
+                            severity={"info"}
+                            text={"You have " + unreadAlertsCount + " new messages in your inbox."}
+                        />
+                    ) : (
+                        <></>
+                    )}
                 </View>
                 <View>
                     <Card>

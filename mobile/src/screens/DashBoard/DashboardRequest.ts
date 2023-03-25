@@ -29,6 +29,10 @@ const concatenateReferralType = (referral: IOutstandingReferral) => {
     if (referral.wheelchair) {
         referralTypes.push("Wheelchair");
     }
+    // For some reason referral.hha_nutrition_and_agriculture is only returning undefined
+    if (referral.emergency_food_aid || referral.agriculture_livelihood_program_enrollment) {
+        referralTypes.push("HHANAP");
+    }
     if (referral.services_other) {
         referralTypes.push(referral.services_other);
     }

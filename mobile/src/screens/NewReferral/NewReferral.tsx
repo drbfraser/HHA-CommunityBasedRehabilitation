@@ -19,11 +19,13 @@ import {
     wheelchairValidationSchema,
     APIFetchFailError,
     countObjectKeys,
+    hhaNutritionAndAgricultureProjectValidationSchema,
 } from "@cbr/common";
 import WheelchairForm from "./ReferralForm/WheelchairForm";
 import PhysiotherapyForm from "./ReferralForm/PhysiotherapyForm";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewReferral.styles";
 import ProstheticOrthoticForm from "./ReferralForm/ProstheticOrthoticForm";
+import NutritionAgricultureForm from "./ReferralForm/NutritionAgricultureForm";
 import OtherServicesForm from "./ReferralForm/OtherServicesForm";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import { StackScreenName } from "../../util/StackScreenName";
@@ -56,7 +58,7 @@ const ReferralServiceForm = (
             )
         );
     };
-
+    console.log(props.formikProps.values["physiotherapy"]);
     return (
         <View>
             <Text />
@@ -173,6 +175,13 @@ const NewReferral = (props: INewReferralProps) => {
             label: `${referralFieldLabels[ReferralFormField.orthotic]} Visit`,
             Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.orthotic),
             validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.orthotic),
+        },
+        [ReferralFormField.hhaNutritionAndAgricultureProject]: {
+            label: `${
+                referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]
+            } Visit`,
+            Form: NutritionAgricultureForm,
+            validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
         },
         [ReferralFormField.servicesOther]: {
             label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,

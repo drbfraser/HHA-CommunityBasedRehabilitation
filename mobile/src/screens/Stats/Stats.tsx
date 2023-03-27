@@ -133,7 +133,6 @@ const Stats = () => {
 
     const referralStats = async (resolved: boolean) => {
         let sum = 0;
-        console.log(serviceTypes);
         for (const type of serviceTypes) {
             let count;
             if (type != ReferralFormField.servicesOther) {

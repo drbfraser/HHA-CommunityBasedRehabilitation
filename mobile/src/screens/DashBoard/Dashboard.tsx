@@ -87,7 +87,6 @@ const Dashboard = () => {
 
     const getReferrals = async () => {
         let fetchedReferrals: BriefReferral[] = await fetchReferrals(database);
-        console.log(fetchedReferrals);
         if (referralSortDirection !== "None") {
             fetchedReferrals = fetchedReferrals.sort(dashBoardReferralComparator);
         }

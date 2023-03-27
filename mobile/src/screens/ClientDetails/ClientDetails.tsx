@@ -75,7 +75,6 @@ const ClientDetails = (props: ClientProps) => {
             const fetchedReferrals = await presentClient.referrals.fetch();
             const fetchedSurveys = await presentClient.surveys.fetch();
             const fetchedVisits = await presentClient.visits.fetch();
-            console.log(fetchedReferrals);
             setClient(presentClient);
             setRisk(fetchedRisk);
             setReferrals(fetchedReferrals);

@@ -136,10 +136,6 @@ const Stats = () => {
         console.log(serviceTypes);
         for (const type of serviceTypes) {
             let count;
-            // "ReferralFormField.hhaNutritionAndAgricultureProject" is not a field in the mobile schema
-            // if (type === ReferralFormField.hhaNutritionAndAgricultureProject) {
-            //     continue;
-            // }
             if (type != ReferralFormField.servicesOther) {
                 count = await database
                     .get(modelName.referrals)

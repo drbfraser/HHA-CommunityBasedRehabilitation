@@ -108,7 +108,7 @@ export async function SyncDB(database: dbType) {
                     throw new Error(await response.text());
                 }
             },
-            migrationsEnabledAtVersion: 3,
+            migrationsEnabledAtVersion: 4,
             conflictResolver: conflictResolver,
         }).then(() => {
             updateLastVersionSynced();

@@ -84,14 +84,22 @@ export const referralFieldLabels = {
     [ReferralFormField.orthotic]: "Orthotic",
     [ReferralFormField.orthoticInjuryLocation]: "Orthotic Injury Location",
 
-    [ReferralFormField.hhaNutritionAndAgricultureProject]:
-        "HHA Nutrition/Agriculture Project (NOT Supported on Mobile)",
+    [ReferralFormField.hhaNutritionAndAgricultureProject]: "HHA Nutrition/Agriculture Project",
     [ReferralFormField.emergencyFoodAidRequired]: "Emergency Food Aid",
     [ReferralFormField.agricultureLivelihoodProgramEnrollment]:
         "Agriculture Livelihood Program Enrollment",
 
     [ReferralFormField.servicesOther]: "Other Services",
     [ReferralFormField.otherDescription]: "Service Description",
+};
+
+export const referralStatsChartLabels = {
+    [ReferralFormField.wheelchair]: "Wheelchair",
+    [ReferralFormField.physiotherapy]: "Physiotherapy",
+    [ReferralFormField.orthotic]: "Orthotic",
+    [ReferralFormField.prosthetic]: "Prosthetic",
+    [ReferralFormField.hhaNutritionAndAgricultureProject]: "HHANAP",
+    [ReferralFormField.servicesOther]: "Other Services",
 };
 
 export const referralInitialValues = {

@@ -395,6 +395,7 @@ class OutstandingReferralSerializer(serializers.Serializer):
     full_name = serializers.CharField()
     services_other = serializers.CharField()
     physiotherapy = serializers.BooleanField()
+    hha_nutrition_and_agriculture_project = serializers.BooleanField()
     wheelchair = serializers.BooleanField()
     prosthetic = serializers.BooleanField()
     orthotic = serializers.BooleanField()

@@ -106,6 +106,7 @@ const Dashboard = () => {
             let referralTypes = [];
             if (row.wheelchair) referralTypes.push("Wheelchair");
             if (row.physiotherapy) referralTypes.push("Physiotherapy");
+            if (row.hha_nutrition_and_agriculture_project) referralTypes.push("HHANAP");
             if (row.orthotic) referralTypes.push("Orthotic");
             if (row.prosthetic) referralTypes.push("Prosthetic");
             if (row.services_other) referralTypes.push(row.services_other);

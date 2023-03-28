@@ -13,7 +13,7 @@ import { appSchema, tableSchema } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 
 export default appSchema({
-    version: 3,
+    version: 4,
     tables: [
         tableSchema({
             name: modelName.users,
@@ -98,6 +98,9 @@ export default appSchema({
                 { name: ReferralField.orthotic, type: "boolean" },
                 { name: ReferralField.orthotic_injury_location, type: "string" },
                 { name: ReferralField.services_other, type: "string" },
+                { name: ReferralField.hha_nutrition_and_agriculture_project, type: "boolean" },
+                { name: ReferralField.emergency_food_aid, type: "boolean" },
+                { name: ReferralField.agriculture_livelihood_program_enrollment, type: "boolean" },
                 { name: mobileGenericField.updated_at, type: "number" },
             ],
         }),

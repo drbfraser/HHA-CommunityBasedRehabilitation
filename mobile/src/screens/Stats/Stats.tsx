@@ -19,6 +19,7 @@ import {
     ReferralField,
     referralFieldLabels,
     ReferralFormField,
+    referralStatsChartLabels,
     serviceTypes,
     themeColors,
     useDisabilities,
@@ -134,10 +135,6 @@ const Stats = () => {
         let sum = 0;
         for (const type of serviceTypes) {
             let count;
-            // "ReferralFormField.hhaNutritionAndAgricultureProject" is not a field in the mobile schema
-            if (type === ReferralFormField.hhaNutritionAndAgricultureProject) {
-                continue;
-            }
             if (type != ReferralFormField.servicesOther) {
                 count = await database
                     .get(modelName.referrals)
@@ -151,7 +148,7 @@ const Stats = () => {
             }
             sum = sum + count;
             var record: BarStat = {
-                name: referralFieldLabels[type],
+                name: referralStatsChartLabels[type],
                 count: count,
             };
             if (resolved) {
@@ -412,6 +409,7 @@ const Stats = () => {
                             <VictoryChart
                                 animate={{ duration: 500 }}
                                 domainPadding={10}
+                                padding={{ left: 100, right: 50, bottom: 30, top: 30 }}
                                 containerComponent={<VictoryZoomContainer />}
                                 theme={VictoryTheme.material}
                             >
@@ -431,8 +429,10 @@ const Stats = () => {
                                         },
                                     ]}
                                 />
+
                                 <VictoryGroup offset={20} colorScale={"qualitative"}>
                                     <VictoryBar
+                                        horizontal
                                         barRatio={0.5}
                                         style={{ data: { fill: themeColors.riskRed } }}
                                         data={unresolvedRef}
@@ -440,6 +440,7 @@ const Stats = () => {
                                         y="count"
                                     />
                                     <VictoryBar
+                                        horizontal
                                         barRatio={0.5}
                                         style={{ data: { fill: themeColors.riskGreen } }}
                                         data={resolvedRef}

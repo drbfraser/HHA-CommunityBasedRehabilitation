@@ -1,3 +1,4 @@
+import { themeColors } from "./colors";
 import { Time } from "./time";
 
 export interface IAlert {
@@ -20,4 +21,28 @@ export const priorities = {
     [PriorityLevel.HIGH]: "High",
     [PriorityLevel.MEDIUM]: "Medium",
     [PriorityLevel.LOW]: "Low",
+};
+
+export interface IPriorityLevel {
+    name: string;
+    color: string;
+    level: number;
+}
+
+export const priorityLevels: { [key: string]: IPriorityLevel } = {
+    [PriorityLevel.LOW]: {
+        level: 0,
+        name: "Low",
+        color: themeColors.riskGreen,
+    },
+    [PriorityLevel.MEDIUM]: {
+        level: 1,
+        name: "Medium",
+        color: themeColors.riskYellow,
+    },
+    [PriorityLevel.HIGH]: {
+        level: 4,
+        name: "High",
+        color: themeColors.riskRed,
+    },
 };

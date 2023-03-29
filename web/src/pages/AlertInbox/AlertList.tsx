@@ -4,14 +4,14 @@ import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
-import { RiskLevel, riskLevels } from "@cbr/common/util/risks";
 import { FiberManualRecord } from "@material-ui/icons";
-import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { socket } from "@cbr/common/context/SocketIOContext";
-import { IAlert } from "@cbr/common/util/alerts";
+import { IAlert, PriorityLevel, priorityLevels } from "@cbr/common/util/alerts";
 import { timestampToDate } from "@cbr/common/util/dates";
+import { compressedDataGridWidth } from "styles/DataGrid.styles";
+import PriorityLevelChip from "components/PriorityLevelChip/PriorityLevelChip";
 
 const useStyles = makeStyles({
     selectedListItemStyle: {
@@ -44,24 +44,20 @@ type AlertDetailProps = {
 };
 
 const RenderBadge = (params: String) => {
-    let risk: RiskLevel;
+    let priority: PriorityLevel;
 
-    /*
-      TODO: this should be improved, make Priority icons seperate from Risk Icons
-    */
     if (params === "ME") {
-        risk = RiskLevel.MEDIUM;
+        priority = PriorityLevel.MEDIUM;
     } else if (params === "HI") {
-        risk = RiskLevel.HIGH;
+        priority = PriorityLevel.HIGH;
     } else {
-        risk = RiskLevel.LOW;
+        priority = PriorityLevel.LOW;
     }
 
-    /* TODO: This function is not working as expected */
-    return window.innerWidth >= 20 ? (
-        <RiskLevelChip clickable risk={risk} />
+    return window.innerWidth >= compressedDataGridWidth ? (
+        <PriorityLevelChip clickable priority={priority} />
     ) : (
-        <FiberManualRecord style={{ color: riskLevels[risk].color }} />
+        <FiberManualRecord style={{ color: priorityLevels[priority].color }} />
     );
 };
 
@@ -73,7 +69,7 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
 
     socket.on("updateUnreadList", (unreadAlerts) => {
         if (unreadAlertsCount !== unreadAlerts) {
-            // update state oonly if the number of unread alerts have changed
+            // update state only if the number of unread alerts have changed
             setUnreadAlertsCount(unreadAlerts);
         }
     });

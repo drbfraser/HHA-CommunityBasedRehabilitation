@@ -6,8 +6,7 @@ import { APILoadError, getCurrentUser, IUser } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { themeColors } from "@cbr/common";
 import { modelName } from "../../models/constant";
-import { priorities } from "@cbr/common/src/util/alerts";
-import { riskLevels } from "@cbr/common";
+import { priorities, priorityLevels } from "@cbr/common/src/util/alerts";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const AlertInbox = () => {
@@ -124,7 +123,7 @@ const AlertInbox = () => {
                         <Chip
                             key={alert.id}
                             mode="flat"
-                            style={{ backgroundColor: riskLevels[alert.priority].color }}
+                            style={{ backgroundColor: priorityLevels[alert.priority].color }}
                         >
                             <Text key={alert.id} style={{ color: themeColors.white }}>
                                 {priorities[alert.priority]}

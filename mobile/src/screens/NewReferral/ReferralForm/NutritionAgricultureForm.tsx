@@ -19,12 +19,15 @@ const NutritionAgricultureForm = (props: IFormProps) => {
                     <Checkbox
                         status={foodAid ? "checked" : "unchecked"}
                         onPress={() => {
-                            props.formikProps.setFieldTouched(ReferralFormField.emergencyFoodAidRequired, !foodAid);
-                            setFoodAid(!foodAid);
+                            props.formikProps.setFieldTouched(
+                                ReferralFormField.emergencyFoodAidRequired,
+                                !foodAid
+                            );
                             props.formikProps.setFieldValue(
                                 ReferralFormField.emergencyFoodAidRequired,
-                                foodAid
+                                !foodAid
                             );
+                            setFoodAid(!foodAid);
                         }}
                     />
                 </View>
@@ -38,12 +41,15 @@ const NutritionAgricultureForm = (props: IFormProps) => {
                     <Checkbox
                         status={agricultureProgram ? "checked" : "unchecked"}
                         onPress={() => {
-                            props.formikProps.setFieldTouched(ReferralFormField.agricultureLivelihoodProgramEnrollment, !agricultureProgram);
-                            setAgricultureProgram(!agricultureProgram);
+                            props.formikProps.setFieldTouched(
+                                ReferralFormField.agricultureLivelihoodProgramEnrollment,
+                                !agricultureProgram
+                            );
                             props.formikProps.setFieldValue(
                                 ReferralFormField.agricultureLivelihoodProgramEnrollment,
-                                agricultureProgram
+                                !agricultureProgram
                             );
+                            setAgricultureProgram(!agricultureProgram);
                         }}
                     />
                 </View>

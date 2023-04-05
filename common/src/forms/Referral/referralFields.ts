@@ -178,12 +178,24 @@ export const prostheticOrthoticValidationSchema = (serviceType: ReferralFormFiel
 export const hhaNutritionAndAgricultureProjectValidationSchema = () =>
     Yup.object().shape({
         [ReferralFormField.agricultureLivelihoodProgramEnrollment]: Yup.boolean()
-            .label(referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment])
-            .required(),
+            .label(referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment]),
         [ReferralFormField.emergencyFoodAidRequired]: Yup.boolean()
             .label(referralFieldLabels[ReferralFormField.emergencyFoodAidRequired])
-            .required(),
-    });
+    }).test(
+        "require-atleast-one-checkbox",
+        "At least one checkbox must be selected",
+        (obj) => {
+            if (obj[ReferralFormField.agricultureLivelihoodProgramEnrollment] || obj[ReferralFormField.emergencyFoodAidRequired]) {
+                return true;
+            }
+
+            return new Yup.ValidationError(
+                "Please select one option",
+                null,
+                "custom"
+            )
+        }
+    );
 
 export const otherServicesValidationSchema = () =>
     Yup.object().shape({

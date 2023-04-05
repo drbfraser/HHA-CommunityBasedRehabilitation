@@ -9,23 +9,6 @@ const NutritionAgricultureForm = (props: IFormProps) => {
     const [agricultureProgram, setAgricultureProgram] = useState(false);
     const styles = useStyles();
 
-    useEffect(() => {
-        if (foodAid || agricultureProgram) {
-            props.formikProps.setFieldTouched(
-                ReferralFormField.hhaNutritionAndAgricultureProject,
-                true
-            );
-
-            props.formikProps.setFieldValue(
-                ReferralFormField.hhaNutritionAndAgricultureProject,
-                true
-            );
-        } else {
-            props.formikProps.resetForm({
-                values: { [ReferralFormField.hhaNutritionAndAgricultureProject]: false },
-            });
-        }
-    }, [foodAid, agricultureProgram]);
     return (
         <View>
             <Text />
@@ -36,6 +19,7 @@ const NutritionAgricultureForm = (props: IFormProps) => {
                     <Checkbox
                         status={foodAid ? "checked" : "unchecked"}
                         onPress={() => {
+                            props.formikProps.setFieldTouched(ReferralFormField.emergencyFoodAidRequired, !foodAid);
                             setFoodAid(!foodAid);
                             props.formikProps.setFieldValue(
                                 ReferralFormField.emergencyFoodAidRequired,
@@ -54,6 +38,7 @@ const NutritionAgricultureForm = (props: IFormProps) => {
                     <Checkbox
                         status={agricultureProgram ? "checked" : "unchecked"}
                         onPress={() => {
+                            props.formikProps.setFieldTouched(ReferralFormField.agricultureLivelihoodProgramEnrollment, !agricultureProgram);
                             setAgricultureProgram(!agricultureProgram);
                             props.formikProps.setFieldValue(
                                 ReferralFormField.agricultureLivelihoodProgramEnrollment,

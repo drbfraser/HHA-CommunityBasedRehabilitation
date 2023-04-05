@@ -36,6 +36,7 @@ import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { string } from "yup";
 
 interface INewReferralProps {
     clientID: number;
@@ -58,7 +59,6 @@ const ReferralServiceForm = (
             )
         );
     };
-    console.log(props.formikProps.values["physiotherapy"]);
     return (
         <View>
             <Text />
@@ -101,12 +101,14 @@ const NewReferral = (props: INewReferralProps) => {
                 checkedSteps.push(enabledSteps[activeStep - 1]);
             }
         }
+        console.log(props);
         setActiveStep(activeStep - 1);
         props.setErrors({});
     };
 
     const database = useDatabase();
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
+
         if (isFinalStep) {
             setSaveError(undefined);
             handleSubmit(values, database, helpers, autoSync, cellularSync)
@@ -190,6 +192,16 @@ const NewReferral = (props: INewReferralProps) => {
         },
     };
 
+    const countTouchedFields = (formikTouched: any): number => {
+        let count = 0;
+        for (const key in formikTouched) {
+            if (formikTouched[key] == true) {
+                count++
+            }
+        }
+        return count;
+    }
+
     const referralSteps: IReferralForm[] = [
         {
             label: "Referral Services",
@@ -247,7 +259,7 @@ const NewReferral = (props: INewReferralProps) => {
                                                     enabledSteps[activeStep - 1]
                                                 )
                                                     ? countObjectKeys(formikProps.errors) !== 0 ||
-                                                      countObjectKeys(formikProps.touched) === 0
+                                                      countTouchedFields(formikProps.touched) === 0
                                                     : countObjectKeys(formikProps.errors) !== 0))
                                         }
                                         previousBtnDisabled={formikProps.isSubmitting}

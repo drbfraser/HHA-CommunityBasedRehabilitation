@@ -110,7 +110,6 @@ const NewReferral = (props: INewReferralProps) => {
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
-            console.log("This log is from the next step", values);
             handleSubmit(values, database, helpers, autoSync, cellularSync)
                 .then(() => {
                     setHasSubmitted(true);

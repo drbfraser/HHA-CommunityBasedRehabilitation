@@ -101,7 +101,6 @@ const NewReferral = (props: INewReferralProps) => {
                 checkedSteps.push(enabledSteps[activeStep - 1]);
             }
         }
-        console.log(props);
         setActiveStep(activeStep - 1);
         props.setErrors({});
     };

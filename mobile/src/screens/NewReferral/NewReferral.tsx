@@ -110,6 +110,7 @@ const NewReferral = (props: INewReferralProps) => {
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
+            console.log("This log is from the next step", values);
             handleSubmit(values, database, helpers, autoSync, cellularSync)
                 .then(() => {
                     setHasSubmitted(true);
@@ -193,13 +194,11 @@ const NewReferral = (props: INewReferralProps) => {
 
     const countTouchedFields = (formikTouched: any): number => {
         let count = 0;
-        console.log(formikTouched);
         for (const key in formikTouched) {
             if (formikTouched[key] == true) {
                 count++;
             }
         }
-        console.log(count);
         return count;
     };
 

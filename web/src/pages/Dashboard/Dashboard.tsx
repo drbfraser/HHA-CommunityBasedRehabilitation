@@ -93,7 +93,7 @@ const Dashboard = () => {
                             date_referred: row.date_referred,
                         };
                     });
-
+                console.log(outstandingReferrals);
                 setReferrals(outstandingReferrals);
             } catch (e) {
                 setReferralError(e instanceof Error ? e.message : `${e}`);
@@ -103,6 +103,7 @@ const Dashboard = () => {
         };
 
         const concatenateReferralType = (row: IOutstandingReferral) => {
+            console.log(row);
             let referralTypes = [];
             if (row.wheelchair) referralTypes.push("Wheelchair");
             if (row.physiotherapy) referralTypes.push("Physiotherapy");

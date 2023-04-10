@@ -39,40 +39,31 @@ export async function checkUnsyncedChanges() {
 
 export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSync: boolean) {
     await NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
-        try {
-            switch (connectionInfo?.type) {
-                case NetInfoStateType.cellular:
-                    if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
-                        if (
-                            !(await lastVersionSyncedIsCurrentVersion()) &&
-                            !(await noPreviousSyncsPerformed())
-                        ) {
-                            showAutoSyncFailedAlert();
-                        } else {
-                            await SyncDB(database);
-                        }
+        switch (connectionInfo?.type) {
+            case NetInfoStateType.cellular:
+                if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
+                    if (
+                        !(await lastVersionSyncedIsCurrentVersion()) &&
+                        !(await noPreviousSyncsPerformed())
+                    ) {
+                        showAutoSyncFailedAlert();
+                    } else {
+                        await SyncDB(database);
                     }
-                    break;
-                case NetInfoStateType.wifi:
-                    if (autoSync && connectionInfo?.isInternetReachable) {
-                        if (
-                            !(await lastVersionSyncedIsCurrentVersion()) &&
-                            !(await noPreviousSyncsPerformed())
-                        ) {
-                            showAutoSyncFailedAlert();
-                        } else {
-                            await SyncDB(database);
-                        }
+                }
+                break;
+            case NetInfoStateType.wifi:
+                if (autoSync && connectionInfo?.isInternetReachable) {
+                    if (
+                        !(await lastVersionSyncedIsCurrentVersion()) &&
+                        !(await noPreviousSyncsPerformed())
+                    ) {
+                        showAutoSyncFailedAlert();
+                    } else {
+                        await SyncDB(database);
                     }
-                    break;
-            }
-        } catch (e) {
-            if (e instanceof APIFetchFailError && e.status === 403) {
-                showGenericAlert(
-                    "Sync Is Not Compatible With Your Current Version Of CBR",
-                    "Please install the newest update of CBR on the Google Play Store."
-                );
-            }
+                }
+                break;
         }
     });
 }
@@ -114,8 +105,13 @@ export async function SyncDB(database: dbType) {
             updateLastVersionSynced();
             storeStats();
         });
-    } catch (error) {
-        console.log("Encountered an error during WatermelonDB sync process!" + error);
+    } catch (e) {
+        if (e instanceof APIFetchFailError && e.status === 403) {
+            showGenericAlert(
+                "Sync Is Not Compatible With Your Current Version Of CBR",
+                "Please install the newest update of CBR on the Google Play Store."
+            );
+        }
     }
 }
 

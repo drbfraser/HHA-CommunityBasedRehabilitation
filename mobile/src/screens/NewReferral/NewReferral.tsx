@@ -19,11 +19,13 @@ import {
     wheelchairValidationSchema,
     APIFetchFailError,
     countObjectKeys,
+    hhaNutritionAndAgricultureProjectValidationSchema,
 } from "@cbr/common";
 import WheelchairForm from "./ReferralForm/WheelchairForm";
 import PhysiotherapyForm from "./ReferralForm/PhysiotherapyForm";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewReferral.styles";
 import ProstheticOrthoticForm from "./ReferralForm/ProstheticOrthoticForm";
+import NutritionAgricultureForm from "./ReferralForm/NutritionAgricultureForm";
 import OtherServicesForm from "./ReferralForm/OtherServicesForm";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import { StackScreenName } from "../../util/StackScreenName";
@@ -34,6 +36,7 @@ import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { string } from "yup";
 
 interface INewReferralProps {
     clientID: number;
@@ -56,7 +59,6 @@ const ReferralServiceForm = (
             )
         );
     };
-
     return (
         <View>
             <Text />
@@ -174,11 +176,28 @@ const NewReferral = (props: INewReferralProps) => {
             Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.orthotic),
             validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.orthotic),
         },
+        [ReferralFormField.hhaNutritionAndAgricultureProject]: {
+            label: `${
+                referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]
+            } Visit`,
+            Form: NutritionAgricultureForm,
+            validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
+        },
         [ReferralFormField.servicesOther]: {
             label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,
             Form: OtherServicesForm,
             validationSchema: otherServicesValidationSchema,
         },
+    };
+
+    const countTouchedFields = (formikTouched: any): number => {
+        let count = 0;
+        for (const key in formikTouched) {
+            if (formikTouched[key] == true) {
+                count++;
+            }
+        }
+        return count;
     };
 
     const referralSteps: IReferralForm[] = [
@@ -233,13 +252,8 @@ const NewReferral = (props: INewReferralProps) => {
                                         nextBtnDisabled={
                                             formikProps.isSubmitting ||
                                             enabledSteps.length === 0 ||
-                                            (enabledSteps[activeStep - 1] !== undefined &&
-                                                (!checkedSteps.includes(
-                                                    enabledSteps[activeStep - 1]
-                                                )
-                                                    ? countObjectKeys(formikProps.errors) !== 0 ||
-                                                      countObjectKeys(formikProps.touched) === 0
-                                                    : countObjectKeys(formikProps.errors) !== 0))
+                                            countTouchedFields(formikProps.touched) === 0 ||
+                                            countObjectKeys(formikProps.errors) !== 0
                                         }
                                         previousBtnDisabled={formikProps.isSubmitting}
                                         onPrevious={() => prevStep(formikProps)}

@@ -21,7 +21,6 @@ export const handleSubmit = async (
             .find(values[ReferralFormField.client_id].toString());
         await database.get(modelName.referrals).create((referral: any) => {
             delete referralInfo.client_id; /* We want to set this relation ourselves */
-
             Object.assign(referral, referralInfo);
             referral.client.set(client);
             referral.hip_width = parseInt(referralInfo.hip_width);

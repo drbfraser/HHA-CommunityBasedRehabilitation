@@ -93,7 +93,6 @@ const Dashboard = () => {
                             date_referred: row.date_referred,
                         };
                     });
-
                 setReferrals(outstandingReferrals);
             } catch (e) {
                 setReferralError(e instanceof Error ? e.message : `${e}`);

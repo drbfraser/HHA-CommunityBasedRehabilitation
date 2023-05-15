@@ -114,9 +114,9 @@ export const referralInitialValues = {
     [ReferralFormField.condition]: "",
     [ReferralFormField.conditionOther]: "",
     [ReferralFormField.prosthetic]: false,
-    [ReferralFormField.prostheticInjuryLocation]: InjuryLocation.BELOW,
+    [ReferralFormField.prostheticInjuryLocation]: InjuryLocation.BELOW_KNEE,
     [ReferralFormField.orthotic]: false,
-    [ReferralFormField.orthoticInjuryLocation]: InjuryLocation.BELOW,
+    [ReferralFormField.orthoticInjuryLocation]: InjuryLocation.BELOW_KNEE,
 
     [ReferralFormField.hhaNutritionAndAgricultureProject]: false,
     [ReferralFormField.emergencyFoodAidRequired]: false,

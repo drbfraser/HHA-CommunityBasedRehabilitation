@@ -17,7 +17,7 @@ export interface IReferral {
     prosthetic: boolean;
     prosthetic_injury_location: InjuryLocation;
     orthotic: boolean;
-    orthotic_injury_location: InjuryLocation;
+    orthotic_injury_location: orthoticInjury;
 
     hha_nutrition_and_agriculture_project: boolean;
     emergency_food_aid: boolean;
@@ -48,8 +48,20 @@ export enum ReferralTypes {
 }
 
 export enum InjuryLocation {
-    BELOW = "BEL",
-    ABOVE = "ABO",
+    BELOW_KNEE = "BELOW_KNEE",
+    ABOVE_KNEE = "ABOVE_KNEE",
+    BELOW_ELBOW = "BELOW_ELBOW",
+    ABOVE_ELBOW = "ABOVE_ELBOW",
+}
+export enum orthoticInjury {
+    WEAK_LEG = "Weak Leg",
+    CEREBRAL_PALSY = "Cerebral Paulsy",
+    SPINA_BIFIDA = "Spina Bifida",
+    CLUB_FOOT = "Club Foot",
+    INJECTION_NEURITIS = "Injection Neuritis",
+    DROP_FOOT = "Drop Foot",
+    POLIO = "Polio",
+    OTHER = "Other",
 }
 
 export enum WheelchairExperience {
@@ -58,13 +70,21 @@ export enum WheelchairExperience {
 }
 
 export const prostheticInjuryLocations = {
-    [InjuryLocation.BELOW]: "Below the knee",
-    [InjuryLocation.ABOVE]: "Above the knee",
+    [InjuryLocation.BELOW_KNEE]: "Below the knee",
+    [InjuryLocation.ABOVE_KNEE]: "Above the knee",
+    [InjuryLocation.BELOW_ELBOW]: "Below the elbow",
+    [InjuryLocation.ABOVE_ELBOW]: "Above the elbow",
 };
 
 export const orthoticInjuryLocations = {
-    [InjuryLocation.BELOW]: "Below the elbow",
-    [InjuryLocation.ABOVE]: "Above the elbow",
+    [orthoticInjury.WEAK_LEG]: "Weak Leg",
+    [orthoticInjury.CEREBRAL_PALSY]: "Cerebral Palsy",
+    [orthoticInjury.SPINA_BIFIDA]: "Spina Bifida",
+    [orthoticInjury.CLUB_FOOT]: "Club Foot",
+    [orthoticInjury.INJECTION_NEURITIS]: "Injection Neuritis",
+    [orthoticInjury.DROP_FOOT]: "Drop Foot",
+    [orthoticInjury.POLIO]: "Polio",
+    [orthoticInjury.OTHER]: "Other",
 };
 
 export const wheelchairExperiences = {

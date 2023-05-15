@@ -1,5 +1,5 @@
 import { FormikProps } from "formik";
-import { InjuryLocation, WheelchairExperience } from "../../util/referrals";
+import { InjuryLocation, WheelchairExperience, orthoticInjury } from "../../util/referrals";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
 import * as Yup from "yup";
 
@@ -116,7 +116,7 @@ export const referralInitialValues = {
     [ReferralFormField.prosthetic]: false,
     [ReferralFormField.prostheticInjuryLocation]: InjuryLocation.BELOW_KNEE,
     [ReferralFormField.orthotic]: false,
-    [ReferralFormField.orthoticInjuryLocation]: InjuryLocation.BELOW_KNEE,
+    [ReferralFormField.orthoticInjuryLocation]: orthoticInjury.WEAK_LEG,
 
     [ReferralFormField.hhaNutritionAndAgricultureProject]: false,
     [ReferralFormField.emergencyFoodAidRequired]: false,

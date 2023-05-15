@@ -54,14 +54,14 @@ export enum InjuryLocation {
     ABOVE_ELBOW = "ABOVE_ELBOW",
 }
 export enum orthoticInjury {
-    WEAK_LEG = "Weak Leg",
-    CEREBRAL_PALSY = "Cerebral Paulsy",
-    SPINA_BIFIDA = "Spina Bifida",
-    CLUB_FOOT = "Club Foot",
-    INJECTION_NEURITIS = "Injection Neuritis",
-    DROP_FOOT = "Drop Foot",
-    POLIO = "Polio",
-    OTHER = "Other",
+    WEAK_LEG = "WEAK_LEG",
+    CEREBRAL_PALSY = "CEREBRAL_PALSY",
+    SPINA_BIFIDA = "SPINA_BIFIDA",
+    CLUB_FOOT = "CLUB_FOOT",
+    INJECTION_NEURITIS = "INJECTION_NEURITIS",
+    DROP_FOOT = "DROP_FOOT",
+    POLIO = "POLIO",
+    OTHER = "OTHER",
 }
 
 export enum WheelchairExperience {

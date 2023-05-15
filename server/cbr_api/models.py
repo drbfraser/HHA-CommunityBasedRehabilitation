@@ -305,17 +305,30 @@ class Referral(models.Model):
     condition = models.CharField(max_length=100, blank=True)
 
     class InjuryLocation(models.TextChoices):
-        BELOW = "BEL", _("Below")
-        ABOVE = "ABO", _("Above")
+        BELOW_KNEE = "BELOW_KNEE", _("Below Knee")
+        ABOVE_KNEE = "ABOVE_KNEE", _("Above Knee")
+        BELOW_ELBOW = "BELOW_ELBOW", _("Above Elbow")
+        ABOVE_ELBOW = "ABOVE_ELBOW", _("Above Elbow")
+    
+    class OrthoticInjury(models.TextChoices):
+        WEAK_LEG = "WEAK_LEG", _("Weak Leg")
+        CEREBRAL_PALSY = "CEREBRAL_PALSY", _("Cerebral Palsy")
+        SPINA_BIFIDA = "SPINA_BIFIDA", _("Spina Bifida")
+        CLUB_FOOT = "CLUB_FOOT", _("Club Foot")
+        INJECTION_NEURITIS = "INJECTION_NEURITIS", _("Injection Neuritis")
+        DROP_FOOT = "DROP_FOOT", _("Drop Foot")
+        POLIO = "POLIO", _("Polio")
+        OTHER = "OTHER", _("Other")
+
 
     prosthetic = models.BooleanField(default=False)
     prosthetic_injury_location = models.CharField(
-        max_length=3, choices=InjuryLocation.choices, blank=True
+        max_length=20, choices=InjuryLocation.choices, blank=True
     )
 
     orthotic = models.BooleanField(default=False)
     orthotic_injury_location = models.CharField(
-        max_length=3, choices=InjuryLocation.choices, blank=True
+        max_length=20, choices=OrthoticInjury.choices, blank=True
     )
 
     hha_nutrition_and_agriculture_project = models.BooleanField(default=False)

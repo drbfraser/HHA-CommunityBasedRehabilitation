@@ -16,8 +16,8 @@ class Command(BaseCommand):
         models.Disability.objects.create(disability_type="Cerebral palsy")
         models.Disability.objects.create(disability_type="Spina bifida")
         models.Disability.objects.create(disability_type="Hydrocephalus")
-        models.Disability.objects.create(disability_type="Visual impairment")
-        models.Disability.objects.create(disability_type="Hearing impairment")
+        models.Disability.objects.create(disability_type="Congenital Abnormalities")
+        models.Disability.objects.create(disability_type="Paralysis Cases")
         models.Disability.objects.create(disability_type="Don’t know")
         models.Disability.objects.create(disability_type="Other")
 

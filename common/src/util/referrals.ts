@@ -65,10 +65,10 @@ export enum orthoticInjury {
 }
 
 export enum Impairments {
-    VISUAL_IMPAIRMENT = "VISUAL_IMPARIMENT",
-    HEARING_IMPAIRMENT = "HEARING_IMPAIRMENT",
-    SAFEGUARDING = "SAFEGUARDING",
-    OTHER = "OTHER",
+    VISUAL_IMPAIRMENT = "Visual Impairment",
+    HEARING_IMPAIRMENT = "Hearing Impairment",
+    SAFEGUARDING = "Safeguarding",
+    OTHER = "Other",
 }
 
 export enum WheelchairExperience {

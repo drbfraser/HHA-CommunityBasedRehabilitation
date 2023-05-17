@@ -1,5 +1,11 @@
 import { FormikProps } from "formik";
-import { InjuryLocation, WheelchairExperience, orthoticInjury } from "../../util/referrals";
+import {
+    Impairments,
+    InjuryLocation,
+    WheelchairExperience,
+    orthoticInjury,
+    otherServices,
+} from "../../util/referrals";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
 import * as Yup from "yup";
 
@@ -54,6 +60,7 @@ export enum ReferralFormField {
     agricultureLivelihoodProgramEnrollment = "agriculture_livelihood_program_enrollment",
 
     servicesOther = "services_other",
+    referralOther = "referral_other",
     otherDescription = "other_description",
 }
 
@@ -91,6 +98,7 @@ export const referralFieldLabels = {
 
     [ReferralFormField.servicesOther]: "Other Services",
     [ReferralFormField.otherDescription]: "Service Description",
+    [ReferralFormField.referralOther]: "Other referral",
 };
 
 export const referralStatsChartLabels = {
@@ -124,6 +132,7 @@ export const referralInitialValues = {
 
     [ReferralFormField.servicesOther]: false,
     [ReferralFormField.otherDescription]: "",
+    [ReferralFormField.referralOther]: "",
 };
 
 export const referralInitialValidationSchema = () => Yup.object().shape({});

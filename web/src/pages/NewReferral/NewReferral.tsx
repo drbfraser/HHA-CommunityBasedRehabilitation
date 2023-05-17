@@ -288,7 +288,7 @@ const OtherServicesForm = (props: IFormProps) => {
 
     return (
         <div>
-            <FormLabel>Please describe the referral</FormLabel>
+            <FormLabel>Please select another referral</FormLabel>
             <br />
             <br />
             <div className={styles.fieldIndent}>
@@ -311,12 +311,13 @@ const OtherServicesForm = (props: IFormProps) => {
                     Impairments.OTHER && (
                     <div>
                         <br />
+                        <FormLabel>Please describe the referral</FormLabel>
                         <Field
                             component={TextField}
                             fullWidth
-                            label={referralFieldLabels[ReferralFormField.otherDescription]}
+                            label={referralFieldLabels[ReferralFormField.referralOther]}
                             required
-                            name={ReferralFormField.otherDescription}
+                            name={ReferralFormField.referralOther}
                             variant="outlined"
                         />
                     </div>

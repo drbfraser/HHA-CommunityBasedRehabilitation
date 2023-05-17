@@ -1,7 +1,13 @@
 import React from "react";
 import { View } from "react-native";
-import { Text } from "react-native-paper";
-import { IFormProps, referralFieldLabels, ReferralFormField, useDisabilities } from "@cbr/common";
+import { Text, TextInput } from "react-native-paper";
+import {
+    getOtherDisabilityId,
+    IFormProps,
+    referralFieldLabels,
+    ReferralFormField,
+    useDisabilities,
+} from "@cbr/common";
 import useStyles from "../NewReferral.styles";
 import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 
@@ -21,6 +27,19 @@ const PhysiotherapyForm = (props: IFormProps) => {
                 fieldLabels={referralFieldLabels}
                 mode="outlined"
             />
+            <Text />
+            {props.formikProps.values[ReferralFormField.condition] ===
+                getOtherDisabilityId(disabilities) && (
+                <TextInput
+                    mode="outlined"
+                    label={referralFieldLabels[ReferralFormField.conditionOther]}
+                    value={props.formikProps.values[ReferralFormField.conditionOther]}
+                    onChangeText={(value: string) => {
+                        props.formikProps.setFieldValue(ReferralFormField.conditionOther, value);
+                        props.formikProps.setFieldTouched(ReferralFormField.conditionOther, true);
+                    }}
+                />
+            )}
         </View>
     );
 };

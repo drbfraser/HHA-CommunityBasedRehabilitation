@@ -19,6 +19,8 @@ import {
     orthoticInjuryLocations,
     prostheticInjuryLocations,
     wheelchairExperiences,
+    otherServices,
+    Impairments,
 } from "@cbr/common/util/referrals";
 import { handleSubmit } from "./formHandler";
 import { ArrowBack } from "@material-ui/icons";
@@ -281,7 +283,7 @@ const NutritionForm = (props: IFormProps) => {
     );
 };
 
-const OtherServicesForm = () => {
+const OtherServicesForm = (props: IFormProps) => {
     const styles = useStyles();
 
     return (
@@ -291,15 +293,34 @@ const OtherServicesForm = () => {
             <br />
             <div className={styles.fieldIndent}>
                 <Field
-                    type="text"
                     component={TextField}
                     variant="outlined"
                     name={ReferralFormField.otherDescription}
                     label={referralFieldLabels[ReferralFormField.otherDescription]}
-                    required
+                    select
                     fullWidth
-                    multiline
-                />
+                    required
+                >
+                    {Object.entries(otherServices).map(([value, name]) => (
+                        <MenuItem key={value} value={value}>
+                            {name}
+                        </MenuItem>
+                    ))}
+                </Field>
+                {props.formikProps.values[ReferralFormField.otherDescription] ===
+                    Impairments.OTHER && (
+                    <div>
+                        <br />
+                        <Field
+                            component={TextField}
+                            fullWidth
+                            label={referralFieldLabels[ReferralFormField.otherDescription]}
+                            required
+                            name={ReferralFormField.otherDescription}
+                            variant="outlined"
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

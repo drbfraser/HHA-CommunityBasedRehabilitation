@@ -64,6 +64,13 @@ export enum orthoticInjury {
     OTHER = "OTHER",
 }
 
+export enum Impairments {
+    VISUAL_IMPAIRMENT = "VISUAL_IMPARIMENT",
+    HEARING_IMPAIRMENT = "HEARING_IMPAIRMENT",
+    SAFEGUARDING = "SAFEGUARDING",
+    OTHER = "OTHER",
+}
+
 export enum WheelchairExperience {
     BASIC = "BAS",
     INTERMEDIATE = "INT",
@@ -85,6 +92,13 @@ export const orthoticInjuryLocations = {
     [orthoticInjury.DROP_FOOT]: "Drop Foot",
     [orthoticInjury.POLIO]: "Polio",
     [orthoticInjury.OTHER]: "Other",
+};
+
+export const otherServices = {
+    [Impairments.VISUAL_IMPAIRMENT]: "Visual Impairment",
+    [Impairments.HEARING_IMPAIRMENT]: "Hearing Impairment",
+    [Impairments.SAFEGUARDING]: "Safeguarding",
+    [Impairments.OTHER]: "Other",
 };
 
 export const wheelchairExperiences = {

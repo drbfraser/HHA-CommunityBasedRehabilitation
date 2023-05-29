@@ -39,7 +39,7 @@ class Command(BaseCommand):
                 created_at=date,
                 server_created_at=date,
                 provided=random.choice(provides),
-                desc="Provided the client with additional services and assistance to improve their health, social, educational and nutritional conditions.",
+                desc="Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",
             )
 
         def createOutcome(self, visit, type, date):

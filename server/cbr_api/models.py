@@ -234,6 +234,7 @@ class Visit(models.Model):
     educat_visit = models.BooleanField(default=False)
     social_visit = models.BooleanField(default=False)
     nutrit_visit = models.BooleanField(default=False)
+    mental_visit = models.BooleanField(default=False)
     longitude = models.DecimalField(max_digits=22, decimal_places=16)
     latitude = models.DecimalField(max_digits=22, decimal_places=16)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)

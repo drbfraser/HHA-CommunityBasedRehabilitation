@@ -420,6 +420,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             "educat_visit",
             "social_visit",
             "nutrit_visit",
+            "mental_visit",
             "longitude",
             "latitude",
             "zone",
@@ -479,6 +480,7 @@ class SummaryVisitSerializer(serializers.ModelSerializer):
             "educat_visit",
             "social_visit",
             "nutrit_visit",
+            "mental_visit",
             "longitude",
             "latitude",
             "zone",
@@ -493,6 +495,7 @@ class AdminStatsVisitsSerializer(serializers.Serializer):
     educat_count = serializers.IntegerField()
     social_count = serializers.IntegerField()
     nutrit_count = serializers.IntegerField()
+    mental_count = serializers.IntegerField()
 
 
 class AdminStatsReferralSerializer(serializers.Serializer):

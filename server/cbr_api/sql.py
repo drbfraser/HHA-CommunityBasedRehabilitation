@@ -54,7 +54,8 @@ def getVisitStats(user_id, from_time, to_time):
         COUNT(*) filter(where health_visit) as health_count,
         COUNT(*) filter(where educat_visit) as educat_count,
         COUNT(*) filter(where social_visit) as social_count,
-        COUNT(*) filter(where nutrit_visit) as nutrit_count
+        COUNT(*) filter(where nutrit_visit) as nutrit_count,
+        COUNT(*) filter(where mental_visit_ as mental_count
         FROM cbr_api_visit
     """
 

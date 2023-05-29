@@ -5,6 +5,7 @@ import {
     School,
     SvgIconComponent,
     Restaurant,
+    Favorite,
 } from "@material-ui/icons";
 
 export interface IRiskType {
@@ -28,5 +29,9 @@ export const riskTypes: { [key: string]: IRiskType } = {
     [RiskType.NUTRITION]: {
         name: "Nutrition",
         Icon: Restaurant,
+    },
+    [RiskType.MENTAL]: {
+        name: "Mental",
+        Icon: Favorite,
     },
 };

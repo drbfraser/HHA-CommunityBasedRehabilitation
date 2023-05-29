@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 outcome=random.choice(outcomes),
             )
 
-        def createVisit(self, health, social, educat, nutrit, type, village):
+        def createVisit(self, health, social, educat, nutrit, mental, type, village):
             client = random.choice(clients)
 
             date_visited = random.randint(
@@ -78,6 +78,7 @@ class Command(BaseCommand):
                 social_visit=social,
                 educat_visit=educat,
                 nutrit_visit=nutrit,
+                mental_visit=mental,
             )
             visit.improvements.add(createImprovement(self, visit, type, date_visited))
             visit.outcomes.add(createOutcome(self, visit, type, date_visited))
@@ -111,19 +112,22 @@ class Command(BaseCommand):
             )
             return
 
-        createVisit(self, True, False, False, False, "HEALTH", "#1")
-        createVisit(self, False, True, False, False, "SOCIAL", "#2")
-        createVisit(self, False, False, True, False, "EDUCAT", "#3")
-        createVisit(self, False, False, False, True, "NUTRIT", "#4")
+        createVisit(self, True, False, False, False, False, "HEALTH", "#1")
+        createVisit(self, False, True, False, False, False, "SOCIAL", "#2")
+        createVisit(self, False, False, True, False, False, "EDUCAT", "#3")
+        createVisit(self, False, False, False, True, False, "NUTRIT", "#4")
+        createVisit(self, False, False, False, False, True, "MENTAL", "#5")
 
-        createVisit(self, True, False, False, False, "HEALTH", "#5")
-        createVisit(self, False, True, False, False, "SOCIAL", "#6")
-        createVisit(self, False, False, True, False, "EDUCAT", "#7")
-        createVisit(self, False, False, False, True, "NUTRIT", "#8")
+        createVisit(self, True, False, False, False, False, "HEALTH", "#6")
+        createVisit(self, False, True, False, False, False, "SOCIAL", "#7")
+        createVisit(self, False, False, True, False, False, "EDUCAT", "#8")
+        createVisit(self, False, False, False, True, False, "NUTRIT", "#9")
+        createVisit(self, False, False, False, False, True, "MENTAL", "#1")
 
-        createVisit(self, True, False, False, False, "HEALTH", "#9")
-        createVisit(self, False, True, False, False, "SOCIAL", "#1")
-        createVisit(self, False, False, True, False, "EDUCAT", "#2")
-        createVisit(self, False, False, False, True, "NUTRIT", "#3")
+        createVisit(self, True, False, False, False, False, "HEALTH", "#2")
+        createVisit(self, False, True, False, False, False, "SOCIAL", "#3")
+        createVisit(self, False, False, True, False, False, "EDUCAT", "#4")
+        createVisit(self, False, False, False, True, False, "NUTRIT", "#5")
+        createVisit(self, False, False, False, False, True, "MENTAL", "#6")
 
         self.stdout.write(self.style.SUCCESS("Visits successfully created!"))

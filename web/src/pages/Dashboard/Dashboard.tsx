@@ -61,6 +61,7 @@ const Dashboard = () => {
                             [RiskType.EDUCATION]: row.educat_risk_level,
                             [RiskType.SOCIAL]: row.social_risk_level,
                             [RiskType.NUTRITION]: row.nutrit_risk_level,
+                            [RiskType.MENTAL]: row.mental_risk_level,
                             last_visit_date: row.last_visit_date,
                             is_active: row.is_active,
                         };

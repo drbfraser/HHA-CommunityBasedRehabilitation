@@ -123,29 +123,33 @@ const RiskHistoryCharts = ({ client }: IProps) => {
 
     return (
         <Grid container>
-            {[RiskType.HEALTH, RiskType.EDUCATION, RiskType.SOCIAL, RiskType.NUTRITION].map(
-                (riskType) => (
-                    // TODO: REMOVE when working on visit
-                    //(riskType!==RiskType.NUTRITION) ?
+            {[
+                RiskType.HEALTH,
+                RiskType.EDUCATION,
+                RiskType.SOCIAL,
+                RiskType.NUTRITION,
+                RiskType.MENTAL,
+            ].map((riskType) => (
+                // TODO: REMOVE when working on visit
+                //(riskType!==RiskType.NUTRITION) ?
 
-                    <Grid key={riskType} item md={4} xs={12}>
-                        <Typography variant="h5" className={styles.textCenter}>
-                            {riskTypes[riskType].name} Risk
-                        </Typography>
+                <Grid key={riskType} item md={4} xs={12}>
+                    <Typography variant="h5" className={styles.textCenter}>
+                        {riskTypes[riskType].name} Risk
+                    </Typography>
 
-                        {chartData && chartData[riskType].length ? (
-                            <RiskChart riskType={riskType} data={chartData[riskType]} />
-                        ) : (
-                            <Skeleton
-                                variant="rect"
-                                height={chartHeight}
-                                className={styles.chartSkeleton}
-                            />
-                        )}
-                    </Grid>
-                    //:<></>
-                )
-            )}
+                    {chartData && chartData[riskType].length ? (
+                        <RiskChart riskType={riskType} data={chartData[riskType]} />
+                    ) : (
+                        <Skeleton
+                            variant="rect"
+                            height={chartHeight}
+                            className={styles.chartSkeleton}
+                        />
+                    )}
+                </Grid>
+                //:<></>
+            ))}
         </Grid>
     );
 };

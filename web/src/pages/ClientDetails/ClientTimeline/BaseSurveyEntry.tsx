@@ -40,6 +40,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
     const [open, setOpen] = useState(false);
     const [loadingError, setLoadingError] = useState(false);
     const styles = useStyles();
+    console.log(survey);
 
     const onOpen = () => setOpen(true);
 
@@ -71,6 +72,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
                     };
                 })
                 .filter((d) => d.desc !== "");
+            console.log(fields);
 
             return (
                 <Accordion key={categoryName} className={styles.impOutcomeAccordion}>

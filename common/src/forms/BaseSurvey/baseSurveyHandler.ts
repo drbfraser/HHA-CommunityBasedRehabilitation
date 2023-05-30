@@ -23,6 +23,7 @@ export const baseSurveyHandleSubmitForm = async (values: BaseFormValues, source:
         health: values[BaseSurveyFormField.rateLevel],
         health_have_rehabilitation_access: values[BaseSurveyFormField.getService],
         health_need_rehabilitation_access: values[BaseSurveyFormField.needService],
+        health_have_mental_condition: values[BaseSurveyFormField.mentalHealth],
         health_have_assistive_device: values[BaseSurveyFormField.haveDevice],
         health_working_assistive_device: values[BaseSurveyFormField.deviceWorking],
         health_need_assistive_device: values[BaseSurveyFormField.needDevice],

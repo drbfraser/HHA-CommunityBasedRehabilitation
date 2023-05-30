@@ -403,6 +403,7 @@ class BaselineSurvey(models.Model):
     health = models.CharField(max_length=2, choices=Ratings.choices)
     health_have_rehabilitation_access = models.BooleanField()
     health_need_rehabilitation_access = models.BooleanField()
+    health_have_mental_condition = models.BooleanField(default=False)
     health_have_assistive_device = models.BooleanField()
     health_working_assistive_device = models.BooleanField()
     health_need_assistive_device = models.BooleanField()

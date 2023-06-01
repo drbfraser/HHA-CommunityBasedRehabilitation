@@ -23,7 +23,7 @@ const dataLabels = [
         key: "orthotic_count",
     },
     {
-        label: "HHNAP",
+        label: "HHANAP",
         key: "nutrition_agriculture_count",
     },
     {

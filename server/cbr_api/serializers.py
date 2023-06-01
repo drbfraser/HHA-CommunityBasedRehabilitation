@@ -510,6 +510,7 @@ class AdminStatsReferralSerializer(serializers.Serializer):
     prosthetic_count = serializers.IntegerField()
     orthotic_count = serializers.IntegerField()
     nutrition_agriculture_count = serializers.IntegerField()
+    mental_health_count = serializers.IntegerField()
     other_count = serializers.IntegerField()
 
 

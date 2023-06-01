@@ -23,8 +23,12 @@ const dataLabels = [
         key: "orthotic_count",
     },
     {
-        label: "Nutrition & Agriculture",
+        label: "HHNAP",
         key: "nutrition_agriculture_count",
+    },
+    {
+        label: "Mental Health",
+        key: "mental_health_count",
     },
     {
         label: "Other",
@@ -40,7 +44,7 @@ const ReferralStats = ({ stats }: IProps) => {
     if (!stats) {
         return <Skeleton variant="rect" height={400} />;
     }
-
+    console.log(stats);
     const data = dataLabels.map((d) => ({
         label: d.label,
         resolved: stats.referrals_resolved[d.key as keyof IStatsReferral],

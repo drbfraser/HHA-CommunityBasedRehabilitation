@@ -80,6 +80,7 @@ def getReferralStats(user_id, from_time, to_time):
         COUNT(*) filter(where prosthetic) as prosthetic_count,
         COUNT(*) filter(where orthotic) as orthotic_count,
         COUNT(*) filter(where hha_nutrition_and_agriculture_project) as nutrition_agriculture_count,
+        COUNT(*) filter(where mental_health) as mental_health_count,
         COUNT(*) filter(where services_other != '') as other_count
         FROM cbr_api_referral
     """

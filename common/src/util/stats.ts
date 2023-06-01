@@ -20,6 +20,7 @@ export interface IStatsReferral {
     prosthetic_count: number;
     orthotic_count: number;
     nutrition_agriculture_count: number;
+    mental_health_count: number;
     other_count: number;
 }
 

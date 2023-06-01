@@ -338,6 +338,9 @@ class Referral(models.Model):
     emergency_food_aid = models.BooleanField(default=False)
     agriculture_livelihood_program_enrollment = models.BooleanField(default=False)
 
+    mental_health = models.BooleanField(default=False)
+    mental_health_condition = models.CharField(max_length=100, blank=True)
+
     services_other = models.CharField(max_length=100, blank=True)
 
 

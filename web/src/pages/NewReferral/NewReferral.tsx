@@ -290,7 +290,7 @@ const MentalHealthForm = (props: IFormProps) => {
     const styles = useStyles();
     return (
         <div>
-            <FormLabel>Please select another referral</FormLabel>
+            <FormLabel>Please select mental health referral</FormLabel>
             <br />
             <br />
             <div className={styles.fieldIndent}>

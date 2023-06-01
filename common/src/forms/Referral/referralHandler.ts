@@ -3,7 +3,7 @@ import { apiFetch, Endpoint, objectToFormData } from "../../util/endpoints";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
 import { appendPic } from "../../util/referralImageSubmission";
 import { appendMobilePict } from "../../util/mobileImageSubmisson";
-import { Impairments } from "../../util/referrals";
+import { Impairments, MentalConditions } from "../../util/referrals";
 
 const addReferral = async (referralInfo: FormData) => {
     const init: RequestInit = {
@@ -54,6 +54,13 @@ export const referralHandleSubmit = async (values: ReferralFormValues, source: s
         emergency_food_aid: values[ReferralFormField.emergencyFoodAidRequired],
         agriculture_livelihood_program_enrollment:
             values[ReferralFormField.agricultureLivelihoodProgramEnrollment],
+
+        mental_health: values[ReferralFormField.mentalHealth],
+        mental_health_condition: values[ReferralFormField.mentalHealth]
+            ? values[ReferralFormField.mentalCondition] === MentalConditions.OTHER
+                ? values[ReferralFormField.mentalConditionOther]
+                : values[ReferralFormField.mentalCondition]
+            : "",
 
         services_other: values[ReferralFormField.servicesOther]
             ? values[ReferralFormField.otherDescription] === Impairments.OTHER

@@ -318,6 +318,8 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
             "hha_nutrition_and_agriculture_project",
             "emergency_food_aid",
             "agriculture_livelihood_program_enrollment",
+            "mental_health",
+            "mental_health_condition",
             "services_other",
             "picture",
             "updated_at",
@@ -370,6 +372,8 @@ class ReferralSyncSerializer(serializers.ModelSerializer):
             "hha_nutrition_and_agriculture_project",
             "emergency_food_aid",
             "agriculture_livelihood_program_enrollment",
+            "mental_health",
+            "mental_health_condition",
             "services_other",
             "picture",
             "updated_at",
@@ -398,6 +402,7 @@ class OutstandingReferralSerializer(serializers.Serializer):
     services_other = serializers.CharField()
     physiotherapy = serializers.BooleanField()
     hha_nutrition_and_agriculture_project = serializers.BooleanField()
+    mental_health = serializers.BooleanField()
     wheelchair = serializers.BooleanField()
     prosthetic = serializers.BooleanField()
     orthotic = serializers.BooleanField()

@@ -109,6 +109,7 @@ const Dashboard = () => {
             if (row.hha_nutrition_and_agriculture_project) referralTypes.push("HHANAP");
             if (row.orthotic) referralTypes.push("Orthotic");
             if (row.prosthetic) referralTypes.push("Prosthetic");
+            if (row.mental_health) referralTypes.push("Mental Health");
             if (row.services_other) referralTypes.push(row.services_other);
 
             return referralTypes.join(", ");

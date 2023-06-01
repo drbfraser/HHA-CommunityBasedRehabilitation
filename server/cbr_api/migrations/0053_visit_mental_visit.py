@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0052_client_mental_risk_level_client_mental_timestamp_and_more'),
+        ("cbr_api", "0052_client_mental_risk_level_client_mental_timestamp_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='visit',
-            name='mental_visit',
+            model_name="visit",
+            name="mental_visit",
             field=models.BooleanField(default=False),
         ),
     ]

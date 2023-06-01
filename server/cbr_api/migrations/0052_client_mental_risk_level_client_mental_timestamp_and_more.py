@@ -6,33 +6,72 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0051_merge_20230529_1405'),
+        ("cbr_api", "0051_merge_20230529_1405"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='client',
-            name='mental_risk_level',
-            field=models.CharField(choices=[('LO', 'Low'), ('ME', 'Medium'), ('HI', 'High'), ('CR', 'Critical')], default='LO', max_length=2),
+            model_name="client",
+            name="mental_risk_level",
+            field=models.CharField(
+                choices=[
+                    ("LO", "Low"),
+                    ("ME", "Medium"),
+                    ("HI", "High"),
+                    ("CR", "Critical"),
+                ],
+                default="LO",
+                max_length=2,
+            ),
         ),
         migrations.AddField(
-            model_name='client',
-            name='mental_timestamp',
+            model_name="client",
+            name="mental_timestamp",
             field=models.BigIntegerField(default=0),
         ),
         migrations.AlterField(
-            model_name='clientrisk',
-            name='risk_type',
-            field=models.CharField(choices=[('HEALTH', 'Health'), ('SOCIAL', 'Social'), ('EDUCAT', 'Education'), ('NUTRIT', 'Nutrition'), ('MENTAL', 'Mental')], default='HEALTH', max_length=6),
+            model_name="clientrisk",
+            name="risk_type",
+            field=models.CharField(
+                choices=[
+                    ("HEALTH", "Health"),
+                    ("SOCIAL", "Social"),
+                    ("EDUCAT", "Education"),
+                    ("NUTRIT", "Nutrition"),
+                    ("MENTAL", "Mental"),
+                ],
+                default="HEALTH",
+                max_length=6,
+            ),
         ),
         migrations.AlterField(
-            model_name='improvement',
-            name='risk_type',
-            field=models.CharField(choices=[('HEALTH', 'Health'), ('SOCIAL', 'Social'), ('EDUCAT', 'Education'), ('NUTRIT', 'Nutrition'), ('MENTAL', 'Mental')], default='HEALTH', max_length=6),
+            model_name="improvement",
+            name="risk_type",
+            field=models.CharField(
+                choices=[
+                    ("HEALTH", "Health"),
+                    ("SOCIAL", "Social"),
+                    ("EDUCAT", "Education"),
+                    ("NUTRIT", "Nutrition"),
+                    ("MENTAL", "Mental"),
+                ],
+                default="HEALTH",
+                max_length=6,
+            ),
         ),
         migrations.AlterField(
-            model_name='outcome',
-            name='risk_type',
-            field=models.CharField(choices=[('HEALTH', 'Health'), ('SOCIAL', 'Social'), ('EDUCAT', 'Education'), ('NUTRIT', 'Nutrition'), ('MENTAL', 'Mental')], default='HEALTH', max_length=6),
+            model_name="outcome",
+            name="risk_type",
+            field=models.CharField(
+                choices=[
+                    ("HEALTH", "Health"),
+                    ("SOCIAL", "Social"),
+                    ("EDUCAT", "Education"),
+                    ("NUTRIT", "Nutrition"),
+                    ("MENTAL", "Mental"),
+                ],
+                default="HEALTH",
+                max_length=6,
+            ),
         ),
     ]

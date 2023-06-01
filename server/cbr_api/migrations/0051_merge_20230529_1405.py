@@ -6,9 +6,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cbr_api', '0050_alter_referral_orthotic_injury_location_and_more'),
-        ('cbr_api', '0050_alter_referral_orthotic_injury_location_and_more 2'),
+        ("cbr_api", "0050_alter_referral_orthotic_injury_location_and_more"),
+        ("cbr_api", "0050_alter_referral_orthotic_injury_location_and_more 2"),
     ]
 
-    operations = [
-    ]
+    operations = []

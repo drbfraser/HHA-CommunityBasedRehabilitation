@@ -297,8 +297,8 @@ const MentalHealthForm = (props: IFormProps) => {
                 <Field
                     component={TextField}
                     variant="outlined"
-                    name={ReferralFormField.mentalCondition}
-                    label={referralFieldLabels[ReferralFormField.mentalCondition]}
+                    name={ReferralFormField.mentalHealthCondition}
+                    label={referralFieldLabels[ReferralFormField.mentalHealthCondition]}
                     select
                     fullWidth
                     required
@@ -309,7 +309,7 @@ const MentalHealthForm = (props: IFormProps) => {
                         </MenuItem>
                     ))}
                 </Field>
-                {props.formikProps.values[ReferralFormField.mentalCondition] ===
+                {props.formikProps.values[ReferralFormField.mentalHealthCondition] ===
                     MentalConditions.OTHER && (
                     <div>
                         <br />
@@ -410,7 +410,7 @@ const NewReferral = () => {
             validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
         },
         [ReferralFormField.mentalHealth]: {
-            label: `${referralFieldLabels[ReferralFormField.mentalCondition]} Visit`,
+            label: `${referralFieldLabels[ReferralFormField.mentalHealth]} Visit`,
             Form: MentalHealthForm,
             validationSchema: mentalHealthValidationSchema,
         },

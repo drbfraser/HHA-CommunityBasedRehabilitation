@@ -2,6 +2,7 @@ import { FormikProps } from "formik";
 import {
     Impairments,
     InjuryLocation,
+    MentalConditions,
     WheelchairExperience,
     mentalHealthConditions,
     orthoticInjury,
@@ -34,7 +35,7 @@ export enum ReferralField {
     orthotic_injury_location = "orthotic_injury_location",
 
     mental_health = "mental_health",
-    mental_condition = "mental_condition",
+    mental_health_condition = "mental_health_condition",
     mental_condition_other = "mental_condition_other",
 
     hha_nutrition_and_agriculture_project = "hha_nutrition_and_agriculture_project",
@@ -61,7 +62,7 @@ export enum ReferralFormField {
     orthoticInjuryLocation = "orthotic_injury_location",
 
     mentalHealth = "mental_heath",
-    mentalCondition = "mental_condition",
+    mentalHealthCondition = "mental_health_condition",
     mentalConditionOther = "mental_condition_other",
 
     hhaNutritionAndAgricultureProject = "hha_nutrition_and_agriculture_project",
@@ -100,7 +101,7 @@ export const referralFieldLabels = {
     [ReferralFormField.orthoticInjuryLocation]: "Orthotic Injury Location",
 
     [ReferralFormField.mentalHealth]: "Mental Health",
-    [ReferralFormField.mentalCondition]: "Mental Condition",
+    [ReferralFormField.mentalHealthCondition]: "Mental Condition",
     [ReferralFormField.mentalConditionOther]: "Other Mental Condition",
 
     [ReferralFormField.hhaNutritionAndAgricultureProject]: "HHA Nutrition/Agriculture Project",
@@ -140,7 +141,7 @@ export const referralInitialValues = {
     [ReferralFormField.orthoticInjuryLocation]: orthoticInjury.WEAK_LEG,
 
     [ReferralFormField.mentalHealth]: false,
-    [ReferralFormField.mentalCondition]: mentalHealthConditions.AUT,
+    [ReferralFormField.mentalHealthCondition]: "",
     [ReferralFormField.mentalConditionOther]: "",
 
     [ReferralFormField.hhaNutritionAndAgricultureProject]: false,
@@ -201,27 +202,28 @@ export const prostheticOrthoticValidationSchema = (serviceType: ReferralFormFiel
             .required(),
     });
 
+const isOtherMentalCondition = (condition: string) => condition === MentalConditions.OTHER;
 export const mentalHealthValidationSchema = () =>
     Yup.object().shape({
-        [ReferralFormField.mentalCondition]: Yup.string()
-            .label(referralFieldLabels[ReferralFormField.mentalCondition])
+        [ReferralFormField.mentalConditionOther]: Yup.string()
+            .label(referralFieldLabels[ReferralFormField.mentalHealthCondition])
             .max(100)
             .required(),
-        [ReferralFormField.mentalConditionOther]: Yup.string()
-            .label(referralFieldLabels[ReferralFormField.mentalConditionOther])
+        [ReferralFormField.mentalHealthCondition]: Yup.string()
+            .label(referralFieldLabels[ReferralFormField.mentalHealthCondition])
             .trim()
             .test(
                 "require-if-other-selected",
                 "Other Condition is required",
-                async (conditionOther, schema) =>
-                    !(await isOtherCondition(schema.parent.condition)) ||
+                async (conditionOther) =>
+                    !isOtherMentalCondition(conditionOther!) ||
                     (conditionOther !== undefined && conditionOther.length > 0)
             )
             .test(
                 "require-if-other-selected",
-                "Other Condition must be at most 100 characters",
-                async (conditionOther, schema) =>
-                    !(await isOtherCondition(schema.parent.condition)) ||
+                "Mental Condition must be at most 100 characters",
+                async (conditionOther) =>
+                    !isOtherMentalCondition(conditionOther!) ||
                     (conditionOther !== undefined && conditionOther.length <= 100)
             ),
     });

@@ -20,7 +20,7 @@ export interface IReferral {
     orthotic_injury_location: orthoticInjury;
 
     mental_health: boolean;
-    mental_condition: MentalConditions;
+    mental_health_condition: MentalConditions;
     mental_condition_other: string;
 
     hha_nutrition_and_agriculture_project: boolean;
@@ -70,10 +70,10 @@ export enum orthoticInjury {
 }
 
 export enum Impairments {
-    VISUAL_IMPAIRMENT = "VIS_IMPAIRMENT",
-    HEARING_IMPAIRMENT = "HEAR_IMPAIRMENT",
-    SAFEGUARDING = "SAFEGUARDING",
-    OTHER = "OTHER",
+    VISUAL_IMPAIRMENT = "Visual Impairment",
+    HEARING_IMPAIRMENT = "Hearing Impairment",
+    SAFEGUARDING = "Safeguarding",
+    OTHER = "Other",
 }
 
 export enum WheelchairExperience {
@@ -82,9 +82,9 @@ export enum WheelchairExperience {
 }
 
 export enum MentalConditions {
-    AUTISM = "AUT",
-    DEMENTIA = "DEM",
-    OTHER = "OTH",
+    AUTISM = "Autism",
+    DEMENTIA = "Dementia",
+    OTHER = "Other",
 }
 
 export const prostheticInjuryLocations = {

@@ -57,9 +57,9 @@ export const referralHandleSubmit = async (values: ReferralFormValues, source: s
 
         mental_health: values[ReferralFormField.mentalHealth],
         mental_health_condition: values[ReferralFormField.mentalHealth]
-            ? values[ReferralFormField.mentalCondition] === MentalConditions.OTHER
+            ? values[ReferralFormField.mentalHealthCondition] === MentalConditions.OTHER
                 ? values[ReferralFormField.mentalConditionOther]
-                : values[ReferralFormField.mentalCondition]
+                : values[ReferralFormField.mentalHealthCondition]
             : "",
 
         services_other: values[ReferralFormField.servicesOther]

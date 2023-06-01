@@ -37,6 +37,7 @@ interface IEntryProps {
 }
 
 const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) => {
+    console.log(referral);
     const [open, setOpen] = useState(false);
     const styles = useStyles();
     const Summary = ({ clickable }: { clickable: boolean }) => {
@@ -57,6 +58,8 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                 {referral.prosthetic && <ReasonChip label="Prosthetic" />}{" "}
                 {referral.orthotic && <ReasonChip label="Orthotic" />}{" "}
                 {referral.hha_nutrition_and_agriculture_project && <ReasonChip label="Nutrition" />}{" "}
+                {referral.mental_health && <ReasonChip label="Mental" />}{" "}
+                {referral.services_other && <ReasonChip label="Other" />}{" "}
             </>
         );
     };
@@ -185,6 +188,14 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                         <br />
                         <b>Agriculture Livelihood Program Enrollment Required: </b>
                         {referral.agriculture_livelihood_program_enrollment ? "Yes" : "No"}
+                        <br />
+                        <br />
+                    </>
+                )}
+                {referral.mental_health && (
+                    <>
+                        <b>Mental Health Condition: </b>
+                        {referral.mental_health_condition}
                         <br />
                         <br />
                     </>

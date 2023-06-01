@@ -44,7 +44,6 @@ const ReferralStats = ({ stats }: IProps) => {
     if (!stats) {
         return <Skeleton variant="rect" height={400} />;
     }
-    console.log(stats);
     const data = dataLabels.map((d) => ({
         label: d.label,
         resolved: stats.referrals_resolved[d.key as keyof IStatsReferral],

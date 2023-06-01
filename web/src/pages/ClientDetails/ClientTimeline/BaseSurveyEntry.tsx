@@ -40,7 +40,6 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
     const [open, setOpen] = useState(false);
     const [loadingError, setLoadingError] = useState(false);
     const styles = useStyles();
-    console.log(survey);
 
     const onOpen = () => setOpen(true);
 

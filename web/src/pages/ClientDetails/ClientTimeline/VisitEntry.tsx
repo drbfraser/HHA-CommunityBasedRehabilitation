@@ -55,7 +55,6 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
 
     const Summary = ({ clickable }: { clickable: boolean }) => {
         const zone = zones.get(visitSummary.zone) ?? "Unknown";
-        console.log(visitSummary);
 
         return (
             <>

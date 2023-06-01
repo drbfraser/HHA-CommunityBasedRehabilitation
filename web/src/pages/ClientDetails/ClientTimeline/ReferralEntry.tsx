@@ -37,7 +37,6 @@ interface IEntryProps {
 }
 
 const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) => {
-    console.log(referral);
     const [open, setOpen] = useState(false);
     const styles = useStyles();
     const Summary = ({ clickable }: { clickable: boolean }) => {

@@ -7,6 +7,7 @@ export interface ISurvey {
     health_have_rehabilitation_access: boolean;
     health_need_rehabilitation_access: boolean;
     health_have_assistive_device: boolean;
+    health_have_mental_condition: boolean;
     health_working_assistive_device: boolean;
     health_need_assistive_device: boolean;
     health_services_satisfaction: RateLevel;
@@ -203,6 +204,7 @@ export const getSurveyInfo = (survey: ISurvey) => {
             [BaseSurveyFormField.health]: rateLevel[survey.health].name,
             [BaseSurveyFormField.getService]: survey.health_have_rehabilitation_access,
             [BaseSurveyFormField.needService]: survey.health_need_rehabilitation_access,
+            [BaseSurveyFormField.mentalHealth]: survey.health_have_mental_condition,
             [BaseSurveyFormField.haveDevice]: survey.health_have_assistive_device,
             [BaseSurveyFormField.deviceWorking]: survey.health_working_assistive_device,
             [BaseSurveyFormField.needDevice]: survey.health_need_assistive_device,

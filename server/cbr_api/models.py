@@ -95,6 +95,7 @@ class RiskType(models.TextChoices):
     SOCIAL = "SOCIAL", _("Social")
     EDUCAT = "EDUCAT", _("Education")
     NUTRIT = "NUTRIT", _("Nutrition")
+    MENTAL = "MENTAL", _("Mental")
 
     @staticmethod
     def getField():
@@ -180,6 +181,8 @@ class Client(models.Model):
     educat_timestamp = models.BigIntegerField(default=0)
     nutrit_risk_level = RiskLevel.getField()
     nutrit_timestamp = models.BigIntegerField(default=0)
+    mental_risk_level = RiskLevel.getField()
+    mental_timestamp = models.BigIntegerField(default=0)
     last_visit_date = models.BigIntegerField(default=0)
 
     def save(self, *args, **kwargs):
@@ -231,6 +234,7 @@ class Visit(models.Model):
     educat_visit = models.BooleanField(default=False)
     social_visit = models.BooleanField(default=False)
     nutrit_visit = models.BooleanField(default=False)
+    mental_visit = models.BooleanField(default=False)
     longitude = models.DecimalField(max_digits=22, decimal_places=16)
     latitude = models.DecimalField(max_digits=22, decimal_places=16)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
@@ -334,6 +338,9 @@ class Referral(models.Model):
     emergency_food_aid = models.BooleanField(default=False)
     agriculture_livelihood_program_enrollment = models.BooleanField(default=False)
 
+    mental_health = models.BooleanField(default=False)
+    mental_health_condition = models.CharField(max_length=100, blank=True)
+
     services_other = models.CharField(max_length=100, blank=True)
 
 
@@ -399,6 +406,7 @@ class BaselineSurvey(models.Model):
     health = models.CharField(max_length=2, choices=Ratings.choices)
     health_have_rehabilitation_access = models.BooleanField()
     health_need_rehabilitation_access = models.BooleanField()
+    health_have_mental_condition = models.BooleanField(default=False)
     health_have_assistive_device = models.BooleanField()
     health_working_assistive_device = models.BooleanField()
     health_need_assistive_device = models.BooleanField()

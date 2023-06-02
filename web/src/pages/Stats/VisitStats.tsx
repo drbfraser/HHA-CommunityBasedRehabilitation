@@ -60,7 +60,12 @@ const VisitStats = ({ stats }: IProps) => {
         {
             label: "Nutrition",
             count: getBreakdownCount("nutrit_count"),
-            color: themeColors.hhaBlue,
+            color: themeColors.yellow,
+        },
+        {
+            label: "Mental",
+            count: getBreakdownCount("mental_count"),
+            color: themeColors.bluePale,
         },
     ].filter((z) => z.count);
 

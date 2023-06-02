@@ -54,7 +54,8 @@ def getVisitStats(user_id, from_time, to_time):
         COUNT(*) filter(where health_visit) as health_count,
         COUNT(*) filter(where educat_visit) as educat_count,
         COUNT(*) filter(where social_visit) as social_count,
-        COUNT(*) filter(where nutrit_visit) as nutrit_count
+        COUNT(*) filter(where nutrit_visit) as nutrit_count,
+        COUNT(*) filter(where mental_visit) as mental_count
         FROM cbr_api_visit
     """
 
@@ -79,6 +80,7 @@ def getReferralStats(user_id, from_time, to_time):
         COUNT(*) filter(where prosthetic) as prosthetic_count,
         COUNT(*) filter(where orthotic) as orthotic_count,
         COUNT(*) filter(where hha_nutrition_and_agriculture_project) as nutrition_agriculture_count,
+        COUNT(*) filter(where mental_health) as mental_health_count,
         COUNT(*) filter(where services_other != '') as other_count
         FROM cbr_api_referral
     """
@@ -128,7 +130,7 @@ def getOutstandingReferrals():
     with connection.cursor() as cursor:
         cursor.execute(
             """
-            SELECT c.id, c.full_name, r.services_other, r.physiotherapy, r.wheelchair, r.prosthetic, r.orthotic, r.hha_nutrition_and_agriculture_project, r.date_referred
+            SELECT c.id, c.full_name, r.services_other, r.physiotherapy, r.wheelchair, r.prosthetic, r.orthotic, r.hha_nutrition_and_agriculture_project, r.date_referred, r.mental_health
             FROM cbr_api_referral as r
             INNER JOIN cbr_api_client as c
             ON c.id = r.client_id_id

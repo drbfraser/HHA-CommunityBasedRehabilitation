@@ -11,6 +11,7 @@ export interface IClientSummary {
     educat_risk_level: string;
     social_risk_level: string;
     nutrit_risk_level: string;
+    mental_risk_level: string;
     last_visit_date: number;
     user_id: number;
     is_active: boolean;
@@ -57,6 +58,7 @@ export enum SortOptions {
     EDUCATION = "education",
     SOCIAL = "social",
     NUTRITION = "nutrition",
+    MENTAL = "mental",
 }
 
 export const genders = {
@@ -66,10 +68,13 @@ export const genders = {
 
 export const clientPrioritySort = (a: IClientSummary, b: IClientSummary) => {
     const getCombinedRisk = (c: IClientSummary) =>
-        [c.health_risk_level, c.educat_risk_level, c.social_risk_level, c.nutrit_risk_level].reduce(
-            (sum, r) => sum + riskLevels[r].level,
-            0
-        );
+        [
+            c.health_risk_level,
+            c.educat_risk_level,
+            c.social_risk_level,
+            c.nutrit_risk_level,
+            c.mental_risk_level,
+        ].reduce((sum, r) => sum + riskLevels[r].level, 0);
 
     const riskA = getCombinedRisk(a);
     const riskB = getCombinedRisk(b);

@@ -71,6 +71,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
                     };
                 })
                 .filter((d) => d.desc !== "");
+            console.log(fields);
 
             return (
                 <Accordion key={categoryName} className={styles.impOutcomeAccordion}>

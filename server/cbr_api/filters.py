@@ -14,6 +14,7 @@ class ClientFilter(django_filters.FilterSet):
             "social_risk_level",
             "educat_risk_level",
             "nutrit_risk_level",
+            "mental_risk_level",
             "user_id",
             "is_active",
         ]

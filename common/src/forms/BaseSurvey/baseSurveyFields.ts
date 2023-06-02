@@ -10,6 +10,7 @@ export enum BaseSurveyField {
     health = "health",
     health_have_rehabilitation_access = "health_have_rehabilitation_access",
     health_need_rehabilitation_access = "health_need_rehabilitation_access",
+    health_have_mental_condition = "health_have_mental_condition",
     health_have_assistive_device = "health_have_assistive_device",
     health_working_assistive_device = "health_working_assistive_device",
     health_need_assistive_device = "health_need_assistive_device",
@@ -50,6 +51,7 @@ export enum BaseSurveyFormField {
     rateLevel = "rate_level",
     getService = "get_service",
     needService = "need_service",
+    mentalHealth = "mental_health",
     haveDevice = "have_device",
     deviceWorking = "device_working",
     needDevice = "need_device",
@@ -109,6 +111,7 @@ export const baseFieldLabels = {
     [BaseSurveyFormField.getService]:
         "I have access to rehabilitation services (e.g physiotherapy, speech therapy, training how to use assistive device)",
     [BaseSurveyFormField.needService]: "I need access to rehabilitation services",
+    [BaseSurveyFormField.mentalHealth]: "I suffer from a mental health condition",
     [BaseSurveyFormField.haveDevice]:
         "I have an assistive device (e.g wheelchair, crutches, prosthetic limbs, hearing aid)",
     [BaseSurveyFormField.deviceWorking]: "My assistive device is working well",
@@ -204,6 +207,8 @@ export const baseInitialValues = {
 
     [BaseSurveyFormField.haveShelter]: false,
     [BaseSurveyFormField.accessItem]: false,
+
+    [BaseSurveyFormField.mentalHealth]: false,
 };
 
 export const emptyValidationSchema = () => Yup.object().shape({});

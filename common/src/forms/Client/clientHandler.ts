@@ -75,6 +75,11 @@ export const handleNewWebClientSubmit = async (
             requirement: values.nutritionRequirements,
             goal: values.nutritionGoals,
         },
+        mental_risk: {
+            risk_level: values.mentalRisk,
+            requirement: values.mentalRequirements,
+            goal: values.mentalGoals,
+        },
     };
 
     const formData = objectToFormData(newClient);

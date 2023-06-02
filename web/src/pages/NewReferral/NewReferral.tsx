@@ -21,6 +21,8 @@ import {
     wheelchairExperiences,
     otherServices,
     Impairments,
+    mentalHealthConditions,
+    MentalConditions,
 } from "@cbr/common/util/referrals";
 import { handleSubmit } from "./formHandler";
 import { ArrowBack } from "@material-ui/icons";
@@ -39,6 +41,7 @@ import {
     wheelchairValidationSchema,
     hhaNutritionAndAgricultureProjectValidationSchema,
     serviceTypes,
+    mentalHealthValidationSchema,
 } from "@cbr/common/forms/Referral/referralFields";
 import { PhotoView } from "components/ReferralPhotoView/PhotoView";
 
@@ -283,6 +286,49 @@ const NutritionForm = (props: IFormProps) => {
     );
 };
 
+const MentalHealthForm = (props: IFormProps) => {
+    const styles = useStyles();
+    return (
+        <div>
+            <FormLabel>Please select mental health referral</FormLabel>
+            <br />
+            <br />
+            <div className={styles.fieldIndent}>
+                <Field
+                    component={TextField}
+                    variant="outlined"
+                    name={ReferralFormField.mentalHealthCondition}
+                    label={referralFieldLabels[ReferralFormField.mentalHealthCondition]}
+                    select
+                    fullWidth
+                    required
+                >
+                    {Object.entries(mentalHealthConditions).map(([value, name]) => (
+                        <MenuItem key={value} value={value}>
+                            {name}
+                        </MenuItem>
+                    ))}
+                </Field>
+                {props.formikProps.values[ReferralFormField.mentalHealthCondition] ===
+                    MentalConditions.OTHER && (
+                    <div>
+                        <br />
+                        <FormLabel>Please describe the referral</FormLabel>
+                        <Field
+                            component={TextField}
+                            fullWidth
+                            label={referralFieldLabels[ReferralFormField.mentalConditionOther]}
+                            required
+                            name={ReferralFormField.mentalConditionOther}
+                            variant="outlined"
+                        />
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
 const OtherServicesForm = (props: IFormProps) => {
     const styles = useStyles();
 
@@ -363,6 +409,12 @@ const NewReferral = () => {
             Form: NutritionForm,
             validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
         },
+        [ReferralFormField.mentalHealth]: {
+            label: `${referralFieldLabels[ReferralFormField.mentalHealth]} Visit`,
+            Form: MentalHealthForm,
+            validationSchema: mentalHealthValidationSchema,
+        },
+
         [ReferralFormField.servicesOther]: {
             label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,
             Form: OtherServicesForm,

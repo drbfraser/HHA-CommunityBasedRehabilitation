@@ -71,6 +71,9 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
                 {visitSummary.nutrit_visit && (
                     <RiskTypeChip risk={RiskType.NUTRITION} clickable={clickable} />
                 )}{" "}
+                {visitSummary.mental_visit && (
+                    <RiskTypeChip risk={RiskType.MENTAL} clickable={clickable} />
+                )}{" "}
             </>
         );
     };

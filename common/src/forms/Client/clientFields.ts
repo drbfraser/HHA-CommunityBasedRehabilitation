@@ -29,6 +29,9 @@ export enum ClientField {
     nutritionRisk = "nutritionRisk",
     nutritionRequirements = "nutritionRequirements",
     nutritionGoals = "nutritionGoals",
+    mentalRisk = "mentalRisk",
+    mentalRequirements = "mentalRequirements",
+    mentalGoals = "mentalGoals",
     picture = "picture",
     pictureChanged = "pictureChanged",
 
@@ -53,6 +56,8 @@ export enum ClientField {
     educat_timestamp = "educat_timestamp",
     nutrit_risk_level = "nutrit_risk_level",
     nutrit_timestamp = "nutrit_timestamp",
+    mental_risk_level = "mental_risk_level",
+    mental_timestamp = "mental_timestamp",
     last_visit_date = "last_visit_date",
     is_active = "is_active",
 }
@@ -103,6 +108,9 @@ export const clientFieldLabels = {
     [ClientField.nutritionRisk]: "Nutrition Risk",
     [ClientField.nutritionRequirements]: "Nutrition Requirement(s)",
     [ClientField.nutritionGoals]: "Nutrition Goal(s)",
+    [ClientField.mentalRisk]: "Mental Health Risk",
+    [ClientField.mentalRequirements]: "Mental Health Requirement(s)",
+    [ClientField.mentalGoals]: "Mental Health Goal(s)",
 };
 
 export const updateClientfieldLabels = {
@@ -148,6 +156,9 @@ export const clientInitialValues = {
     [ClientField.nutritionRisk]: "",
     [ClientField.nutritionRequirements]: "",
     [ClientField.nutritionGoals]: "",
+    [ClientField.mentalRisk]: "",
+    [ClientField.mentalRequirements]: "",
+    [ClientField.mentalGoals]: "",
     [ClientField.picture]: "",
     [ClientField.pictureChanged]: false,
     [ClientField.is_active]: true,
@@ -364,6 +375,17 @@ export const newClientValidationSchema = () =>
             .required(),
         [ClientField.nutritionGoals]: Yup.string()
             .label(clientFieldLabels[ClientField.nutritionGoals])
+            .trim()
+            .required(),
+        [ClientField.mentalRisk]: Yup.string()
+            .label(clientFieldLabels[ClientField.mentalRisk])
+            .required(),
+        [ClientField.mentalRequirements]: Yup.string()
+            .label(clientFieldLabels[ClientField.mentalRequirements])
+            .trim()
+            .required(),
+        [ClientField.mentalGoals]: Yup.string()
+            .label(clientFieldLabels[ClientField.mentalGoals])
             .trim()
             .required(),
         [ClientField.interviewConsent]: Yup.boolean()

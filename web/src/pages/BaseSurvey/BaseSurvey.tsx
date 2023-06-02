@@ -93,6 +93,14 @@ const HealthForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    name={BaseSurveyFormField.mentalHealth}
+                    Label={{ label: baseFieldLabels[BaseSurveyFormField.mentalHealth] }}
+                />
+                <br />
+
+                <Field
+                    component={CheckboxWithLabel}
+                    type="checkbox"
                     name={BaseSurveyFormField.haveDevice}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.haveDevice] }}
                 />
@@ -539,6 +547,7 @@ const NewSurvey = () => {
     const isFinalStep = step + 1 === surveyTypes.length && step !== 0;
     const prevStep = () => setStep(step - 1);
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
+        console.log(values);
         if (isFinalStep) {
             handleSubmit(values, helpers, setSubmissionError);
         } else {

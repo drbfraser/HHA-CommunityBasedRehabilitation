@@ -9,6 +9,7 @@ export interface IVisitSummary {
     educat_visit: boolean;
     social_visit: boolean;
     nutrit_visit: boolean;
+    mental_visit: boolean;
     longitude: number;
     latitude: number;
     zone: number;
@@ -24,6 +25,7 @@ export interface IVisit {
     educat_visit: boolean;
     social_visit: boolean;
     nutrit_visit: boolean;
+    mental_visit: boolean;
     longitude: number;
     latitude: number;
     zone: number;

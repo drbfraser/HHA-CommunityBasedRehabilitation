@@ -34,7 +34,7 @@ const createPossibleClientsWithASingleExtremeRisk = (riskLevel: RiskLevel): ICli
         educat_risk_level: RiskLevel.LOW,
         social_risk_level: RiskLevel.LOW,
         nutrit_risk_level: RiskLevel.LOW,
-        mental_risk_level: RiskLevel.LOW,
+        mental_risk_level: riskLevel,
         last_visit_date: 0,
     };
     return [

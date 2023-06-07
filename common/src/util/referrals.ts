@@ -19,6 +19,10 @@ export interface IReferral {
     orthotic: boolean;
     orthotic_injury_location: orthoticInjury;
 
+    mental_health: boolean;
+    mental_health_condition: MentalConditions;
+    mental_condition_other: string;
+
     hha_nutrition_and_agriculture_project: boolean;
     emergency_food_aid: boolean;
     agriculture_livelihood_program_enrollment: boolean;
@@ -34,6 +38,7 @@ export interface IOutstandingReferral {
     physiotherapy: boolean;
     prosthetic: boolean;
     orthotic: boolean;
+    mental_health: boolean;
     hha_nutrition_and_agriculture_project: boolean;
     emergency_food_aid: boolean;
     agriculture_livelihood_program_enrollment: boolean;
@@ -76,6 +81,12 @@ export enum WheelchairExperience {
     INTERMEDIATE = "INT",
 }
 
+export enum MentalConditions {
+    AUTISM = "Autism",
+    DEMENTIA = "Dementia",
+    OTHER = "Other",
+}
+
 export const prostheticInjuryLocations = {
     [InjuryLocation.BELOW_KNEE]: "Below the knee",
     [InjuryLocation.ABOVE_KNEE]: "Above the knee",
@@ -104,4 +115,10 @@ export const otherServices = {
 export const wheelchairExperiences = {
     [WheelchairExperience.BASIC]: "Basic",
     [WheelchairExperience.INTERMEDIATE]: "Intermediate",
+};
+
+export const mentalHealthConditions = {
+    [MentalConditions.AUTISM]: "Autism",
+    [MentalConditions.DEMENTIA]: "Dementia",
+    [MentalConditions.OTHER]: "Other",
 };

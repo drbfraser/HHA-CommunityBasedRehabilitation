@@ -7,6 +7,7 @@ const unusedClientSummaryProps: Omit<
     | "educat_risk_level"
     | "social_risk_level"
     | "nutrit_risk_level"
+    | "mental_risk_level"
     | "last_visit_date"
 > = {
     id: 0,
@@ -22,6 +23,7 @@ const createClientWithAllRisksAsGivenLevel = (riskLevel: RiskLevel): IClientSumm
         educat_risk_level: riskLevel,
         social_risk_level: riskLevel,
         nutrit_risk_level: RiskLevel.LOW,
+        mental_risk_level: RiskLevel.LOW,
         last_visit_date: 0,
     };
 };
@@ -32,6 +34,7 @@ const createPossibleClientsWithASingleExtremeRisk = (riskLevel: RiskLevel): ICli
         educat_risk_level: RiskLevel.LOW,
         social_risk_level: RiskLevel.LOW,
         nutrit_risk_level: RiskLevel.LOW,
+        mental_risk_level: RiskLevel.LOW,
         last_visit_date: 0,
     };
     return [
@@ -39,6 +42,7 @@ const createPossibleClientsWithASingleExtremeRisk = (riskLevel: RiskLevel): ICli
         { ...clientWithAllLowRisks, educat_risk_level: riskLevel },
         { ...clientWithAllLowRisks, social_risk_level: riskLevel },
         { ...clientWithAllLowRisks, nutrit_risk_level: riskLevel },
+        { ...clientWithAllLowRisks, mental_risk_level: riskLevel },
     ];
 };
 

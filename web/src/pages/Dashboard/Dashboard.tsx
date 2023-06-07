@@ -61,6 +61,7 @@ const Dashboard = () => {
                             [RiskType.EDUCATION]: row.educat_risk_level,
                             [RiskType.SOCIAL]: row.social_risk_level,
                             [RiskType.NUTRITION]: row.nutrit_risk_level,
+                            [RiskType.MENTAL]: row.mental_risk_level,
                             last_visit_date: row.last_visit_date,
                             is_active: row.is_active,
                         };
@@ -108,6 +109,7 @@ const Dashboard = () => {
             if (row.hha_nutrition_and_agriculture_project) referralTypes.push("HHANAP");
             if (row.orthotic) referralTypes.push("Orthotic");
             if (row.prosthetic) referralTypes.push("Prosthetic");
+            if (row.mental_health) referralTypes.push("Mental Health");
             if (row.services_other) referralTypes.push(row.services_other);
 
             return referralTypes.join(", ");

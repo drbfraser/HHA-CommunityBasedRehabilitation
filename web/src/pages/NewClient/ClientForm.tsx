@@ -523,6 +523,64 @@ const ClientForm = () => {
                                             />
                                         </Grid>
                                         <br />
+
+                                        <Grid item md={6} xs={12}>
+                                            <FormControl fullWidth variant="outlined">
+                                                <Field
+                                                    component={TextField}
+                                                    select
+                                                    variant="outlined"
+                                                    required
+                                                    label={
+                                                        clientFieldLabels[ClientField.mentalRisk]
+                                                    }
+                                                    name={ClientField.mentalRisk}
+                                                    autoComplete="off"
+                                                >
+                                                    {Object.entries(riskLevels).map(
+                                                        ([value, { name }]) => (
+                                                            <MenuItem key={value} value={value}>
+                                                                {name}
+                                                            </MenuItem>
+                                                        )
+                                                    )}
+                                                </Field>
+                                            </FormControl>
+                                        </Grid>
+
+                                        <Grid item md={8} xs={12}>
+                                            <Field
+                                                component={TextField}
+                                                fullWidth
+                                                multiline
+                                                required
+                                                rows={4}
+                                                variant="outlined"
+                                                label={
+                                                    clientFieldLabels[
+                                                        ClientField.mentalRequirements
+                                                    ]
+                                                }
+                                                name={ClientField.mentalRequirements}
+                                                autoComplete="off"
+                                            />
+                                        </Grid>
+
+                                        <Grid item md={8} xs={12}>
+                                            <Field
+                                                component={TextField}
+                                                fullWidth
+                                                required
+                                                multiline
+                                                rows={4}
+                                                variant="outlined"
+                                                label={clientFieldLabels[ClientField.mentalGoals]}
+                                                name={ClientField.mentalGoals}
+                                                autoComplete="off"
+                                            />
+                                        </Grid>
+                                        <br />
+
                                         <Grid
                                             item
                                             md={12}

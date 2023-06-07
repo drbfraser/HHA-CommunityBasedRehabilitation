@@ -201,7 +201,6 @@ const ClientRisks = ({ clientInfo }: IProps) => {
             <Grid container spacing={5} direction="row" justify="flex-start">
                 {Object.keys(riskTypes).map((type) => {
                     const risk = clientInfo?.risks.find((r) => r.risk_type === type);
-
                     return (
                         <Grid item md={4} xs={12} key={type}>
                             {risk ? <RiskCard risk={risk} /> : <SkeletonRiskCard />}

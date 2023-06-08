@@ -35,6 +35,9 @@ export default class Referral extends Model implements SyncableModel {
     @field(ReferralField.emergency_food_aid) emergency_food_aid;
     @field(ReferralField.agriculture_livelihood_program_enrollment)
     agriculture_livelihood_program_enrollment;
+    @field(ReferralField.mental_health) mental_health;
+    @text(ReferralField.mental_health_condition) mental_health_condition;
+    @text(ReferralField.mental_condition_other) mental_condition_other;
 
     @readonly @date(mobileGenericField.updated_at) updatedAt;
 

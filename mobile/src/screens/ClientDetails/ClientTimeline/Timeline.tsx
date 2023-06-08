@@ -113,6 +113,14 @@ const Timeline = (props: ISummaryProps) => {
                                     ) : (
                                         <></>
                                     )}
+                                    {props.activity.visit.mental_visit ? (
+                                        <View style={styles.subItem}>
+                                            {riskTypes.MENTAL.Icon(themeColors.riskBlack)}
+                                            <Text style={styles.subItemText}>Mental</Text>
+                                        </View>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </View>
                                 <Portal>
                                     <Modal

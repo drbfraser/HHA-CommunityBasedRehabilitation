@@ -75,7 +75,6 @@ const ClientDetails = (props: ClientProps) => {
             const fetchedReferrals = await presentClient.referrals.fetch();
             const fetchedSurveys = await presentClient.surveys.fetch();
             const fetchedVisits = await presentClient.visits.fetch();
-            console.log("LOOOOOOOOOOOK  ", fetchedRisk);
             setClient(presentClient);
             setRisk(fetchedRisk);
             setReferrals(fetchedReferrals);
@@ -325,6 +324,12 @@ const ClientDetails = (props: ClientProps) => {
                     <ClientRisk
                         clientRisks={risks || []}
                         presentRiskType={RiskType.NUTRITION}
+                        clientArchived={client.is_active}
+                    />
+                    <Divider />
+                    <ClientRisk
+                        clientRisks={risks || []}
+                        presentRiskType={RiskType.MENTAL}
                         clientArchived={client.is_active}
                     />
                     <Card style={styles.riskCardStyle}>

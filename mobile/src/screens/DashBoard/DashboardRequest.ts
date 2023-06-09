@@ -29,9 +29,11 @@ const concatenateReferralType = (referral: IOutstandingReferral) => {
     if (referral.wheelchair) {
         referralTypes.push("Wheelchair");
     }
-    // For some reason referral.hha_nutrition_and_agriculture is only returning undefined
-    if (referral.emergency_food_aid || referral.agriculture_livelihood_program_enrollment) {
+    if (referral.hha_nutrition_and_agriculture_project) {
         referralTypes.push("HHANAP");
+    }
+    if (referral.mental_health) {
+        referralTypes.push("Mental");
     }
     if (referral.services_other) {
         referralTypes.push(referral.services_other);
@@ -57,6 +59,7 @@ export const fetchAllClientsFromDB = async (database: dbType): Promise<ClientLis
                 EducationLevel: riskLevels[responseRow.educat_risk_level].color,
                 SocialLevel: riskLevels[responseRow.social_risk_level].color,
                 NutritionLevel: riskLevels[responseRow.nutrit_risk_level].color,
+                MentalLevel: riskLevels[responseRow.mental_risk_level].color,
                 last_visit_date: responseRow.last_visit_date,
             }));
         return resultRows;

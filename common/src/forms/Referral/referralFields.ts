@@ -61,7 +61,7 @@ export enum ReferralFormField {
     orthotic = "orthotic",
     orthoticInjuryLocation = "orthotic_injury_location",
 
-    mentalHealth = "mental_heath",
+    mentalHealth = "mental_health",
     mentalHealthCondition = "mental_health_condition",
     mentalConditionOther = "mental_condition_other",
 
@@ -205,12 +205,12 @@ export const prostheticOrthoticValidationSchema = (serviceType: ReferralFormFiel
 const isOtherMentalCondition = (condition: string) => condition === MentalConditions.OTHER;
 export const mentalHealthValidationSchema = () =>
     Yup.object().shape({
-        [ReferralFormField.mentalConditionOther]: Yup.string()
+        [ReferralFormField.mentalHealthCondition]: Yup.string()
             .label(referralFieldLabels[ReferralFormField.mentalHealthCondition])
             .max(100)
             .required(),
-        [ReferralFormField.mentalHealthCondition]: Yup.string()
-            .label(referralFieldLabels[ReferralFormField.mentalHealthCondition])
+        [ReferralFormField.mentalConditionOther]: Yup.string()
+            .label(referralFieldLabels[ReferralFormField.mentalConditionOther])
             .trim()
             .test(
                 "require-if-other-selected",

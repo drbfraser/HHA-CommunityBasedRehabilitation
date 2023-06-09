@@ -152,6 +152,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         {referral.physiotherapy && <ReasonChip label="Physiotherapy" />}
                         {referral.prosthetic && <ReasonChip label="Prosthetic" />}
                         {referral.orthotic && <ReasonChip label="Orthotic" />}
+                        {referral.mental_health && <ReasonChip label="Mental" />}
                     </Dialog.Title>
                     <Dialog.Content>
                         <Text>
@@ -228,6 +229,14 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                     {orthoticInjuryLocations[referral.orthotic_injury_location]}
                                 </Text>
                                 <Text />
+                            </>
+                        )}
+                        {referral.mental_health && (
+                            <>
+                                <Text>
+                                    <Text style={styles.labelBold}>Mental Health Condition: </Text>
+                                    <Text>{referral.mental_health_condition}</Text>
+                                </Text>
                             </>
                         )}
                         {Boolean(referral.services_other.trim().length) && (

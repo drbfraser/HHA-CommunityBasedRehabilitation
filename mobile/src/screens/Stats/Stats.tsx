@@ -81,6 +81,7 @@ const Stats = () => {
         themeColors.hhaPurple,
         themeColors.hhaBlue,
         themeColors.yellow,
+        themeColors.bluePale,
     ];
 
     const VisitStats = async () => {
@@ -106,8 +107,9 @@ const Stats = () => {
             VisitField.social_visit,
             VisitField.educat_visit,
             VisitField.nutrit_visit,
+            VisitField.mental_visit,
         ];
-        const visitName = ["Health", "Social", "Education", "Nutrition"];
+        const visitName = ["Health", "Social", "Education", "Nutrition", "Mental"];
         var index = 0;
         pieData = [];
         for (const type of visitType) {
@@ -414,7 +416,7 @@ const Stats = () => {
                                 theme={VictoryTheme.material}
                             >
                                 <VictoryLegend
-                                    x={280}
+                                    x={300}
                                     y={0}
                                     gutter={50}
                                     style={{ title: { fontSize: 20 } }}
@@ -430,7 +432,7 @@ const Stats = () => {
                                     ]}
                                 />
 
-                                <VictoryGroup offset={20} colorScale={"qualitative"}>
+                                <VictoryGroup offset={10} colorScale={"qualitative"}>
                                     <VictoryBar
                                         horizontal
                                         barRatio={0.5}

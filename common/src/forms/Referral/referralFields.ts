@@ -61,7 +61,7 @@ export enum ReferralFormField {
     orthotic = "orthotic",
     orthoticInjuryLocation = "orthotic_injury_location",
 
-    mentalHealth = "mental_heath",
+    mentalHealth = "mental_health",
     mentalHealthCondition = "mental_health_condition",
     mentalConditionOther = "mental_condition_other",
 

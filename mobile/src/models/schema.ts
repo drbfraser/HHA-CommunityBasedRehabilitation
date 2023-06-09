@@ -13,7 +13,7 @@ import { appSchema, tableSchema } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 
 export default appSchema({
-    version: 4,
+    version: 5,
     tables: [
         tableSchema({
             name: modelName.users,
@@ -59,6 +59,8 @@ export default appSchema({
                 { name: ClientField.educat_timestamp, type: "number" },
                 { name: ClientField.nutrit_risk_level, type: "string" },
                 { name: ClientField.nutrit_timestamp, type: "number" },
+                { name: ClientField.mental_risk_level, type: "string" },
+                { name: ClientField.mental_timestamp, type: "number" },
                 { name: ClientField.last_visit_date, type: "number" },
                 { name: ClientField.is_active, type: "boolean" },
                 { name: mobileGenericField.created_at, type: "number" },
@@ -101,6 +103,9 @@ export default appSchema({
                 { name: ReferralField.hha_nutrition_and_agriculture_project, type: "boolean" },
                 { name: ReferralField.emergency_food_aid, type: "boolean" },
                 { name: ReferralField.agriculture_livelihood_program_enrollment, type: "boolean" },
+                { name: ReferralField.mental_health, type: "boolean" },
+                { name: ReferralField.mental_health_condition, type: "string" },
+                { name: ReferralField.mental_condition_other, type: "string" },
                 { name: mobileGenericField.updated_at, type: "number" },
             ],
         }),
@@ -166,6 +171,7 @@ export default appSchema({
                 { name: VisitField.educat_visit, type: "boolean" },
                 { name: VisitField.social_visit, type: "boolean" },
                 { name: VisitField.nutrit_visit, type: "boolean" },
+                { name: VisitField.mental_visit, type: "boolean" },
                 { name: VisitField.longitude, type: "string", isOptional: true },
                 { name: VisitField.latitude, type: "string", isOptional: true },
                 { name: VisitField.zone, type: "number" },

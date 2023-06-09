@@ -22,6 +22,7 @@ export type ClientListRow = {
     EducationLevel: string;
     SocialLevel: string;
     NutritionLevel: string;
+    MentalLevel: string;
     last_visit_date: number;
     is_active: boolean;
 };
@@ -84,6 +85,7 @@ export const fetchClientsFromDB = async (
             EducationLevel: riskLevels[responseRow.educat_risk_level].color,
             NutritionLevel: riskLevels[responseRow.nutrit_risk_level].color,
             SocialLevel: riskLevels[responseRow.social_risk_level].color,
+            MentalLevel: riskLevels[responseRow.mental_risk_level].color,
             last_visit_date: responseRow.last_visit_date,
             is_active: responseRow.is_active,
         }));

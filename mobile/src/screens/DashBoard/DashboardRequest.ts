@@ -59,6 +59,7 @@ export const fetchAllClientsFromDB = async (database: dbType): Promise<ClientLis
                 EducationLevel: riskLevels[responseRow.educat_risk_level].color,
                 SocialLevel: riskLevels[responseRow.social_risk_level].color,
                 NutritionLevel: riskLevels[responseRow.nutrit_risk_level].color,
+                MentalLevel: riskLevels[responseRow.mental_risk_level].color,
                 last_visit_date: responseRow.last_visit_date,
             }));
         return resultRows;

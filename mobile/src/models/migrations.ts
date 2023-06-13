@@ -1,4 +1,4 @@
-import { ReferralField, VisitField } from "@cbr/common";
+import { BaseSurveyField, ReferralField, VisitField } from "@cbr/common";
 import { alertField } from "@cbr/common/src/forms/Alert/alertFields";
 import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 import { addColumns, schemaMigrations, createTable } from "@nozbe/watermelondb/Schema/migrations";
@@ -44,6 +44,15 @@ export default schemaMigrations({
                     columns: [
                         {
                             name: VisitField.mental_visit,
+                            type: "boolean",
+                        },
+                    ],
+                }),
+                addColumns({
+                    table: modelName.surveys,
+                    columns: [
+                        {
+                            name: BaseSurveyField.health_have_mental_condition,
                             type: "boolean",
                         },
                     ],

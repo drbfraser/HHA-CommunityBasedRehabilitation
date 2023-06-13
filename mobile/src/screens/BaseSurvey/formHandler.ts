@@ -19,12 +19,14 @@ export const handleSubmit = async (
     helpers.setSubmitting(true);
 
     const surveyInfo = await baseSurveyHandleSubmitForm(values, source);
+    console.warn(surveyInfo);
     await database.write(async () => {
         const client = await database
             .get(modelName.clients)
             .find(values[BaseSurveyFormField.client_id].toString());
         await database.get(modelName.surveys).create((survey: any) => {
             delete surveyInfo.client_id; /* We want to set this relation ourselves */
+            console.warn("The existing one", survey);
 
             Object.assign(survey, surveyInfo);
             survey.client.set(client);

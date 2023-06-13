@@ -127,6 +127,7 @@ export default appSchema({
                     isOptional: true,
                 },
                 { name: BaseSurveyField.health_services_satisfaction, type: "string" },
+                { name: BaseSurveyField.health_have_mental_condition, type: "boolean" },
                 { name: BaseSurveyField.school_currently_attend, type: "boolean" },
                 { name: BaseSurveyField.school_grade, type: "number" },
                 {

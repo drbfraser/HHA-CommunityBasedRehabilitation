@@ -50,14 +50,24 @@ const ClientList = () => {
     const [showEducationColumn, setShowEducationColumn] = useState(true);
     const [showSocialColumn, setShowSocialColumn] = useState(true);
     const [showNutritionColumn, setShowNutritionColumn] = useState(true);
-    const [selectedColumn, setSelectedColumn] = useState<String[]>(["0", "1", "2", "3", "4"]);
+    const [ShowMentalColumn, setShowMentalColumn] = useState(true);
+    const [selectedColumn, setSelectedColumn] = useState<String[]>([
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+    ]);
     const columnShowingList = [
         setShowNameColumn,
         setShowZoneColumn,
         setShowHealthColumn,
         setShowEducationColumn,
-        setShowNutritionColumn,
         setShowSocialColumn,
+        setShowNutritionColumn,
+        setShowMentalColumn,
     ];
 
     const openColumnBuilderMenu = () => {
@@ -76,6 +86,7 @@ const ClientList = () => {
         3: "Education",
         4: "Social",
         5: "Nutrition",
+        6: "Mental Health",
     };
 
     const clientSortBy = (option: string) => {
@@ -279,6 +290,12 @@ const ClientList = () => {
                             showTheTitle={showNutritionColumn}
                             thisColumnSortOption={SortOptions.NUTRITION}
                         />
+                        <ShowTitle
+                            label={riskTypes.MENTAL.Icon(themeColors.riskBlack)}
+                            style={styles.columnIcons}
+                            showTheTitle={ShowMentalColumn}
+                            thisColumnSortOption={SortOptions.MENTAL}
+                        />
                     </DataTable.Header>
                     {clientList.map((item: ClientListRow) => {
                         return (
@@ -334,6 +351,13 @@ const ClientList = () => {
                                 {showNutritionColumn ? (
                                     <DataTable.Cell style={styles.columnIcons}>
                                         {riskTypes.CIRCLE.Icon(item.NutritionLevel)}
+                                    </DataTable.Cell>
+                                ) : (
+                                    <View></View>
+                                )}
+                                {ShowMentalColumn ? (
+                                    <DataTable.Cell style={styles.columnIcons}>
+                                        {riskTypes.CIRCLE.Icon(item.MentalLevel)}
                                     </DataTable.Cell>
                                 ) : (
                                     <View></View>

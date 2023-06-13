@@ -1,4 +1,4 @@
-import { ReferralField } from "@cbr/common";
+import { ReferralField, VisitField } from "@cbr/common";
 import { alertField } from "@cbr/common/src/forms/Alert/alertFields";
 import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 import { addColumns, schemaMigrations, createTable } from "@nozbe/watermelondb/Schema/migrations";
@@ -6,6 +6,50 @@ import { mobileGenericField, modelName, tableKey } from "./constant";
 
 export default schemaMigrations({
     migrations: [
+        {
+            toVersion: 5,
+            steps: [
+                addColumns({
+                    table: modelName.clients,
+                    columns: [
+                        {
+                            name: ClientField.mental_risk_level,
+                            type: "string",
+                        },
+                        {
+                            name: ClientField.mental_timestamp,
+                            type: "number",
+                        },
+                    ],
+                }),
+                addColumns({
+                    table: modelName.referrals,
+                    columns: [
+                        {
+                            name: ReferralField.mental_health,
+                            type: "boolean",
+                        },
+                        {
+                            name: ReferralField.mental_health_condition,
+                            type: "string",
+                        },
+                        {
+                            name: ReferralField.mental_condition_other,
+                            type: "string",
+                        },
+                    ],
+                }),
+                addColumns({
+                    table: modelName.visits,
+                    columns: [
+                        {
+                            name: VisitField.mental_visit,
+                            type: "boolean",
+                        },
+                    ],
+                }),
+            ],
+        },
         {
             toVersion: 4,
             steps: [

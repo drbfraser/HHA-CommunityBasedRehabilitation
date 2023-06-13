@@ -99,7 +99,7 @@ export async function SyncDB(database: dbType) {
                     throw new Error(await response.text());
                 }
             },
-            migrationsEnabledAtVersion: 4,
+            migrationsEnabledAtVersion: 5,
             conflictResolver: conflictResolver,
         }).then(() => {
             updateLastVersionSynced();
@@ -267,6 +267,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                 ClientField.educat_timestamp,
                 ClientField.social_timestamp,
                 ClientField.nutrit_timestamp,
+                ClientField.mental_timestamp,
             ].some((a) => a !== column)
         ) {
             if (
@@ -275,6 +276,7 @@ function conflictResolver(tableName, raw, dirtyRaw, newRaw) {
                     ClientField.educat_risk_level,
                     ClientField.social_risk_level,
                     ClientField.nutrit_risk_level,
+                    ClientField.mental_risk_level,
                 ].some((a) => a === column)
             ) {
                 let riskType = column.split("_")[0];

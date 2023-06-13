@@ -1,5 +1,6 @@
 import { RiskType } from "@cbr/common";
 import React from "react";
+import { color } from "react-native-reanimated";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const riskIcon = (name: string, color: string) => {
@@ -27,6 +28,10 @@ export const riskTypes: { [key: string]: IRiskType } = {
     [RiskType.NUTRITION]: {
         name: "Nutrition",
         Icon: (color: string) => riskIcon("silverware-fork-knife", color),
+    },
+    [RiskType.MENTAL]: {
+        name: "Mental",
+        Icon: (color: string) => riskIcon("heart", color),
     },
     CIRCLE: {
         name: "Circle",

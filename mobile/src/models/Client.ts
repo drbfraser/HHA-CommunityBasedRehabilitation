@@ -58,6 +58,8 @@ export default class Client extends Model implements SyncableModel {
     @date(ClientField.educat_timestamp) educat_timestamp;
     @text(ClientField.nutrit_risk_level) nutrit_risk_level;
     @date(ClientField.nutrit_timestamp) nutrit_timestamp;
+    @text(ClientField.mental_risk_level) mental_risk_level;
+    @date(ClientField.mental_timestamp) mental_timestamp;
     @date(ClientField.last_visit_date) last_visit_date;
 
     @readonly @date(mobileGenericField.created_at) createdAt;
@@ -99,6 +101,11 @@ export default class Client extends Model implements SyncableModel {
                     client.nutrit_risk_level = level;
                     client.nutrit_timestamp = time;
                     break;
+
+                case RiskType.MENTAL:
+                    client.mental_risk_level = level;
+                    client.mental_timestamp = time;
+                    break;
             }
         });
     }
@@ -109,6 +116,7 @@ export default class Client extends Model implements SyncableModel {
             client.health_timestamp = this.createdAt;
             client.social_timestamp = this.createdAt;
             client.nutrit_timestamp = this.createdAt;
+            client.mental_timestamp = this.createdAt;
         });
     }
 

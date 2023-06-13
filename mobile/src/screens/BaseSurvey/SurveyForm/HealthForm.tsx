@@ -45,6 +45,13 @@ const HealthForm = (props: IFormProps) => {
                 setFieldTouched={props.formikProps.setFieldTouched}
             />
             <TextCheckBox
+                field={BaseSurveyFormField.mentalHealth}
+                value={props.formikProps.values[BaseSurveyFormField.mentalHealth]}
+                label={baseFieldLabels[BaseSurveyFormField.mentalHealth]}
+                setFieldValue={props.formikProps.setFieldValue}
+                setFieldTouched={props.formikProps.setFieldTouched}
+            />
+            <TextCheckBox
                 field={BaseSurveyFormField.haveDevice}
                 value={props.formikProps.values[BaseSurveyFormField.haveDevice]}
                 label={baseFieldLabels[BaseSurveyFormField.haveDevice]}

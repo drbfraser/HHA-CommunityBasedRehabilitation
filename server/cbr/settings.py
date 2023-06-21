@@ -13,10 +13,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
-
+from pythonjsonlogger import jsonlogger
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+import logging.config
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -35,19 +35,7 @@ else:
     CORS_ALLOW_ALL_ORIGINS = False
     USE_X_FORWARDED_HOST = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "handlers": {
-            "console": {
-                "class": "logging.StreamHandler",
-            },
-        },
-        "root": {
-            "handlers": ["console"],
-            "level": "WARNING",
-        },
-    }
+    
 
 # Application definition
 
@@ -117,7 +105,42 @@ DATABASES = {
         "PORT": 5432,
     }
 }
-
+LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "json_formatter": {
+                "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+                "fmt": "%(asctime) %(name)-12s %(levelname)-8s - %(message)s",
+            }
+        },
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "level": "DEBUG",
+                "formatter": "json_formatter",
+                "stream": "ext://sys.stdout",  # print to CLI
+            },
+            "file": {
+                "class": "logging.handlers.TimedRotatingFileHandler",
+                "level": "DEBUG",
+                "formatter": "json_formatter",
+                "filename": "/var/log/application.log",  # print to file
+                "when": "D",
+                "interval": 1,
+            },
+        },
+        "loggers": {
+            "": {"handlers": ["console", "file"], "level": "DEBUG"},
+            "django": {"level": "INFO"},
+            "django.request": {
+                "handlers": ["console", "file"],
+                "level": "WARNING",
+            },
+        },
+    }
+logging.config.dictConfig(LOGGING)
+logger = logging.getLogger(__name__)
 
 AUTH_USER_MODEL = "cbr_api.UserCBR"
 

@@ -42,6 +42,28 @@ const ZoneEdit = () => {
         getInfo();
     }, [zone_name]);
 
+    const deleteZone = async (zoneId: number): Promise<void> => {
+        const init: RequestInit = {
+            method: "DELETE",
+        };
+        return await apiFetch(Endpoint.ZONE, `${zoneId}`, init).then(async(res) => {
+            if (!res.ok) {
+                const resBody = await res.text();
+                if (resBody.includes("referenced through protected foreign keys")){
+                    alert("Zone cannot be deleted because some client profiles still reference this zone.");
+                }
+                else {
+                    alert("Encountered an error while trying to delete the zone!");
+                }
+            }
+            history.push("/admin")
+        });
+    };
+    const handleDeleteZone = (zoneId: number) => {
+        if (window.confirm("Are you sure you want to delete this zone?")) {
+            deleteZone(zoneId);
+        }
+    };
     return loadingError ? (
         <Alert severity="error">
             Something went wrong trying to load that user. Please go back and try again.{" "}
@@ -95,6 +117,15 @@ const ZoneEdit = () => {
 
                                 <Button color="primary" variant="outlined" onClick={history.goBack}>
                                     Cancel
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    variant="contained"
+                                    className={styles.disableBtn}
+                                    onClick={() => handleDeleteZone(zone.id)}
+                                >
+                                    DELETE
                                 </Button>
                             </Grid>
                         </Grid>

@@ -1,0 +1,344 @@
+name: 415-hha_cbr/cbr-platform
+# Main GitHub CI/CD pipeline definition file
+# For syntax, see: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+
+on:
+  push:
+    branches: [ main, staging ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+env:
+  HUB_REPO_BACKEND: "${{ secrets.HUB_REPO_BACKEND }}"
+  HUB_REPO_FRONTEND: "${{ secrets.HUB_REPO_FRONTEND }}"
+  HUB_TOKEN: "${{ secrets.HUB_TOKEN }}"
+  HUB_USER: "${{ secrets.HUB_USER }}"
+  NPM_VERSION: 7.19.0
+  CLONE_DEPTH: 50
+  # Keep npm's cache out of home directory (mounted from host)
+  # otherwise, NPM gives EACCES error trying to mkdir /github/home/.npm
+  # Using the /isolated_build/ folder (inside the container) keeps permissions straight
+  npm_config_cache: /isolated_build/.npm-cache    
+jobs:
+
+  display_github_contexts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display commonly used info
+        run: |
+          echo "  CI/CD Event Name  = ${{ github.event_name }}"
+          echo "  PR request Number = ${{ github.event.pull_request.number }}"
+          echo "  Refspec           = ${{ github.ref }}"
+          echo "  Branch name       = ${{ github.ref_name }}"
+          echo "  Commit SHA        = ${{ github.sha }}"
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo '$GITHUB_CONTEXT'
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo '$JOB_CONTEXT'
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo '$STEPS_CONTEXT'
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo '$RUNNER_CONTEXT'
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run: echo '$STRATEGY_CONTEXT'
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo '$MATRIX_CONTEXT'
+
+  build-common:
+    runs-on: [self-hosted, docker]
+    container:
+      image: node:14
+    timeout-minutes: 60
+    steps:
+    - name: Checkout repo _into_ container
+      run: |
+        # NOTE: This code is **copied** into all jobs that needs code inside a container because 
+        # each job has its own container (must checkout the code there) and reusable workflows
+        # cannot be called as steps in a job: they must be the entire job.
+        # 
+        # Checkout the correct branch of the repo _into_ a container (without using mounts)
+        # because the /actions/checkoutv3 action checks out code on the host and then mounts it;
+        # this causes many file permission issues (especially with images using older Git versions).
+        mkdir /isolated_build/ ; cd /isolated_build/
+        HTTPS_PATH_WITH_TOKEN=`echo ${{ github.repositoryUrl }} | awk '{ gsub(/git:\/\//, "\n" ); print "https://${{github.token}}@" $1; }'`
+        echo "Cloning from '$HTTPS_PATH_WITH_TOKEN'"
+        git clone $HTTPS_PATH_WITH_TOKEN repo
+        cd repo
+
+        # Name a new branch after the ref-spec we were given (stripping off leading 'refs/')
+        # 'github.ref' is "refs/heads/main" for code on `main`; or "refs/pull/5/merge" for MRs (ex)
+        export FETCH_REF=`echo ${{ github.ref }} | cut -c 6-`
+        echo "Fetching ref '${{ github.ref }}', which is branch '${{ github.ref_name }}' using refspec '$FETCH_REF'"        
+        git fetch origin $FETCH_REF:my_build_branch
+        git checkout my_build_branch
+
+        echo "Resetting to SHA '${{ github.sha }}'"
+        git reset --hard ${{ github.sha }}
+    - name: Install NPM globally & Run 'npm ci'
+      run:  |
+        npm install -g npm@$NPM_VERSION --loglevel=verbose
+        npm ci
+      working-directory: /isolated_build/repo/common
+    - name: Check code formatting
+      run:  npx prettier --check .
+      working-directory: /isolated_build/repo/common
+    - name: Run TypeScript compiler
+      run:  npx tsc
+      working-directory: /isolated_build/repo/common
+    - name: Run tests on ./common/
+      run:  npm run test-ci
+      working-directory: /isolated_build/repo/common
+
+  build-mobile:
+    runs-on: [self-hosted, docker]
+    container:
+      image: node:14
+    timeout-minutes: 60
+    steps:
+    - name: Checkout repo _into_ container
+      run: |
+          mkdir /isolated_build/ ; cd /isolated_build/
+          HTTPS_PATH_WITH_TOKEN=`echo ${{ github.repositoryUrl }} | awk '{ gsub(/git:\/\//, "\n" ); print "https://${{github.token}}@" $1; }'`
+          echo "Cloning from '$HTTPS_PATH_WITH_TOKEN'"
+          git clone $HTTPS_PATH_WITH_TOKEN repo
+          cd repo
+          export FETCH_REF=`echo ${{ github.ref }} | cut -c 6-`
+          echo "Fetching ref '${{ github.ref }}', which is branch '${{ github.ref_name }}' using refspec '$FETCH_REF'"        
+          git fetch origin $FETCH_REF:my_build_branch
+          git checkout my_build_branch
+          echo "Resetting to SHA '${{ github.sha }}'"
+          git reset --hard ${{ github.sha }}
+    - name: Install NPM globally & Build mobile
+      run:  |
+        set -x  # echo commands names
+
+        npm install -g npm@$NPM_VERSION
+        npm uninstall @cbr/common
+        COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
+        npm install $COMMON_PACK_NAME
+        npm ci
+        npx prettier --check .
+        npm run build dev
+      working-directory: /isolated_build/repo/mobile
+
+
+  build-web:
+    runs-on: [self-hosted, docker]
+    container:
+      image: node:14
+    timeout-minutes: 60
+    steps:
+    - name: Checkout repo _into_ container
+      run: |
+          mkdir /isolated_build/ ; cd /isolated_build/
+          HTTPS_PATH_WITH_TOKEN=`echo ${{ github.repositoryUrl }} | awk '{ gsub(/git:\/\//, "\n" ); print "https://${{github.token}}@" $1; }'`
+          echo "Cloning from '$HTTPS_PATH_WITH_TOKEN'"
+          git clone $HTTPS_PATH_WITH_TOKEN repo
+          cd repo
+          export FETCH_REF=`echo ${{ github.ref }} | cut -c 6-`
+          echo "Fetching ref '${{ github.ref }}', which is branch '${{ github.ref_name }}' using refspec '$FETCH_REF'"        
+          git fetch origin $FETCH_REF:my_build_branch
+          git checkout my_build_branch
+          echo "Resetting to SHA '${{ github.sha }}'"
+          git reset --hard ${{ github.sha }}
+    - name: Install NPM
+      run:  npm install -g npm@$NPM_VERSION
+    - name: Build common
+      run:  npm ci
+      working-directory: /isolated_build/repo/common
+    - name: Build web
+      run:  npm ci
+      working-directory: /isolated_build/repo/web
+    - name: Check code formatting
+      run:  npx prettier --check .
+      working-directory: /isolated_build/repo/web
+    - name: Compress files
+      run:  |
+        GENERATE_SOURCEMAP=false npm run build
+        cd build && tar -czvf ../../web_build.tar.gz .
+      working-directory: /isolated_build/repo/web
+    - uses: actions/upload-artifact@v3.1.1
+      if: success()
+      with:
+        name: "${{ github.job }}"
+        retention-days: 7
+        path: /isolated_build/repo/web_build.tar.gz
+
+
+  build-server:
+    runs-on: [self-hosted, docker]
+    container:
+      image: python:3.9.1-buster
+    timeout-minutes: 60
+    services:
+      test_postgres:
+        image: postgres:13.1-alpine
+    env:
+      DOMAIN: example.com
+      SECRET_KEY: test
+      POSTGRES_DB: cbr
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_HOST: test_postgres
+    steps:
+    - name: Checkout repo _into_ container
+      run: |
+            mkdir /isolated_build/ ; cd /isolated_build/
+            HTTPS_PATH_WITH_TOKEN=`echo ${{ github.repositoryUrl }} | awk '{ gsub(/git:\/\//, "\n" ); print "https://${{github.token}}@" $1; }'`
+            echo "Cloning from '$HTTPS_PATH_WITH_TOKEN'"
+            git clone $HTTPS_PATH_WITH_TOKEN repo
+            cd repo
+            export FETCH_REF=`echo ${{ github.ref }} | cut -c 6-`
+            echo "Fetching ref '${{ github.ref }}', which is branch '${{ github.ref_name }}' using refspec '$FETCH_REF'"        
+            git fetch origin $FETCH_REF:my_build_branch
+            git checkout my_build_branch
+            echo "Resetting to SHA '${{ github.sha }}'"
+            git reset --hard ${{ github.sha }}
+    - name: Install dependencies
+      run:  pip install -r requirements.txt
+      working-directory: /isolated_build/repo/server
+    - name: Check spacing
+      run:  python -m black --check .
+      working-directory: /isolated_build/repo/server
+    - name: Run 'manage.py check'
+      run:  python manage.py check
+      working-directory: /isolated_build/repo/server
+    - name: Make migrations
+      run:  python manage.py makemigrations --check
+      working-directory: /isolated_build/repo/server
+    - name: "TODO: SKIPPING TEST OF 'manage.py test'"
+      run: |
+        echo "::warning file=manage.py,title=SKIPPING TEST::Skipped manage.py test"
+        # python manage.py test
+      working-directory: /isolated_build/repo/server
+
+
+
+
+  # ----------------------------------------------------------------------------
+  # Publish to DockerHub
+  # ----------------------------------------------------------------------------
+  export-image-tag:
+    runs-on: [self-hosted, docker]
+    outputs:
+      image_tag: ${{ steps.set_step.outputs.tag }}
+    steps:
+    - uses: actions/checkout@v3.5.0
+      # Checkout the code, not into a container, because all work here is not in a container
+      with:
+        fetch-depth: 50
+    - id: set_step
+      run: |
+        export IMAGE_TAG=v$(git show -s --format=%cs ${{ github.sha }}).`git rev-parse --short=8 ${{ github.sha }}`
+        echo "IMAGE_TAG = '$IMAGE_TAG'"
+        echo "tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+
+  build-docker-publish-docker-images:
+    needs: [build-common, build-mobile, build-web, build-server, export-image-tag]
+    # needs: [export-image-tag]   # Used for faking and testing
+    runs-on: [self-hosted, docker]
+    if: ${{ github.ref_name == 'main' }}
+    timeout-minutes: 60
+    env:
+      IMAGE_TAG: ${{ needs.export-image-tag.outputs.image_tag}}
+    steps:
+    - uses: actions/checkout@v3.5.0
+      # Checkout the code, not into a container, because all work here is not in a container
+      with:
+        fetch-depth: 50
+    - name: Get build products
+      uses: actions/download-artifact@v3.0.1
+      with:
+        name: build-web
+    # FAKE BUILD: To make build faster for testing, comment out above and use this instead.
+    # - name: Get build products (**FAKE**)
+    #   run: |
+    #     echo "::warning file=web_build.tar.gz,title=FAKE::Fake web_build.tar.gz used for testing!"
+    #     mkdir -p fakestuff/
+    #     touch fakestuff/nothing.txt
+    #     tar -czvf web_build.tar.gz ./fakestuff/
+    - name: Printing debug information...
+      run: |
+        echo "Files in current folder before building image"
+        ls -al
+        echo "IMAGE_TAG = '$IMAGE_TAG'"
+    - name: Running 'docker compose'...
+      run: |
+        docker compose -f docker-compose.yml -f docker-compose.deploy.yml build
+        docker images
+    - name: Pushing to docker hub...
+      run: |
+        docker login -u $HUB_USER -p $HUB_TOKEN
+        docker push $HUB_USER/$HUB_REPO_BACKEND:$IMAGE_TAG
+        docker push $HUB_USER/$HUB_REPO_FRONTEND:$IMAGE_TAG
+        docker logout
+        echo "::notice file=main-cicd.yml::Pushed to Docker Hub with IMAGE_TAG '$IMAGE_TAG'"
+    - name: Cleaning up...
+      run: |
+        docker images -a | grep -e "$HUB_REPO_BACKEND" -e "$HUB_REPO_FRONTEND" | awk '{print $3}' | xargs docker rmi --force
+        docker images
+
+    
+
+  # ----------------------------------------------------------------------------
+  # Deployment and Re-tagging Jobs
+  # Note: 
+  #   Since these jobs are calling a reusable workflow, they cannot
+  #   use 'timeout-minutes:', 'environment:', 'env:', or 'steps:' because
+  #   those break the allowable syntax for a job calling a reusable workflow.
+  #   https://docs.github.com/en/actions/using-workflows/reusing-workflows
+  # ----------------------------------------------------------------------------
+  # Development (dev) server
+  dev-server-deploy-from-dockerhub:
+    needs: [build-docker-publish-docker-images, export-image-tag]
+    if: ${{ github.ref_name == 'main' }}
+    uses: ./.github/workflows/deploy-from-dockerhub.yml
+    with:
+      RUNNER_NAME: deploy-development
+      DOMAIN:      cbr-dev.cmpt.sfu.ca
+      IMAGE_TAG:   ${{ needs.export-image-tag.outputs.image_tag }}
+    secrets: inherit
+
+  dev-retag-and-upload-to-dockerhub:
+    needs: [build-docker-publish-docker-images, export-image-tag]
+    if: ${{ github.ref_name == 'main' }}
+    uses: ./.github/workflows/retag-and-upload-dockerhub.yml
+    with:
+      IMAGE_TAG:  ${{ needs.export-image-tag.outputs.image_tag }}
+      BRANCH_TAG: dev
+    secrets: inherit
+
+
+  # Staging (stg) server
+  staging-server-deploy-from-dockerhub:
+    needs: [export-image-tag]
+    if: ${{ github.ref_name == 'staging' }}
+    uses: ./.github/workflows/deploy-from-dockerhub.yml
+    with:
+        RUNNER_NAME: deploy-staging
+        DOMAIN:      cbr-dev.cmpt.sfu.ca
+        IMAGE_TAG:   ${{ needs.export-image-tag.outputs.image_tag }}
+    secrets: inherit
+
+  staging-retag-and-upload-to-dockerhub:
+    needs: [export-image-tag]
+    if: ${{ github.ref_name == 'staging' }}
+    uses: ./.github/workflows/retag-and-upload-dockerhub.yml
+    with:
+        IMAGE_TAG:  ${{ needs.export-image-tag.outputs.image_tag }}
+        BRANCH_TAG: stg
+    secrets: inherit
+

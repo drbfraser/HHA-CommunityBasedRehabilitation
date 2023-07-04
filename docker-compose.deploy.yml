@@ -29,8 +29,18 @@ services:
     command: gunicorn -k eventlet --workers 1 cbr.wsgi --bind 0:8000
     environment:
       - DOMAIN=${DOMAIN}
+    volumes:
+      - django_logs:/var/log
   postgres:
     restart: always
+    logging:
+      driver: fluentd
+      options:
+          tag: docker.{{.Name}}.{{.ID}}
+          fluentd-async: "true"
+          fluentd-address: tcp://localhost:24224
+    volumes:
+      - cbr_postgres_data:/var/lib/postgresql/data
   caddy:
     container_name: cbr_caddy
     image: drbfraser/hopehealthaction_cbr_revproxy_frontend:$IMAGE_TAG
@@ -48,4 +58,7 @@ services:
       - cbr_caddy_logs:/var/log
 
 volumes:
-  cbr_caddy_data:
+  cbr_postgres_data:
+  django_logs:
+  fluentbit_logs_db:
+  caddy_logs:

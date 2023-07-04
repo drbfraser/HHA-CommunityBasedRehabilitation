@@ -20,6 +20,11 @@ from cbr_api.util import (
     create_generic_data,
     create_update_delete_alert_data,
 )
+from cbr import settings
+import logging
+
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger(__name__)
 
 
 # create and list
@@ -71,6 +76,7 @@ class UserCBRSerializer(serializers.ModelSerializer):
         )
 
     def update(self, user, validated_data):
+        logger.info("user cbr serializer")
         validated_data["updated_at"] = current_milli_time()
         super().update(user, validated_data)
         return user
@@ -107,6 +113,7 @@ class UserPasswordSerializer(serializers.ModelSerializer):
         fields = ("new_password",)
 
     def update(self, user, validated_data):
+        logger.info("User %s changed password", user.id)
         user.set_password(validated_data["new_password"])
         user.save()
         return user
@@ -124,13 +131,14 @@ class UserCurrentPasswordSerializer(serializers.ModelSerializer):
 
     def update(self, user, validated_data):
         if not user.check_password(validated_data["current_password"]):
+            logger.warning("Failed password change attempt by user %s", user.id)
             raise serializers.ValidationError(
                 {"detail": "Current password is incorrect"}
             )
 
         user.set_password(validated_data["new_password"])
         user.save()
-
+        logger.info("User %s successfully changed password.", user.id)
         return user
 
 
@@ -184,6 +192,7 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "timestamp"]
 
     def create(self, validated_data):
+        logger.info("create risk")
         current_time = current_milli_time()
         validated_data["timestamp"] = current_time
         validated_data["server_created_at"] = current_time
@@ -280,6 +289,7 @@ class UpdateReferralSerializer(serializers.ModelSerializer):
         read_only_fields = ["date_resolved"]
 
     def update(self, referral, validated_data):
+        logger.info("update referral")
         super().update(referral, validated_data)
         referral.resolved = validated_data["resolved"]
         if validated_data["resolved"] == True:

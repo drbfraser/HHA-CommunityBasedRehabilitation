@@ -8,6 +8,19 @@
 #     vYYYY-MM-DD.SHA
 version: "3.9"
 services:
+  fluentbit:
+    container_name: cbr_fluentbit
+    image: fluent/fluent-bit:latest
+    volumes:
+      - ./fluentbit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./fluentbit/logs:/output
+      - django_logs:/logs/django:ro
+      - fluentbit_logs_db:/persist
+    ports:
+      - "24224:24224"
+    environment:
+      GRAFANA_API_KEY: ${GRAFANA_API_KEY}
+      PROMETHEUS_API_KEY: ${GRAFANA_API_KEY}
   django:
     image: drbfraser/hopehealthaction_cbr_backend:$IMAGE_TAG
     build:
@@ -32,7 +45,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - cbr_caddy_data:/data
+      - cbr_caddy_logs:/var/log
 
 volumes:
   cbr_caddy_data:

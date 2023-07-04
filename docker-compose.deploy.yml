@@ -55,7 +55,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - cbr_caddy_logs:/var/log
+      - caddy_logs:/var/log
 
 volumes:
   cbr_postgres_data:

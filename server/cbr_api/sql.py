@@ -2,6 +2,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def getDisabilityStats(is_active):
     logger.info("Get Disability Stats")
     sql = """

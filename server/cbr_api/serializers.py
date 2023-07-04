@@ -22,6 +22,7 @@ from cbr_api.util import (
 )
 from cbr import settings
 import logging
+
 logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger(__name__)
 
@@ -137,7 +138,7 @@ class UserCurrentPasswordSerializer(serializers.ModelSerializer):
 
         user.set_password(validated_data["new_password"])
         user.save()
-        logger.info("User %s successfully changed password.",user.id)
+        logger.info("User %s successfully changed password.", user.id)
         return user
 
 

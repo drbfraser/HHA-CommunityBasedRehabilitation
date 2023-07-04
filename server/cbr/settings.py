@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from pythonjsonlogger import jsonlogger
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 import logging.config
@@ -35,7 +36,7 @@ else:
     CORS_ALLOW_ALL_ORIGINS = False
     USE_X_FORWARDED_HOST = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    
+
 
 # Application definition
 
@@ -106,39 +107,39 @@ DATABASES = {
     }
 }
 LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "formatters": {
-            "json_formatter": {
-                "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
-                "fmt": "%(asctime) %(name)-12s %(levelname)-8s - %(message)s",
-            }
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "json_formatter": {
+            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            "fmt": "%(asctime) %(name)-12s %(levelname)-8s - %(message)s",
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "json_formatter",
+            "stream": "ext://sys.stdout",  # print to CLI
         },
-        "handlers": {
-            "console": {
-                "class": "logging.StreamHandler",
-                "level": "DEBUG",
-                "formatter": "json_formatter",
-                "stream": "ext://sys.stdout",  # print to CLI
-            },
-            "file": {
-                "class": "logging.handlers.TimedRotatingFileHandler",
-                "level": "DEBUG",
-                "formatter": "json_formatter",
-                "filename": "/var/log/application.log",  # print to file
-                "when": "D",
-                "interval": 1,
-            },
+        "file": {
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "level": "DEBUG",
+            "formatter": "json_formatter",
+            "filename": "/var/log/application.log",  # print to file
+            "when": "D",
+            "interval": 1,
         },
-        "loggers": {
-            "": {"handlers": ["console", "file"], "level": "DEBUG"},
-            "django": {"level": "INFO"},
-            "django.request": {
-                "handlers": ["console", "file"],
-                "level": "WARNING",
-            },
+    },
+    "loggers": {
+        "": {"handlers": ["console", "file"], "level": "DEBUG"},
+        "django": {"level": "INFO"},
+        "django.request": {
+            "handlers": ["console", "file"],
+            "level": "WARNING",
         },
-    }
+    },
+}
 logging.config.dictConfig(LOGGING)
 logger = logging.getLogger(__name__)
 

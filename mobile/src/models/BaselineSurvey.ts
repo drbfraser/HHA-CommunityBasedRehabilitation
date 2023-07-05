@@ -19,6 +19,7 @@ export default class BaselineSurvey extends Model implements SyncableModel {
     @field(BaseSurveyField.health_have_assistive_device) health_have_assistive_device;
     @field(BaseSurveyField.health_working_assistive_device) health_working_assistive_device;
     @field(BaseSurveyField.health_need_assistive_device) health_need_assistive_device;
+    @field(BaseSurveyField.health_have_mental_condition) health_have_mental_condition;
     @text(BaseSurveyField.health_assistive_device_type) health_assistive_device_type;
     @text(BaseSurveyField.health_services_satisfaction) health_services_satisfaction;
     @field(BaseSurveyField.school_currently_attend) school_currently_attend;

@@ -20,12 +20,14 @@ import {
     APIFetchFailError,
     countObjectKeys,
     hhaNutritionAndAgricultureProjectValidationSchema,
+    mentalHealthValidationSchema,
 } from "@cbr/common";
 import WheelchairForm from "./ReferralForm/WheelchairForm";
 import PhysiotherapyForm from "./ReferralForm/PhysiotherapyForm";
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewReferral.styles";
 import ProstheticOrthoticForm from "./ReferralForm/ProstheticOrthoticForm";
 import NutritionAgricultureForm from "./ReferralForm/NutritionAgricultureForm";
+import MentalHealthForm from "./ReferralForm/MentalHealthForm";
 import OtherServicesForm from "./ReferralForm/OtherServicesForm";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import { StackScreenName } from "../../util/StackScreenName";
@@ -182,6 +184,11 @@ const NewReferral = (props: INewReferralProps) => {
             } Visit`,
             Form: NutritionAgricultureForm,
             validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
+        },
+        [ReferralFormField.mentalHealth]: {
+            label: `${referralFieldLabels[ReferralFormField.mentalHealth]} Visit`,
+            Form: MentalHealthForm,
+            validationSchema: mentalHealthValidationSchema,
         },
         [ReferralFormField.servicesOther]: {
             label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,

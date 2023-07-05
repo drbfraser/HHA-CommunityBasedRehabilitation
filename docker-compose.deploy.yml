@@ -8,6 +8,19 @@
 #     vYYYY-MM-DD.SHA
 version: "3.9"
 services:
+  fluentbit:
+    container_name: cbr_fluentbit
+    image: fluent/fluent-bit:latest
+    volumes:
+      - ./fluentbit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./fluentbit/logs:/output
+      - django_logs:/logs/django:ro
+      - fluentbit_logs_db:/persist
+    ports:
+      - "24224:24224"
+    environment:
+      GRAFANA_API_KEY: ${GRAFANA_API_KEY}
+      PROMETHEUS_API_KEY: ${GRAFANA_API_KEY}
   django:
     image: drbfraser/hopehealthaction_cbr_backend:$IMAGE_TAG
     build:
@@ -16,8 +29,18 @@ services:
     command: gunicorn -k eventlet --workers 1 cbr.wsgi --bind 0:8000
     environment:
       - DOMAIN=${DOMAIN}
+    volumes:
+      - django_logs:/var/log
   postgres:
     restart: always
+    logging:
+      driver: fluentd
+      options:
+          tag: docker.{{.Name}}.{{.ID}}
+          fluentd-async: "true"
+          fluentd-address: tcp://localhost:24224
+    volumes:
+      - cbr_postgres_data:/var/lib/postgresql/data
   caddy:
     container_name: cbr_caddy
     image: drbfraser/hopehealthaction_cbr_revproxy_frontend:$IMAGE_TAG
@@ -35,4 +58,7 @@ services:
       - cbr_caddy_data:/data
 
 volumes:
-  cbr_caddy_data:
+  cbr_postgres_data:
+  django_logs:
+  fluentbit_logs_db:
+  caddy_logs:

@@ -55,6 +55,7 @@ const handleNewMobileClientSubmit = async (
                 client.social_risk_level = values.socialRisk;
                 client.educat_risk_level = values.educationRisk;
                 client.nutrit_risk_level = values.nutritionRisk;
+                client.mental_risk_level = values.mentalRisk;
                 client.last_visit_date = 0;
                 client.is_active = true;
             });
@@ -92,6 +93,15 @@ const handleNewMobileClientSubmit = async (
                 values.nutritionRisk,
                 values.nutritionRequirements,
                 values.nutritionGoals,
+                newClient.createdAt
+            );
+            addRisk(
+                newClient,
+                database,
+                "MENTAL",
+                values.mentalRisk,
+                values.mentalRequirements,
+                values.mentalGoals,
                 newClient.createdAt
             );
         });

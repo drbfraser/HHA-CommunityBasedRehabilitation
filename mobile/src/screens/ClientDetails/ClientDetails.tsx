@@ -326,6 +326,12 @@ const ClientDetails = (props: ClientProps) => {
                         presentRiskType={RiskType.NUTRITION}
                         clientArchived={client.is_active}
                     />
+                    <Divider />
+                    <ClientRisk
+                        clientRisks={risks || []}
+                        presentRiskType={RiskType.MENTAL}
+                        clientArchived={client.is_active}
+                    />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>

@@ -19,6 +19,7 @@ export default class Visit extends Model implements SyncableModel {
     @field(VisitField.educat_visit) educat_visit;
     @field(VisitField.social_visit) social_visit;
     @field(VisitField.nutrit_visit) nutrit_visit;
+    @field(VisitField.mental_visit) mental_visit;
     @field(VisitField.longitude) longitude;
     @field(VisitField.latitude) latitude;
     @field(VisitField.zone) zone;

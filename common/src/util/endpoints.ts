@@ -148,16 +148,17 @@ export const apiFetchByRequest = async (
     return fetch(request, customInit)
         .then(async (resp) => {
             if (!resp.ok) {
-                const jsonPromise = await resp.clone().text().catch(() => undefined);
+                const jsonPromise = await resp.clone().json().catch(() => undefined);
+                const respBodyText = await resp.clone().text();
                 const message = `API Fetch failed with HTTP Status ${resp.status}`;
                 console.error(message);
                 // gracefully handle failed DELETE requests due to protected FKs
-                if (jsonPromise?.includes("referenced through protected foreign keys")) {
+                if (respBodyText.includes("referenced through protected foreign keys")) {
                     clearTimeout(timeoutId);
                     return resp;
                 }
                 return Promise.reject(
-                    new APIFetchFailError(message, resp.status, jsonPromise)
+                    new APIFetchFailError(message, resp.status, await jsonPromise)
                 );
             }
             clearTimeout(timeoutId); // clears timeout if request completes sooner

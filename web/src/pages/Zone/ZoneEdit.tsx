@@ -18,7 +18,17 @@ import {
     IRouteParams,
 } from "@cbr/common/forms/Zone/zoneFields";
 import history from "@cbr/common/util/history";
-
+import { UserRole } from "@cbr/common/util/users";
+interface IResponseRow {
+    id: number;
+    zone: number;
+    first_name: string;
+    last_name: string;
+    full_name:string;
+    username: string;
+    role: UserRole;
+    is_active: boolean;
+}
 const ZoneEdit = () => {
     const styles = useStyles();
     const { zone_name } = useRouteMatch<IRouteParams>().params;
@@ -50,7 +60,35 @@ const ZoneEdit = () => {
             if (!res.ok) {
                 const resBody = await res.text();
                 if (resBody.includes("referenced through protected foreign keys")){
-                    alert("Zone cannot be deleted because some client profiles still reference this zone.");
+                    const allUsers = await apiFetch(Endpoint.USERS, "");
+                    const allClients = await apiFetch(Endpoint.CLIENTS, "");
+                    const userRows: IResponseRow[] = await allUsers.json();
+                    const clientRows: IResponseRow[] = await allClients.json();
+                    var users = userRows.filter(function (row) {
+                        return row.zone === zoneId
+                    });
+                    var clients = clientRows.filter(function (row) {
+                        return row.zone === zoneId
+                    });
+                    var userList = "";
+                    for (const user of users) {
+                        userList += (user.username)
+                        if (user === users[users.length - 1]) {
+                            userList += "."
+                        }
+                        else userList += ", "
+                    }
+                    var clientList = ""
+                    for (const client of clients) {
+                        clientList += client.full_name
+                        if (client === clients[clients.length - 1]) {
+                            clientList += "."
+                        }
+                        else clientList += ", "
+                    }
+                    var inZone = userList ? "Users: " + userList : "";
+                    inZone += clientList ? "\nClients: " + clientList : ""
+                    alert("Zone cannot be deleted. The following users/clients are in this zone: \n" + inZone);
                 }
                 else {
                     alert("Encountered an error while trying to delete the zone!");

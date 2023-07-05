@@ -148,7 +148,10 @@ export const apiFetchByRequest = async (
     return fetch(request, customInit)
         .then(async (resp) => {
             if (!resp.ok) {
-                const jsonPromise = await resp.clone().json().catch(() => undefined);
+                const jsonPromise = await resp
+                    .clone()
+                    .json()
+                    .catch(() => undefined);
                 const respBodyText = await resp.clone().text();
                 const message = `API Fetch failed with HTTP Status ${resp.status}`;
                 console.error(message);

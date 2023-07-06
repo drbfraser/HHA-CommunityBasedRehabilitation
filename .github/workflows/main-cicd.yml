@@ -1,6 +1,12 @@
 name: 415-hha_cbr/cbr-platform
 # Main GitHub CI/CD pipeline definition file
 # For syntax, see: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+#
+# TODO:
+# - Switch from CI/CD pipeline containing build & test commands to having Dockerfile
+#   build the image and run tests inside the image it's building so only building code once (repeatable)
+# - Add check to caddy/Dockerfile for syntax of Caddyfile: RUN caddy validate --config /etc/caddy/Caddyfile
+#   (test is currently skipped)
 
 on:
   push:
@@ -22,7 +28,9 @@ env:
 jobs:
 
   display_github_contexts:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, docker]
+    container:
+      image: node:14
     steps:
       - name: Display commonly used info
         run: |
@@ -170,7 +178,7 @@ jobs:
         GENERATE_SOURCEMAP=false npm run build
         cd build && tar -czvf ../../web_build.tar.gz .
       working-directory: /isolated_build/repo/web
-    - uses: actions/upload-artifact@v3.1.1
+    - uses: actions/upload-artifact@v3
       if: success()
       with:
         name: "${{ github.job }}"
@@ -236,15 +244,20 @@ jobs:
     outputs:
       image_tag: ${{ steps.set_step.outputs.tag }}
     steps:
-    - uses: actions/checkout@v3.5.0
-      # Checkout the code, not into a container, because all work here is not in a container
-      with:
-        fetch-depth: 50
-    - id: set_step
-      run: |
-        export IMAGE_TAG=v$(git show -s --format=%cs ${{ github.sha }}).`git rev-parse --short=8 ${{ github.sha }}`
-        echo "IMAGE_TAG = '$IMAGE_TAG'"
-        echo "tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v3
+        # Checkout the code, not into a container, because all work here is not in a container
+        with:
+          fetch-depth: 50
+      - id: set_step
+        name: Export the IMAGE_TAG
+        run: |
+          export IMAGE_TAG=v$(git show -s --format=%cs ${{ github.sha }}).`git rev-parse --short=8 ${{ github.sha }}`
+          echo "IMAGE_TAG = '$IMAGE_TAG'"
+          # NOTE: On github action runner v2.297 or higher, should redirect echo output to GITHUB_OUTPUT:
+          # echo "tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+          # However, as of July 2023, SFU's GitHub runner is v2.296.x, so using old syntax (which works on newer)
+          # https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+          echo "::set-output name=tag::$IMAGE_TAG"
 
   build-docker-publish-docker-images:
     needs: [build-common, build-mobile, build-web, build-server, export-image-tag]
@@ -255,12 +268,12 @@ jobs:
     env:
       IMAGE_TAG: ${{ needs.export-image-tag.outputs.image_tag}}
     steps:
-    - uses: actions/checkout@v3.5.0
+    - uses: actions/checkout@v3
       # Checkout the code, not into a container, because all work here is not in a container
       with:
         fetch-depth: 50
     - name: Get build products
-      uses: actions/download-artifact@v3.0.1
+      uses: actions/download-artifact@v3
       with:
         name: build-web
     # FAKE BUILD: To make build faster for testing, comment out above and use this instead.
@@ -293,15 +306,15 @@ jobs:
 
     
 
-  # ----------------------------------------------------------------------------
-  # Deployment and Re-tagging Jobs
-  # Note: 
-  #   Since these jobs are calling a reusable workflow, they cannot
-  #   use 'timeout-minutes:', 'environment:', 'env:', or 'steps:' because
-  #   those break the allowable syntax for a job calling a reusable workflow.
-  #   https://docs.github.com/en/actions/using-workflows/reusing-workflows
-  # ----------------------------------------------------------------------------
-  # Development (dev) server
+#   ----------------------------------------------------------------------------
+#   Deployment and Re-tagging Jobs
+#   Note: 
+#     Since these jobs are calling a reusable workflow, they cannot
+#     use 'timeout-minutes:', 'environment:', 'env:', or 'steps:' because
+#     those break the allowable syntax for a job calling a reusable workflow.
+#     https://docs.github.com/en/actions/using-workflows/reusing-workflows
+#   ----------------------------------------------------------------------------
+#   Development (dev) server
   dev-server-deploy-from-dockerhub:
     needs: [build-docker-publish-docker-images, export-image-tag]
     if: ${{ github.ref_name == 'main' }}
@@ -341,4 +354,3 @@ jobs:
         IMAGE_TAG:  ${{ needs.export-image-tag.outputs.image_tag }}
         BRANCH_TAG: stg
     secrets: inherit
-

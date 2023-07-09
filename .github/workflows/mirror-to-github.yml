@@ -1,0 +1,31 @@
+name: Mirror Repo
+# Mirror the project to GitHub.com
+on:
+  push:
+    branches: [ main, staging ]
+  workflow_call:
+env:
+  GITHUB_MIRROR_USER: ${{ secrets.MIRROR_TO_GITHUB_USER }}
+  GITHUB_MIRROR_TOKEN: ${{ secrets.MIRROR_TO_GITHUB_TOKEN }}
+
+  # Where to mirror to; likely format is:
+  #    github.com/<user>/<repo>.git
+  GITHUB_MIRROR_URL: ${{ secrets.MIRROR_TO_GITHUB_URL }}
+jobs:
+  mirror-to-githubcom:
+    runs-on: [self-hosted, docker]
+    steps:
+      - name: Checkout repo as Mirror
+        run: |
+          HTTPS_PATH_WITH_TOKEN=`echo ${{ github.repositoryUrl }} | awk '{ gsub(/git:\/\//, "\n" ); print "https://oauth2:${{ secrets.GITHUB_TOKEN }}@" $1; }'`
+          echo "Cloning w/ --mirror from '$HTTPS_PATH_WITH_TOKEN' (it should be https://oauth2:<password>@<url>.<user>.<repo>)"
+          git clone --mirror $HTTPS_PATH_WITH_TOKEN repo
+
+      - name: Push mirror to GitHub.com
+        run: |
+          # Source: https://github.com/isaacs/github/issues/415#issuecomment-769711216
+          cd repo/
+          echo "Adding remote..."
+          git remote add github "https://$MIRROR_TO_GITHUB_USER:$MIRROR_TO_GITHUB_TOKEN@MIRROR_TO_GITHUB_URL"
+          echo "Pushing mirror"
+          git push --mirror github

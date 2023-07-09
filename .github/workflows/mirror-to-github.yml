@@ -5,12 +5,11 @@ on:
     branches: [ main, staging ]
   workflow_call:
 env:
-  GITHUB_MIRROR_USER: ${{ secrets.MIRROR_TO_GITHUB_USER }}
-  GITHUB_MIRROR_TOKEN: ${{ secrets.MIRROR_TO_GITHUB_TOKEN }}
-
+  MIRROR_TO_GITHUB_USER: ${{ secrets.MIRROR_TO_GITHUB_USER }}
+  MIRROR_TO_GITHUB_TOKEN: ${{ secrets.MIRROR_TO_GITHUB_TOKEN }}
   # Where to mirror to; likely format is:
   #    github.com/<user>/<repo>.git
-  GITHUB_MIRROR_URL: ${{ secrets.MIRROR_TO_GITHUB_URL }}
+  MIRROR_TO_GITHUB_URL: ${{ secrets.MIRROR_TO_GITHUB_URL }}
 jobs:
   mirror-to-githubcom:
     runs-on: [self-hosted, docker]
@@ -27,5 +26,5 @@ jobs:
           cd repo/
           echo "Adding remote..."
           git remote add github "https://$MIRROR_TO_GITHUB_USER:$MIRROR_TO_GITHUB_TOKEN@MIRROR_TO_GITHUB_URL"
-          echo "Pushing mirror"
-          git push --mirror github
+          echo "Pushing mirror (--all and --force)"
+          git push --all --force github

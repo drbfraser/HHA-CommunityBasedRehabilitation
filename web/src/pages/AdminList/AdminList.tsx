@@ -62,6 +62,7 @@ const AdminList = () => {
     const [isRoleHidden, setRoleHidden] = useState<boolean>(false);
     const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
     const [isStatusHidden, setStatusHidden] = useState<boolean>(false);
+    const [isUsernameHidden, setIsUsernameHidden] = useState<boolean>(false);
     const [filteredRows, setFilteredRows] = useState<RowsProp>([]);
     const [serverRows, setServerRows] = useState<RowsProp>([]);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
@@ -115,6 +116,14 @@ const AdminList = () => {
             renderCell: RenderText,
             hide: isStatusHidden,
             hideFunction: setStatusHidden,
+        },
+        {
+            field: "username",
+            headerName: "Username",
+            flex: 1,
+            renderCell: RenderText,
+            hide: isUsernameHidden,
+            hideFunction: setIsUsernameHidden,
         },
     ];
 

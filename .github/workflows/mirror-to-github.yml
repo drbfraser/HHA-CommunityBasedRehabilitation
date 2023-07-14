@@ -24,14 +24,15 @@ jobs:
           
       - name: Checkout repo as Mirror
         run: |
+          mkdir /isolated_build/ ; cd /isolated_build/
           HTTPS_PATH_WITH_TOKEN=`echo ${{ github.repositoryUrl }} | awk '{ gsub(/git:\/\//, "\n" ); print "https://oauth2:${{ secrets.GITHUB_TOKEN }}@" $1; }'`
           echo "Cloning w/ --mirror from '$HTTPS_PATH_WITH_TOKEN' (it should be https://oauth2:<password>@<url>.<user>.<repo>)"
           git clone --mirror $HTTPS_PATH_WITH_TOKEN repo
 
       - name: Push mirror to GitHub.com
+        working-directory: /isolated_build/repo/
         run: |
           # Source: https://github.com/isaacs/github/issues/415#issuecomment-769711216
-          cd repo/
           echo "Adding remote..."
           git remote add github "https://$MIRROR_TO_GITHUB_USER:$MIRROR_TO_GITHUB_TOKEN@$MIRROR_TO_GITHUB_URL"
           echo "Pushing mirror (--all and --force)"

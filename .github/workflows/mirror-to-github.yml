@@ -25,6 +25,6 @@ jobs:
           # Source: https://github.com/isaacs/github/issues/415#issuecomment-769711216
           cd repo/
           echo "Adding remote..."
-          git remote add github "https://$MIRROR_TO_GITHUB_USER:$MIRROR_TO_GITHUB_TOKEN@MIRROR_TO_GITHUB_URL"
+          git remote add github "https://$MIRROR_TO_GITHUB_USER:$MIRROR_TO_GITHUB_TOKEN@$MIRROR_TO_GITHUB_URL"
           echo "Pushing mirror (--all and --force)"
           git push --all --force github

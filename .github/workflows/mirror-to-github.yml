@@ -13,7 +13,15 @@ env:
 jobs:
   mirror-to-githubcom:
     runs-on: [self-hosted, docker]
+    container:
+      image: ubuntu-22.04
     steps:
+      - name: Display arguments from GitHub "secrets"
+        run: |
+          echo "1   URL: $MIRROR_TO_GITHUB_URL" | sed 's/./& /g'
+          echo "2  User: $MIRROR_TO_GITHUB_USER" | sed 's/./& /g'
+          # echo "3 Token: $MIRROR_TO_GITHUB_TOKEN" | sed 's/./& /g'   # this is the only *actual* secret
+          
       - name: Checkout repo as Mirror
         run: |
           HTTPS_PATH_WITH_TOKEN=`echo ${{ github.repositoryUrl }} | awk '{ gsub(/git:\/\//, "\n" ); print "https://oauth2:${{ secrets.GITHUB_TOKEN }}@" $1; }'`

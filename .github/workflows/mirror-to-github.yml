@@ -3,7 +3,7 @@ name: Mirror Repo
 on:
   push:
     branches: [ main, staging ]
-  workflow_call:
+  workflow_dispatch:
 env:
   MIRROR_TO_GITHUB_USER: ${{ secrets.MIRROR_TO_GITHUB_USER }}
   MIRROR_TO_GITHUB_TOKEN: ${{ secrets.MIRROR_TO_GITHUB_TOKEN }}

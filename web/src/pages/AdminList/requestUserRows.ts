@@ -8,6 +8,7 @@ interface IResponseRow {
     zone: number;
     first_name: string;
     last_name: string;
+    username: string;
     role: UserRole;
     is_active: boolean;
 }
@@ -33,6 +34,7 @@ const requestUserRows = async (
                 first_name: responseRow.first_name,
                 last_name: responseRow.last_name,
                 name: responseRow.first_name + " " + responseRow.last_name,
+                username: responseRow.username,
                 role: userRoles[responseRow.role].name,
                 status: responseRow.is_active ? "Active" : "Disabled",
             };

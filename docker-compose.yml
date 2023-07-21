@@ -5,7 +5,7 @@ services:
     image: fluent/fluent-bit:latest
     volumes:
       - ./fluentbit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
-      - fluentbit_logs_output:/output
+      - :/output     # Anonymoust volume to keep files out of file system, but still accessible
       - django_logs:/logs/django:ro
       - fluentbit_logs_db:/persist
     ports:

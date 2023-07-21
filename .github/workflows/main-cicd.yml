@@ -346,7 +346,7 @@ jobs:
     uses: ./.github/workflows/deploy-from-dockerhub.yml
     with:
         RUNNER_NAME: deploy-staging
-        DOMAIN:      cbr-dev.cmpt.sfu.ca
+        DOMAIN:      cbr-stg.cmpt.sfu.ca
         IMAGE_TAG:   ${{ needs.export-image-tag.outputs.image_tag }}
     secrets: inherit
 

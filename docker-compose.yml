@@ -5,7 +5,7 @@ services:
     image: fluent/fluent-bit:latest
     volumes:
       - ./fluentbit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
-      - ./fluentbit/logs:/output
+      - fluentbit_logs_output:/output
       - django_logs:/logs/django:ro
       - fluentbit_logs_db:/persist
     ports:
@@ -47,3 +47,4 @@ volumes:
   cbr_postgres_data:
   django_logs:
   fluentbit_logs_db:
+  fluentbit_logs_output:

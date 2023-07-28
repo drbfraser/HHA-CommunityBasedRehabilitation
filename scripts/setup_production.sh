@@ -5,6 +5,9 @@ RED='\033[1;31m'
 BLUE='\033[1;36m'
 COLOR_OFF='\033[0m'
 
+# Set the data-root directory for docker
+DOCKER_DATA_ROOT="/mnt/blockstorage"
+
 # exit if there is a failed command
 set -e
 
@@ -62,7 +65,8 @@ echo -e "\n${BLUE}Configuring docker security with user namespaces...${COLOR_OFF
 
 # User namespaces (security): https://docs.docker.com/engine/security/userns-remap/
 echo '{
-  "userns-remap": "default"
+  "userns-remap": "default",
+  "data-root": "'"${DOCKER_DATA_ROOT}"'"
 }' | sudo tee /etc/docker/daemon.json > /dev/null
 sudo chmod 0644 /etc/docker/daemon.json
 sudo systemctl restart docker
@@ -115,6 +119,18 @@ if [ ! -f .env ]; then
     docker compose -f docker-compose.yml -f docker-compose.deploy.yml down
     docker volume prune -f
 fi
+
+echo -e "\n${BLUE}Setting up cron jobs...${COLOR_OFF}\n"
+
+# Create the text files before setting up the cron jobs
+touch "~hourly_backup_log.txt"
+touch "~daily_backup_log.txt"
+
+# Add cron job for hourly_backup.sh and redirect output to hourly_backup_log.txt
+(crontab -l 2>/dev/null; echo "0 * * * * /bin/bash ~/cbr/scripts/hourly_backup_script.sh >> ~/hourly_backup_log.txt 2>&1") | crontab -
+
+# Add cron job for daily_backup.sh and redirect output to daily_backup_log.txt
+(crontab -l 2>/dev/null; echo "0 2 * * * /bin/bash ~/cbr/scripts/daily_backup_script.sh >> ~/daily_backup_log.txt 2>&1") | crontab -
 
 
 echo -e "\n${BLUE}Downloading Docker images and spinning up Docker containers...${COLOR_OFF}\n"

@@ -88,7 +88,8 @@ echo -e "\n${BLUE}Clone project code from GitHub...${COLOR_OFF}\n"
 
 cd ~
 if [ ! -d cbr ]; then
-    git clone https://github.com/drbfraser/HHA-CommunityBasedRehabilitation.git cbr
+    git clone https://github.com
+    /drbfraser/HHA-CommunityBasedRehabilitation.git cbr
 fi    
 cd ~/cbr/
 git pull
@@ -123,8 +124,8 @@ fi
 echo -e "\n${BLUE}Setting up cron jobs...${COLOR_OFF}\n"
 
 # Create the text files before setting up the cron jobs
-touch "~hourly_backup_log.txt"
-touch "~daily_backup_log.txt"
+touch "~/hourly_backup_log.txt"
+touch "~/daily_backup_log.txt"
 
 # Add cron job for hourly_backup.sh and redirect output to hourly_backup_log.txt
 (crontab -l 2>/dev/null; echo "0 * * * * /bin/bash ~/cbr/scripts/hourly_backup_script.sh >> ~/hourly_backup_log.txt 2>&1") | crontab -

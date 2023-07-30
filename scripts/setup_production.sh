@@ -126,15 +126,19 @@ echo -e "\n${BLUE}Setting up cron jobs...${COLOR_OFF}\n"
 # Create the text files before setting up the cron jobs
 touch ~/hourly_backup_log.txt
 touch ~/daily_backup_log.txt
+touch ~/monthly_backup_log.txt
 
 chmod +x ~/cbr/scripts/hourly_backup_script.sh
 chmod +x ~/cbr/scripts/daily_backup_script.sh
+# chmod +x ~/cbr/scripts/restore_backup_script.sh
+ln -s -f ~/cbr/scripts/restor_backup_script.sh ~/restore_backup.sh
 
 # Add cron job for hourly_backup.sh and redirect output to hourly_backup_log.txt
 # Add cron job for daily_backup.sh and redirect output to daily_backup_log.txt
 crontab - <<EOF
-*/2 * * * * /bin/bash ~/cbr/scripts/hourly_backup_script.sh >> ~/hourly_backup_log.txt 2>&1
+0 * * * * /bin/bash ~/cbr/scripts/hourly_backup_script.sh >> ~/hourly_backup_log.txt 2>&1
 0 2 * * * /bin/bash ~/cbr/scripts/daily_backup_script.sh >> ~/daily_backup_log.txt 2>&1
+0 0 1 * * /bin/bash ~/cbr/scripts/monthly_backup_script.sh >> ~/monthly_backup_log.txt 2>&1
 EOF
 
 

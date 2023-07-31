@@ -27,7 +27,7 @@ restore_backup() {
 # Main script starts here
 
 # Set the S3 bucket name
-source .env
+source ../.env
 
 # Ask the user to choose hourly or daily backup
 echo "Choose a backup type:"

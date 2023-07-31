@@ -47,6 +47,9 @@ sudo apt-get -y install \
     lsb-release \
     git
 
+read -p "\n${BLUE}Please enter the absolute path to the block storage: ${COLOR_OFF}" BLOCK_STORAGE_DIR
+echo -e "\n${BLUE}The block storge path is: ${BLOCK_STORAGE_DIR}${COLOR_OFF}\n"
+
 
 echo -e "\n${BLUE}Installing docker and docker compose...${COLOR_OFF}\n"
 
@@ -66,7 +69,7 @@ echo -e "\n${BLUE}Configuring docker security with user namespaces...${COLOR_OFF
 # User namespaces (security): https://docs.docker.com/engine/security/userns-remap/
 echo '{
   "userns-remap": "default",
-  "data-root": "'"${DOCKER_DATA_ROOT}"'"
+  "data-root": "'"${BLOCK_STORAGE_DIR}"'"
 }' | sudo tee /etc/docker/daemon.json > /dev/null
 sudo chmod 0644 /etc/docker/daemon.json
 sudo systemctl restart docker
@@ -98,6 +101,7 @@ git checkout production
 
 echo -e "\n${BLUE}Linking update script into /root/update.sh...${COLOR_OFF}\n"
 
+chmod +X ~/cbr/scripts/update.sh
 ln -s -f ~/cbr/scripts/update.sh ~/update.sh
 
 
@@ -119,6 +123,12 @@ if [ ! -f .env ]; then
     echo -e "\n${BLUE}Removing previous Docker containers and volumes...${COLOR_OFF}\n"
     docker compose -f docker-compose.yml -f docker-compose.deploy.yml down
     docker volume prune -f
+
+    echo -e "\n${BLUE}Please enter the name of the S3 bucket you want to sync with:${COLOR_OFF}"
+    read;
+    echo "S3_BUCKET_NAME=${REPLY}" >> .env
+
+    echo "SOURCE_DIR='"${BLOCK_STORAGE_DIR}/165536.165536/volumes/cbr_cbr_postgres_data"'"
 fi
 
 echo -e "\n${BLUE}Setting up cron jobs...${COLOR_OFF}\n"
@@ -130,8 +140,9 @@ touch ~/monthly_backup_log.txt
 
 chmod +x ~/cbr/scripts/hourly_backup_script.sh
 chmod +x ~/cbr/scripts/daily_backup_script.sh
-# chmod +x ~/cbr/scripts/restore_backup_script.sh
-ln -s -f ~/cbr/scripts/restor_backup_script.sh ~/restore_backup.sh
+chmod +x ~/cbr/scripts/monthly_backup_script.sh
+chmod +x ~/cbr/scripts/restore_backup_script.sh
+ln -s -f ~/cbr/scripts/restor_backup.sh ~/restore_backup.sh
 
 # Add cron job for hourly_backup.sh and redirect output to hourly_backup_log.txt
 # Add cron job for daily_backup.sh and redirect output to daily_backup_log.txt

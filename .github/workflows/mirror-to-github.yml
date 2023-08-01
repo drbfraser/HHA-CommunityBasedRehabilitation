@@ -18,11 +18,12 @@ jobs:
     steps:
       - uses: bfraser/cicd/actions/mirror_to_github@HEAD
         with:
-          MIRROR_TO_GITHUB_USER:  ${{ secrets.MIRROR_TO_GITHUB_USER }}
-          MIRROR_TO_GITHUB_TOKEN: ${{ secrets.MIRROR_TO_GITHUB_TOKEN }}
+          target_github_user:  ${{ secrets.MIRROR_TO_GITHUB_USER }}
+          target_github_token: ${{ secrets.MIRROR_TO_GITHUB_TOKEN }}
           # Where to mirror to; likely format is:
           #    github.com/<user>/<repo>.git
-          MIRROR_TO_GITHUB_URL:   ${{ secrets.MIRROR_TO_GITHUB_URL }}
+          target_github_url:   ${{ secrets.MIRROR_TO_GITHUB_URL }}
+          source_github_token: ${{ secrets.GITHUB_TOKEN }}
       
       # - name: Display arguments from GitHub "secrets"
       #   run: |

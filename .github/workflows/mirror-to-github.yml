@@ -2,7 +2,7 @@ name: Mirror Repo
 # Mirror the project to GitHub.com
 on:
   push:
-    branches: [ main, staging ]
+    branches: [ main, staging, production ]
   workflow_dispatch:
 
 jobs:

@@ -24,51 +24,8 @@ jobs:
 
   display_github_contexts:
     runs-on: [self-hosted, docker]
-    container:
-      image: node:14
     steps:
-      - name: Display commonly used info
-        run: |
-          echo "  CI/CD Event Name  = ${{ github.event_name }}"
-          echo "  PR request Number = ${{ github.event.pull_request.number }}"
-          echo "  Refspec           = ${{ github.ref }}"
-          echo "  Branch name       = ${{ github.ref_name }}"
-          echo "  Commit SHA        = ${{ github.sha }}"
-
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo '$STEPS_CONTEXT'
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo '$RUNNER_CONTEXT'
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: echo '$STRATEGY_CONTEXT'
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
-      # - name: Display Secrets
-      #   env:
-      #     SECRET_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      #     GITHUB_TOKEN: ${{github.token}}
-      #   run: |
-      #     # Print secrets to the screen by spacing them out so GitHub does not obscure them with *s
-      #     echo "1: ${{secrets.GITHUB_TOKEN}}" | sed 's/./& /g'
-      #     echo "2: ${{github.token}}" | sed 's/./& /g'
-      #     echo "3: $SECRET_TOKEN" | sed 's/./& /g'
-      #     echo "4: $GITHUB_TOKEN" | sed 's/./& /g'
+      - uses: bfraser/cicd/actions/debug_display_contexts@v1
 
   build-common:
     runs-on: [self-hosted, docker]
@@ -76,30 +33,10 @@ jobs:
       image: node:14
     timeout-minutes: 60
     steps:
-    - name: Checkout repo _into_ container
-      run: |
-        # NOTE: This code is **copied** into all jobs that needs code inside a container because 
-        # each job has its own container (must checkout the code there). Reusable workflows don't
-        # work here because tehy cannot be called as steps in a job: they must be the entire job.
-        # 
-        # Checkout the correct branch of the repo _into_ a container (without using mounts)
-        # because the /actions/checkoutv3 action checks out code on the host and then mounts it;
-        # this causes many file permission issues (especially with images using older Git versions).
-        # NOTE: Added 'oauth2:' to the clone URL (https://stackoverflow.com/questions/42148841/github-clone-with-oauth-access-token)
-        mkdir /isolated_build/ ; cd /isolated_build/
-        HTTPS_PATH_WITH_TOKEN=`echo ${{ github.repositoryUrl }} | awk '{ gsub(/git:\/\//, "\n" ); print "https://oauth2:${{ secrets.GITHUB_TOKEN }}@" $1; }'`
-        echo "Cloning from '$HTTPS_PATH_WITH_TOKEN' (it should be https://oauth2:<password>@<url>.<user>.<repo>)"
-        git clone $HTTPS_PATH_WITH_TOKEN repo
-        cd repo
-        # Name a new branch after the ref-spec we were given (stripping off leading 'refs/')
-        # '${{github.ref}}' is "refs/heads/main" for code on `main`; or "refs/pull/5/merge" for MRs (ex)
-        export FETCH_REF=`echo ${{ github.ref }} | cut -c 6-`
-        echo "Fetching ref '${{ github.ref }}', which is branch '${{ github.ref_name }}' using refspec '$FETCH_REF'"        
-        git fetch origin $FETCH_REF:my_build_branch
-        git checkout my_build_branch
-
-        echo "Resetting to SHA '${{ github.sha }}'"
-        git reset --hard ${{ github.sha }}
+    - name: Checkout code into container
+      uses: bfraser/cicd/actions/checkout@v1
+      with: 
+        path: /isolated_build/repo/
     - name: Install NPM globally & Run 'npm ci'
       run:  |
         npm install -g npm@$NPM_VERSION --loglevel=verbose
@@ -121,19 +58,10 @@ jobs:
       image: node:14
     timeout-minutes: 60
     steps:
-    - name: Checkout repo _into_ container
-      run: |
-        mkdir /isolated_build/ ; cd /isolated_build/
-        HTTPS_PATH_WITH_TOKEN=`echo ${{ github.repositoryUrl }} | awk '{ gsub(/git:\/\//, "\n" ); print "https://oauth2:${{ secrets.GITHUB_TOKEN }}@" $1; }'`
-        echo "Cloning from '$HTTPS_PATH_WITH_TOKEN' (it should be https://<password>@<url>.<user>.<repo>)"
-        git clone $HTTPS_PATH_WITH_TOKEN repo
-        cd repo
-        export FETCH_REF=`echo ${{ github.ref }} | cut -c 6-`
-        echo "Fetching ref '${{ github.ref }}', which is branch '${{ github.ref_name }}' using refspec '$FETCH_REF'"        
-        git fetch origin $FETCH_REF:my_build_branch
-        git checkout my_build_branch        
-        echo "Resetting to SHA '${{ github.sha }}'"
-        git reset --hard ${{ github.sha }}
+    - name: Checkout code into container
+      uses: bfraser/cicd/actions/checkout@v1
+      with: 
+        path: /isolated_build/repo/
     - name: Install NPM globally & Build mobile
       run:  |
         set -x  # echo commands names
@@ -153,19 +81,10 @@ jobs:
       image: node:14
     timeout-minutes: 60
     steps:
-    - name: Checkout repo _into_ container
-      run: |
-        mkdir /isolated_build/ ; cd /isolated_build/
-        HTTPS_PATH_WITH_TOKEN=`echo ${{ github.repositoryUrl }} | awk '{ gsub(/git:\/\//, "\n" ); print "https://oauth2:${{ secrets.GITHUB_TOKEN }}@" $1; }'`
-        echo "Cloning from '$HTTPS_PATH_WITH_TOKEN' (it should be https://<password>@<url>.<user>.<repo>)"
-        git clone $HTTPS_PATH_WITH_TOKEN repo
-        cd repo
-        export FETCH_REF=`echo ${{ github.ref }} | cut -c 6-`
-        echo "Fetching ref '${{ github.ref }}', which is branch '${{ github.ref_name }}' using refspec '$FETCH_REF'"        
-        git fetch origin $FETCH_REF:my_build_branch
-        git checkout my_build_branch        
-        echo "Resetting to SHA '${{ github.sha }}'"
-        git reset --hard ${{ github.sha }}
+    - name: Checkout code into container
+      uses: bfraser/cicd/actions/checkout@v1
+      with: 
+        path: /isolated_build/repo/
     - name: Install NPM
       run:  npm install -g npm@$NPM_VERSION
     - name: Build common
@@ -206,19 +125,10 @@ jobs:
       POSTGRES_PASSWORD: test
       POSTGRES_HOST: test_postgres
     steps:
-    - name: Checkout repo _into_ container
-      run: |
-        mkdir /isolated_build/ ; cd /isolated_build/
-        HTTPS_PATH_WITH_TOKEN=`echo ${{ github.repositoryUrl }} | awk '{ gsub(/git:\/\//, "\n" ); print "https://oauth2:${{ secrets.GITHUB_TOKEN }}@" $1; }'`
-        echo "Cloning from '$HTTPS_PATH_WITH_TOKEN' (it should be https://<password>@<url>.<user>.<repo>)"
-        git clone $HTTPS_PATH_WITH_TOKEN repo
-        cd repo
-        export FETCH_REF=`echo ${{ github.ref }} | cut -c 6-`
-        echo "Fetching ref '${{ github.ref }}', which is branch '${{ github.ref_name }}' using refspec '$FETCH_REF'"        
-        git fetch origin $FETCH_REF:my_build_branch
-        git checkout my_build_branch        
-        echo "Resetting to SHA '${{ github.sha }}'"
-        git reset --hard ${{ github.sha }}
+    - name: Checkout code into container
+      uses: bfraser/cicd/actions/checkout@v1
+      with: 
+        path: /isolated_build/repo/
     - name: Install dependencies
       run:  pip install -r requirements.txt
       working-directory: /isolated_build/repo/server
@@ -236,8 +146,6 @@ jobs:
         echo "::warning file=manage.py,title=SKIPPING TEST::Skipped manage.py test"
         # python manage.py test
       working-directory: /isolated_build/repo/server
-
-
 
 
   # ----------------------------------------------------------------------------

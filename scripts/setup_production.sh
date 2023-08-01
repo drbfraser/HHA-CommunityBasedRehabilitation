@@ -47,7 +47,10 @@ sudo apt-get -y install \
     lsb-release \
     git
 
-read -p "\n${BLUE}Please enter the absolute path to the block storage: ${COLOR_OFF}" BLOCK_STORAGE_DIR
+echo -e ${BLUE}
+read -p "Please enter the absolute path to the block storage: (/path/to/block/storage) " BLOCK_STORAGE_DIR
+echo -e ${COLOR_OFF}
+
 echo -e "\n${BLUE}The block storge path is: ${BLOCK_STORAGE_DIR}${COLOR_OFF}\n"
 
 
@@ -91,8 +94,10 @@ echo -e "\n${BLUE}Clone project code from GitHub...${COLOR_OFF}\n"
 
 cd ~
 if [ ! -d cbr ]; then
-    git clone https://github.com
-    /drbfraser/HHA-CommunityBasedRehabilitation.git cbr
+    # git clone https://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@github.sfu.ca/bfraser/415-HHA-CBR.git cbr
+    git clone https://github.com/drbfraser/HHA-CommunityBasedRehabilitation.git cbr
+
+
 fi    
 cd ~/cbr/
 git pull
@@ -128,7 +133,7 @@ if [ ! -f .env ]; then
     read;
     echo "S3_BUCKET_NAME=${REPLY}" >> .env
 
-    echo "SOURCE_DIR='"${BLOCK_STORAGE_DIR}/165536.165536/volumes/cbr_cbr_postgres_data"'"
+    echo "SOURCE_DIR='"${BLOCK_STORAGE_DIR}/165536.165536/volumes/cbr_cbr_postgres_data"'" >> .env
 fi
 
 echo -e "\n${BLUE}Setting up cron jobs...${COLOR_OFF}\n"
@@ -141,8 +146,8 @@ touch ~/monthly_backup_log.txt
 chmod +x ~/cbr/scripts/hourly_backup_script.sh
 chmod +x ~/cbr/scripts/daily_backup_script.sh
 chmod +x ~/cbr/scripts/monthly_backup_script.sh
-chmod +x ~/cbr/scripts/restore_backup_script.sh
-ln -s -f ~/cbr/scripts/restor_backup.sh ~/restore_backup.sh
+chmod +x ~/cbr/scripts/restore_backup.sh
+ln -s -f ~/cbr/scripts/restore_backup.sh ~/restore_backup.sh
 
 # Add cron job for hourly_backup.sh and redirect output to hourly_backup_log.txt
 # Add cron job for daily_backup.sh and redirect output to daily_backup_log.txt

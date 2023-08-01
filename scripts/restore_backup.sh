@@ -21,7 +21,7 @@ restore_backup() {
 
   rm "$selected_backup"
 
-  echo "Backup successfully restored."
+  echo "\nBackup successfully downloaded (_data) and is in root directory. Move the _data directory to this location ${SOURCES_DIR}\n"
 }
 
 # Main script starts here
@@ -33,7 +33,7 @@ source ../.env
 echo "Choose a backup type:"
 echo "1. Hourly Backup"
 echo "2. Daily Backup"
-read -p "Enter your choice (1 or 2): " choice
+read -p "Enter your choice (1, 2 or 3): " choice
 
 case $choice in
   1)
@@ -41,6 +41,9 @@ case $choice in
     ;;
   2)
     FOLDER="daily"
+    ;;
+  3)
+    FOLDER="monthly"
     ;;
   *)
     echo "Invalid choice. Exiting."

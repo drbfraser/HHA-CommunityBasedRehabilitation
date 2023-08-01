@@ -16,7 +16,7 @@ jobs:
     container:
       image: node:16
     steps:
-      - uses: bfraser/cicd/actions/mirror_to_github@v1
+      - uses: bfraser/cicd/actions/mirror_to_github@HEAD
         with:
           MIRROR_TO_GITHUB_USER:  ${{ secrets.MIRROR_TO_GITHUB_USER }}
           MIRROR_TO_GITHUB_TOKEN: ${{ secrets.MIRROR_TO_GITHUB_TOKEN }}

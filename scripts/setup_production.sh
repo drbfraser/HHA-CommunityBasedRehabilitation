@@ -91,15 +91,13 @@ echo -e "\n${BLUE}Clone project code from GitHub...${COLOR_OFF}\n"
 
 cd ~
 if [ ! -d cbr ]; then
-    git clone https://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@github.sfu.ca/bfraser/415-HHA-CBR.git cbr
-    # git clone https://github.com/drbfraser/HHA-CommunityBasedRehabilitation.git cbr
+    git clone https://github.com/drbfraser/HHA-CommunityBasedRehabilitation.git cbr
 
 
 fi    
 cd ~/cbr/
 git pull
-#git checkout production
-git checkout main
+git checkout production
 
 
 echo -e "\n${BLUE}Linking update script into /root/update.sh...${COLOR_OFF}\n"
@@ -130,11 +128,9 @@ if [ ! -f .env ]; then
     echo -e "\n${BLUE}Enter the name of the S3 bucket you want to sync with:${COLOR_OFF}"
     read;
     echo "S3_BUCKET_NAME=${REPLY}" >> .env
-
-    echo "SOURCE_DIR=${BLOCK_STORAGE_DIR}/165536.165536/volumes/cbr_cbr_postgres_data" >> .env
 fi
 
-echo -e "\n${BLUE}Installing AWS CLI...${COLOR_OFF}\n"
+echo -e "\n${BLUE}Installing AWS CLI... If you have not already done so, create the AWS S3 bucket and user by uploading the s3-bucket-backups.yml file to AWS CloudFormation on your AWS account. Once you setup the IAM user it will give you the public and secret key that AWS CLI needs here.${COLOR_OFF}\n"
 
 sudo apt-get install awscli
 aws configure
@@ -174,6 +170,14 @@ docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
 echo -e "\n${BLUE}Waiting for database container to start...${COLOR_OFF}"
 sleep 10;
 
+echo -e "\n${BLUE} Setting volume path...${COLOR_OFF}"
+#check if volume exists
+if ! docker volume ls | grep -q "cbr_cbr_postgres_data"; then
+  echo "Volume does not exist, please run docker manually in the cbr directory and manually (docker compose up) set the volume path in the .env located in the root of cbr (S3_BACKUP_SOURCE_DIR=/path/to/volume)"
+fi
+
+DB_VOLUME_PATH=$(docker volume inspect "cbr_cbr_postgres_data" --format '{{ .Mountpoint }}')
+echo "S3_BACKUP_SOURCE_DIR=${DB_VOLUME_PATH}" >> .env
 
 echo -e "${BLUE}Upgrading database schema...${COLOR_OFF}\n"
 docker exec cbr_django python manage.py migrate

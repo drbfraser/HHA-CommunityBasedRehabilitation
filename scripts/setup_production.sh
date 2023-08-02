@@ -5,9 +5,6 @@ RED='\033[1;31m'
 BLUE='\033[1;36m'
 COLOR_OFF='\033[0m'
 
-# Set the data-root directory for docker
-DOCKER_DATA_ROOT="/mnt/blockstorage"
-
 # exit if there is a failed command
 set -e
 
@@ -94,14 +91,15 @@ echo -e "\n${BLUE}Clone project code from GitHub...${COLOR_OFF}\n"
 
 cd ~
 if [ ! -d cbr ]; then
-    # git clone https://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@github.sfu.ca/bfraser/415-HHA-CBR.git cbr
-    git clone https://github.com/drbfraser/HHA-CommunityBasedRehabilitation.git cbr
+    git clone https://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@github.sfu.ca/bfraser/415-HHA-CBR.git cbr
+    # git clone https://github.com/drbfraser/HHA-CommunityBasedRehabilitation.git cbr
 
 
 fi    
 cd ~/cbr/
 git pull
-git checkout production
+#git checkout production
+git checkout backup-s3-scripts
 
 
 echo -e "\n${BLUE}Linking update script into /root/update.sh...${COLOR_OFF}\n"
@@ -129,14 +127,19 @@ if [ ! -f .env ]; then
     docker compose -f docker-compose.yml -f docker-compose.deploy.yml down
     docker volume prune -f
 
-    echo -e "\n${BLUE}Please enter the name of the S3 bucket you want to sync with:${COLOR_OFF}"
+    echo -e "\n${BLUE}Enter the name of the S3 bucket you want to sync with:${COLOR_OFF}"
     read;
     echo "S3_BUCKET_NAME=${REPLY}" >> .env
 
-    echo "SOURCE_DIR='"${BLOCK_STORAGE_DIR}/165536.165536/volumes/cbr_cbr_postgres_data"'" >> .env
+    echo "SOURCE_DIR=${BLOCK_STORAGE_DIR}/165536.165536/volumes/cbr_cbr_postgres_data" >> .env
 fi
 
-echo -e "\n${BLUE}Setting up cron jobs...${COLOR_OFF}\n"
+echo -e "\n${BLUE}Installing AWS CLI...${COLOR_OFF}\n"
+
+sudo apt-get install awscli
+aws configure
+
+echo -e "\n${BLUE}Creating backup log files & setting up cron jobs...${COLOR_OFF}\n"
 
 # Create the text files before setting up the cron jobs
 touch ~/hourly_backup_log.txt

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#change to working directory of file not link
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+cd "$SCRIPT_DIR"
+
 restore_backup() {
   # Get the list of available backups from the S3 bucket
   backups=$(aws s3 ls "s3://$S3_BUCKET_NAME/$FOLDER/")
@@ -9,7 +13,6 @@ restore_backup() {
     return
   fi
 
-  # Ask the user to select a backup to restore
   echo "Available backups:"
   echo "$backups"
   read -p "Enter the name of the backup you want to restore: " selected_backup
@@ -19,20 +22,21 @@ restore_backup() {
   # Unzip the backup
   tar -xzvf "$selected_backup"
 
+  mv 
   rm "$selected_backup"
 
-  echo "\nBackup successfully downloaded (_data) and is in root directory. Move the _data directory to this location ${SOURCES_DIR}\n"
+  echo "Backup successfully downloaded (_data) and is in root directory. Move the _data directory to this location ${SOURCE_DIR}"
 }
 
 # Main script starts here
 
 # Set the S3 bucket name
-source ../.env
+source "$SCRIPT_DIR/../.env"
 
-# Ask the user to choose hourly or daily backup
 echo "Choose a backup type:"
 echo "1. Hourly Backup"
 echo "2. Daily Backup"
+echo "3. Monthly Backup"
 read -p "Enter your choice (1, 2 or 3): " choice
 
 case $choice in

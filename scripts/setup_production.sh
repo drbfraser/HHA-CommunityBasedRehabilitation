@@ -99,7 +99,7 @@ fi
 cd ~/cbr/
 git pull
 #git checkout production
-git checkout backup-s3-scripts
+git checkout main
 
 
 echo -e "\n${BLUE}Linking update script into /root/update.sh...${COLOR_OFF}\n"
@@ -141,7 +141,6 @@ aws configure
 
 echo -e "\n${BLUE}Creating backup log files & setting up cron jobs...${COLOR_OFF}\n"
 
-# Create the text files before setting up the cron jobs
 touch ~/hourly_backup_log.txt
 touch ~/daily_backup_log.txt
 touch ~/monthly_backup_log.txt

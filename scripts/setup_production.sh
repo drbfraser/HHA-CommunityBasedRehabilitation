@@ -173,7 +173,7 @@ sleep 10;
 echo -e "\n${BLUE} Setting volume path...${COLOR_OFF}"
 #check if volume exists
 if ! docker volume ls | grep -q "cbr_cbr_postgres_data"; then
-  echo "Volume does not exist, please run docker manually in the cbr directory and manually (docker compose up) set the volume path in the .env located in the root of cbr (S3_BACKUP_SOURCE_DIR=/path/to/volume)"
+  echo "Volume does not exist, please run docker manually in the cbr directory (docker compose up) and manually set the volume path in the .env located in the root of cbr (S3_BACKUP_SOURCE_DIR=/path/to/volume)"
 fi
 
 DB_VOLUME_PATH=$(docker volume inspect "cbr_cbr_postgres_data" --format '{{ .Mountpoint }}')

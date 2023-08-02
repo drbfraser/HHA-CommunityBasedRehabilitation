@@ -22,7 +22,7 @@ restore_backup() {
   # Unzip the backup
   tar -xzvf "$selected_backup"
 
-  mv 
+  mv _data ~
   rm "$selected_backup"
 
   echo "Backup successfully downloaded (_data) and is in root directory. Move the _data directory to this location ${SOURCE_DIR}"

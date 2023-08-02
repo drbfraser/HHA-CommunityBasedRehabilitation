@@ -46,4 +46,8 @@ Resources:
               - Effect: Allow
                 Action:
                   - s3:PutObject
-                Resource: !Sub "${S3BucketForBackups.Arn}/*"
+                  - s3:GetObject
+                  - s3:ListBucket
+                Resource:
+                  - !Sub "${S3BucketForBackups.Arn}/*"
+                  - !Sub "${S3BucketForBackups.Arn}"

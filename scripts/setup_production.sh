@@ -130,7 +130,11 @@ if [ ! -f .env ]; then
     echo "S3_BUCKET_NAME=${REPLY}" >> .env
 fi
 
-echo -e "\n${BLUE}Installing AWS CLI... If you have not already done so, create the AWS S3 bucket and user by uploading the s3-bucket-backups.yml file to AWS CloudFormation on your AWS account. Once you setup the IAM user it will give you the public and secret key that AWS CLI needs here.${COLOR_OFF}\n"
+echo -e "\n${BLUE}Installing AWS CLI..."
+echo -e "  If you have not already done so, create the AWS S3 bucket and user by uploading"
+echo -e "  the s3-bucket-backups.yml file to AWS CloudFormation on your AWS account."
+echo -e "  Once you setup the IAM user it will give you the public and secret key that"
+echo -e "  AWS CLI needs here.${COLOR_OFF}\n"
 
 sudo apt-get install awscli
 aws configure
@@ -173,7 +177,9 @@ sleep 10;
 echo -e "\n${BLUE} Setting volume path...${COLOR_OFF}"
 #check if volume exists
 if ! docker volume ls | grep -q "cbr_cbr_postgres_data"; then
-  echo "Volume does not exist, please run docker manually in the cbr directory (docker compose up) and manually set the volume path in the .env located in the root of cbr (S3_BACKUP_SOURCE_DIR=/path/to/volume)"
+  echo "Database volume does not exist, please run docker manually in the cbr directory (docker compose up)"
+  echo "and manually set the volume path in the .env located in the root of cbr"
+  echo "(S3_BACKUP_SOURCE_DIR=/path/to/volume)"
 fi
 
 DB_VOLUME_PATH=$(docker volume inspect "cbr_cbr_postgres_data" --format '{{ .Mountpoint }}')

@@ -44,6 +44,12 @@ sudo apt-get -y install \
     lsb-release \
     git
 
+echo -e ${BLUE}
+read -p "Please enter the absolute path to the block storage: (/path/to/block/storage) " BLOCK_STORAGE_DIR
+echo -e ${COLOR_OFF}
+
+echo -e "\n${BLUE}The block storge path is: ${BLOCK_STORAGE_DIR}${COLOR_OFF}\n"
+
 
 echo -e "\n${BLUE}Installing docker and docker compose...${COLOR_OFF}\n"
 
@@ -62,7 +68,8 @@ echo -e "\n${BLUE}Configuring docker security with user namespaces...${COLOR_OFF
 
 # User namespaces (security): https://docs.docker.com/engine/security/userns-remap/
 echo '{
-  "userns-remap": "default"
+  "userns-remap": "default",
+  "data-root": "'"${BLOCK_STORAGE_DIR}"'"
 }' | sudo tee /etc/docker/daemon.json > /dev/null
 sudo chmod 0644 /etc/docker/daemon.json
 sudo systemctl restart docker
@@ -85,6 +92,8 @@ echo -e "\n${BLUE}Clone project code from GitHub...${COLOR_OFF}\n"
 cd ~
 if [ ! -d cbr ]; then
     git clone https://github.com/drbfraser/HHA-CommunityBasedRehabilitation.git cbr
+
+
 fi    
 cd ~/cbr/
 git pull
@@ -93,6 +102,7 @@ git checkout production
 
 echo -e "\n${BLUE}Linking update script into /root/update.sh...${COLOR_OFF}\n"
 
+chmod +X ~/cbr/scripts/update.sh
 ln -s -f ~/cbr/scripts/update.sh ~/update.sh
 
 
@@ -114,7 +124,40 @@ if [ ! -f .env ]; then
     echo -e "\n${BLUE}Removing previous Docker containers and volumes...${COLOR_OFF}\n"
     docker compose -f docker-compose.yml -f docker-compose.deploy.yml down
     docker volume prune -f
+
+    echo -e "\n${BLUE}Enter the name of the S3 bucket you want to sync with:${COLOR_OFF}"
+    read;
+    echo "S3_BUCKET_NAME=${REPLY}" >> .env
 fi
+
+echo -e "\n${BLUE}Installing AWS CLI..."
+echo -e "  If you have not already done so, create the AWS S3 bucket and user by uploading"
+echo -e "  the s3-bucket-backups.yml file to AWS CloudFormation on your AWS account."
+echo -e "  Once you setup the IAM user it will give you the public and secret key that"
+echo -e "  AWS CLI needs here.${COLOR_OFF}\n"
+
+sudo apt-get install awscli
+aws configure
+
+echo -e "\n${BLUE}Creating backup log files & setting up cron jobs...${COLOR_OFF}\n"
+
+touch ~/hourly_backup_log.txt
+touch ~/daily_backup_log.txt
+touch ~/monthly_backup_log.txt
+
+chmod +x ~/cbr/scripts/hourly_backup_script.sh
+chmod +x ~/cbr/scripts/daily_backup_script.sh
+chmod +x ~/cbr/scripts/monthly_backup_script.sh
+chmod +x ~/cbr/scripts/restore_backup.sh
+ln -s -f ~/cbr/scripts/restore_backup.sh ~/restore_backup.sh
+
+# Add cron job for hourly_backup.sh and redirect output to hourly_backup_log.txt
+# Add cron job for daily_backup.sh and redirect output to daily_backup_log.txt
+crontab - <<EOF
+0 * * * * /bin/bash ~/cbr/scripts/hourly_backup_script.sh >> ~/hourly_backup_log.txt 2>&1
+0 2 * * * /bin/bash ~/cbr/scripts/daily_backup_script.sh >> ~/daily_backup_log.txt 2>&1
+0 0 1 * * /bin/bash ~/cbr/scripts/monthly_backup_script.sh >> ~/monthly_backup_log.txt 2>&1
+EOF
 
 
 echo -e "\n${BLUE}Downloading Docker images and spinning up Docker containers...${COLOR_OFF}\n"
@@ -131,6 +174,16 @@ docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
 echo -e "\n${BLUE}Waiting for database container to start...${COLOR_OFF}"
 sleep 10;
 
+echo -e "\n${BLUE} Setting volume path...${COLOR_OFF}"
+#check if volume exists
+if ! docker volume ls | grep -q "cbr_cbr_postgres_data"; then
+  echo "Database volume does not exist, please run docker manually in the cbr directory (docker compose up)"
+  echo "and manually set the volume path in the .env located in the root of cbr"
+  echo "(S3_BACKUP_SOURCE_DIR=/path/to/volume)"
+fi
+
+DB_VOLUME_PATH=$(docker volume inspect "cbr_cbr_postgres_data" --format '{{ .Mountpoint }}')
+echo "S3_BACKUP_SOURCE_DIR=${DB_VOLUME_PATH}" >> .env
 
 echo -e "${BLUE}Upgrading database schema...${COLOR_OFF}\n"
 docker exec cbr_django python manage.py migrate

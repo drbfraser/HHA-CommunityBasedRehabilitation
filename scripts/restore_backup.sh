@@ -29,8 +29,17 @@ restore_backup() {
   mv _data ~
   rm "$selected_backup"
 
-  echo "Backup successfully downloaded (_data) and is in root directory. Move the _data directory to this location ${SOURCE_DIR}."
-  echo "1. Navigate to cbr root directory\n2. Stop running containers (docker compose down)\n3.Copy/move current _data out\n4. Copy the .env file from _data directory (if needed)"
+  echo "Backup successfully downloaded (_data/) and is in root directory."
+  echo "To restore to active system:"
+  echo "1. Navigate to cbr root directory (likely ~/cbr)"
+  echo "2. Stop running containers (docker compose down)"
+  echo "3. Save a copy of the current _data\ just in case"
+  echo "4. Copy the .env file from _data directory (if needed)"
+  echo "5. Move the extracted _data/ directory to this location: ${SOURCE_DIR}"
+  echo "6. Restart the server. Likely:"
+  echo "      docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d"
+  echo "7. Run data migration:"
+  echo "      docker exec cbr_django python manage.py migrate"
 }
 
 # Main script starts here

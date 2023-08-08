@@ -17,6 +17,7 @@ export enum Endpoint {
     REFERRAL_PICTURE = "referral/picture/",
     ZONES = "zones",
     ZONE = "zone/",
+    ZONE_MIGRATION = "zone_migration/",
     USERS = "users",
     USER = "user/",
     USER_CURRENT = "currentuser",

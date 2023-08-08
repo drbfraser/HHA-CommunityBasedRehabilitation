@@ -1,6 +1,6 @@
 import React from "react";
 import { useStyles } from "./styles";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, setNestedObjectValues } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -19,6 +19,7 @@ import {
 } from "@cbr/common/forms/Zone/zoneFields";
 import history from "@cbr/common/util/history";
 import { UserRole } from "@cbr/common/util/users";
+import ConfirmDeleteZone from "components/Dialogs/ConfirmDeleteZone";
 interface IResponseRow {
     id: number;
     zone: number;
@@ -33,6 +34,10 @@ const ZoneEdit = () => {
     const styles = useStyles();
     const { zone_name } = useRouteMatch<IRouteParams>().params;
     const [zone, setZone] = useState<IZone>();
+    const [userList, setUserList] = useState<IResponseRow[]>([]);
+    const [clientList, setClientList] = useState<IResponseRow[]>([]);
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
     const zones = useZones();
     const [loadingError, setLoadingError] = useState<string>();
 
@@ -49,6 +54,7 @@ const ZoneEdit = () => {
                 );
             }
         };
+
         getInfo();
     }, [zone_name]);
 
@@ -58,49 +64,33 @@ const ZoneEdit = () => {
         };
         return await apiFetch(Endpoint.ZONE, `${zoneId}`, init).then(async (res) => {
             if (!res.ok) {
-                const resBody = await res.text();
-                if (resBody.includes("referenced through protected foreign keys")) {
-                    const allUsers = await apiFetch(Endpoint.USERS, "");
-                    const allClients = await apiFetch(Endpoint.CLIENTS, "");
-                    const userRows: IResponseRow[] = await allUsers.json();
-                    const clientRows: IResponseRow[] = await allClients.json();
-                    var users = userRows.filter(function (row) {
-                        return row.zone === zoneId;
-                    });
-                    var clients = clientRows.filter(function (row) {
-                        return row.zone === zoneId;
-                    });
-                    var userList = "";
-                    for (const user of users) {
-                        userList += user.username;
-                        if (user === users[users.length - 1]) {
-                            userList += ".";
-                        } else userList += ", ";
-                    }
-                    var clientList = "";
-                    for (const client of clients) {
-                        clientList += client.full_name;
-                        if (client === clients[clients.length - 1]) {
-                            clientList += ".";
-                        } else clientList += ", ";
-                    }
-                    var inZone = userList ? "Users: " + userList : "";
-                    inZone += clientList ? "\nClients: " + clientList : "";
-                    alert(
-                        "Zone cannot be deleted. The following users/clients are in this zone: \n" +
-                            inZone
-                    );
-                } else {
-                    alert("Encountered an error while trying to delete the zone!");
-                }
+                alert("Encountered an error while trying to delete the zone!");
+            } else {
+                alert("Zone successfully deleted!");
+                history.push("/admin");
             }
-            history.push("/admin");
         });
     };
-    const handleDeleteZone = (zoneId: number) => {
-        if (window.confirm("Are you sure you want to delete this zone?")) {
-            deleteZone(zoneId);
-        }
+    const getClientsAndUsers = async (zoneId: any) => {
+        const allUsers = await apiFetch(Endpoint.USERS, "");
+        const allClients = await apiFetch(Endpoint.CLIENTS, "");
+        const userRows: IResponseRow[] = await allUsers.json();
+        const clientRows: IResponseRow[] = await allClients.json();
+        const usersInZone = userRows.filter(function (row) {
+            return row.zone === zoneId;
+        });
+        const clientsInZone = clientRows.filter(function (row) {
+            return row.zone === zoneId;
+        });
+        setUserList(usersInZone);
+        setClientList(clientsInZone);
+        return usersInZone.length || clientsInZone.length;
+    };
+    const handleDeleteZone = async (zoneId: number) => {
+        const zoneNotEmpty = await getClientsAndUsers(zoneId);
+        if (zoneNotEmpty) {
+            setDialogOpen(true);
+        } else if (window.confirm("Are you sure you want to delete this zone?")) deleteZone(zoneId);
     };
     return loadingError ? (
         <Alert severity="error">
@@ -108,69 +98,83 @@ const ZoneEdit = () => {
             {loadingError}
         </Alert>
     ) : zone && zones.size ? (
-        <Formik
-            initialValues={zone}
-            validationSchema={editZoneValidationSchema}
-            onSubmit={(values, formikHelpers) => {
-                handleZoneEditSubmit(values, formikHelpers)
-                    .then(() => history.push("/admin"))
-                    .then(() => window.location.reload())
-                    .catch((e) => {
-                        const errMsg =
-                            e instanceof APIFetchFailError
-                                ? e.buildFormError(zoneFieldLabels)
-                                : `${e}` ??
-                                  "Sorry, something went wrong trying to edit that user. Please try again.";
-                        alert(errMsg);
-                    });
-            }}
-        >
-            {({ values, setFieldValue, isSubmitting }) => (
-                <div className={styles.container}>
-                    <br />
-                    <b>ZoneName </b>
-                    <p>{zone.zone_name}</p>
-                    <Form>
-                        <Grid container spacing={2}>
-                            <Grid item md={6} xs={12}>
-                                <Field
-                                    component={TextField}
-                                    name={ZoneField.zone_name}
-                                    variant="outlined"
-                                    label={zoneFieldLabels[ZoneField.zone_name]}
-                                    required
-                                    fullWidth
-                                />
-                            </Grid>
-                            <Grid item>
-                                <Button
-                                    color="primary"
-                                    variant="contained"
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    className={styles.btn}
-                                >
-                                    Save
-                                </Button>
+        <div>
+            <ConfirmDeleteZone
+                users={userList}
+                clients={clientList}
+                zoneId={zone.id}
+                open={dialogOpen}
+                setOpen={setDialogOpen}
+                handleDeleteZone={deleteZone}
+            />
+            <Formik
+                initialValues={zone}
+                validationSchema={editZoneValidationSchema}
+                onSubmit={(values, formikHelpers) => {
+                    handleZoneEditSubmit(values, formikHelpers)
+                        .then(() => history.push("/admin"))
+                        .then(() => window.location.reload())
+                        .catch((e) => {
+                            const errMsg =
+                                e instanceof APIFetchFailError
+                                    ? e.buildFormError(zoneFieldLabels)
+                                    : `${e}` ??
+                                      "Sorry, something went wrong trying to edit that user. Please try again.";
+                            alert(errMsg);
+                        });
+                }}
+            >
+                {({ values, setFieldValue, isSubmitting }) => (
+                    <div className={styles.container}>
+                        <br />
+                        <b>ZoneName </b>
+                        <p>{zone.zone_name}</p>
+                        <Form>
+                            <Grid container spacing={2}>
+                                <Grid item md={6} xs={12}>
+                                    <Field
+                                        component={TextField}
+                                        name={ZoneField.zone_name}
+                                        variant="outlined"
+                                        label={zoneFieldLabels[ZoneField.zone_name]}
+                                        required
+                                        fullWidth
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        color="primary"
+                                        variant="contained"
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className={styles.btn}
+                                    >
+                                        Save
+                                    </Button>
 
-                                <Button color="primary" variant="outlined" onClick={history.goBack}>
-                                    Cancel
-                                </Button>
+                                    <Button
+                                        color="primary"
+                                        variant="outlined"
+                                        onClick={history.goBack}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        variant="contained"
+                                        className={styles.disableBtn}
+                                        onClick={() => handleDeleteZone(zone.id)}
+                                    >
+                                        DELETE
+                                    </Button>
+                                </Grid>
                             </Grid>
-                            <Grid item>
-                                <Button
-                                    variant="contained"
-                                    className={styles.disableBtn}
-                                    onClick={() => handleDeleteZone(zone.id)}
-                                >
-                                    DELETE
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Form>
-                </div>
-            )}
-        </Formik>
+                        </Form>
+                    </div>
+                )}
+            </Formik>
+        </div>
     ) : (
         <Skeleton variant="rect" height={500} />
     );

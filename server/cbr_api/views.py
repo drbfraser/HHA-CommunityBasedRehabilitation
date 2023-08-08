@@ -208,6 +208,25 @@ class ZoneDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Zone.objects.all()
     serializer_class = serializers.ZoneSerializer
 
+class ZoneMigrationView(generics.RetrieveUpdateDestroyAPIView):
+    def get(self, request, source_zone, target_zone):
+        try:
+            source_zone = int(source_zone)
+            target_zone = int(target_zone)
+        except ValueError:
+            return Response({"error": "Invalid zone IDs provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            source_zone_clients = ClientList.queryset.filter(zone=source_zone)
+            source_zone_visits = VisitList.queryset.filter(zone=source_zone)
+            source_zone_users = UserList.queryset.filter(zone=source_zone)
+            source_zone_clients.update(zone=target_zone)
+            source_zone_visits.update(zone=target_zone)
+            source_zone_users.update(zone=target_zone)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"message": "Zone migration completed successfully"}, status=status.HTTP_200_OK)
 
 class RiskList(generics.ListCreateAPIView):
     queryset = models.ClientRisk.objects.all()

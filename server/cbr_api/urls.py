@@ -28,7 +28,11 @@ urlpatterns = [
     ),
     path("zones", views.ZoneList.as_view(), name="zone-list"),
     path("zone/<int:pk>", views.ZoneDetail.as_view(), name="zone-detail"),
-    path('zone_migration/<int:source_zone>/<int:target_zone>/', views.ZoneMigrationView.as_view(), name='zone_migration'),
+    path(
+        "zone_migration/<int:source_zone>/<int:target_zone>/",
+        views.ZoneMigrationView.as_view(),
+        name="zone_migration",
+    ),
     path("risks", views.RiskList.as_view(), name="risk-list"),
     path("risk/<str:pk>", views.RiskDetail.as_view(), name="risk-detail"),
     path("disabilities", views.DisabilityList.as_view(), name="disability-list"),

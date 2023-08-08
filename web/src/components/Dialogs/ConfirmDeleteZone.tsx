@@ -22,7 +22,7 @@ export default function ConfirmDeleteZone(props: any) {
     React.useEffect(() => {
         const getZones = async () => {
             const resp = await apiFetch(Endpoint.ZONES);
-    
+
             const responseRows: IResponseRow[] = await resp.json();
             const allZones = responseRows.map((responseRow) => {
                 return {
@@ -69,14 +69,18 @@ export default function ConfirmDeleteZone(props: any) {
     };
 
     const handleSave = async () => {
-        return await apiFetch(Endpoint.ZONE_MIGRATION, `${zoneId}/${selectedZone}`).then(async (res) => {
-            if (!res.ok) {
-                alert("Encountered an error while trying to migrate users and clients to target zone!");
-            } else {
-                setOpen(false);
-                setConfirmDeleteOpen(true);
+        return await apiFetch(Endpoint.ZONE_MIGRATION, `${zoneId}/${selectedZone}`).then(
+            async (res) => {
+                if (!res.ok) {
+                    alert(
+                        "Encountered an error while trying to migrate users and clients to target zone!"
+                    );
+                } else {
+                    setOpen(false);
+                    setConfirmDeleteOpen(true);
+                }
             }
-        });;
+        );
     };
     return (
         <div>
@@ -126,12 +130,12 @@ export default function ConfirmDeleteZone(props: any) {
                 <DialogTitle id="alert-dialog-title">Confirm Delete Zone</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                    Users and clients successfully migrated. Delete zone?
+                        Users and clients successfully migrated. Delete zone?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setConfirmDeleteOpen(false)}>Cancel</Button>
-                    <Button onClick={()=>handleDeleteZone(zoneId)} autoFocus>
+                    <Button onClick={() => handleDeleteZone(zoneId)} autoFocus>
                         Delete
                     </Button>
                 </DialogActions>

@@ -31,7 +31,7 @@
         "@types/react-native-vector-icons": "^6.4.6",
         "core-js": "^3.15.2",
         "dotenv": "^10.0.0",
-        "expo": "^48.0.0",
+        "expo": "^49.0.6",
         "expo-background-fetch": "~11.1.1",
         "expo-cli": "^6.3.2",
         "expo-image-manipulator": "~11.1.1",

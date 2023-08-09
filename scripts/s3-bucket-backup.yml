@@ -3,6 +3,9 @@ Parameters:
   S3BucketName:
     Type: String
     Default: hha-cbr-backup
+  IAMUserName:
+    Type: String
+    Default: BackupUser
 Resources:
   S3BucketForBackups:
     Type: AWS::S3::Bucket
@@ -37,7 +40,7 @@ Resources:
     Type: AWS::IAM::User
     DeletionPolicy: Retain
     Properties:
-      UserName: BackupUser
+      UserName: !Ref IAMUserName
       Policies:
         - PolicyName: PolicyForBackupUser
           PolicyDocument:

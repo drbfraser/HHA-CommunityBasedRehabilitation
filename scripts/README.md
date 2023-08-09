@@ -2,16 +2,20 @@
 
 ## Initial Deployment
 
+* Create a new Virtual Private Server (VPS) on a hosting service.
+    * Supported OS: Ubuntu 22.04
+    * Mount block storage to the VPS under `/mnt/blockstorage/`
+
 * On a fresh Ubuntu 22.04 server, log in as `root` and create the file `/root/setup_production.sh` and copy into it the contents of the `setup_production.sh` file from this repo. Suggested command:  
   `nano /root/setup_production.sh`
 * Run the script  
   `cd /root/`  
   `chmod +x ./setup_production.sh`  
   `./setup_production.sh`
-  - Tell the script the URL for this server (press ENTER if just using locally)
-  - Script will randomly create some passwords.
-  - Script will allow you to edit the `.env` file to configure username and password for email account and Views.
-  - Script will link the `update.sh` script into the `/root/` folder for future updates.
+    * Tell the script the URL for this server (press ENTER if just using locally)
+    * Script will randomly create some passwords.
+    * Script will allow you to edit the `.env` file to configure server.
+    * Script will link the `update.sh` script into the `/root/` folder for future updates.
 
 ## Update Server to New Version
 
@@ -40,10 +44,10 @@ This will put the current version of the code from the source branch into the pr
 
 Development, staging, and deployment servers will run docker images pulled from Docker Hub. Images are tagged as follows:
 
-- Each build on `master` is tagged with something like `v2022-05-22.acbd1234`
-- The build of the latest code on `master` is additionally tagged with `:dev`
-- The build of the latest code on `staging` is additionally tagged with `:staging`
-- The build of the latest code on `production` is additionally tagged with `:prod`
+* Each build on `master` is tagged with something like `v2022-05-22.acbd1234`
+* The build of the latest code on `master` is additionally tagged with `:dev`
+* The build of the latest code on `staging` is additionally tagged with `:staging`
+* The build of the latest code on `production` is additionally tagged with `:prod`
 
 ### Docker Hub Tag Details 
 

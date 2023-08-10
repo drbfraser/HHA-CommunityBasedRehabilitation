@@ -108,6 +108,7 @@ export default function ConfirmDeleteZone(props: any) {
                         onChange={handleSelectZone}
                     >
                         {Array.from(zones).map((zone) => (
+                            (zone.id!==zoneId) &&
                             <MenuItem key={zone.id} value={zone.id}>
                                 {zone.zone_name}
                             </MenuItem>

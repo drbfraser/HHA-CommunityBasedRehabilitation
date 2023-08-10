@@ -92,8 +92,6 @@ echo -e "\n${BLUE}Clone project code from GitHub...${COLOR_OFF}\n"
 cd ~
 if [ ! -d cbr ]; then
     git clone https://github.com/drbfraser/HHA-CommunityBasedRehabilitation.git cbr
-
-
 fi    
 cd ~/cbr/
 git pull
@@ -145,18 +143,15 @@ touch ~/hourly_backup_log.txt
 touch ~/daily_backup_log.txt
 touch ~/monthly_backup_log.txt
 
-chmod +x ~/cbr/scripts/hourly_backup_script.sh
-chmod +x ~/cbr/scripts/daily_backup_script.sh
-chmod +x ~/cbr/scripts/monthly_backup_script.sh
-chmod +x ~/cbr/scripts/restore_backup.sh
-ln -s -f ~/cbr/scripts/restore_backup.sh ~/restore_backup.sh
+chmod +x ~/cbr/scripts/backup_volume_to_s3.sh
+chmod +x ~/cbr/scripts/restore_volume_from_s3.sh
+ln -s -f ~/cbr/scripts/restore_volume_from_s3.sh ~/restore_volume_from_s3.sh
 
-# Add cron job for hourly_backup.sh and redirect output to hourly_backup_log.txt
-# Add cron job for daily_backup.sh and redirect output to daily_backup_log.txt
+# Add cron job for hourly/daily/monthly backups and redirect output to ~/..._backup_log.txt
 crontab - <<EOF
-0 * * * * /bin/bash ~/cbr/scripts/hourly_backup_script.sh >> ~/hourly_backup_log.txt 2>&1
-0 2 * * * /bin/bash ~/cbr/scripts/daily_backup_script.sh >> ~/daily_backup_log.txt 2>&1
-0 0 1 * * /bin/bash ~/cbr/scripts/monthly_backup_script.sh >> ~/monthly_backup_log.txt 2>&1
+0 * * * * /bin/bash ~/cbr/scripts/backup_volume_to_s3.sh hourly >> ~/hourly_backup_log.txt 2>&1
+0 2 * * * /bin/bash ~/cbr/scripts/backup_volume_to_s3.sh daily >> ~/daily_backup_log.txt 2>&1
+0 0 1 * * /bin/bash ~/cbr/scripts/backup_volume_to_s3.sh monthly >> ~/monthly_backup_log.txt 2>&1
 EOF
 
 
@@ -173,17 +168,6 @@ docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
 
 echo -e "\n${BLUE}Waiting for database container to start...${COLOR_OFF}"
 sleep 10;
-
-echo -e "\n${BLUE} Setting volume path...${COLOR_OFF}"
-#check if volume exists
-if ! docker volume ls | grep -q "cbr_cbr_postgres_data"; then
-  echo "Database volume does not exist, please run docker manually in the cbr directory (docker compose up)"
-  echo "and manually set the volume path in the .env located in the root of cbr"
-  echo "(S3_BACKUP_SOURCE_DIR=/path/to/volume)"
-fi
-
-DB_VOLUME_PATH=$(docker volume inspect "cbr_cbr_postgres_data" --format '{{ .Mountpoint }}')
-echo "S3_BACKUP_SOURCE_DIR=${DB_VOLUME_PATH}" >> .env
 
 echo -e "${BLUE}Upgrading database schema...${COLOR_OFF}\n"
 docker exec cbr_django python manage.py migrate

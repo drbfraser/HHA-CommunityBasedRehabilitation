@@ -65,7 +65,7 @@ Overall, it is best to create small issues and merge often.
 
 ### 0. Create Issue in SFU's GitHub (if necessary)
 
-If an issue has not yet been filed in GitHUb, make sure to create one and assign it to yourself first.
+If an issue has not yet been filed in GitHub, make sure to create one and assign it to yourself first.
 
 ### 1. Create New Branch
 

@@ -63,9 +63,9 @@ You can also access auto-generating Swagger API documentation at http://localhos
 
 Overall, it is best to create small issues and merge often.
 
-### 0. Create Issue in GitLab (if necessary)
+### 0. Create Issue in SFU's GitHub (if necessary)
 
-If an issue has not yet been filed in GitLab, make sure to create one and assign it to yourself first.
+If an issue has not yet been filed in GitHub, make sure to create one and assign it to yourself first.
 
 ### 1. Create New Branch
 
@@ -107,7 +107,7 @@ With the Django Docker container running, run `docker exec cbr_django python -m 
 
 ### 5. Submit a Merge Request
 
-First, make sure you've committed all changes and pushed your branch and then submit a merge request from within Gitlab. If you've recently pushed your branch, on the merge requests page you'll see a blue "Create merge request" button.
+First, make sure you've committed all changes and pushed your branch and then submit a merge request from within SFU's GitHub. If you've recently pushed your branch, on the merge requests page you'll see a blue "Create merge request" button.
 
 Your merge request will automatically run our CI/CD pipelines to test your branch. If any pipelines fail, you can click on the red `X` icon and then click on the job that failed to see more details and fix the problem.
 
@@ -122,4 +122,3 @@ During the code review process, you'll likely receive a few suggestions for thin
 Once at least one other developer has approved your merge request, all discussions are resolved and the CI/CD pipelines pass, you can merge when ready.
 
 **Note:** it is best practice for the person who made the merge request to merge it. If you are reviewing a merge request, don't merge it after approving it - the original author may still want to make a few changes or other team members might be in the process of reviewing it.
-

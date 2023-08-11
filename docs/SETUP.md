@@ -18,7 +18,7 @@ Install JDK 11 from here: https://jdk.java.net/java-se-ri/11
 
 ### 2. Clone the Repo
 
-Clone the repo using `git`. Ensure you have registered your SSH key with GitLab (out of scope of this guide).
+Clone the repo using `git`. Ensure you have registered your SSH key with `github.sfu.ca` (out of scope of this guide).
 
 ### 3. Set up Environment Variables
 

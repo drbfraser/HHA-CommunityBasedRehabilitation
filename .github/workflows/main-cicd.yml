@@ -82,6 +82,9 @@ jobs:
     container:
       image: reactnativecommunity/react-native-android
     timeout-minutes: 60
+    env:
+      # Keep Gradle's settings file out of home directory (mounted from host)
+      GRADLE_USER_HOME: /isolated_build/.gradle
     steps:
     - name: Checkout code into container
       uses: bfraser/cicd/actions/checkout@v1
@@ -91,10 +94,10 @@ jobs:
     - name: Setup Release Keystore for Play Store
       run:  |
         set -x  # echo commands names
-        sudo mkdir -p ~/.gradle
-        sudo chown $USER ~/.gradle
-        echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_GRADLEPROP }}" > ~/.gradle/gradle.properties
-        ls -la ~/.gradle/gradle.properties
+        mkdir -p $GRADLE_USER_HOME
+        echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_GRADLEPROP }}" > $GRADLE_USER_HOME/gradle.properties
+        ls -la "$GRADLE_USER_HOME"
+        cat $GRADLE_USER_HOME/gradle.properties
         echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_FILE_B64 }}" > ./cbr-upload-key.keystore.b64
         ls -la
         base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore

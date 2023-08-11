@@ -27,242 +27,339 @@ jobs:
     steps:
       - uses: bfraser/cicd/actions/debug_display_contexts@v1
 
-  build-common:
-    runs-on: [self-hosted, docker]
-    container:
-      image: node:14
-    timeout-minutes: 60
-    steps:
-    - name: Checkout code into container
-      uses: bfraser/cicd/actions/checkout@v1
-      with: 
-        path: /isolated_build/repo/
-    - name: Install NPM globally & Run 'npm ci'
-      run:  |
-        npm install -g npm@$NPM_VERSION --loglevel=verbose
-        npm ci
-      working-directory: /isolated_build/repo/common
-    - name: Check code formatting
-      run:  npx prettier --check .
-      working-directory: /isolated_build/repo/common
-    - name: Run TypeScript compiler
-      run:  npx tsc
-      working-directory: /isolated_build/repo/common
-    - name: Run tests on ./common/
-      run:  npm run test-ci
-      working-directory: /isolated_build/repo/common
+  # build-common:
+  #   runs-on: [self-hosted, docker]
+  #   container:
+  #     image: node:14
+  #   timeout-minutes: 60
+  #   steps:
+  #   - name: Checkout code into container
+  #     uses: bfraser/cicd/actions/checkout@v1
+  #     with: 
+  #       path: /isolated_build/repo/
+  #   - name: Install NPM globally & Run 'npm ci'
+  #     run:  |
+  #       npm install -g npm@$NPM_VERSION --loglevel=verbose
+  #       npm ci
+  #     working-directory: /isolated_build/repo/common
+  #   - name: Check code formatting
+  #     run:  npx prettier --check .
+  #     working-directory: /isolated_build/repo/common
+  #   - name: Run TypeScript compiler
+  #     run:  npx tsc
+  #     working-directory: /isolated_build/repo/common
+  #   - name: Run tests on ./common/
+  #     run:  npm run test-ci
+  #     working-directory: /isolated_build/repo/common
+
+
+  # #DELETE THIS PART!
+  # build-mobile:
+  #   runs-on: [self-hosted, docker]
+  #   container:
+  #     image: node:14
+  #   timeout-minutes: 60
+  #   steps:
+  #   - name: Checkout code into container
+  #     uses: bfraser/cicd/actions/checkout@v1
+  #     with: 
+  #       path: /isolated_build/repo/
+  #   - name: Install NPM globally & Build mobile
+  #     run:  |
+  #       set -x  # echo commands names
+  #       npm install -g npm@$NPM_VERSION
+  #       npm uninstall @cbr/common
+  #       COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
+  #       npm install $COMMON_PACK_NAME
+  #       npm ci
+  #       npx prettier --check .
+  #       npm run build dev
+  #     working-directory: /isolated_build/repo/mobile
+
 
   build-mobile:
     runs-on: [self-hosted, docker]
     container:
-      image: node:14
+      image: reactnativecommunity/react-native-android
     timeout-minutes: 60
     steps:
     - name: Checkout code into container
       uses: bfraser/cicd/actions/checkout@v1
       with: 
         path: /isolated_build/repo/
-    - name: Install NPM globally & Build mobile
+
+    - name: Setup Release Keystore for Play Store
+      run:  |
+        set -x  # echo commands names
+        mkdir -p ~/.gradle
+        echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_GRADLEPROP }}" > ~/.gradle/gradle.properties
+        ls -la ~/.gradle/gradle.properties
+        echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_FILE_B64 }}" > ./cbr-upload-key.keystore.b64
+        ls -la
+        base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
+        ls -la
+      working-directory: /isolated_build/repo/mobile/android/app
+
+    - name: Install NPM version & Build Common
       run:  |
         set -x  # echo commands names
         npm install -g npm@$NPM_VERSION
+        npm ci
+        npx tsc
+      working-directory: /isolated_build/repo/common
+
+    - name: Prepair mobile build environment
+      run:  |
         npm uninstall @cbr/common
         COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
         npm install $COMMON_PACK_NAME
         npm ci
         npx prettier --check .
-        npm run build dev
       working-directory: /isolated_build/repo/mobile
 
-
-  build-web:
-    runs-on: [self-hosted, docker]
-    container:
-      image: node:14
-    timeout-minutes: 60
-    steps:
-    - name: Checkout code into container
-      uses: bfraser/cicd/actions/checkout@v1
-      with: 
-        path: /isolated_build/repo/
-    - name: Install NPM
-      run:  npm install -g npm@$NPM_VERSION
-    - name: Build common
-      run:  npm ci
-      working-directory: /isolated_build/repo/common
-    - name: Build web
-      run:  npm ci
-      working-directory: /isolated_build/repo/web
-    - name: Check code formatting
-      run:  npx prettier --check .
-      working-directory: /isolated_build/repo/web
-    - name: Compress files
+    - name: Build APK (Targeting Local Server)
       run:  |
-        GENERATE_SOURCEMAP=false npm run build
-        cd build && tar -czvf ../../web_build.tar.gz .
-      working-directory: /isolated_build/repo/web
+        npm run build local
+      working-directory: /isolated_build/repo/mobile
     - uses: actions/upload-artifact@v3
       if: success()
       with:
-        name: "${{ github.job }}"
-        retention-days: 7
-        path: /isolated_build/repo/web_build.tar.gz
+        name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Local.apk"
+        retention-days: 60
+        path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
 
-
-  build-server:
-    runs-on: [self-hosted, docker]
-    container:
-      image: python:3.9.1-buster
-    timeout-minutes: 60
-    services:
-      test_postgres:
-        image: postgres:13.1-alpine
-    env:
-      DOMAIN: example.com
-      SECRET_KEY: test
-      POSTGRES_DB: cbr
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: test
-      POSTGRES_HOST: test_postgres
-    steps:
-    - name: Checkout code into container
-      uses: bfraser/cicd/actions/checkout@v1
-      with: 
-        path: /isolated_build/repo/
-    - name: Install dependencies
-      run:  pip install -r requirements.txt
-      working-directory: /isolated_build/repo/server
-    - name: Check spacing
-      run:  python -m black --check .
-      working-directory: /isolated_build/repo/server
-    - name: Run 'manage.py check'
-      run:  python manage.py check
-      working-directory: /isolated_build/repo/server
-    - name: Make migrations
-      run:  python manage.py makemigrations --check
-      working-directory: /isolated_build/repo/server
-    - name: "TODO: SKIPPING TEST OF 'manage.py test'"
-      run: |
-        echo "::warning file=manage.py,title=SKIPPING TEST::Skipped manage.py test"
-        # python manage.py test
-      working-directory: /isolated_build/repo/server
-
-
-  # ----------------------------------------------------------------------------
-  # Publish to DockerHub
-  # ----------------------------------------------------------------------------
-  export-image-tag:
-    runs-on: [self-hosted, docker]
-    outputs:
-      image_tag: ${{ steps.set_step.outputs.tag }}
-    steps:
-      - uses: actions/checkout@v3
-        # Checkout the code, not into a container, because all work here is not in a container
-        with:
-          fetch-depth: 50
-      - id: set_step
-        name: Export the IMAGE_TAG
-        run: |
-          export IMAGE_TAG=v$(git show -s --format=%cs ${{ github.sha }}).`git rev-parse --short=8 ${{ github.sha }}`
-          echo "IMAGE_TAG = '$IMAGE_TAG'"
-          # NOTE: On github action runner v2.297 or higher, should redirect echo output to GITHUB_OUTPUT:
-          #    `echo "tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"`
-          # However, as of July 2023, SFU's GitHub runner is v2.296.x, so using old syntax (which works on newer)
-          # https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
-          echo "::set-output name=tag::$IMAGE_TAG"
-
-  build-docker-publish-docker-images:
-    needs: [build-common, build-mobile, build-web, build-server, export-image-tag]
-    # needs: [export-image-tag]   # Used for faking and testing
-    runs-on: [self-hosted, docker]
-    if: ${{ github.ref_name == 'main' }}
-    timeout-minutes: 60
-    env:
-      IMAGE_TAG: ${{ needs.export-image-tag.outputs.image_tag}}
-    steps:
-    - uses: actions/checkout@v3
-      # Checkout the code, not into a container, because all work here is not in a container
+    - name: Build APK (Targeting Development Server)
+      run:  |
+        npm run build dev
+      working-directory: /isolated_build/repo/mobile
+    - uses: actions/upload-artifact@v3
+      if: success()
       with:
-        fetch-depth: 50
-    - name: Get build products
-      uses: actions/download-artifact@v3
+        name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Dev.apk"
+        retention-days: 60
+        path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+
+    - name: Build APK (Targeting Staging Server)
+      run:  |
+        npm run build staging
+      working-directory: /isolated_build/repo/mobile
+    - uses: actions/upload-artifact@v3
+      if: success()
       with:
-        name: build-web
-    # FAKE BUILD: To make build faster for testing, comment out above and use this instead.
-    # - name: Get build products (**FAKE**)
-    #   run: |
-    #     echo "::warning file=web_build.tar.gz,title=FAKE::Fake web_build.tar.gz used for testing!"
-    #     mkdir -p fakestuff/
-    #     touch fakestuff/nothing.txt
-    #     tar -czvf web_build.tar.gz ./fakestuff/
-    - name: Printing debug information...
-      run: |
-        echo "Files in current folder before building image"
-        ls -al
-        echo "IMAGE_TAG = '$IMAGE_TAG'"
-    - name: Running 'docker compose'...
-      run: |
-        docker compose -f docker-compose.yml -f docker-compose.deploy.yml build
-        docker images
-    - name: Pushing to docker hub...
-      run: |
-        docker login -u $HUB_USER -p $HUB_TOKEN
-        docker push $HUB_USER/$HUB_REPO_BACKEND:$IMAGE_TAG
-        docker push $HUB_USER/$HUB_REPO_FRONTEND:$IMAGE_TAG
-        docker logout
-        echo "::notice file=main-cicd.yml::Pushed to Docker Hub with IMAGE_TAG '$IMAGE_TAG'"
-    - name: Cleaning up...
-      run: |
-        docker images -a | grep -e "$HUB_REPO_BACKEND" -e "$HUB_REPO_FRONTEND" | awk '{print $3}' | xargs docker rmi --force
-        docker images
+        name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Staging.apk"
+        retention-days: 60
+        path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+
+    - name: Build APK (Targeting Production Server)
+      run:  |
+        npm run build prod
+      working-directory: /isolated_build/repo/mobile
+    - uses: actions/upload-artifact@v3
+      if: success()
+      with:
+        name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Prod.apk"
+        retention-days: 60
+        path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+
+    - name: Build AAB for Play Store (Targeting Production Server)
+      run:  |
+        npm run bundle prod
+      working-directory: /isolated_build/repo/mobile
+    - uses: actions/upload-artifact@v3
+      if: success()
+      with:
+        name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Prod.aab"
+        retention-days: 60
+        path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
+
+#   build-web:
+#     runs-on: [self-hosted, docker]
+#     container:
+#       image: node:14
+#     timeout-minutes: 60
+#     steps:
+#     - name: Checkout code into container
+#       uses: bfraser/cicd/actions/checkout@v1
+#       with: 
+#         path: /isolated_build/repo/
+#     - name: Install NPM
+#       run:  npm install -g npm@$NPM_VERSION
+#     - name: Build common
+#       run:  npm ci
+#       working-directory: /isolated_build/repo/common
+#     - name: Build web
+#       run:  npm ci
+#       working-directory: /isolated_build/repo/web
+#     - name: Check code formatting
+#       run:  npx prettier --check .
+#       working-directory: /isolated_build/repo/web
+#     - name: Compress files
+#       run:  |
+#         GENERATE_SOURCEMAP=false npm run build
+#         cd build && tar -czvf ../../web_build.tar.gz .
+#       working-directory: /isolated_build/repo/web
+#     - uses: actions/upload-artifact@v3
+#       if: success()
+#       with:
+#         name: "${{ github.job }}"
+#         retention-days: 7
+#         path: /isolated_build/repo/web_build.tar.gz
+
+
+#   build-server:
+#     runs-on: [self-hosted, docker]
+#     container:
+#       image: python:3.9.1-buster
+#     timeout-minutes: 60
+#     services:
+#       test_postgres:
+#         image: postgres:13.1-alpine
+#     env:
+#       DOMAIN: example.com
+#       SECRET_KEY: test
+#       POSTGRES_DB: cbr
+#       POSTGRES_USER: test
+#       POSTGRES_PASSWORD: test
+#       POSTGRES_HOST: test_postgres
+#     steps:
+#     - name: Checkout code into container
+#       uses: bfraser/cicd/actions/checkout@v1
+#       with: 
+#         path: /isolated_build/repo/
+#     - name: Install dependencies
+#       run:  pip install -r requirements.txt
+#       working-directory: /isolated_build/repo/server
+#     - name: Check spacing
+#       run:  python -m black --check .
+#       working-directory: /isolated_build/repo/server
+#     - name: Run 'manage.py check'
+#       run:  python manage.py check
+#       working-directory: /isolated_build/repo/server
+#     - name: Make migrations
+#       run:  python manage.py makemigrations --check
+#       working-directory: /isolated_build/repo/server
+#     - name: "TODO: SKIPPING TEST OF 'manage.py test'"
+#       run: |
+#         echo "::warning file=manage.py,title=SKIPPING TEST::Skipped manage.py test"
+#         # python manage.py test
+#       working-directory: /isolated_build/repo/server
+
+
+#   # ----------------------------------------------------------------------------
+#   # Publish to DockerHub
+#   # ----------------------------------------------------------------------------
+#   export-image-tag:
+#     runs-on: [self-hosted, docker]
+#     outputs:
+#       image_tag: ${{ steps.set_step.outputs.tag }}
+#     steps:
+#       - uses: actions/checkout@v3
+#         # Checkout the code, not into a container, because all work here is not in a container
+#         with:
+#           fetch-depth: 50
+#       - id: set_step
+#         name: Export the IMAGE_TAG
+#         run: |
+#           export IMAGE_TAG=v$(git show -s --format=%cs ${{ github.sha }}).`git rev-parse --short=8 ${{ github.sha }}`
+#           echo "IMAGE_TAG = '$IMAGE_TAG'"
+#           # NOTE: On github action runner v2.297 or higher, should redirect echo output to GITHUB_OUTPUT:
+#           #    `echo "tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"`
+#           # However, as of July 2023, SFU's GitHub runner is v2.296.x, so using old syntax (which works on newer)
+#           # https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+#           echo "::set-output name=tag::$IMAGE_TAG"
+
+#   build-docker-publish-docker-images:
+#     needs: [build-common, build-mobile, build-web, build-server, export-image-tag]
+#     # needs: [export-image-tag]   # Used for faking and testing
+#     runs-on: [self-hosted, docker]
+#     if: ${{ github.ref_name == 'main' }}
+#     timeout-minutes: 60
+#     env:
+#       IMAGE_TAG: ${{ needs.export-image-tag.outputs.image_tag}}
+#     steps:
+#     - uses: actions/checkout@v3
+#       # Checkout the code, not into a container, because all work here is not in a container
+#       with:
+#         fetch-depth: 50
+#     - name: Get build products
+#       uses: actions/download-artifact@v3
+#       with:
+#         name: build-web
+#     # FAKE BUILD: To make build faster for testing, comment out above and use this instead.
+#     # - name: Get build products (**FAKE**)
+#     #   run: |
+#     #     echo "::warning file=web_build.tar.gz,title=FAKE::Fake web_build.tar.gz used for testing!"
+#     #     mkdir -p fakestuff/
+#     #     touch fakestuff/nothing.txt
+#     #     tar -czvf web_build.tar.gz ./fakestuff/
+#     - name: Printing debug information...
+#       run: |
+#         echo "Files in current folder before building image"
+#         ls -al
+#         echo "IMAGE_TAG = '$IMAGE_TAG'"
+#     - name: Running 'docker compose'...
+#       run: |
+#         docker compose -f docker-compose.yml -f docker-compose.deploy.yml build
+#         docker images
+#     - name: Pushing to docker hub...
+#       run: |
+#         docker login -u $HUB_USER -p $HUB_TOKEN
+#         docker push $HUB_USER/$HUB_REPO_BACKEND:$IMAGE_TAG
+#         docker push $HUB_USER/$HUB_REPO_FRONTEND:$IMAGE_TAG
+#         docker logout
+#         echo "::notice file=main-cicd.yml::Pushed to Docker Hub with IMAGE_TAG '$IMAGE_TAG'"
+#     - name: Cleaning up...
+#       run: |
+#         docker images -a | grep -e "$HUB_REPO_BACKEND" -e "$HUB_REPO_FRONTEND" | awk '{print $3}' | xargs docker rmi --force
+#         docker images
 
     
 
-#   ----------------------------------------------------------------------------
-#   Deployment and Re-tagging Jobs
-#   Note: 
-#     Since these jobs are calling a reusable workflow, they cannot
-#     use 'timeout-minutes:', 'environment:', 'env:', or 'steps:' because
-#     those break the allowable syntax for a job calling a reusable workflow.
-#     https://docs.github.com/en/actions/using-workflows/reusing-workflows
-#   ----------------------------------------------------------------------------
-#   Development (dev) server
-  dev-server-deploy-from-dockerhub:
-    needs: [build-docker-publish-docker-images, export-image-tag]
-    if: ${{ github.ref_name == 'main' }}
-    uses: ./.github/workflows/deploy-from-dockerhub.yml
-    with:
-      RUNNER_NAME: deploy-development
-      DOMAIN:      cbr-dev.cmpt.sfu.ca
-      IMAGE_TAG:   ${{ needs.export-image-tag.outputs.image_tag }}
-    secrets: inherit
+# #   ----------------------------------------------------------------------------
+# #   Deployment and Re-tagging Jobs
+# #   Note: 
+# #     Since these jobs are calling a reusable workflow, they cannot
+# #     use 'timeout-minutes:', 'environment:', 'env:', or 'steps:' because
+# #     those break the allowable syntax for a job calling a reusable workflow.
+# #     https://docs.github.com/en/actions/using-workflows/reusing-workflows
+# #   ----------------------------------------------------------------------------
+# #   Development (dev) server
+#   dev-server-deploy-from-dockerhub:
+#     needs: [build-docker-publish-docker-images, export-image-tag]
+#     if: ${{ github.ref_name == 'main' }}
+#     uses: ./.github/workflows/deploy-from-dockerhub.yml
+#     with:
+#       RUNNER_NAME: deploy-development
+#       DOMAIN:      cbr-dev.cmpt.sfu.ca
+#       IMAGE_TAG:   ${{ needs.export-image-tag.outputs.image_tag }}
+#     secrets: inherit
 
-  dev-retag-and-upload-to-dockerhub:
-    needs: [build-docker-publish-docker-images, export-image-tag]
-    if: ${{ github.ref_name == 'main' }}
-    uses: ./.github/workflows/retag-and-upload-dockerhub.yml
-    with:
-      IMAGE_TAG:  ${{ needs.export-image-tag.outputs.image_tag }}
-      BRANCH_TAG: dev
-    secrets: inherit
+#   dev-retag-and-upload-to-dockerhub:
+#     needs: [build-docker-publish-docker-images, export-image-tag]
+#     if: ${{ github.ref_name == 'main' }}
+#     uses: ./.github/workflows/retag-and-upload-dockerhub.yml
+#     with:
+#       IMAGE_TAG:  ${{ needs.export-image-tag.outputs.image_tag }}
+#       BRANCH_TAG: dev
+#     secrets: inherit
 
 
-  # Staging (stg) server
-  staging-server-deploy-from-dockerhub:
-    needs: [export-image-tag]
-    if: ${{ github.ref_name == 'staging' }}
-    uses: ./.github/workflows/deploy-from-dockerhub.yml
-    with:
-        RUNNER_NAME: deploy-staging
-        DOMAIN:      cbr-stg.cmpt.sfu.ca
-        IMAGE_TAG:   ${{ needs.export-image-tag.outputs.image_tag }}
-    secrets: inherit
+#   # Staging (stg) server
+#   staging-server-deploy-from-dockerhub:
+#     needs: [export-image-tag]
+#     if: ${{ github.ref_name == 'staging' }}
+#     uses: ./.github/workflows/deploy-from-dockerhub.yml
+#     with:
+#         RUNNER_NAME: deploy-staging
+#         DOMAIN:      cbr-stg.cmpt.sfu.ca
+#         IMAGE_TAG:   ${{ needs.export-image-tag.outputs.image_tag }}
+#     secrets: inherit
 
-  staging-retag-and-upload-to-dockerhub:
-    needs: [export-image-tag]
-    if: ${{ github.ref_name == 'staging' }}
-    uses: ./.github/workflows/retag-and-upload-dockerhub.yml
-    with:
-        IMAGE_TAG:  ${{ needs.export-image-tag.outputs.image_tag }}
-        BRANCH_TAG: stg
-    secrets: inherit
+#   staging-retag-and-upload-to-dockerhub:
+#     needs: [export-image-tag]
+#     if: ${{ github.ref_name == 'staging' }}
+#     uses: ./.github/workflows/retag-and-upload-dockerhub.yml
+#     with:
+#         IMAGE_TAG:  ${{ needs.export-image-tag.outputs.image_tag }}
+#         BRANCH_TAG: stg
+#     secrets: inherit

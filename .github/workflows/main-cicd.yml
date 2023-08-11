@@ -91,7 +91,8 @@ jobs:
     - name: Setup Release Keystore for Play Store
       run:  |
         set -x  # echo commands names
-        mkdir -p ~/.gradle
+        sudo mkdir -p ~/.gradle
+        sudo chown $USER ~/.gradle
         echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_GRADLEPROP }}" > ~/.gradle/gradle.properties
         ls -la ~/.gradle/gradle.properties
         echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_FILE_B64 }}" > ./cbr-upload-key.keystore.b64

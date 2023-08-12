@@ -91,6 +91,10 @@ jobs:
       with: 
         path: /isolated_build/repo/
 
+    - name: Build Date String
+      id: date_str
+      run: date +"%Y-%m-%d_%H%M%S%z" >> $GITHUB_OUTPUT
+
     - name: Setup Release Keystore for Play Store
       run:  |
         set -x  # echo commands names
@@ -105,6 +109,7 @@ jobs:
         apt-get update
         apt-get install bsdmainutils
         hexdump -C $GRADLE_USER_HOME/gradle.properties
+        echo "Date String: ${{ steps.date_str.outputs.stdout }}"
       working-directory: /isolated_build/repo/mobile/android/app
 
     - name: Install NPM version & Build Common
@@ -130,7 +135,7 @@ jobs:
       working-directory: /isolated_build/repo/mobile
     - uses: actions/upload-artifact@v3
       with:
-        name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Local.apk"
+        name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Local.apk"
         path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
         retention-days: 60
         if-no-files-found: error
@@ -141,7 +146,7 @@ jobs:
       working-directory: /isolated_build/repo/mobile
     - uses: actions/upload-artifact@v3
       with:
-        name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Dev.apk"
+        name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Dev.apk"
         path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
         retention-days: 60
         if-no-files-found: error
@@ -152,7 +157,7 @@ jobs:
       working-directory: /isolated_build/repo/mobile
     - uses: actions/upload-artifact@v3
       with:
-        name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Staging.apk"
+        name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Staging.apk"
         path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
         retention-days: 60
         if-no-files-found: error
@@ -163,7 +168,7 @@ jobs:
       working-directory: /isolated_build/repo/mobile
     - uses: actions/upload-artifact@v3
       with:
-        name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Prod.apk"
+        name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.apk"
         path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
         retention-days: 60
         if-no-files-found: error
@@ -174,7 +179,7 @@ jobs:
       working-directory: /isolated_build/repo/mobile
     - uses: actions/upload-artifact@v3
       with:
-        name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Prod.aab"
+        name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.aab"
         path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
         retention-days: 60
         if-no-files-found: error

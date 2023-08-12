@@ -92,8 +92,8 @@ jobs:
         path: /isolated_build/repo/
 
     - name: Build Date String
-      id: date_str
-      run: date +"%Y-%m-%d_%H%M%S%z" >> $GITHUB_OUTPUT
+      id:   date_str
+      run:  echo "::set-output name=stdout::$(date -u +%Y-%m-%d-%H%M%S%z)"
 
     - name: Setup Release Keystore for Play Store
       run:  |

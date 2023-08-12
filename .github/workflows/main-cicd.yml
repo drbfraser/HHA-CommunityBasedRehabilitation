@@ -266,3 +266,5 @@ jobs:
         IMAGE_TAG:  ${{ needs.export-image-tag.outputs.image_tag }}
         BRANCH_TAG: stg
     secrets: inherit
+
+  

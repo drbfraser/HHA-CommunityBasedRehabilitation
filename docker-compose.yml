@@ -4,10 +4,12 @@ services:
     container_name: cbr_fluentbit
     image: fluent/fluent-bit:latest
     volumes:
-      - ./fluentbit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./fluentbit/config:/fluent-bit/etc
+      - ./fluentbit/config/fluent-local.conf:/fluent-bit/etc/fluent-bit.conf
       - fluentbit_logs_output:/output
-      - django_logs:/logs/django:ro
       - fluentbit_logs_db:/persist
+      - django_logs:/logs/django:ro
+      - caddy_logs:/logs/caddy:ro
     ports:
       - "24224:24224"
     environment:
@@ -23,6 +25,12 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - SECRET_KEY=${SECRET_KEY}
+    logging:
+      driver: fluentd
+      options:
+          tag: docker.{{.Name}}.{{.ID}}
+          fluentd-async: "true"
+          fluentd-address: tcp://localhost:24224
     depends_on:
       - postgres
     volumes:
@@ -46,5 +54,6 @@ services:
 volumes:
   cbr_postgres_data:
   django_logs:
+  caddy_logs:
   fluentbit_logs_db:
   fluentbit_logs_output:

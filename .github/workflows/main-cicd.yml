@@ -102,6 +102,9 @@ jobs:
         ls -la
         base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
         ls -la
+        apt-get update
+        apt-get install bsdmainutils
+        hexdump -C $GRADLE_USER_HOME/gradle.properties
       working-directory: /isolated_build/repo/mobile/android/app
 
     - name: Install NPM version & Build Common
@@ -126,55 +129,55 @@ jobs:
         npm run build local
       working-directory: /isolated_build/repo/mobile
     - uses: actions/upload-artifact@v3
-      if: success()
       with:
         name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Local.apk"
-        retention-days: 60
         path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+        retention-days: 60
+        if-no-files-found: error
 
     - name: Build APK (Targeting Development Server)
       run:  |
         npm run build dev
       working-directory: /isolated_build/repo/mobile
     - uses: actions/upload-artifact@v3
-      if: success()
       with:
         name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Dev.apk"
-        retention-days: 60
         path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+        retention-days: 60
+        if-no-files-found: error
 
     - name: Build APK (Targeting Staging Server)
       run:  |
         npm run build staging
       working-directory: /isolated_build/repo/mobile
     - uses: actions/upload-artifact@v3
-      if: success()
       with:
         name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Staging.apk"
-        retention-days: 60
         path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+        retention-days: 60
+        if-no-files-found: error
 
     - name: Build APK (Targeting Production Server)
       run:  |
         npm run build prod
       working-directory: /isolated_build/repo/mobile
     - uses: actions/upload-artifact@v3
-      if: success()
       with:
         name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Prod.apk"
-        retention-days: 60
         path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+        retention-days: 60
+        if-no-files-found: error
 
     - name: Build AAB for Play Store (Targeting Production Server)
       run:  |
         npm run bundle prod
       working-directory: /isolated_build/repo/mobile
     - uses: actions/upload-artifact@v3
-      if: success()
       with:
         name: "CBR-Mobile-${{ github.event.repository.updated_at}}-Prod.aab"
-        retention-days: 60
         path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
+        retention-days: 60
+        if-no-files-found: error
 
 #   build-web:
 #     runs-on: [self-hosted, docker]

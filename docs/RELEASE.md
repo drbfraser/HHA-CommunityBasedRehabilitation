@@ -10,14 +10,14 @@ Select the branch you wish to create an release APK for mobile CBR.
 
 Before releasing a new version of the app, you must ensure that you have updated the version information.
 
-Update the `versionName`:
+**Update the `versionName`:**
 - For Android project in `mobile/android/app/build.gradle` under the `defaultConfig` (visible to user on Google Play store)
 - For our UI in `mobile/src/screens/Sync/Sync.tsx`, change `VERSION_NAME` to match (visible to user when using our app)
 
-Update `versionCode`:
+**Update `versionCode`:**
 - In `mobile/android/app/build.gradle` under the `defaultConfig`: incrementing to the next largest integer. This is used by the Play store to uniquely track each uploaded version, and must be new for each uploaded bundle.
 
-Also, the API version number maintained in the mobile app must match that of the server. Ensure that `mobileApiVersion` in `mobile/src/util/syncHandler.ts` matches the version specified by `API_VERSION` in `server/cbr_api/util.py`. This will likely need to be updated only when a full DB wipe has occurred on the server and therefore requires the mobile client to also do a complete local database wipe before syncing with the server.
+Also, the API version number maintained in the mobile app must match that of the server. Ensure that `mobileApiVersion` in `mobile/src/util/syncHandler.ts` matches the version specified by `API_VERSION` in `server/cbr_api/util.py`. This will likely need to be updated only when a full DB wipe has occurred on the server and therefore requires the mobile client to also do a complete local database wipe before syncing with the server. Changing the major version number of the `API_VERSION` will cause the web client to wipe its database when syncing.
 
 ### 2. Setup release Keystore
 

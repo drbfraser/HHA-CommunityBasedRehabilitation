@@ -2,6 +2,7 @@ import os
 
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.cache import cache_control
+from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
@@ -150,6 +151,9 @@ class ClientDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ClientDetailSerializer
 
 
+@method_decorator(
+    cache_control(max_age=1209600, no_cache=True, private=True), name="dispatch"
+)
 class ClientImage(AuthenticatedObjectDownloadView):
     model = models.Client
     file_field = "picture"
@@ -158,7 +162,6 @@ class ClientImage(AuthenticatedObjectDownloadView):
         description="Gets the profile picture for a client if it exists.",
         responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
     )
-    @cache_control(max_age=1209600, no_cache=True, private=True)
     def get(self, request, pk):
         if DEBUG:
             # We're not using Caddy in debug environments, so let Django stream it via downloadview.
@@ -260,6 +263,9 @@ class VisitDetail(generics.RetrieveAPIView):
     serializer_class = serializers.DetailedVisitSerializer
 
 
+@method_decorator(
+    cache_control(max_age=1209600, no_cache=True, private=True), name="dispatch"
+)
 class ReferralImage(AuthenticatedObjectDownloadView):
     model = models.Referral
     file_field = "picture"
@@ -268,7 +274,6 @@ class ReferralImage(AuthenticatedObjectDownloadView):
         description="Gets the wheelchair image of referral if it exists.",
         responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
     )
-    @cache_control(max_age=1209600, no_cache=True, private=True)
     def get(self, request, pk):
         if DEBUG:
 

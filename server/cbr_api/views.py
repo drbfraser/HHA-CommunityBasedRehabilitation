@@ -33,6 +33,11 @@ from cbr_api.util import (
     destringify_unread_users,
     string_of_id_to_dictionary,
 )
+from cbr import settings
+import logging
+
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger(__name__)
 
 
 class UserList(generics.ListCreateAPIView):
@@ -99,6 +104,7 @@ class UserCurrent(generics.RetrieveAPIView):
     serializer_class = serializers.UserCBRSerializer
 
     def get_object(self):
+        logger.info("User %s logged in", self.request.user.username)
         return generics.get_object_or_404(self.queryset, id=self.request.user.id)
 
 
@@ -135,10 +141,8 @@ class ClientList(generics.ListCreateAPIView):
 
     def get_serializer_class(self):
         if self.request.method == "GET":
-            print("GET 1")
             return serializers.ClientListSerializer
         elif self.request.method == "POST":
-            print("POST 2")
             return serializers.ClientCreateSerializer
 
     filter_backends = (DjangoFilterBackend,)
@@ -227,6 +231,12 @@ class ZoneMigrationView(generics.RetrieveUpdateDestroyAPIView):
             source_zone_clients.update(zone=target_zone)
             source_zone_visits.update(zone=target_zone)
             source_zone_users.update(zone=target_zone)
+            logger.info(
+                "Zone %s deleted by user %s and data migrated to zone %s",
+                source_zone,
+                self.request.user.username,
+                target_zone,
+            )
         except Exception as e:
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR

@@ -113,7 +113,7 @@ class UserPasswordSerializer(serializers.ModelSerializer):
         fields = ("new_password",)
 
     def update(self, user, validated_data):
-        logger.info("User %s changed password", user.id)
+        logger.info("User %s changed password", user.username)
         user.set_password(validated_data["new_password"])
         user.save()
         return user
@@ -131,14 +131,14 @@ class UserCurrentPasswordSerializer(serializers.ModelSerializer):
 
     def update(self, user, validated_data):
         if not user.check_password(validated_data["current_password"]):
-            logger.warning("Failed password change attempt by user %s", user.id)
+            logger.warning("Failed password change attempt by user %s", user.username)
             raise serializers.ValidationError(
                 {"detail": "Current password is incorrect"}
             )
 
         user.set_password(validated_data["new_password"])
         user.save()
-        logger.info("User %s successfully changed password.", user.id)
+        logger.info("User %s successfully changed password.", user.username)
         return user
 
 
@@ -192,7 +192,6 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "timestamp"]
 
     def create(self, validated_data):
-        logger.info("create risk")
         current_time = current_milli_time()
         validated_data["timestamp"] = current_time
         validated_data["server_created_at"] = current_time

@@ -150,7 +150,10 @@ class ClientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Client.objects.all()
     serializer_class = serializers.ClientDetailSerializer
 
-@method_decorator(cache_control(max_age=1209600, no_cache=True, private=True), name='dispatch')
+
+@method_decorator(
+    cache_control(max_age=1209600, no_cache=True, private=True), name="dispatch"
+)
 class ClientImage(AuthenticatedObjectDownloadView):
     model = models.Client
     file_field = "picture"
@@ -259,7 +262,10 @@ class VisitDetail(generics.RetrieveAPIView):
     queryset = models.Visit.objects.all()
     serializer_class = serializers.DetailedVisitSerializer
 
-@method_decorator(cache_control(max_age=1209600, no_cache=True, private=True), name='dispatch')
+
+@method_decorator(
+    cache_control(max_age=1209600, no_cache=True, private=True), name="dispatch"
+)
 class ReferralImage(AuthenticatedObjectDownloadView):
     model = models.Referral
     file_field = "picture"

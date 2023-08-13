@@ -146,10 +146,10 @@ LOGGING = {
             "handlers": ["console", "file"],
             "level": "WARNING",
         },
-        'django.server': {
-            'level': 'INFO',
-            'handlers': ['console', "file2"], 
-            'propagate': False,
+        "django.server": {
+            "level": "INFO",
+            "handlers": ["console", "file2"],
+            "propagate": False,
         },
     },
 }

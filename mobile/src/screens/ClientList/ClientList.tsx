@@ -30,7 +30,7 @@ import { Checkbox } from "react-native-paper";
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
     const [clientList, setClientList] = useState<ClientListRow[]>([]);
-    const [selectedSearchOption, setSearchOption] = useState("");
+    const [selectedSearchOption, setSearchOption] = useState(SearchOption.NAME);
     const [searchQuery, setSearchQuery] = useState("");
     const [allClientsMode, setAllClientsMode] = useState<boolean>(true);
     const [archivedMode, setArchivedMode] = useState<boolean>(false);
@@ -237,7 +237,6 @@ const ClientList = () => {
                         setSearchQuery("");
                     }}
                 >
-                    <Picker.Item label="N/A" value="" />
                     <Picker.Item label="Name" value={SearchOption.NAME} />
                     <Picker.Item label="Zone" value={SearchOption.ZONE} />
                 </Picker>

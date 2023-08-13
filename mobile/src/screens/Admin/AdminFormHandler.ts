@@ -55,7 +55,7 @@ export const handleNewUserSubmit = async (
         let newUser;
         await database.write(async () => {
             newUser = await database.get(modelName.users).create((user: any) => {
-                user.username = values.username;
+                user.username = values.username.toLocaleLowerCase();
                 user.password = values.password;
                 user.first_name = values.first_name;
                 user.last_name = values.last_name;

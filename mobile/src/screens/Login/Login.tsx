@@ -75,7 +75,7 @@ const Login = () => {
 
         setStatus({ status: "submitting" });
         try {
-            await login(usernameToUse, password);
+            await login(usernameToUse.toLocaleLowerCase(), password);
             // Navigation is handled by App component as it updates the AuthState.
         } catch (e) {
             if (e instanceof Error || e instanceof APIFetchFailError) {

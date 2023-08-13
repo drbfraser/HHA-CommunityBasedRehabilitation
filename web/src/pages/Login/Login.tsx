@@ -88,7 +88,7 @@ const Login = () => {
                         required
                         InputLabelProps={{ required: false }}
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value.toLocaleLowerCase())}
                     />
                     <br />
                     <br />

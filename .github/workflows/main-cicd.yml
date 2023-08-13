@@ -97,18 +97,6 @@ jobs:
         npx prettier --check .
       working-directory: /isolated_build/repo/mobile
 
-    - name: Build APK (Targeting Local Server)
-      run:  |
-        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        npm run build local
-      working-directory: /isolated_build/repo/mobile
-    - uses: actions/upload-artifact@v3
-      with:
-        name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Local.apk"
-        path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        retention-days: 60
-        if-no-files-found: error
-
     - name: Build APK (Targeting Development Server)
       run:  |
         rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
@@ -117,30 +105,6 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Dev.apk"
-        path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        retention-days: 60
-        if-no-files-found: error
-
-    - name: Build APK (Targeting Staging Server)
-      run:  |
-        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        npm run build staging
-      working-directory: /isolated_build/repo/mobile
-    - uses: actions/upload-artifact@v3
-      with:
-        name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Staging.apk"
-        path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        retention-days: 60
-        if-no-files-found: error
-
-    - name: Build APK (Targeting Production Server)
-      run:  |
-        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        npm run build prod
-      working-directory: /isolated_build/repo/mobile
-    - uses: actions/upload-artifact@v3
-      with:
-        name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.apk"
         path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
         retention-days: 60
         if-no-files-found: error
@@ -156,6 +120,44 @@ jobs:
         path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
         retention-days: 60
         if-no-files-found: error
+  
+    # # Only build the APK targeting the development server because it can be retargeted to other servers.
+    # # (This saves about 10 minutes on the CI/CD build because the SFU GitHub server is very slow on upload)
+    # - name: Build APK (Targeting Local Server)
+    #   run:  |
+    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+    #     npm run build local
+    #   working-directory: /isolated_build/repo/mobile
+    # - uses: actions/upload-artifact@v3
+    #   with:
+    #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Local.apk"
+    #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+    #     retention-days: 60
+    #     if-no-files-found: error
+  
+    # - name: Build APK (Targeting Staging Server)
+    #   run:  |
+    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+    #     npm run build staging
+    #   working-directory: /isolated_build/repo/mobile
+    # - uses: actions/upload-artifact@v3
+    #   with:
+    #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Staging.apk"
+    #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+    #     retention-days: 60
+    #     if-no-files-found: error
+
+    # - name: Build APK (Targeting Production Server)
+    #   run:  |
+    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+    #     npm run build prod
+    #   working-directory: /isolated_build/repo/mobile
+    # - uses: actions/upload-artifact@v3
+    #   with:
+    #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.apk"
+    #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+    #     retention-days: 60
+    #     if-no-files-found: error
 
   build-web:
     runs-on: [self-hosted, docker]

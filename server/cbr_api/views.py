@@ -179,13 +179,14 @@ class ClientImage(AuthenticatedObjectDownloadView):
         if client:
             if len(client.picture.name) <= 0:
                 return HttpResponseNotFound()
-
-            dir_name, file_name = os.path.split(client.picture.name)
-            response = HttpResponse()
-            # Redirect the image request to Caddy.
-            response["X-Accel-Redirect"] = client.picture.name
-            response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-            return response
+            # Currently skipping caddy to serve images. Stream directly from Django
+            # dir_name, file_name = os.path.split(client.picture.name)
+            # response = HttpResponse()
+            # # Redirect the image request to Caddy.
+            # response["X-Accel-Redirect"] = client.picture.name
+            # response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+            return super().get(self, request, pk)
+        #     return response
         else:
             return HttpResponseNotFound()
 

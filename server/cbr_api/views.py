@@ -298,12 +298,13 @@ class ReferralImage(AuthenticatedObjectDownloadView):
             if len(referral.picture.name) <= 0:
                 return HttpResponseNotFound()
 
-            dir_name, file_name = os.path.split(referral.picture.name)
-            response = HttpResponse()
-            # Redirect the image request to Caddy.
-            response["X-Accel-Redirect"] = referral.picture.name
-            response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-            return response
+            # dir_name, file_name = os.path.split(referral.picture.name)
+            # response = HttpResponse()
+            # # Redirect the image request to Caddy.
+            # response["X-Accel-Redirect"] = referral.picture.name
+            # response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+            # return response
+            return super().get(self, request, pk)
         else:
             return HttpResponseNotFound()
 

@@ -36,6 +36,7 @@ services:
       - DOMAIN=${DOMAIN}
     volumes:
       - django_logs:/var/log
+      - django_uploads:/uploads/
   postgres:
     restart: always
     logging:
@@ -65,6 +66,7 @@ services:
 volumes:
   cbr_postgres_data:
   django_logs:
+  django_uploads:
   fluentbit_logs_db:
   caddy_logs:
   fluentbit_logs_output:

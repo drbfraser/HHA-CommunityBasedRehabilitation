@@ -20,6 +20,7 @@ services:
       - postgres
     volumes:
       - django_logs:/var/log
+      - django_uploads:/uploads/
   postgres:
     container_name: cbr_postgres
     image: postgres:13.1-alpine
@@ -39,6 +40,7 @@ services:
 volumes:
   cbr_postgres_data:
   django_logs:
+  django_uploads:
   caddy_logs:
   fluentbit_logs_db:
   fluentbit_logs_output:

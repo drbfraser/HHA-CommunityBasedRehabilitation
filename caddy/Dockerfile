@@ -1,4 +1,4 @@
-FROM caddy:2.4.6
+FROM caddy:latest
 
 # these paths are relative to the project root, not this folder
 COPY caddy/Caddyfile /etc/caddy/Caddyfile

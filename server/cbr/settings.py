@@ -118,25 +118,38 @@ LOGGING = {
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "level": "DEBUG",
+            "level": "INFO",
             "formatter": "json_formatter",
             "stream": "ext://sys.stdout",  # print to CLI
         },
         "file": {
             "class": "logging.handlers.TimedRotatingFileHandler",
-            "level": "DEBUG",
+            "level": "INFO",
             "formatter": "json_formatter",
             "filename": "/var/log/application.log",  # print to file
             "when": "D",
             "interval": 1,
         },
+        "file2": {
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "level": "INFO",
+            "formatter": "json_formatter",
+            "filename": "/var/log/access.log",  # print to file
+            "when": "D",
+            "interval": 1,
+        },
     },
     "loggers": {
-        "": {"handlers": ["console", "file"], "level": "DEBUG"},
+        "": {"handlers": ["console"], "level": "DEBUG"},
         "django": {"level": "INFO"},
         "django.request": {
             "handlers": ["console", "file"],
             "level": "WARNING",
+        },
+        "django.server": {
+            "level": "INFO",
+            "handlers": ["console", "file2"],
+            "propagate": False,
         },
     },
 }

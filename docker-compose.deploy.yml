@@ -12,15 +12,20 @@ services:
     container_name: cbr_fluentbit
     image: fluent/fluent-bit:latest
     volumes:
-      - ./fluentbit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./fluentbit/config:/fluent-bit/etc
+      - ./fluentbit/config/fluent-${ENV:-local}.conf:/fluent-bit/etc/fluent-bit.conf
       - fluentbit_logs_output:/output
       - django_logs:/logs/django:ro
       - fluentbit_logs_db:/persist
+      - caddy_logs:/logs/caddy:ro
     ports:
       - "24224:24224"
     environment:
       GRAFANA_API_KEY: ${GRAFANA_API_KEY}
       PROMETHEUS_API_KEY: ${GRAFANA_API_KEY}
+      # Used in staging/prod environment
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
   django:
     image: drbfraser/hopehealthaction_cbr_backend:$IMAGE_TAG
     build:

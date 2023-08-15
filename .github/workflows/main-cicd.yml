@@ -109,17 +109,19 @@ jobs:
         retention-days: 60
         if-no-files-found: error
 
-    - name: Build AAB for Play Store (Targeting Production Server)
-      run:  |
-        rm -f /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
-        npm run bundle prod
-      working-directory: /isolated_build/repo/mobile
-    - uses: actions/upload-artifact@v3
-      with:
-        name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.aab"
-        path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
-        retention-days: 60
-        if-no-files-found: error
+    # TODO: Re-enable the building of the .AAB file for deployment.
+    # Removed just to speed up the CI/CD pipeline while we are not deploying to the Play Store.
+    # - name: Build AAB for Play Store (Targeting Production Server)
+    #   run:  |
+    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
+    #     npm run bundle prod
+    #   working-directory: /isolated_build/repo/mobile
+    # - uses: actions/upload-artifact@v3
+    #   with:
+    #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.aab"
+    #     path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
+    #     retention-days: 60
+    #     if-no-files-found: error
   
     # # Only build the APK targeting the development server because it can be retargeted to other servers.
     # # (This saves about 10 minutes on the CI/CD build because the SFU GitHub server is very slow on upload)

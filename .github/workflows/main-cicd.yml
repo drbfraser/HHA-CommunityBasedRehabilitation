@@ -55,7 +55,8 @@ jobs:
   build-mobile:
     runs-on: [self-hosted, docker]
     container:
-      image: reactnativecommunity/react-native-android
+      # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
+      image: reactnativecommunity/react-native-android:6.2
     timeout-minutes: 60
     env:
       # Keep Gradle's settings file out of home directory (mounted from host)

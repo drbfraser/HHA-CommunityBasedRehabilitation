@@ -4,16 +4,11 @@ from django.db import migrations
 import uuid
 import time
 
-
-def add_mental_risk_type(apps):
-    ClientRisk = apps.get_model("cbr_api", "ClientRisk")
+def add_mental_risk_type(apps, schema_editor):
+    ClientRisk = apps.get_model('cbr_api', 'ClientRisk')
     timestamp = int(time.time() * 1000)
 
-    client_ids_without_mental = (
-        ClientRisk.objects.exclude(risk_type="MENTAL")
-        .values_list("client_id_id", flat=True)
-        .distinct()
-    )
+    client_ids_without_mental = ClientRisk.objects.exclude(risk_type='MENTAL').values_list('client_id_id', flat=True).distinct()
 
     # For each client, create a new record with risk_type as "MENTAL", requirement as "No requirement" and goal as "No goal"
     for client_id in client_ids_without_mental:

@@ -1,8 +1,11 @@
 from django.db import migrations, models
 from cbr_api import models as cbr_models
 from django.db.models.functions import Lower
+
+
 def make_usernames_lowercase(apps, schema_editor):
-    cbr_models.UserCBR.objects.all().update(username=Lower('username'))
+    cbr_models.UserCBR.objects.all().update(username=Lower("username"))
+
 
 class Migration(migrations.Migration):
     dependencies = [

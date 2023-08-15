@@ -36,7 +36,7 @@ const Login = () => {
         setStatus({ status: "submitting" });
 
         try {
-            await doLogin(username, password);
+            await doLogin(username.toLocaleLowerCase(), password);
             // The App component handles navigation to dashboard
             loginState.emit(true);
         } catch (e) {

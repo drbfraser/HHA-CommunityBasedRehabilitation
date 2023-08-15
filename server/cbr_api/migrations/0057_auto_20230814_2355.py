@@ -4,7 +4,7 @@ from django.db import migrations
 import uuid
 import time
 
-def add_mental_risk_type(apps, schema_editor):
+def add_mental_risk_type(apps):
     ClientRisk = apps.get_model('cbr_api', 'ClientRisk')
     timestamp = int(time.time() * 1000)
 

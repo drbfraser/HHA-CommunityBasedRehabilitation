@@ -216,8 +216,8 @@ class ClientRisk(models.Model):
     server_created_at = models.BigIntegerField(default=0)
     risk_type = RiskType.getField()
     risk_level = RiskLevel.getField()
-    requirement = models.TextField()
-    goal = models.TextField()
+    requirement = models.TextField(default="No requirement set")
+    goal = models.TextField(default="No goal set")
 
 
 class Visit(models.Model):

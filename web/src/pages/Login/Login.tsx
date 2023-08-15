@@ -36,7 +36,7 @@ const Login = () => {
         setStatus({ status: "submitting" });
 
         try {
-            await doLogin(username.toLocaleLowerCase(), password);
+            await doLogin(username, password);
             // The App component handles navigation to dashboard
             loginState.emit(true);
         } catch (e) {
@@ -88,7 +88,7 @@ const Login = () => {
                         required
                         InputLabelProps={{ required: false }}
                         value={username}
-                        onChange={(e) => setUsername(e.target.value.toLocaleLowerCase())}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                     <br />
                     <br />

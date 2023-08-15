@@ -1,18 +1,5 @@
 version: "3.9"
 services:
-  fluentbit:
-    container_name: cbr_fluentbit
-    image: fluent/fluent-bit:latest
-    volumes:
-      - ./fluentbit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
-      - fluentbit_logs_output:/output
-      - django_logs:/logs/django:ro
-      - fluentbit_logs_db:/persist
-    ports:
-      - "24224:24224"
-    environment:
-      GRAFANA_API_KEY: ${GRAFANA_API_KEY}
-      PROMETHEUS_API_KEY: ${GRAFANA_API_KEY}
   django:
     container_name: cbr_django
     build:

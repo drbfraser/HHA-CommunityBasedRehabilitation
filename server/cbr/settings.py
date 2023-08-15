@@ -157,7 +157,7 @@ logging.config.dictConfig(LOGGING)
 logger = logging.getLogger(__name__)
 
 AUTH_USER_MODEL = "cbr_api.UserCBR"
-
+AUTHENTICATION_BACKENDS = ["cbr_api.auth_custom.CustomModelBackend"]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

@@ -5,7 +5,6 @@ import os
 import time
 import uuid
 from typing import Optional
-
 from django.contrib.auth.password_validation import validate_password
 from django.core.files import File
 from rest_framework import serializers
@@ -75,8 +74,12 @@ class UserCBRSerializer(serializers.ModelSerializer):
             "updated_at",
         )
 
+    def to_representation(self, instance):
+        logger.info("User logged in: %s", instance.username)
+        return super().to_representation(instance)
+
     def update(self, user, validated_data):
-        logger.info("user cbr serializer")
+        logger.info("Update user %s", user.username)
         validated_data["updated_at"] = current_milli_time()
         super().update(user, validated_data)
         return user

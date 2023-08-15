@@ -59,7 +59,7 @@ export const handleNewUserSubmit = async (
     helpers: FormikHelpers<TNewUserValues>
 ) => {
     const newUser = JSON.stringify({
-        username: values.username,
+        username: values.username.toLocaleLowerCase(),
         password: values.password,
         first_name: values.first_name,
         last_name: values.last_name,

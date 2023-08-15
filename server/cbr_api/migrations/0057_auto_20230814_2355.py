@@ -16,10 +16,10 @@ def add_mental_risk_type(apps):
             id=uuid.uuid4(),
             client_id_id=client_id,
             risk_type="MENTAL",
-            requirement="No requirement",
+            requirement="Client not asked about mental health.",
             timestamp=timestamp,
             server_created_at=timestamp,
-            goal="No goal",
+            goal="Client not asked about mental health.",
         )
 
 

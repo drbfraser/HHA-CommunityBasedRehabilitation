@@ -1,0 +1,52 @@
+name: Staging CI/CD -- Deploy Stg Server and Retag
+on:
+  push:
+    branches: [ staging ]
+  workflow_dispatch:
+
+jobs:
+  export-image-tag:
+    runs-on: [self-hosted, docker]
+    outputs:
+      image_tag: ${{ steps.set_step.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v3
+        # Checkout the code, not into a container, because all work here is not in a container
+        with:
+          fetch-depth: 50
+      - id: set_step
+        name: Export the IMAGE_TAG
+        run: |
+          export IMAGE_TAG=v$(git show -s --format=%cs ${{ github.sha }}).`git rev-parse --short=8 ${{ github.sha }}`
+          echo "IMAGE_TAG = '$IMAGE_TAG'"
+          # NOTE: On github action runner v2.297 or higher, should redirect echo output to GITHUB_OUTPUT:
+          #    `echo "tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"`
+          # However, as of July 2023, SFU's GitHub runner is v2.296.x, so using old syntax (which works on newer)
+          # https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+          echo "::set-output name=tag::$IMAGE_TAG"
+
+#   ----------------------------------------------------------------------------
+#   Deployment and Re-tagging Jobs
+#   Note: 
+#     Since these jobs are calling a reusable workflow, they cannot
+#     use 'timeout-minutes:', 'environment:', 'env:', or 'steps:' because
+#     those break the allowable syntax for a job calling a reusable workflow.
+#     https://docs.github.com/en/actions/using-workflows/reusing-workflows
+#   ----------------------------------------------------------------------------
+# Staging (stg) server
+  staging-server-deploy-from-dockerhub:
+    needs: [export-image-tag]
+    uses: ./.github/workflows/deploy-from-dockerhub.yml
+    with:
+        RUNNER_NAME: deploy-staging
+        DOMAIN:      cbr-stg.cmpt.sfu.ca
+        IMAGE_TAG:   ${{ needs.export-image-tag.outputs.image_tag }}
+    secrets: inherit
+
+  staging-retag-and-upload-to-dockerhub:
+    needs: [export-image-tag]
+    uses: ./.github/workflows/retag-and-upload-dockerhub.yml
+    with:
+        IMAGE_TAG:  ${{ needs.export-image-tag.outputs.image_tag }}
+        BRANCH_TAG: stg
+    secrets: inherit

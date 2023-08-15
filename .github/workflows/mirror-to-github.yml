@@ -1,5 +1,4 @@
-name: Mirror Repo
-# Mirror the project to GitHub.com
+name: Mirror Repo to GitHub.com
 on:
   push:
     branches: [ main, staging, production ]

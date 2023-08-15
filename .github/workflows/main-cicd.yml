@@ -102,12 +102,18 @@ jobs:
         rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
         npm run build dev
       working-directory: /isolated_build/repo/mobile
-    - uses: actions/upload-artifact@v3
-      with:
-        name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Dev.apk"
-        path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        retention-days: 60
-        if-no-files-found: error
+
+    # NOTE: Artifact upload disabled because builds from the CI/CD server seem
+    #       to not work. Specifically, creating a client on mobile and then
+    #       trying to sync results in a "Inalid Date" sync error.
+    #       Since these builds cannot be trusted, they are disabled.
+    #       Instead, the builds must be done locally.
+    # - uses: actions/upload-artifact@v3
+    #   with:
+    #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Dev.apk"
+    #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+    #     retention-days: 60
+    #     if-no-files-found: error
 
     # TODO: Re-enable the building of the .AAB file for deployment.
     # Removed just to speed up the CI/CD pipeline while we are not deploying to the Play Store.

@@ -23,8 +23,7 @@ export interface ISync {
     remoteChanges: number;
     localChanges: number;
 }
-
-export const VERSION_NAME: string = "1.1.4";
+export const VERSION_NAME: string = "1.1.5";
 
 const Sync = () => {
     const styles = useStyles();

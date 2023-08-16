@@ -74,10 +74,6 @@ class UserCBRSerializer(serializers.ModelSerializer):
             "updated_at",
         )
 
-    def to_representation(self, instance):
-        logger.info("User logged in: %s", instance.username)
-        return super().to_representation(instance)
-
     def update(self, user, validated_data):
         logger.info("Update user %s", user.username)
         validated_data["updated_at"] = current_milli_time()
@@ -291,7 +287,6 @@ class UpdateReferralSerializer(serializers.ModelSerializer):
         read_only_fields = ["date_resolved"]
 
     def update(self, referral, validated_data):
-        logger.info("update referral")
         super().update(referral, validated_data)
         referral.resolved = validated_data["resolved"]
         if validated_data["resolved"] == True:

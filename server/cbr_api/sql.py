@@ -4,7 +4,6 @@ logger = logging.getLogger(__name__)
 
 
 def getDisabilityStats(is_active):
-    logger.info("Get Disability Stats")
     sql = """
         SELECT disability_id,
         COUNT(*) as total
@@ -32,7 +31,6 @@ def getDisabilityStats(is_active):
 
 
 def getNumClientsWithDisabilities(is_active):
-    logger.info("getNumClientsWithDisabilities")
     sql = """
         SELECT COUNT(DISTINCT client_id) as total
         FROM cbr_api_client_disability
@@ -55,7 +53,6 @@ def getNumClientsWithDisabilities(is_active):
 
 
 def getVisitStats(user_id, from_time, to_time):
-    logger.info("getVisitStats")
     sql = """
         SELECT zone_id,
         COUNT(*) as total,
@@ -80,7 +77,6 @@ def getVisitStats(user_id, from_time, to_time):
 
 
 def getReferralStats(user_id, from_time, to_time):
-    logger.info("getReferralStats")
     sql = """
         SELECT resolved,
         COUNT(*) as total,

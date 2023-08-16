@@ -15,6 +15,7 @@ services:
       - ./fluentbit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
       - fluentbit_logs_output:/output
       - django_logs:/logs/django:ro
+      - caddy_logs:/logs/caddy:ro
       - fluentbit_logs_db:/persist
     ports:
       - "24224:24224"

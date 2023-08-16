@@ -10,7 +10,7 @@ from django.core.files.base import ContentFile
 
 from cbr_api import models
 
-API_VERSION = "3.0.0"
+API_VERSION = "4.0.0"
 
 
 def client_last_modified_datetime(request, pk, *args):

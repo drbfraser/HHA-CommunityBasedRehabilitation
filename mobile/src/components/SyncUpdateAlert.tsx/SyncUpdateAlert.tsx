@@ -185,12 +185,13 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                                     This App is Out of Date
                                 </Text>
                                 <Text style={styles.modalText}>
-                                    A new version of the HHA CBR app is available on the Google Play Store.
-                                    Please update your app now, or you will be unable to sync.
+                                    A new version of the HHA CBR app is available on the Google 
+                                    Play Store. Please update your app now, or you will be unable 
+                                    to sync.
                                 </Text>
                                 <Text style={styles.modalText}>
-                                    If you have the latest version of the app and still see this message,
-                                    then try uninstalling and reinstalling the app.
+                                    If you have the latest version of the app and still see this 
+                                    message, then try uninstalling and reinstalling the app.
                                 </Text>
                                 <TouchableOpacity
                                     style={[

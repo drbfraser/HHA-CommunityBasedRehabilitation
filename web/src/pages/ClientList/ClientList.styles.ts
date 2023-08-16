@@ -26,7 +26,7 @@ export const useStyles = makeStyles(
             position: "relative",
             left: "0px",
             top: "-41px",
-            width: "fit-content"
+            width: "fit-content",
         },
         downloadSVCLink: {
             textDecoration: "none",

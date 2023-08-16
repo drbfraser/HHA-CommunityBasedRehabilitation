@@ -105,7 +105,6 @@ class UserCurrent(generics.RetrieveAPIView):
     serializer_class = serializers.UserCBRSerializer
 
     def get_object(self):
-        logger.info("User %s logged in", self.request.user.username)
         return generics.get_object_or_404(self.queryset, id=self.request.user.id)
 
 

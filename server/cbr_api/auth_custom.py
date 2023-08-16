@@ -11,7 +11,6 @@ User = get_user_model()
 
 class CustomModelBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
-        logger.info("auth")
         if username is None:
             username = kwargs.get(User.USERNAME_FIELD)
 
@@ -30,5 +29,6 @@ class CustomModelBackend(ModelBackend):
                     "Successful login with lowercase username for: %s",
                     lowercase_username,
                 )
-
+        else:
+            logger.info("User logged in: %s", user.username)
         return user

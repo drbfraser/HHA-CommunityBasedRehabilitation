@@ -22,7 +22,7 @@ const BASE_URLS = {
     local: process.env.LOCAL_URL ?? "",
     dev: "https://cbr-dev.cmpt.sfu.ca",
     staging: "https://cbr-stg.cmpt.sfu.ca",
-    prod: "https://cbr.hopehealthaction.org",
+    prod: "https://cbr-test-new.cradleplatform.com", //"https://cbr.hopehealthaction.org",
 };
 
 const DEFAULT_APP_ENV = "dev";

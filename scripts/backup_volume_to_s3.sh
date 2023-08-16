@@ -1,5 +1,18 @@
 #!/bin/bash
-# Backup Postgres DB (from docker volume) to Amazon S3
+# Backup user data from the running docker volumes to Amazon S3
+# Includes:
+#  - Postgres DB
+#  - Django /uploads/ directory (user-uploaded images)
+#  - .env file
+#  - Info about the system (date/time, host, docker info, etc.)
+# 
+# Usage (from any directory): 
+#   ./backup_volume_to_s3.sh <S3 folder name>
+#
+# Note: Creates and deletes ~/db-backup-temp/ folder to store the backup files.
+# 
+# This script expects to be in the scripts/ folder of the project
+# in order to find the .env file.
 
 # What S3 folder should be backup to?
 S3_FOLDER=$1
@@ -11,19 +24,27 @@ then
     exit 1
 fi
 
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+
+# If .env file is missing, then exit
+if [ ! -f "$SCRIPT_DIR/../.env" ]; then
+    echo "Error: Missing .env file"
+    echo "Ensure this script is located in the scripts/ folder of the project."
+    exit 1
+fi
+
 # Needed from .env
 # POSTGRES_USER
 # S3_BUCKET_NAME
-source "$(dirname "$(realpath "$0")")/../.env"
+source "$SCRIPT_DIR/../.env"
 
 # Constants
 DB_NAME=cbr
-ENV_FILE="$(dirname "$(realpath "$0")")/../.env"
+ENV_FILE="$SCRIPT_DIR/../.env"
 FOLDER="$HOME/db-backup-temp"
 BACKUP_FILENAME_BASE="${DB_NAME}_db_backup_$(date +%Y%m%d_%H%M%S)"
 
-
-echo "Backing-up $DB_NAME database to file $BACKUP_FILENAME_BASE.tar.gz"
+echo "Backing-up $DB_NAME database and uploaded data to file $BACKUP_FILENAME_BASE.tar.gz"
 
 mkdir -p $FOLDER
 
@@ -51,6 +72,10 @@ docker exec cbr_postgres \
    pg_dump $DB_NAME -U $POSTGRES_USER \
    > $FOLDER/$BACKUP_FILENAME_BASE.sql
 
+# Export `/uploads` directory from cbr_django to tar file
+#   '-' means stream as tar file to stdout
+docker cp cbr_django:/uploads/ - > $FOLDER/uploads.tar
+
 # Compress files (in sub-shell so we don't encode leading folder names)
 (cd "$FOLDER"; tar -czvf "$FOLDER/$BACKUP_FILENAME_BASE.tar.gz" *)
 
@@ -60,6 +85,7 @@ aws s3 cp "$FOLDER/$BACKUP_FILENAME_BASE.tar.gz" "s3://$S3_BUCKET_NAME/$S3_FOLDE
 # Cleanup
 rm "$FOLDER/info.txt"
 rm "$FOLDER/backup.env"
+rm "$FOLDER/uploads.tar"
 rm "$FOLDER/$BACKUP_FILENAME_BASE.sql"
 rm "$FOLDER/$BACKUP_FILENAME_BASE.tar.gz"
 rmdir $FOLDER

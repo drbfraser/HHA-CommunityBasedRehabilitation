@@ -20,6 +20,7 @@ services:
     ports:
       - "24224:24224"
     environment:
+      AWS_LOGGING_REGION: ${AWS_LOGGING_REGION}
       GRAFANA_API_KEY: ${GRAFANA_API_KEY}
       PROMETHEUS_API_KEY: ${GRAFANA_API_KEY}
       # Used in staging/prod environment

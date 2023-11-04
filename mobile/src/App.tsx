@@ -33,7 +33,7 @@ import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
 import { Provider as StoreProvider } from "react-redux";
 import { store } from "./redux/store";
-
+import "./i18n.config"; 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
 enableScreens();

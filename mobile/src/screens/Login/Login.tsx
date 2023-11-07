@@ -21,7 +21,8 @@ import { APIFetchFailError } from "@cbr/common";
 import { useNavigation } from "@react-navigation/core";
 import { VERSION_NAME } from "../Sync/Sync";
 import { column } from "@nozbe/watermelondb/QueryDescription";
-
+import { useTranslation } from "react-i18next";
+import LanguagePicker from "../../LanguagePicker";
 interface IBaseLoginStatus {
     status: "initial" | "submitting";
 }
@@ -34,6 +35,7 @@ interface ILoginStatusFailed {
 type LoginStatus = ILoginStatusFailed | IBaseLoginStatus;
 
 const Login = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const styles = useStyles();
     const [username, setUsername] = useState("");
@@ -106,6 +108,7 @@ const Login = () => {
             )}
 
             <View style={styles.formContainer}>
+                <LanguagePicker />
                 <Image
                     style={styles.logo}
                     resizeMode="contain"
@@ -113,7 +116,7 @@ const Login = () => {
                 />
 
                 {authState.state !== "previouslyLoggedIn" ? (
-                    <Text style={styles.loginHeader}>Login</Text>
+                    <Text style={styles.loginHeader}>{t("Login")}</Text>
                 ) : (
                     <Alert
                         style={styles.alert}

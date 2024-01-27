@@ -1,3 +1,14 @@
 {
-    "Login": "not english"
+    "login":{
+        "login": "Se connecter",
+        "logout": "Se deconnecter",
+        "username": "nom d'utilisateur",
+        "password": "mot de passe",
+        "login_failed": "La connexion a échoué",
+        "inactive_logout": "Déconnecté pour cause d'inactivité. Veuillez vous reconnecter.",
+        "logging_in":"Se connecter",
+        "logging_in_as":"se connecter en tant qu'",
+        "prompt_username":"Merci d'entrer un nom d'utilisateur.",
+        "prompt_password":"Veuillez entrer un mot de passe."
+    }
 }

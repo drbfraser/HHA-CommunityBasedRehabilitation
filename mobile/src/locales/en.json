@@ -1,3 +1,52 @@
 {
-    "Login": "Login"
+    "login":{
+        "login": "Login",
+        "logout": "Logout",
+        "username": "Username",
+        "password": "Password",
+        "login_failed": "Login failed",
+        "inactive_logout": "Logged out due to inactivity. Please login again.",
+        "logging_in":"Logging in",
+        "logging_in_as":"Logging in as: ",
+        "enter_username":"Please enter a username.",
+        "enter_password":"Please enter a password.",
+        "missing_password":"Missing password.",
+        "missing_username":"Missing username.",
+        "missing_username_password":"Missing username and password.",
+        "request_timeout":"The request has timed out."
+    },
+    "clientInfo":{
+        "firstName":"First Name",
+        "lastName":"Last Name",
+        "birthDate":"Birth Date",
+        "gender":"Gender",
+        "village":"Village",
+        "zone":"Zone",
+        "phoneNumber":"Phone Number",
+        "interviewConsent":"Consent to Interview?",
+        "caregiverPresent":"Caregiver Present?",
+        "caregiverPhone":"Caregiver Phone Number",
+        "caregiverName":"Caregiver Name",
+        "caregiverEmail":"Caregiver Email",
+        "Disabilities":"Disabilities",
+        "otherDisabilities":"Other Disabilities",
+        "healthRisk":"Health Risk",
+        "healthRequirements":"Health Requirement(s)",
+        "healthGoals":"Health Goal(s)",
+        "educationRisk":"Education Risk",
+        "educationRequirements":"Education Requirement(s)",
+        "educationGoals":"Education Goal(s)",
+        "socialRisk":"Social Risk",
+        "socialRequirements":"Social Requirement(s)",
+        "socialGoals":"Social Goal(s)",
+        "nutritionRisk":"Nutrition Risk",
+        "nutritionRequirements":"Nutrition Requirement(s)",
+        "nutritionGoals":"Nutrition Goal(s)",
+        "mentalRisk":"Mental Health Risk",
+        "mentalRequirements":"Mental Health Requirement(s)",
+        "mentalGoals":"Mental Health Goal(s)"
+    }
+
+
+
 }

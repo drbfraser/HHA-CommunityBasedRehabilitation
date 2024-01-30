@@ -10,5 +10,9 @@
         "logging_in_as":"se connecter en tant qu'",
         "prompt_username":"Merci d'entrer un nom d'utilisateur.",
         "prompt_password":"Veuillez entrer un mot de passe."
+    },
+    "dashboard": {
+        "dashboard": "kossss sher",
+        "messageAlert": "You have {{count}} new messages in your inbox." 
     }
 }

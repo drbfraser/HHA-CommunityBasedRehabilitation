@@ -17,6 +17,7 @@ import { ScrollView, View } from "react-native";
 import DataCard from "../../../../components/DataCard/DataCard";
 import { database } from "../../../../util/watermelonDatabase";
 import { modelName } from "../../../../models/constant";
+import { useTranslation } from "react-i18next";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -27,6 +28,8 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
     const [visit, setVisit] = useState<IVisit>();
     const [visitOutcomes, setVisitOutcome] = useState<any>();
     const [visitImprovements, setVisitImprovement] = useState<any>();
+    const { t } = useTranslation();
+
     const onOpen = async () => {
         if (!visit) {
             const fetchedVisit: any = await database.get(modelName.visits).find(visitSummary.id);
@@ -125,14 +128,14 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
 
         return (
             <>
-                <Card.Title title="New Visit Survey" />
+                <Card.Title title={t("visitAttr.newVisitSurvey")} />
                 <Card style={styles.createdCard}>
                     <Card.Content>
                         <Text>
-                            <Text style={styles.labelBold}>Visit Date:</Text>{" "}
+                            <Text style={styles.labelBold}>{t("visitAttr.date")}:</Text>{" "}
                             {timestampToDateTime(visit.created_at)}
                             {"\n"}
-                            <Text style={styles.labelBold}>Village:</Text> {visit.village}
+                            <Text style={styles.labelBold}>{t("commons.village")}:</Text> {visit.village}
                         </Text>
                     </Card.Content>
                 </Card>
@@ -147,7 +150,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
         <ScrollView>
             <>
                 <Dialog.Title>
-                    Visit in {zone}
+                    {t('visitAttr.visitLocation', {body: zone})}
                     {"\n"}
                     {visitSummary.health_visit && (
                         <SocialChip label="Health" type={RiskType.HEALTH} />
@@ -167,7 +170,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 </Dialog.Content>
                 <Dialog.Actions>
                     <Button onPress={onClose} color={themeColors.blueBgDark}>
-                        Close
+                        {t("commons.close")}
                     </Button>
                 </Dialog.Actions>
             </>

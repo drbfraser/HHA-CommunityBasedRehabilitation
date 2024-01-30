@@ -66,10 +66,10 @@ const Login = () => {
         if (!usernameToUse.length || !password.length) {
             const error =
                 !usernameToUse.length && !password.length
-                    ? t("login.missing_username_password")
+                    ? t('login.missingValue', {context: 'usernamePassword'})
                     : !usernameToUse.length
-                    ? t("login.missing_username")
-                    : t("login.missing_password");
+                    ? t('login.missingValue', {context: 'username'})
+                    : t('login.missingValue', {context: 'password'})
 
             setStatus({ status: "failed", error: error });
             return;
@@ -82,7 +82,7 @@ const Login = () => {
         } catch (e) {
             if (e instanceof Error || e instanceof APIFetchFailError) {
                 if (e.name === "AbortError") {
-                    setStatus({ status: "failed", error: t("login.request_timeout") });
+                    setStatus({ status: "failed", error: t("login.requestTimeout") });
                 } else {
                     const errorMessage =
                         e instanceof APIFetchFailError && e.details ? e.details : `${e}`;
@@ -116,12 +116,12 @@ const Login = () => {
                 />
 
                 {authState.state !== "previouslyLoggedIn" ? (
-                    <Text style={styles.loginHeader}>{t("login.login")}</Text>
+                    <Text style={styles.loginHeader}>{t("commons.login")}</Text>
                 ) : (
                     <Alert
                         style={styles.alert}
                         severity="info"
-                        text={t("login.inactive_logout")}
+                        text={t("login.inactiveLogoutAlert")}
                     />
                 )}
 
@@ -129,10 +129,10 @@ const Login = () => {
                     <Alert
                         style={styles.alert}
                         severity="error"
-                        text={`${t("login.login_failed")}: ${status.error}`}
+                        text={`${t("login.loginFailed")}: ${status.error}`}
                     />
                 ) : status.status === "submitting" ? (
-                    <Alert style={styles.alert} severity="info" text={t("login.logging_in")} />
+                    <Alert style={styles.alert} severity="info" text={t("login.loggingIn")} />
                 ) : null}
                 {/*
                     React Native Paper does not have "standard styling" TextFields as described in
@@ -142,12 +142,12 @@ const Login = () => {
                 */}
                 {authState.state == "previouslyLoggedIn" ? (
                     <Title style={styles.loginAgain}>
-                        {t("login.logging_in_as")}{authState.currentUser.username}
+                        {t("login.loggingInAs")}{authState.currentUser.username}
                     </Title>
                 ) : (
                     <View>
                         <TextInput
-                            label={t("login.username")}
+                            label={t("commons.username")}
                             error={status.status === "failed" && !username}
                             value={username}
                             onChangeText={(newUsername) => setUsername(newUsername)}
@@ -162,14 +162,14 @@ const Login = () => {
                             onSubmitEditing={() => passwordTextRef.current?.focus()}
                         />
                         <HelperText type="error" visible={status.status === "failed" && !username}>
-                            {t("login.enter_username")}
+                            {t('login.enterValue', {context: 'username'})}
                         </HelperText>
                     </View>
                 )}
                 <View>
                     <TextInput
                         {...passwordTextInputProps}
-                        label={t("login.password")}
+                        label={t("commons.password")}
                         error={status.status === "failed" && !password}
                         value={password}
                         onChangeText={(newPassword) => setPassword(newPassword)}
@@ -180,7 +180,7 @@ const Login = () => {
                         ref={passwordTextRef}
                     />
                     <HelperText type="error" visible={status.status === "failed" && !password}>
-                        {t("login.enter_password")}
+                    {t('login.enterValue', {context: 'password'})}
                     </HelperText>
                 </View>
                 <Button
@@ -191,7 +191,7 @@ const Login = () => {
                     onPress={handleLogin}
                     mode="contained"
                 >
-                    {t("login.login")}
+                    {t("commons.login")}
                 </Button>
                 {authState.state == "previouslyLoggedIn" ? (
                     <Button
@@ -201,7 +201,7 @@ const Login = () => {
                         onPress={logout}
                         mode="text"
                     >
-                        {t("login.logout")}
+                        {t("commons.logout")}
                     </Button>
                 ) : (
                     <></>

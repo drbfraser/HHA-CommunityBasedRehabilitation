@@ -30,6 +30,7 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { modelName } from "../../models/constant";
 import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { useTranslation } from "react-i18next";
 
 interface ClientProps {
     clientID: string;
@@ -55,6 +56,7 @@ const ClientDetails = (props: ClientProps) => {
     const [referrals, setReferrals] = useState<any>();
     const [surveys, setSurveys] = useState<ISurvey[]>();
     const [visits, setVisits] = useState<any>();
+    const { t } = useTranslation();
     const errorAlert = () =>
         Alert.alert("Alert", "We were unable to fetch the client, please try again.", [
             {
@@ -243,7 +245,7 @@ const ClientDetails = (props: ClientProps) => {
                                                 });
                                             }}
                                         >
-                                            New Referral
+                                            {t("referralAttr.newReferral")}
                                         </Button>
                                         <Button
                                             mode="contained"
@@ -255,7 +257,7 @@ const ClientDetails = (props: ClientProps) => {
                                                 });
                                             }}
                                         >
-                                            Baseline Survey
+                                            {t("surveyAttr.baselineSurvey")}
                                         </Button>
                                         <Button
                                             mode="contained"
@@ -267,7 +269,7 @@ const ClientDetails = (props: ClientProps) => {
                                                 });
                                             }}
                                         >
-                                            New Visit
+                                            {t("visitAttr.newVisit")}
                                         </Button>
                                     </Card>
                                     <Divider />
@@ -275,11 +277,10 @@ const ClientDetails = (props: ClientProps) => {
                                         <></>
                                     ) : (
                                         <Text style={styles.archiveWarningStyle}>
-                                            The client is archived. Only administrators can
-                                            dearchive a client
+                                            {t("clientAttr.archivedClientAccessAlert")}
                                         </Text>
                                     )}
-                                    <Text style={styles.cardSectionTitle}>Client Details</Text>
+                                    <Text style={styles.cardSectionTitle}>{t("clientAttr.clientDetails")}</Text>
                                     <Divider />
                                     <ClientForm
                                         clientId={client?.id}
@@ -301,7 +302,7 @@ const ClientDetails = (props: ClientProps) => {
                             )}
                         </Formik>
                     </Card>
-                    <Text style={styles.cardSectionTitle}>Client Risks</Text>
+                    <Text style={styles.cardSectionTitle}>{t("clientAttr.clientRisks")}</Text>
                     <Divider />
                     <ClientRisk
                         clientRisks={risks || []}
@@ -334,7 +335,7 @@ const ClientDetails = (props: ClientProps) => {
                     />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>
-                            <Text style={styles.riskTitleStyle}>Visits, Referrals & Surveys</Text>
+                            <Text style={styles.riskTitleStyle}>{t("clientAttr.visitsRefsSurveys")}</Text>
                         </View>
                         {client && (
                             <RecentActivity

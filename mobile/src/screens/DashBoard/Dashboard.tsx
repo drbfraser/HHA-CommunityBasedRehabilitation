@@ -26,6 +26,7 @@ import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
 import Alert from "../../components/Alert/Alert";
 import { modelName } from "../../models/constant";
+import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
     const styles = useStyles();
@@ -40,6 +41,8 @@ const Dashboard = () => {
     const isFocused = useIsFocused();
     const database = useDatabase();
     const { setUnSyncedChanges, screenRefresh, setScreenRefresh } = useContext(SyncContext);
+
+    const { t } = useTranslation();
 
     const dashBoardClientComparator = (a: ClientListRow, b: ClientListRow): number => {
         return clientComparator(a, b, clientSortOption, clientSortDirection);
@@ -139,14 +142,14 @@ const Dashboard = () => {
             <ConflictDialog />
             <ScrollView>
                 <View style={styles.row}>
-                    <Text style={styles.title}>Dashboard</Text>
+                    <Text style={styles.title}>{t("commons.dashboard")}</Text>
                 </View>
                 <View>
                     {unreadAlertsCount > 0 ? (
                         <Alert
                             style={styles.inbox_info_alert}
                             severity={"info"}
-                            text={"You have " + unreadAlertsCount + " new messages in your inbox."}
+                            text={t('dashboard.messageAlert', {count: unreadAlertsCount})}
                         />
                     ) : (
                         <></>
@@ -154,7 +157,7 @@ const Dashboard = () => {
                 </View>
                 <View>
                     <Card>
-                        <Card.Title title="Priority Clients"></Card.Title>
+                        <Card.Title title={t("dashboard.clientListPriority")}></Card.Title>
                         <ScrollView>
                             <DataTable>
                                 <DataTable.Header style={styles.item}>
@@ -163,14 +166,14 @@ const Dashboard = () => {
                                         onPress={() => clientSortBy("name")}
                                         sortDirection={clientArrowDirectionController("name")}
                                     >
-                                        Name
+                                        {t("commons.name")}
                                     </DataTable.Title>
                                     <DataTable.Title
                                         style={styles.column_client_zone}
                                         onPress={() => clientSortBy("zone")}
                                         sortDirection={clientArrowDirectionController("zone")}
                                     >
-                                        Zone
+                                        {t("commons.zone")}
                                     </DataTable.Title>
                                     <DataTable.Title
                                         style={styles.column_client_icon}
@@ -212,7 +215,7 @@ const Dashboard = () => {
                                         onPress={() => clientSortBy("date")}
                                         sortDirection={clientArrowDirectionController("date")}
                                     >
-                                        Last visit date
+                                        {t("clientAttr.lastVisitDate")}
                                     </DataTable.Title>
                                 </DataTable.Header>
                                 {clientList.map((item) => {
@@ -269,7 +272,7 @@ const Dashboard = () => {
                 </View>
                 <View>
                     <Card>
-                        <Card.Title title="Outstanding Referrals"></Card.Title>
+                        <Card.Title title={t("dashboard.clientListOutstandingRefs")}></Card.Title>
                         <ScrollView>
                             <DataTable>
                                 <DataTable.Header style={styles.item}>
@@ -280,7 +283,7 @@ const Dashboard = () => {
                                             SortOptions.NAME
                                         )}
                                     >
-                                        Name
+                                        {t("commons.name")}
                                     </DataTable.Title>
                                     <DataTable.Title
                                         style={styles.column_referral_type}
@@ -289,7 +292,7 @@ const Dashboard = () => {
                                             SortOptions.TYPE
                                         )}
                                     >
-                                        Type
+                                        {t("commons.type")}
                                     </DataTable.Title>
                                     <DataTable.Title
                                         style={styles.column_referral_date}
@@ -298,7 +301,7 @@ const Dashboard = () => {
                                             SortOptions.DATE
                                         )}
                                     >
-                                        Date Referred
+                                        {t("referralAttr.dateReferred")}
                                     </DataTable.Title>
                                 </DataTable.Header>
                                 {referralList.map((item) => {

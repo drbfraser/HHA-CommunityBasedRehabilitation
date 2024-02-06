@@ -18,11 +18,13 @@ import {
 } from "../../util/syncConflictConstants";
 import { objectFromMap } from "../../util/ObjectFromMap";
 import { useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
+import { useTranslation } from "react-i18next";
 
 const ConflictDialog = () => {
     const styles = useStyles();
     const dispatch = useDispatch();
     const database = useDatabase();
+    const { t } = useTranslation();
 
     const disabilityMap = useDisabilities();
     const disabilityObj = objectFromMap(disabilityMap);
@@ -100,10 +102,7 @@ const ConflictDialog = () => {
                 </Dialog.Title>
                 <Dialog.Content style={styles.conflictDialogContent}>
                     <Text style={styles.conflictMessage}>
-                        The following changes could not be synced with the server because they have
-                        been modified by another user since your last sync. {"\n\n"}
-                        If you would like to keep your version, you'll need to make the following
-                        changes again:
+                        {t("alert.unsyncedFailure")}
                     </Text>
                     <ScrollView>
                         {clientConflicts.size > 0 && (
@@ -128,7 +127,7 @@ const ConflictDialog = () => {
                                                 return rej.column == "Picture" ? (
                                                     <View key={keyId}>
                                                         <Text style={styles.conflictContentBold}>
-                                                            Client Photo:{" "}
+                                                            {t("clientAttr.picture")}:{" "}
                                                         </Text>
                                                         <Image
                                                             style={styles.conflictPicture}
@@ -202,7 +201,7 @@ const ConflictDialog = () => {
                         onPress={onClose}
                         color={themeColors.blueBgDark}
                     >
-                        OK
+                        {t("commons.ok")}
                     </Button>
                 </Dialog.Actions>
             </Dialog>

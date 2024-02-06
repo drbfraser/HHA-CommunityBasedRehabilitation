@@ -32,6 +32,7 @@ import DefaultHeader from "../DefaultHeader/DefaultHeader";
 import FormikExposedDropdownMenu from "../ExposedDropdownMenu/FormikExposedDropdownMenu";
 import TextCheckBox from "../TextCheckBox/TextCheckBox";
 import { showValidationErrorToast } from "../../util/validationToast";
+import { useTranslation } from "react-i18next";
 
 export interface IClientFormProps {
     isNewClient: boolean;
@@ -50,6 +51,7 @@ export const ClientForm = (props: IClientFormProps) => {
     const disabilityObj = objectFromMap(disabilityMap);
     const zoneMap = useZones();
     const currentUser = useCurrentUser();
+    const { t } = useTranslation();
 
     const [fieldsDisabled, setFieldsDisabled] = useState(!props.isNewClient);
     const [cancelButtonType, setCancelButtonType] = useState<"outlined" | "contained">("outlined");
@@ -92,11 +94,11 @@ export const ClientForm = (props: IClientFormProps) => {
 
     const fetchUserErrorAlert = () =>
         Alert.alert(
-            "Alert",
-            "Ecountered an error fetching your user information. Please try again.",
+            t("commons.alert"),
+            t("alert.actionFailure", {action: t("commons.fetch"), object: t("commons.user")}),
             [
                 {
-                    text: "Return",
+                    text: t("commons.return"),
                     style: "cancel",
                     onPress: () => {},
                 },
@@ -106,11 +108,11 @@ export const ClientForm = (props: IClientFormProps) => {
 
     const invalidUserAlert = () =>
         Alert.alert(
-            "Alert",
-            "You are not authorized to archive/dearchive clients. Please ask an administrator.",
+            t("commons.alert"),
+            t("alert.unauthorizedArchive"),
             [
                 {
-                    text: "Return",
+                    text: t("commons.return"),
                     style: "cancel",
                     onPress: () => {},
                 },
@@ -120,10 +122,10 @@ export const ClientForm = (props: IClientFormProps) => {
 
     useEffect(() => {
         const title = props.isNewClient
-            ? "New Client"
+            ? t("clientAttr.newClient")
             : fieldsDisabled
-            ? "View Client"
-            : "Edit Client";
+            ? t("clientAttr.viewClient")
+            : t("clientAttr.editClient");
 
         const subtitle = props.clientId ? `Client ID: ${props.clientId}` : undefined;
 
@@ -153,8 +155,8 @@ export const ClientForm = (props: IClientFormProps) => {
                     props.formikProps.resetForm();
                     props.resetImage!();
                 }}
-                confirmButtonText="Discard"
-                dialogContent={props.isNewClient ? "Discard new client?" : "Discard your changes?"}
+                confirmButtonText={t("commons.discard")}
+                dialogContent={props.isNewClient ? t("clientAttr.discardNew")  : t("commons.discardChanges")}
             />
             <ConfirmDialog
                 visible={archiveDialogVisibleOk}
@@ -167,7 +169,8 @@ export const ClientForm = (props: IClientFormProps) => {
                     props.formikProps.handleSubmit();
                     setArchiveDialogVisibleOk(false);
                 }}
-                confirmButtonText={props.formikProps.values.is_active ? "Archive" : "Dearchive"}
+                confirmButtonText={props.formikProps.values.is_active ? t("commons.archive") : t("clientAttr.dearchive")}
+                //TODO translation
                 dialogContent={`Are you sure you want to ${
                     props.formikProps.values.is_active ? "archive" : "dearchive"
                 } ${props.formikProps.values.firstName} ${
@@ -214,7 +217,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 mode="contained"
                                 onPress={showDatepicker}
                             >
-                                SELECT
+                                {t("commons.select")}
                             </Button>
                         ) : (
                             <></>
@@ -238,7 +241,7 @@ export const ClientForm = (props: IClientFormProps) => {
                             }
                             mode="date"
                             display="default"
-                            neutralButtonLabel="Today"
+                            neutralButtonLabel={t("commons.today")}
                             onChange={(event, date) => {
                                 setDatePickerVisible(Platform.OS === "ios");
                                 if (event.type === "neutralButtonPressed") {
@@ -312,7 +315,7 @@ export const ClientForm = (props: IClientFormProps) => {
                         <View style={styles.nestedScrollView}>
                             <View style={styles.disabilityListHeaderContainerStyle}>
                                 <Text style={styles.disabilityListHeaderStyle}>
-                                    Disability List
+                                    {t("commons.objectList")}
                                 </Text>
                             </View>
                             <KeyboardAwareScrollView
@@ -322,7 +325,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 <CustomMultiPicker
                                     options={disabilityObj}
                                     multiple={true}
-                                    placeholder={"Disability"}
+                                    placeholder={t("commons.disability")}
                                     placeholderTextColor={themeColors.blueBgLight}
                                     returnValue={"disability_type"}
                                     callback={(values) => {
@@ -348,7 +351,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 disabled={isFieldDisabled()}
                                 onPress={closeDisabilityMenu}
                             >
-                                Save
+                                {t("commons.save")}
                             </Button>
                         </View>
                     </Modal>
@@ -379,7 +382,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 )}
                             </>
                         ) : (
-                            <Text style={styles.valueText}>No disabilities selected</Text>
+                            <Text style={styles.valueText}>{t("commons.noObjectSelected")}</Text>
                         )}
                     </View>
                     <View>
@@ -389,7 +392,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 disabled={isFieldDisabled()}
                                 onPress={openDisabilityMenu}
                             >
-                                SELECT
+                                {t("commons.select")}
                             </Button>
                         ) : (
                             <></>
@@ -466,7 +469,7 @@ export const ClientForm = (props: IClientFormProps) => {
                             }
                         }}
                     >
-                        {fieldsDisabled ? "Edit" : "Save"}
+                        {fieldsDisabled ? t("commons.edit") : t("commons.save")}
                     </Button>
                     {fieldsDisabled ? (
                         <Button
@@ -482,7 +485,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 }
                             }}
                         >
-                            {props.formikProps.values.is_active ? "Archive" : "Dearchive"}
+                            {props.formikProps.values.is_active ? t("commons.archive") : t("commons.dearchive")}
                         </Button>
                     ) : (
                         <Button
@@ -491,7 +494,7 @@ export const ClientForm = (props: IClientFormProps) => {
                             disabled={fieldsDisabled}
                             onPress={() => setDiscardDialogVisible(true)}
                         >
-                            Cancel
+                            {t("commons.cancel")}
                         </Button>
                     )}
                 </View>

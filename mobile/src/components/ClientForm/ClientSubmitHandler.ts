@@ -1,6 +1,7 @@
 import { TClientValues } from "@cbr/common";
 import { dbType } from "../../util/watermelonDatabase";
 import { AutoSyncDB } from "../../util/syncHandler";
+import { useTranslation } from "react-i18next";
 
 export const handleSubmit = async (
     client: any,
@@ -10,6 +11,7 @@ export const handleSubmit = async (
     cellularSync: boolean,
     imageChange?: boolean
 ) => {
+    const { t } = useTranslation();
     try {
         await database.write(async () => {
             await client.update(() => {
@@ -34,8 +36,7 @@ export const handleSubmit = async (
 
         AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {
-        const initialMessage = "Encountered an error while trying to edit the client!";
-
+        const initialMessage = t("alert.actionFailure", {action: t("commons.edit"), object: t("commons.client")});
         alert(initialMessage);
     }
 };

@@ -1,18 +1,112 @@
 {
     "login":{
-        "login": "Se connecter",
-        "logout": "Se deconnecter",
-        "username": "nom d'utilisateur",
-        "password": "mot de passe",
-        "login_failed": "La connexion a échoué",
-        "inactive_logout": "Déconnecté pour cause d'inactivité. Veuillez vous reconnecter.",
-        "logging_in":"Se connecter",
-        "logging_in_as":"se connecter en tant qu'",
-        "prompt_username":"Merci d'entrer un nom d'utilisateur.",
-        "prompt_password":"Veuillez entrer un mot de passe."
+        "loginFailed": "--Login failed",
+        "inactiveLogoutAlert": "--Logged out due to inactivity. Please login again.",
+        "loggingIn": "--Logging in",
+        "loggingInAs": "--Logging in as: ",
+        "enterValue_username": "--Please enter a username.",
+        "enterValue_password": "--Please enter a password.",
+        "missingValue_password": "--Missing password.",
+        "missingValue_username": "--Missing username.",
+        "missingValue": "--Missing required Value",
+        "missingValue_usernamePassword": "--Missing username and password.",
+        "requestTimeout": "--The request has timed out."
     },
     "dashboard": {
-        "dashboard": "kossss sher",
-        "messageAlert": "You have {{count}} new messages in your inbox." 
+        "messageAlert": "--You have {{count}} new messages in your inbox." ,
+        "clientListPriority": "--Priority Clients",
+        "clientListOutstandingRefs": "--Outstanding Referrals"
+    },
+    "clientAttr": {
+        "lastVisitDate": "--last visit date",
+        "clientDetails": "--Client Details",
+        "clientRisks": "--Client Risks",
+        "visitsRefsSurveys": "--Visits, Referrals & Surveys",
+        "archivedClientAccessAlert": "--The client is archived. Only administrators can dearchive a client",
+        "clientCreated": "--Client Created",
+        "newClient": ""
+    },
+    "referralAttr": {
+        "dateReferred": "--Date Referred",
+        "newReferral": "--New Referral",
+        "referralPosted": "--Referral Posted",
+        "referralResolutionFailureAlert": "--Something went wrong when submitting the outcome and resolving the referral. Please try that again.",
+        "resolveVerb": "--Resolve",
+        "markResolved": "--Mark Resolved",
+        "referralDate": "--Referral Date",
+        "resolutionDate": "--Resolution Date",
+        "resolutionStatus_pending": "--Referral Pending",
+        "resolutionStatus_resolved": "--Referral Resolved",
+        "condition_physiotherapy": "--Physiotherapy Condition",
+        "condition_mental": "--Mental Health Condition",
+        "injuryLocation_prosthetic": "--Prosthetic Injury Location",
+        "injuryLocation_orthotic": "--Orthotic Injury Location",
+        "otherServiceRequired": "--Other Services Required"
+
+
+    },
+    "surveyAttr":{
+        "baselineSurvey": "Baseline Survey",
+        "surveyDate": "Survey Date",
+    },
+    "visitAttr":{
+        "newVisit": "New Visit",
+        "visitVerb": "visits",
+        "visitLocation": "visit in {{body}}",
+        "date": "Visit Date",
+        "newVisitSurvey": "New Visit Survey"
+    },
+    "riskAttr":{
+        "update_health": "Update Health Risk",
+        "update_education": "Update Health Risk",
+        "update_social": "Update Social Risk",
+        "update_nutrition": "Update Nutrition Risk",
+        "updateFailureAlert": "Encountered an error while trying to update the client's risk",
+    },
+    "wheelchairAttr": {
+        "experience": "Wheelchair Experience",
+        "ownership": "Wheelchair Owned",
+        "repairability": "Wheelchair Repairable",
+        "hipWidth": "Hip Width"
+    },
+    "commons":{
+        "login": "Login",
+        "logout": "Logout",
+        "username": "Username",
+        "password": "Password",
+        "type": "Type",
+        "name": "Name",
+        "zone": "Zone",
+        "dashboard": "Dashboard",
+        "update": "Update",
+        "edit": "Edit",
+        "submit": "Submit",
+        "save": "Save",
+        "archive": "Archive",
+        "return": "Return",
+        "health": "Health",
+        "education": "Education",
+        "social": "Social",
+        "nutrition": "Nutrition",
+        "mental": "Mental",
+        "requirements": "Requirements",
+        "goals": "Goals",
+        "resolved": "Resolved",
+        "unresolved": "Unresolved",
+        "showMore": "Show More",
+        "village": "Village",
+        "close": "Close",
+        "outcome": "Outcome",
+        "resolve": "Resolve",
+        "wheelchair": "Wheelchair",
+        "Physiotherapy": "Physiotherapy",
+        "prosthetic": "Prosthetic",
+        "orthotic": "Orthotic",
+        "alert": "Alert",
+    },
+    "alert": {
+        "fetchUser": "Encountered an error fetching your user information. Please try again.",
+        "invalidUser": "You are not authorized to archive/dearchive clients. Please ask an administrator."
+
     }
 }

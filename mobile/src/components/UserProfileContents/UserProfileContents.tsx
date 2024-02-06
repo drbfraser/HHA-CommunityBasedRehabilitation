@@ -12,6 +12,7 @@ import { StackScreenName } from "../../util/StackScreenName";
 import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { dbType } from "../../util/watermelonDatabase";
 import { logger, SyncDB } from "../../util/syncHandler";
+import { useTranslation } from "react-i18next";
 
 export interface Props {
     user: IUser | null;
@@ -28,6 +29,8 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
     const navigation = useNavigation<AppStackNavProp>();
 
     const authContext = useContext<IAuthContext>(AuthContext);
+
+    const { t } = useTranslation();
 
     const zones = useZones();
 
@@ -54,11 +57,11 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                         {/* TODO: If the user has data made that isn't synced with the server,
                                  tell them about it. */}
                         <Dialog.Content>
-                            <Text>Are you sure you want to logout?</Text>
+                            <Text>{t("alert.logoutNotice")}</Text>
                         </Dialog.Content>
                         <Dialog.Actions>
                             <Button onPress={() => setLogoutConfirmDialogVisibility(false)}>
-                                Cancel
+                                {t("commons.cancel")}
                             </Button>
                             <Button onPress={authContext.logout}>Logout</Button>
                         </Dialog.Actions>
@@ -73,8 +76,8 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                             severity="error"
                             text={
                                 isSelf
-                                    ? "Something went wrong. Please login again."
-                                    : "Something went wrong trying to display this user."
+                                    ? `${t("alert.generalFailure")} ${t("login.reLoginPrompt")}`
+                                    : t("actionFailure", {action: t("commons.display"), object: t("commons.user")})
                             }
                         />
                         {isSelf ? (
@@ -109,26 +112,26 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                                 {user.first_name} {user.last_name}
                             </Title>
 
-                            <Subheading style={styles.profileInfoHeader}>Username</Subheading>
+                            <Subheading style={styles.profileInfoHeader}>{t("commons.username")}</Subheading>
                             <Text style={styles.profileInfoText}>{user.username}</Text>
 
-                            <Subheading style={styles.profileInfoHeader}>ID</Subheading>
+                            <Subheading style={styles.profileInfoHeader}>{t("commons.id")}</Subheading>
                             <Text style={styles.profileInfoText}>{user.id}</Text>
 
-                            <Subheading style={styles.profileInfoHeader}>Zone</Subheading>
+                            <Subheading style={styles.profileInfoHeader}>{t("commons.zone")}</Subheading>
                             <Text style={styles.profileInfoText}>
                                 {zones.get(user.zone) ?? `Unknown (ID ${user.zone})`}
                             </Text>
 
-                            <Subheading style={styles.profileInfoHeader}>Phone number</Subheading>
+                            <Subheading style={styles.profileInfoHeader}>{t("commons.phoneNumber")}</Subheading>
                             <Text style={styles.profileInfoText}>{user.phone_number}</Text>
 
-                            <Subheading style={styles.profileInfoHeader}>Type</Subheading>
+                            <Subheading style={styles.profileInfoHeader}>{t("commons.type")}</Subheading>
                             <Text style={styles.profileInfoText}>{userRoles[user.role].name}</Text>
 
-                            <Subheading style={styles.profileInfoHeader}>Status</Subheading>
+                            <Subheading style={styles.profileInfoHeader}>{t("commons.status")}</Subheading>
                             <Text style={styles.profileInfoText}>
-                                {user.is_active ? "Active" : "Disabled"}
+                                {user.is_active ? t("commons.active") : t("commons.disabled")}
                             </Text>
 
                             <Button
@@ -141,7 +144,7 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                                     });
                                 }}
                             >
-                                Edit
+                                {t("commons.edit")}
                             </Button>
 
                             <Button
@@ -152,7 +155,7 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                                     setPassChangeDialogVisibility(true);
                                 }}
                             >
-                                Change password
+                                {t("login.changePassword")}
                             </Button>
 
                             {isSelf ? (
@@ -162,7 +165,7 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                                     mode="contained"
                                     onPress={() => setLogoutConfirmDialogVisibility(true)}
                                 >
-                                    Logout
+                                    {t("commons.logout")}
                                 </Button>
                             ) : null}
                         </View>
@@ -175,7 +178,7 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                 duration={4000}
                 onDismiss={() => setPassChangeSnackbarVisibility(false)}
             >
-                Password changed successfully.
+                {("login.passwordChangeConfirmation")}
             </Snackbar>
         </View>
     );

@@ -1,5 +1,6 @@
 {
     "login":{
+        "reLoginPrompt": "Please login again.",
         "loginFailed": "Login failed",
         "inactiveLogoutAlert": "Logged out due to inactivity. Please login again.",
         "loggingIn":"Logging in",
@@ -10,10 +11,13 @@
         "missingValue_username":"Missing username.",
         "missingValue": "Missing required Value",
         "missingValue_usernamePassword":"Missing username and password.",
-        "requestTimeout":"The request has timed out."
+        "requestTimeout":"The request has timed out.",
+        "changePassword": "Change Password",
+        "changePasswordFor":"Change password for {{username}} (ID {{userID}})",
+        "passwordChangeConfirmation": "Password changed successfully."
+
     },
     "dashboard": {
-        "messageAlert": "You have {{count}} new messages in your inbox." ,
         "clientListPriority": "Priority Clients",
         "clientListOutstandingRefs": "Outstanding Referrals"
     },
@@ -23,7 +27,12 @@
         "clientRisks": "Client Risks",
         "visitsRefsSurveys": "Visits, Referrals & Surveys",
         "archivedClientAccessAlert": "The client is archived. Only administrators can dearchive a client",
-        "clientCreated": "Client Created"
+        "clientCreated": "Client Created",
+        "newClient": "New Client",
+        "editClient": "Edit Client",
+        "viewClient": "View Client",
+        "discardNew": "Discard new client?",
+        "picture": "Client's picture"
     },
     "referralAttr": {
         "dateReferred": "Date Referred",
@@ -82,6 +91,7 @@
         "submit": "Submit",
         "save": "Save",
         "archive": "Archive",
+        "dearchive": "Dearchive",
         "return": "Return",
         "health": "Health",
         "education": "Education",
@@ -100,6 +110,45 @@
         "wheelchair": "Wheelchair",
         "Physiotherapy": "Physiotherapy",
         "prosthetic": "Prosthetic",
-        "orthotic": "Orthotic", 
+        "orthotic": "Orthotic",
+        "alert": "Alert",
+        "discard": "Discard",
+        "discardChanges" :"Discard your changes?",
+        "today": "Today",
+        "select": "Select",
+        "disability": "Disability",
+        "objectList": "Disability List",
+        "noObjectSelected": "No disabilities selected",
+        "cancel": "Cancel",
+        "client": "Client",
+        "fetch": "Fetch",
+        "user": "User",
+        "syncConflicts": "Sync Conflicts",
+        "ok": "OK",
+        "localChanges": "Local Changes",
+        "confirm": "Confirm",
+        "id": "ID",
+        "status": "Status",
+        "phoneNumber": "Phone Number",
+        "active": "Active",
+        "disabled": "Disabled",
+        "display": "Display",
+    },
+    "alert": {
+        "generalFailure": "Something went Wrong",
+        "messageAlert": "You have {{count}} new messages in your inbox." ,
+        "unauthorizedArchive": "You are not authorized to archive/dearchive clients. Please ask an administrator.",
+        "actionFailure" :"Encountered an error while trying to {{action}} the {{object}}!",
+        "unsyncedFailure": "The following changes could not be synced with the server because they have been modified by another user since your last sync. \n\nIf you would like to keep your version, you'll need to make the following changes again:",
+        "missingLocalChanges": "There are no local changes on your device.",
+        "obsoleteDataForServerUpdating": "Our servers are undergoing major changes. As a result, any old data is now obsolete and cannot be synced. If you would still like to sync, then any local changes on your device must first be destroyed.",
+        "directUserToWebapp": "You should use the web app to recreate any local changes, any changes on the following entities will be lost:",
+        "localDataAffectOnlyNotice": "Note that this will only affect local data, any settings that have previously been set will be unaffected.",
+        "timeDataUsageNotice": "This action may take awhile, and a considerable amount of cellular data may be used.",
+        "clearLocalDataConfirmation":"If you understand and would still like to proceed with the sync, type \"clear local data\" to confirm.",
+        "outdatedApp": "This App is Out of Date",
+        "newVersionAvailability": "A new version of the HHA CBR app is available on the Google Play Store. Please update your app now, or you will be unable to sync.",
+        "reinstallingSuggestion": "If you have the latest version of the app and still see this message, then try uninstalling and reinstalling the app.",
+        "logoutNotice": "Are you sure you want to logout?",
     }
 }

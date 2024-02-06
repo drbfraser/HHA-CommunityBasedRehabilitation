@@ -29,6 +29,7 @@ import {
 } from "../../screens/Admin/AdminFormHandler";
 import { dbType } from "../../util/watermelonDatabase";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { useTranslation } from "react-i18next";
 
 export type Props = {
     isSelf: boolean;
@@ -51,6 +52,8 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
     const confirmNewPassRef = useRef<NativeTextInput>(null);
     const styles = useStyles();
     const { autoSync, cellularSync } = useContext(SyncContext);
+    const { t } = useTranslation();
+
     useEffect(() => {
         setSubmissionError(null);
     }, [visible]);
@@ -84,7 +87,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                 >
                     {(formikProps: FormikProps<TPasswordValues>) => (
                         <>
-                            <Dialog.Title>Change password</Dialog.Title>
+                            <Dialog.Title>{t("login.changePassword")}</Dialog.Title>
                             <Dialog.ScrollArea>
                                 <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
                                     {!formikProps.isSubmitting && submissionError ? (
@@ -134,7 +137,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                     disabled={formikProps.isSubmitting}
                                     onPress={() => onDismiss(false)}
                                 >
-                                    Cancel
+                                    {t("commons.cancel")}
                                 </Button>
                                 <Button
                                     disabled={
@@ -145,7 +148,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                     loading={formikProps.isSubmitting}
                                     onPress={formikProps.handleSubmit}
                                 >
-                                    Save
+                                    {t("commons.save")}
                                 </Button>
                             </Dialog.Actions>
                         </>
@@ -176,7 +179,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                     {(formikProps: FormikProps<TAdminPasswordValues>) => (
                         <>
                             <Dialog.Title>
-                                Change password for {user.username} (ID {user.id})
+                                {t("login.changePasswordFor", {username: user.username, userID: user.id})}
                             </Dialog.Title>
                             <Dialog.ScrollArea>
                                 <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
@@ -217,7 +220,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                     disabled={formikProps.isSubmitting}
                                     onPress={() => onDismiss(false)}
                                 >
-                                    Cancel
+                                    {t("commons.cancel")}
                                 </Button>
                                 <Button
                                     disabled={
@@ -228,7 +231,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                     loading={formikProps.isSubmitting}
                                     onPress={formikProps.handleSubmit}
                                 >
-                                    Save
+                                    {t("commons.save")}
                                 </Button>
                             </Dialog.Actions>
                         </>

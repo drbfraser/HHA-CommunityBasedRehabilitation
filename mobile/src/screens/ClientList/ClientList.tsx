@@ -26,6 +26,8 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
 import { Checkbox } from "react-native-paper";
+import { useTranslation } from "react-i18next";
+
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
@@ -41,6 +43,7 @@ const ClientList = () => {
     const isFocused = useIsFocused();
     const database = useDatabase();
     const { setUnSyncedChanges } = useContext(SyncContext);
+    const { t } = useTranslation();
 
     const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
 
@@ -80,13 +83,13 @@ const ClientList = () => {
     };
 
     const columnList = {
-        0: "Name",
-        1: "Zone",
-        2: "Health",
-        3: "Education",
-        4: "Social",
-        5: "Nutrition",
-        6: "Mental Health",
+        0: t("commons.name"),
+        1: t("commons.zone"),
+        2: t("commons.health"),
+        3: t("commons.education"),
+        4: t("commons.social"),
+        5: t("commons.nutrition"),
+        6: t("commons.mentalHealth"),
     };
 
     const clientSortBy = (option: string) => {
@@ -179,7 +182,7 @@ const ClientList = () => {
                 ) : (
                     <Searchbar
                         style={styles.search}
-                        placeholder="Search"
+                        placeholder={t("commons.search")}
                         onChangeText={onChangeSearch}
                         value={searchQuery}
                     />
@@ -200,7 +203,7 @@ const ClientList = () => {
                         <CustomMultiPicker
                             options={columnList}
                             multiple={true}
-                            placeholder={"Select columns"}
+                            placeholder={t("commons.selectObject", {object: "commons.columns"})}
                             placeholderTextColor={themeColors.blueBgLight}
                             returnValue={"value"}
                             callback={(label) => {
@@ -217,7 +220,7 @@ const ClientList = () => {
                 </Portal>
             </View>
             <View style={styles.row}>
-                <Text style={{ flex: 0.7, margin: 10 }}>My Clients</Text>
+                <Text style={{ flex: 0.7, margin: 10 }}>{t("dashboard.myClients")}</Text>
                 <Switch
                     style={styles.switch}
                     trackColor={{ false: themeColors.white, true: themeColors.yellow }}
@@ -226,9 +229,9 @@ const ClientList = () => {
                     onValueChange={setAllClientsMode}
                     value={allClientsMode}
                 />
-                <Text style={styles.container}>All Clients</Text>
+                <Text style={styles.container}>{t("dashboard.allClients")}</Text>
 
-                <Text style={{ textAlign: "center", fontSize: 16 }}>Filter by</Text>
+                <Text style={{ textAlign: "center", fontSize: 16 }}>{t("commons.filterBy")}</Text>
                 <Picker
                     style={styles.select}
                     selectedValue={selectedSearchOption}
@@ -237,12 +240,12 @@ const ClientList = () => {
                         setSearchQuery("");
                     }}
                 >
-                    <Picker.Item label="Name" value={SearchOption.NAME} />
-                    <Picker.Item label="Zone" value={SearchOption.ZONE} />
+                    <Picker.Item label={t("commons.name")} value={SearchOption.NAME} />
+                    <Picker.Item label={t("commons.zone")} value={SearchOption.ZONE} />
                 </Picker>
             </View>
             <View style={styles.checkbox}>
-                <Text style={{ alignSelf: "center" }}>Show Archived</Text>
+                <Text style={{ alignSelf: "center" }}>{t("dashboard.showArchived")}</Text>
                 <Checkbox
                     status={archivedMode ? "checked" : "unchecked"}
                     onPress={() => {

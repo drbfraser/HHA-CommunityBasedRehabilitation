@@ -11,13 +11,15 @@ import {
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
 import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
+import { useTranslation } from "react-i18next";
 
 const HealthForm = (props: IFormProps) => {
     const styles = useStyles();
+    const { t } = useTranslation();
 
     return (
         <View>
-            <Text style={styles.pickerQuestion}>{"\n"}Rate your general health </Text>
+            <Text style={styles.pickerQuestion}>{"\n"}{t("survey.rateHealth")} </Text>
             <FormikExposedDropdownMenu
                 field={BaseSurveyFormField.rateLevel}
                 valuesType="record-string"
@@ -78,7 +80,7 @@ const HealthForm = (props: IFormProps) => {
             {props.formikProps.values[BaseSurveyFormField.needDevice] && (
                 <View>
                     <Text style={styles.pickerQuestion}>
-                        {"\n"} What assistive device do you need?
+                        {"\n"} {t("survey.assistiveDeviceNeeds")}
                     </Text>
                     <FormikExposedDropdownMenu
                         field={BaseSurveyFormField.deviceType}
@@ -91,7 +93,7 @@ const HealthForm = (props: IFormProps) => {
                 </View>
             )}
             <Text style={styles.pickerQuestion}>
-                {"\n"}Are you satisfied with the health services you receive?
+                {"\n"}{t("survey.satisfiedWithHealthService")}
             </Text>
 
             <FormikExposedDropdownMenu

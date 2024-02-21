@@ -11,6 +11,7 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { resourceLimits } from "worker_threads";
 import { useIsFocused } from "@react-navigation/core";
 import { modelName } from "../../models/constant";
+import { useTranslation } from "react-i18next";
 
 interface ILoadError {
     statusCode?: number;
@@ -33,6 +34,7 @@ const AdminView = ({
     const [error, setErrorMessage] = useState<ILoadError>();
     const database = useDatabase();
     const currentUser = useCurrentUser();
+    const { t } = useTranslation();
 
     const loadUser = async (
         userId: string,
@@ -56,7 +58,7 @@ const AdminView = ({
         } catch (e) {
             setError({
                 statusCode: e instanceof APIFetchFailError ? e.status : undefined,
-                message: "User doesn't exist",
+                message: t("commons.noObject", {object: t("commons.user")}),
             });
         }
     };
@@ -77,7 +79,7 @@ const AdminView = ({
             {error ? (
                 <>
                     <Text style={styles.loadingErrorText}>
-                        Unable to load user with ID {route.params.userID}:
+                        {t("cantLoadUserWithID", {userID: route.params.userID})}:
                     </Text>
                     <Text style={styles.loadingErrorText}>{error.message}</Text>
                     {error.statusCode !== 404 ? (
@@ -85,7 +87,7 @@ const AdminView = ({
                             style={styles.retryButton}
                             onPress={() => loadUser(route.params.userID, setUser, setErrorMessage)}
                         >
-                            Retry
+                            {t("commons.retry")}
                         </Button>
                     ) : null}
                 </>
@@ -105,7 +107,7 @@ const AdminView = ({
                 duration={4000}
                 onDismiss={() => setUserChangeSnackbarVisible(false)}
             >
-                {route.params.userInfo?.isNewUser ? "User created." : "User updated successfully."}
+                {route.params.userInfo?.isNewUser ? t("commons.objectCreated", {object: t("commons.user")}) : t("objectUpdated", {object: t("commons.user")})}
             </Snackbar>
         </>
     );

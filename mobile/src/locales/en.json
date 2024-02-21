@@ -14,12 +14,17 @@
         "requestTimeout":"The request has timed out.",
         "changePassword": "Change Password",
         "changePasswordFor":"Change password for {{username}} (ID {{userID}})",
-        "passwordChangeConfirmation": "Password changed successfully."
+        "passwordChangeConfirmation": "Password changed successfully.",
+        "cantLoadUserWithID": "Unable to load user with ID {{userID}}",
 
     },
     "dashboard": {
         "clientListPriority": "Priority Clients",
-        "clientListOutstandingRefs": "Outstanding Referrals"
+        "clientListOutstandingRefs": "Outstanding Referrals",
+        "emptyInbox": "Inbox is empty",
+        "myClients": "My Clients",
+        "allClients": "All Clients",
+        "showArchived": "Show Archived"
     },
     "clientAttr": {
         "lastVisitDate": "last visit date",
@@ -66,7 +71,7 @@
     },
     "riskAttr":{
         "update_health": "Update Health Risk",
-        "update_education": "Update Health Risk",
+        "update_education": "Update Education Risk",
         "update_social": "Update Social Risk",
         "update_nutrition": "Update Nutrition Risk",
         "updateFailureAlert": "Encountered an error while trying to update the client's risk",
@@ -114,6 +119,7 @@
         "alert": "Alert",
         "discard": "Discard",
         "discardChanges" :"Discard your changes?",
+        "discardAdded": "Discard your added information?",
         "today": "Today",
         "select": "Select",
         "disability": "Disability",
@@ -133,9 +139,25 @@
         "active": "Active",
         "disabled": "Disabled",
         "display": "Display",
+        "retry": "Retry",
+        "objectCreated": "{{object}} created successfully",
+        "objectUpdated": "{{object}} updated successfully",
+        "noObject": "{{object}} doesn't exist",
+        "alerts": "Alerts",
+        "reminder": "Reminder",
+        "empowerment": "Empowerment",
+        "consent": "Consent",
+        "mentalHealth": "Mental Health",
+        "search": "Search",
+        "columns": "Columns",
+        "selectObject": "Select {{object}}",
+        "filterBy": "Filter by"
+
+
     },
     "alert": {
         "generalFailure": "Something went Wrong",
+        "DeleteAlertWithSubject": "Delete Alert with Subject: {{subject}}",
         "messageAlert": "You have {{count}} new messages in your inbox." ,
         "unauthorizedArchive": "You are not authorized to archive/dearchive clients. Please ask an administrator.",
         "actionFailure" :"Encountered an error while trying to {{action}} the {{object}}!",
@@ -150,5 +172,25 @@
         "newVersionAvailability": "A new version of the HHA CBR app is available on the Google Play Store. Please update your app now, or you will be unable to sync.",
         "reinstallingSuggestion": "If you have the latest version of the app and still see this message, then try uninstalling and reinstalling the app.",
         "logoutNotice": "Are you sure you want to logout?",
+        "actionConfirmationNotice": "Are you sure you want to {{action}} this {{object}}?"
+    },
+    "survey": {
+        "whatGrade": "What grade?",
+        "whyNotSchool": "Why do you not go to school?",
+        "foodSecurity": "Food security",
+        "whatsNutritionStatus": "What is this child's nutritional status?",
+        "referralRequired": "A referral to the health center is required!",
+        "rateHealth": "Rate your general health",
+        "assistiveDeviceNeeds": "What assistive device do you need?",
+        "satisfiedWithHealthService": "Are you satisfied with the health services you receive?",
+        "employmentStatus": "Are you employed or self-employed?",
+        "occupationStatus": "What do you do?",
+        "shelterAndCare":  "Shelter and Care",
+        "foodAndNutrition": "Food and Nutrition",
+        "education": "Education (under 18)",
+        "livelihood": "Livelihood (over 16)"
+    },
+    "referral": {
+
     }
 }

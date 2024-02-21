@@ -12,12 +12,14 @@ import {
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
 import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
+import { useTranslation } from "react-i18next";
 
 const FoodForm = (props: IFormProps) => {
     const [alertInfo, setAlertError] = useState(false);
     const styles = useStyles();
     const hideAlert = () => setAlertError(false);
     const showAlert = () => setAlertError(true);
+    const { t } = useTranslation();
 
     const otherDropdownKeyChangeCallback = useCallback(
         (key: any) => (key === ChildNourish.MALNOURISHED ? showAlert() : hideAlert()),
@@ -26,7 +28,7 @@ const FoodForm = (props: IFormProps) => {
 
     return (
         <View>
-            <Text style={styles.pickerQuestion}>Food security</Text>
+            <Text style={styles.pickerQuestion}>{t("survey.foodSecurity")}</Text>
             <FormikExposedDropdownMenu
                 field={BaseSurveyFormField.foodSecurityRate}
                 valuesType="record-string"
@@ -55,7 +57,7 @@ const FoodForm = (props: IFormProps) => {
             {props.formikProps.values[BaseSurveyFormField.isChild] && (
                 <View>
                     <Text style={styles.pickerQuestion}>
-                        What is this child's nutritional status?
+                        {t("survey.whatsNutritionStatus")}
                     </Text>
 
                     <FormikExposedDropdownMenu
@@ -70,12 +72,12 @@ const FoodForm = (props: IFormProps) => {
 
                     <Portal>
                         <Dialog visible={alertInfo} onDismiss={hideAlert}>
-                            <Dialog.Title>Reminder</Dialog.Title>
+                            <Dialog.Title>{t("commons.reminder")}</Dialog.Title>
                             <Dialog.Content>
-                                <Paragraph>A referral to the health center is required!</Paragraph>
+                                <Paragraph>{t("survey.referralRequired")}</Paragraph>
                             </Dialog.Content>
                             <Dialog.Actions>
-                                <Button onPress={hideAlert}>OK</Button>
+                                <Button onPress={hideAlert}>{t("commons.ok")}</Button>
                             </Dialog.Actions>
                         </Dialog>
                     </Portal>

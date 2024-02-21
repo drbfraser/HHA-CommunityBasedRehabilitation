@@ -24,12 +24,14 @@ import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/Confir
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { handleUserEditSubmit } from "./AdminFormHandler";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { useTranslation } from "react-i18next";
 
 const AdminEdit = ({
     navigation,
     route,
 }: StackScreenProps<StackParamList, StackScreenName.ADMIN_EDIT>) => {
     const user = route.params.user;
+    const { t } = useTranslation();
 
     const zones = useZones();
     const database = useDatabase();
@@ -45,8 +47,8 @@ const AdminEdit = ({
     return (
         <>
             <ConfirmDialogWithNavListener
-                confirmButtonText="Discard"
-                dialogContent="Discard your changes?"
+                confirmButtonText={t("commons.discard")}
+                dialogContent={t("commons.discardChanges")}
                 bypassDialog={hasSubmitted}
             />
             <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
@@ -60,10 +62,10 @@ const AdminEdit = ({
                         />
                     ) : null}
 
-                    <Subheading style={styles.profileInfoHeader}>Username</Subheading>
+                    <Subheading style={styles.profileInfoHeader}>{t("commons.username")}</Subheading>
                     <Text style={styles.profileInfoText}>{user.username}</Text>
 
-                    <Subheading style={styles.profileInfoHeader}>ID</Subheading>
+                    <Subheading style={styles.profileInfoHeader}>{t("commons.id")}</Subheading>
                     <Text style={styles.profileInfoText}>{user.id}</Text>
 
                     <Formik
@@ -153,7 +155,7 @@ const AdminEdit = ({
 
                                 <Subheading style={styles.profileInfoHeader}>Status</Subheading>
                                 <Text style={styles.profileInfoText}>
-                                    {formikProps.values.is_active ? "Active" : "Disabled"}
+                                    {formikProps.values.is_active ? t("commons.active") : t("commons.disabled")}
                                 </Text>
 
                                 <View style={styles.bottomButtonContainer}>
@@ -173,7 +175,7 @@ const AdminEdit = ({
                                         }}
                                         mode="contained"
                                     >
-                                        {formikProps.values.is_active ? "Disable" : "Activate"}
+                                        {formikProps.values.is_active ? t("commons.active") : t("commons.disabled")}
                                     </Button>
 
                                     <Button
@@ -185,7 +187,7 @@ const AdminEdit = ({
                                         onPress={formikProps.handleSubmit}
                                         mode="contained"
                                     >
-                                        Save
+                                        {t("commons.save")}
                                     </Button>
                                 </View>
                             </>

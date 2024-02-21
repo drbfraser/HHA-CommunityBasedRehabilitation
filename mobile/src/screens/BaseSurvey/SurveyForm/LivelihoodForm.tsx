@@ -5,9 +5,11 @@ import { baseFieldLabels, BaseSurveyFormField, IFormProps, isSelfEmployed } from
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
 import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
+import { useTranslation } from "react-i18next";
 
 const LivelihoodForm = (props: IFormProps) => {
     const styles = useStyles();
+    const { t } = useTranslation();
 
     return (
         <View>
@@ -21,7 +23,7 @@ const LivelihoodForm = (props: IFormProps) => {
 
             {props.formikProps.values[BaseSurveyFormField.isWorking] && (
                 <View>
-                    <Text style={styles.pickerQuestion}>What do you do?</Text>
+                    <Text style={styles.pickerQuestion}>{t("survey.occupationStatus")}</Text>
                     <TextInput
                         mode="outlined"
                         label={BaseSurveyFormField.job}
@@ -41,7 +43,7 @@ const LivelihoodForm = (props: IFormProps) => {
                     <View>
                         <Text />
                         <Text style={styles.pickerQuestion}>
-                            Are you employed or self-employed?
+                            {t("survey.employmentStatus")}
                         </Text>
 
                         <FormikExposedDropdownMenu

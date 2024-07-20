@@ -15,7 +15,7 @@ interface riskProps {
 }
 
 const getLatestRisks = (clientRisk: IRisk[], riskType: RiskType) => {
-    //Get the latest Risk for each type and pass the values on so they can be displayed initially
+    // Get the latest Risk for each type and pass the values on so they can be displayed initially
     const filteredRisks: IRisk[] = clientRisk.filter(
         (presentRisk) => presentRisk.risk_type === riskType
     );
@@ -50,7 +50,7 @@ export const ClientRisk = (props: riskProps) => {
                         <Text
                             style={riskStyles(riskLevels[risk.risk_level].color).riskSubtitleStyle}
                         >
-                            {riskLevels[risk.risk_level].name}
+                            {t([`riskLevels.${riskLevels[risk.risk_level].name}`])}
                         </Text>
                     </View>
                     <View>

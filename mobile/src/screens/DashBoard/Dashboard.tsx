@@ -260,7 +260,7 @@ const Dashboard = () => {
                                                               locale,
                                                               timezone
                                                           )
-                                                        : "No Visits"}
+                                                        : t("dashboard.noVisits")}
                                                 </Text>
                                             </DataTable.Cell>
                                         </DataTable.Row>

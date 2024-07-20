@@ -1,7 +1,7 @@
 import { TClientValues } from "@cbr/common";
 import { dbType } from "../../util/watermelonDatabase";
 import { AutoSyncDB } from "../../util/syncHandler";
-import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 
 export const handleSubmit = async (
     client: any,
@@ -11,7 +11,6 @@ export const handleSubmit = async (
     cellularSync: boolean,
     imageChange?: boolean
 ) => {
-    const { t } = useTranslation();
     try {
         await database.write(async () => {
             await client.update(() => {
@@ -32,11 +31,11 @@ export const handleSubmit = async (
                 client.caregiver_email = values.caregiverEmail;
                 client.is_active = values.is_active;
             });
-        });
+        }); 
 
         AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {
-        const initialMessage = t("alert.actionFailure", {action: t("commons.edit"), object: t("commons.client")});
+        const initialMessage = i18n.t("alert.actionFailure", {action: i18n.t("commons.edit"), object: i18n.t("commons.client")});
         alert(initialMessage);
     }
 };

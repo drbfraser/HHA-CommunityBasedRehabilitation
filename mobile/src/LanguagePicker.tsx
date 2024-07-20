@@ -11,7 +11,7 @@ const LanguagePicker = () => {
     //array with all supported languages
     const languages = [
         { name: "en", label: "English" },
-        { name: "ne", label: "NotEnglish" },
+        { name: "bari", label: "Bari" },
     ];
 
     const LanguageItem = ({ name, label }: { name: string; label: string }) => (

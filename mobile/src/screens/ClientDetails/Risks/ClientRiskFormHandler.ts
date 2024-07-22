@@ -3,7 +3,7 @@ import { modelName } from "../../../models/constant";
 import { dbType } from "../../../util/watermelonDatabase";
 import { addRisk } from "../../NewClient/formHandler";
 import { AutoSyncDB } from "../../../util/syncHandler";
-import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 
 
 const wasChangeMade = (values: IRisk, initialValues: IRisk) => {
@@ -25,7 +25,6 @@ export const handleRiskSubmit = async (
     autoSync: boolean,
     cellularSync: boolean
 ) => {
-    const { t } = useTranslation();
     if (!wasChangeMade(values, initialValues)) return;
 
     try {
@@ -49,6 +48,6 @@ export const handleRiskSubmit = async (
 
         AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {
-        alert(t("riskAttr.updateFailureAlert"));
+        alert(i18n.t("riskAttr.updateFailureAlert"));
     }
 };

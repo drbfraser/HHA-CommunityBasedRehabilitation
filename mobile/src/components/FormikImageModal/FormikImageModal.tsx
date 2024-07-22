@@ -80,7 +80,7 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                     quality: 0.7,
                 });
 
-                if (!image.cancelled) {
+                if (!image.canceled) {
                     const fileInfo = await getFileInfo(image.uri);
                     let uri;
                     if (fileInfo.size && fileInfo.size >= MAX_FILE_SIZE) {

@@ -1,6 +1,7 @@
 import { Validation } from "../../util/validations";
 import * as Yup from "yup";
 import { Gender, IClient } from "../../util/clients";
+import i18n from "i18next";
 
 export enum ClientField {
     firstName = "firstName",
@@ -81,7 +82,13 @@ export enum ClientDetailsFields {
     is_active = "is_active",
 }
 
+export function getClientFieldLabel(clientField: ClientField): string{
+    const translationName = "commons.clientFields." + clientField;
+    return i18n.t(translationName);
+}
+
 export const clientFieldLabels = {
+
     [ClientField.firstName]: "First Name",
     [ClientField.lastName]: "Last Name",
     [ClientField.birthDate]: "Birthdate",
@@ -111,9 +118,55 @@ export const clientFieldLabels = {
     [ClientField.mentalRisk]: "Mental Health Risk",
     [ClientField.mentalRequirements]: "Mental Health Requirement(s)",
     [ClientField.mentalGoals]: "Mental Health Goal(s)",
+
+    // [ClientField.firstName]: i18n.t("commons.clientFields.firstName"),
+    // [ClientField.lastName]: i18n.t("commons.clientFields.lastName"),
+    // [ClientField.birthDate]: i18n.t("commons.clientFields.birthDate"),
+    // [ClientField.village]: i18n.t("commons.clientFields.village"),
+    // [ClientField.gender]: i18n.t("commons.clientFields.gender"),
+    // [ClientField.zone]: i18n.t("commons.clientFields.zone"),
+    // [ClientField.phoneNumber]: i18n.t("commons.clientFields.phoneNumber"),
+    // [ClientField.interviewConsent]: i18n.t("commons.clientFields.interviewConsent"),
+    // [ClientField.caregiverPresent]: i18n.t("commons.clientFields.caregiverPresent"),
+    // [ClientField.caregiverPhone]: i18n.t("commons.clientFields.caregiverPhone"),
+    // [ClientField.caregiverName]: i18n.t("commons.clientFields.caregiverName"),
+    // [ClientField.caregiverEmail]: i18n.t("commons.clientFields.caregiverEmail"),
+    // [ClientField.disability]: i18n.t("commons.clientFields.disability"),
+    // [ClientField.otherDisability]: i18n.t("commons.clientFields.otherDisability"),
+    // [ClientField.healthRisk]: i18n.t("commons.clientFields.healthRisk"),
+    // [ClientField.healthRequirements]: i18n.t("commons.clientFields.healthRequirements"),
+    // [ClientField.healthGoals]: i18n.t("commons.clientFields.healthGoals"),
+    // [ClientField.educationRisk]: i18n.t("commons.clientFields.educationRisk"),
+    // [ClientField.educationRequirements]: i18n.t("commons.clientFields.educationRequirements"),
+    // [ClientField.educationGoals]: i18n.t("commons.clientFields.educationGoals"),
+    // [ClientField.socialRisk]: i18n.t("commons.clientFields.socialRisk"),
+    // [ClientField.socialRequirements]: i18n.t("commons.clientFields.socialRequirements"),
+    // [ClientField.socialGoals]: i18n.t("commons.clientFields.socialGoals"),
+    // [ClientField.nutritionRisk]: i18n.t("commons.clientFields.nutritionRisk"),
+    // [ClientField.nutritionRequirements]: i18n.t("commons.clientFields.nutritionRequirements"),
+    // [ClientField.nutritionGoals]: i18n.t("commons.clientFields.nutritionGoals"),
+    // [ClientField.mentalRisk]: i18n.t("commons.clientFields.mentalRisk"),
+    // [ClientField.mentalRequirements]: i18n.t("commons.clientFields.mentalRequirements"),
+    // [ClientField.mentalGoals]: i18n.t("commons.clientFields.mentalGoals"),
+    "oops": "This is an oops (version A-1)"
 };
 
 export const updateClientfieldLabels = {
+    // // TODO: Why are these names in snake_case vs camelCase as used above?
+    // [ClientField.first_name]: i18n.t("commons.clientFields.firstName"),
+    // [ClientField.last_name]: i18n.t("commons.clientFields.lastName"),
+    // [ClientField.birth_date]: i18n.t("commons.clientFields.birthDate"),
+    // [ClientField.village]: i18n.t("commons.clientFields.village"),
+    // [ClientField.gender]: i18n.t("commons.clientFields.gender"),
+    // [ClientField.zone]: i18n.t("commons.clientFields.zone"),
+    // [ClientField.phone_number]: i18n.t("commons.clientFields.phoneNumber"),
+    // [ClientField.caregiver_present]: i18n.t("commons.clientFields.caregiverPresent"),
+    // [ClientField.caregiver_name]: i18n.t("commons.clientFields.caregiverName"),
+    // [ClientField.caregiver_phone]: i18n.t("commons.clientFields.caregiverPhone"),
+    // [ClientField.caregiver_email]: i18n.t("commons.clientFields.caregiverEmail"),
+    // [ClientField.disability]: i18n.t("commons.clientFields.disability"),
+    // [ClientField.other_disability]: i18n.t("commons.clientFields.otherDisability"),
+
     [ClientField.first_name]: "First Name",
     [ClientField.last_name]: "Last Name",
     [ClientField.birth_date]: "Birthdate",
@@ -126,7 +179,7 @@ export const updateClientfieldLabels = {
     [ClientField.caregiver_phone]: "Caregiver Phone Number",
     [ClientField.caregiver_email]: "Caregiver Email",
     [ClientField.disability]: "Disabilities",
-    [ClientField.other_disability]: "Other Disabilities",
+    [ClientField.other_disability]: "Other Disabilities",    
 };
 
 export const clientInitialValues = {

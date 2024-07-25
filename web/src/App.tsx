@@ -12,6 +12,7 @@ import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
 import AlertNotification from "./components/Alerts/AlertNotification";
 import { IAlert } from "@cbr/common/util/alerts";
 import AlertOffline from "./components/Alerts/AlertOffline";
+import "./i18n.config";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();

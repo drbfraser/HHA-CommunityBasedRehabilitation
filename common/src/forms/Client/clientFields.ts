@@ -2,6 +2,26 @@ import { Validation } from "../../util/validations";
 import * as Yup from "yup";
 import { Gender, IClient } from "../../util/clients";
 import i18n from "i18next";
+import { useTranslation } from "react-i18next";
+
+
+// export function getClientFieldLabel(clientField: ClientField): string{
+//     const translationName = "commons.clientFields." + clientField;
+//     return i18n.t(translationName);
+// }
+export function getClientFieldLabel(clientFieldStr: string): string{
+    console.log("---> ENTER getClientFieldLabel");
+    console.log("i18n? " + i18n);
+    // console.log("useTranslation? " + useTranslation);
+    console.log("Is i18n initialized? " + i18n.isInitialized);
+    console.log("i18n languages: " + i18n.languages);
+
+    const { t } = useTranslation();
+    const verA = "   A: '" + t(clientFieldStr) + "'";
+    const verB = "   B: '" + i18n.t(clientFieldStr) + "'";
+    console.log("<--- EXIT  getClientFieldLabel");
+    return verA + verB
+}
 
 export enum ClientField {
     firstName = "firstName",
@@ -82,10 +102,6 @@ export enum ClientDetailsFields {
     is_active = "is_active",
 }
 
-export function getClientFieldLabel(clientField: ClientField): string{
-    const translationName = "commons.clientFields." + clientField;
-    return i18n.t(translationName);
-}
 
 export const clientFieldLabels = {
 

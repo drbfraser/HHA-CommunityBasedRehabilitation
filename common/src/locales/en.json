@@ -30,6 +30,17 @@
             "mentalRisk": "CC_Mental Health Risk",
             "mentalRequirements": "CC_Mental Health Requirement(s)",
             "mentalGoals": "CC_Mental Health Goal(s)"
+        },
+        "clientValidation":{
+            "birthdayNotFuture": "CC_Birthdate cannot be in the future",
+            "phoneNumberNotValid": "CC_Phone number is not valid",
+            "emailAddressNotValid": "CC_Email address is not valid",
+            "disabilityRequired": "CC_Disability is required",
+            "otherDisabilityRequired": "CC_Other disabilities is required",
+            "otherDisabilityTooLong": "CC_Other Disability must be at most 100 characters",
+            "consentToInterviewRequired": "CC_Consent to Interview is required"
         }
+    
+        
     }
 }

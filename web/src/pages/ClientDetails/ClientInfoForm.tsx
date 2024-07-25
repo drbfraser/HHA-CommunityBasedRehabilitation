@@ -29,7 +29,6 @@ import {
     ClientDetailsFields,
     TClientFormValues,
     webClientDetailsValidationSchema,
-    getClientFieldLabel,  // TODO: REMOVE THIS LINE
 } from "@cbr/common/forms/Client/clientFields";
 import { IUser } from "@cbr/common/util/users";
 import { useTranslation } from "react-i18next";
@@ -170,13 +169,6 @@ const ClientInfoForm = (props: IProps) => {
                                         fullWidth
                                         autoComplete="off"
                                     />
-                                    {/* ----------------------------------------------------------------------------- */}
-                                    {console.log("Main: Starting translations...")}
-                                    <b>Tr in main:</b> {t("commons.education")}<br />  
-                                    <b>Tr in comm:</b> {getClientFieldLabel("commons.education")}<br />
-                                    {console.log("Main: Done translations.")}
-                                    {/* ----------------------------------------------------------------------------- */}
-
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <Field

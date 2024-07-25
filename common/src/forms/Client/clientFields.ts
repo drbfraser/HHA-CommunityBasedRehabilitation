@@ -2,26 +2,6 @@ import { Validation } from "../../util/validations";
 import * as Yup from "yup";
 import { Gender, IClient } from "../../util/clients";
 import i18n from "i18next";
-import { useTranslation } from "react-i18next";
-
-
-// export function getClientFieldLabel(clientField: ClientField): string{
-//     const translationName = "commons.clientFields." + clientField;
-//     return i18n.t(translationName);
-// }
-export function getClientFieldLabel(clientFieldStr: string): string{
-    console.log("---> ENTER getClientFieldLabel");
-    console.log("i18n? " + i18n);
-    // console.log("useTranslation? " + useTranslation);
-    console.log("Is i18n initialized? " + i18n.isInitialized);
-    console.log("i18n languages: " + i18n.languages);
-
-    const { t } = useTranslation();
-    const verA = "   A: '" + t(clientFieldStr) + "'";
-    const verB = "   B: '" + i18n.t(clientFieldStr) + "'";
-    console.log("<--- EXIT  getClientFieldLabel");
-    return verA + verB
-}
 
 export enum ClientField {
     firstName = "firstName",
@@ -104,98 +84,53 @@ export enum ClientDetailsFields {
 
 
 export const clientFieldLabels = {
-
-    [ClientField.firstName]: "First Name",
-    [ClientField.lastName]: "Last Name",
-    [ClientField.birthDate]: "Birthdate",
-    [ClientField.village]: "Village",
-    [ClientField.gender]: "Gender",
-    [ClientField.zone]: "Zone",
-    [ClientField.phoneNumber]: "Phone Number",
-    [ClientField.interviewConsent]: "Consent to Interview?",
-    [ClientField.caregiverPresent]: "Caregiver Present?",
-    [ClientField.caregiverPhone]: "Caregiver Phone Number",
-    [ClientField.caregiverName]: "Caregiver Name",
-    [ClientField.caregiverEmail]: "Caregiver Email",
-    [ClientField.disability]: "Disabilities",
-    [ClientField.otherDisability]: "Other Disabilities",
-    [ClientField.healthRisk]: "Health Risk",
-    [ClientField.healthRequirements]: "Health Requirement(s)",
-    [ClientField.healthGoals]: "Health Goal(s)",
-    [ClientField.educationRisk]: "Education Risk",
-    [ClientField.educationRequirements]: "Education Requirement(s)",
-    [ClientField.educationGoals]: "Education Goal(s)",
-    [ClientField.socialRisk]: "Social Risk",
-    [ClientField.socialRequirements]: "Social Requirement(s)",
-    [ClientField.socialGoals]: "Social Goal(s)",
-    [ClientField.nutritionRisk]: "Nutrition Risk",
-    [ClientField.nutritionRequirements]: "Nutrition Requirement(s)",
-    [ClientField.nutritionGoals]: "Nutrition Goal(s)",
-    [ClientField.mentalRisk]: "Mental Health Risk",
-    [ClientField.mentalRequirements]: "Mental Health Requirement(s)",
-    [ClientField.mentalGoals]: "Mental Health Goal(s)",
-
-    // [ClientField.firstName]: i18n.t("commons.clientFields.firstName"),
-    // [ClientField.lastName]: i18n.t("commons.clientFields.lastName"),
-    // [ClientField.birthDate]: i18n.t("commons.clientFields.birthDate"),
-    // [ClientField.village]: i18n.t("commons.clientFields.village"),
-    // [ClientField.gender]: i18n.t("commons.clientFields.gender"),
-    // [ClientField.zone]: i18n.t("commons.clientFields.zone"),
-    // [ClientField.phoneNumber]: i18n.t("commons.clientFields.phoneNumber"),
-    // [ClientField.interviewConsent]: i18n.t("commons.clientFields.interviewConsent"),
-    // [ClientField.caregiverPresent]: i18n.t("commons.clientFields.caregiverPresent"),
-    // [ClientField.caregiverPhone]: i18n.t("commons.clientFields.caregiverPhone"),
-    // [ClientField.caregiverName]: i18n.t("commons.clientFields.caregiverName"),
-    // [ClientField.caregiverEmail]: i18n.t("commons.clientFields.caregiverEmail"),
-    // [ClientField.disability]: i18n.t("commons.clientFields.disability"),
-    // [ClientField.otherDisability]: i18n.t("commons.clientFields.otherDisability"),
-    // [ClientField.healthRisk]: i18n.t("commons.clientFields.healthRisk"),
-    // [ClientField.healthRequirements]: i18n.t("commons.clientFields.healthRequirements"),
-    // [ClientField.healthGoals]: i18n.t("commons.clientFields.healthGoals"),
-    // [ClientField.educationRisk]: i18n.t("commons.clientFields.educationRisk"),
-    // [ClientField.educationRequirements]: i18n.t("commons.clientFields.educationRequirements"),
-    // [ClientField.educationGoals]: i18n.t("commons.clientFields.educationGoals"),
-    // [ClientField.socialRisk]: i18n.t("commons.clientFields.socialRisk"),
-    // [ClientField.socialRequirements]: i18n.t("commons.clientFields.socialRequirements"),
-    // [ClientField.socialGoals]: i18n.t("commons.clientFields.socialGoals"),
-    // [ClientField.nutritionRisk]: i18n.t("commons.clientFields.nutritionRisk"),
-    // [ClientField.nutritionRequirements]: i18n.t("commons.clientFields.nutritionRequirements"),
-    // [ClientField.nutritionGoals]: i18n.t("commons.clientFields.nutritionGoals"),
-    // [ClientField.mentalRisk]: i18n.t("commons.clientFields.mentalRisk"),
-    // [ClientField.mentalRequirements]: i18n.t("commons.clientFields.mentalRequirements"),
-    // [ClientField.mentalGoals]: i18n.t("commons.clientFields.mentalGoals"),
-    "oops": "This is an oops (version A-1)"
+    [ClientField.firstName]: i18n.t("common.clientFields.firstName"),
+    [ClientField.lastName]: i18n.t("common.clientFields.lastName"),
+    [ClientField.birthDate]: i18n.t("common.clientFields.birthDate"),
+    [ClientField.village]: i18n.t("common.clientFields.village"),
+    [ClientField.gender]: i18n.t("common.clientFields.gender"),
+    [ClientField.zone]: i18n.t("common.clientFields.zone"),
+    [ClientField.phoneNumber]: i18n.t("common.clientFields.phoneNumber"),
+    [ClientField.interviewConsent]: i18n.t("common.clientFields.interviewConsent"),
+    [ClientField.caregiverPresent]: i18n.t("common.clientFields.caregiverPresent"),
+    [ClientField.caregiverPhone]: i18n.t("common.clientFields.caregiverPhone"),
+    [ClientField.caregiverName]: i18n.t("common.clientFields.caregiverName"),
+    [ClientField.caregiverEmail]: i18n.t("common.clientFields.caregiverEmail"),
+    [ClientField.disability]: i18n.t("common.clientFields.disability"),
+    [ClientField.otherDisability]: i18n.t("common.clientFields.otherDisability"),
+    [ClientField.healthRisk]: i18n.t("common.clientFields.healthRisk"),
+    [ClientField.healthRequirements]: i18n.t("common.clientFields.healthRequirements"),
+    [ClientField.healthGoals]: i18n.t("common.clientFields.healthGoals"),
+    [ClientField.educationRisk]: i18n.t("common.clientFields.educationRisk"),
+    [ClientField.educationRequirements]: i18n.t("common.clientFields.educationRequirements"),
+    [ClientField.educationGoals]: i18n.t("common.clientFields.educationGoals"),
+    [ClientField.socialRisk]: i18n.t("common.clientFields.socialRisk"),
+    [ClientField.socialRequirements]: i18n.t("common.clientFields.socialRequirements"),
+    [ClientField.socialGoals]: i18n.t("common.clientFields.socialGoals"),
+    [ClientField.nutritionRisk]: i18n.t("common.clientFields.nutritionRisk"),
+    [ClientField.nutritionRequirements]: i18n.t("common.clientFields.nutritionRequirements"),
+    [ClientField.nutritionGoals]: i18n.t("common.clientFields.nutritionGoals"),
+    [ClientField.mentalRisk]: i18n.t("common.clientFields.mentalRisk"),
+    [ClientField.mentalRequirements]: i18n.t("common.clientFields.mentalRequirements"),
+    [ClientField.mentalGoals]: i18n.t("common.clientFields.mentalGoals"),
 };
 
 export const updateClientfieldLabels = {
-    // // TODO: Why are these names in snake_case vs camelCase as used above?
-    // [ClientField.first_name]: i18n.t("commons.clientFields.firstName"),
-    // [ClientField.last_name]: i18n.t("commons.clientFields.lastName"),
-    // [ClientField.birth_date]: i18n.t("commons.clientFields.birthDate"),
-    // [ClientField.village]: i18n.t("commons.clientFields.village"),
-    // [ClientField.gender]: i18n.t("commons.clientFields.gender"),
-    // [ClientField.zone]: i18n.t("commons.clientFields.zone"),
-    // [ClientField.phone_number]: i18n.t("commons.clientFields.phoneNumber"),
-    // [ClientField.caregiver_present]: i18n.t("commons.clientFields.caregiverPresent"),
-    // [ClientField.caregiver_name]: i18n.t("commons.clientFields.caregiverName"),
-    // [ClientField.caregiver_phone]: i18n.t("commons.clientFields.caregiverPhone"),
-    // [ClientField.caregiver_email]: i18n.t("commons.clientFields.caregiverEmail"),
-    // [ClientField.disability]: i18n.t("commons.clientFields.disability"),
-    // [ClientField.other_disability]: i18n.t("commons.clientFields.otherDisability"),
+    // TODO: Why are these names in snake_case vs camelCase as used above?
+    [ClientField.first_name]: i18n.t("common.clientFields.firstName"),
+    [ClientField.last_name]: i18n.t("common.clientFields.lastName"),
+    [ClientField.birth_date]: i18n.t("common.clientFields.birthDate"),
+    [ClientField.village]: i18n.t("common.clientFields.village"),
+    [ClientField.gender]: i18n.t("common.clientFields.gender"),
+    [ClientField.zone]: i18n.t("common.clientFields.zone"),
+    [ClientField.phone_number]: i18n.t("common.clientFields.phoneNumber"),
+    [ClientField.caregiver_present]: i18n.t("common.clientFields.caregiverPresent"),
+    [ClientField.caregiver_name]: i18n.t("common.clientFields.caregiverName"),
+    [ClientField.caregiver_phone]: i18n.t("common.clientFields.caregiverPhone"),
+    [ClientField.caregiver_email]: i18n.t("common.clientFields.caregiverEmail"),
+    [ClientField.disability]: i18n.t("common.clientFields.disability"),
+    [ClientField.other_disability]: i18n.t("common.clientFields.otherDisability"),
 
-    [ClientField.first_name]: "First Name",
-    [ClientField.last_name]: "Last Name",
-    [ClientField.birth_date]: "Birthdate",
-    [ClientField.village]: "Village",
-    [ClientField.gender]: "Gender",
-    [ClientField.zone]: "Zone",
-    [ClientField.phone_number]: "Phone Number",
-    [ClientField.caregiver_present]: "Caregiver Present?",
-    [ClientField.caregiver_name]: "Caregiver Name",
-    [ClientField.caregiver_phone]: "Caregiver Phone Number",
-    [ClientField.caregiver_email]: "Caregiver Email",
-    [ClientField.disability]: "Disabilities",
-    [ClientField.other_disability]: "Other Disabilities",    
 };
 
 export const clientInitialValues = {
@@ -232,6 +167,7 @@ export const clientInitialValues = {
     [ClientField.pictureChanged]: false,
     [ClientField.is_active]: true,
 };
+
 
 export type TClientValues = typeof clientInitialValues;
 

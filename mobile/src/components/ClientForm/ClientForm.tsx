@@ -11,7 +11,7 @@ import {
     ClientField,
     clientFieldLabels,
     genders,
-    getClientFieldLabel,
+    isThisExportingString,
     TClientValues,
     themeColors,
     timestampFromFormDate,
@@ -46,6 +46,8 @@ export interface IClientFormProps {
 }
 
 export const ClientForm = (props: IClientFormProps) => {
+    console.log("------------------------- ClientForm ----------------------");
+    console.log("isThisExportingString?", isThisExportingString)
     const styles = useStyles();
     const disabilityMap = useDisabilities();
     const otherDisabilityId = getOtherDisabilityId(disabilityMap);

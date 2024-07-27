@@ -82,6 +82,9 @@ export enum ClientDetailsFields {
     is_active = "is_active",
 }
 
+// TODO: Remove this export
+export const isThisExportingString = "Is this exporting?";
+
 export const clientFieldLabels = {
     [ClientField.firstName]: i18n.t("common.clientFields.firstName"),
     [ClientField.lastName]: i18n.t("common.clientFields.lastName"),

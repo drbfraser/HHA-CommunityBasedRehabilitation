@@ -203,12 +203,6 @@ export const ClientForm = (props: IClientFormProps) => {
             <Text style={styles.field}>{ClientField.birthDate}</Text>
             <Text style={styles.field}>{clientFieldLabels["birthDate"]}</Text>
             <Text style={styles.field}>{clientFieldLabels[ClientField.birthDate]}</Text>
-            <Text style={styles.field}>BRIAN: map access: Oops and broken</Text>
-            <Text style={styles.field}>{clientFieldLabels["oops"]}</Text>
-            <Text style={styles.field}>{clientFieldLabels["bad"]}</Text>
-            <Text style={styles.field}>BRIAN: map access: Testing function</Text>
-            <Text style={styles.field}>A) {getClientFieldLabel("oops")}</Text>
-            <Text style={styles.field}>b) {getClientFieldLabel(ClientField.birthDate)}</Text>
 
             <View style={styles.clientBirthdayView}>
                 <Text style={styles.valueText}>

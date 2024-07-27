@@ -39,6 +39,10 @@
             "otherDisabilityRequired": "CC_Other disabilities is required",
             "otherDisabilityTooLong": "CC_Other Disability must be at most 100 characters",
             "consentToInterviewRequired": "CC_Consent to Interview is required"
+        },
+        "clientHandler": {
+            "errorTryingToCreateClient": "CC_Encountered an error while trying to create the client!",
+            "errorTryingToEditClient": "CC_Encountered an error while trying to edit the client!"
         }
     
         

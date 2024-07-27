@@ -6,6 +6,7 @@ import { clientFieldLabels, TClientFormValues, TClientValues } from "./clientFie
 import { appendPicture, IClient } from "../../util/clients";
 import history from "../../util/history";
 import { IUser, UserRole } from "../../util/users";
+import i18n from "i18next";
 
 const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {
@@ -93,7 +94,8 @@ export const handleNewWebClientSubmit = async (
         history.push(`/client/${client.id}`);
         return client;
     } catch (e) {
-        const initialMessage = "Encountered an error while trying to create the client!";
+        
+        const initialMessage = i18n.t("common.clientFields.errorTryingToCreateClient");
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);
@@ -143,7 +145,7 @@ export const handleUpdateClientSubmit = async (
         await updateClient(formData, values.id);
         setIsEditing(false);
     } catch (e) {
-        const initialMessage = "Encountered an error while trying to edit the client!";
+        const initialMessage = i18n.t("common.clientFields.errorTryingToEditClient");
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);

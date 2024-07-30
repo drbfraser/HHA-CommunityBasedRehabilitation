@@ -55,6 +55,7 @@ jobs:
     runs-on: [self-hosted, docker]
     container:
       # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
+      # TODO: Update this version to support Android tools version 34?
       image: reactnativecommunity/react-native-android:6.2
     timeout-minutes: 60
     env:

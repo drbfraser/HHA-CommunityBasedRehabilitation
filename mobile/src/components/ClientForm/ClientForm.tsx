@@ -172,7 +172,7 @@ export const ClientForm = (props: IClientFormProps) => {
                     props.formikProps.handleSubmit();
                     setArchiveDialogVisibleOk(false);
                 }}
-                confirmButtonText={props.formikProps.values.is_active ? t("commons.archive") : t("clientAttr.dearchive")}
+                confirmButtonText={props.formikProps.values.is_active ? t("commons.archive") : t("commons.dearchive")}
                 //TODO translation
                 dialogContent={`Are you sure you want to ${
                     props.formikProps.values.is_active ? "archive" : "dearchive"

@@ -1,5 +1,6 @@
 import { FormikProps } from "formik";
 import * as Yup from "yup";
+import i18n from "i18next";
 export interface IFormProps {
     formikProps: FormikProps<any>;
 }
@@ -104,63 +105,51 @@ export const baseServicesTypes = [
 ];
 
 export const baseFieldLabels = {
-    [BaseSurveyFormField.client_id]: "Client",
-    [BaseSurveyFormField.surveyConsent]: "I give the consent to take the baseline survey",
-    [BaseSurveyFormField.rateLevel]: "Health Level",
-    [BaseSurveyFormField.health]: "Health",
-    [BaseSurveyFormField.getService]:
-        "I have access to rehabilitation services (e.g physiotherapy, speech therapy, training how to use assistive device)",
-    [BaseSurveyFormField.needService]: "I need access to rehabilitation services",
-    [BaseSurveyFormField.mentalHealth]: "I suffer from a mental health condition",
-    [BaseSurveyFormField.haveDevice]:
-        "I have an assistive device (e.g wheelchair, crutches, prosthetic limbs, hearing aid)",
-    [BaseSurveyFormField.deviceWorking]: "My assistive device is working well",
-    [BaseSurveyFormField.needDevice]: "I need an assistive device",
-    [BaseSurveyFormField.deviceType]: "Assistive Device",
-    [BaseSurveyFormField.serviceSatisf]: "Satisfied Rate",
 
-    [BaseSurveyFormField.education]: "Education",
-    [BaseSurveyFormField.goSchool]: "I go to school",
-    [BaseSurveyFormField.grade]: "Grade",
-    [BaseSurveyFormField.reasonNotSchool]: "Reason",
-    [BaseSurveyFormField.beenSchool]: "I have been to school before",
-    [BaseSurveyFormField.wantSchool]: "I want to go to school",
-
-    [BaseSurveyFormField.social]: "Social",
-    [BaseSurveyFormField.feelValue]: "I feel valued as a member of my community",
-    [BaseSurveyFormField.feelIndependent]: "I feel independent",
-    [BaseSurveyFormField.ableInSocial]:
-        "I am able to participate in community/social events (going to church, market, meeting friends)",
-    [BaseSurveyFormField.disabiAffectSocial]:
-        "My disability affects my ability to interact socially",
-    [BaseSurveyFormField.disabiDiscrimination]:
-        "I have experienced discrimination because of my disability",
-
-    [BaseSurveyFormField.livelihood]: "Livelihood",
-    [BaseSurveyFormField.isWorking]: "I am working",
-    [BaseSurveyFormField.job]: "Job",
-    [BaseSurveyFormField.meetFinanceNeeds]: "This meets my financial needs",
-    [BaseSurveyFormField.disabiAffectWork]: "My disability affects my ability to go to work",
-    [BaseSurveyFormField.wantWork]: "I want to work",
-    [BaseSurveyFormField.isSelfEmployed]: "I am",
-
-    [BaseSurveyFormField.foodAndNutrition]: "Food and Nutrition",
-    [BaseSurveyFormField.foodSecurityRate]: "Rate",
-    [BaseSurveyFormField.enoughFoodPerMonth]: "I have enough food every month",
-    [BaseSurveyFormField.isChild]: "I am a child or have a child",
-    [BaseSurveyFormField.childNourish]: "Nourishment",
-
-    [BaseSurveyFormField.empowerment]: "Empowerment",
-    [BaseSurveyFormField.memOfOrgan]:
-        "I am a member of some organisations which assist people with disabilities",
-    [BaseSurveyFormField.organization]: "Organization",
-    [BaseSurveyFormField.awareRight]:
-        "I am aware of my rights as a citizen living with disabilities",
-    [BaseSurveyFormField.ableInfluence]: "I feel like I am able to influence people around me",
-
-    [BaseSurveyFormField.shelterAndCare]: "Shelter and Care",
-    [BaseSurveyFormField.haveShelter]: "I have adequate shelter",
-    [BaseSurveyFormField.accessItem]: "I have access to essential items for my household",
+    [BaseSurveyFormField.client_id]: i18n.t("common.baseSurveyFields.client_id"),
+    [BaseSurveyFormField.surveyConsent]: i18n.t("common.baseSurveyFields.surveyConsent"),
+    [BaseSurveyFormField.rateLevel]: i18n.t("common.baseSurveyFields.rateLevel"),
+    [BaseSurveyFormField.health]: i18n.t("common.baseSurveyFields.health"),
+    [BaseSurveyFormField.getService]: i18n.t("common.baseSurveyFields.getService"),
+    [BaseSurveyFormField.needService]: i18n.t("common.baseSurveyFields.needService"),
+    [BaseSurveyFormField.mentalHealth]: i18n.t("common.baseSurveyFields.mentalHealth"),
+    [BaseSurveyFormField.haveDevice]: i18n.t("common.baseSurveyFields.haveDevice"),
+    [BaseSurveyFormField.deviceWorking]: i18n.t("common.baseSurveyFields.deviceWorking"),
+    [BaseSurveyFormField.needDevice]: i18n.t("common.baseSurveyFields.needDevice"),
+    [BaseSurveyFormField.deviceType]: i18n.t("common.baseSurveyFields.deviceType"),
+    [BaseSurveyFormField.serviceSatisf]: i18n.t("common.baseSurveyFields.serviceSatisf"),
+    [BaseSurveyFormField.education]: i18n.t("common.baseSurveyFields.education"),
+    [BaseSurveyFormField.goSchool]: i18n.t("common.baseSurveyFields.goSchool"),
+    [BaseSurveyFormField.grade]: i18n.t("common.baseSurveyFields.grade"),
+    [BaseSurveyFormField.reasonNotSchool]: i18n.t("common.baseSurveyFields.reasonNotSchool"),
+    [BaseSurveyFormField.beenSchool]: i18n.t("common.baseSurveyFields.beenSchool"),
+    [BaseSurveyFormField.wantSchool]: i18n.t("common.baseSurveyFields.wantSchool"),
+    [BaseSurveyFormField.social]: i18n.t("common.baseSurveyFields.social"),
+    [BaseSurveyFormField.feelValue]: i18n.t("common.baseSurveyFields.feelValue"),
+    [BaseSurveyFormField.feelIndependent]: i18n.t("common.baseSurveyFields.feelIndependent"),
+    [BaseSurveyFormField.ableInSocial]: i18n.t("common.baseSurveyFields.ableInSocial"),
+    [BaseSurveyFormField.disabiAffectSocial]: i18n.t("common.baseSurveyFields.disabiAffectSocial"),
+    [BaseSurveyFormField.disabiDiscrimination]: i18n.t("common.baseSurveyFields.disabiDiscrimination"),
+    [BaseSurveyFormField.livelihood]: i18n.t("common.baseSurveyFields.livelihood"),
+    [BaseSurveyFormField.isWorking]: i18n.t("common.baseSurveyFields.isWorking"),
+    [BaseSurveyFormField.job]: i18n.t("common.baseSurveyFields.job"),
+    [BaseSurveyFormField.meetFinanceNeeds]: i18n.t("common.baseSurveyFields.meetFinanceNeeds"),
+    [BaseSurveyFormField.disabiAffectWork]: i18n.t("common.baseSurveyFields.disabiAffectWork"),
+    [BaseSurveyFormField.wantWork]: i18n.t("common.baseSurveyFields.wantWork"),
+    [BaseSurveyFormField.isSelfEmployed]: i18n.t("common.baseSurveyFields.isSelfEmployed"),
+    [BaseSurveyFormField.foodAndNutrition]: i18n.t("common.baseSurveyFields.foodAndNutrition"),
+    [BaseSurveyFormField.foodSecurityRate]: i18n.t("common.baseSurveyFields.foodSecurityRate"),
+    [BaseSurveyFormField.enoughFoodPerMonth]: i18n.t("common.baseSurveyFields.enoughFoodPerMonth"),
+    [BaseSurveyFormField.isChild]: i18n.t("common.baseSurveyFields.isChild"),
+    [BaseSurveyFormField.childNourish]: i18n.t("common.baseSurveyFields.childNourish"),
+    [BaseSurveyFormField.empowerment]: i18n.t("common.baseSurveyFields.empowerment"),
+    [BaseSurveyFormField.memOfOrgan]: i18n.t("common.baseSurveyFields.memOfOrgan"),
+    [BaseSurveyFormField.organization]: i18n.t("common.baseSurveyFields.organization"),
+    [BaseSurveyFormField.awareRight]: i18n.t("common.baseSurveyFields.awareRight"),
+    [BaseSurveyFormField.ableInfluence]: i18n.t("common.baseSurveyFields.ableInfluence"),
+    [BaseSurveyFormField.shelterAndCare]: i18n.t("common.baseSurveyFields.shelterAndCare"),
+    [BaseSurveyFormField.haveShelter]: i18n.t("common.baseSurveyFields.haveShelter"),
+    [BaseSurveyFormField.accessItem]: i18n.t("common.baseSurveyFields.accessItem"),
 };
 
 export const baseInitialValues = {

@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import i18n from "i18next";
 
 export enum FormField {
     risk_type = "risk_type",
@@ -9,9 +10,9 @@ export enum FormField {
 }
 
 export const fieldLabels = {
-    [FormField.risk_level]: "Risk Level",
-    [FormField.requirement]: "Requirements",
-    [FormField.goal]: "Goals",
+    [FormField.risk_level]: i18n.t("common.risks.riskLevel"),
+    [FormField.requirement]: i18n.t("common.risks.requirements"),
+    [FormField.goal]: i18n.t("common.risks.goals"),
 };
 
 export const validationSchema = () =>

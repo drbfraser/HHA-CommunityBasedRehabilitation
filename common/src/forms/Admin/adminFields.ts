@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { Validation } from "../../util/validations";
 import { UserRole } from "../../util/users";
+import i18n from "i18next";
 
 export interface IRouteParams {
     userId: string;
@@ -19,15 +20,15 @@ export enum AdminField {
 }
 
 export const adminUserFieldLabels = {
-    [AdminField.username]: "Username",
-    [AdminField.password]: "Enter password",
-    [AdminField.confirmPassword]: "Confirm password",
-    [AdminField.first_name]: "First name",
-    [AdminField.last_name]: "Last name",
-    [AdminField.role]: "Role",
-    [AdminField.zone]: "Zone",
-    [AdminField.phone_number]: "Phone number",
-    [AdminField.is_active]: "Status",
+    [AdminField.username]: i18n.t("common.admin.username"),
+    [AdminField.password]: i18n.t("common.admin.enterPassword"),
+    [AdminField.confirmPassword]: i18n.t("common.admin.confirmPassword"),
+    [AdminField.first_name]: i18n.t("common.admin.firstName"),
+    [AdminField.last_name]: i18n.t("common.admin.lastName"),
+    [AdminField.role]: i18n.t("common.admin.role"),
+    [AdminField.zone]: i18n.t("common.admin.zone"),
+    [AdminField.phone_number]: i18n.t("common.admin.phoneNumber"),
+    [AdminField.is_active]: i18n.t("common.admin.status"),
 };
 
 export const adminUserInitialValues = {
@@ -66,7 +67,7 @@ const infoValidationShape = {
         .max(50),
     [AdminField.zone]: Yup.string().label(adminUserFieldLabels[AdminField.zone]).required(),
     [AdminField.phone_number]: Yup.string()
-        .matches(Validation.phoneRegExp, "Phone number is not valid")
+        .matches(Validation.phoneRegExp, i18n.t("common.admin.phoneNumberNotValid"))
         .label(adminUserFieldLabels[AdminField.phone_number])
         .max(50)
         .required(),
@@ -85,7 +86,7 @@ const passwordValidationShape = {
     [AdminField.confirmPassword]: Yup.string()
         .label(adminUserFieldLabels[AdminField.confirmPassword])
         .required()
-        .oneOf([Yup.ref(AdminField.password)], "Passwords must match"),
+        .oneOf([Yup.ref(AdminField.password)], i18n.t("common.admin.passwordsMustMatch")),
 };
 
 export const newUserValidationSchema = Yup.object().shape({

@@ -1,5 +1,6 @@
 import { IRisk } from "../../util/risks";
 import { apiFetch, Endpoint } from "../../util/endpoints";
+import i18n from "i18next";
 
 const updateRisk = async (updatedRisk: string) => {
     const init: RequestInit = {
@@ -44,6 +45,6 @@ export const handleSubmit = async (
         const risk = await updateRisk(updatedRisk);
         setRisk(risk);
     } catch (e) {
-        alert("Encountered an error while trying to update the client's risk");
+        alert(i18n.t("common.risks.riskUpdateError"));
     }
 };

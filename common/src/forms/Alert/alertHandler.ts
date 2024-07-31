@@ -12,6 +12,8 @@ import history from "../../util/history";
 import { socket } from "../../context/SocketIOContext";
 import { IUser } from "../../util/users";
 import { getCurrentUser } from "../../util/hooks/currentUser";
+import i18n from "i18next";
+
 
 const addAlert = async (alertInfo: FormData): Promise<IAlert> => {
     const init: RequestInit = {
@@ -42,7 +44,7 @@ const deleteAlert = async (alertId: string, refreshAlert: () => void): Promise<v
     };
     return await apiFetch(Endpoint.ALERT, `${alertId}`, init).then((res) => {
         if (!res.ok) {
-            alert("Encountered an error while trying to delete the alert!");
+            alert(i18n.t("common.alerts.errorDeletingAlert"));
         }
         refreshAlert();
     });
@@ -68,7 +70,7 @@ export const handleNewWebAlertSubmit = async (
                 return acc;
             }, []);
         } catch (e) {
-            throw new Error(`Error retreiving users. ${e}`);
+            throw new Error(i18n.t("common.alerts.errorRetrievingUsers", {error: e}));
         }
 
         newAlert = {
@@ -79,7 +81,7 @@ export const handleNewWebAlertSubmit = async (
             created_by_user: user.id,
         };
     } else {
-        throw new Error("API Load Error");
+        throw new Error(i18n.t("common.alerts.apiLoadError"));
     }
 
     const formData = objectToFormData(newAlert);
@@ -90,7 +92,7 @@ export const handleNewWebAlertSubmit = async (
 
         return alert;
     } catch (e) {
-        const initialMessage = "Encountered an error while trying to create the alert!";
+        const initialMessage = i18n.t("common.alerts.errorCreatingAlert")
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(alertFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);
@@ -99,13 +101,13 @@ export const handleNewWebAlertSubmit = async (
 };
 
 export const handleDiscard = (resetForm: () => void) => {
-    if (window.confirm("Are you sure you want to clear the form?")) {
+    if (window.confirm(i18n.t("common.alerts.sureToClearForm"))) {
         resetForm();
     }
 };
 
 export const handleDeleteAlert = (alertId: string, refreshAlert: () => void) => {
-    if (window.confirm("Are you sure you want to delete this alarm?")) {
+    if (window.confirm(i18n.t("common.alerts.sureToDeleteAlarm"))) {
         deleteAlert(alertId, refreshAlert);
     }
 };
@@ -113,7 +115,7 @@ export const handleDeleteAlert = (alertId: string, refreshAlert: () => void) => 
 export const handleUpdateAlertSubmit = async (values: TAlertUpdateValues) => {
     try {
         const user: IUser | typeof APILoadError = await getCurrentUser();
-        let userID: string = user !== APILoadError ? user.id : "unknown";
+        let userID: string = user !== APILoadError ? user.id : i18n.t("common.alerts.unknownUser");
         // remove this user from the list of unread users
         let updatedUnreadUserList = Object.values(values.unread_by_users).filter(
             (user) => user != userID
@@ -131,7 +133,7 @@ export const handleUpdateAlertSubmit = async (values: TAlertUpdateValues) => {
         await updateAlert(formData, values.id.toString());
         socket.emit("alertViewed", { ...updateValues, currentUser: userID }); // emit socket event to the backend
     } catch (e) {
-        const initialMessage = "Encountered an error while trying to update the alert!";
+        const initialMessage = i18n.t("common.alerts.errorUpdatingAlert");
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(alertFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);

@@ -1,4 +1,5 @@
 import { themeColors } from "./colors";
+import i18n from "i18next";
 export interface IRisk {
     id: string;
     client_id: string;
@@ -33,22 +34,22 @@ export interface IRiskLevel {
 export const riskLevels: { [key: string]: IRiskLevel } = {
     [RiskLevel.LOW]: {
         level: 0,
-        name: "Low",
+        name: i18n.t("common.risks.low"),
         color: themeColors.riskGreen,
     },
     [RiskLevel.MEDIUM]: {
         level: 1,
-        name: "Medium",
+        name: i18n.t("common.risks.medium"),
         color: themeColors.riskYellow,
     },
     [RiskLevel.HIGH]: {
         level: 4, // 1 high > 3 mediums, as specified by customer
-        name: "High",
+        name: i18n.t("common.risks.high"),
         color: themeColors.riskRed,
     },
     [RiskLevel.CRITICAL]: {
         level: 13, // 1 critical > 3 highs, as specified by customer
-        name: "Critical",
+        name: i18n.t("common.risks.critical"),
         color: themeColors.riskBlack,
     },
 };
@@ -59,18 +60,18 @@ export interface IRiskType {
 
 export const riskTypes: { [key: string]: IRiskType } = {
     [RiskType.HEALTH]: {
-        name: "Health",
+        name: i18n.t("common.risks.health"),
     },
     [RiskType.EDUCATION]: {
-        name: "Education",
+        name:  i18n.t("common.risks.education"),
     },
     [RiskType.SOCIAL]: {
-        name: "Social",
+        name: i18n.t("common.risks.social"),
     },
     [RiskType.NUTRITION]: {
-        name: "Nutrition",
+        name: i18n.t("common.risks.nutrition"),
     },
     [RiskType.MENTAL]: {
-        name: "Mental Health",
+        name: i18n.t("common.risks.mental"),
     },
 };

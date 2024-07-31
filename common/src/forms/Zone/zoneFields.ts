@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import i18n from "i18next";
 
 export interface IRouteParams {
     zone_name: string;
@@ -9,7 +10,7 @@ export enum ZoneField {
 }
 
 export const zoneFieldLabels = {
-    [ZoneField.zone_name]: "Zone",
+    [ZoneField.zone_name]: i18n.t("common.zone.zone"),
 };
 
 export const zoneInitialValues = {

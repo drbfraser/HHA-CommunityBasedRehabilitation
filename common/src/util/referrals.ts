@@ -1,3 +1,5 @@
+import i18n from "i18next";
+
 export interface IReferral {
     id: number;
     user: number;
@@ -88,37 +90,37 @@ export enum MentalConditions {
 }
 
 export const prostheticInjuryLocations = {
-    [InjuryLocation.BELOW_KNEE]: "Below the knee",
-    [InjuryLocation.ABOVE_KNEE]: "Above the knee",
-    [InjuryLocation.BELOW_ELBOW]: "Below the elbow",
-    [InjuryLocation.ABOVE_ELBOW]: "Above the elbow",
+    [InjuryLocation.BELOW_KNEE]: i18n.t("common.referral.belowKnee"),
+    [InjuryLocation.ABOVE_KNEE]: i18n.t("common.referral.aboveKnee"),
+    [InjuryLocation.BELOW_ELBOW]: i18n.t("common.referral.belowElbow"),
+    [InjuryLocation.ABOVE_ELBOW]: i18n.t("common.referral.aboveElbow"),
 };
 
 export const orthoticInjuryLocations = {
-    [orthoticInjury.WEAK_LEG]: "Weak Leg",
-    [orthoticInjury.CEREBRAL_PALSY]: "Cerebral Palsy",
-    [orthoticInjury.SPINA_BIFIDA]: "Spina Bifida",
-    [orthoticInjury.CLUB_FOOT]: "Club Foot",
-    [orthoticInjury.INJECTION_NEURITIS]: "Injection Neuritis",
-    [orthoticInjury.DROP_FOOT]: "Drop Foot",
-    [orthoticInjury.POLIO]: "Polio",
-    [orthoticInjury.OTHER]: "Other",
+    [orthoticInjury.WEAK_LEG]: i18n.t("common.referral.weakLeg"),
+    [orthoticInjury.CEREBRAL_PALSY]: i18n.t("common.referral.cerebralPalsy"),
+    [orthoticInjury.SPINA_BIFIDA]: i18n.t("common.referral.spinaBifida"),
+    [orthoticInjury.CLUB_FOOT]: i18n.t("common.referral.clubFoot"),
+    [orthoticInjury.INJECTION_NEURITIS]: i18n.t("common.referral.injectionNeuritis"),
+    [orthoticInjury.DROP_FOOT]: i18n.t("common.referral.dropFoot"),
+    [orthoticInjury.POLIO]: i18n.t("common.referral.polio"),
+    [orthoticInjury.OTHER]: i18n.t("common.referral.other"),
 };
 
 export const otherServices = {
-    [Impairments.VISUAL_IMPAIRMENT]: "Visual Impairment",
-    [Impairments.HEARING_IMPAIRMENT]: "Hearing Impairment",
-    [Impairments.SAFEGUARDING]: "Safeguarding",
-    [Impairments.OTHER]: "Other",
+    [Impairments.VISUAL_IMPAIRMENT]: i18n.t("common.referral.visualImpairment"),
+    [Impairments.HEARING_IMPAIRMENT]: i18n.t("common.referral.hearingImpairment"),
+    [Impairments.SAFEGUARDING]: i18n.t("common.referral.safeguarding"),
+    [Impairments.OTHER]: i18n.t("common.referral.other"),
 };
 
 export const wheelchairExperiences = {
-    [WheelchairExperience.BASIC]: "Basic",
-    [WheelchairExperience.INTERMEDIATE]: "Intermediate",
+    [WheelchairExperience.BASIC]: i18n.t("common.referral.basic"),
+    [WheelchairExperience.INTERMEDIATE]: i18n.t("common.referral.intermediate"),
 };
 
 export const mentalHealthConditions = {
-    [MentalConditions.AUTISM]: "Autism",
-    [MentalConditions.DEMENTIA]: "Dementia",
-    [MentalConditions.OTHER]: "Other",
+    [MentalConditions.AUTISM]: i18n.t("common.referral.autism"),
+    [MentalConditions.DEMENTIA]: i18n.t("common.referral.dementia"),
+    [MentalConditions.OTHER]: i18n.t("common.referral.other"),
 };

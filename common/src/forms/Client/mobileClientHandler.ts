@@ -5,6 +5,7 @@ import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabili
 import { clientFieldLabels, TClientValues } from "./clientFields";
 import { IClient } from "../../util/clients";
 import { appendMobilePict } from "../../util/mobileImageSubmisson";
+import i18n from "i18next";
 
 const addMobileClient = async (clientInfo: FormData) => {
     const init: RequestInit = {
@@ -83,7 +84,7 @@ export const handleNewMobileClientSubmit = async (
         const client: IClient = await addMobileClient(formData);
         return client;
     } catch (e) {
-        const initialMessage = "Encountered an error while trying to create the client!";
+        const initialMessage = i18n.t("common.clientFields.errorCreatingClient");
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);

@@ -1,4 +1,5 @@
 import { apiFetch, APIFetchFailError, Endpoint } from "./endpoints";
+import i18n from "i18next";
 
 export interface IUser {
     id: string;
@@ -19,13 +20,13 @@ export enum UserRole {
 
 export const userRoles = {
     [UserRole.ADMIN]: {
-        name: "Admin",
+        name: i18n.t("common.users.admin"),
     },
     [UserRole.CLINICIAN]: {
-        name: "Clinician",
+        name: i18n.t("common.users.clinician"),
     },
     [UserRole.WORKER]: {
-        name: "Worker",
+        name: i18n.t("common.users.worker"),
     },
 };
 

@@ -2,6 +2,7 @@ import { IReferral } from "./referrals";
 import { IRisk, riskLevels } from "./risks";
 import { ISurvey } from "./survey";
 import { IVisitSummary } from "./visits";
+import i18n from "i18next";
 
 export interface IClientSummary {
     id: number;
@@ -62,8 +63,8 @@ export enum SortOptions {
 }
 
 export const genders = {
-    [Gender.FEMALE]: "Female",
-    [Gender.MALE]: "Male",
+    [Gender.FEMALE]: i18n.t("common.clientFields.female"),
+    [Gender.MALE]: i18n.t("common.clientFields.male"),
 };
 
 export const clientPrioritySort = (a: IClientSummary, b: IClientSummary) => {

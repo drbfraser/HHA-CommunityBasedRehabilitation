@@ -1,4 +1,6 @@
 import { RiskType } from "./risks";
+import i18n from "i18next";
+
 
 export interface IVisitSummary {
     id: string;
@@ -58,12 +60,12 @@ export enum OutcomeGoalMet {
 
 export const outcomeGoalMets = {
     [OutcomeGoalMet.CANCELLED]: {
-        name: "Cancelled",
+        name: i18n.t("common.newVisit.cancelled"),
     },
     [OutcomeGoalMet.ONGOING]: {
-        name: "Ongoing",
+        name: i18n.t("common.newVisit.ongoing"),
     },
     [OutcomeGoalMet.CONCLUDED]: {
-        name: "Concluded",
+        name: i18n.t("common.newVisit.concluded"),
     },
 };

@@ -10,6 +10,7 @@ import {
 } from "../../util/referrals";
 import { getDisabilities, getOtherDisabilityId } from "../../util/hooks/disabilities";
 import * as Yup from "yup";
+import i18n from "i18next";
 
 export interface ReferralFormProps {
     formikProps: FormikProps<any>;
@@ -85,43 +86,42 @@ export const referralServicesTypes = [
 ];
 
 export const referralFieldLabels = {
-    [ReferralFormField.client_id]: "Client",
-    [ReferralFormField.wheelchair]: "Wheelchair",
-    [ReferralFormField.wheelchairExperience]: "Wheelchair Experience",
-    [ReferralFormField.picture]: "picture",
-    [ReferralFormField.hipWidth]: "Hip Width",
-    [ReferralFormField.wheelchairOwned]: "Client Owns a Wheelchair",
-    [ReferralFormField.wheelchairRepairable]: "Client's Wheelchair is Repairable",
-    [ReferralFormField.physiotherapy]: "Physiotherapy",
-    [ReferralFormField.condition]: "Condition",
-    [ReferralFormField.conditionOther]: "Other Condition",
-    [ReferralFormField.prosthetic]: "Prosthetic",
-    [ReferralFormField.prostheticInjuryLocation]: "Prosthetic Injury Location",
-    [ReferralFormField.orthotic]: "Orthotic",
-    [ReferralFormField.orthoticInjuryLocation]: "Orthotic Injury Location",
+    [ReferralFormField.client_id]: i18n.t("common.referral.client_id"),
+    [ReferralFormField.wheelchair]: i18n.t("common.referral.wheelchair"),
+    [ReferralFormField.wheelchairExperience]: i18n.t("common.referral.wheelchairExperience"),
+    [ReferralFormField.picture]: i18n.t("common.referral.picture"),
+    [ReferralFormField.hipWidth]: i18n.t("common.referral.hipWidth"),
+    [ReferralFormField.wheelchairOwned]: i18n.t("common.referral.wheelchairOwned"),
+    [ReferralFormField.wheelchairRepairable]: i18n.t("common.referral.wheelchairRepairable"),
+    [ReferralFormField.physiotherapy]: i18n.t("common.referral.physiotherapy"),
+    [ReferralFormField.condition]: i18n.t("common.referral.condition"),
+    [ReferralFormField.conditionOther]: i18n.t("common.referral.conditionOther"),
+    [ReferralFormField.prosthetic]: i18n.t("common.referral.prosthetic"),
+    [ReferralFormField.prostheticInjuryLocation]: i18n.t("common.referral.prostheticInjuryLocation"),
+    [ReferralFormField.orthotic]: i18n.t("common.referral.orthotic"),
+    [ReferralFormField.orthoticInjuryLocation]: i18n.t("common.referral.orthoticInjuryLocation"),
 
-    [ReferralFormField.mentalHealth]: "Mental Health",
-    [ReferralFormField.mentalHealthCondition]: "Mental Condition",
-    [ReferralFormField.mentalConditionOther]: "Other Mental Condition",
+    [ReferralFormField.mentalHealth]: i18n.t("common.referral.mentalHealth"),
+    [ReferralFormField.mentalHealthCondition]: i18n.t("common.referral.mentalHealthCondition"),
+    [ReferralFormField.mentalConditionOther]: i18n.t("common.referral.mentalConditionOther"),
 
-    [ReferralFormField.hhaNutritionAndAgricultureProject]: "HHA Nutrition/Agriculture Project",
-    [ReferralFormField.emergencyFoodAidRequired]: "Emergency Food Aid",
-    [ReferralFormField.agricultureLivelihoodProgramEnrollment]:
-        "Agriculture Livelihood Program Enrollment",
+    [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t("common.referral.hhaNutritionAndAgricultureProject"),
+    [ReferralFormField.emergencyFoodAidRequired]: i18n.t("common.referral.emergencyFoodAidRequired"),
+    [ReferralFormField.agricultureLivelihoodProgramEnrollment]: i18n.t("common.referral.agricultureLivelihoodProgramEnrollment"),
 
-    [ReferralFormField.servicesOther]: "Other Services",
-    [ReferralFormField.otherDescription]: "Service Description",
-    [ReferralFormField.referralOther]: "Other referral",
+    [ReferralFormField.servicesOther]: i18n.t("common.referral.servicesOther"),
+    [ReferralFormField.otherDescription]: i18n.t("common.referral.otherDescription"),
+    [ReferralFormField.referralOther]: i18n.t("common.referral.referralOther"),
 };
 
 export const referralStatsChartLabels = {
-    [ReferralFormField.wheelchair]: "Wheelchair",
-    [ReferralFormField.physiotherapy]: "Physiotherapy",
-    [ReferralFormField.orthotic]: "Orthotic",
-    [ReferralFormField.prosthetic]: "Prosthetic",
-    [ReferralFormField.hhaNutritionAndAgricultureProject]: "HHANAP",
-    [ReferralFormField.mentalHealth]: "Mental Health",
-    [ReferralFormField.servicesOther]: "Other Services",
+    [ReferralFormField.wheelchair]: i18n.t("common.referral.wheelchair"),
+    [ReferralFormField.physiotherapy]: i18n.t("common.referral.physiotherapy"),
+    [ReferralFormField.orthotic]: i18n.t("common.referral.orthotic"),
+    [ReferralFormField.prosthetic]: i18n.t("common.referral.prosthetic"),
+    [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t("common.referral.hhaNutritionAndAgricultureProjectAbbr"),
+    [ReferralFormField.mentalHealth]: i18n.t("common.referral.mentalHealth"),
+    [ReferralFormField.servicesOther]: i18n.t("common.referral.servicesOther"),
 };
 
 export const referralInitialValues = {
@@ -181,14 +181,14 @@ export const physiotherapyValidationSchema = () =>
             .trim()
             .test(
                 "require-if-other-selected",
-                "Other Condition is required",
+                i18n.t("common.referral.otherConditionRequired"),
                 async (conditionOther, schema) =>
                     !(await isOtherCondition(schema.parent.condition)) ||
                     (conditionOther !== undefined && conditionOther.length > 0)
             )
             .test(
                 "require-if-other-selected",
-                "Other Condition must be at most 100 characters",
+                i18n.t("common.referral.otherConditionAtMost100Char"),
                 async (conditionOther, schema) =>
                     !(await isOtherCondition(schema.parent.condition)) ||
                     (conditionOther !== undefined && conditionOther.length <= 100)
@@ -214,14 +214,14 @@ export const mentalHealthValidationSchema = () =>
             .trim()
             .test(
                 "require-if-other-selected",
-                "Other Condition is required",
+                i18n.t("common.referral.otherConditionRequired"),
                 async (conditionOther) =>
                     !isOtherMentalCondition(conditionOther!) ||
                     (conditionOther !== undefined && conditionOther.length > 0)
             )
             .test(
                 "require-if-other-selected",
-                "Mental Condition must be at most 100 characters",
+                i18n.t("common.referral.mentalConditionAtMost100Char"),
                 async (conditionOther) =>
                     !isOtherMentalCondition(conditionOther!) ||
                     (conditionOther !== undefined && conditionOther.length <= 100)
@@ -238,16 +238,20 @@ export const hhaNutritionAndAgricultureProjectValidationSchema = () =>
                 referralFieldLabels[ReferralFormField.emergencyFoodAidRequired]
             ),
         })
-        .test("require-atleast-one-checkbox", "At least one checkbox must be selected", (obj) => {
-            if (
-                obj[ReferralFormField.agricultureLivelihoodProgramEnrollment] ||
-                obj[ReferralFormField.emergencyFoodAidRequired]
-            ) {
-                return true;
-            }
+        .test(
+            "require-atleast-one-checkbox", 
+            i18n.t("common.referral.atLeastOneCheckbox"),
+            (obj) => {
+                if (
+                    obj[ReferralFormField.agricultureLivelihoodProgramEnrollment] ||
+                    obj[ReferralFormField.emergencyFoodAidRequired]
+                ) {
+                    return true;
+                }
 
-            return new Yup.ValidationError("Please select one option", null, "custom");
-        });
+                return new Yup.ValidationError(i18n.t("common.referral.selectOneOption"), null, "custom");
+            }
+        );
 
 export const otherServicesValidationSchema = () =>
     Yup.object().shape({

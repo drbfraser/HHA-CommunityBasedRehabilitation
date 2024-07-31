@@ -95,7 +95,7 @@ export const handleNewWebClientSubmit = async (
         return client;
     } catch (e) {
         
-        const initialMessage = i18n.t("common.clientFields.errorTryingToCreateClient");
+        const initialMessage = i18n.t("common.clientFields.errorCreatingClient");
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);
@@ -145,7 +145,7 @@ export const handleUpdateClientSubmit = async (
         await updateClient(formData, values.id);
         setIsEditing(false);
     } catch (e) {
-        const initialMessage = i18n.t("common.clientFields.errorTryingToEditClient");
+        const initialMessage = i18n.t("common.clientFields.errorEditingClient");
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);
@@ -161,23 +161,32 @@ export const handleArchiveConfirmation = (
 ): boolean => {
     if (loadingError) {
         window.alert(
-            `Ecountered an error fetching your user information. Please try again\n${loadingError}`
+            i18n.t("common.clientFields.errorFetching", {loadingError: loadingError})
         );
     } else if (user.role !== UserRole.ADMIN) {
         window.alert(
-            "You are not authorized to archive/dearchive clients. Please ask an administrator"
+            i18n.t("common.clientFields.notAuthorizedToArchive")
         );
-    } else if (
-        window.confirm(
-            `Are you sure you want to ${values.is_active ? "archive" : "dearchive"} ${
-                values.first_name
-            } ${values.last_name}?\n${
-                values.is_active ? "You cannot edit clients while they are archived" : ""
-            }`
-        )
-    ) {
-        // set is_active
-        return !values.is_active;
+    } else {
+        // Simplify logic for confirmation dialog construction
+        const action = values.is_active ? 
+                            i18n.t("common.clientFields.archive")
+                            : i18n.t("common.clientFields.dearchive");
+        const clientActiveError = values.is_active ?
+                            i18n.t("common.clientFields.cannotEditArchived")
+                            : "";
+        if (window.confirm(
+                i18n.t("common.clientFields.sureToArchiveClient", {
+                    action: action,
+                    first_name: values.first_name,
+                    last_name: values.last_name,
+                    client_active_error: clientActiveError
+                })
+            )
+        ) {
+            // set is_active
+            return !values.is_active;
+        }
     }
     return values.is_active;
 };
@@ -185,7 +194,7 @@ export const handleArchiveConfirmation = (
 export const handleCancel = (resetForm: () => void, setIsEditing: (isEditing: boolean) => void) => {
     if (
         window.confirm(
-            "Are you sure you want to cancel editing the client?\nClicking OK will not save any edited information."
+            i18n.t("common.clientFields.sureToCancelEditClient")
         )
     ) {
         resetForm();
@@ -194,7 +203,10 @@ export const handleCancel = (resetForm: () => void, setIsEditing: (isEditing: bo
 };
 
 export const handleReset = (resetForm: () => void) => {
-    if (window.confirm("Are you sure you want to clear the form?")) {
+    if (window.confirm(
+            i18n.t("common.clientFields.sureToClearForm")
+        )
+    ) {
         resetForm();
     }
 };

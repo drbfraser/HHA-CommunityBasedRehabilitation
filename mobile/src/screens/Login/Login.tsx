@@ -116,7 +116,7 @@ const Login = () => {
                 />
 
                 {authState.state !== "previouslyLoggedIn" ? (
-                    <Text style={styles.loginHeader}>{t("commons.login")}</Text>
+                    <Text style={styles.loginHeader}>{t("login.login")}</Text>
                 ) : (
                     <Alert
                         style={styles.alert}
@@ -191,7 +191,7 @@ const Login = () => {
                     onPress={handleLogin}
                     mode="contained"
                 >
-                    {t("commons.login")}
+                    {t("login.login")}
                 </Button>
                 {authState.state == "previouslyLoggedIn" ? (
                     <Button
@@ -201,7 +201,7 @@ const Login = () => {
                         onPress={logout}
                         mode="text"
                     >
-                        {t("commons.logout")}
+                        {t("login.logout")}
                     </Button>
                 ) : (
                     <></>

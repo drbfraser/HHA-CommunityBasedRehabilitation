@@ -165,7 +165,7 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                                     mode="contained"
                                     onPress={() => setLogoutConfirmDialogVisibility(true)}
                                 >
-                                    {t("commons.logout")}
+                                    {t("login.logout")}
                                 </Button>
                             ) : null}
                         </View>

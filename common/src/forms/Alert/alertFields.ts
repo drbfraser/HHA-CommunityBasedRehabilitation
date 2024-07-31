@@ -1,5 +1,7 @@
 import * as Yup from "yup";
 import { PriorityLevel, IAlert } from "../../util/alerts";
+import i18n from "i18next";
+
 
 export enum alertField {
     id = "id",
@@ -20,9 +22,9 @@ export const alertInitialValues = {
 export type TAlertValues = typeof alertInitialValues;
 
 export const alertFieldLabels = {
-    [alertField.subject]: "Subject",
-    [alertField.priority]: "Priority",
-    [alertField.alert_message]: "Body",
+    [alertField.subject]: i18n.t("common.alerts.subject"),
+    [alertField.priority]: i18n.t("common.alerts.priority"),
+    [alertField.alert_message]: i18n.t("common.alerts.body"),
 };
 
 export const alertUpdateValues = {

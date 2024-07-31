@@ -137,7 +137,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                     disabled={formikProps.isSubmitting}
                                     onPress={() => onDismiss(false)}
                                 >
-                                    {t("commons.cancel")}
+                                    {t("general.cancel")}
                                 </Button>
                                 <Button
                                     disabled={
@@ -148,7 +148,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                     loading={formikProps.isSubmitting}
                                     onPress={formikProps.handleSubmit}
                                 >
-                                    {t("commons.save")}
+                                    {t("general.save")}
                                 </Button>
                             </Dialog.Actions>
                         </>
@@ -220,7 +220,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                     disabled={formikProps.isSubmitting}
                                     onPress={() => onDismiss(false)}
                                 >
-                                    {t("commons.cancel")}
+                                    {t("general.cancel")}
                                 </Button>
                                 <Button
                                     disabled={
@@ -231,7 +231,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                     loading={formikProps.isSubmitting}
                                     onPress={formikProps.handleSubmit}
                                 >
-                                    {t("commons.save")}
+                                    {t("general.save")}
                                 </Button>
                             </Dialog.Actions>
                         </>

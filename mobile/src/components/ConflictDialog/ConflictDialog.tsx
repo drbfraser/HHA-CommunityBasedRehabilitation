@@ -201,7 +201,7 @@ const ConflictDialog = () => {
                         onPress={onClose}
                         color={themeColors.blueBgDark}
                     >
-                        {t("commons.ok")}
+                        {t("general.ok")}
                     </Button>
                 </Dialog.Actions>
             </Dialog>

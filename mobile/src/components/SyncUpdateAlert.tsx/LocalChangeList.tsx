@@ -70,7 +70,7 @@ export default function LocalChangeList() {
             )}
             {error ? (
                 <Text style={{ paddingHorizontal: 10, marginTop: 5, color: "red" }}>
-                    {t("alert.actionFailure", {action: t("commons.fetch"), object: "commons.localChanges"})}
+                    {t("alert.actionFailure", {action: t("general.fetch"), object: "general.localChanges"})}
                 </Text>
             ) : (
                 <></>

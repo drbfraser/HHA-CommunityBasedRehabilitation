@@ -58,7 +58,7 @@ const AdminView = ({
         } catch (e) {
             setError({
                 statusCode: e instanceof APIFetchFailError ? e.status : undefined,
-                message: t("commons.noObject", {object: t("commons.user")}),
+                message: t("general.noObject", {object: t("general.user")}),
             });
         }
     };
@@ -87,7 +87,7 @@ const AdminView = ({
                             style={styles.retryButton}
                             onPress={() => loadUser(route.params.userID, setUser, setErrorMessage)}
                         >
-                            {t("commons.retry")}
+                            {t("general.retry")}
                         </Button>
                     ) : null}
                 </>
@@ -107,7 +107,7 @@ const AdminView = ({
                 duration={4000}
                 onDismiss={() => setUserChangeSnackbarVisible(false)}
             >
-                {route.params.userInfo?.isNewUser ? t("commons.objectCreated", {object: t("commons.user")}) : t("objectUpdated", {object: t("commons.user")})}
+                {route.params.userInfo?.isNewUser ? t("general.objectCreated", {object: t("general.user")}) : t("objectUpdated", {object: t("general.user")})}
             </Snackbar>
         </>
     );

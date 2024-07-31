@@ -70,13 +70,13 @@ const AlertInbox = () => {
     const openDeleteConfirmationAlert = (alert) =>
         Alert.alert(
             t("alert.deleteAlertWithSubject", {subject: alert.subject}),
-            t("alert.actionConfirmationNotice", {action: t("commons.delete"), object: t("commons.alert")}),
+            t("alert.actionConfirmationNotice", {action: t("general.delete"), object: t("general.alert")}),
             [
                 {
-                    text: t("commons.cancel"),
+                    text: t("general.cancel"),
                     style: "cancel",
                 },
-                { text: t("commons.ok"), onPress: () => deleteAlert(alert.id) },
+                { text: t("general.ok"), onPress: () => deleteAlert(alert.id) },
             ]
         );
 
@@ -93,7 +93,7 @@ const AlertInbox = () => {
         ) : (
             <View style={styles.emptyInboxContainer}>
                 <Icon name="inbox" style={styles.emptyInboxIcon} />
-                <Text style={styles.emptyInboxText}>{t("commons.emptyInbox")}</Text>
+                <Text style={styles.emptyInboxText}>{t("general.emptyInbox")}</Text>
             </View>
         );
     };
@@ -142,7 +142,7 @@ const AlertInbox = () => {
                             mode="outlined"
                             onPress={() => openDeleteConfirmationAlert(alert)}
                         >
-                            {t("commons.delete")}
+                            {t("general.delete")}
                         </Button>
                     </View>
                 </List.Accordion>
@@ -153,7 +153,7 @@ const AlertInbox = () => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.groupContainer}>
-                <Text style={styles.cardSectionTitle}>{t("commons.alerts")}</Text>
+                <Text style={styles.cardSectionTitle}>{t("general.alerts")}</Text>
                 <Card style={styles.CardStyle}>{!loading ? generateAlertList() : <></>}</Card>
             </ScrollView>
         </SafeAreaView>

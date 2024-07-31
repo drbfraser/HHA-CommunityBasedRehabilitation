@@ -86,7 +86,7 @@ const Timeline = (props: ISummaryProps) => {
                                     {props.activity.visit.educat_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.EDUCAT.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemText}>{t("commons.education")}</Text>
+                                            <Text style={styles.subItemText}>{t("general.education")}</Text>
                                         </View>
                                     ) : (
                                         <></>
@@ -94,7 +94,7 @@ const Timeline = (props: ISummaryProps) => {
                                     {props.activity.visit.health_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.HEALTH.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemText}>{t("commons.health")}</Text>
+                                            <Text style={styles.subItemText}>{t("general.health")}</Text>
                                         </View>
                                     ) : (
                                         <></>
@@ -102,7 +102,7 @@ const Timeline = (props: ISummaryProps) => {
                                     {props.activity.visit.social_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.SOCIAL.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemText}>{t("commons.social")}</Text>
+                                            <Text style={styles.subItemText}>{t("general.social")}</Text>
                                         </View>
                                     ) : (
                                         <></>
@@ -110,7 +110,7 @@ const Timeline = (props: ISummaryProps) => {
                                     {props.activity.visit.nutrit_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.NUTRIT.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemText}>{t("commons.nutrition")}</Text>
+                                            <Text style={styles.subItemText}>{t("general.nutrition")}</Text>
                                         </View>
                                     ) : (
                                         <></>
@@ -118,7 +118,7 @@ const Timeline = (props: ISummaryProps) => {
                                     {props.activity.visit.mental_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.MENTAL.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemText}>{t("commons.mental")}</Text>
+                                            <Text style={styles.subItemText}>{t("general.mental")}</Text>
                                         </View>
                                     ) : (
                                         <></>
@@ -145,7 +145,7 @@ const Timeline = (props: ISummaryProps) => {
                                     <View style={styles.subItemRow}>
                                         {props.activity.referral.resolved ? (
                                             <>
-                                                <Text style={styles.subItemText}>{t("commons.resolved")}</Text>
+                                                <Text style={styles.subItemText}>{t("general.resolved")}</Text>
                                                 <Icon
                                                     name="check-circle"
                                                     size={15}
@@ -154,7 +154,7 @@ const Timeline = (props: ISummaryProps) => {
                                             </>
                                         ) : (
                                             <>
-                                                <Text style={styles.subItemText}>{t("commons.unresolved")}</Text>
+                                                <Text style={styles.subItemText}>{t("general.unresolved")}</Text>
                                                 <Icon
                                                     name="clock-o"
                                                     size={15}

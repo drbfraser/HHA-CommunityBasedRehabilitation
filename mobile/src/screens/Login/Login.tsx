@@ -147,7 +147,7 @@ const Login = () => {
                 ) : (
                     <View>
                         <TextInput
-                            label={t("commons.username")}
+                            label={t("general.username")}
                             error={status.status === "failed" && !username}
                             value={username}
                             onChangeText={(newUsername) => setUsername(newUsername)}
@@ -169,7 +169,7 @@ const Login = () => {
                 <View>
                     <TextInput
                         {...passwordTextInputProps}
-                        label={t("commons.password")}
+                        label={t("general.password")}
                         error={status.status === "failed" && !password}
                         value={password}
                         onChangeText={(newPassword) => setPassword(newPassword)}

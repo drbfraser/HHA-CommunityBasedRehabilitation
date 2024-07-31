@@ -65,7 +65,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                     setShowModal(true);
                 }}
             >
-                {t("commons.update")}
+                {t("general.update")}
             </Button>
             <Formik
                 initialValues={getRiskFormInitialValues()}
@@ -201,7 +201,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     }
                                 }}
                             >
-                                {t("commons.save")}
+                                {t("general.save")}
                             </Button>
                         </Modal>
                     </Portal>

@@ -35,7 +35,7 @@ export const handleSubmit = async (
 
         AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {
-        const initialMessage = i18n.t("alert.actionFailure", {action: i18n.t("commons.edit"), object: i18n.t("commons.client")});
+        const initialMessage = i18n.t("alert.actionFailure", {action: i18n.t("general.edit"), object: i18n.t("general.client")});
         alert(initialMessage);
     }
 };

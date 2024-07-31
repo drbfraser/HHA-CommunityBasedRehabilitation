@@ -37,15 +37,15 @@ export const ClientRisk = (props: riskProps) => {
                 <Card style={styles.riskCardStyle}>
                     <View style={styles.riskCardContentStyle}>
                         {risk.risk_type === RiskType.HEALTH ? (
-                            <Text style={styles.riskTitleStyle}>{t("commons.health")}</Text>
+                            <Text style={styles.riskTitleStyle}>{t("general.health")}</Text>
                         ) : risk.risk_type === RiskType.EDUCATION ? (
-                            <Text style={styles.riskTitleStyle}>{t("commons.education")}</Text>
+                            <Text style={styles.riskTitleStyle}>{t("general.education")}</Text>
                         ) : risk.risk_type === RiskType.SOCIAL ? (
-                            <Text style={styles.riskTitleStyle}>{t("commons.social")}</Text>
+                            <Text style={styles.riskTitleStyle}>{t("general.social")}</Text>
                         ) : risk.risk_type === RiskType.NUTRITION ? (
-                            <Text style={styles.riskTitleStyle}>{t("commons.nutrition")}</Text>
+                            <Text style={styles.riskTitleStyle}>{t("general.nutrition")}</Text>
                         ) : (
-                            <Text style={styles.riskTitleStyle}>{t("commons.mental")}</Text>
+                            <Text style={styles.riskTitleStyle}>{t("general.mental")}</Text>
                         )}
                         <Text
                             style={riskStyles(riskLevels[risk.risk_level].color).riskSubtitleStyle}
@@ -54,11 +54,11 @@ export const ClientRisk = (props: riskProps) => {
                         </Text>
                     </View>
                     <View>
-                        <Text style={styles.riskHeaderStyle}>{t("commons.requirements")}: </Text>
+                        <Text style={styles.riskHeaderStyle}>{t("general.requirements")}: </Text>
                         <Text style={styles.riskRequirementStyle}>{risk.requirement}</Text>
                     </View>
                     <View>
-                        <Text style={styles.riskHeaderStyle}>{t("commons.goals")}: </Text>
+                        <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
                         <Text style={styles.riskRequirementStyle}>{risk.goal}</Text>
                     </View>
                     <View style={styles.clientDetailsFinalView}></View>

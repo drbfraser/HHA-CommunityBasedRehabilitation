@@ -24,7 +24,7 @@ const ShowMore = () => {
                     <View style={styles.verticleLine}></View>
                 </View>
                 <View style={styles.subItem}>
-                    <Text style={styles.subItemTextDark}>{t("commons.showMore")}</Text>
+                    <Text style={styles.subItemTextDark}>{t("general.showMore")}</Text>
                     <Button
                         style={styles.arrowButton}
                         icon={"chevron-double-down"}

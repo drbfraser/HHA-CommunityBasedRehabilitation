@@ -93,8 +93,6 @@
         "physiotherapy": "-Physiotherapy",
         "prosthetic": "-Prosthetic",
         "orthotic": "-Orthotic",
-        "hhanapAbbreviation": "-HHA Nutrition and Agriculture Program",
-        "hhanap": "-HHANAP",
         "alert": "-Alert",
         "alerts": "-Alerts",
         "discard": "-Discard",
@@ -169,8 +167,6 @@
         "education": "-Education (under 18)",
         "livelihood": "-Livelihood (over 16)"
     },
-
-
     "referralAttr": {
         "dateReferred": "-Date Referred",
         "newReferral": "-New Referral",

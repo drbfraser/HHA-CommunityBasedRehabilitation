@@ -135,7 +135,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                             <Text style={styles.labelBold}>{t("visitAttr.date")}:</Text>{" "}
                             {timestampToDateTime(visit.created_at)}
                             {"\n"}
-                            <Text style={styles.labelBold}>{t("commons.village")}:</Text> {visit.village}
+                            <Text style={styles.labelBold}>{t("general.village")}:</Text> {visit.village}
                         </Text>
                     </Card.Content>
                 </Card>
@@ -170,7 +170,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 </Dialog.Content>
                 <Dialog.Actions>
                     <Button onPress={onClose} color={themeColors.blueBgDark}>
-                        {t("commons.close")}
+                        {t("general.close")}
                     </Button>
                 </Dialog.Actions>
             </>

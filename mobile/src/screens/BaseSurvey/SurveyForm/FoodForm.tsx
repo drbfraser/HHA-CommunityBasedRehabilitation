@@ -72,12 +72,12 @@ const FoodForm = (props: IFormProps) => {
 
                     <Portal>
                         <Dialog visible={alertInfo} onDismiss={hideAlert}>
-                            <Dialog.Title>{t("commons.reminder")}</Dialog.Title>
+                            <Dialog.Title>{t("general.reminder")}</Dialog.Title>
                             <Dialog.Content>
                                 <Paragraph>{t("survey.referralRequired")}</Paragraph>
                             </Dialog.Content>
                             <Dialog.Actions>
-                                <Button onPress={hideAlert}>{t("commons.ok")}</Button>
+                                <Button onPress={hideAlert}>{t("general.ok")}</Button>
                             </Dialog.Actions>
                         </Dialog>
                     </Portal>

@@ -46,8 +46,8 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
         <>
             <ConfirmDialogWithNavListener
                 bypassDialog={hasSubmitted}
-                confirmButtonText={t("commons.discard")}
-                dialogContent={t("commons.discardChanges")}
+                confirmButtonText={t("general.discard")}
+                dialogContent={t("general.discardChanges")}
             />
             <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
                 <View style={styles.container}>
@@ -190,7 +190,7 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
                                         onPress={formikProps.handleSubmit}
                                         mode="contained"
                                     >
-                                        {t("commons.save")}
+                                        {t("general.save")}
                                     </Button>
                                 </View>
                             </>

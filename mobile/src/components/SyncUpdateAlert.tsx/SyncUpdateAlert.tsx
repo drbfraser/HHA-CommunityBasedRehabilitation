@@ -153,7 +153,7 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                                                 style={styles.enabledButton}
                                                 onPress={() => shutdownModal()}
                                             >
-                                                <Text style={styles.buttonText}>{t("commons.cancel")}</Text>
+                                                <Text style={styles.buttonText}>{t("general.cancel")}</Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -168,7 +168,7 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                                                 disabled={!syncConfirmed}
                                                 onPress={() => onConfirm()}
                                             >
-                                                <Text style={styles.buttonText}>{t("commons.confirm")}</Text>
+                                                <Text style={styles.buttonText}>{t("general.confirm")}</Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -190,7 +190,7 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                                     ]}
                                     onPress={() => shutdownModal()}
                                 >
-                                    <Text style={styles.buttonText}>{t("commons.ok")}</Text>
+                                    <Text style={styles.buttonText}>{t("general.ok")}</Text>
                                 </TouchableOpacity>
                             </>
                         )}

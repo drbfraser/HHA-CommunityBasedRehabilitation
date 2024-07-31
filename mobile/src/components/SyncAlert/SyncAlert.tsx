@@ -80,7 +80,7 @@ export default function SyncAlert({
                                 marginBottom: 10,
                             }}
                         >
-                            <Text style={{ color: "white", margin: 15 }}>{t("commons.ok")}</Text>
+                            <Text style={{ color: "white", margin: 15 }}>{t("general.ok")}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

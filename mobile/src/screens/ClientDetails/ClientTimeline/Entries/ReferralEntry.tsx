@@ -68,7 +68,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
         };
 
         const outcomeFieldLabels = {
-            [OutcomeField.outcome]: t("commons.outcome"),
+            [OutcomeField.outcome]: t("general.outcome"),
         };
         type TOutcomeValues = typeof initialValues;
 
@@ -152,11 +152,11 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         ? t('referralAttr.resolutionStatus', {context: 'resolved'}) 
                         : t('referralAttr.resolutionStatus', {context: 'pending'})}
                         {"\n\n"}
-                        {referral.wheelchair && <ReasonChip label={t("commons.wheelchair")} />}
-                        {referral.physiotherapy && <ReasonChip label={t("commons.physiotherapy")} />}
-                        {referral.prosthetic && <ReasonChip label={t("commons.prosthetic")} />}
-                        {referral.orthotic && <ReasonChip label={t("commons.orthotic")} />}
-                        {referral.mental_health && <ReasonChip label={t("commons.mental")} />}
+                        {referral.wheelchair && <ReasonChip label={t("general.wheelchair")} />}
+                        {referral.physiotherapy && <ReasonChip label={t("general.physiotherapy")} />}
+                        {referral.prosthetic && <ReasonChip label={t("general.prosthetic")} />}
+                        {referral.orthotic && <ReasonChip label={t("general.orthotic")} />}
+                        {referral.mental_health && <ReasonChip label={t("general.mental")} />}
                     </Dialog.Title>
                     <Dialog.Content>
                         <Text>
@@ -171,7 +171,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                     {timestampToDateTime(referral.date_resolved)}
                                 </Text>
                                 <Text>
-                                    <Text style={styles.labelBold}>{t("commons.outcome")}: </Text>
+                                    <Text style={styles.labelBold}>{t("general.outcome")}: </Text>
                                     {referral.outcome}
                                 </Text>
                             </>
@@ -259,7 +259,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                             onPress={onClose}
                             color={themeColors.blueBgDark}
                         >
-                            {t("commons.close")}
+                            {t("general.close")}
                         </Button>
                     </Dialog.Actions>
                 </>

@@ -107,12 +107,12 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
 
     const surveySteps: ISurvey[] = [
         {
-            label: t("commons.consent"),
+            label: t("general.consent"),
             Form: (formikProps) => ConsentForm(formikProps),
             validationSchema: emptyValidationSchema,
         },
         {
-            label: t("commons.health"),
+            label: t("general.health"),
             Form: (formikProps) => HealthForm(formikProps),
             validationSchema: healthValidationSchema,
         },
@@ -122,7 +122,7 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
             validationSchema: educationValidationSchema,
         },
         {
-            label: t("commons.social"),
+            label: t("general.social"),
             Form: (formikProps) => SocialForm(formikProps),
             validationSchema: emptyValidationSchema,
         },
@@ -137,7 +137,7 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
             validationSchema: foodValidationSchema,
         },
         {
-            label: t("commons.empowerment"),
+            label: t("general.empowerment"),
             Form: (formikProps) => EmpowermentForm(formikProps),
             validationSchema: empowermentValidationSchema,
         },
@@ -152,8 +152,8 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
         <>
             <ConfirmDialogWithNavListener
                 bypassDialog={hasSubmitted}
-                confirmButtonText={t("commons.discard")}
-                dialogContent={t("commons.discardAdded")}
+                confirmButtonText={t("general.discard")}
+                dialogContent={t("general.discardAdded")}
             />
             <Formik
                 initialValues={baseInitialValues}

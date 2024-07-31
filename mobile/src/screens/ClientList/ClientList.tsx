@@ -83,13 +83,13 @@ const ClientList = () => {
     };
 
     const columnList = {
-        0: t("commons.name"),
-        1: t("commons.zone"),
-        2: t("commons.health"),
-        3: t("commons.education"),
-        4: t("commons.social"),
-        5: t("commons.nutrition"),
-        6: t("commons.mentalHealth"),
+        0: t("general.name"),
+        1: t("general.zone"),
+        2: t("general.health"),
+        3: t("general.education"),
+        4: t("general.social"),
+        5: t("general.nutrition"),
+        6: t("general.mentalHealth"),
     };
 
     const clientSortBy = (option: string) => {
@@ -182,7 +182,7 @@ const ClientList = () => {
                 ) : (
                     <Searchbar
                         style={styles.search}
-                        placeholder={t("commons.search")}
+                        placeholder={t("general.search")}
                         onChangeText={onChangeSearch}
                         value={searchQuery}
                     />
@@ -203,7 +203,7 @@ const ClientList = () => {
                         <CustomMultiPicker
                             options={columnList}
                             multiple={true}
-                            placeholder={t("commons.selectObject", {object: "commons.columns"})}
+                            placeholder={t("general.selectObject", {object: "general.columns"})}
                             placeholderTextColor={themeColors.blueBgLight}
                             returnValue={"value"}
                             callback={(label) => {
@@ -231,7 +231,7 @@ const ClientList = () => {
                 />
                 <Text style={styles.container}>{t("dashboard.allClients")}</Text>
 
-                <Text style={{ textAlign: "center", fontSize: 16 }}>{t("commons.filterBy")}</Text>
+                <Text style={{ textAlign: "center", fontSize: 16 }}>{t("general.filterBy")}</Text>
                 <Picker
                     style={styles.select}
                     selectedValue={selectedSearchOption}
@@ -240,8 +240,8 @@ const ClientList = () => {
                         setSearchQuery("");
                     }}
                 >
-                    <Picker.Item label={t("commons.name")} value={SearchOption.NAME} />
-                    <Picker.Item label={t("commons.zone")} value={SearchOption.ZONE} />
+                    <Picker.Item label={t("general.name")} value={SearchOption.NAME} />
+                    <Picker.Item label={t("general.zone")} value={SearchOption.ZONE} />
                 </Picker>
             </View>
             <View style={styles.checkbox}>

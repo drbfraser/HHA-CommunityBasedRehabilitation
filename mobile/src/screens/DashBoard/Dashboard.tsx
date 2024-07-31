@@ -142,7 +142,7 @@ const Dashboard = () => {
             <ConflictDialog />
             <ScrollView>
                 <View style={styles.row}>
-                    <Text style={styles.title}>{t("commons.dashboard")}</Text>
+                    <Text style={styles.title}>{t("general.dashboard")}</Text>
                 </View>
                 <View>
                     {unreadAlertsCount > 0 ? (
@@ -166,14 +166,14 @@ const Dashboard = () => {
                                         onPress={() => clientSortBy("name")}
                                         sortDirection={clientArrowDirectionController("name")}
                                     >
-                                        {t("commons.name")}
+                                        {t("general.name")}
                                     </DataTable.Title>
                                     <DataTable.Title
                                         style={styles.column_client_zone}
                                         onPress={() => clientSortBy("zone")}
                                         sortDirection={clientArrowDirectionController("zone")}
                                     >
-                                        {t("commons.zone")}
+                                        {t("general.zone")}
                                     </DataTable.Title>
                                     <DataTable.Title
                                         style={styles.column_client_icon}
@@ -283,7 +283,7 @@ const Dashboard = () => {
                                             SortOptions.NAME
                                         )}
                                     >
-                                        {t("commons.name")}
+                                        {t("general.name")}
                                     </DataTable.Title>
                                     <DataTable.Title
                                         style={styles.column_referral_type}
@@ -292,7 +292,7 @@ const Dashboard = () => {
                                             SortOptions.TYPE
                                         )}
                                     >
-                                        {t("commons.type")}
+                                        {t("general.type")}
                                     </DataTable.Title>
                                     <DataTable.Title
                                         style={styles.column_referral_date}

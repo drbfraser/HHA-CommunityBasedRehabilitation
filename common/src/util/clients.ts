@@ -63,8 +63,8 @@ export enum SortOptions {
 }
 
 export const genders = {
-    [Gender.FEMALE]: i18n.t("common.clientFields.female"),
-    [Gender.MALE]: i18n.t("common.clientFields.male"),
+    [Gender.FEMALE]: i18n.t("clientFields.female"),
+    [Gender.MALE]: i18n.t("clientFields.male"),
 };
 
 export const clientPrioritySort = (a: IClientSummary, b: IClientSummary) => {

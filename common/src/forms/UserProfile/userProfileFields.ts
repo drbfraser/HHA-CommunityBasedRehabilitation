@@ -9,9 +9,9 @@ export enum ChangePasswordField {
 }
 
 export const changePasswordFieldLabels = {
-    [ChangePasswordField.oldPassword]: i18n.t("common.userProfile.oldPassword"),
-    [ChangePasswordField.newPassword]: i18n.t("common.userProfile.newPassword"),
-    [ChangePasswordField.confirmNewPassword]: i18n.t("common.userProfile.confirmNewPassword"),
+    [ChangePasswordField.oldPassword]: i18n.t("userProfile.oldPassword"),
+    [ChangePasswordField.newPassword]: i18n.t("userProfile.newPassword"),
+    [ChangePasswordField.confirmNewPassword]: i18n.t("userProfile.confirmNewPassword"),
 };
 
 export const changePasswordInitialValues = {
@@ -30,10 +30,10 @@ export const changePassValidationSchema = () =>
         [ChangePasswordField.newPassword]: Yup.string()
             .label(changePasswordFieldLabels[ChangePasswordField.newPassword])
             .matches(Validation.passwordRegExp, Validation.passwordInvalidMsg)
-            .notOneOf([Yup.ref(ChangePasswordField.oldPassword)], i18n.t("common.userProfile.passwordsMustBeDifferent"))
+            .notOneOf([Yup.ref(ChangePasswordField.oldPassword)], i18n.t("userProfile.passwordsMustBeDifferent"))
             .required(),
         [ChangePasswordField.confirmNewPassword]: Yup.string()
             .label(changePasswordFieldLabels[ChangePasswordField.confirmNewPassword])
-            .oneOf([Yup.ref(ChangePasswordField.newPassword)], i18n.t("common.userProfile.passwordsMustMatch"))
+            .oneOf([Yup.ref(ChangePasswordField.newPassword)], i18n.t("userProfile.passwordsMustMatch"))
             .required(),
     });

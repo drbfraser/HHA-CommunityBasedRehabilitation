@@ -86,42 +86,42 @@ export const referralServicesTypes = [
 ];
 
 export const referralFieldLabels = {
-    [ReferralFormField.client_id]: i18n.t("common.referral.client_id"),
-    [ReferralFormField.wheelchair]: i18n.t("common.referral.wheelchair"),
-    [ReferralFormField.wheelchairExperience]: i18n.t("common.referral.wheelchairExperience"),
-    [ReferralFormField.picture]: i18n.t("common.referral.picture"),
-    [ReferralFormField.hipWidth]: i18n.t("common.referral.hipWidth"),
-    [ReferralFormField.wheelchairOwned]: i18n.t("common.referral.wheelchairOwned"),
-    [ReferralFormField.wheelchairRepairable]: i18n.t("common.referral.wheelchairRepairable"),
-    [ReferralFormField.physiotherapy]: i18n.t("common.referral.physiotherapy"),
-    [ReferralFormField.condition]: i18n.t("common.referral.condition"),
-    [ReferralFormField.conditionOther]: i18n.t("common.referral.conditionOther"),
-    [ReferralFormField.prosthetic]: i18n.t("common.referral.prosthetic"),
-    [ReferralFormField.prostheticInjuryLocation]: i18n.t("common.referral.prostheticInjuryLocation"),
-    [ReferralFormField.orthotic]: i18n.t("common.referral.orthotic"),
-    [ReferralFormField.orthoticInjuryLocation]: i18n.t("common.referral.orthoticInjuryLocation"),
+    [ReferralFormField.client_id]: i18n.t("referral.client_id"),
+    [ReferralFormField.wheelchair]: i18n.t("referral.wheelchair"),
+    [ReferralFormField.wheelchairExperience]: i18n.t("referral.wheelchairExperience"),
+    [ReferralFormField.picture]: i18n.t("referral.picture"),
+    [ReferralFormField.hipWidth]: i18n.t("referral.hipWidth"),
+    [ReferralFormField.wheelchairOwned]: i18n.t("referral.wheelchairOwned"),
+    [ReferralFormField.wheelchairRepairable]: i18n.t("referral.wheelchairRepairable"),
+    [ReferralFormField.physiotherapy]: i18n.t("referral.physiotherapy"),
+    [ReferralFormField.condition]: i18n.t("referral.condition"),
+    [ReferralFormField.conditionOther]: i18n.t("referral.conditionOther"),
+    [ReferralFormField.prosthetic]: i18n.t("referral.prosthetic"),
+    [ReferralFormField.prostheticInjuryLocation]: i18n.t("referral.prostheticInjuryLocation"),
+    [ReferralFormField.orthotic]: i18n.t("referral.orthotic"),
+    [ReferralFormField.orthoticInjuryLocation]: i18n.t("referral.orthoticInjuryLocation"),
 
-    [ReferralFormField.mentalHealth]: i18n.t("common.referral.mentalHealth"),
-    [ReferralFormField.mentalHealthCondition]: i18n.t("common.referral.mentalHealthCondition"),
-    [ReferralFormField.mentalConditionOther]: i18n.t("common.referral.mentalConditionOther"),
+    [ReferralFormField.mentalHealth]: i18n.t("referral.mentalHealth"),
+    [ReferralFormField.mentalHealthCondition]: i18n.t("referral.mentalHealthCondition"),
+    [ReferralFormField.mentalConditionOther]: i18n.t("referral.mentalConditionOther"),
 
-    [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t("common.referral.hhaNutritionAndAgricultureProject"),
-    [ReferralFormField.emergencyFoodAidRequired]: i18n.t("common.referral.emergencyFoodAidRequired"),
-    [ReferralFormField.agricultureLivelihoodProgramEnrollment]: i18n.t("common.referral.agricultureLivelihoodProgramEnrollment"),
+    [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t("referral.hhaNutritionAndAgricultureProject"),
+    [ReferralFormField.emergencyFoodAidRequired]: i18n.t("referral.emergencyFoodAidRequired"),
+    [ReferralFormField.agricultureLivelihoodProgramEnrollment]: i18n.t("referral.agricultureLivelihoodProgramEnrollment"),
 
-    [ReferralFormField.servicesOther]: i18n.t("common.referral.servicesOther"),
-    [ReferralFormField.otherDescription]: i18n.t("common.referral.otherDescription"),
-    [ReferralFormField.referralOther]: i18n.t("common.referral.referralOther"),
+    [ReferralFormField.servicesOther]: i18n.t("referral.servicesOther"),
+    [ReferralFormField.otherDescription]: i18n.t("referral.otherDescription"),
+    [ReferralFormField.referralOther]: i18n.t("referral.referralOther"),
 };
 
 export const referralStatsChartLabels = {
-    [ReferralFormField.wheelchair]: i18n.t("common.referral.wheelchair"),
-    [ReferralFormField.physiotherapy]: i18n.t("common.referral.physiotherapy"),
-    [ReferralFormField.orthotic]: i18n.t("common.referral.orthotic"),
-    [ReferralFormField.prosthetic]: i18n.t("common.referral.prosthetic"),
-    [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t("common.referral.hhaNutritionAndAgricultureProjectAbbr"),
-    [ReferralFormField.mentalHealth]: i18n.t("common.referral.mentalHealth"),
-    [ReferralFormField.servicesOther]: i18n.t("common.referral.servicesOther"),
+    [ReferralFormField.wheelchair]: i18n.t("referral.wheelchair"),
+    [ReferralFormField.physiotherapy]: i18n.t("referral.physiotherapy"),
+    [ReferralFormField.orthotic]: i18n.t("referral.orthotic"),
+    [ReferralFormField.prosthetic]: i18n.t("referral.prosthetic"),
+    [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t("referral.hhaNutritionAndAgricultureProjectAbbr"),
+    [ReferralFormField.mentalHealth]: i18n.t("referral.mentalHealth"),
+    [ReferralFormField.servicesOther]: i18n.t("referral.servicesOther"),
 };
 
 export const referralInitialValues = {
@@ -181,14 +181,14 @@ export const physiotherapyValidationSchema = () =>
             .trim()
             .test(
                 "require-if-other-selected",
-                i18n.t("common.referral.otherConditionRequired"),
+                i18n.t("referral.otherConditionRequired"),
                 async (conditionOther, schema) =>
                     !(await isOtherCondition(schema.parent.condition)) ||
                     (conditionOther !== undefined && conditionOther.length > 0)
             )
             .test(
                 "require-if-other-selected",
-                i18n.t("common.referral.otherConditionAtMost100Char"),
+                i18n.t("referral.otherConditionAtMost100Char"),
                 async (conditionOther, schema) =>
                     !(await isOtherCondition(schema.parent.condition)) ||
                     (conditionOther !== undefined && conditionOther.length <= 100)
@@ -214,14 +214,14 @@ export const mentalHealthValidationSchema = () =>
             .trim()
             .test(
                 "require-if-other-selected",
-                i18n.t("common.referral.otherConditionRequired"),
+                i18n.t("referral.otherConditionRequired"),
                 async (conditionOther) =>
                     !isOtherMentalCondition(conditionOther!) ||
                     (conditionOther !== undefined && conditionOther.length > 0)
             )
             .test(
                 "require-if-other-selected",
-                i18n.t("common.referral.mentalConditionAtMost100Char"),
+                i18n.t("referral.mentalConditionAtMost100Char"),
                 async (conditionOther) =>
                     !isOtherMentalCondition(conditionOther!) ||
                     (conditionOther !== undefined && conditionOther.length <= 100)
@@ -240,7 +240,7 @@ export const hhaNutritionAndAgricultureProjectValidationSchema = () =>
         })
         .test(
             "require-atleast-one-checkbox", 
-            i18n.t("common.referral.atLeastOneCheckbox"),
+            i18n.t("referral.atLeastOneCheckbox"),
             (obj) => {
                 if (
                     obj[ReferralFormField.agricultureLivelihoodProgramEnrollment] ||
@@ -249,7 +249,7 @@ export const hhaNutritionAndAgricultureProjectValidationSchema = () =>
                     return true;
                 }
 
-                return new Yup.ValidationError(i18n.t("common.referral.selectOneOption"), null, "custom");
+                return new Yup.ValidationError(i18n.t("referral.selectOneOption"), null, "custom");
             }
         );
 

@@ -45,6 +45,6 @@ export const handleSubmit = async (
         const risk = await updateRisk(updatedRisk);
         setRisk(risk);
     } catch (e) {
-        alert(i18n.t("common.risks.riskUpdateError"));
+        alert(i18n.t("risks.riskUpdateError"));
     }
 };

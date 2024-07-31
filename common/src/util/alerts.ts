@@ -20,9 +20,9 @@ export enum PriorityLevel {
 }
 
 export const priorities = {
-    [PriorityLevel.HIGH]: i18n.t("common.alerts.high"),
-    [PriorityLevel.MEDIUM]: i18n.t("common.alerts.medium"),
-    [PriorityLevel.LOW]: i18n.t("common.alerts.low"),
+    [PriorityLevel.HIGH]: i18n.t("alerts.high"),
+    [PriorityLevel.MEDIUM]: i18n.t("alerts.medium"),
+    [PriorityLevel.LOW]: i18n.t("alerts.low"),
 };
 
 export interface IPriorityLevel {
@@ -34,17 +34,17 @@ export interface IPriorityLevel {
 export const priorityLevels: { [key: string]: IPriorityLevel } = {
     [PriorityLevel.LOW]: {
         level: 0,
-        name: i18n.t("common.alerts.low"),
+        name: i18n.t("alerts.low"),
         color: themeColors.riskGreen,
     },
     [PriorityLevel.MEDIUM]: {
         level: 1,
-        name: i18n.t("common.alerts.medium"),
+        name: i18n.t("alerts.medium"),
         color: themeColors.riskYellow,
     },
     [PriorityLevel.HIGH]: {
         level: 4,
-        name: i18n.t("common.alerts.high"),
+        name: i18n.t("alerts.high"),
         color: themeColors.riskRed,
     },
 };

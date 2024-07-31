@@ -95,7 +95,7 @@ export const handleNewWebClientSubmit = async (
         return client;
     } catch (e) {
         
-        const initialMessage = i18n.t("common.clientFields.errorCreatingClient");
+        const initialMessage = i18n.t("clientFields.errorCreatingClient");
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);
@@ -145,7 +145,7 @@ export const handleUpdateClientSubmit = async (
         await updateClient(formData, values.id);
         setIsEditing(false);
     } catch (e) {
-        const initialMessage = i18n.t("common.clientFields.errorEditingClient");
+        const initialMessage = i18n.t("clientFields.errorEditingClient");
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);
@@ -161,22 +161,22 @@ export const handleArchiveConfirmation = (
 ): boolean => {
     if (loadingError) {
         window.alert(
-            i18n.t("common.clientFields.errorFetching", {loadingError: loadingError})
+            i18n.t("clientFields.errorFetching", {loadingError: loadingError})
         );
     } else if (user.role !== UserRole.ADMIN) {
         window.alert(
-            i18n.t("common.clientFields.notAuthorizedToArchive")
+            i18n.t("clientFields.notAuthorizedToArchive")
         );
     } else {
         // Simplify logic for confirmation dialog construction
         const action = values.is_active ? 
-                            i18n.t("common.clientFields.archive")
-                            : i18n.t("common.clientFields.dearchive");
+                            i18n.t("clientFields.archive")
+                            : i18n.t("clientFields.dearchive");
         const clientActiveError = values.is_active ?
-                            i18n.t("common.clientFields.cannotEditArchived")
+                            i18n.t("clientFields.cannotEditArchived")
                             : "";
         if (window.confirm(
-                i18n.t("common.clientFields.sureToArchiveClient", {
+                i18n.t("clientFields.sureToArchiveClient", {
                     action: action,
                     first_name: values.first_name,
                     last_name: values.last_name,
@@ -194,7 +194,7 @@ export const handleArchiveConfirmation = (
 export const handleCancel = (resetForm: () => void, setIsEditing: (isEditing: boolean) => void) => {
     if (
         window.confirm(
-            i18n.t("common.clientFields.sureToCancelEditClient")
+            i18n.t("clientFields.sureToCancelEditClient")
         )
     ) {
         resetForm();
@@ -204,7 +204,7 @@ export const handleCancel = (resetForm: () => void, setIsEditing: (isEditing: bo
 
 export const handleReset = (resetForm: () => void) => {
     if (window.confirm(
-            i18n.t("common.clientFields.sureToClearForm")
+            i18n.t("clientFields.sureToClearForm")
         )
     ) {
         resetForm();

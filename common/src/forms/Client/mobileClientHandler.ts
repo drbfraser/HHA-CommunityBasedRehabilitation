@@ -84,7 +84,7 @@ export const handleNewMobileClientSubmit = async (
         const client: IClient = await addMobileClient(formData);
         return client;
     } catch (e) {
-        const initialMessage = i18n.t("common.clientFields.errorCreatingClient");
+        const initialMessage = i18n.t("clientFields.errorCreatingClient");
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);

@@ -20,15 +20,15 @@ export enum AdminField {
 }
 
 export const adminUserFieldLabels = {
-    [AdminField.username]: i18n.t("common.admin.username"),
-    [AdminField.password]: i18n.t("common.admin.enterPassword"),
-    [AdminField.confirmPassword]: i18n.t("common.admin.confirmPassword"),
-    [AdminField.first_name]: i18n.t("common.admin.firstName"),
-    [AdminField.last_name]: i18n.t("common.admin.lastName"),
-    [AdminField.role]: i18n.t("common.admin.role"),
-    [AdminField.zone]: i18n.t("common.admin.zone"),
-    [AdminField.phone_number]: i18n.t("common.admin.phoneNumber"),
-    [AdminField.is_active]: i18n.t("common.admin.status"),
+    [AdminField.username]: i18n.t("admin.username"),
+    [AdminField.password]: i18n.t("admin.enterPassword"),
+    [AdminField.confirmPassword]: i18n.t("admin.confirmPassword"),
+    [AdminField.first_name]: i18n.t("admin.firstName"),
+    [AdminField.last_name]: i18n.t("admin.lastName"),
+    [AdminField.role]: i18n.t("admin.role"),
+    [AdminField.zone]: i18n.t("admin.zone"),
+    [AdminField.phone_number]: i18n.t("admin.phoneNumber"),
+    [AdminField.is_active]: i18n.t("admin.status"),
 };
 
 export const adminUserInitialValues = {
@@ -67,7 +67,7 @@ const infoValidationShape = {
         .max(50),
     [AdminField.zone]: Yup.string().label(adminUserFieldLabels[AdminField.zone]).required(),
     [AdminField.phone_number]: Yup.string()
-        .matches(Validation.phoneRegExp, i18n.t("common.admin.phoneNumberNotValid"))
+        .matches(Validation.phoneRegExp, i18n.t("admin.phoneNumberNotValid"))
         .label(adminUserFieldLabels[AdminField.phone_number])
         .max(50)
         .required(),
@@ -86,7 +86,7 @@ const passwordValidationShape = {
     [AdminField.confirmPassword]: Yup.string()
         .label(adminUserFieldLabels[AdminField.confirmPassword])
         .required()
-        .oneOf([Yup.ref(AdminField.password)], i18n.t("common.admin.passwordsMustMatch")),
+        .oneOf([Yup.ref(AdminField.password)], i18n.t("admin.passwordsMustMatch")),
 };
 
 export const newUserValidationSchema = Yup.object().shape({

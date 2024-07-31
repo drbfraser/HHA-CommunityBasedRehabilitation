@@ -60,12 +60,12 @@ export enum OutcomeGoalMet {
 
 export const outcomeGoalMets = {
     [OutcomeGoalMet.CANCELLED]: {
-        name: i18n.t("common.newVisit.cancelled"),
+        name: i18n.t("newVisit.cancelled"),
     },
     [OutcomeGoalMet.ONGOING]: {
-        name: i18n.t("common.newVisit.ongoing"),
+        name: i18n.t("newVisit.ongoing"),
     },
     [OutcomeGoalMet.CONCLUDED]: {
-        name: i18n.t("common.newVisit.concluded"),
+        name: i18n.t("newVisit.concluded"),
     },
 };

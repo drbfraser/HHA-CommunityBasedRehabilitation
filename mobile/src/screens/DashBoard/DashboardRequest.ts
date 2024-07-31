@@ -21,25 +21,25 @@ const concatenateReferralType = (referral: IOutstandingReferral) => {
 
     const referralTypes: String[] = [];
     if (referral.orthotic) {
-        referralTypes.push(i18n.t("referralTypes.Orthotic"));
+        referralTypes.push(i18n.t("referral.orthotic"));
     }
     if (referral.physiotherapy) {
-        referralTypes.push(i18n.t("referralTypes.Physiotherapy"));
+        referralTypes.push(i18n.t("referral.physiotherapy"));
     }
     if (referral.prosthetic) {
-        referralTypes.push(i18n.t("referralTypes.Prosthetic"));
+        referralTypes.push(i18n.t("referral.prosthetic"));
     }
     if (referral.wheelchair) {
-        referralTypes.push(i18n.t("referralTypes.Wheelchair"));
+        referralTypes.push(i18n.t("referral.wheelchair"));
     }
     if (referral.hha_nutrition_and_agriculture_project) {
-        referralTypes.push(i18n.t("referralTypes.HHANAP"));
+        referralTypes.push(i18n.t("referral.hhaNutritionAndAgricultureProjectAbbr"));
     }
     if (referral.mental_health) {
-        referralTypes.push(i18n.t("referralTypes.Mental"));
+        referralTypes.push(i18n.t("referral.mental"));
     }
     if (referral.services_other) {
-        referralTypes.push(i18n.t([`referralTypes.${referral.services_other}`]));
+        referralTypes.push(referral.services_other);
     }
 
     return referralTypes.join(", ");

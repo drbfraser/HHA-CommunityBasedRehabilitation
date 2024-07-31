@@ -10,7 +10,7 @@ export enum ZoneField {
 }
 
 export const zoneFieldLabels = {
-    [ZoneField.zone_name]: i18n.t("common.zone.zone"),
+    [ZoneField.zone_name]: i18n.t("zone.zone"),
 };
 
 export const zoneInitialValues = {

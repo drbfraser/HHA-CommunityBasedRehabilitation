@@ -86,52 +86,52 @@ export enum ClientDetailsFields {
 export const isThisExportingString = "Is this exporting? (3)";
 
 export const clientFieldLabels = {
-    [ClientField.firstName]: i18n.t("common.clientFields.firstName"),
-    [ClientField.lastName]: i18n.t("common.clientFields.lastName"),
-    [ClientField.birthDate]: i18n.t("common.clientFields.birthDate"),
-    [ClientField.village]: i18n.t("common.clientFields.village"),
-    [ClientField.gender]: i18n.t("common.clientFields.gender"),
-    [ClientField.zone]: i18n.t("common.clientFields.zone"),
-    [ClientField.phoneNumber]: i18n.t("common.clientFields.phoneNumber"),
-    [ClientField.interviewConsent]: i18n.t("common.clientFields.interviewConsent"),
-    [ClientField.caregiverPresent]: i18n.t("common.clientFields.caregiverPresent"),
-    [ClientField.caregiverPhone]: i18n.t("common.clientFields.caregiverPhone"),
-    [ClientField.caregiverName]: i18n.t("common.clientFields.caregiverName"),
-    [ClientField.caregiverEmail]: i18n.t("common.clientFields.caregiverEmail"),
-    [ClientField.disability]: i18n.t("common.clientFields.disability"),
-    [ClientField.otherDisability]: i18n.t("common.clientFields.otherDisability"),
-    [ClientField.healthRisk]: i18n.t("common.clientFields.healthRisk"),
-    [ClientField.healthRequirements]: i18n.t("common.clientFields.healthRequirements"),
-    [ClientField.healthGoals]: i18n.t("common.clientFields.healthGoals"),
-    [ClientField.educationRisk]: i18n.t("common.clientFields.educationRisk"),
-    [ClientField.educationRequirements]: i18n.t("common.clientFields.educationRequirements"),
-    [ClientField.educationGoals]: i18n.t("common.clientFields.educationGoals"),
-    [ClientField.socialRisk]: i18n.t("common.clientFields.socialRisk"),
-    [ClientField.socialRequirements]: i18n.t("common.clientFields.socialRequirements"),
-    [ClientField.socialGoals]: i18n.t("common.clientFields.socialGoals"),
-    [ClientField.nutritionRisk]: i18n.t("common.clientFields.nutritionRisk"),
-    [ClientField.nutritionRequirements]: i18n.t("common.clientFields.nutritionRequirements"),
-    [ClientField.nutritionGoals]: i18n.t("common.clientFields.nutritionGoals"),
-    [ClientField.mentalRisk]: i18n.t("common.clientFields.mentalRisk"),
-    [ClientField.mentalRequirements]: i18n.t("common.clientFields.mentalRequirements"),
-    [ClientField.mentalGoals]: i18n.t("common.clientFields.mentalGoals"),
+    [ClientField.firstName]: i18n.t("clientFields.firstName"),
+    [ClientField.lastName]: i18n.t("clientFields.lastName"),
+    [ClientField.birthDate]: i18n.t("clientFields.birthDate"),
+    [ClientField.village]: i18n.t("clientFields.village"),
+    [ClientField.gender]: i18n.t("clientFields.gender"),
+    [ClientField.zone]: i18n.t("clientFields.zone"),
+    [ClientField.phoneNumber]: i18n.t("clientFields.phoneNumber"),
+    [ClientField.interviewConsent]: i18n.t("clientFields.interviewConsent"),
+    [ClientField.caregiverPresent]: i18n.t("clientFields.caregiverPresent"),
+    [ClientField.caregiverPhone]: i18n.t("clientFields.caregiverPhone"),
+    [ClientField.caregiverName]: i18n.t("clientFields.caregiverName"),
+    [ClientField.caregiverEmail]: i18n.t("clientFields.caregiverEmail"),
+    [ClientField.disability]: i18n.t("clientFields.disability"),
+    [ClientField.otherDisability]: i18n.t("clientFields.otherDisability"),
+    [ClientField.healthRisk]: i18n.t("clientFields.healthRisk"),
+    [ClientField.healthRequirements]: i18n.t("clientFields.healthRequirements"),
+    [ClientField.healthGoals]: i18n.t("clientFields.healthGoals"),
+    [ClientField.educationRisk]: i18n.t("clientFields.educationRisk"),
+    [ClientField.educationRequirements]: i18n.t("clientFields.educationRequirements"),
+    [ClientField.educationGoals]: i18n.t("clientFields.educationGoals"),
+    [ClientField.socialRisk]: i18n.t("clientFields.socialRisk"),
+    [ClientField.socialRequirements]: i18n.t("clientFields.socialRequirements"),
+    [ClientField.socialGoals]: i18n.t("clientFields.socialGoals"),
+    [ClientField.nutritionRisk]: i18n.t("clientFields.nutritionRisk"),
+    [ClientField.nutritionRequirements]: i18n.t("clientFields.nutritionRequirements"),
+    [ClientField.nutritionGoals]: i18n.t("clientFields.nutritionGoals"),
+    [ClientField.mentalRisk]: i18n.t("clientFields.mentalRisk"),
+    [ClientField.mentalRequirements]: i18n.t("clientFields.mentalRequirements"),
+    [ClientField.mentalGoals]: i18n.t("clientFields.mentalGoals"),
 };
 
 export const updateClientfieldLabels = {
     // TODO: Why are these names in snake_case vs camelCase as used above?
-    [ClientField.first_name]: i18n.t("common.clientFields.firstName"),
-    [ClientField.last_name]: i18n.t("common.clientFields.lastName"),
-    [ClientField.birth_date]: i18n.t("common.clientFields.birthDate"),
-    [ClientField.village]: i18n.t("common.clientFields.village"),
-    [ClientField.gender]: i18n.t("common.clientFields.gender"),
-    [ClientField.zone]: i18n.t("common.clientFields.zone"),
-    [ClientField.phone_number]: i18n.t("common.clientFields.phoneNumber"),
-    [ClientField.caregiver_present]: i18n.t("common.clientFields.caregiverPresent"),
-    [ClientField.caregiver_name]: i18n.t("common.clientFields.caregiverName"),
-    [ClientField.caregiver_phone]: i18n.t("common.clientFields.caregiverPhone"),
-    [ClientField.caregiver_email]: i18n.t("common.clientFields.caregiverEmail"),
-    [ClientField.disability]: i18n.t("common.clientFields.disability"),
-    [ClientField.other_disability]: i18n.t("common.clientFields.otherDisability"),
+    [ClientField.first_name]: i18n.t("clientFields.firstName"),
+    [ClientField.last_name]: i18n.t("clientFields.lastName"),
+    [ClientField.birth_date]: i18n.t("clientFields.birthDate"),
+    [ClientField.village]: i18n.t("clientFields.village"),
+    [ClientField.gender]: i18n.t("clientFields.gender"),
+    [ClientField.zone]: i18n.t("clientFields.zone"),
+    [ClientField.phone_number]: i18n.t("clientFields.phoneNumber"),
+    [ClientField.caregiver_present]: i18n.t("clientFields.caregiverPresent"),
+    [ClientField.caregiver_name]: i18n.t("clientFields.caregiverName"),
+    [ClientField.caregiver_phone]: i18n.t("clientFields.caregiverPhone"),
+    [ClientField.caregiver_email]: i18n.t("clientFields.caregiverEmail"),
+    [ClientField.disability]: i18n.t("clientFields.disability"),
+    [ClientField.other_disability]: i18n.t("clientFields.otherDisability"),
 };
 
 export const clientInitialValues = {
@@ -187,28 +187,28 @@ export const mobileClientDetailsValidationSchema = () =>
             .max(50),
         [ClientField.birthDate]: Yup.date()
             .label(clientFieldLabels[ClientField.birthDate])
-            .max(new Date(), i18n.t("common.clientFields.birthdayNotFuture"))
+            .max(new Date(), i18n.t("clientFields.birthdayNotFuture"))
             .required(),
         [ClientField.phoneNumber]: Yup.string()
             .label(clientFieldLabels[ClientField.phoneNumber])
             .max(50)
-            .matches(Validation.phoneRegExp, i18n.t("common.clientFields.phoneNumberNotValid")),
+            .matches(Validation.phoneRegExp, i18n.t("clientFields.phoneNumberNotValid")),
         [ClientField.disability]: Yup.array()
             .label(clientFieldLabels[ClientField.disability])
-            .min(1, i18n.t("common.clientFields.disabilityRequired"))
+            .min(1, i18n.t("clientFields.disabilityRequired"))
             .required(),
         [ClientField.otherDisability]: Yup.string()
             .label(clientFieldLabels[ClientField.otherDisability])
             .test(
                 "require-if-other-selected",
-                i18n.t("common.clientFields.otherDisabilityRequired"),
+                i18n.t("clientFields.otherDisabilityRequired"),
                 async (otherDisability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
                     (otherDisability !== undefined && otherDisability.length > 0)
             )
             .test(
                 "require-if-other-selected",
-                i18n.t("common.clientFields.otherDisabilityTooLong"),
+                i18n.t("clientFields.otherDisabilityTooLong"),
                 async (otherDisability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
                     (otherDisability !== undefined && otherDisability.length <= 100)
@@ -222,14 +222,14 @@ export const mobileClientDetailsValidationSchema = () =>
         [ClientField.caregiverPhone]: Yup.string()
             .label(clientFieldLabels[ClientField.caregiverPhone])
             .max(50)
-            .matches(Validation.phoneRegExp, i18n.t("common.clientFields.phoneNumberNotValid")),
+            .matches(Validation.phoneRegExp, i18n.t("clientFields.phoneNumberNotValid")),
         [ClientField.caregiverName]: Yup.string()
             .label(clientFieldLabels[ClientField.caregiverName])
             .max(101),
         [ClientField.caregiverEmail]: Yup.string()
             .label(clientFieldLabels[ClientField.caregiverEmail])
             .max(50)
-            .matches(Validation.emailRegExp, i18n.t("common.clientFields.emailAddressNotValid")),
+            .matches(Validation.emailRegExp, i18n.t("clientFields.emailAddressNotValid")),
     });
 
 export const webClientDetailsValidationSchema = () =>
@@ -244,12 +244,12 @@ export const webClientDetailsValidationSchema = () =>
             .max(50),
         [ClientField.birth_date]: Yup.date()
             .label(updateClientfieldLabels[ClientField.birth_date])
-            .max(new Date(), i18n.t("common.clientFields.birthdayNotFuture"))
+            .max(new Date(), i18n.t("clientFields.birthdayNotFuture"))
             .required(),
         [ClientField.phone_number]: Yup.string()
             .label(updateClientfieldLabels[ClientField.phone_number])
             .max(50)
-            .matches(Validation.phoneRegExp, i18n.t("common.clientFields.phoneNumberNotValid")),
+            .matches(Validation.phoneRegExp, i18n.t("clientFields.phoneNumberNotValid")),
         [ClientField.disability]: Yup.array()
             .label(updateClientfieldLabels[ClientField.disability])
             .required(),
@@ -258,14 +258,14 @@ export const webClientDetailsValidationSchema = () =>
             .trim()
             .test(
                 "require-if-other-selected",
-                i18n.t("common.clientFields.otherDisabilityRequired"),
+                i18n.t("clientFields.otherDisabilityRequired"),
                 async (other_disability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
                     (other_disability !== undefined && other_disability.length > 0)
             )
             .test(
                 "require-if-other-selected",
-                i18n.t("common.clientFields.otherDisabilityTooLong"),
+                i18n.t("clientFields.otherDisabilityTooLong"),
                 async (other_disability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
                     (other_disability !== undefined && other_disability.length <= 100)
@@ -285,11 +285,11 @@ export const webClientDetailsValidationSchema = () =>
         [ClientField.caregiver_phone]: Yup.string()
             .label(updateClientfieldLabels[ClientField.caregiver_phone])
             .max(50)
-            .matches(Validation.phoneRegExp, i18n.t("common.clientFields.phoneNumberNotValid")),
+            .matches(Validation.phoneRegExp, i18n.t("clientFields.phoneNumberNotValid")),
         [ClientField.caregiver_email]: Yup.string()
             .label(updateClientfieldLabels[ClientField.caregiver_email])
             .max(50)
-            .matches(Validation.emailRegExp, i18n.t("common.clientFields.emailAddressNotValid")),
+            .matches(Validation.emailRegExp, i18n.t("clientFields.emailAddressNotValid")),
     });
 
 export const newClientValidationSchema = () =>
@@ -306,12 +306,12 @@ export const newClientValidationSchema = () =>
             .max(50),
         [ClientField.birthDate]: Yup.date()
             .label(clientFieldLabels[ClientField.birthDate])
-            .max(new Date(), i18n.t("common.clientFields.birthdayNotFuture"))
+            .max(new Date(), i18n.t("clientFields.birthdayNotFuture"))
             .required(),
         [ClientField.phoneNumber]: Yup.string()
             .label(clientFieldLabels[ClientField.phoneNumber])
             .max(50)
-            .matches(Validation.phoneRegExp, i18n.t("common.clientFields.phoneNumberNotValid")),
+            .matches(Validation.phoneRegExp, i18n.t("clientFields.phoneNumberNotValid")),
         [ClientField.disability]: Yup.array()
             .label(clientFieldLabels[ClientField.disability])
             .min(1)
@@ -320,14 +320,14 @@ export const newClientValidationSchema = () =>
             .label(clientFieldLabels[ClientField.otherDisability])
             .test(
                 "require-if-other-selected",
-                i18n.t("common.clientFields.otherDisabilityRequired"),
+                i18n.t("clientFields.otherDisabilityRequired"),
                 async (otherDisability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
                     (otherDisability !== undefined && otherDisability.length > 0)
             )
             .test(
                 "require-if-other-selected",
-                i18n.t("common.clientFields.otherDisabilityTooLong"),
+                i18n.t("clientFields.otherDisabilityTooLong"),
                 async (otherDisability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
                     (otherDisability !== undefined && otherDisability.length <= 100)
@@ -395,17 +395,17 @@ export const newClientValidationSchema = () =>
             .required(),
         [ClientField.interviewConsent]: Yup.boolean()
             .label(clientFieldLabels[ClientField.interviewConsent])
-            .oneOf([true], i18n.t("common.clientFields.consentToInterviewRequired"))
-            .required(i18n.t("common.clientFields.consentToInterviewRequired")),
+            .oneOf([true], i18n.t("clientFields.consentToInterviewRequired"))
+            .required(i18n.t("clientFields.consentToInterviewRequired")),
         [ClientField.caregiverPhone]: Yup.string()
             .label(clientFieldLabels[ClientField.caregiverPhone])
             .max(50)
-            .matches(Validation.phoneRegExp, i18n.t("common.clientFields.phoneNumberNotValid")),
+            .matches(Validation.phoneRegExp, i18n.t("clientFields.phoneNumberNotValid")),
         [ClientField.caregiverName]: Yup.string()
             .label(clientFieldLabels[ClientField.caregiverName])
             .max(101),
         [ClientField.caregiverEmail]: Yup.string()
             .label(clientFieldLabels[ClientField.caregiverEmail])
             .max(50)
-            .matches(Validation.emailRegExp, i18n.t("common.clientFields.emailAddressNotValid")),
+            .matches(Validation.emailRegExp, i18n.t("clientFields.emailAddressNotValid")),
     });

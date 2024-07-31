@@ -15,8 +15,8 @@ const rejectWithWrappedError = async (e: any): Promise<Response> => {
     if (e.name === "AbortError") {
         return Promise.reject<Response>(
             commonConfiguration.fetchErrorWrapper && e instanceof Error
-                ? await commonConfiguration.fetchErrorWrapper(Error(i18n.t("common.general.requestTimedOut")))
-                : Error(i18n.t("common.general.requestTimedOut"))
+                ? await commonConfiguration.fetchErrorWrapper(Error(i18n.t("general.requestTimedOut")))
+                : Error(i18n.t("general.requestTimedOut"))
         );
     }
 

@@ -34,22 +34,22 @@ export interface IRiskLevel {
 export const riskLevels: { [key: string]: IRiskLevel } = {
     [RiskLevel.LOW]: {
         level: 0,
-        name: i18n.t("common.risks.low"),
+        name: i18n.t("risks.low"),
         color: themeColors.riskGreen,
     },
     [RiskLevel.MEDIUM]: {
         level: 1,
-        name: i18n.t("common.risks.medium"),
+        name: i18n.t("risks.medium"),
         color: themeColors.riskYellow,
     },
     [RiskLevel.HIGH]: {
         level: 4, // 1 high > 3 mediums, as specified by customer
-        name: i18n.t("common.risks.high"),
+        name: i18n.t("risks.high"),
         color: themeColors.riskRed,
     },
     [RiskLevel.CRITICAL]: {
         level: 13, // 1 critical > 3 highs, as specified by customer
-        name: i18n.t("common.risks.critical"),
+        name: i18n.t("risks.critical"),
         color: themeColors.riskBlack,
     },
 };
@@ -60,18 +60,18 @@ export interface IRiskType {
 
 export const riskTypes: { [key: string]: IRiskType } = {
     [RiskType.HEALTH]: {
-        name: i18n.t("common.risks.health"),
+        name: i18n.t("risks.health"),
     },
     [RiskType.EDUCATION]: {
-        name:  i18n.t("common.risks.education"),
+        name:  i18n.t("risks.education"),
     },
     [RiskType.SOCIAL]: {
-        name: i18n.t("common.risks.social"),
+        name: i18n.t("risks.social"),
     },
     [RiskType.NUTRITION]: {
-        name: i18n.t("common.risks.nutrition"),
+        name: i18n.t("risks.nutrition"),
     },
     [RiskType.MENTAL]: {
-        name: i18n.t("common.risks.mental"),
+        name: i18n.t("risks.mental"),
     },
 };

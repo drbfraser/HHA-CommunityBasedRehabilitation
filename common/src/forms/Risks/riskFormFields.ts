@@ -10,9 +10,9 @@ export enum FormField {
 }
 
 export const fieldLabels = {
-    [FormField.risk_level]: i18n.t("common.risks.riskLevel"),
-    [FormField.requirement]: i18n.t("common.risks.requirements"),
-    [FormField.goal]: i18n.t("common.risks.goals"),
+    [FormField.risk_level]: i18n.t("risks.riskLevel"),
+    [FormField.requirement]: i18n.t("risks.requirements"),
+    [FormField.goal]: i18n.t("risks.goals"),
 };
 
 export const validationSchema = () =>

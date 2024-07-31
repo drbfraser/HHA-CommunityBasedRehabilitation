@@ -22,9 +22,9 @@ export const alertInitialValues = {
 export type TAlertValues = typeof alertInitialValues;
 
 export const alertFieldLabels = {
-    [alertField.subject]: i18n.t("common.alerts.subject"),
-    [alertField.priority]: i18n.t("common.alerts.priority"),
-    [alertField.alert_message]: i18n.t("common.alerts.body"),
+    [alertField.subject]: i18n.t("alerts.subject"),
+    [alertField.priority]: i18n.t("alerts.priority"),
+    [alertField.alert_message]: i18n.t("alerts.body"),
 };
 
 export const alertUpdateValues = {

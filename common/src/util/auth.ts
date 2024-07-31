@@ -80,7 +80,7 @@ const requestTokens = async (
 
         if (!resp.ok) {
             throw new APIFetchFailError(
-                i18n.t("common.general.requestTokenFailureHttp", { respStatus: resp.status }),
+                i18n.t("general.requestTokenFailureHttp", { respStatus: resp.status }),
                 resp.status,
                 await resp.json().catch(() => undefined)
             );
@@ -93,14 +93,14 @@ const requestTokens = async (
             return tokens;
         } else {
             throw new Error(
-                i18n.t("common.general.requestTokenFailureInvalid", { respStatus: resp.status })
+                i18n.t("general.requestTokenFailureInvalid", { respStatus: resp.status })
             );
         }
     } catch (e) {
         console.error(e);
         if (e.name === "AbortError" && e instanceof DOMException) {
             throw new Error(
-                i18n.t("common.general.requestTimedOut"),
+                i18n.t("general.requestTimedOut"),
             );
         } else {
             throw e;

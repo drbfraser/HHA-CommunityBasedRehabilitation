@@ -20,13 +20,13 @@ export enum UserRole {
 
 export const userRoles = {
     [UserRole.ADMIN]: {
-        name: i18n.t("common.users.admin"),
+        name: i18n.t("users.admin"),
     },
     [UserRole.CLINICIAN]: {
-        name: i18n.t("common.users.clinician"),
+        name: i18n.t("users.clinician"),
     },
     [UserRole.WORKER]: {
-        name: i18n.t("common.users.worker"),
+        name: i18n.t("users.worker"),
     },
 };
 

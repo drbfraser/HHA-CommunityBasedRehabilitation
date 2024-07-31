@@ -48,21 +48,21 @@ export enum ImprovementFormField {
 }
 
 export const visitFieldLabels = {
-    [VisitFormField.client_id]: i18n.t("common.newVisit.client"),
-    [VisitFormField.village]: i18n.t("common.newVisit.village"),
-    [VisitFormField.zone]: i18n.t("common.newVisit.zone"),
-    [VisitFormField.health]: i18n.t("common.newVisit.health"),
-    [VisitFormField.education]: i18n.t("common.newVisit.education"),
-    [VisitFormField.social]: i18n.t("common.newVisit.social"),
-    [VisitFormField.nutrition]: i18n.t("common.newVisit.nutrition"),
-    [VisitFormField.mental]: i18n.t("common.newVisit.mental"),
-    [VisitFormField.improvements]: i18n.t("common.newVisit.improvements"),
-    [VisitFormField.outcomes]: i18n.t("common.newVisit.outcomes"),
-    [ImprovementFormField.description]: i18n.t("common.newVisit.description"),
-    [OutcomeFormField.outcome]: i18n.t("common.newVisit.outcome"),
-    [GoalStatus.cancelled]: i18n.t("common.newVisit.cancelled"),
-    [GoalStatus.ongoing]: i18n.t("common.newVisit.ongoing"),
-    [GoalStatus.concluded]: i18n.t("common.newVisit.concluded"),
+    [VisitFormField.client_id]: i18n.t("newVisit.client"),
+    [VisitFormField.village]: i18n.t("newVisit.village"),
+    [VisitFormField.zone]: i18n.t("newVisit.zone"),
+    [VisitFormField.health]: i18n.t("newVisit.health"),
+    [VisitFormField.education]: i18n.t("newVisit.education"),
+    [VisitFormField.social]: i18n.t("newVisit.social"),
+    [VisitFormField.nutrition]: i18n.t("newVisit.nutrition"),
+    [VisitFormField.mental]: i18n.t("newVisit.mental"),
+    [VisitFormField.improvements]: i18n.t("newVisit.improvements"),
+    [VisitFormField.outcomes]: i18n.t("newVisit.outcomes"),
+    [ImprovementFormField.description]: i18n.t("newVisit.description"),
+    [OutcomeFormField.outcome]: i18n.t("newVisit.outcome"),
+    [GoalStatus.cancelled]: i18n.t("newVisit.cancelled"),
+    [GoalStatus.ongoing]: i18n.t("newVisit.ongoing"),
+    [GoalStatus.concluded]: i18n.t("newVisit.concluded"),
 };
 
 export const visitInitialValues = {
@@ -92,38 +92,38 @@ export const visitInitialValues = {
 
 export const provisionals: { [key: string]: string[] } = {
     [VisitFormField.health]: [
-        i18n.t("common.newVisit.advice"),
-        i18n.t("common.newVisit.advocacy"),
-        i18n.t("common.newVisit.encouragement"),
-        i18n.t("common.newVisit.orthotic"),
-        i18n.t("common.newVisit.prosthetic"),
-        i18n.t("common.newVisit.referralToHealthCentre"),
-        i18n.t("common.newVisit.wheelchair"),
-        i18n.t("common.newVisit.wheelchairRepair"),
+        i18n.t("newVisit.advice"),
+        i18n.t("newVisit.advocacy"),
+        i18n.t("newVisit.encouragement"),
+        i18n.t("newVisit.orthotic"),
+        i18n.t("newVisit.prosthetic"),
+        i18n.t("newVisit.referralToHealthCentre"),
+        i18n.t("newVisit.wheelchair"),
+        i18n.t("newVisit.wheelchairRepair"),
     ],
     [VisitFormField.education]: [
-        i18n.t("common.newVisit.advice"),
-        i18n.t("common.newVisit.advocacy"),
-        i18n.t("common.newVisit.encouragement"),
-        i18n.t("common.newVisit.referralToOther"),
+        i18n.t("newVisit.advice"),
+        i18n.t("newVisit.advocacy"),
+        i18n.t("newVisit.encouragement"),
+        i18n.t("newVisit.referralToOther"),
     ],
     [VisitFormField.social]: [
-        i18n.t("common.newVisit.advice"),
-        i18n.t("common.newVisit.advocacy"),
-        i18n.t("common.newVisit.encouragement"),
-        i18n.t("common.newVisit.referralToOther"),
+        i18n.t("newVisit.advice"),
+        i18n.t("newVisit.advocacy"),
+        i18n.t("newVisit.encouragement"),
+        i18n.t("newVisit.referralToOther"),
     ],
     [VisitFormField.nutrition]: [
-        i18n.t("common.newVisit.advice"),
-        i18n.t("common.newVisit.advocacy"),
-        i18n.t("common.newVisit.encouragement"),
-        i18n.t("common.newVisit.referralToOther"),
+        i18n.t("newVisit.advice"),
+        i18n.t("newVisit.advocacy"),
+        i18n.t("newVisit.encouragement"),
+        i18n.t("newVisit.referralToOther"),
     ],
     [VisitFormField.mental]: [
-        i18n.t("common.newVisit.advice"),
-        i18n.t("common.newVisit.advocacy"),
-        i18n.t("common.newVisit.encouragement"),
-        i18n.t("common.newVisit.referralToOtherMentalHealth"),
+        i18n.t("newVisit.advice"),
+        i18n.t("newVisit.advocacy"),
+        i18n.t("newVisit.encouragement"),
+        i18n.t("newVisit.referralToOtherMentalHealth"),
     ],
 };
 
@@ -149,7 +149,7 @@ export const visitTypeValidationSchema = (visitType: VisitFormField) =>
                 Yup.object().shape({
                     [ImprovementFormField.description]: Yup.string().test(
                         "Required-If-Enabled",
-                        i18n.t("common.newVisit.isRequiredField", {field: visitFieldLabels[ImprovementFormField.description]}),
+                        i18n.t("newVisit.isRequiredField", {field: visitFieldLabels[ImprovementFormField.description]}),
                         (description, context) =>
                             context.parent.enabled ? description !== undefined : true
                     ),

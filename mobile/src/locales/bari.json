@@ -16,7 +16,7 @@
         "changePassword": "XXChange Password",
         "changePasswordFor": "XXChange password for {{username}} (ID {{userID}})",
         "passwordChangeConfirmation": "XXPassword changed successfully.",
-        "cantLoadUserWithID": "XXUnable to load user with ID {{userID}}",
+        "cantLoadUserWithID": "XXUnable to load user with ID {{userID}}"
     },
     "dashboard": {
         "clientListPriority": "XXPriority Clients",
@@ -58,7 +58,7 @@
     },
     "surveyAttr": {
         "baselineSurvey": "XXBaseline Survey",
-        "surveyDate": "XXSurvey Date",
+        "surveyDate": "XXSurvey Date"
     },
     "visitAttr": {
         "newVisit": "XXNew Visit",
@@ -72,7 +72,7 @@
         "update_education": "XXUpdate Education Risk",
         "update_social": "XXUpdate Social Risk",
         "update_nutrition": "XXUpdate Nutrition Risk",
-        "updateFailureAlert": "XXEncountered an error while trying to update the client's risk",
+        "updateFailureAlert": "XXEncountered an error while trying to update the client's risk"
     },
     "wheelchairAttr": {
         "experience": "XXWheelchair Experience",

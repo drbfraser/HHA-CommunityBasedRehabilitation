@@ -1,4 +1,6 @@
 import { BaseSurveyFormField } from "../forms/BaseSurvey/baseSurveyFields";
+import i18n from "i18next";
+
 
 export interface ISurvey {
     id: number;
@@ -99,101 +101,101 @@ export interface IRateLevel {
 
 export const rateLevel = {
     [RateLevel.VERY_POOR]: {
-        name: "Very poor",
+        name: i18n.t("common.survey.veryPoor"),
         level: 1,
     },
     [RateLevel.POOR]: {
-        name: "Poor",
+        name: i18n.t("common.survey.poor"),
         level: 2,
     },
     [RateLevel.FINE]: {
-        name: "Fine",
+        name: i18n.t("common.survey.fine"),
         level: 3,
     },
     [RateLevel.GOOD]: {
-        name: "Good",
+        name: i18n.t("common.survey.good"),
         level: 4,
     },
 };
 export const deviceTypes = {
-    [DeviceType.WHEELCHAIR]: "Wheelchair",
-    [DeviceType.PROSTHETIC]: "Prosthetic",
-    [DeviceType.ORTHOTIC]: "Orthotic",
-    [DeviceType.CRUTCH]: "Crutch",
-    [DeviceType.WALKING_STICK]: "Walking Stick",
-    [DeviceType.HEARING_AID]: "Hearing Aid",
-    [DeviceType.GLASSES]: "Glasses",
-    [DeviceType.STANDING_FRAME]: "Standing Frame",
-    [DeviceType.CORNER_SEAT]: "Corner Seat",
+    [DeviceType.WHEELCHAIR]: i18n.t("common.survey.wheelchair"),
+    [DeviceType.PROSTHETIC]: i18n.t("common.survey.prosthetic"),
+    [DeviceType.ORTHOTIC]: i18n.t("common.survey.orthotic"),
+    [DeviceType.CRUTCH]: i18n.t("common.survey.crutch"),
+    [DeviceType.WALKING_STICK]: i18n.t("common.survey.walkingStick"),
+    [DeviceType.HEARING_AID]: i18n.t("common.survey.hearingAid"),
+    [DeviceType.GLASSES]: i18n.t("common.survey.glasses"),
+    [DeviceType.STANDING_FRAME]: i18n.t("common.survey.standingFrame"),
+    [DeviceType.CORNER_SEAT]: i18n.t("common.survey.cornerSeat"),
 };
 export const reasonNotSchool = {
-    [ReasonNotSchool.LACK_OF_FUNDING]: "Lack of funding",
-    [ReasonNotSchool.MY_DISABILITY_STOPS_ME]: "My disability stops me",
-    [ReasonNotSchool.OTHER]: "Other",
+    [ReasonNotSchool.LACK_OF_FUNDING]: i18n.t("common.survey.lackOfFunding"),
+    [ReasonNotSchool.MY_DISABILITY_STOPS_ME]: i18n.t("common.survey.myDisabilityStopsMe"),
+    [ReasonNotSchool.OTHER]: i18n.t("common.survey.other"),
 };
 
 export const childNourish = {
-    [ChildNourish.MALNOURISHED]: "Malnourished",
-    [ChildNourish.UNDERNOURISHED]: "Undernourished",
-    [ChildNourish.WELL_NOURISHED]: "Well-nourished",
+    [ChildNourish.MALNOURISHED]: i18n.t("common.survey.malnourished"),
+    [ChildNourish.UNDERNOURISHED]: i18n.t("common.survey.undernourished"),
+    [ChildNourish.WELL_NOURISHED]: i18n.t("common.survey.wellNourished"),
 };
 
 export const isSelfEmployed = {
-    [IsSelfEmployed.EMPLOYED]: "Employed",
-    [IsSelfEmployed.SELFEMPLOYED]: "Self-employed",
+    [IsSelfEmployed.EMPLOYED]: i18n.t("common.survey.employed"),
+    [IsSelfEmployed.SELFEMPLOYED]: i18n.t("common.survey.selfEmployed"),
 };
 
 export const grade = {
     [Grade.P1]: {
-        name: "Primary 1",
+        name: i18n.t("common.survey.primary1"),
         number: 1,
     },
     [Grade.P2]: {
-        name: "Primary 2",
+        name: i18n.t("common.survey.primary2"),
         number: 2,
     },
     [Grade.P3]: {
-        name: "Primary 3",
+        name: i18n.t("common.survey.primary3"),
         number: 3,
     },
     [Grade.P4]: {
-        name: "Primary 4",
+        name: i18n.t("common.survey.primary4"),
         number: 4,
     },
     [Grade.P5]: {
-        name: "Primary 5",
+        name: i18n.t("common.survey.primary5"),
         number: 5,
     },
     [Grade.P6]: {
-        name: "Primary 6",
+        name: i18n.t("common.survey.primary6"),
         number: 6,
     },
     [Grade.P7]: {
-        name: "Primary 7",
+        name: i18n.t("common.survey.primary7"),
         number: 7,
     },
     [Grade.S1]: {
-        name: "Secondary 1",
+        name: i18n.t("common.survey.secondary1"),
         number: 8,
     },
     [Grade.S2]: {
-        name: "Secondary 2",
+        name: i18n.t("common.survey.secondary2"),
         number: 9,
     },
     [Grade.S3]: {
-        name: "Secondary 3",
+        name: i18n.t("common.survey.secondary3"),
         number: 10,
     },
     [Grade.S4]: {
-        name: "Secondary 4",
+        name: i18n.t("common.survey.secondary4"),
         number: 11,
     },
     [Grade.S5]: {
-        name: "Secondary 5",
+        name: i18n.t("common.survey.secondary5"),
         number: 12,
     },
     [Grade.S6]: {
-        name: "Secondary 6",
+        name: i18n.t("common.survey.secondary6"),
         number: 13,
     },
 };

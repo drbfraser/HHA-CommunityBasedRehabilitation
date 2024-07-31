@@ -109,7 +109,7 @@
         "update_education": "-Update Education Risk",
         "update_social": "-Update Social Risk",
         "update_nutrition": "-Update Nutrition Risk",
-        "updateFailureAlert": "-Encountered an error while trying to update the client's risk",
+        "updateFailureAlert": "-Encountered an error while trying to update the client's risk"
     },
     "riskLevels": {
         "Low": "-Low",
@@ -241,7 +241,13 @@
     },
     "referral": {},
 
+
     "common": {
+        "alerts": {
+            "low": "Low",
+            "medium": "Medium",
+            "high": "High"
+        },
         "baseSurveyFields": {
             "client_id": "-Client",
             "surveyConsent": "-I give the consent to take the baseline survey",
@@ -286,7 +292,7 @@
             "ableInfluence": "-I feel like I am able to influence people around me",
             "shelterAndCare": "-Shelter and Care",
             "haveShelter": "-I have adequate shelter",
-            "accessItem": "-I have access to essential items for my household",
+            "accessItem": "-I have access to essential items for my household"
         },
 
         "clientFields": {
@@ -328,6 +334,43 @@
             "otherDisabilityRequired": "-Other disabilities is required",
             "otherDisabilityTooLong": "-Other Disability must be at most 100 characters",
             "consentToInterviewRequired": "-Consent to Interview is required"
+        },
+
+        "survey": {
+            "veryPoor": "-Very Poor",
+            "poor": "-Poor",
+            "fine": "-Fine",
+            "good": "-Good",
+            "wheelchair": "-Wheelchair",
+            "prosthetic": "-Prosthetic",
+            "orthotic": "-Orthotic",
+            "crutch": "-Crutch",
+            "walkingStick": "-Walking Stick",
+            "hearingAid": "-Hearing Aid",
+            "glasses": "-Glasses",
+            "standingFrame": "-StandingFrame",
+            "cornerSeat": "-Corner Seat",
+            "lackOfFunding": "-Lack of funding",
+            "myDisabilityStopsMe": "-My disability stops me",
+            "other": "-Other",
+            "malnourished": "-Malnourished",
+            "undernourished": "-Undernourished",
+            "wellNourished": "-Well-nourished",
+            "employed": "-Employed",
+            "selfEmployed": "-Self Employed",
+            "primary1": "-Primary 1",
+            "primary2": "-Primary 2",
+            "primary3": "-Primary 3",
+            "primary4": "-Primary 4",
+            "primary5": "-Primary 5",
+            "primary6": "-Primary 6",
+            "primary7": "-Primary 7",
+            "secondary1": "-Secondary 1",
+            "secondary2": "-Secondary 2",
+            "secondary3": "-Secondary 3",
+            "secondary4": "-Secondary 4",
+            "secondary5": "-Secondary 5",
+            "secondary6": "-Secondary 6"
         }
     }
 

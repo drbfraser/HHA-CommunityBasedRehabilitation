@@ -1,5 +1,7 @@
 import { themeColors } from "./colors";
 import { Time } from "./time";
+import i18n from "i18next";
+
 
 export interface IAlert {
     id: number;
@@ -18,9 +20,9 @@ export enum PriorityLevel {
 }
 
 export const priorities = {
-    [PriorityLevel.HIGH]: "High",
-    [PriorityLevel.MEDIUM]: "Medium",
-    [PriorityLevel.LOW]: "Low",
+    [PriorityLevel.HIGH]: i18n.t("common.alerts.high"),
+    [PriorityLevel.MEDIUM]: i18n.t("common.alerts.medium"),
+    [PriorityLevel.LOW]: i18n.t("common.alerts.low"),
 };
 
 export interface IPriorityLevel {
@@ -32,17 +34,17 @@ export interface IPriorityLevel {
 export const priorityLevels: { [key: string]: IPriorityLevel } = {
     [PriorityLevel.LOW]: {
         level: 0,
-        name: "Low",
+        name: i18n.t("common.alerts.low"),
         color: themeColors.riskGreen,
     },
     [PriorityLevel.MEDIUM]: {
         level: 1,
-        name: "Medium",
+        name: i18n.t("common.alerts.medium"),
         color: themeColors.riskYellow,
     },
     [PriorityLevel.HIGH]: {
         level: 4,
-        name: "High",
+        name: i18n.t("common.alerts.high"),
         color: themeColors.riskRed,
     },
 };

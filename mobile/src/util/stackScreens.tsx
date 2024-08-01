@@ -17,6 +17,7 @@ import Sync from "../screens/Sync/Sync";
 import Login from "../screens/Login/Login";
 import SwitchServer from "../screens/SwitchServer/SwitchServer";
 import AlertInbox from "../screens/AlertInbox/AlertInbox";
+import i18n from "i18next";
 
 export const stackScreenProps: Record<
     StackScreenName | NoAuthScreenName,
@@ -58,57 +59,57 @@ export const stackScreenOptions: Record<
     [StackScreenName.CLIENT]: ({ route, navigation }) => ({
         headerShown: true,
         header: DefaultHeader(
-            "View client",
-            `Client ID: ${(route as TAppRouteProp<StackScreenName.CLIENT>).params.clientID}`
+            i18n.t("screenNames.viewClient"),
+            `${i18n.t("screenNames.clientID")}{i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.CLIENT>).params.clientID}`
         ),
     }),
     [StackScreenName.ADMIN_VIEW]: {
         headerShown: true,
-        header: DefaultHeader("View user"),
+        header: DefaultHeader(i18n.t("screenNames.viewUser")),
     },
     [StackScreenName.ADMIN_EDIT]: {
         headerShown: true,
-        header: DefaultHeader("Edit user"),
+        header: DefaultHeader(i18n.t("screenNames.editUser")),
     },
     [StackScreenName.ADMIN_NEW]: {
         headerShown: true,
-        header: DefaultHeader("New user"),
+        header: DefaultHeader(i18n.t("screenNames.newUser")),
     },
     [StackScreenName.VISIT]: ({ route, navigation }) => ({
         headerShown: true,
         header: DefaultHeader(
-            "New visit",
-            `Client ID: ${(route as TAppRouteProp<StackScreenName.VISIT>).params.clientID}`
+            i18n.t("screenNames.newVisit"),
+            `${i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.VISIT>).params.clientID}`
         ),
     }),
     [StackScreenName.REFERRAL]: ({ route, navigation }) => ({
         headerShown: true,
         header: DefaultHeader(
-            "New referral",
-            `Client ID: ${(route as TAppRouteProp<StackScreenName.REFERRAL>).params.clientID}`
+            i18n.t("screenNames.newReferral"),
+            `${i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.REFERRAL>).params.clientID}`
         ),
     }),
     [StackScreenName.BASE_SURVEY]: ({ route, navigation }) => ({
         headerShown: true,
         header: DefaultHeader(
-            "New baseline survey",
-            `Client ID: ${(route as TAppRouteProp<StackScreenName.BASE_SURVEY>).params.clientID}`
+            i18n.t("screenNames.newBaselineSurvey"),
+            `${i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.BASE_SURVEY>).params.clientID}`
         ),
     }),
     [StackScreenName.SYNC]: {
         headerShown: true,
-        header: DefaultHeader("Synchronization"),
+        header: DefaultHeader(i18n.t("screenNames.synchronization")),
     },
     [StackScreenName.ALERT_INBOX]: {
         headerShown: true,
-        header: DefaultHeader("Inbox"),
+        header: DefaultHeader(i18n.t("screenNames.inbox"))
     },
     [NoAuthScreenName.LOGIN]: {
         headerShown: false,
     },
     [NoAuthScreenName.SWITCH_SERVER]: {
         headerShown: true,
-        header: DefaultHeader("Switch Target Server"),
+        header: DefaultHeader(i18n.t("screenNames.switchTargetServer")),
     },
 };
 

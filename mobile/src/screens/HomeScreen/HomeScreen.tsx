@@ -102,7 +102,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
                             props.navigation.navigate(StackScreenName.SYNC);
                         }}
                     >
-                        {t('commons.sync')}
+                        {t("general.sync")}
                     </Button>
 
                     <Button
@@ -113,7 +113,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
                             props.navigation.navigate(StackScreenName.ALERT_INBOX);
                         }}
                     >
-                        {t('commons.alerts')}
+                        {t("general.alerts")}
                     </Button>
                 </TabModal>
             </Provider>

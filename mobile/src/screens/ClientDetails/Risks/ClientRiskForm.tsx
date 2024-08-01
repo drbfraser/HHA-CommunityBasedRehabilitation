@@ -126,7 +126,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                                     .riskRadioStyle
                                             }
                                         >
-                                            {t(`riskLevelsAbbreviated.${RiskLevel.LOW}`)}
+                                            {t("riskLevelsAbbreviated.low")}
                                         </Text>
                                         <RadioButton value={RiskLevel.LOW} />
                                     </View>
@@ -137,7 +137,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                                     .riskRadioStyle
                                             }
                                         >
-                                            {t(`riskLevelsAbbreviated.${RiskLevel.MEDIUM}`)}
+                                            {t("riskLevelsAbbreviated.medium")}
                                         </Text>
                                         <RadioButton value={RiskLevel.MEDIUM} />
                                     </View>
@@ -148,7 +148,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                                     .riskRadioStyle
                                             }
                                         >
-                                            {t(`riskLevelsAbbreviated.${RiskLevel.HIGH}`)}
+                                            {t("riskLevelsAbbreviated.high")}
                                         </Text>
                                         <RadioButton value={RiskLevel.HIGH} />
                                     </View>
@@ -159,7 +159,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                                     .riskRadioStyle
                                             }
                                         >
-                                            {t(`riskLevelsAbbreviated.${RiskLevel.CRITICAL}`)}
+                                            {t("riskLevelsAbbreviated.critical")}
                                         </Text>
                                         <RadioButton value={RiskLevel.CRITICAL} />
                                     </View>

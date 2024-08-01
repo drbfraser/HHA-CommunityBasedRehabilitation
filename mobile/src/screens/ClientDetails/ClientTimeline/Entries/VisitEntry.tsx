@@ -153,16 +153,16 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                     {t('visitAttr.visitLocation', {body: zone})}
                     {"\n"}
                     {visitSummary.health_visit && (
-                        <SocialChip label="Health" type={RiskType.HEALTH} />
+                        <SocialChip label={t("newVisit.health")} type={RiskType.HEALTH} />
                     )}{" "}
                     {visitSummary.educat_visit && (
-                        <SocialChip label="Education" type={RiskType.EDUCATION} />
+                        <SocialChip label={t("newVisit.education")} type={RiskType.EDUCATION} />
                     )}{" "}
                     {visitSummary.social_visit && (
-                        <SocialChip label="Social" type={RiskType.SOCIAL} />
+                        <SocialChip label={t("newVisit.social")} type={RiskType.SOCIAL} />
                     )}{" "}
                     {visitSummary.nutrit_visit && (
-                        <SocialChip label="Nutrition" type={RiskType.NUTRITION} />
+                        <SocialChip label={t("newVisit.nutrition")} type={RiskType.NUTRITION} />
                     )}{" "}
                 </Dialog.Title>
                 <Dialog.Content>

@@ -50,7 +50,7 @@ export const ClientRisk = (props: riskProps) => {
                         <Text
                             style={riskStyles(riskLevels[risk.risk_level].color).riskSubtitleStyle}
                         >
-                            {t([`riskLevels.${riskLevels[risk.risk_level].name}`])}
+                            {riskLevels[risk.risk_level].name}
                         </Text>
                     </View>
                     <View>

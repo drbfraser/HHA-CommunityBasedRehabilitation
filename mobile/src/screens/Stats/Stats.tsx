@@ -28,6 +28,7 @@ import {
 } from "@cbr/common";
 import { Q } from "@nozbe/watermelondb";
 import { modelName } from "../../models/constant";
+import i18n from "i18next";
 
 const allZone = "all zones";
 
@@ -109,7 +110,14 @@ const Stats = () => {
             VisitField.nutrit_visit,
             VisitField.mental_visit,
         ];
-        const visitName = ["Health", "Social", "Education", "Nutrition", "Mental"];
+        const visitName = [
+            i18n.t("newVisit.health"),
+            i18n.t("newVisit.social"),
+            i18n.t("newVisit.education"),
+            i18n.t("newVisit.nutrition"),
+            i18n.t("newVisit.mental")
+        ];
+
         var index = 0;
         pieData = [];
         for (const type of visitType) {

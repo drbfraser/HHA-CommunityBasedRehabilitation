@@ -32,9 +32,6 @@ class Command(BaseCommand):
             user.save()
             return user
 
-        if models.UserCBR.objects.all().count() > 0:
-            self.stdout.write(self.style.ERROR("Users have already been created!"))
-            return
         if models.Zone.objects.all().count() == 0:
             self.stdout.write(
                 self.style.ERROR("Zones have not been created! Run seedzones first!")

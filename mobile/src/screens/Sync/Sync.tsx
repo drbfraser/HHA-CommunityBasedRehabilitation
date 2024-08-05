@@ -17,6 +17,7 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import useStyles from "./Sync.styles";
 import { SyncDatabaseTask } from "../../tasks/SyncDatabaseTask";
 import SyncUpdateAlert from "../../components/SyncUpdateAlert.tsx/SyncUpdateAlert";
+import { useTranslation } from "react-i18next";
 
 export interface ISync {
     lastPulledTime: number;
@@ -41,6 +42,7 @@ const Sync = () => {
         remoteChanges: 0,
         localChanges: 0,
     });
+    const { t } = useTranslation();
 
     const resetAlertSubtitleIfVisible = () => {
         if (alertSubtitle !== "") {
@@ -49,16 +51,18 @@ const Sync = () => {
     };
 
     const resetDatabase = async () => {
-        Alert.alert("Alert", "Are you sure you want to reset local database", [
-            { text: "Cancel", style: "cancel" },
+        Alert.alert(
+                t("general.alert"),
+                t("sync.sureResetLocalDB"), [
+            { text: t("general.cancel"), style: "cancel" },
             {
-                text: "Reset",
+                text: t("sync.reset"),
                 onPress: async () => {
                     await database.write(async () => {
                         await database.unsafeResetDatabase();
                     });
                     setAlertStatus(true);
-                    setAlertMessage("Database Reset");
+                    setAlertMessage(t("sync.databaseReset"));
                     resetAlertSubtitleIfVisible();
                     setSyncModal(true);
                     clearStats();
@@ -119,7 +123,7 @@ const Sync = () => {
         await SyncDB(database);
 
         setAlertStatus(true);
-        setAlertMessage("Synchronization Complete");
+        setAlertMessage(t("sync.syncComplete"));
         resetAlertSubtitleIfVisible();
         setSyncModal(true);
         updateStats();
@@ -127,11 +131,11 @@ const Sync = () => {
 
     const handleSyncError = (e) => {
         setAlertStatus(false);
-        setAlertMessage("Synchronization Failure");
+        setAlertMessage(t("sync.syncFailed"));
 
         if (e instanceof APIFetchFailError && e.status === 403) {
             setAlertSubtitle(
-                "Please download the latest update for HHA CBR from the Google Play Store."
+                t("sync.downloadNewVersion")
             );
         }
 
@@ -162,10 +166,13 @@ const Sync = () => {
         }
     }, [loading]);
 
+    console.log("Sync: stats.lastPulledTime: ", stats.lastPulledTime);
+    console.log("Sync: stats.localChanges:   ", stats.localChanges);
+    console.log("Sync: stats.remoteChanges:  ", stats.remoteChanges);
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.groupContainer}>
-                <Text style={styles.cardSectionTitle}>Database </Text>
+                <Text style={styles.cardSectionTitle}>{t("sync.database")} </Text>
                 <View style={styles.btnContainer}>
                     <Button
                         icon="database-sync"
@@ -191,7 +198,7 @@ const Sync = () => {
                             }
                         }}
                     >
-                        Server Sync
+                        {t("sync.serverSync")}
                     </Button>
                     <Button
                         icon="lock-reset"
@@ -200,32 +207,32 @@ const Sync = () => {
                         style={styles.resetBtbContainer}
                         onPress={resetDatabase}
                     >
-                        Clear Local
+                        {t("sync.clearLocal")}
                     </Button>
                 </View>
                 <Divider />
-                <Text style={styles.cardSectionTitle}>Sync Statistics</Text>
+                <Text style={styles.cardSectionTitle}>{t("sync.syncStatistics")}</Text>
                 <Card style={styles.CardStyle}>
                     {!loading ? (
                         <>
                             <View style={styles.row}>
-                                <Text style={styles.stats}> Last Pulled at:</Text>
+                                <Text style={styles.stats}> {t("sync.lastPullAt")}</Text>
                                 {stats.lastPulledTime != 0 ? (
                                     <Text>{timestampToDateTime(stats.lastPulledTime)}</Text>
                                 ) : (
-                                    <Text>Never Synced</Text>
+                                    <Text>{t("sync.neverSynced")}</Text>
                                 )}
                             </View>
                             <View style={styles.row}>
-                                <Text style={styles.stats}> Local Changes:</Text>
+                                <Text style={styles.stats}> {t("sync.localChanges")}</Text>
                                 <Text> {stats.localChanges}</Text>
                             </View>
                             <View style={styles.row}>
-                                <Text style={styles.stats}> Remote Changes:</Text>
+                                <Text style={styles.stats}> {t("sync.remoteChanges")}</Text>
                                 <Text>{stats.remoteChanges}</Text>
                             </View>
                             <View style={styles.row}>
-                                <Text style={styles.stats}> Version Name</Text>
+                                <Text style={styles.stats}> {t("sync.versionName")}</Text>
                                 <Text>{VERSION_NAME}</Text>
                             </View>
                         </>
@@ -234,11 +241,11 @@ const Sync = () => {
                     )}
                 </Card>
                 <Divider />
-                <Text style={styles.cardSectionTitle}>Sync Settings</Text>
+                <Text style={styles.cardSectionTitle}>{t("sync.syncSettings")}</Text>
                 <Card style={styles.CardStyle}>
                     <View style={styles.row}>
                         <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>
-                            Automatic Syncing
+                            {t("sync.autoSyncing")}
                         </Text>
                         <Switch
                             style={styles.switch}
@@ -257,7 +264,7 @@ const Sync = () => {
                     </View>
                     <View style={styles.row}>
                         <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>
-                            Sync over Cellular
+                            {t("sync.syncOverCellular")}
                         </Text>
                         <Switch
                             style={styles.switch}

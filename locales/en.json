@@ -541,6 +541,29 @@
     "activeClients": "-Active Clients",
     "clientsWithDisabilities": "-Clients with Disabilities:"
   },
+  "sync": {
+    "sureResetLocalDB": "&&Are you sure you want to reset local database",
+    "reset": "&&Reset",
+    "databaseReset": "&&Database Reset",
+    "syncComplete": "&&Synchronization Complete",
+    "syncFailed": "&&Synchronization Failed",
+    "database": "&&Database",
+    "serverSync": "&&Server Sync",
+    "clearLocal": "&&Clear Local",
+    "syncStatistics": "&&Sync Statistics",
+    "lastPullAt": "&&Last Pulled at:",
+    "localChanges": "&&Local Changes:",
+    "remoteChanges": "&&Remote Changes:",
+    "versionName": "&&Version Name:",
+    "syncSettings": "&&Sync Settings",
+    "autoSyncing": "&&Automatic Syncing",
+    "syncOverCellular": "&&Sync over Cellular",
+    "success": "&&success",
+    "failed": "&&failed",
+    "neverSynced": "&&Never Synced",
+    "downloadNewVersion": "&&Please download the latest update for HHA CBR from the Google Play Store.",
+    "x":""
+  },
   "zone": {
     "zone": "-Zone"
   }

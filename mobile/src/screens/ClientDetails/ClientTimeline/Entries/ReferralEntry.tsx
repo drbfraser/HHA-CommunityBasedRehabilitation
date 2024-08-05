@@ -180,19 +180,19 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                             <>
                                 <Text />
                                 <Text>
-                                    <Text style={styles.labelBold}>{t("wheelchairAttr.experience")}: </Text>
+                                    <Text style={styles.labelBold}>{t("referral.experience")}: </Text>
                                     {wheelchairExperiences[referral.wheelchair_experience]}
                                 </Text>
                                 <Text>
-                                    <Text style={styles.labelBold}>{t("wheelchairAttr.hipWidth")}: </Text>
+                                    <Text style={styles.labelBold}>{t("referral.hipWidth")}: </Text>
                                     {referral.hip_width} inches
                                 </Text>
                                 <Text>
-                                    <Text style={styles.labelBold}>{t("wheelchairAttr.ownership")}? </Text>
+                                    <Text style={styles.labelBold}>{t("referral.ownership")}? </Text>
                                     {referral.wheelchair_owned ? "Yes" : "No"}
                                 </Text>
                                 <Text>
-                                    <Text style={styles.labelBold}>{t("wheelchairAttr.repairability")}? </Text>
+                                    <Text style={styles.labelBold}>{t("referral.repairability")}? </Text>
                                     {referral.wheelchair_repairable ? "Yes" : "No"}
                                 </Text>
                                 <Text />

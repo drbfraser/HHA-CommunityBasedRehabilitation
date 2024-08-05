@@ -31,7 +31,6 @@ import { modelName } from "../../models/constant";
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";
 
-const allZone = i18n.t('statistics.allZones');
 
 export type BarStat = {
     name: string;
@@ -62,6 +61,7 @@ const Stats = () => {
 
     const [loading, setLoading] = useState<boolean>(true);
 
+    const allZone = i18n.t('statistics.allZones');
     const [zoneOption, setZoneOption] = useState<string>(allZone);
     const [visitData, setVisitData] = useState(fetchVisitData);
     const [visitCount, setVisitCount] = useState<number>(0);

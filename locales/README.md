@@ -25,3 +25,5 @@ By having one unified translation source which is copied into each package, it w
 6. Convert excel back into language .json files (overwrites current files):  
   `npx i18n-json-to-xlsx-converter --convert excelFileFromGoogleDrive.xlsx`  
   IMPORTANT: Do not include "../" or "./" at the front of path.
+
+Tool documentation [here](https://github.com/ofcyln/i18n-json-to-xlsx-converter).

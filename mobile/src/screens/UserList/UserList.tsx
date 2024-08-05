@@ -26,6 +26,7 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
 import { Icon } from "react-native-elements";
+import { useTranslation } from "react-i18next";
 
 const UserList = () => {
     const styles = useStyles();
@@ -42,6 +43,7 @@ const UserList = () => {
     const [sortDirection, setIsSortDirection] = useState<TSortDirection>("None");
     const [isAuthenticate, setAuthenticate] = useState<boolean>(false);
     const { setUnSyncedChanges } = useContext(SyncContext);
+    const { t } = useTranslation();
 
     const [showColumnBuilderMenu, setShowColumnBuilderMenu] = useState(false);
 
@@ -57,7 +59,12 @@ const UserList = () => {
         setShowRoleColumn,
         setShowStatusColumn,
     ];
-    const columnList = { 0: "Name", 1: "Zone", 2: "Role", 3: "Status" };
+    const columnList = { 
+        0: t('admin.name'), 
+        1: t('admin.zone'), 
+        2: t('admin.role'), 
+        3: t('admin.status') 
+    };
     const openColumnBuilderMenu = () => {
         setShowColumnBuilderMenu(true);
         showSelectedColumn;
@@ -149,7 +156,7 @@ const UserList = () => {
                 ) : (
                     <Searchbar
                         style={styles.search}
-                        placeholder="Search"
+                        placeholder={t('admin.searchPlaceholder')}
                         onChangeText={onChangeSearch}
                         value={searchQuery}
                     />
@@ -157,7 +164,7 @@ const UserList = () => {
             </View>
 
             <View style={styles.row}>
-                <Text style={styles.title}>Search by</Text>
+                <Text style={styles.title}>{t('admin.searchBy')}</Text>
                 <Picker
                     style={styles.select}
                     selectedValue={selectedSearchOption}
@@ -166,9 +173,9 @@ const UserList = () => {
                         setSearchQuery("");
                     }}
                 >
-                    <Picker.Item label="N/A" value="" />
-                    <Picker.Item label="Name" value={SearchOption.NAME} />
-                    <Picker.Item label="Zone" value={SearchOption.ZONE} />
+                    <Picker.Item label={t('admin.notApplicable')} value="" />
+                    <Picker.Item label={t('admin.name')} value={SearchOption.NAME} />
+                    <Picker.Item label={t('admin.zone')} value={SearchOption.ZONE} />
                 </Picker>
                 <IconButton
                     icon="dots-vertical"
@@ -186,7 +193,7 @@ const UserList = () => {
                         <CustomMultiPicker
                             options={columnList}
                             multiple={true}
-                            placeholder={"Select columns"}
+                            placeholder={t('admin.selectAColumn')}
                             placeholderTextColor={themeColors.blueBgLight}
                             returnValue={"value"}
                             callback={(label) => {
@@ -207,25 +214,25 @@ const UserList = () => {
                     <DataTable.Header style={styles.item}>
                         <DataTable.Title style={styles.column_icon}>{}</DataTable.Title>
                         <ShowTitle
-                            label="Name"
+                            label={t('admin.name')}
                             style={styles.column_name}
                             showTheTitle={showNameColumn}
                             thisColumnSortOption={SortOptions.NAME}
                         />
                         <ShowTitle
-                            label="Zone"
+                            label={t('admin.zone')}
                             style={styles.column_zone}
                             showTheTitle={showZoneColumn}
                             thisColumnSortOption={SortOptions.ZONE}
                         />
                         <ShowTitle
-                            label="Role"
+                            label={t('admin.role')}
                             style={styles.column_role}
                             showTheTitle={showRoleColumn}
                             thisColumnSortOption={SortOptions.ROLE}
                         />
                         <ShowTitle
-                            label="Status"
+                            label={t('admin.status')}
                             style={styles.column_status}
                             showTheTitle={showStatusColumn}
                             thisColumnSortOption={SortOptions.STATUS}

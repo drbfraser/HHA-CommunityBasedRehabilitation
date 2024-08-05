@@ -28,6 +28,7 @@ import useStyles from "./NewClient.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
+import { useTranslation } from "react-i18next";
 
 const riskMap: Map<RiskLevel, string> = new Map(
     Object.entries(riskLevels).map(([riskKey, riskLevel]) => [riskKey as RiskLevel, riskLevel.name])
@@ -95,6 +96,7 @@ const NewClient = () => {
     const scrollRef = React.createRef<KeyboardAwareScrollView>();
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const { autoSync, cellularSync } = useContext(SyncContext);
+    const { t } = useTranslation();
 
     const scrollToTop = useCallback(
         () => scrollRef?.current?.scrollToPosition(0, 0, false),
@@ -186,7 +188,7 @@ const NewClient = () => {
                                         disabled={formikProps.isSubmitting}
                                         onPress={() => formikProps.submitForm()}
                                     >
-                                        CREATE
+                                        {t('general.create')}
                                     </Button>
                                 </View>
                             </View>

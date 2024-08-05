@@ -7,6 +7,29 @@
 # Get the source code folder of these files
 $sourceCodeFolder = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
+# Validate source files are correct JSON
+$sourceFiles = Get-ChildItem -Path "$sourceCodeFolder\*.json"
+foreach ($sourceFile in $sourceFiles) {
+    # Supports older PowenShell versions
+    # try {
+    #     Get-Content $sourceFile.FullName | ConvertFrom-Json | Out-Null
+    # } catch {
+    #     Write-Host "ERROR: $sourceFile is not valid JSON"
+    #     exit 1
+    # }
+
+    # Supports newer (PowerSHell version 6+) versions
+    $text = Get-Content $sourceFile.FullName -Raw
+    if ($text | Test-Json) {
+        $powershellRepresentation = ConvertFrom-Json $text -ErrorAction Stop;
+    } else {
+        Write-Host "Provided text is not a valid JSON string";
+    }
+
+}
+
+
+
 # Set array of target folders
 $targetFolders = @(
     "$sourceCodeFolder\..\mobile\src\locales",

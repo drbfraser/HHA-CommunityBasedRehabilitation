@@ -1,5 +1,6 @@
 import { Button, Dialog, Portal, Text } from "react-native-paper";
 import React from "react";
+import i18n from "i18next";
 
 export type Props = {
     /** Whether the dialog is visible. This should be changed by {@link onDismiss}. */
@@ -27,8 +28,12 @@ const ConfirmDialog = (props: Props) => (
                 <Text>{props.dialogContent}</Text>
             </Dialog.Content>
             <Dialog.Actions>
-                <Button onPress={props.onDismiss}>{props.cancelButtonText ?? "Cancel"}</Button>
-                <Button onPress={props.onConfirm}>{props.confirmButtonText}</Button>
+                <Button onPress={props.onDismiss}>
+                    {props.cancelButtonText ?? i18n.t('general.cancel')}
+                </Button>
+                <Button onPress={props.onConfirm}>
+                    {props.confirmButtonText}
+                </Button>
             </Dialog.Actions>
         </Dialog>
     </Portal>

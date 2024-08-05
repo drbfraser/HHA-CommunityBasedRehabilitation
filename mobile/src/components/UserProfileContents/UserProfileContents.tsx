@@ -63,7 +63,9 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                             <Button onPress={() => setLogoutConfirmDialogVisibility(false)}>
                                 {t("general.cancel")}
                             </Button>
-                            <Button onPress={authContext.logout}>Logout</Button>
+                            <Button onPress={authContext.logout}>
+                                {t("login.logout")}
+                            </Button>
                         </Dialog.Actions>
                     </Dialog>
                 </Portal>

@@ -153,7 +153,9 @@ const AdminEdit = ({
                                     mode="outlined"
                                 />
 
-                                <Subheading style={styles.profileInfoHeader}>Status</Subheading>
+                                <Subheading style={styles.profileInfoHeader}>
+                                    {t("general.status")}
+                                </Subheading>
                                 <Text style={styles.profileInfoText}>
                                     {formikProps.values.is_active ? t("general.active") : t("general.disabled")}
                                 </Text>

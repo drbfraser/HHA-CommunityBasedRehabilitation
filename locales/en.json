@@ -17,7 +17,25 @@
         "changePassword": "-Change Password",
         "changePasswordFor": "-Change password for {{username}} (ID {{userID}})",
         "passwordChangeConfirmation": "-Password changed successfully.",
-        "cantLoadUserWithID": "-Unable to load user with ID {{userID}}"
+        "cantLoadUserWithID": "-Unable to load user with ID {{userID}}",
+
+        "alreadyConnectedToServer": "-Already connected to server: ",
+        "notConnectedToInternet": "-Your device is not connected to the internet",
+        "mustHaveInternet": "-You must have an internet connection via wifi to switch servers.",
+        "switchClearData": "-Switching servers will clear all local data. Are you sure you want to proceed?",
+        "live": "-Live",
+        "test": "-Test",
+        "noConnection": "-No Connection",
+        "currentStatus": "-Current Status",
+        "connectedToServer": "-Connected to server:",
+        "serverURL": "-Server URL:",
+        "selectServer": "-Select Server",
+        "testServerURL": "-Test Server URL",
+        "switchServers": "-Switch Servers",
+        "liveServer": "-Live Server",
+        "testServer": "-Test Server",
+        "noInternet": "-No internet available",
+        "unableToReachServer": "-Unable to reach server"
     },
     "dashboard": {
         "clientListPriority": "-Priority Clients",
@@ -27,6 +45,18 @@
         "allClients": "-All Clients",
         "showArchived": "-Show Archived",
         "noVisits": "-No Visits"
+    },
+    "disabilities": {
+        "amputee": "-Amputee",
+        "polio": "-Polio", 
+        "spinalCordInjury": "-Spinal Cord Injury",
+        "cerebralPalsy": "-Cerebral Palsy",
+        "spinaBifida": "-Spina Bifida",
+        "hydrocephalus": "-Hydrocephalus",
+        "congenitalAbnormality": "-Congenital Abnormality",
+        "paralysisCases": "-Paralysis Cases",
+        "dontKnow": "-Don't Know",
+        "other": "-Other"
     },
     "clientAttr": {
         "lastVisitDate": "-Last visit date",
@@ -131,7 +161,8 @@
         "delete": "-Delete",
         "requestTimedOut": "-The request has timed out",
         "requestTokenFailureHttp": "-Request token failure: request failed with HTTP status {{respStatus}}.",
-        "requestTokenFailureInvalid": "-Request token failure: the access and/or refresh token(s) received were invalid."
+        "requestTokenFailureInvalid": "-Request token failure: the access and/or refresh token(s) received were invalid.",
+        "create": "-CREATE"
     },
     "alert": {
         "generalFailure": "-Something went Wrong",
@@ -163,7 +194,12 @@
         "phoneNumber": "-Phone number",
         "status": "-Status",
         "phoneNumberNotValid": "-Phone number is not valid",
-        "passwordsMustMatch": "-Passwords must match"
+        "passwordsMustMatch": "-Passwords must match",
+        "searchPlaceholder": "-Search for a user",
+        "searchBy": "-Search by",
+        "notApplicable": "-N/A",
+        "name":"-Name",
+        "selectAColumn": "-Select a column"
     },
     "alerts": {
         "subject": "-Subject",
@@ -510,6 +546,26 @@
         "inbox": "-Inbox",
         "switchTargetServer": "-Switch Target Server",
         "clientID": "-Client ID"
+    },
+    "statistics": {
+        "statistics": "-Statistics",
+        "visits": "-Visits",
+        "referrals": "-Referrals",
+        "disabilities": "-Disabilities",
+        "byType": "-By Type",
+        "showingDataFor": "-Showing data for",
+        "allZones": "-all zones",
+        "viewAllZone": "-View All Zone",
+        "byZone": "-By Zone",
+        "totalVisits": "-Total Visits:",
+        "clickBarToFilter": "-Click on bar to filter by zone",
+        "totalUnresolved": "-Total Unresolved:",
+        "totalResolved": "-Total Resolved:",
+        "unresolved": "-Unresolved",
+        "resolved": "-Resolved",
+        "allClients": "-All Clients",
+        "activeClients": "-Active Clients",
+        "clientsWithDisabilities": "-Clients with Disabilities:"
     },
     "zone": {
         "zone": "-Zone"

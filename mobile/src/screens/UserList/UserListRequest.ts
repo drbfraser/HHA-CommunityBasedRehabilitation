@@ -9,6 +9,7 @@ import {
 } from "@cbr/common";
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
+import i18n from "i18next";
 
 type BriefUser = {
     id: string;
@@ -41,7 +42,9 @@ export const fetchUsersFromDB = async (
             zoneID: responseRow.zone,
             zone: zones.get(responseRow.zone) ?? "",
             role: userRoles[responseRow.role].name,
-            status: responseRow.is_active ? "Active" : "Disabled",
+            status: responseRow.is_active ? 
+                i18n.t("general.active")
+                : i18n.t("general.disabled")
         }));
         if (searchValue.length != 0) {
             if (searchOption == SearchOption.NAME) {

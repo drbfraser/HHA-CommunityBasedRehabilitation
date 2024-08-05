@@ -257,13 +257,13 @@ const ClientList = () => {
                 <DataTable>
                     <DataTable.Header style={styles.item}>
                         <ShowTitle
-                            label="Name"
+                            label={t('general.name')}
                             style={styles.column_name}
                             showTheTitle={showNameColumn}
                             thisColumnSortOption={SortOptions.NAME}
                         />
                         <ShowTitle
-                            label="Zone"
+                            label={t('general.zone')}
                             style={styles.column_zone}
                             showTheTitle={showZoneColumn}
                             thisColumnSortOption={SortOptions.ZONE}

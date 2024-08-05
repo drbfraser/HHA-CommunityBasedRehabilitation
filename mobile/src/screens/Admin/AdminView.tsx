@@ -107,7 +107,7 @@ const AdminView = ({
                 duration={4000}
                 onDismiss={() => setUserChangeSnackbarVisible(false)}
             >
-                {route.params.userInfo?.isNewUser ? t("general.objectCreated", {object: t("general.user")}) : t("objectUpdated", {object: t("general.user")})}
+                {route.params.userInfo?.isNewUser ? t("general.objectCreated", {object: t("general.user")}) : t("general.objectUpdated", {object: t("general.user")})}
             </Snackbar>
         </>
     );

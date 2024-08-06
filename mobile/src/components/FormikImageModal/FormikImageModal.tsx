@@ -8,6 +8,7 @@ import { TFormikComponentProps } from "../../util/formikUtil";
 import useStyles from "./FormikImageModal.styles";
 import * as FileSystem from "expo-file-system";
 import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
+import { useTranslation } from "react-i18next";
 
 interface IFormikImageModal<Field extends string> extends TFormikComponentProps<Field> {
     visible: boolean;
@@ -28,6 +29,7 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
     const styles = useStyles();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(props.visible);
+    const { t } = useTranslation();
 
     const modalY = useRef(new Animated.Value(Dimensions.get("screen").height));
 
@@ -123,21 +125,21 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                 ) : (
                     <View style={styles.container}>
                         <Animated.View style={[styles.content, modalAnimationStyle]}>
-                            <Title>Choose an Image from</Title>
+                            <Title>{t('clientFields.chooseImageFrom')}</Title>
                             <View style={styles.buttonView}>
                                 <Button
                                     labelStyle={styles.button}
                                     icon="image"
                                     onPress={() => pickImage(ImageSource.GALLERY)}
                                 >
-                                    {ImageSource.GALLERY}
-                                </Button>
+                                    {t('clientFields.gallery')}
+                                </Button> 
                                 <Button
                                     labelStyle={styles.button}
                                     icon="camera"
                                     onPress={() => pickImage(ImageSource.CAMERA)}
                                 >
-                                    {ImageSource.CAMERA}
+                                    {t('clientFields.camera')}
                                 </Button>
                             </View>
                         </Animated.View>

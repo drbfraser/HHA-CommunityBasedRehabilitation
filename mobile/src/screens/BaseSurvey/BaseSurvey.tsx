@@ -188,14 +188,19 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
                                         nextBtnDisabled={
                                             formikProps.isSubmitting ||
                                             !formikProps.values.give_consent ||
-                                            ((countObjectKeys(formikProps.errors) !== 0 ||
-                                                countObjectKeys(formikProps.touched) === 0) &&
-                                                !stepChecked[step])
+                                            (
+                                                (countObjectKeys(formikProps.errors) !== 0 ||
+                                                    countObjectKeys(formikProps.touched) === 0) &&
+                                                !stepChecked[step]
+                                            )
                                         }
                                         previousBtnDisabled={formikProps.isSubmitting}
                                         onPrevious={prevStep}
                                         previousBtnStyle={styles.prevButton}
                                         onSubmit={() => nextStep(formikProps.values, formikProps)}
+                                        previousBtnText={t("general.previous")}
+                                        nextBtnText={t("general.next")}
+                                        finishBtnText={t("general.submit")}
                                     >
                                         <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
                                         <Divider

@@ -46,8 +46,6 @@ export interface IClientFormProps {
 }
 
 export const ClientForm = (props: IClientFormProps) => {
-    console.log("------------------------- ClientForm ----------------------");
-    console.log("isThisExportingString?", isThisExportingString)
     const styles = useStyles();
     const disabilityMap = useDisabilities();
     const otherDisabilityId = getOtherDisabilityId(disabilityMap);
@@ -244,7 +242,9 @@ export const ClientForm = (props: IClientFormProps) => {
                             }
                             mode="date"
                             display="default"
-                            neutralButtonLabel={t("general.today")}
+                            neutralButton={{label: t("general.today")}}
+                            negativeButton={{label: t("general.cancel")}}
+                            positiveButton={{label: t("general.ok")}}
                             onChange={(event, date) => {
                                 setDatePickerVisible(Platform.OS === "ios");
                                 if (event.type === "neutralButtonPressed") {

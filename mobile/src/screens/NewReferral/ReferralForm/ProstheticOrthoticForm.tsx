@@ -4,8 +4,10 @@ import { Text, Paragraph, RadioButton, List } from "react-native-paper";
 import useStyles from "../NewReferral.styles";
 import { ReferralFormField } from "@cbr/common";
 import { IFormProps, orthoticInjuryLocations, prostheticInjuryLocations } from "@cbr/common";
+import { useTranslation } from "react-i18next";
 
 const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormField) => {
+    const { t } = useTranslation();
     const injuryLocations =
         serviceType === ReferralFormField.prosthetic
             ? prostheticInjuryLocations
@@ -14,7 +16,7 @@ const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormFiel
     return (
         <View>
             <Text />
-            <Text style={styles.question}>Where is the injury?</Text>
+            <Text style={styles.question}>{t('referral.whereIsInjury')}</Text>
             <List.Section>
                 <RadioButton.Group
                     value={props.formikProps.values[`${serviceType}_injury_location`]}

@@ -429,6 +429,7 @@ const NewVisit = (props: INewVisitProps) => {
         }
     };
 
+
     return (
         <>
             <ConfirmDialogWithNavListener
@@ -473,18 +474,18 @@ const NewVisit = (props: INewVisitProps) => {
                                                     (!checkedSteps.includes(
                                                         enabledSteps[activeStep - 1]
                                                     )
-                                                        ? countObjectKeys(formikProps.errors) !==
-                                                              0 ||
-                                                          Object.keys(formikProps.touched)
-                                                              .length === 0
-                                                        : countObjectKeys(formikProps.errors) !==
-                                                          0))
+                                                        ? countObjectKeys(formikProps.errors) !== 0 ||
+                                                          Object.keys(formikProps.touched).length === 0
+                                                        : countObjectKeys(formikProps.errors) !== 0))
                                             }
                                             previousBtnDisabled={formikProps.isSubmitting}
                                             onPrevious={() => prevStep(formikProps)}
                                             onSubmit={() =>
                                                 nextStep(formikProps.values, formikProps)
                                             }
+                                            previousBtnText={t("general.previous")}
+                                            nextBtnText={t("general.next")}
+                                            finishBtnText={t("general.submit")}
                                         >
                                             <Text style={styles.stepLabelText}>
                                                 {surveyStep.label}

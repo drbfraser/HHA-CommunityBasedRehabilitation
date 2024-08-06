@@ -10,15 +10,17 @@ import {
 } from "@cbr/common";
 import useStyles from "../NewReferral.styles";
 import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
+import { useTranslation } from "react-i18next";
 
 const PhysiotherapyForm = (props: IFormProps) => {
     const styles = useStyles();
     const disabilities = useDisabilities();
+    const { t } = useTranslation();
 
     return (
         <View>
             <Text />
-            <Text style={styles.question}>What condition does the client have?</Text>
+            <Text style={styles.question}>{t('referral.whatCondition')}</Text>
             <FormikExposedDropdownMenu
                 field={ReferralFormField.condition}
                 valuesType="map"

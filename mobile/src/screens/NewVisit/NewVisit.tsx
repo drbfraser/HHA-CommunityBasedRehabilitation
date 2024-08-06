@@ -382,13 +382,16 @@ const NewVisit = (props: INewVisitProps) => {
     ];
 
     const prevStep = (props: any) => {
-        if (countObjectKeys(props.errors) !== 0) {
-            const arr = checkedSteps.filter((item) => {
-                return item != enabledSteps[activeStep - 1];
-            });
-            setCheckedSteps(arr);
-        } else {
-            checkedSteps.push(enabledSteps[activeStep - 1]);
+        // Only adjust set of "good" states if we changed something:
+        if (Object.keys(props.touched).length !== 0) {
+            if (countObjectKeys(props.errors) !== 0) {
+                const arr = checkedSteps.filter((item) => {
+                    return item != enabledSteps[activeStep - 1];
+                });
+                setCheckedSteps(arr);
+            } else {
+                checkedSteps.push(enabledSteps[activeStep - 1]);
+            }
         }
         setActiveStep(activeStep - 1);
         props.setErrors({});

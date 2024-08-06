@@ -38,8 +38,8 @@ const MentalHealthForm = (props: IFormProps) => {
                         mode="outlined"
                         label={referralFieldLabels[ReferralFormField.mentalConditionOther]}
                         value={props.formikProps.values[ReferralFormField.mentalConditionOther]}
-                        onChangeText={(value) => {
-                            // props.formikProps.setFieldTouched(ReferralFormField.mentalConditionOther, true);
+                        onChangeText={(value) => { 
+                            props.formikProps.setFieldTouched(ReferralFormField.mentalConditionOther, true);
                             props.formikProps.setFieldValue(ReferralFormField.mentalConditionOther, value);
                         }}
                     />

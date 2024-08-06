@@ -97,28 +97,23 @@ const NewReferral = (props: INewReferralProps) => {
     const { t } = useTranslation();
 
     const prevStep = async (props: any) => { 
-        console.log("PREV:  >Validating<");
-        await props.validateForm(); //.then(console.log("   ---> Validation done!"));
-        console.log("    Done");
-        if (countObjectKeys(props.errors) !== 0) {
-            console.log("PREV: ----------------");
-            console.log("      Errors on page, filtering out current step: ", enabledSteps[activeStep - 1]);
-            const arr = checkedSteps.filter((item) => {
-                return item != enabledSteps[activeStep - 1];
-            });
-            setCheckedSteps(arr);
-        } else {
-            checkedSteps.push(enabledSteps[activeStep - 1]);
-            console.log("PREV: ++++++++++++++++");
-            console.log("      No errors; Adding current step: ", enabledSteps[activeStep - 1]);
+        // Only adjust set of "good" states if we changed something:
+        if (Object.keys(props.touched).length !== 0) {
+            if (countObjectKeys(props.errors) !== 0) {
+                const arr = checkedSteps.filter((item) => {
+                    return item != enabledSteps[activeStep - 1];
+                });
+                setCheckedSteps(arr);
+            } else {
+                checkedSteps.push(enabledSteps[activeStep - 1]);
+            }
         }
         setActiveStep(activeStep - 1);
         props.setErrors({});
-        console.log("      Set of checked steps now: ", checkedSteps);
     };
 
     const database = useDatabase();
-    const nextStep = (values: any, helpers: FormikHelpers<any>) => {
+    const nextStep = async (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
             handleSubmit(values, database, helpers, autoSync, cellularSync)
@@ -149,8 +144,6 @@ const NewReferral = (props: INewReferralProps) => {
             }
             else if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
                 checkedSteps.push(enabledSteps[activeStep - 1]);
-                console.log("NEXT: ++++++++++++++++");
-                console.log("      Adding current step: ", enabledSteps[activeStep - 1]);
             }
             setCheckedSteps([...new Set(checkedSteps)]);
 
@@ -159,14 +152,12 @@ const NewReferral = (props: INewReferralProps) => {
                     enabledSteps[activeStep] !== ReferralFormField.orthotic) ||
                 !checkedSteps.includes(enabledSteps[activeStep - 1])
             ) {
-                console.log("NEXT: Settings setTouched");
                 helpers.setTouched({});
             }
 
             setActiveStep(activeStep + 1);
             helpers.setSubmitting(false);
         }
-        console.log("      Set of checked steps now: ", checkedSteps);
     };
 
     const visitStr = t("newVisit.visit");

@@ -37,6 +37,7 @@ const PhysiotherapyForm = (props: IFormProps) => {
                     label={referralFieldLabels[ReferralFormField.conditionOther]}
                     value={props.formikProps.values[ReferralFormField.conditionOther]}
                     onChangeText={(value: string) => {
+                        props.formikProps.setFieldTouched(ReferralFormField.conditionOther, true);
                         props.formikProps.setFieldValue(ReferralFormField.conditionOther, value);
                     }}
                 />

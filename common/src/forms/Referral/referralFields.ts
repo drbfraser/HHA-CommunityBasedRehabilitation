@@ -214,23 +214,9 @@ export const mentalHealthValidationSchema = () =>
             .test(
                 "require-if-other-selected",
                 i18n.t("referral.otherConditionRequired"),
-                async (conditionOther, schema) => {
-                    console.log("--> Validating mentalConditionOther <--");
-                    console.log("conditionOther: ", conditionOther);
-                    console.log("MentalConditions.OTHER: ", MentalConditions.OTHER);
-                    console.log("schema.parent:                       ", schema.parent);
-                    console.log("schema.parent[ReferralFormField.mentalHealthCondition]: ", schema.parent[ReferralFormField.mentalHealthCondition]);
-                    console.log("schema.parent.mental_health_condition:                  ", schema.parent.mental_health_condition);
-                    console.log("schema.parent[ReferralFormField.mentalHealthCondition] !== MentalConditions.OTHER: ", schema.parent[ReferralFormField.mentalHealthCondition] !== MentalConditions.OTHER);
-                    console.log("schema.parent.mental_health_condition !== MentalConditions.OTHER: ", schema.parent.mental_health_condition !== MentalConditions.OTHER);
-                    console.log("Result: ", schema.parent[ReferralFormField.mentalHealthCondition] !== MentalConditions.OTHER || (conditionOther !== undefined && conditionOther.length > 0));
-                    return schema.parent[ReferralFormField.mentalHealthCondition] !== MentalConditions.OTHER ||
-                        (conditionOther !== undefined && conditionOther.length > 0);
-                    // console.log("result: ", !isOtherMentalCondition(conditionOther!) ||
-                    //     (conditionOther !== undefined && conditionOther.length > 0));
-                    // return !isOtherMentalCondition(conditionOther!) ||
-                    // (conditionOther !== undefined && conditionOther.length > 0)
-                }
+                async (conditionOther, schema) =>
+                    schema.parent[ReferralFormField.mentalHealthCondition] !== MentalConditions.OTHER ||
+                        (conditionOther !== undefined && conditionOther.length > 0)
             )
             .test(
                 "require-if-other-selected",

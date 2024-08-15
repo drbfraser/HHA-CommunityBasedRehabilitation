@@ -1,13 +1,15 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import en from "./locales/en.json";
-import ne from "./locales/bari.json";
+import bari from "./locales/bari.json";
+
+console.log("===> i18n.config.ts: Start");
 const resources = {
     en: {
         translation: en,
     },
-    ne: {
-        translation: ne,
+    bari: {
+        translation: bari,
     },
 };
 
@@ -25,4 +27,7 @@ i18n
         returnEmptyString: false,
     });
 
+
+
 export default i18n;
+console.log("===> i18n.config.ts: End");

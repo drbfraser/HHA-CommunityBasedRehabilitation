@@ -26,6 +26,7 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
 import { Icon } from "react-native-elements";
+import LanguagePicker from "../../components/LanguagePicker/LanguagePicker";
 import { useTranslation } from "react-i18next";
 
 const UserList = () => {
@@ -141,6 +142,9 @@ const UserList = () => {
 
     return (
         <View style={styles.container}>
+            <View style={styles.row}>
+                <LanguagePicker />
+            </View>
             <View style={styles.row}>
                 {selectedSearchOption === SearchOption.ZONE ? (
                     <Picker

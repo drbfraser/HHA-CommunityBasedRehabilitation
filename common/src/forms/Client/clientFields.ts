@@ -2,6 +2,7 @@ import { Validation } from "../../util/validations";
 import * as Yup from "yup";
 import { Gender, IClient } from "../../util/clients";
 import i18n from "i18next";
+import { get } from "fetch-mock";
 
 export enum ClientField {
     firstName = "firstName",
@@ -82,9 +83,23 @@ export enum ClientDetailsFields {
     is_active = "is_active",
 }
 
-// TODO: Remove this export
+// TODO: START REMOVE
 export const isThisExportingString = "Is this exporting? (3)";
 
+// Write a function that returns the current language
+export const getCurrentLanguage = () => {
+    return i18n.language;
+};
+export const getCurrentLanguageObject = () => {
+    return i18n;
+};
+export const getTranslationForFirstName = () => {   
+    return i18n.t("clientFields.firstName");
+}
+// TODO: END REMOVE
+
+console.log("--> ClientFields.ts: Current language is: ", i18n.language);
+console.log("--> ClientFields.ts: Current first name is: ", i18n.t("clientFields.firstName"));
 export const clientFieldLabels = {
     [ClientField.firstName]: i18n.t("clientFields.firstName"),
     [ClientField.lastName]: i18n.t("clientFields.lastName"),

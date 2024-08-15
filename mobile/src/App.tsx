@@ -33,6 +33,7 @@ import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
 import { Provider as StoreProvider } from "react-redux";
 import { store } from "./redux/store";
+import i18next from "i18next";
 import "./i18n.config";
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -197,6 +198,23 @@ export default function App() {
             });
         }
     }, [authState]);
+
+    // Load the language from AsyncStorage
+    // Source: https://medium.com/@lasithherath00/implementing-react-native-i18n-and-language-selection-with-asyncstorage-b24ae59e788e
+    useEffect(() => {
+        const loadLanguage = async ()=>{
+            try{
+                const storedLanguage = await AsyncStorage.getItem('language');
+                if (storedLanguage) {
+                    i18next.changeLanguage(storedLanguage);
+                    console.log("Language loaded", storedLanguage);
+                }
+            } catch(e){ 
+                console.log(e)
+            }
+        }
+        loadLanguage()
+    }, [])
 
     return (
         <SafeAreaView style={styles.safeApp}>

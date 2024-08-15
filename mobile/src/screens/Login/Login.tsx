@@ -22,7 +22,7 @@ import { useNavigation } from "@react-navigation/core";
 import { VERSION_NAME } from "../Sync/Sync";
 // import { column } from "@nozbe/watermelondb/QueryDescription";
 import { useTranslation } from "react-i18next";
-import LanguagePicker from "../../LanguagePicker";
+import LanguagePicker from "../../components/LanguagePicker/LanguagePicker";
 interface IBaseLoginStatus {
     status: "initial" | "submitting";
 }

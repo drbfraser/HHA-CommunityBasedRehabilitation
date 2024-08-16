@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { View, Text, Pressable } from "react-native";
 import { Button, Modal, Portal } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import i18n from "i18next";
 
 import { 
     isThisExportingString, 
@@ -19,32 +18,12 @@ import {
 
 
 
-const data = {
-    ["c"]: i18n.t("general.cancel"),
-    ["d"]: i18n.t("general.discard"),
-}
-
-const refresh = () => {
-    console.log("Data refreshed");  
-    data["c"] = i18n.t("general.client");
-    data["d"] = i18n.t("general.disabled");
-}
-
-const refreshAfterLanguageChange = () => {
-    console.log("Data refreshed after language change");
-    refresh();
-}
-
-i18n.on("languageChanged", () => {
-    console.log("!!! ==> LanguagePicker: i18n languageChanged event fired:", i18n.language);
-    refreshAfterLanguageChange();
-}); 
-
 const LanguagePicker = () => {
 
     const styles = useStyles();
     const [modalVisible, setModalVisible] = useState(false);
     const { i18n } = useTranslation(); //i18n instance
+    const { t } = useTranslation();
 
     //array with all supported languages 
     const languages = [
@@ -82,7 +61,6 @@ const LanguagePicker = () => {
     console.log("");
     console.log("-------- Mobile ----------");
     console.log("Current language: ", i18n.language);
-    console.log("Data: ", data);
     console.log("-------- Common ----------");
     console.log("isThisExportingString?: ", isThisExportingString);
     console.log("clientFieldLabels[ClientField.firstName]: ", clientFieldLabels[ClientField.firstName]);
@@ -97,7 +75,7 @@ const LanguagePicker = () => {
         <View>
             <Pressable onPress={() => setModalVisible(true)}>
                 <Text style={styles.displayText}>
-                    <Text style={styles.selectedText}>Selected Language: </Text>
+                    <Text style={styles.selectedText}>{t("languagePicker.selectedLanguage")} </Text>
                     <Text>{getLangName(i18n.language)}</Text>
                 </Text>                    
             </Pressable>
@@ -115,7 +93,7 @@ const LanguagePicker = () => {
                         <Text 
                             style={styles.selectTitle}
                         >
-                            Select Language
+                            {t("languagePicker.selectLanguage")}
                         </Text>
                         <View>
                             {languages.map((lang) => (

@@ -189,11 +189,11 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                 </Text>
                                 <Text>
                                     <Text style={styles.labelBold}>{t("referral.ownership")}? </Text>
-                                    {referral.wheelchair_owned ? "Yes" : "No"}
+                                    {referral.wheelchair_owned ? t("general.yes") : t("general.no")}
                                 </Text>
                                 <Text>
                                     <Text style={styles.labelBold}>{t("referral.repairability")}? </Text>
-                                    {referral.wheelchair_repairable ? "Yes" : "No"}
+                                    {referral.wheelchair_repairable ? t("general.yes") : t("general.no")}
                                 </Text>
                                 <Text />
                                 {hasImage ? (

@@ -8,11 +8,19 @@ export enum ChangePasswordField {
     confirmNewPassword = "confirmNewPassword",
 }
 
-export const changePasswordFieldLabels = {
-    [ChangePasswordField.oldPassword]: i18n.t("userProfile.oldPassword"),
-    [ChangePasswordField.newPassword]: i18n.t("userProfile.newPassword"),
-    [ChangePasswordField.confirmNewPassword]: i18n.t("userProfile.confirmNewPassword"),
+// On language change, recompute arrays of labels
+export var changePasswordFieldLabels: {[key: string]: string} = {};
+const refreshArrays = () => {
+    changePasswordFieldLabels = {
+        [ChangePasswordField.oldPassword]: i18n.t("userProfile.oldPassword"),
+        [ChangePasswordField.newPassword]: i18n.t("userProfile.newPassword"),
+        [ChangePasswordField.confirmNewPassword]: i18n.t("userProfile.confirmNewPassword"),
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+}); 
 
 export const changePasswordInitialValues = {
     [ChangePasswordField.oldPassword]: "",

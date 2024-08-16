@@ -21,11 +21,19 @@ export const alertInitialValues = {
 
 export type TAlertValues = typeof alertInitialValues;
 
-export const alertFieldLabels = {
-    [alertField.subject]: i18n.t("alerts.subject"),
-    [alertField.priority]: i18n.t("alerts.priority"),
-    [alertField.alert_message]: i18n.t("alerts.body"),
+// On language change, recompute arrays of labels
+export var alertFieldLabels: {[key: string]: string} = {};
+const refreshArrays = () => {
+    alertFieldLabels = {
+        [alertField.subject]: i18n.t("alerts.subject"),
+        [alertField.priority]: i18n.t("alerts.priority"),
+        [alertField.alert_message]: i18n.t("alerts.body"),
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+}); 
 
 export const alertUpdateValues = {
     [alertField.id]: "",

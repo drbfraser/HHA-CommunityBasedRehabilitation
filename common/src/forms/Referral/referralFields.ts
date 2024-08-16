@@ -85,44 +85,56 @@ export const referralServicesTypes = [
     ReferralFormField.servicesOther,
 ];
 
-export const referralFieldLabels = {
-    [ReferralFormField.client_id]: i18n.t("referral.client_id"),
-    [ReferralFormField.wheelchair]: i18n.t("referral.wheelchair"),
-    [ReferralFormField.wheelchairExperience]: i18n.t("referral.wheelchairExperience"),
-    [ReferralFormField.picture]: i18n.t("referral.picture"),
-    [ReferralFormField.hipWidth]: i18n.t("referral.hipWidth"),
-    [ReferralFormField.wheelchairOwned]: i18n.t("referral.wheelchairOwned"),
-    [ReferralFormField.wheelchairRepairable]: i18n.t("referral.wheelchairRepairable"),
-    [ReferralFormField.physiotherapy]: i18n.t("referral.physiotherapy"),
-    [ReferralFormField.condition]: i18n.t("referral.condition"),
-    [ReferralFormField.conditionOther]: i18n.t("referral.conditionOther"),
-    [ReferralFormField.prosthetic]: i18n.t("referral.prosthetic"),
-    [ReferralFormField.prostheticInjuryLocation]: i18n.t("referral.prostheticInjuryLocation"),
-    [ReferralFormField.orthotic]: i18n.t("referral.orthotic"),
-    [ReferralFormField.orthoticInjuryLocation]: i18n.t("referral.orthoticInjuryLocation"),
 
-    [ReferralFormField.mentalHealth]: i18n.t("referral.mentalHealth"),
-    [ReferralFormField.mentalHealthCondition]: i18n.t("referral.mentalHealthCondition"),
-    [ReferralFormField.mentalConditionOther]: i18n.t("referral.mentalConditionOther"),
 
-    [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t("referral.hhaNutritionAndAgricultureProject"),
-    [ReferralFormField.emergencyFoodAidRequired]: i18n.t("referral.emergencyFoodAidRequired"),
-    [ReferralFormField.agricultureLivelihoodProgramEnrollment]: i18n.t("referral.agricultureLivelihoodProgramEnrollment"),
-
-    [ReferralFormField.servicesOther]: i18n.t("referral.servicesOther"),
-    [ReferralFormField.otherDescription]: i18n.t("referral.otherDescription"),
-    [ReferralFormField.referralOther]: i18n.t("referral.referralOther"),
+// On language change, recompute arrays of labels
+export var referralFieldLabels: {[key: string]: string} = {};
+export var referralStatsChartLabels: {[key: string]: string} = {};
+const refreshArrays = () => {
+    referralFieldLabels = {
+        [ReferralFormField.client_id]: i18n.t("referral.client_id"),
+        [ReferralFormField.wheelchair]: i18n.t("referral.wheelchair"),
+        [ReferralFormField.wheelchairExperience]: i18n.t("referral.wheelchairExperience"),
+        [ReferralFormField.picture]: i18n.t("referral.picture"),
+        [ReferralFormField.hipWidth]: i18n.t("referral.hipWidth"),
+        [ReferralFormField.wheelchairOwned]: i18n.t("referral.wheelchairOwned"),
+        [ReferralFormField.wheelchairRepairable]: i18n.t("referral.wheelchairRepairable"),
+        [ReferralFormField.physiotherapy]: i18n.t("referral.physiotherapy"),
+        [ReferralFormField.condition]: i18n.t("referral.condition"),
+        [ReferralFormField.conditionOther]: i18n.t("referral.conditionOther"),
+        [ReferralFormField.prosthetic]: i18n.t("referral.prosthetic"),
+        [ReferralFormField.prostheticInjuryLocation]: i18n.t("referral.prostheticInjuryLocation"),
+        [ReferralFormField.orthotic]: i18n.t("referral.orthotic"),
+        [ReferralFormField.orthoticInjuryLocation]: i18n.t("referral.orthoticInjuryLocation"),
+    
+        [ReferralFormField.mentalHealth]: i18n.t("referral.mentalHealth"),
+        [ReferralFormField.mentalHealthCondition]: i18n.t("referral.mentalHealthCondition"),
+        [ReferralFormField.mentalConditionOther]: i18n.t("referral.mentalConditionOther"),
+    
+        [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t("referral.hhaNutritionAndAgricultureProject"),
+        [ReferralFormField.emergencyFoodAidRequired]: i18n.t("referral.emergencyFoodAidRequired"),
+        [ReferralFormField.agricultureLivelihoodProgramEnrollment]: i18n.t("referral.agricultureLivelihoodProgramEnrollment"),
+    
+        [ReferralFormField.servicesOther]: i18n.t("referral.servicesOther"),
+        [ReferralFormField.otherDescription]: i18n.t("referral.otherDescription"),
+        [ReferralFormField.referralOther]: i18n.t("referral.referralOther"),
+    };
+    
+    referralStatsChartLabels = {
+        [ReferralFormField.wheelchair]: i18n.t("referral.wheelchair"),
+        [ReferralFormField.physiotherapy]: i18n.t("referral.physiotherapy"),
+        [ReferralFormField.orthotic]: i18n.t("referral.orthotic"),
+        [ReferralFormField.prosthetic]: i18n.t("referral.prosthetic"),
+        [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t("referral.hhaNutritionAndAgricultureProjectAbbr"),
+        [ReferralFormField.mentalHealth]: i18n.t("referral.mentalHealth"),
+        [ReferralFormField.servicesOther]: i18n.t("referral.servicesOther"),
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+}); 
 
-export const referralStatsChartLabels = {
-    [ReferralFormField.wheelchair]: i18n.t("referral.wheelchair"),
-    [ReferralFormField.physiotherapy]: i18n.t("referral.physiotherapy"),
-    [ReferralFormField.orthotic]: i18n.t("referral.orthotic"),
-    [ReferralFormField.prosthetic]: i18n.t("referral.prosthetic"),
-    [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t("referral.hhaNutritionAndAgricultureProjectAbbr"),
-    [ReferralFormField.mentalHealth]: i18n.t("referral.mentalHealth"),
-    [ReferralFormField.servicesOther]: i18n.t("referral.servicesOther"),
-};
 
 export const referralInitialValues = {
     [ReferralFormField.client_id]: 0,

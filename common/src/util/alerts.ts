@@ -19,32 +19,40 @@ export enum PriorityLevel {
     HIGH = "HI",
 }
 
-export const priorities = {
-    [PriorityLevel.HIGH]: i18n.t("alerts.high"),
-    [PriorityLevel.MEDIUM]: i18n.t("alerts.medium"),
-    [PriorityLevel.LOW]: i18n.t("alerts.low"),
-};
-
 export interface IPriorityLevel {
     name: string;
     color: string;
     level: number;
 }
 
-export const priorityLevels: { [key: string]: IPriorityLevel } = {
-    [PriorityLevel.LOW]: {
-        level: 0,
-        name: i18n.t("alerts.low"),
-        color: themeColors.riskGreen,
-    },
-    [PriorityLevel.MEDIUM]: {
-        level: 1,
-        name: i18n.t("alerts.medium"),
-        color: themeColors.riskYellow,
-    },
-    [PriorityLevel.HIGH]: {
-        level: 4,
-        name: i18n.t("alerts.high"),
-        color: themeColors.riskRed,
-    },
+// On language change, recompute arrays of labels
+export var priorities: {[key: string]: string} = {};
+export var priorityLevels: {[key: string]: IPriorityLevel} = {};
+const refreshArrays = () => {
+    priorities = {
+        [PriorityLevel.HIGH]: i18n.t("alerts.high"),
+        [PriorityLevel.MEDIUM]: i18n.t("alerts.medium"),
+        [PriorityLevel.LOW]: i18n.t("alerts.low"),
+    };
+    priorityLevels  = {
+        [PriorityLevel.LOW]: {
+            level: 0,
+            name: i18n.t("alerts.low"),
+            color: themeColors.riskGreen,
+        },
+        [PriorityLevel.MEDIUM]: {
+            level: 1,
+            name: i18n.t("alerts.medium"),
+            color: themeColors.riskYellow,
+        },
+        [PriorityLevel.HIGH]: {
+            level: 4,
+            name: i18n.t("alerts.high"),
+            color: themeColors.riskRed,
+        },
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+}); 

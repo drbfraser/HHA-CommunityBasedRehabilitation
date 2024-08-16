@@ -80,21 +80,21 @@ export async function SyncDB(database: dbType) {
                     throw new Error(await response.text());
                 }
                 const { changes, timestamp } = await response.json();
-                console.log(JSON.stringify({ changes, timestamp }));
+                // console.log(JSON.stringify({ changes, timestamp }));
                 await getImage(changes);
                 return { changes, timestamp };
             },
             pushChanges: async ({ changes, lastPulledAt }) => {
-                console.log("starting push");
-                console.log(JSON.stringify(changes));
+                // console.log("starting push");
+                // console.log(JSON.stringify(changes));
                 const urlParams = `/?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
                 const init: RequestInit = {
                     method: "POST",
                     body: JSON.stringify(changes),
                 };
                 const response = await apiFetch(Endpoint.SYNC, urlParams, init);
-                console.log("pushed");
-                console.log(JSON.stringify(response));
+                // console.log("pushed");
+                // console.log(JSON.stringify(response));
                 if (!response.ok) {
                     throw new Error(await response.text());
                 }

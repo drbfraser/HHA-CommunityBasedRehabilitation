@@ -18,17 +18,26 @@ export enum UserRole {
     WORKER = "WRK",
 }
 
-export const userRoles = {
-    [UserRole.ADMIN]: {
-        name: i18n.t("users.admin"),
-    },
-    [UserRole.CLINICIAN]: {
-        name: i18n.t("users.clinician"),
-    },
-    [UserRole.WORKER]: {
-        name: i18n.t("users.worker"),
-    },
+
+// On language change, recompute arrays of labels
+export var userRoles: {[key: string]: {[key:string]: string}} = {};
+const refreshArrays = () => {
+    userRoles = {
+        [UserRole.ADMIN]: {
+            name: i18n.t("users.admin"),
+        },
+        [UserRole.CLINICIAN]: {
+            name: i18n.t("users.clinician"),
+        },
+        [UserRole.WORKER]: {
+            name: i18n.t("users.worker"),
+        },
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+}); 
 
 export const userRolesToLabelMap: ReadonlyMap<string, string> = new Map(
     Object.entries(userRoles).map(([value, { name }]) => [value, name])

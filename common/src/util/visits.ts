@@ -58,14 +58,22 @@ export enum OutcomeGoalMet {
     CONCLUDED = "CON",
 }
 
-export const outcomeGoalMets = {
-    [OutcomeGoalMet.CANCELLED]: {
-        name: i18n.t("newVisit.cancelled"),
-    },
-    [OutcomeGoalMet.ONGOING]: {
-        name: i18n.t("newVisit.ongoing"),
-    },
-    [OutcomeGoalMet.CONCLUDED]: {
-        name: i18n.t("newVisit.concluded"),
-    },
+// On language change, recompute arrays of labels
+export var outcomeGoalMets: {[key: string]: {[key:string]: string}} = {};
+const refreshArrays = () => {
+    outcomeGoalMets = {
+        [OutcomeGoalMet.CANCELLED]: {
+            name: i18n.t("newVisit.cancelled"),
+        },
+        [OutcomeGoalMet.ONGOING]: {
+            name: i18n.t("newVisit.ongoing"),
+        },
+        [OutcomeGoalMet.CONCLUDED]: {
+            name: i18n.t("newVisit.concluded"),
+        },
+    };;
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+}); 

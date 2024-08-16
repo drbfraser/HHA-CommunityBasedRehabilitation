@@ -49,69 +49,77 @@ export type TAppRouteProp<ScreenName extends StackScreenName> = RouteProp<
     ScreenName
 >;
 
-export const stackScreenOptions: Record<
-    StackScreenName | NoAuthScreenName,
-    TStackNavigationOptions<StackParamList, StackScreenName | NoAuthScreenName>
-> = {
-    [StackScreenName.HOME]: {
-        headerShown: false,
-    },
-    [StackScreenName.CLIENT]: ({ route, navigation }) => ({
-        headerShown: true,
-        header: DefaultHeader(
-            i18n.t("screenNames.viewClient"),
-            `${i18n.t("screenNames.clientID")}{i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.CLIENT>).params.clientID}`
-        ),
-    }),
-    [StackScreenName.ADMIN_VIEW]: {
-        headerShown: true,
-        header: DefaultHeader(i18n.t("screenNames.viewUser")),
-    },
-    [StackScreenName.ADMIN_EDIT]: {
-        headerShown: true,
-        header: DefaultHeader(i18n.t("screenNames.editUser")),
-    },
-    [StackScreenName.ADMIN_NEW]: {
-        headerShown: true,
-        header: DefaultHeader(i18n.t("screenNames.newUser")),
-    },
-    [StackScreenName.VISIT]: ({ route, navigation }) => ({
-        headerShown: true,
-        header: DefaultHeader(
-            i18n.t("screenNames.newVisit"),
-            `${i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.VISIT>).params.clientID}`
-        ),
-    }),
-    [StackScreenName.REFERRAL]: ({ route, navigation }) => ({
-        headerShown: true,
-        header: DefaultHeader(
-            i18n.t("screenNames.newReferral"),
-            `${i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.REFERRAL>).params.clientID}`
-        ),
-    }),
-    [StackScreenName.BASE_SURVEY]: ({ route, navigation }) => ({
-        headerShown: true,
-        header: DefaultHeader(
-            i18n.t("screenNames.newBaselineSurvey"),
-            `${i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.BASE_SURVEY>).params.clientID}`
-        ),
-    }),
-    [StackScreenName.SYNC]: {
-        headerShown: true,
-        header: DefaultHeader(i18n.t("screenNames.synchronization")),
-    },
-    [StackScreenName.ALERT_INBOX]: {
-        headerShown: true,
-        header: DefaultHeader(i18n.t("screenNames.inbox"))
-    },
-    [NoAuthScreenName.LOGIN]: {
-        headerShown: false,
-    },
-    [NoAuthScreenName.SWITCH_SERVER]: {
-        headerShown: true,
-        header: DefaultHeader(i18n.t("screenNames.switchTargetServer")),
-    },
+// On language change, recompute arrays of labels
+export var stackScreenOptions: Record<
+        StackScreenName | NoAuthScreenName,
+        TStackNavigationOptions<StackParamList, StackScreenName | NoAuthScreenName>
+    > = {};
+const refreshArrays = () => {
+    stackScreenOptions = {
+        [StackScreenName.HOME]: {
+            headerShown: false,
+        },
+        [StackScreenName.CLIENT]: ({ route, navigation }) => ({
+            headerShown: true,
+            header: DefaultHeader(
+                i18n.t("screenNames.viewClient"),
+                `${i18n.t("screenNames.clientID")}{i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.CLIENT>).params.clientID}`
+            ),
+        }),
+        [StackScreenName.ADMIN_VIEW]: {
+            headerShown: true,
+            header: DefaultHeader(i18n.t("screenNames.viewUser")),
+        },
+        [StackScreenName.ADMIN_EDIT]: {
+            headerShown: true,
+            header: DefaultHeader(i18n.t("screenNames.editUser")),
+        },
+        [StackScreenName.ADMIN_NEW]: {
+            headerShown: true,
+            header: DefaultHeader(i18n.t("screenNames.newUser")),
+        },
+        [StackScreenName.VISIT]: ({ route, navigation }) => ({
+            headerShown: true,
+            header: DefaultHeader(
+                i18n.t("screenNames.newVisit"),
+                `${i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.VISIT>).params.clientID}`
+            ),
+        }),
+        [StackScreenName.REFERRAL]: ({ route, navigation }) => ({
+            headerShown: true,
+            header: DefaultHeader(
+                i18n.t("screenNames.newReferral"),
+                `${i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.REFERRAL>).params.clientID}`
+            ),
+        }),
+        [StackScreenName.BASE_SURVEY]: ({ route, navigation }) => ({
+            headerShown: true,
+            header: DefaultHeader(
+                i18n.t("screenNames.newBaselineSurvey"),
+                `${i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.BASE_SURVEY>).params.clientID}`
+            ),
+        }),
+        [StackScreenName.SYNC]: {
+            headerShown: true,
+            header: DefaultHeader(i18n.t("screenNames.synchronization")),
+        },
+        [StackScreenName.ALERT_INBOX]: {
+            headerShown: true,
+            header: DefaultHeader(i18n.t("screenNames.inbox"))
+        },
+        [NoAuthScreenName.LOGIN]: {
+            headerShown: false,
+        },
+        [NoAuthScreenName.SWITCH_SERVER]: {
+            headerShown: true,
+            header: DefaultHeader(i18n.t("screenNames.switchTargetServer")),
+        },
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+}); 
 
 export type StackParamList = {
     [StackScreenName.HOME]: undefined;

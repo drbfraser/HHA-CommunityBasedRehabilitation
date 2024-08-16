@@ -62,10 +62,18 @@ export enum SortOptions {
     MENTAL = "mental",
 }
 
-export const genders = {
-    [Gender.FEMALE]: i18n.t("clientFields.female"),
-    [Gender.MALE]: i18n.t("clientFields.male"),
+// On language change, recompute arrays of labels
+export var genders: {[key: string]: string} = {};
+const refreshArrays = () => {
+    genders = {
+        [Gender.FEMALE]: i18n.t("clientFields.female"),
+        [Gender.MALE]: i18n.t("clientFields.male"),
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+}); 
 
 export const clientPrioritySort = (a: IClientSummary, b: IClientSummary) => {
     const getCombinedRisk = (c: IClientSummary) =>

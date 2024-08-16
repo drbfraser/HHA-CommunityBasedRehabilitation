@@ -13,3 +13,12 @@ export const Validation = {
     otherDisabilitySelected: async (disabilities: number[]) =>
         disabilities.includes(getOtherDisabilityId(await getDisabilities())),
 };
+
+// On language change, recompute arrays of labels
+const refreshMessages = () => {
+    Validation.usernameInvalidMsg = i18n.t("validation.userNameInvalid");
+    Validation.passwordInvalidMsg = i18n.t("validation.passwordStrength");
+};
+i18n.on("languageChanged", () => {
+    refreshMessages();
+}); 

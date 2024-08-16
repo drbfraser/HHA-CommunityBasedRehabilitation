@@ -2,7 +2,6 @@ import { Validation } from "../../util/validations";
 import * as Yup from "yup";
 import { Gender, IClient } from "../../util/clients";
 import i18n from "i18next";
-import { get } from "fetch-mock";
 
 export enum ClientField {
     firstName = "firstName",
@@ -100,54 +99,67 @@ export const getTranslationForFirstName = () => {
 
 console.log("--> ClientFields.ts: Current language is: ", i18n.language);
 console.log("--> ClientFields.ts: Current first name is: ", i18n.t("clientFields.firstName"));
-export const clientFieldLabels = {
-    [ClientField.firstName]: i18n.t("clientFields.firstName"),
-    [ClientField.lastName]: i18n.t("clientFields.lastName"),
-    [ClientField.birthDate]: i18n.t("clientFields.birthDate"),
-    [ClientField.village]: i18n.t("clientFields.village"),
-    [ClientField.gender]: i18n.t("clientFields.gender"),
-    [ClientField.zone]: i18n.t("clientFields.zone"),
-    [ClientField.phoneNumber]: i18n.t("clientFields.phoneNumber"),
-    [ClientField.interviewConsent]: i18n.t("clientFields.interviewConsent"),
-    [ClientField.caregiverPresent]: i18n.t("clientFields.caregiverPresent"),
-    [ClientField.caregiverPhone]: i18n.t("clientFields.caregiverPhone"),
-    [ClientField.caregiverName]: i18n.t("clientFields.caregiverName"),
-    [ClientField.caregiverEmail]: i18n.t("clientFields.caregiverEmail"),
-    [ClientField.disability]: i18n.t("clientFields.disability"),
-    [ClientField.otherDisability]: i18n.t("clientFields.otherDisability"),
-    [ClientField.healthRisk]: i18n.t("clientFields.healthRisk"),
-    [ClientField.healthRequirements]: i18n.t("clientFields.healthRequirements"),
-    [ClientField.healthGoals]: i18n.t("clientFields.healthGoals"),
-    [ClientField.educationRisk]: i18n.t("clientFields.educationRisk"),
-    [ClientField.educationRequirements]: i18n.t("clientFields.educationRequirements"),
-    [ClientField.educationGoals]: i18n.t("clientFields.educationGoals"),
-    [ClientField.socialRisk]: i18n.t("clientFields.socialRisk"),
-    [ClientField.socialRequirements]: i18n.t("clientFields.socialRequirements"),
-    [ClientField.socialGoals]: i18n.t("clientFields.socialGoals"),
-    [ClientField.nutritionRisk]: i18n.t("clientFields.nutritionRisk"),
-    [ClientField.nutritionRequirements]: i18n.t("clientFields.nutritionRequirements"),
-    [ClientField.nutritionGoals]: i18n.t("clientFields.nutritionGoals"),
-    [ClientField.mentalRisk]: i18n.t("clientFields.mentalRisk"),
-    [ClientField.mentalRequirements]: i18n.t("clientFields.mentalRequirements"),
-    [ClientField.mentalGoals]: i18n.t("clientFields.mentalGoals"),
-};
 
-export const updateClientfieldLabels = {
-    // TODO: Why are these names in snake_case vs camelCase as used above?
-    [ClientField.first_name]: i18n.t("clientFields.firstName"),
-    [ClientField.last_name]: i18n.t("clientFields.lastName"),
-    [ClientField.birth_date]: i18n.t("clientFields.birthDate"),
-    [ClientField.village]: i18n.t("clientFields.village"),
-    [ClientField.gender]: i18n.t("clientFields.gender"),
-    [ClientField.zone]: i18n.t("clientFields.zone"),
-    [ClientField.phone_number]: i18n.t("clientFields.phoneNumber"),
-    [ClientField.caregiver_present]: i18n.t("clientFields.caregiverPresent"),
-    [ClientField.caregiver_name]: i18n.t("clientFields.caregiverName"),
-    [ClientField.caregiver_phone]: i18n.t("clientFields.caregiverPhone"),
-    [ClientField.caregiver_email]: i18n.t("clientFields.caregiverEmail"),
-    [ClientField.disability]: i18n.t("clientFields.disability"),
-    [ClientField.other_disability]: i18n.t("clientFields.otherDisability"),
-};
+// On language change, recompute arrays of labels
+export var clientFieldLabels: {[key: string]: string} = {};
+export var updateClientfieldLabels: {[key: string]: string} = {};
+
+const refreshArrays = () => {
+    clientFieldLabels = {
+        [ClientField.firstName]: i18n.t("clientFields.firstName"),
+        [ClientField.lastName]: i18n.t("clientFields.lastName"),
+        [ClientField.birthDate]: i18n.t("clientFields.birthDate"),
+        [ClientField.village]: i18n.t("clientFields.village"),
+        [ClientField.gender]: i18n.t("clientFields.gender"),
+        [ClientField.zone]: i18n.t("clientFields.zone"),
+        [ClientField.phoneNumber]: i18n.t("clientFields.phoneNumber"),
+        [ClientField.interviewConsent]: i18n.t("clientFields.interviewConsent"),
+        [ClientField.caregiverPresent]: i18n.t("clientFields.caregiverPresent"),
+        [ClientField.caregiverPhone]: i18n.t("clientFields.caregiverPhone"),
+        [ClientField.caregiverName]: i18n.t("clientFields.caregiverName"),
+        [ClientField.caregiverEmail]: i18n.t("clientFields.caregiverEmail"),
+        [ClientField.disability]: i18n.t("clientFields.disability"),
+        [ClientField.otherDisability]: i18n.t("clientFields.otherDisability"),
+        [ClientField.healthRisk]: i18n.t("clientFields.healthRisk"),
+        [ClientField.healthRequirements]: i18n.t("clientFields.healthRequirements"),
+        [ClientField.healthGoals]: i18n.t("clientFields.healthGoals"),
+        [ClientField.educationRisk]: i18n.t("clientFields.educationRisk"),
+        [ClientField.educationRequirements]: i18n.t("clientFields.educationRequirements"),
+        [ClientField.educationGoals]: i18n.t("clientFields.educationGoals"),
+        [ClientField.socialRisk]: i18n.t("clientFields.socialRisk"),
+        [ClientField.socialRequirements]: i18n.t("clientFields.socialRequirements"),
+        [ClientField.socialGoals]: i18n.t("clientFields.socialGoals"),
+        [ClientField.nutritionRisk]: i18n.t("clientFields.nutritionRisk"),
+        [ClientField.nutritionRequirements]: i18n.t("clientFields.nutritionRequirements"),
+        [ClientField.nutritionGoals]: i18n.t("clientFields.nutritionGoals"),
+        [ClientField.mentalRisk]: i18n.t("clientFields.mentalRisk"),
+        [ClientField.mentalRequirements]: i18n.t("clientFields.mentalRequirements"),
+        [ClientField.mentalGoals]: i18n.t("clientFields.mentalGoals"),
+    };
+    
+    updateClientfieldLabels = {
+        // TODO: Why are these names in snake_case vs camelCase as used above?
+        [ClientField.first_name]: i18n.t("clientFields.firstName"),
+        [ClientField.last_name]: i18n.t("clientFields.lastName"),
+        [ClientField.birth_date]: i18n.t("clientFields.birthDate"),
+        [ClientField.village]: i18n.t("clientFields.village"),
+        [ClientField.gender]: i18n.t("clientFields.gender"),
+        [ClientField.zone]: i18n.t("clientFields.zone"),
+        [ClientField.phone_number]: i18n.t("clientFields.phoneNumber"),
+        [ClientField.caregiver_present]: i18n.t("clientFields.caregiverPresent"),
+        [ClientField.caregiver_name]: i18n.t("clientFields.caregiverName"),
+        [ClientField.caregiver_phone]: i18n.t("clientFields.caregiverPhone"),
+        [ClientField.caregiver_email]: i18n.t("clientFields.caregiverEmail"),
+        [ClientField.disability]: i18n.t("clientFields.disability"),
+        [ClientField.other_disability]: i18n.t("clientFields.otherDisability"),
+    };
+}
+refreshArrays();
+i18n.on("languageChanged", () => {
+    console.log("!!! ==> common:clientFields - i18n languageChanged event fired:", i18n.language);
+    refreshArrays();
+}); 
+
 
 export const clientInitialValues = {
     [ClientField.firstName]: "",

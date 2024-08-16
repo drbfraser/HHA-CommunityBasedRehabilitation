@@ -35,17 +35,18 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
             const fetchedVisit: any = await database.get(modelName.visits).find(visitSummary.id);
             const iVisit: IVisit = {
                 id: fetchedVisit.id,
-                user_id: fetchedVisit.user_id,
-                client_id: fetchedVisit.client_id,
+                user_id: fetchedVisit.user_id,          // Value in fetchVisit, but undefined in iVisit. Why?
+                client_id: fetchedVisit.client_id,      // Value in fetchVisit, but undefined in iVisit. Why?
                 created_at: fetchedVisit.createdAt,
                 health_visit: fetchedVisit.health_visit,
                 educat_visit: fetchedVisit.educat_visit,
                 social_visit: fetchedVisit.social_visit,
                 nutrit_visit: fetchedVisit.nutrit_visit,
+                mental_visit: fetchedVisit.mental_visit,
                 longitude: fetchedVisit.longitude,
                 latitude: fetchedVisit.latitude,
                 zone: fetchedVisit.zone,
-                village: fetchedVisit.zone,
+                village: fetchedVisit.village,
                 improvements: [],
                 outcomes: [],
             };
@@ -128,7 +129,6 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
 
         return (
             <>
-                <Card.Title title={t("visitAttr.newVisitSurvey")} />
                 <Card style={styles.createdCard}>
                     <Card.Content>
                         <Text>
@@ -163,6 +163,9 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                     )}{" "}
                     {visitSummary.nutrit_visit && (
                         <SocialChip label={t("newVisit.nutrition")} type={RiskType.NUTRITION} />
+                    )}{" "}
+                    {visitSummary.mental_visit && (
+                        <SocialChip label={t("newVisit.mental")} type={RiskType.MENTAL} />
                     )}{" "}
                 </Dialog.Title>
                 <Dialog.Content>

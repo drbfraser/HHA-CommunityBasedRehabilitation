@@ -158,14 +158,13 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         {referral.orthotic && <ReasonChip label={t("general.orthotic")} />}
                         {referral.hha_nutrition_and_agriculture_project && <ReasonChip label={t("general.nutrition")} />}
                         {referral.mental_health && <ReasonChip label={t("general.mental")} />}
-                        {referral.services_other && <ReasonChip label={t("general.other")} />}
+                        {referral.services_other && <ReasonChip label={t("referral.other")} />}
                     </Dialog.Title>
                     <Dialog.Content>
                         <Text>
                             <Text style={styles.labelBold}>{t("referralAttr.referralDate")}: </Text>
                             {timestampToDateTime(referral.date_referred)}
                         </Text>
-                        <Text />
                         {referral.resolved && (
                             <>
                                 <Text />
@@ -211,6 +210,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         )}
                         {referral.physiotherapy && (
                             <>
+                                <Text />
                                 <Text>
                                     <Text style={styles.labelBold}>{t('referralAttr.condition', {context: "physiotherapy"})}: </Text>
                                     {referral.condition}
@@ -220,25 +220,26 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         )}
                         {referral.prosthetic && (
                             <>
+                                <Text />
                                 <Text>
                                     <Text style={styles.labelBold}>
                                         {t('referralAttr.injuryLocation', {context: "prosthetic"})}: </Text>
                                     {prostheticInjuryLocations[referral.prosthetic_injury_location]}
                                 </Text>
-                                <Text />
                             </>
                         )}
                         {referral.orthotic && (
                             <>
+                                <Text />
                                 <Text>
                                     <Text style={styles.labelBold}>{t('referralAttr.injuryLocation', {context: "orthotic"})}: </Text>
                                     {orthoticInjuryLocations[referral.orthotic_injury_location]}
                                 </Text>
-                                <Text />
                             </>
                         )}
                         {referral.hha_nutrition_and_agriculture_project && (
                             <>                            
+                                <Text />
                                 <Text>
                                     <Text style={styles.labelBold}>{t("referral.emergencyFoodAidRequired")}? </Text>
                                     {referral.emergency_food_aid ? t("general.yes") : t("general.no")}
@@ -247,11 +248,11 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                 <Text style={styles.labelBold}>{t("referral.agricultureLivelihoodProgramEnrollment")}? </Text>
                                     {referral.agriculture_livelihood_program_enrollment ? t("general.yes") : t("general.no")}
                                 </Text>
-                                <Text />
                             </>
                         )}
                         {referral.mental_health && (
                             <>
+                                <Text />
                                 <Text>
                                     <Text style={styles.labelBold}>{t('referralAttr.condition', {context: "mental"})}: </Text>
                                     <Text>{referral.mental_health_condition}</Text>
@@ -260,11 +261,11 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         )}
                         {Boolean(referral.services_other.trim().length) && (
                             <>
+                                <Text />
                                 <Text>
                                     <Text style={styles.labelBold}>{t("referralAttr.otherServiceRequired")}: </Text>
                                     {referral.services_other}
                                 </Text>
-                                <Text />
                             </>
                         )}
                         {!referral.resolved && <ResolveForm />}

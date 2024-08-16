@@ -83,7 +83,7 @@
     "visitAttr": {
         "newVisit": "-New Visit",
         "visitVerb": "-visits",
-        "visitLocation": "-visit in {{body}}",
+        "visitLocation": "-Visit in {{body}}",
         "date": "-Visit Date",
         "newVisitSurvey": "-New Visit Survey"
     },

@@ -180,7 +180,7 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                 duration={4000}
                 onDismiss={() => setPassChangeSnackbarVisibility(false)}
             >
-                {("login.passwordChangeConfirmation")}
+                {t("login.passwordChangeConfirmation")}
             </Snackbar>
         </View>
     );

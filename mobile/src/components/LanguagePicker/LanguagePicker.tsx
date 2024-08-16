@@ -7,17 +7,6 @@ import { View, Text, Pressable } from "react-native";
 import { Button, Modal, Portal } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { 
-    isThisExportingString, 
-    ClientField, 
-    clientFieldLabels, 
-    getCurrentLanguage, 
-    getCurrentLanguageObject,
-    getTranslationForFirstName,
- } from "@cbr/common";
-
-
-
 const LanguagePicker = () => {
 
     const styles = useStyles();
@@ -56,20 +45,6 @@ const LanguagePicker = () => {
         const lang = languages.find((lang) => lang.name === name);
         return lang ? lang.label : name;
     };
-
-    // Debugging
-    console.log("");
-    console.log("-------- Mobile ----------");
-    console.log("Current language: ", i18n.language);
-    console.log("-------- Common ----------");
-    console.log("isThisExportingString?: ", isThisExportingString);
-    console.log("clientFieldLabels[ClientField.firstName]: ", clientFieldLabels[ClientField.firstName]);
-    console.log("clientFieldLabels: ", clientFieldLabels);
-    console.log("getCurrentLanguage(): ", getCurrentLanguage());
-    console.log("getCurrentLanguageObject(): ", getCurrentLanguageObject());
-    console.log("getTranslationForFirstName(): ", getTranslationForFirstName());
-    console.log("");
-
 
     return (
         <View>

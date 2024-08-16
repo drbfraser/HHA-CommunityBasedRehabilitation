@@ -156,13 +156,16 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         {referral.physiotherapy && <ReasonChip label={t("general.physiotherapy")} />}
                         {referral.prosthetic && <ReasonChip label={t("general.prosthetic")} />}
                         {referral.orthotic && <ReasonChip label={t("general.orthotic")} />}
+                        {referral.hha_nutrition_and_agriculture_project && <ReasonChip label={t("general.nutrition")} />}
                         {referral.mental_health && <ReasonChip label={t("general.mental")} />}
+                        {referral.services_other && <ReasonChip label={t("general.other")} />}
                     </Dialog.Title>
                     <Dialog.Content>
                         <Text>
                             <Text style={styles.labelBold}>{t("referralAttr.referralDate")}: </Text>
                             {timestampToDateTime(referral.date_referred)}
                         </Text>
+                        <Text />
                         {referral.resolved && (
                             <>
                                 <Text />
@@ -219,7 +222,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                             <>
                                 <Text>
                                     <Text style={styles.labelBold}>
-                                    {t('referralAttr.injuryLocation', {context: "prosthetic"})}: </Text>
+                                        {t('referralAttr.injuryLocation', {context: "prosthetic"})}: </Text>
                                     {prostheticInjuryLocations[referral.prosthetic_injury_location]}
                                 </Text>
                                 <Text />
@@ -230,6 +233,19 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                 <Text>
                                     <Text style={styles.labelBold}>{t('referralAttr.injuryLocation', {context: "orthotic"})}: </Text>
                                     {orthoticInjuryLocations[referral.orthotic_injury_location]}
+                                </Text>
+                                <Text />
+                            </>
+                        )}
+                        {referral.hha_nutrition_and_agriculture_project && (
+                            <>                            
+                                <Text>
+                                    <Text style={styles.labelBold}>{t("referral.emergencyFoodAidRequired")}? </Text>
+                                    {referral.emergency_food_aid ? t("general.yes") : t("general.no")}
+                                </Text>
+                                <Text>
+                                <Text style={styles.labelBold}>{t("referral.agricultureLivelihoodProgramEnrollment")}? </Text>
+                                    {referral.agriculture_livelihood_program_enrollment ? t("general.yes") : t("general.no")}
                                 </Text>
                                 <Text />
                             </>

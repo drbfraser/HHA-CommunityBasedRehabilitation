@@ -286,37 +286,6 @@ const NewReferral = (props: INewReferralProps) => {
                                             style={{ backgroundColor: themeColors.blueBgDark }}
                                         />
                                         <ScrollView>
-                                            <Text>
-                                                formikProps.isSubmitting: {formikProps.isSubmitting}
-                                            </Text>
-                                            <Text>
-                                                enabledSteps.length: {enabledSteps.length}
-                                            </Text>
-                                            <Text>
-                                                enabledSteps: {enabledSteps}
-                                            </Text>
-                                            <Text>
-                                                enabledSteps[activeStep-1]:{" "}
-                                                {enabledSteps[activeStep - 1]}
-                                            </Text>
-                                            <Text>
-                                                activeStep: {activeStep}
-                                            </Text>
-                                            <Text>
-                                                checkedSteps: {checkedSteps}
-                                            </Text>
-                                            <Text>
-                                                checkedSteps include current: {checkedSteps.includes(
-                                                    enabledSteps[activeStep - 1])}
-                                            </Text>
-                                            <Text>
-                                                countTouchedFields(formikProps.touched):
-                                                {countTouchedFields(formikProps.touched)}    
-                                            </Text>
-                                            <Text>
-                                                countObjectKeys(formikProps.errors):
-                                                {countObjectKeys(formikProps.errors)}
-                                            </Text>
                                             <surveyStep.Form formikProps={formikProps} />
                                         </ScrollView>
                                     </ProgressStep>

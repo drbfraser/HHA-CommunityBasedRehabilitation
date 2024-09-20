@@ -28,7 +28,3 @@ export const initI18n = (i18nInstance: typeof i18n) => {
 
     console.log("===> COMMON: i18n.config.ts: End");
 };
-
-export const testFn = () => {
-    console.log("testing!");
-};

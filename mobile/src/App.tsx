@@ -134,6 +134,10 @@ export default function App() {
     }, []);
 
     useEffect(() => {
+        initI18n(i18next);
+    }, []);
+
+    useEffect(() => {
         // Refresh disabilities, zones, current user information
         isLoggedIn()
             .then((loggedIn) => {

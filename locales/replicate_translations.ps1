@@ -1,4 +1,4 @@
-# Copy the translations from the source folder to the locales folders for common/web/mobile
+# Copy the translations from the source folder to the locales folders for common
 # 
 # Run via PowerShell (in project root)
 #   .\locales\replicate_translations.ps1
@@ -28,13 +28,9 @@ foreach ($sourceFile in $sourceFiles) {
 
 }
 
-
-
 # Set array of target folders
 $targetFolders = @(
-    "$sourceCodeFolder\..\mobile\src\locales",
-    "$sourceCodeFolder\..\common\src\locales",
-    "$sourceCodeFolder\..\web\src\locales"
+    "$sourceCodeFolder\..\common\src\locales"
 )
 
 # For each target folder

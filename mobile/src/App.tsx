@@ -16,6 +16,8 @@ import {
     getCurrentUser,
     invalidateAllCachedAPI,
     isLoggedIn,
+    testFn,
+    initI18n,
 } from "@cbr/common";
 import { AuthContext as AuthContext, IAuthContext } from "./context/AuthContext/AuthContext";
 import { enableScreens } from "react-native-screens";
@@ -34,7 +36,12 @@ import { AutoSyncDB } from "./util/syncHandler";
 import { Provider as StoreProvider } from "react-redux";
 import { store } from "./redux/store";
 import i18next from "i18next";
-import "./i18n.config";
+// import "./i18n.config";
+
+// initI18n(i18next);
+testFn();
+console.log("new code!");
+
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
 enableScreens();
@@ -113,6 +120,10 @@ export default function App() {
     const [autoSync, setAutoSync] = useState<boolean>(true);
     const [cellularSync, setCellularSync] = useState<boolean>(false);
     const [screenRefresh, setScreenRefresh] = useState<boolean>(false);
+
+    useEffect(() => {
+        initI18n(i18next);
+    }, []);
 
     useEffect(() => {
         // Refresh disabilities, zones, current user information
@@ -202,19 +213,19 @@ export default function App() {
     // Load the language from AsyncStorage
     // Source: https://medium.com/@lasithherath00/implementing-react-native-i18n-and-language-selection-with-asyncstorage-b24ae59e788e
     useEffect(() => {
-        const loadLanguage = async ()=>{
-            try{
-                const storedLanguage = await AsyncStorage.getItem('language');
+        const loadLanguage = async () => {
+            try {
+                const storedLanguage = await AsyncStorage.getItem("language");
                 if (storedLanguage) {
                     i18next.changeLanguage(storedLanguage);
                     console.log("Language loaded", storedLanguage);
                 }
-            } catch(e){ 
-                console.log(e)
+            } catch (e) {
+                console.log(e);
             }
-        }
-        loadLanguage()
-    }, [])
+        };
+        loadLanguage();
+    }, []);
 
     return (
         <SafeAreaView style={styles.safeApp}>

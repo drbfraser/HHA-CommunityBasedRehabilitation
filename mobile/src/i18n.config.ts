@@ -13,21 +13,17 @@ const resources = {
     },
 };
 
-i18n
-    .use(initReactI18next)
-    .init({
-        debug: true,            // TODO: Remove this line in production!
-        compatibilityJSON: "v3",
-        resources,
-        //language to use if translations in user language are not available
-        fallbackLng: "en",
-        interpolation: {
-            escapeValue: false,
-        },
-        returnEmptyString: false,
-    });
-
-
+i18n.use(initReactI18next).init({
+    debug: true, // TODO: Remove this line in production!
+    compatibilityJSON: "v3",
+    resources,
+    //language to use if translations in user language are not available
+    fallbackLng: "en",
+    interpolation: {
+        escapeValue: false,
+    },
+    returnEmptyString: false,
+});
 
 export default i18n;
 console.log("===> i18n.config.ts: End");

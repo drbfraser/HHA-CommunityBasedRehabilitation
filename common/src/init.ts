@@ -1,6 +1,7 @@
 import { initSocketContext } from "./context/SocketIOContext";
 // Initialize the i18n translations (done here in common, and in web or mobile)
 import "./i18n.config";
+
 export interface KeyValStorageProvider {
     readonly getItem: (key: string) => Promise<string | null>;
     readonly setItem: (key: string, value: string) => Promise<void>;

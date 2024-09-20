@@ -36,8 +36,6 @@ import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
 import { store } from "./redux/store";
 
-initI18n(i18next);
-
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
 enableScreens();
@@ -116,6 +114,25 @@ export default function App() {
     const [cellularSync, setCellularSync] = useState<boolean>(false);
     const [screenRefresh, setScreenRefresh] = useState<boolean>(false);
 
+    // Load the language from AsyncStorage
+    // Source: https://medium.com/@lasithherath00/implementing-react-native-i18n-and-language-selection-with-asyncstorage-b24ae59e788e
+    useEffect(() => {
+        const loadLanguage = async () => {
+            try {
+                const storedLanguage = await AsyncStorage.getItem("language");
+                if (storedLanguage) {
+                    i18next.changeLanguage(storedLanguage);
+                    console.log("Language loaded:", storedLanguage);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        };
+
+        initI18n(i18next);
+        loadLanguage();
+    }, []);
+
     useEffect(() => {
         // Refresh disabilities, zones, current user information
         isLoggedIn()
@@ -158,6 +175,21 @@ export default function App() {
         });
     }, []);
 
+    useEffect(() => {
+        if (autoSync) {
+            SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
+        }
+    }, [autoSync]);
+
+    useEffect(() => {
+        if (authState.state === "loggedIn" && autoSync) {
+            AutoSyncDB(database, autoSync, cellularSync).then(() => {
+                setScreenRefresh(true);
+                SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
+            });
+        }
+    }, [authState]);
+
     // design inspired by https://reactnavigation.org/docs/auth-flow/
     const authContext = useMemo<IAuthContext>(
         () => ({
@@ -185,38 +217,6 @@ export default function App() {
         }),
         [authState]
     );
-
-    useEffect(() => {
-        if (autoSync) {
-            SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
-        }
-    }, [autoSync]);
-
-    useEffect(() => {
-        if (authState.state === "loggedIn" && autoSync) {
-            AutoSyncDB(database, autoSync, cellularSync).then(() => {
-                setScreenRefresh(true);
-                SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
-            });
-        }
-    }, [authState]);
-
-    // Load the language from AsyncStorage
-    // Source: https://medium.com/@lasithherath00/implementing-react-native-i18n-and-language-selection-with-asyncstorage-b24ae59e788e
-    useEffect(() => {
-        const loadLanguage = async () => {
-            try {
-                const storedLanguage = await AsyncStorage.getItem("language");
-                if (storedLanguage) {
-                    i18next.changeLanguage(storedLanguage);
-                    console.log("Language loaded", storedLanguage);
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        };
-        loadLanguage();
-    }, []);
 
     return (
         <SafeAreaView style={styles.safeApp}>

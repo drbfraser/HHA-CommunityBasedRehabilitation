@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "scripts": {
         "test": "LANG=en-US jest",
-        "test-ci": "LANG=en-US jest --ci --coverage --reporters=default --reporters=jest-junit"
+        "test-ci": "LANG=en-US jest --ci --coverage --reporters=default --reporters=jest-junit",
+        "i18n-interface": "i18next-resources-for-ts interface -i ./src/locales/ -o ./src/@types/resources.d.ts"
     },
     "dependencies": {
         "@types/history": "^4.7.9",
@@ -22,6 +23,7 @@
         "@types/react": "^17.0.9",
         "base64url": "^3.0.1",
         "fetch-mock": "^7.3.9",
+        "i18next-resources-for-ts": "^1.5.0",
         "jest": "^27.0.6",
         "jest-junit": "^12.2.0",
         "node-abort-controller": "^2.0.0",

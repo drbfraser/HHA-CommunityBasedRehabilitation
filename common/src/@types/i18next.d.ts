@@ -1,14 +1,10 @@
 import "i18next";
 
-import en from '../locales/en.json';
-import bari from '../locales/bari.json';
+import Resources from './resources.ts';
 
 declare module 'i18next' {
   interface CustomTypeOptions {
     defaultNS: 'en';
-    resources: {
-      en: typeof en;
-      bari: typeof bari;
-    };
+    resources: Resources;
   }
 }

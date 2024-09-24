@@ -5,8 +5,8 @@ The CBR Mobile app uses the React Native framework along with [WatermelonDB](htt
 # Setup
 
 1. Install Android Studio, configure a virtual device
-2. Add Android SDK to path (to run `adb`, Android Debug Bridge)
 
+2. Add Android SDK to path (to run `adb`, Android Debug Bridge)
     - Find the location of the Android SDK: in Android Studios go to Tools > SDK Manager, at top under "Android SDK Location"
     - Under Windows, goto Start > "Environment Variables" > Environment Variables > User variables for ... > Path.
     - Add to the end the `platform-tools/` sub-folder of the Android SDK, such as: `D:\Users\Brian\AndroidSDK\platform-tools`
@@ -15,7 +15,6 @@ The CBR Mobile app uses the React Native framework along with [WatermelonDB](htt
       `$ adb`
 
 3. Set the JAVA_HOME environment variable
-
     - Find the location of your installed version of the Java JDK. Likely something like `C:\Program Files\Java\jdk-11.0.5`
     - JDK 11.0.5 is known to work; JRE 8 is known not to.
     - Under Windows, goto Start > "Environment Variables" > Environment Variables > User variables for ... > add new entry for `JAVA_HOME`, and set to `C:\Program Files\Java\jdk-11.0.5` (or the like).
@@ -75,27 +74,41 @@ After the app is up and running the first time, after you make a change to the c
 # Troubleshooting
 
 -   After running `npm install` in the mobile/ folder, if you get an error for `EINTERGRITY` complaining about a SHA-512 mismatch, then it is likely that you need to re-run the `npm install cbr-common-1.0.0.tgz` command inside the mobile/ folder to trigger it updating the SHA-512 of our custom package building built on your machine.
+
 -   After running `npm install` in the mobile/ folder, if you get an error for `EBADPLATFORM` related to the package `fservants`, then delete `mobile/package-lock.json` and re-run `npm install` to update to a newer `fservants`
+
 -   After running `docker compose up` in the project folder, if it complains that POSTGRES_USER, POSTGRES_PASSWORD, SECRET_KEY and such are not set, then:
     -   Ensure you have created the .env file in the project's root directory with those contents
     -   If in windows, ensure you are running the command via PowerShell (not Git Bash)
+
 -   After running `react-native run-android` if you see "Could not determine the dependencies of task ':app:installDebug'.", it likely means you have not correctly created the `local.properties` file.
+
 -   When running the mobile app, if you see "cachedAPIGet(..): API fetch failed" it likely means that you have not started the backed Docker containers, or are not targeting the correct URL for the back-end.
+
 -   If you see the error "NativeModules.DatabaseBridge is not defined!", it likely means that you are trying to use Expo to run the project. However, the project has been ejected from Expo in order to work with Watermelon DB, so we cannot use the `expo start` command.
+
 -   If your username and password are rejected when logging in, ensure that you can log in via the web interface first. You may need to seed the database by running the populate database script to setup the default user(s).
--   Upon doing react-native run-android, if a message below is returned,
 
-```
-ERROR cachedAPIGet(cache_user): API fetch failed (unable to get an access token) and no backup; using error value"
-```
+- Upon doing react-native run-android, if a message below is returned,
+    ```
+    ERROR cachedAPIGet(cache_user): API fetch failed (unable to get an access token) and no backup; using error value"
+    ```
+then enter this command in your terminal while running docker backend:
+    ```
+    docker exec cbr_django python manage.py migrate
+    ```
 
-then enter this command in your terminal while running docker backend
-
-```
-docker exec cbr_django python manage.py migrate
-```
 - If Android app fails to load with message "Unable to load Script. Make sure you're either running Metro (...) or that your bundle `index.android.bundle` is packaged correctly for release", then try re-running the `npm run android` command. (Seems to happen when the React Native terminal does not stay open.)
 
+- If when building the Android app you get an error stating something like:
+    ```
+    Execution failed for task ':app:mapDebugSourceSetPaths'.  
+    Could not resolve all files for configuration ':app:debugRuntimeClasspath'.
+    ```
+  and it seems like files or directories cannot be found in
+  `~/.gradle/caches/*`, then try deleting the entire `~/.gradle` directory and building the app again 
+   - ref: https://stackoverflow.com/questions/70010356/android-gradle-build-fails-from-cached-files. 
+   - There are also other solutions in the SO post, but they have not been tested with CBR.
 
 -  If `common` package does not update correctly (such as translations being stale after they have been updated), here is a large set of things to try to clean up the project:
 
@@ -145,7 +158,7 @@ docker exec cbr_django python manage.py migrate
 
     TO TRY
     
-    - Delete the cache folders in `~/.android/` and `~/.gradle` folders.
+    - Delete the `~/.android/cache` folder and the `~/.gradle` folder.
     - Reset npm cache: (from mobile/) `npm start -- --reset-cache`
     - Run `npm clean --force`
 

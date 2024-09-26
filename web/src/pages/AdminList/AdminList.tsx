@@ -1,5 +1,6 @@
-import { useStyles } from "./AdminList.styles";
-import SearchBar from "components/SearchBar/SearchBar";
+import React, { useRef, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import {
     DataGrid,
@@ -17,38 +18,33 @@ import {
     Popover,
     Switch,
 } from "@material-ui/core";
+import { Cancel, MoreVert } from "@material-ui/icons";
+
+import { useZones } from "@cbr/common/util/hooks/zones";
+import SearchBar from "components/SearchBar/SearchBar";
+import { useStyles } from "./AdminList.styles";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
-import { useRef } from "react";
-import { useHistory } from "react-router-dom";
-import { useEffect, useState } from "react";
 import requestUserRows from "./requestUserRows";
-import React from "react";
-import { Cancel, MoreVert } from "@material-ui/icons";
 import { SearchOption } from "../ClientList/searchOptions";
-import { useZones } from "@cbr/common/util/hooks/zones";
 
-const RenderText = (params: ValueFormatterParams) => {
-    return <Typography variant={"body2"}>{params.value}</Typography>;
-};
-
-const RenderLoadingOverlay = () => {
-    return (
-        <GridOverlay>
-            <div style={{ position: "absolute", top: 0, width: "100%" }}>
-                <LinearProgress />
-            </div>
-        </GridOverlay>
-    );
-};
-
+const RenderText = (params: ValueFormatterParams) => (
+    <Typography variant={"body2"}>{params.value}</Typography>
+);
+const RenderLoadingOverlay = () => (
+    <GridOverlay>
+        <div style={{ position: "absolute", top: 0, width: "100%" }}>
+            <LinearProgress />
+        </div>
+    </GridOverlay>
+);
 const RenderNoRowsOverlay = () => {
     const styles = useDataGridStyles();
-
     return (
         <GridOverlay className={styles.noRows}>
             <Cancel color="primary" className={styles.noRowsIcon} />
+            {/* TODO: Translate */}
             <Typography color="primary">No Users Found</Typography>
         </GridOverlay>
     );
@@ -74,6 +70,7 @@ const AdminList = () => {
     const searchOptionsStyle = useSearchOptionsStyles();
     const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
+    const { t } = useTranslation();
 
     const onRowClick = (row: any) => {
         const user = row.row;
@@ -87,7 +84,7 @@ const AdminList = () => {
     const adminColumns = [
         {
             field: "name",
-            headerName: "Name",
+            headerName: t("admin.name"),
             flex: 1,
             renderCell: RenderText,
             hide: isNameHidden,
@@ -95,7 +92,7 @@ const AdminList = () => {
         },
         {
             field: "zone",
-            headerName: "Zone",
+            headerName: t("admin.zone"),
             flex: 1,
             renderCell: RenderText,
             hide: isZoneHidden,
@@ -103,7 +100,7 @@ const AdminList = () => {
         },
         {
             field: "role",
-            headerName: "Role",
+            headerName: t("admin.role"),
             flex: 1,
             renderCell: RenderText,
             hide: isRoleHidden,
@@ -111,7 +108,7 @@ const AdminList = () => {
         },
         {
             field: "status",
-            headerName: "Status",
+            headerName: t("admin.status"),
             flex: 1,
             renderCell: RenderText,
             hide: isStatusHidden,
@@ -119,7 +116,7 @@ const AdminList = () => {
         },
         {
             field: "username",
-            headerName: "Username",
+            headerName: t("admin.username"),
             flex: 1,
             renderCell: RenderText,
             hide: isUsernameHidden,
@@ -143,6 +140,7 @@ const AdminList = () => {
         if (!initialDataLoaded.current) {
             return;
         }
+
         if (searchOption === SearchOption.NAME) {
             const filteredRows: RowsProp = serverRows.filter(
                 (r) =>
@@ -162,23 +160,24 @@ const AdminList = () => {
                 <IconButton onClick={onAdminAddClick} className={styles.icon}>
                     <PersonAddIcon />
                 </IconButton>
+
                 <div className={searchOptionsStyle.searchOptions}>
                     <Select
                         color={"primary"}
-                        defaultValue={SearchOption.NAME}
                         value={searchOption}
                         onChange={(event) => {
                             setSearchValue("");
                             setSearchOption(String(event.target.value));
                         }}
                     >
-                        {Object.values(SearchOption).map((option) => (
-                            <MenuItem key={option} value={option}>
+                        {Object.values(SearchOption).map((option, index) => (
+                            <MenuItem key={index} value={option}>
                                 {option}
                             </MenuItem>
                         ))}
                     </Select>
                 </div>
+
                 {searchOption === SearchOption.ZONE ? (
                     <div>
                         <Select

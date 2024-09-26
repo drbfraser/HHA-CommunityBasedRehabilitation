@@ -12,10 +12,10 @@ const resources = {
     },
 };
 
-export const initI18n = (i18nInstance: typeof i18n, i18nReactInstance: ThirdPartyModule | null) => {
+export const initI18n = (i18nInstance: typeof i18n) => {
     console.log("===> COMMON: i18n.config.ts: Start");
 
-    i18nInstance.use(i18nReactInstance ?? initReactI18next).init({
+    i18nInstance.use(initReactI18next).init({
         debug: true, // TODO: Remove this line in production!
         compatibilityJSON: "v3",
         resources,

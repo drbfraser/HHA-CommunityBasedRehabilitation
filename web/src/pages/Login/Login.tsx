@@ -60,7 +60,7 @@ const Login = () => {
             case "failed": {
                 return (
                     <Alert variant="filled" severity="error">
-                        {t("login.loginFailed")}: {`\n${status.error}`}
+                        {`${t("login.loginFailed")}:\n${status.error}`}
                     </Alert>
                 );
             }
@@ -95,7 +95,7 @@ const Login = () => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
-                    <br />
+                    <br /> {/* this should be handled by styling */}
                     <br />
                     <TextField
                         label={t("general.password")}

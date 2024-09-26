@@ -2,7 +2,7 @@ import { CssBaseline, ThemeProvider } from "@material-ui/core";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { themeMui } from "theme.styles";
-import { initReactI18next } from "react-i18next";
+import { I18nextProvider } from "react-i18next";
 import i18n from "i18next";
 
 import App from "./App";
@@ -37,8 +37,7 @@ initializeCommon({
     },
 });
 
-// why do we need to pass in initReactI18next?
-initI18n(i18n, initReactI18next);
+initI18n(i18n);
 
 const renderApp = () => {
     const container = document.getElementById("root");
@@ -50,10 +49,12 @@ const renderApp = () => {
     const root = createRoot(container);
     root.render(
         <React.StrictMode>
-            <ThemeProvider theme={themeMui}>
-                <CssBaseline />
-                <App />
-            </ThemeProvider>
+            <I18nextProvider i18n={i18n}>
+                <ThemeProvider theme={themeMui}>
+                    <CssBaseline />
+                    <App />
+                </ThemeProvider>
+            </I18nextProvider>
         </React.StrictMode>
     );
 };

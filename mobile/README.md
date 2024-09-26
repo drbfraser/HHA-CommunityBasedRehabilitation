@@ -56,6 +56,7 @@ If you need to change the version of node/npm, then try:
 1. Run back-end, front-end, and DB docker containers:  
    `$ docker compose up`
 2. Launch an Android virtual device via Android Studio, or connect an Android phone to your computer.
+    - **NOTE:** due to a run-time exception when targeting API 34 (Android 14.0) on ARM64 ("Keeps Stopping" error message), we are currently targeting API 30 (Android 11.0).  Confirmed to work on `Pixel 6 API 30` virtual device on both ARM64 and X86.
     - If using a physical phone, you must enable developer mode via the settings menu, then enable USB debugging, then disconnect and reconnect the phone from the computer.
     - When the phone is first connected to the computer, after USB debugging has been enabled, then on the phone you'll need to authorize your computer to use USB debugging with your phone.
 3. Build and launch from mobile/ folder  
@@ -72,6 +73,7 @@ After the app is up and running the first time, after you make a change to the c
 -   How is it best to do hot-reloading?
 
 # Troubleshooting
+-   If running the app in a virtual device via Android Studio, note that `Logcat` (in the bottom left corner) can offer some very useful error messages than metro.  This can greatly help with troubleshooting.
 
 -   After running `npm install` in the mobile/ folder, if you get an error for `EINTERGRITY` complaining about a SHA-512 mismatch, then it is likely that you need to re-run the `npm install cbr-common-1.0.0.tgz` command inside the mobile/ folder to trigger it updating the SHA-512 of our custom package building built on your machine.
 
@@ -83,7 +85,7 @@ After the app is up and running the first time, after you make a change to the c
 
 -   After running `react-native run-android` if you see "Could not determine the dependencies of task ':app:installDebug'.", it likely means you have not correctly created the `local.properties` file.
 
--   When running the mobile app, if you see "cachedAPIGet(..): API fetch failed" it likely means that you have not started the backed Docker containers, or are not targeting the correct URL for the back-end.
+-   When running the mobile app, if you see "cachedAPIGet(..): API fetch failed" it likely means that you have not started the backed Docker containers, or are not targeting the correct URL for the back-end.  It is possible that your environment variables are improperly set, or a wondow reloadmay be necessary to make them apply.
 
 -   If you see the error "NativeModules.DatabaseBridge is not defined!", it likely means that you are trying to use Expo to run the project. However, the project has been ejected from Expo in order to work with Watermelon DB, so we cannot use the `expo start` command.
 

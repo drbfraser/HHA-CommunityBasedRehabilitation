@@ -14,6 +14,8 @@ Follow this guide to set up a proper environment for React Native v0.71.3: https
 
 Follow this guide to install an Android emulator which can be used to run the mobile app: https://developer.android.com/studio/run/emulator/
 
+Note that we are currently targeting API 30 (Android 11.0).  Pixel 6 is confirmed to work well.
+
 Install JDK 11 from here: https://jdk.java.net/java-se-ri/11
 
 #### For Mac Users:
@@ -86,8 +88,9 @@ If you are going to be using an IP address, you will need to specify the port (8
   `npm install`
 - Navigate to `mobile/` and run:  
   `npm run refresh-common`
+  `npm install`
 
- The `npm run refresh-common` command will rebuild the `common` package and reinstall it in `mobile/`. (If we did not force a reinstall of common it would generate an `EINTEGRITY` error due to a mismatch between the `common` package and cached SHA in `mobile/package-lock.json`.
+ The `npm run refresh-common` command will rebuild the `common` package and reinstall it in `mobile/`. If we did not force a reinstall of common it would generate an `EINTEGRITY` error due to a mismatch between the `common` package and cached SHA in `mobile/package-lock.json`.
 
 ### 5. Run Django Database Migrations
 

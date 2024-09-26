@@ -1,7 +1,8 @@
 import { CssBaseline, ThemeProvider } from "@material-ui/core";
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { themeMui } from "theme.styles";
+
 import App from "./App";
 import { initializeCommon, KeyValStorageProvider } from "@cbr/common/init";
 import { loginState } from "./util/hooks/loginState";
@@ -33,12 +34,22 @@ initializeCommon({
     },
 });
 
-ReactDOM.render(
-    <React.StrictMode>
-        <ThemeProvider theme={themeMui}>
-            <CssBaseline />
-            <App />
-        </ThemeProvider>
-    </React.StrictMode>,
-    document.getElementById("root")
-);
+const renderApp = () => {
+    const container = document.getElementById("root");
+    if (!container) {
+        console.error("No root element for app.");
+        return;
+    }
+
+    const root = createRoot(container);
+    root.render(
+        <React.StrictMode>
+            <ThemeProvider theme={themeMui}>
+                <CssBaseline />
+                <App />
+            </ThemeProvider>
+        </React.StrictMode>
+    );
+};
+
+renderApp();

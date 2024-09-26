@@ -64,9 +64,7 @@ const App = () => {
     return (
         <Router history={history}>
             <AlertOffline />
-            {isLoggedIn === undefined ? (
-                <></>
-            ) : (
+            {isLoggedIn !== undefined && (
                 <SocketContext.Provider value={socket}>
                     <Switch>
                         <Route exact path="/">

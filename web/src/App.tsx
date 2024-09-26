@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
-import i18n from "i18next";
 
-import { initI18n } from "@cbr/common/i18n.config";
 import history from "@cbr/common/util/history";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { IAlert } from "@cbr/common/util/alerts";
@@ -21,10 +19,6 @@ const App = () => {
     const styles = useStyles();
     const [open, setOpen] = useState<boolean>(false);
     const [alert, setAlert] = useState<Partial<IAlert>>();
-
-    useEffect(() => {
-        initI18n(i18n);
-    }, []);
 
     useEffect(() => {
         socket.on("broadcastAlert", (data) => {

@@ -3,6 +3,8 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import { doLogin } from "@cbr/common/util/auth";
 import { useStyles } from "./Login.styles";
 import { loginState } from "../../util/hooks/loginState";
@@ -21,6 +23,7 @@ type LoginStatus = ILoginStatusFailed | IBaseLoginStatus;
 
 const Login = () => {
     const styles = useStyles();
+    const { t } = useTranslation();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -46,23 +49,25 @@ const Login = () => {
     };
 
     const LoginAlert = () => {
-        if (status.status === "submitting") {
-            return (
-                <Alert variant="filled" severity="info">
-                    Logging in...
-                </Alert>
-            );
+        switch (status.status) {
+            case "submitting": {
+                return (
+                    <Alert variant="filled" severity="info">
+                        {t("login.loggingIn")}
+                    </Alert>
+                );
+            }
+            case "failed": {
+                return (
+                    <Alert variant="filled" severity="error">
+                        {t("login.loginFailed")}: {`\n${status.error}`}
+                    </Alert>
+                );
+            }
+            default: {
+                return <></>;
+            }
         }
-
-        if (status.status === "failed") {
-            return (
-                <Alert variant="filled" severity="error">
-                    Login failed: {"\n" + status.error}
-                </Alert>
-            );
-        }
-
-        return <></>;
     };
 
     return (
@@ -76,13 +81,13 @@ const Login = () => {
                 <br />
                 <br />
                 <Typography variant="h4" gutterBottom>
-                    Login
+                    {t("login.login")}
                 </Typography>
                 <LoginAlert />
                 <br />
                 <form onSubmit={(e) => handleLogin(e)}>
                     <TextField
-                        label="Username"
+                        label={t("general.username")}
                         fullWidth
                         inputProps={{ autoCapitalize: "off" }}
                         required
@@ -93,7 +98,7 @@ const Login = () => {
                     <br />
                     <br />
                     <TextField
-                        label="Password"
+                        label={t("general.password")}
                         type="password"
                         fullWidth
                         required
@@ -110,7 +115,7 @@ const Login = () => {
                         fullWidth
                         disabled={status.status === "submitting"}
                     >
-                        Login
+                        {t("login.login")}
                     </Button>
                 </form>
             </div>

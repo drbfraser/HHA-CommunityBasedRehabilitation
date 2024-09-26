@@ -13,17 +13,18 @@ import {
     Typography,
 } from "@material-ui/core";
 import { Skeleton, Alert } from "@material-ui/lab";
+import { Assignment } from "@material-ui/icons";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+
 import { timestampToDateTime } from "@cbr/common/util/dates";
-import { useStyles } from "./Entry.styles";
+import { getSurveyInfo, ISurvey } from "@cbr/common/util/survey";
 import {
     BaseSurveyFormField,
     baseFieldLabels,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
+import { useStyles } from "./Entry.styles";
 import TimelineEntry from "../Timeline/TimelineEntry";
-import { Assignment } from "@material-ui/icons";
 import DataCard from "components/DataCard/DataCard";
-import { getSurveyInfo, ISurvey } from "@cbr/common/util/survey";
 
 interface IEntryProps {
     survey: ISurvey;
@@ -31,10 +32,8 @@ interface IEntryProps {
 }
 
 type TSurveyForm = {
-    [key: string]: ISurveyCategory;
+    [key: string]: { [key: string]: string | number | boolean | undefined };
 };
-
-type ISurveyCategory = { [key: string]: string | number | boolean | undefined };
 
 const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
     const [open, setOpen] = useState(false);

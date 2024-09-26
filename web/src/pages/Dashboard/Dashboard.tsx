@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, Grid, Typography } from "@material-ui/core";
-import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useHistory } from "react-router-dom";
+import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { Cancel, CheckCircle, FiberManualRecord } from "@material-ui/icons";
-import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
-import { IRiskType, riskTypes } from "util/riskIcon";
-import { clientPrioritySort, IClientSummary } from "@cbr/common/util/clients";
-import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
-import { useZones } from "@cbr/common/util/hooks/zones";
-import { timestampToDate } from "@cbr/common/util/dates";
-import { IOutstandingReferral } from "@cbr/common/util/referrals";
 import { Alert } from "@material-ui/lab";
 import {
     DataGrid,
@@ -23,13 +15,24 @@ import {
     RowsProp,
     RowData,
 } from "@material-ui/data-grid";
+import { useTranslation } from "react-i18next";
+
+import { clientPrioritySort, IClientSummary } from "@cbr/common/util/clients";
+import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
+import { useZones } from "@cbr/common/util/hooks/zones";
+import { timestampToDate } from "@cbr/common/util/dates";
+import { IOutstandingReferral } from "@cbr/common/util/referrals";
 import { IAlert } from "@cbr/common/util/alerts";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
+import { IRiskType, riskTypes } from "util/riskIcon";
+import { useDataGridStyles } from "styles/DataGrid.styles";
 
 const Dashboard = () => {
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
+    const { t } = useTranslation();
 
     const [clients, setClients] = useState<RowData[]>([]);
     const [referrals, setReferrals] = useState<RowsProp>([]);
@@ -104,20 +107,21 @@ const Dashboard = () => {
 
         const concatenateReferralType = (row: IOutstandingReferral) => {
             let referralTypes = [];
-            if (row.wheelchair) referralTypes.push("Wheelchair");
-            if (row.physiotherapy) referralTypes.push("Physiotherapy");
-            if (row.hha_nutrition_and_agriculture_project) referralTypes.push("HHANAP");
-            if (row.orthotic) referralTypes.push("Orthotic");
-            if (row.prosthetic) referralTypes.push("Prosthetic");
-            if (row.mental_health) referralTypes.push("Mental Health");
-            if (row.services_other) referralTypes.push(row.services_other);
+            if (row.wheelchair) referralTypes.push(t("referral.wheelchair"));
+            if (row.physiotherapy) referralTypes.push(t("referral.physiotherapy"));
+            if (row.hha_nutrition_and_agriculture_project)
+                referralTypes.push(t("referral.hhaNutritionAndAgricultureProjectAbbr"));
+            if (row.orthotic) referralTypes.push(t("referral.orthotic"));
+            if (row.prosthetic) referralTypes.push(t("referral.prosthetic"));
+            if (row.mental_health) referralTypes.push(t("referral.mentalHealth"));
+            if (row.services_other) referralTypes.push(row.services_other); // TODO: how to translate these?
 
             return referralTypes.join(", ");
         };
 
         fetchClients();
         fetchReferrals();
-    }, []);
+    }, [t]);
 
     useEffect(() => {
         const fetchAlerts = async () => {
@@ -126,8 +130,8 @@ const Dashboard = () => {
                 const user: IUser | typeof APILoadError = await getCurrentUser();
 
                 if (user !== APILoadError) {
-                    let userID = user.id;
-                    let unreadAlerts: IAlert[] = alertsList.filter((alert: IAlert) =>
+                    const userID = user.id;
+                    const unreadAlerts: IAlert[] = alertsList.filter((alert: IAlert) =>
                         alert.unread_by_users.includes(userID)
                     );
                     setUnreadAlertsCount(unreadAlerts.length);
@@ -149,10 +153,9 @@ const Dashboard = () => {
         );
     };
 
-    const RenderText = (params: ValueFormatterParams) => {
-        return <Typography variant={"body2"}>{params.value}</Typography>;
-    };
-
+    const RenderText = (params: ValueFormatterParams) => (
+        <Typography variant={"body2"}>{params.value}</Typography>
+    );
     const riskComparator = (
         v1: CellValue,
         v2: CellValue,
@@ -166,7 +169,6 @@ const Dashboard = () => {
 
     const RenderRiskHeader = (params: ColParams): JSX.Element => {
         const riskType: IRiskType = riskTypes[params.field];
-
         return (
             <div className="MuiDataGrid-colCellTitle">
                 <riskType.Icon />
@@ -177,39 +179,35 @@ const Dashboard = () => {
     const RenderNoPriorityClientsOverlay = () => (
         <GridOverlay className={dataGridStyle.noRows}>
             <Cancel color="primary" className={dataGridStyle.noRowsIcon} />
+            {/* TODO: translate */}
             <Typography color="primary">No Priority Clients Found</Typography>
         </GridOverlay>
     );
 
-    const RenderNoOutstandingReferralsOverlay = () => {
-        return (
-            <GridOverlay className={dataGridStyle.noRows}>
-                <CheckCircle color="primary" className={dataGridStyle.noRowsIcon} />
-                <Typography color="primary">No Outstanding Referrals Found</Typography>
-            </GridOverlay>
-        );
-    };
-
-    const locale = navigator.language;
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const RenderNoOutstandingReferralsOverlay = () => (
+        <GridOverlay className={dataGridStyle.noRows}>
+            <CheckCircle color="primary" className={dataGridStyle.noRowsIcon} />
+            {/* TODO: translate */}
+            <Typography color="primary"> No Outstanding Referrals Found</Typography>
+        </GridOverlay>
+    );
 
     const RenderDate = (params: ValueFormatterParams) => {
-        return Number(params.value) === 0 ? (
-            <Typography variant={"body2"}>No Visits</Typography>
-        ) : (
-            <Typography variant={"body2"}>
-                {timestampToDate(Number(params.value), locale, timezone)}
+        const locale = navigator.language;
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        return (
+            <Typography variant="body2">
+                {Number(params.value) === 0
+                    ? t("dashboard.noVisits")
+                    : timestampToDate(Number(params.value), locale, timezone)}
             </Typography>
         );
     };
 
-    const RenderZone = (params: ValueFormatterParams) => {
-        return (
-            <Typography variant={"body2"}>
-                {zones ? zones.get(Number(params.value)) : ""}
-            </Typography>
-        );
-    };
+    const RenderZone = (params: ValueFormatterParams) => (
+        <Typography variant={"body2"}>{zones ? zones.get(Number(params.value)) : ""}</Typography>
+    );
 
     const handleClientRowClick = (rowParams: RowParams) =>
         history.push(`/client/${rowParams.row.id}`);
@@ -219,7 +217,7 @@ const Dashboard = () => {
     const priorityClientsColumns = [
         {
             field: "full_name",
-            headerName: "Name",
+            headerName: t("general.name"),
             flex: 1,
             renderCell: RenderText,
         },
@@ -233,12 +231,13 @@ const Dashboard = () => {
         })),
         {
             field: "zone",
-            headerName: "Zone",
+            headerName: t("general.zone"),
             flex: 1.2,
             renderCell: RenderZone,
         },
         {
             field: "last_visit_date",
+            // TODO: translate
             headerName: "Last Visit",
             renderCell: RenderDate,
             flex: 1,
@@ -248,19 +247,19 @@ const Dashboard = () => {
     const outstandingReferralsColumns = [
         {
             field: "full_name",
-            headerName: "Name",
+            headerName: t("general.name"),
             flex: 0.7,
             renderCell: RenderText,
         },
         {
             field: "type",
-            headerName: "Type",
+            headerName: t("general.type"),
             flex: 2,
             renderCell: RenderText,
         },
         {
             field: "date_referred",
-            headerName: "Date Referred",
+            headerName: t("referralAttr.dateReferred"),
             flex: 1,
             renderCell: RenderDate,
         },
@@ -270,6 +269,7 @@ const Dashboard = () => {
         <>
             <Alert severity="info">
                 <Typography variant="body1">
+                    {/* TODO: translate */}
                     You have <b>{unreadAlertsCount}</b> new messages in your inbox.
                 </Typography>
             </Alert>
@@ -279,11 +279,13 @@ const Dashboard = () => {
                     <Alert severity="error">
                         {clientError && (
                             <Typography variant="body1">
+                                {/* TODO: translate */}
                                 Error loading priority clients: {clientError}
                             </Typography>
                         )}
                         {referralError && (
                             <Typography variant="body1">
+                                {/* TODO: translate */}
                                 Error loading referrals: {referralError}
                             </Typography>
                         )}
@@ -296,7 +298,7 @@ const Dashboard = () => {
                     <Card variant="outlined">
                         <CardContent>
                             <Typography variant="h6" component="h2">
-                                Priority Clients
+                                {t("dashboard.clientListPriority")}
                             </Typography>
                             <br />
                             <div className={dataGridStyle.dashboardTables}>
@@ -321,7 +323,7 @@ const Dashboard = () => {
                     <Card variant="outlined">
                         <CardContent>
                             <Typography variant="h6" component="h2">
-                                Outstanding Referrals
+                                {t("dashboard.clientListOutstandingRefs")}
                             </Typography>
                             <br />
                             <div className={dataGridStyle.dashboardTables}>

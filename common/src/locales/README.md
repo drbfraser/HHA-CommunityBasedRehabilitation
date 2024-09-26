@@ -4,7 +4,7 @@ This folder contains the translations files for all projects (`common`, `mobile`
 
 * Edit the `en.json` file to add/remove/edit phrases for translation.
 * Edit the `bari.json` file to mirror all the phrases in `en.json`.
-* Under Windows PowerShell, run `replicate_translations.ps1` to copy all translation files to the correct locations in each of the projects.
+* `common` exports an initialization function that takes in an i18n instance as an argument. This function will initialize i18n to contain all translations needed and other configuration.
 
 ## Rationale for Centralized Translation Files
 

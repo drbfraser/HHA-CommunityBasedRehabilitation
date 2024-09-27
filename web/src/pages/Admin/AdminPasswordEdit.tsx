@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
@@ -8,8 +8,7 @@ import Button from "@material-ui/core/Button";
 import { Alert, Skeleton } from "@material-ui/lab";
 
 import { handleUpdatePassword } from "@cbr/common/forms/Admin/adminFormsHandler";
-import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
-import { IUser } from "@cbr/common/util/users";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
 import history from "@cbr/common/util/history";
 import {
     AdminField,
@@ -19,31 +18,13 @@ import {
     adminEditPasswordValidationSchema,
 } from "@cbr/common/forms/Admin/adminFields";
 import { useStyles } from "./styles";
+import { useUser } from "util/hooks/useUser";
 
 const AdminPasswordEdit = () => {
     const styles = useStyles();
-    const [user, setUser] = useState<IUser>();
-    const [loadingError, setLoadingError] = useState<string>();
     const { userId } = useRouteMatch<IRouteParams>().params;
+    const [user, loadingError] = useUser(userId);
     const { t } = useTranslation();
-
-    useEffect(() => {
-        const getInfo = async () => {
-            try {
-                const theUser: IUser = (await (
-                    await apiFetch(Endpoint.USER, userId)
-                ).json()) as IUser;
-                setUser(theUser);
-            } catch (e) {
-                setLoadingError(
-                    e instanceof APIFetchFailError && e.details
-                        ? `${e}: ${e.details}`
-                        : (e as string)
-                );
-            }
-        };
-        getInfo();
-    }, [userId]);
 
     if (loadingError) {
         return (
@@ -69,8 +50,7 @@ const AdminPasswordEdit = () => {
                                 : (e as string);
                         alert(
                             // TODO: translate
-                            "Error occurred when trying to change the user's password: " +
-                                errorMessage
+                            `Error occurred when trying to change the user's password: ${errorMessage}`
                         );
                     });
             }}

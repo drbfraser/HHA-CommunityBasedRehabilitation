@@ -1,7 +1,8 @@
-import { useStyles } from "./ZoneList.styles";
-import SearchBar from "components/SearchBar/SearchBar";
-
+import React, { useRef, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
+import { Cancel } from "@material-ui/icons";
 import {
     DataGrid,
     DensityTypes,
@@ -10,32 +11,24 @@ import {
     ValueFormatterParams,
 } from "@material-ui/data-grid";
 import { LinearProgress, IconButton, Typography } from "@material-ui/core";
+
+import { useStyles } from "./ZoneList.styles";
 import { useDataGridStyles } from "styles/DataGrid.styles";
-import { useRef } from "react";
-import { useHistory } from "react-router-dom";
-import { useEffect, useState } from "react";
+import SearchBar from "components/SearchBar/SearchBar";
 import reqeustZoneRows from "./reqeustZoneRows";
-import React from "react";
-import { Cancel } from "@material-ui/icons";
-import { SearchOption } from "./searchOptions";
-// import { IRouteParams } from "@cbr/common/forms/Zone/zoneFields";
-const RenderText = (params: ValueFormatterParams) => {
-    return <Typography variant={"body2"}>{params.value}</Typography>;
-};
 
-const RenderLoadingOverlay = () => {
-    return (
-        <GridOverlay>
-            <div style={{ position: "absolute", top: 0, width: "100%" }}>
-                <LinearProgress />
-            </div>
-        </GridOverlay>
-    );
-};
-
+const RenderText = (params: ValueFormatterParams) => (
+    <Typography variant={"body2"}>{params.value}</Typography>
+);
+const RenderLoadingOverlay = () => (
+    <GridOverlay>
+        <div style={{ position: "absolute", top: 0, width: "100%" }}>
+            <LinearProgress />
+        </div>
+    </GridOverlay>
+);
 const RenderNoRowsOverlay = () => {
     const styles = useDataGridStyles();
-
     return (
         <GridOverlay className={styles.noRows}>
             <Cancel color="primary" className={styles.noRowsIcon} />
@@ -46,7 +39,6 @@ const RenderNoRowsOverlay = () => {
 
 const ZoneList = () => {
     const [searchValue, setSearchValue] = useState<string>("");
-    const [searchOption] = useState<string>(SearchOption.ZONE);
     const [loading, setLoading] = useState<boolean>(true);
     const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
     const [filteredRows, setFilteredRows] = useState<RowsProp>([]);
@@ -54,12 +46,13 @@ const ZoneList = () => {
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
+    const { t } = useTranslation();
+
     const onZoneAddClick = () => history.push("/zone/new");
-    // const { zone_name } = useRouteMatch<IRouteParams>().params;
     const adminColumns = [
         {
             field: "zone",
-            headerName: "Zone",
+            headerName: t("admin.zone"),
             flex: 1,
             renderCell: RenderText,
             hide: isZoneHidden,
@@ -90,7 +83,7 @@ const ZoneList = () => {
 
         const filteredRows: RowsProp = serverRows.filter((r) => r.zone.startsWith(searchValue));
         setFilteredRows(filteredRows);
-    }, [searchValue, searchOption, serverRows]);
+    }, [searchValue, serverRows]);
 
     return (
         <div className={styles.container}>

@@ -1,10 +1,11 @@
+import React, { useEffect, useState } from "react";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { ArrowBack } from "@material-ui/icons";
 import Alert from "@material-ui/lab/Alert";
 import Skeleton from "@material-ui/lab/Skeleton";
-import React, { useEffect, useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+
 import { IClient } from "@cbr/common/util/clients";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import RiskHistoryCharts from "./RiskHistoryCharts";
@@ -23,11 +24,8 @@ const ClientRiskHistory = () => {
     useEffect(() => {
         const getClient = async () => {
             try {
-                const theClient: IClient = await (
-                    await apiFetch(Endpoint.CLIENT, `${clientId}`)
-                ).json();
-
-                setClient(theClient);
+                const client: IClient = await (await apiFetch(Endpoint.CLIENT, clientId)).json();
+                setClient(client);
             } catch (e) {
                 setLoadingError(true);
             }
@@ -39,11 +37,15 @@ const ClientRiskHistory = () => {
     return (
         <>
             <Button onClick={history.goBack}>
-                <ArrowBack /> Go back
+                <ArrowBack />
+                {/* TODO: translate */}
+                Go back
             </Button>
             <br />
             <br />
+
             {loadingError ? (
+                // TODO: translate
                 <Alert severity="error">Something went wrong. Please go back and try again.</Alert>
             ) : (
                 <>

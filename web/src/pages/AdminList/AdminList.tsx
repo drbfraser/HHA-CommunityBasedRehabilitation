@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
@@ -27,7 +27,7 @@ import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import requestUserRows from "./requestUserRows";
-import { SearchOption } from "../ClientList/searchOptions";
+import { getClientListSearchOptions } from "../ClientList/searchOptions";
 
 const RenderText = (params: ValueFormatterParams) => (
     <Typography variant={"body2"}>{params.value}</Typography>
@@ -51,8 +51,11 @@ const RenderNoRowsOverlay = () => {
 };
 
 const AdminList = () => {
+    const { t } = useTranslation();
+    const searchOptions = useMemo(() => getClientListSearchOptions(t), [t]);
+
     const [searchValue, setSearchValue] = useState<string>("");
-    const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
+    const [searchOption, setSearchOption] = useState<string>(searchOptions.NAME.value);
     const [loading, setLoading] = useState<boolean>(true);
     const [isNameHidden, setNameHidden] = useState<boolean>(false);
     const [isRoleHidden, setRoleHidden] = useState<boolean>(false);
@@ -70,11 +73,10 @@ const AdminList = () => {
     const searchOptionsStyle = useSearchOptionsStyles();
     const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
-    const { t } = useTranslation();
 
     const onRowClick = (row: any) => {
         const user = row.row;
-        history.push("/admin/view/" + user.id);
+        history.push(`/admin/view/${user.id}`);
     };
     const onAdminAddClick = () => history.push("/admin/new");
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
@@ -129,30 +131,33 @@ const AdminList = () => {
     useEffect(() => {
         const loadInitialData = async () => {
             setLoading(true);
-            await requestUserRows(setFilteredRows, setServerRows, setLoading);
+            await requestUserRows(setFilteredRows, setServerRows, setLoading, t);
             setLoading(false);
             initialDataLoaded.current = true;
         };
         loadInitialData();
-    }, []);
+    }, [t]);
 
     useEffect(() => {
         if (!initialDataLoaded.current) {
             return;
         }
 
-        if (searchOption === SearchOption.NAME) {
-            const filteredRows: RowsProp = serverRows.filter(
-                (r) =>
-                    r.name.toLowerCase().startsWith(searchValue) ||
-                    r.last_name.toLowerCase().startsWith(searchValue)
-            );
-            setFilteredRows(filteredRows);
-        } else if (searchOption === SearchOption.ZONE) {
-            const filteredRows: RowsProp = serverRows.filter((r) => r.zone.startsWith(searchValue));
-            setFilteredRows(filteredRows);
+        switch (searchOption) {
+            case searchOptions.NAME.value:
+                setFilteredRows(
+                    serverRows.filter(
+                        (r) =>
+                            r.name.toLowerCase().startsWith(searchValue) ||
+                            r.last_name.toLowerCase().startsWith(searchValue)
+                    )
+                );
+                break;
+            case searchOptions.ZONE.value:
+                setFilteredRows(serverRows.filter((r) => r.zone.startsWith(searchValue)));
+                break;
         }
-    }, [searchValue, searchOption, serverRows]);
+    }, [searchValue, searchOption, serverRows, searchOptions.NAME, searchOptions.ZONE]);
 
     return (
         <div className={styles.container}>
@@ -170,15 +175,15 @@ const AdminList = () => {
                             setSearchOption(String(event.target.value));
                         }}
                     >
-                        {Object.values(SearchOption).map((option, index) => (
-                            <MenuItem key={index} value={option}>
-                                {option}
+                        {Object.values(searchOptions).map(({ value, display }, index) => (
+                            <MenuItem key={index} value={value}>
+                                {display}
                             </MenuItem>
                         ))}
                     </Select>
                 </div>
 
-                {searchOption === SearchOption.ZONE ? (
+                {searchOption === searchOptions.ZONE.value ? (
                     <div>
                         <Select
                             className={searchOptionsStyle.zoneOptions}

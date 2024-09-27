@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useStyles } from "../NewClient/ClientForm.styles";
+import { useTranslation } from "react-i18next";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 import {
@@ -13,6 +13,7 @@ import {
     Typography,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+
 import {
     handleCancel,
     handleUpdateClientSubmit,
@@ -22,7 +23,6 @@ import { genders, IClient } from "@cbr/common/util/clients";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import history from "@cbr/common/util/history";
-import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import {
     updateClientfieldLabels,
@@ -31,6 +31,8 @@ import {
     webClientDetailsValidationSchema,
 } from "@cbr/common/forms/Client/clientFields";
 import { IUser } from "@cbr/common/util/users";
+import { useStyles } from "../NewClient/ClientForm.styles";
+import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 
 interface IProps {
     clientInfo: IClient;
@@ -43,17 +45,18 @@ const ClientInfoForm = (props: IProps) => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [user, setUser] = useState<IUser>();
     const [loadingError, setLoadingError] = useState<string>();
+    const { t } = useTranslation();
 
     useEffect(() => {
         const getInfo = async () => {
             try {
-                const theUser: IUser = (await (
-                    await apiFetch(Endpoint.USER_CURRENT)
-                ).json()) as IUser;
-                setUser(theUser);
+                const user: IUser = (await (await apiFetch(Endpoint.USER_CURRENT)).json()) as IUser;
+                setUser(user);
             } catch (e) {
                 setLoadingError(
-                    e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : `${e}`
+                    e instanceof APIFetchFailError && e.details
+                        ? `${e}: ${e.details}`
+                        : (e as string)
                 );
             }
         };
@@ -79,7 +82,7 @@ const ClientInfoForm = (props: IProps) => {
                     )
                     .catch((e) =>
                         alert(
-                            `Encountered an error while trying to edit the client! ${
+                            `${t("clientFields.errorEditingClient")}: ${
                                 e instanceof APIFetchFailError ? JSON.stringify(e.response) : e
                             }`
                         )
@@ -115,7 +118,7 @@ const ClientInfoForm = (props: IProps) => {
                                     }
                                     disabled={isSubmitting || !values.is_active}
                                 >
-                                    New Visit
+                                    {t("visitAttr.newVisit")}
                                 </Button>
                             </Grid>
                             <Grid className={styles.sideFormButtonWrapper} item md={10} xs={12}>
@@ -129,7 +132,7 @@ const ClientInfoForm = (props: IProps) => {
                                     }
                                     disabled={isSubmitting || !values.is_active}
                                 >
-                                    New Referral
+                                    {t("referralAttr.newReferral")}
                                 </Button>
                             </Grid>
                             <Grid className={styles.sideFormButtonWrapper} item md={10} xs={12}>
@@ -143,11 +146,12 @@ const ClientInfoForm = (props: IProps) => {
                                     }
                                     disabled={isSubmitting || !values.is_active}
                                 >
-                                    Baseline Survey
+                                    {t("surveyAttr.baselineSurvey")}
                                 </Button>
                             </Grid>
                         </Grid>
                     </Grid>
+
                     <Grid item md={10} xs={12}>
                         <Form>
                             <Grid container spacing={2}>
@@ -339,13 +343,14 @@ const ClientInfoForm = (props: IProps) => {
                                         }}
                                     />
                                 </Grid>
-                                {values.caregiver_present ? (
+                                {values.caregiver_present && (
                                     <Grid item md={7} xs={12}>
                                         <Accordion
                                             className={styles.caregiverAccordion}
                                             defaultExpanded
                                         >
                                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                                {/* TODO: translate */}
                                                 Caregiver Details:
                                             </AccordionSummary>
                                             <AccordionDetails>
@@ -411,16 +416,11 @@ const ClientInfoForm = (props: IProps) => {
                                             </AccordionDetails>
                                         </Accordion>
                                     </Grid>
-                                ) : (
-                                    <></>
                                 )}
-                                {!values.is_active ? (
+                                {!values.is_active && (
                                     <Typography color="textSecondary">
-                                        The client is archived. Only administrators can dearchive a
-                                        client.
+                                        {t("clientAttr.archivedClientAccessAlert")}
                                     </Typography>
-                                ) : (
-                                    <></>
                                 )}
                             </Grid>
 
@@ -435,7 +435,7 @@ const ClientInfoForm = (props: IProps) => {
                                                 type="submit"
                                                 disabled={isSubmitting}
                                             >
-                                                Save
+                                                {t("general.save")}
                                             </Button>
                                         </Grid>
                                         <Grid item>
@@ -447,13 +447,12 @@ const ClientInfoForm = (props: IProps) => {
                                                 }}
                                                 disabled={isSubmitting}
                                             >
-                                                Cancel
+                                                {t("general.cancel")}
                                             </Button>
                                         </Grid>
                                     </>
                                 ) : (
                                     <Grid item>
-                                        <></>
                                         <Button
                                             variant="outlined"
                                             color="primary"
@@ -462,12 +461,11 @@ const ClientInfoForm = (props: IProps) => {
                                             }}
                                             disabled={!values.is_active}
                                         >
-                                            Edit
+                                            {t("general.edit")}
                                         </Button>
                                     </Grid>
                                 )}
                                 <Grid item>
-                                    <></>
                                     <Button
                                         variant="outlined"
                                         color="primary"
@@ -481,7 +479,9 @@ const ClientInfoForm = (props: IProps) => {
                                             );
                                         }}
                                     >
-                                        {values.is_active ? "Archive" : "Dearchive"}
+                                        {values.is_active
+                                            ? t("general.archive")
+                                            : t("general.dearchive")}
                                     </Button>
                                 </Grid>
                             </Grid>

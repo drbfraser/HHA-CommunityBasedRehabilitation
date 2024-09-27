@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
@@ -9,8 +9,8 @@ import { Alert, Skeleton } from "@material-ui/lab";
 import { FormControl, MenuItem } from "@material-ui/core";
 
 import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
-import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
-import { IUser, userRoles } from "@cbr/common/util/users";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
+import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import {
     AdminField,
@@ -20,37 +20,19 @@ import {
 } from "@cbr/common/forms/Admin/adminFields";
 import history from "@cbr/common/util/history";
 import { useStyles } from "./styles";
+import { useUser } from "util/hooks/useUser";
 
 const AdminEdit = () => {
     const styles = useStyles();
-    const [user, setUser] = useState<IUser>();
-    const [loadingError, setLoadingError] = useState<string>();
-    const { userId } = useRouteMatch<IRouteParams>().params;
     const { t } = useTranslation();
     const zones = useZones();
-
-    useEffect(() => {
-        const getInfo = async () => {
-            try {
-                const theUser: IUser = (await (
-                    await apiFetch(Endpoint.USER, userId)
-                ).json()) as IUser;
-                setUser(theUser);
-            } catch (e) {
-                setLoadingError(
-                    e instanceof APIFetchFailError && e.details
-                        ? `${e}: ${e.details}`
-                        : (e as string)
-                );
-            }
-        };
-        getInfo();
-    }, [userId]);
+    const { userId } = useRouteMatch<IRouteParams>().params;
+    const [user, loadingError] = useUser(userId);
 
     if (loadingError) {
-        // TODO: translate
         return (
             <Alert severity="error">
+                {/* TODO: translate */}
                 Something went wrong trying to load that user. Please go back and try again.{" "}
                 {loadingError}
             </Alert>

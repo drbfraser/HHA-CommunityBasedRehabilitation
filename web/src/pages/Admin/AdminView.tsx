@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import EditIcon from "@material-ui/icons/Edit";
@@ -6,35 +6,22 @@ import LockOpenIcon from "@material-ui/icons/LockOpen";
 import { Button } from "@material-ui/core";
 import { Alert, Skeleton } from "@material-ui/lab";
 
-import { IUser, userRoles } from "@cbr/common/util/users";
+import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { IRouteParams } from "@cbr/common/forms/Admin/adminFields";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { useStyles } from "./styles";
+import { useUser } from "util/hooks/useUser";
 
 const AdminView = () => {
     const styles = useStyles();
     const history = useHistory();
-    const [loadingError, setLoadingError] = useState(false);
-    const [user, setUser] = useState<IUser>();
     const zones = useZones();
     const { userId } = useRouteMatch<IRouteParams>().params;
+    const [user, loadingError] = useUser(userId);
     const { t } = useTranslation();
 
     const handleEdit = () => history.push(`/admin/edit/${userId}`);
     const handlePasswordEdit = () => history.push(`/admin/password/${userId}`);
-
-    useEffect(() => {
-        const getUser = async () => {
-            try {
-                const user: IUser = (await (await apiFetch(Endpoint.USER, userId)).json()) as IUser;
-                setUser(user);
-            } catch (e) {
-                setLoadingError(true);
-            }
-        };
-        getUser();
-    }, [userId]);
 
     return (
         <div className={styles.container}>
@@ -42,6 +29,7 @@ const AdminView = () => {
                 <Alert severity="error">
                     {/* TODO: Translate */}
                     Something went wrong trying to load that user. Please go back and try again.
+                    {loadingError}
                 </Alert>
             ) : user ? (
                 <>

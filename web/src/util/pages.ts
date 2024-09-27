@@ -46,20 +46,21 @@ export interface IPage {
 const pages: IPage[] = [
     {
         path: "/dashboard",
-        name: "Dashboard",
+        name: "general.dashboard",
         Component: Dashboard,
         showInNav: true,
         Icon: HomeIcon,
     },
     {
         path: "/clients/new",
-        name: "New Client",
+        name: "clientAttr.newClient",
         showInNav: true,
         Component: ClientForm,
         Icon: AddCircleIcon,
     },
     {
         path: "/clients",
+        // TODO: translate
         name: "Client List",
         Component: ClientList,
         showInNav: true,
@@ -67,36 +68,41 @@ const pages: IPage[] = [
     },
     {
         path: "/client/:clientId",
-        name: "Client Details",
+        name: "clientAttr.clientDetails",
         Component: ClientDetails,
         showInNav: false,
     },
     {
         path: "/client/:clientId/risks",
+        // TODO: translate
         name: "Client Risk History",
         Component: ClientRiskHistory,
         showInNav: false,
     },
     {
         path: "/client/:clientId/visits/new",
+        // TODO: translate
         name: "Add a Visit",
         Component: NewVisit,
         showInNav: false,
     },
     {
         path: "/client/:clientId/surveys/new",
+        // TODO: translate
         name: "Add a survey",
         Component: NewSurvey,
         showInNav: false,
     },
     {
         path: "/client/:clientId/referrals/new",
+        // TODO: translate
         name: "Add a Referral",
         Component: NewReferral,
         showInNav: false,
     },
     {
         path: "/user",
+        // TODO: translate
         name: "Profile",
         Component: UserView,
         showInNav: true,
@@ -104,12 +110,13 @@ const pages: IPage[] = [
     },
     {
         path: "/user/password",
-        name: "Change Password",
+        name: "login.changePassword",
         Component: UserChangePassword,
         showInNav: false,
     },
     {
         path: "/stats",
+        // TODO: translate
         name: "Stats",
         roles: [UserRole.ADMIN],
         Component: Stats,
@@ -118,7 +125,7 @@ const pages: IPage[] = [
     },
     {
         path: "/admin",
-        name: "Admin",
+        name: "users.admin",
         roles: [UserRole.ADMIN],
         Component: AdminPage,
         showInNav: true,
@@ -126,33 +133,35 @@ const pages: IPage[] = [
     },
     {
         path: "/admin/new",
-        name: "New User",
+        name: "screenNames.newUser",
         roles: [UserRole.ADMIN],
         Component: AdminNew,
         showInNav: false,
     },
     {
         path: "/admin/view/:userId",
-        name: "View User",
+        name: "screenNames.viewUser",
         roles: [UserRole.ADMIN],
         Component: AdminView,
         showInNav: false,
     },
     {
         path: "/admin/edit/:userId",
-        name: "Edit User",
+        name: "screenNames.editUser",
         roles: [UserRole.ADMIN],
         Component: AdminEdit,
         showInNav: false,
     },
     {
         path: "/admin/password/:userId",
+        // TODO: translate
         name: "Edit User Password",
         Component: AdminPasswordEdit,
         showInNav: false,
     },
     {
         path: "/zone/new",
+        // TODO: translate
         name: "New Zone",
         roles: [UserRole.ADMIN],
         Component: ZoneNew,
@@ -160,6 +169,7 @@ const pages: IPage[] = [
     },
     {
         path: "/zone/edit/:zone_name",
+        // TODO: translate
         name: "Edit Zone",
         roles: [UserRole.ADMIN],
         Component: ZoneEdit,
@@ -167,12 +177,13 @@ const pages: IPage[] = [
     },
     {
         path: "/logout",
-        name: "Logout",
+        name: "login.logout",
         Component: Logout,
         showInNav: false,
     },
     {
         path: "/alerts/new",
+        // TODO: translate
         name: "New Alert",
         roles: [UserRole.ADMIN],
         showInNav: true,
@@ -181,7 +192,7 @@ const pages: IPage[] = [
     },
     {
         path: "/alerts/inbox",
-        name: "Inbox",
+        name: "screenNames.inbox",
         showInNav: true,
         Component: AlertInbox,
         Icon: InboxIcon,
@@ -190,6 +201,7 @@ const pages: IPage[] = [
     {
         path: "/",
         exact: false,
+        // TODO: translate
         name: "Not Found",
         Component: NotFound,
         showInNav: false,

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Typography from "@material-ui/core/Typography";
 
 import history from "@cbr/common/util/history";
@@ -32,6 +33,7 @@ const App = () => {
 
     const PrivateRoutes = () => {
         const user = useCurrentUser();
+        const { t } = useTranslation();
 
         return (
             <div className={styles.container}>
@@ -42,7 +44,7 @@ const App = () => {
                             <Route key={page.path} exact={page.exact ?? true} path={page.path}>
                                 {open && <AlertNotification alertInfo={alert} setOpen={setOpen} />}
                                 <Typography variant="h1" className={styles.pageTitle}>
-                                    {page.name}
+                                    {t(page.name)}
                                 </Typography>
                                 <div className={styles.pageContent}>
                                     <page.Component />

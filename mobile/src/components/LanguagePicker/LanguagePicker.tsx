@@ -11,8 +11,7 @@ const LanguagePicker = () => {
 
     const styles = useStyles();
     const [modalVisible, setModalVisible] = useState(false);
-    const { i18n } = useTranslation(); //i18n instance
-    const { t } = useTranslation();
+    const { i18n, t } = useTranslation(); //i18n instance
 
     //array with all supported languages 
     const languages = [
@@ -43,7 +42,7 @@ const LanguagePicker = () => {
     );
     const getLangName = (name: string) => {
         const lang = languages.find((lang) => lang.name === name);
-        return lang ? lang.label : name;
+        return lang?.label ?? name;
     };
 
     return (

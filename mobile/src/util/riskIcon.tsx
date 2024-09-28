@@ -13,7 +13,7 @@ export interface IRiskType {
 }
 
 // On language change, recompute arrays of labels
-export var riskTypes: { [key: string]: IRiskType } = {};
+export let riskTypes: { [key: string]: IRiskType } = {};
 const refreshArrays = () => {
     riskTypes = {
         [RiskType.HEALTH]: {

@@ -148,9 +148,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         ) : (
                             <Icon name="clock-o" size={15} color={themeColors.riskRed} />
                         )}{" "}
-                        {referral.resolved 
-                        ? t('referralAttr.resolutionStatus', {context: 'resolved'}) 
-                        : t('referralAttr.resolutionStatus', {context: 'pending'})}
+                        { t('referralAttr.resolutionStatus', { context: referral.resolved ? 'resolved' : 'pending' }) }
                         {"\n\n"}
                         {referral.wheelchair && <ReasonChip label={t("general.wheelchair")} />}
                         {referral.physiotherapy && <ReasonChip label={t("general.physiotherapy")} />}

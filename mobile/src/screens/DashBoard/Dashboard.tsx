@@ -35,7 +35,7 @@ const Dashboard = () => {
 
     const [referralSortOption, setReferralSortOption] = useState("");
     const [referralSortDirection, setReferralIsSortDirection] = useState<TSortDirection>("None");
-    const [unreadAlertsCount, setUnreadAlertsCount] = useState<Number>(0);
+    const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
     const [userId, setUserId] = useState<string>("unknown");
 
     const isFocused = useIsFocused();

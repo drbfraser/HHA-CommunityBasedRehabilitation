@@ -18,9 +18,8 @@ export enum UserRole {
     WORKER = "WRK",
 }
 
-
 // On language change, recompute arrays of labels
-export var userRoles: {[key: string]: {[key:string]: string}} = {};
+export var userRoles: { [key: string]: { [key: string]: string } } = {};
 const refreshArrays = () => {
     userRoles = {
         [UserRole.ADMIN]: {
@@ -37,7 +36,7 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});
 
 export const userRolesToLabelMap: ReadonlyMap<string, string> = new Map(
     Object.entries(userRoles).map(([value, { name }]) => [value, name])

@@ -94,7 +94,6 @@ export const handleNewWebClientSubmit = async (
         history.push(`/client/${client.id}`);
         return client;
     } catch (e) {
-        
         const initialMessage = i18n.t("clientFields.errorCreatingClient");
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(clientFieldLabels) : `${e}`;
@@ -160,27 +159,22 @@ export const handleArchiveConfirmation = (
     loadingError: string | undefined
 ): boolean => {
     if (loadingError) {
-        window.alert(
-            i18n.t("clientFields.errorFetching", {loadingError: loadingError})
-        );
+        window.alert(i18n.t("clientFields.errorFetching", { loadingError: loadingError }));
     } else if (user.role !== UserRole.ADMIN) {
-        window.alert(
-            i18n.t("clientFields.notAuthorizedToArchive")
-        );
+        window.alert(i18n.t("clientFields.notAuthorizedToArchive"));
     } else {
         // Simplify logic for confirmation dialog construction
-        const action = values.is_active ? 
-                            i18n.t("clientFields.archive")
-                            : i18n.t("clientFields.dearchive");
-        const clientActiveError = values.is_active ?
-                            i18n.t("clientFields.cannotEditArchived")
-                            : "";
-        if (window.confirm(
+        const action = values.is_active
+            ? i18n.t("clientFields.archive")
+            : i18n.t("clientFields.dearchive");
+        const clientActiveError = values.is_active ? i18n.t("clientFields.cannotEditArchived") : "";
+        if (
+            window.confirm(
                 i18n.t("clientFields.sureToArchiveClient", {
                     action: action,
                     first_name: values.first_name,
                     last_name: values.last_name,
-                    client_active_error: clientActiveError
+                    client_active_error: clientActiveError,
                 })
             )
         ) {
@@ -192,21 +186,14 @@ export const handleArchiveConfirmation = (
 };
 
 export const handleCancel = (resetForm: () => void, setIsEditing: (isEditing: boolean) => void) => {
-    if (
-        window.confirm(
-            i18n.t("clientFields.sureToCancelEditClient")
-        )
-    ) {
+    if (window.confirm(i18n.t("clientFields.sureToCancelEditClient"))) {
         resetForm();
         setIsEditing(false);
     }
 };
 
 export const handleReset = (resetForm: () => void) => {
-    if (window.confirm(
-            i18n.t("clientFields.sureToClearForm")
-        )
-    ) {
+    if (window.confirm(i18n.t("clientFields.sureToClearForm"))) {
         resetForm();
     }
 };

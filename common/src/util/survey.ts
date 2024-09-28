@@ -1,7 +1,6 @@
 import { BaseSurveyFormField } from "../forms/BaseSurvey/baseSurveyFields";
 import i18n from "i18next";
 
-
 export interface ISurvey {
     id: number;
     survey_date: number;
@@ -100,12 +99,12 @@ export interface IRateLevel {
 }
 
 // On language change, recompute arrays of labels
-export var rateLevel: {[key: string]: {[key:string]:string | number}} = {};
-export var deviceTypes: {[key: string]: string} = {};
-export var reasonNotSchool: {[key: string]: string} = {};
-export var childNourish: {[key: string]: string} = {};
-export var isSelfEmployed: {[key: string]: string} = {};
-export var grade: {[key: string]: {[key:string]:string | number}} = {};
+export var rateLevel: { [key: string]: { [key: string]: string | number } } = {};
+export var deviceTypes: { [key: string]: string } = {};
+export var reasonNotSchool: { [key: string]: string } = {};
+export var childNourish: { [key: string]: string } = {};
+export var isSelfEmployed: { [key: string]: string } = {};
+export var grade: { [key: string]: { [key: string]: string | number } } = {};
 const refreshArrays = () => {
     rateLevel = {
         [RateLevel.VERY_POOR]: {
@@ -143,18 +142,18 @@ const refreshArrays = () => {
         [ReasonNotSchool.MY_DISABILITY_STOPS_ME]: i18n.t("survey.myDisabilityStopsMe"),
         [ReasonNotSchool.OTHER]: i18n.t("survey.other"),
     };
-    
+
     childNourish = {
         [ChildNourish.MALNOURISHED]: i18n.t("survey.malnourished"),
         [ChildNourish.UNDERNOURISHED]: i18n.t("survey.undernourished"),
         [ChildNourish.WELL_NOURISHED]: i18n.t("survey.wellNourished"),
     };
-    
+
     isSelfEmployed = {
         [IsSelfEmployed.EMPLOYED]: i18n.t("survey.employed"),
         [IsSelfEmployed.SELFEMPLOYED]: i18n.t("survey.selfEmployed"),
     };
-    
+
     grade = {
         [Grade.P1]: {
             name: i18n.t("survey.primary1"),
@@ -213,7 +212,7 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});
 
 export const getSurveyInfo = (survey: ISurvey) => {
     return {

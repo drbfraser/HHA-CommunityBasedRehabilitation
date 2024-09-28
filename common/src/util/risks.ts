@@ -65,7 +65,7 @@ const refreshArrays = () => {
             name: i18n.t("risks.health"),
         },
         [RiskType.EDUCATION]: {
-            name:  i18n.t("risks.education"),
+            name: i18n.t("risks.education"),
         },
         [RiskType.SOCIAL]: {
             name: i18n.t("risks.social"),
@@ -81,4 +81,4 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});

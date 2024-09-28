@@ -105,7 +105,7 @@ export const baseServicesTypes = [
 ];
 
 // On language change, recompute arrays of labels
-export var baseFieldLabels: {[key: string]: string} = {};
+export var baseFieldLabels: { [key: string]: string } = {};
 const refreshArrays = () => {
     baseFieldLabels = {
         [BaseSurveyFormField.client_id]: i18n.t("baseSurveyFields.client_id"),
@@ -157,7 +157,7 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});
 
 export const baseInitialValues = {
     [BaseSurveyFormField.client_id]: 0,

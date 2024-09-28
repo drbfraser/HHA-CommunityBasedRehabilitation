@@ -92,17 +92,17 @@ export const getCurrentLanguage = () => {
 export const getCurrentLanguageObject = () => {
     return i18n;
 };
-export const getTranslationForFirstName = () => {   
+export const getTranslationForFirstName = () => {
     return i18n.t("clientFields.firstName");
-}
+};
 // TODO: END REMOVE
 
 console.log("--> ClientFields.ts: Current language is: ", i18n.language);
 console.log("--> ClientFields.ts: Current first name is: ", i18n.t("clientFields.firstName"));
 
 // On language change, recompute arrays of labels
-export var clientFieldLabels: {[key: string]: string} = {};
-export var updateClientfieldLabels: {[key: string]: string} = {};
+export var clientFieldLabels: { [key: string]: string } = {};
+export var updateClientfieldLabels: { [key: string]: string } = {};
 
 const refreshArrays = () => {
     clientFieldLabels = {
@@ -136,7 +136,7 @@ const refreshArrays = () => {
         [ClientField.mentalRequirements]: i18n.t("clientFields.mentalRequirements"),
         [ClientField.mentalGoals]: i18n.t("clientFields.mentalGoals"),
     };
-    
+
     updateClientfieldLabels = {
         // TODO: Why are these names in snake_case vs camelCase as used above?
         [ClientField.first_name]: i18n.t("clientFields.firstName"),
@@ -153,13 +153,12 @@ const refreshArrays = () => {
         [ClientField.disability]: i18n.t("clientFields.disability"),
         [ClientField.other_disability]: i18n.t("clientFields.otherDisability"),
     };
-}
+};
 refreshArrays();
 i18n.on("languageChanged", () => {
     console.log("!!! ==> common:clientFields - i18n languageChanged event fired:", i18n.language);
     refreshArrays();
-}); 
-
+});
 
 export const clientInitialValues = {
     [ClientField.firstName]: "",

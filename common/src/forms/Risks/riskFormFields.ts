@@ -10,7 +10,7 @@ export enum FormField {
 }
 
 // On language change, recompute arrays of labels
-export var fieldLabels: {[key: string]: string} = {};
+export var fieldLabels: { [key: string]: string } = {};
 const refreshArrays = () => {
     fieldLabels = {
         [FormField.risk_level]: i18n.t("risks.riskLevel"),
@@ -21,7 +21,7 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});
 
 export const validationSchema = () =>
     Yup.object().shape({

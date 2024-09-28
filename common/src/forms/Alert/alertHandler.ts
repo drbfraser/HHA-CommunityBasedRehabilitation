@@ -14,7 +14,6 @@ import { IUser } from "../../util/users";
 import { getCurrentUser } from "../../util/hooks/currentUser";
 import i18n from "i18next";
 
-
 const addAlert = async (alertInfo: FormData): Promise<IAlert> => {
     const init: RequestInit = {
         method: "POST",
@@ -70,7 +69,7 @@ export const handleNewWebAlertSubmit = async (
                 return acc;
             }, []);
         } catch (e) {
-            throw new Error(i18n.t("alerts.errorRetrievingUser", {error: e}));
+            throw new Error(i18n.t("alerts.errorRetrievingUser", { error: e }));
         }
 
         newAlert = {
@@ -92,7 +91,7 @@ export const handleNewWebAlertSubmit = async (
 
         return alert;
     } catch (e) {
-        const initialMessage = i18n.t("alerts.errorCreatingAlert")
+        const initialMessage = i18n.t("alerts.errorCreatingAlert");
         const detailedError =
             e instanceof APIFetchFailError ? e.buildFormError(alertFieldLabels) : `${e}`;
         alert(initialMessage + "\n" + detailedError);

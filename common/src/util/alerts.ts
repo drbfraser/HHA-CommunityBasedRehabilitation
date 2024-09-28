@@ -2,7 +2,6 @@ import { themeColors } from "./colors";
 import { Time } from "./time";
 import i18n from "i18next";
 
-
 export interface IAlert {
     id: number;
     subject: string;
@@ -26,15 +25,15 @@ export interface IPriorityLevel {
 }
 
 // On language change, recompute arrays of labels
-export var priorities: {[key: string]: string} = {};
-export var priorityLevels: {[key: string]: IPriorityLevel} = {};
+export var priorities: { [key: string]: string } = {};
+export var priorityLevels: { [key: string]: IPriorityLevel } = {};
 const refreshArrays = () => {
     priorities = {
         [PriorityLevel.HIGH]: i18n.t("alerts.high"),
         [PriorityLevel.MEDIUM]: i18n.t("alerts.medium"),
         [PriorityLevel.LOW]: i18n.t("alerts.low"),
     };
-    priorityLevels  = {
+    priorityLevels = {
         [PriorityLevel.LOW]: {
             level: 0,
             name: i18n.t("alerts.low"),
@@ -55,4 +54,4 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});

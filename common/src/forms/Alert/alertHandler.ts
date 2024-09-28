@@ -70,7 +70,7 @@ export const handleNewWebAlertSubmit = async (
                 return acc;
             }, []);
         } catch (e) {
-            throw new Error(i18n.t("alerts.errorRetrievingUsers", {error: e}));
+            throw new Error(i18n.t("alerts.errorRetrievingUser", {error: e}));
         }
 
         newAlert = {

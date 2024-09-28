@@ -50,7 +50,7 @@ export type TAppRouteProp<ScreenName extends StackScreenName> = RouteProp<
 >;
 
 // On language change, recompute arrays of labels
-export var stackScreenOptions: Record<
+export let stackScreenOptions: Record<
         StackScreenName | NoAuthScreenName,
         TStackNavigationOptions<StackParamList, StackScreenName | NoAuthScreenName>
     > = {};

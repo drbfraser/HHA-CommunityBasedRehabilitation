@@ -25,8 +25,8 @@ export interface IPriorityLevel {
 }
 
 // On language change, recompute arrays of labels
-export var priorities: { [key: string]: string } = {};
-export var priorityLevels: { [key: string]: IPriorityLevel } = {};
+export let priorities: { [key: string]: string } = {};
+export let priorityLevels: { [key: string]: IPriorityLevel } = {};
 const refreshArrays = () => {
     priorities = {
         [PriorityLevel.HIGH]: i18n.t("alerts.high"),

@@ -99,12 +99,12 @@ export interface IRateLevel {
 }
 
 // On language change, recompute arrays of labels
-export var rateLevel: { [key: string]: { [key: string]: string | number } } = {};
-export var deviceTypes: { [key: string]: string } = {};
-export var reasonNotSchool: { [key: string]: string } = {};
-export var childNourish: { [key: string]: string } = {};
-export var isSelfEmployed: { [key: string]: string } = {};
-export var grade: { [key: string]: { [key: string]: string | number } } = {};
+export let rateLevel: { [key: string]: { [key: string]: string | number } } = {};
+export let deviceTypes: { [key: string]: string } = {};
+export let reasonNotSchool: { [key: string]: string } = {};
+export let childNourish: { [key: string]: string } = {};
+export let isSelfEmployed: { [key: string]: string } = {};
+export let grade: { [key: string]: { [key: string]: string | number } } = {};
 const refreshArrays = () => {
     rateLevel = {
         [RateLevel.VERY_POOR]: {

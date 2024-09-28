@@ -90,11 +90,11 @@ export enum MentalConditions {
 }
 
 // On language change, recompute arrays of labels
-export var prostheticInjuryLocations: { [key: string]: string } = {};
-export var orthoticInjuryLocations: { [key: string]: string } = {};
-export var otherServices: { [key: string]: string } = {};
-export var wheelchairExperiences: { [key: string]: string } = {};
-export var mentalHealthConditions: { [key: string]: string } = {};
+export let prostheticInjuryLocations: { [key: string]: string } = {};
+export let orthoticInjuryLocations: { [key: string]: string } = {};
+export let otherServices: { [key: string]: string } = {};
+export let wheelchairExperiences: { [key: string]: string } = {};
+export let mentalHealthConditions: { [key: string]: string } = {};
 const refreshArrays = () => {
     prostheticInjuryLocations = {
         [InjuryLocation.BELOW_KNEE]: i18n.t("referral.belowKnee"),

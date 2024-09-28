@@ -9,7 +9,7 @@ export enum ChangePasswordField {
 }
 
 // On language change, recompute arrays of labels
-export var changePasswordFieldLabels: { [key: string]: string } = {};
+export let changePasswordFieldLabels: { [key: string]: string } = {};
 const refreshArrays = () => {
     changePasswordFieldLabels = {
         [ChangePasswordField.oldPassword]: i18n.t("userProfile.oldPassword"),

@@ -21,7 +21,7 @@ export const alertInitialValues = {
 export type TAlertValues = typeof alertInitialValues;
 
 // On language change, recompute arrays of labels
-export var alertFieldLabels: { [key: string]: string } = {};
+export let alertFieldLabels: { [key: string]: string } = {};
 const refreshArrays = () => {
     alertFieldLabels = {
         [alertField.subject]: i18n.t("alerts.subject"),

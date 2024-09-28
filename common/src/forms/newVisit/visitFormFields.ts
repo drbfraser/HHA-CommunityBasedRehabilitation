@@ -48,8 +48,8 @@ export enum ImprovementFormField {
 }
 
 // On language change, recompute arrays of labels
-export var visitFieldLabels: { [key: string]: string } = {};
-export var provisionals: { [key: string]: string[] };
+export let visitFieldLabels: { [key: string]: string } = {};
+export let provisionals: { [key: string]: string[] };
 const refreshArrays = () => {
     visitFieldLabels = {
         [VisitFormField.client_id]: i18n.t("newVisit.client"),

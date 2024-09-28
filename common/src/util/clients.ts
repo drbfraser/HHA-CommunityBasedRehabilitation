@@ -63,7 +63,7 @@ export enum SortOptions {
 }
 
 // On language change, recompute arrays of labels
-export var genders: { [key: string]: string } = {};
+export let genders: { [key: string]: string } = {};
 const refreshArrays = () => {
     genders = {
         [Gender.FEMALE]: i18n.t("clientFields.female"),

@@ -101,8 +101,8 @@ console.log("--> ClientFields.ts: Current language is: ", i18n.language);
 console.log("--> ClientFields.ts: Current first name is: ", i18n.t("clientFields.firstName"));
 
 // On language change, recompute arrays of labels
-export var clientFieldLabels: { [key: string]: string } = {};
-export var updateClientfieldLabels: { [key: string]: string } = {};
+export let clientFieldLabels: { [key: string]: string } = {};
+export let updateClientfieldLabels: { [key: string]: string } = {};
 
 const refreshArrays = () => {
     clientFieldLabels = {

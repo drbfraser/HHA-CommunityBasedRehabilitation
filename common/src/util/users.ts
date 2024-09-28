@@ -19,7 +19,7 @@ export enum UserRole {
 }
 
 // On language change, recompute arrays of labels
-export var userRoles: { [key: string]: { [key: string]: string } } = {};
+export let userRoles: { [key: string]: { [key: string]: string } } = {};
 const refreshArrays = () => {
     userRoles = {
         [UserRole.ADMIN]: {

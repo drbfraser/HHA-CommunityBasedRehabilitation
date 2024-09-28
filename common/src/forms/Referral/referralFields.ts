@@ -86,8 +86,8 @@ export const referralServicesTypes = [
 ];
 
 // On language change, recompute arrays of labels
-export var referralFieldLabels: { [key: string]: string } = {};
-export var referralStatsChartLabels: { [key: string]: string } = {};
+export let referralFieldLabels: { [key: string]: string } = {};
+export let referralStatsChartLabels: { [key: string]: string } = {};
 const refreshArrays = () => {
     referralFieldLabels = {
         [ReferralFormField.client_id]: i18n.t("referral.client_id"),

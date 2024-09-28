@@ -10,7 +10,7 @@ export enum ZoneField {
 }
 
 // On language change, recompute arrays of labels
-export var zoneFieldLabels: { [key: string]: string } = {};
+export let zoneFieldLabels: { [key: string]: string } = {};
 const refreshArrays = () => {
     zoneFieldLabels = {
         [ZoneField.zone_name]: i18n.t("zone.zone"),

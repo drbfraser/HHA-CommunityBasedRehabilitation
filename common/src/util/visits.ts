@@ -58,7 +58,7 @@ export enum OutcomeGoalMet {
 }
 
 // On language change, recompute arrays of labels
-export var outcomeGoalMets: { [key: string]: { [key: string]: string } } = {};
+export let outcomeGoalMets: { [key: string]: { [key: string]: string } } = {};
 const refreshArrays = () => {
     outcomeGoalMets = {
         [OutcomeGoalMet.CANCELLED]: {

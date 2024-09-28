@@ -20,7 +20,7 @@ export enum AdminField {
 }
 
 // On language change, recompute arrays of labels
-export var adminUserFieldLabels: { [key: string]: string } = {};
+export let adminUserFieldLabels: { [key: string]: string } = {};
 const refreshArrays = () => {
     adminUserFieldLabels = {
         [AdminField.username]: i18n.t("admin.username"),

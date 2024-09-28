@@ -48,8 +48,8 @@ const SwitchServer = () => {
                     confirmSwitchServer(apiUrl, baseUrl);
                 } else {
                     showGenericAlert(
-                        i18n.t("login.noInternetConnection"),
-                        i18n.t("login.switchServerNoInternetConnection")
+                        i18n.t("login.notConnectedToInternet"),
+                        i18n.t("login.mustHaveInternet")
                     );
                 }
             });

@@ -98,7 +98,7 @@ const requestTokens = async (
         }
     } catch (e) {
         console.error(e);
-        if (e.name === "AbortError" && e instanceof DOMException) {
+        if (e instanceof DOMException && e.name === "AbortError") {
             throw new Error(
                 i18n.t("general.requestTimedOut"),
             );

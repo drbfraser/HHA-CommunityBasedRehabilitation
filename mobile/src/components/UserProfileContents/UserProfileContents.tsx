@@ -77,7 +77,7 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                             text={
                                 isSelf
                                     ? `${t("alert.generalFailure")} ${t("login.reLoginPrompt")}`
-                                    : t("actionFailure", {
+                                    : t("alert.actionFailure", {
                                           action: t("general.display"),
                                           object: t("general.user"),
                                       })

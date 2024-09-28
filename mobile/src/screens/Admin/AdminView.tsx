@@ -79,7 +79,7 @@ const AdminView = ({
             {error ? (
                 <>
                     <Text style={styles.loadingErrorText}>
-                        {t("cantLoadUserWithID", { userID: route.params.userID })}:
+                        {t("login.cantLoadUserWithID", { userID: route.params.userID })}:
                     </Text>
                     <Text style={styles.loadingErrorText}>{error.message}</Text>
                     {error.statusCode !== 404 ? (

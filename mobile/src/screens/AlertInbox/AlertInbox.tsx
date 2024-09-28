@@ -69,7 +69,7 @@ const AlertInbox = () => {
 
     const openDeleteConfirmationAlert = (alert) =>
         Alert.alert(
-            t("alert.deleteAlertWithSubject", { subject: alert.subject }),
+            t("alert.DeleteAlertWithSubject", { subject: alert.subject }),
             t("alert.actionConfirmationNotice", {
                 action: t("general.delete"),
                 object: t("general.alert"),
@@ -96,7 +96,7 @@ const AlertInbox = () => {
         ) : (
             <View style={styles.emptyInboxContainer}>
                 <Icon name="inbox" style={styles.emptyInboxIcon} />
-                <Text style={styles.emptyInboxText}>{t("general.emptyInbox")}</Text>
+                <Text style={styles.emptyInboxText}>{t("dashboard.emptyInbox")}</Text>
             </View>
         );
     };

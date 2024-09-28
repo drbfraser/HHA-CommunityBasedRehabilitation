@@ -24,7 +24,7 @@ import {
     VisitFormField,
     visitInitialValues,
     visitTypeValidationSchema,
-} from "@cbr/common"; 
+} from "@cbr/common";
 import { StackParamList } from "../../util/stackScreens";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StackScreenName } from "../../util/StackScreenName";
@@ -155,13 +155,13 @@ const OutcomeField = (props: {
     return (
         <View>
             <Text style={styles.pickerQuestion}>
-                {t('newVisit.clients')} {visitFieldLabels[props.visitType]} Goal
+                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal
             </Text>
             <Text style={styles.normalInput}>
                 {props.risks.find((r) => r.risk_type === (props.visitType as string))?.goal}
             </Text>
             <Text style={styles.pickerQuestion}>
-            {t('newVisit.clients')} {visitFieldLabels[props.visitType]} Goal Status
+                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal Status
             </Text>
 
             <FormikExposedDropdownMenu
@@ -182,7 +182,7 @@ const OutcomeField = (props: {
             />
 
             <View>
-                <Text style={styles.pickerQuestion}>{t('newVisit.outcomeOfGoal')}</Text>
+                <Text style={styles.pickerQuestion}>{t("newVisit.outcomeOfGoal")}</Text>
                 <TextInput
                     mode="outlined"
                     label={visitFieldLabels[OutcomeFormField.outcome]}
@@ -248,7 +248,7 @@ const VisitFocusForm = (
     };
     return (
         <View>
-            <Text style={styles.pickerQuestion}>{t('newVisit.whereVisit')} </Text>
+            <Text style={styles.pickerQuestion}>{t("newVisit.whereVisit")} </Text>
             <Text />
             <TextInput
                 mode="outlined"
@@ -282,7 +282,7 @@ const VisitFocusForm = (
                 {formikProps.errors[VisitFormField.zone]}
             </HelperText>
 
-            <Text style={styles.pickerQuestion}>{t('newVisit.selectReasons')} </Text>
+            <Text style={styles.pickerQuestion}>{t("newVisit.selectReasons")} </Text>
             {visitTypes.map((visitType) => (
                 <TextCheckBox
                     key={visitType}
@@ -306,7 +306,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[]) => {
     return ({ formikProps }: IFormProps) => {
         return (
             <View>
-                <Text style={styles.pickerQuestion}>{i18n.t('newVisit.selectImprovement')}</Text>
+                <Text style={styles.pickerQuestion}>{i18n.t("newVisit.selectImprovement")}</Text>
                 <FieldArray
                     name={VisitFormField.improvements}
                     render={() =>
@@ -347,7 +347,7 @@ const NewVisit = (props: INewVisitProps) => {
     const database = useDatabase();
     const { autoSync, cellularSync } = useContext(SyncContext);
     const { t } = useTranslation();
-    
+
     const getClientDetails = async () => {
         try {
             const fetchedClient: any = await database.get(modelName.clients).find(clientId);
@@ -370,12 +370,12 @@ const NewVisit = (props: INewVisitProps) => {
 
     const visitSteps = [
         {
-            label: t('newVisit.visitFocus'),
+            label: t("newVisit.visitFocus"),
             Form: visitReasonStepCallBack(setEnabledSteps, zones),
             validationSchema: initialValidationSchema,
         },
         ...enabledSteps.map((visitType) => ({
-            label: `${visitFieldLabels[visitType]} ${t('newVisit.visit')}`,
+            label: `${visitFieldLabels[visitType]} ${t("newVisit.visit")}`,
             Form: VisitTypeStep(visitType, risks),
             validationSchema: visitTypeValidationSchema(visitType),
         })),
@@ -432,13 +432,12 @@ const NewVisit = (props: INewVisitProps) => {
         }
     };
 
-
     return (
         <>
             <ConfirmDialogWithNavListener
                 bypassDialog={hasSubmitted}
-                confirmButtonText={t('general.discard')}
-                dialogContent={t('newVisit.discardNewVisit')}
+                confirmButtonText={t("general.discard")}
+                dialogContent={t("newVisit.discardNewVisit")}
             />
             <Formik
                 initialValues={visitInitialValues}
@@ -477,9 +476,12 @@ const NewVisit = (props: INewVisitProps) => {
                                                     (!checkedSteps.includes(
                                                         enabledSteps[activeStep - 1]
                                                     )
-                                                        ? countObjectKeys(formikProps.errors) !== 0 ||
-                                                          Object.keys(formikProps.touched).length === 0
-                                                        : countObjectKeys(formikProps.errors) !== 0))
+                                                        ? countObjectKeys(formikProps.errors) !==
+                                                              0 ||
+                                                          Object.keys(formikProps.touched)
+                                                              .length === 0
+                                                        : countObjectKeys(formikProps.errors) !==
+                                                          0))
                                             }
                                             previousBtnDisabled={formikProps.isSubmitting}
                                             onPrevious={() => prevStep(formikProps)}

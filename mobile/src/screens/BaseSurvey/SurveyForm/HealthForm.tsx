@@ -19,7 +19,10 @@ const HealthForm = (props: IFormProps) => {
 
     return (
         <View>
-            <Text style={styles.pickerQuestion}>{"\n"}{t("survey.rateHealth")} </Text>
+            <Text style={styles.pickerQuestion}>
+                {"\n"}
+                {t("survey.rateHealth")}{" "}
+            </Text>
             <FormikExposedDropdownMenu
                 field={BaseSurveyFormField.rateLevel}
                 valuesType="record-string"
@@ -93,7 +96,8 @@ const HealthForm = (props: IFormProps) => {
                 </View>
             )}
             <Text style={styles.pickerQuestion}>
-                {"\n"}{t("survey.satisfiedWithHealthService")}
+                {"\n"}
+                {t("survey.satisfiedWithHealthService")}
             </Text>
 
             <FormikExposedDropdownMenu

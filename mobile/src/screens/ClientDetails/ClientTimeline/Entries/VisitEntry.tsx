@@ -35,8 +35,8 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
             const fetchedVisit: any = await database.get(modelName.visits).find(visitSummary.id);
             const iVisit: IVisit = {
                 id: fetchedVisit.id,
-                user_id: fetchedVisit.user_id,          // Value in fetchVisit, but undefined in iVisit. Why?
-                client_id: fetchedVisit.client_id,      // Value in fetchVisit, but undefined in iVisit. Why?
+                user_id: fetchedVisit.user_id, // Value in fetchVisit, but undefined in iVisit. Why?
+                client_id: fetchedVisit.client_id, // Value in fetchVisit, but undefined in iVisit. Why?
                 created_at: fetchedVisit.createdAt,
                 health_visit: fetchedVisit.health_visit,
                 educat_visit: fetchedVisit.educat_visit,
@@ -135,7 +135,8 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                             <Text style={styles.labelBold}>{t("visitAttr.date")}:</Text>{" "}
                             {timestampToDateTime(visit.created_at)}
                             {"\n"}
-                            <Text style={styles.labelBold}>{t("general.village")}:</Text> {visit.village}
+                            <Text style={styles.labelBold}>{t("general.village")}:</Text>{" "}
+                            {visit.village}
                         </Text>
                     </Card.Content>
                 </Card>
@@ -150,7 +151,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
         <ScrollView>
             <>
                 <Dialog.Title>
-                    {t('visitAttr.visitLocation', {body: zone})}
+                    {t("visitAttr.visitLocation", { body: zone })}
                     {"\n"}
                     {visitSummary.health_visit && (
                         <SocialChip label={t("newVisit.health")} type={RiskType.HEALTH} />

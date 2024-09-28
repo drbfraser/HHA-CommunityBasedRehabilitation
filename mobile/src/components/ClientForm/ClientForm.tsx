@@ -96,7 +96,7 @@ export const ClientForm = (props: IClientFormProps) => {
     const fetchUserErrorAlert = () =>
         Alert.alert(
             t("general.alert"),
-            t("alert.actionFailure", {action: t("general.fetch"), object: t("general.user")}),
+            t("alert.actionFailure", { action: t("general.fetch"), object: t("general.user") }),
             [
                 {
                     text: t("general.return"),
@@ -128,7 +128,9 @@ export const ClientForm = (props: IClientFormProps) => {
             ? t("clientAttr.viewClient")
             : t("clientAttr.editClient");
 
-        const subtitle = props.clientId ? `${t("screenNames.clientID")}: ${props.clientId}` : undefined;
+        const subtitle = props.clientId
+            ? `${t("screenNames.clientID")}: ${props.clientId}`
+            : undefined;
 
         navigation.setOptions({ header: DefaultHeader(title, subtitle) });
 
@@ -157,7 +159,9 @@ export const ClientForm = (props: IClientFormProps) => {
                     props.resetImage!();
                 }}
                 confirmButtonText={t("general.discard")}
-                dialogContent={props.isNewClient ? t("clientAttr.discardNew")  : t("general.discardChanges")}
+                dialogContent={
+                    props.isNewClient ? t("clientAttr.discardNew") : t("general.discardChanges")
+                }
             />
             <ConfirmDialog
                 visible={archiveDialogVisibleOk}
@@ -170,7 +174,11 @@ export const ClientForm = (props: IClientFormProps) => {
                     props.formikProps.handleSubmit();
                     setArchiveDialogVisibleOk(false);
                 }}
-                confirmButtonText={props.formikProps.values.is_active ? t("general.archive") : t("general.dearchive")}
+                confirmButtonText={
+                    props.formikProps.values.is_active
+                        ? t("general.archive")
+                        : t("general.dearchive")
+                }
                 //TODO translation
                 dialogContent={`Are you sure you want to ${
                     props.formikProps.values.is_active ? "archive" : "dearchive"
@@ -242,9 +250,9 @@ export const ClientForm = (props: IClientFormProps) => {
                             }
                             mode="date"
                             display="default"
-                            neutralButton={{label: t("general.today")}}
-                            negativeButton={{label: t("general.cancel")}}
-                            positiveButton={{label: t("general.ok")}}
+                            neutralButton={{ label: t("general.today") }}
+                            negativeButton={{ label: t("general.cancel") }}
+                            positiveButton={{ label: t("general.ok") }}
                             onChange={(event, date) => {
                                 setDatePickerVisible(Platform.OS === "ios");
                                 if (event.type === "neutralButtonPressed") {
@@ -488,7 +496,9 @@ export const ClientForm = (props: IClientFormProps) => {
                                 }
                             }}
                         >
-                            {props.formikProps.values.is_active ? t("general.archive") : t("general.dearchive")}
+                            {props.formikProps.values.is_active
+                                ? t("general.archive")
+                                : t("general.dearchive")}
                         </Button>
                     ) : (
                         <Button

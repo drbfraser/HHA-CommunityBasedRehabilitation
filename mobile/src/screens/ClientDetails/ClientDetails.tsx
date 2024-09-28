@@ -280,7 +280,9 @@ const ClientDetails = (props: ClientProps) => {
                                             {t("clientAttr.archivedClientAccessAlert")}
                                         </Text>
                                     )}
-                                    <Text style={styles.cardSectionTitle}>{t("clientAttr.clientDetails")}</Text>
+                                    <Text style={styles.cardSectionTitle}>
+                                        {t("clientAttr.clientDetails")}
+                                    </Text>
                                     <Divider />
                                     <ClientForm
                                         clientId={client?.id}
@@ -335,7 +337,9 @@ const ClientDetails = (props: ClientProps) => {
                     />
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>
-                            <Text style={styles.riskTitleStyle}>{t("clientAttr.visitsRefsSurveys")}</Text>
+                            <Text style={styles.riskTitleStyle}>
+                                {t("clientAttr.visitsRefsSurveys")}
+                            </Text>
                         </View>
                         {client && (
                             <RecentActivity

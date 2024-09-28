@@ -101,9 +101,7 @@ const ConflictDialog = () => {
                     <Text>Sync Conflicts</Text>
                 </Dialog.Title>
                 <Dialog.Content style={styles.conflictDialogContent}>
-                    <Text style={styles.conflictMessage}>
-                        {t("alert.unsyncedFailure")}
-                    </Text>
+                    <Text style={styles.conflictMessage}>{t("alert.unsyncedFailure")}</Text>
                     <ScrollView>
                         {clientConflicts.size > 0 && (
                             <List.Accordion

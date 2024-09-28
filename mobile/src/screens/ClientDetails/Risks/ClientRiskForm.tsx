@@ -92,22 +92,30 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                             }}
                         >
                             {formikProps.values.risk_type === RiskType.HEALTH ? (
-                                <Text style={styles.riskHeaderStyle}>{t('riskAttr.update',{context: "health"})}</Text>
+                                <Text style={styles.riskHeaderStyle}>
+                                    {t("riskAttr.update", { context: "health" })}
+                                </Text>
                             ) : (
                                 <></>
                             )}
                             {formikProps.values.risk_type === RiskType.EDUCATION ? (
-                                <Text style={styles.riskHeaderStyle}>{t('riskAttr.update',{context: "education"})}</Text>
+                                <Text style={styles.riskHeaderStyle}>
+                                    {t("riskAttr.update", { context: "education" })}
+                                </Text>
                             ) : (
                                 <></>
                             )}
                             {formikProps.values.risk_type === RiskType.SOCIAL ? (
-                                <Text style={styles.riskHeaderStyle}>{t('riskAttr.update',{context: "social"})}</Text>
+                                <Text style={styles.riskHeaderStyle}>
+                                    {t("riskAttr.update", { context: "social" })}
+                                </Text>
                             ) : (
                                 <></>
                             )}
                             {formikProps.values.risk_type === RiskType.NUTRITION ? (
-                                <Text style={styles.riskHeaderStyle}>{t('riskAttr.update',{context: "nutrition"})}</Text>
+                                <Text style={styles.riskHeaderStyle}>
+                                    {t("riskAttr.update", { context: "nutrition" })}
+                                </Text>
                             ) : (
                                 <></>
                             )}

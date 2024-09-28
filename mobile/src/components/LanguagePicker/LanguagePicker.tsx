@@ -8,12 +8,11 @@ import { Button, Modal, Portal } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LanguagePicker = () => {
-
     const styles = useStyles();
     const [modalVisible, setModalVisible] = useState(false);
     const { i18n, t } = useTranslation(); //i18n instance
 
-    //array with all supported languages 
+    //array with all supported languages
     const languages = [
         { name: "en", label: "English" },
         { name: "bari", label: "Bari" },
@@ -26,7 +25,7 @@ const LanguagePicker = () => {
         } catch (e) {
             console.error(e);
         }
-    }
+    };
     const LanguageItem = ({ name, label }: { name: string; label: string }) => (
         <Button
             mode={"contained"}
@@ -51,9 +50,9 @@ const LanguagePicker = () => {
                 <Text style={styles.displayText}>
                     <Text style={styles.selectedText}>{t("languagePicker.selectedLanguage")} </Text>
                     <Text>{getLangName(i18n.language)}</Text>
-                </Text>                    
+                </Text>
             </Pressable>
-            
+
             <Portal>
                 <Modal
                     visible={modalVisible}
@@ -61,14 +60,9 @@ const LanguagePicker = () => {
                     onDismiss={() => {
                         setModalVisible(false);
                     }}
-
                 >
                     <View>
-                        <Text 
-                            style={styles.selectTitle}
-                        >
-                            {t("languagePicker.selectLanguage")}
-                        </Text>
+                        <Text style={styles.selectTitle}>{t("languagePicker.selectLanguage")}</Text>
                         <View>
                             {languages.map((lang) => (
                                 <LanguageItem {...lang} key={lang.name} />

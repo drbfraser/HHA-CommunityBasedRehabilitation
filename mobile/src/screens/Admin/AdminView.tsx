@@ -58,7 +58,7 @@ const AdminView = ({
         } catch (e) {
             setError({
                 statusCode: e instanceof APIFetchFailError ? e.status : undefined,
-                message: t("general.noObject", {object: t("general.user")}),
+                message: t("general.noObject", { object: t("general.user") }),
             });
         }
     };
@@ -79,7 +79,7 @@ const AdminView = ({
             {error ? (
                 <>
                     <Text style={styles.loadingErrorText}>
-                        {t("cantLoadUserWithID", {userID: route.params.userID})}:
+                        {t("cantLoadUserWithID", { userID: route.params.userID })}:
                     </Text>
                     <Text style={styles.loadingErrorText}>{error.message}</Text>
                     {error.statusCode !== 404 ? (
@@ -107,7 +107,9 @@ const AdminView = ({
                 duration={4000}
                 onDismiss={() => setUserChangeSnackbarVisible(false)}
             >
-                {route.params.userInfo?.isNewUser ? t("general.objectCreated", {object: t("general.user")}) : t("general.objectUpdated", {object: t("general.user")})}
+                {route.params.userInfo?.isNewUser
+                    ? t("general.objectCreated", { object: t("general.user") })
+                    : t("general.objectUpdated", { object: t("general.user") })}
             </Snackbar>
         </>
     );

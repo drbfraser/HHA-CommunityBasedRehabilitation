@@ -59,8 +59,8 @@ initializeCommon({
             const netInfoState = await NetInfo.fetch();
             return new Error(
                 !netInfoState.isInternetReachable
-                    ? i18n.t('login.noInternet')
-                    : i18n.t('login.unableToReachServer')
+                    ? i18n.t("login.noInternet")
+                    : i18n.t("login.unableToReachServer")
             );
         }
 

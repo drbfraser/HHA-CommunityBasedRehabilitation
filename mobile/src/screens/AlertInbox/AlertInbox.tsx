@@ -69,8 +69,11 @@ const AlertInbox = () => {
 
     const openDeleteConfirmationAlert = (alert) =>
         Alert.alert(
-            t("alert.deleteAlertWithSubject", {subject: alert.subject}),
-            t("alert.actionConfirmationNotice", {action: t("general.delete"), object: t("general.alert")}),
+            t("alert.deleteAlertWithSubject", { subject: alert.subject }),
+            t("alert.actionConfirmationNotice", {
+                action: t("general.delete"),
+                object: t("general.alert"),
+            }),
             [
                 {
                     text: t("general.cancel"),

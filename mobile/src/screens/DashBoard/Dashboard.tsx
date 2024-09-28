@@ -149,7 +149,7 @@ const Dashboard = () => {
                         <Alert
                             style={styles.inbox_info_alert}
                             severity={"info"}
-                            text={t('alert.messageAlert', {count: unreadAlertsCount})}
+                            text={t("alert.messageAlert", { count: unreadAlertsCount })}
                         />
                     ) : (
                         <></>

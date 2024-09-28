@@ -66,10 +66,10 @@ const Login = () => {
         if (!usernameToUse.length || !password.length) {
             const error =
                 !usernameToUse.length && !password.length
-                    ? t('login.missingValue', {context: 'usernamePassword'})
+                    ? t("login.missingValue", { context: "usernamePassword" })
                     : !usernameToUse.length
-                    ? t('login.missingValue', {context: 'username'})
-                    : t('login.missingValue', {context: 'password'})
+                    ? t("login.missingValue", { context: "username" })
+                    : t("login.missingValue", { context: "password" });
 
             setStatus({ status: "failed", error: error });
             return;
@@ -142,7 +142,8 @@ const Login = () => {
                 */}
                 {authState.state == "previouslyLoggedIn" ? (
                     <Title style={styles.loginAgain}>
-                        {t("login.loggingInAs")}{authState.currentUser.username}
+                        {t("login.loggingInAs")}
+                        {authState.currentUser.username}
                     </Title>
                 ) : (
                     <View>
@@ -162,7 +163,7 @@ const Login = () => {
                             onSubmitEditing={() => passwordTextRef.current?.focus()}
                         />
                         <HelperText type="error" visible={status.status === "failed" && !username}>
-                            {t('login.enterValue', {context: 'username'})}
+                            {t("login.enterValue", { context: "username" })}
                         </HelperText>
                     </View>
                 )}
@@ -180,7 +181,7 @@ const Login = () => {
                         ref={passwordTextRef}
                     />
                     <HelperText type="error" visible={status.status === "failed" && !password}>
-                    {t('login.enterValue', {context: 'password'})}
+                        {t("login.enterValue", { context: "password" })}
                     </HelperText>
                 </View>
                 <Button

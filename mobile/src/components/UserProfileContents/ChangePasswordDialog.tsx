@@ -179,7 +179,10 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                     {(formikProps: FormikProps<TAdminPasswordValues>) => (
                         <>
                             <Dialog.Title>
-                                {t("login.changePasswordFor", {username: user.username, userID: user.id})}
+                                {t("login.changePasswordFor", {
+                                    username: user.username,
+                                    userID: user.id,
+                                })}
                             </Dialog.Title>
                             <Dialog.ScrollArea>
                                 <KeyboardAwareScrollView keyboardShouldPersistTaps="always">

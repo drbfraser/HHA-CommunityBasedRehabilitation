@@ -29,11 +29,9 @@ const ConfirmDialog = (props: Props) => (
             </Dialog.Content>
             <Dialog.Actions>
                 <Button onPress={props.onDismiss}>
-                    {props.cancelButtonText ?? i18n.t('general.cancel')}
+                    {props.cancelButtonText ?? i18n.t("general.cancel")}
                 </Button>
-                <Button onPress={props.onConfirm}>
-                    {props.confirmButtonText}
-                </Button>
+                <Button onPress={props.onConfirm}>{props.confirmButtonText}</Button>
             </Dialog.Actions>
         </Dialog>
     </Portal>

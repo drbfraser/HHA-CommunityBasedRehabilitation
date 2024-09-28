@@ -188,7 +188,7 @@ const NewClient = () => {
                                         disabled={formikProps.isSubmitting}
                                         onPress={() => formikProps.submitForm()}
                                     >
-                                        {t('general.create')}
+                                        {t("general.create")}
                                     </Button>
                                 </View>
                             </View>

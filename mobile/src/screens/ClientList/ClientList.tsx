@@ -28,7 +28,6 @@ import { checkUnsyncedChanges } from "../../util/syncHandler";
 import { Checkbox } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 
-
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
     const [clientList, setClientList] = useState<ClientListRow[]>([]);
@@ -203,7 +202,7 @@ const ClientList = () => {
                         <CustomMultiPicker
                             options={columnList}
                             multiple={true}
-                            placeholder={t("general.selectObject", {object: "general.columns"})}
+                            placeholder={t("general.selectObject", { object: "general.columns" })}
                             placeholderTextColor={themeColors.blueBgLight}
                             returnValue={"value"}
                             callback={(label) => {
@@ -257,13 +256,13 @@ const ClientList = () => {
                 <DataTable>
                     <DataTable.Header style={styles.item}>
                         <ShowTitle
-                            label={t('general.name')}
+                            label={t("general.name")}
                             style={styles.column_name}
                             showTheTitle={showNameColumn}
                             thisColumnSortOption={SortOptions.NAME}
                         />
                         <ShowTitle
-                            label={t('general.zone')}
+                            label={t("general.zone")}
                             style={styles.column_zone}
                             showTheTitle={showZoneColumn}
                             thisColumnSortOption={SortOptions.ZONE}

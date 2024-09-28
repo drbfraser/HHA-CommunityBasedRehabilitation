@@ -56,9 +56,7 @@ const FoodForm = (props: IFormProps) => {
             />
             {props.formikProps.values[BaseSurveyFormField.isChild] && (
                 <View>
-                    <Text style={styles.pickerQuestion}>
-                        {t("survey.whatsNutritionStatus")}
-                    </Text>
+                    <Text style={styles.pickerQuestion}>{t("survey.whatsNutritionStatus")}</Text>
 
                     <FormikExposedDropdownMenu
                         field={BaseSurveyFormField.childNourish}

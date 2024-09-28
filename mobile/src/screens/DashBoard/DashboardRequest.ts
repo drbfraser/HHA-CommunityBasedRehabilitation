@@ -8,7 +8,6 @@ import { Q } from "@nozbe/watermelondb";
 import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 import i18n from "i18next";
 
-
 export type BriefReferral = {
     id: string;
     client_id: string;
@@ -18,7 +17,6 @@ export type BriefReferral = {
 };
 
 const concatenateReferralType = (referral: IOutstandingReferral) => {
-
     const referralTypes: String[] = [];
     if (referral.orthotic) {
         referralTypes.push(i18n.t("referral.orthotic"));

@@ -31,11 +31,14 @@ export const handleSubmit = async (
                 client.caregiver_email = values.caregiverEmail;
                 client.is_active = values.is_active;
             });
-        }); 
+        });
 
         AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {
-        const initialMessage = i18n.t("alert.actionFailure", {action: i18n.t("general.edit"), object: i18n.t("general.client")});
+        const initialMessage = i18n.t("alert.actionFailure", {
+            action: i18n.t("general.edit"),
+            object: i18n.t("general.client"),
+        });
         alert(initialMessage);
     }
 };

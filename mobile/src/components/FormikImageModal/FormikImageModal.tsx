@@ -125,21 +125,21 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                 ) : (
                     <View style={styles.container}>
                         <Animated.View style={[styles.content, modalAnimationStyle]}>
-                            <Title>{t('clientFields.chooseImageFrom')}</Title>
+                            <Title>{t("clientFields.chooseImageFrom")}</Title>
                             <View style={styles.buttonView}>
                                 <Button
                                     labelStyle={styles.button}
                                     icon="image"
                                     onPress={() => pickImage(ImageSource.GALLERY)}
                                 >
-                                    {t('clientFields.gallery')}
-                                </Button> 
+                                    {t("clientFields.gallery")}
+                                </Button>
                                 <Button
                                     labelStyle={styles.button}
                                     icon="camera"
                                     onPress={() => pickImage(ImageSource.CAMERA)}
                                 >
-                                    {t('clientFields.camera')}
+                                    {t("clientFields.camera")}
                                 </Button>
                             </View>
                         </Animated.View>

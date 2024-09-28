@@ -5,7 +5,6 @@ import { addRisk } from "../../NewClient/formHandler";
 import { AutoSyncDB } from "../../../util/syncHandler";
 import i18n from "i18next";
 
-
 const wasChangeMade = (values: IRisk, initialValues: IRisk) => {
     const keysToCheck = ["risk_level", "requirement", "goal"] as (keyof IRisk)[];
 

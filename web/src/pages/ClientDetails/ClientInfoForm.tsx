@@ -45,8 +45,6 @@ const ClientInfoForm = (props: IProps) => {
     const [user, setUser] = useState<IUser>();
     const [loadingError, setLoadingError] = useState<string>();
 
-    const { t } = useTranslation();
-
     useEffect(() => {
         const getInfo = async () => {
             try {

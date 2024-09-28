@@ -80,7 +80,7 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
         .then((fetchedClients) => {
             let clientCount = 0;
 
-            fetchReferrals = new Promise((resolve) => {
+            fetchReferrals = new Promise<void>((resolve) => {
                 fetchedClients.forEach(async (client) => {
                     const referrals = await client.outstandingReferrals.fetch();
                     if (referrals.length > 0) {

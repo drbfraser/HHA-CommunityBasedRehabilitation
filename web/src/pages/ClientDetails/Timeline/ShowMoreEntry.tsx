@@ -1,4 +1,7 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+import { SvgIconTypeMap } from "@material-ui/core";
+import { MoreVert, ArrowDropDown } from "@material-ui/icons";
 import {
     TimelineOppositeContent,
     TimelineItem,
@@ -7,16 +10,16 @@ import {
     TimelineConnector,
     TimelineContent,
 } from "@material-ui/lab";
-import { useTimelineStyles } from "./timelines.styles";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core";
-import { MoreVert, ArrowDropDown } from "@material-ui/icons";
+
+import { useTimelineStyles } from "./timelines.styles";
 
 interface IProps {
     onClick?: () => void;
 }
 
 const ShowMoreEntry = ({ onClick }: IProps) => {
+    const { t } = useTranslation();
     const timelineStyles = useTimelineStyles();
     const Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> = MoreVert;
 
@@ -36,7 +39,7 @@ const ShowMoreEntry = ({ onClick }: IProps) => {
                     style={{ color: "white", fontWeight: 700 }}
                     onClick={onClick}
                 >
-                    {"Show more "}
+                    {`${t("general.showMore")} `}
                     {<ArrowDropDown style={{ marginBottom: "-7px" }} />}
                 </div>
             </TimelineContent>

@@ -1,29 +1,12 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
-import {
-    Grid,
-    Card,
-    CardActions,
-    CardContent,
-    Typography,
-    Button,
-    Dialog,
-    DialogContent,
-    DialogActions,
-    DialogTitle,
-    MenuItem,
-    FormControl,
-} from "@material-ui/core";
+import { Grid, Card, CardActions, CardContent, Typography, Button } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
-import { IRisk, riskLevels, RiskType } from "@cbr/common/util/risks";
+import { IRisk } from "@cbr/common/util/risks";
 import { IClient } from "@cbr/common/util/clients";
-import { fieldLabels, FormField, validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
-import { handleSubmit } from "@cbr/common/forms/Risks/riskFormFieldHandler";
 import { useStyles } from "./ClientRisks.styles";
-import { riskTypes } from "util/riskIcon";
+import { getTranslatedRiskName, riskTypes } from "util/risks";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import ClientRisksModal from "./ClientRisksModal";
 
@@ -42,24 +25,6 @@ const ClientRisks = ({ clientInfo }: IProps) => {
         const [risk, setRisk] = useState(props.risk);
         const [isModalOpen, setIsModalOpen] = useState(false);
 
-        const getRiskName = (riskType: RiskType): string => {
-            switch (riskType) {
-                case RiskType.HEALTH:
-                    return t("risks.health");
-                case RiskType.EDUCATION:
-                    return t("risks.education");
-                case RiskType.SOCIAL:
-                    return t("risks.social");
-                case RiskType.NUTRITION:
-                    return t("risks.nutrition");
-                case RiskType.MENTAL:
-                    return t("risks.mental");
-                default:
-                    console.error("Unknown risk type.");
-                    return "";
-            }
-        };
-
         return (
             <>
                 {isModalOpen && (
@@ -75,7 +40,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                         <Grid container direction="row" justify="space-between">
                             <Grid item md={6}>
                                 <Typography variant="h5" component="h1">
-                                    {getRiskName(risk.risk_type)}
+                                    {getTranslatedRiskName(t, risk.risk_type)}
                                 </Typography>
                             </Grid>
                             <Grid item md={6}>

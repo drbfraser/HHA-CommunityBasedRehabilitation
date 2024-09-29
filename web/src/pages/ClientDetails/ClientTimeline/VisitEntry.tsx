@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     Dialog,
     DialogTitle,
@@ -12,19 +13,20 @@ import {
     AccordionDetails,
     Typography,
 } from "@material-ui/core";
-import { Skeleton, Alert } from "@material-ui/lab";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
+import { Skeleton, Alert } from "@material-ui/lab";
+
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import { IVisit, IVisitSummary, outcomeGoalMets } from "@cbr/common/util/visits";
-import { useStyles } from "./Entry.styles";
-import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { RiskType } from "@cbr/common/util/risks";
-import { riskTypes } from "util/riskIcon";
-import TimelineEntry from "../Timeline/TimelineEntry";
-import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import { useStyles } from "./Entry.styles";
+import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import DataCard from "components/DataCard/DataCard";
+import { getTranslatedRiskName } from "util/risks";
+import TimelineEntry from "../Timeline/TimelineEntry";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -32,6 +34,7 @@ interface IEntryProps {
 }
 
 const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [visit, setVisit] = useState<IVisit>();
     const [loadingError, setLoadingError] = useState(false);
@@ -47,18 +50,23 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
                 .catch(() => setLoadingError(true));
         }
     };
-
     const onClose = () => {
         setOpen(false);
         setLoadingError(false);
     };
 
     const Summary = ({ clickable }: { clickable: boolean }) => {
+        // TODO: translate "Unknown"
         const zone = zones.get(visitSummary.zone) ?? "Unknown";
+
+        const title = t("visitAttr.visitLocation", { body: zone });
+        const words = title.split(" ");
+        const keyWord = words[0];
+        const remainingWords = words.slice(1).join(" ");
 
         return (
             <>
-                <b>Visit</b> in {zone} &nbsp;
+                <b>{keyWord}</b> {remainingWords}
                 {visitSummary.health_visit && (
                     <RiskTypeChip risk={RiskType.HEALTH} clickable={clickable} />
                 )}{" "}
@@ -84,13 +92,14 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
         }
 
         const DetailAccordion = ({ type }: { type: RiskType }) => {
+            console.log(visit.improvements);
+
             const improvements = visit.improvements
                 .filter((i) => i.risk_type === type)
                 .map((i) => ({
                     title: i.provided,
                     desc: i.desc,
                 }));
-
             const outcomes = visit.outcomes
                 .filter((o) => o.risk_type === type)
                 .map((o) => ({
@@ -102,27 +111,25 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
                 return <React.Fragment key={type} />;
             }
 
-            let titleDescArr = [];
-
+            const titleDescArr = [];
             if (improvements.length) {
-                titleDescArr.push("Improvements");
+                titleDescArr.push(t("newVisit.improvements"));
             }
-
             if (outcomes.length) {
-                titleDescArr.push("Outcomes");
+                titleDescArr.push(t("newVisit.outcomes"));
             }
 
             return (
                 <Accordion key={type} className={styles.impOutcomeAccordion}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>
-                            <b>{riskTypes[type].name}</b> ({titleDescArr.join(" & ")})
+                            <b>{getTranslatedRiskName(t, type)}</b> ({titleDescArr.join(" & ")})
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <div>
-                            {Boolean(improvements.length) && <DataCard data={improvements} />}
-                            {Boolean(outcomes.length) && <DataCard data={outcomes} />}
+                            {improvements.length > 0 && <DataCard data={improvements} />}
+                            {outcomes.length > 0 && <DataCard data={outcomes} />}
                         </div>
                     </AccordionDetails>
                 </Accordion>
@@ -133,9 +140,9 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
             <>
                 <Card variant="outlined">
                     <CardContent>
-                        <b>Visit Date:</b> {timestampToDateTime(visit.created_at)}
+                        <b>{t("visitAttr.date")}:</b> {timestampToDateTime(visit.created_at)}
                         <br />
-                        <b>Village:</b> {visit.village}
+                        <b>{t("general.village")}:</b> {visit.village}
                     </CardContent>
                 </Card>
                 <br />
@@ -160,6 +167,7 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
                 </DialogTitle>
                 <DialogContent>
                     {loadingError ? (
+                        // TODO: translate
                         <Alert severity="error">Something went wrong. Please try again.</Alert>
                     ) : (
                         <Details />
@@ -167,7 +175,7 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose} color="primary">
-                        Close
+                        {t("general.close")}
                     </Button>
                 </DialogActions>
             </Dialog>

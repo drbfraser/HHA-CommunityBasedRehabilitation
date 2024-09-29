@@ -1,21 +1,23 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import Chip, { ChipProps } from "@material-ui/core/Chip";
 import { RiskType } from "@cbr/common/util/risks";
-import { riskTypes } from "util/riskIcon";
+import { getTranslatedRiskName, riskTypes } from "util/risks";
 
 interface IProps extends ChipProps {
     risk: RiskType;
 }
 
 const RiskTypeChip = (props: IProps) => {
-    const riskType = riskTypes[props.risk];
+    const { t } = useTranslation();
 
+    const riskType = riskTypes[props.risk];
     return (
         <Chip
             icon={<riskType.Icon />}
             variant="outlined"
             color="primary"
-            label={riskType.name}
+            label={getTranslatedRiskName(t, props.risk)}
             {...props}
         />
     );

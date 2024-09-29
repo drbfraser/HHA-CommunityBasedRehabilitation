@@ -26,7 +26,7 @@ import { IAlert } from "@cbr/common/util/alerts";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
-import { IRiskType, riskTypes } from "util/riskIcon";
+import { IRiskType, riskTypes } from "util/risks";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 
 const Dashboard = () => {

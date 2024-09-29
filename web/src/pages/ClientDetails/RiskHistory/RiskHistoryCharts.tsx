@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useStyles } from "./RiskHistory.styles";
+import { useTranslation } from "react-i18next";
+import { Grid, Typography } from "@material-ui/core";
 import {
     LineChart,
     Line,
@@ -9,12 +10,13 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
-import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
-import { riskTypes } from "util/riskIcon";
-import { Grid, Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
+
+import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import { IClient } from "@cbr/common/util/clients";
+import { useStyles } from "./RiskHistory.styles";
+import { riskTypes } from "util/risks";
 
 interface IProps {
     client?: IClient;
@@ -76,8 +78,9 @@ const risksToChartData = (risks: IRisk[]) => {
 
 const RiskHistoryCharts = ({ client }: IProps) => {
     const styles = useStyles();
-    const chartHeight = 300;
+    const { t } = useTranslation();
     const [chartData, setChartData] = useState<IChartData>();
+    const chartHeight = 300;
     const dateFormatter = getDateFormatterFromReference(client?.created_at);
 
     useEffect(() => {
@@ -85,6 +88,24 @@ const RiskHistoryCharts = ({ client }: IProps) => {
             setChartData(risksToChartData(client.risks.slice()));
         }
     }, [client]);
+
+    const getChartTitle = (riskType: RiskType): string => {
+        switch (riskType) {
+            case RiskType.HEALTH:
+                return t("clientFields.healthRisk");
+            case RiskType.EDUCATION:
+                return t("clientFields.educationRisk");
+            case RiskType.SOCIAL:
+                return t("clientFields.socialRisk");
+            case RiskType.NUTRITION:
+                return t("clientFields.nutritionRisk");
+            case RiskType.MENTAL:
+                return t("clientFields.mentalRisk");
+            default:
+                console.error("Unknown risk type.");
+                return "";
+        }
+    };
 
     const RiskChart = ({ riskType, data }: { riskType: RiskType; data: IDataPoint[] }) => (
         <ResponsiveContainer width="100%" height={chartHeight} className={styles.chartContainer}>
@@ -100,10 +121,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
                     type="category"
                     domain={Object.keys(riskLevels)}
                     tickFormatter={(level) => riskLevels[level].name}
-                    padding={{
-                        top: 25,
-                        bottom: 25,
-                    }}
+                    padding={{ top: 25, bottom: 25 }}
                 />
                 <Tooltip
                     labelFormatter={dateFormatter}
@@ -135,7 +153,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
 
                 <Grid key={riskType} item md={4} xs={12}>
                     <Typography variant="h5" className={styles.textCenter}>
-                        {riskTypes[riskType].name} Risk
+                        {getChartTitle(riskType)}
                     </Typography>
 
                     {chartData && chartData[riskType].length ? (

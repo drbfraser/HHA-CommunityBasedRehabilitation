@@ -31,7 +31,7 @@ import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
-import { IRiskType, riskTypes } from "util/riskIcon";
+import { IRiskType, riskTypes } from "util/risks";
 import { SearchOption } from "@cbr/common/util/searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
 import requestClientRows from "./requestClientRows";

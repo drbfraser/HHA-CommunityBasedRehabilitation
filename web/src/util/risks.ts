@@ -7,6 +7,7 @@ import {
     Restaurant,
     Favorite,
 } from "@material-ui/icons";
+import { TFunction } from "i18next";
 
 export interface IRiskType {
     name: string;
@@ -34,4 +35,22 @@ export const riskTypes: { [key: string]: IRiskType } = {
         name: "Mental",
         Icon: Favorite,
     },
+};
+
+export const getTranslatedRiskName = (t: TFunction, riskType: RiskType) => {
+    switch (riskType) {
+        case RiskType.HEALTH:
+            return t("risks.health");
+        case RiskType.EDUCATION:
+            return t("risks.education");
+        case RiskType.SOCIAL:
+            return t("risks.social");
+        case RiskType.NUTRITION:
+            return t("risks.nutrition");
+        case RiskType.MENTAL:
+            return t("risks.mental");
+        default:
+            console.error("Unknown risk type.");
+            return "";
+    }
 };

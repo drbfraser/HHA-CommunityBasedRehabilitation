@@ -1,15 +1,15 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Timeline } from "@material-ui/lab";
+
 import { IClient } from "@cbr/common/util/clients";
 import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
-import VisitEntry from "./VisitEntry";
 import { useTimelineStyles } from "../Timeline/timelines.styles";
+import ShowMoreEntry from "../Timeline/ShowMoreEntry";
+import VisitEntry from "./VisitEntry";
 import ReferralEntry from "./ReferralEntry";
 import BaseSurveyEntry from "./BaseSurveyEntry";
-import ShowMoreEntry from "../Timeline/ShowMoreEntry";
 
 interface IProps {
     client?: IClient;
@@ -18,9 +18,9 @@ interface IProps {
 
 const ClientTimeline = ({ client, refreshClient }: IProps) => {
     const timelineStyles = useTimelineStyles();
-    const dateFormatter = getDateFormatterFromReference(client?.created_at);
-    const [showAllEntries, setShowAllEntries] = useState<boolean>(false);
+    const [showAllEntries, setShowAllEntries] = useState(false);
     const numEntriesToShow = 10;
+    const dateFormatter = getDateFormatterFromReference(client?.created_at);
 
     const timelineItems = !client
         ? []

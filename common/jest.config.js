@@ -3,7 +3,7 @@
  */
 module.exports = {
     preset: "ts-jest/presets/default-esm",
-    testEnvironment: "node",
+    testEnvironment: "jsdom",
     collectCoverageFrom: ["./src/**/*.ts"],
     coverageReporters: ["text", "cobertura"],
     setupFilesAfterEnv: ["./test/setup.ts"],

@@ -16,7 +16,7 @@ import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import { IClient } from "@cbr/common/util/clients";
 import { useStyles } from "./RiskHistory.styles";
-import { riskTypes } from "util/risks";
+import { getTranslatedRiskChartName, riskTypes } from "util/risks";
 
 interface IProps {
     client?: IClient;
@@ -77,11 +77,10 @@ const risksToChartData = (risks: IRisk[]) => {
 };
 
 const RiskHistoryCharts = ({ client }: IProps) => {
-    const styles = useStyles();
-    const { t } = useTranslation();
     const [chartData, setChartData] = useState<IChartData>();
+    const { t } = useTranslation();
+    const styles = useStyles();
     const chartHeight = 300;
-    const dateFormatter = getDateFormatterFromReference(client?.created_at);
 
     useEffect(() => {
         if (client) {
@@ -89,55 +88,44 @@ const RiskHistoryCharts = ({ client }: IProps) => {
         }
     }, [client]);
 
-    const getChartTitle = (riskType: RiskType): string => {
-        switch (riskType) {
-            case RiskType.HEALTH:
-                return t("clientFields.healthRisk");
-            case RiskType.EDUCATION:
-                return t("clientFields.educationRisk");
-            case RiskType.SOCIAL:
-                return t("clientFields.socialRisk");
-            case RiskType.NUTRITION:
-                return t("clientFields.nutritionRisk");
-            case RiskType.MENTAL:
-                return t("clientFields.mentalRisk");
-            default:
-                console.error("Unknown risk type.");
-                return "";
-        }
+    const RiskChart = ({ riskType, data }: { riskType: RiskType; data: IDataPoint[] }) => {
+        const dateFormatter = getDateFormatterFromReference(client?.created_at);
+        return (
+            <ResponsiveContainer
+                width="100%"
+                height={chartHeight}
+                className={styles.chartContainer}
+            >
+                <LineChart>
+                    <CartesianGrid strokeDasharray="6" vertical={false} />
+                    <XAxis
+                        dataKey="timestamp"
+                        type="number"
+                        domain={[data[0].timestamp, data.slice(-1)[0].timestamp]}
+                        tickFormatter={dateFormatter}
+                    />
+                    <YAxis
+                        type="category"
+                        domain={Object.keys(riskLevels)}
+                        tickFormatter={(level) => riskLevels[level].name}
+                        padding={{ top: 25, bottom: 25 }}
+                    />
+                    <Tooltip
+                        labelFormatter={dateFormatter}
+                        formatter={(level: RiskLevel) => riskLevels[level].name}
+                    />
+                    <Line
+                        type="stepAfter"
+                        name={`${riskTypes[riskType].name} Risk`}
+                        data={data}
+                        dataKey="level"
+                        stroke={riskLevels[data.slice(-1)[0].level].color}
+                        strokeWidth={6}
+                    />
+                </LineChart>
+            </ResponsiveContainer>
+        );
     };
-
-    const RiskChart = ({ riskType, data }: { riskType: RiskType; data: IDataPoint[] }) => (
-        <ResponsiveContainer width="100%" height={chartHeight} className={styles.chartContainer}>
-            <LineChart>
-                <CartesianGrid strokeDasharray="6" vertical={false} />
-                <XAxis
-                    dataKey="timestamp"
-                    type="number"
-                    domain={[data[0].timestamp, data.slice(-1)[0].timestamp]}
-                    tickFormatter={dateFormatter}
-                />
-                <YAxis
-                    type="category"
-                    domain={Object.keys(riskLevels)}
-                    tickFormatter={(level) => riskLevels[level].name}
-                    padding={{ top: 25, bottom: 25 }}
-                />
-                <Tooltip
-                    labelFormatter={dateFormatter}
-                    formatter={(level: RiskLevel) => riskLevels[level].name}
-                />
-                <Line
-                    type="stepAfter"
-                    name={`${riskTypes[riskType].name} Risk`}
-                    data={data}
-                    dataKey="level"
-                    stroke={riskLevels[data.slice(-1)[0].level].color}
-                    strokeWidth={6}
-                />
-            </LineChart>
-        </ResponsiveContainer>
-    );
 
     return (
         <Grid container>
@@ -153,7 +141,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
 
                 <Grid key={riskType} item md={4} xs={12}>
                     <Typography variant="h5" className={styles.textCenter}>
-                        {getChartTitle(riskType)}
+                        {getTranslatedRiskChartName(t, riskType)}
                     </Typography>
 
                     {chartData && chartData[riskType].length ? (

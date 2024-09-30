@@ -54,3 +54,21 @@ export const getTranslatedRiskName = (t: TFunction, riskType: RiskType) => {
             return "";
     }
 };
+
+export const getTranslatedRiskChartName = (t: TFunction, riskType: RiskType) => {
+    switch (riskType) {
+        case RiskType.HEALTH:
+            return t("clientFields.healthRisk");
+        case RiskType.EDUCATION:
+            return t("clientFields.educationRisk");
+        case RiskType.SOCIAL:
+            return t("clientFields.socialRisk");
+        case RiskType.NUTRITION:
+            return t("clientFields.nutritionRisk");
+        case RiskType.MENTAL:
+            return t("clientFields.mentalRisk");
+        default:
+            console.error("Unknown risk type.");
+            return "";
+    }
+};

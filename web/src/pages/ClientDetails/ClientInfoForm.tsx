@@ -31,7 +31,6 @@ import {
     webClientDetailsValidationSchema,
 } from "@cbr/common/forms/Client/clientFields";
 import { IUser } from "@cbr/common/util/users";
-import { useTranslation } from "react-i18next";
 
 interface IProps {
     clientInfo: IClient;

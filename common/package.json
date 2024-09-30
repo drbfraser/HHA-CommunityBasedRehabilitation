@@ -1,6 +1,9 @@
 {
     "name": "@cbr/common",
     "version": "1.0.0",
+    "engines": {
+        "node": ">=14.21.3 <15"
+    },
     "scripts": {
         "test": "LANG=en-US jest",
         "test-ci": "LANG=en-US jest --ci --coverage --reporters=default --reporters=jest-junit",

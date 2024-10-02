@@ -18,7 +18,12 @@ import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 import { Skeleton, Alert } from "@material-ui/lab";
 
 import { timestampToDateTime } from "@cbr/common/util/dates";
-import { IVisit, IVisitSummary, outcomeGoalMets } from "@cbr/common/util/visits";
+import {
+    getTranslatedImprovementName,
+    IVisit,
+    IVisitSummary,
+    outcomeGoalMets,
+} from "@cbr/common/util/visits";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { RiskType } from "@cbr/common/util/risks";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -44,7 +49,7 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
     const onOpen = () => {
         setOpen(true);
         if (!visit) {
-            apiFetch(Endpoint.VISIT, `${visitSummary.id}`)
+            apiFetch(Endpoint.VISIT, visitSummary.id)
                 .then((resp) => resp.json())
                 .then((resp) => setVisit(resp as IVisit))
                 .catch(() => setLoadingError(true));
@@ -66,7 +71,7 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
 
         return (
             <>
-                <b>{keyWord}</b> {remainingWords}
+                <b>{keyWord}</b> {remainingWords}{" "}
                 {visitSummary.health_visit && (
                     <RiskTypeChip risk={RiskType.HEALTH} clickable={clickable} />
                 )}{" "}
@@ -92,19 +97,18 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
         }
 
         const DetailAccordion = ({ type }: { type: RiskType }) => {
-            console.log(visit.improvements);
-
             const improvements = visit.improvements
-                .filter((i) => i.risk_type === type)
-                .map((i) => ({
-                    title: i.provided,
-                    desc: i.desc,
+                .filter(({ risk_type }) => risk_type === type)
+                .map(({ provided, desc }) => ({
+                    title: getTranslatedImprovementName(t, provided),
+                    desc,
                 }));
+
             const outcomes = visit.outcomes
-                .filter((o) => o.risk_type === type)
-                .map((o) => ({
-                    title: outcomeGoalMets[o.goal_met].name,
-                    desc: o.outcome,
+                .filter(({ risk_type }) => risk_type === type)
+                .map(({ goal_met, outcome }) => ({
+                    title: outcomeGoalMets[goal_met].name,
+                    desc: outcome,
                 }));
 
             if (!improvements.length && !outcomes.length) {

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     Dialog,
     DialogTitle,
@@ -38,10 +39,10 @@ type TSurveyForm = {
 const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
     const [open, setOpen] = useState(false);
     const [loadingError, setLoadingError] = useState(false);
+    const { t } = useTranslation();
     const styles = useStyles();
 
     const onOpen = () => setOpen(true);
-
     const onClose = () => {
         setOpen(false);
         setLoadingError(false);
@@ -59,7 +60,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
                 .map((k) => {
                     let desc;
                     if (typeof surveyInfo[categoryName][k] === "boolean") {
-                        desc = surveyInfo[categoryName][k] ? "Yes" : "No";
+                        desc = surveyInfo[categoryName][k] ? t("general.yes") : t("general.no");
                     } else {
                         desc = surveyInfo[categoryName][k]?.toString();
                     }
@@ -90,7 +91,8 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
             <>
                 <Card variant="outlined">
                     <CardContent>
-                        <b>Survey Date:</b> {timestampToDateTime(survey.survey_date)}
+                        <b>{t("surveyAttr.surveyDate")}:</b>{" "}
+                        {timestampToDateTime(survey.survey_date)}
                     </CardContent>
                 </Card>
                 <br />
@@ -105,16 +107,17 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
         <>
             <TimelineEntry
                 date={dateFormatter(survey.survey_date)}
-                content={<b>Baseline Survey</b>}
+                content={<b>{t("surveyAttr.baselineSurvey")}</b>}
                 DotIcon={Assignment}
                 onClick={onOpen}
             />
             <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
                 <DialogTitle>
-                    <b>Baseline Survey</b>
+                    <b>{t("surveyAttr.baselineSurvey")}</b>
                 </DialogTitle>
                 <DialogContent>
                     {loadingError ? (
+                        // TODO: translate
                         <Alert severity="error">Something went wrong. Please try again.</Alert>
                     ) : (
                         <Details />
@@ -122,7 +125,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose} color="primary">
-                        Close
+                        {t("general.close")}
                     </Button>
                 </DialogActions>
             </Dialog>

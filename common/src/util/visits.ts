@@ -1,7 +1,6 @@
 import { RiskType } from "./risks";
 import i18n from "i18next";
 
-
 export interface IVisitSummary {
     id: string;
     user_id: string;
@@ -59,7 +58,7 @@ export enum OutcomeGoalMet {
 }
 
 // On language change, recompute arrays of labels
-export var outcomeGoalMets: {[key: string]: {[key:string]: string}} = {};
+export let outcomeGoalMets: { [key: string]: { [key: string]: string } } = {};
 const refreshArrays = () => {
     outcomeGoalMets = {
         [OutcomeGoalMet.CANCELLED]: {
@@ -71,9 +70,9 @@ const refreshArrays = () => {
         [OutcomeGoalMet.CONCLUDED]: {
             name: i18n.t("newVisit.concluded"),
         },
-    };;
+    };
 };
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});

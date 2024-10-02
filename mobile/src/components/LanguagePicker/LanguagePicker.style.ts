@@ -25,13 +25,13 @@ const useStyles = () =>
         },
         selectTitle: {
             fontSize: 20,
-            textAlign: "center", 
+            textAlign: "center",
             margin: 10,
             fontWeight: "bold",
         },
         languageButton: {
             padding: 3,
-            marginTop: 3, 
+            marginTop: 3,
             marginBottom: 15,
             marginLeft: 10,
             marginRight: 10,

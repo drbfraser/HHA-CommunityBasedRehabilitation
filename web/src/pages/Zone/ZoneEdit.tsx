@@ -118,8 +118,7 @@ const ZoneEdit = () => {
                             const errMsg =
                                 e instanceof APIFetchFailError
                                     ? e.buildFormError(zoneFieldLabels)
-                                    : `${e}` ??
-                                      "Sorry, something went wrong trying to edit that user. Please try again.";
+                                    : "Sorry, something went wrong trying to edit that user. Please try again.";
                             alert(errMsg);
                         });
                 }}

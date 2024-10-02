@@ -50,10 +50,10 @@ export type TAppRouteProp<ScreenName extends StackScreenName> = RouteProp<
 >;
 
 // On language change, recompute arrays of labels
-export var stackScreenOptions: Record<
-        StackScreenName | NoAuthScreenName,
-        TStackNavigationOptions<StackParamList, StackScreenName | NoAuthScreenName>
-    > = {};
+export let stackScreenOptions: Record<
+    StackScreenName | NoAuthScreenName,
+    TStackNavigationOptions<StackParamList, StackScreenName | NoAuthScreenName>
+> = {};
 const refreshArrays = () => {
     stackScreenOptions = {
         [StackScreenName.HOME]: {
@@ -63,7 +63,9 @@ const refreshArrays = () => {
             headerShown: true,
             header: DefaultHeader(
                 i18n.t("screenNames.viewClient"),
-                `${i18n.t("screenNames.clientID")}{i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.CLIENT>).params.clientID}`
+                `${i18n.t("screenNames.clientID")}{i18n.t("screenNames.clientID")}: ${
+                    (route as TAppRouteProp<StackScreenName.CLIENT>).params.clientID
+                }`
             ),
         }),
         [StackScreenName.ADMIN_VIEW]: {
@@ -82,21 +84,27 @@ const refreshArrays = () => {
             headerShown: true,
             header: DefaultHeader(
                 i18n.t("screenNames.newVisit"),
-                `${i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.VISIT>).params.clientID}`
+                `${i18n.t("screenNames.clientID")}: ${
+                    (route as TAppRouteProp<StackScreenName.VISIT>).params.clientID
+                }`
             ),
         }),
         [StackScreenName.REFERRAL]: ({ route, navigation }) => ({
             headerShown: true,
             header: DefaultHeader(
                 i18n.t("screenNames.newReferral"),
-                `${i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.REFERRAL>).params.clientID}`
+                `${i18n.t("screenNames.clientID")}: ${
+                    (route as TAppRouteProp<StackScreenName.REFERRAL>).params.clientID
+                }`
             ),
         }),
         [StackScreenName.BASE_SURVEY]: ({ route, navigation }) => ({
             headerShown: true,
             header: DefaultHeader(
                 i18n.t("screenNames.newBaselineSurvey"),
-                `${i18n.t("screenNames.clientID")}: ${(route as TAppRouteProp<StackScreenName.BASE_SURVEY>).params.clientID}`
+                `${i18n.t("screenNames.clientID")}: ${
+                    (route as TAppRouteProp<StackScreenName.BASE_SURVEY>).params.clientID
+                }`
             ),
         }),
         [StackScreenName.SYNC]: {
@@ -105,7 +113,7 @@ const refreshArrays = () => {
         },
         [StackScreenName.ALERT_INBOX]: {
             headerShown: true,
-            header: DefaultHeader(i18n.t("screenNames.inbox"))
+            header: DefaultHeader(i18n.t("screenNames.inbox")),
         },
         [NoAuthScreenName.LOGIN]: {
             headerShown: false,
@@ -119,7 +127,7 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});
 
 export type StackParamList = {
     [StackScreenName.HOME]: undefined;

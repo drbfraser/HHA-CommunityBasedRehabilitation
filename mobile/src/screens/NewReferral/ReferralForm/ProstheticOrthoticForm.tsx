@@ -16,7 +16,7 @@ const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormFiel
     return (
         <View>
             <Text />
-            <Text style={styles.question}>{t('referral.whereIsInjury')}</Text>
+            <Text style={styles.question}>{t("referral.whereIsInjury")}</Text>
             <List.Section>
                 <RadioButton.Group
                     value={props.formikProps.values[`${serviceType}_injury_location`]}

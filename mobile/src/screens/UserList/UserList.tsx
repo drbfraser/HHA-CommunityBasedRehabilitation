@@ -60,11 +60,11 @@ const UserList = () => {
         setShowRoleColumn,
         setShowStatusColumn,
     ];
-    const columnList = { 
-        0: t('admin.name'), 
-        1: t('admin.zone'), 
-        2: t('admin.role'), 
-        3: t('admin.status') 
+    const columnList = {
+        0: t("admin.name"),
+        1: t("admin.zone"),
+        2: t("admin.role"),
+        3: t("admin.status"),
     };
     const openColumnBuilderMenu = () => {
         setShowColumnBuilderMenu(true);
@@ -160,7 +160,7 @@ const UserList = () => {
                 ) : (
                     <Searchbar
                         style={styles.search}
-                        placeholder={t('admin.searchPlaceholder')}
+                        placeholder={t("admin.searchPlaceholder")}
                         onChangeText={onChangeSearch}
                         value={searchQuery}
                     />
@@ -168,7 +168,7 @@ const UserList = () => {
             </View>
 
             <View style={styles.row}>
-                <Text style={styles.title}>{t('admin.searchBy')}</Text>
+                <Text style={styles.title}>{t("admin.searchBy")}</Text>
                 <Picker
                     style={styles.select}
                     selectedValue={selectedSearchOption}
@@ -177,9 +177,9 @@ const UserList = () => {
                         setSearchQuery("");
                     }}
                 >
-                    <Picker.Item label={t('admin.notApplicable')} value="" />
-                    <Picker.Item label={t('admin.name')} value={SearchOption.NAME} />
-                    <Picker.Item label={t('admin.zone')} value={SearchOption.ZONE} />
+                    <Picker.Item label={t("admin.notApplicable")} value="" />
+                    <Picker.Item label={t("admin.name")} value={SearchOption.NAME} />
+                    <Picker.Item label={t("admin.zone")} value={SearchOption.ZONE} />
                 </Picker>
                 <IconButton
                     icon="dots-vertical"
@@ -197,7 +197,7 @@ const UserList = () => {
                         <CustomMultiPicker
                             options={columnList}
                             multiple={true}
-                            placeholder={t('admin.selectAColumn')}
+                            placeholder={t("admin.selectAColumn")}
                             placeholderTextColor={themeColors.blueBgLight}
                             returnValue={"value"}
                             callback={(label) => {
@@ -218,25 +218,25 @@ const UserList = () => {
                     <DataTable.Header style={styles.item}>
                         <DataTable.Title style={styles.column_icon}>{}</DataTable.Title>
                         <ShowTitle
-                            label={t('admin.name')}
+                            label={t("admin.name")}
                             style={styles.column_name}
                             showTheTitle={showNameColumn}
                             thisColumnSortOption={SortOptions.NAME}
                         />
                         <ShowTitle
-                            label={t('admin.zone')}
+                            label={t("admin.zone")}
                             style={styles.column_zone}
                             showTheTitle={showZoneColumn}
                             thisColumnSortOption={SortOptions.ZONE}
                         />
                         <ShowTitle
-                            label={t('admin.role')}
+                            label={t("admin.role")}
                             style={styles.column_role}
                             showTheTitle={showRoleColumn}
                             thisColumnSortOption={SortOptions.ROLE}
                         />
                         <ShowTitle
-                            label={t('admin.status')}
+                            label={t("admin.status")}
                             style={styles.column_status}
                             showTheTitle={showStatusColumn}
                             thisColumnSortOption={SortOptions.STATUS}

@@ -14,7 +14,6 @@ import rejectWithWrappedError from "./internal/rejectWithWrappedError";
 import { DEFAULT_FETCH_TIMEOUT_MILLIS } from "../constants";
 import i18n from "i18next";
 
-
 /**
  * Validates the given token to check if it's valid for use.
  *
@@ -98,10 +97,8 @@ const requestTokens = async (
         }
     } catch (e) {
         console.error(e);
-        if (e.name === "AbortError" && e instanceof DOMException) {
-            throw new Error(
-                i18n.t("general.requestTimedOut"),
-            );
+        if (e instanceof DOMException && e.name === "AbortError") {
+            throw new Error(i18n.t("general.requestTimedOut"));
         } else {
             throw e;
         }

@@ -67,7 +67,7 @@ const ReferralServiceForm = (
     return (
         <View>
             <Text />
-            <Text style={styles.question}>{t('referral.selectReferralServices')}</Text>
+            <Text style={styles.question}>{t("referral.selectReferralServices")}</Text>
             {serviceTypes.map((serviceType) => (
                 <TextCheckBox
                     key={serviceType}
@@ -96,7 +96,7 @@ const NewReferral = (props: INewReferralProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const { t } = useTranslation();
 
-    const prevStep = async (props: any) => { 
+    const prevStep = async (props: any) => {
         // Only adjust set of "good" states if we changed something:
         if (Object.keys(props.touched).length !== 0) {
             if (countObjectKeys(props.errors) !== 0) {
@@ -141,8 +141,7 @@ const NewReferral = (props: INewReferralProps) => {
                 checkedSteps.push(ReferralFormField.orthotic);
                 checkedSteps.push(ReferralFormField.prosthetic);
                 helpers.setFieldValue(`${[ReferralFormField.client_id]}`, clientId);
-            }
-            else if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
+            } else if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
                 checkedSteps.push(enabledSteps[activeStep - 1]);
             }
             setCheckedSteps([...new Set(checkedSteps)]);
@@ -230,8 +229,8 @@ const NewReferral = (props: INewReferralProps) => {
         <>
             <ConfirmDialogWithNavListener
                 bypassDialog={hasSubmitted}
-                confirmButtonText={t('general.discard')}
-                dialogContent={t('referral.discardNewReferral')}
+                confirmButtonText={t("general.discard")}
+                dialogContent={t("referral.discardNewReferral")}
             />
             <Formik
                 initialValues={referralInitialValues}

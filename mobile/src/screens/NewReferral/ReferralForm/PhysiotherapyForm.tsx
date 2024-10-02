@@ -20,7 +20,7 @@ const PhysiotherapyForm = (props: IFormProps) => {
     return (
         <View>
             <Text />
-            <Text style={styles.question}>{t('referral.whatCondition')}</Text>
+            <Text style={styles.question}>{t("referral.whatCondition")}</Text>
             <FormikExposedDropdownMenu
                 field={ReferralFormField.condition}
                 valuesType="map"

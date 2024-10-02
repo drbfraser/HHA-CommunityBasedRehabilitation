@@ -85,11 +85,9 @@ export const referralServicesTypes = [
     ReferralFormField.servicesOther,
 ];
 
-
-
 // On language change, recompute arrays of labels
-export var referralFieldLabels: {[key: string]: string} = {};
-export var referralStatsChartLabels: {[key: string]: string} = {};
+export let referralFieldLabels: { [key: string]: string } = {};
+export let referralStatsChartLabels: { [key: string]: string } = {};
 const refreshArrays = () => {
     referralFieldLabels = {
         [ReferralFormField.client_id]: i18n.t("referral.client_id"),
@@ -106,26 +104,32 @@ const refreshArrays = () => {
         [ReferralFormField.prostheticInjuryLocation]: i18n.t("referral.prostheticInjuryLocation"),
         [ReferralFormField.orthotic]: i18n.t("referral.orthotic"),
         [ReferralFormField.orthoticInjuryLocation]: i18n.t("referral.orthoticInjuryLocation"),
-    
+
         [ReferralFormField.mentalHealth]: i18n.t("referral.mentalHealth"),
         [ReferralFormField.mentalHealthCondition]: i18n.t("referral.mentalHealthCondition"),
         [ReferralFormField.mentalConditionOther]: i18n.t("referral.mentalConditionOther"),
-    
-        [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t("referral.hhaNutritionAndAgricultureProject"),
+
+        [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t(
+            "referral.hhaNutritionAndAgricultureProject"
+        ),
         [ReferralFormField.emergencyFoodAidRequired]: i18n.t("referral.emergencyFoodAidRequired"),
-        [ReferralFormField.agricultureLivelihoodProgramEnrollment]: i18n.t("referral.agricultureLivelihoodProgramEnrollment"),
-    
+        [ReferralFormField.agricultureLivelihoodProgramEnrollment]: i18n.t(
+            "referral.agricultureLivelihoodProgramEnrollment"
+        ),
+
         [ReferralFormField.servicesOther]: i18n.t("referral.servicesOther"),
         [ReferralFormField.otherDescription]: i18n.t("referral.otherDescription"),
         [ReferralFormField.referralOther]: i18n.t("referral.referralOther"),
     };
-    
+
     referralStatsChartLabels = {
         [ReferralFormField.wheelchair]: i18n.t("referral.wheelchair"),
         [ReferralFormField.physiotherapy]: i18n.t("referral.physiotherapy"),
         [ReferralFormField.orthotic]: i18n.t("referral.orthotic"),
         [ReferralFormField.prosthetic]: i18n.t("referral.prosthetic"),
-        [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t("referral.hhaNutritionAndAgricultureProjectAbbr"),
+        [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t(
+            "referral.hhaNutritionAndAgricultureProjectAbbr"
+        ),
         [ReferralFormField.mentalHealth]: i18n.t("referral.mentalHealth"),
         [ReferralFormField.servicesOther]: i18n.t("referral.servicesOther"),
     };
@@ -133,8 +137,7 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
-
+});
 
 export const referralInitialValues = {
     [ReferralFormField.client_id]: 0,
@@ -227,14 +230,16 @@ export const mentalHealthValidationSchema = () =>
                 "require-if-other-selected",
                 i18n.t("referral.otherConditionRequired"),
                 async (conditionOther, schema) =>
-                    schema.parent[ReferralFormField.mentalHealthCondition] !== MentalConditions.OTHER ||
-                        (conditionOther !== undefined && conditionOther.length > 0)
+                    schema.parent[ReferralFormField.mentalHealthCondition] !==
+                        MentalConditions.OTHER ||
+                    (conditionOther !== undefined && conditionOther.length > 0)
             )
             .test(
                 "require-if-other-selected",
                 i18n.t("referral.mentalConditionAtMost100Char"),
-                async (conditionOther, schema) => 
-                    schema.parent[ReferralFormField.mentalHealthCondition] !== MentalConditions.OTHER ||
+                async (conditionOther, schema) =>
+                    schema.parent[ReferralFormField.mentalHealthCondition] !==
+                        MentalConditions.OTHER ||
                     (conditionOther !== undefined && conditionOther.length <= 100)
             ),
     });
@@ -249,20 +254,16 @@ export const hhaNutritionAndAgricultureProjectValidationSchema = () =>
                 referralFieldLabels[ReferralFormField.emergencyFoodAidRequired]
             ),
         })
-        .test(
-            "require-atleast-one-checkbox", 
-            i18n.t("referral.atLeastOneCheckbox"),
-            (obj) => {
-                if (
-                    obj[ReferralFormField.agricultureLivelihoodProgramEnrollment] ||
-                    obj[ReferralFormField.emergencyFoodAidRequired]
-                ) {
-                    return true;
-                }
-
-                return new Yup.ValidationError(i18n.t("referral.selectOneOption"), null, "custom");
+        .test("require-atleast-one-checkbox", i18n.t("referral.atLeastOneCheckbox"), (obj) => {
+            if (
+                obj[ReferralFormField.agricultureLivelihoodProgramEnrollment] ||
+                obj[ReferralFormField.emergencyFoodAidRequired]
+            ) {
+                return true;
             }
-        );
+
+            return new Yup.ValidationError(i18n.t("referral.selectOneOption"), null, "custom");
+        });
 
 export const otherServicesValidationSchema = () =>
     Yup.object().shape({
@@ -287,7 +288,6 @@ export const otherServicesValidationSchema = () =>
                     schema.parent[ReferralFormField.otherDescription] !== Impairments.OTHER ||
                     (conditionOther !== undefined && conditionOther.length <= 100)
             ),
-
     });
 export const serviceTypes: ReferralFormField[] = [
     ReferralFormField.wheelchair,

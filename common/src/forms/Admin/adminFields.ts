@@ -20,7 +20,7 @@ export enum AdminField {
 }
 
 // On language change, recompute arrays of labels
-export var adminUserFieldLabels: {[key: string]: string} = {};
+export let adminUserFieldLabels: { [key: string]: string } = {};
 const refreshArrays = () => {
     adminUserFieldLabels = {
         [AdminField.username]: i18n.t("admin.username"),
@@ -37,7 +37,7 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});
 
 export const adminUserInitialValues = {
     [AdminField.username]: "",
@@ -84,7 +84,7 @@ const infoValidationShape = () => {
         [AdminField.is_active]: Yup.boolean()
             .label(adminUserFieldLabels[AdminField.is_active])
             .required(),
-    }
+    };
 };
 
 //Referencing Daniel's answer https://stackoverflow.com/questions/55451304/formik-yup-password-strength-validation-with-react
@@ -98,17 +98,16 @@ const passwordValidationShape = () => {
             .label(adminUserFieldLabels[AdminField.confirmPassword])
             .required()
             .oneOf([Yup.ref(AdminField.password)], i18n.t("admin.passwordsMustMatch")),
-    }
+    };
 };
 
 // Build validation schema dynamically with a function instead of hard-coded with a map
 // so that Yup/Formik can access the i18n translations when the language changes
-export const newUserValidationSchema = () => 
+export const newUserValidationSchema = () =>
     Yup.object().shape({
         ...infoValidationShape(),
         ...passwordValidationShape(),
     });
-export const editUserValidationSchema = () => 
-    Yup.object().shape(infoValidationShape());
+export const editUserValidationSchema = () => Yup.object().shape(infoValidationShape());
 export const adminEditPasswordValidationSchema = () =>
     Yup.object().shape(passwordValidationShape());

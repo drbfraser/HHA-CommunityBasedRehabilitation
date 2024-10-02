@@ -13,7 +13,7 @@ const NutritionAgricultureForm = (props: IFormProps) => {
     return (
         <View>
             <Text />
-            <Text style={styles.question}>{t('referral.whatDoesClientNeed')}</Text>
+            <Text style={styles.question}>{t("referral.whatDoesClientNeed")}</Text>
             <List.Section>
                 <TextCheckBox
                     field={ReferralFormField.emergencyFoodAidRequired}
@@ -24,8 +24,16 @@ const NutritionAgricultureForm = (props: IFormProps) => {
                 />
                 <TextCheckBox
                     field={ReferralFormField.agricultureLivelihoodProgramEnrollment}
-                    value={props.formikProps.values[ReferralFormField.agricultureLivelihoodProgramEnrollment]}
-                    label={referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment]}
+                    value={
+                        props.formikProps.values[
+                            ReferralFormField.agricultureLivelihoodProgramEnrollment
+                        ]
+                    }
+                    label={
+                        referralFieldLabels[
+                            ReferralFormField.agricultureLivelihoodProgramEnrollment
+                        ]
+                    }
                     setFieldValue={props.formikProps.setFieldValue}
                     setFieldTouched={props.formikProps.setFieldTouched}
                 />

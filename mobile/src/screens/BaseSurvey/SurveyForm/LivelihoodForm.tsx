@@ -42,9 +42,7 @@ const LivelihoodForm = (props: IFormProps) => {
 
                     <View>
                         <Text />
-                        <Text style={styles.pickerQuestion}>
-                            {t("survey.employmentStatus")}
-                        </Text>
+                        <Text style={styles.pickerQuestion}>{t("survey.employmentStatus")}</Text>
 
                         <FormikExposedDropdownMenu
                             field={BaseSurveyFormField.isSelfEmployed}

@@ -51,9 +51,7 @@ const Sync = () => {
     };
 
     const resetDatabase = async () => {
-        Alert.alert(
-                t("general.alert"),
-                t("sync.sureResetLocalDB"), [
+        Alert.alert(t("general.alert"), t("sync.sureResetLocalDB"), [
             { text: t("general.cancel"), style: "cancel" },
             {
                 text: t("sync.reset"),
@@ -134,9 +132,7 @@ const Sync = () => {
         setAlertMessage(t("sync.syncFailed"));
 
         if (e instanceof APIFetchFailError && e.status === 403) {
-            setAlertSubtitle(
-                t("sync.downloadNewVersion")
-            );
+            setAlertSubtitle(t("sync.downloadNewVersion"));
         }
 
         setSyncModal(true);

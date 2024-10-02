@@ -9,7 +9,7 @@ export enum ChangePasswordField {
 }
 
 // On language change, recompute arrays of labels
-export var changePasswordFieldLabels: {[key: string]: string} = {};
+export let changePasswordFieldLabels: { [key: string]: string } = {};
 const refreshArrays = () => {
     changePasswordFieldLabels = {
         [ChangePasswordField.oldPassword]: i18n.t("userProfile.oldPassword"),
@@ -20,7 +20,7 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});
 
 export const changePasswordInitialValues = {
     [ChangePasswordField.oldPassword]: "",
@@ -38,10 +38,16 @@ export const changePassValidationSchema = () =>
         [ChangePasswordField.newPassword]: Yup.string()
             .label(changePasswordFieldLabels[ChangePasswordField.newPassword])
             .matches(Validation.passwordRegExp, Validation.passwordInvalidMsg)
-            .notOneOf([Yup.ref(ChangePasswordField.oldPassword)], i18n.t("userProfile.passwordsMustBeDifferent"))
+            .notOneOf(
+                [Yup.ref(ChangePasswordField.oldPassword)],
+                i18n.t("userProfile.passwordsMustBeDifferent")
+            )
             .required(),
         [ChangePasswordField.confirmNewPassword]: Yup.string()
             .label(changePasswordFieldLabels[ChangePasswordField.confirmNewPassword])
-            .oneOf([Yup.ref(ChangePasswordField.newPassword)], i18n.t("userProfile.passwordsMustMatch"))
+            .oneOf(
+                [Yup.ref(ChangePasswordField.newPassword)],
+                i18n.t("userProfile.passwordsMustMatch")
+            )
             .required(),
     });

@@ -48,8 +48,8 @@ export enum ImprovementFormField {
 }
 
 // On language change, recompute arrays of labels
-export var visitFieldLabels: {[key: string]: string} = {};
-export var provisionals: { [key: string]: string[] }
+export let visitFieldLabels: { [key: string]: string } = {};
+export let provisionals: { [key: string]: string[] };
 const refreshArrays = () => {
     visitFieldLabels = {
         [VisitFormField.client_id]: i18n.t("newVisit.client"),
@@ -108,7 +108,7 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});
 
 export const visitInitialValues = {
     [VisitFormField.client_id]: "",
@@ -135,8 +135,6 @@ export const visitInitialValues = {
     },
 };
 
-
-
 export type TVisitFormValues = typeof visitInitialValues;
 
 export const initialValidationSchema = () =>
@@ -159,7 +157,9 @@ export const visitTypeValidationSchema = (visitType: VisitFormField) =>
                 Yup.object().shape({
                     [ImprovementFormField.description]: Yup.string().test(
                         "Required-If-Enabled",
-                        i18n.t("newVisit.isRequiredField", {field: visitFieldLabels[ImprovementFormField.description]}),
+                        i18n.t("newVisit.isRequiredField", {
+                            field: visitFieldLabels[ImprovementFormField.description],
+                        }),
                         (description, context) =>
                             context.parent.enabled ? description !== undefined : true
                     ),

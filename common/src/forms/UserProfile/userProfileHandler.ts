@@ -5,7 +5,7 @@ import { TPasswordValues } from "./userProfileFields";
 import i18n from "i18next";
 
 const createFailedToGetPasswordError = (reason?: string) => {
-    const baseError = i18n.t("userProfile.failedToCHangePassword");
+    const baseError = i18n.t("userProfile.failedToChangePassword");
     return reason ? baseError + ` (${reason})` : baseError;
 };
 

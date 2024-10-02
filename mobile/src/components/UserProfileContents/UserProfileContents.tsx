@@ -63,9 +63,7 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                             <Button onPress={() => setLogoutConfirmDialogVisibility(false)}>
                                 {t("general.cancel")}
                             </Button>
-                            <Button onPress={authContext.logout}>
-                                {t("login.logout")}
-                            </Button>
+                            <Button onPress={authContext.logout}>{t("login.logout")}</Button>
                         </Dialog.Actions>
                     </Dialog>
                 </Portal>
@@ -79,7 +77,10 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                             text={
                                 isSelf
                                     ? `${t("alert.generalFailure")} ${t("login.reLoginPrompt")}`
-                                    : t("actionFailure", {action: t("general.display"), object: t("general.user")})
+                                    : t("alert.actionFailure", {
+                                          action: t("general.display"),
+                                          object: t("general.user"),
+                                      })
                             }
                         />
                         {isSelf ? (
@@ -114,24 +115,36 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                                 {user.first_name} {user.last_name}
                             </Title>
 
-                            <Subheading style={styles.profileInfoHeader}>{t("general.username")}</Subheading>
+                            <Subheading style={styles.profileInfoHeader}>
+                                {t("general.username")}
+                            </Subheading>
                             <Text style={styles.profileInfoText}>{user.username}</Text>
 
-                            <Subheading style={styles.profileInfoHeader}>{t("general.id")}</Subheading>
+                            <Subheading style={styles.profileInfoHeader}>
+                                {t("general.id")}
+                            </Subheading>
                             <Text style={styles.profileInfoText}>{user.id}</Text>
 
-                            <Subheading style={styles.profileInfoHeader}>{t("general.zone")}</Subheading>
+                            <Subheading style={styles.profileInfoHeader}>
+                                {t("general.zone")}
+                            </Subheading>
                             <Text style={styles.profileInfoText}>
                                 {zones.get(user.zone) ?? `Unknown (ID ${user.zone})`}
                             </Text>
 
-                            <Subheading style={styles.profileInfoHeader}>{t("general.phoneNumber")}</Subheading>
+                            <Subheading style={styles.profileInfoHeader}>
+                                {t("general.phoneNumber")}
+                            </Subheading>
                             <Text style={styles.profileInfoText}>{user.phone_number}</Text>
 
-                            <Subheading style={styles.profileInfoHeader}>{t("general.type")}</Subheading>
+                            <Subheading style={styles.profileInfoHeader}>
+                                {t("general.type")}
+                            </Subheading>
                             <Text style={styles.profileInfoText}>{userRoles[user.role].name}</Text>
 
-                            <Subheading style={styles.profileInfoHeader}>{t("general.status")}</Subheading>
+                            <Subheading style={styles.profileInfoHeader}>
+                                {t("general.status")}
+                            </Subheading>
                             <Text style={styles.profileInfoText}>
                                 {user.is_active ? t("general.active") : t("general.disabled")}
                             </Text>

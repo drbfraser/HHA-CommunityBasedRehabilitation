@@ -112,54 +112,54 @@ then enter this command in your terminal while running docker backend:
    - ref: https://stackoverflow.com/questions/70010356/android-gradle-build-fails-from-cached-files. 
    - There are also other solutions in the SO post, but they have not been tested with CBR.
 
--  If `common` package does not update correctly (such as translations being stale after they have been updated), here is a large set of things to try to clean up the project:
+-   If `common` package does not update correctly (such as translations being stale after they have been updated), here is a large set of things to try to clean up the project:
 
     DID NOT WORK:
-    - Close the emulator and the React Native command line
-    - [X] Android clean: (from mobile/android) `.\gradlew cleanbuildCache` >> Error: not a build target.
-    - Android clean: (from mobile/android) `.\gradlew clean`, then npm install
-    - Remove `mobile\android\.gradle` folder
-    - Expo cleanup (in mobile/) `expo r -c`
-    - Remove all files git ignores (interactively: don't delete your `.env` file!)  
-      `git clean -d -f -x -i`
-      (delete .expo, android/.expo, android/.gradle, android/app/build, android/build, android/local.properties, node_modules)
-        - npm run refresh-common
-        - npm run android
-        (build failed once due to concurrent access, then failed to run "Unable to load script"(re-ran android command))
-    - Reboot
-    - Open Android Studio and let it build there automatically (Gradle build tasks)
-    - Open Android project in Android Studio and do a Build > Clean Project; then Build > Rebuild Project
-    - Android studio: Increase maximum heap size
-    - Run from inside Android Studio (debug) (1st: build failed, 2nd: runtime error "Unable to load script"; 3rd same, 4th same)
-    - Run from inside Android Studio (run) (1st: "unable to load script"; 2nd same (tried reload but "could not connect to development server."))
-    - Delete all cache folders:
-        - Android Studio: Build > Clean
-        - Android Studio: File > Invalidate Caches (clear both), restart and then quickly exit
-        - `git clean -d -f -x -i`
-        - Reboot
-        - `~/.android/` and `~/.gradle` folders
-        - `npm cache clean --force`
-        - NPM installs  
-            /common: npm install
+    -   Close the emulator and the React Native command line
+    -   [x] Android clean: (from mobile/android) `.\gradlew cleanbuildCache` >> Error: not a build target.
+    -   Android clean: (from mobile/android) `.\gradlew clean`, then npm install
+    -   Remove `mobile\android\.gradle` folder
+    -   Expo cleanup (in mobile/) `expo r -c`
+    -   Remove all files git ignores (interactively: don't delete your `.env` file!)  
+        `git clean -d -f -x -i`
+        (delete .expo, android/.expo, android/.gradle, android/app/build, android/build, android/local.properties, node_modules)
+        -   npm run refresh-common
+        -   npm run android
+            (build failed once due to concurrent access, then failed to run "Unable to load script"(re-ran android command))
+    -   Reboot
+    -   Open Android Studio and let it build there automatically (Gradle build tasks)
+    -   Open Android project in Android Studio and do a Build > Clean Project; then Build > Rebuild Project
+    -   Android studio: Increase maximum heap size
+    -   Run from inside Android Studio (debug) (1st: build failed, 2nd: runtime error "Unable to load script"; 3rd same, 4th same)
+    -   Run from inside Android Studio (run) (1st: "unable to load script"; 2nd same (tried reload but "could not connect to development server."))
+    -   Delete all cache folders:
+        -   Android Studio: Build > Clean
+        -   Android Studio: File > Invalidate Caches (clear both), restart and then quickly exit
+        -   `git clean -d -f -x -i`
+        -   Reboot
+        -   `~/.android/` and `~/.gradle` folders
+        -   `npm cache clean --force`
+        -   NPM installs  
+             /common: npm install
             /mobile: npm run refresh-common
             /mobile: npm install
-        - Rebuild from command line
+        -   Rebuild from command line
             /mobile: npm run android (fails)
-        - Open project in Android Studio (gradle downloads packages)
-        - Run project /mobile: npm run android (fails)
-        ==> Still old text.
+        -   Open project in Android Studio (gradle downloads packages)
+        -   Run project /mobile: npm run android (fails)
+            ==> Still old text.
 
-    - [WORKS] Close React server, /mobile: `npm start -- --reset-cache`; then `r`
-        - Gives EADDRINUSE port 8081 error if react server is running.
-        ==> YAY! Seems to have cleared the cache out! BUT app shows no translations.
+    -   [WORKS] Close React server, /mobile: `npm start -- --reset-cache`; then `r`
+        -   Gives EADDRINUSE port 8081 error if react server is running.
+            ==> YAY! Seems to have cleared the cache out! BUT app shows no translations.
 
     CURRENTLY TRYING:
-    - [X] npm run android -- --reset-cache
-        (the "--" on its own differentiates NPM options (before it) from program arguments (after))
-        (Fails to launch: "react-native run-android --reset-cache" unknown option '--reset-cache')
+    -   [x] npm run android -- --reset-cache
+            (the "--" on its own differentiates NPM options (before it) from program arguments (after))
+            (Fails to launch: "react-native run-android --reset-cache" unknown option '--reset-cache')
 
     TO TRY
-    
+
     - Delete the `~/.android/cache` folder and the `~/.gradle` folder.
     - Reset npm cache: (from mobile/) `npm start -- --reset-cache`
     - Run `npm clean --force`
@@ -170,4 +170,4 @@ then enter this command in your terminal while running docker backend:
        [Android on a diet](https://engineering.backmarket.com/put-your-android-studio-on-a-diet-fa4d364acb05)
 - When running Android (`npm run android`), if you get any of the following errors, they can sometimes be resolved by re-running the command (a few times?), or pressing 'r' or 'a' in the React-native window to reload the Android app:
     "The development server returned response error code: 500"...
-- Error "Error: Unable to resolve module async-mutex from", try re-running `npm install` on mobile folder.
+-   Error "Error: Unable to resolve module async-mutex from", try re-running `npm install` on mobile folder.

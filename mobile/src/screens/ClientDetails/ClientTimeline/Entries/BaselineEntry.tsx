@@ -42,7 +42,7 @@ const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
                 .map((k) => {
                     let desc: string | undefined;
                     if (typeof surveyInfo[categoryName][k] === "boolean") {
-                        desc = surveyInfo[categoryName][k] ?  t("general.yes") : t("general.no");
+                        desc = surveyInfo[categoryName][k] ? t("general.yes") : t("general.no");
                     } else {
                         desc = surveyInfo[categoryName][k]?.toString();
                     }

@@ -90,11 +90,11 @@ export enum MentalConditions {
 }
 
 // On language change, recompute arrays of labels
-export var prostheticInjuryLocations: {[key: string]: string} = {};
-export var orthoticInjuryLocations: {[key: string]: string} = {};
-export var otherServices: {[key: string]: string} = {};
-export var wheelchairExperiences: {[key: string]: string} = {};
-export var mentalHealthConditions: {[key: string]: string} = {};
+export let prostheticInjuryLocations: { [key: string]: string } = {};
+export let orthoticInjuryLocations: { [key: string]: string } = {};
+export let otherServices: { [key: string]: string } = {};
+export let wheelchairExperiences: { [key: string]: string } = {};
+export let mentalHealthConditions: { [key: string]: string } = {};
 const refreshArrays = () => {
     prostheticInjuryLocations = {
         [InjuryLocation.BELOW_KNEE]: i18n.t("referral.belowKnee"),
@@ -102,7 +102,7 @@ const refreshArrays = () => {
         [InjuryLocation.BELOW_ELBOW]: i18n.t("referral.belowElbow"),
         [InjuryLocation.ABOVE_ELBOW]: i18n.t("referral.aboveElbow"),
     };
-    
+
     orthoticInjuryLocations = {
         [orthoticInjury.WEAK_LEG]: i18n.t("referral.weakLeg"),
         [orthoticInjury.CEREBRAL_PALSY]: i18n.t("referral.cerebralPalsy"),
@@ -113,19 +113,19 @@ const refreshArrays = () => {
         [orthoticInjury.POLIO]: i18n.t("referral.polio"),
         [orthoticInjury.OTHER]: i18n.t("referral.other"),
     };
-    
+
     otherServices = {
         [Impairments.VISUAL_IMPAIRMENT]: i18n.t("referral.visualImpairment"),
         [Impairments.HEARING_IMPAIRMENT]: i18n.t("referral.hearingImpairment"),
         [Impairments.SAFEGUARDING]: i18n.t("referral.safeguarding"),
         [Impairments.OTHER]: i18n.t("referral.other"),
     };
-    
+
     wheelchairExperiences = {
         [WheelchairExperience.BASIC]: i18n.t("referral.basic"),
         [WheelchairExperience.INTERMEDIATE]: i18n.t("referral.intermediate"),
     };
-    
+
     mentalHealthConditions = {
         [MentalConditions.AUTISM]: i18n.t("referral.autism"),
         [MentalConditions.DEMENTIA]: i18n.t("referral.dementia"),
@@ -135,4 +135,4 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});

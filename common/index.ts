@@ -39,3 +39,4 @@ export * from "./src/forms/newVisit/visitFormHandler";
 export * from "./src/forms/Risks/riskFormFieldHandler";
 export * from "./src/forms/Risks/riskFormFields";
 export * from "./src/context/SocketIOContext";
+export * from "./src/i18n.config";

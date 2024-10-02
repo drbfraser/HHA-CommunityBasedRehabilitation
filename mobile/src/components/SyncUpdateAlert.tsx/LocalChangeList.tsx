@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 export default function LocalChangeList() {
     const [error, setError] = useState<boolean>(false);
     const [localChanges, setLocalChanges] = useState<Array<string>>();
-    
+
     const { t } = useTranslation();
 
     const database = useDatabase();
@@ -70,7 +70,10 @@ export default function LocalChangeList() {
             )}
             {error ? (
                 <Text style={{ paddingHorizontal: 10, marginTop: 5, color: "red" }}>
-                    {t("alert.actionFailure", {action: t("general.fetch"), object: "general.localChanges"})}
+                    {t("alert.actionFailure", {
+                        action: t("general.fetch"),
+                        object: "general.localChanges",
+                    })}
                 </Text>
             ) : (
                 <></>

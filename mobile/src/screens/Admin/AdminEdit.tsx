@@ -62,7 +62,9 @@ const AdminEdit = ({
                         />
                     ) : null}
 
-                    <Subheading style={styles.profileInfoHeader}>{t("general.username")}</Subheading>
+                    <Subheading style={styles.profileInfoHeader}>
+                        {t("general.username")}
+                    </Subheading>
                     <Text style={styles.profileInfoText}>{user.username}</Text>
 
                     <Subheading style={styles.profileInfoHeader}>{t("general.id")}</Subheading>
@@ -157,7 +159,9 @@ const AdminEdit = ({
                                     {t("general.status")}
                                 </Subheading>
                                 <Text style={styles.profileInfoText}>
-                                    {formikProps.values.is_active ? t("general.active") : t("general.disabled")}
+                                    {formikProps.values.is_active
+                                        ? t("general.active")
+                                        : t("general.disabled")}
                                 </Text>
 
                                 <View style={styles.bottomButtonContainer}>
@@ -177,7 +181,9 @@ const AdminEdit = ({
                                         }}
                                         mode="contained"
                                     >
-                                        {formikProps.values.is_active ? t("general.active") : t("general.disabled")}
+                                        {formikProps.values.is_active
+                                            ? t("general.active")
+                                            : t("general.disabled")}
                                     </Button>
 
                                     <Button

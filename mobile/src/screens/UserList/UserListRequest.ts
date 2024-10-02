@@ -42,9 +42,7 @@ export const fetchUsersFromDB = async (
             zoneID: responseRow.zone,
             zone: zones.get(responseRow.zone) ?? "",
             role: userRoles[responseRow.role].name,
-            status: responseRow.is_active ? 
-                i18n.t("general.active")
-                : i18n.t("general.disabled")
+            status: responseRow.is_active ? i18n.t("general.active") : i18n.t("general.disabled"),
         }));
         if (searchValue.length != 0) {
             if (searchOption == SearchOption.NAME) {

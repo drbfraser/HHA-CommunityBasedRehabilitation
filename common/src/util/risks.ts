@@ -34,8 +34,8 @@ export interface IRiskType {
     name: string;
 }
 // On language change, recompute arrays of labels
-export var riskLevels: { [key: string]: IRiskLevel } = {};
-export var riskTypes: { [key: string]: IRiskType } = {};
+export let riskLevels: { [key: string]: IRiskLevel } = {};
+export let riskTypes: { [key: string]: IRiskType } = {};
 const refreshArrays = () => {
     riskLevels = {
         [RiskLevel.LOW]: {
@@ -65,7 +65,7 @@ const refreshArrays = () => {
             name: i18n.t("risks.health"),
         },
         [RiskType.EDUCATION]: {
-            name:  i18n.t("risks.education"),
+            name: i18n.t("risks.education"),
         },
         [RiskType.SOCIAL]: {
             name: i18n.t("risks.social"),
@@ -81,4 +81,4 @@ const refreshArrays = () => {
 refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
-}); 
+});

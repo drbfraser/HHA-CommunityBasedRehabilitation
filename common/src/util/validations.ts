@@ -21,4 +21,4 @@ const refreshMessages = () => {
 };
 i18n.on("languageChanged", () => {
     refreshMessages();
-}); 
+});

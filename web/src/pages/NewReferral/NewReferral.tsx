@@ -36,6 +36,7 @@ import {
     OtherServicesForm,
     PhysiotherapyForm,
     ProstheticOrthoticForm,
+    ReferralServiceForm,
     WheelchairForm,
 } from "./forms";
 
@@ -48,44 +49,6 @@ interface IService {
     Form: (props: IFormProps) => JSX.Element;
     validationSchema: () => any;
 }
-
-const ReferralServiceForm = (
-    props: IFormProps,
-    setEnabledSteps: React.Dispatch<React.SetStateAction<ReferralFormField[]>>
-) => {
-    const onCheckboxChange = (checked: boolean, selectedServiceType: string) => {
-        // We can't fully rely on formikProps.values[service] here because it might not be updated yet
-        setEnabledSteps(
-            serviceTypes.filter(
-                (serviceType) =>
-                    (props.formikProps.values[serviceType] &&
-                        serviceType !== selectedServiceType) ||
-                    (checked && serviceType === selectedServiceType)
-            )
-        );
-    };
-
-    return (
-        <FormControl component="fieldset">
-            <FormLabel>Select referral services</FormLabel>
-            <FormGroup>
-                {serviceTypes.map((serviceType) => (
-                    <Field
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        key={serviceType}
-                        name={serviceType}
-                        Label={{ label: referralFieldLabels[serviceType] }}
-                        onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                            props.formikProps.handleChange(event);
-                            onCheckboxChange(event.currentTarget.checked, serviceType);
-                        }}
-                    />
-                ))}
-            </FormGroup>
-        </FormControl>
-    );
-};
 
 const NewReferral = () => {
     const [activeStep, setActiveStep] = useState<number>(0);

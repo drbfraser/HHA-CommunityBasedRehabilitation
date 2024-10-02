@@ -30,12 +30,14 @@ import {
     mentalHealthValidationSchema,
 } from "@cbr/common/forms/Referral/referralFields";
 import { handleSubmit } from "./formHandler";
-import MentalHealthForm from "./forms/MentalHealthForm";
-import WheelchairForm from "./forms/WheelchairForm";
-import PhysiotherapyForm from "./forms/PhysiotherapyForm";
-import ProstheticOrthoticForm from "./forms/ProstheticOrthoticForm";
-import NutritionForm from "./forms/NutritionForm";
-import OtherServicesForm from "./forms/OtherServicesForm";
+import {
+    MentalHealthForm,
+    NutritionForm,
+    OtherServicesForm,
+    PhysiotherapyForm,
+    ProstheticOrthoticForm,
+    WheelchairForm,
+} from "./forms";
 
 interface IFormProps {
     formikProps: FormikProps<any>;

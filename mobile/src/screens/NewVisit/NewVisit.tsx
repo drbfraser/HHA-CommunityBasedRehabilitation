@@ -40,6 +40,8 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { modelName } from "../../models/constant";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -148,17 +150,18 @@ const OutcomeField = (props: {
 }) => {
     const fieldName = `${VisitFormField.outcomes}.${props.visitType}`;
     const styles = useStyles();
+    const { t } = useTranslation();
 
     return (
         <View>
             <Text style={styles.pickerQuestion}>
-                Client's {visitFieldLabels[props.visitType]} Goal
+                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal
             </Text>
             <Text style={styles.normalInput}>
                 {props.risks.find((r) => r.risk_type === (props.visitType as string))?.goal}
             </Text>
             <Text style={styles.pickerQuestion}>
-                Client's {visitFieldLabels[props.visitType]} Goal Status
+                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal Status
             </Text>
 
             <FormikExposedDropdownMenu
@@ -179,7 +182,7 @@ const OutcomeField = (props: {
             />
 
             <View>
-                <Text style={styles.pickerQuestion}>What is the Outcome of the Goal?</Text>
+                <Text style={styles.pickerQuestion}>{t("newVisit.outcomeOfGoal")}</Text>
                 <TextInput
                     mode="outlined"
                     label={visitFieldLabels[OutcomeFormField.outcome]}
@@ -221,6 +224,7 @@ const VisitFocusForm = (
     setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>,
     zones: TZoneMap
 ) => {
+    const { t } = useTranslation();
     const styles = useStyles();
 
     const onCheckboxChange = (checked: boolean, visitType: string) => {
@@ -244,7 +248,7 @@ const VisitFocusForm = (
     };
     return (
         <View>
-            <Text style={styles.pickerQuestion}>Where was the Visit? </Text>
+            <Text style={styles.pickerQuestion}>{t("newVisit.whereVisit")} </Text>
             <Text />
             <TextInput
                 mode="outlined"
@@ -278,7 +282,7 @@ const VisitFocusForm = (
                 {formikProps.errors[VisitFormField.zone]}
             </HelperText>
 
-            <Text style={styles.pickerQuestion}>Select the Reasons for the Visit </Text>
+            <Text style={styles.pickerQuestion}>{t("newVisit.selectReasons")} </Text>
             {visitTypes.map((visitType) => (
                 <TextCheckBox
                     key={visitType}
@@ -296,10 +300,13 @@ const VisitFocusForm = (
 
 const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[]) => {
     const styles = useStyles();
+    // Note: Not using the useTranslation hook here because it causes a crash:
+    //     "Render Error -- Cannot read the property 'length' of undefined"
+    // Using `i18n.t(...)` instead
     return ({ formikProps }: IFormProps) => {
         return (
             <View>
-                <Text style={styles.pickerQuestion}>Select an Improvement</Text>
+                <Text style={styles.pickerQuestion}>{i18n.t("newVisit.selectImprovement")}</Text>
                 <FieldArray
                     name={VisitFormField.improvements}
                     render={() =>
@@ -339,6 +346,7 @@ const NewVisit = (props: INewVisitProps) => {
     const clientId = props.route.params.clientID;
     const database = useDatabase();
     const { autoSync, cellularSync } = useContext(SyncContext);
+    const { t } = useTranslation();
 
     const getClientDetails = async () => {
         try {
@@ -362,25 +370,28 @@ const NewVisit = (props: INewVisitProps) => {
 
     const visitSteps = [
         {
-            label: "Visit Focus",
+            label: t("newVisit.visitFocus"),
             Form: visitReasonStepCallBack(setEnabledSteps, zones),
             validationSchema: initialValidationSchema,
         },
         ...enabledSteps.map((visitType) => ({
-            label: `${visitFieldLabels[visitType]} Visit`,
+            label: `${visitFieldLabels[visitType]} ${t("newVisit.visit")}`,
             Form: VisitTypeStep(visitType, risks),
             validationSchema: visitTypeValidationSchema(visitType),
         })),
     ];
 
     const prevStep = (props: any) => {
-        if (countObjectKeys(props.errors) !== 0) {
-            const arr = checkedSteps.filter((item) => {
-                return item != enabledSteps[activeStep - 1];
-            });
-            setCheckedSteps(arr);
-        } else {
-            checkedSteps.push(enabledSteps[activeStep - 1]);
+        // Only adjust set of "good" states if we changed something:
+        if (Object.keys(props.touched).length !== 0) {
+            if (countObjectKeys(props.errors) !== 0) {
+                const arr = checkedSteps.filter((item) => {
+                    return item != enabledSteps[activeStep - 1];
+                });
+                setCheckedSteps(arr);
+            } else {
+                checkedSteps.push(enabledSteps[activeStep - 1]);
+            }
         }
         setActiveStep(activeStep - 1);
         props.setErrors({});
@@ -425,8 +436,8 @@ const NewVisit = (props: INewVisitProps) => {
         <>
             <ConfirmDialogWithNavListener
                 bypassDialog={hasSubmitted}
-                confirmButtonText="Discard"
-                dialogContent="Discard this new visit?"
+                confirmButtonText={t("general.discard")}
+                dialogContent={t("newVisit.discardNewVisit")}
             />
             <Formik
                 initialValues={visitInitialValues}
@@ -477,6 +488,9 @@ const NewVisit = (props: INewVisitProps) => {
                                             onSubmit={() =>
                                                 nextStep(formikProps.values, formikProps)
                                             }
+                                            previousBtnText={t("general.previous")}
+                                            nextBtnText={t("general.next")}
+                                            finishBtnText={t("general.submit")}
                                         >
                                             <Text style={styles.stepLabelText}>
                                                 {surveyStep.label}

@@ -2,17 +2,19 @@ import React from "react";
 import { View } from "react-native";
 import { Text, TextInput, HelperText } from "react-native-paper";
 import useStyles from "../NewReferral.styles";
-import { referralFieldLabels, ReferralFormField, IFormProps } from "@cbr/common";
+import { IFormProps, Impairments, ReferralFormField, referralFieldLabels } from "@cbr/common";
 import { otherServices } from "@cbr/common";
 import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
+import { useTranslation } from "react-i18next";
 
 const OtherServicesForm = (props: IFormProps) => {
     const styles = useStyles();
     const services = new Map(Object.entries(otherServices));
+    const { t } = useTranslation();
     return (
         <View>
             <Text />
-            <Text style={styles.question}>Please select another referral</Text>
+            <Text style={styles.question}>{t("referral.selectAnotherReferral")}</Text>
             <FormikExposedDropdownMenu
                 field={ReferralFormField.otherDescription}
                 valuesType="map"
@@ -22,16 +24,19 @@ const OtherServicesForm = (props: IFormProps) => {
                 fieldLabels={referralFieldLabels}
                 mode="outlined"
             />
-            {props.formikProps.values[ReferralFormField.otherDescription] ===
-                otherServices.Other && (
+            {props.formikProps.values[ReferralFormField.otherDescription] === Impairments.OTHER && (
                 <View>
                     <Text />
-                    <Text style={styles.question}>Please describe the referral</Text>
+                    <Text style={styles.question}>{t("referral.describeReferral")}</Text>
                     <TextInput
                         mode="outlined"
                         label={referralFieldLabels[ReferralFormField.referralOther]}
                         value={props.formikProps.values[ReferralFormField.referralOther]}
                         onChangeText={(value) => {
+                            props.formikProps.setFieldTouched(
+                                ReferralFormField.referralOther,
+                                true
+                            );
                             props.formikProps.setFieldValue(ReferralFormField.referralOther, value);
                         }}
                     />

@@ -4,10 +4,13 @@ import { Q } from "@nozbe/watermelondb";
 import { Text, View } from "react-native";
 import { modelName } from "../../models/constant";
 import { isSyncableModel } from "../../models/interfaces/SyncableModel";
+import { useTranslation } from "react-i18next";
 
 export default function LocalChangeList() {
     const [error, setError] = useState<boolean>(false);
     const [localChanges, setLocalChanges] = useState<Array<string>>();
+
+    const { t } = useTranslation();
 
     const database = useDatabase();
 
@@ -62,12 +65,15 @@ export default function LocalChangeList() {
                         fontWeight: "bold",
                     }}
                 >
-                    There are no local changes on your device.
+                    {t("alert.missingLocalChanges")}
                 </Text>
             )}
             {error ? (
                 <Text style={{ paddingHorizontal: 10, marginTop: 5, color: "red" }}>
-                    There was an error fetching local changes.
+                    {t("alert.actionFailure", {
+                        action: t("general.fetch"),
+                        object: "general.localChanges",
+                    })}
                 </Text>
             ) : (
                 <></>

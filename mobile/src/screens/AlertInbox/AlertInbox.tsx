@@ -8,6 +8,7 @@ import { themeColors } from "@cbr/common";
 import { modelName } from "../../models/constant";
 import { priorities, priorityLevels } from "@cbr/common/src/util/alerts";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useTranslation } from "react-i18next";
 
 const AlertInbox = () => {
     const [loading, setLoading] = useState<boolean>(true);
@@ -15,6 +16,7 @@ const AlertInbox = () => {
     const styles = useStyles();
     const database = useDatabase();
     const [userId, setUserId] = useState<string>("unknown");
+    const { t } = useTranslation();
 
     const getUserProfile = async () => {
         let user: IUser | typeof APILoadError = await getCurrentUser();
@@ -67,14 +69,17 @@ const AlertInbox = () => {
 
     const openDeleteConfirmationAlert = (alert) =>
         Alert.alert(
-            "Delete Alert with Subject: " + alert.subject,
-            "Are you sure you want to delete this alert?",
+            t("alert.DeleteAlertWithSubject", { subject: alert.subject }),
+            t("alert.actionConfirmationNotice", {
+                action: t("general.delete"),
+                object: t("general.alert"),
+            }),
             [
                 {
-                    text: "Cancel",
+                    text: t("general.cancel"),
                     style: "cancel",
                 },
-                { text: "OK", onPress: () => deleteAlert(alert.id) },
+                { text: t("general.ok"), onPress: () => deleteAlert(alert.id) },
             ]
         );
 
@@ -91,7 +96,7 @@ const AlertInbox = () => {
         ) : (
             <View style={styles.emptyInboxContainer}>
                 <Icon name="inbox" style={styles.emptyInboxIcon} />
-                <Text style={styles.emptyInboxText}>Inbox is empty</Text>
+                <Text style={styles.emptyInboxText}>{t("dashboard.emptyInbox")}</Text>
             </View>
         );
     };
@@ -140,7 +145,7 @@ const AlertInbox = () => {
                             mode="outlined"
                             onPress={() => openDeleteConfirmationAlert(alert)}
                         >
-                            DELETE
+                            {t("general.delete")}
                         </Button>
                     </View>
                 </List.Accordion>
@@ -151,7 +156,7 @@ const AlertInbox = () => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.groupContainer}>
-                <Text style={styles.cardSectionTitle}>Alerts</Text>
+                <Text style={styles.cardSectionTitle}>{t("general.alerts")}</Text>
                 <Card style={styles.CardStyle}>{!loading ? generateAlertList() : <></>}</Card>
             </ScrollView>
         </SafeAreaView>

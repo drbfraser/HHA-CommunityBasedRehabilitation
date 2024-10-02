@@ -18,6 +18,7 @@ import FormikTextInput from "../../../../components/FormikTextInput/FormikTextIn
 import { dbType } from "../../../../util/watermelonDatabase";
 import { AutoSyncDB } from "../../../../util/syncHandler";
 import { SyncContext } from "../../../../context/SyncContext/SyncContext";
+import { useTranslation } from "react-i18next";
 
 interface IEntryProps {
     referral: IReferral;
@@ -32,6 +33,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
     const [hasImage, setHasImage] = useState<boolean>(false);
     const [loading, setLoading] = useState(false);
     const { autoSync, cellularSync } = useContext(SyncContext);
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (referral.picture && referral.picture !== null) {
@@ -66,7 +68,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
         };
 
         const outcomeFieldLabels = {
-            [OutcomeField.outcome]: "Outcome",
+            [OutcomeField.outcome]: t("general.outcome"),
         };
         type TOutcomeValues = typeof initialValues;
 
@@ -84,16 +86,14 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                 .updateReferral(values[OutcomeField.outcome])
                 .then(() => handleUpdate())
                 .catch(() => {
-                    alert(
-                        "Something went wrong when submitting the outcome and resolving the referral. Please try that again."
-                    );
+                    alert(t("referralAttr.referralResolutionFailureAlert"));
                 });
 
             AutoSyncDB(database, autoSync, cellularSync);
         };
 
         return (
-            <List.Accordion title={"Resolve"}>
+            <List.Accordion title={t("referralAttr.resolveVerb")}>
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
@@ -123,7 +123,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                         }}
                                         mode="outlined"
                                     >
-                                        Mark Resolved
+                                        {t("referralAttr.markResolved")}
                                     </Button>
                                 </Card.Content>
                             </Card>
@@ -146,28 +146,38 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         ) : (
                             <Icon name="clock-o" size={15} color={themeColors.riskRed} />
                         )}{" "}
-                        Referral {referral.resolved ? "Resolved" : "Pending"}
+                        {t("referralAttr.resolutionStatus", {
+                            context: referral.resolved ? "resolved" : "pending",
+                        })}
                         {"\n\n"}
-                        {referral.wheelchair && <ReasonChip label="Wheelchair" />}
-                        {referral.physiotherapy && <ReasonChip label="Physiotherapy" />}
-                        {referral.prosthetic && <ReasonChip label="Prosthetic" />}
-                        {referral.orthotic && <ReasonChip label="Orthotic" />}
-                        {referral.mental_health && <ReasonChip label="Mental" />}
+                        {referral.wheelchair && <ReasonChip label={t("general.wheelchair")} />}
+                        {referral.physiotherapy && (
+                            <ReasonChip label={t("general.physiotherapy")} />
+                        )}
+                        {referral.prosthetic && <ReasonChip label={t("general.prosthetic")} />}
+                        {referral.orthotic && <ReasonChip label={t("general.orthotic")} />}
+                        {referral.hha_nutrition_and_agriculture_project && (
+                            <ReasonChip label={t("general.nutrition")} />
+                        )}
+                        {referral.mental_health && <ReasonChip label={t("general.mental")} />}
+                        {referral.services_other && <ReasonChip label={t("referral.other")} />}
                     </Dialog.Title>
                     <Dialog.Content>
                         <Text>
-                            <Text style={styles.labelBold}>Referral Date: </Text>
+                            <Text style={styles.labelBold}>{t("referralAttr.referralDate")}: </Text>
                             {timestampToDateTime(referral.date_referred)}
                         </Text>
                         {referral.resolved && (
                             <>
                                 <Text />
                                 <Text>
-                                    <Text style={styles.labelBold}>Resolution Date: </Text>
+                                    <Text style={styles.labelBold}>
+                                        {t("referralAttr.resolutionDate")}:{" "}
+                                    </Text>
                                     {timestampToDateTime(referral.date_resolved)}
                                 </Text>
                                 <Text>
-                                    <Text style={styles.labelBold}>Outcome: </Text>
+                                    <Text style={styles.labelBold}>{t("general.outcome")}: </Text>
                                     {referral.outcome}
                                 </Text>
                             </>
@@ -176,20 +186,28 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                             <>
                                 <Text />
                                 <Text>
-                                    <Text style={styles.labelBold}>Wheelchair Experience: </Text>
+                                    <Text style={styles.labelBold}>
+                                        {t("referral.experience")}:{" "}
+                                    </Text>
                                     {wheelchairExperiences[referral.wheelchair_experience]}
                                 </Text>
                                 <Text>
-                                    <Text style={styles.labelBold}>Hip Width: </Text>
+                                    <Text style={styles.labelBold}>{t("referral.hipWidth")}: </Text>
                                     {referral.hip_width} inches
                                 </Text>
                                 <Text>
-                                    <Text style={styles.labelBold}>Wheelchair Owned? </Text>
-                                    {referral.wheelchair_owned ? "Yes" : "No"}
+                                    <Text style={styles.labelBold}>
+                                        {t("referral.ownership")}?{" "}
+                                    </Text>
+                                    {referral.wheelchair_owned ? t("general.yes") : t("general.no")}
                                 </Text>
                                 <Text>
-                                    <Text style={styles.labelBold}>Wheelchair Repairable? </Text>
-                                    {referral.wheelchair_repairable ? "Yes" : "No"}
+                                    <Text style={styles.labelBold}>
+                                        {t("referral.repairability")}?{" "}
+                                    </Text>
+                                    {referral.wheelchair_repairable
+                                        ? t("general.yes")
+                                        : t("general.no")}
                                 </Text>
                                 <Text />
                                 {hasImage ? (
@@ -204,8 +222,11 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         )}
                         {referral.physiotherapy && (
                             <>
+                                <Text />
                                 <Text>
-                                    <Text style={styles.labelBold}>Physiotherapy Condition: </Text>
+                                    <Text style={styles.labelBold}>
+                                        {t("referralAttr.condition", { context: "physiotherapy" })}:{" "}
+                                    </Text>
                                     {referral.condition}
                                 </Text>
                                 <Text />
@@ -213,39 +234,70 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         )}
                         {referral.prosthetic && (
                             <>
+                                <Text />
                                 <Text>
                                     <Text style={styles.labelBold}>
-                                        Prosthetic Injury Location:{" "}
+                                        {t("referralAttr.injuryLocation", {
+                                            context: "prosthetic",
+                                        })}
+                                        :{" "}
                                     </Text>
                                     {prostheticInjuryLocations[referral.prosthetic_injury_location]}
                                 </Text>
-                                <Text />
                             </>
                         )}
                         {referral.orthotic && (
                             <>
+                                <Text />
                                 <Text>
-                                    <Text style={styles.labelBold}>Orthotic Injury Location: </Text>
+                                    <Text style={styles.labelBold}>
+                                        {t("referralAttr.injuryLocation", { context: "orthotic" })}:{" "}
+                                    </Text>
                                     {orthoticInjuryLocations[referral.orthotic_injury_location]}
                                 </Text>
+                            </>
+                        )}
+                        {referral.hha_nutrition_and_agriculture_project && (
+                            <>
                                 <Text />
+                                <Text>
+                                    <Text style={styles.labelBold}>
+                                        {t("referral.emergencyFoodAidRequired")}?{" "}
+                                    </Text>
+                                    {referral.emergency_food_aid
+                                        ? t("general.yes")
+                                        : t("general.no")}
+                                </Text>
+                                <Text>
+                                    <Text style={styles.labelBold}>
+                                        {t("referral.agricultureLivelihoodProgramEnrollment")}?{" "}
+                                    </Text>
+                                    {referral.agriculture_livelihood_program_enrollment
+                                        ? t("general.yes")
+                                        : t("general.no")}
+                                </Text>
                             </>
                         )}
                         {referral.mental_health && (
                             <>
+                                <Text />
                                 <Text>
-                                    <Text style={styles.labelBold}>Mental Health Condition: </Text>
+                                    <Text style={styles.labelBold}>
+                                        {t("referralAttr.condition", { context: "mental" })}:{" "}
+                                    </Text>
                                     <Text>{referral.mental_health_condition}</Text>
                                 </Text>
                             </>
                         )}
                         {Boolean(referral.services_other.trim().length) && (
                             <>
+                                <Text />
                                 <Text>
-                                    <Text style={styles.labelBold}>Other Services Required: </Text>
+                                    <Text style={styles.labelBold}>
+                                        {t("referralAttr.otherServiceRequired")}:{" "}
+                                    </Text>
                                     {referral.services_other}
                                 </Text>
-                                <Text />
                             </>
                         )}
                         {!referral.resolved && <ResolveForm />}
@@ -256,7 +308,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                             onPress={onClose}
                             color={themeColors.blueBgDark}
                         >
-                            Close
+                            {t("general.close")}
                         </Button>
                     </Dialog.Actions>
                 </>

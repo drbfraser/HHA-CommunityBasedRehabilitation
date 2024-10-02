@@ -34,7 +34,7 @@ type TSurveyForm = {
     [key: string]: ISurveyCategory;
 };
 
-type ISurveyCategory = { [key: string]: string | boolean | undefined };
+type ISurveyCategory = { [key: string]: string | number | boolean | undefined };
 
 const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
     const [open, setOpen] = useState(false);

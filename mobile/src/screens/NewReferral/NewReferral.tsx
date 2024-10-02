@@ -39,6 +39,8 @@ import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/Confir
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { string } from "yup";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 
 interface INewReferralProps {
     clientID: number;
@@ -51,6 +53,7 @@ const ReferralServiceForm = (
     setEnabledSteps: React.Dispatch<React.SetStateAction<ReferralFormField[]>>
 ) => {
     const styles = useStyles();
+    const { t } = useTranslation();
     const onCheckboxChange = (checked: boolean, selectedServiceType: string) => {
         setEnabledSteps(
             serviceTypes.filter(
@@ -64,7 +67,7 @@ const ReferralServiceForm = (
     return (
         <View>
             <Text />
-            <Text style={styles.question}>Select referral services</Text>
+            <Text style={styles.question}>{t("referral.selectReferralServices")}</Text>
             {serviceTypes.map((serviceType) => (
                 <TextCheckBox
                     key={serviceType}
@@ -91,15 +94,17 @@ const NewReferral = (props: INewReferralProps) => {
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
     const { autoSync, cellularSync } = useContext(SyncContext);
     const [hasSubmitted, setHasSubmitted] = useState(false);
+    const { t } = useTranslation();
 
-    const prevStep = (props: any) => {
-        if (countObjectKeys(props.errors) !== 0) {
-            const arr = checkedSteps.filter((item) => {
-                return item != enabledSteps[activeStep - 1];
-            });
-            setCheckedSteps(arr);
-        } else {
-            if (props.values[ReferralFormField.otherDescription] !== "") {
+    const prevStep = async (props: any) => {
+        // Only adjust set of "good" states if we changed something:
+        if (Object.keys(props.touched).length !== 0) {
+            if (countObjectKeys(props.errors) !== 0) {
+                const arr = checkedSteps.filter((item) => {
+                    return item != enabledSteps[activeStep - 1];
+                });
+                setCheckedSteps(arr);
+            } else {
                 checkedSteps.push(enabledSteps[activeStep - 1]);
             }
         }
@@ -108,7 +113,7 @@ const NewReferral = (props: INewReferralProps) => {
     };
 
     const database = useDatabase();
-    const nextStep = (values: any, helpers: FormikHelpers<any>) => {
+    const nextStep = async (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
             handleSubmit(values, database, helpers, autoSync, cellularSync)
@@ -136,8 +141,7 @@ const NewReferral = (props: INewReferralProps) => {
                 checkedSteps.push(ReferralFormField.orthotic);
                 checkedSteps.push(ReferralFormField.prosthetic);
                 helpers.setFieldValue(`${[ReferralFormField.client_id]}`, clientId);
-            }
-            if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
+            } else if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
                 checkedSteps.push(enabledSteps[activeStep - 1]);
             }
             setCheckedSteps([...new Set(checkedSteps)]);
@@ -155,43 +159,44 @@ const NewReferral = (props: INewReferralProps) => {
         }
     };
 
+    const visitStr = t("newVisit.visit");
     const services: { [key: string]: IReferralForm } = {
         [ReferralFormField.wheelchair]: {
-            label: `${referralFieldLabels[ReferralFormField.wheelchair]} Visit`,
+            label: `${referralFieldLabels[ReferralFormField.wheelchair]} ${visitStr}`,
             Form: WheelchairForm,
             validationSchema: wheelchairValidationSchema,
         },
         [ReferralFormField.physiotherapy]: {
-            label: `${referralFieldLabels[ReferralFormField.physiotherapy]} Visit`,
+            label: `${referralFieldLabels[ReferralFormField.physiotherapy]} ${visitStr}`,
             Form: PhysiotherapyForm,
             validationSchema: physiotherapyValidationSchema,
         },
         [ReferralFormField.prosthetic]: {
-            label: `${referralFieldLabels[ReferralFormField.prosthetic]} Visit`,
+            label: `${referralFieldLabels[ReferralFormField.prosthetic]} ${visitStr}`,
             Form: (formikProps) =>
                 ProstheticOrthoticForm(formikProps, ReferralFormField.prosthetic),
             validationSchema: () =>
                 prostheticOrthoticValidationSchema(ReferralFormField.prosthetic),
         },
         [ReferralFormField.orthotic]: {
-            label: `${referralFieldLabels[ReferralFormField.orthotic]} Visit`,
+            label: `${referralFieldLabels[ReferralFormField.orthotic]} ${visitStr}`,
             Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.orthotic),
             validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.orthotic),
         },
         [ReferralFormField.hhaNutritionAndAgricultureProject]: {
             label: `${
                 referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]
-            } Visit`,
+            } ${visitStr}`,
             Form: NutritionAgricultureForm,
             validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
         },
         [ReferralFormField.mentalHealth]: {
-            label: `${referralFieldLabels[ReferralFormField.mentalHealth]} Visit`,
+            label: `${referralFieldLabels[ReferralFormField.mentalHealth]} ${visitStr}`,
             Form: MentalHealthForm,
             validationSchema: mentalHealthValidationSchema,
         },
         [ReferralFormField.servicesOther]: {
-            label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,
+            label: `${referralFieldLabels[ReferralFormField.servicesOther]} ${visitStr}`,
             Form: OtherServicesForm,
             validationSchema: otherServicesValidationSchema,
         },
@@ -209,7 +214,7 @@ const NewReferral = (props: INewReferralProps) => {
 
     const referralSteps: IReferralForm[] = [
         {
-            label: "Referral Services",
+            label: t("referral.referralServices"),
             Form: (props) => ReferralServiceForm(props, setEnabledSteps),
             validationSchema: referralInitialValidationSchema,
         },
@@ -224,8 +229,8 @@ const NewReferral = (props: INewReferralProps) => {
         <>
             <ConfirmDialogWithNavListener
                 bypassDialog={hasSubmitted}
-                confirmButtonText="Discard"
-                dialogContent="Discard this new referral?"
+                confirmButtonText={t("general.discard")}
+                dialogContent={t("referral.discardNewReferral")}
             />
             <Formik
                 initialValues={referralInitialValues}
@@ -259,13 +264,21 @@ const NewReferral = (props: INewReferralProps) => {
                                         nextBtnDisabled={
                                             formikProps.isSubmitting ||
                                             enabledSteps.length === 0 ||
-                                            countTouchedFields(formikProps.touched) === 0 ||
-                                            countObjectKeys(formikProps.errors) !== 0
+                                            (enabledSteps[activeStep - 1] !== undefined &&
+                                                (!checkedSteps.includes(
+                                                    enabledSteps[activeStep - 1]
+                                                )
+                                                    ? countObjectKeys(formikProps.errors) !== 0 ||
+                                                      Object.keys(formikProps.touched).length === 0
+                                                    : countObjectKeys(formikProps.errors) !== 0))
                                         }
                                         previousBtnDisabled={formikProps.isSubmitting}
                                         onPrevious={() => prevStep(formikProps)}
                                         previousBtnStyle={styles.prevButton}
                                         onSubmit={() => nextStep(formikProps.values, formikProps)}
+                                        previousBtnText={t("general.previous")}
+                                        nextBtnText={t("general.next")}
+                                        finishBtnText={t("general.submit")}
                                     >
                                         <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
                                         <Divider

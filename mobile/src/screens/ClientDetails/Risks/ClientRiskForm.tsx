@@ -17,6 +17,7 @@ import { Formik } from "formik";
 import { handleRiskSubmit } from "./ClientRiskFormHandler";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../../context/SyncContext/SyncContext";
+import { useTranslation } from "react-i18next";
 
 export interface ClientRiskFormProps {
     riskData: any;
@@ -37,6 +38,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
     const styles = useStyles();
     const [showModal, setShowModal] = useState(false);
     const database = useDatabase();
+    const { t } = useTranslation();
     const { autoSync, cellularSync } = useContext(SyncContext);
 
     const getRiskFormInitialValues = () => {
@@ -63,7 +65,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                     setShowModal(true);
                 }}
             >
-                Update
+                {t("general.update")}
             </Button>
             <Formik
                 initialValues={getRiskFormInitialValues()}
@@ -90,25 +92,34 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                             }}
                         >
                             {formikProps.values.risk_type === RiskType.HEALTH ? (
-                                <Text style={styles.riskHeaderStyle}>Update Health Risk</Text>
+                                <Text style={styles.riskHeaderStyle}>
+                                    {t("riskAttr.update", { context: "health" })}
+                                </Text>
                             ) : (
                                 <></>
                             )}
                             {formikProps.values.risk_type === RiskType.EDUCATION ? (
-                                <Text style={styles.riskHeaderStyle}>Update Education Risk</Text>
+                                <Text style={styles.riskHeaderStyle}>
+                                    {t("riskAttr.update", { context: "education" })}
+                                </Text>
                             ) : (
                                 <></>
                             )}
                             {formikProps.values.risk_type === RiskType.SOCIAL ? (
-                                <Text style={styles.riskHeaderStyle}>Update Social Risk</Text>
+                                <Text style={styles.riskHeaderStyle}>
+                                    {t("riskAttr.update", { context: "social" })}
+                                </Text>
                             ) : (
                                 <></>
                             )}
                             {formikProps.values.risk_type === RiskType.NUTRITION ? (
-                                <Text style={styles.riskHeaderStyle}>Update Nutrition Risk</Text>
+                                <Text style={styles.riskHeaderStyle}>
+                                    {t("riskAttr.update", { context: "nutrition" })}
+                                </Text>
                             ) : (
                                 <></>
                             )}
+                            {/* missing RiskTyPE.MENTAL */}
                             <RadioButton.Group
                                 onValueChange={(newValue) =>
                                     formikProps.setFieldValue(FormField.risk_level, newValue)
@@ -123,7 +134,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                                     .riskRadioStyle
                                             }
                                         >
-                                            {RiskLevel.LOW}
+                                            {t("riskLevelsAbbreviated.low")}
                                         </Text>
                                         <RadioButton value={RiskLevel.LOW} />
                                     </View>
@@ -134,7 +145,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                                     .riskRadioStyle
                                             }
                                         >
-                                            {RiskLevel.MEDIUM}
+                                            {t("riskLevelsAbbreviated.medium")}
                                         </Text>
                                         <RadioButton value={RiskLevel.MEDIUM} />
                                     </View>
@@ -145,7 +156,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                                     .riskRadioStyle
                                             }
                                         >
-                                            {RiskLevel.HIGH}
+                                            {t("riskLevelsAbbreviated.high")}
                                         </Text>
                                         <RadioButton value={RiskLevel.HIGH} />
                                     </View>
@@ -156,7 +167,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                                     .riskRadioStyle
                                             }
                                         >
-                                            {RiskLevel.CRITICAL}
+                                            {t("riskLevelsAbbreviated.critical")}
                                         </Text>
                                         <RadioButton value={RiskLevel.CRITICAL} />
                                     </View>
@@ -198,7 +209,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     }
                                 }}
                             >
-                                Save
+                                {t("general.save")}
                             </Button>
                         </Modal>
                     </Portal>

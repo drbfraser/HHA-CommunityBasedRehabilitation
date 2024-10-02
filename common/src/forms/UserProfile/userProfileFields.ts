@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { Validation } from "../../util/validations";
+import i18n from "i18next";
 
 export enum ChangePasswordField {
     oldPassword = "oldPassword",
@@ -7,11 +8,19 @@ export enum ChangePasswordField {
     confirmNewPassword = "confirmNewPassword",
 }
 
-export const changePasswordFieldLabels = {
-    [ChangePasswordField.oldPassword]: "Old password",
-    [ChangePasswordField.newPassword]: "New password",
-    [ChangePasswordField.confirmNewPassword]: "Confirm new password",
+// On language change, recompute arrays of labels
+export let changePasswordFieldLabels: { [key: string]: string } = {};
+const refreshArrays = () => {
+    changePasswordFieldLabels = {
+        [ChangePasswordField.oldPassword]: i18n.t("userProfile.oldPassword"),
+        [ChangePasswordField.newPassword]: i18n.t("userProfile.newPassword"),
+        [ChangePasswordField.confirmNewPassword]: i18n.t("userProfile.confirmNewPassword"),
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+});
 
 export const changePasswordInitialValues = {
     [ChangePasswordField.oldPassword]: "",
@@ -29,10 +38,16 @@ export const changePassValidationSchema = () =>
         [ChangePasswordField.newPassword]: Yup.string()
             .label(changePasswordFieldLabels[ChangePasswordField.newPassword])
             .matches(Validation.passwordRegExp, Validation.passwordInvalidMsg)
-            .notOneOf([Yup.ref(ChangePasswordField.oldPassword)], "Passwords must be different")
+            .notOneOf(
+                [Yup.ref(ChangePasswordField.oldPassword)],
+                i18n.t("userProfile.passwordsMustBeDifferent")
+            )
             .required(),
         [ChangePasswordField.confirmNewPassword]: Yup.string()
             .label(changePasswordFieldLabels[ChangePasswordField.confirmNewPassword])
-            .oneOf([Yup.ref(ChangePasswordField.newPassword)], "Passwords must match")
+            .oneOf(
+                [Yup.ref(ChangePasswordField.newPassword)],
+                i18n.t("userProfile.passwordsMustMatch")
+            )
             .required(),
     });

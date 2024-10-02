@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import i18n from "i18next";
 
 export enum VisitField {
     health_visit = "health_visit",
@@ -46,23 +47,68 @@ export enum ImprovementFormField {
     description = "desc",
 }
 
-export const visitFieldLabels = {
-    [VisitFormField.client_id]: "Client",
-    [VisitFormField.village]: "Village",
-    [VisitFormField.zone]: "Zone",
-    [VisitFormField.health]: "Health",
-    [VisitFormField.education]: "Education",
-    [VisitFormField.social]: "Social",
-    [VisitFormField.nutrition]: "Nutrition",
-    [VisitFormField.mental]: "Mental",
-    [VisitFormField.improvements]: "Improvements",
-    [VisitFormField.outcomes]: "Outcomes",
-    [ImprovementFormField.description]: "Description",
-    [OutcomeFormField.outcome]: "Outcome",
-    [GoalStatus.cancelled]: "Cancelled",
-    [GoalStatus.ongoing]: "Ongoing",
-    [GoalStatus.concluded]: "Concluded",
+// On language change, recompute arrays of labels
+export let visitFieldLabels: { [key: string]: string } = {};
+export let provisionals: { [key: string]: string[] };
+const refreshArrays = () => {
+    visitFieldLabels = {
+        [VisitFormField.client_id]: i18n.t("newVisit.client"),
+        [VisitFormField.village]: i18n.t("newVisit.village"),
+        [VisitFormField.zone]: i18n.t("newVisit.zone"),
+        [VisitFormField.health]: i18n.t("newVisit.health"),
+        [VisitFormField.education]: i18n.t("newVisit.education"),
+        [VisitFormField.social]: i18n.t("newVisit.social"),
+        [VisitFormField.nutrition]: i18n.t("newVisit.nutrition"),
+        [VisitFormField.mental]: i18n.t("newVisit.mental"),
+        [VisitFormField.improvements]: i18n.t("newVisit.improvements"),
+        [VisitFormField.outcomes]: i18n.t("newVisit.outcomes"),
+        [ImprovementFormField.description]: i18n.t("newVisit.description"),
+        [OutcomeFormField.outcome]: i18n.t("newVisit.outcome"),
+        [GoalStatus.cancelled]: i18n.t("newVisit.cancelled"),
+        [GoalStatus.ongoing]: i18n.t("newVisit.ongoing"),
+        [GoalStatus.concluded]: i18n.t("newVisit.concluded"),
+    };
+    provisionals = {
+        [VisitFormField.health]: [
+            i18n.t("newVisit.advice"),
+            i18n.t("newVisit.advocacy"),
+            i18n.t("newVisit.encouragement"),
+            i18n.t("newVisit.orthotic"),
+            i18n.t("newVisit.prosthetic"),
+            i18n.t("newVisit.referralToHealthCentre"),
+            i18n.t("newVisit.wheelchair"),
+            i18n.t("newVisit.wheelchairRepair"),
+        ],
+        [VisitFormField.education]: [
+            i18n.t("newVisit.advice"),
+            i18n.t("newVisit.advocacy"),
+            i18n.t("newVisit.encouragement"),
+            i18n.t("newVisit.referralToOther"),
+        ],
+        [VisitFormField.social]: [
+            i18n.t("newVisit.advice"),
+            i18n.t("newVisit.advocacy"),
+            i18n.t("newVisit.encouragement"),
+            i18n.t("newVisit.referralToOther"),
+        ],
+        [VisitFormField.nutrition]: [
+            i18n.t("newVisit.advice"),
+            i18n.t("newVisit.advocacy"),
+            i18n.t("newVisit.encouragement"),
+            i18n.t("newVisit.referralToOther"),
+        ],
+        [VisitFormField.mental]: [
+            i18n.t("newVisit.advice"),
+            i18n.t("newVisit.advocacy"),
+            i18n.t("newVisit.encouragement"),
+            i18n.t("newVisit.referralToOtherMentalHealth"),
+        ],
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+});
 
 export const visitInitialValues = {
     [VisitFormField.client_id]: "",
@@ -89,43 +135,6 @@ export const visitInitialValues = {
     },
 };
 
-export const provisionals: { [key: string]: string[] } = {
-    [VisitFormField.health]: [
-        "Advice",
-        "Advocacy",
-        "Encouragement",
-        "Orthotic",
-        "Prosthetic",
-        "Referral to Health Centre",
-        "Wheelchair",
-        "Wheelchair Repair",
-    ],
-    [VisitFormField.education]: [
-        "Advice",
-        "Advocacy",
-        "Encouragement",
-        "Referral to Other Organization",
-    ],
-    [VisitFormField.social]: [
-        "Advice",
-        "Advocacy",
-        "Encouragement",
-        "Referral to Other Organization",
-    ],
-    [VisitFormField.nutrition]: [
-        "Advice",
-        "Advocacy",
-        "Encouragement",
-        "Referral to Other Organization",
-    ],
-    [VisitFormField.mental]: [
-        "Advice",
-        "Advocacy",
-        "Encouragement",
-        "Referral to Other Mental Health Organization",
-    ],
-};
-
 export type TVisitFormValues = typeof visitInitialValues;
 
 export const initialValidationSchema = () =>
@@ -148,7 +157,9 @@ export const visitTypeValidationSchema = (visitType: VisitFormField) =>
                 Yup.object().shape({
                     [ImprovementFormField.description]: Yup.string().test(
                         "Required-If-Enabled",
-                        `${visitFieldLabels[ImprovementFormField.description]} is a required field`,
+                        i18n.t("newVisit.isRequiredField", {
+                            field: visitFieldLabels[ImprovementFormField.description],
+                        }),
                         (description, context) =>
                             context.parent.enabled ? description !== undefined : true
                     ),

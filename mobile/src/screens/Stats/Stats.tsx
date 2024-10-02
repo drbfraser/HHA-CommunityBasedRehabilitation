@@ -28,8 +28,8 @@ import {
 } from "@cbr/common";
 import { Q } from "@nozbe/watermelondb";
 import { modelName } from "../../models/constant";
-
-const allZone = "all zones";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 
 export type BarStat = {
     name: string;
@@ -56,9 +56,11 @@ const Stats = () => {
     const [showReferrals, setShowReferrals] = useState<boolean>(false);
     const [showDisabilites, setShowDisabilites] = useState<boolean>(false);
     const [archiveMode, setArchiveMode] = useState<boolean>(false);
+    const { t } = useTranslation();
 
     const [loading, setLoading] = useState<boolean>(true);
 
+    const allZone = i18n.t("statistics.allZones");
     const [zoneOption, setZoneOption] = useState<string>(allZone);
     const [visitData, setVisitData] = useState(fetchVisitData);
     const [visitCount, setVisitCount] = useState<number>(0);
@@ -109,7 +111,14 @@ const Stats = () => {
             VisitField.nutrit_visit,
             VisitField.mental_visit,
         ];
-        const visitName = ["Health", "Social", "Education", "Nutrition", "Mental"];
+        const visitName = [
+            i18n.t("newVisit.health"),
+            i18n.t("newVisit.social"),
+            i18n.t("newVisit.education"),
+            i18n.t("newVisit.nutrition"),
+            i18n.t("newVisit.mental"),
+        ];
+
         var index = 0;
         pieData = [];
         for (const type of visitType) {
@@ -244,7 +253,7 @@ const Stats = () => {
     return (
         <ScrollView>
             <View style={styles.row}>
-                <Text style={styles.title}>Statistics</Text>
+                <Text style={styles.title}>{t("statistics.statistics")}</Text>
             </View>
             {!loading ? (
                 <>
@@ -262,7 +271,7 @@ const Stats = () => {
                                 }
                             }}
                         >
-                            {"Visits"}
+                            {t("statistics.visits")}
                         </Button>
                         <Button
                             mode="contained"
@@ -277,7 +286,7 @@ const Stats = () => {
                                 }
                             }}
                         >
-                            {"Referrals"}
+                            {t("statistics.referrals")}
                         </Button>
                         <Button
                             mode="contained"
@@ -292,17 +301,17 @@ const Stats = () => {
                                 }
                             }}
                         >
-                            {"Disabilites"}
+                            {t("statistics.disabilities")}
                         </Button>
                     </View>
                     {showVisits ? (
                         <>
                             <Divider />
-                            <Text style={styles.cardSectionTitle}>Visits</Text>
+                            <Text style={styles.cardSectionTitle}>{t("statistics.visits")}</Text>
                             <Divider />
-                            <Text style={styles.chartTitle}>By Type</Text>
+                            <Text style={styles.chartTitle}>{t("statistics.byType")}</Text>
                             <Text style={styles.graphStat}>
-                                <Text>Showing data for </Text>
+                                <Text>{t("statistics.showingDataFor")} </Text>
                                 <Text style={{ fontWeight: "bold" }}>{zoneOption}</Text>
                             </Text>
                             {zoneOption !== allZone ? (
@@ -313,7 +322,7 @@ const Stats = () => {
                                         filterVisitByZone();
                                     }}
                                 >
-                                    View All Zone
+                                    {t("statistics.viewAllZone")}
                                 </Button>
                             ) : (
                                 <></>
@@ -328,14 +337,16 @@ const Stats = () => {
                                     innerRadius={30}
                                 />
                             </View>
-                            <Text style={styles.chartTitle}>By Zone</Text>
+                            <Text style={styles.chartTitle}>{t("statistics.byZone")}</Text>
                             <Text style={styles.graphStat}>
-                                <Text style={{ fontWeight: "bold" }}>Total Visits: </Text>
+                                <Text style={{ fontWeight: "bold" }}>
+                                    {t("statistics.totalVisits")}{" "}
+                                </Text>
                                 <Text>{visitCount}</Text>
                             </Text>
                             {zoneOption === allZone ? (
                                 <Text style={styles.graphStat}>
-                                    {"Click on bar to filter by zone"}
+                                    {t("statistics.clickBarToFilter")}
                                 </Text>
                             ) : (
                                 <></>
@@ -399,13 +410,17 @@ const Stats = () => {
                     {showReferrals ? (
                         <>
                             <Divider />
-                            <Text style={styles.cardSectionTitle}>Referrals</Text>
+                            <Text style={styles.cardSectionTitle}>{t("statistics.referrals")}</Text>
                             <Text style={styles.graphStat}>
-                                <Text style={{ fontWeight: "bold" }}>Total Unresolved: </Text>
+                                <Text style={{ fontWeight: "bold" }}>
+                                    {t("statistics.totalUnresolved")}{" "}
+                                </Text>
                                 <Text>{unresolvedCount}</Text>
                             </Text>
                             <Text style={styles.graphStat}>
-                                <Text style={{ fontWeight: "bold" }}>Total Resolved: </Text>
+                                <Text style={{ fontWeight: "bold" }}>
+                                    {t("statistics.totalResolved")}{" "}
+                                </Text>
                                 <Text>{resolvedCount}</Text>
                             </Text>
                             <VictoryChart
@@ -422,11 +437,11 @@ const Stats = () => {
                                     style={{ title: { fontSize: 20 } }}
                                     data={[
                                         {
-                                            name: "Unresolved",
+                                            name: t("statistics.unresolved"),
                                             symbol: { fill: themeColors.riskRed },
                                         },
                                         {
-                                            name: "Resolved",
+                                            name: t("statistics.resolved"),
                                             symbol: { fill: themeColors.riskGreen },
                                         },
                                     ]}
@@ -459,19 +474,21 @@ const Stats = () => {
                         <>
                             <Divider />
                             <View style={styles.row}>
-                                <Text>All Clients</Text>
+                                <Text>{t("statistics.allClients")}</Text>
                                 <Switch
                                     style={styles.switch}
                                     thumbColor={archiveMode ? themeColors.white : themeColors.white}
                                     onValueChange={setArchiveMode}
                                     value={archiveMode}
                                 />
-                                <Text>Active Clients</Text>
+                                <Text>{t("statistics.activeClients")}</Text>
                             </View>
-                            <Text style={styles.cardSectionTitle}>Disabilities</Text>
+                            <Text style={styles.cardSectionTitle}>
+                                {t("statistics.disabilities")}
+                            </Text>
                             <Text style={styles.graphStat}>
                                 <Text style={{ fontWeight: "bold" }}>
-                                    Clients with Disabilities:{" "}
+                                    {t("statistics.clientsWithDisabilities")}{" "}
                                 </Text>
                                 <Text>{disabilityCount}</Text>
                             </Text>

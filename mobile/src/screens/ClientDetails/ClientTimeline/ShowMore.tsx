@@ -2,9 +2,11 @@ import React from "react";
 import { View, Text } from "react-native";
 import { Button } from "react-native-paper";
 import useStyles from "./Timeline.style";
+import { useTranslation } from "react-i18next";
 
 const ShowMore = () => {
     const styles = useStyles();
+    const { t } = useTranslation();
 
     return (
         <View>
@@ -22,7 +24,7 @@ const ShowMore = () => {
                     <View style={styles.verticleLine}></View>
                 </View>
                 <View style={styles.subItem}>
-                    <Text style={styles.subItemTextDark}>Show More</Text>
+                    <Text style={styles.subItemTextDark}>{t("general.showMore")}</Text>
                     <Button
                         style={styles.arrowButton}
                         icon={"chevron-double-down"}

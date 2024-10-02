@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
 import { CacheRefreshTask } from "./src/tasks/CacheRefreshTask";
 import { SyncDatabaseTask } from "./src/tasks/SyncDatabaseTask";
+import i18n from "i18next";
 
 const keyValStorageProvider = {
     getItem(key) {
@@ -58,8 +59,8 @@ initializeCommon({
             const netInfoState = await NetInfo.fetch();
             return new Error(
                 !netInfoState.isInternetReachable
-                    ? "No internet available"
-                    : "Unable to reach server "
+                    ? i18n.t("login.noInternet")
+                    : i18n.t("login.unableToReachServer")
             );
         }
 

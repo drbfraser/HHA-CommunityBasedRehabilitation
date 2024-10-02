@@ -6,6 +6,7 @@ import { ClientListRow } from "../ClientList/ClientListRequest";
 import { dbType } from "../../util/watermelonDatabase";
 import { Q } from "@nozbe/watermelondb";
 import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
+import i18n from "i18next";
 
 export type BriefReferral = {
     id: string;
@@ -18,22 +19,22 @@ export type BriefReferral = {
 const concatenateReferralType = (referral: IOutstandingReferral) => {
     const referralTypes: String[] = [];
     if (referral.orthotic) {
-        referralTypes.push("Orthotic");
+        referralTypes.push(i18n.t("referral.orthotic"));
     }
     if (referral.physiotherapy) {
-        referralTypes.push("Physiotherapy");
+        referralTypes.push(i18n.t("referral.physiotherapy"));
     }
     if (referral.prosthetic) {
-        referralTypes.push("Prosthetic");
+        referralTypes.push(i18n.t("referral.prosthetic"));
     }
     if (referral.wheelchair) {
-        referralTypes.push("Wheelchair");
+        referralTypes.push(i18n.t("referral.wheelchair"));
     }
     if (referral.hha_nutrition_and_agriculture_project) {
-        referralTypes.push("HHANAP");
+        referralTypes.push(i18n.t("referral.hhaNutritionAndAgricultureProjectAbbr"));
     }
     if (referral.mental_health) {
-        referralTypes.push("Mental");
+        referralTypes.push(i18n.t("referral.mental"));
     }
     if (referral.services_other) {
         referralTypes.push(referral.services_other);
@@ -79,7 +80,7 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
         .then((fetchedClients) => {
             let clientCount = 0;
 
-            fetchReferrals = new Promise((resolve) => {
+            fetchReferrals = new Promise<void>((resolve) => {
                 fetchedClients.forEach(async (client) => {
                     const referrals = await client.outstandingReferrals.fetch();
                     if (referrals.length > 0) {

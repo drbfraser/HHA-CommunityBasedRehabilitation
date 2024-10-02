@@ -1,6 +1,7 @@
 import { TClientValues } from "@cbr/common";
 import { dbType } from "../../util/watermelonDatabase";
 import { AutoSyncDB } from "../../util/syncHandler";
+import i18n from "i18next";
 
 export const handleSubmit = async (
     client: any,
@@ -34,8 +35,10 @@ export const handleSubmit = async (
 
         AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {
-        const initialMessage = "Encountered an error while trying to edit the client!";
-
+        const initialMessage = i18n.t("alert.actionFailure", {
+            action: i18n.t("general.edit"),
+            object: i18n.t("general.client"),
+        });
         alert(initialMessage);
     }
 };

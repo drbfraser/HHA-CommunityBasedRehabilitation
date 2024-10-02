@@ -15,14 +15,16 @@ import { ReferralFormField, referralFieldLabels } from "@cbr/common";
 import { IFormProps, wheelchairExperiences } from "@cbr/common";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import FormikImageModal from "../../../components/FormikImageModal/FormikImageModal";
+import { useTranslation } from "react-i18next";
 
 const WheelchairForm = (props: IFormProps) => {
     const styles = useStyles();
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
+    const { t } = useTranslation();
     return (
         <View>
             <Text />
-            <Text style={styles.question}>What type of wheelchair user?</Text>
+            <Text style={styles.question}>{t("referral.whatTypeOfWheelchair")}</Text>
             <List.Section>
                 <RadioButton.Group
                     value={props.formikProps.values[ReferralFormField.wheelchairExperience]}
@@ -42,7 +44,7 @@ const WheelchairForm = (props: IFormProps) => {
                 </RadioButton.Group>
             </List.Section>
 
-            <Text style={styles.question}>What is the client's hip width?</Text>
+            <Text style={styles.question}>{t("referral.clientHipWidth")}</Text>
             <View style={styles.hipWidthContainer}>
                 <TextInput
                     style={styles.hipWidthInput}
@@ -53,7 +55,7 @@ const WheelchairForm = (props: IFormProps) => {
                         props.formikProps.setFieldValue(ReferralFormField.hipWidth, value);
                     }}
                 />
-                <Text>inches</Text>
+                <Text>{t("referral.inches")}</Text>
             </View>
 
             <HelperText
@@ -63,7 +65,7 @@ const WheelchairForm = (props: IFormProps) => {
             >
                 {props.formikProps.errors[ReferralFormField.hipWidth]}
             </HelperText>
-            <Text style={styles.question}>Wheelchair information</Text>
+            <Text style={styles.question}>{t("referral.wheelchairInformation")}</Text>
             <TextCheckBox
                 field={ReferralFormField.wheelchairOwned}
                 value={props.formikProps.values[ReferralFormField.wheelchairOwned]}
@@ -100,7 +102,9 @@ const WheelchairForm = (props: IFormProps) => {
                                     setShowImagePickerModal(true);
                                 }}
                             >
-                                <Text style={styles.buttonTextStyle}>choose a photo to upload</Text>
+                                <Text style={styles.buttonTextStyle}>
+                                    {t("referral.choosePhoto")}
+                                </Text>
                             </TouchableOpacity>
                         </View>
                         <FormikImageModal

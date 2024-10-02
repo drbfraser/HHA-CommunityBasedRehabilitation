@@ -1,24 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
+import Typography from "@material-ui/core/Typography";
+import i18n from "i18next";
+
+import { initI18n } from "@cbr/common/i18n.config";
+import history from "@cbr/common/util/history";
+import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import { IAlert } from "@cbr/common/util/alerts";
+import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
 import SideNav from "./components/SideNav/SideNav";
+import AlertNotification from "./components/Alerts/AlertNotification";
+import AlertOffline from "./components/Alerts/AlertOffline";
 import { defaultPagePath, pagesForUser } from "util/pages";
 import Login from "pages/Login/Login";
-import Typography from "@material-ui/core/Typography";
 import { useStyles } from "App.styles";
-import history from "@cbr/common/util/history";
 import { useIsLoggedIn } from "./util/hooks/loginState";
-import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
-import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
-import AlertNotification from "./components/Alerts/AlertNotification";
-import { IAlert } from "@cbr/common/util/alerts";
-import AlertOffline from "./components/Alerts/AlertOffline";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
     const styles = useStyles();
-
     const [open, setOpen] = useState<boolean>(false);
     const [alert, setAlert] = useState<Partial<IAlert>>();
+
+    useEffect(() => {
+        initI18n(i18n);
+    }, []);
+
+    useEffect(() => {
+        socket.on("broadcastAlert", (data) => {
+            setAlert(data);
+            setOpen(true);
+        });
+        return () => {
+            setOpen(false);
+        };
+    }, []);
 
     const PrivateRoutes = () => {
         const user = useCurrentUser();
@@ -44,16 +60,6 @@ const App = () => {
             </div>
         );
     };
-
-    useEffect(() => {
-        socket.on("broadcastAlert", (data) => {
-            setAlert(data);
-            setOpen(true);
-        });
-        return () => {
-            setOpen(false);
-        };
-    }, []);
 
     return (
         <Router history={history}>

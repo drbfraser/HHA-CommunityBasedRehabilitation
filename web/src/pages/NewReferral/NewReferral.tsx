@@ -1,17 +1,8 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { CheckboxWithLabel } from "formik-material-ui";
-import {
-    Button,
-    FormControl,
-    FormGroup,
-    FormLabel,
-    Step,
-    StepContent,
-    StepLabel,
-    Stepper,
-} from "@material-ui/core";
+import { Form, Formik, FormikHelpers, FormikProps } from "formik";
+import { Button, Step, StepContent, StepLabel, Stepper } from "@material-ui/core";
 import { ArrowBack } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 
@@ -54,6 +45,7 @@ const NewReferral = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<ReferralFormField[]>([]);
     const [submissionError, setSubmissionError] = useState<string>();
+    const { t } = useTranslation();
     const { clientId } = useParams<{ clientId: string }>();
 
     const services: { [key: string]: IService } = {
@@ -99,11 +91,9 @@ const NewReferral = () => {
         },
     };
 
-    const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
-
     const referralSteps: IService[] = [
         {
-            label: "Referral Services",
+            label: t("referral.referralServices"),
             Form: (props) => ReferralServiceForm(props, setEnabledSteps),
             validationSchema: referralInitialValidationSchema,
         },
@@ -114,6 +104,8 @@ const NewReferral = () => {
         })),
     ];
 
+    const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
+    const prevStep = () => setActiveStep(activeStep - 1);
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             handleSubmit(values, helpers, setSubmissionError);
@@ -133,8 +125,6 @@ const NewReferral = () => {
             .reduce((disabledState, serviceState) => disabledState || serviceState);
     };
 
-    const prevStep = () => setActiveStep(activeStep - 1);
-
     return (
         <Formik
             initialValues={referralInitialValues}
@@ -146,12 +136,15 @@ const NewReferral = () => {
                 <Form>
                     {submissionError && (
                         <Alert onClose={() => setSubmissionError(undefined)} severity="error">
+                            {/* TODO: translate this error string */}
                             An error occurred when submitting the referral: {submissionError}
                         </Alert>
                     )}
                     <Button onClick={history.goBack}>
+                        {/* TODO: translate "Go back" */}
                         <ArrowBack /> Go back
                     </Button>
+
                     <Stepper activeStep={activeStep} orientation="vertical">
                         {referralSteps.map((referralStep, index) => (
                             <Step key={index}>
@@ -166,6 +159,7 @@ const NewReferral = () => {
                                             color="primary"
                                             onClick={prevStep}
                                         >
+                                            {/* TODO: translate "prev step" */}
                                             Prev Step
                                         </Button>
                                     )}
@@ -176,8 +170,9 @@ const NewReferral = () => {
                                         disabled={isNoServiceChecked(formikProps)}
                                     >
                                         {isFinalStep && index === activeStep
-                                            ? "Submit"
-                                            : "Next Step"}
+                                            ? t("general.submit")
+                                            : // TODO: translate "next step"
+                                              "Next Step"}
                                     </Button>
                                 </StepContent>
                             </Step>

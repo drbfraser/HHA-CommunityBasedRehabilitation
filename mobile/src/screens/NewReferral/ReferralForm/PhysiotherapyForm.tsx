@@ -14,8 +14,8 @@ import { useTranslation } from "react-i18next";
 
 const PhysiotherapyForm = (props: IFormProps) => {
     const styles = useStyles();
-    const disabilities = useDisabilities();
     const { t } = useTranslation();
+    const disabilities = useDisabilities(t);
 
     return (
         <View>

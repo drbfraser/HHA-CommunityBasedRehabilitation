@@ -51,12 +51,12 @@ const Stats = () => {
     const database = useDatabase();
     const isFocused = useIsFocused();
     const zones = useZones();
-    const disabilityMap = useDisabilities();
     const [showVisits, setShowVisits] = useState<boolean>(true);
     const [showReferrals, setShowReferrals] = useState<boolean>(false);
     const [showDisabilites, setShowDisabilites] = useState<boolean>(false);
     const [archiveMode, setArchiveMode] = useState<boolean>(false);
     const { t } = useTranslation();
+    const disabilityMap = useDisabilities(t);
 
     const [loading, setLoading] = useState<boolean>(true);
 

@@ -13,13 +13,13 @@ interface IFormProps {
 }
 
 const PhysiotherapyForm = (props: IFormProps) => {
-    const { t } = useTranslation();
     const styles = useStyles();
-    const disabilities = useDisabilities();
+    const { t } = useTranslation();
+    const disabilities = useDisabilities(t);
 
     return (
         <div>
-            <FormLabel>{t("referral.whatCondition")}?</FormLabel>
+            <FormLabel>{t("referral.whatCondition")}</FormLabel>
             <br />
             <br />
             <div className={styles.fieldIndent}>
@@ -32,7 +32,6 @@ const PhysiotherapyForm = (props: IFormProps) => {
                     name={ReferralFormField.condition}
                     variant="outlined"
                 >
-                    {/* TODO: translate these disabilities */}
                     {Array.from(disabilities).map(([id, name]) => (
                         <MenuItem key={id} value={id}>
                             {name}

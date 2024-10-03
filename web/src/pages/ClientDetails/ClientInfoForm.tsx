@@ -41,11 +41,11 @@ interface IProps {
 const ClientInfoForm = (props: IProps) => {
     const styles = useStyles();
     const zones = useZones();
-    const disabilities = useDisabilities();
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [user, setUser] = useState<IUser>();
     const [loadingError, setLoadingError] = useState<string>();
     const { t } = useTranslation();
+    const disabilities = useDisabilities(t);
 
     useEffect(() => {
         const getInfo = async () => {

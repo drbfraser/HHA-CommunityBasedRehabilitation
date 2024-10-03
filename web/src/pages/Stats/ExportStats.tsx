@@ -1,6 +1,7 @@
 import { Button, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { IStats } from "@cbr/common/util/stats";
 import { CSVLink } from "react-csv";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -14,7 +15,8 @@ interface IProps {
 
 const ExportStats = ({ open, onClose, stats }: IProps) => {
     const zones = useZones();
-    const disabilities = useDisabilities();
+    const { t } = useTranslation();
+    const disabilities = useDisabilities(t);
 
     const data = useMemo(() => {
         if (!open || !stats || !zones.size || !disabilities.size) {

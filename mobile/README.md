@@ -96,9 +96,9 @@ After the app is up and running the first time, after you make a change to the c
 -   If your username and password are rejected when logging in, ensure that you can log in via the web interface first. You may need to seed the database by running the populate database script to setup the default user(s).
 
 -   Upon doing react-native run-android, if a message below is returned,
-    ` ERROR cachedAPIGet(cache_user): API fetch failed (unable to get an access token) and no backup; using error value" `
+    `ERROR cachedAPIGet(cache_user): API fetch failed (unable to get an access token) and no backup; using error value"`
     then enter this command in your terminal while running docker backend:
-    ` docker exec cbr_django python manage.py migrate `
+    `docker exec cbr_django python manage.py migrate`
 
 -   If Android app fails to load with message "Unable to load Script. Make sure you're either running Metro (...) or that your bundle `index.android.bundle` is packaged correctly for release", then try re-running the `npm run android` command. (Seems to happen when the React Native terminal does not stay open.)
 

@@ -7,6 +7,7 @@ The CBR Mobile app uses the React Native framework along with [WatermelonDB](htt
 1. Install Android Studio, configure a virtual device
 
 2. Add Android SDK to path (to run `adb`, Android Debug Bridge)
+
     - Find the location of the Android SDK: in Android Studios go to Tools > SDK Manager, at top under "Android SDK Location"
     - Under Windows, goto Start > "Environment Variables" > Environment Variables > User variables for ... > Path.
     - Add to the end the `platform-tools/` sub-folder of the Android SDK, such as: `D:\Users\Brian\AndroidSDK\platform-tools`
@@ -15,6 +16,7 @@ The CBR Mobile app uses the React Native framework along with [WatermelonDB](htt
       `$ adb`
 
 3. Set the JAVA_HOME environment variable
+
     - Find the location of your installed version of the Java JDK. Likely something like `C:\Program Files\Java\jdk-11.0.5`
     - JDK 11.0.5 is known to work; JRE 8 is known not to.
     - Under Windows, goto Start > "Environment Variables" > Environment Variables > User variables for ... > add new entry for `JAVA_HOME`, and set to `C:\Program Files\Java\jdk-11.0.5` (or the like).
@@ -56,7 +58,7 @@ If you need to change the version of node/npm, then try:
 1. Run back-end, front-end, and DB docker containers:  
    `$ docker compose up`
 2. Launch an Android virtual device via Android Studio, or connect an Android phone to your computer.
-    - **NOTE:** due to a run-time exception when targeting API 34 (Android 14.0) on ARM64 ("Keeps Stopping" error message), we are currently targeting API 30 (Android 11.0).  Confirmed to work on `Pixel 6 API 30` virtual device on both ARM64 and X86.
+    - **NOTE:** due to a run-time exception when targeting API 34 (Android 14.0) on ARM64 ("Keeps Stopping" error message), we are currently targeting API 30 (Android 11.0). Confirmed to work on `Pixel 6 API 30` virtual device on both ARM64 and X86.
     - If using a physical phone, you must enable developer mode via the settings menu, then enable USB debugging, then disconnect and reconnect the phone from the computer.
     - When the phone is first connected to the computer, after USB debugging has been enabled, then on the phone you'll need to authorize your computer to use USB debugging with your phone.
 3. Build and launch from mobile/ folder  
@@ -73,48 +75,50 @@ After the app is up and running the first time, after you make a change to the c
 -   How is it best to do hot-reloading?
 
 # Troubleshooting
--   If running the app in a virtual device via Android Studio, note that `Logcat` (in the bottom left corner) can offer some very useful error messages than metro.  This can greatly help with troubleshooting.
+
+-   If running the app in a virtual device via Android Studio, note that `Logcat` (in the bottom left corner) can offer some very useful error messages than metro. This can greatly help with troubleshooting.
 
 -   After running `npm install` in the mobile/ folder, if you get an error for `EINTERGRITY` complaining about a SHA-512 mismatch, then it is likely that you need to re-run the `npm install cbr-common-1.0.0.tgz` command inside the mobile/ folder to trigger it updating the SHA-512 of our custom package building built on your machine.
 
 -   After running `npm install` in the mobile/ folder, if you get an error for `EBADPLATFORM` related to the package `fservants`, then delete `mobile/package-lock.json` and re-run `npm install` to update to a newer `fservants`
 
 -   After running `docker compose up` in the project folder, if it complains that POSTGRES_USER, POSTGRES_PASSWORD, SECRET_KEY and such are not set, then:
+
     -   Ensure you have created the .env file in the project's root directory with those contents
     -   If in windows, ensure you are running the command via PowerShell (not Git Bash)
 
 -   After running `react-native run-android` if you see "Could not determine the dependencies of task ':app:installDebug'.", it likely means you have not correctly created the `local.properties` file.
 
--   When running the mobile app, if you see "cachedAPIGet(..): API fetch failed" it likely means that you have not started the backed Docker containers, or are not targeting the correct URL for the back-end.  It is possible that your environment variables are improperly set, or a wondow reloadmay be necessary to make them apply.
+-   When running the mobile app, if you see "cachedAPIGet(..): API fetch failed" it likely means that you have not started the backed Docker containers, or are not targeting the correct URL for the back-end. It is possible that your environment variables are improperly set, or a wondow reloadmay be necessary to make them apply.
 
 -   If you see the error "NativeModules.DatabaseBridge is not defined!", it likely means that you are trying to use Expo to run the project. However, the project has been ejected from Expo in order to work with Watermelon DB, so we cannot use the `expo start` command.
 
 -   If your username and password are rejected when logging in, ensure that you can log in via the web interface first. You may need to seed the database by running the populate database script to setup the default user(s).
 
-- Upon doing react-native run-android, if a message below is returned,
-    ```
-    ERROR cachedAPIGet(cache_user): API fetch failed (unable to get an access token) and no backup; using error value"
-    ```
-then enter this command in your terminal while running docker backend:
-    ```
-    docker exec cbr_django python manage.py migrate
-    ```
+-   Upon doing react-native run-android, if a message below is returned,
+    `ERROR cachedAPIGet(cache_user): API fetch failed (unable to get an access token) and no backup; using error value"`
+    then enter this command in your terminal while running docker backend:
+    `docker exec cbr_django python manage.py migrate`
 
-- If Android app fails to load with message "Unable to load Script. Make sure you're either running Metro (...) or that your bundle `index.android.bundle` is packaged correctly for release", then try re-running the `npm run android` command. (Seems to happen when the React Native terminal does not stay open.)
+-   If Android app fails to load with message "Unable to load Script. Make sure you're either running Metro (...) or that your bundle `index.android.bundle` is packaged correctly for release", then try re-running the `npm run android` command. (Seems to happen when the React Native terminal does not stay open.)
 
-- If when building the Android app you get an error stating something like:
+-   If when building the Android app you get an error stating something like:
+
     ```
-    Execution failed for task ':app:mapDebugSourceSetPaths'.  
+    Execution failed for task ':app:mapDebugSourceSetPaths'.
     Could not resolve all files for configuration ':app:debugRuntimeClasspath'.
     ```
-  and it seems like files or directories cannot be found in
-  `~/.gradle/caches/*`, then try deleting the entire `~/.gradle` directory and building the app again 
-   - ref: https://stackoverflow.com/questions/70010356/android-gradle-build-fails-from-cached-files. 
-   - There are also other solutions in the SO post, but they have not been tested with CBR.
+
+    and it seems like files or directories cannot be found in
+    `~/.gradle/caches/*`, then try deleting the entire `~/.gradle` directory and building the app again
+
+    -   ref: https://stackoverflow.com/questions/70010356/android-gradle-build-fails-from-cached-files.
+    -   There are also other solutions in the SO post, but they have not been tested with CBR.
 
 -   If `common` package does not update correctly (such as translations being stale after they have been updated), here is a large set of things to try to clean up the project:
 
     DID NOT WORK:
+
     -   Close the emulator and the React Native command line
     -   [x] Android clean: (from mobile/android) `.\gradlew cleanbuildCache` >> Error: not a build target.
     -   Android clean: (from mobile/android) `.\gradlew clean`, then npm install
@@ -133,6 +137,7 @@ then enter this command in your terminal while running docker backend:
     -   Run from inside Android Studio (debug) (1st: build failed, 2nd: runtime error "Unable to load script"; 3rd same, 4th same)
     -   Run from inside Android Studio (run) (1st: "unable to load script"; 2nd same (tried reload but "could not connect to development server."))
     -   Delete all cache folders:
+
         -   Android Studio: Build > Clean
         -   Android Studio: File > Invalidate Caches (clear both), restart and then quickly exit
         -   `git clean -d -f -x -i`
@@ -154,20 +159,22 @@ then enter this command in your terminal while running docker backend:
             ==> YAY! Seems to have cleared the cache out! BUT app shows no translations.
 
     CURRENTLY TRYING:
+
     -   [x] npm run android -- --reset-cache
             (the "--" on its own differentiates NPM options (before it) from program arguments (after))
             (Fails to launch: "react-native run-android --reset-cache" unknown option '--reset-cache')
 
     TO TRY
 
-    - Delete the `~/.android/cache` folder and the `~/.gradle` folder.
-    - Reset npm cache: (from mobile/) `npm start -- --reset-cache`
-    - Run `npm clean --force`
+    -   Delete the `~/.android/cache` folder and the `~/.gradle` folder.
+    -   Reset npm cache: (from mobile/) `npm start -- --reset-cache`
+    -   Run `npm clean --force`
 
-    - Resources:  
-       [Stack Overflow](https://stackoverflow.com/questions/46878638/how-to-clear-react-native-cache)  
-       [Medium.com](https://medium.com/@under_the_hook/become-a-react-native-developer-how-to-clean-cache-in-your-project-acfe4983e139)
-       [Android on a diet](https://engineering.backmarket.com/put-your-android-studio-on-a-diet-fa4d364acb05)
-- When running Android (`npm run android`), if you get any of the following errors, they can sometimes be resolved by re-running the command (a few times?), or pressing 'r' or 'a' in the React-native window to reload the Android app:
+    -   Resources:  
+         [Stack Overflow](https://stackoverflow.com/questions/46878638/how-to-clear-react-native-cache)  
+         [Medium.com](https://medium.com/@under_the_hook/become-a-react-native-developer-how-to-clean-cache-in-your-project-acfe4983e139)
+        [Android on a diet](https://engineering.backmarket.com/put-your-android-studio-on-a-diet-fa4d364acb05)
+
+-   When running Android (`npm run android`), if you get any of the following errors, they can sometimes be resolved by re-running the command (a few times?), or pressing 'r' or 'a' in the React-native window to reload the Android app:
     "The development server returned response error code: 500"...
 -   Error "Error: Unable to resolve module async-mutex from", try re-running `npm install` on mobile folder.

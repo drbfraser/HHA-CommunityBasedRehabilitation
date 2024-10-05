@@ -4,6 +4,7 @@ import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { pagesForUser } from "../../util/pages";
 import { useStyles } from "./SideNav.styles";
 import SideNavIcon from "./SideNavIcon";
+import LangPicker from "./LangPicker";
 
 const SideNav = () => {
     const user = useCurrentUser();
@@ -18,6 +19,7 @@ const SideNav = () => {
                 .map((page) => (
                     <SideNavIcon key={page.path} page={page} active={page.path === pathname} />
                 ))}
+            <LangPicker />
         </div>
     );
 };

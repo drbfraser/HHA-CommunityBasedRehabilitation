@@ -1,6 +1,6 @@
 {
     "engines": {
-        "node": ">=14.21.3 <15"
+        "node": ">=20.17.0 <21"
     },
     "scripts": {
         "start": "react-native start",

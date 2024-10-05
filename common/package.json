@@ -2,7 +2,7 @@
     "name": "@cbr/common",
     "version": "1.0.0",
     "engines": {
-        "node": ">=20.17.0 <21"
+        "node": ">=18.20.4 <19"
     },
     "scripts": {
         "test": "LANG=en-US jest",

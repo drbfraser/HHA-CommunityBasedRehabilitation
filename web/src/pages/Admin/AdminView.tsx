@@ -27,8 +27,7 @@ const AdminView = () => {
         <div className={styles.container}>
             {loadingError ? (
                 <Alert severity="error">
-                    {/* TODO: Translate */}
-                    Something went wrong trying to load that user. Please go back and try again.
+                    {t("alert.loadUserFailure")}
                     {loadingError}
                 </Alert>
             ) : user ? (

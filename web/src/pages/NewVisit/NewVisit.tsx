@@ -35,6 +35,7 @@ import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IClient } from "@cbr/common/util/clients";
 import { Alert } from "@material-ui/lab";
 import { TZoneMap, useZones } from "@cbr/common/util/hooks/zones";
+import GoBackButton from "components/GoBackButton/GoBackButton";
 
 const visitTypes: VisitFormField[] = [
     VisitFormField.health,
@@ -332,9 +333,8 @@ const NewVisit = () => {
                             Error occurred trying to submit the visit: {submissionError}
                         </Alert>
                     )}
-                    <Button onClick={history.goBack}>
-                        <ArrowBack /> Go back
-                    </Button>
+                    <GoBackButton />
+
                     <Stepper activeStep={activeStep} orientation="vertical">
                         {visitSteps.map((visitStep, index) => (
                             <Step key={index}>

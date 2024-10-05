@@ -29,8 +29,7 @@ const AdminPasswordEdit = () => {
     if (loadingError) {
         return (
             <Alert severity="error">
-                {/* TODO: translate */}
-                Something went wrong trying to load that user. Please go back and try again.
+                {t("alert.loadUserFailure")}
                 {loadingError}
             </Alert>
         );
@@ -48,10 +47,7 @@ const AdminPasswordEdit = () => {
                             e instanceof APIFetchFailError
                                 ? e.buildFormError(adminUserFieldLabels)
                                 : (e as string);
-                        alert(
-                            // TODO: translate
-                            `Error occurred when trying to change the user's password: ${errorMessage}`
-                        );
+                        alert(`${t("alert.editUserPasswordFailure")}: ${errorMessage}`);
                     });
             }}
         >

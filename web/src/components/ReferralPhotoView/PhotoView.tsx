@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FormLabel } from "@material-ui/core";
 import { helperImgCompress } from "./imgCompressHelper";
 
@@ -9,6 +10,7 @@ interface Iprops {
 export const PhotoView = (props: Iprops) => {
     const [thumb, setThumb] = useState<string | undefined>(undefined);
     const [upload, setUpload] = useState<boolean>(false);
+    const { t } = useTranslation();
 
     return (
         <>
@@ -23,8 +25,7 @@ export const PhotoView = (props: Iprops) => {
             )}
 
             {upload === false ? (
-                // TODO: translate
-                <FormLabel>Attach a photo of the wheelchair if possible </FormLabel>
+                <FormLabel>{t("referral.attachWheelchairPhoto")} </FormLabel>
             ) : (
                 <p />
             )}

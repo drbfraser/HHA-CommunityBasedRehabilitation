@@ -3,12 +3,9 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { Button, Step, StepContent, StepLabel, Stepper } from "@material-ui/core";
-import { ArrowBack } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 
-import history from "@cbr/common/util/history";
 import {
-    referralFieldLabels,
     ReferralFormField,
     referralInitialValidationSchema,
     referralInitialValues,
@@ -30,6 +27,7 @@ import {
     ReferralServiceForm,
     WheelchairForm,
 } from "./forms";
+import GoBackButton from "components/GoBackButton/GoBackButton";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -50,42 +48,40 @@ const NewReferral = () => {
 
     const services: { [key: string]: IService } = {
         [ReferralFormField.wheelchair]: {
-            label: `${referralFieldLabels[ReferralFormField.wheelchair]} Visit`,
+            label: t("referral.wheelchairVisit"),
             Form: WheelchairForm,
             validationSchema: wheelchairValidationSchema,
         },
         [ReferralFormField.physiotherapy]: {
-            label: `${referralFieldLabels[ReferralFormField.physiotherapy]} Visit`,
+            label: t("referral.physiotherapyVisit"),
             Form: PhysiotherapyForm,
             validationSchema: physiotherapyValidationSchema,
         },
         [ReferralFormField.prosthetic]: {
-            label: `${referralFieldLabels[ReferralFormField.prosthetic]} Visit`,
+            label: t("referral.prostheticVisit"),
             Form: (formikProps) =>
                 ProstheticOrthoticForm(formikProps, ReferralFormField.prosthetic),
             validationSchema: () =>
                 prostheticOrthoticValidationSchema(ReferralFormField.prosthetic),
         },
         [ReferralFormField.orthotic]: {
-            label: `${referralFieldLabels[ReferralFormField.orthotic]} Visit`,
+            label: t("referral.orthoticVisit"),
             Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.orthotic),
             validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.orthotic),
         },
         [ReferralFormField.hhaNutritionAndAgricultureProject]: {
-            label: `${
-                referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]
-            } Visit`,
+            label: t("referral.hhaNutritionAndAgricultureProjectVisit"),
             Form: NutritionForm,
             validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
         },
         [ReferralFormField.mentalHealth]: {
-            label: `${referralFieldLabels[ReferralFormField.mentalHealth]} Visit`,
+            label: t("referral.mentalHealthVisit"),
             Form: MentalHealthForm,
             validationSchema: mentalHealthValidationSchema,
         },
 
         [ReferralFormField.servicesOther]: {
-            label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`, // TODO: translate "Visit"?
+            label: t("referral.otherServiceVisit"),
             Form: OtherServicesForm,
             validationSchema: otherServicesValidationSchema,
         },
@@ -136,14 +132,10 @@ const NewReferral = () => {
                 <Form>
                     {submissionError && (
                         <Alert onClose={() => setSubmissionError(undefined)} severity="error">
-                            {/* TODO: translate this error string */}
-                            An error occurred when submitting the referral: {submissionError}
+                            {t("alert.submitReferralError")}: {submissionError}
                         </Alert>
                     )}
-                    <Button onClick={history.goBack}>
-                        {/* TODO: translate "Go back" */}
-                        <ArrowBack /> Go back
-                    </Button>
+                    <GoBackButton />
 
                     <Stepper activeStep={activeStep} orientation="vertical">
                         {referralSteps.map((referralStep, index) => (
@@ -159,8 +151,7 @@ const NewReferral = () => {
                                             color="primary"
                                             onClick={prevStep}
                                         >
-                                            {/* TODO: translate "prev step" */}
-                                            Prev Step
+                                            {t("general.previousStep")}
                                         </Button>
                                     )}
                                     <Button
@@ -171,8 +162,7 @@ const NewReferral = () => {
                                     >
                                         {isFinalStep && index === activeStep
                                             ? t("general.submit")
-                                            : // TODO: translate "next step"
-                                              "Next Step"}
+                                            : t("general.nextStep")}
                                     </Button>
                                 </StepContent>
                             </Step>

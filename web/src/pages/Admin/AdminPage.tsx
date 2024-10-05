@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Typography } from "@material-ui/core";
 import { Tabs, Tab, Box } from "@mui/material";
 
@@ -33,6 +34,7 @@ const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => (
 );
 
 const AdminPage = () => {
+    const { t } = useTranslation();
     const [value, setValue] = useState(0);
 
     const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -44,16 +46,8 @@ const AdminPage = () => {
             <Box sx={{ width: "100%" }}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider", width: "100%" }}>
                     <Tabs value={value} onChange={handleTabChange} aria-label="basic tabs">
-                        <Tab
-                            // TODO: Translate
-                            label="Users"
-                            {...a11yProps(0)}
-                        />
-                        <Tab
-                            // TODO: Translate
-                            label="Zones"
-                            {...a11yProps(1)}
-                        />
+                        <Tab label={t("general.users")} {...a11yProps(0)} />
+                        <Tab label={t("general.zones")} {...a11yProps(1)} />
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>

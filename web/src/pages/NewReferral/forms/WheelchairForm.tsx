@@ -79,8 +79,7 @@ const WheelchairForm = (props: IFormProps) => {
             {props.formikProps.values[ReferralFormField.wheelchairOwned] &&
                 props.formikProps.values[ReferralFormField.wheelchairRepairable] && (
                     <>
-                        {/* TODO: translate */}
-                        <Alert severity="info">Please bring wheelchair to the center</Alert>
+                        <Alert severity="info">{t("referral.bringWheelchair")}</Alert>
                         <br />
                         <PhotoView
                             onPictureChange={(pictureURL) => {

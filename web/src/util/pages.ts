@@ -60,8 +60,7 @@ const pages: IPage[] = [
     },
     {
         path: "/clients",
-        // TODO: translate
-        name: "Client List",
+        name: "screenNames.clientList",
         Component: ClientList,
         showInNav: true,
         Icon: FormatListBulletedIcon,
@@ -74,36 +73,31 @@ const pages: IPage[] = [
     },
     {
         path: "/client/:clientId/risks",
-        // TODO: translate
-        name: "Client Risk History",
+        name: "screenNames.clientRiskHistory",
         Component: ClientRiskHistory,
         showInNav: false,
     },
     {
         path: "/client/:clientId/visits/new",
-        // TODO: translate
-        name: "Add a Visit",
+        name: "screenNames.addVisit",
         Component: NewVisit,
         showInNav: false,
     },
     {
         path: "/client/:clientId/surveys/new",
-        // TODO: translate
-        name: "Add a survey",
+        name: "screenNames.addSurvey",
         Component: NewSurvey,
         showInNav: false,
     },
     {
         path: "/client/:clientId/referrals/new",
-        // TODO: translate
-        name: "Add a Referral",
+        name: "screenNames.addReferral",
         Component: NewReferral,
         showInNav: false,
     },
     {
         path: "/user",
-        // TODO: translate
-        name: "Profile",
+        name: "screenNames.profile",
         Component: UserView,
         showInNav: true,
         Icon: PersonIcon,
@@ -116,8 +110,7 @@ const pages: IPage[] = [
     },
     {
         path: "/stats",
-        // TODO: translate
-        name: "Stats",
+        name: "screenNames.stats",
         roles: [UserRole.ADMIN],
         Component: Stats,
         showInNav: true,
@@ -154,23 +147,20 @@ const pages: IPage[] = [
     },
     {
         path: "/admin/password/:userId",
-        // TODO: translate
-        name: "Edit User Password",
+        name: "screenNames.editUserPass",
         Component: AdminPasswordEdit,
         showInNav: false,
     },
     {
         path: "/zone/new",
-        // TODO: translate
-        name: "New Zone",
+        name: "screenNames.newZone",
         roles: [UserRole.ADMIN],
         Component: ZoneNew,
         showInNav: false,
     },
     {
         path: "/zone/edit/:zone_name",
-        // TODO: translate
-        name: "Edit Zone",
+        name: "screenNames.editZone",
         roles: [UserRole.ADMIN],
         Component: ZoneEdit,
         showInNav: false,
@@ -183,8 +173,7 @@ const pages: IPage[] = [
     },
     {
         path: "/alerts/new",
-        // TODO: translate
-        name: "New Alert",
+        name: "screenNames.newAlert",
         roles: [UserRole.ADMIN],
         showInNav: true,
         Component: AlertForm,
@@ -201,8 +190,7 @@ const pages: IPage[] = [
     {
         path: "/",
         exact: false,
-        // TODO: translate
-        name: "Not Found",
+        name: "screenNames.notFound",
         Component: NotFound,
         showInNav: false,
     },
@@ -213,7 +201,6 @@ export const pagesForUser = (user: IUser | TAPILoadError | undefined) => {
         if (!page.roles) {
             return true;
         }
-
         if (!user || user === APILoadError) {
             return false;
         }

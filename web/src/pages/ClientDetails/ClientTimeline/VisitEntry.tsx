@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import {
     Dialog,
     DialogTitle,
@@ -61,17 +61,13 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
     };
 
     const Summary = ({ clickable }: { clickable: boolean }) => {
-        // TODO: translate "Unknown"
-        const zone = zones.get(visitSummary.zone) ?? "Unknown";
-
-        const title = t("visitAttr.visitLocation", { body: zone });
-        const words = title.split(" ");
-        const keyWord = words[0];
-        const remainingWords = words.slice(1).join(" ");
+        const zone = zones.get(visitSummary.zone) ?? t("general.unknown");
 
         return (
             <>
-                <b>{keyWord}</b> {remainingWords}{" "}
+                <Trans i18nKey="visitAttr.visitLocation">
+                    -<b>Visit</b> in {{ body: zone }}
+                </Trans>
                 {visitSummary.health_visit && (
                     <RiskTypeChip risk={RiskType.HEALTH} clickable={clickable} />
                 )}{" "}
@@ -171,8 +167,7 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
                 </DialogTitle>
                 <DialogContent>
                     {loadingError ? (
-                        // TODO: translate
-                        <Alert severity="error">Something went wrong. Please try again.</Alert>
+                        <Alert severity="error">{t("alert.generalFailureTryAgain")}</Alert>
                     ) : (
                         <Details />
                     )}

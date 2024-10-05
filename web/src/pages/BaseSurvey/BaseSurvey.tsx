@@ -38,6 +38,7 @@ import {
 } from "@cbr/common/util/survey";
 import { useStyles } from "./baseSurvey.style";
 import { handleSubmit } from "./formHandler";
+import GoBackButton from "components/GoBackButton/GoBackButton";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -574,9 +575,7 @@ const NewSurvey = () => {
                             Error occurred when submitting the survey: {submissionError}
                         </Alert>
                     )}
-                    <Button onClick={history.goBack}>
-                        <ArrowBack /> Go back
-                    </Button>
+                    <GoBackButton />
                     <br />
                     <br />
                     <Field

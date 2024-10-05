@@ -8,7 +8,6 @@ import { IClient } from "@cbr/common/util/clients";
 import { getDateFormatterFromReference, timestampToDateTime } from "@cbr/common/util/dates";
 import { IRisk } from "@cbr/common/util/risks";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
-import { riskTypes } from "util/risks";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";

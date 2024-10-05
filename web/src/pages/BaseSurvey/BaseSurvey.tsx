@@ -23,8 +23,6 @@ import {
     empowermentValidationSchema,
     surveyTypes,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
-import { ArrowBack } from "@material-ui/icons";
-import history from "@cbr/common/util/history";
 import { useParams } from "react-router-dom";
 import { Alert } from "@material-ui/lab";
 import {

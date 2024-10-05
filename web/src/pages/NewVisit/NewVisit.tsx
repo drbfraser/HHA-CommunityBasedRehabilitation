@@ -10,7 +10,6 @@ import {
     Stepper,
     Typography,
 } from "@material-ui/core";
-import { ArrowBack } from "@material-ui/icons";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 import React, { useEffect, useState } from "react";
@@ -29,7 +28,6 @@ import {
 
 import { handleSubmit } from "./formHandler";
 import { useStyles } from "./NewVisit.styles";
-import history from "@cbr/common/util/history";
 import { IRisk } from "@cbr/common/util/risks";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IClient } from "@cbr/common/util/clients";

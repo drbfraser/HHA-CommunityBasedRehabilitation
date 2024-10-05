@@ -35,7 +35,6 @@ export const getOtherDisabilityId = (disabilities: TDisabilityMap): number => {
 };
 
 export const getDisabilities = async () => cache.getCachedValue();
-// export const useDisabilities = cache.useCacheHook();
 
 export const useDisabilities = (t: TFunction) => {
     const translations: { [key: string]: string } = {

@@ -28,6 +28,7 @@ import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import requestUserRows from "./requestUserRows";
 import { getClientListSearchOptions } from "../ClientList/searchOptions";
+import { t } from "i18next";
 
 const RenderText = (params: ValueFormatterParams) => (
     <Typography variant={"body2"}>{params.value}</Typography>
@@ -44,8 +45,7 @@ const RenderNoRowsOverlay = () => {
     return (
         <GridOverlay className={styles.noRows}>
             <Cancel color="primary" className={styles.noRowsIcon} />
-            {/* TODO: Translate */}
-            <Typography color="primary">No Users Found</Typography>
+            <Typography color="primary">{t("admin.noUsersFound")}</Typography>
         </GridOverlay>
     );
 };

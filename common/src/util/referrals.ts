@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import i18n, { TFunction } from "i18next";
 
 export interface IReferral {
     id: number;
@@ -88,6 +88,33 @@ export enum MentalConditions {
     DEMENTIA = "Dementia",
     OTHER = "Other",
 }
+
+enum PhysiotherapyConditions {
+    AMPUTEE = "Amputee",
+    POLIO = "Polio",
+    SPINAL_INJURY = "Spinal Cord Injury",
+    CEREBRAL_PALSY = "Cerebral Palsy",
+    SPINA_BIFIDA = "Spina Bifida",
+    HYDROCEPHALUS = "Hydrocephalus",
+    CONGENITAL_ABNORMALITY = "Congenital Abnormality",
+    PARALYSIS_CASES = "Paralysis Cases",
+    DONT_KNOW = "Don't Know",
+    OTHER = "Other",
+}
+
+export const physiotherapyConditions = (t: TFunction): { [key: string]: string } => {
+    return {
+        [PhysiotherapyConditions.AMPUTEE]: t("disabilities.amputee"),
+        [PhysiotherapyConditions.POLIO]: t("disabilities.polio"),
+        [PhysiotherapyConditions.SPINAL_INJURY]: t("disabilities.spinalCordInjury"),
+        [PhysiotherapyConditions.CEREBRAL_PALSY]: t("disabilities.cerebralPalsy"),
+        [PhysiotherapyConditions.SPINA_BIFIDA]: t("disabilities.spinaBifida"),
+        [PhysiotherapyConditions.HYDROCEPHALUS]: t("disabilities.hydrocephalus"),
+        [PhysiotherapyConditions.PARALYSIS_CASES]: t("disabilities.paralysisCases"),
+        [PhysiotherapyConditions.DONT_KNOW]: t("disabilities.dontKnow"),
+        [PhysiotherapyConditions.OTHER]: t("disabilities.other"),
+    };
+};
 
 // On language change, recompute arrays of labels
 export let prostheticInjuryLocations: { [key: string]: string } = {};

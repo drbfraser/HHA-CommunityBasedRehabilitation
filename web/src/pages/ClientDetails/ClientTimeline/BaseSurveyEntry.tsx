@@ -117,8 +117,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
                 </DialogTitle>
                 <DialogContent>
                     {loadingError ? (
-                        // TODO: translate
-                        <Alert severity="error">Something went wrong. Please try again.</Alert>
+                        <Alert severity="error">{t("alert.generalFailureTryAgain")}</Alert>
                     ) : (
                         <Details />
                     )}

@@ -37,8 +37,7 @@ const ClientRisksModal = (props: IModalProps) => {
             case RiskType.NUTRITION:
                 return t("riskAttr.update_nutrition");
             case RiskType.MENTAL:
-                // TODO: translate
-                return "Update Mental Risk";
+                return t("riskAttr.update_mental");
             default:
                 console.error("Unknown risk type.");
                 return "";

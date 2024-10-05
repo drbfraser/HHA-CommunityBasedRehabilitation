@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import * as Yup from "yup";
@@ -22,7 +22,10 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import {
     IReferral,
+    mentalHealthConditions,
     orthoticInjuryLocations,
+    otherServices,
+    physiotherapyConditions,
     prostheticInjuryLocations,
     wheelchairExperiences,
 } from "@cbr/common/util/referrals";
@@ -43,6 +46,8 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
     const [open, setOpen] = useState(false);
     const styles = useStyles();
 
+    console.log(referral);
+
     const Summary = ({ clickable }: { clickable: boolean }) => {
         const ReasonChip = ({ label }: { label: string }) => (
             <Chip label={label} clickable={clickable} color="primary" variant="outlined" />
@@ -51,12 +56,20 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
         return (
             <>
                 {referral.resolved ? (
-                    <CheckCircleIcon fontSize="small" className={styles.completeIcon} />
+                    <>
+                        <CheckCircleIcon fontSize="small" className={styles.completeIcon} />{" "}
+                        <Trans i18nKey="referralAttr.resolutionStatus_resolved_bold">
+                            -<b>Referral</b> Resolved
+                        </Trans>{" "}
+                    </>
                 ) : (
-                    <ScheduleIcon fontSize="small" className={styles.pendingIcon} />
-                )}{" "}
-                {/* TODO: translate "Refferal" and "pending" */}
-                <b>Referral</b> {referral.resolved ? t("general.resolved") : "Pending"}{" "}
+                    <>
+                        <ScheduleIcon fontSize="small" className={styles.pendingIcon} />{" "}
+                        <Trans i18nKey="referralAttr.resolutionStatus_pending_bold">
+                            -<b>Referral</b> Pending
+                        </Trans>{" "}
+                    </>
+                )}
                 {referral.wheelchair && <ReasonChip label={t("referral.wheelchair")} />}{" "}
                 {referral.physiotherapy && <ReasonChip label={t("referral.physiotherapy")} />}{" "}
                 {referral.prosthetic && <ReasonChip label={t("referral.prosthetic")} />}{" "}
@@ -93,7 +106,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                 }),
             })
                 .then(() => refreshClient())
-                .catch(() => alert("Something went wrong. Please try that again."));
+                .catch(() => alert(t("alert.generalFailureTryAgain")));
         };
 
         return (
@@ -174,8 +187,8 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                     )}
                     {referral.physiotherapy && (
                         <>
-                            {/* TODO: translate referral.condition */}
-                            <b>{t("referralAttr.condition_physiotherapy")}:</b> {referral.condition}
+                            <b>{t("referralAttr.condition_physiotherapy")}:</b>{" "}
+                            {physiotherapyConditions(t)[referral.condition]}
                             <br />
                             <br />
                         </>
@@ -198,12 +211,10 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                     )}
                     {referral.hha_nutrition_and_agriculture_project && (
                         <>
-                            {/* TODO: translate */}
-                            <b>Emergency Food Aid Required: </b>
+                            <b>{t("referral.emergencyFoodAidIsRequired")}: </b>
                             {referral.emergency_food_aid ? translatedYes : translatedNo}
                             <br />
-                            {/* TODO: translate */}
-                            <b>Agriculture Livelihood Program Enrollment Required: </b>
+                            <b>{t("referral.agricultureLivelihoodProgramEnrollmentRequired")}: </b>
                             {referral.agriculture_livelihood_program_enrollment
                                 ? translatedYes
                                 : translatedNo}
@@ -214,16 +225,15 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                     {referral.mental_health && (
                         <>
                             <b>{t("referralAttr.condition_mental")}: </b>
-                            {/* TODO: translate */}
-                            {referral.mental_health_condition}
+                            {mentalHealthConditions[referral.mental_health_condition]}
                             <br />
                             <br />
                         </>
                     )}
                     {Boolean(referral.services_other.trim().length) && (
                         <>
-                            <b>{t("referralAttr.otherServiceRequired")}:</b> {/* TODO: translate */}
-                            {referral.services_other}
+                            <b>{t("referralAttr.otherServiceRequired")}: </b>
+                            {otherServices[referral.services_other]}
                             <br />
                             <br />
                         </>

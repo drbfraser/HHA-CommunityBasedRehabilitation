@@ -13,6 +13,7 @@ import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import { useTimelineStyles } from "../Timeline/timelines.styles";
+import { translateRiskEntrySummary } from "./helper";
 
 interface IProps {
     client?: IClient;
@@ -30,15 +31,19 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
 
     const RiskEntry = ({ risk, isInitial }: IEntryProps) => {
         const [expanded, setExpanded] = useState(false);
-        const riskType = riskTypes[risk.risk_type];
 
-        const Summary = ({ clickable }: { clickable?: boolean }) => (
-            <>
-                {/* TODO: translate */}
-                <b>{riskType.name}</b> risk {isInitial ? "set" : "changed"} to{" "}
-                <RiskLevelChip risk={risk.risk_level} clickable={clickable ?? false} />
-            </>
-        );
+        const Summary = ({ clickable }: { clickable?: boolean }) => {
+            const text = translateRiskEntrySummary(t, risk.risk_type, isInitial).split(" ");
+            const riskName = text[0];
+            const remainingText = text.slice(1).join(" ");
+
+            return (
+                <>
+                    <b>{riskName}</b> {remainingText}{" "}
+                    <RiskLevelChip risk={risk.risk_level} clickable={clickable ?? false} />
+                </>
+            );
+        };
 
         return (
             <>
@@ -53,8 +58,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
                         <Summary />
                     </DialogTitle>
                     <DialogContent>
-                        {/* TODO: translate */}
-                        <b>When:</b> {timestampToDateTime(risk.timestamp)}
+                        <b>{t("general.when")}:</b> {timestampToDateTime(risk.timestamp)}
                     </DialogContent>
                     <DialogContent>
                         <b>{t("risks.requirements")}:</b> {risk.requirement}

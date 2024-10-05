@@ -32,9 +32,7 @@ const AdminEdit = () => {
     if (loadingError) {
         return (
             <Alert severity="error">
-                {/* TODO: translate */}
-                Something went wrong trying to load that user. Please go back and try again.{" "}
-                {loadingError}
+                {t("alert.loadUserFailure")} {loadingError}
             </Alert>
         );
     }
@@ -50,9 +48,7 @@ const AdminEdit = () => {
                         const errMsg =
                             e instanceof APIFetchFailError
                                 ? e.buildFormError(adminUserFieldLabels)
-                                : (e as string) ??
-                                  // TODO: translate
-                                  "Sorry, something went wrong trying to edit that user. Please try again.";
+                                : (e as string) ?? t("alert.editUserFailure");
                         alert(errMsg);
                     });
             }}
@@ -158,8 +154,7 @@ const AdminEdit = () => {
                                     setFieldValue(AdminField.is_active, !values.is_active)
                                 }
                             >
-                                {/* TODO: translate "disable" and "activate" */}
-                                {values.is_active ? "Disable" : "Activate"}
+                                {values.is_active ? t("general.disable") : t("general.activate")}
                             </Button>
                             <Grid item>
                                 <Button

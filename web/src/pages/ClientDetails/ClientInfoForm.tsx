@@ -350,8 +350,7 @@ const ClientInfoForm = (props: IProps) => {
                                             defaultExpanded
                                         >
                                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                                {/* TODO: translate */}
-                                                Caregiver Details:
+                                                {t("clientFields.caregiverDetails")}:
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <Grid container direction="row" spacing={2}>

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
-import Button from "@material-ui/core/Button";
+import { useTranslation } from "react-i18next";
+import { useRouteMatch } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
-import { ArrowBack } from "@material-ui/icons";
 import Alert from "@material-ui/lab/Alert";
 import Skeleton from "@material-ui/lab/Skeleton";
 
@@ -10,13 +9,14 @@ import { IClient } from "@cbr/common/util/clients";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import RiskHistoryCharts from "./RiskHistoryCharts";
 import RiskHistoryTimeline from "./RiskHistoryTimeline";
+import GoBackButton from "components/GoBackButton/GoBackButton";
 
 interface IRouteParams {
     clientId: string;
 }
 
 const ClientRiskHistory = () => {
-    const history = useHistory();
+    const { t } = useTranslation();
     const { clientId } = useRouteMatch<IRouteParams>().params;
     const [loadingError, setLoadingError] = useState(false);
     const [client, setClient] = useState<IClient>();
@@ -36,17 +36,12 @@ const ClientRiskHistory = () => {
 
     return (
         <>
-            <Button onClick={history.goBack}>
-                <ArrowBack />
-                {/* TODO: translate */}
-                Go back
-            </Button>
+            <GoBackButton />
             <br />
             <br />
 
             {loadingError ? (
-                // TODO: translate
-                <Alert severity="error">Something went wrong. Please go back and try again.</Alert>
+                <Alert severity="error">{t("alert.generalFailureTryAgain")}</Alert>
             ) : (
                 <>
                     <Typography variant="h3">

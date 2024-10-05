@@ -99,8 +99,6 @@ export const getTranslatedImprovementName = (t: TFunction, name: string): string
         [Improvement.WHEELCHAIR_REPAIRED]: t("newVisit.wheelchairRepair"),
     };
 
-    console.log(name);
-
     if (!improvementNames.hasOwnProperty(name)) {
         console.log(`string either has no translation or is already translated: ${name}`);
         return name;

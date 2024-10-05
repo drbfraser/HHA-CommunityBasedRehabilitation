@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation, Trans } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { Cancel, CheckCircle, FiberManualRecord } from "@material-ui/icons";
@@ -15,7 +16,6 @@ import {
     RowsProp,
     RowData,
 } from "@material-ui/data-grid";
-import { useTranslation } from "react-i18next";
 
 import { clientPrioritySort, IClientSummary } from "@cbr/common/util/clients";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
@@ -179,16 +179,14 @@ const Dashboard = () => {
     const RenderNoPriorityClientsOverlay = () => (
         <GridOverlay className={dataGridStyle.noRows}>
             <Cancel color="primary" className={dataGridStyle.noRowsIcon} />
-            {/* TODO: translate */}
-            <Typography color="primary">No Priority Clients Found</Typography>
+            <Typography color="primary">{t("dashboard.noPriorityClients")}</Typography>
         </GridOverlay>
     );
 
     const RenderNoOutstandingReferralsOverlay = () => (
         <GridOverlay className={dataGridStyle.noRows}>
             <CheckCircle color="primary" className={dataGridStyle.noRowsIcon} />
-            {/* TODO: translate */}
-            <Typography color="primary"> No Outstanding Referrals Found</Typography>
+            <Typography color="primary">{t("dashboard.noOutstandingReferrals")}</Typography>
         </GridOverlay>
     );
 
@@ -237,8 +235,7 @@ const Dashboard = () => {
         },
         {
             field: "last_visit_date",
-            // TODO: translate
-            headerName: "Last Visit",
+            headerName: t("general.lastVisit"),
             renderCell: RenderDate,
             flex: 1,
         },
@@ -269,8 +266,9 @@ const Dashboard = () => {
         <>
             <Alert severity="info">
                 <Typography variant="body1">
-                    {/* TODO: translate */}
-                    You have <b>{unreadAlertsCount}</b> new messages in your inbox.
+                    <Trans i18nKey="dashboard.newInboxMessages" count={unreadAlertsCount}>
+                        -You have <b>{{ unreadAlertsCount }}</b> new messages in your inbox
+                    </Trans>
                 </Typography>
             </Alert>
             {(clientError || referralError) && (
@@ -279,14 +277,12 @@ const Dashboard = () => {
                     <Alert severity="error">
                         {clientError && (
                             <Typography variant="body1">
-                                {/* TODO: translate */}
-                                Error loading priority clients: {clientError}
+                                {t("alert.loadingPriorityClientsError")}: {clientError}
                             </Typography>
                         )}
                         {referralError && (
                             <Typography variant="body1">
-                                {/* TODO: translate */}
-                                Error loading referrals: {referralError}
+                                {t("alert.loadingReferralsError")}: {referralError}
                             </Typography>
                         )}
                     </Alert>

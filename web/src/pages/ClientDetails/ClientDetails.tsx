@@ -25,7 +25,7 @@ const ClientDetails = () => {
     const { t } = useTranslation();
 
     const getClient = useCallback(() => {
-        apiFetch(Endpoint.CLIENT, `${clientId}`)
+        apiFetch(Endpoint.CLIENT, clientId)
             .then((resp) => resp.json())
             .then((client: IClient) => {
                 client.birth_date = timestampToFormDate(client.birth_date as number, true);
@@ -40,12 +40,7 @@ const ClientDetails = () => {
     }, [getClient]);
 
     if (loadingError) {
-        return (
-            <Alert severity="error">
-                {/* TODO: translate */}
-                Something went wrong loading that client. Please try again.
-            </Alert>
-        );
+        return <Alert severity="error">{t("alert.loadClientFailure")}</Alert>;
     }
 
     return (
@@ -65,8 +60,7 @@ const ClientDetails = () => {
             <Grid container justify="space-between" direction="row">
                 <Grid item xs={6}>
                     <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
-                        {/* TODO: translate */}
-                        <b>Risk Levels</b>
+                        <b>{t("clientAttr.riskLevels")}</b>
                     </Typography>
                     <br />
                 </Grid>
@@ -78,8 +72,7 @@ const ClientDetails = () => {
                             history.push(`/client/${clientId}/risks`);
                         }}
                     >
-                        {/* TODO: translate */}
-                        See Risk History
+                        {t("clientAttr.seeRiskHistory")}
                         <ArrowForwardIcon fontSize="small" />
                     </Button>
                 </Grid>

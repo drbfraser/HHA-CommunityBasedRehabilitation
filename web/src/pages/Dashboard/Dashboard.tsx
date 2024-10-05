@@ -21,7 +21,7 @@ import { clientPrioritySort, IClientSummary } from "@cbr/common/util/clients";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { timestampToDate } from "@cbr/common/util/dates";
-import { IOutstandingReferral } from "@cbr/common/util/referrals";
+import { IOutstandingReferral, otherServices } from "@cbr/common/util/referrals";
 import { IAlert } from "@cbr/common/util/alerts";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
@@ -106,7 +106,7 @@ const Dashboard = () => {
         };
 
         const concatenateReferralType = (row: IOutstandingReferral) => {
-            let referralTypes = [];
+            const referralTypes = [];
             if (row.wheelchair) referralTypes.push(t("referral.wheelchair"));
             if (row.physiotherapy) referralTypes.push(t("referral.physiotherapy"));
             if (row.hha_nutrition_and_agriculture_project)
@@ -114,7 +114,7 @@ const Dashboard = () => {
             if (row.orthotic) referralTypes.push(t("referral.orthotic"));
             if (row.prosthetic) referralTypes.push(t("referral.prosthetic"));
             if (row.mental_health) referralTypes.push(t("referral.mentalHealth"));
-            if (row.services_other) referralTypes.push(row.services_other); // TODO: how to translate these?
+            if (row.services_other) referralTypes.push(otherServices[row.services_other]);
 
             return referralTypes.join(", ");
         };

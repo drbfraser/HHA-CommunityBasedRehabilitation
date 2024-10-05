@@ -46,8 +46,6 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
     const [open, setOpen] = useState(false);
     const styles = useStyles();
 
-    console.log(referral);
-
     const Summary = ({ clickable }: { clickable: boolean }) => {
         const ReasonChip = ({ label }: { label: string }) => (
             <Chip label={label} clickable={clickable} color="primary" variant="outlined" />

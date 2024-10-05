@@ -10,7 +10,7 @@ import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
-import { IPage } from "util/pages";
+import { IPage, PageName } from "util/pages";
 import { useStyles } from "./SideNav.styles";
 
 interface IProps {
@@ -81,7 +81,7 @@ const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
         );
     }
 
-    return page.name === "screenNames.inbox" ? (
+    return page.name === PageName.INBOX ? (
         <Badge
             badgeContent={unreadAlertsCount}
             max={9}

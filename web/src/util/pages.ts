@@ -33,10 +33,35 @@ import { APILoadError, TAPILoadError } from "@cbr/common/util/endpoints";
 import UserChangePassword from "pages/User/UserPasswordEdit";
 import NewSurvey from "pages/BaseSurvey/BaseSurvey";
 
+export enum PageName {
+    DASHBOARD = "general.dashboard",
+    NEW_CLIENT = "clientAttr.newClient",
+    CLIENTS = "screenNames.clientList",
+    CLIENT_DETAILS = "clientAttr.clientDetails",
+    CLIENT_RISK_HISTORY = "screenNames.clientRiskHistory",
+    NEW_VISIT = "screenNames.addVisit",
+    NEW_SURVEY = "screenNames.addSurvey",
+    NEW_REFERRAL = "screenNames.addReferral",
+    PROFILE = "screenNames.profile",
+    CHANGE_PASSWORD = "login.changePassword",
+    STATS = "screenNames.stats",
+    ADMIN = "users.admin",
+    NEW_USER = "screenNames.newUser",
+    EDIT_USER = "screenNames.viewUser",
+    VIEW_USER = "screenNames.editUser",
+    EDIT_USER_PASS = "screenNames.editUserPass",
+    NEW_ZONE = "screenNames.newZone",
+    EDIT_ZONE = "screenNames.editZone",
+    LOGOUT = "login.logout",
+    NEW_ALERT = "screenNames.newAlert",
+    INBOX = "screenNames.inbox",
+    NOT_FOUND = "screenNames.notFound",
+}
+
 export interface IPage {
     path: string;
     exact?: boolean;
-    name: string;
+    name: PageName;
     roles?: UserRole[];
     Component: React.ComponentType<any>;
     showInNav: boolean;
@@ -46,71 +71,71 @@ export interface IPage {
 const pages: IPage[] = [
     {
         path: "/dashboard",
-        name: "general.dashboard",
+        name: PageName.DASHBOARD,
         Component: Dashboard,
         showInNav: true,
         Icon: HomeIcon,
     },
     {
         path: "/clients/new",
-        name: "clientAttr.newClient",
+        name: PageName.NEW_CLIENT,
         showInNav: true,
         Component: ClientForm,
         Icon: AddCircleIcon,
     },
     {
         path: "/clients",
-        name: "screenNames.clientList",
+        name: PageName.CLIENTS,
         Component: ClientList,
         showInNav: true,
         Icon: FormatListBulletedIcon,
     },
     {
         path: "/client/:clientId",
-        name: "clientAttr.clientDetails",
+        name: PageName.CLIENT_DETAILS,
         Component: ClientDetails,
         showInNav: false,
     },
     {
         path: "/client/:clientId/risks",
-        name: "screenNames.clientRiskHistory",
+        name: PageName.CLIENT_RISK_HISTORY,
         Component: ClientRiskHistory,
         showInNav: false,
     },
     {
         path: "/client/:clientId/visits/new",
-        name: "screenNames.addVisit",
+        name: PageName.NEW_VISIT,
         Component: NewVisit,
         showInNav: false,
     },
     {
         path: "/client/:clientId/surveys/new",
-        name: "screenNames.addSurvey",
+        name: PageName.NEW_SURVEY,
         Component: NewSurvey,
         showInNav: false,
     },
     {
         path: "/client/:clientId/referrals/new",
-        name: "screenNames.addReferral",
+        name: PageName.NEW_REFERRAL,
         Component: NewReferral,
         showInNav: false,
     },
     {
         path: "/user",
-        name: "screenNames.profile",
+        name: PageName.PROFILE,
         Component: UserView,
         showInNav: true,
         Icon: PersonIcon,
     },
     {
         path: "/user/password",
-        name: "login.changePassword",
+        name: PageName.CHANGE_PASSWORD,
         Component: UserChangePassword,
         showInNav: false,
     },
     {
         path: "/stats",
-        name: "screenNames.stats",
+        name: PageName.STATS,
         roles: [UserRole.ADMIN],
         Component: Stats,
         showInNav: true,
@@ -118,7 +143,7 @@ const pages: IPage[] = [
     },
     {
         path: "/admin",
-        name: "users.admin",
+        name: PageName.ADMIN,
         roles: [UserRole.ADMIN],
         Component: AdminPage,
         showInNav: true,
@@ -126,54 +151,54 @@ const pages: IPage[] = [
     },
     {
         path: "/admin/new",
-        name: "screenNames.newUser",
+        name: PageName.NEW_USER,
         roles: [UserRole.ADMIN],
         Component: AdminNew,
         showInNav: false,
     },
     {
         path: "/admin/view/:userId",
-        name: "screenNames.viewUser",
+        name: PageName.VIEW_USER,
         roles: [UserRole.ADMIN],
         Component: AdminView,
         showInNav: false,
     },
     {
         path: "/admin/edit/:userId",
-        name: "screenNames.editUser",
+        name: PageName.EDIT_USER,
         roles: [UserRole.ADMIN],
         Component: AdminEdit,
         showInNav: false,
     },
     {
         path: "/admin/password/:userId",
-        name: "screenNames.editUserPass",
+        name: PageName.EDIT_USER_PASS,
         Component: AdminPasswordEdit,
         showInNav: false,
     },
     {
         path: "/zone/new",
-        name: "screenNames.newZone",
+        name: PageName.NEW_ZONE,
         roles: [UserRole.ADMIN],
         Component: ZoneNew,
         showInNav: false,
     },
     {
         path: "/zone/edit/:zone_name",
-        name: "screenNames.editZone",
+        name: PageName.EDIT_ZONE,
         roles: [UserRole.ADMIN],
         Component: ZoneEdit,
         showInNav: false,
     },
     {
         path: "/logout",
-        name: "login.logout",
+        name: PageName.LOGOUT,
         Component: Logout,
         showInNav: false,
     },
     {
         path: "/alerts/new",
-        name: "screenNames.newAlert",
+        name: PageName.NEW_ALERT,
         roles: [UserRole.ADMIN],
         showInNav: true,
         Component: AlertForm,
@@ -181,7 +206,7 @@ const pages: IPage[] = [
     },
     {
         path: "/alerts/inbox",
-        name: "screenNames.inbox",
+        name: PageName.INBOX,
         showInNav: true,
         Component: AlertInbox,
         Icon: InboxIcon,
@@ -190,7 +215,7 @@ const pages: IPage[] = [
     {
         path: "/",
         exact: false,
-        name: "screenNames.notFound",
+        name: PageName.NOT_FOUND,
         Component: NotFound,
         showInNav: false,
     },

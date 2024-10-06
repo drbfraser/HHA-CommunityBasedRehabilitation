@@ -11,6 +11,7 @@
         "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz"
     },
     "dependencies": {
+        "@babel/runtime": "^7.25.7",
         "@cbr/common": "file:cbr-common-1.0.0.tgz",
         "@expo/vector-icons": "^13.0.0",
         "@formatjs/intl-datetimeformat": "^4.1.6",

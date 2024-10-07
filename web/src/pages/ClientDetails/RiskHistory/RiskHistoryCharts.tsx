@@ -11,8 +11,8 @@ import {
 } from "recharts";
 import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { riskTypes } from "util/riskIcon";
-import { Grid, Typography } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { Grid, Typography } from "@mui/material";
+import Skeleton from '@mui/material/Skeleton';
 import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import { IClient } from "@cbr/common/util/clients";
 
@@ -122,7 +122,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
     );
 
     return (
-        <Grid container>
+        (<Grid container>
             {[
                 RiskType.HEALTH,
                 RiskType.EDUCATION,
@@ -133,24 +133,23 @@ const RiskHistoryCharts = ({ client }: IProps) => {
                 // TODO: REMOVE when working on visit
                 //(riskType!==RiskType.NUTRITION) ?
 
-                <Grid key={riskType} item md={4} xs={12}>
+                (<Grid key={riskType} item md={4} xs={12}>
                     <Typography variant="h5" className={styles.textCenter}>
                         {riskTypes[riskType].name} Risk
                     </Typography>
-
                     {chartData && chartData[riskType].length ? (
                         <RiskChart riskType={riskType} data={chartData[riskType]} />
                     ) : (
                         <Skeleton
-                            variant="rect"
+                            variant="rectangular"
                             height={chartHeight}
                             className={styles.chartSkeleton}
                         />
                     )}
-                </Grid>
+                </Grid>)
                 //:<></>
             ))}
-        </Grid>
+        </Grid>)
     );
 };
 

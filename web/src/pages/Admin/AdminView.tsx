@@ -1,11 +1,11 @@
 import React from "react";
-import EditIcon from "@material-ui/icons/Edit";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
+import EditIcon from "@mui/icons-material/Edit";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { useStyles } from "./styles";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Alert, Skeleton } from "@material-ui/lab";
+import { Alert, Skeleton } from '@mui/material';
 import { IUser, userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { IRouteParams } from "@cbr/common/forms/Admin/adminFields";
@@ -42,7 +42,7 @@ const AdminView = () => {
     }, [userId]);
 
     return (
-        <div className={styles.container}>
+        (<div className={styles.container}>
             {loadingError ? (
                 <Alert severity="error">
                     Something went wrong trying to load that user. Please go back and try again.
@@ -76,9 +76,9 @@ const AdminView = () => {
                     <p> {user.is_active ? "Active" : "Disabled"} </p>
                 </>
             ) : (
-                <Skeleton variant="rect" height={500} />
+                <Skeleton variant="rectangular" height={500} />
             )}
-        </div>
+        </div>)
     );
 };
 

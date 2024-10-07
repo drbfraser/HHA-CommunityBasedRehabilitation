@@ -1,5 +1,5 @@
 import React from "react";
-import { Chip, ChipProps } from "@material-ui/core";
+import { Chip, ChipProps } from "@mui/material";
 import { RiskLevel, riskLevels } from "@cbr/common/util/risks";
 import { useStyles } from "./RiskLevelChip.styles";
 

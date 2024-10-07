@@ -11,9 +11,9 @@ import {
     AccordionSummary,
     AccordionDetails,
     Typography,
-} from "@material-ui/core";
-import { Skeleton, Alert } from "@material-ui/lab";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+} from "@mui/material";
+import { Skeleton, Alert } from '@mui/material';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import { IVisit, IVisitSummary, outcomeGoalMets } from "@cbr/common/util/visits";
 import { useStyles } from "./Entry.styles";
@@ -22,7 +22,7 @@ import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { RiskType } from "@cbr/common/util/risks";
 import { riskTypes } from "util/riskIcon";
 import TimelineEntry from "../Timeline/TimelineEntry";
-import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
+import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import DataCard from "components/DataCard/DataCard";
 
@@ -80,7 +80,7 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
 
     const Details = () => {
         if (!visit) {
-            return <Skeleton variant="rect" height={200} />;
+            return <Skeleton variant="rectangular" height={200} />;
         }
 
         const DetailAccordion = ({ type }: { type: RiskType }) => {

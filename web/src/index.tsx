@@ -1,4 +1,4 @@
-import { CssBaseline, ThemeProvider } from "@material-ui/core";
+import { CssBaseline, ThemeProvider, Theme, StyledEngineProvider } from "@mui/material";
 import React from "react";
 import ReactDOM from "react-dom";
 import { themeMui } from "theme.styles";
@@ -7,6 +7,13 @@ import { initializeCommon, KeyValStorageProvider } from "@cbr/common/init";
 import { loginState } from "./util/hooks/loginState";
 import { invalidateAllCachedAPI } from "@cbr/common/util/hooks/cachedAPI";
 import { API_BASE_URL, API_URL } from "./util/api";
+
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 const localStorageProvider: KeyValStorageProvider = {
     getItem: async (key: string) => {
@@ -35,10 +42,12 @@ initializeCommon({
 
 ReactDOM.render(
     <React.StrictMode>
-        <ThemeProvider theme={themeMui}>
-            <CssBaseline />
-            <App />
-        </ThemeProvider>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={themeMui}>
+                <CssBaseline />
+                <App />
+            </ThemeProvider>
+        </StyledEngineProvider>
     </React.StrictMode>,
     document.getElementById("root")
 );

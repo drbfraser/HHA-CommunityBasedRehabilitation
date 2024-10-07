@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, SwitchProps } from "@material-ui/core";
+import { Switch, SwitchProps } from "@mui/material";
 import { useStyles } from "./IOSSwitch.styles";
 
 const IOSSwitch = (props: SwitchProps) => {

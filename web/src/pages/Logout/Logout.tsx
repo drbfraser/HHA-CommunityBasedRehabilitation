@@ -1,4 +1,4 @@
-import { LinearProgress } from "@material-ui/core";
+import { LinearProgress } from "@mui/material";
 import React, { useEffect } from "react";
 import { doLogout } from "@cbr/common/util/auth";
 

@@ -1,5 +1,5 @@
-import { Button, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog";
+import { Button, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
 import React, { useMemo } from "react";
 import { IStats } from "@cbr/common/util/stats";
 import { CSVLink } from "react-csv";

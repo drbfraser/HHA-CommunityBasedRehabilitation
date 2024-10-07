@@ -1,11 +1,11 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
-import { FiberManualRecord } from "@material-ui/icons";
-import { makeStyles } from "@material-ui/core/styles";
+import { FiberManualRecord } from "@mui/icons-material";
+import makeStyles from '@mui/styles/makeStyles';
 import { useState } from "react";
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IAlert, PriorityLevel, priorityLevels } from "@cbr/common/util/alerts";

@@ -1,5 +1,5 @@
 import React from "react";
-import Chip, { ChipProps } from "@material-ui/core/Chip";
+import Chip, { ChipProps } from "@mui/material/Chip";
 import { RiskType } from "@cbr/common/util/risks";
 import { riskTypes } from "util/riskIcon";
 

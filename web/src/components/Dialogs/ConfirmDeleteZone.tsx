@@ -5,7 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { InputLabel, MenuItem, Select } from "@material-ui/core";
+import { InputLabel, MenuItem, Select } from "@mui/material";
 import { FormControl } from "@mui/material";
 import { Endpoint, apiFetch } from "@cbr/common/util/endpoints";
 interface IResponseRow {

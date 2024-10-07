@@ -1,11 +1,11 @@
 import { useStyles } from "./styles";
 import { TextField } from "formik-material-ui";
 import { Field, Form, Formik } from "formik";
-import { Alert, Skeleton } from "@material-ui/lab";
+import { Alert, Skeleton } from '@mui/material';
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 
 import {
     changePassValidationSchema,
@@ -113,7 +113,7 @@ const UserPasswordEdit = () => {
 
                             <br />
 
-                            <Grid container direction="row" spacing={2} justify="flex-end">
+                            <Grid container direction="row" spacing={2} justifyContent="flex-end">
                                 <Grid item>
                                     <Button
                                         color="primary"
@@ -140,7 +140,7 @@ const UserPasswordEdit = () => {
             </Formik>
         </>
     ) : (
-        <Skeleton variant="rect" height={500} />
+        <Skeleton variant="rectangular" height={500} />
     );
 };
 

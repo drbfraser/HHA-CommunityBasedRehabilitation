@@ -1,5 +1,5 @@
 import React from "react";
-import { Chip, ChipProps } from "@material-ui/core";
+import { Chip, ChipProps } from "@mui/material";
 import { useStyles } from "./PriorityLevelChip.styles";
 import { PriorityLevel, priorityLevels } from "@cbr/common/util/alerts";
 

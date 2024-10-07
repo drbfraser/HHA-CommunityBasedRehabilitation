@@ -18,12 +18,12 @@ import {
     wheelchairExperiences,
 } from "@cbr/common/util/referrals";
 import TimelineEntry from "../Timeline/TimelineEntry";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import ScheduleIcon from "@material-ui/icons/Schedule";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ScheduleIcon from "@mui/icons-material/Schedule";
 import { useStyles } from "./Entry.styles";
 import { timestampToDateTime } from "@cbr/common/util/dates";
-import NearMeIcon from "@material-ui/icons/NearMe";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import NearMeIcon from "@mui/icons-material/NearMe";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import * as Yup from "yup";

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Timeline } from "@material-ui/lab";
+import { Timeline } from "@mui/lab";
 import { IClient } from "@cbr/common/util/clients";
 import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import SkeletonEntry from "../Timeline/SkeletonEntry";

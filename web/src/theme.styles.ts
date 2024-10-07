@@ -1,9 +1,9 @@
 import { themeColors } from "@cbr/common/util/colors";
-import { createMuiTheme } from "@material-ui/core";
+import { createTheme, adaptV4Theme } from "@mui/material";
 
 export const mediaMobile = "@media (max-width: 800px)";
 
-export const themeMui = createMuiTheme({
+export const themeMui = createTheme(adaptV4Theme({
     overrides: {
         MuiCssBaseline: {
             "@global": {
@@ -45,4 +45,4 @@ export const themeMui = createMuiTheme({
             fontSize: "2rem",
         },
     },
-});
+}));

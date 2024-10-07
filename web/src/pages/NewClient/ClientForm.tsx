@@ -2,14 +2,14 @@ import React from "react";
 import { Field, Form, Formik } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 import { useStyles } from "./ClientForm.styles";
-import Button from "@material-ui/core/Button";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import FormControl from "@material-ui/core/FormControl";
-import Grid from "@material-ui/core/Grid";
-import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@mui/material/Button";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
+import MenuItem from "@mui/material/MenuItem";
 import {
     clientFieldLabels,
     ClientField,
@@ -29,13 +29,13 @@ const ClientForm = () => {
     const disabilities = useDisabilities();
 
     return (
-        <Formik
+        (<Formik
             initialValues={clientInitialValues}
             validationSchema={newClientValidationSchema}
             onSubmit={handleNewWebClientSubmit}
         >
             {({ values, isSubmitting, resetForm, touched, setFieldValue }) => (
-                <Grid container direction="row" justify="flex-start" spacing={2}>
+                <Grid container direction="row" justifyContent="flex-start" spacing={2}>
                     <Grid item md={12} xs={12}>
                         <Field
                             component={CheckboxWithLabel}
@@ -594,7 +594,7 @@ const ClientForm = () => {
                                     </Grid>
                                     <br />
                                     <br />
-                                    <Grid justify="flex-end" container spacing={2}>
+                                    <Grid justifyContent="flex-end" container spacing={2}>
                                         <Grid item>
                                             <Button
                                                 color="primary"
@@ -624,7 +624,7 @@ const ClientForm = () => {
                     )}
                 </Grid>
             )}
-        </Formik>
+        </Formik>)
     );
 };
 

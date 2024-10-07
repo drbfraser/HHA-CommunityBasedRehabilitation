@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, Grid, Typography } from "@material-ui/core";
+import { Card, CardContent, Grid, Typography } from "@mui/material";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useHistory } from "react-router-dom";
-import { Cancel, CheckCircle, FiberManualRecord } from "@material-ui/icons";
+import { Cancel, CheckCircle, FiberManualRecord } from "@mui/icons-material";
 import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { IRiskType, riskTypes } from "util/riskIcon";
 import { clientPrioritySort, IClientSummary } from "@cbr/common/util/clients";
@@ -10,7 +10,7 @@ import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { timestampToDate } from "@cbr/common/util/dates";
 import { IOutstandingReferral } from "@cbr/common/util/referrals";
-import { Alert } from "@material-ui/lab";
+import { Alert } from '@mui/material';
 import {
     DataGrid,
     ColParams,

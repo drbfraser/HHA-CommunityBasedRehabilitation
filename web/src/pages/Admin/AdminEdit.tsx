@@ -2,13 +2,13 @@ import React from "react";
 import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import { useRouteMatch } from "react-router-dom";
-import { FormControl, MenuItem } from "@material-ui/core";
+import { FormControl, MenuItem } from "@mui/material";
 import { useState, useEffect } from "react";
 import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
-import { Alert, Skeleton } from "@material-ui/lab";
+import { Alert, Skeleton } from '@mui/material';
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import { IUser, userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -151,7 +151,7 @@ const AdminEdit = () => {
                             container
                             direction="row"
                             spacing={2}
-                            justify="space-between"
+                            justifyContent="space-between"
                             alignItems="center"
                         >
                             <Button
@@ -187,7 +187,7 @@ const AdminEdit = () => {
             )}
         </Formik>
     ) : (
-        <Skeleton variant="rect" height={500} />
+        <Skeleton variant="rectangular" height={500} />
     );
 };
 

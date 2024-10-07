@@ -1,5 +1,5 @@
-import { Typography } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { Typography } from "@mui/material";
+import Skeleton from '@mui/material/Skeleton';
 import React from "react";
 import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar, Legend } from "recharts";
 import { IStats, IStatsReferral } from "@cbr/common/util/stats";
@@ -42,7 +42,7 @@ interface IProps {
 
 const ReferralStats = ({ stats }: IProps) => {
     if (!stats) {
-        return <Skeleton variant="rect" height={400} />;
+        return <Skeleton variant="rectangular" height={400} />;
     }
     const data = dataLabels.map((d) => ({
         label: d.label,

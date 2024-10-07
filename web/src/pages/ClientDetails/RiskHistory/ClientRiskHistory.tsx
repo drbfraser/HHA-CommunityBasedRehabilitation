@@ -1,8 +1,8 @@
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import { ArrowBack } from "@material-ui/icons";
-import Alert from "@material-ui/lab/Alert";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { ArrowBack } from "@mui/icons-material";
+import Alert from '@mui/material/Alert';
+import Skeleton from '@mui/material/Skeleton';
 import React, { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { IClient } from "@cbr/common/util/clients";

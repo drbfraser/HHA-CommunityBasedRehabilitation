@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 import i18n from "i18next";
 
 import { initI18n } from "@cbr/common/i18n.config";

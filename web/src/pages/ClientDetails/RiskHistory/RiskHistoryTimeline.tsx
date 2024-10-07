@@ -1,5 +1,5 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
-import { Timeline } from "@material-ui/lab";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import { Timeline } from "@mui/lab";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import React, { useState } from "react";
 import { IClient } from "@cbr/common/util/clients";
@@ -10,7 +10,7 @@ import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import { useTimelineStyles } from "../Timeline/timelines.styles";
-import UpdateIcon from "@material-ui/icons/Update";
+import UpdateIcon from "@mui/icons-material/Update";
 
 interface IProps {
     client?: IClient;

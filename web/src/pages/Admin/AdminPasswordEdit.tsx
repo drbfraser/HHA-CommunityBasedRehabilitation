@@ -2,12 +2,12 @@ import React from "react";
 import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import { useRouteMatch } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { handleUpdatePassword } from "@cbr/common/forms/Admin/adminFormsHandler";
-import { Alert, Skeleton } from "@material-ui/lab";
+import { Alert, Skeleton } from '@mui/material';
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import { IUser } from "@cbr/common/util/users";
 import {
@@ -101,7 +101,7 @@ const AdminPasswordEdit = () => {
 
                         <br />
 
-                        <Grid container direction="row" spacing={2} justify="flex-end">
+                        <Grid container direction="row" spacing={2} justifyContent="flex-end">
                             <Grid item>
                                 <Button
                                     color="primary"
@@ -123,7 +123,7 @@ const AdminPasswordEdit = () => {
             )}
         </Formik>
     ) : (
-        <Skeleton variant="rect" height={500} />
+        <Skeleton variant="rectangular" height={500} />
     );
 };
 

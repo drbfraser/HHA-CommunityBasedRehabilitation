@@ -1,6 +1,6 @@
 import { useStyles } from "./AdminList.styles";
 import SearchBar from "components/SearchBar/SearchBar";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import {
     DataGrid,
     DensityTypes,
@@ -16,7 +16,7 @@ import {
     MenuItem,
     Popover,
     Switch,
-} from "@material-ui/core";
+} from "@mui/material";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
@@ -25,7 +25,7 @@ import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import requestUserRows from "./requestUserRows";
 import React from "react";
-import { Cancel, MoreVert } from "@material-ui/icons";
+import { Cancel, MoreVert } from "@mui/icons-material";
 import { SearchOption } from "../ClientList/searchOptions";
 import { useZones } from "@cbr/common/util/hooks/zones";
 
@@ -157,9 +157,9 @@ const AdminList = () => {
     }, [searchValue, searchOption, serverRows]);
 
     return (
-        <div className={styles.container}>
+        (<div className={styles.container}>
             <div className={styles.topContainer}>
-                <IconButton onClick={onAdminAddClick} className={styles.icon}>
+                <IconButton onClick={onAdminAddClick} className={styles.icon} size="large">
                     <PersonAddIcon />
                 </IconButton>
                 <div className={searchOptionsStyle.searchOptions}>
@@ -200,7 +200,10 @@ const AdminList = () => {
                         onChange={(e) => setSearchValue(e.target.value)}
                     />
                 )}
-                <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
+                <IconButton
+                    className={hideColumnsStyle.optionsButton}
+                    onClick={onOptionsClick}
+                    size="large">
                     <MoreVert />
                 </IconButton>
                 <Popover
@@ -254,7 +257,7 @@ const AdminList = () => {
                     ]}
                 />
             </div>
-        </div>
+        </div>)
     );
 };
 

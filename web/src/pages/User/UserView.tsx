@@ -1,7 +1,7 @@
 import { useStyles } from "./styles";
-import { Button } from "@material-ui/core";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
-import { Alert, Skeleton } from "@material-ui/lab";
+import { Button } from "@mui/material";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import { Alert, Skeleton } from '@mui/material';
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -19,7 +19,7 @@ const UserView = () => {
     };
 
     return (
-        <div className={styles.container}>
+        (<div className={styles.container}>
             {user === APILoadError ? (
                 <Alert severity="error">Something went wrong. Please go back and try again.</Alert>
             ) : user ? (
@@ -55,9 +55,9 @@ const UserView = () => {
                     </div>
                 </>
             ) : (
-                <Skeleton variant="rect" height={400} />
+                <Skeleton variant="rectangular" height={400} />
             )}
-        </div>
+        </div>)
     );
 };
 

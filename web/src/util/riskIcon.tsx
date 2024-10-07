@@ -6,7 +6,7 @@ import {
     SvgIconComponent,
     Restaurant,
     Favorite,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 
 export interface IRiskType {
     name: string;

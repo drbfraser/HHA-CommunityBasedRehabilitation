@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import { mediaCompressedDataGrid } from "styles/DataGrid.styles";
 import { mediaMobile } from "theme.styles";
 

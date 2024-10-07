@@ -8,9 +8,9 @@ import {
     DialogActions,
     DialogContent,
     LinearProgress,
-} from "@material-ui/core";
+} from "@mui/material";
 import { useStyles } from "./PhotoViewUpload.styles";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";

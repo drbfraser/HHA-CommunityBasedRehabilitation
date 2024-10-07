@@ -9,8 +9,8 @@ import {
     StepLabel,
     Stepper,
     Typography,
-} from "@material-ui/core";
-import { ArrowBack } from "@material-ui/icons";
+} from "@mui/material";
+import { ArrowBack } from "@mui/icons-material";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 import React, { useEffect, useState } from "react";
@@ -33,7 +33,7 @@ import history from "@cbr/common/util/history";
 import { IRisk } from "@cbr/common/util/risks";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IClient } from "@cbr/common/util/clients";
-import { Alert } from "@material-ui/lab";
+import { Alert } from '@mui/material';
 import { TZoneMap, useZones } from "@cbr/common/util/hooks/zones";
 
 const visitTypes: VisitFormField[] = [

@@ -1,5 +1,5 @@
-import { Typography } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
+import { Typography } from "@mui/material";
+import { Skeleton } from '@mui/material';
 import React from "react";
 import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar } from "recharts";
 import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
@@ -15,7 +15,7 @@ const DisabilityStats = ({ stats }: IProps) => {
     const disabilityToName = (id: number) => disabilities.get(id) ?? "Loading";
 
     if (!stats) {
-        return <Skeleton variant="rect" height={500} />;
+        return <Skeleton variant="rectangular" height={500} />;
     }
 
     return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { InputBase, InputBaseProps, useTheme } from "@material-ui/core";
+import { InputBase, InputBaseProps, useTheme } from "@mui/material";
 import { SearchIcon } from "@material-ui/data-grid";
 import { useStyles } from "./SearchBar.styles";
 

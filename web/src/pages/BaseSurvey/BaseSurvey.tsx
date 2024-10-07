@@ -7,7 +7,7 @@ import {
     StepContent,
     StepLabel,
     Stepper,
-} from "@material-ui/core";
+} from "@mui/material";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
 import React, { useState } from "react";
@@ -23,10 +23,10 @@ import {
     empowermentValidationSchema,
     surveyTypes,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
-import { ArrowBack } from "@material-ui/icons";
+import { ArrowBack } from "@mui/icons-material";
 import history from "@cbr/common/util/history";
 import { useParams } from "react-router-dom";
-import { Alert } from "@material-ui/lab";
+import { Alert } from '@mui/material';
 import {
     ChildNourish,
     childNourish,

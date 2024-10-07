@@ -2,7 +2,7 @@ import React from "react";
 import AdminList from "../AdminList/AdminList";
 import ZoneList from "../ZoneList/ZoneList";
 import { Tabs, Tab, Box } from "@mui/material";
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 
 interface TabPanelProps {
     children?: React.ReactNode;

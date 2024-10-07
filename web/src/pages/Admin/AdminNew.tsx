@@ -2,10 +2,10 @@ import React from "react";
 import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import history from "@cbr/common/util/history";
-import { FormControl, MenuItem } from "@material-ui/core";
+import { FormControl, MenuItem } from "@mui/material";
 import { handleNewUserSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -22,7 +22,7 @@ const AdminNew = () => {
     const zones = useZones();
 
     return (
-        <Formik
+        (<Formik
             initialValues={adminUserInitialValues}
             validationSchema={newUserValidationSchema}
             onSubmit={(values, formikHelpers) => {
@@ -144,7 +144,7 @@ const AdminNew = () => {
                         <br />
 
                         <div>
-                            <Grid container justify="flex-end" spacing={2}>
+                            <Grid container justifyContent="flex-end" spacing={2}>
                                 <Grid item>
                                     <Button
                                         color="primary"
@@ -171,7 +171,7 @@ const AdminNew = () => {
                     </Form>
                 </div>
             )}
-        </Formik>
+        </Formik>)
     );
 };
 

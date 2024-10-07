@@ -16,7 +16,7 @@ import {
     DialogTitle,
     MenuItem,
     FormControl,
-} from "@material-ui/core";
+} from "@mui/material";
 import { IRisk, riskLevels } from "@cbr/common/util/risks";
 import { riskTypes } from "util/riskIcon";
 import { IClient } from "@cbr/common/util/clients";
@@ -25,7 +25,7 @@ import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { fieldLabels, FormField, validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
 
 import { handleSubmit } from "@cbr/common/forms/Risks/riskFormFieldHandler";
-import { Skeleton } from "@material-ui/lab";
+import { Skeleton } from '@mui/material';
 
 interface IProps {
     clientInfo?: IClient;
@@ -141,64 +141,62 @@ const ClientRisks = ({ clientInfo }: IProps) => {
     const RiskCard = (props: ICardProps) => {
         const [risk, setRisk] = useState(props.risk);
         const [isModalOpen, setIsModalOpen] = useState(false);
-        return (
-            <>
-                {isModalOpen && (
-                    <FormModal risk={risk} setRisk={setRisk} close={() => setIsModalOpen(false)} />
-                )}
-                <Card variant="outlined">
-                    <CardContent>
-                        <Grid container direction="row" justify="space-between">
-                            <Grid item md={6}>
-                                <Typography variant="h5" component="h1">
-                                    {riskTypes[risk.risk_type].name}
-                                </Typography>
-                            </Grid>
-                            <Grid item md={6}>
-                                <div className={styles.riskCardButtonAndBadge}>
-                                    {" "}
-                                    <RiskLevelChip risk={risk.risk_level} />
-                                </div>
-                            </Grid>
+        return (<>
+            {isModalOpen && (
+                <FormModal risk={risk} setRisk={setRisk} close={() => setIsModalOpen(false)} />
+            )}
+            <Card variant="outlined">
+                <CardContent>
+                    <Grid container direction="row" justifyContent="space-between">
+                        <Grid item md={6}>
+                            <Typography variant="h5" component="h1">
+                                {riskTypes[risk.risk_type].name}
+                            </Typography>
                         </Grid>
-                        <br />
-                        <Typography variant="subtitle2" component="h6">
-                            Requirements:
-                        </Typography>
-                        <Typography variant="body2" component="p">
-                            {risk.requirement}
-                        </Typography>
-                        <br />
-                        <Typography variant="subtitle2" component="h6">
-                            Goals:
-                        </Typography>
-                        <Typography variant="body2" component="p">
-                            {risk.goal}
-                        </Typography>
-                    </CardContent>
-                    <CardActions className={styles.riskCardButtonAndBadge}>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            size="small"
-                            disabled={!clientInfo?.is_active}
-                            onClick={() => {
-                                setIsModalOpen(true);
-                            }}
-                        >
-                            Update
-                        </Button>
-                    </CardActions>
-                </Card>
-            </>
-        );
+                        <Grid item md={6}>
+                            <div className={styles.riskCardButtonAndBadge}>
+                                {" "}
+                                <RiskLevelChip risk={risk.risk_level} />
+                            </div>
+                        </Grid>
+                    </Grid>
+                    <br />
+                    <Typography variant="subtitle2" component="h6">
+                        Requirements:
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        {risk.requirement}
+                    </Typography>
+                    <br />
+                    <Typography variant="subtitle2" component="h6">
+                        Goals:
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        {risk.goal}
+                    </Typography>
+                </CardContent>
+                <CardActions className={styles.riskCardButtonAndBadge}>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        size="small"
+                        disabled={!clientInfo?.is_active}
+                        onClick={() => {
+                            setIsModalOpen(true);
+                        }}
+                    >
+                        Update
+                    </Button>
+                </CardActions>
+            </Card>
+        </>);
     };
 
-    const SkeletonRiskCard = () => <Skeleton variant="rect" height={300} />;
+    const SkeletonRiskCard = () => <Skeleton variant="rectangular" height={300} />;
 
     return (
-        <div className={styles.riskCardContainer}>
-            <Grid container spacing={5} direction="row" justify="flex-start">
+        (<div className={styles.riskCardContainer}>
+            <Grid container spacing={5} direction="row" justifyContent="flex-start">
                 {Object.keys(riskTypes).map((type) => {
                     const risk = clientInfo?.risks.find((r) => r.risk_type === type);
                     return (
@@ -208,7 +206,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                     );
                 })}
             </Grid>
-        </div>
+        </div>)
     );
 };
 

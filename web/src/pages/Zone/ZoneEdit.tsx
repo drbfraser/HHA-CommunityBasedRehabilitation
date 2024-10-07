@@ -2,12 +2,12 @@ import React from "react";
 import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import { useRouteMatch } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { handleZoneEditSubmit } from "@cbr/common/forms/Zone/zoneFormsHandler";
-import { Alert, Skeleton } from "@material-ui/lab";
+import { Alert, Skeleton } from '@mui/material';
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import { IZone } from "@cbr/common/util/zones";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -175,7 +175,7 @@ const ZoneEdit = () => {
             </Formik>
         </div>
     ) : (
-        <Skeleton variant="rect" height={500} />
+        <Skeleton variant="rectangular" height={500} />
     );
 };
 

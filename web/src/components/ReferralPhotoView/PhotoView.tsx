@@ -1,4 +1,4 @@
-import { FormLabel } from "@material-ui/core";
+import { FormLabel } from "@mui/material";
 import React from "react";
 import { useState } from "react";
 import { helperImgCompress } from "./imgCompressHelper";

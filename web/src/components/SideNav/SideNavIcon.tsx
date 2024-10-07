@@ -1,12 +1,12 @@
-import { Badge } from "@material-ui/core";
-import Tooltip from "@material-ui/core/Tooltip";
+import { Badge } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IPage } from "util/pages";
 import { useStyles } from "./SideNav.styles";
 import { IAlert } from "@cbr/common/util/alerts";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
-import { Alert } from "@material-ui/lab";
+import { Alert } from '@mui/material';
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";

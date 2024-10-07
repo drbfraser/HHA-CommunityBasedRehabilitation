@@ -1,4 +1,5 @@
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { alpha } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import { themeColors } from "@cbr/common/util/colors";
 
 export const useStyles = makeStyles(
@@ -6,9 +7,9 @@ export const useStyles = makeStyles(
         search: {
             position: "relative",
             borderRadius: 90,
-            backgroundColor: fade(themeColors.blueBgDark, 0.15),
+            backgroundColor: alpha(themeColors.blueBgDark, 0.15),
             "&:hover": {
-                backgroundColor: fade(themeColors.blueBgDark, 0.25),
+                backgroundColor: alpha(themeColors.blueBgDark, 0.25),
             },
             marginLeft: 0,
             [theme.breakpoints.up("sm")]: {
@@ -31,7 +32,7 @@ export const useStyles = makeStyles(
         inputInput: {
             padding: theme.spacing(1, 1, 1, 0),
             // vertical padding + font size from searchIcon
-            paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+            paddingLeft: `calc(1em + ${theme.spacing(4)})`,
             transition: theme.transitions.create("width"),
             width: "12ch",
             "&:focus": {

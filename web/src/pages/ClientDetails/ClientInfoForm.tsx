@@ -11,8 +11,8 @@ import {
     Grid,
     MenuItem,
     Typography,
-} from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
     handleCancel,
     handleUpdateClientSubmit,
@@ -61,7 +61,7 @@ const ClientInfoForm = (props: IProps) => {
     }, []);
 
     return (
-        <Formik
+        (<Formik
             initialValues={
                 {
                     ...props.clientInfo,
@@ -92,7 +92,7 @@ const ClientInfoForm = (props: IProps) => {
                 setFieldValue,
                 values,
             }: FormikProps<TClientFormValues>) => (
-                <Grid container direction="row" justify="flex-start" spacing={2}>
+                <Grid container direction="row" justifyContent="flex-start" spacing={2}>
                     <Grid item md={2} xs={12}>
                         <ProfilePicCard
                             clientId={props.clientInfo.id}
@@ -425,7 +425,7 @@ const ClientInfoForm = (props: IProps) => {
                             </Grid>
 
                             <br />
-                            <Grid justify="flex-end" container spacing={2}>
+                            <Grid justifyContent="flex-end" container spacing={2}>
                                 {isEditing ? (
                                     <>
                                         <Grid item>
@@ -489,7 +489,7 @@ const ClientInfoForm = (props: IProps) => {
                     </Grid>
                 </Grid>
             )}
-        </Formik>
+        </Formik>)
     );
 };
 

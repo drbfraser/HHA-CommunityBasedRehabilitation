@@ -10,7 +10,7 @@ import {
     StepContent,
     StepLabel,
     Stepper,
-} from "@material-ui/core";
+} from "@mui/material";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, RadioGroup, TextField } from "formik-material-ui";
 import React, { useState } from "react";
@@ -25,11 +25,11 @@ import {
     MentalConditions,
 } from "@cbr/common/util/referrals";
 import { handleSubmit } from "./formHandler";
-import { ArrowBack } from "@material-ui/icons";
+import { ArrowBack } from "@mui/icons-material";
 import history from "@cbr/common/util/history";
 import { useParams } from "react-router-dom";
 import { useStyles } from "./NewReferral.styles";
-import { Alert } from "@material-ui/lab";
+import { Alert } from '@mui/material';
 import {
     referralFieldLabels,
     ReferralFormField,

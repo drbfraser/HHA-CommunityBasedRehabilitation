@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Grid from "@material-ui/core/Grid";
+import Grid from "@mui/material/Grid";
 import AlertList from "./AlertList";
 import AlertDetail from "./AlertDetail";
 import { useState } from "react";
@@ -63,7 +63,7 @@ const AlertInbox = () => {
     };
 
     return (
-        <Grid container justify="center" alignItems="stretch" spacing={3}>
+        (<Grid container justifyContent="center" alignItems="stretch" spacing={3}>
             <AlertList {...alertListProps} />
             <AlertDetail {...alertDetailProps} />
             {/* TODO: 
@@ -71,7 +71,7 @@ const AlertInbox = () => {
             */}
             {/* <AlertList alertListProps={alertListProps} alertData={alertData} />
             <AlertDetail alertDetailProps={alertDetailProps} alertData={alertData} /> */}
-        </Grid>
+        </Grid>)
     );
 };
 

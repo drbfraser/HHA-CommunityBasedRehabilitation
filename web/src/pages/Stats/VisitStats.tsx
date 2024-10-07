@@ -1,6 +1,6 @@
-import { Link, Typography } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { Link, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import Skeleton from '@mui/material/Skeleton';
 import React, { useEffect, useState } from "react";
 import {
     BarChart,
@@ -78,7 +78,7 @@ const VisitStats = ({ stats }: IProps) => {
     };
 
     return (
-        <Grid container spacing={3} style={{ minHeight: CHART_HEIGHT }}>
+        (<Grid container spacing={3} style={{ minHeight: CHART_HEIGHT }}>
             <Grid item xs={12} lg={7} xl={8}>
                 <Typography variant="h3">By Zone</Typography>
                 <Typography variant="body1">
@@ -109,7 +109,7 @@ const VisitStats = ({ stats }: IProps) => {
                         </BarChart>
                     </ResponsiveContainer>
                 ) : (
-                    <Skeleton variant="rect" height={400} />
+                    <Skeleton variant="rectangular" height={400} />
                 )}
             </Grid>
             <Grid item xs={12} lg={5} xl={4}>
@@ -147,10 +147,10 @@ const VisitStats = ({ stats }: IProps) => {
                         </PieChart>
                     </ResponsiveContainer>
                 ) : (
-                    <Skeleton variant="rect" height={400} />
+                    <Skeleton variant="rectangular" height={400} />
                 )}
             </Grid>
-        </Grid>
+        </Grid>)
     );
 };
 

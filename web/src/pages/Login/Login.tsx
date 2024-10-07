@@ -1,7 +1,7 @@
-import { Typography } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Alert from "@material-ui/lab/Alert";
+import { Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Alert from '@mui/material/Alert';
 import React, { useState } from "react";
 import { doLogin } from "@cbr/common/util/auth";
 import { useStyles } from "./Login.styles";

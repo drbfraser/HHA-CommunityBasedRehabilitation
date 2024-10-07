@@ -6,11 +6,11 @@ import {
     TimelineConnector,
     TimelineDot,
     TimelineContent,
-} from "@material-ui/lab";
+} from "@mui/lab";
 import { useTimelineStyles } from "./timelines.styles";
-import BlankIcon from "@material-ui/core/SvgIcon";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core";
+import BlankIcon from "@mui/material/SvgIcon";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { SvgIconTypeMap } from "@mui/material";
 
 interface IProps {
     date: string | JSX.Element;

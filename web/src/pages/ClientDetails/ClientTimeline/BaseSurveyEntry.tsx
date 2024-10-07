@@ -11,9 +11,9 @@ import {
     AccordionSummary,
     AccordionDetails,
     Typography,
-} from "@material-ui/core";
-import { Skeleton, Alert } from "@material-ui/lab";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+} from "@mui/material";
+import { Skeleton, Alert } from '@mui/material';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import { useStyles } from "./Entry.styles";
 import {
@@ -21,7 +21,7 @@ import {
     baseFieldLabels,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
 import TimelineEntry from "../Timeline/TimelineEntry";
-import { Assignment } from "@material-ui/icons";
+import { Assignment } from "@mui/icons-material";
 import DataCard from "components/DataCard/DataCard";
 import { getSurveyInfo, ISurvey } from "@cbr/common/util/survey";
 
@@ -52,7 +52,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
 
     const Details = () => {
         if (!survey) {
-            return <Skeleton variant="rect" height={200} />;
+            return <Skeleton variant="rectangular" height={200} />;
         }
 
         const DetailAccordion = ({ categoryName }: { categoryName: string }) => {

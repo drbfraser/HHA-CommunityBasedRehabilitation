@@ -9,14 +9,14 @@ import {
     GridOverlay,
     ValueFormatterParams,
 } from "@material-ui/data-grid";
-import { LinearProgress, IconButton, Typography } from "@material-ui/core";
+import { LinearProgress, IconButton, Typography } from "@mui/material";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import reqeustZoneRows from "./reqeustZoneRows";
 import React from "react";
-import { Cancel } from "@material-ui/icons";
+import { Cancel } from "@mui/icons-material";
 import { SearchOption } from "./searchOptions";
 // import { IRouteParams } from "@cbr/common/forms/Zone/zoneFields";
 const RenderText = (params: ValueFormatterParams) => {
@@ -93,14 +93,13 @@ const ZoneList = () => {
     }, [searchValue, searchOption, serverRows]);
 
     return (
-        <div className={styles.container}>
+        (<div className={styles.container}>
             <div className={styles.topContainer}>
-                <IconButton onClick={onZoneAddClick} className={styles.icon}>
+                <IconButton onClick={onZoneAddClick} className={styles.icon} size="large">
                     <AddLocationIcon />
                 </IconButton>
                 <SearchBar value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
             </div>
-
             <div className={styles.dataGridWrapper}>
                 <DataGrid
                     className={dataGridStyle.datagrid}
@@ -122,7 +121,7 @@ const ZoneList = () => {
                     ]}
                 />
             </div>
-        </div>
+        </div>)
     );
 };
 

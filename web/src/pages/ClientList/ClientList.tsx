@@ -25,7 +25,7 @@ import {
     Typography,
     debounce,
     Button,
-} from "@material-ui/core";
+} from "@mui/material";
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
@@ -33,7 +33,7 @@ import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { IRiskType, riskTypes } from "util/riskIcon";
 import { SearchOption } from "@cbr/common/util/searchOptions";
-import { MoreVert, Cancel, FiberManualRecord } from "@material-ui/icons";
+import { MoreVert, Cancel, FiberManualRecord } from "@mui/icons-material";
 import requestClientRows from "./requestClientRows";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
@@ -222,7 +222,7 @@ const ClientList = () => {
     }, [searchValue, searchOption, allClientsMode, archivedMode, requestClientRowsDebounced]);
 
     return (
-        <div className={styles.root}>
+        (<div className={styles.root}>
             <div>
                 <div className={styles.switch}>
                     <Typography
@@ -299,7 +299,10 @@ const ClientList = () => {
                         onChange={(e) => setSearchValue(e.target.value)}
                     />
                 )}
-                <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
+                <IconButton
+                    className={hideColumnsStyle.optionsButton}
+                    onClick={onOptionsClick}
+                    size="large">
                     <MoreVert />
                 </IconButton>
                 <Popover
@@ -362,7 +365,7 @@ const ClientList = () => {
                     </Button>
                 </CSVLink>
             </div>
-        </div>
+        </div>)
     );
 };
 

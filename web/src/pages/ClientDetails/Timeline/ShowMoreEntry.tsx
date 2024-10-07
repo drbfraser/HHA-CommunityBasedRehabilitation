@@ -6,11 +6,11 @@ import {
     TimelineDot,
     TimelineConnector,
     TimelineContent,
-} from "@material-ui/lab";
+} from "@mui/lab";
 import { useTimelineStyles } from "./timelines.styles";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core";
-import { MoreVert, ArrowDropDown } from "@material-ui/icons";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { SvgIconTypeMap } from "@mui/material";
+import { MoreVert, ArrowDropDown } from "@mui/icons-material";
 
 interface IProps {
     onClick?: () => void;

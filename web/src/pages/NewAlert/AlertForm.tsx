@@ -1,11 +1,11 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
+import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { priorities } from "@cbr/common/util/alerts";
-import MenuItem from "@material-ui/core/MenuItem";
+import MenuItem from "@mui/material/MenuItem";
 import { TextField } from "formik-material-ui";
 import { Field, Formik, Form } from "formik";
-import FormControl from "@material-ui/core/FormControl";
+import FormControl from "@mui/material/FormControl";
 import {
     alertFieldLabels,
     alertField,
@@ -16,15 +16,15 @@ import { handleDiscard, handleNewWebAlertSubmit } from "@cbr/common/forms/Alert/
 
 const AlertForm = () => {
     return (
-        <Formik
+        (<Formik
             initialValues={alertInitialValues}
             validationSchema={validationSchema}
             onSubmit={handleNewWebAlertSubmit}
         >
             {({ values, isSubmitting, resetForm, touched, setFieldValue }) => (
                 <Form>
-                    <Grid container justify="center" alignItems="flex-start">
-                        <Grid container direction="row" justify="flex-start" spacing={1}>
+                    <Grid container justifyContent="center" alignItems="flex-start">
+                        <Grid container direction="row" justifyContent="flex-start" spacing={1}>
                             <Grid item md={8} xs={8}>
                                 <Field
                                     component={TextField}
@@ -82,7 +82,7 @@ const AlertForm = () => {
                                         </Button>
                                     </Grid>
                                     <Grid item md={4} xs={8}>
-                                        <Grid container justify="flex-end">
+                                        <Grid container justifyContent="flex-end">
                                             {/* 
                                             // Save functionality is not yet implemented, therefore the save button is disabled
                                             <Button
@@ -109,7 +109,7 @@ const AlertForm = () => {
                     </Grid>
                 </Form>
             )}
-        </Formik>
+        </Formik>)
     );
 };
 

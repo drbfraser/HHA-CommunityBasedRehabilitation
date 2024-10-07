@@ -123,7 +123,7 @@ const VisitStats = ({ stats }: IProps) => {
                             component="button"
                             variant="body1"
                             onClick={() => setBreakdownZoneId(0)}
-                        >
+                            underline="hover">
                             View data for all zones.
                         </Link>
                     )}

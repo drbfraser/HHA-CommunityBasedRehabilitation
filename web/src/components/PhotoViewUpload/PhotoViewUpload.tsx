@@ -15,7 +15,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-// import useIsMounted from "react-is-mounted-hook"; // TODO: replace!
+import { useIsMounted } from "util/hooks/useIsMounted";
 import { helperImgCompress } from "components/ReferralPhotoView/imgCompressHelper";
 
 interface IProps {
@@ -53,9 +53,7 @@ const imgSrcReducer: Reducer<string, TReducerAction> = (prevImgSrc, { newImgSrc 
 };
 
 export const ProfilePicCard = (props: IProps) => {
-    // const isMounted = useIsMounted(); // TODO: replace!
-
-    const isMounted = false;
+    const isMounted = useIsMounted();
 
     const styles = useStyles();
     const profilePicRef = useRef<HTMLInputElement | null>(null);
@@ -71,11 +69,7 @@ export const ProfilePicCard = (props: IProps) => {
     );
     useEffect(() => {
         return () => {
-            // if (!isMounted() && imgSrcState.startsWith("blob:")) {
-            //     URL.revokeObjectURL(imgSrcState);
-            // }
-            // TODO: replace!
-            if (!isMounted && imgSrcState.startsWith("blob:")) {
+            if (!isMounted() && imgSrcState.startsWith("blob:")) {
                 URL.revokeObjectURL(imgSrcState);
             }
         };
@@ -132,8 +126,7 @@ export const ProfilePicCard = (props: IProps) => {
         const cropper = useRef<Cropper>();
 
         const [isSaving, setIsSaving] = useState(false);
-        // const isMounted = useIsMounted(); // TODO: replace!
-        const isMounted = false;
+        const isMounted = useIsMounted();
 
         const handleExit = () => {
             setCropModalOpen(false);
@@ -180,11 +173,7 @@ export const ProfilePicCard = (props: IProps) => {
 
                             setIsSaving(true);
                             cropper.current.getCroppedCanvas().toBlob((blob: Blob | null) => {
-                                // if (!isMounted()) {
-                                //     return;
-                                // }
-                                // TODO: replace!
-                                if (!isMounted) {
+                                if (!isMounted()) {
                                     return;
                                 }
 

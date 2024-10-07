@@ -83,7 +83,7 @@ export default function ConfirmDeleteZone(props: any) {
         );
     };
     return (
-        <div>
+        (<div>
             <Dialog
                 open={open}
                 onClose={() => setOpen(false)}
@@ -96,17 +96,17 @@ export default function ConfirmDeleteZone(props: any) {
                         {contentText}
                     </DialogContentText>
                 </DialogContent>
-                <FormControl fullWidth style={{ padding: 20 }}>
+                <FormControl variant="standard" fullWidth style={{ padding: 20 }}>
                     <InputLabel id="demo-simple-select-label">
                         Move Users And Clients To Zone
                     </InputLabel>
                     <Select
+                        variant="standard"
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={selectedZone}
                         label="Zone"
-                        onChange={handleSelectZone}
-                    >
+                        onChange={handleSelectZone}>
                         {Array.from(zones).map(
                             (zone) =>
                                 zone.id !== zoneId && (
@@ -143,6 +143,6 @@ export default function ConfirmDeleteZone(props: any) {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </div>)
     );
 }

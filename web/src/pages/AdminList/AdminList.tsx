@@ -164,14 +164,14 @@ const AdminList = () => {
                 </IconButton>
                 <div className={searchOptionsStyle.searchOptions}>
                     <Select
+                        variant="standard"
                         color={"primary"}
                         defaultValue={SearchOption.NAME}
                         value={searchOption}
                         onChange={(event) => {
                             setSearchValue("");
                             setSearchOption(String(event.target.value));
-                        }}
-                    >
+                        }}>
                         {Object.values(SearchOption).map((option) => (
                             <MenuItem key={option} value={option}>
                                 {option}
@@ -182,11 +182,11 @@ const AdminList = () => {
                 {searchOption === SearchOption.ZONE ? (
                     <div>
                         <Select
+                            variant="standard"
                             className={searchOptionsStyle.zoneOptions}
                             color={"primary"}
                             defaultValue={""}
-                            onChange={(event) => setSearchValue(String(event.target.value))}
-                        >
+                            onChange={(event) => setSearchValue(String(event.target.value))}>
                             {Array.from(zones).map(([id, name]) => (
                                 <MenuItem key={id} value={name}>
                                     {name}

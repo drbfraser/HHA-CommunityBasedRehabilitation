@@ -151,7 +151,7 @@ interface IStepProps {
 const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[]) => {
     return ({ formikProps }: IStepProps) => {
         return (
-            <FormControl>
+            (<FormControl variant="standard">
                 <FormLabel focused={false}>Select an Improvement</FormLabel>
                 <FieldArray
                     name={VisitFormField.improvements}
@@ -169,7 +169,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[]) => {
                 />
                 <br />
                 <OutcomeField visitType={visitType} risks={risks} />
-            </FormControl>
+            </FormControl>)
         );
     };
 };
@@ -207,61 +207,59 @@ const VisitReasonStep = (
             formikProps.setFieldValue(`${VisitFormField.outcomes}.${visitType}`, undefined);
         }
     };
-    return (
-        <>
-            <FormLabel focused={false}>Where was the Visit?</FormLabel>
-            <FormControl
-                className={styles.visitLocationContainer}
+    return (<>
+        <FormLabel focused={false}>Where was the Visit?</FormLabel>
+        <FormControl
+            className={styles.visitLocationContainer}
+            fullWidth
+            required
+            variant="outlined"
+        >
+            <Field
+                className={styles.visitLocation}
+                component={TextField}
+                name={VisitFormField.village}
+                label={visitFieldLabels[VisitFormField.village]}
+                variant="outlined"
                 fullWidth
                 required
+            />
+            <Field
+                className={styles.visitLocation}
+                component={TextField}
+                select
+                label={visitFieldLabels[VisitFormField.zone]}
+                name={VisitFormField.zone}
                 variant="outlined"
+                required
             >
-                <Field
-                    className={styles.visitLocation}
-                    component={TextField}
-                    name={VisitFormField.village}
-                    label={visitFieldLabels[VisitFormField.village]}
-                    variant="outlined"
-                    fullWidth
-                    required
-                />
-                <Field
-                    className={styles.visitLocation}
-                    component={TextField}
-                    select
-                    label={visitFieldLabels[VisitFormField.zone]}
-                    name={VisitFormField.zone}
-                    variant="outlined"
-                    required
-                >
-                    {Array.from(zones).map(([id, name]) => (
-                        <MenuItem key={id} value={id}>
-                            {name}
-                        </MenuItem>
-                    ))}
-                </Field>
-            </FormControl>
-            <br />
-            <FormControl component="fieldset">
-                <FormLabel focused={false}>Select the Reasons for the Visit</FormLabel>
-                <FormGroup>
-                    {visitTypes.map((visitType) => (
-                        <Field
-                            component={CheckboxWithLabel}
-                            type="checkbox"
-                            key={visitType}
-                            name={visitType}
-                            Label={{ label: visitFieldLabels[visitType] }}
-                            onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                                formikProps.handleChange(event);
-                                onCheckboxChange(event.currentTarget.checked, visitType);
-                            }}
-                        />
-                    ))}
-                </FormGroup>
-            </FormControl>
-        </>
-    );
+                {Array.from(zones).map(([id, name]) => (
+                    <MenuItem key={id} value={id}>
+                        {name}
+                    </MenuItem>
+                ))}
+            </Field>
+        </FormControl>
+        <br />
+        <FormControl variant="standard" component="fieldset">
+            <FormLabel focused={false}>Select the Reasons for the Visit</FormLabel>
+            <FormGroup>
+                {visitTypes.map((visitType) => (
+                    <Field
+                        component={CheckboxWithLabel}
+                        type="checkbox"
+                        key={visitType}
+                        name={visitType}
+                        Label={{ label: visitFieldLabels[visitType] }}
+                        onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                            formikProps.handleChange(event);
+                            onCheckboxChange(event.currentTarget.checked, visitType);
+                        }}
+                    />
+                ))}
+            </FormGroup>
+        </FormControl>
+    </>);
 };
 
 const NewVisit = () => {

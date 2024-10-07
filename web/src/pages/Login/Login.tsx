@@ -66,7 +66,7 @@ const Login = () => {
     };
 
     return (
-        <div className={styles.container}>
+        (<div className={styles.container}>
             <div className={styles.formContainer}>
                 <img
                     className={styles.logo}
@@ -82,25 +82,25 @@ const Login = () => {
                 <br />
                 <form onSubmit={(e) => handleLogin(e)}>
                     <TextField
+                        variant="standard"
                         label="Username"
                         fullWidth
                         inputProps={{ autoCapitalize: "off" }}
                         required
                         InputLabelProps={{ required: false }}
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
+                        onChange={(e) => setUsername(e.target.value)} />
                     <br />
                     <br />
                     <TextField
+                        variant="standard"
                         label="Password"
                         type="password"
                         fullWidth
                         required
                         InputLabelProps={{ required: false }}
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                        onChange={(e) => setPassword(e.target.value)} />
                     <br />
                     <br />
                     <Button
@@ -114,7 +114,7 @@ const Login = () => {
                     </Button>
                 </form>
             </div>
-        </div>
+        </div>)
     );
 };
 

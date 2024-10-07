@@ -72,7 +72,7 @@ const ReferralServiceForm = (
     };
 
     return (
-        <FormControl component="fieldset">
+        (<FormControl variant="standard" component="fieldset">
             <FormLabel>Select referral services</FormLabel>
             <FormGroup>
                 {serviceTypes.map((serviceType) => (
@@ -89,7 +89,7 @@ const ReferralServiceForm = (
                     />
                 ))}
             </FormGroup>
-        </FormControl>
+        </FormControl>)
     );
 };
 

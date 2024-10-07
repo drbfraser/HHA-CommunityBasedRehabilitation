@@ -12,6 +12,7 @@
         "@mui/icons-material": "^5.16.7",
         "@mui/material": "^5.16.7",
         "@mui/styles": "^6.1.2",
+        "@mui/x-data-grid": "^5.17.26",
         "@testing-library/jest-dom": "^5.11.9",
         "@testing-library/react": "^11.2.3",
         "@testing-library/user-event": "^12.6.0",

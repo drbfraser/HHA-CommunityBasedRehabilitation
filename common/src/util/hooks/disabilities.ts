@@ -4,6 +4,7 @@ import { TFunction } from "i18next";
 import { apiFetch, Endpoint } from "../endpoints";
 import emptyMap from "../internal/emptyMap";
 import { APICacheData } from "./cachedAPI";
+import { physiotherapyConditions } from "../referrals";
 
 export interface IDisability {
     id: number;
@@ -37,26 +38,17 @@ export const getOtherDisabilityId = (disabilities: TDisabilityMap): number => {
 export const getDisabilities = async () => cache.getCachedValue();
 
 export const useDisabilities = (t: TFunction) => {
-    const translations: { [key: string]: string } = {
-        Amputee: t("disabilities.amputee"),
-        Polio: t("disabilities.polio"),
-        "Spinal cord injury": t("disabilities.spinalCordInjury"),
-        "Cerebral palsy": t("disabilities.cerebralPalsy"),
-        "Spina bifida": t("disabilities.spinaBifida"),
-        Hydrocephalus: t("disabilities.hydrocephalus"),
-        "Congenital Abnormalities": t("disabilities.congenitalAbnormality"),
-        "Paralysis Cases": t("disabilities.paralysisCases"),
-        "Don’t know": t("disabilities.dontKnow"),
-        Other: t("disabilities.other"),
-    };
-
     const disabilities = cache.useCacheHook()();
     const translatedDisabilities = new Map();
 
     disabilities.forEach((name, key) => {
-        const translation = translations[name];
+        // sanitize string before using it to lookup in common dictionary
+        // also replaces non-ascii apostrophes with ascii apostrophes
+        name = name.toLowerCase().replace(/[’]/g, "'");
+
+        const translation = physiotherapyConditions(t)[name.toLowerCase()];
         if (!translation) {
-            console.error(`unknown disability name: ${name}`);
+            console.error(`unknown disability name: ${name.toLowerCase()}`);
             return;
         }
 

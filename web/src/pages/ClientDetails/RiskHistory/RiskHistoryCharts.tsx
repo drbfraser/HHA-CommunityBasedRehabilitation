@@ -90,6 +90,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
 
     const RiskChart = ({ riskType, data }: { riskType: RiskType; data: IDataPoint[] }) => {
         const dateFormatter = getDateFormatterFromReference(client?.created_at);
+
         return (
             <ResponsiveContainer
                 width="100%"
@@ -116,7 +117,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
                     />
                     <Line
                         type="stepAfter"
-                        name={`${riskTypes[riskType].name} Risk`}
+                        name={getTranslatedRiskChartName(t, riskType)}
                         data={data}
                         dataKey="level"
                         stroke={riskLevels[data.slice(-1)[0].level].color}

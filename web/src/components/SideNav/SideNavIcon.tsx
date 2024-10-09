@@ -61,13 +61,13 @@ const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
         }
     }, [fetchAlerts, isUnreadAlertCountSet]);
 
-    function IconInfo(props: any) {
+    function IconInfo(props: { page: IPage }) {
         const { path, name, Icon } = props.page;
 
         return (
             <Link to={path}>
                 <Tooltip
-                    title={name}
+                    title={t(name)}
                     placement="top"
                     arrow
                     classes={{ tooltip: styles.tooltip }}

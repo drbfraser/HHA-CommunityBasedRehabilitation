@@ -151,7 +151,7 @@ const NewReferral = () => {
                                             color="primary"
                                             onClick={prevStep}
                                         >
-                                            {t("general.previousStep")}
+                                            {t("general.previous")}
                                         </Button>
                                     )}
                                     <Button
@@ -162,7 +162,7 @@ const NewReferral = () => {
                                     >
                                         {isFinalStep && index === activeStep
                                             ? t("general.submit")
-                                            : t("general.nextStep")}
+                                            : t("general.next")}
                                     </Button>
                                 </StepContent>
                             </Step>

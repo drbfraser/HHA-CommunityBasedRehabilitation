@@ -32,13 +32,9 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
         const [expanded, setExpanded] = useState(false);
 
         const Summary = ({ clickable }: { clickable?: boolean }) => {
-            const text = translateRiskEntrySummary(t, risk.risk_type, isInitial).split(" ");
-            const riskName = text[0];
-            const remainingText = text.slice(1).join(" ");
-
             return (
                 <>
-                    <b>{riskName}</b> {remainingText}{" "}
+                    {translateRiskEntrySummary(risk.risk_type, isInitial)}
                     <RiskLevelChip risk={risk.risk_level} clickable={clickable ?? false} />
                 </>
             );
@@ -86,13 +82,16 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
         <Timeline className={timelineStyles.timeline}>
             {client ? (
                 <>
-                    {client.risks.sort(riskSort).map((risk) => (
-                        <RiskEntry
-                            key={risk.id}
-                            risk={risk}
-                            isInitial={risk.timestamp === client.created_at}
-                        />
-                    ))}
+                    {client.risks
+                        .slice() // creates a copy/clone
+                        .sort(riskSort)
+                        .map((risk) => (
+                            <RiskEntry
+                                key={risk.id}
+                                risk={risk}
+                                isInitial={risk.timestamp === client.created_at}
+                            />
+                        ))}
                     <ClientCreatedEntry createdDate={dateFormatter(client.created_at)} />
                 </>
             ) : (

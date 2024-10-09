@@ -90,16 +90,17 @@ export enum MentalConditions {
 }
 
 enum PhysiotherapyConditions {
-    AMPUTEE = "Amputee",
-    POLIO = "Polio",
-    SPINAL_INJURY = "Spinal Cord Injury",
-    CEREBRAL_PALSY = "Cerebral Palsy",
-    SPINA_BIFIDA = "Spina Bifida",
-    HYDROCEPHALUS = "Hydrocephalus",
-    CONGENITAL_ABNORMALITY = "Congenital Abnormality",
-    PARALYSIS_CASES = "Paralysis Cases",
-    DONT_KNOW = "Don't Know",
-    OTHER = "Other",
+    AMPUTEE = "amputee",
+    POLIO = "polio",
+    SPINAL_INJURY = "spinal cord injury",
+    CEREBRAL_PALSY = "cerebral palsy",
+    SPINA_BIFIDA = "spina bifida",
+    HYDROCEPHALUS = "hydrocephalus",
+    CONGENITAL_ABNORMALITY = "congenital abnormality",
+    CONGENITAL_ABNORMALITIES = "congenital abnormalities",
+    PARALYSIS_CASES = "paralysis cases",
+    DONT_KNOW = "don't know",
+    OTHER = "other",
 }
 
 export const physiotherapyConditions = (t: TFunction): { [key: string]: string } => {
@@ -111,6 +112,8 @@ export const physiotherapyConditions = (t: TFunction): { [key: string]: string }
         [PhysiotherapyConditions.SPINA_BIFIDA]: t("disabilities.spinaBifida"),
         [PhysiotherapyConditions.HYDROCEPHALUS]: t("disabilities.hydrocephalus"),
         [PhysiotherapyConditions.PARALYSIS_CASES]: t("disabilities.paralysisCases"),
+        [PhysiotherapyConditions.CONGENITAL_ABNORMALITY]: t("disabilities.congenitalAbnormality"),
+        [PhysiotherapyConditions.CONGENITAL_ABNORMALITIES]: t("disabilities.congenitalAbnormality"),
         [PhysiotherapyConditions.DONT_KNOW]: t("disabilities.dontKnow"),
         [PhysiotherapyConditions.OTHER]: t("disabilities.other"),
     };

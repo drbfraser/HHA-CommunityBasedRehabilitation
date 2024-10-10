@@ -3,11 +3,11 @@ import SearchBar from "components/SearchBar/SearchBar";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import {
     DataGrid,
-    DensityTypes,
-    RowsProp,
+    GridDensityTypes,
+    GridRowsProp,
     GridOverlay,
-    ValueFormatterParams,
-} from "@material-ui/data-grid";
+    GridValueFormatterParams,
+} from "@mui/x-data-grid";
 import {
     LinearProgress,
     IconButton,
@@ -29,7 +29,7 @@ import { Cancel, MoreVert } from "@mui/icons-material";
 import { SearchOption } from "../ClientList/searchOptions";
 import { useZones } from "@cbr/common/util/hooks/zones";
 
-const RenderText = (params: ValueFormatterParams) => {
+const RenderText = (params: GridValueFormatterParams) => {
     return <Typography variant={"body2"}>{params.value}</Typography>;
 };
 
@@ -63,8 +63,8 @@ const AdminList = () => {
     const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
     const [isStatusHidden, setStatusHidden] = useState<boolean>(false);
     const [isUsernameHidden, setIsUsernameHidden] = useState<boolean>(false);
-    const [filteredRows, setFilteredRows] = useState<RowsProp>([]);
-    const [serverRows, setServerRows] = useState<RowsProp>([]);
+    const [filteredRows, setFilteredRows] = useState<GridRowsProp>([]);
+    const [serverRows, setServerRows] = useState<GridRowsProp>([]);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
@@ -144,14 +144,14 @@ const AdminList = () => {
             return;
         }
         if (searchOption === SearchOption.NAME) {
-            const filteredRows: RowsProp = serverRows.filter(
+            const filteredRows: GridRowsProp = serverRows.filter(
                 (r) =>
                     r.name.toLowerCase().startsWith(searchValue) ||
                     r.last_name.toLowerCase().startsWith(searchValue)
             );
             setFilteredRows(filteredRows);
         } else if (searchOption === SearchOption.ZONE) {
-            const filteredRows: RowsProp = serverRows.filter((r) => r.zone.startsWith(searchValue));
+            const filteredRows: GridRowsProp = serverRows.filter((r) => r.zone.startsWith(searchValue));
             setFilteredRows(filteredRows);
         }
     }, [searchValue, searchOption, serverRows]);
@@ -246,7 +246,7 @@ const AdminList = () => {
                     }}
                     rows={filteredRows}
                     columns={adminColumns}
-                    density={DensityTypes.Comfortable}
+                    density={GridDensityTypes.Comfortable}
                     onRowClick={onRowClick}
                     pagination
                     sortModel={[

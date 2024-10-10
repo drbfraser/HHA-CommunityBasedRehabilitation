@@ -2,16 +2,17 @@ import React from "react";
 import { CSVLink } from "react-csv";
 import { useCallback, useEffect, useState, useRef } from "react";
 import {
-    CellParams,
-    CellValue,
-    ColParams,
+    GridCellParams,
+    GridCellValue, // TODO: fix deprecated
+    // ColParams,
+    GridColDef,
     DataGrid,
-    DensityTypes,
+    GridDensityTypes,
     GridOverlay,
-    RowParams,
-    RowsProp,
-    ValueFormatterParams,
-} from "@material-ui/data-grid";
+    GridRowParams,
+    GridRowsProp,
+    GridValueFormatterParams,
+} from "@mui/x-data-grid";
 import { useStyles } from "./ClientList.styles";
 import { compressedDataGridWidth, useDataGridStyles } from "styles/DataGrid.styles";
 import {
@@ -39,7 +40,7 @@ import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import { useZones } from "@cbr/common/util/hooks/zones";
 
-const riskComparator = (v1: CellValue, v2: CellValue, params1: CellParams, params2: CellParams) => {
+const riskComparator = (v1: GridCellValue, v2: GridCellValue, params1: GridCellParams, params2: GridCellParams) => {
     const risk1: IRiskLevel = riskLevels[String(params1.value)];
     const risk2: IRiskLevel = riskLevels[String(params2.value)];
     return risk1.level - risk2.level;
@@ -55,7 +56,7 @@ const RenderRiskHeader = (params: ColParams): JSX.Element => {
     );
 };
 
-const RenderText = (params: ValueFormatterParams) => {
+const RenderText = (params: GridValueFormatterParams) => {
     return (
         <Typography
             variant={"body2"}
@@ -66,7 +67,7 @@ const RenderText = (params: ValueFormatterParams) => {
     );
 };
 
-const RenderBadge = (params: ValueFormatterParams) => {
+const RenderBadge = (params: GridValueFormatterParams) => {
     const risk: RiskLevel = Object(params.value);
 
     return window.innerWidth >= compressedDataGridWidth ? (
@@ -110,7 +111,7 @@ const ClientList = () => {
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
-    const [rows, setRows] = useState<RowsProp>([]);
+    const [rows, setRows] = useState<GridRowsProp>([]);
     const [archivedMode, setArchivedMode] = useState<boolean>(false);
 
     const zones = useZones();
@@ -121,7 +122,7 @@ const ClientList = () => {
     const history = useHistory();
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
-    const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
+    const onRowClick = (rowParams: GridRowParams) => history.push(`/client/${rowParams.row.id}`);
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
         setOptionsAnchorEl(event.currentTarget);
     const onOptionsClose = () => setOptionsAnchorEl(null);
@@ -151,8 +152,8 @@ const ClientList = () => {
         },
     };
 
-    const sortClientsById = (rows: RowsProp) => {
-        let sortById: RowsProp = rows.slice(0);
+    const sortClientsById = (rows: GridRowsProp) => {
+        let sortById: GridRowsProp = rows.slice(0);
 
         sortById.sort((a: any, b: any) => {
             return a.id - b.id;
@@ -344,7 +345,7 @@ const ClientList = () => {
                     LoadingOverlay: RenderLoadingOverlay,
                     NoRowsOverlay: RenderNoRowsOverlay,
                 }}
-                density={DensityTypes.Comfortable}
+                density={GridDensityTypes.Comfortable}
                 onRowClick={onRowClick}
                 pagination
                 sortModel={[

@@ -1,6 +1,6 @@
 import React from "react";
 import { InputBase, InputBaseProps, useTheme } from "@mui/material";
-import { SearchIcon } from "@material-ui/data-grid";
+import SearchIcon from "@mui/icons-material/Search"; // TODO: was from data-grid - verify same
 import { useStyles } from "./SearchBar.styles";
 
 const SearchBar = (props: InputBaseProps) => {

@@ -9,6 +9,8 @@ import { doLogin } from "@cbr/common/util/auth";
 import { useStyles } from "./Login.styles";
 import { loginState } from "../../util/hooks/loginState";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
+import LanguagePicker from "components/LanguagePicker/LanguagePicker";
+import { Box } from "@mui/material";
 
 interface IBaseLoginStatus {
     status: "initial" | "submitting";
@@ -72,6 +74,15 @@ const Login = () => {
 
     return (
         <div className={styles.container}>
+            <LanguagePicker
+                sx={{
+                    position: "absolute",
+                    right: "8%",
+                    top: "3%",
+                }}
+                color="white"
+            />
+
             <div className={styles.formContainer}>
                 <img
                     className={styles.logo}

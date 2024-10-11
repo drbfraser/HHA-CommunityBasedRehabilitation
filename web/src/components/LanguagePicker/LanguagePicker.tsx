@@ -16,7 +16,7 @@ interface IProps {
     color?: string;
 }
 
-const LanguagePicker = ({ sx, color }: IProps) => {
+const LanguagePicker = ({ sx }: IProps) => {
     const [language, setLanguage] = useState("en");
     const { t, i18n } = useTranslation();
 
@@ -27,15 +27,13 @@ const LanguagePicker = ({ sx, color }: IProps) => {
 
     return (
         <FormControl
+            id="language-picker-form"
             sx={{
                 width: 100,
-                "& #language-label, #language-select, .MuiSelect-icon": {
-                    color,
-                },
-                "& .MuiInput-underline:before": { borderColor: color },
                 ...sx,
             }}
             variant="standard"
+            color="primary"
         >
             <InputLabel id="language-label">
                 <LanguageOutlinedIcon sx={{ verticalAlign: "middle" }} /> {t("general.language")}

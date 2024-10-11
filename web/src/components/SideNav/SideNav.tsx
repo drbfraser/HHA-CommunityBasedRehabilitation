@@ -4,7 +4,6 @@ import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { pagesForUser } from "../../util/pages";
 import { useStyles } from "./SideNav.styles";
 import SideNavIcon from "./SideNavIcon";
-import LangPicker from "./LangPicker";
 
 const SideNav = () => {
     const user = useCurrentUser();
@@ -12,15 +11,14 @@ const SideNav = () => {
     const { pathname } = useLocation();
 
     return (
-        <div className={styles.container}>
+        <nav className={styles.container}>
             <img src="/images/hha_icon_white.png" alt="" className={styles.hhaIcon} />
             {pagesForUser(user)
                 .filter((page) => page.showInNav)
                 .map((page) => (
                     <SideNavIcon key={page.path} page={page} active={page.path === pathname} />
                 ))}
-            <LangPicker />
-        </div>
+        </nav>
     );
 };
 

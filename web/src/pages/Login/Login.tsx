@@ -10,7 +10,6 @@ import { useStyles } from "./Login.styles";
 import { loginState } from "../../util/hooks/loginState";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
 import LanguagePicker from "components/LanguagePicker/LanguagePicker";
-import { Box } from "@mui/material";
 
 interface IBaseLoginStatus {
     status: "initial" | "submitting";
@@ -74,29 +73,18 @@ const Login = () => {
 
     return (
         <div className={styles.container}>
-            <LanguagePicker
-                sx={{
-                    position: "absolute",
-                    right: "8%",
-                    top: "3%",
-                }}
-                color="white"
-            />
-
             <div className={styles.formContainer}>
                 <img
                     className={styles.logo}
                     src="/images/hha_logo_white.png"
                     alt="Hope Health Action"
                 />
-                <br />
-                <br />
+
                 <Typography variant="h4" gutterBottom>
                     {t("login.login")}
                 </Typography>
                 <LoginAlert />
-                <br />
-                <form onSubmit={(e) => handleLogin(e)}>
+                <form className={styles.loginForm} onSubmit={(e) => handleLogin(e)}>
                     <TextField
                         label={t("general.username")}
                         fullWidth
@@ -106,8 +94,6 @@ const Login = () => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
-                    <br /> {/* this should be handled by styling */}
-                    <br />
                     <TextField
                         label={t("general.password")}
                         type="password"
@@ -117,8 +103,6 @@ const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <br />
-                    <br />
                     <Button
                         type="submit"
                         variant="contained"
@@ -129,6 +113,15 @@ const Login = () => {
                         {t("login.login")}
                     </Button>
                 </form>
+
+                <LanguagePicker
+                    sx={{
+                        right: "0",
+                        marginTop: "10%",
+                        alignSelf: "flex-end",
+                    }}
+                    color="white"
+                />
             </div>
         </div>
     );

@@ -191,7 +191,8 @@
         "when": "-When",
         "lastVisit": "-Last Visit",
         "previousStep": "-Previous Step",
-        "nextStep": "-Next Step"
+        "nextStep": "-Next Step",
+        "language": "-Language"
     },
     "alert": {
         "generalFailure": "-Something went Wrong",

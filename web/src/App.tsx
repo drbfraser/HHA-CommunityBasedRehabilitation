@@ -10,10 +10,12 @@ import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
 import SideNav from "./components/SideNav/SideNav";
 import AlertNotification from "./components/Alerts/AlertNotification";
 import AlertOffline from "./components/Alerts/AlertOffline";
+import LanguagePicker from "components/LanguagePicker/LanguagePicker";
 import { defaultPagePath, pagesForUser } from "util/pages";
 import Login from "pages/Login/Login";
 import { useStyles } from "App.styles";
 import { useIsLoggedIn } from "./util/hooks/loginState";
+import { Box } from "@mui/material";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
@@ -42,13 +44,27 @@ const App = () => {
                     <Switch>
                         {pagesForUser(user).map((page) => (
                             <Route key={page.path} exact={page.exact ?? true} path={page.path}>
-                                {open && <AlertNotification alertInfo={alert} setOpen={setOpen} />}
-                                <Typography variant="h1" className={styles.pageTitle}>
-                                    {t(page.name)}
-                                </Typography>
-                                <div className={styles.pageContent}>
+                                <header>
+                                    {open && (
+                                        <AlertNotification alertInfo={alert} setOpen={setOpen} />
+                                    )}
+                                    <Box
+                                        component="section"
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <Typography variant="h1" className={styles.pageTitle}>
+                                            {t(page.name)}
+                                        </Typography>
+                                        <LanguagePicker />
+                                    </Box>
+                                </header>
+                                <main className={styles.pageContent}>
                                     <page.Component />
-                                </div>
+                                </main>
                             </Route>
                         ))}
                     </Switch>

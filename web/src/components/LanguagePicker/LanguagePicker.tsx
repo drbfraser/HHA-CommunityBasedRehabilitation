@@ -8,8 +8,6 @@ const LanguagePicker = () => {
     const { t, i18n } = useTranslation();
 
     const handleLanguageChange = (e: SelectChangeEvent) => {
-        console.log(e.target.value);
-
         i18n.changeLanguage(e.target.value);
         setLanguage(e.target.value);
     };
@@ -22,11 +20,12 @@ const LanguagePicker = () => {
             variant="standard"
         >
             <InputLabel id="language-input">
-                <LanguageOutlinedIcon sx={{ verticalAlign: "middle" }} /> Language
+                <LanguageOutlinedIcon sx={{ verticalAlign: "middle" }} />
+                {t("general.language")}
             </InputLabel>
             <Select labelId="language-input" value={language} onChange={handleLanguageChange}>
-                <MenuItem value={"en"}>English</MenuItem>
-                <MenuItem value={"bari"}>Bari</MenuItem>
+                <MenuItem value={"en"}>{t("languagePicker.english")}</MenuItem>
+                <MenuItem value={"bari"}>{t("languagePicker.bari")}</MenuItem>
             </Select>
         </FormControl>
     );

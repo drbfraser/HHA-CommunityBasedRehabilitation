@@ -54,7 +54,8 @@ interface Resources {
       "noVisits": "&No Visits",
       "noPriorityClients": "&No Priority Clients Found",
       "noOutstandingReferrals": "&No Outstanding Referrals Found",
-      "newInboxMessages": "&You have <1>{{count}}</1> new messages in your inbox"
+      "newInboxMessages": "&You have <1>1</1> new message in your inbox",
+      "newInboxMessages_plural": "&You have <1>{{count}}</1> new messages in your inbox"
     },
     "disabilities": {
       "amputee": "&Amputee",
@@ -191,7 +192,8 @@ interface Resources {
       "when": "&When",
       "lastVisit": "&Last Visit",
       "previousStep": "&Previous Step",
-      "nextStep": "&Next Step"
+      "nextStep": "&Next Step",
+      "language": "&Language"
     },
     "alert": {
       "generalFailure": "&Something went Wrong",
@@ -465,16 +467,16 @@ interface Resources {
       "social": "&Social",
       "nutrition": "&Nutrition",
       "mental": "&Mental Health",
-      "healthSet": "&Health risk set to",
-      "healthChanged": "&Health risk changed to",
-      "educationSet": "&Education risk set to",
-      "educationChanged": "&Education risk changed to",
-      "socialSet": "&Social risk set to",
-      "socialChanged": "&Social risk changed to",
-      "nutritionSet": "&Nutrition risk set to",
-      "nutritionChanged": "&Nutrition risk changed to",
-      "mentalSet": "&Mental health risk set to",
-      "mentalChanged": "&Mental health risk changed to"
+      "healthSet": "&<1>Health</1> risk set to",
+      "healthChanged": "&<1>Health</1> risk changed to",
+      "educationSet": "&<1>Education</1> risk set to",
+      "educationChanged": "&<1>Education</1> risk changed to",
+      "socialSet": "&<1>Social</1> risk set to",
+      "socialChanged": "&<1>Social</1> risk changed to",
+      "nutritionSet": "&<1>Nutrition</1> risk set to",
+      "nutritionChanged": "&<1>Nutrition</1> risk changed to",
+      "mentalSet": "&<1>Mental health</1> risk set to",
+      "mentalChanged": "&<1>Mental health</1> risk changed to"
     },
     "riskLevelsAbbreviated": {
       "low": "&LO",
@@ -600,11 +602,7 @@ interface Resources {
       "clientID": "&Client ID",
       "clientList": "&Client List",
       "clientRiskHistory": "&Client Risk History",
-      "addVisit": "&Add a Visit",
-      "addSurvey": "&Add a Survey",
-      "addReferral": "&Add a Referral",
       "profile": "&Profile",
-      "stats": "&Stats",
       "editUserPass": "&Edit User Password",
       "newZone": "&New Zone",
       "editZone": "&Edit Zone",
@@ -712,7 +710,8 @@ interface Resources {
       "noVisits": "-No Visits",
       "noPriorityClients": "-No Priority Clients Found",
       "noOutstandingReferrals": "-No Outstanding Referrals Found",
-      "newInboxMessages": "-You have <1>{{count}}</1> new messages in your inbox"
+      "newInboxMessages": "-You have <1>1</1> new message in your inbox",
+      "newInboxMessages_plural": "-You have <1>{{count}}</1> new messages in your inbox"
     },
     "disabilities": {
       "amputee": "-Amputee",
@@ -849,7 +848,8 @@ interface Resources {
       "when": "-When",
       "lastVisit": "-Last Visit",
       "previousStep": "-Previous Step",
-      "nextStep": "-Next Step"
+      "nextStep": "-Next Step",
+      "language": "-Language"
     },
     "alert": {
       "generalFailure": "-Something went Wrong",
@@ -1103,7 +1103,7 @@ interface Resources {
       "selectMentalHealthReferral": "-Please select mental health referral",
       "describeReferral": "-Please describe the referral",
       "discardNewReferral": "-Discard this new referral?",
-      "wheelchairVisit": "-Wheelchair asdaVisit",
+      "wheelchairVisit": "-Wheelchair Visit",
       "physiotherapyVisit": "-Physiotherapy Visit",
       "prostheticVisit": "-Prosthetic Visit",
       "orthoticVisit": "-Orthotic Visit",
@@ -1125,16 +1125,16 @@ interface Resources {
       "social": "-Social",
       "nutrition": "-Nutrition",
       "mental": "-Mental Health",
-      "healthSet": "-Health risk set to",
-      "healthChanged": "-Health risk changed to",
-      "educationSet": "-Education risk set to",
-      "educationChanged": "-Education risk changed to",
-      "socialSet": "-Social risk set to",
-      "socialChanged": "-Social risk changed to",
-      "nutritionSet": "-Nutrition risk set to",
-      "nutritionChanged": "-Nutrition risk changed to",
-      "mentalSet": "-Mental health risk set to",
-      "mentalChanged": "-Mental health risk changed to"
+      "healthSet": "-<1>Health</1> risk set to",
+      "healthChanged": "-<1>Health</1> risk changed to",
+      "educationSet": "-<1>Education</1> risk set to",
+      "educationChanged": "-<1>Education</1> risk changed to",
+      "socialSet": "-<1>Social</1> risk set to",
+      "socialChanged": "-<1>Social</1> risk changed to",
+      "nutritionSet": "-<1>Nutrition</1> risk set to",
+      "nutritionChanged": "-<1>Nutrition</1> risk changed to",
+      "mentalSet": "-<1>Mental health</1> risk set to",
+      "mentalChanged": "-<1>Mental health</1> risk changed to"
     },
     "riskLevelsAbbreviated": {
       "low": "-LO",
@@ -1260,11 +1260,7 @@ interface Resources {
       "clientID": "-Client ID",
       "clientList": "-Client List",
       "clientRiskHistory": "-Client Risk History",
-      "addVisit": "-Add a Visit",
-      "addSurvey": "-Add a Survey",
-      "addReferral": "-Add a Referral",
       "profile": "-Profile",
-      "stats": "-Stats",
       "editUserPass": "-Edit User Password",
       "newZone": "-New Zone",
       "editZone": "-Edit Zone",

@@ -1,16 +1,15 @@
-import { CssBaseline, ThemeProvider } from "@material-ui/core";
 import React from "react";
-import { createRoot } from "react-dom/client";
-import { themeMui } from "theme.styles";
 import { I18nextProvider } from "react-i18next";
-import i18n from "i18next";
+import { createRoot } from "react-dom/client";
+import { CssBaseline, ThemeProvider } from "@material-ui/core";
+import { themeMui } from "theme.styles";
 
 import App from "./App";
 import { initializeCommon, KeyValStorageProvider } from "@cbr/common/init";
 import { loginState } from "./util/hooks/loginState";
 import { invalidateAllCachedAPI } from "@cbr/common/util/hooks/cachedAPI";
 import { API_BASE_URL, API_URL } from "./util/api";
-import { initI18n } from "@cbr/common/i18n.config";
+import { getI18nInstance } from "@cbr/common/i18n.config";
 
 const localStorageProvider: KeyValStorageProvider = {
     getItem: async (key: string) => {
@@ -37,8 +36,6 @@ initializeCommon({
     },
 });
 
-initI18n(i18n);
-
 const renderApp = () => {
     const container = document.getElementById("root");
     if (!container) {
@@ -49,7 +46,7 @@ const renderApp = () => {
     const root = createRoot(container);
     root.render(
         <React.StrictMode>
-            <I18nextProvider i18n={i18n}>
+            <I18nextProvider i18n={getI18nInstance()}>
                 <ThemeProvider theme={themeMui}>
                     <CssBaseline />
                     <App />

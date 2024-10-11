@@ -12,10 +12,10 @@ const resources = {
     },
 };
 
-export const initI18n = (i18nInstance: typeof i18n) => {
+// This will only be called in /Common
+export const initI18n = () => {
     console.log("===> COMMON: i18n.config.ts: Start");
-
-    i18nInstance.use(initReactI18next).init({
+    i18n.use(initReactI18next).init({
         debug: true, // TODO: Remove this line in production!
         compatibilityJSON: "v3",
         resources,
@@ -25,6 +25,10 @@ export const initI18n = (i18nInstance: typeof i18n) => {
         },
         returnEmptyString: false,
     });
-
     console.log("===> COMMON: i18n.config.ts: End");
+};
+
+// ensures that web, mobile, and common all reference the same instance of i18n
+export const getI18nInstance = (): typeof i18n => {
+    return i18n;
 };

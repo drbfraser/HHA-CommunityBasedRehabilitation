@@ -120,7 +120,6 @@ const Login = () => {
                         marginTop: "10%",
                         alignSelf: "flex-end",
                     }}
-                    color="white"
                 />
             </div>
         </div>

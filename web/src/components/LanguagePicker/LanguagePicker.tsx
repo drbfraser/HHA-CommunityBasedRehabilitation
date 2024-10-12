@@ -13,7 +13,6 @@ import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 
 interface IProps {
     sx?: SxProps<Theme>;
-    color?: string;
 }
 
 const LanguagePicker = ({ sx }: IProps) => {
@@ -33,7 +32,6 @@ const LanguagePicker = ({ sx }: IProps) => {
                 ...sx,
             }}
             variant="standard"
-            color="primary"
         >
             <InputLabel id="language-label">
                 <LanguageOutlinedIcon sx={{ verticalAlign: "middle" }} /> {t("general.language")}

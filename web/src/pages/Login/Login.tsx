@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Alert from '@mui/material/Alert';
@@ -7,6 +7,8 @@ import { doLogin } from "@cbr/common/util/auth";
 import { useStyles } from "./Login.styles";
 import { loginState } from "../../util/hooks/loginState";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
+import BackgroundImage from "./background.svg";
+import BackgroundImageMobile from "./backgroundMobile.svg";
 
 interface IBaseLoginStatus {
     status: "initial" | "submitting";
@@ -66,7 +68,15 @@ const Login = () => {
     };
 
     return (
-        (<div className={styles.container}>
+        (<Box sx={{
+            height: "100%",
+            backgroundRepeat: "no-repeat",
+            backgroundImage: `url(${BackgroundImage})`,
+            backgroundSize: "100% auto",
+            "@media (max-width: 600px)": { // todo: check this max-width relative to mediaMobile
+                backgroundImage: `url(${BackgroundImageMobile})`,
+            }
+        }}>
             <div className={styles.formContainer}>
                 <img
                     className={styles.logo}
@@ -114,7 +124,7 @@ const Login = () => {
                     </Button>
                 </form>
             </div>
-        </div>)
+        </Box>)
     );
 };
 

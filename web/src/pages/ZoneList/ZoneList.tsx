@@ -9,8 +9,8 @@ import {
     GridOverlay,
     GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { LinearProgress, IconButton, Typography } from "@mui/material";
-import { useDataGridStyles } from "styles/DataGrid.styles";
+import { LinearProgress, IconButton, Typography, Box } from "@mui/material";
+import { mediaCompressedDataGrid, useDataGridStyles } from "styles/DataGrid.styles";
 import { useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -18,6 +18,7 @@ import reqeustZoneRows from "./reqeustZoneRows";
 import React from "react";
 import { Cancel } from "@mui/icons-material";
 import { SearchOption } from "./searchOptions";
+import { mediaMobile } from "theme.styles";
 // import { IRouteParams } from "@cbr/common/forms/Zone/zoneFields";
 const RenderText = (params: GridRenderCellParams) => {
     return <Typography variant={"body2"}>{String(params.value)}</Typography>; // todo: String() ok?
@@ -93,14 +94,46 @@ const ZoneList = () => {
     }, [searchValue, searchOption, serverRows]);
 
     return (
-        (<div className={styles.container}>
-            <div className={styles.topContainer}>
+        <Box
+            sx={{
+                height: "calc(100vh - 175px)",
+                minHeight: 400,
+                padding: "5px 0px 25px 0px",
+                [mediaMobile]: {
+                    height: "calc(100vh - 150px)",
+                    paddingBottom: "50px",
+                },
+                [mediaCompressedDataGrid]: {
+                    paddingBottom: "71px",
+                },
+            }}
+        >
+            <Box
+                sx={{
+                    justifyContent: "flex-end",
+                    display: "flex",
+                    [mediaCompressedDataGrid]: {
+                        flexGrow: 1,
+                        justifyContent: "center",
+                    },
+                }}
+            >
                 <IconButton onClick={onZoneAddClick} className={styles.icon} size="large">
                     <AddLocationIcon />
                 </IconButton>
                 <SearchBar value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
-            </div>
-            <div className={styles.dataGridWrapper}>
+            </Box>
+            <Box
+                sx={{
+                    height: "100%",
+                    width: "100%",
+                    [mediaCompressedDataGrid]: {
+                        height: "100%",
+                        width: "100%",
+                        marginTop: 0,
+                    }
+                }}
+            >
                 <DataGrid
                     className={dataGridStyle.datagrid}
                     loading={loading}
@@ -120,8 +153,8 @@ const ZoneList = () => {
                         },
                     ]}
                 />
-            </div>
-        </div>)
+            </Box>
+        </Box>
     );
 };
 

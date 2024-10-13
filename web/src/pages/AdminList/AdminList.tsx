@@ -16,8 +16,9 @@ import {
     MenuItem,
     Popover,
     Switch,
+    Box,
 } from "@mui/material";
-import { useDataGridStyles } from "styles/DataGrid.styles";
+import { mediaCompressedDataGrid, useDataGridStyles } from "styles/DataGrid.styles";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import { useRef } from "react";
@@ -28,6 +29,7 @@ import React from "react";
 import { Cancel, MoreVert } from "@mui/icons-material";
 import { SearchOption } from "../ClientList/searchOptions";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import { mediaMobile } from "theme.styles";
 
 const RenderText = (params: GridRenderCellParams) => {
     return <Typography variant={"body2"}>{String(params.value)}</Typography>; // todo: String conversion ok here?
@@ -151,14 +153,38 @@ const AdminList = () => {
             );
             setFilteredRows(filteredRows);
         } else if (searchOption === SearchOption.ZONE) {
-            const filteredRows: GridRowsProp = serverRows.filter((r) => r.zone.startsWith(searchValue));
+            const filteredRows: GridRowsProp = serverRows.filter((r) =>
+                r.zone.startsWith(searchValue)
+            );
             setFilteredRows(filteredRows);
         }
     }, [searchValue, searchOption, serverRows]);
 
     return (
-        (<div className={styles.container}>
-            <div className={styles.topContainer}>
+        <Box
+            sx={{
+                height: "calc(100vh - 175px)",
+                minHeight: 400,
+                padding: "5px 0px 25px 0px",
+                [mediaMobile]: {
+                    height: "calc(100vh - 150px)",
+                    paddingBottom: "50px",
+                },
+                [mediaCompressedDataGrid]: {
+                    paddingBottom: "71px",
+                },
+            }}
+        >
+            <Box
+                sx={{
+                    justifyContent: "flex-end",
+                    display: "flex",
+                    [mediaCompressedDataGrid]: {
+                        flexGrow: 1,
+                        justifyContent: "center",
+                    },
+                }}
+            >
                 <IconButton onClick={onAdminAddClick} className={styles.icon} size="large">
                     <PersonAddIcon />
                 </IconButton>
@@ -171,7 +197,8 @@ const AdminList = () => {
                         onChange={(event) => {
                             setSearchValue("");
                             setSearchOption(String(event.target.value));
-                        }}>
+                        }}
+                    >
                         {Object.values(SearchOption).map((option) => (
                             <MenuItem key={option} value={option}>
                                 {option}
@@ -186,7 +213,8 @@ const AdminList = () => {
                             className={searchOptionsStyle.zoneOptions}
                             color={"primary"}
                             defaultValue={""}
-                            onChange={(event) => setSearchValue(String(event.target.value))}>
+                            onChange={(event) => setSearchValue(String(event.target.value))}
+                        >
                             {Array.from(zones).map(([id, name]) => (
                                 <MenuItem key={id} value={name}>
                                     {name}
@@ -203,7 +231,8 @@ const AdminList = () => {
                 <IconButton
                     className={hideColumnsStyle.optionsButton}
                     onClick={onOptionsClick}
-                    size="large">
+                    size="large"
+                >
                     <MoreVert />
                 </IconButton>
                 <Popover
@@ -235,8 +264,18 @@ const AdminList = () => {
                         })}
                     </div>
                 </Popover>
-            </div>
-            <div className={styles.dataGridWrapper}>
+            </Box>
+            <Box
+                sx={{
+                    height: "100%",
+                    width: "100%",
+                    [mediaCompressedDataGrid]: {
+                        height: "100%",
+                        width: "100%",
+                        marginTop: 0,
+                    }
+                }}
+            >
                 <DataGrid
                     className={dataGridStyle.datagrid}
                     loading={loading}
@@ -256,8 +295,8 @@ const AdminList = () => {
                         },
                     ]}
                 />
-            </div>
-        </div>)
+            </Box>
+        </Box>
     );
 };
 

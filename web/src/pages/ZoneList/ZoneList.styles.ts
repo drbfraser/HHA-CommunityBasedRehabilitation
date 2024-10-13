@@ -2,6 +2,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { mediaCompressedDataGrid } from "styles/DataGrid.styles";
 import { mediaMobile } from "theme.styles";
 
+// todo: finish migration to sx
 export const useStyles = makeStyles(
     {
         container: {
@@ -20,26 +21,26 @@ export const useStyles = makeStyles(
         icon: {
             padding: "0px 15px 0px 0px",
         },
-        [mediaMobile]: {
-            container: {
-                height: "calc(100vh - 150px)",
-                paddingBottom: "50px",
-            },
-        },
-        [mediaCompressedDataGrid]: {
-            container: {
-                paddingBottom: "71px",
-            },
-            topContainer: {
-                flexGrow: 1,
-                justifyContent: "center",
-            },
-            dataGridWrapper: {
-                height: "100%",
-                width: "100%",
-                marginTop: 0,
-            },
-        },
+        // [mediaMobile]: {
+        //     container: {
+        //         height: "calc(100vh - 150px)",
+        //         paddingBottom: "50px",
+        //     },
+        // },
+        // [mediaCompressedDataGrid]: {
+        //     container: {
+        //         paddingBottom: "71px",
+        //     },
+        //     topContainer: {
+        //         flexGrow: 1,
+        //         justifyContent: "center",
+        //     },
+        //     dataGridWrapper: {
+        //         height: "100%",
+        //         width: "100%",
+        //         marginTop: 0,
+        //     },
+        // },
     },
     { index: 1 }
 );

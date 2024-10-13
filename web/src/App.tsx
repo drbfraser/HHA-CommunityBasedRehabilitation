@@ -15,6 +15,9 @@ import { defaultPagePath, pagesForUser } from "util/pages";
 import Login from "pages/Login/Login";
 import { useStyles } from "App.styles";
 import { useIsLoggedIn } from "./util/hooks/loginState";
+import { Box } from "@mui/material";
+import { themeColors } from "@cbr/common/util/colors";
+import { mediaMobile } from "theme.styles";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
@@ -39,25 +42,80 @@ const App = () => {
     const PrivateRoutes = () => {
         const user = useCurrentUser();
 
+        // todo: verify no consequences from replacing all <div> with Box
         return (
-            <div className={styles.container}>
+            <Box
+                // container
+                sx={{
+                    minHeight: "100%",
+                    display: "flex",
+                    flexDirection: "row",
+                    [mediaMobile]: {
+                        flexDirection: "column-reverse",
+                        height: "100%",
+                    },
+                }}
+            >
                 <SideNav />
-                <div className={styles.pageContainer}>
+                <Box
+                    // pageContainer
+                    sx={{
+                        width: "100%",
+                        padding: 20,
+                        borderRadius: "50px 0 0 50px",
+                        boxShadow: "-5px 0px 10px rgba(25, 25, 25, 0.2)",
+                        backgroundColor: themeColors.blueBgLight,
+                        [mediaMobile]: {
+                            height: "100%",
+                            width: "auto",
+                            padding: 0,
+                            overflowX: "auto",
+                            overflowY: "auto",
+                            borderRadius: "0 0 30px 30px",
+                            boxShadow: "0px 5px 10px rgba(25, 25, 25, 0.2)",
+                        },
+                    }}
+                >
                     <Switch>
                         {pagesForUser(user).map((page) => (
                             <Route key={page.path} exact={page.exact ?? true} path={page.path}>
                                 {open && <AlertNotification alertInfo={alert} setOpen={setOpen} />}
-                                <Typography variant="h1" className={styles.pageTitle}>
+                                <Typography
+                                    variant="h1"
+                                    sx={{
+                                        // pageTitle
+                                        marginLeft: 20,
+                                        fontWeight: "bold",
+                                        [mediaMobile]: {
+                                            marginTop: 10,
+                                            marginLeft: 0,
+                                            fontSize: "40px",
+                                            textAlign: "center",
+                                        }
+                                    }}
+                                >
                                     {page.name}
                                 </Typography>
-                                <div className={styles.pageContent}>
+                                <Box
+                                    // pageContent
+                                    sx={{
+                                        marginTop: 20,
+                                        padding: 20,
+                                        borderRadius: 30,
+                                        backgroundColor: "white",
+                                        boxShadow: "0px 0px 10px rgba(25, 25, 25, 0.1)",
+                                        [mediaMobile]: {
+                                            marginTop: 10,
+                                        },
+                                    }}
+                                >
                                     <page.Component />
-                                </div>
+                                </Box>
                             </Route>
                         ))}
                     </Switch>
-                </div>
-            </div>
+                </Box>
+            </Box>
         );
     };
 

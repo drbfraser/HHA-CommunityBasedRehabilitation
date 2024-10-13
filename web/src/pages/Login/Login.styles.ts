@@ -2,6 +2,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import BackgroundImage from "./background.svg";
 import BackgroundImageMobile from "./backgroundMobile.svg";
 
+// todo: complete export
 export const useStyles = makeStyles(
     {
         container: {
@@ -33,9 +34,9 @@ export const useStyles = makeStyles(
             },
         },
         "@media (max-width: 600px)": {
-            container: {
-                backgroundImage: `url(${BackgroundImageMobile})`,
-            },
+            // container: {
+            //     backgroundImage: `url(${BackgroundImageMobile})`,
+            // },
             formContainer: {
                 margin: "0 auto",
                 top: "25%",

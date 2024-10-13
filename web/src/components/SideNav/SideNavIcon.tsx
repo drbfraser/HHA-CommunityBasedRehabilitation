@@ -6,10 +6,11 @@ import { IPage } from "util/pages";
 import { useStyles } from "./SideNav.styles";
 import { IAlert } from "@cbr/common/util/alerts";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
-import { Alert } from '@mui/material';
+import { Alert } from "@mui/material";
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import { mediaMobile } from "theme.styles";
 
 interface IProps {
     page: IPage;
@@ -64,7 +65,15 @@ const SideNavIcon = ({ page, active }: IProps) => {
                     title={props.page.name}
                     placement="top"
                     arrow
-                    classes={{ tooltip: styles.tooltip }}
+                    // classes={{ tooltip: styles.tooltip }}
+                    // todo: sx replaces classes here?
+                    sx={{
+                        // tooltip
+                        fontSize: 14,
+                        "&, & .MuiTooltip-arrow:before": {
+                            backgroundColor: "black",
+                        },
+                    }}
                     TransitionComponent={NoTransition}
                 >
                     <div className={styles.icon + (active ? ` ${styles.active}` : "")}>
@@ -79,7 +88,19 @@ const SideNavIcon = ({ page, active }: IProps) => {
         <Badge
             badgeContent={unreadAlertsCount}
             max={9}
-            className={styles.notificationBadge}
+            sx={{
+                // notificationBadge
+                justifyContent: "center",
+                "& .MuiBadge-badge": {
+                    right: 20,
+                    top: 15,
+                },
+                [mediaMobile]: {
+                    "& .MuiBadge-badge": {
+                        right: 10,
+                    },
+                }
+            }}
             color="error"
             anchorOrigin={{
                 vertical: "top",

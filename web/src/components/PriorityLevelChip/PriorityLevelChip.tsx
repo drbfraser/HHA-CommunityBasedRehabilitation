@@ -1,6 +1,6 @@
 import React from "react";
 import { Chip, ChipProps } from "@mui/material";
-import { useStyles } from "./PriorityLevelChip.styles";
+import { priorityLevelChipStyles } from "./PriorityLevelChip.styles";
 import { PriorityLevel, priorityLevels } from "@cbr/common/util/alerts";
 
 interface PriorityChipProps extends ChipProps {
@@ -8,12 +8,11 @@ interface PriorityChipProps extends ChipProps {
 }
 
 const PriorityLevelChip = (props: PriorityChipProps) => {
-    const styles = useStyles();
     const priorityLevel = priorityLevels[props.priority];
 
     return (
         <Chip
-            className={styles.chip}
+            sx={priorityLevelChipStyles.chip}
             label={priorityLevel ? priorityLevel.name : "High"}
             style={{ backgroundColor: priorityLevel ? priorityLevel.color : "red" }}
             {...props}

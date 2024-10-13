@@ -4,11 +4,9 @@ import TextField from "@mui/material/TextField";
 import Alert from '@mui/material/Alert';
 import React, { useState } from "react";
 import { doLogin } from "@cbr/common/util/auth";
-import { useStyles } from "./Login.styles";
+import { clientListStyles } from "./Login.styles";
 import { loginState } from "../../util/hooks/loginState";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
-import BackgroundImage from "./background.svg";
-import BackgroundImageMobile from "./backgroundMobile.svg";
 
 interface IBaseLoginStatus {
     status: "initial" | "submitting";
@@ -22,8 +20,6 @@ interface ILoginStatusFailed {
 type LoginStatus = ILoginStatusFailed | IBaseLoginStatus;
 
 const Login = () => {
-    const styles = useStyles();
-
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [status, setStatus] = useState<LoginStatus>({ status: "initial" });
@@ -68,18 +64,11 @@ const Login = () => {
     };
 
     return (
-        (<Box sx={{
-            height: "100%",
-            backgroundRepeat: "no-repeat",
-            backgroundImage: `url(${BackgroundImage})`,
-            backgroundSize: "100% auto",
-            "@media (max-width: 600px)": { // todo: check this max-width relative to mediaMobile
-                backgroundImage: `url(${BackgroundImageMobile})`,
-            }
-        }}>
-            <div className={styles.formContainer}>
-                <img
-                    className={styles.logo}
+        (<Box sx={clientListStyles.container}>
+            <Box sx={clientListStyles.formContainer}>
+                <Box
+                    component="img"
+                    sx={clientListStyles.logo}
                     src="/images/hha_logo_white.png"
                     alt="Hope Health Action"
                 />
@@ -123,7 +112,7 @@ const Login = () => {
                         Login
                     </Button>
                 </form>
-            </div>
+            </Box>
         </Box>)
     );
 };

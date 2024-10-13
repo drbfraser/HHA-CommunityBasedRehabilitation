@@ -13,15 +13,12 @@ import AlertNotification from "./components/Alerts/AlertNotification";
 import AlertOffline from "./components/Alerts/AlertOffline";
 import { defaultPagePath, pagesForUser } from "util/pages";
 import Login from "pages/Login/Login";
-import { useStyles } from "App.styles";
+import { appStyles } from "App.styles";
 import { useIsLoggedIn } from "./util/hooks/loginState";
 import { Box } from "@mui/material";
-import { themeColors } from "@cbr/common/util/colors";
-import { mediaMobile } from "theme.styles";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
-    const styles = useStyles();
     const [open, setOpen] = useState<boolean>(false);
     const [alert, setAlert] = useState<Partial<IAlert>>();
 
@@ -45,36 +42,11 @@ const App = () => {
         // todo: verify no consequences from replacing all <div> with Box
         return (
             <Box
-                // container
-                sx={{
-                    minHeight: "100%",
-                    display: "flex",
-                    flexDirection: "row",
-                    [mediaMobile]: {
-                        flexDirection: "column-reverse",
-                        height: "100%",
-                    },
-                }}
+                sx={appStyles.container}
             >
                 <SideNav />
                 <Box
-                    // pageContainer
-                    sx={{
-                        width: "100%",
-                        padding: '20px',
-                        borderRadius: "50px 0 0 50px",
-                        boxShadow: "-5px 0px 10px rgba(25, 25, 25, 0.2)",
-                        backgroundColor: themeColors.blueBgLight,
-                        [mediaMobile]: {
-                            height: "100%",
-                            width: "auto",
-                            padding: 0,
-                            overflowX: "auto",
-                            overflowY: "auto",
-                            borderRadius: "0 0 30px 30px",
-                            boxShadow: "0px 5px 10px rgba(25, 25, 25, 0.2)",
-                        },
-                    }}
+                    sx={appStyles.pageContainer}
                 >
                     <Switch>
                         {pagesForUser(user).map((page) => (
@@ -82,32 +54,12 @@ const App = () => {
                                 {open && <AlertNotification alertInfo={alert} setOpen={setOpen} />}
                                 <Typography
                                     variant="h1"
-                                    sx={{
-                                        // pageTitle
-                                        marginLeft: "20px",
-                                        fontWeight: "bold",
-                                        [mediaMobile]: {
-                                            marginTop: "10px",
-                                            marginLeft: 0,
-                                            fontSize: "40px",
-                                            textAlign: "center",
-                                        }
-                                    }}
+                                    sx={appStyles.pageTitle}
                                 >
                                     {page.name}
                                 </Typography>
                                 <Box
-                                    // pageContent
-                                    sx={{
-                                        marginTop: "20px",
-                                        padding: "20px",
-                                        borderRadius: "30px",
-                                        backgroundColor: "white",
-                                        boxShadow: "0px 0px 10px rgba(25, 25, 25, 0.1)",
-                                        [mediaMobile]: {
-                                            marginTop: "10px",
-                                        },
-                                    }}
+                                    sx={appStyles.pageContent}
                                 >
                                     <page.Component />
                                 </Box>

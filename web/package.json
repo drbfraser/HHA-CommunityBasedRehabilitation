@@ -13,7 +13,6 @@
         "@mui/lab": "^5.0.0-alpha.170",
         "@mui/material": "^5.16.7",
         "@mui/styles": "^6.1.2",
-        "@mui/system": "^5.16.7",
         "@mui/x-data-grid": "^5.17.26",
         "@testing-library/jest-dom": "^5.11.9",
         "@testing-library/react": "^11.2.3",

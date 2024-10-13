@@ -1,21 +1,21 @@
 import React from "react";
 import { Switch, SwitchProps } from "@mui/material";
-import { useStyles } from "./IOSSwitch.styles";
+import { iOSSwitchStyles } from "./IOSSwitch.styles";
 
 const IOSSwitch = (props: SwitchProps) => {
-    const styles = useStyles();
 
     return (
         <Switch
-            focusVisibleClassName={styles.focusVisible}
+            focusVisibleClassName="" // todo: was {}, correct replacement?
             disableRipple
-            classes={{
-                root: styles.root,
-                switchBase: styles.switchBase,
-                thumb: styles.thumb,
-                track: styles.track,
-                checked: styles.checked,
-            }}
+            // classes={{
+            //     root: stylesiOSSwitchStyles.root,
+            //     switchBase: styles.switchBase,
+            //     thumb: styles.thumb,
+            //     track: styles.track,
+            //     checked: styles.checked,
+            // }}
+            sx={iOSSwitchStyles} // todo: are these being applied?
             {...props}
         />
     );

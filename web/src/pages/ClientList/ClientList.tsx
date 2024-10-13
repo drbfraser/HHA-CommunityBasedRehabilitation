@@ -4,15 +4,15 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import {
     GridCellParams,
     GridCellValue, // TODO: fix deprecated
-    // ColParams,
-    GridColDef,
+    GridColumnHeaderParams,
     DataGrid,
     GridDensityTypes,
     GridOverlay,
     GridRowParams,
     GridRowsProp,
     GridValueFormatterParams,
-} from "@mui/x-data-grid";
+    GridSortCellParams,
+} from "@material-ui/data-grid";
 import { useStyles } from "./ClientList.styles";
 import { compressedDataGridWidth, useDataGridStyles } from "styles/DataGrid.styles";
 import {
@@ -40,13 +40,14 @@ import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import { useZones } from "@cbr/common/util/hooks/zones";
 
-const riskComparator = (v1: GridCellValue, v2: GridCellValue, params1: GridCellParams, params2: GridCellParams) => {
+// todo: update from GridCellParams -> GridSortCellParams ok?
+const riskComparator = (v1: GridCellValue, v2: GridCellValue, params1: GridSortCellParams, params2: GridSortCellParams) => {
     const risk1: IRiskLevel = riskLevels[String(params1.value)];
     const risk2: IRiskLevel = riskLevels[String(params2.value)];
     return risk1.level - risk2.level;
 };
 
-const RenderRiskHeader = (params: ColParams): JSX.Element => {
+const RenderRiskHeader = (params: GridColumnHeaderParams): JSX.Element => {
     const riskType: IRiskType = riskTypes[params.field];
 
     return (
@@ -62,7 +63,7 @@ const RenderText = (params: GridValueFormatterParams) => {
             variant={"body2"}
             color={params.row.is_active ? "textPrimary" : "textSecondary"}
         >
-            {params.value}
+            {String(params.value)} {/* todo: String ok here? */}
         </Typography>
     );
 };
@@ -153,7 +154,14 @@ const ClientList = () => {
     };
 
     const sortClientsById = (rows: GridRowsProp) => {
-        let sortById: GridRowsProp = rows.slice(0);
+        // let sortById: GridRowsProp = rows.slice(0);
+
+        // sortById.sort((a: any, b: any) => {
+        //     return a.id - b.id;
+        // });
+
+
+        let sortById = rows.slice(0); // todo: re-add type?  still has functionality?
 
         sortById.sort((a: any, b: any) => {
             return a.id - b.id;

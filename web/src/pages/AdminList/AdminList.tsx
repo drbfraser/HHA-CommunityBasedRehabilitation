@@ -7,7 +7,7 @@ import {
     GridRowsProp,
     GridOverlay,
     GridValueFormatterParams,
-} from "@mui/x-data-grid";
+} from "@material-ui/data-grid";
 import {
     LinearProgress,
     IconButton,
@@ -30,7 +30,7 @@ import { SearchOption } from "../ClientList/searchOptions";
 import { useZones } from "@cbr/common/util/hooks/zones";
 
 const RenderText = (params: GridValueFormatterParams) => {
-    return <Typography variant={"body2"}>{params.value}</Typography>;
+    return <Typography variant={"body2"}>{String(params.value)}</Typography>; // todo: String conversion ok here?
 };
 
 const RenderLoadingOverlay = () => {

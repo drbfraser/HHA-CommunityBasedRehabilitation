@@ -4,10 +4,10 @@ import SearchBar from "components/SearchBar/SearchBar";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import {
     DataGrid,
-    DensityTypes,
-    RowsProp,
+    GridDensityTypes,
+    GridRowsProp,
     GridOverlay,
-    ValueFormatterParams,
+    GridValueFormatterParams,
 } from "@material-ui/data-grid";
 import { LinearProgress, IconButton, Typography } from "@mui/material";
 import { useDataGridStyles } from "styles/DataGrid.styles";
@@ -19,8 +19,8 @@ import React from "react";
 import { Cancel } from "@mui/icons-material";
 import { SearchOption } from "./searchOptions";
 // import { IRouteParams } from "@cbr/common/forms/Zone/zoneFields";
-const RenderText = (params: ValueFormatterParams) => {
-    return <Typography variant={"body2"}>{params.value}</Typography>;
+const RenderText = (params: GridValueFormatterParams) => {
+    return <Typography variant={"body2"}>{String(params.value)}</Typography>; // todo: String() ok?
 };
 
 const RenderLoadingOverlay = () => {
@@ -49,8 +49,8 @@ const ZoneList = () => {
     const [searchOption] = useState<string>(SearchOption.ZONE);
     const [loading, setLoading] = useState<boolean>(true);
     const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
-    const [filteredRows, setFilteredRows] = useState<RowsProp>([]);
-    const [serverRows, setServerRows] = useState<RowsProp>([]);
+    const [filteredRows, setFilteredRows] = useState<GridRowsProp>([]); // todo: RowsProp -> GridRowsProp ok?
+    const [serverRows, setServerRows] = useState<GridRowsProp>([]);
     const styles = useStyles();
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
@@ -88,7 +88,7 @@ const ZoneList = () => {
             return;
         }
 
-        const filteredRows: RowsProp = serverRows.filter((r) => r.zone.startsWith(searchValue));
+        const filteredRows: GridRowsProp = serverRows.filter((r) => r.zone.startsWith(searchValue));
         setFilteredRows(filteredRows);
     }, [searchValue, searchOption, serverRows]);
 
@@ -110,7 +110,7 @@ const ZoneList = () => {
                     }}
                     rows={filteredRows}
                     columns={adminColumns}
-                    density={DensityTypes.Comfortable}
+                    density={GridDensityTypes.Comfortable}
                     onRowClick={onRowClick}
                     pagination
                     sortModel={[

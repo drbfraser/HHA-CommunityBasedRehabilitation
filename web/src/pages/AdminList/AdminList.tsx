@@ -1,4 +1,5 @@
-import { useStyles } from "./AdminList.styles";
+import { adminListStyles } from "./AdminList.styles";
+import { dataGridStyles } from "styles/DataGrid.styles";
 import SearchBar from "components/SearchBar/SearchBar";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import {
@@ -18,7 +19,6 @@ import {
     Switch,
     Box,
 } from "@mui/material";
-import { mediaCompressedDataGrid, useDataGridStyles } from "styles/DataGrid.styles";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import { useRef } from "react";
@@ -29,7 +29,6 @@ import React from "react";
 import { Cancel, MoreVert } from "@mui/icons-material";
 import { SearchOption } from "../ClientList/searchOptions";
 import { useZones } from "@cbr/common/util/hooks/zones";
-import { mediaMobile } from "theme.styles";
 
 const RenderText = (params: GridRenderCellParams) => {
     return <Typography variant={"body2"}>{String(params.value)}</Typography>; // todo: String conversion ok here?
@@ -46,11 +45,9 @@ const RenderLoadingOverlay = () => {
 };
 
 const RenderNoRowsOverlay = () => {
-    const styles = useDataGridStyles();
-
     return (
-        <GridOverlay className={styles.noRows}>
-            <Cancel color="primary" className={styles.noRowsIcon} />
+        <GridOverlay sx={dataGridStyles.noRows}>
+            <Cancel color="primary" sx={dataGridStyles.noRowsIcon} />
             <Typography color="primary">No Users Found</Typography>
         </GridOverlay>
     );
@@ -71,8 +68,6 @@ const AdminList = () => {
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
     const zones = useZones();
-    const styles = useStyles();
-    const dataGridStyle = useDataGridStyles();
     const searchOptionsStyle = useSearchOptionsStyles();
     const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
@@ -161,31 +156,9 @@ const AdminList = () => {
     }, [searchValue, searchOption, serverRows]);
 
     return (
-        <Box
-            sx={{
-                height: "calc(100vh - 175px)",
-                minHeight: 400,
-                padding: "5px 0px 25px 0px",
-                [mediaMobile]: {
-                    height: "calc(100vh - 150px)",
-                    paddingBottom: "50px",
-                },
-                [mediaCompressedDataGrid]: {
-                    paddingBottom: "71px",
-                },
-            }}
-        >
-            <Box
-                sx={{
-                    justifyContent: "flex-end",
-                    display: "flex",
-                    [mediaCompressedDataGrid]: {
-                        flexGrow: 1,
-                        justifyContent: "center",
-                    },
-                }}
-            >
-                <IconButton onClick={onAdminAddClick} className={styles.icon} size="large">
+        <Box sx={adminListStyles.container}>
+            <Box sx={adminListStyles.topContainer}>
+                <IconButton onClick={onAdminAddClick} sx={adminListStyles.icon} size="large">
                     <PersonAddIcon />
                 </IconButton>
                 <div className={searchOptionsStyle.searchOptions}>
@@ -266,18 +239,10 @@ const AdminList = () => {
                 </Popover>
             </Box>
             <Box
-                sx={{
-                    height: "100%",
-                    width: "100%",
-                    [mediaCompressedDataGrid]: {
-                        height: "100%",
-                        width: "100%",
-                        marginTop: 0,
-                    }
-                }}
+                sx={adminListStyles.dataGridWrapper}
             >
                 <DataGrid
-                    className={dataGridStyle.datagrid}
+                    sx={dataGridStyles.datagrid}
                     loading={loading}
                     components={{
                         LoadingOverlay: RenderLoadingOverlay,

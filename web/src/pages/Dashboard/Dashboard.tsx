@@ -13,16 +13,16 @@ import { IOutstandingReferral } from "@cbr/common/util/referrals";
 import { Alert } from '@mui/material';
 import {
     DataGrid,
-    ColParams,
-    CellValue,
-    CellParams,
-    RowParams,
-    DensityTypes,
-    ValueFormatterParams,
+    GridColumnHeaderParams,
+    GridCellValue,
+    GridRowParams,
+    GridDensityTypes,
     GridOverlay,
-    RowsProp,
-    RowData,
-} from "@material-ui/data-grid";
+    GridRowsProp,
+    GridRowData,
+    GridSortCellParams,
+    GridRenderCellParams,
+} from "@mui/x-data-grid";
 import { IAlert } from "@cbr/common/util/alerts";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
@@ -31,8 +31,8 @@ const Dashboard = () => {
     const dataGridStyle = useDataGridStyles();
     const history = useHistory();
 
-    const [clients, setClients] = useState<RowData[]>([]);
-    const [referrals, setReferrals] = useState<RowsProp>([]);
+    const [clients, setClients] = useState<GridRowData[]>([]);
+    const [referrals, setReferrals] = useState<GridRowsProp>([]);
     const zones = useZones();
     const [isPriorityClientsLoading, setPriorityClientsLoading] = useState<boolean>(true);
     const [referralsLoading, setReferralsLoading] = useState<boolean>(true);
@@ -49,7 +49,8 @@ const Dashboard = () => {
                     await apiFetch(Endpoint.CLIENTS, "?is_active=true")
                 ).json();
 
-                const priorityClients: RowsProp = tempClients
+                // const priorityClients: GridRowsProp = tempClients 
+                const priorityClients = tempClients  // todo: set type back to GridRowsProp?  not mutable?
                     .sort(clientPrioritySort)
                     .slice(0, 5)
                     .map((row: IClientSummary) => {
@@ -80,7 +81,7 @@ const Dashboard = () => {
                     await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
                 ).json();
 
-                const outstandingReferrals: RowsProp = tempReferrals
+                const outstandingReferrals: GridRowsProp = tempReferrals
                     .sort(
                         (a: IOutstandingReferral, b: IOutstandingReferral) =>
                             a.date_referred - b.date_referred
@@ -140,7 +141,7 @@ const Dashboard = () => {
     }, [unreadAlertsCount]);
 
     /* TODO I have changed it with an existance check, need to reverse it when backend is ready */
-    const RenderBadge = (params: ValueFormatterParams) => {
+    const RenderBadge = (params: GridRenderCellParams) => {
         const risk: RiskLevel = Object(params.value);
         return (
             <FiberManualRecord
@@ -149,22 +150,22 @@ const Dashboard = () => {
         );
     };
 
-    const RenderText = (params: ValueFormatterParams) => {
-        return <Typography variant={"body2"}>{params.value}</Typography>;
+    const RenderText = (params: GridRenderCellParams) => {
+        return <Typography variant={"body2"}>{String(params.value)}</Typography>; // todo: String() ok?
     };
 
     const riskComparator = (
-        v1: CellValue,
-        v2: CellValue,
-        params1: CellParams,
-        params2: CellParams
+        v1: GridCellValue,
+        v2: GridCellValue,
+        params1: GridSortCellParams, // todo: ok to update GridCellParams to GridSortCellParams?
+        params2: GridSortCellParams
     ) => {
         const risk1: IRiskLevel = riskLevels[String(params1.value)];
         const risk2: IRiskLevel = riskLevels[String(params2.value)];
         return risk1.level - risk2.level;
     };
 
-    const RenderRiskHeader = (params: ColParams): JSX.Element => {
+    const RenderRiskHeader = (params: GridColumnHeaderParams): JSX.Element => {
         const riskType: IRiskType = riskTypes[params.field];
 
         return (
@@ -193,7 +194,7 @@ const Dashboard = () => {
     const locale = navigator.language;
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    const RenderDate = (params: ValueFormatterParams) => {
+    const RenderDate = (params: GridRenderCellParams) => {
         return Number(params.value) === 0 ? (
             <Typography variant={"body2"}>No Visits</Typography>
         ) : (
@@ -203,7 +204,7 @@ const Dashboard = () => {
         );
     };
 
-    const RenderZone = (params: ValueFormatterParams) => {
+    const RenderZone = (params: GridRenderCellParams) => {
         return (
             <Typography variant={"body2"}>
                 {zones ? zones.get(Number(params.value)) : ""}
@@ -211,9 +212,9 @@ const Dashboard = () => {
         );
     };
 
-    const handleClientRowClick = (rowParams: RowParams) =>
+    const handleClientRowClick = (rowParams: GridRowParams) =>
         history.push(`/client/${rowParams.row.id}`);
-    const handleReferralRowClick = (rowParams: RowParams) =>
+    const handleReferralRowClick = (rowParams: GridRowParams) =>
         history.push(`/client/${rowParams.row.client_id}`);
 
     const priorityClientsColumns = [
@@ -308,7 +309,7 @@ const Dashboard = () => {
                                     columns={priorityClientsColumns}
                                     pageSize={5}
                                     onRowClick={handleClientRowClick}
-                                    density={DensityTypes.Comfortable}
+                                    density={GridDensityTypes.Comfortable}
                                     components={{
                                         NoRowsOverlay: RenderNoPriorityClientsOverlay,
                                     }}
@@ -331,7 +332,7 @@ const Dashboard = () => {
                                     loading={referralsLoading}
                                     columns={outstandingReferralsColumns}
                                     pageSize={5}
-                                    density={DensityTypes.Comfortable}
+                                    density={GridDensityTypes.Comfortable}
                                     onRowClick={handleReferralRowClick}
                                     components={{
                                         NoRowsOverlay: RenderNoOutstandingReferralsOverlay,

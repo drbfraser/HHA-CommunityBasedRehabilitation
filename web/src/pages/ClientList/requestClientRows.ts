@@ -1,4 +1,4 @@
-import { RowsProp } from "@material-ui/data-grid";
+import { GridRowsProp } from "@mui/x-data-grid";
 import { IClientSummary } from "@cbr/common/util/clients";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
@@ -7,7 +7,7 @@ import { RiskType } from "@cbr/common/util/risks";
 import { SearchOption } from "./searchOptions";
 
 const requestClientRows = async (
-    setRows: (rows: RowsProp) => void,
+    setRows: (rows: GridRowsProp) => void,
     setLoading: (loading: boolean) => void,
     searchValue: string,
     searchOption: string,
@@ -42,7 +42,7 @@ const requestClientRows = async (
         const resp = await apiFetch(Endpoint.CLIENTS, "?" + urlParams.toString());
         const responseRows: IClientSummary[] = await resp.json();
 
-        const rows: RowsProp = responseRows.map((responseRow) => {
+        const rows: GridRowsProp = responseRows.map((responseRow) => {
             return {
                 id: responseRow.id,
                 name: responseRow.full_name,

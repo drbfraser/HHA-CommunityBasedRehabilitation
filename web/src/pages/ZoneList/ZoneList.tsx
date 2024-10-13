@@ -7,8 +7,8 @@ import {
     GridDensityTypes,
     GridRowsProp,
     GridOverlay,
-    GridValueFormatterParams,
-} from "@material-ui/data-grid";
+    GridRenderCellParams,
+} from "@mui/x-data-grid";
 import { LinearProgress, IconButton, Typography } from "@mui/material";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useRef } from "react";
@@ -19,7 +19,7 @@ import React from "react";
 import { Cancel } from "@mui/icons-material";
 import { SearchOption } from "./searchOptions";
 // import { IRouteParams } from "@cbr/common/forms/Zone/zoneFields";
-const RenderText = (params: GridValueFormatterParams) => {
+const RenderText = (params: GridRenderCellParams) => {
     return <Typography variant={"body2"}>{String(params.value)}</Typography>; // todo: String() ok?
 };
 

@@ -6,8 +6,8 @@ import {
     GridDensityTypes,
     GridRowsProp,
     GridOverlay,
-    GridValueFormatterParams,
-} from "@material-ui/data-grid";
+    GridRenderCellParams,
+} from "@mui/x-data-grid";
 import {
     LinearProgress,
     IconButton,
@@ -29,7 +29,7 @@ import { Cancel, MoreVert } from "@mui/icons-material";
 import { SearchOption } from "../ClientList/searchOptions";
 import { useZones } from "@cbr/common/util/hooks/zones";
 
-const RenderText = (params: GridValueFormatterParams) => {
+const RenderText = (params: GridRenderCellParams) => {
     return <Typography variant={"body2"}>{String(params.value)}</Typography>; // todo: String conversion ok here?
 };
 

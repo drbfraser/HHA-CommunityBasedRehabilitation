@@ -8,7 +8,7 @@ import {
     TextField,
 } from "@mui/material";
 import { IUser } from "@cbr/common/util/users";
-import { Autocomplete } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { AutocompleteRenderInputParams } from '@mui/lab';
 
 interface IProps {

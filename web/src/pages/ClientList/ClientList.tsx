@@ -2,7 +2,6 @@ import React from "react";
 import { CSVLink } from "react-csv";
 import { useCallback, useEffect, useState, useRef } from "react";
 import {
-    GridCellParams,
     GridCellValue, // TODO: fix deprecated
     GridColumnHeaderParams,
     DataGrid,
@@ -10,9 +9,9 @@ import {
     GridOverlay,
     GridRowParams,
     GridRowsProp,
-    GridValueFormatterParams,
     GridSortCellParams,
-} from "@material-ui/data-grid";
+    GridRenderCellParams,
+} from "@mui/x-data-grid";
 import { useStyles } from "./ClientList.styles";
 import { compressedDataGridWidth, useDataGridStyles } from "styles/DataGrid.styles";
 import {
@@ -57,7 +56,7 @@ const RenderRiskHeader = (params: GridColumnHeaderParams): JSX.Element => {
     );
 };
 
-const RenderText = (params: GridValueFormatterParams) => {
+const RenderText = (params: GridRenderCellParams) => {
     return (
         <Typography
             variant={"body2"}
@@ -68,7 +67,7 @@ const RenderText = (params: GridValueFormatterParams) => {
     );
 };
 
-const RenderBadge = (params: GridValueFormatterParams) => {
+const RenderBadge = (params: GridRenderCellParams) => {
     const risk: RiskLevel = Object(params.value);
 
     return window.innerWidth >= compressedDataGridWidth ? (

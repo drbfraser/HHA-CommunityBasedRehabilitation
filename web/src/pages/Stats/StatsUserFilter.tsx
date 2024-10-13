@@ -44,6 +44,7 @@ const StatsUserFilter = ({ open, onClose, users, user, setUser }: IProps) => {
                     onChange={(e, v) => setSelectedUser(v)}
                     getOptionLabel={renderUser}
                     // renderOption={renderUser} // todo: need this?  check output, and reformat if needed
+                    // NOTE: see Autocomplete changes from https://mui.com/material-ui/migration/v5-component-changes/
                     renderInput={(params) => ( // todo: missing params type AutocompleteRenderInputParams?
                         <TextField
                             {...params}

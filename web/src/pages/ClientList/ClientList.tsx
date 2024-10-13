@@ -261,6 +261,7 @@ const ClientList = () => {
                         Show Archived
                     </Typography>
                     <Checkbox
+                        // todo: color="secondary"?? https://mui.com/material-ui/migration/v5-component-changes/
                         checked={archivedMode}
                         onChange={(e) => {
                             setArchivedMode(e.target.checked);

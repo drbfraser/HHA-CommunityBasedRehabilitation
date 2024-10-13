@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { IUser } from "@cbr/common/util/users";
 import Autocomplete from '@mui/material/Autocomplete';
-import { AutocompleteRenderInputParams } from '@mui/lab';
+// import { AutocompleteRenderInputParams } from '@mui/lab'; // todo, needed?
 
 interface IProps {
     open: boolean;
@@ -43,8 +43,8 @@ const StatsUserFilter = ({ open, onClose, users, user, setUser }: IProps) => {
                     value={selectedUser}
                     onChange={(e, v) => setSelectedUser(v)}
                     getOptionLabel={renderUser}
-                    renderOption={renderUser}
-                    renderInput={(params: AutocompleteRenderInputParams) => (
+                    // renderOption={renderUser} // todo: need this?  check output, and reformat if needed
+                    renderInput={(params) => ( // todo: missing params type AutocompleteRenderInputParams?
                         <TextField
                             {...params}
                             fullWidth

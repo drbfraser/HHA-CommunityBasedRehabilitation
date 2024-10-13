@@ -61,7 +61,7 @@ const App = () => {
                     // pageContainer
                     sx={{
                         width: "100%",
-                        padding: 20,
+                        padding: '20px',
                         borderRadius: "50px 0 0 50px",
                         boxShadow: "-5px 0px 10px rgba(25, 25, 25, 0.2)",
                         backgroundColor: themeColors.blueBgLight,
@@ -84,10 +84,10 @@ const App = () => {
                                     variant="h1"
                                     sx={{
                                         // pageTitle
-                                        marginLeft: 20,
+                                        marginLeft: "20px",
                                         fontWeight: "bold",
                                         [mediaMobile]: {
-                                            marginTop: 10,
+                                            marginTop: "10px",
                                             marginLeft: 0,
                                             fontSize: "40px",
                                             textAlign: "center",
@@ -99,13 +99,13 @@ const App = () => {
                                 <Box
                                     // pageContent
                                     sx={{
-                                        marginTop: 20,
-                                        padding: 20,
-                                        borderRadius: 30,
+                                        marginTop: "20px",
+                                        padding: "20px",
+                                        borderRadius: "30px",
                                         backgroundColor: "white",
                                         boxShadow: "0px 0px 10px rgba(25, 25, 25, 0.1)",
                                         [mediaMobile]: {
-                                            marginTop: 10,
+                                            marginTop: "10px",
                                         },
                                     }}
                                 >

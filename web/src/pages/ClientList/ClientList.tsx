@@ -12,8 +12,11 @@ import {
     GridSortCellParams,
     GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { useStyles } from "./ClientList.styles";
-import { compressedDataGridWidth, useDataGridStyles } from "styles/DataGrid.styles";
+import { clientListStyles } from "./ClientList.styles";
+import {
+    compressedDataGridWidth,
+    dataGridStyles,
+} from "styles/DataGrid.styles";
 import {
     LinearProgress,
     IconButton,
@@ -25,6 +28,7 @@ import {
     Typography,
     debounce,
     Button,
+    Box,
 } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
@@ -38,9 +42,15 @@ import requestClientRows from "./requestClientRows";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import { mediaMobile } from "theme.styles";
 
 // todo: update from GridCellParams -> GridSortCellParams ok?
-const riskComparator = (v1: GridCellValue, v2: GridCellValue, params1: GridSortCellParams, params2: GridSortCellParams) => {
+const riskComparator = (
+    v1: GridCellValue,
+    v2: GridCellValue,
+    params1: GridSortCellParams,
+    params2: GridSortCellParams
+) => {
     const risk1: IRiskLevel = riskLevels[String(params1.value)];
     const risk2: IRiskLevel = riskLevels[String(params2.value)];
     return risk1.level - risk2.level;
@@ -88,11 +98,9 @@ const RenderLoadingOverlay = () => {
 };
 
 const RenderNoRowsOverlay = () => {
-    const styles = useDataGridStyles();
-
     return (
-        <GridOverlay className={styles.noRows}>
-            <Cancel color="primary" className={styles.noRowsIcon} />
+        <GridOverlay sx={dataGridStyles.noRows}>
+            <Cancel color="primary" sx={dataGridStyles.noRowsIcon} />
             <Typography color="primary">No Clients Found</Typography>
         </GridOverlay>
     );
@@ -115,8 +123,6 @@ const ClientList = () => {
     const [archivedMode, setArchivedMode] = useState<boolean>(false);
 
     const zones = useZones();
-    const styles = useStyles();
-    const dataGridStyle = useDataGridStyles();
     const searchOptionsStyle = useSearchOptionsStyles();
     const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
@@ -158,7 +164,6 @@ const ClientList = () => {
         // sortById.sort((a: any, b: any) => {
         //     return a.id - b.id;
         // });
-
 
         let sortById = rows.slice(0); // todo: re-add type?  still has functionality?
 
@@ -230,9 +235,9 @@ const ClientList = () => {
     }, [searchValue, searchOption, allClientsMode, archivedMode, requestClientRowsDebounced]);
 
     return (
-        (<div className={styles.root}>
+        <Box sx={clientListStyles.root}>
             <div>
-                <div className={styles.switch}>
+                <Box sx={clientListStyles.switch}>
                     <Typography
                         color={allClientsMode ? "textSecondary" : "textPrimary"}
                         component={"span"}
@@ -251,8 +256,8 @@ const ClientList = () => {
                     >
                         All Clients
                     </Typography>
-                </div>
-                <div className={styles.checkbox}>
+                </Box>
+                <Box sx={clientListStyles.checkbox}>
                     <Typography
                         color={archivedMode ? "textPrimary" : "textSecondary"}
                         component={"span"}
@@ -267,9 +272,9 @@ const ClientList = () => {
                             setArchivedMode(e.target.checked);
                         }}
                     />
-                </div>
+                </Box>
             </div>
-            <div className={styles.search}>
+            <Box sx={clientListStyles.search}>
                 <div className={searchOptionsStyle.searchOptions}>
                     <Select
                         variant="standard"
@@ -279,7 +284,8 @@ const ClientList = () => {
                         onChange={(event) => {
                             setSearchValue("");
                             setSearchOption(String(event.target.value));
-                        }}>
+                        }}
+                    >
                         {Object.values(SearchOption).map((option) => (
                             <MenuItem key={option} value={option}>
                                 {option}
@@ -294,7 +300,8 @@ const ClientList = () => {
                             className={searchOptionsStyle.zoneOptions}
                             color={"primary"}
                             defaultValue={""}
-                            onChange={(e) => setSearchValue(String(e.target.value))}>
+                            onChange={(e) => setSearchValue(String(e.target.value))}
+                        >
                             {Array.from(zones).map(([id, name]) => (
                                 <MenuItem key={id} value={id}>
                                     {name}
@@ -311,7 +318,8 @@ const ClientList = () => {
                 <IconButton
                     className={hideColumnsStyle.optionsButton}
                     onClick={onOptionsClick}
-                    size="large">
+                    size="large"
+                >
                     <MoreVert />
                 </IconButton>
                 <Popover
@@ -343,9 +351,9 @@ const ClientList = () => {
                         })}
                     </div>
                 </Popover>
-            </div>
+            </Box>
             <DataGrid
-                className={dataGridStyle.datagrid}
+                sx={dataGridStyles.datagrid}
                 columns={columns}
                 rows={rows}
                 loading={loading}
@@ -363,18 +371,19 @@ const ClientList = () => {
                     },
                 ]}
             />
-            <div className={styles.downloadSVC}>
+            <Box sx={clientListStyles.downloadSVC}>
                 <CSVLink
                     filename="ClientList.csv"
                     data={sortClientsById(rows)}
-                    className={styles.downloadSVCLink}
+                    // className={styles.downloadSVCLink}
+                    style={{ textDecoration: "none" }} // todo: does this replacement work?
                 >
                     <Button variant="outlined" size="small">
                         EXPORT TO CSV{" "}
                     </Button>
                 </CSVLink>
-            </div>
-        </div>)
+            </Box>
+        </Box>
     );
 };
 

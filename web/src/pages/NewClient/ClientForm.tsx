@@ -1,6 +1,6 @@
 import React from "react";
 import { Field, Form, Formik } from "formik";
-import { CheckboxWithLabel, TextField } from "formik-material-ui";
+import { CheckboxWithLabel, TextField } from "formik-mui";
 import { useStyles } from "./ClientForm.styles";
 import Button from "@mui/material/Button";
 import Accordion from "@mui/material/Accordion";

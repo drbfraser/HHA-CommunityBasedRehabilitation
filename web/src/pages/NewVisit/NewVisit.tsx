@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { CheckboxWithLabel, TextField } from "formik-material-ui";
+import { CheckboxWithLabel, TextField } from "formik-mui";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import {

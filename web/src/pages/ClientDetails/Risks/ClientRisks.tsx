@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useStyles } from "./ClientRisks.styles";
 import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
+import { TextField } from "formik-mui";
 
 import {
     Grid,

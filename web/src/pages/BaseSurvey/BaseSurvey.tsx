@@ -9,7 +9,7 @@ import {
     Stepper,
 } from "@mui/material";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { CheckboxWithLabel, TextField } from "formik-material-ui";
+import { CheckboxWithLabel, TextField } from "formik-mui";
 import React, { useState } from "react";
 import {
     baseFieldLabels,

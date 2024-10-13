@@ -12,7 +12,7 @@ import {
     Stepper,
 } from "@mui/material";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { CheckboxWithLabel, RadioGroup, TextField } from "formik-material-ui";
+import { CheckboxWithLabel, RadioGroup, TextField } from "formik-mui";
 import React, { useState } from "react";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import {

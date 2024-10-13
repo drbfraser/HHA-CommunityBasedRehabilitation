@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useStyles } from "../NewClient/ClientForm.styles";
 import { Field, Form, Formik, FormikProps } from "formik";
-import { CheckboxWithLabel, TextField } from "formik-material-ui";
+import { CheckboxWithLabel, TextField } from "formik-mui";
 import {
     Accordion,
     AccordionDetails,

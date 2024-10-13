@@ -1,7 +1,7 @@
 import React from "react";
 import { useStyles } from "./styles";
 import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
+import { TextField } from "formik-mui";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import history from "@cbr/common/util/history";

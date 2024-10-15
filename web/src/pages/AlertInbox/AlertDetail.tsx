@@ -2,13 +2,14 @@ import React from "react";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
-import makeStyles from '@mui/styles/makeStyles';
 import Typography from "@mui/material/Typography";
 import { IAlert } from "@cbr/common/util/alerts";
 import { useEffect } from "react";
 import { handleUpdateAlertSubmit, handleDeleteAlert } from "@cbr/common/forms/Alert/alertHandler";
+import { Box, SxProps, Theme } from '@mui/material';
 
-const useStyles = makeStyles({
+// todosd: move this styling to external file?
+const alertStyles: Record<string, SxProps<Theme>> = {
     dividerStyle: {
         backgroundColor: "grey",
         height: "3px",
@@ -21,7 +22,7 @@ const useStyles = makeStyles({
         position: "relative",
         minHeight: "300px",
     },
-});
+};
 
 type Props = {
     selectAlert: number;
@@ -31,7 +32,6 @@ type Props = {
 };
 
 const AlertDetail = (alertDetailProps: Props) => {
-    const style = useStyles();
     const { alertData } = alertDetailProps;
 
     useEffect(() => {
@@ -69,9 +69,9 @@ const AlertDetail = (alertDetailProps: Props) => {
     });
 
     return (
-        <Grid item xs={9} className={style.detailContainerStyle}>
+        <Grid item xs={9} sx={alertStyles.detailContainerStyle}>
             <h1>Details</h1>
-            <Divider variant="fullWidth" className={style.dividerStyle} />
+            <Divider variant="fullWidth" sx={alertStyles.dividerStyle} />
 
             <h2>{selectedItem.length === 0 ? "" : selectedItem[0].subject}</h2>
             <Typography>
@@ -82,7 +82,7 @@ const AlertDetail = (alertDetailProps: Props) => {
             {selectedItem.length === 0 ? (
                 <></>
             ) : (
-                <div className={style.deleteButtonStyle}>
+                <Box sx={alertStyles.deleteButtonStyle}>
                     <Button
                         variant="outlined"
                         color="error"
@@ -92,7 +92,7 @@ const AlertDetail = (alertDetailProps: Props) => {
                     >
                         Delete
                     </Button>
-                </div>
+                </Box>
             )}
         </Grid>
     );

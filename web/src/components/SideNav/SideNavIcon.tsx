@@ -1,16 +1,16 @@
-import { Badge } from "@mui/material";
+import { Badge, Box } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IPage } from "util/pages";
-import { useStyles } from "./SideNav.styles";
+import { sideNavStyles } from "./SideNav.styles";
 import { IAlert } from "@cbr/common/util/alerts";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
 import { Alert } from "@mui/material";
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
-import { mediaMobile } from "theme.styles";
+import { SxProps, Theme } from '@mui/material';
 
 interface IProps {
     page: IPage;
@@ -18,7 +18,6 @@ interface IProps {
 }
 
 const SideNavIcon = ({ page, active }: IProps) => {
-    const styles = useStyles();
     // fix issue with findDOMNode in strict mode
     const NoTransition = ({ children }: any) => children;
     const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
@@ -66,20 +65,20 @@ const SideNavIcon = ({ page, active }: IProps) => {
                     placement="top"
                     arrow
                     // classes={{ tooltip: styles.tooltip }}
-                    // todo: sx replaces classes here?
-                    sx={{
-                        // tooltip
-                        fontSize: 14,
-                        "&, & .MuiTooltip-arrow:before": {
-                            backgroundColor: "black",
-                        },
-                    }}
+                    // todo: sx replaces classes here correctly?
+                    sx={sideNavStyles.tooltip}
                     TransitionComponent={NoTransition}
                 >
-                    <div className={styles.icon + (active ? ` ${styles.active}` : "")}>
+                    {/* // todo: verify correct update */}
+                    {/* <div className={styles.icon + (active ? ` ${styles.active}` : "")}></div> */}
+                    <Box sx={{
+                        ...(sideNavStyles.icon),
+                        ...(active && sideNavStyles.active)
+                        } as SxProps<Theme>}>
                         {props.page.Icon && <props.page.Icon fontSize="large" />}
-                    </div>
+                    </Box>
                 </Tooltip>
+                
             </Link>
         );
     }
@@ -88,19 +87,7 @@ const SideNavIcon = ({ page, active }: IProps) => {
         <Badge
             badgeContent={unreadAlertsCount}
             max={9}
-            sx={{
-                // notificationBadge
-                justifyContent: "center",
-                "& .MuiBadge-badge": {
-                    right: 20,
-                    top: 15,
-                },
-                [mediaMobile]: {
-                    "& .MuiBadge-badge": {
-                        right: 10,
-                    },
-                }
-            }}
+            sx={sideNavStyles.notificationBadge}
             color="error"
             anchorOrigin={{
                 vertical: "top",

@@ -1,27 +1,68 @@
 import React from "react";
-import { InputBase, InputBaseProps, useTheme } from "@mui/material";
+import { alpha, Box, InputBase, InputBaseProps, useTheme } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search"; // TODO: was from data-grid - verify same
-import { useStyles } from "./SearchBar.styles";
+import { themeColors } from "@cbr/common/util/colors";
 
 const SearchBar = (props: InputBaseProps) => {
     const theme = useTheme();
-    const styles = useStyles(theme);
+    // const styles = useStyles(theme);
 
     return (
-        <div className={styles.search}>
-            <div className={styles.searchIcon}>
+        <Box
+            sx={{
+                // search
+                position: "relative",
+                borderRadius: 90,
+                backgroundColor: alpha(themeColors.blueBgDark, 0.15),
+                "&:hover": {
+                    backgroundColor: alpha(themeColors.blueBgDark, 0.25),
+                },
+                marginLeft: 0,
+                [theme.breakpoints.up("sm")]: {
+                    marginLeft: theme.spacing(1),
+                    width: "auto",
+                },
+            }}
+        >
+            <Box
+                sx={{
+                    // searchIcon
+                    padding: theme.spacing(0, 2),
+                    height: "100%",
+                    position: "absolute",
+                    pointerEvents: "none",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
                 <SearchIcon />
-            </div>
+            </Box>
             <InputBase
                 placeholder="Search…"
-                classes={{
-                    root: styles.inputRoot,
-                    input: styles.inputInput,
+                sx={{
+                    root: {
+                        // input root
+                        // todo: verifiy this is appying correctly
+                        color: "inherit",
+                    },
+                    input: {
+                        // inputInput
+                        // todo: verifiy this is appying correctly
+                        padding: theme.spacing(1, 1, 1, 0),
+                        // vertical padding + font size from searchIcon
+                        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+                        transition: theme.transitions.create("width"),
+                        width: "12ch",
+                        "&:focus": {
+                            width: "20ch",
+                        },
+                    },
                 }}
                 inputProps={{ "aria-label": "search" }}
                 {...props}
             />
-        </div>
+        </Box>
     );
 };
 

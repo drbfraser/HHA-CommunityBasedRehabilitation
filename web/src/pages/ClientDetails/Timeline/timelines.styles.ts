@@ -7,22 +7,22 @@ export const timelineStyles: Record<string, SxProps<Theme>> = {
         paddingRight: 0,
     },
     entry: {
-        margin: 10,
+        margin: "10px",
         marginRight: 0,
         padding: "8px 10px",
         border: "1px solid #aaa",
-        borderRadius: 5,
+        borderRadius: "5px",
         fontSize: "120%",
         "& .MuiChip-root": {
             margin: "2px 0",
         },
     },
     showMore: {
-        margin: 10,
+        margin: "10px",
         marginRight: 0,
         padding: "8px 10px",
         border: "1px solid #aaa",
-        borderRadius: 5,
+        borderRadius: "5px",
         fontSize: "120%",
         "& .MuiChip-root": {
             margin: "2px 0",
@@ -41,7 +41,7 @@ export const timelineStyles: Record<string, SxProps<Theme>> = {
     date: {
         alignSelf: "center",
         flex: "none",
-        width: 105,
+        width: "105px",
         paddingLeft: 0,
         whiteSpace: "nowrap",
     },

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useStyles } from "./ClientRisks.styles";
+import { clientRiskStyles } from "./ClientRisks.styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 
@@ -16,6 +16,7 @@ import {
     DialogTitle,
     MenuItem,
     FormControl,
+    Box,
 } from "@mui/material";
 import { IRisk, riskLevels } from "@cbr/common/util/risks";
 import { riskTypes } from "util/riskIcon";
@@ -32,7 +33,6 @@ interface IProps {
 }
 
 const ClientRisks = ({ clientInfo }: IProps) => {
-    const styles = useStyles();
 
     interface IModalProps {
         risk: IRisk;
@@ -154,10 +154,10 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                             </Typography>
                         </Grid>
                         <Grid item md={6}>
-                            <div className={styles.riskCardButtonAndBadge}>
+                            <Box sx={clientRiskStyles.riskCardButtonAndBadge}>
                                 {" "}
                                 <RiskLevelChip risk={risk.risk_level} />
-                            </div>
+                            </Box>
                         </Grid>
                     </Grid>
                     <br />
@@ -175,7 +175,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                         {risk.goal}
                     </Typography>
                 </CardContent>
-                <CardActions className={styles.riskCardButtonAndBadge}>
+                <CardActions sx={clientRiskStyles.riskCardButtonAndBadge}>
                     <Button
                         variant="outlined"
                         color="primary"
@@ -195,7 +195,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
     const SkeletonRiskCard = () => <Skeleton variant="rectangular" height={300} />;
 
     return (
-        (<div className={styles.riskCardContainer}>
+        (<Box sx={clientRiskStyles.riskCardContainer}>
             <Grid container spacing={5} direction="row" justifyContent="flex-start">
                 {Object.keys(riskTypes).map((type) => {
                     const risk = clientInfo?.risks.find((r) => r.risk_type === type);
@@ -206,7 +206,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                     );
                 })}
             </Grid>
-        </div>)
+        </Box>)
     );
 };
 

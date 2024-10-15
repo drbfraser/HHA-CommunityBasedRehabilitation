@@ -5,15 +5,16 @@ import List from "@mui/material/List";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import { FiberManualRecord } from "@mui/icons-material";
-import makeStyles from '@mui/styles/makeStyles';
 import { useState } from "react";
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IAlert, PriorityLevel, priorityLevels } from "@cbr/common/util/alerts";
 import { timestampToDate } from "@cbr/common/util/dates";
 import { compressedDataGridWidth } from "styles/DataGrid.styles";
 import PriorityLevelChip from "components/PriorityLevelChip/PriorityLevelChip";
+import { SxProps, Theme } from '@mui/material';
 
-const useStyles = makeStyles({
+// todosd: move to external file?
+const alertListStyles: Record<string, SxProps<Theme>> = {
     selectedListItemStyle: {
         backgroundColor: "lightcyan",
         border: "1px solid blue",
@@ -33,7 +34,7 @@ const useStyles = makeStyles({
         backgroundColor: "grey",
         height: "3px",
     },
-});
+};
 
 type AlertDetailProps = {
     onAlertSelectionEvent: (itemNum: number) => void;
@@ -62,7 +63,6 @@ const RenderBadge = (params: String) => {
 };
 
 const AlertList = (alertDetailProps: AlertDetailProps) => {
-    const style = useStyles();
     const { alertData, onAlertSelectionEvent } = alertDetailProps;
     // For the purposes of tracking changes to a user's unread alerts
     const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
@@ -82,9 +82,9 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
     };
 
     return (
-        <Grid item xs={3} className={style.gridStyle}>
+        <Grid item xs={3} sx={alertListStyles.gridStyle}>
             <h1>Alerts</h1>
-            <Divider variant="fullWidth" className={style.tableTopAndContentDividerStyle} />
+            <Divider variant="fullWidth" sx={alertListStyles.tableTopAndContentDividerStyle} />
             <List
                 sx={{
                     width: "100%",
@@ -161,17 +161,23 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                     </div>
                                 }
                                 onClick={() => onAlertSelectionEvent(currAlert.id)}
-                                className={
-                                    currAlert.id === alertDetailProps.selectAlert
-                                        ? style.selectedListItemStyle
-                                        : style.listItemStyle
-                                }
+                                // todosd: verify conditional has same function
+                                // className={
+                                //     currAlert.id === alertDetailProps.selectAlert
+                                //         ? style.selectedListItemStyle
+                                //         : style.listItemStyle
+                                // }
+                                sx={{
+                                    ...(currAlert.id === alertDetailProps.selectAlert
+                                        ? alertListStyles.selectedListItemStyle
+                                        : alertListStyles.listItemStyle),
+                                }}
                             />
 
                             <Divider
                                 variant="fullWidth"
                                 component="li"
-                                className={style.dividerStyle}
+                                sx={alertListStyles.dividerStyle}
                             />
                         </div>
                     );

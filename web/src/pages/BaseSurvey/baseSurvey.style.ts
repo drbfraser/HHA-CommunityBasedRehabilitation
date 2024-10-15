@@ -1,16 +1,29 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { SxProps, Theme } from '@mui/material';
 
-export const useStyles = makeStyles(
-    {
-        fieldIndent: {
-            paddingLeft: "9px",
-        },
-        hipWidth: {
-            maxWidth: "160px",
-        },
-        inches: {
-            verticalAlign: "sub",
-        },
+export const adminStyles: Record<string, SxProps<Theme>> = {
+    fieldIndent: {
+        paddingLeft: "9px",
     },
-    { index: 1 }
-);
+    hipWidth: {
+        maxWidth: "160px",
+    },
+    inches: {
+        verticalAlign: "sub",
+    },
+}
+
+// todosd: remove
+// export const useStyles = makeStyles(
+//     {
+//         fieldIndent: {
+//             paddingLeft: "9px",
+//         },
+//         hipWidth: {
+//             maxWidth: "160px",
+//         },
+//         inches: {
+//             verticalAlign: "sub",
+//         },
+//     },
+//     { index: 1 }
+// );

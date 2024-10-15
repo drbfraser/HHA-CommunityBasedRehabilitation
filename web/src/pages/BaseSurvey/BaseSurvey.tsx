@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     FormControl,
     FormLabel,
@@ -36,7 +37,7 @@ import {
     rateLevel,
     reasonNotSchool,
 } from "@cbr/common/util/survey";
-import { useStyles } from "./baseSurvey.style";
+import { adminStyles } from "./baseSurvey.style";
 import { handleSubmit } from "./formHandler";
 
 interface IFormProps {
@@ -50,7 +51,6 @@ interface ISurvey {
 }
 
 const HealthForm = (props: IFormProps) => {
-    const styles = useStyles();
     return (
         <div>
             <FormLabel>Rate your general health</FormLabel>
@@ -124,7 +124,7 @@ const HealthForm = (props: IFormProps) => {
             </div>
 
             {props.formikProps.values[BaseSurveyFormField.needDevice] && (
-                <div className={styles.fieldIndent}>
+                <Box sx={adminStyles.fieldIndent}>
                     <FormControl fullWidth variant="outlined">
                         <FormLabel>What assistive device do you need?</FormLabel>
                         <br />
@@ -143,7 +143,7 @@ const HealthForm = (props: IFormProps) => {
                             ))}
                         </Field>
                     </FormControl>
-                </div>
+                </Box>
             )}
 
             <br />
@@ -173,7 +173,6 @@ const HealthForm = (props: IFormProps) => {
 };
 
 const EducationForm = (props: IFormProps) => {
-    const styles = useStyles();
 
     return (
         <div>
@@ -184,9 +183,9 @@ const EducationForm = (props: IFormProps) => {
                 Label={{ label: baseFieldLabels[BaseSurveyFormField.goSchool] }}
             />
             <br />
-            <div className={styles.fieldIndent}>
+            <Box sx={adminStyles.fieldIndent}>
                 {props.formikProps.values[BaseSurveyFormField.goSchool] ? (
-                    <div className={styles.fieldIndent}>
+                    <Box sx={adminStyles.fieldIndent}>
                         <FormLabel>What grade?</FormLabel>
                         <FormControl fullWidth variant="outlined">
                             <br />
@@ -205,9 +204,9 @@ const EducationForm = (props: IFormProps) => {
                                 ))}
                             </Field>
                         </FormControl>
-                    </div>
+                    </Box>
                 ) : (
-                    <div className={styles.fieldIndent}>
+                    <Box sx={adminStyles.fieldIndent}>
                         <FormLabel>Why do you not go to school?</FormLabel>
                         <FormControl fullWidth variant="outlined">
                             <br />
@@ -232,9 +231,9 @@ const EducationForm = (props: IFormProps) => {
                                 Label={{ label: baseFieldLabels[BaseSurveyFormField.beenSchool] }}
                             />
                         </FormControl>
-                    </div>
+                    </Box>
                 )}
-            </div>
+            </Box>
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
@@ -284,10 +283,9 @@ const SocialForm = () => {
 };
 
 const LivelihoodForm = (props: IFormProps) => {
-    const styles = useStyles();
 
     return (
-        <div className={styles.fieldIndent}>
+        <Box sx={adminStyles.fieldIndent}>
             <FormControl fullWidth variant="outlined">
                 <Field
                     component={CheckboxWithLabel}
@@ -297,7 +295,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 />
             </FormControl>
             {props.formikProps.values[BaseSurveyFormField.isWorking] && (
-                <div className={styles.fieldIndent}>
+                <Box sx={adminStyles.fieldIndent}>
                     <FormLabel>What do you do?</FormLabel>
                     <FormControl fullWidth variant="outlined">
                         <br />
@@ -338,7 +336,7 @@ const LivelihoodForm = (props: IFormProps) => {
                             Label={{ label: baseFieldLabels[BaseSurveyFormField.meetFinanceNeeds] }}
                         />
                     </FormControl>
-                </div>
+                </Box>
             )}
 
             <br />
@@ -357,12 +355,11 @@ const LivelihoodForm = (props: IFormProps) => {
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.wantWork] }}
                 />
             </FormControl>
-        </div>
+        </Box>
     );
 };
 
 const FoodForm = (props: IFormProps) => {
-    const styles = useStyles();
 
     return (
         <div>
@@ -397,7 +394,7 @@ const FoodForm = (props: IFormProps) => {
                 />
 
                 {props.formikProps.values[BaseSurveyFormField.isChild] && (
-                    <div className={styles.fieldIndent}>
+                    <Box sx={adminStyles.fieldIndent}>
                         <FormControl fullWidth variant="outlined">
                             <FormLabel>What is this child nutritional status?</FormLabel>
                             <br />
@@ -417,16 +414,16 @@ const FoodForm = (props: IFormProps) => {
                             </Field>
                             {props.formikProps.values[BaseSurveyFormField.childNourish] ===
                                 ChildNourish.MALNOURISHED && (
-                                <div className={styles.fieldIndent}>
+                                <Box sx={adminStyles.fieldIndent}>
                                     <br />
                                     <Alert severity="info">
                                         A referral to the health center is required!
                                     </Alert>
-                                </div>
+                                </Box>
                             )}
                         </FormControl>
                         <br />
-                    </div>
+                    </Box>
                 )}
             </FormControl>
         </div>
@@ -434,7 +431,6 @@ const FoodForm = (props: IFormProps) => {
 };
 
 const EmpowermentForm = (props: IFormProps) => {
-    const styles = useStyles();
 
     return (
         <div>
@@ -446,7 +442,7 @@ const EmpowermentForm = (props: IFormProps) => {
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.memOfOrgan] }}
                 />
                 {props.formikProps.values[BaseSurveyFormField.memOfOrgan] && (
-                    <div className={styles.fieldIndent}>
+                    <Box sx={adminStyles.fieldIndent}>
                         <Field
                             component={TextField}
                             multiline
@@ -455,7 +451,7 @@ const EmpowermentForm = (props: IFormProps) => {
                             name={BaseSurveyFormField.organization}
                             fullWidth
                         />
-                    </div>
+                    </Box>
                 )}
 
                 <FormControl fullWidth variant="outlined">

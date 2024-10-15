@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useStyles } from "./RiskHistory.styles";
+import { chartContainerStyles, riskHistoryStyles } from "./RiskHistory.styles";
 import {
     LineChart,
     Line,
@@ -12,7 +12,7 @@ import {
 import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { riskTypes } from "util/riskIcon";
 import { Grid, Typography } from "@mui/material";
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import { IClient } from "@cbr/common/util/clients";
 
@@ -75,7 +75,6 @@ const risksToChartData = (risks: IRisk[]) => {
 };
 
 const RiskHistoryCharts = ({ client }: IProps) => {
-    const styles = useStyles();
     const chartHeight = 300;
     const [chartData, setChartData] = useState<IChartData>();
     const dateFormatter = getDateFormatterFromReference(client?.created_at);
@@ -87,7 +86,13 @@ const RiskHistoryCharts = ({ client }: IProps) => {
     }, [client]);
 
     const RiskChart = ({ riskType, data }: { riskType: RiskType; data: IDataPoint[] }) => (
-        <ResponsiveContainer width="100%" height={chartHeight} className={styles.chartContainer}>
+        // todosd: make the classname apply correctly - this is incorrect, or a hack at best
+        <ResponsiveContainer
+            width="100%"
+            height={chartHeight}
+            className={chartContainerStyles}
+        >
+            {/* <ResponsiveContainer width="100%" height={chartHeight} className={styles.chartContainer}> */}
             <LineChart>
                 <CartesianGrid strokeDasharray="6" vertical={false} />
                 <XAxis
@@ -122,7 +127,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
     );
 
     return (
-        (<Grid container>
+        <Grid container>
             {[
                 RiskType.HEALTH,
                 RiskType.EDUCATION,
@@ -133,8 +138,8 @@ const RiskHistoryCharts = ({ client }: IProps) => {
                 // TODO: REMOVE when working on visit
                 //(riskType!==RiskType.NUTRITION) ?
 
-                (<Grid key={riskType} item md={4} xs={12}>
-                    <Typography variant="h5" className={styles.textCenter}>
+                <Grid key={riskType} item md={4} xs={12}>
+                    <Typography variant="h5" sx={riskHistoryStyles.textCenter}>
                         {riskTypes[riskType].name} Risk
                     </Typography>
                     {chartData && chartData[riskType].length ? (
@@ -143,13 +148,13 @@ const RiskHistoryCharts = ({ client }: IProps) => {
                         <Skeleton
                             variant="rectangular"
                             height={chartHeight}
-                            className={styles.chartSkeleton}
+                            sx={riskHistoryStyles.chartSkeleton}
                         />
                     )}
-                </Grid>)
+                </Grid>
                 //:<></>
             ))}
-        </Grid>)
+        </Grid>
     );
 };
 

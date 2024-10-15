@@ -1,4 +1,3 @@
-import makeStyles from '@mui/styles/makeStyles';
 import { SxProps, Theme } from '@mui/material';
 
 export const priorityLevelChipStyles: Record<string, SxProps<Theme>> = {
@@ -9,6 +8,7 @@ export const priorityLevelChipStyles: Record<string, SxProps<Theme>> = {
     },
 }
 
+// todo: remove
 // export const useStyles = makeStyles(
 //     {
 //         chip: {

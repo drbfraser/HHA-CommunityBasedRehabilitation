@@ -42,7 +42,7 @@ import requestClientRows from "./requestClientRows";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import { useZones } from "@cbr/common/util/hooks/zones";
-import { mediaMobile } from "theme.styles";
+
 
 // todo: update from GridCellParams -> GridSortCellParams ok?
 const riskComparator = (

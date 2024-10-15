@@ -5,7 +5,6 @@ import { themeColors } from "@cbr/common/util/colors";
 
 const SearchBar = (props: InputBaseProps) => {
     const theme = useTheme();
-    // const styles = useStyles(theme);
 
     return (
         <Box

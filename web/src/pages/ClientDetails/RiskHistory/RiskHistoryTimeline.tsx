@@ -9,7 +9,7 @@ import { riskTypes } from "util/riskIcon";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";
-import { useTimelineStyles } from "../Timeline/timelines.styles";
+import { timelineStyles } from "../Timeline/timelines.styles";
 import UpdateIcon from "@mui/icons-material/Update";
 
 interface IProps {
@@ -17,7 +17,6 @@ interface IProps {
 }
 
 const RiskHistoryTimeline = ({ client }: IProps) => {
-    const timelineStyles = useTimelineStyles();
     const dateFormatter = getDateFormatterFromReference(client?.created_at);
 
     interface IEntryProps {
@@ -76,7 +75,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
     };
 
     return (
-        <Timeline className={timelineStyles.timeline}>
+        <Timeline sx={timelineStyles.timeline}>
             {client ? (
                 <>
                     {client.risks

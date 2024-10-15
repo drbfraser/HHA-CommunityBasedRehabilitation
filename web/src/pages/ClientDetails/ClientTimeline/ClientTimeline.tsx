@@ -6,7 +6,7 @@ import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import VisitEntry from "./VisitEntry";
-import { useTimelineStyles } from "../Timeline/timelines.styles";
+import { timelineStyles } from "../Timeline/timelines.styles";
 import ReferralEntry from "./ReferralEntry";
 import BaseSurveyEntry from "./BaseSurveyEntry";
 import ShowMoreEntry from "../Timeline/ShowMoreEntry";
@@ -17,7 +17,6 @@ interface IProps {
 }
 
 const ClientTimeline = ({ client, refreshClient }: IProps) => {
-    const timelineStyles = useTimelineStyles();
     const dateFormatter = getDateFormatterFromReference(client?.created_at);
     const [showAllEntries, setShowAllEntries] = useState<boolean>(false);
     const numEntriesToShow = 10;
@@ -61,7 +60,7 @@ const ClientTimeline = ({ client, refreshClient }: IProps) => {
     const topTimelineItems = !timelineItems ? [] : timelineItems.slice(0, numEntriesToShow);
 
     return (
-        <Timeline className={timelineStyles.timeline}>
+        <Timeline sx={timelineStyles.timeline}>
             {client ? (
                 <>
                     {!showAllEntries

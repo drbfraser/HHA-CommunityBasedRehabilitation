@@ -1,9 +1,9 @@
 import { themeColors } from "@cbr/common/util/colors";
 import { SxProps, Theme } from '@mui/material';
 
-export const styles: Record<string, SxProps<Theme>> = {
+export const adminStyles: Record<string, SxProps<Theme>> = {
     container: {
-        paddingLeft: 20,
+        paddingLeft: "20px",
     },
     header: {
         display: "flex",
@@ -13,7 +13,7 @@ export const styles: Record<string, SxProps<Theme>> = {
         alignItems: "center",
     },
     editButton: {
-        marginBottom: 20,
+        marginBottom: "20px",
     },
     disableBtn: {
         backgroundColor: themeColors.riskRed,
@@ -24,7 +24,7 @@ export const styles: Record<string, SxProps<Theme>> = {
         color: "white",
     },
     btn: {
-        marginRight: 8,
+        marginRight: "8px",
     },
 }
 

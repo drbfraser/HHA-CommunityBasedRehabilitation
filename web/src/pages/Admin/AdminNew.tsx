@@ -1,5 +1,5 @@
 import React from "react";
-import { useStyles } from "./styles";
+import { useStyles } from "./Admin.styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 import Grid from "@mui/material/Grid";

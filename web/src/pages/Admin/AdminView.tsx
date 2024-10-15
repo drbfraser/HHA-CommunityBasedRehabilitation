@@ -1,9 +1,9 @@
 import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import { useStyles } from "./styles";
+import { adminStyles } from "./Admin.styles";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Alert, Skeleton } from '@mui/material';
 import { IUser, userRoles } from "@cbr/common/util/users";
@@ -12,7 +12,6 @@ import { IRouteParams } from "@cbr/common/forms/Admin/adminFields";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 
 const AdminView = () => {
-    const styles = useStyles();
     const history = useHistory();
     const [loadingError, setLoadingError] = useState(false);
     const [user, setUser] = useState<IUser>();
@@ -42,26 +41,26 @@ const AdminView = () => {
     }, [userId]);
 
     return (
-        (<div className={styles.container}>
+        (<Box sx={adminStyles.container}>
             {loadingError ? (
                 <Alert severity="error">
                     Something went wrong trying to load that user. Please go back and try again.
                 </Alert>
             ) : user ? (
                 <>
-                    <div className={styles.header}>
+                    <Box sx={adminStyles.header}>
                         <h1>
                             {user.first_name} {user.last_name}
                         </h1>
-                        <div className={styles.editButton}>
+                        <Box sx={adminStyles.editButton}>
                             <Button color="primary" onClick={handleEdit}>
                                 <EditIcon></EditIcon>Edit
                             </Button>
                             <Button color="primary" onClick={handlePasswordEdit}>
                                 <LockOpenIcon></LockOpenIcon>Change Password
                             </Button>
-                        </div>
-                    </div>
+                        </Box>
+                    </Box>
                     <b>Username</b>
                     <p>{user.username}</p>
                     <b>ID</b>
@@ -78,7 +77,7 @@ const AdminView = () => {
             ) : (
                 <Skeleton variant="rectangular" height={500} />
             )}
-        </div>)
+        </Box>)
     );
 };
 

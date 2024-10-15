@@ -1,5 +1,5 @@
 import React from "react";
-import { useStyles } from "./styles";
+import { adminStyles } from "./Admin.styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 import Grid from "@mui/material/Grid";
@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import { useRouteMatch } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { handleUpdatePassword } from "@cbr/common/forms/Admin/adminFormsHandler";
-import { Alert, Skeleton } from '@mui/material';
+import { Alert, Box, Skeleton } from '@mui/material';
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import { IUser } from "@cbr/common/util/users";
 import {
@@ -20,7 +20,6 @@ import {
 import history from "@cbr/common/util/history";
 
 const AdminPasswordEdit = () => {
-    const styles = useStyles();
     const { userId } = useRouteMatch<IRouteParams>().params;
     const [user, setUser] = useState<IUser>();
     const [loadingError, setLoadingError] = useState<string>();
@@ -66,7 +65,7 @@ const AdminPasswordEdit = () => {
             }}
         >
             {({ isSubmitting }) => (
-                <div className={styles.container}>
+                <Box sx={adminStyles.container}>
                     <br />
                     <b>ID</b>
                     <p>{userId}</p>
@@ -108,7 +107,7 @@ const AdminPasswordEdit = () => {
                                     variant="contained"
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className={styles.btn}
+                                    sx={adminStyles.btn}
                                 >
                                     Save
                                 </Button>
@@ -119,7 +118,7 @@ const AdminPasswordEdit = () => {
                             </Grid>
                         </Grid>
                     </Form>
-                </div>
+                </Box>
             )}
         </Formik>
     ) : (

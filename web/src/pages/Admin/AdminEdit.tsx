@@ -1,11 +1,11 @@
 import React from "react";
-import { useStyles } from "./styles";
+import { adminStyles } from "./Admin.styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { useRouteMatch } from "react-router-dom";
-import { FormControl, MenuItem } from "@mui/material";
+import { Box, FormControl, MenuItem } from "@mui/material";
 import { useState, useEffect } from "react";
 import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { Alert, Skeleton } from '@mui/material';
@@ -21,7 +21,6 @@ import {
 import history from "@cbr/common/util/history";
 
 const AdminEdit = () => {
-    const styles = useStyles();
     const { userId } = useRouteMatch<IRouteParams>().params;
     const [user, setUser] = useState<IUser>();
     const zones = useZones();
@@ -65,7 +64,7 @@ const AdminEdit = () => {
             }}
         >
             {({ values, setFieldValue, isSubmitting }) => (
-                <div className={styles.container}>
+                <Box sx={adminStyles.container}>
                     <br />
                     <b>ID</b>
                     <p>{userId}</p>
@@ -156,9 +155,13 @@ const AdminEdit = () => {
                         >
                             <Button
                                 variant="contained"
-                                className={
-                                    values.is_active ? styles["disableBtn"] : styles["activeBtn"]
-                                }
+                                // todo: ensure conditional still working with sx spread, then remove
+                                // className={
+                                //     values.is_active ? styles["disableBtn"] : styles["activeBtn"]
+                                // }
+                                sx={{
+                                    ...(values.is_active ? adminStyles.disableBtn : adminStyles.activeBtn)
+                                }}
                                 disabled={isSubmitting}
                                 onClick={() =>
                                     setFieldValue(AdminField.is_active, !values.is_active)
@@ -172,7 +175,7 @@ const AdminEdit = () => {
                                     variant="contained"
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className={styles.btn}
+                                    sx={adminStyles.btn}
                                 >
                                     Save
                                 </Button>
@@ -183,7 +186,7 @@ const AdminEdit = () => {
                             </Grid>
                         </Grid>
                     </Form>
-                </div>
+                </Box>
             )}
         </Formik>
     ) : (

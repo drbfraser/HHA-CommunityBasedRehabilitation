@@ -12,11 +12,11 @@ import {
     AccordionDetails,
     Typography,
 } from "@mui/material";
-import { Skeleton, Alert } from '@mui/material';
+import { Skeleton, Alert } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import { IVisit, IVisitSummary, outcomeGoalMets } from "@cbr/common/util/visits";
-import { useStyles } from "./Entry.styles";
+import { entryStyles } from "./Entry.styles";
 import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { RiskType } from "@cbr/common/util/risks";
@@ -36,7 +36,6 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
     const [visit, setVisit] = useState<IVisit>();
     const [loadingError, setLoadingError] = useState(false);
     const zones = useZones();
-    const styles = useStyles();
 
     const onOpen = () => {
         setOpen(true);
@@ -113,7 +112,7 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
             }
 
             return (
-                <Accordion key={type} className={styles.impOutcomeAccordion}>
+                <Accordion key={type} sx={entryStyles.impOutcomeAccordion}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>
                             <b>{riskTypes[type].name}</b> ({titleDescArr.join(" & ")})

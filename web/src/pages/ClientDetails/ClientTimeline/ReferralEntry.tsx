@@ -20,7 +20,7 @@ import {
 import TimelineEntry from "../Timeline/TimelineEntry";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ScheduleIcon from "@mui/icons-material/Schedule";
-import { useStyles } from "./Entry.styles";
+import { entryStyles } from "./Entry.styles";
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import NearMeIcon from "@mui/icons-material/NearMe";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -38,7 +38,7 @@ interface IEntryProps {
 
 const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) => {
     const [open, setOpen] = useState(false);
-    const styles = useStyles();
+
     const Summary = ({ clickable }: { clickable: boolean }) => {
         const ReasonChip = ({ label }: { label: string }) => (
             <Chip label={label} clickable={clickable} color="primary" variant="outlined" />
@@ -47,9 +47,9 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
         return (
             <>
                 {referral.resolved ? (
-                    <CheckCircleIcon fontSize="small" className={styles.completeIcon} />
+                    <CheckCircleIcon fontSize="small" sx={entryStyles.completeIcon} />
                 ) : (
-                    <ScheduleIcon fontSize="small" className={styles.pendingIcon} />
+                    <ScheduleIcon fontSize="small" sx={entryStyles.pendingIcon} />
                 )}{" "}
                 <b>Referral</b> {referral.resolved ? "Resolved" : "Pending"}{" "}
                 {referral.wheelchair && <ReasonChip label="Wheelchair" />}{" "}
@@ -96,7 +96,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                         <b>Resolve</b>
                     </Typography>
                 </AccordionSummary>
-                <AccordionDetails className={styles.resolveAccordion}>
+                <AccordionDetails sx={entryStyles.resolveAccordion}>
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
@@ -113,7 +113,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                             />
                             <br />
                             <br />
-                            <Button type="submit" variant="outlined" className={styles.resolveBtn}>
+                            <Button type="submit" variant="outlined" sx={entryStyles.resolveBtn}>
                                 Mark Resolved
                             </Button>
                         </Form>

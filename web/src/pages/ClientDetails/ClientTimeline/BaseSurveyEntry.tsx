@@ -15,7 +15,7 @@ import {
 import { Skeleton, Alert } from '@mui/material';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { timestampToDateTime } from "@cbr/common/util/dates";
-import { useStyles } from "./Entry.styles";
+import { entryStyles } from "./Entry.styles";
 import {
     BaseSurveyFormField,
     baseFieldLabels,
@@ -39,7 +39,6 @@ type ISurveyCategory = { [key: string]: string | number | boolean | undefined };
 const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
     const [open, setOpen] = useState(false);
     const [loadingError, setLoadingError] = useState(false);
-    const styles = useStyles();
 
     const onOpen = () => setOpen(true);
 
@@ -74,7 +73,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
             console.log(fields);
 
             return (
-                <Accordion key={categoryName} className={styles.impOutcomeAccordion}>
+                <Accordion key={categoryName} sx={entryStyles.impOutcomeAccordion}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>
                             <b>{baseFieldLabels[categoryName as BaseSurveyFormField]}</b>

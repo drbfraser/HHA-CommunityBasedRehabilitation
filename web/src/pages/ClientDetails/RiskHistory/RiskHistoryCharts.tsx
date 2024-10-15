@@ -87,11 +87,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
 
     const RiskChart = ({ riskType, data }: { riskType: RiskType; data: IDataPoint[] }) => (
         // todosd: make the classname apply correctly - this is incorrect, or a hack at best
-        <ResponsiveContainer
-            width="100%"
-            height={chartHeight}
-            className={chartContainerStyles}
-        >
+        <ResponsiveContainer width="100%" height={chartHeight} className={chartContainerStyles}>
             {/* <ResponsiveContainer width="100%" height={chartHeight} className={styles.chartContainer}> */}
             <LineChart>
                 <CartesianGrid strokeDasharray="6" vertical={false} />

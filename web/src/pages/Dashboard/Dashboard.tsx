@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, Grid, Typography } from "@mui/material";
-import { useDataGridStyles } from "styles/DataGrid.styles";
+import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
+import { dataGridStyles } from "styles/DataGrid.styles";
 import { useHistory } from "react-router-dom";
 import { Cancel, CheckCircle, FiberManualRecord } from "@mui/icons-material";
 import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
@@ -28,7 +28,6 @@ import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
 
 const Dashboard = () => {
-    const dataGridStyle = useDataGridStyles();
     const history = useHistory();
 
     const [clients, setClients] = useState<GridRowData[]>([]);
@@ -176,16 +175,16 @@ const Dashboard = () => {
     };
 
     const RenderNoPriorityClientsOverlay = () => (
-        <GridOverlay className={dataGridStyle.noRows}>
-            <Cancel color="primary" className={dataGridStyle.noRowsIcon} />
+        <GridOverlay sx={dataGridStyles.noRows}>
+            <Cancel color="primary" sx={dataGridStyles.noRowsIcon} />
             <Typography color="primary">No Priority Clients Found</Typography>
         </GridOverlay>
     );
 
     const RenderNoOutstandingReferralsOverlay = () => {
         return (
-            <GridOverlay className={dataGridStyle.noRows}>
-                <CheckCircle color="primary" className={dataGridStyle.noRowsIcon} />
+            <GridOverlay sx={dataGridStyles.noRows}>
+                <CheckCircle color="primary" sx={dataGridStyles.noRowsIcon} />
                 <Typography color="primary">No Outstanding Referrals Found</Typography>
             </GridOverlay>
         );
@@ -300,9 +299,9 @@ const Dashboard = () => {
                                 Priority Clients
                             </Typography>
                             <br />
-                            <div className={dataGridStyle.dashboardTables}>
+                            <Box sx={dataGridStyles.dashboardTables}>
                                 <DataGrid
-                                    className={`${dataGridStyle.datagrid}`}
+                                    sx={dataGridStyles.datagrid}
                                     rows={clients}
                                     hideFooterPagination
                                     loading={isPriorityClientsLoading}
@@ -314,7 +313,7 @@ const Dashboard = () => {
                                         NoRowsOverlay: RenderNoPriorityClientsOverlay,
                                     }}
                                 />
-                            </div>
+                            </Box>
                         </CardContent>
                     </Card>
                 </Grid>
@@ -325,9 +324,9 @@ const Dashboard = () => {
                                 Outstanding Referrals
                             </Typography>
                             <br />
-                            <div className={dataGridStyle.dashboardTables}>
+                            <Box sx={dataGridStyles.dashboardTables}>
                                 <DataGrid
-                                    className={`${dataGridStyle.datagrid}`}
+                                    sx={dataGridStyles.datagrid}
                                     rows={referrals}
                                     loading={referralsLoading}
                                     columns={outstandingReferralsColumns}
@@ -338,7 +337,7 @@ const Dashboard = () => {
                                         NoRowsOverlay: RenderNoOutstandingReferralsOverlay,
                                     }}
                                 />
-                            </div>
+                            </Box>
                         </CardContent>
                     </Card>
                 </Grid>

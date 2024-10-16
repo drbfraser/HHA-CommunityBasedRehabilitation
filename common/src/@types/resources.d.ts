@@ -91,7 +91,7 @@ interface Resources {
     "visitAttr": {
       "newVisit": "&New Visit",
       "visitVerb": "&visits",
-      "visitLocation": "-<1>Visit</1> in {{body}}",
+      "visitLocation": "&<1>Visit</1> in {{body}}",
       "date": "&Visit Date",
       "newVisitSurvey": "&New Visit Survey"
     },
@@ -220,7 +220,8 @@ interface Resources {
       "actionConfirmationNotice": "&Are you sure you want to {{action}} this {{object}}?",
       "loadingPriorityClientsError": "&Error loading priority clients",
       "loadingReferralsError": "&Error loading referrals",
-      "submitReferralError": "&An error occurred when submitting the referral"
+      "submitReferralError": "&An error occurred when submitting the referral",
+      "submitVisitError": "&Error occurred trying to submit the visit"
     },
     "admin": {
       "username": "&Username",
@@ -586,7 +587,17 @@ interface Resources {
       "visitFocus": "&Visit Focus",
       "visit": "&Visit",
       "discardNewVisit": "&Discard this new visit?",
-      "clients": "&Client's"
+      "clients": "&Client's",
+      "clientHealthGoal": "&Client's Health Goal",
+      "clientEducationGoal": "&Client's Education Goal",
+      "clientSocialGoal": "&Client's Social Goal",
+      "clientNutritionGoal": "&Client's Nutrition Goal",
+      "clientMentalHealthGoal": "&Client's Mental Health Goal",
+      "clientHealthGoalStatus": "&Client's Health Goal Status",
+      "clientEducationGoalStatus": "&Client's Education Goal Status",
+      "clientSocialGoalStatus": "&Client's Social Goal Status",
+      "clientNutritionGoalStatus": "&Client's Nutrition Goal Status",
+      "clientMentalHealthGoalStatus": "&Client's Mental Health Goal Status"
     },
     "screenNames": {
       "viewClient": "&View Client",
@@ -847,8 +858,6 @@ interface Resources {
       "goBack": "-Go Back",
       "when": "-When",
       "lastVisit": "-Last Visit",
-      "previousStep": "-Previous Step",
-      "nextStep": "-Next Step",
       "language": "-Language"
     },
     "alert": {
@@ -876,7 +885,8 @@ interface Resources {
       "actionConfirmationNotice": "-Are you sure you want to {{action}} this {{object}}?",
       "loadingPriorityClientsError": "-Error loading priority clients",
       "loadingReferralsError": "-Error loading referrals",
-      "submitReferralError": "-An error occurred when submitting the referral"
+      "submitReferralError": "-An error occurred when submitting the referral",
+      "submitVisitError": "-Error occurred trying to submit the visit"
     },
     "admin": {
       "username": "-Username",
@@ -1244,7 +1254,17 @@ interface Resources {
       "visitFocus": "-Visit Focus",
       "visit": "-Visit",
       "discardNewVisit": "-Discard this new visit?",
-      "clients": "-Client's"
+      "clients": "-Client's",
+      "clientHealthGoal": "-Client's Health Goal",
+      "clientEducationGoal": "-Client's Education Goal",
+      "clientSocialGoal": "-Client's Social Goal",
+      "clientNutritionGoal": "-Client's Nutrition Goal",
+      "clientMentalHealthGoal": "-Client's Mental Health Goal",
+      "clientHealthGoalStatus": "-Client's Health Goal Status",
+      "clientEducationGoalStatus": "-Client's Education Goal Status",
+      "clientSocialGoalStatus": "-Client's Social Goal Status",
+      "clientNutritionGoalStatus": "-Client's Nutrition Goal Status",
+      "clientMentalHealthGoalStatus": "-Client's Mental Health Goal Status"
     },
     "screenNames": {
       "viewClient": "-View Client",

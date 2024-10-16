@@ -16,7 +16,7 @@ import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import { IClient } from "@cbr/common/util/clients";
 import { useStyles } from "./RiskHistory.styles";
-import { getTranslatedRiskChartName, riskTypes } from "util/risks";
+import { getTranslatedRiskChartName } from "util/risks";
 
 interface IProps {
     client?: IClient;

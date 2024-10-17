@@ -1,14 +1,17 @@
-import { useStyles } from "./styles";
+import React from "react";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@material-ui/core";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import { Alert, Skeleton } from "@material-ui/lab";
+
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
 import { useZones } from "@cbr/common/util/hooks/zones";
-import { useHistory } from "react-router-dom";
-import React from "react";
+import { useStyles } from "./styles";
 
 const UserView = () => {
+    const { t } = useTranslation();
     const styles = useStyles();
     const history = useHistory();
     const user = useCurrentUser();
@@ -21,7 +24,7 @@ const UserView = () => {
     return (
         <div className={styles.container}>
             {user === APILoadError ? (
-                <Alert severity="error">Something went wrong. Please go back and try again.</Alert>
+                <Alert severity="error">{t("alert.generalFailureTryAgain")}</Alert>
             ) : user ? (
                 <>
                     <div className={styles.header}>
@@ -33,24 +36,30 @@ const UserView = () => {
                             color="primary"
                             onClick={handleChangePassword}
                         >
-                            <LockOpenIcon></LockOpenIcon>Change Password
+                            <LockOpenIcon />
+                            {t("login.changePassword")}
                         </Button>
                     </div>
-                    <b>Username</b>
+
+                    <b>{t("general.username")}</b>
                     <p>{user.username}</p>
-                    <b>ID</b>
+
+                    <b>{t("general.id")}</b>
                     <p> {user.id} </p>
-                    <b>Zone</b>
+
+                    <b>{t("general.zone")}</b>
                     <p> {zones.get(user.zone) ?? "Unknown"} </p>
-                    <b>Phone Number</b>
+
+                    <b>{t("general.phoneNumber")}</b>
                     <p> {user.phone_number} </p>
+
                     <div className={styles.logOutButton}>
                         <Button
                             onClick={() => history.push("/logout")}
                             color="primary"
                             variant="contained"
                         >
-                            Logout
+                            {t("login.logout")}
                         </Button>
                     </div>
                 </>

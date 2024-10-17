@@ -53,9 +53,11 @@ interface Resources {
       "showArchived": "&Show Archived",
       "noVisits": "&No Visits",
       "noPriorityClients": "&No Priority Clients Found",
+      "noClients": "&No Clients found",
       "noOutstandingReferrals": "&No Outstanding Referrals Found",
       "newInboxMessages": "&You have <1>1</1> new message in your inbox",
-      "newInboxMessages_plural": "&You have <1>{{count}}</1> new messages in your inbox"
+      "newInboxMessages_plural": "&You have <1>{{count}}</1> new messages in your inbox",
+      "csvExport": "&EXPORT TO CSV"
     },
     "disabilities": {
       "amputee": "&Amputee",
@@ -720,9 +722,11 @@ interface Resources {
       "showArchived": "-Show Archived",
       "noVisits": "-No Visits",
       "noPriorityClients": "-No Priority Clients Found",
+      "noClients": "-No Clients found",
       "noOutstandingReferrals": "-No Outstanding Referrals Found",
       "newInboxMessages": "-You have <1>1</1> new message in your inbox",
-      "newInboxMessages_plural": "-You have <1>{{count}}</1> new messages in your inbox"
+      "newInboxMessages_plural": "-You have <1>{{count}}</1> new messages in your inbox",
+      "csvExport": "-EXPORT TO CSV"
     },
     "disabilities": {
       "amputee": "-Amputee",

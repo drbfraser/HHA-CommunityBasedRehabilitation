@@ -57,43 +57,40 @@ const Toolbar = ({
 
     return (
         <>
-            <div>
-                <div className={styles.switch}>
-                    <Typography
-                        color={allClientsMode ? "textSecondary" : "textPrimary"}
-                        component={"span"}
-                        variant={"body2"}
-                    >
-                        {t("dashboard.myClients")}
-                    </Typography>
-                    <IOSSwitch
-                        checked={allClientsMode}
-                        onChange={(event) => onClientModeChange(event.target.checked)}
-                    />
-                    <Typography
-                        color={allClientsMode ? "textPrimary" : "textSecondary"}
-                        component={"span"}
-                        variant={"body2"}
-                    >
-                        {t("dashboard.allClients")}
-                    </Typography>
-                </div>
-
-                <div className={styles.checkbox}>
-                    <Typography
-                        color={archivedMode ? "textPrimary" : "textSecondary"}
-                        component={"span"}
-                        variant={"body2"}
-                    >
-                        {t("dashboard.showArchived")}
-                    </Typography>
-                    <Checkbox
-                        checked={archivedMode}
-                        onChange={(e) => {
-                            onArchivedModeChange(e.target.checked);
-                        }}
-                    />
-                </div>
+            <div className={styles.switch}>
+                <Typography
+                    color={allClientsMode ? "textSecondary" : "textPrimary"}
+                    component={"span"}
+                    variant={"body2"}
+                >
+                    {t("dashboard.myClients")}
+                </Typography>
+                <IOSSwitch
+                    checked={allClientsMode}
+                    onChange={(event) => onClientModeChange(event.target.checked)}
+                />
+                <Typography
+                    color={allClientsMode ? "textPrimary" : "textSecondary"}
+                    component={"span"}
+                    variant={"body2"}
+                >
+                    {t("dashboard.allClients")}
+                </Typography>
+            </div>
+            <div className={styles.checkbox}>
+                <Typography
+                    color={archivedMode ? "textPrimary" : "textSecondary"}
+                    component={"span"}
+                    variant={"body2"}
+                >
+                    {t("dashboard.showArchived")}
+                </Typography>
+                <Checkbox
+                    checked={archivedMode}
+                    onChange={(e) => {
+                        onArchivedModeChange(e.target.checked);
+                    }}
+                />
             </div>
 
             <div className={styles.search}>
@@ -114,6 +111,7 @@ const Toolbar = ({
                         ))}
                     </Select>
                 </div>
+
                 {searchOption === SearchOption.ZONE ? (
                     <div>
                         <Select
@@ -135,6 +133,7 @@ const Toolbar = ({
                         onChange={(e) => onSearchValueChange(e.target.value)}
                     />
                 )}
+
                 <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
                     <MoreVert />
                 </IconButton>

@@ -72,12 +72,13 @@ const RenderLoadingOverlay = () => {
 };
 
 const RenderNoRowsOverlay = () => {
+    const { t } = useTranslation();
     const styles = useDataGridStyles();
 
     return (
         <GridOverlay className={styles.noRows}>
             <Cancel color="primary" className={styles.noRowsIcon} />
-            <Typography color="primary">No Clients Found</Typography>
+            <Typography color="primary">{t("dashboard.noClients")}</Typography>
         </GridOverlay>
     );
 };
@@ -249,7 +250,7 @@ const ClientList = () => {
                     className={styles.downloadSVCLink}
                 >
                     <Button variant="outlined" size="small">
-                        EXPORT TO CSV{" "}
+                        {t("dashboard.csvExport")}
                     </Button>
                 </CSVLink>
             </div>

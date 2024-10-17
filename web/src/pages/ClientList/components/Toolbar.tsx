@@ -106,7 +106,9 @@ const Toolbar = ({
                     >
                         {Object.values(SearchOption).map((option) => (
                             <MenuItem key={option} value={option}>
-                                {option}
+                                {option === SearchOption.NAME
+                                    ? t("general.name")
+                                    : t("general.zone")}
                             </MenuItem>
                         ))}
                     </Select>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Chip, Divider, Typography } from "@material-ui/core";
+import { Divider, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 
 import { timestampFromFormDate } from "@cbr/common/util/dates";
@@ -7,23 +7,13 @@ import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IStats } from "@cbr/common/util/stats";
 import { IUser } from "@cbr/common/util/users";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
-import {
-    DisabilityStats,
-    ExportStats,
-    ReferralStats,
-    StatsDateFilter,
-    StatsUserFilter,
-    VisitStats,
-} from "./components";
-import { blankDateRange, IDateRange } from "./components/StatsDateFilter";
+import { DisabilityStats, FilterBar, ReferralStats, VisitStats } from "./components";
+import { blankDateRange, IDateRange } from "./components/filterbar/StatsDateFilter";
 
 const Stats = () => {
-    const [dateFilterOpen, setDateFilterOpen] = useState(false);
     const [dateRange, setDateRange] = useState(blankDateRange);
-    const [userFilterOpen, setUserFilterOpen] = useState(false);
     const [users, setUsers] = useState<IUser[]>([]);
     const [user, setUser] = useState<IUser | null>(null);
-    const [exportOpen, setExportOpen] = useState(false);
     const [stats, setStats] = useState<IStats>();
     const [errorLoading, setErrorLoading] = useState(false);
     const [archiveMode, setArchiveMode] = useState(false);
@@ -64,38 +54,6 @@ const Stats = () => {
             .catch(() => setErrorLoading(true));
     }, [dateRange, user, archiveMode]);
 
-    const FilterBar = () => (
-        <div style={{ textAlign: "center" }}>
-            <Button variant="outlined" onClick={() => setDateFilterOpen(true)}>
-                Filter by Date
-            </Button>{" "}
-            <Button variant="outlined" onClick={() => setUserFilterOpen(true)}>
-                Filter by User
-            </Button>{" "}
-            <Button variant="outlined" onClick={() => setExportOpen(true)}>
-                Export to CSV
-            </Button>{" "}
-            <br />
-            <br />
-            {dateRange.from.length && dateRange.to.length ? (
-                <Chip
-                    label={`From ${dateRange.from} to ${dateRange.to}`}
-                    onDelete={() => setDateRange(blankDateRange)}
-                />
-            ) : (
-                <Chip label="All Time" />
-            )}{" "}
-            {user ? (
-                <Chip
-                    label={`${user.first_name} (${user.username})`}
-                    onDelete={() => setUser(null)}
-                />
-            ) : (
-                <Chip label="All Users" />
-            )}
-        </div>
-    );
-
     if (errorLoading) {
         return (
             <Alert severity="error">
@@ -106,23 +64,17 @@ const Stats = () => {
 
     return (
         <>
-            <FilterBar />
-            <StatsDateFilter
-                open={dateFilterOpen}
-                onClose={() => setDateFilterOpen(false)}
-                range={dateRange}
-                setRange={setDateRange}
-            />
-            <StatsUserFilter
-                open={userFilterOpen}
-                onClose={() => setUserFilterOpen(false)}
-                users={users}
+            <FilterBar
                 user={user}
+                users={users}
+                dateRange={dateRange}
+                stats={stats}
+                setDateRange={setDateRange}
                 setUser={setUser}
             />
-            <ExportStats open={exportOpen} onClose={() => setExportOpen(false)} stats={stats} />
             <br />
             <Divider />
+
             <br />
             <Typography variant="h2" align="center">
                 Visits
@@ -130,6 +82,7 @@ const Stats = () => {
             <VisitStats stats={stats} />
             <br />
             <Divider />
+
             <br />
             <Typography variant="h2" align="center">
                 Referrals
@@ -137,6 +90,7 @@ const Stats = () => {
             <ReferralStats stats={stats} />
             <br />
             <Divider />
+
             <br />
             <div>
                 <Typography

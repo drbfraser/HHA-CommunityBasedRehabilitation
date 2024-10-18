@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Divider, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 
@@ -17,6 +18,7 @@ const Stats = () => {
     const [stats, setStats] = useState<IStats>();
     const [errorLoading, setErrorLoading] = useState(false);
     const [archiveMode, setArchiveMode] = useState(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         apiFetch(Endpoint.USERS)
@@ -55,11 +57,7 @@ const Stats = () => {
     }, [dateRange, user, archiveMode]);
 
     if (errorLoading) {
-        return (
-            <Alert severity="error">
-                Something went wrong loading the statistics. Please try again.
-            </Alert>
-        );
+        return <Alert severity="error">{t("alert.loadStatsFailure")}</Alert>;
     }
 
     return (
@@ -74,31 +72,31 @@ const Stats = () => {
             />
             <br />
             <Divider />
-
             <br />
+
             <Typography variant="h2" align="center">
-                Visits
+                {t("statistics.visits")}
             </Typography>
             <VisitStats stats={stats} />
             <br />
             <Divider />
-
             <br />
+
             <Typography variant="h2" align="center">
-                Referrals
+                {t("statistics.referrals")}
             </Typography>
             <ReferralStats stats={stats} />
             <br />
             <Divider />
-
             <br />
+
             <div>
                 <Typography
                     color={archiveMode ? "textSecondary" : "textPrimary"}
                     component={"span"}
                     variant={"body2"}
                 >
-                    All Clients
+                    {t("statistics.allClients")}
                 </Typography>
                 <IOSSwitch
                     checked={archiveMode}
@@ -109,14 +107,14 @@ const Stats = () => {
                     component={"span"}
                     variant={"body2"}
                 >
-                    Active Clients
+                    {t("statistics.activeClients")}
                 </Typography>
             </div>
             <Typography variant="h2" align="center" display="block">
-                Disabilities
+                {t("statistics.disabilities")}
             </Typography>
             <Typography variant="body1" align="center">
-                Filters do not apply to disabilities.
+                {t("statistics.filtersDoNotApplyToDisabilities")}
             </Typography>
             <br />
             <DisabilityStats stats={stats} />

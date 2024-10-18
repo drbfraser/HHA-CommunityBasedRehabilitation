@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button, Chip } from "@material-ui/core";
 
 import { IUser } from "@cbr/common/util/users";
@@ -20,28 +21,32 @@ const FilterBar = ({ user, users, dateRange, stats, setDateRange, setUser }: IPr
     const [dateFilterOpen, setDateFilterOpen] = useState(false);
     const [userFilterOpen, setUserFilterOpen] = useState(false);
     const [exportOpen, setExportOpen] = useState(false);
+    const { t } = useTranslation();
 
     return (
         <>
             <div style={{ textAlign: "center" }}>
                 <Button variant="outlined" onClick={() => setDateFilterOpen(true)}>
-                    Filter by Date
+                    {t("statistics.filterByDate")}
                 </Button>{" "}
                 <Button variant="outlined" onClick={() => setUserFilterOpen(true)}>
-                    Filter by User
+                    {t("statistics.filterByUser")}
                 </Button>{" "}
                 <Button variant="outlined" onClick={() => setExportOpen(true)}>
-                    Export to CSV
+                    {t("general.csvExport")}
                 </Button>{" "}
                 <br />
                 <br />
                 {dateRange.from.length && dateRange.to.length ? (
                     <Chip
-                        label={`From ${dateRange.from} to ${dateRange.to}`}
+                        label={t("statistics.dateRange", {
+                            start: dateRange.from,
+                            end: dateRange.to,
+                        })}
                         onDelete={() => setDateRange(blankDateRange)}
                     />
                 ) : (
-                    <Chip label="All Time" />
+                    <Chip label={t("statistics.allTime")} />
                 )}{" "}
                 {user ? (
                     <Chip
@@ -49,7 +54,7 @@ const FilterBar = ({ user, users, dateRange, stats, setDateRange, setUser }: IPr
                         onDelete={() => setUser(null)}
                     />
                 ) : (
-                    <Chip label="All Users" />
+                    <Chip label={t("statistics.allUsers")} />
                 )}
             </div>
 

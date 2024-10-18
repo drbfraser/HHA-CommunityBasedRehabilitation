@@ -202,6 +202,7 @@ interface Resources {
       "generalFailureTryAgain": "&Something went wrong. Please go back and try again.",
       "loadClientFailure": "&Something went wrong loading that client. Please try again.",
       "loadUserFailure": "&Something went wrong trying to load that user. Please go back and try again.",
+      "loadStatsFailure": "&Something went wrong loading the statistics. Please try again.",
       "editUserFailure": "&Something went wrong trying to edit that user. Please try again.",
       "editUserPasswordFailure": "&Error occurred when trying to change the user's password",
       "DeleteAlertWithSubject": "&Delete Alert with Subject: {{subject}}",
@@ -631,6 +632,8 @@ interface Resources {
       "showingDataFor": "&Showing data for",
       "allZones": "&all zones",
       "viewAllZone": "&View All Zone",
+      "viewAllZones": "&View All Zones",
+      "viewAllZoneData": "&View data for all zones.",
       "byZone": "&By Zone",
       "totalVisits": "&Total Visits:",
       "clickBarToFilter": "&Click on bar to filter by zone",
@@ -640,7 +643,12 @@ interface Resources {
       "resolved": "&Resolved",
       "allClients": "&All Clients",
       "activeClients": "&Active Clients",
-      "clientsWithDisabilities": "&Clients with Disabilities:"
+      "clientsWithDisabilities": "&Clients with Disabilities:",
+      "filtersDoNotApplyToDisabilities": "&Filters do not apply to disabilities.",
+      "clickForZoneSpecificData": "&For zone-specific data, click on a zone in the zone chart.",
+      "onlyZonesWithVisits": "&Only zones with visits are shown.",
+      "noVisitsFound": "&No visits found. If you are filtering, perhaps there were no visits during the date period selected or the user selected has not visited any clients yet.",
+      "count": "&Count"
     },
     "sync": {
       "sureResetLocalDB": "&Are you sure you want to reset local database",
@@ -869,6 +877,7 @@ interface Resources {
       "generalFailureTryAgain": "-Something went wrong. Please go back and try again.",
       "loadClientFailure": "-Something went wrong loading that client. Please try again.",
       "loadUserFailure": "-Something went wrong trying to load that user. Please go back and try again.",
+      "loadStatsFailure": "-Something went wrong loading the statistics. Please try again.",
       "editUserFailure": "-Something went wrong trying to edit that user. Please try again.",
       "editUserPasswordFailure": "-Error occurred when trying to change the user's password",
       "DeleteAlertWithSubject": "-Delete Alert with Subject: {{subject}}",
@@ -1300,6 +1309,8 @@ interface Resources {
       "showingDataFor": "-Showing data for",
       "allZones": "-all zones",
       "viewAllZone": "-View All Zone",
+      "viewAllZones": "-View All Zones",
+      "viewAllZoneData": "-View data for all zones.",
       "byZone": "-By Zone",
       "totalVisits": "-Total Visits:",
       "clickBarToFilter": "-Click on bar to filter by zone",
@@ -1309,7 +1320,12 @@ interface Resources {
       "resolved": "-Resolved",
       "allClients": "-All Clients",
       "activeClients": "-Active Clients",
-      "clientsWithDisabilities": "-Clients with Disabilities:"
+      "clientsWithDisabilities": "-Clients with Disabilities:",
+      "filtersDoNotApplyToDisabilities": "-Filters do not apply to disabilities.",
+      "clickForZoneSpecificData": "-For zone-specific data, click on a zone in the zone chart.",
+      "onlyZonesWithVisits": "-Only zones with visits are shown.",
+      "noVisitsFound": "-No visits found. If you are filtering, perhaps there were no visits during the date period selected or the user selected has not visited any clients yet.",
+      "count": "-Count"
     },
     "sync": {
       "sureResetLocalDB": "-Are you sure you want to reset local database",

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import Grid from "@material-ui/core/Grid";
 
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
@@ -7,8 +6,7 @@ import { APILoadError } from "@cbr/common/util/endpoints";
 import { IUser } from "@cbr/common/util/users";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IAlert } from "@cbr/common/util/alerts";
-import AlertList from "./AlertList";
-import AlertDetail from "./AlertDetail";
+import { AlertDetail, AlertList } from "./components";
 
 const AlertInbox = () => {
     const [selectedAlert, setSelectedAlert] = useState<number>(-1);

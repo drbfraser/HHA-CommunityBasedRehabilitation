@@ -197,7 +197,8 @@ interface Resources {
       "language": "&Language",
       "csvExport": "&EXPORT TO CSV",
       "clear": "&Clear",
-      "filter": "&Filter"
+      "filter": "&Filter",
+      "details": "&Details"
     },
     "alert": {
       "generalFailure": "&Something went Wrong",
@@ -261,7 +262,8 @@ interface Resources {
       "errorUpdatingAlert": "&Encountered an error while trying to update the alert!",
       "errorDeletingAlert": "&Encountered an error while trying to delete the alert!",
       "errorRetrievingUser": "&Error retrieving users. {{error}}",
-      "apiLoadError": "&API Load Error"
+      "apiLoadError": "&API Load Error",
+      "selectAnAlert": "&Please select an alert."
     },
     "baseSurveyFields": {
       "client_id": "&Client",
@@ -883,7 +885,8 @@ interface Resources {
       "language": "-Language",
       "csvExport": "-EXPORT TO CSV",
       "clear": "-Clear",
-      "filter": "-Filter"
+      "filter": "-Filter",
+      "details": "-Details"
     },
     "alert": {
       "generalFailure": "-Something went Wrong",
@@ -947,7 +950,8 @@ interface Resources {
       "errorUpdatingAlert": "-Encountered an error while trying to update the alert!",
       "errorDeletingAlert": "-Encountered an error while trying to delete the alert!",
       "errorRetrievingUser": "-Error retrieving users. {{error}}",
-      "apiLoadError": "-API Load Error"
+      "apiLoadError": "-API Load Error",
+      "selectAnAlert": "-Please select an alert."
     },
     "baseSurveyFields": {
       "client_id": "-Client",

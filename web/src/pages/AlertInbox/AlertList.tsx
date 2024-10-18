@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import ListItemText from "@mui/material/ListItemText";
@@ -61,6 +62,8 @@ const RenderBadge = (params: String) => {
 
 const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: AlertDetailProps) => {
     const style = useStyles();
+    const { t } = useTranslation();
+
     // For the purposes of tracking changes to a user's unread alerts
     const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
 
@@ -83,7 +86,7 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
 
     return (
         <Grid item xs={3} className={style.gridStyle}>
-            <h1>Alerts</h1>
+            <h1>{t("general.alerts")}</h1>
             <Divider variant="fullWidth" className={style.tableTopAndContentDividerStyle} />
             <List
                 sx={{

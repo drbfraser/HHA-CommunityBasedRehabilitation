@@ -34,15 +34,15 @@ const Stats = () => {
 
         ["from", "to"].forEach((field) => {
             const fieldVal = dateRange[field as keyof IDateRange];
-            if (fieldVal) {
-                if (field === "from") {
-                    urlParams.append(field, String(timestampFromFormDate(fieldVal)));
-                } else {
-                    urlParams.append(
-                        field,
-                        String(timestampFromFormDate(fieldVal) + milliSecondPerDay)
-                    );
-                }
+            if (!fieldVal) return;
+
+            if (field === "from") {
+                urlParams.append(field, String(timestampFromFormDate(fieldVal)));
+            } else {
+                urlParams.append(
+                    field,
+                    String(timestampFromFormDate(fieldVal) + milliSecondPerDay)
+                );
             }
         });
 

@@ -56,8 +56,7 @@ interface Resources {
       "noClients": "&No Clients found",
       "noOutstandingReferrals": "&No Outstanding Referrals Found",
       "newInboxMessages": "&You have <1>1</1> new message in your inbox",
-      "newInboxMessages_plural": "&You have <1>{{count}}</1> new messages in your inbox",
-      "csvExport": "&EXPORT TO CSV"
+      "newInboxMessages_plural": "&You have <1>{{count}}</1> new messages in your inbox"
     },
     "disabilities": {
       "amputee": "&Amputee",
@@ -195,7 +194,10 @@ interface Resources {
       "lastVisit": "&Last Visit",
       "previousStep": "&Previous Step",
       "nextStep": "&Next Step",
-      "language": "&Language"
+      "language": "&Language",
+      "csvExport": "&EXPORT TO CSV",
+      "clear": "&Clear",
+      "filter": "&Filter"
     },
     "alert": {
       "generalFailure": "&Something went Wrong",
@@ -648,7 +650,15 @@ interface Resources {
       "clickForZoneSpecificData": "&For zone-specific data, click on a zone in the zone chart.",
       "onlyZonesWithVisits": "&Only zones with visits are shown.",
       "noVisitsFound": "&No visits found. If you are filtering, perhaps there were no visits during the date period selected or the user selected has not visited any clients yet.",
-      "count": "&Count"
+      "count": "&Count",
+      "filterByDate": "&Filter by Date",
+      "filterByUser": "&Filter by User",
+      "export": "&Export Statistics",
+      "filtersApplyToExports": "&Note that any filters will also apply to exported data.",
+      "downloadAsCSV": "&<1>Download statistics<1> as a CSV file.",
+      "allTime": "&All Time",
+      "allUsers": "&All Users",
+      "dateRange": "&From {{start}} to {{end}}"
     },
     "sync": {
       "sureResetLocalDB": "&Are you sure you want to reset local database",
@@ -870,7 +880,10 @@ interface Resources {
       "goBack": "-Go Back",
       "when": "-When",
       "lastVisit": "-Last Visit",
-      "language": "-Language"
+      "language": "-Language",
+      "csvExport": "-EXPORT TO CSV",
+      "clear": "-Clear",
+      "filter": "-Filter"
     },
     "alert": {
       "generalFailure": "-Something went Wrong",
@@ -1325,7 +1338,15 @@ interface Resources {
       "clickForZoneSpecificData": "-For zone-specific data, click on a zone in the zone chart.",
       "onlyZonesWithVisits": "-Only zones with visits are shown.",
       "noVisitsFound": "-No visits found. If you are filtering, perhaps there were no visits during the date period selected or the user selected has not visited any clients yet.",
-      "count": "-Count"
+      "count": "-Count",
+      "filterByDate": "-Filter by Date",
+      "filterByUser": "-Filter by User",
+      "export": "-Export Statistics",
+      "filtersApplyToExports": "-Note that any filters will also apply to exported data.",
+      "downloadAsCSV": "-<1>Download statistics</1> as a CSV file.",
+      "allTime": "-All Time",
+      "allUsers": "-All Users",
+      "dateRange": "-From {{start}} to {{end}}"
     },
     "sync": {
       "sureResetLocalDB": "-Are you sure you want to reset local database",

@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+
 import { IAlert } from "@cbr/common/util/alerts";
-import { useEffect } from "react";
 import { handleUpdateAlertSubmit, handleDeleteAlert } from "@cbr/common/forms/Alert/alertHandler";
 
 const useStyles = makeStyles({
@@ -23,28 +24,25 @@ const useStyles = makeStyles({
     },
 });
 
-type Props = {
+type IProps = {
     selectAlert: number;
-    userID: string;
     alertData: IAlert[];
     refreshAlert: () => void;
 };
 
-const AlertDetail = (alertDetailProps: Props) => {
+const AlertDetail = ({ selectAlert, alertData, refreshAlert }: IProps) => {
+    const { t } = useTranslation();
     const style = useStyles();
-    const { alertData } = alertDetailProps;
 
     useEffect(() => {
         const updateAlertUnreadUsersList = async () => {
             try {
                 // Find the selected alert in the alertData list by ID
-                let selectedAlertData: IAlert | undefined = alertData.find(
-                    ({ id }) => id.toString() === alertDetailProps.selectAlert.toString()
+                const selectedAlertData: IAlert | undefined = alertData.find(
+                    ({ id }) => id.toString() === selectAlert.toString()
                 );
-
-                let updateAlert: IAlert;
                 if (selectedAlertData) {
-                    updateAlert = {
+                    const updateAlert = {
                         id: selectedAlertData.id,
                         subject: selectedAlertData.subject,
                         priority: selectedAlertData.priority,
@@ -53,7 +51,6 @@ const AlertDetail = (alertDetailProps: Props) => {
                         created_by_user: selectedAlertData.created_by_user,
                         created_date: selectedAlertData.created_date,
                     };
-
                     await handleUpdateAlertSubmit(updateAlert);
                 }
             } catch (e) {
@@ -62,35 +59,32 @@ const AlertDetail = (alertDetailProps: Props) => {
         };
 
         updateAlertUnreadUsersList();
-    }, [alertDetailProps, alertData]);
+    }, [alertData, selectAlert]);
 
     const selectedItem: Array<any> = alertData.filter((alert) => {
-        return alert.id.toString() === alertDetailProps.selectAlert.toString();
+        return alert.id.toString() === selectAlert.toString();
     });
 
     return (
         <Grid item xs={9} className={style.detailContainerStyle}>
-            <h1>Details</h1>
+            <h1>{t("general.details")}</h1>
             <Divider variant="fullWidth" className={style.dividerStyle} />
 
             <h2>{selectedItem.length === 0 ? "" : selectedItem[0].subject}</h2>
             <Typography>
                 {selectedItem.length === 0 || selectedItem[0].alert_message === ""
-                    ? "Please select an alert."
+                    ? t("alerts.selectAnAlert")
                     : selectedItem[0].alert_message}
             </Typography>
-            {selectedItem.length === 0 ? (
-                <></>
-            ) : (
+
+            {selectedItem.length !== 0 && (
                 <div className={style.deleteButtonStyle}>
                     <Button
                         variant="outlined"
                         color="error"
-                        onClick={() =>
-                            handleDeleteAlert(selectedItem[0].id, alertDetailProps.refreshAlert)
-                        }
+                        onClick={() => handleDeleteAlert(selectedItem[0].id, refreshAlert)}
                     >
-                        Delete
+                        {t("general.delete")}
                     </Button>
                 </div>
             )}

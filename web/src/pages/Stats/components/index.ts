@@ -1,4 +1,4 @@
-export { default as DisabilityStats } from "./DisabilityStats";
-export { default as ReferralStats } from "./ReferralStats";
-export { default as VisitStats } from "./VisitStats";
+export { default as DisabilityStats } from "./charts/DisabilityStats";
+export { default as ReferralStats } from "./charts/ReferralStats";
+export { default as VisitStats } from "./charts/VisitStats";
 export { FilterBar } from "./filterbar";

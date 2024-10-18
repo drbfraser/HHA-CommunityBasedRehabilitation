@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
@@ -21,11 +22,12 @@ interface IProps {
 }
 
 const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
+    const { t } = useTranslation();
+
     const handleSubmit = (values: IDateRange) => {
         setRange({ ...values });
         onClose();
     };
-
     const handleClear = () => {
         setRange({ ...blankDateRange });
         onClose();
@@ -33,7 +35,7 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Filter by Date</DialogTitle>
+            <DialogTitle>{t("statistics.filterByDate")}</DialogTitle>
             <Formik initialValues={range} onSubmit={handleSubmit}>
                 <Form>
                     <DialogContent>
@@ -61,9 +63,9 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                         <br />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClear}>Clear</Button>
+                        <Button onClick={handleClear}>{t("general.clear")}</Button>
                         <Button color="primary" type="submit">
-                            Filter
+                            {t("general.filter")}
                         </Button>
                     </DialogActions>
                 </Form>

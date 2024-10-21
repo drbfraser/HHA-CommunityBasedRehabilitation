@@ -1,5 +1,5 @@
-import { useStyles } from "./styles";
-import { Button } from "@mui/material";
+import { userStyles } from "./User.styles";
+import { Box, Button } from "@mui/material";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { Alert, Skeleton } from '@mui/material';
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
@@ -9,7 +9,6 @@ import { useHistory } from "react-router-dom";
 import React from "react";
 
 const UserView = () => {
-    const styles = useStyles();
     const history = useHistory();
     const user = useCurrentUser();
     const zones = useZones();
@@ -19,23 +18,23 @@ const UserView = () => {
     };
 
     return (
-        (<div className={styles.container}>
+        (<Box sx={userStyles.container}>
             {user === APILoadError ? (
                 <Alert severity="error">Something went wrong. Please go back and try again.</Alert>
             ) : user ? (
                 <>
-                    <div className={styles.header}>
+                    <Box sx={userStyles.header}>
                         <h1>
                             {user.first_name} {user.last_name}
                         </h1>
                         <Button
-                            className={styles.changePasswordButton}
+                            sx={userStyles.changePasswordButton}
                             color="primary"
                             onClick={handleChangePassword}
                         >
                             <LockOpenIcon></LockOpenIcon>Change Password
                         </Button>
-                    </div>
+                    </Box>
                     <b>Username</b>
                     <p>{user.username}</p>
                     <b>ID</b>
@@ -44,7 +43,7 @@ const UserView = () => {
                     <p> {zones.get(user.zone) ?? "Unknown"} </p>
                     <b>Phone Number</b>
                     <p> {user.phone_number} </p>
-                    <div className={styles.logOutButton}>
+                    <Box sx={userStyles.logOutButton}>
                         <Button
                             onClick={() => history.push("/logout")}
                             color="primary"
@@ -52,12 +51,12 @@ const UserView = () => {
                         >
                             Logout
                         </Button>
-                    </div>
+                    </Box>
                 </>
             ) : (
                 <Skeleton variant="rectangular" height={400} />
             )}
-        </div>)
+        </Box>)
     );
 };
 

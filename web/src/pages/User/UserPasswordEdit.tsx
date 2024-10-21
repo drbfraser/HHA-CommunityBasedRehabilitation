@@ -1,7 +1,7 @@
-import { useStyles } from "./styles";
+import { userStyles } from "./User.styles";
 import { TextField } from "formik-mui";
 import { Field, Form, Formik } from "formik";
-import { Alert, Skeleton } from '@mui/material';
+import { Alert, Box, Skeleton } from '@mui/material';
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
 import Grid from "@mui/material/Grid";
@@ -24,7 +24,6 @@ import history from "@cbr/common/util/history";
 const handleCancel = () => history.goBack();
 
 const UserPasswordEdit = () => {
-    const styles = useStyles();
     const user = useCurrentUser();
     const [passwordChangeError, setPasswordChangeError] = useState<string | null>(null);
 
@@ -34,7 +33,7 @@ const UserPasswordEdit = () => {
         </Alert>
     ) : user ? (
         <>
-            <div className={styles.container}>
+            <Box sx={userStyles.container}>
                 {passwordChangeError && (
                     <Alert onClose={() => setPasswordChangeError(null)} severity="error">
                         {passwordChangeError}
@@ -45,7 +44,7 @@ const UserPasswordEdit = () => {
                 <p>{user.id}</p>
                 <b>Username </b>
                 <p>{user.username}</p>
-            </div>
+            </Box>
             <Formik
                 initialValues={changePasswordInitialValues}
                 validationSchema={changePassValidationSchema}
@@ -58,7 +57,7 @@ const UserPasswordEdit = () => {
                 }}
             >
                 {({ isSubmitting }) => (
-                    <div className={styles.container}>
+                    <Box sx={userStyles.container}>
                         <Form>
                             <Grid container spacing={1}>
                                 <Grid item md={3} xs={12}>
@@ -135,7 +134,7 @@ const UserPasswordEdit = () => {
                                 </Grid>
                             </Grid>
                         </Form>
-                    </div>
+                    </Box>
                 )}
             </Formik>
         </>

@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     FormControl,
     FormGroup,
@@ -28,7 +29,7 @@ import { handleSubmit } from "./formHandler";
 import { ArrowBack } from "@mui/icons-material";
 import history from "@cbr/common/util/history";
 import { useParams } from "react-router-dom";
-import { useStyles } from "./NewReferral.styles";
+import { newReferralStyles } from "./NewReferral.styles";
 import { Alert } from '@mui/material';
 import {
     referralFieldLabels,
@@ -94,8 +95,7 @@ const ReferralServiceForm = (
 };
 
 const WheelchairForm = (props: IFormProps) => {
-    const styles = useStyles();
-
+    
     return (
         <div>
             <FormLabel>What type of wheelchair user?</FormLabel>
@@ -119,9 +119,10 @@ const WheelchairForm = (props: IFormProps) => {
             <br />
             <FormLabel>What is the client's hip width?</FormLabel>
             <br />
-            <div className={`${styles.fieldIndent}`}>
+            {/* todosd: verify correct */}
+            <Box sx={newReferralStyles.fieldIndent}>
                 <Field
-                    className={styles.hipWidth}
+                    sx={newReferralStyles.hipWidth}
                     component={TextField}
                     type="number"
                     name={ReferralFormField.hipWidth}
@@ -129,11 +130,11 @@ const WheelchairForm = (props: IFormProps) => {
                         endAdornment: <InputAdornment position="end">inches</InputAdornment>,
                     }}
                 />
-            </div>
+            </Box>
             <br />
             <FormLabel>Wheelchair information</FormLabel>
             <br />
-            <div className={styles.fieldIndent}>
+            <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
@@ -151,7 +152,7 @@ const WheelchairForm = (props: IFormProps) => {
                         }}
                     />
                 )}
-            </div>
+            </Box>
             {props.formikProps.values[ReferralFormField.wheelchairOwned] &&
                 props.formikProps.values[ReferralFormField.wheelchairRepairable] && (
                     <>
@@ -172,7 +173,6 @@ const WheelchairForm = (props: IFormProps) => {
 };
 
 const PhysiotherapyForm = (props: IFormProps) => {
-    const styles = useStyles();
     const disabilities = useDisabilities();
 
     return (
@@ -180,7 +180,7 @@ const PhysiotherapyForm = (props: IFormProps) => {
             <FormLabel>What condition does the client have?</FormLabel>
             <br />
             <br />
-            <div className={styles.fieldIndent}>
+            <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     component={TextField}
                     fullWidth
@@ -210,7 +210,7 @@ const PhysiotherapyForm = (props: IFormProps) => {
                         />
                     </div>
                 )}
-            </div>
+            </Box>
         </div>
     );
 };
@@ -246,14 +246,13 @@ const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormFiel
 };
 
 const NutritionForm = (props: IFormProps) => {
-    const styles = useStyles();
     // const disabilities = useDisabilities();
 
     return (
         <div>
             <FormLabel>What does the client need?</FormLabel>
             <br />
-            <div className={styles.fieldIndent}>
+            <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
@@ -281,19 +280,19 @@ const NutritionForm = (props: IFormProps) => {
                         props.formikProps.handleChange(event);
                     }}
                 />
-            </div>
+            </Box>
         </div>
     );
 };
 
 const MentalHealthForm = (props: IFormProps) => {
-    const styles = useStyles();
+
     return (
         <div>
             <FormLabel>Please select mental health referral</FormLabel>
             <br />
             <br />
-            <div className={styles.fieldIndent}>
+            <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     component={TextField}
                     variant="outlined"
@@ -324,20 +323,19 @@ const MentalHealthForm = (props: IFormProps) => {
                         />
                     </div>
                 )}
-            </div>
+            </Box>
         </div>
     );
 };
 
 const OtherServicesForm = (props: IFormProps) => {
-    const styles = useStyles();
 
     return (
         <div>
             <FormLabel>Please select another referral</FormLabel>
             <br />
             <br />
-            <div className={styles.fieldIndent}>
+            <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     component={TextField}
                     variant="outlined"
@@ -368,7 +366,7 @@ const OtherServicesForm = (props: IFormProps) => {
                         />
                     </div>
                 )}
-            </div>
+            </Box>
         </div>
     );
 };

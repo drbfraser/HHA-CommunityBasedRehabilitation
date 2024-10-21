@@ -1,11 +1,11 @@
 import React from "react";
-import { useStyles } from "./Admin.styles";
+import { adminStyles } from "./Admin.styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import history from "@cbr/common/util/history";
-import { FormControl, MenuItem } from "@mui/material";
+import { Box, FormControl, MenuItem } from "@mui/material";
 import { handleNewUserSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -18,7 +18,6 @@ import {
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
 
 const AdminNew = () => {
-    const styles = useStyles();
     const zones = useZones();
 
     return (
@@ -38,7 +37,7 @@ const AdminNew = () => {
             }}
         >
             {({ isSubmitting }) => (
-                <div className={styles.container}>
+                <Box sx={adminStyles.container}>
                     <Form>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>
@@ -169,7 +168,7 @@ const AdminNew = () => {
                             <br></br>
                         </div>
                     </Form>
-                </div>
+                </Box>
             )}
         </Formik>)
     );

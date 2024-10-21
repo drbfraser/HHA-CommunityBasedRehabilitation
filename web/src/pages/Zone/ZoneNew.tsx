@@ -1,5 +1,5 @@
 import React from "react";
-import { useStyles } from "./styles";
+import { zoneStyles } from "./Zone.styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 import Grid from "@mui/material/Grid";
@@ -8,9 +8,10 @@ import history from "@cbr/common/util/history";
 import { handleNewZoneSubmit } from "@cbr/common/forms/Zone/zoneFormsHandler";
 import { ZoneField, zoneFieldLabels, zoneInitialValues } from "@cbr/common/forms/Zone/zoneFields";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
+import { Box } from "@mui/material";
 
 const ZoneNew = () => {
-    const styles = useStyles();
+
     return (
         (<Formik
             initialValues={zoneInitialValues}
@@ -28,7 +29,7 @@ const ZoneNew = () => {
             }}
         >
             {({ isSubmitting }) => (
-                <div className={styles.container}>
+                <Box sx={zoneStyles.container}>
                     <Form>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>
@@ -70,7 +71,7 @@ const ZoneNew = () => {
                             <br></br>
                         </div>
                     </Form>
-                </div>
+                </Box>
             )}
         </Formik>)
     );

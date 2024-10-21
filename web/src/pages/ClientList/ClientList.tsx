@@ -40,7 +40,7 @@ import { SearchOption } from "@cbr/common/util/searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@mui/icons-material";
 import requestClientRows from "./requestClientRows";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
-import { useHideColumnsStyles } from "styles/HideColumns.styles";
+import { hideColumnsStyles } from "styles/HideColumns.styles";
 import { useZones } from "@cbr/common/util/hooks/zones";
 
 
@@ -124,7 +124,6 @@ const ClientList = () => {
 
     const zones = useZones();
     const searchOptionsStyle = useSearchOptionsStyles();
-    const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
@@ -316,7 +315,7 @@ const ClientList = () => {
                     />
                 )}
                 <IconButton
-                    className={hideColumnsStyle.optionsButton}
+                    sx={hideColumnsStyles.optionsButton}
                     onClick={onOptionsClick}
                     size="large"
                 >
@@ -335,10 +334,10 @@ const ClientList = () => {
                         horizontal: "center",
                     }}
                 >
-                    <div className={hideColumnsStyle.optionsContainer}>
+                    <Box sx={hideColumnsStyles.optionsContainer}>
                         {columns.map((column): JSX.Element => {
                             return (
-                                <div key={column.field} className={hideColumnsStyle.optionsRow}>
+                                <Box key={column.field} sx={hideColumnsStyles.optionsRow}>
                                     <Typography component={"span"} variant={"body2"}>
                                         {column.headerName}
                                     </Typography>
@@ -346,10 +345,10 @@ const ClientList = () => {
                                         checked={!column.hide}
                                         onClick={() => column.hideFunction(!column.hide)}
                                     />
-                                </div>
+                                </Box>
                             );
                         })}
-                    </div>
+                    </Box>
                 </Popover>
             </Box>
             <DataGrid

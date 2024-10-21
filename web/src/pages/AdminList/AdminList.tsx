@@ -20,7 +20,7 @@ import {
     Box,
 } from "@mui/material";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
-import { useHideColumnsStyles } from "styles/HideColumns.styles";
+import { hideColumnsStyles } from "styles/HideColumns.styles";
 import { useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -69,7 +69,6 @@ const AdminList = () => {
 
     const zones = useZones();
     const searchOptionsStyle = useSearchOptionsStyles();
-    const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
 
     const onRowClick = (row: any) => {
@@ -202,7 +201,7 @@ const AdminList = () => {
                     />
                 )}
                 <IconButton
-                    className={hideColumnsStyle.optionsButton}
+                    sx={hideColumnsStyles.optionsButton}
                     onClick={onOptionsClick}
                     size="large"
                 >
@@ -221,10 +220,10 @@ const AdminList = () => {
                         horizontal: "center",
                     }}
                 >
-                    <div className={hideColumnsStyle.optionsContainer}>
+                    <Box sx={hideColumnsStyles.optionsContainer}>
                         {adminColumns.map((column): JSX.Element => {
                             return (
-                                <div key={column.field} className={hideColumnsStyle.optionsRow}>
+                                <Box key={column.field} sx={hideColumnsStyles.optionsRow}>
                                     <Typography component={"span"} variant={"body2"}>
                                         {column.headerName}
                                     </Typography>
@@ -232,15 +231,13 @@ const AdminList = () => {
                                         checked={!column.hide}
                                         onClick={() => column.hideFunction(!column.hide)}
                                     />
-                                </div>
+                                </Box>
                             );
                         })}
-                    </div>
+                    </Box>
                 </Popover>
             </Box>
-            <Box
-                sx={adminListStyles.dataGridWrapper}
-            >
+            <Box sx={adminListStyles.dataGridWrapper}>
                 <DataGrid
                     sx={dataGridStyles.datagrid}
                     loading={loading}

@@ -3,7 +3,8 @@ import { createTheme, adaptV4Theme } from "@mui/material";
 
 export const mediaMobile = "@media (max-width: 800px)";
 
-// todo: reset body font size here? https://mui.com/material-ui/migration/v5-component-changes/ @Update body font size
+// todosd: reset body font size here? https://mui.com/material-ui/migration/v5-component-changes/ @Update body font size
+// todosd: remove adaptV4Theme
 export const themeMui = createTheme(adaptV4Theme({
     overrides: {
         MuiCssBaseline: {

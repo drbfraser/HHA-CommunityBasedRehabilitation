@@ -137,6 +137,7 @@ const ClientForm = () => {
                                                     variant="outlined"
                                                     required
                                                     label={clientFieldLabels[ClientField.zone]}
+                                                    defaultValue=""
                                                     name={ClientField.zone}
                                                     autoComplete="off"
                                                 >

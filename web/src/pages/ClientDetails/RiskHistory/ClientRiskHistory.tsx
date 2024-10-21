@@ -1,21 +1,22 @@
-import Button from "@mui/material/Button";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useRouteMatch } from "react-router-dom";
 import Typography from "@mui/material/Typography";
-import { ArrowBack } from "@mui/icons-material";
 import Alert from '@mui/material/Alert';
 import Skeleton from '@mui/material/Skeleton';
-import React, { useEffect, useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+
 import { IClient } from "@cbr/common/util/clients";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import RiskHistoryCharts from "./RiskHistoryCharts";
 import RiskHistoryTimeline from "./RiskHistoryTimeline";
+import GoBackButton from "components/GoBackButton/GoBackButton";
 
 interface IRouteParams {
     clientId: string;
 }
 
 const ClientRiskHistory = () => {
-    const history = useHistory();
+    const { t } = useTranslation();
     const { clientId } = useRouteMatch<IRouteParams>().params;
     const [loadingError, setLoadingError] = useState(false);
     const [client, setClient] = useState<IClient>();
@@ -23,11 +24,8 @@ const ClientRiskHistory = () => {
     useEffect(() => {
         const getClient = async () => {
             try {
-                const theClient: IClient = await (
-                    await apiFetch(Endpoint.CLIENT, `${clientId}`)
-                ).json();
-
-                setClient(theClient);
+                const client: IClient = await (await apiFetch(Endpoint.CLIENT, clientId)).json();
+                setClient(client);
             } catch (e) {
                 setLoadingError(true);
             }
@@ -38,13 +36,12 @@ const ClientRiskHistory = () => {
 
     return (
         <>
-            <Button onClick={history.goBack}>
-                <ArrowBack /> Go back
-            </Button>
+            <GoBackButton />
             <br />
             <br />
+
             {loadingError ? (
-                <Alert severity="error">Something went wrong. Please go back and try again.</Alert>
+                <Alert severity="error">{t("alert.generalFailureTryAgain")}</Alert>
             ) : (
                 <>
                     <Typography variant="h3">

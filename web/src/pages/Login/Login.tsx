@@ -3,10 +3,13 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Alert from '@mui/material/Alert';
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import { doLogin } from "@cbr/common/util/auth";
 import { clientListStyles } from "./Login.styles";
 import { loginState } from "../../util/hooks/loginState";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
+import LanguagePicker from "components/LanguagePicker/LanguagePicker";
 
 interface IBaseLoginStatus {
     status: "initial" | "submitting";
@@ -20,6 +23,8 @@ interface ILoginStatusFailed {
 type LoginStatus = ILoginStatusFailed | IBaseLoginStatus;
 
 const Login = () => {
+    const { t } = useTranslation();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [status, setStatus] = useState<LoginStatus>({ status: "initial" });
@@ -44,27 +49,29 @@ const Login = () => {
     };
 
     const LoginAlert = () => {
-        if (status.status === "submitting") {
-            return (
-                <Alert variant="filled" severity="info">
-                    Logging in...
-                </Alert>
-            );
+        switch (status.status) {
+            case "submitting": {
+                return (
+                    <Alert variant="filled" severity="info">
+                        {t("login.loggingIn")}
+                    </Alert>
+                );
+            }
+            case "failed": {
+                return (
+                    <Alert variant="filled" severity="error">
+                        {`${t("login.loginFailed")}:\n${status.error}`}
+                    </Alert>
+                );
+            }
+            default: {
+                return <></>;
+            }
         }
-
-        if (status.status === "failed") {
-            return (
-                <Alert variant="filled" severity="error">
-                    Login failed: {"\n" + status.error}
-                </Alert>
-            );
-        }
-
-        return <></>;
     };
 
     return (
-        (<Box sx={clientListStyles.container}>
+        <Box sx={clientListStyles.container}>
             <Box sx={clientListStyles.formContainer}>
                 <Box
                     component="img"
@@ -72,36 +79,32 @@ const Login = () => {
                     src="/images/hha_logo_white.png"
                     alt="Hope Health Action"
                 />
-                <br />
-                <br />
+
                 <Typography variant="h4" gutterBottom>
-                    Login
+                    {t("login.login")}
                 </Typography>
                 <LoginAlert />
-                <br />
-                <form onSubmit={(e) => handleLogin(e)}>
+                <form className={styles.loginForm} onSubmit={(e) => handleLogin(e)}>
                     <TextField
+                        label={t("general.username")}
                         variant="standard"
-                        label="Username"
                         fullWidth
                         inputProps={{ autoCapitalize: "off" }}
                         required
                         InputLabelProps={{ required: false }}
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)} />
-                    <br />
-                    <br />
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
                     <TextField
                         variant="standard"
-                        label="Password"
+                        label={t("general.password")}
                         type="password"
                         fullWidth
                         required
                         InputLabelProps={{ required: false }}
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)} />
-                    <br />
-                    <br />
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
                     <Button
                         type="submit"
                         variant="contained"
@@ -109,11 +112,19 @@ const Login = () => {
                         fullWidth
                         disabled={status.status === "submitting"}
                     >
-                        Login
+                        {t("login.login")}
                     </Button>
                 </form>
+
+                <LanguagePicker
+                    sx={{
+                        right: "0",
+                        marginTop: "10%",
+                        alignSelf: "flex-end",
+                    }}
+                />
             </Box>
-        </Box>)
+        </Box>
     );
 };
 

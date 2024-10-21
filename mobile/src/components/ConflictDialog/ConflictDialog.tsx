@@ -26,7 +26,7 @@ const ConflictDialog = () => {
     const database = useDatabase();
     const { t } = useTranslation();
 
-    const disabilityMap = useDisabilities();
+    const disabilityMap = useDisabilities(t);
     const disabilityObj = objectFromMap(disabilityMap);
 
     const currState: RootState = useSelector((state: RootState) => state);

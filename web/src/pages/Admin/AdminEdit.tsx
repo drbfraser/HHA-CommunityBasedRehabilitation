@@ -1,10 +1,11 @@
 import React from "react";
+import { useRouteMatch } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { adminStyles } from "./Admin.styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import { useRouteMatch } from "react-router-dom";
 import { Box, FormControl, MenuItem } from "@mui/material";
 import { useState, useEffect } from "react";
 import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
@@ -19,35 +20,25 @@ import {
     IRouteParams,
 } from "@cbr/common/forms/Admin/adminFields";
 import history from "@cbr/common/util/history";
+import { useStyles } from "./styles";
+import { useUser } from "util/hooks/useUser";
 
 const AdminEdit = () => {
-    const { userId } = useRouteMatch<IRouteParams>().params;
-    const [user, setUser] = useState<IUser>();
+    const styles = useStyles();
+    const { t } = useTranslation();
     const zones = useZones();
-    const [loadingError, setLoadingError] = useState<string>();
+    const { userId } = useRouteMatch<IRouteParams>().params;
+    const [user, loadingError] = useUser(userId);
 
-    useEffect(() => {
-        const getInfo = async () => {
-            try {
-                const theUser: IUser = (await (
-                    await apiFetch(Endpoint.USER, `${userId}`)
-                ).json()) as IUser;
-                setUser(theUser);
-            } catch (e) {
-                setLoadingError(
-                    e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : `${e}`
-                );
-            }
-        };
-        getInfo();
-    }, [userId]);
+    if (loadingError) {
+        return (
+            <Alert severity="error">
+                {t("alert.loadUserFailure")} {loadingError}
+            </Alert>
+        );
+    }
 
-    return loadingError ? (
-        <Alert severity="error">
-            Something went wrong trying to load that user. Please go back and try again.{" "}
-            {loadingError}
-        </Alert>
-    ) : user && zones.size ? (
+    return user && zones.size ? (
         <Formik
             initialValues={user}
             validationSchema={editUserValidationSchema}
@@ -58,18 +49,18 @@ const AdminEdit = () => {
                         const errMsg =
                             e instanceof APIFetchFailError
                                 ? e.buildFormError(adminUserFieldLabels)
-                                : "Sorry, something went wrong trying to edit that user. Please try again.";
+                                : (e as string) ?? t("alert.editUserFailure");
                         alert(errMsg);
                     });
             }}
         >
             {({ values, setFieldValue, isSubmitting }) => (
                 <Box sx={adminStyles.container}>
-                    <br />
-                    <b>ID</b>
+                    <b>{t("general.id")}</b>
                     <p>{userId}</p>
-                    <b>Username </b>
+                    <b>{t("admin.username")}</b>
                     <p>{user.username}</p>
+
                     <Form>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>
@@ -141,11 +132,12 @@ const AdminEdit = () => {
                                 </FormControl>
                             </Grid>
                         </Grid>
+                        <br />
 
+                        <b>{t("admin.status")}</b>
+                        <p>{values.is_active ? t("general.active") : t("general.disabled")}</p>
                         <br />
-                        <b>Status</b>
-                        <p>{values.is_active ? "Active" : "Disabled"}</p>
-                        <br />
+
                         <Grid
                             container
                             direction="row"
@@ -167,7 +159,7 @@ const AdminEdit = () => {
                                     setFieldValue(AdminField.is_active, !values.is_active)
                                 }
                             >
-                                {values.is_active ? "Disable" : "Activate"}
+                                {values.is_active ? t("general.disable") : t("general.activate")}
                             </Button>
                             <Grid item>
                                 <Button
@@ -177,11 +169,11 @@ const AdminEdit = () => {
                                     disabled={isSubmitting}
                                     sx={adminStyles.btn}
                                 >
-                                    Save
+                                    {t("general.save")}
                                 </Button>
 
                                 <Button color="primary" variant="outlined" onClick={history.goBack}>
-                                    Cancel
+                                    {t("general.cancel")}
                                 </Button>
                             </Grid>
                         </Grid>

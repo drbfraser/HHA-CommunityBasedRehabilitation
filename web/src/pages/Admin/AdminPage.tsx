@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Typography } from "@mui/material";
+import { Tabs, Tab, Box } from "@mui/material";
+
 import AdminList from "../AdminList/AdminList";
 import ZoneList from "../ZoneList/ZoneList";
-import { Tabs, Tab, Box } from "@mui/material";
-import { Typography } from "@mui/material";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -10,37 +12,32 @@ interface TabPanelProps {
     value: number;
 }
 
-const a11yProps = (index: number) => {
-    return {
-        id: `simple-tab-${index}`,
-        "aria-controls": `simple-tabpanel-${index}`,
-    };
-};
+const a11yProps = (index: number) => ({
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+});
 
-const TabPanel = (props: TabPanelProps) => {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-};
+const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => (
+    <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+    >
+        {value === index && (
+            <Box sx={{ p: 3 }}>
+                <Typography>{children}</Typography>
+            </Box>
+        )}
+    </div>
+);
 
 const AdminPage = () => {
-    const [value, setValue] = React.useState(0);
+    const { t } = useTranslation();
+    const [value, setValue] = useState(0);
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
 
@@ -49,8 +46,8 @@ const AdminPage = () => {
             <Box sx={{ width: "100%" }}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider", width: "100%" }}>
                     <Tabs value={value} onChange={handleTabChange} aria-label="basic tabs">
-                        <Tab label="Users" {...a11yProps(0)} />
-                        <Tab label="Zones" {...a11yProps(1)} />
+                        <Tab label={t("general.users")} {...a11yProps(0)} />
+                        <Tab label={t("general.zones")} {...a11yProps(1)} />
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>

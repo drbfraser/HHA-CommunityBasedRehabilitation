@@ -1,8 +1,8 @@
-import { zoneListStyles } from "./ZoneList.styles";
-import { dataGridStyles } from "styles/DataGrid.styles";
-import SearchBar from "components/SearchBar/SearchBar";
-
+import React, { useRef, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
+import { Cancel } from "@mui/icons-material";
 import {
     DataGrid,
     GridDensityTypes,
@@ -11,17 +11,15 @@ import {
     GridRenderCellParams,
 } from "@mui/x-data-grid";
 import { LinearProgress, IconButton, Typography, Box } from "@mui/material";
-import { useRef } from "react";
-import { useHistory } from "react-router-dom";
-import { useEffect, useState } from "react";
-import reqeustZoneRows from "./reqeustZoneRows";
-import React from "react";
-import { Cancel } from "@mui/icons-material";
-import { SearchOption } from "./searchOptions";
 
+import { zoneListStyles } from "./ZoneList.styles";
+import { dataGridStyles } from "styles/DataGrid.styles";
+import SearchBar from "components/SearchBar/SearchBar";
+import reqeustZoneRows from "./reqeustZoneRows";
+import { SearchOption } from "./searchOptions";
 // import { IRouteParams } from "@cbr/common/forms/Zone/zoneFields";
 const RenderText = (params: GridRenderCellParams) => {
-    return <Typography variant={"body2"}>{String(params.value)}</Typography>; // todo: String() ok?
+    return <Typography variant={"body2"}>{params.value}</Typography>;
 };
 
 const RenderLoadingOverlay = () => {
@@ -45,18 +43,18 @@ const RenderNoRowsOverlay = () => {
 
 const ZoneList = () => {
     const [searchValue, setSearchValue] = useState<string>("");
-    const [searchOption] = useState<string>(SearchOption.ZONE);
     const [loading, setLoading] = useState<boolean>(true);
     const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
     const [filteredRows, setFilteredRows] = useState<GridRowsProp>([]); // todo: RowsProp -> GridRowsProp ok?
     const [serverRows, setServerRows] = useState<GridRowsProp>([]);
     const history = useHistory();
+    const { t } = useTranslation();
+
     const onZoneAddClick = () => history.push("/zone/new");
-    // const { zone_name } = useRouteMatch<IRouteParams>().params;
     const adminColumns = [
         {
             field: "zone",
-            headerName: "Zone",
+            headerName: t("admin.zone"),
             flex: 1,
             renderCell: RenderText,
             hide: isZoneHidden,
@@ -87,7 +85,7 @@ const ZoneList = () => {
 
         const filteredRows: GridRowsProp = serverRows.filter((r) => r.zone.startsWith(searchValue));
         setFilteredRows(filteredRows);
-    }, [searchValue, searchOption, serverRows]);
+    }, [searchValue, serverRows]);
 
     return (
         <Box sx={zoneListStyles.container}>

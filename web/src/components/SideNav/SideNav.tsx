@@ -11,21 +11,14 @@ const SideNav = () => {
     const { pathname } = useLocation();
 
     return (
-        <Box
-            sx={sideNavStyles.container}
-        >
-            <Box
-                component="img"
-                src="/images/hha_icon_white.png"
-                alt=""
-                sx={sideNavStyles.hhaIcon}
-            />
+        <nav className={styles.container}>
+            <img src="/images/hha_icon_white.png" alt="" className={styles.hhaIcon} />
             {pagesForUser(user)
                 .filter((page) => page.showInNav)
                 .map((page) => (
                     <SideNavIcon key={page.path} page={page} active={page.path === pathname} />
                 ))}
-        </Box>
+        </nav>
     );
 };
 

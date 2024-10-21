@@ -2,6 +2,7 @@ import { GridRowsProp } from "@mui/x-data-grid";
 import { getZones } from "@cbr/common/util/hooks/zones";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { UserRole, userRoles } from "@cbr/common/util/users";
+import { TFunction } from "i18next";
 
 interface IResponseRow {
     id: number;
@@ -16,7 +17,8 @@ interface IResponseRow {
 const requestUserRows = async (
     setFilteredRows: (rows: GridRowsProp) => void,
     setServerRows: (rows: GridRowsProp) => void,
-    setLoading: (loading: boolean) => void
+    setLoading: (loading: boolean) => void,
+    t: TFunction
 ) => {
     setLoading(true);
 
@@ -36,7 +38,7 @@ const requestUserRows = async (
                 name: responseRow.first_name + " " + responseRow.last_name,
                 username: responseRow.username,
                 role: userRoles[responseRow.role].name,
-                status: responseRow.is_active ? "Active" : "Disabled",
+                status: responseRow.is_active ? t("general.active") : t("general.disabled"),
             };
         });
 

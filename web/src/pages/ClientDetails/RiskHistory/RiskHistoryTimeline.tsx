@@ -1,22 +1,24 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
-import { Timeline } from "@mui/lab";
-import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import UpdateIcon from "@mui/icons-material/Update";
+import { Timeline } from "@mui/lab";
+
 import { IClient } from "@cbr/common/util/clients";
 import { getDateFormatterFromReference, timestampToDateTime } from "@cbr/common/util/dates";
 import { IRisk } from "@cbr/common/util/risks";
-import { riskTypes } from "util/riskIcon";
+import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import { timelineStyles } from "../Timeline/timelines.styles";
-import UpdateIcon from "@mui/icons-material/Update";
 
 interface IProps {
     client?: IClient;
 }
 
 const RiskHistoryTimeline = ({ client }: IProps) => {
+    const { t } = useTranslation();
     const dateFormatter = getDateFormatterFromReference(client?.created_at);
 
     interface IEntryProps {
@@ -26,14 +28,15 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
 
     const RiskEntry = ({ risk, isInitial }: IEntryProps) => {
         const [expanded, setExpanded] = useState(false);
-        const riskType = riskTypes[risk.risk_type];
 
-        const Summary = ({ clickable }: { clickable?: boolean }) => (
-            <>
-                <b>{riskType.name}</b> risk {isInitial ? "set" : "changed"} to{" "}
-                <RiskLevelChip risk={risk.risk_level} clickable={clickable ?? false} />
-            </>
-        );
+        const Summary = ({ clickable }: { clickable?: boolean }) => {
+            return (
+                <>
+                    {translateRiskEntrySummary(risk.risk_type, isInitial)}
+                    <RiskLevelChip risk={risk.risk_level} clickable={clickable ?? false} />
+                </>
+            );
+        };
 
         return (
             <>
@@ -48,17 +51,17 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
                         <Summary />
                     </DialogTitle>
                     <DialogContent>
-                        <b>When:</b> {timestampToDateTime(risk.timestamp)}
+                        <b>{t("general.when")}:</b> {timestampToDateTime(risk.timestamp)}
                     </DialogContent>
                     <DialogContent>
-                        <b>Requirements:</b> {risk.requirement}
+                        <b>{t("risks.requirements")}:</b> {risk.requirement}
                     </DialogContent>
                     <DialogContent>
-                        <b>Goals:</b> {risk.goal}
+                        <b>{t("risks.goals")}:</b> {risk.goal}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setExpanded(false)} color="primary">
-                            Close
+                            {t("general.close")}
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -70,7 +73,6 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
         if (a.timestamp === b.timestamp) {
             return b.risk_type.localeCompare(a.risk_type);
         }
-
         return b.timestamp - a.timestamp;
     };
 
@@ -79,7 +81,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
             {client ? (
                 <>
                     {client.risks
-                        .slice()
+                        .slice() // creates a copy/clone
                         .sort(riskSort)
                         .map((risk) => (
                             <RiskEntry

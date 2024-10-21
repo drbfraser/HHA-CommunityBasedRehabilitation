@@ -47,12 +47,12 @@ export interface IClientFormProps {
 
 export const ClientForm = (props: IClientFormProps) => {
     const styles = useStyles();
-    const disabilityMap = useDisabilities();
+    const { t } = useTranslation();
+    const disabilityMap = useDisabilities(t);
     const otherDisabilityId = getOtherDisabilityId(disabilityMap);
     const disabilityObj = objectFromMap(disabilityMap);
     const zoneMap = useZones();
     const currentUser = useCurrentUser();
-    const { t } = useTranslation();
 
     const [fieldsDisabled, setFieldsDisabled] = useState(!props.isNewClient);
     const [cancelButtonType, setCancelButtonType] = useState<"outlined" | "contained">("outlined");

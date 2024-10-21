@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
 import { Skeleton } from '@mui/material';
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar } from "recharts";
 import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import { IStats } from "@cbr/common/util/stats";
@@ -11,7 +12,8 @@ interface IProps {
 }
 
 const DisabilityStats = ({ stats }: IProps) => {
-    const disabilities = useDisabilities();
+    const { t } = useTranslation();
+    const disabilities = useDisabilities(t);
     const disabilityToName = (id: number) => disabilities.get(id) ?? "Loading";
 
     if (!stats) {

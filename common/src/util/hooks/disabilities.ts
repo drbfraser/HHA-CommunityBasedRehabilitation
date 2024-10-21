@@ -1,8 +1,10 @@
 // TODO: Remove or rework cachedAPI calls. The mobile app should probably be caching data in a
 //  database for proper persistence, not caching in TypeScript variables
+import { TFunction } from "i18next";
 import { apiFetch, Endpoint } from "../endpoints";
 import emptyMap from "../internal/emptyMap";
 import { APICacheData } from "./cachedAPI";
+import { physiotherapyConditions } from "../referrals";
 
 export interface IDisability {
     id: number;
@@ -34,4 +36,24 @@ export const getOtherDisabilityId = (disabilities: TDisabilityMap): number => {
 };
 
 export const getDisabilities = async () => cache.getCachedValue();
-export const useDisabilities = cache.useCacheHook();
+
+export const useDisabilities = (t: TFunction) => {
+    const disabilities = cache.useCacheHook()();
+    const translatedDisabilities = new Map();
+
+    disabilities.forEach((name, key) => {
+        // sanitize string before using it to lookup in common dictionary
+        // also replaces non-ascii apostrophes with ascii apostrophes
+        name = name.toLowerCase().replace(/[’]/g, "'");
+
+        const translation = physiotherapyConditions(t)[name.toLowerCase()];
+        if (!translation) {
+            console.error(`unknown disability name: ${name.toLowerCase()}`);
+            return;
+        }
+
+        translatedDisabilities.set(key, translation);
+    });
+
+    return translatedDisabilities;
+};

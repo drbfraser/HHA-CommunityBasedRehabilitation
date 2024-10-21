@@ -51,7 +51,11 @@ interface Resources {
       "myClients": "&My Clients",
       "allClients": "&All Clients",
       "showArchived": "&Show Archived",
-      "noVisits": "&No Visits"
+      "noVisits": "&No Visits",
+      "noPriorityClients": "&No Priority Clients Found",
+      "noOutstandingReferrals": "&No Outstanding Referrals Found",
+      "newInboxMessages": "&You have <1>1</1> new message in your inbox",
+      "newInboxMessages_plural": "&You have <1>{{count}}</1> new messages in your inbox"
     },
     "disabilities": {
       "amputee": "&Amputee",
@@ -76,7 +80,9 @@ interface Resources {
       "editClient": "&Edit Client",
       "viewClient": "&View Client",
       "discardNew": "&Discard new client?",
-      "picture": "&Client's picture"
+      "picture": "&Client's picture",
+      "riskLevels": "&Risk Levels",
+      "seeRiskHistory": "&See Risk History"
     },
     "surveyAttr": {
       "baselineSurvey": "&Baseline Survey",
@@ -85,7 +91,7 @@ interface Resources {
     "visitAttr": {
       "newVisit": "&New Visit",
       "visitVerb": "&visits",
-      "visitLocation": "&visit in {{body}}",
+      "visitLocation": "-<1>Visit</1> in {{body}}",
       "date": "&Visit Date",
       "newVisitSurvey": "&New Visit Survey"
     },
@@ -94,6 +100,7 @@ interface Resources {
       "update_education": "&Update Education Risk",
       "update_social": "&Update Social Risk",
       "update_nutrition": "&Update Nutrition Risk",
+      "update_mental": "&Update Mental Risk",
       "updateFailureAlert": "&Encountered an error while trying to update the client's risk"
     },
     "general": {
@@ -173,10 +180,28 @@ interface Resources {
       "requestTokenFailureInvalid": "&Request token failure: the access and/or refresh token(s) received were invalid.",
       "create": "&CREATE",
       "no": "&No",
-      "yes": "&Yes"
+      "yes": "&Yes",
+      "disable": "&Disable",
+      "activate": "&Activate",
+      "users": "&Users",
+      "zones": "&Zones",
+      "referral": "&Referral",
+      "pending": "&Pending",
+      "unknown": "&Unknown",
+      "goBack": "&Go Back",
+      "when": "&When",
+      "lastVisit": "&Last Visit",
+      "previousStep": "&Previous Step",
+      "nextStep": "&Next Step",
+      "language": "&Language"
     },
     "alert": {
       "generalFailure": "&Something went Wrong",
+      "generalFailureTryAgain": "&Something went wrong. Please go back and try again.",
+      "loadClientFailure": "&Something went wrong loading that client. Please try again.",
+      "loadUserFailure": "&Something went wrong trying to load that user. Please go back and try again.",
+      "editUserFailure": "&Something went wrong trying to edit that user. Please try again.",
+      "editUserPasswordFailure": "&Error occurred when trying to change the user's password",
       "DeleteAlertWithSubject": "&Delete Alert with Subject: {{subject}}",
       "messageAlert": "&You have {{count}} new messages in your inbox.",
       "unauthorizedArchive": "&You are not authorized to archive/dearchive clients. Please ask an administrator.",
@@ -192,7 +217,10 @@ interface Resources {
       "newVersionAvailability": "&A new version of the HHA CBR app is available on the Google Play Store. Please update your app now, or you will be unable to sync.",
       "reinstallingSuggestion": "&If you have the latest version of the app and still see this message, then try uninstalling and reinstalling the app.",
       "logoutNotice": "&Are you sure you want to logout?",
-      "actionConfirmationNotice": "&Are you sure you want to {{action}} this {{object}}?"
+      "actionConfirmationNotice": "&Are you sure you want to {{action}} this {{object}}?",
+      "loadingPriorityClientsError": "&Error loading priority clients",
+      "loadingReferralsError": "&Error loading referrals",
+      "submitReferralError": "&An error occurred when submitting the referral"
     },
     "admin": {
       "username": "&Username",
@@ -210,7 +238,8 @@ interface Resources {
       "searchBy": "&Search by",
       "notApplicable": "&N/A",
       "name": "&Name",
-      "selectAColumn": "&Select a column"
+      "selectAColumn": "&Select a column",
+      "noUsersFound": "&No Users Found"
     },
     "alerts": {
       "subject": "&Subject",
@@ -283,6 +312,7 @@ interface Resources {
       "zone": "&Zone",
       "phoneNumber": "&Phone Number",
       "interviewConsent": "&Consent to Interview?",
+      "caregiverDetails": "&Caregiver Details",
       "caregiverPresent": "&Caregiver Present?",
       "caregiverPhone": "&Caregiver Phone Number",
       "caregiverName": "&Caregiver Name",
@@ -352,6 +382,8 @@ interface Resources {
       "hipWidth": "&Hip Width",
       "wheelchairOwned": "&Client Owns a Wheelchair",
       "wheelchairRepairable": "&Client's Wheelchair is Repairable",
+      "attachWheelchairPhoto": "&Attach a photo of the wheelchair if possible",
+      "bringWheelchair": "&Please bring wheelchair to the center",
       "physiotherapy": "&Physiotherapy",
       "condition": "&Condition",
       "conditionOther": "&Other Condition",
@@ -364,7 +396,9 @@ interface Resources {
       "mentalHealthCondition": "&Mental Condition",
       "mentalConditionOther": "&Other Mental Condition",
       "emergencyFoodAidRequired": "&Emergency Food Aid",
+      "emergencyFoodAidIsRequired": "&Emergency Food Aid Required",
       "agricultureLivelihoodProgramEnrollment": "&Agriculture Livelihood Program Enrollment",
+      "agricultureLivelihoodProgramEnrollmentRequired": "&Agriculture Livelihood Program Enrollment Required",
       "servicesOther": "&Other Services",
       "otherDescription": "&Service Description",
       "referralOther": "&Other referral",
@@ -410,7 +444,14 @@ interface Resources {
       "whatDoesClientNeed": "&What does the client need?",
       "selectMentalHealthReferral": "&Please select mental health referral",
       "describeReferral": "&Please describe the referral",
-      "discardNewReferral": "&Discard this new referral?"
+      "discardNewReferral": "&Discard this new referral?",
+      "wheelchairVisit": "&Wheelchair Visit",
+      "physiotherapyVisit": "&Physiotherapy Visit",
+      "prostheticVisit": "&Prosthetic Visit",
+      "orthoticVisit": "&Orthotic Visit",
+      "hhaNutritionAndAgricultureProjectVisit": "&HHA Nutrition/Agriculture Project Visit",
+      "mentalHealthVisit": "&Mental Health Visit",
+      "otherServiceVisit": "&Other Services Visit"
     },
     "risks": {
       "riskLevel": "&Risk Level",
@@ -425,7 +466,17 @@ interface Resources {
       "education": "&Education",
       "social": "&Social",
       "nutrition": "&Nutrition",
-      "mental": "&Mental Health"
+      "mental": "&Mental Health",
+      "healthSet": "&<1>Health</1> risk set to",
+      "healthChanged": "&<1>Health</1> risk changed to",
+      "educationSet": "&<1>Education</1> risk set to",
+      "educationChanged": "&<1>Education</1> risk changed to",
+      "socialSet": "&<1>Social</1> risk set to",
+      "socialChanged": "&<1>Social</1> risk changed to",
+      "nutritionSet": "&<1>Nutrition</1> risk set to",
+      "nutritionChanged": "&<1>Nutrition</1> risk changed to",
+      "mentalSet": "&<1>Mental health</1> risk set to",
+      "mentalChanged": "&<1>Mental health</1> risk changed to"
     },
     "riskLevelsAbbreviated": {
       "low": "&LO",
@@ -548,7 +599,15 @@ interface Resources {
       "synchronization": "&Synchronization",
       "inbox": "&Inbox",
       "switchTargetServer": "&Switch Target Server",
-      "clientID": "&Client ID"
+      "clientID": "&Client ID",
+      "clientList": "&Client List",
+      "clientRiskHistory": "&Client Risk History",
+      "profile": "&Profile",
+      "editUserPass": "&Edit User Password",
+      "newZone": "&New Zone",
+      "editZone": "&Edit Zone",
+      "newAlert": "&New Alert",
+      "notFound": "&Not Found"
     },
     "statistics": {
       "statistics": "&Statistics",
@@ -648,7 +707,11 @@ interface Resources {
       "myClients": "-My Clients",
       "allClients": "-All Clients",
       "showArchived": "-Show Archived",
-      "noVisits": "-No Visits"
+      "noVisits": "-No Visits",
+      "noPriorityClients": "-No Priority Clients Found",
+      "noOutstandingReferrals": "-No Outstanding Referrals Found",
+      "newInboxMessages": "-You have <1>1</1> new message in your inbox",
+      "newInboxMessages_plural": "-You have <1>{{count}}</1> new messages in your inbox"
     },
     "disabilities": {
       "amputee": "-Amputee",
@@ -673,7 +736,9 @@ interface Resources {
       "editClient": "-Edit Client",
       "viewClient": "-View Client",
       "discardNew": "-Discard new client?",
-      "picture": "-Client's picture"
+      "picture": "-Client's picture",
+      "riskLevels": "-Risk Levels",
+      "seeRiskHistory": "-See Risk History"
     },
     "surveyAttr": {
       "baselineSurvey": "-Baseline Survey",
@@ -682,7 +747,7 @@ interface Resources {
     "visitAttr": {
       "newVisit": "-New Visit",
       "visitVerb": "-visits",
-      "visitLocation": "-Visit in {{body}}",
+      "visitLocation": "-<1>Visit</1> in {{body}}",
       "date": "-Visit Date",
       "newVisitSurvey": "-New Visit Survey"
     },
@@ -691,6 +756,7 @@ interface Resources {
       "update_education": "-Update Education Risk",
       "update_social": "-Update Social Risk",
       "update_nutrition": "-Update Nutrition Risk",
+      "update_mental": "-Update Mental Risk",
       "updateFailureAlert": "-Encountered an error while trying to update the client's risk"
     },
     "general": {
@@ -770,10 +836,28 @@ interface Resources {
       "requestTokenFailureInvalid": "-Request token failure: the access and/or refresh token(s) received were invalid.",
       "create": "-CREATE",
       "no": "-No",
-      "yes": "-Yes"
+      "yes": "-Yes",
+      "disable": "-Disable",
+      "activate": "-Activate",
+      "users": "-Users",
+      "zones": "-Zones",
+      "referral": "-Referral",
+      "pending": "-Pending",
+      "unknown": "-Unknown",
+      "goBack": "-Go Back",
+      "when": "-When",
+      "lastVisit": "-Last Visit",
+      "previousStep": "-Previous Step",
+      "nextStep": "-Next Step",
+      "language": "-Language"
     },
     "alert": {
       "generalFailure": "-Something went Wrong",
+      "generalFailureTryAgain": "-Something went wrong. Please go back and try again.",
+      "loadClientFailure": "-Something went wrong loading that client. Please try again.",
+      "loadUserFailure": "-Something went wrong trying to load that user. Please go back and try again.",
+      "editUserFailure": "-Something went wrong trying to edit that user. Please try again.",
+      "editUserPasswordFailure": "-Error occurred when trying to change the user's password",
       "DeleteAlertWithSubject": "-Delete Alert with Subject: {{subject}}",
       "messageAlert": "-You have {{count}} new messages in your inbox.",
       "unauthorizedArchive": "-You are not authorized to archive/dearchive clients. Please ask an administrator.",
@@ -789,7 +873,10 @@ interface Resources {
       "newVersionAvailability": "-A new version of the HHA CBR app is available on the Google Play Store. Please update your app now, or you will be unable to sync.",
       "reinstallingSuggestion": "-If you have the latest version of the app and still see this message, then try uninstalling and reinstalling the app.",
       "logoutNotice": "-Are you sure you want to logout?",
-      "actionConfirmationNotice": "-Are you sure you want to {{action}} this {{object}}?"
+      "actionConfirmationNotice": "-Are you sure you want to {{action}} this {{object}}?",
+      "loadingPriorityClientsError": "-Error loading priority clients",
+      "loadingReferralsError": "-Error loading referrals",
+      "submitReferralError": "-An error occurred when submitting the referral"
     },
     "admin": {
       "username": "-Username",
@@ -807,7 +894,8 @@ interface Resources {
       "searchBy": "-Search by",
       "notApplicable": "-N/A",
       "name": "-Name",
-      "selectAColumn": "-Select a column"
+      "selectAColumn": "-Select a column",
+      "noUsersFound": "-No Users Found"
     },
     "alerts": {
       "subject": "-Subject",
@@ -880,6 +968,7 @@ interface Resources {
       "zone": "-Zone",
       "phoneNumber": "-Phone Number",
       "interviewConsent": "-Consent to Interview?",
+      "caregiverDetails": "-Caregiver Details",
       "caregiverPresent": "-Caregiver Present?",
       "caregiverPhone": "-Caregiver Phone Number",
       "caregiverName": "-Caregiver Name",
@@ -934,7 +1023,9 @@ interface Resources {
       "referralDate": "-Referral Date",
       "resolutionDate": "-Resolution Date",
       "resolutionStatus_pending": "-Referral Pending",
+      "resolutionStatus_pending_bold": "-<1>Referral</1> Pending",
       "resolutionStatus_resolved": "-Referral Resolved",
+      "resolutionStatus_resolved_bold": "-<1>Referral</1> Resolved",
       "condition_physiotherapy": "-Physiotherapy Condition",
       "condition_mental": "-Mental Health Condition",
       "injuryLocation_prosthetic": "-Prosthetic Injury Location",
@@ -949,6 +1040,8 @@ interface Resources {
       "hipWidth": "-Hip Width",
       "wheelchairOwned": "-Client Owns a Wheelchair",
       "wheelchairRepairable": "-Client's Wheelchair is Repairable",
+      "attachWheelchairPhoto": "-Attach a photo of the wheelchair if possible",
+      "bringWheelchair": "-Please bring wheelchair to the center",
       "physiotherapy": "-Physiotherapy",
       "condition": "-Condition",
       "conditionOther": "-Other Condition",
@@ -961,7 +1054,9 @@ interface Resources {
       "mentalHealthCondition": "-Mental Condition",
       "mentalConditionOther": "-Other Mental Condition",
       "emergencyFoodAidRequired": "-Emergency Food Aid",
+      "emergencyFoodAidIsRequired": "-Emergency Food Aid Required",
       "agricultureLivelihoodProgramEnrollment": "-Agriculture Livelihood Program Enrollment",
+      "agricultureLivelihoodProgramEnrollmentRequired": "-Agriculture Livelihood Program Enrollment Required",
       "servicesOther": "-Other Services",
       "otherDescription": "-Service Description",
       "referralOther": "-Other referral",
@@ -1007,7 +1102,14 @@ interface Resources {
       "whatDoesClientNeed": "-What does the client need?",
       "selectMentalHealthReferral": "-Please select mental health referral",
       "describeReferral": "-Please describe the referral",
-      "discardNewReferral": "-Discard this new referral?"
+      "discardNewReferral": "-Discard this new referral?",
+      "wheelchairVisit": "-Wheelchair Visit",
+      "physiotherapyVisit": "-Physiotherapy Visit",
+      "prostheticVisit": "-Prosthetic Visit",
+      "orthoticVisit": "-Orthotic Visit",
+      "hhaNutritionAndAgricultureProjectVisit": "-HHA Nutrition/Agriculture Project Visit",
+      "mentalHealthVisit": "-Mental Health Visit",
+      "otherServiceVisit": "-Other Services Visit"
     },
     "risks": {
       "riskLevel": "-Risk Level",
@@ -1022,7 +1124,17 @@ interface Resources {
       "education": "-Education",
       "social": "-Social",
       "nutrition": "-Nutrition",
-      "mental": "-Mental Health"
+      "mental": "-Mental Health",
+      "healthSet": "-<1>Health</1> risk set to",
+      "healthChanged": "-<1>Health</1> risk changed to",
+      "educationSet": "-<1>Education</1> risk set to",
+      "educationChanged": "-<1>Education</1> risk changed to",
+      "socialSet": "-<1>Social</1> risk set to",
+      "socialChanged": "-<1>Social</1> risk changed to",
+      "nutritionSet": "-<1>Nutrition</1> risk set to",
+      "nutritionChanged": "-<1>Nutrition</1> risk changed to",
+      "mentalSet": "-<1>Mental health</1> risk set to",
+      "mentalChanged": "-<1>Mental health</1> risk changed to"
     },
     "riskLevelsAbbreviated": {
       "low": "-LO",
@@ -1145,7 +1257,15 @@ interface Resources {
       "synchronization": "-Synchronization",
       "inbox": "-Inbox",
       "switchTargetServer": "-Switch Target Server",
-      "clientID": "-Client ID"
+      "clientID": "-Client ID",
+      "clientList": "-Client List",
+      "clientRiskHistory": "-Client Risk History",
+      "profile": "-Profile",
+      "editUserPass": "-Edit User Password",
+      "newZone": "-New Zone",
+      "editZone": "-Edit Zone",
+      "newAlert": "-New Alert",
+      "notFound": "-Not Found"
     },
     "statistics": {
       "statistics": "-Statistics",

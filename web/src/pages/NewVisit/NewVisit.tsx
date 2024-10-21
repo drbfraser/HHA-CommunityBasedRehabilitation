@@ -10,7 +10,6 @@ import {
     Stepper,
     Typography,
 } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-mui";
 import React, { useEffect, useState } from "react";
@@ -29,12 +28,12 @@ import {
 
 import { handleSubmit } from "./formHandler";
 import { newVisitStyles } from "./NewVisit.styles";
-import history from "@cbr/common/util/history";
 import { IRisk } from "@cbr/common/util/risks";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IClient } from "@cbr/common/util/clients";
 import { Alert } from '@mui/material';
 import { TZoneMap, useZones } from "@cbr/common/util/hooks/zones";
+import GoBackButton from "components/GoBackButton/GoBackButton";
 
 const visitTypes: VisitFormField[] = [
     VisitFormField.health,
@@ -329,9 +328,8 @@ const NewVisit = () => {
                             Error occurred trying to submit the visit: {submissionError}
                         </Alert>
                     )}
-                    <Button onClick={history.goBack}>
-                        <ArrowBack /> Go back
-                    </Button>
+                    <GoBackButton />
+
                     <Stepper activeStep={activeStep} orientation="vertical">
                         {visitSteps.map((visitStep, index) => (
                             <Step key={index}>

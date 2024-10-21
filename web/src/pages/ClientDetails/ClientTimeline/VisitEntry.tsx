@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import {
+    Alert,
     Dialog,
     DialogTitle,
     DialogContent,
@@ -10,21 +12,27 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
+    Skeleton,
     Typography,
 } from "@mui/material";
-import { Skeleton, Alert } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
+
 import { timestampToDateTime } from "@cbr/common/util/dates";
-import { IVisit, IVisitSummary, outcomeGoalMets } from "@cbr/common/util/visits";
-import { entryStyles } from "./Entry.styles";
-import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
+import {
+    getTranslatedImprovementName,
+    IVisit,
+    IVisitSummary,
+    outcomeGoalMets,
+} from "@cbr/common/util/visits";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { RiskType } from "@cbr/common/util/risks";
-import { riskTypes } from "util/riskIcon";
-import TimelineEntry from "../Timeline/TimelineEntry";
-import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import { entryStyles } from "./Entry.styles";
+import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import DataCard from "components/DataCard/DataCard";
+import { getTranslatedRiskName } from "util/risks";
+import TimelineEntry from "../Timeline/TimelineEntry";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -32,6 +40,7 @@ interface IEntryProps {
 }
 
 const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [visit, setVisit] = useState<IVisit>();
     const [loadingError, setLoadingError] = useState(false);
@@ -40,24 +49,25 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
     const onOpen = () => {
         setOpen(true);
         if (!visit) {
-            apiFetch(Endpoint.VISIT, `${visitSummary.id}`)
+            apiFetch(Endpoint.VISIT, visitSummary.id)
                 .then((resp) => resp.json())
                 .then((resp) => setVisit(resp as IVisit))
                 .catch(() => setLoadingError(true));
         }
     };
-
     const onClose = () => {
         setOpen(false);
         setLoadingError(false);
     };
 
     const Summary = ({ clickable }: { clickable: boolean }) => {
-        const zone = zones.get(visitSummary.zone) ?? "Unknown";
+        const zone = zones.get(visitSummary.zone) ?? t("general.unknown");
 
         return (
             <>
-                <b>Visit</b> in {zone} &nbsp;
+                <Trans i18nKey="visitAttr.visitLocation">
+                    -<b>Visit</b> in {{ body: zone }}
+                </Trans>
                 {visitSummary.health_visit && (
                     <RiskTypeChip risk={RiskType.HEALTH} clickable={clickable} />
                 )}{" "}
@@ -84,44 +94,42 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
 
         const DetailAccordion = ({ type }: { type: RiskType }) => {
             const improvements = visit.improvements
-                .filter((i) => i.risk_type === type)
-                .map((i) => ({
-                    title: i.provided,
-                    desc: i.desc,
+                .filter(({ risk_type }) => risk_type === type)
+                .map(({ provided, desc }) => ({
+                    title: getTranslatedImprovementName(t, provided),
+                    desc,
                 }));
 
             const outcomes = visit.outcomes
-                .filter((o) => o.risk_type === type)
-                .map((o) => ({
-                    title: outcomeGoalMets[o.goal_met].name,
-                    desc: o.outcome,
+                .filter(({ risk_type }) => risk_type === type)
+                .map(({ goal_met, outcome }) => ({
+                    title: outcomeGoalMets[goal_met].name,
+                    desc: outcome,
                 }));
 
             if (!improvements.length && !outcomes.length) {
                 return <React.Fragment key={type} />;
             }
 
-            let titleDescArr = [];
-
+            const titleDescArr = [];
             if (improvements.length) {
-                titleDescArr.push("Improvements");
+                titleDescArr.push(t("newVisit.improvements"));
             }
-
             if (outcomes.length) {
-                titleDescArr.push("Outcomes");
+                titleDescArr.push(t("newVisit.outcomes"));
             }
 
             return (
                 <Accordion key={type} sx={entryStyles.impOutcomeAccordion}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>
-                            <b>{riskTypes[type].name}</b> ({titleDescArr.join(" & ")})
+                            <b>{getTranslatedRiskName(t, type)}</b> ({titleDescArr.join(" & ")})
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <div>
-                            {Boolean(improvements.length) && <DataCard data={improvements} />}
-                            {Boolean(outcomes.length) && <DataCard data={outcomes} />}
+                            {improvements.length > 0 && <DataCard data={improvements} />}
+                            {outcomes.length > 0 && <DataCard data={outcomes} />}
                         </div>
                     </AccordionDetails>
                 </Accordion>
@@ -132,9 +140,9 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
             <>
                 <Card variant="outlined">
                     <CardContent>
-                        <b>Visit Date:</b> {timestampToDateTime(visit.created_at)}
+                        <b>{t("visitAttr.date")}:</b> {timestampToDateTime(visit.created_at)}
                         <br />
-                        <b>Village:</b> {visit.village}
+                        <b>{t("general.village")}:</b> {visit.village}
                     </CardContent>
                 </Card>
                 <br />
@@ -159,14 +167,14 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
                 </DialogTitle>
                 <DialogContent>
                     {loadingError ? (
-                        <Alert severity="error">Something went wrong. Please try again.</Alert>
+                        <Alert severity="error">{t("alert.generalFailureTryAgain")}</Alert>
                     ) : (
                         <Details />
                     )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose} color="primary">
-                        Close
+                        {t("general.close")}
                     </Button>
                 </DialogActions>
             </Dialog>

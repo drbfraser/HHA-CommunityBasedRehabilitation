@@ -1,10 +1,14 @@
 import React from "react";
 import { alpha, Box, InputBase, InputBaseProps, useTheme } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search"; // TODO: was from data-grid - verify same
+import { useTranslation } from "react-i18next";
+
 import { themeColors } from "@cbr/common/util/colors";
 
 const SearchBar = (props: InputBaseProps) => {
     const theme = useTheme();
+    const styles = useStyles(theme);
+    const { t } = useTranslation();
 
     return (
         <Box
@@ -38,7 +42,7 @@ const SearchBar = (props: InputBaseProps) => {
                 <SearchIcon />
             </Box>
             <InputBase
-                placeholder="Search…"
+                placeholder={`${t("general.search")}...`}
                 sx={{
                     root: {
                         // input root

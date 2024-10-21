@@ -1,24 +1,30 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { adminStyles } from "./Admin.styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import { TextField } from "formik-material-ui";
+import { FormControl, MenuItem, Button, Grid } from "@material-ui/core";
+
 import history from "@cbr/common/util/history";
 import { Box, FormControl, MenuItem } from "@mui/material";
 import { handleNewUserSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
 import {
     AdminField,
     adminUserFieldLabels,
     adminUserInitialValues,
     newUserValidationSchema,
 } from "@cbr/common/forms/Admin/adminFields";
-import { APIFetchFailError } from "@cbr/common/util/endpoints";
+import { useStyles } from "./styles";
 
 const AdminNew = () => {
     const zones = useZones();
+    const { t } = useTranslation();
 
     return (
         (<Formik
@@ -31,7 +37,7 @@ const AdminNew = () => {
                         const errMsg =
                             e instanceof APIFetchFailError
                                 ? e.buildFormError(adminUserFieldLabels)
-                                : `${e}`;
+                                : (e as string);
                         alert(errMsg);
                     });
             }}
@@ -151,7 +157,7 @@ const AdminNew = () => {
                                         type="submit"
                                         disabled={isSubmitting}
                                     >
-                                        Create
+                                        {t("general.create")}
                                     </Button>
                                 </Grid>
 
@@ -161,7 +167,7 @@ const AdminNew = () => {
                                         variant="outlined"
                                         onClick={history.goBack}
                                     >
-                                        Cancel
+                                        {t("general.cancel")}
                                     </Button>
                                 </Grid>
                             </Grid>

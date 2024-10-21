@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-mui";
 import { clientFormStyles } from "./ClientForm.styles";
@@ -25,7 +26,8 @@ import { handleNewWebClientSubmit, handleReset } from "@cbr/common/forms/Client/
 
 const ClientForm = () => {
     const zones = useZones();
-    const disabilities = useDisabilities();
+    const { t } = useTranslation();
+    const disabilities = useDisabilities(t);
 
     return (
         (<Formik

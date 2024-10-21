@@ -1,4 +1,9 @@
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { Form, Formik, FormikHelpers, FormikProps } from "formik";
 import {
+    Alert,
     Box,
     Button,
     FormControl,
@@ -12,27 +17,8 @@ import {
     StepLabel,
     Stepper,
 } from "@mui/material";
-import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { CheckboxWithLabel, RadioGroup, TextField } from "formik-mui";
-import React, { useState } from "react";
-import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
+
 import {
-    orthoticInjuryLocations,
-    prostheticInjuryLocations,
-    wheelchairExperiences,
-    otherServices,
-    Impairments,
-    mentalHealthConditions,
-    MentalConditions,
-} from "@cbr/common/util/referrals";
-import { handleSubmit } from "./formHandler";
-import { ArrowBack } from "@mui/icons-material";
-import history from "@cbr/common/util/history";
-import { useParams } from "react-router-dom";
-import { newReferralStyles } from "./NewReferral.styles";
-import { Alert } from '@mui/material';
-import {
-    referralFieldLabels,
     ReferralFormField,
     referralInitialValidationSchema,
     referralInitialValues,
@@ -44,7 +30,17 @@ import {
     serviceTypes,
     mentalHealthValidationSchema,
 } from "@cbr/common/forms/Referral/referralFields";
-import { PhotoView } from "components/ReferralPhotoView/PhotoView";
+import { handleSubmit } from "./formHandler";
+import {
+    MentalHealthForm,
+    NutritionForm,
+    OtherServicesForm,
+    PhysiotherapyForm,
+    ProstheticOrthoticForm,
+    ReferralServiceForm,
+    WheelchairForm,
+} from "./forms";
+import GoBackButton from "components/GoBackButton/GoBackButton";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -56,375 +52,57 @@ interface IService {
     validationSchema: () => any;
 }
 
-const ReferralServiceForm = (
-    props: IFormProps,
-    setEnabledSteps: React.Dispatch<React.SetStateAction<ReferralFormField[]>>
-) => {
-    const onCheckboxChange = (checked: boolean, selectedServiceType: string) => {
-        // We can't fully rely on formikProps.values[service] here because it might not be updated yet
-        setEnabledSteps(
-            serviceTypes.filter(
-                (serviceType) =>
-                    (props.formikProps.values[serviceType] &&
-                        serviceType !== selectedServiceType) ||
-                    (checked && serviceType === selectedServiceType)
-            )
-        );
-    };
-
-    return (
-        (<FormControl variant="standard" component="fieldset">
-            <FormLabel>Select referral services</FormLabel>
-            <FormGroup>
-                {serviceTypes.map((serviceType) => (
-                    <Field
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        key={serviceType}
-                        name={serviceType}
-                        Label={{ label: referralFieldLabels[serviceType] }}
-                        onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                            props.formikProps.handleChange(event);
-                            onCheckboxChange(event.currentTarget.checked, serviceType);
-                        }}
-                    />
-                ))}
-            </FormGroup>
-        </FormControl>)
-    );
-};
-
-const WheelchairForm = (props: IFormProps) => {
-    
-    return (
-        <div>
-            <FormLabel>What type of wheelchair user?</FormLabel>
-            <Field
-                component={RadioGroup}
-                name={ReferralFormField.wheelchairExperience}
-                label={referralFieldLabels[ReferralFormField.wheelchairExperience]}
-            >
-                {Object.entries(wheelchairExperiences).map(([value, name]) => (
-                    <label key={value}>
-                        <Field
-                            component={Radio}
-                            type="radio"
-                            name={ReferralFormField.wheelchairExperience}
-                            value={value}
-                        />
-                        {name}
-                    </label>
-                ))}
-            </Field>
-            <br />
-            <FormLabel>What is the client's hip width?</FormLabel>
-            <br />
-            {/* todosd: verify correct */}
-            <Box sx={newReferralStyles.fieldIndent}>
-                <Field
-                    sx={newReferralStyles.hipWidth}
-                    component={TextField}
-                    type="number"
-                    name={ReferralFormField.hipWidth}
-                    InputProps={{
-                        endAdornment: <InputAdornment position="end">inches</InputAdornment>,
-                    }}
-                />
-            </Box>
-            <br />
-            <FormLabel>Wheelchair information</FormLabel>
-            <br />
-            <Box sx={newReferralStyles.fieldIndent}>
-                <Field
-                    component={CheckboxWithLabel}
-                    type="checkbox"
-                    name={ReferralFormField.wheelchairOwned}
-                    Label={{ label: referralFieldLabels[ReferralFormField.wheelchairOwned] }}
-                />
-                <br />
-                {props.formikProps.values[ReferralFormField.wheelchairOwned] && (
-                    <Field
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        name={ReferralFormField.wheelchairRepairable}
-                        Label={{
-                            label: referralFieldLabels[ReferralFormField.wheelchairRepairable],
-                        }}
-                    />
-                )}
-            </Box>
-            {props.formikProps.values[ReferralFormField.wheelchairOwned] &&
-                props.formikProps.values[ReferralFormField.wheelchairRepairable] && (
-                    <>
-                        <Alert severity="info">Please bring wheelchair to the center</Alert>
-                        <br />
-                        <PhotoView
-                            onPictureChange={(pictureURL) => {
-                                props.formikProps.setFieldValue(
-                                    ReferralFormField.picture,
-                                    pictureURL
-                                );
-                            }}
-                        ></PhotoView>
-                    </>
-                )}
-        </div>
-    );
-};
-
-const PhysiotherapyForm = (props: IFormProps) => {
-    const disabilities = useDisabilities();
-
-    return (
-        <div>
-            <FormLabel>What condition does the client have?</FormLabel>
-            <br />
-            <br />
-            <Box sx={newReferralStyles.fieldIndent}>
-                <Field
-                    component={TextField}
-                    fullWidth
-                    select
-                    label={referralFieldLabels[ReferralFormField.condition]}
-                    required
-                    name={ReferralFormField.condition}
-                    variant="outlined"
-                >
-                    {Array.from(disabilities).map(([id, name]) => (
-                        <MenuItem key={id} value={id}>
-                            {name}
-                        </MenuItem>
-                    ))}
-                </Field>
-                {props.formikProps.values[ReferralFormField.condition] ===
-                    getOtherDisabilityId(disabilities) && (
-                    <div>
-                        <br />
-                        <Field
-                            component={TextField}
-                            fullWidth
-                            label={referralFieldLabels[ReferralFormField.conditionOther]}
-                            required
-                            name={ReferralFormField.conditionOther}
-                            variant="outlined"
-                        />
-                    </div>
-                )}
-            </Box>
-        </div>
-    );
-};
-
-const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormField) => {
-    const injuryLocations =
-        serviceType === ReferralFormField.prosthetic
-            ? prostheticInjuryLocations
-            : orthoticInjuryLocations;
-
-    return (
-        <div>
-            <FormLabel>Where is the injury?</FormLabel>
-            <Field
-                component={RadioGroup}
-                name={`${serviceType}_injury_location`}
-                label={referralFieldLabels[serviceType]}
-            >
-                {Object.entries(injuryLocations).map(([value, name]) => (
-                    <label key={value}>
-                        <Field
-                            component={Radio}
-                            type="radio"
-                            name={`${serviceType}_injury_location`}
-                            value={value}
-                        />
-                        {name}
-                    </label>
-                ))}
-            </Field>
-        </div>
-    );
-};
-
-const NutritionForm = (props: IFormProps) => {
-    // const disabilities = useDisabilities();
-
-    return (
-        <div>
-            <FormLabel>What does the client need?</FormLabel>
-            <br />
-            <Box sx={newReferralStyles.fieldIndent}>
-                <Field
-                    component={CheckboxWithLabel}
-                    type="checkbox"
-                    key={ReferralFormField.emergencyFoodAidRequired}
-                    name={ReferralFormField.emergencyFoodAidRequired}
-                    Label={{
-                        label: referralFieldLabels[ReferralFormField.emergencyFoodAidRequired],
-                    }}
-                    onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                        props.formikProps.handleChange(event);
-                    }}
-                />
-                <br />
-                <Field
-                    component={CheckboxWithLabel}
-                    type="checkbox"
-                    key={ReferralFormField.agricultureLivelihoodProgramEnrollment}
-                    name={ReferralFormField.agricultureLivelihoodProgramEnrollment}
-                    Label={{
-                        label: referralFieldLabels[
-                            ReferralFormField.agricultureLivelihoodProgramEnrollment
-                        ],
-                    }}
-                    onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                        props.formikProps.handleChange(event);
-                    }}
-                />
-            </Box>
-        </div>
-    );
-};
-
-const MentalHealthForm = (props: IFormProps) => {
-
-    return (
-        <div>
-            <FormLabel>Please select mental health referral</FormLabel>
-            <br />
-            <br />
-            <Box sx={newReferralStyles.fieldIndent}>
-                <Field
-                    component={TextField}
-                    variant="outlined"
-                    name={ReferralFormField.mentalHealthCondition}
-                    label={referralFieldLabels[ReferralFormField.mentalHealthCondition]}
-                    select
-                    fullWidth
-                    required
-                >
-                    {Object.entries(mentalHealthConditions).map(([value, name]) => (
-                        <MenuItem key={value} value={value}>
-                            {name}
-                        </MenuItem>
-                    ))}
-                </Field>
-                {props.formikProps.values[ReferralFormField.mentalHealthCondition] ===
-                    MentalConditions.OTHER && (
-                    <div>
-                        <br />
-                        <FormLabel>Please describe the referral</FormLabel>
-                        <Field
-                            component={TextField}
-                            fullWidth
-                            label={referralFieldLabels[ReferralFormField.mentalConditionOther]}
-                            required
-                            name={ReferralFormField.mentalConditionOther}
-                            variant="outlined"
-                        />
-                    </div>
-                )}
-            </Box>
-        </div>
-    );
-};
-
-const OtherServicesForm = (props: IFormProps) => {
-
-    return (
-        <div>
-            <FormLabel>Please select another referral</FormLabel>
-            <br />
-            <br />
-            <Box sx={newReferralStyles.fieldIndent}>
-                <Field
-                    component={TextField}
-                    variant="outlined"
-                    name={ReferralFormField.otherDescription}
-                    label={referralFieldLabels[ReferralFormField.otherDescription]}
-                    select
-                    fullWidth
-                    required
-                >
-                    {Object.entries(otherServices).map(([value, name]) => (
-                        <MenuItem key={value} value={value}>
-                            {name}
-                        </MenuItem>
-                    ))}
-                </Field>
-                {props.formikProps.values[ReferralFormField.otherDescription] ===
-                    Impairments.OTHER && (
-                    <div>
-                        <br />
-                        <FormLabel>Please describe the referral</FormLabel>
-                        <Field
-                            component={TextField}
-                            fullWidth
-                            label={referralFieldLabels[ReferralFormField.referralOther]}
-                            required
-                            name={ReferralFormField.referralOther}
-                            variant="outlined"
-                        />
-                    </div>
-                )}
-            </Box>
-        </div>
-    );
-};
-
 const NewReferral = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<ReferralFormField[]>([]);
     const [submissionError, setSubmissionError] = useState<string>();
+    const { t } = useTranslation();
     const { clientId } = useParams<{ clientId: string }>();
 
     const services: { [key: string]: IService } = {
         [ReferralFormField.wheelchair]: {
-            label: `${referralFieldLabels[ReferralFormField.wheelchair]} Visit`,
+            label: t("referral.wheelchairVisit"),
             Form: WheelchairForm,
             validationSchema: wheelchairValidationSchema,
         },
         [ReferralFormField.physiotherapy]: {
-            label: `${referralFieldLabels[ReferralFormField.physiotherapy]} Visit`,
+            label: t("referral.physiotherapyVisit"),
             Form: PhysiotherapyForm,
             validationSchema: physiotherapyValidationSchema,
         },
         [ReferralFormField.prosthetic]: {
-            label: `${referralFieldLabels[ReferralFormField.prosthetic]} Visit`,
+            label: t("referral.prostheticVisit"),
             Form: (formikProps) =>
                 ProstheticOrthoticForm(formikProps, ReferralFormField.prosthetic),
             validationSchema: () =>
                 prostheticOrthoticValidationSchema(ReferralFormField.prosthetic),
         },
         [ReferralFormField.orthotic]: {
-            label: `${referralFieldLabels[ReferralFormField.orthotic]} Visit`,
+            label: t("referral.orthoticVisit"),
             Form: (formikProps) => ProstheticOrthoticForm(formikProps, ReferralFormField.orthotic),
             validationSchema: () => prostheticOrthoticValidationSchema(ReferralFormField.orthotic),
         },
         [ReferralFormField.hhaNutritionAndAgricultureProject]: {
-            label: `${
-                referralFieldLabels[ReferralFormField.hhaNutritionAndAgricultureProject]
-            } Visit`,
+            label: t("referral.hhaNutritionAndAgricultureProjectVisit"),
             Form: NutritionForm,
             validationSchema: hhaNutritionAndAgricultureProjectValidationSchema,
         },
         [ReferralFormField.mentalHealth]: {
-            label: `${referralFieldLabels[ReferralFormField.mentalHealth]} Visit`,
+            label: t("referral.mentalHealthVisit"),
             Form: MentalHealthForm,
             validationSchema: mentalHealthValidationSchema,
         },
 
         [ReferralFormField.servicesOther]: {
-            label: `${referralFieldLabels[ReferralFormField.servicesOther]} Visit`,
+            label: t("referral.otherServiceVisit"),
             Form: OtherServicesForm,
             validationSchema: otherServicesValidationSchema,
         },
     };
 
-    const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
-
     const referralSteps: IService[] = [
         {
-            label: "Referral Services",
+            label: t("referral.referralServices"),
             Form: (props) => ReferralServiceForm(props, setEnabledSteps),
             validationSchema: referralInitialValidationSchema,
         },
@@ -435,6 +113,8 @@ const NewReferral = () => {
         })),
     ];
 
+    const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
+    const prevStep = () => setActiveStep(activeStep - 1);
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             handleSubmit(values, helpers, setSubmissionError);
@@ -454,8 +134,6 @@ const NewReferral = () => {
             .reduce((disabledState, serviceState) => disabledState || serviceState);
     };
 
-    const prevStep = () => setActiveStep(activeStep - 1);
-
     return (
         <Formik
             initialValues={referralInitialValues}
@@ -467,12 +145,11 @@ const NewReferral = () => {
                 <Form>
                     {submissionError && (
                         <Alert onClose={() => setSubmissionError(undefined)} severity="error">
-                            An error occurred when submitting the referral: {submissionError}
+                            {t("alert.submitReferralError")}: {submissionError}
                         </Alert>
                     )}
-                    <Button onClick={history.goBack}>
-                        <ArrowBack /> Go back
-                    </Button>
+                    <GoBackButton />
+
                     <Stepper activeStep={activeStep} orientation="vertical">
                         {referralSteps.map((referralStep, index) => (
                             <Step key={index}>
@@ -487,7 +164,7 @@ const NewReferral = () => {
                                             color="primary"
                                             onClick={prevStep}
                                         >
-                                            Prev Step
+                                            {t("general.previous")}
                                         </Button>
                                     )}
                                     <Button
@@ -497,8 +174,8 @@ const NewReferral = () => {
                                         disabled={isNoServiceChecked(formikProps)}
                                     >
                                         {isFinalStep && index === activeStep
-                                            ? "Submit"
-                                            : "Next Step"}
+                                            ? t("general.submit")
+                                            : t("general.next")}
                                     </Button>
                                 </StepContent>
                             </Step>

@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import i18n, { TFunction } from "i18next";
 
 export interface IReferral {
     id: number;
@@ -88,6 +88,36 @@ export enum MentalConditions {
     DEMENTIA = "Dementia",
     OTHER = "Other",
 }
+
+enum PhysiotherapyConditions {
+    AMPUTEE = "amputee",
+    POLIO = "polio",
+    SPINAL_INJURY = "spinal cord injury",
+    CEREBRAL_PALSY = "cerebral palsy",
+    SPINA_BIFIDA = "spina bifida",
+    HYDROCEPHALUS = "hydrocephalus",
+    CONGENITAL_ABNORMALITY = "congenital abnormality",
+    CONGENITAL_ABNORMALITIES = "congenital abnormalities",
+    PARALYSIS_CASES = "paralysis cases",
+    DONT_KNOW = "don't know",
+    OTHER = "other",
+}
+
+export const physiotherapyConditions = (t: TFunction): { [key: string]: string } => {
+    return {
+        [PhysiotherapyConditions.AMPUTEE]: t("disabilities.amputee"),
+        [PhysiotherapyConditions.POLIO]: t("disabilities.polio"),
+        [PhysiotherapyConditions.SPINAL_INJURY]: t("disabilities.spinalCordInjury"),
+        [PhysiotherapyConditions.CEREBRAL_PALSY]: t("disabilities.cerebralPalsy"),
+        [PhysiotherapyConditions.SPINA_BIFIDA]: t("disabilities.spinaBifida"),
+        [PhysiotherapyConditions.HYDROCEPHALUS]: t("disabilities.hydrocephalus"),
+        [PhysiotherapyConditions.PARALYSIS_CASES]: t("disabilities.paralysisCases"),
+        [PhysiotherapyConditions.CONGENITAL_ABNORMALITY]: t("disabilities.congenitalAbnormality"),
+        [PhysiotherapyConditions.CONGENITAL_ABNORMALITIES]: t("disabilities.congenitalAbnormality"),
+        [PhysiotherapyConditions.DONT_KNOW]: t("disabilities.dontKnow"),
+        [PhysiotherapyConditions.OTHER]: t("disabilities.other"),
+    };
+};
 
 // On language change, recompute arrays of labels
 export let prostheticInjuryLocations: { [key: string]: string } = {};

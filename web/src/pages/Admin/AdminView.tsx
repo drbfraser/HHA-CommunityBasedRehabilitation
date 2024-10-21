@@ -1,50 +1,33 @@
 import React from "react";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import EditIcon from "@mui/icons-material/Edit";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import { adminStyles } from "./Admin.styles";
-import { useHistory, useRouteMatch } from "react-router-dom";
-import { Box, Button } from "@mui/material";
-import { useEffect, useState } from "react";
-import { Alert, Skeleton } from '@mui/material';
+import { Box, Button, Alert, Skeleton } from "@mui/material";
+
 import { IUser, userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { IRouteParams } from "@cbr/common/forms/Admin/adminFields";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { adminStyles } from "./Admin.styles";
+import { useUser } from "util/hooks/useUser";
 
 const AdminView = () => {
     const history = useHistory();
-    const [loadingError, setLoadingError] = useState(false);
-    const [user, setUser] = useState<IUser>();
     const zones = useZones();
     const { userId } = useRouteMatch<IRouteParams>().params;
+    const [user, loadingError] = useUser(userId);
+    const { t } = useTranslation();
 
-    const handleEdit = () => {
-        return history.push("/admin/edit/" + userId);
-    };
-
-    const handlePasswordEdit = () => {
-        return history.push("/admin/password/" + userId);
-    };
-
-    useEffect(() => {
-        const getUser = async () => {
-            try {
-                const theUser: IUser = (await (
-                    await apiFetch(Endpoint.USER, `${userId}`)
-                ).json()) as IUser;
-                setUser(theUser);
-            } catch (e) {
-                setLoadingError(true);
-            }
-        };
-        getUser();
-    }, [userId]);
+    const handleEdit = () => history.push(`/admin/edit/${userId}`);
+    const handlePasswordEdit = () => history.push(`/admin/password/${userId}`);
 
     return (
         (<Box sx={adminStyles.container}>
             {loadingError ? (
                 <Alert severity="error">
-                    Something went wrong trying to load that user. Please go back and try again.
+                    {t("alert.loadUserFailure")}
+                    {loadingError}
                 </Alert>
             ) : user ? (
                 <>
@@ -54,25 +37,32 @@ const AdminView = () => {
                         </h1>
                         <Box sx={adminStyles.editButton}>
                             <Button color="primary" onClick={handleEdit}>
-                                <EditIcon></EditIcon>Edit
+                                <EditIcon />
+                                {t("general.edit")}
                             </Button>
                             <Button color="primary" onClick={handlePasswordEdit}>
-                                <LockOpenIcon></LockOpenIcon>Change Password
+                                <LockOpenIcon />
+                                {t("login.changePassword")}
                             </Button>
                         </Box>
                     </Box>
                     <b>Username</b>
                     <p>{user.username}</p>
-                    <b>ID</b>
+
+                    <b>{t("general.id")}</b>
                     <p> {userId} </p>
-                    <b>Zone</b>
+
+                    <b>{t("admin.zone")}</b>
                     <p> {zones.get(user.zone) ?? "Unknown"} </p>
-                    <b>Phone Number</b>
+
+                    <b>{t("general.phoneNumber")}</b>
                     <p> {user.phone_number} </p>
-                    <b>Type</b>
+
+                    <b>{t("general.type")}</b>
                     <p> {userRoles[user.role].name} </p>
-                    <b>Status</b>
-                    <p> {user.is_active ? "Active" : "Disabled"} </p>
+
+                    <b>{t("admin.status")}</b>
+                    <p> {user.is_active ? t("general.active") : t("general.disabled")} </p>
                 </>
             ) : (
                 <Skeleton variant="rectangular" height={500} />

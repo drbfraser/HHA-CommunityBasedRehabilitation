@@ -16,23 +16,37 @@ export const clientListStyles: Record<string, SxProps<Theme>> = {
     logo: {
         display: "block",
         width: "100%",
+        paddingBottom: "2em",
     },
     formContainer: {
         maxWidth: "350px",
+
         position: "absolute",
         top: "15%",
         right: "8%",
+
+        display: "flex",
+        flexDirection: "column",
+
         color: "white",
-        "& .MuiInputLabel-root, & .MuiInput-input": {
+        "& .MuiInputLabel-root, & .MuiInput-input, & .MuiSelect-icon": {
             color: "white",
+            "&.Mui-focused": {
+                    color: "white",
+                },
         },
-        "& .MuiInput-underline": {
+        "& .MuiInput-underline, #language-picker-form .MuiInput-underline": {
             "&:hover:before, &:before": {
                 borderBottomColor: "white",
             },
         },
         "& .MuiInput-underline:after": {
             borderBottomColor: "white",
+        },
+        loginForm: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "2em",
         },
         "@media (max-width: 600px)": {
             margin: "0 auto",

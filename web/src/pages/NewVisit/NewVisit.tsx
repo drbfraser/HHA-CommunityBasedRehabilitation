@@ -28,7 +28,7 @@ import {
 } from "@cbr/common/forms/newVisit/visitFormFields";
 
 import { handleSubmit } from "./formHandler";
-import { useStyles } from "./NewVisit.styles";
+import { newVisitStyles } from "./NewVisit.styles";
 import history from "@cbr/common/util/history";
 import { IRisk } from "@cbr/common/util/risks";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
@@ -184,7 +184,6 @@ const VisitReasonStep = (
     setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>,
     zones: TZoneMap
 ) => {
-    const styles = useStyles();
 
     const onCheckboxChange = (checked: boolean, visitType: string) => {
         // We can't fully rely on formikProps.values[type] here because it might not be updated yet
@@ -210,13 +209,13 @@ const VisitReasonStep = (
     return (<>
         <FormLabel focused={false}>Where was the Visit?</FormLabel>
         <FormControl
-            className={styles.visitLocationContainer}
+            sx={newVisitStyles.visitLocationContainer}
             fullWidth
             required
             variant="outlined"
         >
             <Field
-                className={styles.visitLocation}
+                sx={newVisitStyles.visitLocation}
                 component={TextField}
                 name={VisitFormField.village}
                 label={visitFieldLabels[VisitFormField.village]}
@@ -225,7 +224,7 @@ const VisitReasonStep = (
                 required
             />
             <Field
-                className={styles.visitLocation}
+                sx={newVisitStyles.visitLocation}
                 component={TextField}
                 select
                 label={visitFieldLabels[VisitFormField.zone]}

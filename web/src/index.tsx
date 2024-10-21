@@ -8,13 +8,6 @@ import { loginState } from "./util/hooks/loginState";
 import { invalidateAllCachedAPI } from "@cbr/common/util/hooks/cachedAPI";
 import { API_BASE_URL, API_URL } from "./util/api";
 
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
-
-
 const localStorageProvider: KeyValStorageProvider = {
     getItem: async (key: string) => {
         return window.localStorage.getItem(key);

@@ -39,7 +39,7 @@ import { IRiskType, riskTypes } from "util/riskIcon";
 import { SearchOption } from "@cbr/common/util/searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@mui/icons-material";
 import requestClientRows from "./requestClientRows";
-import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
+import { searchOptionsStyles } from "styles/SearchOptions.styles";
 import { hideColumnsStyles } from "styles/HideColumns.styles";
 import { useZones } from "@cbr/common/util/hooks/zones";
 
@@ -123,7 +123,6 @@ const ClientList = () => {
     const [archivedMode, setArchivedMode] = useState<boolean>(false);
 
     const zones = useZones();
-    const searchOptionsStyle = useSearchOptionsStyles();
     const history = useHistory();
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
@@ -274,7 +273,7 @@ const ClientList = () => {
                 </Box>
             </div>
             <Box sx={clientListStyles.search}>
-                <div className={searchOptionsStyle.searchOptions}>
+                <Box sx={searchOptionsStyles.searchOptions}>
                     <Select
                         variant="standard"
                         color={"primary"}
@@ -291,12 +290,12 @@ const ClientList = () => {
                             </MenuItem>
                         ))}
                     </Select>
-                </div>
+                </Box>
                 {searchOption === SearchOption.ZONE ? (
                     <div>
                         <Select
                             variant="standard"
-                            className={searchOptionsStyle.zoneOptions}
+                            sx={searchOptionsStyles.zoneOptions}
                             color={"primary"}
                             defaultValue={""}
                             onChange={(e) => setSearchValue(String(e.target.value))}

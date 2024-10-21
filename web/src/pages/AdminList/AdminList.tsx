@@ -19,7 +19,7 @@ import {
     Switch,
     Box,
 } from "@mui/material";
-import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
+import { searchOptionsStyles } from "styles/SearchOptions.styles";
 import { hideColumnsStyles } from "styles/HideColumns.styles";
 import { useRef } from "react";
 import { useHistory } from "react-router-dom";
@@ -68,7 +68,6 @@ const AdminList = () => {
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
     const zones = useZones();
-    const searchOptionsStyle = useSearchOptionsStyles();
     const history = useHistory();
 
     const onRowClick = (row: any) => {
@@ -160,7 +159,7 @@ const AdminList = () => {
                 <IconButton onClick={onAdminAddClick} sx={adminListStyles.icon} size="large">
                     <PersonAddIcon />
                 </IconButton>
-                <div className={searchOptionsStyle.searchOptions}>
+                <Box sx={searchOptionsStyles.searchOptions}>
                     <Select
                         variant="standard"
                         color={"primary"}
@@ -177,12 +176,12 @@ const AdminList = () => {
                             </MenuItem>
                         ))}
                     </Select>
-                </div>
+                </Box>
                 {searchOption === SearchOption.ZONE ? (
                     <div>
                         <Select
                             variant="standard"
-                            className={searchOptionsStyle.zoneOptions}
+                            sx={searchOptionsStyles.zoneOptions}
                             color={"primary"}
                             defaultValue={""}
                             onChange={(event) => setSearchValue(String(event.target.value))}

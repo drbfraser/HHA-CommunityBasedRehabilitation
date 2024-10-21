@@ -7,7 +7,7 @@ import {
     TimelineDot,
     TimelineContent,
 } from "@mui/lab";
-import { useTimelineStyles } from "./timelines.styles";
+import { timelineStyles } from "./timelines.styles";
 import BlankIcon from "@mui/material/SvgIcon";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material";
@@ -21,12 +21,11 @@ interface IProps {
 }
 
 const TimelineEntry = ({ date, content, DotIcon, isBottomEntry, onClick }: IProps) => {
-    const timelineStyles = useTimelineStyles();
     const Icon = DotIcon ?? BlankIcon;
 
     return (
         <TimelineItem>
-            <TimelineOppositeContent className={timelineStyles.date}>
+            <TimelineOppositeContent sx={timelineStyles.date}>
                 {date}
             </TimelineOppositeContent>
             <TimelineSeparator>
@@ -34,7 +33,9 @@ const TimelineEntry = ({ date, content, DotIcon, isBottomEntry, onClick }: IProp
                 <TimelineDot color="grey" variant="outlined">
                     <Icon color="primary" fontSize="small" />
                 </TimelineDot>
-                <TimelineConnector className={isBottomEntry ? timelineStyles.hidden : ""} />
+                {/* todosd: equiv to empty string? */}
+                {/* <TimelineConnector className={isBottomEntry ? timelineStyles.hidden : ""} /> */}
+                <TimelineConnector sx={isBottomEntry ? timelineStyles.hidden : {}} /> 
             </TimelineSeparator>
             <TimelineContent>
                 <div

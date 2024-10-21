@@ -7,7 +7,7 @@ import {
     TimelineConnector,
     TimelineContent,
 } from "@mui/lab";
-import { useTimelineStyles } from "./timelines.styles";
+import { timelineStyles } from "./timelines.styles";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material";
 import { MoreVert, ArrowDropDown } from "@mui/icons-material";
@@ -17,12 +17,11 @@ interface IProps {
 }
 
 const ShowMoreEntry = ({ onClick }: IProps) => {
-    const timelineStyles = useTimelineStyles();
     const Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> = MoreVert;
 
     return (
         <TimelineItem>
-            <TimelineOppositeContent className={timelineStyles.date} />
+            <TimelineOppositeContent sx={timelineStyles.date} />
             <TimelineSeparator>
                 <TimelineConnector />
                 <TimelineDot color="primary" variant="outlined">

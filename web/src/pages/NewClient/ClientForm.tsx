@@ -1,7 +1,7 @@
 import React from "react";
 import { Field, Form, Formik } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-mui";
-import { useStyles } from "./ClientForm.styles";
+import { clientFormStyles } from "./ClientForm.styles";
 import Button from "@mui/material/Button";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -24,7 +24,6 @@ import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 import { handleNewWebClientSubmit, handleReset } from "@cbr/common/forms/Client/clientHandler";
 
 const ClientForm = () => {
-    const styles = useStyles();
     const zones = useZones();
     const disabilities = useDisabilities();
 
@@ -213,7 +212,7 @@ const ClientForm = () => {
                                         {values.caregiverPresent ? (
                                             <Grid item md={7} xs={12}>
                                                 <Accordion
-                                                    className={styles.caregiverAccordion}
+                                                    sx={clientFormStyles.caregiverAccordion}
                                                     defaultExpanded
                                                 >
                                                     <AccordionSummary
@@ -229,8 +228,8 @@ const ClientForm = () => {
                                                         >
                                                             <Grid item md={8} xs={12}>
                                                                 <Field
-                                                                    className={
-                                                                        styles.caregiverInputField
+                                                                    sx={
+                                                                        clientFormStyles.caregiverInputField
                                                                     }
                                                                     component={TextField}
                                                                     name={ClientField.caregiverName}
@@ -247,7 +246,8 @@ const ClientForm = () => {
                                                             </Grid>
                                                             <Grid item md={8} xs={12}>
                                                                 <Field
-                                                                    className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
+                                                                    // todosd: applying correctly?
+                                                                    sx={`${clientFormStyles.caregiverInputField} ${clientFormStyles.disabledTextField}`}
                                                                     component={TextField}
                                                                     name={
                                                                         ClientField.caregiverEmail
@@ -265,8 +265,8 @@ const ClientForm = () => {
                                                             </Grid>
                                                             <Grid item md={8} xs={12}>
                                                                 <Field
-                                                                    className={
-                                                                        styles.caregiverInputField
+                                                                    sx={
+                                                                        clientFormStyles.caregiverInputField
                                                                     }
                                                                     component={TextField}
                                                                     name={
@@ -585,10 +585,16 @@ const ClientForm = () => {
                                             item
                                             md={12}
                                             xs={12}
-                                            className={
+                                            // todosd: replace empty sting with actual version, {} ok?
+                                            // className={
+                                            //     !values.interviewConsent && touched.interviewConsent
+                                            //         ? clientFormStyles.checkboxError
+                                            //         : ""
+                                            // }
+                                            sx={
                                                 !values.interviewConsent && touched.interviewConsent
-                                                    ? styles.checkboxError
-                                                    : ""
+                                                    ? clientFormStyles.checkboxError
+                                                    : {}
                                             }
                                         ></Grid>
                                     </Grid>

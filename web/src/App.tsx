@@ -39,28 +39,19 @@ const App = () => {
     const PrivateRoutes = () => {
         const user = useCurrentUser();
 
-        // todo: verify no consequences from replacing all <div> with Box
+        // todosd: verify no consequences from replacing all <div> with Box
         return (
-            <Box
-                sx={appStyles.container}
-            >
+            <Box sx={appStyles.container}>
                 <SideNav />
-                <Box
-                    sx={appStyles.pageContainer}
-                >
+                <Box sx={appStyles.pageContainer}>
                     <Switch>
                         {pagesForUser(user).map((page) => (
                             <Route key={page.path} exact={page.exact ?? true} path={page.path}>
                                 {open && <AlertNotification alertInfo={alert} setOpen={setOpen} />}
-                                <Typography
-                                    variant="h1"
-                                    sx={appStyles.pageTitle}
-                                >
+                                <Typography variant="h1" sx={appStyles.pageTitle}>
                                     {page.name}
                                 </Typography>
-                                <Box
-                                    sx={appStyles.pageContent}
-                                >
+                                <Box sx={appStyles.pageContent}>
                                     <page.Component />
                                 </Box>
                             </Route>

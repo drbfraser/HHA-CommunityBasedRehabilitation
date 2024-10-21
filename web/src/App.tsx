@@ -56,15 +56,15 @@ const App = () => {
                                             alignItems: "center",
                                         }}
                                     >
-                                        <Typography variant="h1" className={styles.pageTitle}>
+                                        <Typography variant="h1" sx={appStyles.pageTitle}>
                                             {t(page.name)}
                                         </Typography>
                                         <LanguagePicker />
                                     </Box>
                                 </header>
-                                <main className={styles.pageContent}>
+                                <Box component="main" sx={appStyles.pageContent}>
                                     <page.Component />
-                                </main>
+                                </Box>
                             </Route>
                         ))}
                     </Switch>

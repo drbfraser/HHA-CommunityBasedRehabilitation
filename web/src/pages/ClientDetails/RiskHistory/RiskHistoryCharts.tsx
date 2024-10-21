@@ -15,7 +15,7 @@ import {
 import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import { IClient } from "@cbr/common/util/clients";
-import { chartContainerStyles, riskHistoryStyles } from "./RiskHistory.styles";
+import { riskHistoryStyles } from "./RiskHistory.styles";
 import { getTranslatedRiskChartName, riskTypes } from "util/risks";
 
 interface IProps {
@@ -95,7 +95,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
             <ResponsiveContainer
                 width="100%"
                 height={chartHeight}
-                className={chartContainerStyles}
+                className={`${riskHistoryStyles.chartContainer}`} // todosd: does this work?
             >
             {/* <ResponsiveContainer width="100%" height={chartHeight} className={styles.chartContainer}> */}
                 <LineChart>

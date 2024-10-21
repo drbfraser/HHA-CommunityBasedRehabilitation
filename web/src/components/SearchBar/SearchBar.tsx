@@ -7,9 +7,10 @@ import { themeColors } from "@cbr/common/util/colors";
 
 const SearchBar = (props: InputBaseProps) => {
     const theme = useTheme();
-    const styles = useStyles(theme);
+    // const styles = useStyles(theme);  todosd: remove
     const { t } = useTranslation();
 
+    // todosd: move back to styles file?  How to apply theme better
     return (
         <Box
             sx={{

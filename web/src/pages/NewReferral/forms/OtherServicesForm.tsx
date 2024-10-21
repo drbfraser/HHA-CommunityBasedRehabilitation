@@ -1,12 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, FormikProps } from "formik";
-import { TextField } from "formik-material-ui";
-import { FormLabel, MenuItem } from "@material-ui/core";
+import { TextField } from "formik-mui";
+import { Box, FormLabel, MenuItem } from "@mui/material";
 
 import { otherServices, Impairments } from "@cbr/common/util/referrals";
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";
-import { useStyles } from "../NewReferral.styles";
+import { newReferralStyles } from "../NewReferral.styles";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -14,14 +14,14 @@ interface IFormProps {
 
 const OtherServicesForm = (props: IFormProps) => {
     const { t } = useTranslation();
-    const styles = useStyles();
 
     return (
         <div>
             <FormLabel>{t("referral.selectAnotherReferral")}</FormLabel>
             <br />
             <br />
-            <div className={styles.fieldIndent}>
+            {/* todosd: replace with div? */}
+            <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     select
                     required
@@ -52,7 +52,7 @@ const OtherServicesForm = (props: IFormProps) => {
                         />
                     </div>
                 )}
-            </div>
+            </Box>
         </div>
     );
 };

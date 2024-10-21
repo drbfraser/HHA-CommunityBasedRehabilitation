@@ -8,7 +8,7 @@ export const clientListStyles: Record<string, SxProps<Theme>> = {
         backgroundRepeat: "no-repeat",
         backgroundImage: `url(${BackgroundImage})`,
         backgroundSize: "100% auto",
-         // todo: check this max-width relative to mediaMobile
+         // todosd: check this max-width relative to mediaMobile
         "@media (max-width: 600px)": { 
             backgroundImage: `url(${BackgroundImageMobile})`,
         }
@@ -43,11 +43,6 @@ export const clientListStyles: Record<string, SxProps<Theme>> = {
         "& .MuiInput-underline:after": {
             borderBottomColor: "white",
         },
-        loginForm: {
-            display: "flex",
-            flexDirection: "column",
-            gap: "2em",
-        },
         "@media (max-width: 600px)": {
             margin: "0 auto",
             top: "25%",
@@ -55,10 +50,16 @@ export const clientListStyles: Record<string, SxProps<Theme>> = {
             right: 0,
         }
     },
+    // todosd: remove, this should be for sx only?  Talk to Harry
+    // loginForm: {
+    //     display: "flex",
+    //     flexDirection: "column",
+    //     gap: "2em",
+    // },
 }
 
 
-// todo: remove
+// todosd: remove
 // export const useStyles = makeStyles(
 //     {
 //         container: {

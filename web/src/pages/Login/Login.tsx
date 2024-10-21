@@ -84,7 +84,8 @@ const Login = () => {
                     {t("login.login")}
                 </Typography>
                 <LoginAlert />
-                <form className={styles.loginForm} onSubmit={(e) => handleLogin(e)}>
+                {/* todosd: temp hack, use more robust css in js solution */}
+                <form style={{display: "flex", flexDirection: "column", gap: "2em"}} onSubmit={(e) => handleLogin(e)}>
                     <TextField
                         label={t("general.username")}
                         variant="standard"

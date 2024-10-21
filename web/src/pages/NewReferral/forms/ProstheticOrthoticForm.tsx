@@ -1,8 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, FormikProps } from "formik";
-import { RadioGroup } from "formik-material-ui";
-import { FormLabel, Radio } from "@material-ui/core";
+import { RadioGroup } from "formik-mui";
+import { FormLabel, Radio } from "@mui/material";
 
 import { orthoticInjuryLocations, prostheticInjuryLocations } from "@cbr/common/util/referrals";
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";

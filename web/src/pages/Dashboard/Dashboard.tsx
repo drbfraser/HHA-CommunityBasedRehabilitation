@@ -6,12 +6,12 @@ import { Cancel, CheckCircle, FiberManualRecord } from "@mui/icons-material";
 import {
     DataGrid,
     GridColumnHeaderParams,
-    GridCellValue,
+    GridCellValue,  // todosd: deprecated
     GridRowParams,
     GridDensityTypes,
     GridOverlay,
     GridRowsProp,
-    GridRowData,
+    GridRowData,    // todosd: deprecated
     GridSortCellParams,
     GridRenderCellParams,
 } from "@mui/x-data-grid";
@@ -266,8 +266,9 @@ const Dashboard = () => {
             {unreadAlertsCount > 0 && (
                 <Alert severity="info">
                     <Typography variant="body1">
-                        <Trans i18nKey="dashboard.newInboxMessages" count={unreadAlertsCount}>
-                            -You have <b>{{ unreadAlertsCount }}</b> new message
+                        {/* todosd: verify that passing unreadAlertsCount like this doesn't break anything */}
+                        <Trans i18nKey="dashboard.newInboxMessages" count={unreadAlertsCount} values={{unreadAlertsCount}}>
+                            -You have <b>{unreadAlertsCount}</b> new message
                             {unreadAlertsCount > 1 && "s"} in your inbox
                         </Trans>
                     </Typography>

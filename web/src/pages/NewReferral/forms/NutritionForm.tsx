@@ -1,11 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, FormikProps } from "formik";
-import { CheckboxWithLabel } from "formik-material-ui";
-import { FormLabel } from "@material-ui/core";
+import { CheckboxWithLabel } from "formik-mui";
+import { Box, FormLabel } from "@mui/material";
 
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";
-import { useStyles } from "../NewReferral.styles";
+import { newReferralStyles } from "../NewReferral.styles";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -13,13 +13,13 @@ interface IFormProps {
 
 const NutritionForm = (props: IFormProps) => {
     const { t } = useTranslation();
-    const styles = useStyles();
 
     return (
         <div>
             <FormLabel>{t("referral.whatDoesClientNeed")}?</FormLabel>
             <br />
-            <div className={styles.fieldIndent}>
+            {/* todosd: replace Box with div */}
+            <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
@@ -47,7 +47,7 @@ const NutritionForm = (props: IFormProps) => {
                         props.formikProps.handleChange(event);
                     }}
                 />
-            </div>
+            </Box>
         </div>
     );
 };

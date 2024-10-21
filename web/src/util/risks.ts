@@ -6,7 +6,7 @@ import {
     SvgIconComponent,
     Restaurant,
     Favorite,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { TFunction } from "i18next";
 
 export interface IRiskType {

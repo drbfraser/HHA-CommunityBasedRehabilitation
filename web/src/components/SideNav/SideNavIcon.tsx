@@ -19,7 +19,6 @@ interface IProps {
 }
 
 const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
-    const styles = useStyles();
     const { t } = useTranslation();
     const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
     const [isUnreadAlertCountSet, setIsUnreadAlertCountSet] = useState<boolean>(false);
@@ -79,7 +78,7 @@ const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
                     {/* <div className={`${styles.icon} ${iconIsActive ? styles.active : ""}`}></div> */}
                     <Box sx={{
                         ...(sideNavStyles.icon),
-                        ...(active && sideNavStyles.active)
+                        ...(iconIsActive && sideNavStyles.active)
                         } as SxProps<Theme>}>
                         {Icon && <Icon fontSize="large" />}
                     </Box>

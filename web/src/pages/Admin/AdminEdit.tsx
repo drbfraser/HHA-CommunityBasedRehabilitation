@@ -1,17 +1,15 @@
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { adminStyles } from "./Admin.styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { Box, FormControl, MenuItem } from "@mui/material";
-import { useState, useEffect } from "react";
 import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { Alert, Skeleton } from '@mui/material';
-import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
-import { IUser, userRoles } from "@cbr/common/util/users";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
+import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import {
     AdminField,
@@ -20,11 +18,10 @@ import {
     IRouteParams,
 } from "@cbr/common/forms/Admin/adminFields";
 import history from "@cbr/common/util/history";
-import { useStyles } from "./styles";
+import { adminStyles } from "./Admin.styles";
 import { useUser } from "util/hooks/useUser";
 
 const AdminEdit = () => {
-    const styles = useStyles();
     const { t } = useTranslation();
     const zones = useZones();
     const { userId } = useRouteMatch<IRouteParams>().params;

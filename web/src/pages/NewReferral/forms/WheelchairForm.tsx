@@ -1,13 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, FormikProps } from "formik";
-import { CheckboxWithLabel, RadioGroup, TextField } from "formik-material-ui";
-import { FormLabel, InputAdornment, Radio } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+import { CheckboxWithLabel, RadioGroup, TextField } from "formik-mui";
+import { Alert, Box, FormLabel, InputAdornment, Radio } from "@mui/material";
 
 import { wheelchairExperiences } from "@cbr/common/util/referrals";
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";
-import { useStyles } from "../NewReferral.styles";
+import { newReferralStyles } from "../NewReferral.styles";
 import { PhotoView } from "components/ReferralPhotoView/PhotoView";
 
 interface IFormProps {
@@ -16,7 +15,6 @@ interface IFormProps {
 
 const WheelchairForm = (props: IFormProps) => {
     const { t } = useTranslation();
-    const styles = useStyles();
 
     return (
         <div>
@@ -41,9 +39,11 @@ const WheelchairForm = (props: IFormProps) => {
             <br />
             <FormLabel>{t("referral.clientHipWidth")}?</FormLabel>
             <br />
-            <div className={`${styles.fieldIndent}`}>
+            <Box sx={newReferralStyles.fieldIndent}>
+            {/* <div className={`${styles.fieldIndent}`}> */}
+            {/* todosd: use this old way to access css? */}
                 <Field
-                    className={styles.hipWidth}
+                    sx={newReferralStyles.hipWidth}
                     component={TextField}
                     type="number"
                     name={ReferralFormField.hipWidth}
@@ -53,11 +53,11 @@ const WheelchairForm = (props: IFormProps) => {
                         ),
                     }}
                 />
-            </div>
+            </Box>
             <br />
             <FormLabel>{t("referral.wheelchairInformation")}</FormLabel>
             <br />
-            <div className={styles.fieldIndent}>
+            <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
@@ -75,7 +75,7 @@ const WheelchairForm = (props: IFormProps) => {
                         }}
                     />
                 )}
-            </div>
+            </Box>
             {props.formikProps.values[ReferralFormField.wheelchairOwned] &&
                 props.formikProps.values[ReferralFormField.wheelchairRepairable] && (
                     <>

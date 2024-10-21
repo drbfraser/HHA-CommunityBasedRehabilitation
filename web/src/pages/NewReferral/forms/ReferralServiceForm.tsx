@@ -1,8 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, FormikProps } from "formik";
-import { CheckboxWithLabel } from "formik-material-ui";
-import { FormControl, FormGroup, FormLabel } from "@material-ui/core";
+import { CheckboxWithLabel } from "formik-mui";
+import { FormControl, FormGroup, FormLabel } from "@mui/material";
 
 import {
     referralFieldLabels,

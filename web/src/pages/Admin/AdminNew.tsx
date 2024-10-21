@@ -1,15 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { adminStyles } from "./Admin.styles";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import { TextField } from "formik-material-ui";
-import { FormControl, MenuItem, Button, Grid } from "@material-ui/core";
+import { Box, FormControl, MenuItem, Grid, Button } from "@mui/material";
 
 import history from "@cbr/common/util/history";
-import { Box, FormControl, MenuItem } from "@mui/material";
 import { handleNewUserSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -20,14 +15,14 @@ import {
     adminUserInitialValues,
     newUserValidationSchema,
 } from "@cbr/common/forms/Admin/adminFields";
-import { useStyles } from "./styles";
+import { adminStyles } from "./Admin.styles";
 
 const AdminNew = () => {
     const zones = useZones();
     const { t } = useTranslation();
 
     return (
-        (<Formik
+        <Formik
             initialValues={adminUserInitialValues}
             validationSchema={newUserValidationSchema}
             onSubmit={(values, formikHelpers) => {
@@ -176,7 +171,7 @@ const AdminNew = () => {
                     </Form>
                 </Box>
             )}
-        </Formik>)
+        </Formik>
     );
 };
 

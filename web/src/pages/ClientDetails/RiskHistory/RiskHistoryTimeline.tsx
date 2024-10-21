@@ -12,6 +12,7 @@ import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import { timelineStyles } from "../Timeline/timelines.styles";
+import { translateRiskEntrySummary } from "./helper";
 
 interface IProps {
     client?: IClient;

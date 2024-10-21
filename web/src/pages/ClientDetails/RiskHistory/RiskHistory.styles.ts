@@ -18,18 +18,18 @@ Object.values(riskLevels).forEach(({ color }, i) => {
 
 // todosd: correct?  this is a hack, do this better...
 // https://stackoverflow.com/questions/63771649/react-convert-cssproperties-to-styled-component
-const regex = new RegExp(/[A-Z]/g)
-const kebabCase = (str: string) => str.replace(regex, v => `-${v.toLowerCase()}`)
-export const chartContainerStyles = Object.keys(chartContainer).reduce((accumulator, key) => {
-    // transform the key from camelCase to kebab-case
-    const cssKey = kebabCase(key)
+// const regex = new RegExp(/[A-Z]/g)
+// const kebabCase = (str: string) => str.replace(regex, v => `-${v.toLowerCase()}`)
+// export const chartContainerStyles = Object.keys(chartContainer).reduce((accumulator, key) => {
+//     // transform the key from camelCase to kebab-case
+//     const cssKey = kebabCase(key)
     
-    // remove ' in value
-    const cssValue = (chartContainer[key] as string).replace("'", "")
-    // build the result
-    // you can break the line, add indent for it if you need
-    return `${accumulator}${cssKey}:${cssValue};`
-});
+//     // remove ' in value
+//     const cssValue = (chartContainer[key] as string).replace("'", "")
+//     // build the result
+//     // you can break the line, add indent for it if you need
+//     return `${accumulator}${cssKey}:${cssValue};`
+// });
 
 export const riskHistoryStyles: Record<string, SxProps<Theme>> = {
     textCenter: {

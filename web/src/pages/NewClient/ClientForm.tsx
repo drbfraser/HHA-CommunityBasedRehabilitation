@@ -30,7 +30,7 @@ const ClientForm = () => {
     const disabilities = useDisabilities(t);
 
     return (
-        (<Formik
+        <Formik
             initialValues={clientInitialValues}
             validationSchema={newClientValidationSchema}
             onSubmit={handleNewWebClientSubmit}
@@ -137,7 +137,7 @@ const ClientForm = () => {
                                                     variant="outlined"
                                                     required
                                                     label={clientFieldLabels[ClientField.zone]}
-                                                    defaultValue=""
+                                                    // defaultValue="" // todosd: remove
                                                     name={ClientField.zone}
                                                     autoComplete="off"
                                                 >
@@ -633,7 +633,7 @@ const ClientForm = () => {
                     )}
                 </Grid>
             )}
-        </Formik>)
+        </Formik>
     );
 };
 

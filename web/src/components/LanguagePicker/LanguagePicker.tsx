@@ -10,32 +10,11 @@ import {
     Theme,
 } from "@mui/material";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
+import { getLanguageFromLocalStorage, Language, LANGUAGE_KEY } from "./utils";
 
 interface IProps {
     sx?: SxProps<Theme>;
 }
-
-enum Language {
-    EN = "en",
-    BARI = "bari",
-}
-
-const LANGUAGE_KEY = "lang";
-const DEAFULT_LANGUAGE = Language.EN;
-
-const getLanguageFromLocalStorage = (): Language => {
-    const savedLanguage = localStorage.getItem(LANGUAGE_KEY);
-    if (savedLanguage === null || !Object.values(Language).includes(savedLanguage as Language)) {
-        console.error(
-            savedLanguage === null
-                ? "No language was saved in localStorage"
-                : `Unknown language fetched from local storage: ${savedLanguage}`
-        );
-        return DEAFULT_LANGUAGE;
-    }
-
-    return savedLanguage as Language;
-};
 
 const LanguagePicker = ({ sx }: IProps) => {
     const [language, setLanguage] = useState(getLanguageFromLocalStorage());

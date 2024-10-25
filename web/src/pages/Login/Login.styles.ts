@@ -2,9 +2,9 @@ import BackgroundImage from "./background.svg";
 import BackgroundImageMobile from "./backgroundMobile.svg";
 import { SxProps, Theme } from '@mui/material';
 
-export const clientListStyles: Record<string, SxProps<Theme>> = {
+export const clientListStyles: Record<string, SxProps<Theme> | React.CSSProperties> = {
     container: {
-        height: "100%",
+        height: "100vh",
         backgroundRepeat: "no-repeat",
         backgroundImage: `url(${BackgroundImage})`,
         backgroundSize: "100% auto",
@@ -50,12 +50,11 @@ export const clientListStyles: Record<string, SxProps<Theme>> = {
             right: 0,
         }
     },
-    // todosd: remove, this should be for sx only?  Talk to Harry
-    // loginForm: {
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     gap: "2em",
-    // },
+    loginForm: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "2em",
+    } as React.CSSProperties,
 }
 
 

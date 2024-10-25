@@ -3,7 +3,6 @@ import { createTheme } from "@mui/material";
 
 export const mediaMobile = "@media (max-width: 800px)";
 
-// todosd: reset body font size here? https://mui.com/material-ui/migration/v5-component-changes/ @Update body font size
 export const themeMui = createTheme({
     components: {
         MuiCssBaseline: {
@@ -15,6 +14,12 @@ export const themeMui = createTheme({
                 body: {
                     height: "100%",
                     // border: "5px solid red", // todosd: remove
+
+                    // override default body font size to match material-ui 4 default
+                    // see: https://mui.com/material-ui/migration/v5-component-changes/ @Update body font size
+                    fontSize: "0.875rem",
+                    lineHeight: 1.43,
+                    letterSpacing: "0.01071em",
                 },
                 root: {
                     height: "100%",

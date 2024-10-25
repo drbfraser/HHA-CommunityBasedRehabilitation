@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { doLogin } from "@cbr/common/util/auth";
-import { clientListStyles } from "./Login.styles";
+import { loginStyles } from "./Login.styles";
 import { loginState } from "../../util/hooks/loginState";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
 import LanguagePicker from "components/LanguagePicker/LanguagePicker";
@@ -71,11 +71,11 @@ const Login = () => {
     };
 
     return (
-        <Box sx={clientListStyles.container}>
-            <Box sx={clientListStyles.formContainer}>
+        <Box sx={loginStyles.container}>
+            <Box sx={loginStyles.formContainer}>
                 <Box
                     component="img"
-                    sx={clientListStyles.logo}
+                    sx={loginStyles.logo}
                     src="/images/hha_logo_white.png"
                     alt="Hope Health Action"
                 />
@@ -84,7 +84,7 @@ const Login = () => {
                     {t("login.login")}
                 </Typography>
                 <LoginAlert />
-                <form style={clientListStyles.loginForm as React.CSSProperties} onSubmit={(e) => handleLogin(e)}>
+                <form style={loginStyles.loginForm as React.CSSProperties} onSubmit={(e) => handleLogin(e)}>
                     <TextField
                         label={t("general.username")}
                         variant="standard"

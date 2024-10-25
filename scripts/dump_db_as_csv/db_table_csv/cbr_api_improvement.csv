@@ -1,0 +1,31 @@
+id,risk_type,provided,desc,visit_id_id,created_at,server_created_at
+10b25574-41d8-441c-903f-cf5661e06161,HEALTH,Referral,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",adf3988f-4f9a-4dfd-91b1-c54e65915a7b,1594718344149,1594718344149
+d15e43d3-fdda-401b-a876-52ba467890ff,SOCIAL,Orthotic,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",867f134e-fa33-49fc-aa34-848ae4c4d0ad,1581245656532,1581245656532
+2fc56e2b-9169-4d09-8a55-8d320d975717,EDUCAT,Orthotic,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",45102e51-1a38-4a62-8a33-f3f37212c357,1550118220924,1550118220924
+48d40525-cead-4e89-af00-c9562e0470f5,NUTRIT,Wheelchair Repair,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",92342388-7453-4437-966d-c84662f990bc,1604572140808,1604572140808
+78a7b037-f88e-407d-b291-27a1c0d050cc,MENTAL,Prosthetic,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",c9ff265d-b4a4-4642-aa1c-27c4d80135e6,1585809864312,1585809864312
+72fe0122-6527-4603-a692-2143b8695812,HEALTH,Prosthetic,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",b0d7d7e0-5aaa-4b6b-866f-dbad98e754d9,1585360614742,1585360614742
+6e2b33e0-a452-48b2-abf9-0f908c42af17,SOCIAL,Referral,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",f2b942fb-2f3b-48f5-a138-3202b6c3f6f1,1607474093814,1607474093814
+0ded8960-d965-4ad8-a3ad-be54fd38a1dc,EDUCAT,Other,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",09298e8b-fdc6-4a8f-a334-861fd0a59f95,1585883770974,1585883770974
+38f1e592-4231-4772-a246-ea3d8a9e6a55,NUTRIT,Wheelchair Repair,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",24a52ec4-1b91-4b07-b851-a2fcab4621ba,1565275078849,1565275078849
+8fefeef6-d2c9-4a10-a209-6bbd968e12fc,MENTAL,Referral,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",5ad6186e-539f-4ef8-8efe-fa0e94f0c22a,1608173612291,1608173612291
+143c930c-60fb-4ee5-8671-3ed8fc410350,HEALTH,Wheelchair Repair,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",9dd677c1-0377-4cf8-9ccc-f60a06d1c73c,1552972884980,1552972884980
+89f1e024-c997-4939-94ed-4d6beb10e5a5,SOCIAL,Referral,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",75c8372a-4808-4002-acac-8e660d6a0530,1608241142284,1608241142284
+b083fbb9-dfaa-4e00-842d-2ccb84249cdc,EDUCAT,Physiotherapy,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",2a676f9e-2ccb-4ea9-a4d1-3fcdd789f924,1598415428801,1598415428801
+1cc96c16-eb31-4696-b3c8-f1b98d9f337f,NUTRIT,Prosthetic,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",a0c3d242-a7d5-454f-9e61-5f0c512fe109,1608333695215,1608333695215
+bf2a0fc3-c93b-4b92-8765-ff85a4d82dbf,MENTAL,Wheelchair Repair,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",14ed8008-cea9-4ac5-985b-ee07e5a9862b,1602162487832,1602162487832
+b9ebb607-6be2-4eb8-a451-823846d46326,HEALTH,-Advice,a,951d6d2a-deaa-448e-a806-352ca9d5852a,1727732396187,1727732396187
+9a7c19d4-4117-4bc4-9456-12c7a2283981,HEALTH,-Advocacy,a,951d6d2a-deaa-448e-a806-352ca9d5852a,1727732396187,1727732396187
+e79313c6-9572-4e32-83b1-64283782324d,HEALTH,-Encouragement,a,951d6d2a-deaa-448e-a806-352ca9d5852a,1727732396187,1727732396187
+7b21797f-e2d8-44a5-be64-1a2a84273498,HEALTH,-Orthotic,a,951d6d2a-deaa-448e-a806-352ca9d5852a,1727732396187,1727732396187
+11e40b0b-d1c7-4395-a99a-a3159a0c8b42,HEALTH,-Prosthetic,a,951d6d2a-deaa-448e-a806-352ca9d5852a,1727732396187,1727732396187
+bec35ec4-30e6-42f1-9205-315439b7bb07,HEALTH,-Referral to Health Centre,a,951d6d2a-deaa-448e-a806-352ca9d5852a,1727732396187,1727732396187
+d1d9915c-c31e-4fde-b5d4-f647f9356db5,HEALTH,-Wheelchair,a,951d6d2a-deaa-448e-a806-352ca9d5852a,1727732396187,1727732396187
+3915808d-b626-4503-aa2f-42757da7cd78,HEALTH,-Wheelchair Repair,a,951d6d2a-deaa-448e-a806-352ca9d5852a,1727732396187,1727732396187
+ed883dab-8c69-4c2c-98bc-87c33234b5b0,HEALTH,-Advice,bbb,aff92a4c-90d1-4d9e-9a6f-e7809c29ad3e,1728321842702,1728321842702
+09f14544-44b0-4e0d-9395-0b77dbb2350d,EDUCAT,-Advice,bbb,aff92a4c-90d1-4d9e-9a6f-e7809c29ad3e,1728321842702,1728321842702
+c77ea460-2ae9-407a-9325-072f499f034b,SOCIAL,-Advice,bbb,aff92a4c-90d1-4d9e-9a6f-e7809c29ad3e,1728321842702,1728321842702
+1f8903ae-6d2b-4c27-9f8c-7bf811c0ddad,NUTRIT,-Advice,bbb,aff92a4c-90d1-4d9e-9a6f-e7809c29ad3e,1728321842702,1728321842702
+5b632479-6ae0-4289-9a9a-e999ec9d5ab7,MENTAL,-Encouragement,bbb,aff92a4c-90d1-4d9e-9a6f-e7809c29ad3e,1728321842702,1728321842702
+22aff4ad-9bc5-454c-ba4a-9ad0ce1a30e5,HEALTH,-Wheelchair,wheelchair desc,c3bdbc46-c6d4-4af4-b199-028090608d9f,1729880877820,1729880877820
+13a565f9-7299-4e8a-9e6a-0673adb1592f,HEALTH,-Wheelchair Repair,repair desc,c3bdbc46-c6d4-4af4-b199-028090608d9f,1729880877820,1729880877820

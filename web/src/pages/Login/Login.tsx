@@ -93,6 +93,7 @@ const Login = () => {
                         required
                         InputLabelProps={{ required: false }}
                         value={username}
+                        autoComplete="off"
                         onChange={(e) => setUsername(e.target.value)}
                     />
                     <TextField

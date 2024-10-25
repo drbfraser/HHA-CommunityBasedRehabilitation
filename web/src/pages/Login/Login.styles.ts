@@ -9,7 +9,7 @@ export const clientListStyles: Record<string, SxProps<Theme> | React.CSSProperti
         backgroundRepeat: "no-repeat",
         backgroundImage: `url(${BackgroundImage})`,
         backgroundSize: "100% auto",
-         // todosd: check this max-width relative to mediaMobile
+
         "@media (max-width: 600px)": { 
             backgroundImage: `url(${BackgroundImageMobile})`,
         }
@@ -30,7 +30,10 @@ export const clientListStyles: Record<string, SxProps<Theme> | React.CSSProperti
         flexDirection: "column",
 
         color: "white",
-        "& .MuiInputLabel-root, & .MuiInput-input, & .MuiSelect-icon": {
+
+        // todosd: verify no issues with this change
+        // "& .MuiInputLabel-root, & .MuiInput-input, & .MuiSelect-icon": {
+        "& .MuiInputLabel-root, & .MuiInput-input, & .formContainer .MuiSelect-icon": {
             color: "white",
             "&.Mui-focused": {
                     color: "white",
@@ -44,6 +47,7 @@ export const clientListStyles: Record<string, SxProps<Theme> | React.CSSProperti
         "& .MuiInput-underline:after": {
             borderBottomColor: "white",
         },
+
         "@media (max-width: 600px)": {
             margin: "0 auto",
             top: "25%",

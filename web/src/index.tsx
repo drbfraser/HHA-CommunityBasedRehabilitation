@@ -1,7 +1,7 @@
 import React from "react";
 import { I18nextProvider } from "react-i18next";
 import { createRoot } from "react-dom/client";
-import { CssBaseline, ThemeProvider, StyledEngineProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { themeMui } from "theme.styles";
 
 import App from "./App";
@@ -46,15 +46,12 @@ const renderApp = () => {
     const root = createRoot(container);
     root.render(
         <React.StrictMode>
-            {/* todosd: need SEP?  ThemeProvider instead? */}
-            <StyledEngineProvider injectFirst>
-                <I18nextProvider i18n={getI18nInstance()}>
-                    <ThemeProvider theme={themeMui}>
-                        <CssBaseline />
-                        <App />
-                    </ThemeProvider>
-                </I18nextProvider>
-            </StyledEngineProvider>
+            <I18nextProvider i18n={getI18nInstance()}>                
+                <ThemeProvider theme={themeMui}>
+                    <CssBaseline />
+                    <App />
+                </ThemeProvider>
+            </I18nextProvider>
         </React.StrictMode>
     );
 };

@@ -1,26 +1,45 @@
 import { themeColors } from "@cbr/common/util/colors";
-import { createTheme, adaptV4Theme } from "@mui/material";
+import { createTheme } from "@mui/material";
 
 export const mediaMobile = "@media (max-width: 800px)";
 
 // todosd: reset body font size here? https://mui.com/material-ui/migration/v5-component-changes/ @Update body font size
-// todosd: remove adaptV4Theme
-export const themeMui = createTheme(adaptV4Theme({
-    overrides: {
+export const themeMui = createTheme({
+    components: {
         MuiCssBaseline: {
-            "@global": {
-                "html, body, #root": {
+            styleOverrides: {
+                html: {
                     height: "100%",
+                    // border: "5px solid red", // todosd: remove
                 },
-                "#root": {
+                body: {
+                    height: "100%",
+                    // border: "5px solid red", // todosd: remove
+                },
+                root: {
+                    height: "100%",
                     minHeight: "100%",
+                    // border: "5px solid red", // todosd: remove
                 },
+
+                // todosd: confirm this is equivalent
+                // "@global": {
+                //     "html, body, #root": {
+                //         height: "100%",
+                //     },
+                //     "#root": {
+                //         minHeight: "100%", // todosd: vh?
+                //     },
+                // },
             },
         },
         MuiLink: {
-            root: {
-                color: themeColors.linkBlue,
-                textDecoration: "underline",
+            styleOverrides: {
+                root: {
+                    color: themeColors.linkBlue,
+                    textDecoration: "underline",
+                    // border: "5px solid red", // todosd: test
+                },
             },
         },
     },
@@ -47,4 +66,4 @@ export const themeMui = createTheme(adaptV4Theme({
             fontSize: "2rem",
         },
     },
-}));
+});

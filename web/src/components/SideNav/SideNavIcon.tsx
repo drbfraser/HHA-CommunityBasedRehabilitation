@@ -10,7 +10,7 @@ import { Alert } from "@mui/material";
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 import { IPage, PageName } from "util/pages";
 
 interface IProps {
@@ -24,7 +24,8 @@ const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
     const [isUnreadAlertCountSet, setIsUnreadAlertCountSet] = useState<boolean>(false);
 
     // fix issue with findDOMNode in strict mode
-    const NoTransition = ({ children }: any) => children;
+    // todosd: any chance we still need this?
+    // const NoTransition = ({ children }: any) => children;
 
     socket.on("broadcastAlert", () => {
         fetchAlerts();
@@ -69,21 +70,26 @@ const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
                     title={t(name)}
                     placement="top"
                     arrow
-                    // classes={{ tooltip: styles.tooltip }}
-                    // todo: sx replaces classes here correctly?
-                    sx={sideNavStyles.tooltip}
-                    TransitionComponent={NoTransition}
+                    componentsProps={{
+                        tooltip: {
+                            sx: sideNavStyles.tooltip as SxProps,
+                        },
+                    }}
+
+                    // todosd: this component needed?
+                    // TransitionComponent={NoTransition}
                 >
-                    {/* // todo: verify correct update */}
-                    {/* <div className={`${styles.icon} ${iconIsActive ? styles.active : ""}`}></div> */}
-                    <Box sx={{
-                        ...(sideNavStyles.icon),
-                        ...(iconIsActive && sideNavStyles.active)
-                        } as SxProps<Theme>}>
+                    <Box
+                        sx={
+                            {
+                                ...sideNavStyles.icon,
+                                ...(iconIsActive && sideNavStyles.active),
+                            } as SxProps<Theme>
+                        }
+                    >
                         {Icon && <Icon fontSize="large" />}
                     </Box>
                 </Tooltip>
-                
             </Link>
         );
     }

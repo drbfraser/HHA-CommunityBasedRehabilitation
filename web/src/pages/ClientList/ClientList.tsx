@@ -2,7 +2,6 @@ import React from "react";
 import { CSVLink } from "react-csv";
 import { useCallback, useEffect, useState, useRef } from "react";
 import {
-    GridCellValue, // TODOSD: fix deprecated
     GridColumnHeaderParams,
     DataGrid,
     GridDensityTypes,
@@ -12,7 +11,6 @@ import {
     GridSortCellParams,
     GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { clientListStyles } from "./ClientList.styles";
 import { compressedDataGridWidth, dataGridStyles } from "styles/DataGrid.styles";
 import {
     LinearProgress,
@@ -36,11 +34,14 @@ import { IRiskType, riskTypes } from "util/risks";
 import { SearchOption } from "@cbr/common/util/searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@mui/icons-material";
 import requestClientRows from "./requestClientRows";
+import { useZones } from "@cbr/common/util/hooks/zones";
+import { clientListStyles } from "./ClientList.styles";
 import { searchOptionsStyles } from "styles/SearchOptions.styles";
 import { hideColumnsStyles } from "styles/HideColumns.styles";
-import { useZones } from "@cbr/common/util/hooks/zones";
 
-// todosd: update from GridCellParams -> GridSortCellParams ok?
+// manually define this type, as GridCellValue deprecated in MUI 5
+type GridCellValue = string | number | boolean | object | Date | null | undefined;
+
 const riskComparator = (
     v1: GridCellValue,
     v2: GridCellValue,
@@ -68,7 +69,7 @@ const RenderText = (params: GridRenderCellParams) => {
             variant={"body2"}
             color={params.row.is_active ? "textPrimary" : "textSecondary"}
         >
-            {String(params.value)} {/* todosd: String ok here? */}
+            {String(params.value)}
         </Typography>
     );
 };
@@ -260,7 +261,7 @@ const ClientList = () => {
                         Show Archived
                     </Typography>
                     <Checkbox
-                        // todosd: color="secondary"?? https://mui.com/material-ui/migration/v5-component-changes/
+                        color="secondary"
                         checked={archivedMode}
                         onChange={(e) => {
                             setArchivedMode(e.target.checked);
@@ -369,8 +370,7 @@ const ClientList = () => {
                 <CSVLink
                     filename="ClientList.csv"
                     data={sortClientsById(rows)}
-                    // className={styles.downloadSVCLink}
-                    style={{ textDecoration: "none" }} // todosd: does this replacement work?
+                    style={{ textDecoration: "none" }}
                 >
                     <Button variant="outlined" size="small">
                         EXPORT TO CSV{" "}

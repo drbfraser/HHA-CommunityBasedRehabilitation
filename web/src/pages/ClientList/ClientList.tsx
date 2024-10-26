@@ -338,6 +338,7 @@ const ClientList = () => {
                                         {column.headerName}
                                     </Typography>
                                     <Switch
+                                        color="secondary"
                                         checked={!column.hide}
                                         onClick={() => column.hideFunction(!column.hide)}
                                     />

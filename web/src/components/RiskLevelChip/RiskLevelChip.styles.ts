@@ -7,15 +7,3 @@ export const riskLevelChipStyles: Record<string, SxProps<Theme>> = {
         },
     },
 }
-
-// todo: delete
-// export const useStyles = makeStyles(
-//     {
-//         chip: {
-//             "& .MuiChip-label": {
-//                 color: "white",
-//             },
-//         },
-//     },
-//     { index: 1 }
-// );

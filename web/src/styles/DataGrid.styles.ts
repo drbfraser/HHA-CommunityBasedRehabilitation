@@ -1,12 +1,11 @@
 import { SxProps, Theme } from "@mui/material";
 
-// todo: should these be standardized somewhere else?
 export const compressedDataGridWidth = 700;
 export const mediaCompressedDataGrid = "@media (max-width: " + compressedDataGridWidth + "px)";
 
 export const dataGridStyles: Record<string, SxProps<Theme>> = {
     datagrid: {
-        marginTop: 10,
+        marginTop: "10px",
         border: 0,
         WebkitFontSmoothing: "auto",
         letterSpacing: "normal",
@@ -40,6 +39,9 @@ export const dataGridStyles: Record<string, SxProps<Theme>> = {
             cursor: "pointer",
         },
         "& .MuiDataGrid-colCell:focus, .MuiDataGrid-cell:focus": {
+            outline: "none",
+        },
+        "& .MuiDataGrid-colHeader:focus, .MuiDataGrid-columnHeader:focus-within": {
             outline: "none",
         },
         // Hide scrollbars on Windows

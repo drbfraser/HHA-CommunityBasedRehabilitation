@@ -304,12 +304,13 @@ const Dashboard = () => {
                                 <DataGrid
                                     sx={dataGridStyles.datagrid}
                                     rows={clients}
-                                    hideFooterPagination
+                                    // todosd: verify no footer or pagination needed
+                                    hideFooter
                                     loading={isPriorityClientsLoading}
                                     columns={priorityClientsColumns}
                                     pageSize={5}
-                                    onRowClick={handleClientRowClick}
                                     density={GridDensityTypes.Comfortable}
+                                    onRowClick={handleClientRowClick}                                    
                                     components={{
                                         NoRowsOverlay: RenderNoPriorityClientsOverlay,
                                     }}
@@ -328,6 +329,8 @@ const Dashboard = () => {
                             <Box sx={dataGridStyles.dashboardTables}>
                                 <DataGrid
                                     sx={dataGridStyles.datagrid}
+                                    // todosd: verify we want pagination options at all
+                                    rowsPerPageOptions={[5, 25, 50]}
                                     rows={referrals}
                                     loading={referralsLoading}
                                     columns={outstandingReferralsColumns}

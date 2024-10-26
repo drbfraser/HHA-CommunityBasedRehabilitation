@@ -1,15 +1,13 @@
 import { themeColors } from "@cbr/common/util/colors";
 import { SxProps, Theme } from '@mui/material';
-
-// todo: replace "@media (max-width: 800px)" with mediaMobile?
-// import { mediaMobile } from "theme.styles";
+import { mediaMobile } from "theme.styles";
 
 export const sideNavStyles: Record<string, SxProps<Theme>> = {
     container: {
         display: "flex",
         flexDirection: "column",
-        width: "100px", // todo: %?
-        "@media (max-width: 800px)": { 
+        width: "100px",
+        [mediaMobile]: { 
             flexDirection: "row",
             justifyContent: "space-evenly",
             width: "100%",
@@ -46,7 +44,7 @@ export const sideNavStyles: Record<string, SxProps<Theme>> = {
         width: "75px",
         padding: "10px",
         backgroundColor: "rgba(255, 255, 255, 0.1)",
-        "@media (max-width: 800px)": {
+        [mediaMobile]: {
             display: "none",
         }
     },
@@ -56,7 +54,7 @@ export const sideNavStyles: Record<string, SxProps<Theme>> = {
             right: "20px",
             top: "15px",
         },
-        "@media (max-width: 800px)": {
+        [mediaMobile]: {
             "& .MuiBadge-badge": {
                 right: "10px",
             },
@@ -65,7 +63,7 @@ export const sideNavStyles: Record<string, SxProps<Theme>> = {
 }
 
 
-// todo: remove
+// todosd: remove
 // export const useStyles = makeStyles(
 //     {
 //         container: {

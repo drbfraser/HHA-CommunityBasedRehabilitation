@@ -53,7 +53,7 @@ const Dashboard = () => {
                 ).json();
 
                 // const priorityClients: GridRowsProp = tempClients 
-                const priorityClients = tempClients  // todo: set type back to GridRowsProp?  not mutable?
+                const priorityClients = tempClients  // todosd: set type back to GridRowsProp?  not mutable?
                     .sort(clientPrioritySort)
                     .slice(0, 5)
                     .map((row: IClientSummary) => {
@@ -155,12 +155,12 @@ const Dashboard = () => {
     };
 
     const RenderText = (params: GridRenderCellParams) => (
-        <Typography variant={"body2"}>{String(params.value)}</Typography> // todosd: String() ok?
+        <Typography variant={"body2"}>{String(params.value)}</Typography>
     );
     const riskComparator = (
         v1: GridCellValue,
         v2: GridCellValue,
-        params1: GridSortCellParams, // todosd: ok to update GridCellParams to GridSortCellParams?
+        params1: GridSortCellParams,
         params2: GridSortCellParams
     ) => {
         const risk1: IRiskLevel = riskLevels[String(params1.value)];
@@ -268,7 +268,6 @@ const Dashboard = () => {
             {unreadAlertsCount > 0 && (
                 <Alert severity="info">
                     <Typography variant="body1">
-                        {/* todosd: verify that passing unreadAlertsCount like this doesn't break anything */}
                         <Trans i18nKey="dashboard.newInboxMessages" count={unreadAlertsCount} values={{unreadAlertsCount}}>
                             -You have <b>{unreadAlertsCount}</b> new message
                             {unreadAlertsCount > 1 && "s"} in your inbox

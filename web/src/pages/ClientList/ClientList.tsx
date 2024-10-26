@@ -359,12 +359,6 @@ const ClientList = () => {
                 density={GridDensityTypes.Comfortable}
                 onRowClick={onRowClick}
                 pagination
-                sortModel={[
-                    {
-                        field: "name",
-                        sort: "asc",
-                    },
-                ]}
             />
             <Box sx={clientListStyles.downloadSVC}>
                 <CSVLink

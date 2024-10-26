@@ -51,6 +51,7 @@ export const clientListStyles: Record<string, SxProps<Theme>> = {
     },
 }
 
+// todosd: remove
 // export const useStyles = makeStyles(
 //     {
 //         root: {

@@ -4,13 +4,13 @@ export const searchOptionsStyles: Record<string, SxProps<Theme>> = {
     searchOptions: {
         verticalAlign: "top",
         display: "inline-block",
-        paddingRight: 2,
+        paddingRight: "2px",
         "& .MuiSelect-root": {
-            minWidth: 43,
+            minWidth: "43px",
         },
     },
     zoneOptions: {
-        minWidth: 175,
+        minWidth: "175px",
     },
 }
 

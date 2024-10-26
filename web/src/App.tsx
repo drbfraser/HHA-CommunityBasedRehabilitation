@@ -36,7 +36,6 @@ const App = () => {
         const user = useCurrentUser();
         const { t } = useTranslation();
 
-        // todosd: verify no consequences from replacing all <div> with Box
         return (
             <Box sx={appStyles.container}>
                 <SideNav />

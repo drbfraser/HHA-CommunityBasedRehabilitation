@@ -6,12 +6,11 @@ import { Cancel, CheckCircle, FiberManualRecord } from "@mui/icons-material";
 import {
     DataGrid,
     GridColumnHeaderParams,
-    GridCellValue,  // todosd: deprecated
     GridRowParams,
     GridDensityTypes,
     GridOverlay,
     GridRowsProp,
-    GridRowData,    // todosd: deprecated
+    GridRowModel,
     GridSortCellParams,
     GridRenderCellParams,
 } from "@mui/x-data-grid";
@@ -28,11 +27,14 @@ import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/ri
 import { IRiskType, riskTypes } from "util/risks";
 import { dataGridStyles } from "styles/DataGrid.styles";
 
+// manually define this type, as GridCellValue deprecated in MUI 5
+type GridCellValue = string | number | boolean | object | Date | null | undefined;
+
 const Dashboard = () => {
     const history = useHistory();
     const { t } = useTranslation();
 
-    const [clients, setClients] = useState<GridRowData[]>([]);
+    const [clients, setClients] = useState<GridRowModel[]>([]);
     const [referrals, setReferrals] = useState<GridRowsProp>([]);
     const zones = useZones();
     const [isPriorityClientsLoading, setPriorityClientsLoading] = useState<boolean>(true);

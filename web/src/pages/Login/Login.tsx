@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -84,7 +84,10 @@ const Login = () => {
                     {t("login.login")}
                 </Typography>
                 <LoginAlert />
-                <form style={loginStyles.loginForm as React.CSSProperties} onSubmit={(e) => handleLogin(e)}>
+                <form
+                    style={loginStyles.loginForm as React.CSSProperties}
+                    onSubmit={(e) => handleLogin(e)}
+                >
                     <TextField
                         label={t("general.username")}
                         variant="standard"
@@ -97,8 +100,8 @@ const Login = () => {
                         onChange={(e) => setUsername(e.target.value)}
                     />
                     <TextField
-                        variant="standard"
                         label={t("general.password")}
+                        variant="standard"
                         type="password"
                         fullWidth
                         required

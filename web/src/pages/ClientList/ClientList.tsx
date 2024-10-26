@@ -2,7 +2,7 @@ import React from "react";
 import { CSVLink } from "react-csv";
 import { useCallback, useEffect, useState, useRef } from "react";
 import {
-    GridCellValue, // TODO: fix deprecated
+    GridCellValue, // TODOSD: fix deprecated
     GridColumnHeaderParams,
     DataGrid,
     GridDensityTypes,
@@ -13,10 +13,7 @@ import {
     GridRenderCellParams,
 } from "@mui/x-data-grid";
 import { clientListStyles } from "./ClientList.styles";
-import {
-    compressedDataGridWidth,
-    dataGridStyles,
-} from "styles/DataGrid.styles";
+import { compressedDataGridWidth, dataGridStyles } from "styles/DataGrid.styles";
 import {
     LinearProgress,
     IconButton,
@@ -43,8 +40,7 @@ import { searchOptionsStyles } from "styles/SearchOptions.styles";
 import { hideColumnsStyles } from "styles/HideColumns.styles";
 import { useZones } from "@cbr/common/util/hooks/zones";
 
-
-// todo: update from GridCellParams -> GridSortCellParams ok?
+// todosd: update from GridCellParams -> GridSortCellParams ok?
 const riskComparator = (
     v1: GridCellValue,
     v2: GridCellValue,
@@ -72,7 +68,7 @@ const RenderText = (params: GridRenderCellParams) => {
             variant={"body2"}
             color={params.row.is_active ? "textPrimary" : "textSecondary"}
         >
-            {String(params.value)} {/* todo: String ok here? */}
+            {String(params.value)} {/* todosd: String ok here? */}
         </Typography>
     );
 };
@@ -163,7 +159,7 @@ const ClientList = () => {
         //     return a.id - b.id;
         // });
 
-        let sortById = rows.slice(0); // todo: re-add type?  still has functionality?
+        let sortById = rows.slice(0); // todosd: re-add type?  still has functionality?
 
         sortById.sort((a: any, b: any) => {
             return a.id - b.id;
@@ -264,7 +260,7 @@ const ClientList = () => {
                         Show Archived
                     </Typography>
                     <Checkbox
-                        // todo: color="secondary"?? https://mui.com/material-ui/migration/v5-component-changes/
+                        // todosd: color="secondary"?? https://mui.com/material-ui/migration/v5-component-changes/
                         checked={archivedMode}
                         onChange={(e) => {
                             setArchivedMode(e.target.checked);
@@ -374,7 +370,7 @@ const ClientList = () => {
                     filename="ClientList.csv"
                     data={sortClientsById(rows)}
                     // className={styles.downloadSVCLink}
-                    style={{ textDecoration: "none" }} // todo: does this replacement work?
+                    style={{ textDecoration: "none" }} // todosd: does this replacement work?
                 >
                     <Button variant="outlined" size="small">
                         EXPORT TO CSV{" "}

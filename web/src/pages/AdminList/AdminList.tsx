@@ -251,12 +251,6 @@ const AdminList = () => {
                     density={GridDensityTypes.Comfortable}
                     onRowClick={onRowClick}
                     pagination
-                    sortModel={[
-                        {
-                            field: "name",
-                            sort: "asc",
-                        },
-                    ]}
                 />
             </Box>
         </Box>

@@ -38,8 +38,6 @@ export const riskTypes: { [key: string]: IRiskType } = {
 };
 
 export const getTranslatedRiskName = (t: TFunction, riskType: RiskType): string => {
-    console.log(riskType);
-
     switch (riskType) {
         case RiskType.HEALTH:
             return t("risks.health");

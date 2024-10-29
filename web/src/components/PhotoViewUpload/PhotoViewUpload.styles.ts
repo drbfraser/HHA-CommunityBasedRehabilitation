@@ -7,27 +7,16 @@ export const photoViewUploadStyles: Record<string, SxProps<Theme>> = {
         },
         position: "relative",
         display: "block",
-        marginBottom: 15,
+        marginBottom: "15px",
         overflow: "hidden",
         marginLeft: "auto",
         marginRight: "auto",
         cursor: "pointer",
     },
-    // todo: refactor this to only have the &:hover
     profileUploadHover: {
-        "& .MuiCardContent-root": {
-            padding: "16px",
-        },
-        position: "relative",
-        display: "block",
-        marginBottom: 15,
-        overflow: "hidden",
-        marginLeft: "auto",
-        marginRight: "auto",
-        cursor: "pointer",
         "&:hover": {
             opacity: 0.5,
-            "& $uploadIcon": {
+            "& #uploadIcon": {
                 opacity: 1,
             },
         },
@@ -64,7 +53,7 @@ export const photoViewUploadStyles: Record<string, SxProps<Theme>> = {
     },
 }
 
-// todo: remove unused
+// todosd: remove unused
 // export const useStyles = makeStyles(
 //     {
 //         profileImgContainer: {

@@ -9,8 +9,8 @@ import {
     DialogActions,
     DialogContent,
     LinearProgress,
+    SxProps,
 } from "@mui/material";
-import { photoViewUploadStyles } from "./PhotoViewUpload.styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import Cropper from "react-cropper";
@@ -18,6 +18,7 @@ import "cropperjs/dist/cropper.css";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { useIsMounted } from "util/hooks/useIsMounted";
 import { helperImgCompress } from "components/ReferralPhotoView/imgCompressHelper";
+import { photoViewUploadStyles } from "./PhotoViewUpload.styles";
 
 interface IProps {
     isEditing: boolean;
@@ -245,8 +246,11 @@ export const ProfilePicCard = (props: IProps) => {
                 //         ? styles.profileImgContainer
                 //         : `${styles.profileImgContainer} ${styles.profileUploadHover}`
                 // }
-                // todo: better way to merge sx
-                sx={!props.isEditing ? photoViewUploadStyles.profileImgContainer : photoViewUploadStyles.profileUploadHover}
+                // todosd: better way to merge sx
+                sx={!props.isEditing ? photoViewUploadStyles.profileImgContainer : {
+                    ...photoViewUploadStyles.profileImgContainer,
+                    ...photoViewUploadStyles.profileUploadHover
+                } as SxProps}
                 >
                 <CardContent
                     onClick={() =>
@@ -256,7 +260,7 @@ export const ProfilePicCard = (props: IProps) => {
                     {imgSrcState && (
                         <Box component="img" sx={photoViewUploadStyles.profilePicture} src={imgSrcState} alt="user-icon" />
                     )}
-                    <Box sx={photoViewUploadStyles.uploadIcon}>
+                    <Box id="uploadIcon" sx={photoViewUploadStyles.uploadIcon}>
                         <CloudUploadIcon />
                         <input
                             type="file"

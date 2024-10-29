@@ -60,7 +60,7 @@ const UserPasswordEdit = () => {
                     <Box sx={userStyles.container}>
                         <Form>
                             <Grid container spacing={1}>
-                                <Grid item md={3} xs={12}>
+                                <Grid item md={4} xs={12}>
                                     <Field
                                         component={TextField}
                                         name={ChangePasswordField.oldPassword}
@@ -75,7 +75,7 @@ const UserPasswordEdit = () => {
                                         fullWidth
                                     />
                                 </Grid>
-                                <Grid item md={3} xs={12}>
+                                <Grid item md={4} xs={12}>
                                     <Grid>
                                         <Field
                                             component={TextField}

@@ -50,7 +50,7 @@ export const timelineStyles: Record<string, SxProps<Theme>> = {
     },
 };
 
-// todo: remove
+// todosd: remove
 // export const useTimelineStyles = makeStyles(
 //     {
 //         timeline: {

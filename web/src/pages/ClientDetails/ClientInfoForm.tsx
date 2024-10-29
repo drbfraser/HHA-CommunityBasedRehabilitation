@@ -31,8 +31,8 @@ import {
     webClientDetailsValidationSchema,
 } from "@cbr/common/forms/Client/clientFields";
 import { IUser } from "@cbr/common/util/users";
-import { clientFormStyles } from "../NewClient/ClientForm.styles";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
+import { clientFormStyles } from "../NewClient/ClientForm.styles";
 
 interface IProps {
     clientInfo: IClient;
@@ -332,6 +332,7 @@ const ClientInfoForm = (props: IProps) => {
                                     <Field
                                         component={CheckboxWithLabel}
                                         type="checkbox"
+                                        color="secondary"
                                         disabled={!isEditing}
                                         sx={clientFormStyles.disabledTextField}
                                         name={ClientDetailsFields.caregiver_present}
@@ -355,8 +356,10 @@ const ClientInfoForm = (props: IProps) => {
                                                 <Grid container direction="row" spacing={2}>
                                                     <Grid item md={8} xs={12}>
                                                         <Field
-                                                            // todosd: make not a string
-                                                            sx={`${clientFormStyles.caregiverInputField} ${clientFormStyles.disabledTextField}`}
+                                                            sx={{
+                                                                ...clientFormStyles.caregiverInputField,
+                                                                ...clientFormStyles.disabledTextField
+                                                            }}
                                                             component={TextField}
                                                             disabled={!isEditing}
                                                             name={
@@ -375,8 +378,10 @@ const ClientInfoForm = (props: IProps) => {
                                                     </Grid>
                                                     <Grid item md={8} xs={12}>
                                                         <Field
-                                                            // todosd: make not string concat
-                                                            sx={`${clientFormStyles.caregiverInputField} ${clientFormStyles.disabledTextField}`}
+                                                            sx={{
+                                                                ...clientFormStyles.caregiverInputField,
+                                                                ...clientFormStyles.disabledTextField
+                                                            }}
                                                             component={TextField}
                                                             name={
                                                                 ClientDetailsFields.caregiver_email
@@ -395,8 +400,10 @@ const ClientInfoForm = (props: IProps) => {
                                                     </Grid>
                                                     <Grid item md={8} xs={12}>
                                                         <Field
-                                                            // todosd: no string concat
-                                                            sx={`${clientFormStyles.caregiverInputField} ${clientFormStyles.disabledTextField}`}
+                                                            sx={{
+                                                                ...clientFormStyles.caregiverInputField,
+                                                                ...clientFormStyles.disabledTextField
+                                                            }}
                                                             component={TextField}
                                                             name={
                                                                 ClientDetailsFields.caregiver_phone

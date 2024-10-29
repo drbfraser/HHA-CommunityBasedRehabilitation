@@ -1,5 +1,5 @@
 import { themeColors } from "@cbr/common/util/colors";
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const adminStyles: Record<string, SxProps<Theme>> = {
     container: {
@@ -26,7 +26,7 @@ export const adminStyles: Record<string, SxProps<Theme>> = {
     btn: {
         marginRight: "8px",
     },
-}
+};
 
 // todo: remove
 // export const useStyles = makeStyles(

@@ -241,24 +241,27 @@ export const ProfilePicCard = (props: IProps) => {
     return (
         <>
             <Card
-                // className={
-                //     !props.isEditing
-                //         ? styles.profileImgContainer
-                //         : `${styles.profileImgContainer} ${styles.profileUploadHover}`
-                // }
-                // todosd: better way to merge sx
-                sx={!props.isEditing ? photoViewUploadStyles.profileImgContainer : {
-                    ...photoViewUploadStyles.profileImgContainer,
-                    ...photoViewUploadStyles.profileUploadHover
-                } as SxProps}
-                >
+                sx={
+                    !props.isEditing
+                        ? photoViewUploadStyles.profileImgContainer
+                        : ({
+                              ...photoViewUploadStyles.profileImgContainer,
+                              ...photoViewUploadStyles.profileUploadHover,
+                          } as SxProps)
+                }
+            >
                 <CardContent
                     onClick={() =>
                         !props.isEditing ? setIsViewingPicture(true) : triggerFileUpload()
                     }
                 >
                     {imgSrcState && (
-                        <Box component="img" sx={photoViewUploadStyles.profilePicture} src={imgSrcState} alt="user-icon" />
+                        <Box
+                            component="img"
+                            sx={photoViewUploadStyles.profilePicture}
+                            src={imgSrcState}
+                            alt="user-icon"
+                        />
                     )}
                     <Box id="uploadIcon" sx={photoViewUploadStyles.uploadIcon}>
                         <CloudUploadIcon />

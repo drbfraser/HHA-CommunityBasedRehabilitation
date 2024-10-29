@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { Box, FormControl, MenuItem } from "@mui/material";
 import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
-import { Alert, Skeleton } from '@mui/material';
+import { Alert, Skeleton } from "@mui/material";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
 import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -149,7 +149,9 @@ const AdminEdit = () => {
                                 //     values.is_active ? styles["disableBtn"] : styles["activeBtn"]
                                 // }
                                 sx={{
-                                    ...(values.is_active ? adminStyles.disableBtn : adminStyles.activeBtn)
+                                    ...(values.is_active
+                                        ? adminStyles.disableBtn
+                                        : adminStyles.activeBtn),
                                 }}
                                 disabled={isSubmitting}
                                 onClick={() =>

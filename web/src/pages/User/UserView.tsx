@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Alert, Skeleton  } from "@mui/material";
+import { Box, Button, Alert, Skeleton } from "@mui/material";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
@@ -17,7 +17,7 @@ const UserView = () => {
     };
 
     return (
-        (<Box sx={userStyles.container}>
+        <Box sx={userStyles.container}>
             {user === APILoadError ? (
                 <Alert severity="error">Something went wrong. Please go back and try again.</Alert>
             ) : user ? (
@@ -55,7 +55,7 @@ const UserView = () => {
             ) : (
                 <Skeleton variant="rectangular" height={400} />
             )}
-        </Box>)
+        </Box>
     );
 };
 

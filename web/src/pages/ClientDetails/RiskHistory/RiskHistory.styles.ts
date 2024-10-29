@@ -1,5 +1,5 @@
 import { riskLevels } from "@cbr/common/util/risks";
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 // remove all lines from the cartesian grid
 const chartContainer: { [key: string]: React.CSSProperties } = {
@@ -23,7 +23,7 @@ Object.values(riskLevels).forEach(({ color }, i) => {
 // export const chartContainerStyles = Object.keys(chartContainer).reduce((accumulator, key) => {
 //     // transform the key from camelCase to kebab-case
 //     const cssKey = kebabCase(key)
-    
+
 //     // remove ' in value
 //     const cssValue = (chartContainer[key] as string).replace("'", "")
 //     // build the result
@@ -40,7 +40,7 @@ export const riskHistoryStyles: Record<string, SxProps<Theme>> = {
         width: "90% !important",
         margin: "0 auto",
     },
-}
+};
 
 // todosd: remove
 // export const useStyles = makeStyles(

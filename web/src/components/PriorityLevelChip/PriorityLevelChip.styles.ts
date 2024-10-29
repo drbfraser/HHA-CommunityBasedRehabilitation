@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const priorityLevelChipStyles: Record<string, SxProps<Theme>> = {
     chip: {
@@ -6,7 +6,7 @@ export const priorityLevelChipStyles: Record<string, SxProps<Theme>> = {
             color: "white",
         },
     },
-}
+};
 
 // todo: remove
 // export const useStyles = makeStyles(

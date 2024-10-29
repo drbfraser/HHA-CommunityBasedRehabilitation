@@ -5,7 +5,7 @@ import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import { Alert, Box, Skeleton } from '@mui/material';
+import { Alert, Box, Skeleton } from "@mui/material";
 
 import { handleUpdatePassword } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";

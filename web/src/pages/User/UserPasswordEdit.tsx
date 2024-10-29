@@ -1,7 +1,7 @@
 import { userStyles } from "./User.styles";
 import { TextField } from "formik-mui";
 import { Field, Form, Formik } from "formik";
-import { Alert, Box, Skeleton } from '@mui/material';
+import { Alert, Box, Skeleton } from "@mui/material";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
 import Grid from "@mui/material/Grid";

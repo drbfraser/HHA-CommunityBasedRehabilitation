@@ -11,7 +11,7 @@ import { IAlert, PriorityLevel, priorityLevels } from "@cbr/common/util/alerts";
 import { timestampToDate } from "@cbr/common/util/dates";
 import { compressedDataGridWidth } from "styles/DataGrid.styles";
 import PriorityLevelChip from "components/PriorityLevelChip/PriorityLevelChip";
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 // todosd: move to external file?
 const alertListStyles: Record<string, SxProps<Theme>> = {

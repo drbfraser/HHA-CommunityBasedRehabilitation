@@ -31,7 +31,7 @@ import { newVisitStyles } from "./NewVisit.styles";
 import { IRisk } from "@cbr/common/util/risks";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IClient } from "@cbr/common/util/clients";
-import { Alert } from '@mui/material';
+import { Alert } from "@mui/material";
 import { TZoneMap, useZones } from "@cbr/common/util/hooks/zones";
 import GoBackButton from "components/GoBackButton/GoBackButton";
 
@@ -150,7 +150,7 @@ interface IStepProps {
 const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[]) => {
     return ({ formikProps }: IStepProps) => {
         return (
-            (<FormControl variant="standard">
+            <FormControl variant="standard">
                 <FormLabel focused={false}>Select an Improvement</FormLabel>
                 <FieldArray
                     name={VisitFormField.improvements}
@@ -168,7 +168,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[]) => {
                 />
                 <br />
                 <OutcomeField visitType={visitType} risks={risks} />
-            </FormControl>)
+            </FormControl>
         );
     };
 };
@@ -183,7 +183,6 @@ const VisitReasonStep = (
     setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>,
     zones: TZoneMap
 ) => {
-
     const onCheckboxChange = (checked: boolean, visitType: string) => {
         // We can't fully rely on formikProps.values[type] here because it might not be updated yet
         setEnabledSteps(
@@ -205,59 +204,61 @@ const VisitReasonStep = (
             formikProps.setFieldValue(`${VisitFormField.outcomes}.${visitType}`, undefined);
         }
     };
-    return (<>
-        <FormLabel focused={false}>Where was the Visit?</FormLabel>
-        <FormControl
-            sx={newVisitStyles.visitLocationContainer}
-            fullWidth
-            required
-            variant="outlined"
-        >
-            <Field
-                sx={newVisitStyles.visitLocation}
-                component={TextField}
-                name={VisitFormField.village}
-                label={visitFieldLabels[VisitFormField.village]}
-                variant="outlined"
+    return (
+        <>
+            <FormLabel focused={false}>Where was the Visit?</FormLabel>
+            <FormControl
+                sx={newVisitStyles.visitLocationContainer}
                 fullWidth
                 required
-            />
-            <Field
-                sx={newVisitStyles.visitLocation}
-                component={TextField}
-                select
-                label={visitFieldLabels[VisitFormField.zone]}
-                name={VisitFormField.zone}
                 variant="outlined"
-                required
             >
-                {Array.from(zones).map(([id, name]) => (
-                    <MenuItem key={id} value={id}>
-                        {name}
-                    </MenuItem>
-                ))}
-            </Field>
-        </FormControl>
-        <br />
-        <FormControl variant="standard" component="fieldset">
-            <FormLabel focused={false}>Select the Reasons for the Visit</FormLabel>
-            <FormGroup>
-                {visitTypes.map((visitType) => (
-                    <Field
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        key={visitType}
-                        name={visitType}
-                        Label={{ label: visitFieldLabels[visitType] }}
-                        onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                            formikProps.handleChange(event);
-                            onCheckboxChange(event.currentTarget.checked, visitType);
-                        }}
-                    />
-                ))}
-            </FormGroup>
-        </FormControl>
-    </>);
+                <Field
+                    sx={newVisitStyles.visitLocation}
+                    component={TextField}
+                    name={VisitFormField.village}
+                    label={visitFieldLabels[VisitFormField.village]}
+                    variant="outlined"
+                    fullWidth
+                    required
+                />
+                <Field
+                    sx={newVisitStyles.visitLocation}
+                    component={TextField}
+                    select
+                    label={visitFieldLabels[VisitFormField.zone]}
+                    name={VisitFormField.zone}
+                    variant="outlined"
+                    required
+                >
+                    {Array.from(zones).map(([id, name]) => (
+                        <MenuItem key={id} value={id}>
+                            {name}
+                        </MenuItem>
+                    ))}
+                </Field>
+            </FormControl>
+            <br />
+            <FormControl variant="standard" component="fieldset">
+                <FormLabel focused={false}>Select the Reasons for the Visit</FormLabel>
+                <FormGroup>
+                    {visitTypes.map((visitType) => (
+                        <Field
+                            component={CheckboxWithLabel}
+                            type="checkbox"
+                            key={visitType}
+                            name={visitType}
+                            Label={{ label: visitFieldLabels[visitType] }}
+                            onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                                formikProps.handleChange(event);
+                                onCheckboxChange(event.currentTarget.checked, visitType);
+                            }}
+                        />
+                    ))}
+                </FormGroup>
+            </FormControl>
+        </>
+    );
 };
 
 const NewVisit = () => {

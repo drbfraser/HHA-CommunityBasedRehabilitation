@@ -40,8 +40,8 @@ const WheelchairForm = (props: IFormProps) => {
             <FormLabel>{t("referral.clientHipWidth")}?</FormLabel>
             <br />
             <Box sx={newReferralStyles.fieldIndent}>
-            {/* <div className={`${styles.fieldIndent}`}> */}
-            {/* todosd: use this old way to access css? */}
+                {/* <div className={`${styles.fieldIndent}`}> */}
+                {/* todosd: use this old way to access css? */}
                 <Field
                     sx={newReferralStyles.hipWidth}
                     component={TextField}

@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 import { mediaCompressedDataGrid } from "styles/DataGrid.styles";
 import { mediaMobile } from "theme.styles";
 
@@ -15,7 +15,7 @@ export const clientListStyles: Record<string, SxProps<Theme>> = {
         // The width where the DataGrid gets too tight
         [mediaCompressedDataGrid]: {
             paddingBottom: "71px",
-        }
+        },
     },
     switch: {
         position: "absolute",
@@ -26,7 +26,7 @@ export const clientListStyles: Record<string, SxProps<Theme>> = {
             float: "none",
             textAlign: "center",
             paddingBottom: "5px",
-        }
+        },
     },
     checkbox: {
         position: "absolute",
@@ -38,7 +38,7 @@ export const clientListStyles: Record<string, SxProps<Theme>> = {
         [mediaCompressedDataGrid]: {
             flexGrow: 1,
             justifyContent: "center",
-        }
+        },
     },
     downloadSVC: {
         position: "relative",
@@ -49,7 +49,7 @@ export const clientListStyles: Record<string, SxProps<Theme>> = {
     downloadSVCLink: {
         textDecoration: "none",
     },
-}
+};
 
 // todosd: remove
 // export const useStyles = makeStyles(

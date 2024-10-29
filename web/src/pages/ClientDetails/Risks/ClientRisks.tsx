@@ -14,7 +14,7 @@ import {
     MenuItem,
     FormControl,
     Box,
-    Skeleton
+    Skeleton,
 } from "@mui/material";
 
 import { IRisk } from "@cbr/common/util/risks";
@@ -99,7 +99,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
     };
 
     return (
-        (<Box sx={clientRiskStyles.riskCardContainer}>
+        <Box sx={clientRiskStyles.riskCardContainer}>
             <Grid container spacing={5} direction="row" justifyContent="flex-start">
                 {Object.keys(riskTypes).map((type) => {
                     const risk = clientInfo?.risks.find((r) => r.risk_type === type);
@@ -114,7 +114,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                     );
                 })}
             </Grid>
-        </Box>)
+        </Box>
     );
 };
 

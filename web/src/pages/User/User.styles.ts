@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const userStyles: Record<string, SxProps<Theme>> = {
     container: {
@@ -18,4 +18,4 @@ export const userStyles: Record<string, SxProps<Theme>> = {
         display: "flex",
         justifyContent: "flex-end",
     },
-}
+};

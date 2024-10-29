@@ -1,6 +1,6 @@
 import { Link, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 import React, { useEffect, useState } from "react";
 import {
     BarChart,
@@ -78,7 +78,7 @@ const VisitStats = ({ stats }: IProps) => {
     };
 
     return (
-        (<Grid container spacing={3} style={{ minHeight: CHART_HEIGHT }}>
+        <Grid container spacing={3} style={{ minHeight: CHART_HEIGHT }}>
             <Grid item xs={12} lg={7} xl={8}>
                 <Typography variant="h3">By Zone</Typography>
                 <Typography variant="body1">
@@ -123,7 +123,8 @@ const VisitStats = ({ stats }: IProps) => {
                             component="button"
                             variant="body1"
                             onClick={() => setBreakdownZoneId(0)}
-                            underline="hover">
+                            underline="hover"
+                        >
                             View data for all zones.
                         </Link>
                     )}
@@ -150,7 +151,7 @@ const VisitStats = ({ stats }: IProps) => {
                     <Skeleton variant="rectangular" height={400} />
                 )}
             </Grid>
-        </Grid>)
+        </Grid>
     );
 };
 

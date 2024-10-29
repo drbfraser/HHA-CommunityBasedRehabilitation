@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Collapse, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Alert } from '@mui/material';
+import { Alert } from "@mui/material";
 
 const AlertNotification = (props: any) => {
     return (

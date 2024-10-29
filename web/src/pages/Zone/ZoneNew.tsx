@@ -11,9 +11,8 @@ import { APIFetchFailError } from "@cbr/common/util/endpoints";
 import { Box } from "@mui/material";
 
 const ZoneNew = () => {
-
     return (
-        (<Formik
+        <Formik
             initialValues={zoneInitialValues}
             onSubmit={(values, formikHelpers) => {
                 handleNewZoneSubmit(values, formikHelpers)
@@ -73,7 +72,7 @@ const ZoneNew = () => {
                     </Form>
                 </Box>
             )}
-        </Formik>)
+        </Formik>
     );
 };
 

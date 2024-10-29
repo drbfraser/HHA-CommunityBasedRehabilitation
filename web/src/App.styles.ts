@@ -2,7 +2,6 @@ import { themeColors } from "@cbr/common/util/colors";
 import { SxProps, Theme } from "@mui/material";
 import { mediaMobile } from "theme.styles";
 
-
 export const appStyles: Record<string, SxProps<Theme>> = {
     container: {
         minHeight: "100%",
@@ -11,7 +10,7 @@ export const appStyles: Record<string, SxProps<Theme>> = {
         [mediaMobile]: {
             flexDirection: "column-reverse",
             height: "100%",
-        }
+        },
     },
     pageContainer: {
         width: "100%",
@@ -27,7 +26,7 @@ export const appStyles: Record<string, SxProps<Theme>> = {
             overflowY: "auto",
             borderRadius: "0 0 30px 30px",
             boxShadow: "0px 5px 10px rgba(25, 25, 25, 0.2)",
-        }
+        },
     },
     pageContent: {
         marginTop: "20px",
@@ -37,7 +36,7 @@ export const appStyles: Record<string, SxProps<Theme>> = {
         boxShadow: "0px 0px 10px rgba(25, 25, 25, 0.1)",
         [mediaMobile]: {
             marginTop: "10px",
-        }
+        },
     },
     pageTitle: {
         marginLeft: "20px",
@@ -47,9 +46,9 @@ export const appStyles: Record<string, SxProps<Theme>> = {
             marginLeft: 0,
             fontSize: "40px",
             textAlign: "center",
-        }
+        },
     },
-}
+};
 
 // todosd: remove unused
 // export const useStyles = makeStyles(

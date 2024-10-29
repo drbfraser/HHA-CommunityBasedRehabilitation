@@ -13,7 +13,7 @@ import {
     AccordionDetails,
     Typography,
 } from "@mui/material";
-import { Skeleton, Alert } from '@mui/material';
+import { Skeleton, Alert } from "@mui/material";
 import { Assignment } from "@mui/icons-material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { timestampToDateTime } from "@cbr/common/util/dates";

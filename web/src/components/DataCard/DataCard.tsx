@@ -10,7 +10,6 @@ interface IDataCardProps {
 }
 
 const DataCard = ({ data }: IDataCardProps) => {
-
     return (
         <Card sx={dataCardStyles.container}>
             <CardContent>

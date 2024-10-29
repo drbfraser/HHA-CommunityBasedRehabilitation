@@ -16,7 +16,7 @@ import { handleDiscard, handleNewWebAlertSubmit } from "@cbr/common/forms/Alert/
 
 const AlertForm = () => {
     return (
-        (<Formik
+        <Formik
             initialValues={alertInitialValues}
             validationSchema={validationSchema}
             onSubmit={handleNewWebAlertSubmit}
@@ -109,7 +109,7 @@ const AlertForm = () => {
                     </Grid>
                 </Form>
             )}
-        </Formik>)
+        </Formik>
     );
 };
 

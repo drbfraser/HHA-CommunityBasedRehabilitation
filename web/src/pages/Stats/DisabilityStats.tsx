@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { Skeleton } from '@mui/material';
+import { Skeleton } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar } from "recharts";

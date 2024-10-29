@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 import { mediaCompressedDataGrid } from "styles/DataGrid.styles";
 import { mediaMobile } from "theme.styles";
 
@@ -14,7 +14,7 @@ export const adminListStyles: Record<string, SxProps<Theme>> = {
         },
         [mediaCompressedDataGrid]: {
             paddingBottom: "71px",
-        }
+        },
     },
     topContainer: {
         justifyContent: "flex-end",
@@ -22,7 +22,7 @@ export const adminListStyles: Record<string, SxProps<Theme>> = {
         [mediaCompressedDataGrid]: {
             flexGrow: 1,
             justifyContent: "center",
-        }
+        },
     },
     dataGridWrapper: {
         height: "100%",
@@ -31,12 +31,12 @@ export const adminListStyles: Record<string, SxProps<Theme>> = {
             height: "100%",
             width: "100%",
             marginTop: 0,
-        }
+        },
     },
     icon: {
         padding: "0px 15px 0px 0px",
     },
-}
+};
 
 // todo: remove
 // export const useStyles = makeStyles(

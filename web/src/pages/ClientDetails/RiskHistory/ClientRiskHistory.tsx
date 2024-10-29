@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch } from "react-router-dom";
 import Typography from "@mui/material/Typography";
-import Alert from '@mui/material/Alert';
-import Skeleton from '@mui/material/Skeleton';
+import Alert from "@mui/material/Alert";
+import Skeleton from "@mui/material/Skeleton";
 
 import { IClient } from "@cbr/common/util/clients";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";

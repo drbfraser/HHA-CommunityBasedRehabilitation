@@ -52,8 +52,8 @@ const Dashboard = () => {
                     await apiFetch(Endpoint.CLIENTS, "?is_active=true")
                 ).json();
 
-                // const priorityClients: GridRowsProp = tempClients 
-                const priorityClients = tempClients  // todosd: set type back to GridRowsProp?  not mutable?
+                // const priorityClients: GridRowsProp = tempClients
+                const priorityClients = tempClients // todosd: set type back to GridRowsProp?  not mutable?
                     .sort(clientPrioritySort)
                     .slice(0, 5)
                     .map((row: IClientSummary) => {
@@ -268,7 +268,11 @@ const Dashboard = () => {
             {unreadAlertsCount > 0 && (
                 <Alert severity="info">
                     <Typography variant="body1">
-                        <Trans i18nKey="dashboard.newInboxMessages" count={unreadAlertsCount} values={{unreadAlertsCount}}>
+                        <Trans
+                            i18nKey="dashboard.newInboxMessages"
+                            count={unreadAlertsCount}
+                            values={{ unreadAlertsCount }}
+                        >
                             -You have <b>{unreadAlertsCount}</b> new message
                             {unreadAlertsCount > 1 && "s"} in your inbox
                         </Trans>
@@ -311,7 +315,7 @@ const Dashboard = () => {
                                     columns={priorityClientsColumns}
                                     pageSize={5}
                                     density={GridDensityTypes.Comfortable}
-                                    onRowClick={handleClientRowClick}                                    
+                                    onRowClick={handleClientRowClick}
                                     components={{
                                         NoRowsOverlay: RenderNoPriorityClientsOverlay,
                                     }}

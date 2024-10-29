@@ -25,9 +25,7 @@ const TimelineEntry = ({ date, content, DotIcon, isBottomEntry, onClick }: IProp
 
     return (
         <TimelineItem>
-            <TimelineOppositeContent sx={timelineStyles.date}>
-                {date}
-            </TimelineOppositeContent>
+            <TimelineOppositeContent sx={timelineStyles.date}>{date}</TimelineOppositeContent>
             <TimelineSeparator>
                 <TimelineConnector />
                 <TimelineDot color="grey" variant="outlined">
@@ -35,7 +33,7 @@ const TimelineEntry = ({ date, content, DotIcon, isBottomEntry, onClick }: IProp
                 </TimelineDot>
                 {/* todosd: equiv to empty string? */}
                 {/* <TimelineConnector className={isBottomEntry ? timelineStyles.hidden : ""} /> */}
-                <TimelineConnector sx={isBottomEntry ? timelineStyles.hidden : {}} /> 
+                <TimelineConnector sx={isBottomEntry ? timelineStyles.hidden : {}} />
             </TimelineSeparator>
             <TimelineContent>
                 <div

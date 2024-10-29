@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const clientRiskStyles: Record<string, SxProps<Theme>> = {
     riskCardButtonAndBadge: {
@@ -9,7 +9,7 @@ export const clientRiskStyles: Record<string, SxProps<Theme>> = {
         marginRight: "10px",
         width: "100%",
     },
-}
+};
 
 // todosd: remove
 // export const useStyles = makeStyles(

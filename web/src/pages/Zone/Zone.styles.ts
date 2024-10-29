@@ -1,5 +1,5 @@
 import { themeColors } from "@cbr/common/util/colors";
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const zoneStyles: Record<string, SxProps<Theme>> = {
     container: {
@@ -26,7 +26,7 @@ export const zoneStyles: Record<string, SxProps<Theme>> = {
     btn: {
         marginRight: 8,
     },
-}
+};
 
 // todosd: remove
 // export const useStyles = makeStyles(

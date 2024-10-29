@@ -8,7 +8,7 @@ interface IResponseRow {
 
 const requestZoneRows = async (
     setFilteredRows: (rows: GridRowsProp) => void, // todo: RowsProp -> GridRowsProp ok?
-    setServerRows: (rows: GridRowsProp) => void,  // todo
+    setServerRows: (rows: GridRowsProp) => void, // todo
     setLoading: (loading: boolean) => void
 ) => {
     setLoading(true);
@@ -19,7 +19,8 @@ const requestZoneRows = async (
         const resp = await apiFetch(Endpoint.ZONES, urlParams);
 
         const responseRows: IResponseRow[] = await resp.json();
-        const rows: GridRowsProp = responseRows.map((responseRow) => { // todo
+        const rows: GridRowsProp = responseRows.map((responseRow) => {
+            // todo
             return {
                 id: responseRow.id,
                 zone: responseRow.zone_name ?? "",

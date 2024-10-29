@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const photoViewUploadStyles: Record<string, SxProps<Theme>> = {
     profileImgContainer: {
@@ -51,7 +51,7 @@ export const photoViewUploadStyles: Record<string, SxProps<Theme>> = {
             width: "13rem",
         },
     },
-}
+};
 
 // todosd: remove unused
 // export const useStyles = makeStyles(

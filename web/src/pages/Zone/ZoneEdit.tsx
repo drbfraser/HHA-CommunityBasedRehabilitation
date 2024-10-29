@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import { useRouteMatch } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { handleZoneEditSubmit } from "@cbr/common/forms/Zone/zoneFormsHandler";
-import { Alert, Box, Skeleton } from '@mui/material';
+import { Alert, Box, Skeleton } from "@mui/material";
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import { IZone } from "@cbr/common/util/zones";
 import { useZones } from "@cbr/common/util/hooks/zones";

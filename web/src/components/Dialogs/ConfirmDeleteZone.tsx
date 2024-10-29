@@ -83,7 +83,7 @@ export default function ConfirmDeleteZone(props: any) {
         );
     };
     return (
-        (<div>
+        <div>
             <Dialog
                 open={open}
                 onClose={() => setOpen(false)}
@@ -106,7 +106,8 @@ export default function ConfirmDeleteZone(props: any) {
                         id="demo-simple-select"
                         value={selectedZone}
                         label="Zone"
-                        onChange={handleSelectZone}>
+                        onChange={handleSelectZone}
+                    >
                         {Array.from(zones).map(
                             (zone) =>
                                 zone.id !== zoneId && (
@@ -143,6 +144,6 @@ export default function ConfirmDeleteZone(props: any) {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </div>)
+        </div>
     );
 }

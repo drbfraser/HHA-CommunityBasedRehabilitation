@@ -63,7 +63,7 @@ const AlertInbox = () => {
     };
 
     return (
-        (<Grid container justifyContent="center" alignItems="stretch" spacing={3}>
+        <Grid container justifyContent="center" alignItems="stretch" spacing={3}>
             <AlertList {...alertListProps} />
             <AlertDetail {...alertDetailProps} />
             {/* TODO: 
@@ -71,7 +71,7 @@ const AlertInbox = () => {
             */}
             {/* <AlertList alertListProps={alertListProps} alertData={alertData} />
             <AlertDetail alertDetailProps={alertDetailProps} alertData={alertData} /> */}
-        </Grid>)
+        </Grid>
     );
 };
 

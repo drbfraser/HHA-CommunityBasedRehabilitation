@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const riskLevelChipStyles: Record<string, SxProps<Theme>> = {
     chip: {
@@ -6,4 +6,4 @@ export const riskLevelChipStyles: Record<string, SxProps<Theme>> = {
             color: "white",
         },
     },
-}
+};

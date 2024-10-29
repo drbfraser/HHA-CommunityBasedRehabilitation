@@ -63,7 +63,7 @@ const ClientInfoForm = (props: IProps) => {
     }, []);
 
     return (
-        (<Formik
+        <Formik
             initialValues={
                 {
                     ...props.clientInfo,
@@ -490,7 +490,7 @@ const ClientInfoForm = (props: IProps) => {
                     </Grid>
                 </Grid>
             )}
-        </Formik>)
+        </Formik>
     );
 };
 

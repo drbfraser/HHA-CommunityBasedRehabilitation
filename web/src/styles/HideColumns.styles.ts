@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const hideColumnsStyles: Record<string, SxProps<Theme>> = {
     optionsContainer: {
@@ -15,7 +15,7 @@ export const hideColumnsStyles: Record<string, SxProps<Theme>> = {
         alignItems: "center",
         width: "100%",
     },
-}
+};
 
 // todosd: remove
 // export const useHideColumnsStyles = makeStyles(

@@ -67,7 +67,6 @@ export const dataGridStyles: Record<string, SxProps<Theme>> = {
     },
 };
 
-
 // todosd: remove unused
 // export const useDataGridStyles = makeStyles(
 //     {

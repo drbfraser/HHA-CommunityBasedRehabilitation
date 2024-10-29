@@ -23,7 +23,7 @@ const AdminView = () => {
     const handlePasswordEdit = () => history.push(`/admin/password/${userId}`);
 
     return (
-        (<Box sx={adminStyles.container}>
+        <Box sx={adminStyles.container}>
             {loadingError ? (
                 <Alert severity="error">
                     {t("alert.loadUserFailure")}
@@ -67,7 +67,7 @@ const AdminView = () => {
             ) : (
                 <Skeleton variant="rectangular" height={500} />
             )}
-        </Box>)
+        </Box>
     );
 };
 

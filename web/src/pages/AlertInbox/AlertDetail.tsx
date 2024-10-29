@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { IAlert } from "@cbr/common/util/alerts";
 import { useEffect } from "react";
 import { handleUpdateAlertSubmit, handleDeleteAlert } from "@cbr/common/forms/Alert/alertHandler";
-import { Box, SxProps, Theme } from '@mui/material';
+import { Box, SxProps, Theme } from "@mui/material";
 
 // todosd: move this styling to external file?
 const alertStyles: Record<string, SxProps<Theme>> = {

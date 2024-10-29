@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const newReferralStyles: Record<string, SxProps<Theme>> = {
     fieldIndent: {
@@ -10,7 +10,7 @@ export const newReferralStyles: Record<string, SxProps<Theme>> = {
     inches: {
         verticalAlign: "sub",
     },
-}
+};
 
 // todosd: remove
 // export const useStyles = makeStyles(

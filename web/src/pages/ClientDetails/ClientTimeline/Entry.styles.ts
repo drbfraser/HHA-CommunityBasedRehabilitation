@@ -1,5 +1,5 @@
 import { themeColors } from "@cbr/common/util/colors";
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const entryStyles: Record<string, SxProps<Theme>> = {
     impOutcomeAccordion: {
@@ -28,7 +28,7 @@ export const entryStyles: Record<string, SxProps<Theme>> = {
     resolveBtn: {
         color: themeColors.riskGreen,
     },
-}
+};
 
 // todosd: remove
 // export const useStyles = makeStyles(

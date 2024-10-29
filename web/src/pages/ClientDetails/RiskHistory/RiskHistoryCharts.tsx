@@ -97,7 +97,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
                 height={chartHeight}
                 className={`${riskHistoryStyles.chartContainer}`} // todosd: does this work?
             >
-            {/* <ResponsiveContainer width="100%" height={chartHeight} className={styles.chartContainer}> */}
+                {/* <ResponsiveContainer width="100%" height={chartHeight} className={styles.chartContainer}> */}
                 <LineChart>
                     <CartesianGrid strokeDasharray="6" vertical={false} />
                     <XAxis

@@ -1,5 +1,5 @@
 import { themeColors } from "@cbr/common/util/colors";
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const timelineStyles: Record<string, SxProps<Theme>> = {
     timeline: {
@@ -48,7 +48,7 @@ export const timelineStyles: Record<string, SxProps<Theme>> = {
     hidden: {
         visibility: "hidden",
     },
-}
+};
 
 // todo: remove
 // export const useTimelineStyles = makeStyles(

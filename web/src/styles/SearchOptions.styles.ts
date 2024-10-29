@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const searchOptionsStyles: Record<string, SxProps<Theme>> = {
     searchOptions: {
@@ -12,7 +12,7 @@ export const searchOptionsStyles: Record<string, SxProps<Theme>> = {
     zoneOptions: {
         minWidth: "175px",
     },
-}
+};
 
 // todosd: remove
 // export const useSearchOptionsStyles = makeStyles(

@@ -46,7 +46,7 @@ const renderApp = () => {
     const root = createRoot(container);
     root.render(
         <React.StrictMode>
-            <I18nextProvider i18n={getI18nInstance()}>                
+            <I18nextProvider i18n={getI18nInstance()}>
                 <ThemeProvider theme={themeMui}>
                     <CssBaseline />
                     <App />

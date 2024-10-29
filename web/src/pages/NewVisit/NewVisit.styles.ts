@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const newVisitStyles: Record<string, SxProps<Theme>> = {
     visitLocationContainer: {
@@ -12,7 +12,7 @@ export const newVisitStyles: Record<string, SxProps<Theme>> = {
         marginRight: "10px",
         marginTop: "10px",
     },
-}
+};
 
 // todosd: remove
 // export const useStyles = makeStyles(

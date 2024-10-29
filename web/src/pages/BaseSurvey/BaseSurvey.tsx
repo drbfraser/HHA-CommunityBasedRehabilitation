@@ -27,7 +27,7 @@ import {
 import { ArrowBack } from "@mui/icons-material";
 import history from "@cbr/common/util/history";
 import { useParams } from "react-router-dom";
-import { Alert } from '@mui/material';
+import { Alert } from "@mui/material";
 import {
     ChildNourish,
     childNourish,
@@ -174,7 +174,6 @@ const HealthForm = (props: IFormProps) => {
 };
 
 const EducationForm = (props: IFormProps) => {
-
     return (
         <div>
             <Field
@@ -284,7 +283,6 @@ const SocialForm = () => {
 };
 
 const LivelihoodForm = (props: IFormProps) => {
-
     return (
         <Box sx={adminStyles.fieldIndent}>
             <FormControl fullWidth variant="outlined">
@@ -361,7 +359,6 @@ const LivelihoodForm = (props: IFormProps) => {
 };
 
 const FoodForm = (props: IFormProps) => {
-
     return (
         <div>
             <FormLabel>Food security</FormLabel>
@@ -432,7 +429,6 @@ const FoodForm = (props: IFormProps) => {
 };
 
 const EmpowermentForm = (props: IFormProps) => {
-
     return (
         <div>
             <FormControl fullWidth variant="outlined">

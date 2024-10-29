@@ -1,5 +1,5 @@
 import { themeColors } from "@cbr/common/util/colors";
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from "@mui/material";
 
 export const clientFormStyles: Record<string, SxProps<Theme>> = {
     caregiverAccordion: {
@@ -37,12 +37,12 @@ export const clientFormStyles: Record<string, SxProps<Theme>> = {
         "@media (max-width: 960px)": {
             flex: 1,
             minWidth: "auto",
-        }
+        },
     },
     sideFormButton: {
         height: "100%",
     },
-}
+};
 
 // todosd: remove
 // export const useStyles = makeStyles(

@@ -1,0 +1,65 @@
+,risk_type,risk_level,requirement,goal
+0,SOCIAL,LO,Orthotic,Full Recovery
+1,HEALTH,CR,Physiotherapy,Sport Participation
+2,HEALTH,LO,Counseling,Improved Learning
+3,SOCIAL,CR,Wheelchair,Additional Mobility
+4,EDUCAT,ME,Orthotic,Improved Learning
+5,HEALTH,CR,Counseling,Improved Learning
+6,NUTRIT,HI,Counseling,Sport Participation
+7,SOCIAL,CR,Prosthetic,Full Recovery
+8,MENTAL,LO,Wheelchair,Pain Relief
+9,HEALTH,CR,Other,Pain Relief
+10,SOCIAL,HI,Physiotherapy,Pain Relief
+11,EDUCAT,LO,Orthotic,Sport Participation
+12,EDUCAT,CR,Prosthetic,Sport Participation
+13,NUTRIT,CR,Other,Improved Learning
+14,MENTAL,CR,Referral,Improved Learning
+15,NUTRIT,ME,Physiotherapy,Improved Learning
+16,HEALTH,LO,Orthotic,Additional Mobility
+17,SOCIAL,LO,Counseling,Sport Participation
+18,SOCIAL,HI,Physiotherapy,Pain Relief
+19,EDUCAT,ME,Orthotic,Full Recovery
+20,MENTAL,ME,Counseling,Sport Participation
+21,NUTRIT,ME,Prosthetic,Sport Participation
+22,MENTAL,ME,Physiotherapy,Improved Learning
+23,HEALTH,CR,Counseling,Full Recovery
+24,SOCIAL,HI,Wheelchair,Sport Participation
+25,EDUCAT,LO,Physiotherapy,Sport Participation
+26,EDUCAT,CR,Referral,Sport Participation
+27,NUTRIT,ME,Wheelchair,Improved Learning
+28,EDUCAT,CR,Counseling,Pain Relief
+29,MENTAL,ME,Prosthetic,Sport Participation
+30,NUTRIT,ME,Wheelchair Repair,Improved Learning
+31,MENTAL,CR,Orthotic,Pain Relief
+32,SOCIAL,LO,Wheelchair Repair,Full Recovery
+33,HEALTH,CR,Other,Sport Participation
+34,NUTRIT,HI,Orthotic,Full Recovery
+35,MENTAL,LO,Wheelchair,Additional Mobility
+36,MENTAL,ME,Wheelchair,Improved Learning
+37,EDUCAT,LO,Other,Additional Mobility
+38,HEALTH,CR,Other,Improved Learning
+39,NUTRIT,ME,Physiotherapy,Pain Relief
+40,SOCIAL,ME,Orthotic,Improved Learning
+41,HEALTH,ME,Prosthetic,Pain Relief
+42,EDUCAT,ME,Prosthetic,Sport Participation
+43,NUTRIT,CR,Other,Full Recovery
+44,MENTAL,CR,Physiotherapy,Pain Relief
+45,HEALTH,HI,Other,Additional Mobility
+46,SOCIAL,LO,Wheelchair,Pain Relief
+47,MENTAL,ME,Wheelchair Repair,Pain Relief
+48,NUTRIT,LO,Wheelchair,Improved Learning
+49,HEALTH,ME,Counseling,Additional Mobility
+50,NUTRIT,CR,Other,Sport Participation
+51,HEALTH,HI,Orthotic,Sport Participation
+52,SOCIAL,HI,Physiotherapy,Improved Learning
+53,EDUCAT,HI,Physiotherapy,Improved Learning
+54,SOCIAL,CR,Prosthetic,Sport Participation
+55,EDUCAT,LO,Counseling,Pain Relief
+56,MENTAL,LO,Counseling,Pain Relief
+57,NUTRIT,CR,Other,Improved Learnin
+58,NUTRIT,CR,Other,Improved Learning
+59,HEALTH,ME,a,a
+60,SOCIAL,HI,a,a
+61,EDUCAT,LO,a,a
+62,NUTRIT,ME,a,a
+63,MENTAL,HI,a,a

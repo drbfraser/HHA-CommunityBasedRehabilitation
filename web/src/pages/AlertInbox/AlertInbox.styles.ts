@@ -1,6 +1,6 @@
 import { SxProps, Theme } from "@mui/material";
 
-export const alertListStyles: Record<string, SxProps<Theme>> = {
+export const alertInboxStyles: Record<string, SxProps<Theme>> = {
     selectedListItemStyle: {
         backgroundColor: "lightcyan",
         border: "1px solid blue",

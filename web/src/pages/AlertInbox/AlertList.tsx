@@ -1,17 +1,13 @@
 import React from "react";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import List from "@mui/material/List";
-import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
-import { FiberManualRecord } from "@mui/icons-material";
 import { useState } from "react";
+import { Divider, Grid, List, ListItemText, Typography } from "@mui/material";
+import { FiberManualRecord } from "@mui/icons-material";
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IAlert, PriorityLevel, priorityLevels } from "@cbr/common/util/alerts";
 import { timestampToDate } from "@cbr/common/util/dates";
 import { compressedDataGridWidth } from "styles/DataGrid.styles";
 import PriorityLevelChip from "components/PriorityLevelChip/PriorityLevelChip";
-import { alertListStyles } from "./AlertList.styles";
+import { alertInboxStyles } from "./AlertInbox.styles";
 
 type AlertDetailProps = {
     onAlertSelectionEvent: (itemNum: number) => void;
@@ -59,10 +55,11 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
     };
 
     return (
-        <Grid item xs={3} sx={alertListStyles.gridStyle}>
+        <Grid item xs={3} sx={alertInboxStyles.gridStyle}>
             <h1>Alerts</h1>
-            <Divider variant="fullWidth" sx={alertListStyles.tableTopAndContentDividerStyle} />
+            <Divider variant="fullWidth" sx={alertInboxStyles.tableTopAndContentDividerStyle} />
             <List
+                // todosd: move inline styles to external file
                 sx={{
                     width: "100%",
                     maxWidth: 360,
@@ -138,23 +135,17 @@ const AlertList = (alertDetailProps: AlertDetailProps) => {
                                     </div>
                                 }
                                 onClick={() => onAlertSelectionEvent(currAlert.id)}
-                                // todosd: verify conditional has same function
-                                // className={
-                                //     currAlert.id === alertDetailProps.selectAlert
-                                //         ? style.selectedListItemStyle
-                                //         : style.listItemStyle
-                                // }
                                 sx={{
                                     ...(currAlert.id === alertDetailProps.selectAlert
-                                        ? alertListStyles.selectedListItemStyle
-                                        : alertListStyles.listItemStyle),
+                                        ? alertInboxStyles.selectedListItemStyle
+                                        : alertInboxStyles.listItemStyle),
                                 }}
                             />
 
                             <Divider
                                 variant="fullWidth"
                                 component="li"
-                                sx={alertListStyles.dividerStyle}
+                                sx={alertInboxStyles.dividerStyle}
                             />
                         </div>
                     );

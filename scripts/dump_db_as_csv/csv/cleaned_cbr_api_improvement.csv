@@ -1,0 +1,31 @@
+,risk_type,provided,desc
+0,HEALTH,Referral,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+1,SOCIAL,Orthotic,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+2,EDUCAT,Orthotic,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+3,NUTRIT,Wheelchair Repair,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+4,MENTAL,Prosthetic,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+5,HEALTH,Prosthetic,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+6,SOCIAL,Referral,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+7,EDUCAT,Other,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+8,NUTRIT,Wheelchair Repair,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+9,MENTAL,Referral,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+10,HEALTH,Wheelchair Repair,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+11,SOCIAL,Referral,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+12,EDUCAT,Physiotherapy,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+13,NUTRIT,Prosthetic,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+14,MENTAL,Wheelchair Repair,"Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions."
+15,HEALTH,-Advice,a
+16,HEALTH,-Advocacy,a
+17,HEALTH,-Encouragement,a
+18,HEALTH,-Orthotic,a
+19,HEALTH,-Prosthetic,a
+20,HEALTH,-Referral to Health Centre,a
+21,HEALTH,-Wheelchair,a
+22,HEALTH,-Wheelchair Repair,a
+23,HEALTH,-Advice,bbb
+24,EDUCAT,-Advice,bbb
+25,SOCIAL,-Advice,bbb
+26,NUTRIT,-Advice,bbb
+27,MENTAL,-Encouragement,bbb
+28,HEALTH,-Wheelchair,wheelchair desc
+29,HEALTH,-Wheelchair Repair,repair desc

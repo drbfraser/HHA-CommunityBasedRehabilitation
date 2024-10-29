@@ -1,12 +1,11 @@
-import { userStyles } from "./User.styles";
-import { Box, Button } from "@mui/material";
+import React from "react";
+import { Box, Button, Alert, Skeleton  } from "@mui/material";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import { Alert, Skeleton } from '@mui/material';
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { useHistory } from "react-router-dom";
-import React from "react";
+import { userStyles } from "./User.styles";
 
 const UserView = () => {
     const history = useHistory();

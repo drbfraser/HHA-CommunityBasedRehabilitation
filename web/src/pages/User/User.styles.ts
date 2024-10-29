@@ -2,7 +2,7 @@ import { SxProps, Theme } from '@mui/material';
 
 export const userStyles: Record<string, SxProps<Theme>> = {
     container: {
-        paddingLeft: 20,
+        paddingLeft: "20px",
     },
     header: {
         display: "flex",
@@ -12,7 +12,7 @@ export const userStyles: Record<string, SxProps<Theme>> = {
         alignItems: "center",
     },
     changePasswordButton: {
-        marginBottom: 20,
+        marginBottom: "20px",
     },
     logOutButton: {
         display: "flex",

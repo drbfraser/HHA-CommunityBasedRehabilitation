@@ -15,9 +15,8 @@ import { LinearProgress, IconButton, Typography, Box } from "@mui/material";
 import { zoneListStyles } from "./ZoneList.styles";
 import { dataGridStyles } from "styles/DataGrid.styles";
 import SearchBar from "components/SearchBar/SearchBar";
-import reqeustZoneRows from "./reqeustZoneRows";
-import { SearchOption } from "./searchOptions";
-// import { IRouteParams } from "@cbr/common/forms/Zone/zoneFields";
+import requestZoneRows from "./requestZoneRows";
+
 const RenderText = (params: GridRenderCellParams) => {
     return <Typography variant={"body2"}>{params.value}</Typography>;
 };
@@ -71,7 +70,7 @@ const ZoneList = () => {
     useEffect(() => {
         const loadInitialData = async () => {
             setLoading(true);
-            await reqeustZoneRows(setFilteredRows, setServerRows, setLoading);
+            await requestZoneRows(setFilteredRows, setServerRows, setLoading);
             setLoading(false);
             initialDataLoaded.current = true;
         };

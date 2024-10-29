@@ -47,12 +47,12 @@ const SearchBar = (props: InputBaseProps) => {
                 sx={{
                     root: {
                         // input root
-                        // todo: verifiy this is appying correctly
+                        // todosd: verifiy this is appying correctly
                         color: "inherit",
                     },
                     input: {
                         // inputInput
-                        // todo: verifiy this is appying correctly
+                        // todosd: verifiy this is appying correctly
                         padding: theme.spacing(1, 1, 1, 0),
                         // vertical padding + font size from searchIcon
                         paddingLeft: `calc(1em + ${theme.spacing(4)})`,

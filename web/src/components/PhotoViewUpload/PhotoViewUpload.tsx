@@ -12,7 +12,6 @@ import {
     SxProps,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";

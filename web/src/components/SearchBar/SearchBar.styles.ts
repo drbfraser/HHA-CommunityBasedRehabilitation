@@ -2,7 +2,7 @@
 // import { themeColors } from "@cbr/common/util/colors";
 // import { SxProps, Theme } from '@mui/material';
 
-// todosd: remove, or make work...
+// // todosd: remove, or make work...
 // export const searchBarStyles: Record<string, SxProps<Theme>> = {
 //     search: (theme: Theme) => ({
 //         position: "relative",
@@ -41,7 +41,7 @@
 //     },
 // }
 
-// todo: remove
+// todosd: remove
 // export const useStyles = makeStyles(
 //     (theme) => ({
 //         search: {

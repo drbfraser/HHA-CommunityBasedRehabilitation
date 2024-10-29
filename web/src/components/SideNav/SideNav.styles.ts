@@ -11,13 +11,6 @@ export const sideNavStyles: Record<string, SxProps<Theme>> = {
             flexDirection: "row",
             justifyContent: "space-evenly",
             width: "100%",
-
-            // todosd: remove
-            // bottom: 0,
-            // position: "fixed",
-            // backgroundColor: themeColors.blueBgDark,
-            // // paddingTop: "100px",
-            // zIndex: '999',
         },
     },
     icon: {

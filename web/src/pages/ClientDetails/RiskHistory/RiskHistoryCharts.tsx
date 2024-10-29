@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Grid, Typography } from "@mui/material";
-import Skeleton from "@mui/material/Skeleton";
+import { Box, Grid, Skeleton, Typography } from "@mui/material";
 import {
     LineChart,
     Line,
@@ -15,8 +14,8 @@ import {
 import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import { IClient } from "@cbr/common/util/clients";
+import { getTranslatedRiskChartName } from "util/risks";
 import { riskHistoryStyles } from "./RiskHistory.styles";
-import { getTranslatedRiskChartName, riskTypes } from "util/risks";
 
 interface IProps {
     client?: IClient;
@@ -87,45 +86,65 @@ const RiskHistoryCharts = ({ client }: IProps) => {
         }
     }, [client]);
 
+    // todosd
+    // // remove all lines from the cartesian grid
+    // const chartContainer: { [key: string]: React.CSSProperties } = {
+    //     "& .rechartsCartesianGridHorizontal line": {
+    //         strokeOpacity: 0,
+    //     },
+    // };
+
+    // // then show the ones we want and set the colors to the risk level colors
+    // Object.values(riskLevels).forEach(({ color }, i) => {
+    //     // chartContainer[`& .recharts-cartesian-grid-horizontal line:nth-child(${i + 1})`] = {
+    //         chartContainer[`& .rechartsCartesianGridHorizontal line:nthChild(${i + 1})`] = {
+    //         strokeOpacity: 1,
+    //         stroke: color,
+    //     };
+    // });
+
+    // console.log(chartContainer)
+
+
+
     const RiskChart = ({ riskType, data }: { riskType: RiskType; data: IDataPoint[] }) => {
         const dateFormatter = getDateFormatterFromReference(client?.created_at);
 
         return (
-            // todosd: make the classname apply correctly - this is incorrect, or a hack at best
-            <ResponsiveContainer
-                width="100%"
-                height={chartHeight}
-                className={`${riskHistoryStyles.chartContainer}`} // todosd: does this work?
-            >
-                {/* <ResponsiveContainer width="100%" height={chartHeight} className={styles.chartContainer}> */}
-                <LineChart>
-                    <CartesianGrid strokeDasharray="6" vertical={false} />
-                    <XAxis
-                        dataKey="timestamp"
-                        type="number"
-                        domain={[data[0].timestamp, data.slice(-1)[0].timestamp]}
-                        tickFormatter={dateFormatter}
-                    />
-                    <YAxis
-                        type="category"
-                        domain={Object.keys(riskLevels)}
-                        tickFormatter={(level) => riskLevels[level].name}
-                        padding={{ top: 25, bottom: 25 }}
-                    />
-                    <Tooltip
-                        labelFormatter={dateFormatter}
-                        formatter={(level: RiskLevel) => riskLevels[level].name}
-                    />
-                    <Line
-                        type="stepAfter"
-                        name={getTranslatedRiskChartName(t, riskType)}
-                        data={data}
-                        dataKey="level"
-                        stroke={riskLevels[data.slice(-1)[0].level].color}
-                        strokeWidth={6}
-                    />
-                </LineChart>
-            </ResponsiveContainer>
+            <Box sx={riskHistoryStyles.chartContainer}>
+                <ResponsiveContainer
+                    width="100%"
+                    height={chartHeight}
+                >
+                    <LineChart>
+                        <CartesianGrid strokeDasharray="6" vertical={false} />
+                        <XAxis
+                            dataKey="timestamp"
+                            type="number"
+                            domain={[data[0].timestamp, data.slice(-1)[0].timestamp]}
+                            tickFormatter={dateFormatter}
+                        />
+                        <YAxis
+                            type="category"
+                            domain={Object.keys(riskLevels)}
+                            tickFormatter={(level) => riskLevels[level].name}
+                            padding={{ top: 25, bottom: 25 }}
+                        />
+                        <Tooltip
+                            labelFormatter={dateFormatter}
+                            formatter={(level: RiskLevel) => riskLevels[level].name}
+                        />
+                        <Line
+                            type="stepAfter"
+                            name={getTranslatedRiskChartName(t, riskType)}
+                            data={data}
+                            dataKey="level"
+                            stroke={riskLevels[data.slice(-1)[0].level].color}
+                            strokeWidth={6}
+                        />
+                    </LineChart>
+                </ResponsiveContainer>
+            </Box>
         );
     };
 

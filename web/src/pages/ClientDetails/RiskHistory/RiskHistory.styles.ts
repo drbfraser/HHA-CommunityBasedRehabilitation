@@ -10,26 +10,11 @@ const chartContainer: { [key: string]: React.CSSProperties } = {
 
 // then show the ones we want and set the colors to the risk level colors
 Object.values(riskLevels).forEach(({ color }, i) => {
-    chartContainer[`& .recharts-cartesian-grid-horizontal line:nth-child(${i + 1})`] = {
+    chartContainer[`& .recharts-cartesian-grid-horizontal line:nth-of-type(${i + 1})`] = {
         strokeOpacity: 1,
         stroke: color,
     };
 });
-
-// todosd: correct?  this is a hack, do this better...
-// https://stackoverflow.com/questions/63771649/react-convert-cssproperties-to-styled-component
-// const regex = new RegExp(/[A-Z]/g)
-// const kebabCase = (str: string) => str.replace(regex, v => `-${v.toLowerCase()}`)
-// export const chartContainerStyles = Object.keys(chartContainer).reduce((accumulator, key) => {
-//     // transform the key from camelCase to kebab-case
-//     const cssKey = kebabCase(key)
-
-//     // remove ' in value
-//     const cssValue = (chartContainer[key] as string).replace("'", "")
-//     // build the result
-//     // you can break the line, add indent for it if you need
-//     return `${accumulator}${cssKey}:${cssValue};`
-// });
 
 export const riskHistoryStyles: Record<string, SxProps<Theme>> = {
     textCenter: {

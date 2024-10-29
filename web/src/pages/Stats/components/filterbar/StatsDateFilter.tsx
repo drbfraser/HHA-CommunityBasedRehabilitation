@@ -41,7 +41,7 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                     <DialogContent>
                         <Field
                             component={TextField}
-                            label="From"
+                            label={t("general.from")}
                             variant="outlined"
                             type="date"
                             required
@@ -52,7 +52,7 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                         <br />
                         <Field
                             component={TextField}
-                            label="To"
+                            label={t("general.to")}
                             variant="outlined"
                             type="date"
                             required

@@ -198,7 +198,9 @@ interface Resources {
       "csvExport": "&EXPORT TO CSV",
       "clear": "&Clear",
       "filter": "&Filter",
-      "details": "&Details"
+      "details": "&Details",
+      "from": "&From",
+      "to": "&To"
     },
     "alert": {
       "generalFailure": "&Something went Wrong",
@@ -886,7 +888,9 @@ interface Resources {
       "csvExport": "-EXPORT TO CSV",
       "clear": "-Clear",
       "filter": "-Filter",
-      "details": "-Details"
+      "details": "-Details",
+      "from": "-From",
+      "to": "-To"
     },
     "alert": {
       "generalFailure": "-Something went Wrong",

@@ -1,6 +1,5 @@
-import { Typography } from "@mui/material";
-import Skeleton from '@mui/material/Skeleton';
 import React from "react";
+import { Skeleton, Typography } from "@mui/material";
 import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar, Legend } from "recharts";
 import { IStats, IStatsReferral } from "@cbr/common/util/stats";
 import { themeColors } from "@cbr/common/util/colors";

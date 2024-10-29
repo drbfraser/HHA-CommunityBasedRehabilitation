@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+    Autocomplete,
     Button,
     Dialog,
     DialogActions,
@@ -8,8 +9,6 @@ import {
     TextField,
 } from "@mui/material";
 import { IUser } from "@cbr/common/util/users";
-import Autocomplete from '@mui/material/Autocomplete';
-// import { AutocompleteRenderInputParams } from '@mui/lab'; // todo, needed?
 
 interface IProps {
     open: boolean;
@@ -43,9 +42,9 @@ const StatsUserFilter = ({ open, onClose, users, user, setUser }: IProps) => {
                     value={selectedUser}
                     onChange={(e, v) => setSelectedUser(v)}
                     getOptionLabel={renderUser}
-                    // renderOption={renderUser} // todo: need this?  check output, and reformat if needed
-                    // NOTE: see Autocomplete changes from https://mui.com/material-ui/migration/v5-component-changes/
-                    renderInput={(params) => ( // todo: missing params type AutocompleteRenderInputParams?
+                    // NOTE: if issues, see Autocomplete changes from https://mui.com/material-ui/migration/v5-component-changes/
+                    // renderOption={renderUser}
+                    renderInput={(params) => (
                         <TextField
                             {...params}
                             fullWidth

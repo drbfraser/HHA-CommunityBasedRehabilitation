@@ -2,11 +2,11 @@ import { SxProps, Theme } from "@mui/material";
 import { mediaCompressedDataGrid } from "styles/DataGrid.styles";
 import { mediaMobile } from "theme.styles";
 
-// todo: can this be refactored to DRY?
+// todosd: can this be refactored to DRY?
 export const adminListStyles: Record<string, SxProps<Theme>> = {
     container: {
         height: "calc(100vh - 175px)",
-        minHeight: 400,
+        minHeight: "400px",
         padding: "5px 0px 25px 0px",
         [mediaMobile]: {
             height: "calc(100vh - 150px)",
@@ -38,7 +38,7 @@ export const adminListStyles: Record<string, SxProps<Theme>> = {
     },
 };
 
-// todo: remove
+// todosd: remove
 // export const useStyles = makeStyles(
 //     {
 //         container: {

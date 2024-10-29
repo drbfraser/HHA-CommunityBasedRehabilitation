@@ -1,13 +1,10 @@
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Alert, Box, Button, FormControl, Grid, MenuItem, Skeleton } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import { Box, FormControl, MenuItem } from "@mui/material";
 import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
-import { Alert, Skeleton } from "@mui/material";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
 import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -18,8 +15,8 @@ import {
     IRouteParams,
 } from "@cbr/common/forms/Admin/adminFields";
 import history from "@cbr/common/util/history";
-import { adminStyles } from "./Admin.styles";
 import { useUser } from "util/hooks/useUser";
+import { adminStyles } from "./Admin.styles";
 
 const AdminEdit = () => {
     const { t } = useTranslation();
@@ -144,10 +141,6 @@ const AdminEdit = () => {
                         >
                             <Button
                                 variant="contained"
-                                // todo: ensure conditional still working with sx spread, then remove
-                                // className={
-                                //     values.is_active ? styles["disableBtn"] : styles["activeBtn"]
-                                // }
                                 sx={{
                                     ...(values.is_active
                                         ? adminStyles.disableBtn

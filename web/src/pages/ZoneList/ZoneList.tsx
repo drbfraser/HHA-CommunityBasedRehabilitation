@@ -45,7 +45,7 @@ const ZoneList = () => {
     const [searchValue, setSearchValue] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true);
     const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
-    const [filteredRows, setFilteredRows] = useState<GridRowsProp>([]); // todo: RowsProp -> GridRowsProp ok?
+    const [filteredRows, setFilteredRows] = useState<GridRowsProp>([]); // todosd: RowsProp -> GridRowsProp ok?
     const [serverRows, setServerRows] = useState<GridRowsProp>([]);
     const history = useHistory();
     const { t } = useTranslation();
@@ -108,12 +108,6 @@ const ZoneList = () => {
                     density={GridDensityTypes.Comfortable}
                     onRowClick={onRowClick}
                     pagination
-                    sortModel={[
-                        {
-                            field: "zone",
-                            sort: "asc",
-                        },
-                    ]}
                 />
             </Box>
         </Box>

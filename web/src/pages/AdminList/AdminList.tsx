@@ -3,13 +3,6 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import {
-    DataGrid,
-    GridDensityTypes,
-    GridRowsProp,
-    GridOverlay,
-    GridRenderCellParams,
-} from "@mui/x-data-grid";
-import {
     LinearProgress,
     IconButton,
     Typography,
@@ -19,6 +12,13 @@ import {
     Switch,
     Box,
 } from "@mui/material";
+import {
+    DataGrid,
+    GridDensityTypes,
+    GridRowsProp,
+    GridOverlay,
+    GridRenderCellParams,
+} from "@mui/x-data-grid";
 import { Cancel, MoreVert } from "@mui/icons-material";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import SearchBar from "components/SearchBar/SearchBar";

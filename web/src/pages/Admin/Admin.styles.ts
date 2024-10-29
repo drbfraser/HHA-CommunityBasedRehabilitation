@@ -28,7 +28,7 @@ export const adminStyles: Record<string, SxProps<Theme>> = {
     },
 };
 
-// todo: remove
+// todosd: remove
 // export const useStyles = makeStyles(
 //     {
 //         container: {

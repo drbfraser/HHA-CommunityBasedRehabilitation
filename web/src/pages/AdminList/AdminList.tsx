@@ -32,7 +32,7 @@ import { SearchOption } from "../ClientList/searchOptions";
 import { getClientListSearchOptions } from "../ClientList/searchOptions";
 import { t } from "i18next";
 
-const RenderText = (params: GridRenderCellParams) => (
+const RenderText: any = (params: GridRenderCellParams) => (
     <Typography variant={"body2"}>{params.value}</Typography>
 );
 const RenderLoadingOverlay = () => (

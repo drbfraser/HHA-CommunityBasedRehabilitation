@@ -2,15 +2,16 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-mui";
-import { clientFormStyles } from "./ClientForm.styles";
-import Button from "@mui/material/Button";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Button,
+    FormControl,
+    Grid,
+    MenuItem,
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import FormControl from "@mui/material/FormControl";
-import Grid from "@mui/material/Grid";
-import MenuItem from "@mui/material/MenuItem";
 import {
     clientFieldLabels,
     ClientField,
@@ -23,6 +24,7 @@ import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/di
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 import { handleNewWebClientSubmit, handleReset } from "@cbr/common/forms/Client/clientHandler";
+import { clientFormStyles } from "./ClientForm.styles";
 
 const ClientForm = () => {
     const zones = useZones();
@@ -40,6 +42,7 @@ const ClientForm = () => {
                     <Grid item md={12} xs={12}>
                         <Field
                             component={CheckboxWithLabel}
+                            color="secondary"
                             type="checkbox"
                             name={ClientField.interviewConsent}
                             Label={{ label: clientFieldLabels[ClientField.interviewConsent] }}
@@ -137,7 +140,7 @@ const ClientForm = () => {
                                                     variant="outlined"
                                                     required
                                                     label={clientFieldLabels[ClientField.zone]}
-                                                    // defaultValue="" // todosd: remove
+                                                    defaultValue=""
                                                     name={ClientField.zone}
                                                     autoComplete="off"
                                                 >
@@ -204,6 +207,7 @@ const ClientForm = () => {
                                             <Field
                                                 component={CheckboxWithLabel}
                                                 type="checkbox"
+                                                color="secondary"
                                                 name={ClientField.caregiverPresent}
                                                 Label={{
                                                     label: clientFieldLabels[
@@ -249,8 +253,10 @@ const ClientForm = () => {
                                                             </Grid>
                                                             <Grid item md={8} xs={12}>
                                                                 <Field
-                                                                    // todosd: applying correctly?
-                                                                    sx={`${clientFormStyles.caregiverInputField} ${clientFormStyles.disabledTextField}`}
+                                                                    sx={{
+                                                                        ...clientFormStyles.caregiverInputField,
+                                                                        ...clientFormStyles.disabledTextField,
+                                                                    }}
                                                                     component={TextField}
                                                                     name={
                                                                         ClientField.caregiverEmail
@@ -583,17 +589,11 @@ const ClientForm = () => {
                                             />
                                         </Grid>
                                         <br />
-
                                         <Grid
+                                            // todo: what is the purpose of this?  not displaying anything in either case
                                             item
                                             md={12}
                                             xs={12}
-                                            // todosd: replace empty sting with actual version, {} ok?
-                                            // className={
-                                            //     !values.interviewConsent && touched.interviewConsent
-                                            //         ? clientFormStyles.checkboxError
-                                            //         : ""
-                                            // }
                                             sx={
                                                 !values.interviewConsent && touched.interviewConsent
                                                     ? clientFormStyles.checkboxError

@@ -26,18 +26,3 @@ export const riskHistoryStyles: Record<string, SxProps<Theme>> = {
         margin: "0 auto",
     },
 };
-
-// todosd: remove
-// export const useStyles = makeStyles(
-//     {
-//         textCenter: {
-//             textAlign: "center",
-//         },
-//         chartContainer: chartContainer,
-//         chartSkeleton: {
-//             width: "90% !important",
-//             margin: "0 auto",
-//         },
-//     },
-//     { index: 1 }
-// );

@@ -105,17 +105,12 @@ const RiskHistoryCharts = ({ client }: IProps) => {
 
     // console.log(chartContainer)
 
-
-
     const RiskChart = ({ riskType, data }: { riskType: RiskType; data: IDataPoint[] }) => {
         const dateFormatter = getDateFormatterFromReference(client?.created_at);
 
         return (
             <Box sx={riskHistoryStyles.chartContainer}>
-                <ResponsiveContainer
-                    width="100%"
-                    height={chartHeight}
-                >
+                <ResponsiveContainer width="100%" height={chartHeight}>
                     <LineChart>
                         <CartesianGrid strokeDasharray="6" vertical={false} />
                         <XAxis

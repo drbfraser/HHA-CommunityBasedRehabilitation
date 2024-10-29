@@ -2,10 +2,9 @@ import BackgroundImage from "./background.svg";
 import BackgroundImageMobile from "./backgroundMobile.svg";
 import { SxProps, Theme } from "@mui/material";
 
-/* OPTION 1: explicitly type, but need to be explicity about CSSProperties */
-export const loginStyles: Record<string, SxProps<Theme> | React.CSSProperties> = {
+export const loginStyles: Record<string, SxProps<Theme>> = {
     container: {
-        height: "100vh",
+        height: "100%",
         backgroundRepeat: "no-repeat",
         backgroundImage: `url(${BackgroundImage})`,
         backgroundSize: "100% auto",

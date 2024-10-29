@@ -21,7 +21,7 @@ export const themeMui = createTheme({
                     lineHeight: 1.43,
                     letterSpacing: "0.01071em",
                 },
-                root: {
+                "#root": {
                     height: "100%",
                     minHeight: "100%",
                     // border: "5px solid red", // todosd: remove

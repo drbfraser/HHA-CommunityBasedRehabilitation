@@ -28,6 +28,7 @@ const WheelchairForm = (props: IFormProps) => {
                     <label key={value}>
                         <Field
                             component={Radio}
+                            color="secondary"
                             type="radio"
                             name={ReferralFormField.wheelchairExperience}
                             value={value}
@@ -40,11 +41,10 @@ const WheelchairForm = (props: IFormProps) => {
             <FormLabel>{t("referral.clientHipWidth")}?</FormLabel>
             <br />
             <Box sx={newReferralStyles.fieldIndent}>
-                {/* <div className={`${styles.fieldIndent}`}> */}
-                {/* todosd: use this old way to access css? */}
                 <Field
                     sx={newReferralStyles.hipWidth}
                     component={TextField}
+                    variant="standard"
                     type="number"
                     name={ReferralFormField.hipWidth}
                     InputProps={{

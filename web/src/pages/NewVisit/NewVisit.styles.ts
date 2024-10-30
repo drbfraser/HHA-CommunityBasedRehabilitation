@@ -13,21 +13,3 @@ export const newVisitStyles: Record<string, SxProps<Theme>> = {
         marginTop: "10px",
     },
 };
-
-// todosd: remove
-// export const useStyles = makeStyles(
-//     {
-//         visitLocationContainer: {
-//             display: "flex",
-//             flexWrap: "wrap",
-//             flexDirection: "row",
-//         },
-//         visitLocation: {
-//             flex: "1",
-//             minWidth: "200px",
-//             marginRight: "10px",
-//             marginTop: "10px",
-//         },
-//     },
-//     { index: 1 }
-// );

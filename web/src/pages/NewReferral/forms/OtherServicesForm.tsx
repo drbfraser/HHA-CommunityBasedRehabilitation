@@ -20,7 +20,6 @@ const OtherServicesForm = (props: IFormProps) => {
             <FormLabel>{t("referral.selectAnotherReferral")}</FormLabel>
             <br />
             <br />
-            {/* todosd: replace with div? */}
             <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     select

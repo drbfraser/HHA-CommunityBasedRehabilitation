@@ -32,6 +32,7 @@ const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormFiel
                         <Field
                             type="radio"
                             component={Radio}
+                            color="secondary"
                             value={value}
                             name={`${serviceType}_injury_location`}
                         />

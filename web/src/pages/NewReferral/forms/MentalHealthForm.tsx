@@ -20,7 +20,6 @@ const MentalHealthForm = (props: IFormProps) => {
             <FormLabel>{t("referral.selectMentalHealthReferral")}</FormLabel>
             <br />
             <br />
-            {/* todosd: replace with old div? */}
             <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     component={TextField}

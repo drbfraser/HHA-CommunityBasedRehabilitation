@@ -21,7 +21,6 @@ const PhysiotherapyForm = (props: IFormProps) => {
             <FormLabel>{t("referral.whatCondition")}</FormLabel>
             <br />
             <br />
-            {/* todosd: Box -> div */}
             <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     component={TextField}

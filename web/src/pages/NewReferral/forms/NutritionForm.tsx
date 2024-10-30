@@ -18,13 +18,13 @@ const NutritionForm = (props: IFormProps) => {
         <div>
             <FormLabel>{t("referral.whatDoesClientNeed")}?</FormLabel>
             <br />
-            {/* todosd: replace Box with div */}
             <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
                     key={ReferralFormField.emergencyFoodAidRequired}
                     name={ReferralFormField.emergencyFoodAidRequired}
+                    color="secondary"
                     Label={{
                         label: referralFieldLabels[ReferralFormField.emergencyFoodAidRequired],
                     }}
@@ -38,6 +38,7 @@ const NutritionForm = (props: IFormProps) => {
                     type="checkbox"
                     key={ReferralFormField.agricultureLivelihoodProgramEnrollment}
                     name={ReferralFormField.agricultureLivelihoodProgramEnrollment}
+                    color="secondary"
                     Label={{
                         label: referralFieldLabels[
                             ReferralFormField.agricultureLivelihoodProgramEnrollment

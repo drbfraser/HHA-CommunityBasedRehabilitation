@@ -41,6 +41,7 @@ const ReferralServiceForm = (
                         type="checkbox"
                         key={serviceType}
                         component={CheckboxWithLabel}
+                        color="secondary"
                         name={serviceType}
                         Label={{ label: referralFieldLabels[serviceType] }}
                         onChange={(event: React.FormEvent<HTMLInputElement>) => {

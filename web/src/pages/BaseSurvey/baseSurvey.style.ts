@@ -11,19 +11,3 @@ export const adminStyles: Record<string, SxProps<Theme>> = {
         verticalAlign: "sub",
     },
 };
-
-// todosd: remove
-// export const useStyles = makeStyles(
-//     {
-//         fieldIndent: {
-//             paddingLeft: "9px",
-//         },
-//         hipWidth: {
-//             maxWidth: "160px",
-//         },
-//         inches: {
-//             verticalAlign: "sub",
-//         },
-//     },
-//     { index: 1 }
-// );

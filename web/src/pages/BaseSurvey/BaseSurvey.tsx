@@ -1,4 +1,9 @@
+import React, { useState } from "react";
+import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
+import { CheckboxWithLabel, TextField } from "formik-mui";
+import { useParams } from "react-router-dom";
 import {
+    Alert,
     Box,
     Button,
     FormControl,
@@ -9,9 +14,7 @@ import {
     StepLabel,
     Stepper,
 } from "@mui/material";
-import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { CheckboxWithLabel, TextField } from "formik-mui";
-import React, { useState } from "react";
+
 import {
     baseFieldLabels,
     BaseSurveyFormField,
@@ -24,10 +27,7 @@ import {
     empowermentValidationSchema,
     surveyTypes,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
-import { ArrowBack } from "@mui/icons-material";
-import history from "@cbr/common/util/history";
-import { useParams } from "react-router-dom";
-import { Alert } from "@mui/material";
+
 import {
     ChildNourish,
     childNourish,
@@ -37,10 +37,11 @@ import {
     rateLevel,
     reasonNotSchool,
 } from "@cbr/common/util/survey";
-import { adminStyles } from "./baseSurvey.style";
 import { handleSubmit } from "./formHandler";
 import GoBackButton from "components/GoBackButton/GoBackButton";
+import { adminStyles } from "./baseSurvey.style";
 
+// todosd: refactor this file into separate files, it is massive
 interface IFormProps {
     formikProps: FormikProps<any>;
 }
@@ -78,6 +79,7 @@ const HealthForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.getService}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.getService] }}
                 />
@@ -86,6 +88,7 @@ const HealthForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.needService}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.needService] }}
                 />
@@ -94,6 +97,7 @@ const HealthForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.mentalHealth}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.mentalHealth] }}
                 />
@@ -102,6 +106,7 @@ const HealthForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.haveDevice}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.haveDevice] }}
                 />
@@ -110,6 +115,7 @@ const HealthForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.deviceWorking}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.deviceWorking] }}
                 />
@@ -118,6 +124,7 @@ const HealthForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.needDevice}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.needDevice] }}
                 />
@@ -179,6 +186,7 @@ const EducationForm = (props: IFormProps) => {
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
+                color="secondary"
                 name={BaseSurveyFormField.goSchool}
                 Label={{ label: baseFieldLabels[BaseSurveyFormField.goSchool] }}
             />
@@ -227,6 +235,7 @@ const EducationForm = (props: IFormProps) => {
                             <Field
                                 component={CheckboxWithLabel}
                                 type="checkbox"
+                                color="secondary"
                                 name={BaseSurveyFormField.beenSchool}
                                 Label={{ label: baseFieldLabels[BaseSurveyFormField.beenSchool] }}
                             />
@@ -237,6 +246,7 @@ const EducationForm = (props: IFormProps) => {
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
+                color="secondary"
                 name={BaseSurveyFormField.wantSchool}
                 Label={{ label: baseFieldLabels[BaseSurveyFormField.wantSchool] }}
             />
@@ -250,30 +260,35 @@ const SocialForm = () => {
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
+                color="secondary"
                 name={BaseSurveyFormField.feelValue}
                 Label={{ label: baseFieldLabels[BaseSurveyFormField.feelValue] }}
             />
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
+                color="secondary"
                 name={BaseSurveyFormField.feelIndependent}
                 Label={{ label: baseFieldLabels[BaseSurveyFormField.feelIndependent] }}
             />
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
+                color="secondary"
                 name={BaseSurveyFormField.ableInSocial}
                 Label={{ label: baseFieldLabels[BaseSurveyFormField.ableInSocial] }}
             />
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
+                color="secondary"
                 name={BaseSurveyFormField.disabiAffectSocial}
                 Label={{ label: baseFieldLabels[BaseSurveyFormField.disabiAffectSocial] }}
             />
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
+                color="secondary"
                 name={BaseSurveyFormField.disabiDiscrimination}
                 Label={{ label: baseFieldLabels[BaseSurveyFormField.disabiDiscrimination] }}
             />
@@ -289,6 +304,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.isWorking}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.isWorking] }}
                 />
@@ -331,6 +347,7 @@ const LivelihoodForm = (props: IFormProps) => {
                         <Field
                             component={CheckboxWithLabel}
                             type="checkbox"
+                            color="secondary"
                             name={BaseSurveyFormField.meetFinanceNeeds}
                             Label={{ label: baseFieldLabels[BaseSurveyFormField.meetFinanceNeeds] }}
                         />
@@ -343,6 +360,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.disabiAffectWork}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.disabiAffectWork] }}
                 />
@@ -350,6 +368,7 @@ const LivelihoodForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.wantWork}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.wantWork] }}
                 />
@@ -381,12 +400,14 @@ const FoodForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.enoughFoodPerMonth}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.enoughFoodPerMonth] }}
                 />
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.isChild}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.isChild] }}
                 />
@@ -435,6 +456,7 @@ const EmpowermentForm = (props: IFormProps) => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.memOfOrgan}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.memOfOrgan] }}
                 />
@@ -455,6 +477,7 @@ const EmpowermentForm = (props: IFormProps) => {
                     <Field
                         component={CheckboxWithLabel}
                         type="checkbox"
+                        color="secondary"
                         name={BaseSurveyFormField.awareRight}
                         Label={{ label: baseFieldLabels[BaseSurveyFormField.awareRight] }}
                     />
@@ -462,6 +485,7 @@ const EmpowermentForm = (props: IFormProps) => {
                     <Field
                         component={CheckboxWithLabel}
                         type="checkbox"
+                        color="secondary"
                         name={BaseSurveyFormField.ableInfluence}
                         Label={{ label: baseFieldLabels[BaseSurveyFormField.ableInfluence] }}
                     />
@@ -479,6 +503,7 @@ const ShelterForm = () => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.haveShelter}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.haveShelter] }}
                 />
@@ -486,6 +511,7 @@ const ShelterForm = () => {
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
+                    color="secondary"
                     name={BaseSurveyFormField.accessItem}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.accessItem] }}
                 />
@@ -573,6 +599,7 @@ const NewSurvey = () => {
                     <Field
                         component={CheckboxWithLabel}
                         type="checkbox"
+                        color="secondary"
                         name={BaseSurveyFormField.surveyConsent}
                         Label={{ label: baseFieldLabels[BaseSurveyFormField.surveyConsent] }}
                     />

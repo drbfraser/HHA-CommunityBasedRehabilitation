@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { SvgIconTypeMap } from "@mui/material";
+import { Box, SvgIconTypeMap, SxProps } from "@mui/material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { MoreVert, ArrowDropDown } from "@mui/icons-material";
 import {
     TimelineOppositeContent,
@@ -10,9 +11,8 @@ import {
     TimelineConnector,
     TimelineContent,
 } from "@mui/lab";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
 
-import { timelineStyles } from "./timelines.styles";
+import { timelineStyles } from "./Timeline.styles";
 
 interface IProps {
     onClick?: () => void;
@@ -33,14 +33,27 @@ const ShowMoreEntry = ({ onClick }: IProps) => {
                 <TimelineConnector className="" />
             </TimelineSeparator>
             <TimelineContent>
-                <div
+                {/* todosd */}
+                {/* <div
                     className={timelineStyles.showMore + ` ${timelineStyles.showMoreClickable}`}
                     style={{ color: "white", fontWeight: 700 }}
                     onClick={onClick}
                 >
                     {`${t("general.showMore")} `}
                     {<ArrowDropDown style={{ marginBottom: "-7px" }} />}
-                </div>
+                </div> */}
+                <Box
+                    // className={timelineStyles.showMore + ` ${timelineStyles.showMoreClickable}`}
+                    sx={{
+                        ...timelineStyles.showMore,
+                        ...timelineStyles.showMoreClickable
+                    } as SxProps}
+                    style={{ color: "white", fontWeight: 700 }}
+                    onClick={onClick}
+                >
+                    {`${t("general.showMore")} `}
+                    {<ArrowDropDown style={{ marginBottom: "-7px" }} />}
+                </Box>
             </TimelineContent>
         </TimelineItem>
     );

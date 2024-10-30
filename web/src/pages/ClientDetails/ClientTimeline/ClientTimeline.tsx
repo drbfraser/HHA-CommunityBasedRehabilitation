@@ -5,7 +5,7 @@ import { IClient } from "@cbr/common/util/clients";
 import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
-import { timelineStyles } from "../Timeline/timelines.styles";
+import { timelineStyles } from "../Timeline/Timeline.styles";
 import ShowMoreEntry from "../Timeline/ShowMoreEntry";
 import VisitEntry from "./VisitEntry";
 import ReferralEntry from "./ReferralEntry";

@@ -1,4 +1,7 @@
 import React from "react";
+import { Box, SvgIconTypeMap, SxProps } from "@mui/material";
+import BlankIcon from "@mui/material/SvgIcon";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 import {
     TimelineItem,
     TimelineOppositeContent,
@@ -7,10 +10,8 @@ import {
     TimelineDot,
     TimelineContent,
 } from "@mui/lab";
-import { timelineStyles } from "./timelines.styles";
-import BlankIcon from "@mui/material/SvgIcon";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { SvgIconTypeMap } from "@mui/material";
+
+import { timelineStyles } from "./Timeline.styles";
 
 interface IProps {
     date: string | JSX.Element;
@@ -31,20 +32,20 @@ const TimelineEntry = ({ date, content, DotIcon, isBottomEntry, onClick }: IProp
                 <TimelineDot color="grey" variant="outlined">
                     <Icon color="primary" fontSize="small" />
                 </TimelineDot>
-                {/* todosd: equiv to empty string? */}
-                {/* <TimelineConnector className={isBottomEntry ? timelineStyles.hidden : ""} /> */}
                 <TimelineConnector sx={isBottomEntry ? timelineStyles.hidden : {}} />
             </TimelineSeparator>
             <TimelineContent>
-                <div
-                    className={
-                        timelineStyles.entry +
-                        (Boolean(onClick) ? ` ${timelineStyles.clickable}` : "")
+                <Box
+                    sx={
+                        {
+                            ...timelineStyles.entry,
+                            ...(Boolean(onClick) ? timelineStyles.clickable : {}),
+                        } as SxProps
                     }
                     onClick={onClick}
                 >
                     {content}
-                </div>
+                </Box>
             </TimelineContent>
         </TimelineItem>
     );

@@ -1,30 +1,32 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Alert,
+    Button,
+    CardContent,
+    Card,
     Dialog,
     DialogTitle,
     DialogContent,
     DialogActions,
-    Button,
-    CardContent,
-    Card,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
+    Skeleton,
     Typography,
 } from "@mui/material";
-import { Skeleton, Alert } from "@mui/material";
 import { Assignment } from "@mui/icons-material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import { getSurveyInfo, ISurvey } from "@cbr/common/util/survey";
 import {
     BaseSurveyFormField,
     baseFieldLabels,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
-import { entryStyles } from "./Entry.styles";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import DataCard from "components/DataCard/DataCard";
+import { entryStyles } from "./Entry.styles";
 
 interface IEntryProps {
     survey: ISurvey;

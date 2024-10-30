@@ -200,7 +200,8 @@ interface Resources {
       "filter": "&Filter",
       "details": "&Details",
       "from": "&From",
-      "to": "&To"
+      "to": "&To",
+      "clients": "&Clients"
     },
     "alert": {
       "generalFailure": "&Something went Wrong",
@@ -687,7 +688,18 @@ interface Resources {
       "downloadNewVersion": "&Please download the latest update for HHA CBR from the Google Play Store."
     },
     "zone": {
-      "zone": "&Zone"
+      "zone": "&Zone",
+      "successfulDelete": "&Zone successfully deleted!",
+      "failedDelete": "&Encountered an error while trying to delete the zone!",
+      "confirmDelete": "&Are you sure you want to delete this zone?",
+      "zoneName": "&Zone Name",
+      "cannotDelete": "&Zone cannot be deleted",
+      "moveUsersAndClients": "&Move Users and Clients to Zone:",
+      "successfulMigration": "&Users and clients successfully migrated. Delete zone?",
+      "confirmZoneDelete": "&Confirm Delete Zone",
+      "select": "&Select a zone to move these users and clients to:",
+      "cannotDeleteReason": "&Zone cannot be deleted because the following users/clients and their associated past visits are still in zone:",
+      "migrationError": "&Encountered an error while trying to migrate users and clients to target zone!"
     }
   },
   "en": {
@@ -890,7 +902,8 @@ interface Resources {
       "filter": "-Filter",
       "details": "-Details",
       "from": "-From",
-      "to": "-To"
+      "to": "-To",
+      "clients": "-Clients"
     },
     "alert": {
       "generalFailure": "-Something went Wrong",
@@ -1379,7 +1392,18 @@ interface Resources {
       "downloadNewVersion": "-Please download the latest update for HHA CBR from the Google Play Store."
     },
     "zone": {
-      "zone": "-Zone"
+      "zone": "-Zone",
+      "successfulDelete": "-Zone successfully deleted!",
+      "failedDelete": "-Encountered an error while trying to delete the zone!",
+      "confirmDelete": "-Are you sure you want to delete this zone?",
+      "zoneName": "-Zone Name",
+      "cannotDelete": "-Zone cannot be deleted",
+      "moveUsersAndClients": "-Move Users and Clients to Zone:",
+      "successfulMigration": "-Users and clients successfully migrated. Delete zone?",
+      "confirmZoneDelete": "-Confirm Delete Zone",
+      "select": "-Select a zone to move these users and clients to:",
+      "cannotDeleteReason": "-Zone cannot be deleted because the following users/clients and their associated past visits are still in zone:",
+      "migrationError": "-Encountered an error while trying to migrate users and clients to target zone!"
     }
   }
 }

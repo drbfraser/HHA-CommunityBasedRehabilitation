@@ -605,7 +605,7 @@ const NewSurvey = () => {
                     />
 
                     {formikProps.values.give_consent ? (
-                        <Stepper activeStep={step} orientation="vertical">
+                        <Stepper activeStep={step} orientation="vertical" sx={{ padding: "24px" }}>
                             {surveySteps.map((surveyStep, index) => (
                                 <Step key={index}>
                                     <StepLabel>{surveyStep.label}</StepLabel>

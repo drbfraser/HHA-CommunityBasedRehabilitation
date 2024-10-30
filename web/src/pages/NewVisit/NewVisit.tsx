@@ -65,7 +65,7 @@ const ImprovementField = (props: {
             [ImprovementFormField.enabled]: false,
             [ImprovementFormField.description]: "",
             [ImprovementFormField.riskType]: props.visitType,
-            [ImprovementFormField.provided]: props.provided,            
+            [ImprovementFormField.provided]: props.provided,
         });
     }
 
@@ -333,7 +333,11 @@ const NewVisit = () => {
                     )}
                     <GoBackButton />
 
-                    <Stepper activeStep={activeStep} orientation="vertical">
+                    <Stepper
+                        sx={{ padding: "24px" }}
+                        activeStep={activeStep}
+                        orientation="vertical"
+                    >
                         {visitSteps.map((visitStep, index) => (
                             <Step key={index}>
                                 <StepLabel>{visitStep.label}</StepLabel>

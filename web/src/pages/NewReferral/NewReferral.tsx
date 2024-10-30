@@ -2,14 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { Form, Formik, FormikHelpers, FormikProps } from "formik";
-import {
-    Alert,
-    Button,
-    Step,
-    StepContent,
-    StepLabel,
-    Stepper,
-} from "@mui/material";
+import { Alert, Button, Step, StepContent, StepLabel, Stepper } from "@mui/material";
 
 import {
     ReferralFormField,
@@ -143,7 +136,11 @@ const NewReferral = () => {
                     )}
                     <GoBackButton />
 
-                    <Stepper activeStep={activeStep} orientation="vertical">
+                    <Stepper
+                        activeStep={activeStep}
+                        orientation="vertical"
+                        sx={{ padding: "24px" }}
+                    >
                         {referralSteps.map((referralStep, index) => (
                             <Step key={index}>
                                 <StepLabel>{referralStep.label}</StepLabel>

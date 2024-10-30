@@ -33,17 +33,7 @@ const ShowMoreEntry = ({ onClick }: IProps) => {
                 <TimelineConnector className="" />
             </TimelineSeparator>
             <TimelineContent>
-                {/* todosd */}
-                {/* <div
-                    className={timelineStyles.showMore + ` ${timelineStyles.showMoreClickable}`}
-                    style={{ color: "white", fontWeight: 700 }}
-                    onClick={onClick}
-                >
-                    {`${t("general.showMore")} `}
-                    {<ArrowDropDown style={{ marginBottom: "-7px" }} />}
-                </div> */}
                 <Box
-                    // className={timelineStyles.showMore + ` ${timelineStyles.showMoreClickable}`}
                     sx={{
                         ...timelineStyles.showMore,
                         ...timelineStyles.showMoreClickable

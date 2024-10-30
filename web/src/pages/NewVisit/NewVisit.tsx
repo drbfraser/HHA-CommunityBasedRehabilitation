@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
 import {
     Button,
     FormControl,
@@ -12,8 +14,6 @@ import {
 } from "@mui/material";
 import { Field, FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-mui";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
 import {
     visitFieldLabels,
     VisitFormField,
@@ -27,13 +27,13 @@ import {
 } from "@cbr/common/forms/newVisit/visitFormFields";
 
 import { handleSubmit } from "./formHandler";
-import { newVisitStyles } from "./NewVisit.styles";
 import { IRisk } from "@cbr/common/util/risks";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IClient } from "@cbr/common/util/clients";
 import { Alert } from "@mui/material";
 import { TZoneMap, useZones } from "@cbr/common/util/hooks/zones";
 import GoBackButton from "components/GoBackButton/GoBackButton";
+import { newVisitStyles } from "./NewVisit.styles";
 
 const visitTypes: VisitFormField[] = [
     VisitFormField.health,
@@ -65,7 +65,7 @@ const ImprovementField = (props: {
             [ImprovementFormField.enabled]: false,
             [ImprovementFormField.description]: "",
             [ImprovementFormField.riskType]: props.visitType,
-            [ImprovementFormField.provided]: props.provided,
+            [ImprovementFormField.provided]: props.provided,            
         });
     }
 
@@ -74,6 +74,7 @@ const ImprovementField = (props: {
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
+                color="secondary"
                 name={`${fieldName}.${ImprovementFormField.enabled}`}
                 Label={{ label: props.provided }}
             />
@@ -247,6 +248,7 @@ const VisitReasonStep = (
                             component={CheckboxWithLabel}
                             type="checkbox"
                             key={visitType}
+                            color="secondary"
                             name={visitType}
                             Label={{ label: visitFieldLabels[visitType] }}
                             onChange={(event: React.FormEvent<HTMLInputElement>) => {

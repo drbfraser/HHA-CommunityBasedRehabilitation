@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
     FormControl,
@@ -10,18 +10,29 @@ import {
     Theme,
 } from "@mui/material";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
+import { getLanguageFromLocalStorage, Language, LANGUAGE_KEY } from "./utils";
 
 interface IProps {
     sx?: SxProps<Theme>;
 }
 
 const LanguagePicker = ({ sx }: IProps) => {
-    const [language, setLanguage] = useState("en");
+    const [language, setLanguage] = useState(getLanguageFromLocalStorage());
     const { t, i18n } = useTranslation();
 
+    useEffect(() => {
+        i18n.changeLanguage(language);
+    }, [i18n, language]);
+
     const handleLanguageChange = (e: SelectChangeEvent) => {
-        i18n.changeLanguage(e.target.value);
-        setLanguage(e.target.value);
+        const newLanguage = e.target.value;
+
+        setLanguage(newLanguage as Language);
+        try {
+            localStorage.setItem(LANGUAGE_KEY, newLanguage);
+        } catch (e) {
+            console.error("error setting language in localStorage:", e);
+        }
     };
 
     return (
@@ -42,8 +53,8 @@ const LanguagePicker = ({ sx }: IProps) => {
                 value={language}
                 onChange={handleLanguageChange}
             >
-                <MenuItem value={"en"}>{t("languagePicker.english")}</MenuItem>
-                <MenuItem value={"bari"}>{t("languagePicker.bari")}</MenuItem>
+                <MenuItem value={Language.EN}>{t("languagePicker.english")}</MenuItem>
+                <MenuItem value={Language.BARI}>{t("languagePicker.bari")}</MenuItem>
             </Select>
         </FormControl>
     );

@@ -7,6 +7,7 @@ import pandas as pd
 OUTPUT_DIR = f"{os.path.dirname(__file__)}/csv"
 RAW_OUTPUT_DIR = f"{OUTPUT_DIR}/raw"
 CLEANED_OUTPUT_DIR = f"{OUTPUT_DIR}/cleaned"
+FINAL_OUTPUT_DIR = f"{OUTPUT_DIR}/final"
 
 
 def generate_csv_files():
@@ -28,7 +29,7 @@ def generate_csv_files():
         os.makedirs(RAW_OUTPUT_DIR, exist_ok=True)
 
         for table_name in ["cbr_api_clientrisk", "cbr_api_improvement", "cbr_api_outcome"]:
-            print(f"Outputting CSV file for: {table_name}")
+            print(f"--- outputting CSV file for: {table_name}")
             command = [
                 "docker", "exec", "cbr_postgres",
                 "psql", "-U", POSTGRES_USER, "-d", DB_NAME,
@@ -49,62 +50,62 @@ def cleanup_csv_files():
                        "created_at", "server_created_at", "timestamp"]
     os.makedirs(CLEANED_OUTPUT_DIR, exist_ok=True)
 
+    print("Cleaning raw CSV files...")
     for file in Path(RAW_OUTPUT_DIR).glob("*.csv"):
+        print(f"--- cleaning: {file.name}")
         df = pd.read_csv(file)
         df = df.drop(REMOVED_COLUMNS, axis=1, errors="ignore")
         df.to_csv(f"{CLEANED_OUTPUT_DIR}/cleaned_{file.name}")
+    print("Finished cleaning raw CSV files.")
 
 
-def get_counts():
+def process_files_into_final_format():
     # Column names
     RISK_TYPE = "risk_type"
     REQUIREMENT = "requirement"
     GOAL = "goal"
-    COUNT = "count"
     PROVIDED = "provided"
     DESC = "desc"
     GOAL_MET = "goal_met"
     OUTCOME = "outcome"
+    COUNT = "count"
 
-    def process_data(df: pd.DataFrame, group_by: list[str], sort_by: list[str]):
+    def process_data(df: pd.DataFrame, group_by: list[str], sort_by: list[str]) -> pd.DataFrame:
         df = df.groupby(group_by).size().reset_index(name=COUNT)
         df = df.sort_values(by=[*sort_by, COUNT], ascending=False)
         df = df.reset_index(drop=True)
         return df
 
+    print("Processing CSV files into final output form...")
+    os.makedirs(FINAL_OUTPUT_DIR, exist_ok=True)
     for file in Path(CLEANED_OUTPUT_DIR).glob("*.csv"):
-        print(file.name)
+        print(f"--- processing: {file.name}")
+
         df = pd.read_csv(file)
         if ("clientrisk" in file.name):
             requirement_df = process_data(
                 df.copy(), group_by=[RISK_TYPE, REQUIREMENT], sort_by=[RISK_TYPE])
-            # print(requirement_df)
-
-            # print("--------------------------------------------------------")
+            requirement_df.to_csv(f"{FINAL_OUTPUT_DIR}/risk_requirements.csv")
 
             goal_df = process_data(
                 df.copy(), group_by=[RISK_TYPE, GOAL], sort_by=[RISK_TYPE])
-            # print(goal_df)
-            return
+            goal_df.to_csv(f"{FINAL_OUTPUT_DIR}/risk_goals.csv")
         elif ("improvement" in file.name):
             df = process_data(
                 df, group_by=[RISK_TYPE, PROVIDED, DESC], sort_by=[RISK_TYPE, PROVIDED])
-            # print(df)
+            df.to_csv(f"{FINAL_OUTPUT_DIR}/improvements.csv")
         elif ("outcome" in file.name):
             df = process_data(
                 df, group_by=[RISK_TYPE, GOAL_MET, OUTCOME], sort_by=[RISK_TYPE, GOAL_MET])
-            # print(df)
+            df.to_csv(f"{FINAL_OUTPUT_DIR}/outcomes.csv")
         else:
             print(f"Error: unrecognized file name: {file.name}")
-            return
 
-        print(df)
-
-        # df.to_csv(f"{OUTPUT_DIR}/cleaned_{file.name}")
+    print("finished processing CSV files into final output form.")
 
 
 if __name__ == '__main__':
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     generate_csv_files()
     cleanup_csv_files()
-    get_counts()
+    process_files_into_final_format()

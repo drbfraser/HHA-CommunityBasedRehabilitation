@@ -1,16 +1,16 @@
 import React from "react";
-import { InputBase, InputBaseProps, useTheme } from "@material-ui/core";
-import { SearchIcon } from "@material-ui/data-grid";
+import { alpha, Box, InputBase, InputBaseProps, useTheme } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import { useTranslation } from "react-i18next";
+import { themeColors } from "@cbr/common/util/colors";
 
-import { useStyles } from "./SearchBar.styles";
+// import { useStyles } from "./SearchBar.styles";
 
 const SearchBar = (props: InputBaseProps) => {
     const theme = useTheme();
-    // const styles = useStyles(theme);  todosd: remove
     const { t } = useTranslation();
 
-    // todosd: move back to styles file?  How to apply theme better
+    // todosd: move back to styles file?  How to apply theme better -> use styled instead
     return (
         <Box
             sx={{

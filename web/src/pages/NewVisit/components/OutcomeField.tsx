@@ -1,8 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FormLabel, MenuItem, Typography } from "@material-ui/core";
+import { FormLabel, MenuItem, Typography } from "@mui/material";
 import { Field } from "formik";
-import { TextField } from "formik-material-ui";
+import { TextField } from "formik-mui";
 
 import {
     visitFieldLabels,

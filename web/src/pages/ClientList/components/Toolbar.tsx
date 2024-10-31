@@ -8,16 +8,17 @@ import {
     Switch,
     Checkbox,
     Typography,
-} from "@material-ui/core";
-import { MoreVert } from "@material-ui/icons";
+    Box,
+} from "@mui/material";
+import { MoreVert } from "@mui/icons-material";
 
 import { SearchOption } from "@cbr/common/util/searchOptions";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import SearchBar from "components/SearchBar/SearchBar";
-import { useStyles } from "../ClientList.styles";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
-import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
-import { useHideColumnsStyles } from "styles/HideColumns.styles";
+import { clientListStyles } from "../ClientList.styles";
+import { searchOptionsStyles } from "styles/SearchOptions.styles";
+import { hideColumnsStyles } from "styles/HideColumns.styles";
 
 interface IProps {
     allClientsMode: boolean;
@@ -45,9 +46,6 @@ const Toolbar = ({
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const { t } = useTranslation();
     const zones = useZones();
-    const styles = useStyles();
-    const searchOptionsStyle = useSearchOptionsStyles();
-    const hideColumnsStyle = useHideColumnsStyles();
 
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
@@ -57,7 +55,7 @@ const Toolbar = ({
 
     return (
         <>
-            <div className={styles.switch}>
+            <Box sx={clientListStyles.switch}>
                 <Typography
                     color={allClientsMode ? "textSecondary" : "textPrimary"}
                     component={"span"}
@@ -76,8 +74,8 @@ const Toolbar = ({
                 >
                     {t("dashboard.allClients")}
                 </Typography>
-            </div>
-            <div className={styles.checkbox}>
+            </Box>
+            <Box sx={clientListStyles.checkbox}>
                 <Typography
                     color={archivedMode ? "textPrimary" : "textSecondary"}
                     component={"span"}
@@ -91,10 +89,10 @@ const Toolbar = ({
                         onArchivedModeChange(e.target.checked);
                     }}
                 />
-            </div>
+            </Box>
 
-            <div className={styles.search}>
-                <div className={searchOptionsStyle.searchOptions}>
+            <Box sx={clientListStyles.search}>
+                <Box sx={searchOptionsStyles.searchOptions}>
                     <Select
                         color={"primary"}
                         defaultValue={SearchOption.NAME}
@@ -112,12 +110,12 @@ const Toolbar = ({
                             </MenuItem>
                         ))}
                     </Select>
-                </div>
+                </Box>
 
                 {searchOption === SearchOption.ZONE ? (
                     <div>
                         <Select
-                            className={searchOptionsStyle.zoneOptions}
+                            sx={searchOptionsStyles.zoneOptions}
                             color={"primary"}
                             defaultValue={""}
                             onChange={(e) => onSearchValueChange(String(e.target.value))}
@@ -136,7 +134,7 @@ const Toolbar = ({
                     />
                 )}
 
-                <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
+                <IconButton sx={hideColumnsStyles.optionsButton} onClick={onOptionsClick}>
                     <MoreVert />
                 </IconButton>
                 <Popover
@@ -152,10 +150,11 @@ const Toolbar = ({
                         horizontal: "center",
                     }}
                 >
-                    <div className={hideColumnsStyle.optionsContainer}>
+                    <Box sx={hideColumnsStyles.optionsContainer}>
                         {columns.map((column: any): JSX.Element => {
                             return (
-                                <div key={column.field} className={hideColumnsStyle.optionsRow}>
+                                // todosd: possible source of slowdown, many Boxes?
+                                <Box key={column.field} sx={hideColumnsStyles.optionsRow}>
                                     <Typography component={"span"} variant={"body2"}>
                                         {column.headerName}
                                     </Typography>
@@ -163,12 +162,12 @@ const Toolbar = ({
                                         checked={!column.hide}
                                         onClick={() => column.hideFunction(!column.hide)}
                                     />
-                                </div>
+                                </Box>
                             );
                         })}
-                    </div>
+                    </Box>
                 </Popover>
-            </div>
+            </Box>
         </>
     );
 };

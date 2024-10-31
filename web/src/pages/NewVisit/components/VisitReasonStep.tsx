@@ -1,8 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FormControl, FormGroup, FormLabel, MenuItem } from "@material-ui/core";
+import { FormControl, FormGroup, FormLabel, MenuItem } from "@mui/material";
 import { Field, FormikProps } from "formik";
-import { CheckboxWithLabel, TextField } from "formik-material-ui";
+import { CheckboxWithLabel, TextField } from "formik-mui";
 
 import {
     visitFieldLabels,
@@ -11,7 +11,7 @@ import {
     GoalStatus,
 } from "@cbr/common/forms/newVisit/visitFormFields";
 import { TZoneMap } from "@cbr/common/util/hooks/zones";
-import { useStyles } from "../NewVisit.styles";
+import { newVisitStyles } from "../NewVisit.styles";
 
 const visitTypes: VisitFormField[] = [
     VisitFormField.health,
@@ -26,7 +26,6 @@ const VisitReasonStep = (
     setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>,
     zones: TZoneMap
 ) => {
-    const styles = useStyles();
     const { t } = useTranslation();
 
     const onCheckboxChange = (checked: boolean, visitType: string) => {
@@ -54,13 +53,13 @@ const VisitReasonStep = (
         <>
             <FormLabel focused={false}>{t("newVisit.whereVisit")}</FormLabel>
             <FormControl
-                className={styles.visitLocationContainer}
+                sx={newVisitStyles.visitLocationContainer}
                 fullWidth
                 required
                 variant="outlined"
             >
                 <Field
-                    className={styles.visitLocation}
+                    sx={newVisitStyles.visitLocation}
                     component={TextField}
                     name={VisitFormField.village}
                     label={visitFieldLabels[VisitFormField.village]}
@@ -69,7 +68,7 @@ const VisitReasonStep = (
                     required
                 />
                 <Field
-                    className={styles.visitLocation}
+                    sx={newVisitStyles.visitLocation}
                     component={TextField}
                     select
                     label={visitFieldLabels[VisitFormField.zone]}

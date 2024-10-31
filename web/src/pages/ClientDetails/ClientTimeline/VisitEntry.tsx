@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { Trans, useTranslation } from "react-i18next";
 import {
     Alert,
     Dialog,
@@ -29,11 +28,11 @@ import {
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { RiskType } from "@cbr/common/util/risks";
 import { useZones } from "@cbr/common/util/hooks/zones";
-import { entryStyles } from "./Entry.styles";
 import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import DataCard from "components/DataCard/DataCard";
 import { getTranslatedRiskName } from "util/risks";
 import TimelineEntry from "../Timeline/TimelineEntry";
+import { entryStyles } from "./Entry.styles";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;

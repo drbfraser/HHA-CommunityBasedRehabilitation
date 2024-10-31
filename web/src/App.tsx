@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Typography from "@material-ui/core/Typography";
+import { Box, Typography } from "@mui/material";
 
 import history from "@cbr/common/util/history";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
@@ -13,9 +13,8 @@ import AlertOffline from "./components/Alerts/AlertOffline";
 import LanguagePicker from "components/LanguagePicker/LanguagePicker";
 import { defaultPagePath, pagesForUser } from "util/pages";
 import Login from "pages/Login/Login";
-import { appStyles } from "App.styles";
 import { useIsLoggedIn } from "./util/hooks/loginState";
-import { Box } from "@mui/material";
+import { appStyles } from "App.styles";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();

@@ -24,7 +24,6 @@ import {
     BaseSurveyFormField,
     baseFieldLabels,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
-import { useStyles } from "./Entry.styles";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import DataCard from "components/DataCard/DataCard";
 import { entryStyles } from "./Entry.styles";

@@ -43,7 +43,7 @@ const ClientDetails = () => {
     }
 
     return (
-        <Grid container spacing={2} direction="row" justify="flex-start">
+        <Grid container spacing={2} direction="row" justifyContent="flex-start">
             <Grid item xs={12}>
                 {clientInfo ? (
                     <ClientInfoForm clientInfo={clientInfo} />

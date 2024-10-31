@@ -1,40 +1,14 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import Typography from "@mui/material/Typography";
-import List from "@mui/material/List";
-import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
-import Grid from "@material-ui/core/Grid";
-import { FiberManualRecord } from "@material-ui/icons";
-import { makeStyles } from "@material-ui/core/styles";
+import { Divider, Grid, List, ListItemText, Typography } from "@mui/material";
+import { FiberManualRecord } from "@mui/icons-material";
 
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IAlert, PriorityLevel, priorityLevels } from "@cbr/common/util/alerts";
 import { timestampToDate } from "@cbr/common/util/dates";
 import PriorityLevelChip from "components/PriorityLevelChip/PriorityLevelChip";
 import { compressedDataGridWidth } from "styles/DataGrid.styles";
-
-const useStyles = makeStyles({
-    selectedListItemStyle: {
-        backgroundColor: "lightcyan",
-        border: "1px solid blue",
-        padding: "3px",
-    },
-    listItemStyle: {
-        padding: "3px",
-    },
-    gridStyle: {
-        borderRight: "3px solid grey",
-    },
-    dividerStyle: {
-        margin: "0px",
-        padding: "0px",
-    },
-    tableTopAndContentDividerStyle: {
-        backgroundColor: "grey",
-        height: "3px",
-    },
-});
+import { alertInboxStyles } from "../AlertInbox.styles";
 
 type AlertDetailProps = {
     selectAlert: number;
@@ -61,7 +35,6 @@ const RenderBadge = (params: String) => {
 };
 
 const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: AlertDetailProps) => {
-    const style = useStyles();
     const { t } = useTranslation();
 
     // For the purposes of tracking changes to a user's unread alerts
@@ -85,10 +58,11 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
         alert.unread_by_users.includes(userID) ? "bold" : "small";
 
     return (
-        <Grid item xs={3} className={style.gridStyle}>
+        <Grid item xs={3} sx={alertInboxStyles.gridStyle}>
             <h1>{t("general.alerts")}</h1>
-            <Divider variant="fullWidth" className={style.tableTopAndContentDividerStyle} />
+            <Divider variant="fullWidth" sx={alertInboxStyles.tableTopAndContentDividerStyle} />
             <List
+                // todosd: move inline styles to external file
                 sx={{
                     width: "100%",
                     maxWidth: 360,
@@ -150,17 +124,17 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
                                     </div>
                                 }
                                 onClick={() => onAlertSelectionEvent(alert.id)}
-                                className={
-                                    alert.id === selectAlert
-                                        ? style.selectedListItemStyle
-                                        : style.listItemStyle
-                                }
+                                sx={{
+                                    ...(alert.id === selectAlert
+                                        ? alertInboxStyles.selectedListItemStyle
+                                        : alertInboxStyles.listItemStyle),
+                                }}
                             />
 
                             <Divider
                                 variant="fullWidth"
                                 component="li"
-                                className={style.dividerStyle}
+                                sx={alertInboxStyles.dividerStyle}
                             />
                         </div>
                     );

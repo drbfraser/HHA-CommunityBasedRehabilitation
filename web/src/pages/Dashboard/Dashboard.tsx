@@ -200,17 +200,9 @@ const Dashboard = () => {
                 {Number(params.value) === 0
                     ? t("dashboard.noVisits")
                     : timestampToDate(Number(params.value), locale, timezone)}
-            <Typography variant="body2">
-                {Number(params.value) === 0
-                    ? t("dashboard.noVisits")
-                    : timestampToDate(Number(params.value), locale, timezone)}
             </Typography>
         );
     };
-
-    const RenderZone = (params: ValueFormatterParams) => (
-        <Typography variant={"body2"}>{zones ? zones.get(Number(params.value)) : ""}</Typography>
-    );
 
     const RenderZone = (params: GridRenderCellParams) => (
         <Typography variant={"body2"}>{zones ? zones.get(Number(params.value)) : ""}</Typography>
@@ -218,6 +210,7 @@ const Dashboard = () => {
 
     const handleClientRowClick = (rowParams: GridRowParams) =>
         history.push(`/client/${rowParams.row.id}`);
+
     const handleReferralRowClick = (rowParams: GridRowParams) =>
         history.push(`/client/${rowParams.row.client_id}`);
 
@@ -276,9 +269,9 @@ const Dashboard = () => {
             {unreadAlertsCount > 0 && (
                 <Alert severity="info">
                     <Typography variant="body1">
-                        // todosd: values={{ unreadAlertsCount }}
+                        {/* todosd: values={{ unreadAlertsCount }} - check this works */}
                         <Trans i18nKey="dashboard.newInboxMessages" count={unreadAlertsCount}>
-                            -You have <b>{{ unreadAlertsCount }}</b> new message
+                            -You have <b>{ unreadAlertsCount }</b> new message
                             {unreadAlertsCount > 1 && "s"} in your inbox
                         </Trans>
                     </Typography>

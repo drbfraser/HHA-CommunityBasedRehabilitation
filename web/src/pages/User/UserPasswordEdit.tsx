@@ -3,9 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 import { Alert, Box, Button, Grid, Skeleton } from "@mui/material";
-import { userStyles } from "./User.styles";
-import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
-import { APILoadError } from "@cbr/common/util/endpoints";
 
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
@@ -20,13 +17,12 @@ import {
     handleSubmitChangePassword,
 } from "@cbr/common/forms/UserProfile/userProfileHandler";
 import history from "@cbr/common/util/history";
-import { useStyles } from "./styles";
+import { userStyles } from "./User.styles";
 
 const handleCancel = () => history.goBack();
 
 const UserPasswordEdit = () => {
     const { t } = useTranslation();
-    const styles = useStyles();
     const user = useCurrentUser();
     const [passwordChangeError, setPasswordChangeError] = useState<string | null>(null);
 
@@ -34,7 +30,7 @@ const UserPasswordEdit = () => {
         return <Alert severity="error">{t("alert.loadUserFailure")}</Alert>;
     }
     if (!user) {
-        return <Skeleton variant="rect" height={500} />;
+        return <Skeleton variant="rectangular" height={500} />;
     }
     return (
         <>
@@ -145,7 +141,6 @@ const UserPasswordEdit = () => {
                 )}
             </Formik>
         </>
-        // todosd: ok to remove the Skeleton here?
     );
 };
 

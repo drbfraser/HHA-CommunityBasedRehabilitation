@@ -1,8 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar, Legend } from "recharts";
-import { Typography } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { Skeleton, Typography } from "@mui/material";
 
 import { IStats, IStatsReferral } from "@cbr/common/util/stats";
 import { themeColors } from "@cbr/common/util/colors";
@@ -15,7 +14,7 @@ const ReferralStats = ({ stats }: IProps) => {
     const { t } = useTranslation();
 
     if (!stats) {
-        return <Skeleton variant="rect" height={400} />;
+        return <Skeleton variant="rectangular" height={400} />;
     }
 
     const dataLabels = [

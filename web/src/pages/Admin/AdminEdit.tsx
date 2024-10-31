@@ -2,11 +2,8 @@ import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import { Alert, Skeleton } from "@material-ui/lab";
-import { FormControl, MenuItem } from "@material-ui/core";
+import { TextField } from "formik-mui";
+import { Alert, Box, Button, FormControl, Grid, MenuItem, Skeleton } from "@mui/material";
 
 import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";

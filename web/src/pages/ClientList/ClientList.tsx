@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CSVLink } from "react-csv";
 import { useHistory } from "react-router-dom";
-import { LinearProgress, Typography, debounce, Button } from "@material-ui/core";
+import { LinearProgress, Typography, debounce, Button, Box } from "@mui/material";
 import {
     GridColumnHeaderParams,
     DataGrid,
@@ -13,51 +13,19 @@ import {
     GridSortCellParams,
     GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { compressedDataGridWidth, dataGridStyles } from "styles/DataGrid.styles";
-import {
-    LinearProgress,
-    IconButton,
-    MenuItem,
-    Popover,
-    Select,
-    Switch,
-    Checkbox,
-    Typography,
-    debounce,
-    Button,
-    Box,
-} from "@mui/material";
-import { useHistory } from "react-router-dom";
-import IOSSwitch from "components/IOSSwitch/IOSSwitch";
-import SearchBar from "components/SearchBar/SearchBar";
-import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
-import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
-import { getTranslatedRiskName, IRiskType, riskTypes } from "util/risks";
-import { SearchOption } from "@cbr/common/util/searchOptions";
-import { MoreVert, Cancel, FiberManualRecord } from "@mui/icons-material";
-import requestClientRows from "./requestClientRows";
-import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
-import { useHideColumnsStyles } from "styles/HideColumns.styles";
-import { useZones } from "@cbr/common/util/hooks/zones";
-import Toolbar from "./components/Toolbar";
+import { Cancel, FiberManualRecord } from "@mui/icons-material";
 
+import { RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
+import { SearchOption } from "@cbr/common/util/searchOptions";
+import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
+import { getTranslatedRiskName, IRiskType, riskTypes } from "util/risks";
+import requestClientRows from "./requestClientRows";
+import { compressedDataGridWidth, dataGridStyles } from "styles/DataGrid.styles";
 import { clientListStyles } from "./ClientList.styles";
-import { searchOptionsStyles } from "styles/SearchOptions.styles";
-import { hideColumnsStyles } from "styles/HideColumns.styles";
+import Toolbar from "./components/Toolbar";
 
 // manually define this type, as GridCellValue deprecated in MUI 5
 type GridCellValue = string | number | boolean | object | Date | null | undefined;
-
-const riskComparator = (
-    v1: GridCellValue,
-    v2: GridCellValue,
-    params1: GridSortCellParams,
-    params2: GridSortCellParams
-) => {
-    const risk1: IRiskLevel = riskLevels[String(params1.value)];
-    const risk2: IRiskLevel = riskLevels[String(params2.value)];
-    return risk1.level - risk2.level;
-};
 
 const RenderRiskHeader = (params: GridColumnHeaderParams): JSX.Element => {
     const { t } = useTranslation();
@@ -80,7 +48,7 @@ const RenderText = (params: GridRenderCellParams) => {
             variant={"body2"}
             color={params.row.is_active ? "textPrimary" : "textSecondary"}
         >
-            {String(params.value)}
+            {params.value}
         </Typography>
     );
 };
@@ -131,7 +99,6 @@ const ClientList = () => {
     const [rows, setRows] = useState<GridRowsProp>([]);
     const [archivedMode, setArchivedMode] = useState<boolean>(false);
 
-    const zones = useZones();
     const history = useHistory();
     const { t } = useTranslation();
 
@@ -199,7 +166,7 @@ const ClientList = () => {
         //     return a.id - b.id;
         // });
 
-        let sortById = rows.slice(0); // todosd: re-add type?  still has functionality?
+        let sortById = rows.slice(0); // todosd: re-add type?
 
         sortById.sort((a: any, b: any) => {
             return a.id - b.id;
@@ -232,10 +199,10 @@ const ClientList = () => {
             renderHeader: RenderRiskHeader,
             renderCell: RenderBadge,
             sortComparator: (
-                _v1: CellValue,
-                _v2: CellValue,
-                params1: CellParams,
-                params2: CellParams
+                _v1: GridCellValue,
+                _v2: GridCellValue,
+                params1: GridSortCellParams,
+                params2: GridSortCellParams
             ) => {
                 return (
                     riskLevels[String(params1.value)].level -
@@ -248,7 +215,7 @@ const ClientList = () => {
     ];
 
     return (
-        <div className={styles.root}>
+        <Box sx={clientListStyles.root}>
             <Toolbar
                 allClientsMode={allClientsMode}
                 archivedMode={archivedMode}
@@ -261,124 +228,6 @@ const ClientList = () => {
                 onSearchOptionChange={setSearchOption}
             />
 
-        <Box sx={clientListStyles.root}>
-            <div>
-                <Box sx={clientListStyles.switch}>
-                    <Typography
-                        color={allClientsMode ? "textSecondary" : "textPrimary"}
-                        component={"span"}
-                        variant={"body2"}
-                    >
-                        My Clients
-                    </Typography>
-                    <IOSSwitch
-                        checked={allClientsMode}
-                        onChange={(event) => setAllClientsMode(event.target.checked)}
-                    />
-                    <Typography
-                        color={allClientsMode ? "textPrimary" : "textSecondary"}
-                        component={"span"}
-                        variant={"body2"}
-                    >
-                        All Clients
-                    </Typography>
-                </Box>
-                <Box sx={clientListStyles.checkbox}>
-                    <Typography
-                        color={archivedMode ? "textPrimary" : "textSecondary"}
-                        component={"span"}
-                        variant={"body2"}
-                    >
-                        Show Archived
-                    </Typography>
-                    <Checkbox
-                        color="secondary"
-                        checked={archivedMode}
-                        onChange={(e) => {
-                            setArchivedMode(e.target.checked);
-                        }}
-                    />
-                </Box>
-            </div>
-            <Box sx={clientListStyles.search}>
-                <Box sx={searchOptionsStyles.searchOptions}>
-                    <Select
-                        variant="standard"
-                        color={"primary"}
-                        defaultValue={SearchOption.NAME}
-                        value={searchOption}
-                        onChange={(event) => {
-                            setSearchValue("");
-                            setSearchOption(String(event.target.value));
-                        }}
-                    >
-                        {Object.values(SearchOption).map((option) => (
-                            <MenuItem key={option} value={option}>
-                                {option}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </Box>
-                {searchOption === SearchOption.ZONE ? (
-                    <div>
-                        <Select
-                            variant="standard"
-                            sx={searchOptionsStyles.zoneOptions}
-                            color={"primary"}
-                            defaultValue={""}
-                            onChange={(e) => setSearchValue(String(e.target.value))}
-                        >
-                            {Array.from(zones).map(([id, name]) => (
-                                <MenuItem key={id} value={id}>
-                                    {name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </div>
-                ) : (
-                    <SearchBar
-                        value={searchValue}
-                        onChange={(e) => setSearchValue(e.target.value)}
-                    />
-                )}
-                <IconButton
-                    sx={hideColumnsStyles.optionsButton}
-                    onClick={onOptionsClick}
-                    size="large"
-                >
-                    <MoreVert />
-                </IconButton>
-                <Popover
-                    open={isOptionsOpen}
-                    anchorEl={optionsAnchorEl}
-                    onClose={onOptionsClose}
-                    anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "left",
-                    }}
-                    transformOrigin={{
-                        vertical: "top",
-                        horizontal: "center",
-                    }}
-                >
-                    <Box sx={hideColumnsStyles.optionsContainer}>
-                        {columns.map((column): JSX.Element => {
-                            return (
-                                <Box key={column.field} sx={hideColumnsStyles.optionsRow}>
-                                    <Typography component={"span"} variant={"body2"}>
-                                        {column.headerName}
-                                    </Typography>
-                                    <Switch
-                                        color="secondary"
-                                        checked={!column.hide}
-                                        onClick={() => column.hideFunction(!column.hide)}
-                                    />
-                                </Box>
-                            );
-                        })}
-                    </Box>
-                </Popover>
-            </Box>
             <DataGrid
                 sx={dataGridStyles.datagrid}
                 columns={columns}
@@ -392,6 +241,7 @@ const ClientList = () => {
                 onRowClick={onRowClick}
                 pagination
             />
+
             <Box sx={clientListStyles.downloadSVC}>
                 <CSVLink
                     filename="ClientList.csv"

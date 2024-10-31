@@ -86,10 +86,18 @@ def get_counts():
             df = original_df.copy()
             df = df.groupby([RISK_TYPE, "provided", "desc"])
             df = df.size().reset_index(name=COUNT)
-            df = df.sort_values(by=[RISK_TYPE, "provided", COUNT])
-            print(df)
+            df = df.sort_values(
+                by=[RISK_TYPE, "provided", COUNT], ascending=False)
+            df = df.reset_index(drop=True)
+            # print(df)
         elif ("outcome" in file.name):
-            pass
+            df = original_df.copy()
+            df = df.groupby([RISK_TYPE, "goal_met", "outcome"])
+            df = df.size().reset_index(name=COUNT)
+            df = df.sort_values(
+                by=[RISK_TYPE, "goal_met", "outcome"], ascending=False)
+            df = df.reset_index(drop=True)
+            print(df)
         else:
             print(f"Error: unrecognized file name: {file.name}")
 

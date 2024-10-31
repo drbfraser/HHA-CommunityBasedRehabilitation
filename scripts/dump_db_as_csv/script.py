@@ -4,7 +4,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import pandas as pd
 
-OUTPUT_DIR = f"{os.path.dirname(__file__)}/csv"
+OUTPUT_DIR = f"{os.path.dirname(__file__)}/output"
 RAW_OUTPUT_DIR = f"{OUTPUT_DIR}/raw"
 CLEANED_OUTPUT_DIR = f"{OUTPUT_DIR}/cleaned"
 FINAL_OUTPUT_DIR = f"{OUTPUT_DIR}/final"

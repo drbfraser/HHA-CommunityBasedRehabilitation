@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Button, FormControl, Grid, MenuItem } from "@mui/material";
 import { Field, Formik, Form } from "formik";
 import { TextField } from "formik-mui";
@@ -12,6 +13,8 @@ import {
 import { handleDiscard, handleNewWebAlertSubmit } from "@cbr/common/forms/Alert/alertHandler";
 
 const AlertForm = () => {
+    const { t } = useTranslation();
+
     return (
         <Formik
             initialValues={alertInitialValues}
@@ -75,7 +78,7 @@ const AlertForm = () => {
                                             color="error"
                                             onClick={() => handleDiscard(resetForm)}
                                         >
-                                            Discard
+                                            {t("general.discard")}
                                         </Button>
                                     </Grid>
                                     <Grid item md={4} xs={8}>
@@ -96,7 +99,7 @@ const AlertForm = () => {
                                                 type="submit"
                                                 disabled={isSubmitting}
                                             >
-                                                Submit
+                                                {t("general.submit")}
                                             </Button>
                                         </Grid>
                                     </Grid>

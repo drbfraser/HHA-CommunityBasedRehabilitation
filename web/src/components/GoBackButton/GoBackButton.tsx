@@ -1,8 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import Button from "@mui/material/Button";
-import { ArrowBack } from "@mui/icons-material";
+import Button from "@material-ui/core/Button";
+import { ArrowBack } from "@material-ui/icons";
 
 const GoBackButton = () => {
     const { t } = useTranslation();

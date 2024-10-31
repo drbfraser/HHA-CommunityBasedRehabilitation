@@ -34,6 +34,9 @@ export const loginStyles: Record<string, SxProps<Theme>> = {
             color: "white",
             "&.Mui-focused": {
                 color: "white",
+                "&.Mui-focused": {
+                    color: "white",
+                },
             },
         },
         "& .MuiInput-underline, #language-picker-form .MuiInput-underline": {

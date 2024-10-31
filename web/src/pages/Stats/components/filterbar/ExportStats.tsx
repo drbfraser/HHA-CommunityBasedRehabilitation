@@ -1,9 +1,10 @@
-import { Button, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
-import Dialog from "@mui/material/Dialog";
 import React, { useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { IStats } from "@cbr/common/util/stats";
+import { Trans, useTranslation } from "react-i18next";
 import { CSVLink } from "react-csv";
+import { Button, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
+import Dialog from "@material-ui/core/Dialog";
+
+import { IStats } from "@cbr/common/util/stats";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
 
@@ -37,7 +38,6 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
                 v.nutrit_count,
             ]);
         });
-
         rows.push([""]);
 
         const unres = stats.referrals_unresolved;
@@ -51,7 +51,6 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
         rows.push(["Prosthetic", unres.prosthetic_count, res.prosthetic_count]);
         rows.push(["Orthotic", unres.orthotic_count, res.orthotic_count]);
         rows.push(["Other", unres.other_count, res.other_count]);
-
         rows.push([""]);
 
         rows.push(["***DISABILITIES***"]);
@@ -66,21 +65,23 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Export Statistics</DialogTitle>
+            <DialogTitle>{t("statistics.export")}</DialogTitle>
             <DialogContent>
-                <Typography variant="body1">
-                    Note that any filters will also apply to exported data.
-                </Typography>
+                <Typography variant="body1">{t("statistics.filtersApplyToExports")}</Typography>
                 <br />
+
                 <Typography variant="body1">
-                    <CSVLink filename="CBRStats.csv" data={data}>
-                        Download statistics
-                    </CSVLink>{" "}
-                    as a CSV file.
+                    <Trans i18nKey="statistics.downloadAsCSV">
+                        {"-"}
+                        <CSVLink filename="CBRStats.csv" data={data}>
+                            Download statistics
+                        </CSVLink>{" "}
+                        as a CSV file.
+                    </Trans>
                 </Typography>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Close</Button>
+                <Button onClick={onClose}>{t("general.close")}</Button>
             </DialogActions>
         </Dialog>
     );

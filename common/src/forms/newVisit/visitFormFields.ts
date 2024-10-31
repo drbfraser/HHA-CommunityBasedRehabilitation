@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import i18n from "i18next";
+import i18n, { TFunction } from "i18next";
 
 export enum VisitField {
     health_visit = "health_visit",
@@ -109,6 +109,40 @@ refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
 });
+
+export const getVisitGoalLabel = (t: TFunction, visitType: string): string => {
+    const goalLabels: { [key: string]: string } = {
+        [VisitFormField.health]: t("newVisit.clientHealthGoal"),
+        [VisitFormField.education]: t("newVisit.clientEducationGoal"),
+        [VisitFormField.social]: t("newVisit.clientSocialGoal"),
+        [VisitFormField.nutrition]: t("newVisit.clientNutritionGoal"),
+        [VisitFormField.mental]: t("newVisit.clientMentalHealthGoal"),
+    };
+
+    if (visitType in goalLabels) {
+        return goalLabels[visitType];
+    } else {
+        console.error("Unknown translation key:", visitType);
+        return "";
+    }
+};
+
+export const getVisitGoalStatusLabel = (t: TFunction, visitType: string): string => {
+    const goalStatusLabels: { [key: string]: string } = {
+        [VisitFormField.health]: t("newVisit.clientHealthGoalStatus"),
+        [VisitFormField.education]: t("newVisit.clientEducationGoalStatus"),
+        [VisitFormField.social]: t("newVisit.clientSocialGoalStatus"),
+        [VisitFormField.nutrition]: t("newVisit.clientNutritionGoalStatus"),
+        [VisitFormField.mental]: t("newVisit.clientMentalHealthGoalStatus"),
+    };
+
+    if (visitType in goalStatusLabels) {
+        return goalStatusLabels[visitType];
+    } else {
+        console.error("Unknown translation key:", visitType);
+        return "";
+    }
+};
 
 export const visitInitialValues = {
     [VisitFormField.client_id]: "",

@@ -53,6 +53,7 @@ interface Resources {
       "showArchived": "&Show Archived",
       "noVisits": "&No Visits",
       "noPriorityClients": "&No Priority Clients Found",
+      "noClients": "&No Clients found",
       "noOutstandingReferrals": "&No Outstanding Referrals Found",
       "newInboxMessages": "&You have <1>1</1> new message in your inbox",
       "newInboxMessages_plural": "&You have <1>{{count}}</1> new messages in your inbox"
@@ -91,7 +92,7 @@ interface Resources {
     "visitAttr": {
       "newVisit": "&New Visit",
       "visitVerb": "&visits",
-      "visitLocation": "-<1>Visit</1> in {{body}}",
+      "visitLocation": "&<1>Visit</1> in {{body}}",
       "date": "&Visit Date",
       "newVisitSurvey": "&New Visit Survey"
     },
@@ -193,13 +194,21 @@ interface Resources {
       "lastVisit": "&Last Visit",
       "previousStep": "&Previous Step",
       "nextStep": "&Next Step",
-      "language": "&Language"
+      "language": "&Language",
+      "csvExport": "&EXPORT TO CSV",
+      "clear": "&Clear",
+      "filter": "&Filter",
+      "details": "&Details",
+      "from": "&From",
+      "to": "&To",
+      "clients": "&Clients"
     },
     "alert": {
       "generalFailure": "&Something went Wrong",
       "generalFailureTryAgain": "&Something went wrong. Please go back and try again.",
       "loadClientFailure": "&Something went wrong loading that client. Please try again.",
       "loadUserFailure": "&Something went wrong trying to load that user. Please go back and try again.",
+      "loadStatsFailure": "&Something went wrong loading the statistics. Please try again.",
       "editUserFailure": "&Something went wrong trying to edit that user. Please try again.",
       "editUserPasswordFailure": "&Error occurred when trying to change the user's password",
       "DeleteAlertWithSubject": "&Delete Alert with Subject: {{subject}}",
@@ -220,7 +229,8 @@ interface Resources {
       "actionConfirmationNotice": "&Are you sure you want to {{action}} this {{object}}?",
       "loadingPriorityClientsError": "&Error loading priority clients",
       "loadingReferralsError": "&Error loading referrals",
-      "submitReferralError": "&An error occurred when submitting the referral"
+      "submitReferralError": "&An error occurred when submitting the referral",
+      "submitVisitError": "&Error occurred trying to submit the visit"
     },
     "admin": {
       "username": "&Username",
@@ -255,7 +265,8 @@ interface Resources {
       "errorUpdatingAlert": "&Encountered an error while trying to update the alert!",
       "errorDeletingAlert": "&Encountered an error while trying to delete the alert!",
       "errorRetrievingUser": "&Error retrieving users. {{error}}",
-      "apiLoadError": "&API Load Error"
+      "apiLoadError": "&API Load Error",
+      "selectAnAlert": "&Please select an alert."
     },
     "baseSurveyFields": {
       "client_id": "&Client",
@@ -586,7 +597,17 @@ interface Resources {
       "visitFocus": "&Visit Focus",
       "visit": "&Visit",
       "discardNewVisit": "&Discard this new visit?",
-      "clients": "&Client's"
+      "clients": "&Client's",
+      "clientHealthGoal": "&Client's Health Goal",
+      "clientEducationGoal": "&Client's Education Goal",
+      "clientSocialGoal": "&Client's Social Goal",
+      "clientNutritionGoal": "&Client's Nutrition Goal",
+      "clientMentalHealthGoal": "&Client's Mental Health Goal",
+      "clientHealthGoalStatus": "&Client's Health Goal Status",
+      "clientEducationGoalStatus": "&Client's Education Goal Status",
+      "clientSocialGoalStatus": "&Client's Social Goal Status",
+      "clientNutritionGoalStatus": "&Client's Nutrition Goal Status",
+      "clientMentalHealthGoalStatus": "&Client's Mental Health Goal Status"
     },
     "screenNames": {
       "viewClient": "&View Client",
@@ -618,6 +639,8 @@ interface Resources {
       "showingDataFor": "&Showing data for",
       "allZones": "&all zones",
       "viewAllZone": "&View All Zone",
+      "viewAllZones": "&View All Zones",
+      "viewAllZoneData": "&View data for all zones.",
       "byZone": "&By Zone",
       "totalVisits": "&Total Visits:",
       "clickBarToFilter": "&Click on bar to filter by zone",
@@ -627,7 +650,20 @@ interface Resources {
       "resolved": "&Resolved",
       "allClients": "&All Clients",
       "activeClients": "&Active Clients",
-      "clientsWithDisabilities": "&Clients with Disabilities:"
+      "clientsWithDisabilities": "&Clients with Disabilities:",
+      "filtersDoNotApplyToDisabilities": "&Filters do not apply to disabilities.",
+      "clickForZoneSpecificData": "&For zone-specific data, click on a zone in the zone chart.",
+      "onlyZonesWithVisits": "&Only zones with visits are shown.",
+      "noVisitsFound": "&No visits found. If you are filtering, perhaps there were no visits during the date period selected or the user selected has not visited any clients yet.",
+      "count": "&Count",
+      "filterByDate": "&Filter by Date",
+      "filterByUser": "&Filter by User",
+      "export": "&Export Statistics",
+      "filtersApplyToExports": "&Note that any filters will also apply to exported data.",
+      "downloadAsCSV": "&<1>Download statistics<1> as a CSV file.",
+      "allTime": "&All Time",
+      "allUsers": "&All Users",
+      "dateRange": "&From {{start}} to {{end}}"
     },
     "sync": {
       "sureResetLocalDB": "&Are you sure you want to reset local database",
@@ -652,7 +688,18 @@ interface Resources {
       "downloadNewVersion": "&Please download the latest update for HHA CBR from the Google Play Store."
     },
     "zone": {
-      "zone": "&Zone"
+      "zone": "&Zone",
+      "successfulDelete": "&Zone successfully deleted!",
+      "failedDelete": "&Encountered an error while trying to delete the zone!",
+      "confirmDelete": "&Are you sure you want to delete this zone?",
+      "zoneName": "&Zone Name",
+      "cannotDelete": "&Zone cannot be deleted",
+      "moveUsersAndClients": "&Move Users and Clients to Zone:",
+      "successfulMigration": "&Users and clients successfully migrated. Delete zone?",
+      "confirmZoneDelete": "&Confirm Delete Zone",
+      "select": "&Select a zone to move these users and clients to:",
+      "cannotDeleteReason": "&Zone cannot be deleted because the following users/clients and their associated past visits are still in zone:",
+      "migrationError": "&Encountered an error while trying to migrate users and clients to target zone!"
     }
   },
   "en": {
@@ -709,9 +756,11 @@ interface Resources {
       "showArchived": "-Show Archived",
       "noVisits": "-No Visits",
       "noPriorityClients": "-No Priority Clients Found",
+      "noClients": "-No Clients found",
       "noOutstandingReferrals": "-No Outstanding Referrals Found",
       "newInboxMessages": "-You have <1>1</1> new message in your inbox",
-      "newInboxMessages_plural": "-You have <1>{{count}}</1> new messages in your inbox"
+      "newInboxMessages_plural": "-You have <1>{{count}}</1> new messages in your inbox",
+      "csvExport": "-EXPORT TO CSV"
     },
     "disabilities": {
       "amputee": "-Amputee",
@@ -847,15 +896,21 @@ interface Resources {
       "goBack": "-Go Back",
       "when": "-When",
       "lastVisit": "-Last Visit",
-      "previousStep": "-Previous Step",
-      "nextStep": "-Next Step",
-      "language": "-Language"
+      "language": "-Language",
+      "csvExport": "-EXPORT TO CSV",
+      "clear": "-Clear",
+      "filter": "-Filter",
+      "details": "-Details",
+      "from": "-From",
+      "to": "-To",
+      "clients": "-Clients"
     },
     "alert": {
       "generalFailure": "-Something went Wrong",
       "generalFailureTryAgain": "-Something went wrong. Please go back and try again.",
       "loadClientFailure": "-Something went wrong loading that client. Please try again.",
       "loadUserFailure": "-Something went wrong trying to load that user. Please go back and try again.",
+      "loadStatsFailure": "-Something went wrong loading the statistics. Please try again.",
       "editUserFailure": "-Something went wrong trying to edit that user. Please try again.",
       "editUserPasswordFailure": "-Error occurred when trying to change the user's password",
       "DeleteAlertWithSubject": "-Delete Alert with Subject: {{subject}}",
@@ -876,7 +931,8 @@ interface Resources {
       "actionConfirmationNotice": "-Are you sure you want to {{action}} this {{object}}?",
       "loadingPriorityClientsError": "-Error loading priority clients",
       "loadingReferralsError": "-Error loading referrals",
-      "submitReferralError": "-An error occurred when submitting the referral"
+      "submitReferralError": "-An error occurred when submitting the referral",
+      "submitVisitError": "-Error occurred trying to submit the visit"
     },
     "admin": {
       "username": "-Username",
@@ -911,7 +967,8 @@ interface Resources {
       "errorUpdatingAlert": "-Encountered an error while trying to update the alert!",
       "errorDeletingAlert": "-Encountered an error while trying to delete the alert!",
       "errorRetrievingUser": "-Error retrieving users. {{error}}",
-      "apiLoadError": "-API Load Error"
+      "apiLoadError": "-API Load Error",
+      "selectAnAlert": "-Please select an alert."
     },
     "baseSurveyFields": {
       "client_id": "-Client",
@@ -1244,7 +1301,17 @@ interface Resources {
       "visitFocus": "-Visit Focus",
       "visit": "-Visit",
       "discardNewVisit": "-Discard this new visit?",
-      "clients": "-Client's"
+      "clients": "-Client's",
+      "clientHealthGoal": "-Client's Health Goal",
+      "clientEducationGoal": "-Client's Education Goal",
+      "clientSocialGoal": "-Client's Social Goal",
+      "clientNutritionGoal": "-Client's Nutrition Goal",
+      "clientMentalHealthGoal": "-Client's Mental Health Goal",
+      "clientHealthGoalStatus": "-Client's Health Goal Status",
+      "clientEducationGoalStatus": "-Client's Education Goal Status",
+      "clientSocialGoalStatus": "-Client's Social Goal Status",
+      "clientNutritionGoalStatus": "-Client's Nutrition Goal Status",
+      "clientMentalHealthGoalStatus": "-Client's Mental Health Goal Status"
     },
     "screenNames": {
       "viewClient": "-View Client",
@@ -1276,6 +1343,8 @@ interface Resources {
       "showingDataFor": "-Showing data for",
       "allZones": "-all zones",
       "viewAllZone": "-View All Zone",
+      "viewAllZones": "-View All Zones",
+      "viewAllZoneData": "-View data for all zones.",
       "byZone": "-By Zone",
       "totalVisits": "-Total Visits:",
       "clickBarToFilter": "-Click on bar to filter by zone",
@@ -1285,7 +1354,20 @@ interface Resources {
       "resolved": "-Resolved",
       "allClients": "-All Clients",
       "activeClients": "-Active Clients",
-      "clientsWithDisabilities": "-Clients with Disabilities:"
+      "clientsWithDisabilities": "-Clients with Disabilities:",
+      "filtersDoNotApplyToDisabilities": "-Filters do not apply to disabilities.",
+      "clickForZoneSpecificData": "-For zone-specific data, click on a zone in the zone chart.",
+      "onlyZonesWithVisits": "-Only zones with visits are shown.",
+      "noVisitsFound": "-No visits found. If you are filtering, perhaps there were no visits during the date period selected or the user selected has not visited any clients yet.",
+      "count": "-Count",
+      "filterByDate": "-Filter by Date",
+      "filterByUser": "-Filter by User",
+      "export": "-Export Statistics",
+      "filtersApplyToExports": "-Note that any filters will also apply to exported data.",
+      "downloadAsCSV": "-<1>Download statistics</1> as a CSV file.",
+      "allTime": "-All Time",
+      "allUsers": "-All Users",
+      "dateRange": "-From {{start}} to {{end}}"
     },
     "sync": {
       "sureResetLocalDB": "-Are you sure you want to reset local database",
@@ -1310,7 +1392,18 @@ interface Resources {
       "downloadNewVersion": "-Please download the latest update for HHA CBR from the Google Play Store."
     },
     "zone": {
-      "zone": "-Zone"
+      "zone": "-Zone",
+      "successfulDelete": "-Zone successfully deleted!",
+      "failedDelete": "-Encountered an error while trying to delete the zone!",
+      "confirmDelete": "-Are you sure you want to delete this zone?",
+      "zoneName": "-Zone Name",
+      "cannotDelete": "-Zone cannot be deleted",
+      "moveUsersAndClients": "-Move Users and Clients to Zone:",
+      "successfulMigration": "-Users and clients successfully migrated. Delete zone?",
+      "confirmZoneDelete": "-Confirm Delete Zone",
+      "select": "-Select a zone to move these users and clients to:",
+      "cannotDeleteReason": "-Zone cannot be deleted because the following users/clients and their associated past visits are still in zone:",
+      "migrationError": "-Encountered an error while trying to migrate users and clients to target zone!"
     }
   }
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Typography from "@mui/material/Typography";
+import Typography from "@material-ui/core/Typography";
 
 import history from "@cbr/common/util/history";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";

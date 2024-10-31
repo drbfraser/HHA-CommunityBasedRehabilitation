@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { CSVLink } from "react-csv";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useHistory } from "react-router-dom";
+import { LinearProgress, Typography, debounce, Button } from "@material-ui/core";
 import {
     GridColumnHeaderParams,
     DataGrid,
@@ -30,11 +32,15 @@ import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import SearchBar from "components/SearchBar/SearchBar";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
-import { IRiskType, riskTypes } from "util/risks";
+import { getTranslatedRiskName, IRiskType, riskTypes } from "util/risks";
 import { SearchOption } from "@cbr/common/util/searchOptions";
 import { MoreVert, Cancel, FiberManualRecord } from "@mui/icons-material";
 import requestClientRows from "./requestClientRows";
+import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
+import { useHideColumnsStyles } from "styles/HideColumns.styles";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import Toolbar from "./components/Toolbar";
+
 import { clientListStyles } from "./ClientList.styles";
 import { searchOptionsStyles } from "styles/SearchOptions.styles";
 import { hideColumnsStyles } from "styles/HideColumns.styles";
@@ -54,11 +60,16 @@ const riskComparator = (
 };
 
 const RenderRiskHeader = (params: GridColumnHeaderParams): JSX.Element => {
+    const { t } = useTranslation();
     const riskType: IRiskType = riskTypes[params.field];
 
     return (
         <div className="MuiDataGrid-colCellTitle">
-            {window.innerWidth >= compressedDataGridWidth ? riskType.name : <riskType.Icon />}
+            {window.innerWidth >= compressedDataGridWidth ? (
+                getTranslatedRiskName(t, params.field as RiskType)
+            ) : (
+                <riskType.Icon />
+            )}
         </div>
     );
 };
@@ -95,10 +106,12 @@ const RenderLoadingOverlay = () => {
 };
 
 const RenderNoRowsOverlay = () => {
+    const { t } = useTranslation();
+
     return (
         <GridOverlay sx={dataGridStyles.noRows}>
             <Cancel color="primary" sx={dataGridStyles.noRowsIcon} />
-            <Typography color="primary">No Clients Found</Typography>
+            <Typography color="primary">{t("dashboard.noClients")}</Typography>
         </GridOverlay>
     );
 };
@@ -113,7 +126,6 @@ const ClientList = () => {
     const [isSocialHidden, setSocialHidden] = useState<boolean>(false);
     const [isNutritionHidden, setNutritionHidden] = useState<boolean>(false);
     const [isMentalHidden, setMentalHidden] = useState<boolean>(false);
-    const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
     const [rows, setRows] = useState<GridRowsProp>([]);
@@ -121,12 +133,39 @@ const ClientList = () => {
 
     const zones = useZones();
     const history = useHistory();
-    const isOptionsOpen = Boolean(optionsAnchorEl);
+    const { t } = useTranslation();
+
+    const initialDataLoaded = useRef(false);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const requestClientRowsDebounced = useCallback(debounce(requestClientRows, 500), []);
+    useEffect(() => {
+        if (!initialDataLoaded.current) {
+            return;
+        }
+
+        requestClientRowsDebounced(
+            setRows,
+            setLoading,
+            searchValue,
+            searchOption,
+            allClientsMode,
+            archivedMode
+        );
+    }, [searchValue, searchOption, allClientsMode, archivedMode, requestClientRowsDebounced]);
+
+    useEffect(() => {
+        const loadInitialData = async () => {
+            setLoading(true);
+            await requestClientRows(setRows, setLoading, "", "", true, false);
+            setLoading(false);
+            initialDataLoaded.current = true;
+        };
+
+        loadInitialData();
+    }, []);
 
     const onRowClick = (rowParams: GridRowParams) => history.push(`/client/${rowParams.row.id}`);
-    const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-        setOptionsAnchorEl(event.currentTarget);
-    const onOptionsClose = () => setOptionsAnchorEl(null);
 
     const riskColumnStates: {
         [key: string]: { hide: boolean; hideFunction: (isHidden: boolean) => void };
@@ -172,7 +211,7 @@ const ClientList = () => {
     const columns = [
         {
             field: "name",
-            headerName: "Name",
+            headerName: t("general.name"),
             flex: 1,
             renderCell: RenderText,
             hide: isNameHidden,
@@ -180,56 +219,48 @@ const ClientList = () => {
         },
         {
             field: "zone",
-            headerName: "Zone",
+            headerName: t("general.zone"),
             flex: 1,
             renderCell: RenderText,
             hide: isZoneHidden,
             hideFunction: setZoneHidden,
         },
-        ...Object.entries(riskTypes).map(([value, { name }]) => ({
+        ...Object.entries(riskTypes).map(([value]) => ({
             field: value,
-            headerName: name,
+            headerName: getTranslatedRiskName(t, value as RiskType),
             flex: 0.7,
             renderHeader: RenderRiskHeader,
             renderCell: RenderBadge,
-            sortComparator: riskComparator,
+            sortComparator: (
+                _v1: CellValue,
+                _v2: CellValue,
+                params1: CellParams,
+                params2: CellParams
+            ) => {
+                return (
+                    riskLevels[String(params1.value)].level -
+                    riskLevels[String(params2.value)].level
+                );
+            },
             hide: riskColumnStates[value].hide,
             hideFunction: riskColumnStates[value].hideFunction,
         })),
     ];
 
-    const initialDataLoaded = useRef(false);
-
-    useEffect(() => {
-        const loadInitialData = async () => {
-            setLoading(true);
-            await requestClientRows(setRows, setLoading, "", "", true, false);
-            setLoading(false);
-            initialDataLoaded.current = true;
-        };
-
-        loadInitialData();
-    }, []);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const requestClientRowsDebounced = useCallback(debounce(requestClientRows, 500), []);
-
-    useEffect(() => {
-        if (!initialDataLoaded.current) {
-            return;
-        }
-
-        requestClientRowsDebounced(
-            setRows,
-            setLoading,
-            searchValue,
-            searchOption,
-            allClientsMode,
-            archivedMode
-        );
-    }, [searchValue, searchOption, allClientsMode, archivedMode, requestClientRowsDebounced]);
-
     return (
+        <div className={styles.root}>
+            <Toolbar
+                allClientsMode={allClientsMode}
+                archivedMode={archivedMode}
+                searchValue={searchValue}
+                searchOption={searchOption}
+                columns={columns}
+                onClientModeChange={setAllClientsMode}
+                onArchivedModeChange={setArchivedMode}
+                onSearchValueChange={setSearchValue}
+                onSearchOptionChange={setSearchOption}
+            />
+
         <Box sx={clientListStyles.root}>
             <div>
                 <Box sx={clientListStyles.switch}>
@@ -368,7 +399,7 @@ const ClientList = () => {
                     style={{ textDecoration: "none" }}
                 >
                     <Button variant="outlined" size="small">
-                        EXPORT TO CSV{" "}
+                        {t("dashboard.csvExport")}
                     </Button>
                 </CSVLink>
             </Box>

@@ -1,37 +1,42 @@
-import { userStyles } from "./User.styles";
-import { TextField } from "formik-mui";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
-import { Alert, Box, Skeleton } from "@mui/material";
+import { TextField } from "formik-mui";
+import { Alert, Box, Button, Grid, Skeleton } from "@mui/material";
+import { userStyles } from "./User.styles";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
 
+import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import { APILoadError } from "@cbr/common/util/endpoints";
 import {
     changePassValidationSchema,
     ChangePasswordField,
     changePasswordFieldLabels,
     changePasswordInitialValues,
 } from "@cbr/common/forms/UserProfile/userProfileFields";
-import { useState } from "react";
-import React from "react";
 import {
     getPassChangeErrorMessageFromSubmissionError,
     handleSubmitChangePassword,
 } from "@cbr/common/forms/UserProfile/userProfileHandler";
 import history from "@cbr/common/util/history";
+import { useStyles } from "./styles";
 
 const handleCancel = () => history.goBack();
 
 const UserPasswordEdit = () => {
+    const { t } = useTranslation();
+    const styles = useStyles();
     const user = useCurrentUser();
     const [passwordChangeError, setPasswordChangeError] = useState<string | null>(null);
 
-    return user === APILoadError ? (
-        <Alert severity="error">
-            Something went wrong trying to load that user. Please go back and try again.
-        </Alert>
-    ) : user ? (
+    if (user === APILoadError) {
+        return <Alert severity="error">{t("alert.loadUserFailure")}</Alert>;
+    }
+    if (!user) {
+        return <Skeleton variant="rect" height={500} />;
+    }
+    return (
         <>
             <Box sx={userStyles.container}>
                 {passwordChangeError && (
@@ -40,9 +45,11 @@ const UserPasswordEdit = () => {
                     </Alert>
                 )}
                 <br />
-                <b>ID</b>
+
+                <b>{t("general.id")}</b>
                 <p>{user.id}</p>
-                <b>Username </b>
+
+                <b>{t("general.username")}</b>
                 <p>{user.username}</p>
             </Box>
             <Formik
@@ -121,7 +128,7 @@ const UserPasswordEdit = () => {
                                         disabled={isSubmitting}
                                         style={{ marginRight: 5 }}
                                     >
-                                        Save
+                                        {t("general.save")}
                                     </Button>
 
                                     <Button
@@ -129,7 +136,7 @@ const UserPasswordEdit = () => {
                                         variant="outlined"
                                         onClick={handleCancel}
                                     >
-                                        Cancel
+                                        {t("general.cancel")}
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -138,8 +145,7 @@ const UserPasswordEdit = () => {
                 )}
             </Formik>
         </>
-    ) : (
-        <Skeleton variant="rectangular" height={500} />
+        // todosd: ok to remove the Skeleton here?
     );
 };
 

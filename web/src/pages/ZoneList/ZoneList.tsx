@@ -10,7 +10,7 @@ import {
     GridOverlay,
     GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { LinearProgress, IconButton, Typography, Box } from "@mui/material";
+import { Box, IconButton, LinearProgress, Typography } from "@mui/material";
 
 import { zoneListStyles } from "./ZoneList.styles";
 import { dataGridStyles } from "styles/DataGrid.styles";
@@ -20,17 +20,13 @@ import requestZoneRows from "./requestZoneRows";
 const RenderText = (params: GridRenderCellParams) => {
     return <Typography variant={"body2"}>{params.value}</Typography>;
 };
-
-const RenderLoadingOverlay = () => {
-    return (
-        <GridOverlay>
-            <div style={{ position: "absolute", top: 0, width: "100%" }}>
-                <LinearProgress />
-            </div>
-        </GridOverlay>
-    );
-};
-
+const RenderLoadingOverlay = () => (
+    <GridOverlay>
+        <div style={{ position: "absolute", top: 0, width: "100%" }}>
+            <LinearProgress />
+        </div>
+    </GridOverlay>
+);
 const RenderNoRowsOverlay = () => {
     return (
         <GridOverlay sx={dataGridStyles.noRows}>

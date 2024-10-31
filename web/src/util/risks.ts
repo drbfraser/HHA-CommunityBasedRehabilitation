@@ -6,7 +6,7 @@ import {
     SvgIconComponent,
     Restaurant,
     Favorite,
-} from "@mui/icons-material";
+} from "@material-ui/icons";
 import { TFunction } from "i18next";
 
 export interface IRiskType {
@@ -37,7 +37,7 @@ export const riskTypes: { [key: string]: IRiskType } = {
     },
 };
 
-export const getTranslatedRiskName = (t: TFunction, riskType: RiskType) => {
+export const getTranslatedRiskName = (t: TFunction, riskType: RiskType): string => {
     switch (riskType) {
         case RiskType.HEALTH:
             return t("risks.health");

@@ -179,7 +179,8 @@ const AdminList = () => {
                         ))}
                     </Select>
                 </Box>
-                {searchOption === SearchOption.ZONE ? (
+
+                {searchOption === searchOptions.ZONE.value ? (
                     <div>
                         <Select
                             variant="standard"

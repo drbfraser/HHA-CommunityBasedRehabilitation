@@ -1,17 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Badge, Box } from "@mui/material";
-import Tooltip from "@mui/material/Tooltip";
 import { Link } from "react-router-dom";
-import { sideNavStyles } from "./SideNav.styles";
+import { Badge } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import Tooltip from "@material-ui/core/Tooltip";
+
 import { IAlert } from "@cbr/common/util/alerts";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
-import { Alert } from "@mui/material";
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { SxProps, Theme } from "@mui/material";
 import { IPage, PageName } from "util/pages";
+import { sideNavStyles } from "./SideNav.styles";
 
 interface IProps {
     page: IPage;

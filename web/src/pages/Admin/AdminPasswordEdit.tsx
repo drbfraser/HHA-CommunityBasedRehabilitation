@@ -2,10 +2,10 @@ import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-mui";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import { Alert, Box, Skeleton } from "@mui/material";
+import { TextField } from "formik-material-ui";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import { Alert, Skeleton } from "@material-ui/lab";
 
 import { handleUpdatePassword } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";

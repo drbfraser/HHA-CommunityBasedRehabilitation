@@ -200,9 +200,17 @@ const Dashboard = () => {
                 {Number(params.value) === 0
                     ? t("dashboard.noVisits")
                     : timestampToDate(Number(params.value), locale, timezone)}
+            <Typography variant="body2">
+                {Number(params.value) === 0
+                    ? t("dashboard.noVisits")
+                    : timestampToDate(Number(params.value), locale, timezone)}
             </Typography>
         );
     };
+
+    const RenderZone = (params: ValueFormatterParams) => (
+        <Typography variant={"body2"}>{zones ? zones.get(Number(params.value)) : ""}</Typography>
+    );
 
     const RenderZone = (params: GridRenderCellParams) => (
         <Typography variant={"body2"}>{zones ? zones.get(Number(params.value)) : ""}</Typography>
@@ -268,12 +276,9 @@ const Dashboard = () => {
             {unreadAlertsCount > 0 && (
                 <Alert severity="info">
                     <Typography variant="body1">
-                        <Trans
-                            i18nKey="dashboard.newInboxMessages"
-                            count={unreadAlertsCount}
-                            values={{ unreadAlertsCount }}
-                        >
-                            -You have <b>{unreadAlertsCount}</b> new message
+                        // todosd: values={{ unreadAlertsCount }}
+                        <Trans i18nKey="dashboard.newInboxMessages" count={unreadAlertsCount}>
+                            -You have <b>{{ unreadAlertsCount }}</b> new message
                             {unreadAlertsCount > 1 && "s"} in your inbox
                         </Trans>
                     </Typography>

@@ -1,9 +1,10 @@
 import React from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import EditIcon from "@mui/icons-material/Edit";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import { Box, Button, Alert, Skeleton } from "@mui/material";
+import EditIcon from "@material-ui/icons/Edit";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
+import { Button } from "@material-ui/core";
+import { Alert, Skeleton } from "@material-ui/lab";
 
 import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -45,7 +46,7 @@ const AdminView = () => {
                             </Button>
                         </Box>
                     </Box>
-                    <b>Username</b>
+                    <b>{t("admin.username")}</b>
                     <p>{user.username}</p>
 
                     <b>{t("general.id")}</b>

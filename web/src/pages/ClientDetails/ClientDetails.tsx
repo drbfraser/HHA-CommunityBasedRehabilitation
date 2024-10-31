@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Grid, Typography, Button, Alert, Skeleton } from "@mui/material";
+import { Alert, Grid, Skeleton, Typography, Button } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
@@ -43,7 +43,7 @@ const ClientDetails = () => {
     }
 
     return (
-        <Grid container spacing={2} direction="row" justifyContent="flex-start">
+        <Grid container spacing={2} direction="row" justify="flex-start">
             <Grid item xs={12}>
                 {clientInfo ? (
                     <ClientInfoForm clientInfo={clientInfo} />

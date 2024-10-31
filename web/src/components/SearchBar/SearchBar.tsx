@@ -1,9 +1,9 @@
 import React from "react";
-import { alpha, Box, InputBase, InputBaseProps, useTheme } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search"; // TODO: was from data-grid - verify same
+import { InputBase, InputBaseProps, useTheme } from "@material-ui/core";
+import { SearchIcon } from "@material-ui/data-grid";
 import { useTranslation } from "react-i18next";
 
-import { themeColors } from "@cbr/common/util/colors";
+import { useStyles } from "./SearchBar.styles";
 
 const SearchBar = (props: InputBaseProps) => {
     const theme = useTheme();

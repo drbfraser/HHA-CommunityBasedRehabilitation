@@ -57,12 +57,13 @@ def cleanup_csv_files():
 
 def get_counts():
     for file in Path(CLEANED_OUTPUT_DIR).glob("*.csv"):
+        # Column names
         RISK_TYPE = "risk_type"
         REQUIREMENT = "requirement"
         GOAL = "goal"
         COUNT = "count"
-        print(file.name)
 
+        print(file.name)
         original_df = pd.read_csv(file)
         if ("clientrisk" in file.name):
             df = original_df.copy()
@@ -70,20 +71,23 @@ def get_counts():
             df = df.size().reset_index(name=COUNT)
             df = df.sort_values(by=[RISK_TYPE, COUNT], ascending=False)
             df = df.reset_index(drop=True)
-            print(df)
+            # print(df)
 
-            print("--------------------------------------------------------")
+            # print("--------------------------------------------------------")
 
             df = original_df.copy()
-            df = df.groupby([RISK_TYPE, REQUIREMENT, GOAL])
+            df = df.groupby([RISK_TYPE, GOAL])
             df = df.size().reset_index(name=COUNT)
             df = df.sort_values(
-                by=[RISK_TYPE, REQUIREMENT, COUNT], ascending=False)
+                by=[RISK_TYPE, COUNT], ascending=False)
             df = df.reset_index(drop=True)
-            print(df)
-        elif ("improvement" in file.name):
             # print(df)
-            pass
+        elif ("improvement" in file.name):
+            df = original_df.copy()
+            df = df.groupby([RISK_TYPE, "provided", "desc"])
+            df = df.size().reset_index(name=COUNT)
+            df = df.sort_values(by=[RISK_TYPE, "provided", COUNT])
+            print(df)
         elif ("outcome" in file.name):
             pass
         else:

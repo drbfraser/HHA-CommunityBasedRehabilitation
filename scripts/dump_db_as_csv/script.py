@@ -62,6 +62,10 @@ def get_counts():
         REQUIREMENT = "requirement"
         GOAL = "goal"
         COUNT = "count"
+        PROVIDED = "provided"
+        DESC = "desc"
+        GOAL_MET = "goal_met"
+        OUTCOME = "outcome"
 
         print(file.name)
         original_df = pd.read_csv(file)
@@ -84,18 +88,18 @@ def get_counts():
             # print(df)
         elif ("improvement" in file.name):
             df = original_df.copy()
-            df = df.groupby([RISK_TYPE, "provided", "desc"])
+            df = df.groupby([RISK_TYPE, PROVIDED, DESC])
             df = df.size().reset_index(name=COUNT)
             df = df.sort_values(
-                by=[RISK_TYPE, "provided", COUNT], ascending=False)
+                by=[RISK_TYPE, PROVIDED, COUNT], ascending=False)
             df = df.reset_index(drop=True)
             # print(df)
         elif ("outcome" in file.name):
             df = original_df.copy()
-            df = df.groupby([RISK_TYPE, "goal_met", "outcome"])
+            df = df.groupby([RISK_TYPE, GOAL_MET, OUTCOME])
             df = df.size().reset_index(name=COUNT)
             df = df.sort_values(
-                by=[RISK_TYPE, "goal_met", "outcome"], ascending=False)
+                by=[RISK_TYPE, GOAL_MET, OUTCOME], ascending=False)
             df = df.reset_index(drop=True)
             print(df)
         else:

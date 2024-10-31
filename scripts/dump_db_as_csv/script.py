@@ -56,54 +56,49 @@ def cleanup_csv_files():
 
 
 def get_counts():
-    for file in Path(CLEANED_OUTPUT_DIR).glob("*.csv"):
-        # Column names
-        RISK_TYPE = "risk_type"
-        REQUIREMENT = "requirement"
-        GOAL = "goal"
-        COUNT = "count"
-        PROVIDED = "provided"
-        DESC = "desc"
-        GOAL_MET = "goal_met"
-        OUTCOME = "outcome"
+    # Column names
+    RISK_TYPE = "risk_type"
+    REQUIREMENT = "requirement"
+    GOAL = "goal"
+    COUNT = "count"
+    PROVIDED = "provided"
+    DESC = "desc"
+    GOAL_MET = "goal_met"
+    OUTCOME = "outcome"
 
+    def process_data(df: pd.DataFrame, group_by: list[str], sort_by: list[str]):
+        df = df.groupby(group_by).size().reset_index(name=COUNT)
+        df = df.sort_values(by=[*sort_by, COUNT], ascending=False)
+        df = df.reset_index(drop=True)
+        return df
+
+    for file in Path(CLEANED_OUTPUT_DIR).glob("*.csv"):
         print(file.name)
-        original_df = pd.read_csv(file)
+        df = pd.read_csv(file)
         if ("clientrisk" in file.name):
-            df = original_df.copy()
-            df = df.groupby([RISK_TYPE, REQUIREMENT])
-            df = df.size().reset_index(name=COUNT)
-            df = df.sort_values(by=[RISK_TYPE, COUNT], ascending=False)
-            df = df.reset_index(drop=True)
-            # print(df)
+            requirement_df = process_data(
+                df.copy(), group_by=[RISK_TYPE, REQUIREMENT], sort_by=[RISK_TYPE])
+            # print(requirement_df)
 
             # print("--------------------------------------------------------")
 
-            df = original_df.copy()
-            df = df.groupby([RISK_TYPE, GOAL])
-            df = df.size().reset_index(name=COUNT)
-            df = df.sort_values(
-                by=[RISK_TYPE, COUNT], ascending=False)
-            df = df.reset_index(drop=True)
-            # print(df)
+            goal_df = process_data(
+                df.copy(), group_by=[RISK_TYPE, GOAL], sort_by=[RISK_TYPE])
+            # print(goal_df)
+            return
         elif ("improvement" in file.name):
-            df = original_df.copy()
-            df = df.groupby([RISK_TYPE, PROVIDED, DESC])
-            df = df.size().reset_index(name=COUNT)
-            df = df.sort_values(
-                by=[RISK_TYPE, PROVIDED, COUNT], ascending=False)
-            df = df.reset_index(drop=True)
+            df = process_data(
+                df, group_by=[RISK_TYPE, PROVIDED, DESC], sort_by=[RISK_TYPE, PROVIDED])
             # print(df)
         elif ("outcome" in file.name):
-            df = original_df.copy()
-            df = df.groupby([RISK_TYPE, GOAL_MET, OUTCOME])
-            df = df.size().reset_index(name=COUNT)
-            df = df.sort_values(
-                by=[RISK_TYPE, GOAL_MET, OUTCOME], ascending=False)
-            df = df.reset_index(drop=True)
-            print(df)
+            df = process_data(
+                df, group_by=[RISK_TYPE, GOAL_MET, OUTCOME], sort_by=[RISK_TYPE, GOAL_MET])
+            # print(df)
         else:
             print(f"Error: unrecognized file name: {file.name}")
+            return
+
+        print(df)
 
         # df.to_csv(f"{OUTPUT_DIR}/cleaned_{file.name}")
 

@@ -3,7 +3,7 @@ import { SxProps, Theme } from "@mui/material";
 
 export const zoneStyles: Record<string, SxProps<Theme>> = {
     container: {
-        paddingLeft: 20,
+        paddingLeft: "20px",
     },
     header: {
         display: "flex",
@@ -13,7 +13,7 @@ export const zoneStyles: Record<string, SxProps<Theme>> = {
         alignItems: "center",
     },
     editButton: {
-        marginBottom: 20,
+        marginBottom: "20px",
     },
     disableBtn: {
         backgroundColor: themeColors.riskRed,
@@ -24,37 +24,6 @@ export const zoneStyles: Record<string, SxProps<Theme>> = {
         color: "white",
     },
     btn: {
-        marginRight: 8,
+        marginRight: "8px",
     },
 };
-
-// todosd: remove
-// export const useStyles = makeStyles(
-//     {
-//         container: {
-//             paddingLeft: 20,
-//         },
-//         header: {
-//             display: "flex",
-//             flexDirection: "row",
-//             flexWrap: "wrap",
-//             justifyContent: "space-between",
-//             alignItems: "center",
-//         },
-//         editButton: {
-//             marginBottom: 20,
-//         },
-//         disableBtn: {
-//             backgroundColor: themeColors.riskRed,
-//             color: "white",
-//         },
-//         activeBtn: {
-//             backgroundColor: themeColors.riskGreen,
-//             color: "white",
-//         },
-//         btn: {
-//             marginRight: 8,
-//         },
-//     },
-//     { index: 1 }
-// );

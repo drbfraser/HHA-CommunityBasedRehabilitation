@@ -86,7 +86,7 @@ const AdminNew = () => {
                                     name={AdminField.confirmPassword}
                                     variant="outlined"
                                     type="password"
-                                    label={adminUserFieldLabels[AdminField.confirmPassword]}
+                                    label={adminUserFieldLabels[AdminField.confirmPassword]}                                    
                                     required
                                     fullWidth
                                 />

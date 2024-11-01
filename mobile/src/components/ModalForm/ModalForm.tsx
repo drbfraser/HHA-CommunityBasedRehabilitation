@@ -1,11 +1,13 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Pressable } from "react-native";
 import { TextInput, Portal, Modal, Text, Divider, HelperText } from "react-native-paper";
-import TextCheckBox from "../TextCheckBox/TextCheckBox";
-import useStyles from "./ModalForm.styles";
-import { shouldShowError } from "../../util/formikUtil";
+import Icon from "react-native-vector-icons/FontAwesome";
 import { FormikProps } from "formik";
+
 import { clientFieldLabels } from "@cbr/common";
+import TextCheckBox from "../TextCheckBox/TextCheckBox";
+import { shouldShowError } from "../../util/formikUtil";
+import useStyles from "./ModalForm.styles";
 
 interface IProps {
     field: string;
@@ -86,6 +88,7 @@ const ModalForm: FC<IProps> = ({
                 render={() => (
                     <Pressable onPress={onOpen} style={styles.button}>
                         <Text>{formValue}</Text>
+                        <Icon name="edit" size={20} style={styles.editIcon} />
                     </Pressable>
                 )}
             />

@@ -81,7 +81,7 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
                 disabled={isFieldDisabled()}
             />
             <ModalForm
-                title={props.riskPrefix}
+                title={clientFieldLabels[`${props.riskPrefix}Goals`]}
                 checkboxLabels={["Organize Events", "Make Friends", "Volunteer"]}
                 hasFreeFormText={true}
             />

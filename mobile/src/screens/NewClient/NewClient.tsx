@@ -1,20 +1,23 @@
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { SafeAreaView, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Button, Card, Divider, TouchableRipple } from "react-native-paper";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
+import { Formik, FormikProps } from "formik";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
+
 import {
     ClientField,
     clientFieldLabels,
     clientInitialValues,
+    IUser,
     newClientValidationSchema,
     RiskLevel,
     riskLevels,
     RiskType,
     TClientValues,
 } from "@cbr/common";
-import { useDatabase } from "@nozbe/watermelondb/hooks";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { Formik, FormikProps } from "formik";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { SafeAreaView, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Button, Card, Divider, TouchableRipple } from "react-native-paper";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
@@ -28,7 +31,6 @@ import useStyles from "./NewClient.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
-import { useTranslation } from "react-i18next";
 
 const riskMap: Map<RiskLevel, string> = new Map(
     Object.entries(riskLevels).map(([riskKey, riskLevel]) => [riskKey as RiskLevel, riskLevel.name])
@@ -83,26 +85,26 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
 
 const NewClient = () => {
     const authContext = useContext(AuthContext);
-    useEffect(() => {
-        authContext.requireLoggedIn(true);
-    }, []);
-    const user =
-        authContext.authState.state === "loggedIn" ? authContext.authState.currentUser : null;
     const navigation = useNavigation<AppStackNavProp>();
+    const { setUnSyncedChanges } = useContext(SyncContext);
+    const { autoSync, cellularSync } = useContext(SyncContext);
+    const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
+    const { t } = useTranslation();
     const styles = useStyles();
     const database = useDatabase();
     const isFocused = useIsFocused();
-    const { setUnSyncedChanges } = useContext(SyncContext);
-    const scrollRef = React.createRef<KeyboardAwareScrollView>();
-    const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
-    const { autoSync, cellularSync } = useContext(SyncContext);
-    const { t } = useTranslation();
+    const user =
+        authContext.authState.state === "loggedIn" ? authContext.authState.currentUser : null;
 
+    const scrollRef = React.createRef<KeyboardAwareScrollView>();
     const scrollToTop = useCallback(
         () => scrollRef?.current?.scrollToPosition(0, 0, false),
         [scrollRef]
     );
 
+    useEffect(() => {
+        authContext.requireLoggedIn(true);
+    }, []);
     useEffect(() => {
         if (isFocused) {
             checkUnsyncedChanges().then((res) => {

@@ -80,7 +80,11 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
                 mode="outlined"
                 disabled={isFieldDisabled()}
             />
-            <ModalForm />
+            <ModalForm
+                title={props.riskPrefix}
+                checkboxLabels={["Organize Events", "Make Friends", "Volunteer"]}
+                hasFreeFormText={true}
+            />
         </View>
     );
 };

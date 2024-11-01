@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { TextInput, Portal, Modal, Text, Button } from "react-native-paper";
 import TextCheckBox from "../TextCheckBox/TextCheckBox";
 
-const ModalForm = (props: {
+interface IProps {
     title: string;
     checkboxLabels?: string[];
-    hasFreeFormText: boolean;
-}) => {
-    const { title, checkboxLabels } = props;
+    hasFreeFormText?: boolean;
+}
 
+const ModalForm: FC<IProps> = ({ title, checkboxLabels = [], hasFreeFormText = false }) => {
     const [visible, setVisible] = useState(false);
-    const [checkedItems, setCheckedItems] = useState(
-        checkboxLabels?.reduce((acc, label) => ({ ...acc, [label]: false }), {}) ?? {}
+    const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(
+        checkboxLabels.reduce((acc, label) => ({ ...acc, [label]: false }), {}) ?? {}
     );
 
     return (
@@ -23,7 +23,7 @@ const ModalForm = (props: {
                     contentContainerStyle={{ backgroundColor: "white" }}
                 >
                     <Text>{title}</Text>
-                    {props.checkboxLabels?.map((label, index) => (
+                    {checkboxLabels.map((label, index) => (
                         <TextCheckBox
                             key={index}
                             field={label}
@@ -35,7 +35,7 @@ const ModalForm = (props: {
                             }
                         />
                     ))}
-                    {props.hasFreeFormText && <TextInput mode="outlined" />}
+                    {hasFreeFormText && <TextInput mode="outlined" />}
                 </Modal>
             </Portal>
             <Button onPress={() => setVisible(true)}>Show Modal</Button>

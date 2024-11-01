@@ -1,3 +1,22 @@
+##########################################################
+# PREREQUISITES:
+# - Ensure that Postgres Docker container is running
+# - Ensure your environment has pandas and python-dotenv installed
+#     - see requirements.txt; can try running `pip install -r requirements.txt`
+# - This script was made with Python 3.11.9, but other versions might work
+#
+# HOW TO RUN:
+# - python script.py
+#
+# OUTPUTS:
+# - output/raw/
+#     - raw .csv outputs fetched directly from Postgres container
+# - output/cleaned/
+#     - .csv files with only relevant columns selected)
+# - output/final/
+#     - .csv files that have been grouped by relevant columns with an additional `count` column for duplicate values)
+##########################################################
+
 import os
 import subprocess
 from pathlib import Path

@@ -31,6 +31,7 @@ import useStyles from "./NewClient.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
+import ModalForm from "../../components/ModalForm/ModalForm";
 
 const riskMap: Map<RiskLevel, string> = new Map(
     Object.entries(riskLevels).map(([riskKey, riskLevel]) => [riskKey as RiskLevel, riskLevel.name])
@@ -79,6 +80,7 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
                 mode="outlined"
                 disabled={isFieldDisabled()}
             />
+            <ModalForm />
         </View>
     );
 };

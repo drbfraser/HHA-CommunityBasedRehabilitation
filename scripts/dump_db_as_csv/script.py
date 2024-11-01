@@ -70,6 +70,11 @@ def cleanup_csv_files():
         print(f"--- cleaning: {file.name}")
         df = pd.read_csv(file)
         df = df[df.columns.intersection(RELEVANT_COLUMNS)]
+
+        # lowercase string values for consistency
+        df = df.apply(
+            lambda col: col.str.lower() if col.dtype == "object" else col
+        )
         df.to_csv(f"{CLEANED_OUTPUT_DIR}/cleaned_{file.name}")
     print("Finished cleaning raw CSV files.")
 
@@ -116,11 +121,13 @@ def process_files_into_final_format():
                 df, group_by=[RISK_TYPE, GOAL_MET, OUTCOME], sort_by=[RISK_TYPE, GOAL_MET])
             df.to_csv(f"{FINAL_OUTPUT_DIR}/outcomes.csv")
         elif ("baselinesurvey" in file.name):
-            job_df = process_data(df.copy(), group_by=[JOB])
-            job_df.to_csv(f"{FINAL_OUTPUT_DIR}/jobs.csv")
+            job_df = process_data(df.copy(), group_by=[JOB], sort_by=[JOB])
+            job_df.to_csv(f"{FINAL_OUTPUT_DIR}/baseline_jobs.csv")
 
-            organization_df = process_data(df.copy(), group_by=[ORGANIZATION])
-            organization_df.to_csv(f"{FINAL_OUTPUT_DIR}/organizations.csv")
+            organization_df = process_data(
+                df.copy(), group_by=[ORGANIZATION], sort_by=[ORGANIZATION])
+            organization_df.to_csv(
+                f"{FINAL_OUTPUT_DIR}/baseline_organizations.csv")
         else:
             print(f"Error: unrecognized file name: {file.name}")
 

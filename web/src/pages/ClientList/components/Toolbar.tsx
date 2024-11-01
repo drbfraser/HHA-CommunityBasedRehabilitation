@@ -75,7 +75,10 @@ const Toolbar = ({
                     {t("dashboard.allClients")}
                 </Typography>
             </Box>
-            <Box sx={clientListStyles.checkbox}>
+            <Box 
+                sx={clientListStyles.checkbox}
+                color="secondary"
+            >
                 <Typography
                     color={archivedMode ? "textPrimary" : "textSecondary"}
                     component={"span"}
@@ -85,6 +88,7 @@ const Toolbar = ({
                 </Typography>
                 <Checkbox
                     checked={archivedMode}
+                    color="secondary"
                     onChange={(e) => {
                         onArchivedModeChange(e.target.checked);
                     }}
@@ -94,6 +98,7 @@ const Toolbar = ({
             <Box sx={clientListStyles.search}>
                 <Box sx={searchOptionsStyles.searchOptions}>
                     <Select
+                        variant="standard"
                         color={"primary"}
                         defaultValue={SearchOption.NAME}
                         value={searchOption}
@@ -115,8 +120,9 @@ const Toolbar = ({
                 {searchOption === SearchOption.ZONE ? (
                     <div>
                         <Select
-                            sx={searchOptionsStyles.zoneOptions}
+                            variant="standard"
                             color={"primary"}
+                            sx={searchOptionsStyles.zoneOptions}                            
                             defaultValue={""}
                             onChange={(e) => onSearchValueChange(String(e.target.value))}
                         >
@@ -134,7 +140,11 @@ const Toolbar = ({
                     />
                 )}
 
-                <IconButton sx={hideColumnsStyles.optionsButton} onClick={onOptionsClick}>
+                <IconButton 
+                    sx={hideColumnsStyles.optionsButton} 
+                    onClick={onOptionsClick}
+                    size="large"
+                >
                     <MoreVert />
                 </IconButton>
                 <Popover
@@ -153,12 +163,13 @@ const Toolbar = ({
                     <Box sx={hideColumnsStyles.optionsContainer}>
                         {columns.map((column: any): JSX.Element => {
                             return (
-                                // todosd: possible source of slowdown, many Boxes?
+                                // todosd: possible source of slowdown?
                                 <Box key={column.field} sx={hideColumnsStyles.optionsRow}>
                                     <Typography component={"span"} variant={"body2"}>
                                         {column.headerName}
                                     </Typography>
                                     <Switch
+                                        color="secondary"
                                         checked={!column.hide}
                                         onClick={() => column.hideFunction(!column.hide)}
                                     />

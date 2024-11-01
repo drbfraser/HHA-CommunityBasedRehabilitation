@@ -12,7 +12,7 @@ const IOSStyleSwitch = styled((props: SwitchProps) => (
     "& .MuiSwitch-switchBase": {
         padding: 0,
         margin: 2,
-        transitionDuration: "300ms",
+        transitionDuration: "150ms",
         "&.Mui-checked": {
             transform: "translateX(16px)",
             color: "#fff",
@@ -55,7 +55,7 @@ const IOSStyleSwitch = styled((props: SwitchProps) => (
         backgroundColor: themeColors.yellow,
         opacity: 1,
         transition: theme.transitions.create(["background-color"], {
-            duration: 500,
+            duration: 150,
         }),
         ...theme.applyStyles("dark", {
             backgroundColor: "#39393D",

@@ -48,7 +48,7 @@ const RenderText = (params: GridRenderCellParams) => {
             variant={"body2"}
             color={params.row.is_active ? "textPrimary" : "textSecondary"}
         >
-            {params.value}
+            {String(params.value)}
         </Typography>
     );
 };

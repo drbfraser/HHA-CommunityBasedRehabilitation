@@ -28,15 +28,21 @@ def generate_csv_files():
         DB_NAME = "cbr"
         os.makedirs(RAW_OUTPUT_DIR, exist_ok=True)
 
-        for table_name in ["cbr_api_clientrisk", "cbr_api_improvement", "cbr_api_outcome"]:
+        TABLES = [
+            "cbr_api_clientrisk",
+            "cbr_api_improvement",
+            "cbr_api_outcome",
+            "cbr_api_baselinesurvey"
+        ]
+        for table_name in TABLES:
             print(f"--- outputting CSV file for: {table_name}")
             command = [
                 "docker", "exec", "cbr_postgres",
                 "psql", "-U", POSTGRES_USER, "-d", DB_NAME,
                 "-c", f"\copy {table_name} TO STDOUT WITH (FORMAT csv, HEADER)"
             ]
-
             output_path = os.path.join(RAW_OUTPUT_DIR, f"raw_{table_name}.csv")
+
             with open(output_path, 'w') as output_file:
                 subprocess.run(command, stdout=output_file, check=True)
 
@@ -46,15 +52,24 @@ def generate_csv_files():
 
 
 def cleanup_csv_files():
-    REMOVED_COLUMNS = ["id", "client_id_id", "visit_id_id",
-                       "created_at", "server_created_at", "timestamp"]
+    BASELINE_SURVEY_COLS = {"work_what", "empowerment_organization"}
+    IMPROVEMENT_COLS = {"risk_type", "provided", "desc"}
+    RISK_COLS = {"risk_type", "risk_level", "requirement", "goal"}
+    OUTCOME_COLS = {"risk_type", "goal_met", "outcome"}
+    RELEVANT_COLUMNS = {
+        *BASELINE_SURVEY_COLS,
+        *IMPROVEMENT_COLS,
+        *RISK_COLS,
+        *OUTCOME_COLS,
+    }
+
     os.makedirs(CLEANED_OUTPUT_DIR, exist_ok=True)
 
     print("Cleaning raw CSV files...")
     for file in Path(RAW_OUTPUT_DIR).glob("*.csv"):
         print(f"--- cleaning: {file.name}")
         df = pd.read_csv(file)
-        df = df.drop(REMOVED_COLUMNS, axis=1, errors="ignore")
+        df = df[df.columns.intersection(RELEVANT_COLUMNS)]
         df.to_csv(f"{CLEANED_OUTPUT_DIR}/cleaned_{file.name}")
     print("Finished cleaning raw CSV files.")
 
@@ -68,9 +83,11 @@ def process_files_into_final_format():
     DESC = "desc"
     GOAL_MET = "goal_met"
     OUTCOME = "outcome"
+    JOB = "work_what"
+    ORGANIZATION = "empowerment_organization"
     COUNT = "count"
 
-    def process_data(df: pd.DataFrame, group_by: list[str], sort_by: list[str]) -> pd.DataFrame:
+    def process_data(df: pd.DataFrame, group_by: list[str], sort_by: list[str] = []) -> pd.DataFrame:
         df = df.groupby(group_by).size().reset_index(name=COUNT)
         df = df.sort_values(by=[*sort_by, COUNT], ascending=False)
         df = df.reset_index(drop=True)
@@ -98,6 +115,12 @@ def process_files_into_final_format():
             df = process_data(
                 df, group_by=[RISK_TYPE, GOAL_MET, OUTCOME], sort_by=[RISK_TYPE, GOAL_MET])
             df.to_csv(f"{FINAL_OUTPUT_DIR}/outcomes.csv")
+        elif ("baselinesurvey" in file.name):
+            job_df = process_data(df.copy(), group_by=[JOB])
+            job_df.to_csv(f"{FINAL_OUTPUT_DIR}/jobs.csv")
+
+            organization_df = process_data(df.copy(), group_by=[ORGANIZATION])
+            organization_df.to_csv(f"{FINAL_OUTPUT_DIR}/organizations.csv")
         else:
             print(f"Error: unrecognized file name: {file.name}")
 

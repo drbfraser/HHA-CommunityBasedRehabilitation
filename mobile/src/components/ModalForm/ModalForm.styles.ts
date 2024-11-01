@@ -10,8 +10,13 @@ const useStyles = () =>
         },
         button: {
             flex: 1,
-            justifyContent: "center",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
             padding: 10,
+        },
+        editIcon: {
+            alignSelf: "center",
         },
     });
 

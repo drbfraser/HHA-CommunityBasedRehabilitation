@@ -1,25 +1,10 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Box, Button, Divider, Grid, SxProps, Theme, Typography } from "@mui/material";
+import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 
 import { IAlert } from "@cbr/common/util/alerts";
 import { handleUpdateAlertSubmit, handleDeleteAlert } from "@cbr/common/forms/Alert/alertHandler";
-
-// todosd: move this styling to external file?
-const alertStyles: Record<string, SxProps<Theme>> = {
-    dividerStyle: {
-        backgroundColor: "grey",
-        height: "3px",
-    },
-    deleteButtonStyle: {
-        bottom: 0,
-        position: "absolute",
-    },
-    detailContainerStyle: {
-        position: "relative",
-        minHeight: "300px",
-    },
-};
+import { alertDetailStyles } from "./AlertDetail.styles";
 
 type IProps = {
     selectAlert: number;
@@ -62,9 +47,9 @@ const AlertDetail = ({ selectAlert, alertData, refreshAlert }: IProps) => {
     });
 
     return (
-        <Grid item xs={9} sx={alertStyles.detailContainerStyle}>
+        <Grid item xs={9} sx={alertDetailStyles.detailContainerStyle}>
             <h1>{t("general.details")}</h1>
-            <Divider variant="fullWidth" sx={alertStyles.dividerStyle} />
+            <Divider variant="fullWidth" sx={alertDetailStyles.dividerStyle} />
 
             <h2>{selectedItem.length === 0 ? "" : selectedItem[0].subject}</h2>
             <Typography>
@@ -74,7 +59,7 @@ const AlertDetail = ({ selectAlert, alertData, refreshAlert }: IProps) => {
             </Typography>
 
             {selectedItem.length !== 0 && (
-                <Box sx={alertStyles.deleteButtonStyle}>
+                <Box sx={alertDetailStyles.deleteButtonStyle}>
                     <Button
                         variant="outlined"
                         color="error"

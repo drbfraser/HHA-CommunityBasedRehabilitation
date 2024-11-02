@@ -33,11 +33,15 @@ const ModalForm: FC<IProps> = ({
     const [formValue, setFormValue] = useState("");
 
     useEffect(() => {
-        const newValue = Object.entries(checkedItems)
+        let newValue = Object.entries(checkedItems)
             .filter(([_label, isChecked]) => isChecked)
             .map(([label, _isChecked]) => label)
-            .concat(freeformText)
             .join(",\n");
+        if (freeformText) {
+            newValue.concat(",\n");
+            newValue.concat(freeformText);
+        }
+
         setFormValue(newValue);
     }, [checkedItems, freeformText]);
 
@@ -86,7 +90,7 @@ const ModalForm: FC<IProps> = ({
             <TextInput
                 mode="outlined"
                 disabled={disabled}
-                label={`xxx${label}xxx`}
+                label={label}
                 value={formValue}
                 error={hasError}
                 render={() => (

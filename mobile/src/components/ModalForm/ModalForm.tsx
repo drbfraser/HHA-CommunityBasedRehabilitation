@@ -11,9 +11,10 @@ import useStyles from "./ModalForm.styles";
 
 interface IProps {
     field: string;
+    formikProps: FormikProps<any>;
     checkboxLabels?: string[];
     hasFreeformText?: boolean;
-    formikProps: FormikProps<any>;
+    disabled?: boolean;
 }
 
 const ModalForm: FC<IProps> = ({
@@ -21,6 +22,7 @@ const ModalForm: FC<IProps> = ({
     formikProps,
     checkboxLabels = [],
     hasFreeformText = false,
+    disabled = false,
 }) => {
     const styles = useStyles();
     const [visible, setVisible] = useState(false);
@@ -40,6 +42,8 @@ const ModalForm: FC<IProps> = ({
     }, [checkedItems, freeformText]);
 
     const onOpen = () => {
+        if (disabled) return;
+
         setVisible(true);
     };
     const onClose = () => {
@@ -80,8 +84,8 @@ const ModalForm: FC<IProps> = ({
             </Portal>
 
             <TextInput
-                editable={false}
                 mode="outlined"
+                disabled={disabled}
                 label={`xxx${label}xxx`}
                 value={formValue}
                 error={hasError}
@@ -92,9 +96,9 @@ const ModalForm: FC<IProps> = ({
                     </Pressable>
                 )}
             />
-            <HelperText type="error" visible={hasError}>
-                {formikProps.errors[field] as string}
-            </HelperText>
+            {hasError && (
+                <HelperText type="error">{formikProps.errors[field] as string}</HelperText>
+            )}
         </>
     );
 };

@@ -62,7 +62,7 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
             <h1>{t("general.alerts")}</h1>
             <Divider variant="fullWidth" sx={alertInboxStyles.tableTopAndContentDividerStyle} />
             <List
-                // todosd: move inline styles to external file
+                // todosd: move inline styles to external file?
                 sx={{
                     width: "100%",
                     maxWidth: 360,

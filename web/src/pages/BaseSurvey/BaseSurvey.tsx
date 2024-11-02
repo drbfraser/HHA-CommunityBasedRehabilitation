@@ -40,7 +40,6 @@ import { handleSubmit } from "./formHandler";
 import GoBackButton from "components/GoBackButton/GoBackButton";
 import { adminStyles } from "./baseSurvey.style";
 
-// todosd: refactor this file into separate files, it is massive
 interface IFormProps {
     formikProps: FormikProps<any>;
 }

@@ -9,11 +9,9 @@ export const themeMui = createTheme({
             styleOverrides: {
                 html: {
                     height: "100%",
-                    // border: "5px solid red", // todosd: remove
                 },
                 body: {
                     height: "100%",
-                    // border: "5px solid blue", // todosd: remove
 
                     // override default body font size to match material-ui 4 default
                     // see: https://mui.com/material-ui/migration/v5-component-changes/ @Update body font size
@@ -24,18 +22,7 @@ export const themeMui = createTheme({
                 "#root": {
                     height: "100%",
                     minHeight: "100%",
-                    // border: "5px solid green", // todosd: remove
                 },
-
-                // todosd: confirm this is equivalent
-                // "@global": {
-                //     "html, body, #root": {
-                //         height: "100%",
-                //     },
-                //     "#root": {
-                //         minHeight: "100%", // todosd: vh?
-                //     },
-                // },
             },
         },
         MuiLink: {
@@ -43,7 +30,6 @@ export const themeMui = createTheme({
                 root: {
                     color: themeColors.linkBlue,
                     textDecoration: "underline",
-                    // border: "5px solid purple", // todosd: test
                 },
             },
         },

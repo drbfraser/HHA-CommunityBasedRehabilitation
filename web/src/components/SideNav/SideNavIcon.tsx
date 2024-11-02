@@ -74,7 +74,7 @@ const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
                         },
                     }}
 
-                    // todosd: this component needed?
+                    // todosd: this component does not appear to be needed with MUI 5/React 18
                     // TransitionComponent={NoTransition}
                 >
                     <Box

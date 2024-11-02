@@ -52,8 +52,7 @@ const Dashboard = () => {
                     await apiFetch(Endpoint.CLIENTS, "?is_active=true")
                 ).json();
 
-                // const priorityClients: GridRowsProp = tempClients
-                const priorityClients = tempClients // todosd: set type back to GridRowsProp?  not mutable?
+                const priorityClients = tempClients
                     .sort(clientPrioritySort)
                     .slice(0, 5)
                     .map((row: IClientSummary) => {
@@ -269,7 +268,6 @@ const Dashboard = () => {
             {unreadAlertsCount > 0 && (
                 <Alert severity="info">
                     <Typography variant="body1">
-                        {/* todosd: values={{ unreadAlertsCount }} - check this works */}
                         <Trans i18nKey="dashboard.newInboxMessages" count={unreadAlertsCount}>
                             -You have <b>{ unreadAlertsCount }</b> new message
                             {unreadAlertsCount > 1 && "s"} in your inbox
@@ -307,7 +305,6 @@ const Dashboard = () => {
                                 <DataGrid
                                     sx={dataGridStyles.datagrid}
                                     rows={clients}
-                                    // todosd: verify no footer or pagination needed
                                     hideFooter
                                     loading={isPriorityClientsLoading}
                                     columns={priorityClientsColumns}
@@ -332,7 +329,6 @@ const Dashboard = () => {
                             <Box sx={dataGridStyles.dashboardTables}>
                                 <DataGrid
                                     sx={dataGridStyles.datagrid}
-                                    // todosd: verify we want pagination options at all
                                     rowsPerPageOptions={[5, 25, 50]}
                                     rows={referrals}
                                     loading={referralsLoading}

@@ -160,13 +160,7 @@ const ClientList = () => {
     };
 
     const sortClientsById = (rows: GridRowsProp) => {
-        // let sortById: GridRowsProp = rows.slice(0);
-
-        // sortById.sort((a: any, b: any) => {
-        //     return a.id - b.id;
-        // });
-
-        let sortById = rows.slice(0); // todosd: re-add type?
+        let sortById = rows.slice(0);
 
         sortById.sort((a: any, b: any) => {
             return a.id - b.id;

@@ -86,25 +86,6 @@ const RiskHistoryCharts = ({ client }: IProps) => {
         }
     }, [client]);
 
-    // todosd
-    // // remove all lines from the cartesian grid
-    // const chartContainer: { [key: string]: React.CSSProperties } = {
-    //     "& .rechartsCartesianGridHorizontal line": {
-    //         strokeOpacity: 0,
-    //     },
-    // };
-
-    // // then show the ones we want and set the colors to the risk level colors
-    // Object.values(riskLevels).forEach(({ color }, i) => {
-    //     // chartContainer[`& .recharts-cartesian-grid-horizontal line:nth-child(${i + 1})`] = {
-    //         chartContainer[`& .rechartsCartesianGridHorizontal line:nthChild(${i + 1})`] = {
-    //         strokeOpacity: 1,
-    //         stroke: color,
-    //     };
-    // });
-
-    // console.log(chartContainer)
-
     const RiskChart = ({ riskType, data }: { riskType: RiskType; data: IDataPoint[] }) => {
         const dateFormatter = getDateFormatterFromReference(client?.created_at);
 

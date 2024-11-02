@@ -7,8 +7,8 @@ interface IResponseRow {
 }
 
 const requestZoneRows = async (
-    setFilteredRows: (rows: GridRowsProp) => void, // todosd: RowsProp -> GridRowsProp ok?
-    setServerRows: (rows: GridRowsProp) => void, // todosd
+    setFilteredRows: (rows: GridRowsProp) => void,
+    setServerRows: (rows: GridRowsProp) => void,
     setLoading: (loading: boolean) => void
 ) => {
     setLoading(true);

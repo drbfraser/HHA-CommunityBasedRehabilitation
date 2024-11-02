@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { InputLabel, MenuItem, Select } from "@mui/material";
-import { FormControl } from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    FormControl,
+    FormLabel,
+    MenuItem,
+    Select,
+} from "@mui/material";
 import { Endpoint, apiFetch } from "@cbr/common/util/endpoints";
 
 interface IResponseRow {
@@ -99,11 +103,10 @@ export default function ConfirmDeleteZone(props: any) {
                         {contentText}
                     </DialogContentText>
                 </DialogContent>
-                // todosd: paddingTop??
                 <FormControl variant="standard" fullWidth style={{ padding: 20, paddingTop: 0 }}>
-                    <InputLabel id="demo-simple-select-label">
+                    <FormLabel id="demo-simple-select-label" sx={{ marginBottom: "-8px" }}>
                         {t("zone.moveUsersAndClients")}
-                    </InputLabel>
+                    </FormLabel>
                     <Select
                         variant="standard"
                         labelId="demo-simple-select-label"

@@ -103,6 +103,7 @@ const Login = () => {
                         label={t("general.password")}
                         variant="standard"
                         type="password"
+                        autoComplete="off"
                         fullWidth
                         required
                         InputLabelProps={{ required: false }}

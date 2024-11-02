@@ -179,8 +179,8 @@ After the app is up and running the first time, after you make a change to the c
     "The development server returned response error code: 500"...
 -   Error "Error: Unable to resolve module async-mutex from", try re-running `npm install` on mobile folder.
 
-
 # Updating dependencies workflow to minimize build errors
+
 -   `./gradlew clean` (from within `android`)
 -   remove the node_modules folder
 -   `npm cache clean --force` (optional)

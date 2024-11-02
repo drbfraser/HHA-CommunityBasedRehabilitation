@@ -34,10 +34,12 @@ const ShowMoreEntry = ({ onClick }: IProps) => {
             </TimelineSeparator>
             <TimelineContent>
                 <Box
-                    sx={{
-                        ...timelineStyles.showMore,
-                        ...timelineStyles.showMoreClickable
-                    } as SxProps}
+                    sx={
+                        {
+                            ...timelineStyles.showMore,
+                            ...timelineStyles.showMoreClickable,
+                        } as SxProps
+                    }
                     style={{ color: "white", fontWeight: 700 }}
                     onClick={onClick}
                 >

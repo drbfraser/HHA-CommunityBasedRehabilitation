@@ -28,7 +28,6 @@ import { searchOptionsStyles } from "styles/SearchOptions.styles";
 import { hideColumnsStyles } from "styles/HideColumns.styles";
 
 import requestUserRows from "./requestUserRows";
-import { SearchOption } from "../ClientList/searchOptions";
 import { getClientListSearchOptions } from "../ClientList/searchOptions";
 import { t } from "i18next";
 

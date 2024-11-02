@@ -358,7 +358,7 @@ const ClientInfoForm = (props: IProps) => {
                                                         <Field
                                                             sx={{
                                                                 ...clientFormStyles.caregiverInputField,
-                                                                ...clientFormStyles.disabledTextField
+                                                                ...clientFormStyles.disabledTextField,
                                                             }}
                                                             component={TextField}
                                                             disabled={!isEditing}
@@ -380,7 +380,7 @@ const ClientInfoForm = (props: IProps) => {
                                                         <Field
                                                             sx={{
                                                                 ...clientFormStyles.caregiverInputField,
-                                                                ...clientFormStyles.disabledTextField
+                                                                ...clientFormStyles.disabledTextField,
                                                             }}
                                                             component={TextField}
                                                             name={
@@ -402,7 +402,7 @@ const ClientInfoForm = (props: IProps) => {
                                                         <Field
                                                             sx={{
                                                                 ...clientFormStyles.caregiverInputField,
-                                                                ...clientFormStyles.disabledTextField
+                                                                ...clientFormStyles.disabledTextField,
                                                             }}
                                                             component={TextField}
                                                             name={

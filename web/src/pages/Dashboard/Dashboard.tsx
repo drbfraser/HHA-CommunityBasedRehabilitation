@@ -269,7 +269,7 @@ const Dashboard = () => {
                 <Alert severity="info">
                     <Typography variant="body1">
                         <Trans i18nKey="dashboard.newInboxMessages" count={unreadAlertsCount}>
-                            -You have <b>{ unreadAlertsCount }</b> new message
+                            -You have <b>{unreadAlertsCount}</b> new message
                             {unreadAlertsCount > 1 && "s"} in your inbox
                         </Trans>
                     </Typography>

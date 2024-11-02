@@ -75,10 +75,7 @@ const Toolbar = ({
                     {t("dashboard.allClients")}
                 </Typography>
             </Box>
-            <Box 
-                sx={clientListStyles.checkbox}
-                color="secondary"
-            >
+            <Box sx={clientListStyles.checkbox} color="secondary">
                 <Typography
                     color={archivedMode ? "textPrimary" : "textSecondary"}
                     component={"span"}
@@ -122,7 +119,7 @@ const Toolbar = ({
                         <Select
                             variant="standard"
                             color={"primary"}
-                            sx={searchOptionsStyles.zoneOptions}                            
+                            sx={searchOptionsStyles.zoneOptions}
                             defaultValue={""}
                             onChange={(e) => onSearchValueChange(String(e.target.value))}
                         >
@@ -140,8 +137,8 @@ const Toolbar = ({
                     />
                 )}
 
-                <IconButton 
-                    sx={hideColumnsStyles.optionsButton} 
+                <IconButton
+                    sx={hideColumnsStyles.optionsButton}
                     onClick={onOptionsClick}
                     size="large"
                 >

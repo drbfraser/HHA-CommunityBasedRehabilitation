@@ -1,10 +1,35 @@
+// {
+//     "compilerOptions": {
+//         "jsx": "react",
+//         "experimentalDecorators": true,
+//         "strict": true,
+//         "esModuleInterop": true,
+//         "noImplicitAny": false
+    // },
+//     "extends": "expo/tsconfig.base"
+// }
+// todosd: remove
+
+
 {
+    "extends": "expo/tsconfig.base",
     "compilerOptions": {
         "jsx": "react",
-        "experimentalDecorators": true,
+        "experimentalDecorators": true, // allow @nozbe/watermelondb/decorators
         "strict": true,
-        "esModuleInterop": true,
-        "noImplicitAny": false
+        // "esModuleInterop": true, // todosd: test
+        // "noImplicitAny": false,
+        "paths": {
+            "@/*": [
+                "./*"
+            ]
+        }
     },
-    "extends": "expo/tsconfig.base"
+    "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        ".expo/types/**/*.ts",
+        "expo-env.d.ts"
+    ]
 }
+  

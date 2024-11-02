@@ -5,13 +5,3 @@ export const dataCardStyles: Record<string, SxProps<Theme>> = {
         marginBottom: "16px",
     },
 };
-
-// todo: remove
-// export const useStyles = makeStyles(
-//     {
-//         container: {
-//             marginBottom: "16px",
-//         },
-//     },
-//     { index: 1 }
-// );

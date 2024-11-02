@@ -7,15 +7,3 @@ export const priorityLevelChipStyles: Record<string, SxProps<Theme>> = {
         },
     },
 };
-
-// todo: remove
-// export const useStyles = makeStyles(
-//     {
-//         chip: {
-//             "& .MuiChip-label": {
-//                 color: "white",
-//             },
-//         },
-//     },
-//     { index: 1 }
-// );

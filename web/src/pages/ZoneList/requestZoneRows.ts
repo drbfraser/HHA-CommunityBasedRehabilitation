@@ -20,7 +20,6 @@ const requestZoneRows = async (
 
         const responseRows: IResponseRow[] = await resp.json();
         const rows: GridRowsProp = responseRows.map((responseRow) => {
-            // todo
             return {
                 id: responseRow.id,
                 zone: responseRow.zone_name ?? "",

@@ -183,8 +183,7 @@ After the app is up and running the first time, after you make a change to the c
 # Updating dependencies workflow to minimize build errors
 -   `./gradlew clean` (from within `android`)
 -   remove the node_modules folder
--   `npm cache clean --force`
+-   `npm cache clean --force` (optional)
 -   `npm run refresh-common`
--   `npm install`
 -   `npm start -- --reset-cache`
 -   `npm run android`

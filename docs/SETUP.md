@@ -104,6 +104,7 @@ If you are going to be using an IP address, you will need to specify the port (8
 In the project directory, run `docker compose up`.
 
 Once both Django and Postgres are running, run `docker exec cbr_django python manage.py migrate` to apply database migrations.
+NOTE: also run `docker exec cbr_django python manage.py seeddatabase` todosd: clarify
 
 ### 6. You're done!
 

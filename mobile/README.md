@@ -78,6 +78,10 @@ After the app is up and running the first time, after you make a change to the c
 
 # Troubleshooting
 
+- TODOSD: clean up all this to update relevance
+
+-   You **MUST** be using a `development build` TODOSD: finish thought
+
 -   If running the app in a virtual device via Android Studio, note that `Logcat` (in the bottom left corner) can offer some very useful error messages than metro. This can greatly help with troubleshooting.
 
     -   If the virtual device in Android Studio does not open, even when triggered manually, it may be possible that your machine does not have enough storage to run it

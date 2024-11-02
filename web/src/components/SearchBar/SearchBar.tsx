@@ -4,13 +4,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useTranslation } from "react-i18next";
 import { themeColors } from "@cbr/common/util/colors";
 
-// import { useStyles } from "./SearchBar.styles";
-
 const SearchBar = (props: InputBaseProps) => {
     const theme = useTheme();
     const { t } = useTranslation();
 
-    // todosd: move back to styles file?  How to apply theme better -> use styled instead
+    // todosd: move back to styles file, or use styled locally
     return (
         <Box
             sx={{
@@ -46,13 +44,11 @@ const SearchBar = (props: InputBaseProps) => {
                 placeholder={`${t("general.search")}...`}
                 sx={{
                     root: {
-                        // input root
-                        // todosd: verifiy this is appying correctly
+                        // inputRoot
                         color: "inherit",
                     },
                     input: {
                         // inputInput
-                        // todosd: verifiy this is appying correctly
                         padding: theme.spacing(1, 1, 1, 0),
                         // vertical padding + font size from searchIcon
                         paddingLeft: `calc(1em + ${theme.spacing(4)})`,

@@ -58,7 +58,8 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
                 mode="outlined"
                 disabled={isFieldDisabled()}
             />
-            <FormikTextInput
+
+            {/* <FormikTextInput
                 style={styles.field}
                 multiline
                 numberOfLines={NUMBER_OF_LINES}
@@ -69,7 +70,7 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
                 mode="outlined"
                 disabled={isFieldDisabled()}
             />
-            {/* <FormikTextInput
+            <FormikTextInput
                 style={styles.field}
                 multiline
                 numberOfLines={NUMBER_OF_LINES}
@@ -82,10 +83,18 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
             /> */}
 
             <ModalForm
+                field={`${props.riskPrefix}Requirements`}
+                formikProps={props.formikProps}
+                checkboxLabels={["Organize an Event", "Volunteer"]}
+                hasFreeformText={true}
+                disabled={isFieldDisabled()}
+            />
+            <ModalForm
                 field={`${props.riskPrefix}Goals`}
                 formikProps={props.formikProps}
                 checkboxLabels={["Organize Events", "Make Friends", "Volunteer"]}
                 hasFreeformText={true}
+                disabled={isFieldDisabled()}
             />
         </View>
     );

@@ -86,15 +86,15 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
                 field={`${props.riskPrefix}Requirements`}
                 formikProps={props.formikProps}
                 checkboxLabels={["Organize an Event", "Volunteer"]}
-                hasFreeformText={true}
                 disabled={isFieldDisabled()}
+                hasFreeformText
             />
             <ModalForm
                 field={`${props.riskPrefix}Goals`}
                 formikProps={props.formikProps}
                 checkboxLabels={["Organize Events", "Make Friends", "Volunteer"]}
-                hasFreeformText={true}
                 disabled={isFieldDisabled()}
+                hasFreeformText
             />
         </View>
     );

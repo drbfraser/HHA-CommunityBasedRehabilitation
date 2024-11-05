@@ -38,8 +38,8 @@ const ModalForm: FC<IProps> = ({
             .map(([label, _isChecked]) => label)
             .join(",\n");
         if (freeformText) {
-            newValue.concat(",\n");
-            newValue.concat(freeformText);
+            newValue = newValue.concat(",\n");
+            newValue = newValue.concat(freeformText);
         }
 
         setFormValue(newValue);
@@ -95,7 +95,7 @@ const ModalForm: FC<IProps> = ({
                 error={hasError}
                 render={() => (
                     <Pressable onPress={onOpen} style={styles.button}>
-                        <Text>{formValue}</Text>
+                        <Text style={styles.buttonText}>{formValue}</Text>
                         <Icon name="edit" size={20} style={styles.editIcon} />
                     </Pressable>
                 )}

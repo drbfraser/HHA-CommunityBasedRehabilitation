@@ -31,6 +31,9 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "ios": {
+      "bundleIdentifier": "org.hopehealthaction.cbrapp"
     }
   }
 }

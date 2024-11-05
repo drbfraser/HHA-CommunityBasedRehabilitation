@@ -4,9 +4,10 @@ import { StyleSheet } from "react-native";
 const useStyles = () =>
     StyleSheet.create({
         modal: {
-            margin: 20,
-            padding: 20,
             backgroundColor: themeColors.white,
+        },
+        modalContent: {
+            paddingBottom: 0,
         },
         button: {
             flex: 1,
@@ -21,6 +22,9 @@ const useStyles = () =>
         },
         editIcon: {
             alignSelf: "center",
+        },
+        closeButtonText: {
+            fontSize: 16,
         },
     });
 

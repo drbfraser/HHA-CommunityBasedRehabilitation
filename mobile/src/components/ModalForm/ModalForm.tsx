@@ -1,13 +1,13 @@
 import React, { FC, useEffect, useState } from "react";
-import { Pressable } from "react-native";
 import {
     TextInput,
     Portal,
-    Modal,
     Text,
     Divider,
     HelperText,
     TouchableRipple,
+    Dialog,
+    Button,
 } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { FormikProps } from "formik";
@@ -67,30 +67,37 @@ const ModalForm: FC<IProps> = ({
     return (
         <>
             <Portal>
-                <Modal visible={visible} onDismiss={onClose} contentContainerStyle={styles.modal}>
-                    <Text>{label}</Text>
+                <Dialog visible={visible} dismissable={false} style={styles.modal}>
+                    <Dialog.Title>{label}</Dialog.Title>
                     <Divider />
-                    {checkboxLabels.map((label, index) => (
-                        <TextCheckBox
-                            key={index}
-                            field={label}
-                            label={label}
-                            value={checkedItems[label]}
-                            setFieldValue={() => null}
-                            onChange={(checked) =>
-                                setCheckedItems({ ...checkedItems, [label]: checked })
-                            }
-                        />
-                    ))}
-                    {hasFreeformText && (
-                        <TextInput
-                            mode="outlined"
-                            label="Other"
-                            value={freeformText}
-                            onChangeText={(text) => setFreeformText(text)}
-                        />
-                    )}
-                </Modal>
+                    <Dialog.Content style={styles.modalContent}>
+                        {checkboxLabels.map((label, index) => (
+                            <TextCheckBox
+                                key={index}
+                                field={label}
+                                label={label}
+                                value={checkedItems[label]}
+                                setFieldValue={() => null}
+                                onChange={(checked) =>
+                                    setCheckedItems({ ...checkedItems, [label]: checked })
+                                }
+                            />
+                        ))}
+                        {hasFreeformText && (
+                            <TextInput
+                                mode="outlined"
+                                label="Other"
+                                value={freeformText}
+                                onChangeText={(text) => setFreeformText(text)}
+                            />
+                        )}
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={onClose} labelStyle={styles.closeButtonText}>
+                            Ok
+                        </Button>
+                    </Dialog.Actions>
+                </Dialog>
             </Portal>
 
             <TextInput

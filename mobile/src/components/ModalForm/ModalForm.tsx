@@ -1,6 +1,14 @@
 import React, { FC, useEffect, useState } from "react";
 import { Pressable } from "react-native";
-import { TextInput, Portal, Modal, Text, Divider, HelperText } from "react-native-paper";
+import {
+    TextInput,
+    Portal,
+    Modal,
+    Text,
+    Divider,
+    HelperText,
+    TouchableRipple,
+} from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { FormikProps } from "formik";
 
@@ -34,12 +42,11 @@ const ModalForm: FC<IProps> = ({
 
     useEffect(() => {
         let newValue = Object.entries(checkedItems)
-            .filter(([_label, isChecked]) => isChecked)
-            .map(([label, _isChecked]) => label)
+            .filter(([_, isChecked]) => isChecked)
+            .map(([label, _]) => label)
             .join(",\n");
         if (freeformText) {
-            newValue = newValue.concat(",\n");
-            newValue = newValue.concat(freeformText);
+            newValue = newValue ? newValue.concat(`,\n${freeformText}`) : freeformText;
         }
 
         setFormValue(newValue);
@@ -47,13 +54,12 @@ const ModalForm: FC<IProps> = ({
 
     const onOpen = () => {
         if (disabled) return;
-
         setVisible(true);
     };
     const onClose = () => {
-        setVisible(false);
         formikProps.setFieldTouched(field);
         formikProps.setFieldValue(field, formValue);
+        setVisible(false);
     };
 
     const label = clientFieldLabels[field];
@@ -94,10 +100,12 @@ const ModalForm: FC<IProps> = ({
                 value={formValue}
                 error={hasError}
                 render={() => (
-                    <Pressable onPress={onOpen} style={styles.button}>
-                        <Text style={styles.buttonText}>{formValue}</Text>
-                        <Icon name="edit" size={20} style={styles.editIcon} />
-                    </Pressable>
+                    <TouchableRipple onPress={onOpen} style={styles.button}>
+                        <>
+                            <Text style={styles.buttonText}>{formValue}</Text>
+                            <Icon name="edit" size={20} style={styles.editIcon} />
+                        </>
+                    </TouchableRipple>
                 )}
             />
             {hasError && (

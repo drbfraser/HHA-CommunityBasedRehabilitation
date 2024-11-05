@@ -13,7 +13,11 @@ const useStyles = () =>
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
+            alignItems: "center",
             padding: 10,
+        },
+        buttonText: {
+            fontSize: 16,
         },
         editIcon: {
             alignSelf: "center",

@@ -16,11 +16,23 @@ import { clientFieldLabels } from "@cbr/common";
 import TextCheckBox from "../TextCheckBox/TextCheckBox";
 import { shouldShowError } from "../../util/formikUtil";
 import useStyles from "./ModalForm.styles";
+import { generateFormValue } from "./utils";
 
 interface IProps {
     field: string;
     formikProps: FormikProps<any>;
-    checkboxLabels?: string[];
+    /**
+     *  The fields in the default lanugage (English).
+     *  This is for for saving only English strings into the database.
+     *  This array should have a 1-to-1 correspondence with the `translatedFields` array.
+     */
+    canonicalFields: string[];
+    /**
+     * The fields in the currently selected langauge.
+     * This is for displaying to the user.
+     * This array should have a 1-to-1 correspondence with the `canonicalFields` array.
+     */
+    localizedFields: string[];
     hasFreeformText?: boolean;
     disabled?: boolean;
 }
@@ -28,28 +40,30 @@ interface IProps {
 const ModalForm: FC<IProps> = ({
     field,
     formikProps,
-    checkboxLabels = [],
+    canonicalFields,
+    localizedFields,
     hasFreeformText = false,
     disabled = false,
 }) => {
+    console.assert(canonicalFields.length == localizedFields.length);
+
     const styles = useStyles();
     const [visible, setVisible] = useState(false);
     const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(
-        checkboxLabels.reduce((acc, label) => ({ ...acc, [label]: false }), {}) ?? {}
+        localizedFields.reduce((acc, label) => ({ ...acc, [label]: false }), {}) ?? {}
     );
     const [freeformText, setFreeformText] = useState("");
-    const [formValue, setFormValue] = useState("");
+    const [canonicalFormValue, setCanonicalFormValue] = useState("");
+    const [translatedFormValue, setTranslatedFormValue] = useState("");
 
     useEffect(() => {
-        let newValue = Object.entries(checkedItems)
-            .filter(([_, isChecked]) => isChecked)
-            .map(([label, _]) => label)
-            .join(",\n");
-        if (freeformText) {
-            newValue = newValue ? newValue.concat(`,\n${freeformText}`) : freeformText;
-        }
+        const fieldsInEnglish: Array<[string, boolean]> = Object.entries(checkedItems).map(
+            ([_, checked], i) => [canonicalFields[i], checked]
+        );
+        const translatedFields = Object.entries(checkedItems);
 
-        setFormValue(newValue);
+        setCanonicalFormValue(generateFormValue(fieldsInEnglish, freeformText));
+        setTranslatedFormValue(generateFormValue(translatedFields, freeformText));
     }, [checkedItems, freeformText]);
 
     const onOpen = () => {
@@ -58,7 +72,7 @@ const ModalForm: FC<IProps> = ({
     };
     const onClose = () => {
         formikProps.setFieldTouched(field);
-        formikProps.setFieldValue(field, formValue);
+        formikProps.setFieldValue(field, canonicalFormValue);
         setVisible(false);
     };
 
@@ -71,7 +85,7 @@ const ModalForm: FC<IProps> = ({
                     <Dialog.Title>{label}</Dialog.Title>
                     <Divider />
                     <Dialog.Content style={styles.modalContent}>
-                        {checkboxLabels.map((label, index) => (
+                        {localizedFields.map((label, index) => (
                             <TextCheckBox
                                 key={index}
                                 field={label}
@@ -104,12 +118,12 @@ const ModalForm: FC<IProps> = ({
                 mode="outlined"
                 disabled={disabled}
                 label={label}
-                value={formValue}
+                value={translatedFormValue}
                 error={hasError}
                 render={() => (
                     <TouchableRipple onPress={onOpen} style={styles.button}>
                         <>
-                            <Text style={styles.buttonText}>{formValue}</Text>
+                            <Text style={styles.buttonText}>{translatedFormValue}</Text>
                             <Icon name="edit" size={20} style={styles.editIcon} />
                         </>
                     </TouchableRipple>

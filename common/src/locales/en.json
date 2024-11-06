@@ -576,6 +576,7 @@
         "nutrition": "-Nutrition",
         "mental": "-Mental",
         "improvements": "-Improvements",
+        "socialRequirements": ["-Organize an Event", "-Volunteer"],
         "outcomes": "-Outcomes",
         "description": "-Description",
         "outcome": "-Outcome",

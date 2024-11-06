@@ -570,6 +570,10 @@ interface Resources {
       "health": "&Health",
       "education": "&Education",
       "social": "&Social",
+      "socialRequirements": [
+        "&Organize an Event",
+        "&Volunteer"
+      ],
       "nutrition": "&Nutrition",
       "mental": "&Mental",
       "improvements": "&Improvements",
@@ -1277,6 +1281,10 @@ interface Resources {
       "nutrition": "-Nutrition",
       "mental": "-Mental",
       "improvements": "-Improvements",
+      "socialRequirements": [
+        "-Organize an Event",
+        "-Volunteer"
+      ],
       "outcomes": "-Outcomes",
       "description": "-Description",
       "outcome": "-Outcome",

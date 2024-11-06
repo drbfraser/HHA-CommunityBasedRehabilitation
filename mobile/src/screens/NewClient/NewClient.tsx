@@ -38,8 +38,9 @@ const riskMap: Map<RiskLevel, string> = new Map(
 );
 
 const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: string }) => {
+    const { t } = useTranslation();
     const styles = useStyles();
-    const NUMBER_OF_LINES = 4;
+    // const NUMBER_OF_LINES = 4;
 
     const isFieldDisabled = useCallback(
         () => props.formikProps.isSubmitting || !props.formikProps.values.interviewConsent,
@@ -85,14 +86,28 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
             <ModalForm
                 field={`${props.riskPrefix}Requirements`}
                 formikProps={props.formikProps}
-                checkboxLabels={["Organize an Event", "Volunteer"]}
+                canonicalFields={t("newVisit.socialRequirements", {
+                    returnObjects: true,
+                    lng: "en",
+                })}
+                localizedFields={t("newVisit.socialRequirements", { returnObjects: true })}
                 disabled={isFieldDisabled()}
                 hasFreeformText
             />
             <ModalForm
                 field={`${props.riskPrefix}Goals`}
                 formikProps={props.formikProps}
-                checkboxLabels={["Organize Events", "Make Friends", "Volunteer"]}
+                canonicalFields={["Organize Events", "Make Friends", "Volunteer"]}
+                localizedFields={["Organize Events", "Make Friends", "Volunteer"]}
+                // encapsulate conversion between languages into modal form
+                // database gives text in english and want to show Bari
+                // take english strings and swap to Bari if possible
+                // database will always store english
+                //
+                // new args:
+                // 1. current value to populate with
+                // 2. canonical array of fields in english
+                // 3. array of checkboxes in current selected langauge
                 disabled={isFieldDisabled()}
                 hasFreeformText
             />

@@ -2,9 +2,10 @@ import { FormikHelpers } from "formik";
 import { updateCurrentUserPassword } from "../../util/users";
 import { APIFetchFailError } from "../../util/endpoints";
 import { TPasswordValues } from "./userProfileFields";
+import i18n from "i18next";
 
 const createFailedToGetPasswordError = (reason?: string) => {
-    const baseError = "Failed to change password";
+    const baseError = i18n.t("userProfile.failedToChangePassword");
     return reason ? baseError + ` (${reason})` : baseError;
 };
 
@@ -18,7 +19,7 @@ const createFailedToGetPasswordError = (reason?: string) => {
 export const getPassChangeErrorMessageFromSubmissionError = (error: any): string => {
     if (error instanceof APIFetchFailError) {
         if (error.status === 400) {
-            return "Old password is incorrect";
+            return i18n.t("userProfile.oldPasswordIncorrect");
         } else if (error.details) {
             return createFailedToGetPasswordError(error.details);
         } else {

@@ -11,6 +11,7 @@ import { Button, Card, Dialog, List, Text } from "react-native-paper";
 import useStyles from "./Entry.styles";
 import { ActivityIndicator, ScrollView } from "react-native";
 import DataCard from "../../../../components/DataCard/DataCard";
+import { useTranslation } from "react-i18next";
 
 interface IEntryProps {
     survey: ISurvey;
@@ -25,6 +26,7 @@ type ISurveyCategory = { [key: string]: string | boolean | undefined };
 
 const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
     const styles = useStyles();
+    const { t } = useTranslation();
     const onClose = () => {
         close();
     };
@@ -40,7 +42,7 @@ const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
                 .map((k) => {
                     let desc: string | undefined;
                     if (typeof surveyInfo[categoryName][k] === "boolean") {
-                        desc = surveyInfo[categoryName][k] ? "Yes" : "No";
+                        desc = surveyInfo[categoryName][k] ? t("general.yes") : t("general.no");
                     } else {
                         desc = surveyInfo[categoryName][k]?.toString();
                     }
@@ -63,11 +65,11 @@ const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
 
         return (
             <>
-                <Card.Title title="Baseline Survey" />
+                <Card.Title title={t("surveyAttr.baselineSurvey")} />
                 <Card style={styles.createdCard}>
                     <Card.Content>
                         <Text>
-                            <Text style={styles.labelBold}>Survey Date:</Text>{" "}
+                            <Text style={styles.labelBold}>{t("surveyAttr.surveyDate")}:</Text>{" "}
                             {timestampToDateTime(survey.survey_date)}
                         </Text>
                     </Card.Content>

@@ -23,8 +23,6 @@ import {
     empowermentValidationSchema,
     surveyTypes,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
-import { ArrowBack } from "@material-ui/icons";
-import history from "@cbr/common/util/history";
 import { useParams } from "react-router-dom";
 import { Alert } from "@material-ui/lab";
 import {
@@ -38,6 +36,7 @@ import {
 } from "@cbr/common/util/survey";
 import { useStyles } from "./baseSurvey.style";
 import { handleSubmit } from "./formHandler";
+import GoBackButton from "components/GoBackButton/GoBackButton";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -574,9 +573,7 @@ const NewSurvey = () => {
                             Error occurred when submitting the survey: {submissionError}
                         </Alert>
                     )}
-                    <Button onClick={history.goBack}>
-                        <ArrowBack /> Go back
-                    </Button>
+                    <GoBackButton />
                     <br />
                     <br />
                     <Field

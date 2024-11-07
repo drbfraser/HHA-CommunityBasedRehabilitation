@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     Dialog,
     DialogTitle,
@@ -13,17 +14,18 @@ import {
     Typography,
 } from "@material-ui/core";
 import { Skeleton, Alert } from "@material-ui/lab";
+import { Assignment } from "@material-ui/icons";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+
 import { timestampToDateTime } from "@cbr/common/util/dates";
-import { useStyles } from "./Entry.styles";
+import { getSurveyInfo, ISurvey } from "@cbr/common/util/survey";
 import {
     BaseSurveyFormField,
     baseFieldLabels,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
+import { useStyles } from "./Entry.styles";
 import TimelineEntry from "../Timeline/TimelineEntry";
-import { Assignment } from "@material-ui/icons";
 import DataCard from "components/DataCard/DataCard";
-import { getSurveyInfo, ISurvey } from "@cbr/common/util/survey";
 
 interface IEntryProps {
     survey: ISurvey;
@@ -31,18 +33,16 @@ interface IEntryProps {
 }
 
 type TSurveyForm = {
-    [key: string]: ISurveyCategory;
+    [key: string]: { [key: string]: string | number | boolean | undefined };
 };
-
-type ISurveyCategory = { [key: string]: string | boolean | undefined };
 
 const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
     const [open, setOpen] = useState(false);
     const [loadingError, setLoadingError] = useState(false);
+    const { t } = useTranslation();
     const styles = useStyles();
 
     const onOpen = () => setOpen(true);
-
     const onClose = () => {
         setOpen(false);
         setLoadingError(false);
@@ -60,7 +60,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
                 .map((k) => {
                     let desc;
                     if (typeof surveyInfo[categoryName][k] === "boolean") {
-                        desc = surveyInfo[categoryName][k] ? "Yes" : "No";
+                        desc = surveyInfo[categoryName][k] ? t("general.yes") : t("general.no");
                     } else {
                         desc = surveyInfo[categoryName][k]?.toString();
                     }
@@ -91,7 +91,8 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
             <>
                 <Card variant="outlined">
                     <CardContent>
-                        <b>Survey Date:</b> {timestampToDateTime(survey.survey_date)}
+                        <b>{t("surveyAttr.surveyDate")}:</b>{" "}
+                        {timestampToDateTime(survey.survey_date)}
                     </CardContent>
                 </Card>
                 <br />
@@ -106,24 +107,24 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
         <>
             <TimelineEntry
                 date={dateFormatter(survey.survey_date)}
-                content={<b>Baseline Survey</b>}
+                content={<b>{t("surveyAttr.baselineSurvey")}</b>}
                 DotIcon={Assignment}
                 onClick={onOpen}
             />
             <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
                 <DialogTitle>
-                    <b>Baseline Survey</b>
+                    <b>{t("surveyAttr.baselineSurvey")}</b>
                 </DialogTitle>
                 <DialogContent>
                     {loadingError ? (
-                        <Alert severity="error">Something went wrong. Please try again.</Alert>
+                        <Alert severity="error">{t("alert.generalFailureTryAgain")}</Alert>
                     ) : (
                         <Details />
                     )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose} color="primary">
-                        Close
+                        {t("general.close")}
                     </Button>
                 </DialogActions>
             </Dialog>

@@ -1,5 +1,8 @@
 import { initSocketContext } from "./context/SocketIOContext";
 
+import { initI18n } from "./i18n.config";
+initI18n();
+
 export interface KeyValStorageProvider {
     readonly getItem: (key: string) => Promise<string | null>;
     readonly setItem: (key: string, value: string) => Promise<void>;

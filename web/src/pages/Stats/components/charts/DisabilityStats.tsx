@@ -1,7 +1,9 @@
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar } from "recharts";
 import { Typography } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
-import React from "react";
-import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar } from "recharts";
+
 import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import { IStats } from "@cbr/common/util/stats";
 import { themeColors } from "@cbr/common/util/colors";
@@ -11,7 +13,8 @@ interface IProps {
 }
 
 const DisabilityStats = ({ stats }: IProps) => {
-    const disabilities = useDisabilities();
+    const { t } = useTranslation();
+    const disabilities = useDisabilities(t);
     const disabilityToName = (id: number) => disabilities.get(id) ?? "Loading";
 
     if (!stats) {
@@ -21,7 +24,7 @@ const DisabilityStats = ({ stats }: IProps) => {
     return (
         <>
             <Typography variant="body1" align="center">
-                <b>Clients with Disabilities:</b> {stats.clients_with_disabilities}
+                <b>{t("statistics.clientsWithDisabilities")}</b> {stats.clients_with_disabilities}
             </Typography>
             <br />
             <ResponsiveContainer width="100%" height={500}>
@@ -34,7 +37,7 @@ const DisabilityStats = ({ stats }: IProps) => {
                         tickFormatter={disabilityToName}
                     />
                     <Tooltip labelFormatter={disabilityToName} />
-                    <Bar dataKey="total" name="Count" fill={themeColors.bluePale} />
+                    <Bar dataKey="total" name={t("statistics.count")} fill={themeColors.bluePale} />
                 </BarChart>
             </ResponsiveContainer>
         </>

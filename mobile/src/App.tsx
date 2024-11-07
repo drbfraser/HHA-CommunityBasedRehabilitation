@@ -1,12 +1,14 @@
-import React, { createContext, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Provider as PaperProvider } from "react-native-paper";
+import { enableScreens } from "react-native-screens";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
-import theme from "./util/theme.styles";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
-import globalStyle from "./app.styles";
-import { stackScreenOptions, stackScreenProps } from "./util/stackScreens";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { Provider as StoreProvider } from "react-redux";
+import { io } from "socket.io-client/dist/socket.io";
+import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
+
 import {
     APILoadError,
     commonConfiguration,
@@ -16,23 +18,23 @@ import {
     getCurrentUser,
     invalidateAllCachedAPI,
     isLoggedIn,
+    getI18nInstance,
 } from "@cbr/common";
+import theme from "./util/theme.styles";
+import globalStyle from "./app.styles";
+import { stackScreenOptions, stackScreenProps } from "./util/stackScreens";
 import { AuthContext as AuthContext, IAuthContext } from "./context/AuthContext/AuthContext";
-import { enableScreens } from "react-native-screens";
 import Loading from "./screens/Loading/Loading";
 import { AuthState } from "./context/AuthContext/AuthState";
 import { CacheRefreshTask } from "./tasks/CacheRefreshTask";
 import { StackScreenName, NoAuthScreenName } from "./util/StackScreenName";
-import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
 import { database } from "./util/watermelonDatabase";
-import { io } from "socket.io-client/dist/socket.io";
 import { SyncDatabaseTask } from "./tasks/SyncDatabaseTask";
 import { SyncContext } from "./context/SyncContext/SyncContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
-import { Provider as StoreProvider } from "react-redux";
 import { store } from "./redux/store";
+import { I18nextProvider } from "react-i18next";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -40,7 +42,6 @@ enableScreens();
 
 const Stack = createStackNavigator();
 const styles = globalStyle();
-const Tab = createMaterialBottomTabNavigator();
 
 /**
  * @see IAuthContext#requireLoggedIn
@@ -113,6 +114,24 @@ export default function App() {
     const [cellularSync, setCellularSync] = useState<boolean>(false);
     const [screenRefresh, setScreenRefresh] = useState<boolean>(false);
 
+    // Load the language from AsyncStorage
+    // Source: https://medium.com/@lasithherath00/implementing-react-native-i18n-and-language-selection-with-asyncstorage-b24ae59e788e
+    useEffect(() => {
+        const loadLanguage = async () => {
+            try {
+                const storedLanguage = await AsyncStorage.getItem("language");
+                if (storedLanguage) {
+                    getI18nInstance().changeLanguage(storedLanguage);
+                    console.log("Language loaded:", storedLanguage);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        };
+
+        loadLanguage();
+    }, []);
+
     useEffect(() => {
         // Refresh disabilities, zones, current user information
         isLoggedIn()
@@ -155,6 +174,21 @@ export default function App() {
         });
     }, []);
 
+    useEffect(() => {
+        if (autoSync) {
+            SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
+        }
+    }, [autoSync]);
+
+    useEffect(() => {
+        if (authState.state === "loggedIn" && autoSync) {
+            AutoSyncDB(database, autoSync, cellularSync).then(() => {
+                setScreenRefresh(true);
+                SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
+            });
+        }
+    }, [authState]);
+
     // design inspired by https://reactnavigation.org/docs/auth-flow/
     const authContext = useMemo<IAuthContext>(
         () => ({
@@ -183,76 +217,63 @@ export default function App() {
         [authState]
     );
 
-    useEffect(() => {
-        if (autoSync) {
-            SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
-        }
-    }, [autoSync]);
-
-    useEffect(() => {
-        if (authState.state === "loggedIn" && autoSync) {
-            AutoSyncDB(database, autoSync, cellularSync).then(() => {
-                setScreenRefresh(true);
-                SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
-            });
-        }
-    }, [authState]);
-
     return (
         <SafeAreaView style={styles.safeApp}>
-            <StoreProvider store={store}>
-                <PaperProvider theme={theme}>
-                    <NavigationContainer theme={theme}>
-                        <AuthContext.Provider value={authContext}>
-                            <SyncContext.Provider
-                                value={{
-                                    unSyncedChanges: syncAlert,
-                                    setUnSyncedChanges: setSyncAlert,
-                                    autoSync: autoSync,
-                                    setAutoSync: setAutoSync,
-                                    cellularSync: cellularSync,
-                                    setCellularSync: setCellularSync,
-                                    screenRefresh: screenRefresh,
-                                    setScreenRefresh: setScreenRefresh,
-                                }}
-                            >
-                                <DatabaseProvider database={database}>
-                                    <Stack.Navigator>
-                                        {authState.state === "loggedIn" ? (
-                                            Object.values(StackScreenName).map((name) => (
+            <I18nextProvider i18n={getI18nInstance()}>
+                <StoreProvider store={store}>
+                    <PaperProvider theme={theme}>
+                        <NavigationContainer theme={theme}>
+                            <AuthContext.Provider value={authContext}>
+                                <SyncContext.Provider
+                                    value={{
+                                        unSyncedChanges: syncAlert,
+                                        setUnSyncedChanges: setSyncAlert,
+                                        autoSync: autoSync,
+                                        setAutoSync: setAutoSync,
+                                        cellularSync: cellularSync,
+                                        setCellularSync: setCellularSync,
+                                        screenRefresh: screenRefresh,
+                                        setScreenRefresh: setScreenRefresh,
+                                    }}
+                                >
+                                    <DatabaseProvider database={database}>
+                                        <Stack.Navigator>
+                                            {authState.state === "loggedIn" ? (
+                                                Object.values(StackScreenName).map((name) => (
+                                                    <Stack.Screen
+                                                        key={name}
+                                                        name={name}
+                                                        component={stackScreenProps[name]}
+                                                        // @ts-ignore
+                                                        options={stackScreenOptions[name]}
+                                                    />
+                                                ))
+                                            ) : authState.state === "loggedOut" ||
+                                              authState.state === "previouslyLoggedIn" ? (
+                                                Object.values(NoAuthScreenName).map((name) => (
+                                                    <Stack.Screen
+                                                        key={name}
+                                                        name={name}
+                                                        component={stackScreenProps[name]}
+                                                        // @ts-ignore
+                                                        options={stackScreenOptions[name]}
+                                                    />
+                                                ))
+                                            ) : (
                                                 <Stack.Screen
-                                                    key={name}
-                                                    name={name}
-                                                    component={stackScreenProps[name]}
-                                                    // @ts-ignore
-                                                    options={stackScreenOptions[name]}
+                                                    name="Loading"
+                                                    component={Loading}
+                                                    options={{ headerShown: false }}
                                                 />
-                                            ))
-                                        ) : authState.state === "loggedOut" ||
-                                          authState.state === "previouslyLoggedIn" ? (
-                                            Object.values(NoAuthScreenName).map((name) => (
-                                                <Stack.Screen
-                                                    key={name}
-                                                    name={name}
-                                                    component={stackScreenProps[name]}
-                                                    // @ts-ignore
-                                                    options={stackScreenOptions[name]}
-                                                />
-                                            ))
-                                        ) : (
-                                            <Stack.Screen
-                                                name="Loading"
-                                                component={Loading}
-                                                options={{ headerShown: false }}
-                                            />
-                                        )}
-                                    </Stack.Navigator>
-                                </DatabaseProvider>
-                            </SyncContext.Provider>
-                        </AuthContext.Provider>
-                    </NavigationContainer>
-                </PaperProvider>
-            </StoreProvider>
+                                            )}
+                                        </Stack.Navigator>
+                                    </DatabaseProvider>
+                                </SyncContext.Provider>
+                            </AuthContext.Provider>
+                        </NavigationContainer>
+                    </PaperProvider>
+                </StoreProvider>
+            </I18nextProvider>
         </SafeAreaView>
     );
 }

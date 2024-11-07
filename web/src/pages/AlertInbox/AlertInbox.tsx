@@ -1,30 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
-import AlertList from "./AlertList";
-import AlertDetail from "./AlertDetail";
-import { useState } from "react";
+
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
 import { IUser } from "@cbr/common/util/users";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IAlert } from "@cbr/common/util/alerts";
+import { AlertDetail, AlertList } from "./components";
 
 const AlertInbox = () => {
     const [selectedAlert, setSelectedAlert] = useState<number>(-1);
     const [userID, setUserID] = useState<string>("unknown");
     const [alertData, setAlertData] = useState<IAlert[]>([]);
-
-    const alertListProps = {
-        onAlertSelectionEvent: (itemNum: number) => {
-            setSelectedAlert(itemNum);
-        },
-        selectAlert: selectedAlert,
-        userID: userID,
-        alertData: alertData,
-        onAlertSetEvent: (alertData: IAlert[]) => {
-            setAlertData(alertData);
-        },
-    };
 
     useEffect(() => {
         const fetchAlerts = async () => {
@@ -47,6 +34,18 @@ const AlertInbox = () => {
         getUserProfile();
     }, []);
 
+    const alertListProps = {
+        onAlertSelectionEvent: (itemNum: number) => {
+            setSelectedAlert(itemNum);
+        },
+        selectAlert: selectedAlert,
+        userID: userID,
+        alertData: alertData,
+        onAlertSetEvent: (alertData: IAlert[]) => {
+            setAlertData(alertData);
+        },
+    };
+
     const refreshAlert = async () => {
         try {
             setAlertData(await (await apiFetch(Endpoint.ALERTS)).json());
@@ -54,12 +53,11 @@ const AlertInbox = () => {
             console.log(`Error fetching Alerts: ${e}`);
         }
     };
-
     const alertDetailProps = {
         selectAlert: selectedAlert,
         userID: userID,
         alertData: alertData,
-        refreshAlert: refreshAlert,
+        refreshAlert,
     };
 
     return (

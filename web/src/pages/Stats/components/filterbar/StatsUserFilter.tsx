@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     Button,
     Dialog,
@@ -19,6 +20,7 @@ interface IProps {
 }
 
 const StatsUserFilter = ({ open, onClose, users, user, setUser }: IProps) => {
+    const { t } = useTranslation();
     const [selectedUser, setSelectedUser] = useState<IUser | null>(user);
     const renderUser = (u?: IUser) => (u ? `${u.first_name} ${u.last_name} (${u.username})` : "");
 
@@ -26,7 +28,6 @@ const StatsUserFilter = ({ open, onClose, users, user, setUser }: IProps) => {
         setUser(selectedUser);
         onClose();
     };
-
     const handleClear = () => {
         setSelectedUser(null);
         setUser(null);
@@ -35,20 +36,20 @@ const StatsUserFilter = ({ open, onClose, users, user, setUser }: IProps) => {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-            <DialogTitle>Filter by User</DialogTitle>
+            <DialogTitle>{t("statistics.filterByUser")}</DialogTitle>
             <DialogContent>
                 <Autocomplete
                     options={users}
                     value={selectedUser}
-                    onChange={(e, v) => setSelectedUser(v)}
+                    onChange={(_e, v) => setSelectedUser(v)}
                     getOptionLabel={renderUser}
                     renderOption={renderUser}
                     renderInput={(params: AutocompleteRenderInputParams) => (
                         <TextField
                             {...params}
                             fullWidth
+                            label={t("general.user")}
                             name="userId"
-                            label="User"
                             variant="outlined"
                         />
                     )}
@@ -57,9 +58,9 @@ const StatsUserFilter = ({ open, onClose, users, user, setUser }: IProps) => {
                 <br />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClear}>Clear</Button>
+                <Button onClick={handleClear}>{t("general.clear")}</Button>
                 <Button color="primary" onClick={handleSubmit}>
-                    Filter
+                    {t("general.filter")}
                 </Button>
             </DialogActions>
         </Dialog>

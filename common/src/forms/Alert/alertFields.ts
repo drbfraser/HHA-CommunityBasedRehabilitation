@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { PriorityLevel, IAlert } from "../../util/alerts";
+import i18n from "i18next";
 
 export enum alertField {
     id = "id",
@@ -19,11 +20,19 @@ export const alertInitialValues = {
 
 export type TAlertValues = typeof alertInitialValues;
 
-export const alertFieldLabels = {
-    [alertField.subject]: "Subject",
-    [alertField.priority]: "Priority",
-    [alertField.alert_message]: "Body",
+// On language change, recompute arrays of labels
+export let alertFieldLabels: { [key: string]: string } = {};
+const refreshArrays = () => {
+    alertFieldLabels = {
+        [alertField.subject]: i18n.t("alerts.subject"),
+        [alertField.priority]: i18n.t("alerts.priority"),
+        [alertField.alert_message]: i18n.t("alerts.body"),
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+});
 
 export const alertUpdateValues = {
     [alertField.id]: "",

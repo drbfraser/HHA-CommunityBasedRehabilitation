@@ -17,6 +17,7 @@ import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useNavigation } from "@react-navigation/native";
 import { Icon, withBadge } from "react-native-elements";
 import { SyncModalIcon } from "./ModalIcon";
+import { useTranslation } from "react-i18next";
 
 interface IHomeScreenProps {
     navigation: StackNavigationProp<StackParamList, StackScreenName.HOME>;
@@ -57,6 +58,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
             ? authState.currentUser
             : undefined
     );
+    const { t } = useTranslation();
 
     screenList.forEach((screen) => {
         if (screen.name == "Sync") {
@@ -100,7 +102,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
                             props.navigation.navigate(StackScreenName.SYNC);
                         }}
                     >
-                        Sync
+                        {t("general.sync")}
                     </Button>
 
                     <Button
@@ -111,7 +113,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
                             props.navigation.navigate(StackScreenName.ALERT_INBOX);
                         }}
                     >
-                        Alerts
+                        {t("general.alerts")}
                     </Button>
                 </TabModal>
             </Provider>

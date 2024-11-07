@@ -11,6 +11,7 @@ import {
     ClientField,
     clientFieldLabels,
     genders,
+    isThisExportingString,
     TClientValues,
     themeColors,
     timestampFromFormDate,
@@ -32,6 +33,7 @@ import DefaultHeader from "../DefaultHeader/DefaultHeader";
 import FormikExposedDropdownMenu from "../ExposedDropdownMenu/FormikExposedDropdownMenu";
 import TextCheckBox from "../TextCheckBox/TextCheckBox";
 import { showValidationErrorToast } from "../../util/validationToast";
+import { useTranslation } from "react-i18next";
 
 export interface IClientFormProps {
     isNewClient: boolean;
@@ -45,7 +47,8 @@ export interface IClientFormProps {
 
 export const ClientForm = (props: IClientFormProps) => {
     const styles = useStyles();
-    const disabilityMap = useDisabilities();
+    const { t } = useTranslation();
+    const disabilityMap = useDisabilities(t);
     const otherDisabilityId = getOtherDisabilityId(disabilityMap);
     const disabilityObj = objectFromMap(disabilityMap);
     const zoneMap = useZones();
@@ -92,11 +95,11 @@ export const ClientForm = (props: IClientFormProps) => {
 
     const fetchUserErrorAlert = () =>
         Alert.alert(
-            "Alert",
-            "Ecountered an error fetching your user information. Please try again.",
+            t("general.alert"),
+            t("alert.actionFailure", { action: t("general.fetch"), object: t("general.user") }),
             [
                 {
-                    text: "Return",
+                    text: t("general.return"),
                     style: "cancel",
                     onPress: () => {},
                 },
@@ -106,11 +109,11 @@ export const ClientForm = (props: IClientFormProps) => {
 
     const invalidUserAlert = () =>
         Alert.alert(
-            "Alert",
-            "You are not authorized to archive/dearchive clients. Please ask an administrator.",
+            t("general.alert"),
+            t("alert.unauthorizedArchive"),
             [
                 {
-                    text: "Return",
+                    text: t("general.return"),
                     style: "cancel",
                     onPress: () => {},
                 },
@@ -120,12 +123,14 @@ export const ClientForm = (props: IClientFormProps) => {
 
     useEffect(() => {
         const title = props.isNewClient
-            ? "New Client"
+            ? t("clientAttr.newClient")
             : fieldsDisabled
-            ? "View Client"
-            : "Edit Client";
+            ? t("clientAttr.viewClient")
+            : t("clientAttr.editClient");
 
-        const subtitle = props.clientId ? `Client ID: ${props.clientId}` : undefined;
+        const subtitle = props.clientId
+            ? `${t("screenNames.clientID")}: ${props.clientId}`
+            : undefined;
 
         navigation.setOptions({ header: DefaultHeader(title, subtitle) });
 
@@ -153,8 +158,10 @@ export const ClientForm = (props: IClientFormProps) => {
                     props.formikProps.resetForm();
                     props.resetImage!();
                 }}
-                confirmButtonText="Discard"
-                dialogContent={props.isNewClient ? "Discard new client?" : "Discard your changes?"}
+                confirmButtonText={t("general.discard")}
+                dialogContent={
+                    props.isNewClient ? t("clientAttr.discardNew") : t("general.discardChanges")
+                }
             />
             <ConfirmDialog
                 visible={archiveDialogVisibleOk}
@@ -167,7 +174,12 @@ export const ClientForm = (props: IClientFormProps) => {
                     props.formikProps.handleSubmit();
                     setArchiveDialogVisibleOk(false);
                 }}
-                confirmButtonText={props.formikProps.values.is_active ? "Archive" : "Dearchive"}
+                confirmButtonText={
+                    props.formikProps.values.is_active
+                        ? t("general.archive")
+                        : t("general.dearchive")
+                }
+                //TODO translation
                 dialogContent={`Are you sure you want to ${
                     props.formikProps.values.is_active ? "archive" : "dearchive"
                 } ${props.formikProps.values.firstName} ${
@@ -214,7 +226,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 mode="contained"
                                 onPress={showDatepicker}
                             >
-                                SELECT
+                                {t("general.select")}
                             </Button>
                         ) : (
                             <></>
@@ -238,7 +250,9 @@ export const ClientForm = (props: IClientFormProps) => {
                             }
                             mode="date"
                             display="default"
-                            neutralButtonLabel="Today"
+                            neutralButton={{ label: t("general.today") }}
+                            negativeButton={{ label: t("general.cancel") }}
+                            positiveButton={{ label: t("general.ok") }}
                             onChange={(event, date) => {
                                 setDatePickerVisible(Platform.OS === "ios");
                                 if (event.type === "neutralButtonPressed") {
@@ -312,7 +326,7 @@ export const ClientForm = (props: IClientFormProps) => {
                         <View style={styles.nestedScrollView}>
                             <View style={styles.disabilityListHeaderContainerStyle}>
                                 <Text style={styles.disabilityListHeaderStyle}>
-                                    Disability List
+                                    {t("general.objectList")}
                                 </Text>
                             </View>
                             <KeyboardAwareScrollView
@@ -322,7 +336,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 <CustomMultiPicker
                                     options={disabilityObj}
                                     multiple={true}
-                                    placeholder={"Disability"}
+                                    placeholder={t("general.disability")}
                                     placeholderTextColor={themeColors.blueBgLight}
                                     returnValue={"disability_type"}
                                     callback={(values) => {
@@ -348,7 +362,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 disabled={isFieldDisabled()}
                                 onPress={closeDisabilityMenu}
                             >
-                                Save
+                                {t("general.save")}
                             </Button>
                         </View>
                     </Modal>
@@ -379,7 +393,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 )}
                             </>
                         ) : (
-                            <Text style={styles.valueText}>No disabilities selected</Text>
+                            <Text style={styles.valueText}>{t("general.noObjectSelected")}</Text>
                         )}
                     </View>
                     <View>
@@ -389,7 +403,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 disabled={isFieldDisabled()}
                                 onPress={openDisabilityMenu}
                             >
-                                SELECT
+                                {t("general.select")}
                             </Button>
                         ) : (
                             <></>
@@ -466,7 +480,7 @@ export const ClientForm = (props: IClientFormProps) => {
                             }
                         }}
                     >
-                        {fieldsDisabled ? "Edit" : "Save"}
+                        {fieldsDisabled ? t("general.edit") : t("general.save")}
                     </Button>
                     {fieldsDisabled ? (
                         <Button
@@ -482,7 +496,9 @@ export const ClientForm = (props: IClientFormProps) => {
                                 }
                             }}
                         >
-                            {props.formikProps.values.is_active ? "Archive" : "Dearchive"}
+                            {props.formikProps.values.is_active
+                                ? t("general.archive")
+                                : t("general.dearchive")}
                         </Button>
                     ) : (
                         <Button
@@ -491,7 +507,7 @@ export const ClientForm = (props: IClientFormProps) => {
                             disabled={fieldsDisabled}
                             onPress={() => setDiscardDialogVisible(true)}
                         >
-                            Cancel
+                            {t("general.cancel")}
                         </Button>
                     )}
                 </View>

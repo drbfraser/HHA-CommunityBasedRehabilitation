@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import i18n from "i18next";
 
 export interface IRouteParams {
     zone_name: string;
@@ -8,9 +9,17 @@ export enum ZoneField {
     zone_name = "zone_name",
 }
 
-export const zoneFieldLabels = {
-    [ZoneField.zone_name]: "Zone",
+// On language change, recompute arrays of labels
+export let zoneFieldLabels: { [key: string]: string } = {};
+const refreshArrays = () => {
+    zoneFieldLabels = {
+        [ZoneField.zone_name]: i18n.t("zone.zone"),
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+});
 
 export const zoneInitialValues = {
     [ZoneField.zone_name]: "",

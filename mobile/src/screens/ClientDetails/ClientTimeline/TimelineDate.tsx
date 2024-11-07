@@ -5,6 +5,7 @@ import { View, Text, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
 import { Button } from "react-native-paper";
 import useStyles from "./Timeline.style";
+import { useTranslation } from "react-i18next";
 
 interface SummaryProps {
     date: Date;
@@ -15,6 +16,7 @@ const timezone = Localization.timezone;
 
 export const TimelineDate = (props: SummaryProps) => {
     const styles = useStyles();
+    const { t } = useTranslation();
 
     return (
         <View style={styles.container}>
@@ -31,7 +33,7 @@ export const TimelineDate = (props: SummaryProps) => {
             </View>
             <View>
                 <View style={styles.subItem}>
-                    <Text style={styles.subItemText}>Client Created</Text>
+                    <Text style={styles.subItemText}>{t("clientAttr.clientCreated")}</Text>
                 </View>
             </View>
         </View>

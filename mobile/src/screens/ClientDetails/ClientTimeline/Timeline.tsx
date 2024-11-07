@@ -12,6 +12,7 @@ import BaselineEntry from "./Entries/BaselineEntry";
 import ReferralEntry from "./Entries/ReferralEntry";
 import VisitEntry from "./Entries/VisitEntry";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { useTranslation } from "react-i18next";
 
 import { useIsFocused } from "@react-navigation/native";
 interface ISummaryProps {
@@ -37,6 +38,7 @@ export interface IActivity {
 const Timeline = (props: ISummaryProps) => {
     const zones = useZones(false);
     const zone = props.activity.visit ? zones.get(props.activity.visit.zone) : "";
+    const { t } = useTranslation();
 
     const [detailsVisible, setDetailsVisible] = useState(false);
     const showDetails = () => setDetailsVisible(true);
@@ -79,12 +81,16 @@ const Timeline = (props: ISummaryProps) => {
                     <View>
                         {props.activity.type === ActivityType.VISIT && props.activity.visit ? (
                             <View>
-                                <Text>{zone} visit</Text>
+                                <Text>
+                                    {zone} {t("visitAttr.visitVerb")}
+                                </Text>
                                 <View>
                                     {props.activity.visit.educat_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.EDUCAT.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemText}>Education</Text>
+                                            <Text style={styles.subItemText}>
+                                                {t("general.education")}
+                                            </Text>
                                         </View>
                                     ) : (
                                         <></>
@@ -92,7 +98,9 @@ const Timeline = (props: ISummaryProps) => {
                                     {props.activity.visit.health_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.HEALTH.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemText}>Health</Text>
+                                            <Text style={styles.subItemText}>
+                                                {t("general.health")}
+                                            </Text>
                                         </View>
                                     ) : (
                                         <></>
@@ -100,7 +108,9 @@ const Timeline = (props: ISummaryProps) => {
                                     {props.activity.visit.social_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.SOCIAL.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemText}>Social</Text>
+                                            <Text style={styles.subItemText}>
+                                                {t("general.social")}
+                                            </Text>
                                         </View>
                                     ) : (
                                         <></>
@@ -108,7 +118,9 @@ const Timeline = (props: ISummaryProps) => {
                                     {props.activity.visit.nutrit_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.NUTRIT.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemText}>Nutrition</Text>
+                                            <Text style={styles.subItemText}>
+                                                {t("general.nutrition")}
+                                            </Text>
                                         </View>
                                     ) : (
                                         <></>
@@ -116,7 +128,9 @@ const Timeline = (props: ISummaryProps) => {
                                     {props.activity.visit.mental_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.MENTAL.Icon(themeColors.riskBlack)}
-                                            <Text style={styles.subItemText}>Mental</Text>
+                                            <Text style={styles.subItemText}>
+                                                {t("general.mental")}
+                                            </Text>
                                         </View>
                                     ) : (
                                         <></>
@@ -139,11 +153,15 @@ const Timeline = (props: ISummaryProps) => {
                           props.activity.referral ? (
                             <View style={styles.subItem}>
                                 <View>
-                                    <Text style={styles.subItemText}>Referral Posted</Text>
+                                    <Text style={styles.subItemText}>
+                                        {t("referralAttr.referralPosted")}
+                                    </Text>
                                     <View style={styles.subItemRow}>
                                         {props.activity.referral.resolved ? (
                                             <>
-                                                <Text style={styles.subItemText}>Resolved</Text>
+                                                <Text style={styles.subItemText}>
+                                                    {t("general.resolved")}
+                                                </Text>
                                                 <Icon
                                                     name="check-circle"
                                                     size={15}
@@ -152,7 +170,9 @@ const Timeline = (props: ISummaryProps) => {
                                             </>
                                         ) : (
                                             <>
-                                                <Text style={styles.subItemText}>Unresolved</Text>
+                                                <Text style={styles.subItemText}>
+                                                    {t("general.unresolved")}
+                                                </Text>
                                                 <Icon
                                                     name="clock-o"
                                                     size={15}
@@ -181,7 +201,9 @@ const Timeline = (props: ISummaryProps) => {
                             props.activity.type === ActivityType.SURVEY &&
                             props.activity.survey && (
                                 <View style={styles.subItem}>
-                                    <Text style={styles.subItemText}>Baseline Survey</Text>
+                                    <Text style={styles.subItemText}>
+                                        {t("surveyAttr.baselineSurvey")}
+                                    </Text>
                                     <Portal>
                                         <Modal
                                             visible={detailsVisible}

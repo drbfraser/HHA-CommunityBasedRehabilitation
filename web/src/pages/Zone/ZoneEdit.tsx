@@ -1,13 +1,13 @@
-import React from "react";
-import { useStyles } from "./styles";
+import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useRouteMatch } from "react-router-dom";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import { useRouteMatch } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { handleZoneEditSubmit } from "@cbr/common/forms/Zone/zoneFormsHandler";
 import { Alert, Skeleton } from "@material-ui/lab";
+
+import { handleZoneEditSubmit } from "@cbr/common/forms/Zone/zoneFormsHandler";
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import { IZone } from "@cbr/common/util/zones";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -20,6 +20,8 @@ import {
 import history from "@cbr/common/util/history";
 import { UserRole } from "@cbr/common/util/users";
 import ConfirmDeleteZone from "components/Dialogs/ConfirmDeleteZone";
+import { useStyles } from "./styles";
+
 interface IResponseRow {
     id: number;
     zone: number;
@@ -30,8 +32,10 @@ interface IResponseRow {
     role: UserRole;
     is_active: boolean;
 }
+
 const ZoneEdit = () => {
     const styles = useStyles();
+    const { t } = useTranslation();
     const { zone_name } = useRouteMatch<IRouteParams>().params;
     const [zone, setZone] = useState<IZone>();
     const [userList, setUserList] = useState<IResponseRow[]>([]);
@@ -64,40 +68,43 @@ const ZoneEdit = () => {
         };
         return await apiFetch(Endpoint.ZONE, `${zoneId}`, init).then(async (res) => {
             if (!res.ok) {
-                alert("Encountered an error while trying to delete the zone!");
+                alert(t("zone.failedDelete"));
             } else {
-                alert("Zone successfully deleted!");
+                alert(t("zone.successfulDelete"));
                 history.push("/admin");
             }
         });
     };
     const getClientsAndUsers = async (zoneId: any) => {
         const allUsers = await apiFetch(Endpoint.USERS, "");
-        const allClients = await apiFetch(Endpoint.CLIENTS, "");
         const userRows: IResponseRow[] = await allUsers.json();
-        const clientRows: IResponseRow[] = await allClients.json();
-        const usersInZone = userRows.filter(function (row) {
-            return row.zone === zoneId;
-        });
-        const clientsInZone = clientRows.filter(function (row) {
-            return row.zone === zoneId;
-        });
+        const usersInZone = userRows.filter((row) => row.zone === zoneId);
         setUserList(usersInZone);
+
+        const allClients = await apiFetch(Endpoint.CLIENTS, "");
+        const clientRows: IResponseRow[] = await allClients.json();
+        const clientsInZone = clientRows.filter((row) => row.zone === zoneId);
         setClientList(clientsInZone);
+
         return usersInZone.length || clientsInZone.length;
     };
     const handleDeleteZone = async (zoneId: number) => {
         const zoneNotEmpty = await getClientsAndUsers(zoneId);
         if (zoneNotEmpty) {
             setDialogOpen(true);
-        } else if (window.confirm("Are you sure you want to delete this zone?")) deleteZone(zoneId);
+        } else if (window.confirm(t("zone.confirmDelete"))) {
+            deleteZone(zoneId);
+        }
     };
-    return loadingError ? (
-        <Alert severity="error">
-            Something went wrong trying to load that user. Please go back and try again.{" "}
-            {loadingError}
-        </Alert>
-    ) : zone && zones.size ? (
+
+    if (loadingError) {
+        return (
+            <Alert severity="error">
+                {t("alert.loadUserFailure")} {loadingError}
+            </Alert>
+        );
+    }
+    return zone && zones.size ? (
         <div>
             <ConfirmDeleteZone
                 users={userList}
@@ -118,8 +125,7 @@ const ZoneEdit = () => {
                             const errMsg =
                                 e instanceof APIFetchFailError
                                     ? e.buildFormError(zoneFieldLabels)
-                                    : `${e}` ??
-                                      "Sorry, something went wrong trying to edit that user. Please try again.";
+                                    : t("alert.editUserFailure");
                             alert(errMsg);
                         });
                 }}
@@ -127,7 +133,7 @@ const ZoneEdit = () => {
                 {({ values, setFieldValue, isSubmitting }) => (
                     <div className={styles.container}>
                         <br />
-                        <b>ZoneName </b>
+                        <b>{t("zone.zoneName")}</b>
                         <p>{zone.zone_name}</p>
                         <Form>
                             <Grid container spacing={2}>
@@ -149,7 +155,7 @@ const ZoneEdit = () => {
                                         disabled={isSubmitting}
                                         className={styles.btn}
                                     >
-                                        Save
+                                        {t("general.save")}
                                     </Button>
 
                                     <Button
@@ -157,7 +163,7 @@ const ZoneEdit = () => {
                                         variant="outlined"
                                         onClick={history.goBack}
                                     >
-                                        Cancel
+                                        {t("general.cancel")}
                                     </Button>
                                 </Grid>
                                 <Grid item>
@@ -166,7 +172,7 @@ const ZoneEdit = () => {
                                         className={styles.disableBtn}
                                         onClick={() => handleDeleteZone(zone.id)}
                                     >
-                                        DELETE
+                                        {t("general.delete")}
                                     </Button>
                                 </Grid>
                             </Grid>

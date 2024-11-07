@@ -1,5 +1,6 @@
-import { useStyles } from "./AdminList.styles";
-import SearchBar from "components/SearchBar/SearchBar";
+import React, { useRef, useEffect, useState, useMemo } from "react";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import {
     DataGrid,
@@ -17,46 +18,44 @@ import {
     Popover,
     Switch,
 } from "@material-ui/core";
+import { Cancel, MoreVert } from "@material-ui/icons";
+
+import { useZones } from "@cbr/common/util/hooks/zones";
+import SearchBar from "components/SearchBar/SearchBar";
+import { useStyles } from "./AdminList.styles";
 import { useDataGridStyles } from "styles/DataGrid.styles";
 import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
 import { useHideColumnsStyles } from "styles/HideColumns.styles";
-import { useRef } from "react";
-import { useHistory } from "react-router-dom";
-import { useEffect, useState } from "react";
 import requestUserRows from "./requestUserRows";
-import React from "react";
-import { Cancel, MoreVert } from "@material-ui/icons";
-import { SearchOption } from "../ClientList/searchOptions";
-import { useZones } from "@cbr/common/util/hooks/zones";
+import { getClientListSearchOptions } from "../ClientList/searchOptions";
+import { t } from "i18next";
 
-const RenderText = (params: ValueFormatterParams) => {
-    return <Typography variant={"body2"}>{params.value}</Typography>;
-};
-
-const RenderLoadingOverlay = () => {
-    return (
-        <GridOverlay>
-            <div style={{ position: "absolute", top: 0, width: "100%" }}>
-                <LinearProgress />
-            </div>
-        </GridOverlay>
-    );
-};
-
+const RenderText = (params: ValueFormatterParams) => (
+    <Typography variant={"body2"}>{params.value}</Typography>
+);
+const RenderLoadingOverlay = () => (
+    <GridOverlay>
+        <div style={{ position: "absolute", top: 0, width: "100%" }}>
+            <LinearProgress />
+        </div>
+    </GridOverlay>
+);
 const RenderNoRowsOverlay = () => {
     const styles = useDataGridStyles();
-
     return (
         <GridOverlay className={styles.noRows}>
             <Cancel color="primary" className={styles.noRowsIcon} />
-            <Typography color="primary">No Users Found</Typography>
+            <Typography color="primary">{t("admin.noUsersFound")}</Typography>
         </GridOverlay>
     );
 };
 
 const AdminList = () => {
+    const { t } = useTranslation();
+    const searchOptions = useMemo(() => getClientListSearchOptions(t), [t]);
+
     const [searchValue, setSearchValue] = useState<string>("");
-    const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
+    const [searchOption, setSearchOption] = useState<string>(searchOptions.NAME.value);
     const [loading, setLoading] = useState<boolean>(true);
     const [isNameHidden, setNameHidden] = useState<boolean>(false);
     const [isRoleHidden, setRoleHidden] = useState<boolean>(false);
@@ -77,7 +76,7 @@ const AdminList = () => {
 
     const onRowClick = (row: any) => {
         const user = row.row;
-        history.push("/admin/view/" + user.id);
+        history.push(`/admin/view/${user.id}`);
     };
     const onAdminAddClick = () => history.push("/admin/new");
     const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
@@ -87,7 +86,7 @@ const AdminList = () => {
     const adminColumns = [
         {
             field: "name",
-            headerName: "Name",
+            headerName: t("admin.name"),
             flex: 1,
             renderCell: RenderText,
             hide: isNameHidden,
@@ -95,7 +94,7 @@ const AdminList = () => {
         },
         {
             field: "zone",
-            headerName: "Zone",
+            headerName: t("admin.zone"),
             flex: 1,
             renderCell: RenderText,
             hide: isZoneHidden,
@@ -103,7 +102,7 @@ const AdminList = () => {
         },
         {
             field: "role",
-            headerName: "Role",
+            headerName: t("admin.role"),
             flex: 1,
             renderCell: RenderText,
             hide: isRoleHidden,
@@ -111,7 +110,7 @@ const AdminList = () => {
         },
         {
             field: "status",
-            headerName: "Status",
+            headerName: t("admin.status"),
             flex: 1,
             renderCell: RenderText,
             hide: isStatusHidden,
@@ -119,7 +118,7 @@ const AdminList = () => {
         },
         {
             field: "username",
-            headerName: "Username",
+            headerName: t("admin.username"),
             flex: 1,
             renderCell: RenderText,
             hide: isUsernameHidden,
@@ -132,29 +131,33 @@ const AdminList = () => {
     useEffect(() => {
         const loadInitialData = async () => {
             setLoading(true);
-            await requestUserRows(setFilteredRows, setServerRows, setLoading);
+            await requestUserRows(setFilteredRows, setServerRows, setLoading, t);
             setLoading(false);
             initialDataLoaded.current = true;
         };
         loadInitialData();
-    }, []);
+    }, [t]);
 
     useEffect(() => {
         if (!initialDataLoaded.current) {
             return;
         }
-        if (searchOption === SearchOption.NAME) {
-            const filteredRows: RowsProp = serverRows.filter(
-                (r) =>
-                    r.name.toLowerCase().startsWith(searchValue) ||
-                    r.last_name.toLowerCase().startsWith(searchValue)
-            );
-            setFilteredRows(filteredRows);
-        } else if (searchOption === SearchOption.ZONE) {
-            const filteredRows: RowsProp = serverRows.filter((r) => r.zone.startsWith(searchValue));
-            setFilteredRows(filteredRows);
+
+        switch (searchOption) {
+            case searchOptions.NAME.value:
+                setFilteredRows(
+                    serverRows.filter(
+                        (r) =>
+                            r.name.toLowerCase().startsWith(searchValue) ||
+                            r.last_name.toLowerCase().startsWith(searchValue)
+                    )
+                );
+                break;
+            case searchOptions.ZONE.value:
+                setFilteredRows(serverRows.filter((r) => r.zone.startsWith(searchValue)));
+                break;
         }
-    }, [searchValue, searchOption, serverRows]);
+    }, [searchValue, searchOption, serverRows, searchOptions.NAME, searchOptions.ZONE]);
 
     return (
         <div className={styles.container}>
@@ -162,24 +165,25 @@ const AdminList = () => {
                 <IconButton onClick={onAdminAddClick} className={styles.icon}>
                     <PersonAddIcon />
                 </IconButton>
+
                 <div className={searchOptionsStyle.searchOptions}>
                     <Select
                         color={"primary"}
-                        defaultValue={SearchOption.NAME}
                         value={searchOption}
                         onChange={(event) => {
                             setSearchValue("");
                             setSearchOption(String(event.target.value));
                         }}
                     >
-                        {Object.values(SearchOption).map((option) => (
-                            <MenuItem key={option} value={option}>
-                                {option}
+                        {Object.values(searchOptions).map(({ value, display }, index) => (
+                            <MenuItem key={index} value={value}>
+                                {display}
                             </MenuItem>
                         ))}
                     </Select>
                 </div>
-                {searchOption === SearchOption.ZONE ? (
+
+                {searchOption === searchOptions.ZONE.value ? (
                     <div>
                         <Select
                             className={searchOptionsStyle.zoneOptions}

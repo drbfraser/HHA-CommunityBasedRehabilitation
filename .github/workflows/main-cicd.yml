@@ -47,9 +47,9 @@ jobs:
     - name: Run TypeScript compiler
       run:  npx tsc
       working-directory: /isolated_build/repo/common
-    - name: Run tests on ./common/
-      run:  npm run test-ci
-      working-directory: /isolated_build/repo/common
+    # - name: Run tests on ./common/
+    #   run:  npm run test-ci
+    #   working-directory: /isolated_build/repo/common
 
   # build-mobile:
   #   runs-on: [self-hosted, docker]

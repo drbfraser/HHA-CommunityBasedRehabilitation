@@ -5,3 +5,5 @@ public
 *.json
 !package.json
 !tsconfig*.json
+
+resources.d.ts

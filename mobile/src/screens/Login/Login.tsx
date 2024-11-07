@@ -20,8 +20,9 @@ import passwordTextInputProps from "../../components/PasswordTextInput/passwordT
 import { APIFetchFailError } from "@cbr/common";
 import { useNavigation } from "@react-navigation/core";
 import { VERSION_NAME } from "../Sync/Sync";
-import { column } from "@nozbe/watermelondb/QueryDescription";
-
+// import { column } from "@nozbe/watermelondb/QueryDescription";
+import { useTranslation } from "react-i18next";
+import LanguagePicker from "../../components/LanguagePicker/LanguagePicker";
 interface IBaseLoginStatus {
     status: "initial" | "submitting";
 }
@@ -34,6 +35,7 @@ interface ILoginStatusFailed {
 type LoginStatus = ILoginStatusFailed | IBaseLoginStatus;
 
 const Login = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const styles = useStyles();
     const [username, setUsername] = useState("");
@@ -64,10 +66,10 @@ const Login = () => {
         if (!usernameToUse.length || !password.length) {
             const error =
                 !usernameToUse.length && !password.length
-                    ? "Missing username and password"
+                    ? t("login.missingValue", { context: "usernamePassword" })
                     : !usernameToUse.length
-                    ? "Missing username"
-                    : "Missing password";
+                    ? t("login.missingValue", { context: "username" })
+                    : t("login.missingValue", { context: "password" });
 
             setStatus({ status: "failed", error: error });
             return;
@@ -80,7 +82,7 @@ const Login = () => {
         } catch (e) {
             if (e instanceof Error || e instanceof APIFetchFailError) {
                 if (e.name === "AbortError") {
-                    setStatus({ status: "failed", error: `The request has timed out.` });
+                    setStatus({ status: "failed", error: t("login.requestTimeout") });
                 } else {
                     const errorMessage =
                         e instanceof APIFetchFailError && e.details ? e.details : `${e}`;
@@ -106,6 +108,7 @@ const Login = () => {
             )}
 
             <View style={styles.formContainer}>
+                <LanguagePicker />
                 <Image
                     style={styles.logo}
                     resizeMode="contain"
@@ -113,12 +116,12 @@ const Login = () => {
                 />
 
                 {authState.state !== "previouslyLoggedIn" ? (
-                    <Text style={styles.loginHeader}>Login</Text>
+                    <Text style={styles.loginHeader}>{t("login.login")}</Text>
                 ) : (
                     <Alert
                         style={styles.alert}
                         severity="info"
-                        text="Logged out due to inactivity. Please login again."
+                        text={t("login.inactiveLogoutAlert")}
                     />
                 )}
 
@@ -126,10 +129,10 @@ const Login = () => {
                     <Alert
                         style={styles.alert}
                         severity="error"
-                        text={`Login failed: ${status.error}`}
+                        text={`${t("login.loginFailed")}: ${status.error}`}
                     />
                 ) : status.status === "submitting" ? (
-                    <Alert style={styles.alert} severity="info" text="Logging in" />
+                    <Alert style={styles.alert} severity="info" text={t("login.loggingIn")} />
                 ) : null}
                 {/*
                     React Native Paper does not have "standard styling" TextFields as described in
@@ -139,12 +142,13 @@ const Login = () => {
                 */}
                 {authState.state == "previouslyLoggedIn" ? (
                     <Title style={styles.loginAgain}>
-                        Logging in as: {authState.currentUser.username}
+                        {t("login.loggingInAs")}
+                        {authState.currentUser.username}
                     </Title>
                 ) : (
                     <View>
                         <TextInput
-                            label="Username"
+                            label={t("general.username")}
                             error={status.status === "failed" && !username}
                             value={username}
                             onChangeText={(newUsername) => setUsername(newUsername)}
@@ -153,20 +157,20 @@ const Login = () => {
                             blurOnSubmit={false}
                             autoCapitalize="none"
                             autoCorrect={false}
-                            autoCompleteType="username"
+                            autoComplete="username"
                             textContentType="username"
                             returnKeyType="next"
                             onSubmitEditing={() => passwordTextRef.current?.focus()}
                         />
                         <HelperText type="error" visible={status.status === "failed" && !username}>
-                            Please enter a username.
+                            {t("login.enterValue", { context: "username" })}
                         </HelperText>
                     </View>
                 )}
                 <View>
                     <TextInput
                         {...passwordTextInputProps}
-                        label="Password"
+                        label={t("general.password")}
                         error={status.status === "failed" && !password}
                         value={password}
                         onChangeText={(newPassword) => setPassword(newPassword)}
@@ -177,7 +181,7 @@ const Login = () => {
                         ref={passwordTextRef}
                     />
                     <HelperText type="error" visible={status.status === "failed" && !password}>
-                        Please enter a password.
+                        {t("login.enterValue", { context: "password" })}
                     </HelperText>
                 </View>
                 <Button
@@ -188,7 +192,7 @@ const Login = () => {
                     onPress={handleLogin}
                     mode="contained"
                 >
-                    Login
+                    {t("login.login")}
                 </Button>
                 {authState.state == "previouslyLoggedIn" ? (
                     <Button
@@ -198,7 +202,7 @@ const Login = () => {
                         onPress={logout}
                         mode="text"
                     >
-                        Logout
+                        {t("login.logout")}
                     </Button>
                 ) : (
                     <></>

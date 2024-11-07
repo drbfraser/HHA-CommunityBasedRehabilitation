@@ -5,10 +5,12 @@ import { Modal, Text, View, TouchableOpacity, StyleSheet, TextInput } from "reac
 import { themeColors } from "@cbr/common";
 import LocalChangeList from "./LocalChangeList";
 import { ScrollView } from "react-native-gesture-handler";
+import { useTranslation } from "react-i18next";
 
 export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm }) {
     const [syncConfirmed, setSyncConfirmed] = useState<boolean>(false);
     const [upToDateWithServer, setUpToDateWithServer] = useState<boolean>(false);
+    const { t } = useTranslation();
 
     const styles = StyleSheet.create({
         disabledButton: {
@@ -108,27 +110,20 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                             <ScrollView>
                                 <Text style={styles.headerText}>HHA CBR is Updating!</Text>
                                 <Text style={styles.modalText}>
-                                    Our servers are undergoing major changes. As a result, any old
-                                    data is now obsolete and cannot be synced. If you would still
-                                    like to sync, then any local changes on your device must first
-                                    be destroyed.
+                                    {t("alert.obsoleteDataForServerUpdating")}
                                 </Text>
                                 <Text style={styles.modalText}>
-                                    You should use the web app to recreate any local changes, any
-                                    changes on the following entities will be lost:
+                                    {t("alert.directUserToWebapp")}
                                 </Text>
                                 <LocalChangeList />
                                 <Text style={styles.modalText}>
-                                    Note that this will only affect local data, any settings that
-                                    have previously been set will be unaffected.
+                                    {t("alert.localDataAffectOnlyNotice")}
                                 </Text>
                                 <Text style={styles.modalText}>
-                                    This action may take awhile, and a considerable amount of
-                                    cellular data may be used.
+                                    {t("alert.timeDataUsageNotice")}
                                 </Text>
                                 <Text style={styles.modalText}>
-                                    If you understand and would still like to proceed with the sync,
-                                    type "clear local data" to confirm.
+                                    {t("alert.clearLocalDataConfirmation")}
                                 </Text>
                                 <View style={{ alignItems: "center" }}>
                                     <TextInput
@@ -158,7 +153,9 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                                                 style={styles.enabledButton}
                                                 onPress={() => shutdownModal()}
                                             >
-                                                <Text style={styles.buttonText}>CANCEL</Text>
+                                                <Text style={styles.buttonText}>
+                                                    {t("general.cancel")}
+                                                </Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -173,7 +170,9 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                                                 disabled={!syncConfirmed}
                                                 onPress={() => onConfirm()}
                                             >
-                                                <Text style={styles.buttonText}>CONFIRM</Text>
+                                                <Text style={styles.buttonText}>
+                                                    {t("general.confirm")}
+                                                </Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -181,15 +180,12 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                             </ScrollView>
                         ) : (
                             <>
-                                <Text style={styles.headerText}>This App is Out of Date</Text>
+                                <Text style={styles.headerText}>{t("alert.outdatedApp")}</Text>
                                 <Text style={styles.modalText}>
-                                    A new version of the HHA CBR app is available on the Google Play
-                                    Store. Please update your app now, or you will be unable to
-                                    sync.
+                                    {t("alert.newVersionAvailability")}
                                 </Text>
                                 <Text style={styles.modalText}>
-                                    If you have the latest version of the app and still see this
-                                    message, then try uninstalling and reinstalling the app.
+                                    {t("alert.reinstallingSuggestion")}
                                 </Text>
                                 <TouchableOpacity
                                     style={[
@@ -198,7 +194,7 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
                                     ]}
                                     onPress={() => shutdownModal()}
                                 >
-                                    <Text style={styles.buttonText}>OK</Text>
+                                    <Text style={styles.buttonText}>{t("general.ok")}</Text>
                                 </TouchableOpacity>
                             </>
                         )}

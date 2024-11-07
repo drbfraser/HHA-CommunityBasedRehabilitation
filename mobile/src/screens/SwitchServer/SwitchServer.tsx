@@ -11,6 +11,8 @@ import { SyncDB } from "../../util/syncHandler";
 import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
 import { showGenericAlert } from "../../util/genericAlert";
 import { useNavigation } from "@react-navigation/native";
+import i18n from "i18next";
+import { useTranslation } from "react-i18next";
 
 const SwitchServer = () => {
     enum ServerOption {
@@ -25,6 +27,7 @@ const SwitchServer = () => {
     const navigator = useNavigation();
     const [selectedServer, setSelectedServer] = useState(ServerOption.NONE);
     const [testServerURL, setTestServerURL] = useState("");
+    const { t } = useTranslation();
 
     const switchServer = async (server: ServerOption) => {
         if (server !== ServerOption.NONE) {
@@ -32,7 +35,11 @@ const SwitchServer = () => {
             const apiUrl = `${baseUrl}/api/`;
 
             if (baseUrl === socket.ioUrl) {
-                alert("Already connected to server: " + baseUrl);
+                Alert.alert(
+                    i18n.t("general.alert"),
+                    i18n.t("login.alreadyConnectedToServer") + baseUrl,
+                    [{ text: i18n.t("general.ok"), style: "cancel" }]
+                );
                 return;
             }
 
@@ -41,8 +48,8 @@ const SwitchServer = () => {
                     confirmSwitchServer(apiUrl, baseUrl);
                 } else {
                     showGenericAlert(
-                        "Your device is not connected to the internet",
-                        "You must have an internet connection via wifi to switch servers."
+                        i18n.t("login.notConnectedToInternet"),
+                        i18n.t("login.mustHaveInternet")
                     );
                 }
             });
@@ -50,25 +57,21 @@ const SwitchServer = () => {
     };
 
     const confirmSwitchServer = (apiUrl: string, baseUrl: string) => {
-        Alert.alert(
-            "Alert",
-            "Switching servers will clear all local data. Are you sure you want to proceed?",
-            [
-                { text: "Cancel", style: "cancel" },
-                {
-                    text: "Confirm",
-                    onPress: async () => {
-                        await database.write(async () => {
-                            await database.unsafeResetDatabase();
-                        });
+        Alert.alert(i18n.t("general.alert"), i18n.t("login.switchClearData"), [
+            { text: i18n.t("general.cancel"), style: "cancel" },
+            {
+                text: i18n.t("general.confirm"),
+                onPress: async () => {
+                    await database.write(async () => {
+                        await database.unsafeResetDatabase();
+                    });
 
-                        terminateCurrentConnection();
-                        updateCommonApiUrl(apiUrl, baseUrl);
-                        navigator.navigate("Login");
-                    },
+                    terminateCurrentConnection();
+                    updateCommonApiUrl(apiUrl, baseUrl);
+                    navigator.navigate("Login");
                 },
-            ]
-        );
+            },
+        ]);
     };
 
     const terminateCurrentConnection = () => {
@@ -85,7 +88,11 @@ const SwitchServer = () => {
                 ? styles.chipLive
                 : styles.chipTest
             : styles.chipDisconnected;
-        const chipText = isConnected ? (isPointingAtLive ? "Live" : "Test") : "No Connection";
+        const chipText = isConnected
+            ? isPointingAtLive
+                ? i18n.t("login.live")
+                : i18n.t("login.test")
+            : i18n.t("login.noConnection");
 
         return (
             <Chip textStyle={styles.chipText} style={chipStyle}>
@@ -104,7 +111,7 @@ const SwitchServer = () => {
                 icon={value === selectedServer ? "check" : ""}
                 onPress={() => setSelectedServer(value)}
             >
-                {value} server
+                {value === ServerOption.LIVE ? t("login.liveServer") : t("login.testServer")}
             </Button>
         );
     };
@@ -112,19 +119,19 @@ const SwitchServer = () => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.groupContainer}>
-                <Text style={styles.cardSectionTitle}>Current Status</Text>
+                <Text style={styles.cardSectionTitle}>{t("login.currentStatus")}</Text>
                 <Card style={styles.CardStyle}>
                     <View style={styles.row}>
-                        <Text>Connected to server: </Text>
+                        <Text>{t("login.connectedToServer")} </Text>
                         {renderCurrentServer()}
                     </View>
                     <View style={styles.row}>
-                        <Text>Server URL: </Text>
+                        <Text>{t("login.serverURL")} </Text>
                         <Text>{socket.ioUrl}</Text>
                     </View>
                 </Card>
 
-                <Text style={styles.cardSectionTitle}>Select Server</Text>
+                <Text style={styles.cardSectionTitle}>{t("login.selectServer")}</Text>
                 <View>
                     {radioButton(ServerOption.LIVE)}
                     {radioButton(ServerOption.TEST)}
@@ -132,7 +139,7 @@ const SwitchServer = () => {
                 {selectedServer === ServerOption.TEST ? (
                     <View>
                         <TextInput
-                            label="Test Server URL"
+                            label={t("login.testServerURL")}
                             error={false}
                             value={testServerURL}
                             onChangeText={(newURL) => setTestServerURL(newURL)}
@@ -159,7 +166,7 @@ const SwitchServer = () => {
                     }
                     onPress={() => switchServer(selectedServer)}
                 >
-                    Switch Servers
+                    {t("login.switchServers")}
                 </Button>
             </ScrollView>
         </SafeAreaView>

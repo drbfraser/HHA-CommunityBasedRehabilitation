@@ -17,6 +17,7 @@ import { ScrollView, View } from "react-native";
 import DataCard from "../../../../components/DataCard/DataCard";
 import { database } from "../../../../util/watermelonDatabase";
 import { modelName } from "../../../../models/constant";
+import { useTranslation } from "react-i18next";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -27,22 +28,25 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
     const [visit, setVisit] = useState<IVisit>();
     const [visitOutcomes, setVisitOutcome] = useState<any>();
     const [visitImprovements, setVisitImprovement] = useState<any>();
+    const { t } = useTranslation();
+
     const onOpen = async () => {
         if (!visit) {
             const fetchedVisit: any = await database.get(modelName.visits).find(visitSummary.id);
             const iVisit: IVisit = {
                 id: fetchedVisit.id,
-                user_id: fetchedVisit.user_id,
-                client_id: fetchedVisit.client_id,
+                user_id: fetchedVisit.user_id, // Value in fetchVisit, but undefined in iVisit. Why?
+                client_id: fetchedVisit.client_id, // Value in fetchVisit, but undefined in iVisit. Why?
                 created_at: fetchedVisit.createdAt,
                 health_visit: fetchedVisit.health_visit,
                 educat_visit: fetchedVisit.educat_visit,
                 social_visit: fetchedVisit.social_visit,
                 nutrit_visit: fetchedVisit.nutrit_visit,
+                mental_visit: fetchedVisit.mental_visit,
                 longitude: fetchedVisit.longitude,
                 latitude: fetchedVisit.latitude,
                 zone: fetchedVisit.zone,
-                village: fetchedVisit.zone,
+                village: fetchedVisit.village,
                 improvements: [],
                 outcomes: [],
             };
@@ -125,14 +129,14 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
 
         return (
             <>
-                <Card.Title title="New Visit Survey" />
                 <Card style={styles.createdCard}>
                     <Card.Content>
                         <Text>
-                            <Text style={styles.labelBold}>Visit Date:</Text>{" "}
+                            <Text style={styles.labelBold}>{t("visitAttr.date")}:</Text>{" "}
                             {timestampToDateTime(visit.created_at)}
                             {"\n"}
-                            <Text style={styles.labelBold}>Village:</Text> {visit.village}
+                            <Text style={styles.labelBold}>{t("general.village")}:</Text>{" "}
+                            {visit.village}
                         </Text>
                     </Card.Content>
                 </Card>
@@ -147,19 +151,22 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
         <ScrollView>
             <>
                 <Dialog.Title>
-                    Visit in {zone}
+                    {t("visitAttr.visitLocation", { body: zone })}
                     {"\n"}
                     {visitSummary.health_visit && (
-                        <SocialChip label="Health" type={RiskType.HEALTH} />
+                        <SocialChip label={t("newVisit.health")} type={RiskType.HEALTH} />
                     )}{" "}
                     {visitSummary.educat_visit && (
-                        <SocialChip label="Education" type={RiskType.EDUCATION} />
+                        <SocialChip label={t("newVisit.education")} type={RiskType.EDUCATION} />
                     )}{" "}
                     {visitSummary.social_visit && (
-                        <SocialChip label="Social" type={RiskType.SOCIAL} />
+                        <SocialChip label={t("newVisit.social")} type={RiskType.SOCIAL} />
                     )}{" "}
                     {visitSummary.nutrit_visit && (
-                        <SocialChip label="Nutrition" type={RiskType.NUTRITION} />
+                        <SocialChip label={t("newVisit.nutrition")} type={RiskType.NUTRITION} />
+                    )}{" "}
+                    {visitSummary.mental_visit && (
+                        <SocialChip label={t("newVisit.mental")} type={RiskType.MENTAL} />
                     )}{" "}
                 </Dialog.Title>
                 <Dialog.Content>
@@ -167,7 +174,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 </Dialog.Content>
                 <Dialog.Actions>
                     <Button onPress={onClose} color={themeColors.blueBgDark}>
-                        Close
+                        {t("general.close")}
                     </Button>
                 </Dialog.Actions>
             </>

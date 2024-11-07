@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import i18n from "i18next";
 
 export enum FormField {
     risk_type = "risk_type",
@@ -8,11 +9,19 @@ export enum FormField {
     timestamp = "timestamp",
 }
 
-export const fieldLabels = {
-    [FormField.risk_level]: "Risk Level",
-    [FormField.requirement]: "Requirements",
-    [FormField.goal]: "Goals",
+// On language change, recompute arrays of labels
+export let fieldLabels: { [key: string]: string } = {};
+const refreshArrays = () => {
+    fieldLabels = {
+        [FormField.risk_level]: i18n.t("risks.riskLevel"),
+        [FormField.requirement]: i18n.t("risks.requirements"),
+        [FormField.goal]: i18n.t("risks.goals"),
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+});
 
 export const validationSchema = () =>
     Yup.object().shape({

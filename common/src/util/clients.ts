@@ -2,6 +2,7 @@ import { IReferral } from "./referrals";
 import { IRisk, riskLevels } from "./risks";
 import { ISurvey } from "./survey";
 import { IVisitSummary } from "./visits";
+import i18n from "i18next";
 
 export interface IClientSummary {
     id: number;
@@ -61,10 +62,18 @@ export enum SortOptions {
     MENTAL = "mental",
 }
 
-export const genders = {
-    [Gender.FEMALE]: "Female",
-    [Gender.MALE]: "Male",
+// On language change, recompute arrays of labels
+export let genders: { [key: string]: string } = {};
+const refreshArrays = () => {
+    genders = {
+        [Gender.FEMALE]: i18n.t("clientFields.female"),
+        [Gender.MALE]: i18n.t("clientFields.male"),
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+});
 
 export const clientPrioritySort = (a: IClientSummary, b: IClientSummary) => {
     const getCombinedRisk = (c: IClientSummary) =>

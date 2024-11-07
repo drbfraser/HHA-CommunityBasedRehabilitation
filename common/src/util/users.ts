@@ -1,4 +1,5 @@
 import { apiFetch, APIFetchFailError, Endpoint } from "./endpoints";
+import i18n from "i18next";
 
 export interface IUser {
     id: string;
@@ -17,17 +18,25 @@ export enum UserRole {
     WORKER = "WRK",
 }
 
-export const userRoles = {
-    [UserRole.ADMIN]: {
-        name: "Admin",
-    },
-    [UserRole.CLINICIAN]: {
-        name: "Clinician",
-    },
-    [UserRole.WORKER]: {
-        name: "Worker",
-    },
+// On language change, recompute arrays of labels
+export let userRoles: { [key: string]: { [key: string]: string } } = {};
+const refreshArrays = () => {
+    userRoles = {
+        [UserRole.ADMIN]: {
+            name: i18n.t("users.admin"),
+        },
+        [UserRole.CLINICIAN]: {
+            name: i18n.t("users.clinician"),
+        },
+        [UserRole.WORKER]: {
+            name: i18n.t("users.worker"),
+        },
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+});
 
 export const userRolesToLabelMap: ReadonlyMap<string, string> = new Map(
     Object.entries(userRoles).map(([value, { name }]) => [value, name])

@@ -37,6 +37,7 @@ import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/Confir
 import ConsentForm from "./SurveyForm/ConsentForm";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { useTranslation } from "react-i18next";
 
 interface ISurvey {
     label: string;
@@ -62,6 +63,7 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
     const prevStep = () => {
         setStep(step - 1);
     };
+    const { t } = useTranslation();
 
     const database = useDatabase();
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
@@ -105,42 +107,42 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
 
     const surveySteps: ISurvey[] = [
         {
-            label: "Consent",
+            label: t("general.consent"),
             Form: (formikProps) => ConsentForm(formikProps),
             validationSchema: emptyValidationSchema,
         },
         {
-            label: "Health",
+            label: t("general.health"),
             Form: (formikProps) => HealthForm(formikProps),
             validationSchema: healthValidationSchema,
         },
         {
-            label: "Education (under 18)",
+            label: t("survey.education"),
             Form: (formikProps) => EducationForm(formikProps),
             validationSchema: educationValidationSchema,
         },
         {
-            label: "Social",
+            label: t("general.social"),
             Form: (formikProps) => SocialForm(formikProps),
             validationSchema: emptyValidationSchema,
         },
         {
-            label: "Livelihood (over 16)",
+            label: t("survey.livelihood"),
             Form: (formikProps) => LivelihoodForm(formikProps),
             validationSchema: livelihoodValidationSchema,
         },
         {
-            label: "Food and Nutrition",
+            label: t("survey.foodAndNutrition"),
             Form: (formikProps) => FoodForm(formikProps),
             validationSchema: foodValidationSchema,
         },
         {
-            label: "Empowerment",
+            label: t("general.empowerment"),
             Form: (formikProps) => EmpowermentForm(formikProps),
             validationSchema: empowermentValidationSchema,
         },
         {
-            label: "Shelter and Care",
+            label: t("survey.shelterAndCare"),
             Form: (formikProps) => ShelterForm(formikProps),
             validationSchema: emptyValidationSchema,
         },
@@ -150,8 +152,8 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
         <>
             <ConfirmDialogWithNavListener
                 bypassDialog={hasSubmitted}
-                confirmButtonText="Discard"
-                dialogContent="Discard this new baseline survey?"
+                confirmButtonText={t("general.discard")}
+                dialogContent={t("general.discardAdded")}
             />
             <Formik
                 initialValues={baseInitialValues}
@@ -194,6 +196,9 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
                                         onPrevious={prevStep}
                                         previousBtnStyle={styles.prevButton}
                                         onSubmit={() => nextStep(formikProps.values, formikProps)}
+                                        previousBtnText={t("general.previous")}
+                                        nextBtnText={t("general.next")}
+                                        finishBtnText={t("general.submit")}
                                     >
                                         <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
                                         <Divider

@@ -1,38 +1,41 @@
-import { useStyles } from "./styles";
-import { TextField } from "formik-material-ui";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
+import { TextField } from "formik-material-ui";
 import { Alert, Skeleton } from "@material-ui/lab";
-import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
-import { APILoadError } from "@cbr/common/util/endpoints";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
+import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import { APILoadError } from "@cbr/common/util/endpoints";
 import {
     changePassValidationSchema,
     ChangePasswordField,
     changePasswordFieldLabels,
     changePasswordInitialValues,
 } from "@cbr/common/forms/UserProfile/userProfileFields";
-import { useState } from "react";
-import React from "react";
 import {
     getPassChangeErrorMessageFromSubmissionError,
     handleSubmitChangePassword,
 } from "@cbr/common/forms/UserProfile/userProfileHandler";
 import history from "@cbr/common/util/history";
+import { useStyles } from "./styles";
 
 const handleCancel = () => history.goBack();
 
 const UserPasswordEdit = () => {
+    const { t } = useTranslation();
     const styles = useStyles();
     const user = useCurrentUser();
     const [passwordChangeError, setPasswordChangeError] = useState<string | null>(null);
 
-    return user === APILoadError ? (
-        <Alert severity="error">
-            Something went wrong trying to load that user. Please go back and try again.
-        </Alert>
-    ) : user ? (
+    if (user === APILoadError) {
+        return <Alert severity="error">{t("alert.loadUserFailure")}</Alert>;
+    }
+    if (!user) {
+        return <Skeleton variant="rect" height={500} />;
+    }
+    return (
         <>
             <div className={styles.container}>
                 {passwordChangeError && (
@@ -41,11 +44,14 @@ const UserPasswordEdit = () => {
                     </Alert>
                 )}
                 <br />
-                <b>ID</b>
+
+                <b>{t("general.id")}</b>
                 <p>{user.id}</p>
-                <b>Username </b>
+
+                <b>{t("general.username")}</b>
                 <p>{user.username}</p>
             </div>
+
             <Formik
                 initialValues={changePasswordInitialValues}
                 validationSchema={changePassValidationSchema}
@@ -122,7 +128,7 @@ const UserPasswordEdit = () => {
                                         disabled={isSubmitting}
                                         style={{ marginRight: 5 }}
                                     >
-                                        Save
+                                        {t("general.save")}
                                     </Button>
 
                                     <Button
@@ -130,7 +136,7 @@ const UserPasswordEdit = () => {
                                         variant="outlined"
                                         onClick={handleCancel}
                                     >
-                                        Cancel
+                                        {t("general.cancel")}
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -139,8 +145,6 @@ const UserPasswordEdit = () => {
                 )}
             </Formik>
         </>
-    ) : (
-        <Skeleton variant="rect" height={500} />
     );
 };
 

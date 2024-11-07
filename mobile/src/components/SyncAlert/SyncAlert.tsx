@@ -3,6 +3,7 @@ import { Modal, Text, View, TouchableOpacity } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { themeColors } from "@cbr/common";
+import { useTranslation } from "react-i18next";
 
 export default function SyncAlert({
     displayMode,
@@ -11,6 +12,7 @@ export default function SyncAlert({
     visibility,
     dismissAlert,
 }) {
+    const { t } = useTranslation();
     return (
         <View>
             <Modal visible={visibility} animationType={"fade"} transparent={true}>
@@ -78,7 +80,7 @@ export default function SyncAlert({
                                 marginBottom: 10,
                             }}
                         >
-                            <Text style={{ color: "white", margin: 15 }}>OK</Text>
+                            <Text style={{ color: "white", margin: 15 }}>{t("general.ok")}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

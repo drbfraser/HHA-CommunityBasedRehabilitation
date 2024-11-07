@@ -1,4 +1,5 @@
 import { BaseSurveyFormField } from "../forms/BaseSurvey/baseSurveyFields";
+import i18n from "i18next";
 
 export interface ISurvey {
     id: number;
@@ -97,106 +98,121 @@ export interface IRateLevel {
     level: number;
 }
 
-export const rateLevel = {
-    [RateLevel.VERY_POOR]: {
-        name: "Very poor",
-        level: 1,
-    },
-    [RateLevel.POOR]: {
-        name: "Poor",
-        level: 2,
-    },
-    [RateLevel.FINE]: {
-        name: "Fine",
-        level: 3,
-    },
-    [RateLevel.GOOD]: {
-        name: "Good",
-        level: 4,
-    },
-};
-export const deviceTypes = {
-    [DeviceType.WHEELCHAIR]: "Wheelchair",
-    [DeviceType.PROSTHETIC]: "Prosthetic",
-    [DeviceType.ORTHOTIC]: "Orthotic",
-    [DeviceType.CRUTCH]: "Crutch",
-    [DeviceType.WALKING_STICK]: "Walking Stick",
-    [DeviceType.HEARING_AID]: "Hearing Aid",
-    [DeviceType.GLASSES]: "Glasses",
-    [DeviceType.STANDING_FRAME]: "Standing Frame",
-    [DeviceType.CORNER_SEAT]: "Corner Seat",
-};
-export const reasonNotSchool = {
-    [ReasonNotSchool.LACK_OF_FUNDING]: "Lack of funding",
-    [ReasonNotSchool.MY_DISABILITY_STOPS_ME]: "My disability stops me",
-    [ReasonNotSchool.OTHER]: "Other",
-};
+// On language change, recompute arrays of labels
+export let rateLevel: { [key: string]: { [key: string]: string | number } } = {};
+export let deviceTypes: { [key: string]: string } = {};
+export let reasonNotSchool: { [key: string]: string } = {};
+export let childNourish: { [key: string]: string } = {};
+export let isSelfEmployed: { [key: string]: string } = {};
+export let grade: { [key: string]: { [key: string]: string | number } } = {};
+const refreshArrays = () => {
+    rateLevel = {
+        [RateLevel.VERY_POOR]: {
+            name: i18n.t("survey.veryPoor"),
+            level: 1,
+        },
+        [RateLevel.POOR]: {
+            name: i18n.t("survey.poor"),
+            level: 2,
+        },
+        [RateLevel.FINE]: {
+            name: i18n.t("survey.fine"),
+            level: 3,
+        },
+        [RateLevel.GOOD]: {
+            name: i18n.t("survey.good"),
+            level: 4,
+        },
+    };
 
-export const childNourish = {
-    [ChildNourish.MALNOURISHED]: "Malnourished",
-    [ChildNourish.UNDERNOURISHED]: "Undernourished",
-    [ChildNourish.WELL_NOURISHED]: "Well-nourished",
-};
+    deviceTypes = {
+        [DeviceType.WHEELCHAIR]: i18n.t("survey.wheelchair"),
+        [DeviceType.PROSTHETIC]: i18n.t("survey.prosthetic"),
+        [DeviceType.ORTHOTIC]: i18n.t("survey.orthotic"),
+        [DeviceType.CRUTCH]: i18n.t("survey.crutch"),
+        [DeviceType.WALKING_STICK]: i18n.t("survey.walkingStick"),
+        [DeviceType.HEARING_AID]: i18n.t("survey.hearingAid"),
+        [DeviceType.GLASSES]: i18n.t("survey.glasses"),
+        [DeviceType.STANDING_FRAME]: i18n.t("survey.standingFrame"),
+        [DeviceType.CORNER_SEAT]: i18n.t("survey.cornerSeat"),
+    };
 
-export const isSelfEmployed = {
-    [IsSelfEmployed.EMPLOYED]: "Employed",
-    [IsSelfEmployed.SELFEMPLOYED]: "Self-employed",
-};
+    reasonNotSchool = {
+        [ReasonNotSchool.LACK_OF_FUNDING]: i18n.t("survey.lackOfFunding"),
+        [ReasonNotSchool.MY_DISABILITY_STOPS_ME]: i18n.t("survey.myDisabilityStopsMe"),
+        [ReasonNotSchool.OTHER]: i18n.t("survey.other"),
+    };
 
-export const grade = {
-    [Grade.P1]: {
-        name: "Primary 1",
-        number: 1,
-    },
-    [Grade.P2]: {
-        name: "Primary 2",
-        number: 2,
-    },
-    [Grade.P3]: {
-        name: "Primary 3",
-        number: 3,
-    },
-    [Grade.P4]: {
-        name: "Primary 4",
-        number: 4,
-    },
-    [Grade.P5]: {
-        name: "Primary 5",
-        number: 5,
-    },
-    [Grade.P6]: {
-        name: "Primary 6",
-        number: 6,
-    },
-    [Grade.P7]: {
-        name: "Primary 7",
-        number: 7,
-    },
-    [Grade.S1]: {
-        name: "Secondary 1",
-        number: 8,
-    },
-    [Grade.S2]: {
-        name: "Secondary 2",
-        number: 9,
-    },
-    [Grade.S3]: {
-        name: "Secondary 3",
-        number: 10,
-    },
-    [Grade.S4]: {
-        name: "Secondary 4",
-        number: 11,
-    },
-    [Grade.S5]: {
-        name: "Secondary 5",
-        number: 12,
-    },
-    [Grade.S6]: {
-        name: "Secondary 6",
-        number: 13,
-    },
+    childNourish = {
+        [ChildNourish.MALNOURISHED]: i18n.t("survey.malnourished"),
+        [ChildNourish.UNDERNOURISHED]: i18n.t("survey.undernourished"),
+        [ChildNourish.WELL_NOURISHED]: i18n.t("survey.wellNourished"),
+    };
+
+    isSelfEmployed = {
+        [IsSelfEmployed.EMPLOYED]: i18n.t("survey.employed"),
+        [IsSelfEmployed.SELFEMPLOYED]: i18n.t("survey.selfEmployed"),
+    };
+
+    grade = {
+        [Grade.P1]: {
+            name: i18n.t("survey.primary1"),
+            number: 1,
+        },
+        [Grade.P2]: {
+            name: i18n.t("survey.primary2"),
+            number: 2,
+        },
+        [Grade.P3]: {
+            name: i18n.t("survey.primary3"),
+            number: 3,
+        },
+        [Grade.P4]: {
+            name: i18n.t("survey.primary4"),
+            number: 4,
+        },
+        [Grade.P5]: {
+            name: i18n.t("survey.primary5"),
+            number: 5,
+        },
+        [Grade.P6]: {
+            name: i18n.t("survey.primary6"),
+            number: 6,
+        },
+        [Grade.P7]: {
+            name: i18n.t("survey.primary7"),
+            number: 7,
+        },
+        [Grade.S1]: {
+            name: i18n.t("survey.secondary1"),
+            number: 8,
+        },
+        [Grade.S2]: {
+            name: i18n.t("survey.secondary2"),
+            number: 9,
+        },
+        [Grade.S3]: {
+            name: i18n.t("survey.secondary3"),
+            number: 10,
+        },
+        [Grade.S4]: {
+            name: i18n.t("survey.secondary4"),
+            number: 11,
+        },
+        [Grade.S5]: {
+            name: i18n.t("survey.secondary5"),
+            number: 12,
+        },
+        [Grade.S6]: {
+            name: i18n.t("survey.secondary6"),
+            number: 13,
+        },
+    };
 };
+refreshArrays();
+i18n.on("languageChanged", () => {
+    refreshArrays();
+});
 
 export const getSurveyInfo = (survey: ISurvey) => {
     return {

@@ -1,16 +1,16 @@
 import React from "react";
-import { useStyles } from "./styles";
+import { useRouteMatch } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import { useRouteMatch } from "react-router-dom";
-import { FormControl, MenuItem } from "@material-ui/core";
-import { useState, useEffect } from "react";
-import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { Alert, Skeleton } from "@material-ui/lab";
-import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
-import { IUser, userRoles } from "@cbr/common/util/users";
+import { FormControl, MenuItem } from "@material-ui/core";
+
+import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
+import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import {
     AdminField,
@@ -19,36 +19,25 @@ import {
     IRouteParams,
 } from "@cbr/common/forms/Admin/adminFields";
 import history from "@cbr/common/util/history";
+import { useStyles } from "./styles";
+import { useUser } from "util/hooks/useUser";
 
 const AdminEdit = () => {
     const styles = useStyles();
-    const { userId } = useRouteMatch<IRouteParams>().params;
-    const [user, setUser] = useState<IUser>();
+    const { t } = useTranslation();
     const zones = useZones();
-    const [loadingError, setLoadingError] = useState<string>();
+    const { userId } = useRouteMatch<IRouteParams>().params;
+    const [user, loadingError] = useUser(userId);
 
-    useEffect(() => {
-        const getInfo = async () => {
-            try {
-                const theUser: IUser = (await (
-                    await apiFetch(Endpoint.USER, `${userId}`)
-                ).json()) as IUser;
-                setUser(theUser);
-            } catch (e) {
-                setLoadingError(
-                    e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : `${e}`
-                );
-            }
-        };
-        getInfo();
-    }, [userId]);
+    if (loadingError) {
+        return (
+            <Alert severity="error">
+                {t("alert.loadUserFailure")} {loadingError}
+            </Alert>
+        );
+    }
 
-    return loadingError ? (
-        <Alert severity="error">
-            Something went wrong trying to load that user. Please go back and try again.{" "}
-            {loadingError}
-        </Alert>
-    ) : user && zones.size ? (
+    return user && zones.size ? (
         <Formik
             initialValues={user}
             validationSchema={editUserValidationSchema}
@@ -59,19 +48,18 @@ const AdminEdit = () => {
                         const errMsg =
                             e instanceof APIFetchFailError
                                 ? e.buildFormError(adminUserFieldLabels)
-                                : `${e}` ??
-                                  "Sorry, something went wrong trying to edit that user. Please try again.";
+                                : (e as string) ?? t("alert.editUserFailure");
                         alert(errMsg);
                     });
             }}
         >
             {({ values, setFieldValue, isSubmitting }) => (
                 <div className={styles.container}>
-                    <br />
-                    <b>ID</b>
+                    <b>{t("general.id")}</b>
                     <p>{userId}</p>
-                    <b>Username </b>
+                    <b>{t("admin.username")}</b>
                     <p>{user.username}</p>
+
                     <Form>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>
@@ -143,11 +131,12 @@ const AdminEdit = () => {
                                 </FormControl>
                             </Grid>
                         </Grid>
+                        <br />
 
+                        <b>{t("admin.status")}</b>
+                        <p>{values.is_active ? t("general.active") : t("general.disabled")}</p>
                         <br />
-                        <b>Status</b>
-                        <p>{values.is_active ? "Active" : "Disabled"}</p>
-                        <br />
+
                         <Grid
                             container
                             direction="row"
@@ -165,7 +154,7 @@ const AdminEdit = () => {
                                     setFieldValue(AdminField.is_active, !values.is_active)
                                 }
                             >
-                                {values.is_active ? "Disable" : "Activate"}
+                                {values.is_active ? t("general.disable") : t("general.activate")}
                             </Button>
                             <Grid item>
                                 <Button
@@ -175,11 +164,11 @@ const AdminEdit = () => {
                                     disabled={isSubmitting}
                                     className={styles.btn}
                                 >
-                                    Save
+                                    {t("general.save")}
                                 </Button>
 
                                 <Button color="primary" variant="outlined" onClick={history.goBack}>
-                                    Cancel
+                                    {t("general.cancel")}
                                 </Button>
                             </Grid>
                         </Grid>

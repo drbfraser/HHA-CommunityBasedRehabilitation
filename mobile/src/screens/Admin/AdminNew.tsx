@@ -26,6 +26,7 @@ import passwordTextInputProps from "../../components/PasswordTextInput/passwordT
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { handleNewUserSubmit } from "./AdminFormHandler";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { useTranslation } from "react-i18next";
 
 const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenName.ADMIN_NEW>) => {
     const database = useDatabase();
@@ -39,13 +40,14 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
     const { autoSync, cellularSync } = useContext(SyncContext);
 
     const [hasSubmitted, setHasSubmitted] = useState(false);
+    const { t } = useTranslation();
 
     return (
         <>
             <ConfirmDialogWithNavListener
                 bypassDialog={hasSubmitted}
-                confirmButtonText="Discard"
-                dialogContent="Discard this new user?"
+                confirmButtonText={t("general.discard")}
+                dialogContent={t("general.discardChanges")}
             />
             <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
                 <View style={styles.container}>
@@ -188,7 +190,7 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
                                         onPress={formikProps.handleSubmit}
                                         mode="contained"
                                     >
-                                        Save
+                                        {t("general.save")}
                                     </Button>
                                 </View>
                             </>

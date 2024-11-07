@@ -1,15 +1,15 @@
 import React from "react";
-import { useStyles } from "./styles";
+import { useRouteMatch } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import { useRouteMatch } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { handleUpdatePassword } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { Alert, Skeleton } from "@material-ui/lab";
-import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
-import { IUser } from "@cbr/common/util/users";
+
+import { handleUpdatePassword } from "@cbr/common/forms/Admin/adminFormsHandler";
+import { APIFetchFailError } from "@cbr/common/util/endpoints";
+import history from "@cbr/common/util/history";
 import {
     AdminField,
     adminUserFieldLabels,
@@ -17,36 +17,25 @@ import {
     adminPasswordInitialValues,
     adminEditPasswordValidationSchema,
 } from "@cbr/common/forms/Admin/adminFields";
-import history from "@cbr/common/util/history";
+import { useStyles } from "./styles";
+import { useUser } from "util/hooks/useUser";
 
 const AdminPasswordEdit = () => {
     const styles = useStyles();
     const { userId } = useRouteMatch<IRouteParams>().params;
-    const [user, setUser] = useState<IUser>();
-    const [loadingError, setLoadingError] = useState<string>();
+    const [user, loadingError] = useUser(userId);
+    const { t } = useTranslation();
 
-    useEffect(() => {
-        const getInfo = async () => {
-            try {
-                const theUser: IUser = (await (
-                    await apiFetch(Endpoint.USER, `${userId}`)
-                ).json()) as IUser;
-                setUser(theUser);
-            } catch (e) {
-                setLoadingError(
-                    e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : `${e}`
-                );
-            }
-        };
-        getInfo();
-    }, [userId]);
+    if (loadingError) {
+        return (
+            <Alert severity="error">
+                {t("alert.loadUserFailure")}
+                {loadingError}
+            </Alert>
+        );
+    }
 
-    return loadingError ? (
-        <Alert severity="error">
-            Something went wrong trying to load that user. Please go back and try again.
-            {loadingError}
-        </Alert>
-    ) : user ? (
+    return user ? (
         <Formik
             initialValues={adminPasswordInitialValues}
             validationSchema={adminEditPasswordValidationSchema}
@@ -57,21 +46,20 @@ const AdminPasswordEdit = () => {
                         const errorMessage =
                             e instanceof APIFetchFailError
                                 ? e.buildFormError(adminUserFieldLabels)
-                                : `${e}`;
-                        alert(
-                            "Error occurred when trying to change the user's password: " +
-                                errorMessage
-                        );
+                                : (e as string);
+                        alert(`${t("alert.editUserPasswordFailure")}: ${errorMessage}`);
                     });
             }}
         >
             {({ isSubmitting }) => (
                 <div className={styles.container}>
                     <br />
-                    <b>ID</b>
+                    <b>{t("general.id")}</b>
                     <p>{userId}</p>
-                    <b>Username </b>
+
+                    <b>{t("admin.username")}</b>
                     <p>{user.username}</p>
+
                     <Form>
                         <Grid container spacing={2}>
                             <Grid item md={7} xs={12}>
@@ -98,7 +86,6 @@ const AdminPasswordEdit = () => {
                             </Grid>
                             <br />
                         </Grid>
-
                         <br />
 
                         <Grid container direction="row" spacing={2} justify="flex-end">
@@ -110,11 +97,11 @@ const AdminPasswordEdit = () => {
                                     disabled={isSubmitting}
                                     className={styles.btn}
                                 >
-                                    Save
+                                    {t("general.save")}
                                 </Button>
 
                                 <Button color="primary" variant="outlined" onClick={history.goBack}>
-                                    Cancel
+                                    {t("general.cancel")}
                                 </Button>
                             </Grid>
                         </Grid>

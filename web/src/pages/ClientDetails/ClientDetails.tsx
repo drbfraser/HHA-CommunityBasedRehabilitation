@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router";
-
+import { useHistory, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Grid, Typography, Button } from "@material-ui/core";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import { Alert, Skeleton } from "@material-ui/lab";
 
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-
-import ClientInfoForm from "./ClientInfoForm";
 import { IClient } from "@cbr/common/util/clients";
-import ClientRisks from "./Risks/ClientRisks";
 import { IRisk } from "@cbr/common/util/risks";
-import { useHistory } from "react-router-dom";
-import ClientTimeline from "./ClientTimeline/ClientTimeline";
 import { timestampToFormDate } from "@cbr/common/util/dates";
-import { Alert, Skeleton } from "@material-ui/lab";
+import ClientInfoForm from "./ClientInfoForm";
+import ClientRisks from "./Risks/ClientRisks";
+import ClientTimeline from "./ClientTimeline/ClientTimeline";
+
 interface IUrlParam {
     clientId: string;
 }
@@ -22,11 +21,11 @@ const ClientDetails = () => {
     const { clientId } = useParams<IUrlParam>();
     const [clientInfo, setClientInfo] = useState<IClient>();
     const [loadingError, setLoadingError] = useState(false);
-
     const history = useHistory();
+    const { t } = useTranslation();
 
     const getClient = useCallback(() => {
-        apiFetch(Endpoint.CLIENT, `${clientId}`)
+        apiFetch(Endpoint.CLIENT, clientId)
             .then((resp) => resp.json())
             .then((client: IClient) => {
                 client.birth_date = timestampToFormDate(client.birth_date as number, true);
@@ -39,9 +38,12 @@ const ClientDetails = () => {
     useEffect(() => {
         getClient();
     }, [getClient]);
-    return loadingError ? (
-        <Alert severity="error">Something went wrong loading that client. Please try again.</Alert>
-    ) : (
+
+    if (loadingError) {
+        return <Alert severity="error">{t("alert.loadClientFailure")}</Alert>;
+    }
+
+    return (
         <Grid container spacing={2} direction="row" justify="flex-start">
             <Grid item xs={12}>
                 {clientInfo ? (
@@ -50,13 +52,15 @@ const ClientDetails = () => {
                     <Skeleton variant="rect" height={500} />
                 )}
             </Grid>
+
             <Grid item xs={12}>
                 <hr />
             </Grid>
+
             <Grid container justify="space-between" direction="row">
                 <Grid item xs={6}>
                     <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
-                        <b>Risk Levels</b>
+                        <b>{t("clientAttr.riskLevels")}</b>
                     </Typography>
                     <br />
                 </Grid>
@@ -68,7 +72,7 @@ const ClientDetails = () => {
                             history.push(`/client/${clientId}/risks`);
                         }}
                     >
-                        See Risk History
+                        {t("clientAttr.seeRiskHistory")}
                         <ArrowForwardIcon fontSize="small" />
                     </Button>
                 </Grid>
@@ -79,9 +83,10 @@ const ClientDetails = () => {
             <Grid item xs={12}>
                 <hr />
             </Grid>
+
             <Grid item xs={6}>
                 <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
-                    <b>Visits, Referrals &amp; Surveys</b>
+                    <b>{t("clientAttr.visitsRefsSurveys")}</b>
                 </Typography>
             </Grid>
             <Grid item xs={12}>

@@ -12,6 +12,7 @@ import {
 } from "./internal/tokens";
 import rejectWithWrappedError from "./internal/rejectWithWrappedError";
 import { DEFAULT_FETCH_TIMEOUT_MILLIS } from "../constants";
+import i18n from "i18next";
 
 /**
  * Validates the given token to check if it's valid for use.
@@ -78,7 +79,7 @@ const requestTokens = async (
 
         if (!resp.ok) {
             throw new APIFetchFailError(
-                `Request token failure: request failed with HTTP status ${resp.status}.`,
+                i18n.t("general.requestTokenFailureHttp", { respStatus: resp.status }),
                 resp.status,
                 await resp.json().catch(() => undefined)
             );
@@ -91,13 +92,13 @@ const requestTokens = async (
             return tokens;
         } else {
             throw new Error(
-                "Request token failure: the access and/or refresh token(s) received were invalid."
+                i18n.t("general.requestTokenFailureInvalid", { respStatus: resp.status })
             );
         }
     } catch (e) {
         console.error(e);
-        if (e.name === "AbortError" && e instanceof DOMException) {
-            throw new Error(`The request has timed out.`);
+        if (e instanceof DOMException && e.name === "AbortError") {
+            throw new Error(i18n.t("general.requestTimedOut"));
         } else {
             throw e;
         }

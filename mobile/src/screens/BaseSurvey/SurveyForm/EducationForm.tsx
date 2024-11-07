@@ -11,9 +11,11 @@ import {
 import useStyles from "../baseSurvey.style";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
 import FormikExposedDropdownMenu from "../../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
+import { useTranslation } from "react-i18next";
 
 const EducationForm = (props: IFormProps) => {
     const styles = useStyles();
+    const { t } = useTranslation();
 
     return (
         <View>
@@ -27,7 +29,7 @@ const EducationForm = (props: IFormProps) => {
 
             {props.formikProps.values[BaseSurveyFormField.goSchool] ? (
                 <View>
-                    <Text style={styles.pickerQuestion}>What grade?</Text>
+                    <Text style={styles.pickerQuestion}>{t("survey.whatGrade")}</Text>
                     <FormikExposedDropdownMenu
                         field={BaseSurveyFormField.grade}
                         valuesType="record-string"
@@ -42,7 +44,7 @@ const EducationForm = (props: IFormProps) => {
                 </View>
             ) : (
                 <View>
-                    <Text style={styles.pickerQuestion}>Why do you not go to school?</Text>
+                    <Text style={styles.pickerQuestion}>{t("survey.whyNotSchool")}</Text>
                     <FormikExposedDropdownMenu
                         field={BaseSurveyFormField.reasonNotSchool}
                         valuesType="record-string"

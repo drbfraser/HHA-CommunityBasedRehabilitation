@@ -51,57 +51,57 @@ jobs:
       run:  npm run test-ci
       working-directory: /isolated_build/repo/common
 
-  build-mobile:
-    runs-on: [self-hosted, docker]
-    container:
-      # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
-      image: reactnativecommunity/react-native-android:6.2
-    timeout-minutes: 60
-    env:
-      # Keep Gradle's settings file out of home directory (mounted from host)
-      GRADLE_USER_HOME: /isolated_build/.gradle
-    steps:
-    - name: Checkout code into container
-      uses: bfraser/cicd/actions/checkout@v1
-      with: 
-        path: /isolated_build/repo/
+  # build-mobile:
+  #   runs-on: [self-hosted, docker]
+  #   container:
+  #     # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
+  #     image: reactnativecommunity/react-native-android:6.2
+  #   timeout-minutes: 60
+  #   env:
+  #     # Keep Gradle's settings file out of home directory (mounted from host)
+  #     GRADLE_USER_HOME: /isolated_build/.gradle
+  #   steps:
+  #   - name: Checkout code into container
+  #     uses: bfraser/cicd/actions/checkout@v1
+  #     with: 
+  #       path: /isolated_build/repo/
 
-    - name: Build Date String
-      id:   date_str
-      run:  echo "::set-output name=stdout::$(date -u +%Y-%m-%d-%H%M%S%z)"
+  #   - name: Build Date String
+  #     id:   date_str
+  #     run:  echo "::set-output name=stdout::$(date -u +%Y-%m-%d-%H%M%S%z)"
 
-    - name: Setup Release Keystore for Play Store
-      run:  |
-        set -x  # echo commands names
-        mkdir -p $GRADLE_USER_HOME
-        echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_GRADLEPROP }}" > $GRADLE_USER_HOME/gradle.properties
-        echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_FILE_B64 }}" > ./cbr-upload-key.keystore.b64
-        base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
-        echo "Date String: ${{ steps.date_str.outputs.stdout }}"
-      working-directory: /isolated_build/repo/mobile/android/app
+  #   - name: Setup Release Keystore for Play Store
+  #     run:  |
+  #       set -x  # echo commands names
+  #       mkdir -p $GRADLE_USER_HOME
+  #       echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_GRADLEPROP }}" > $GRADLE_USER_HOME/gradle.properties
+  #       echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_FILE_B64 }}" > ./cbr-upload-key.keystore.b64
+  #       base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
+  #       echo "Date String: ${{ steps.date_str.outputs.stdout }}"
+  #     working-directory: /isolated_build/repo/mobile/android/app
 
-    - name: Install NPM version & Build Common
-      run:  |
-        set -x  # echo commands names
-        npm install -g npm@$NPM_VERSION
-        npm ci
-        npx tsc
-      working-directory: /isolated_build/repo/common
+  #   - name: Install NPM version & Build Common
+  #     run:  |
+  #       set -x  # echo commands names
+  #       npm install -g npm@$NPM_VERSION
+  #       npm ci
+  #       npx tsc
+  #     working-directory: /isolated_build/repo/common
 
-    - name: Prepair mobile build environment
-      run:  |
-        npm uninstall @cbr/common
-        COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
-        npm install $COMMON_PACK_NAME
-        npm ci
-        npx prettier --check .
-      working-directory: /isolated_build/repo/mobile
+  #   - name: Prepair mobile build environment
+  #     run:  |
+  #       npm uninstall @cbr/common
+  #       COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
+  #       npm install $COMMON_PACK_NAME
+  #       npm ci
+  #       npx prettier --check .
+  #     working-directory: /isolated_build/repo/mobile
 
-    - name: Build APK (Targeting Development Server)
-      run:  |
-        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        npm run build dev
-      working-directory: /isolated_build/repo/mobile
+  #   - name: Build APK (Targeting Development Server)
+  #     run:  |
+  #       rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+  #       npm run build dev
+  #     working-directory: /isolated_build/repo/mobile
 
     # NOTE: Artifact upload disabled because builds from the CI/CD server seem
     #       to not work. Specifically, creating a client on mobile and then

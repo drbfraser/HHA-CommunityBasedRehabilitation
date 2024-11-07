@@ -26,7 +26,7 @@ application = socketio.WSGIApp(sio, application)
 print(eventlet.__version__)
 
 if DEBUG:
-#     # SocketIO requires a WSGI server to run. By default, when running in debug mode, there is no WSGI
-#     # server running. We don't want to run Gunicorn locally because it doesn't support hot reloading.
+    # SocketIO requires a WSGI server to run. By default, when running in debug mode, there is no WSGI
+    # server running. We don't want to run Gunicorn locally because it doesn't support hot reloading.
     LISTEN_PORT = int(os.environ.get("LISTEN_PORT"))
     eventlet.wsgi.server(eventlet.listen(("", LISTEN_PORT)), application)

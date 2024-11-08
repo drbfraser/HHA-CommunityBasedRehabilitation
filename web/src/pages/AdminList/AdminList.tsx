@@ -251,6 +251,13 @@ const AdminList = () => {
                     density={GridDensityTypes.Comfortable}
                     onRowClick={onRowClick}
                     pagination
+                    // todosd: re-add this functionality
+                    // sortModel={[
+                    //     {
+                    //         field: "name",
+                    //         sort: "asc",
+                    //     },
+                    // ]}
                 />
             </Box>
         </Box>

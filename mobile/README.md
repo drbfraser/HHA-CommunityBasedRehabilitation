@@ -180,10 +180,6 @@ After the app is up and running the first time, after you make a change to the c
 -   Error "Error: Unable to resolve module async-mutex from", try re-running `npm install` on mobile folder.
 
 # Updating dependencies workflow to minimize build errors
-
--   `./gradlew clean` (from within `android`)
--   remove the node_modules folder
--   `npm cache clean --force` (optional)
--   `npm run refresh-common`
--   `npm start -- --reset-cache`
--   `npm run android`
+-   When updating dependencies or changing branches, `npm run clean-start` is recommended and should suffice.  If 
+    a more thorough clean is needed, `npm run clean-install` will also re-install node_modules.  Running `npm cache clean --force`
+    may be of help as well, although this should theoretically not be needed.

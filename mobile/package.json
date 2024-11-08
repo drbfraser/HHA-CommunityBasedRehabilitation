@@ -5,10 +5,11 @@
     "scripts": {
         "start": "react-native start",
         "android": "react-native run-android",
-        "ios": "react-native run-ios",
         "build": "node build.js",
         "bundle": "node build.js --bundle",
-        "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz"
+        "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz",
+        "clean-start": "cd android && ./gradlew clean && cd .. && npm start -- --reset-cache",
+        "clean-install": "cd android && ./gradlew clean && cd .. && rm -rf node_modules && npm run refresh-common && npm install && npm start -- --reset-cache"
     },
     "dependencies": {
         "@babel/runtime": "^7.25.7",

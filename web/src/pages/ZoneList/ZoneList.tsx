@@ -103,6 +103,14 @@ const ZoneList = () => {
                     density={GridDensityTypes.Comfortable}
                     onRowClick={onRowClick}
                     pagination
+                    initialState={{
+                        sorting: {
+                            sortModel: [{
+                                field: "zone",
+                                sort: "asc"
+                            }]
+                        }
+                    }}
                 />
             </Box>
         </Box>

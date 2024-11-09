@@ -234,13 +234,14 @@ const ClientList = () => {
                 density={GridDensityTypes.Comfortable}
                 onRowClick={onRowClick}
                 pagination
-                // todosd: re-add
-                // sortModel={[
-                //     {
-                //         field: "name",
-                //         sort: "asc",
-                //     },
-                // ]}
+                initialState={{
+                    sorting: {
+                        sortModel: [{
+                            field: "name",
+                            sort: "asc"
+                        }]
+                    }
+                }}
             />
 
             <Box sx={clientListStyles.downloadSVC}>

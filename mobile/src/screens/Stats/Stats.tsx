@@ -430,8 +430,7 @@ const Stats = () => {
                                 containerComponent={<VictoryZoomContainer />}
                                 theme={VictoryTheme.material}
                             >
-                                {/* todosd: re-add */}
-                                {/* <VictoryLegend
+                                <VictoryLegend
                                     x={300}
                                     y={0}
                                     gutter={50}
@@ -446,8 +445,7 @@ const Stats = () => {
                                             symbol: { fill: themeColors.riskGreen },
                                         },
                                     ]}
-                                /> */}
-
+                                />
                                 <VictoryGroup offset={10} colorScale={"qualitative"}>
                                     <VictoryBar
                                         horizontal

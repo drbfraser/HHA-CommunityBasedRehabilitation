@@ -8,8 +8,8 @@
         "build": "node build.js",
         "bundle": "node build.js --bundle",
         "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz",
-        "clean-start": "cd android && ./gradlew clean && cd .. && npm start -- --reset-cache",
-        "clean-install": "cd android && ./gradlew clean && cd .. && rm -rf node_modules && npm run refresh-common && npm install && npm start -- --reset-cache"
+        "clean-rebuild": "cd android && ./gradlew clean && cd .. && npm start -- --reset-cache",
+        "clean-rebuild-full": "cd android && ./gradlew clean && cd .. && rm -rf node_modules && npm run refresh-common && npm install && npm start -- --reset-cache"
     },
     "dependencies": {
         "@babel/runtime": "^7.25.7",
@@ -32,6 +32,7 @@
         "@react-navigation/material-bottom-tabs": "^5.3.15",
         "@react-navigation/native": "^5.9.4",
         "@react-navigation/stack": "^5.14.5",
+        "@shopify/react-native-skia": "^1.5.3",
         "@types/react-native-vector-icons": "^6.4.6",
         "async-mutex": "0.5.0",
         "core-js": "^3.15.2",
@@ -74,7 +75,7 @@
         "react-router-dom": "^5.2.0",
         "redux": "^4.1.2",
         "socket.io-client": "^4.3.2",
-        "victory-native": "^36.2.0",
+        "victory-native": "^36.3.1",
         "yup": "^0.32.9"
     },
     "devDependencies": {

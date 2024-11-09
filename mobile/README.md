@@ -181,6 +181,6 @@ After the app is up and running the first time, after you make a change to the c
 
 # Updating dependencies workflow to minimize build errors
 
--   When updating dependencies or changing branches, `npm run clean-start` is recommended and should suffice. If
-    a more thorough clean is needed, `npm run clean-install` will also re-install node_modules. Running `npm cache clean --force`
+-   When updating dependencies or changing branches, `npm run clean-rebuild` is recommended and should suffice. If
+    a more thorough clean is needed, `npm run clean-rebuild-full` will also re-install node_modules. Running `npm cache clean --force`
     may be of help as well, although this should theoretically not be needed.

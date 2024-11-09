@@ -14,7 +14,8 @@
 # - output/cleaned/
 #     - .csv files with only relevant columns selected)
 # - output/final/
-#     - .csv files that have been grouped by relevant columns with an additional `count` column for duplicate values)
+#     - .csv files that have been grouped by relevant columns,
+#       with an additional `count` column for duplicate values
 ##########################################################
 
 import os
@@ -27,6 +28,8 @@ OUTPUT_DIR = f"{os.path.dirname(__file__)}/output"
 RAW_OUTPUT_DIR = f"{OUTPUT_DIR}/raw"
 CLEANED_OUTPUT_DIR = f"{OUTPUT_DIR}/cleaned"
 FINAL_OUTPUT_DIR = f"{OUTPUT_DIR}/final"
+
+DB_CONTAINER_NAME = "cbr_postgres"
 
 
 def generate_csv_files():
@@ -56,7 +59,7 @@ def generate_csv_files():
         for table_name in TABLES:
             print(f"--- outputting CSV file for: {table_name}")
             command = [
-                "docker", "exec", "cbr_postgres",
+                "docker", "exec", DB_CONTAINER_NAME,
                 "psql", "-U", POSTGRES_USER, "-d", DB_NAME,
                 "-c", f"\copy {table_name} TO STDOUT WITH (FORMAT csv, HEADER)"
             ]
@@ -87,13 +90,18 @@ def cleanup_csv_files():
     print("Cleaning raw CSV files...")
     for file in Path(RAW_OUTPUT_DIR).glob("*.csv"):
         print(f"--- cleaning: {file.name}")
-        df = pd.read_csv(file)
+        df: pd.DataFrame = pd.read_csv(file)
         df = df[df.columns.intersection(RELEVANT_COLUMNS)]
 
         # lowercase string values for consistency
         df = df.apply(
             lambda col: col.str.lower() if col.dtype == "object" else col
         )
+        # replace multiple consecutive spaces with a single space
+        df = df.replace(regex=r"\s+", value=" ")
+        # remove any periods at the end of a string
+        df = df.replace(regex=r"\.$", value="")
+
         df.to_csv(f"{CLEANED_OUTPUT_DIR}/cleaned_{file.name}")
     print("Finished cleaning raw CSV files.")
 

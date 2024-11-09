@@ -57,8 +57,9 @@ jobs:
     container:
       # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
       # TODO: Update this version to support Android tools version 34?
-      # todosd: bump this as well?
-      image: reactnativecommunity/react-native-android:6.2
+      # image: reactnativecommunity/react-native-android:6.2
+      # todosd: bump this more?  for now, support for Node 18.x
+      image: reactnativecommunity/react-native-android:9
     timeout-minutes: 60
     env:
       # Keep Gradle's settings file out of home directory (mounted from host)

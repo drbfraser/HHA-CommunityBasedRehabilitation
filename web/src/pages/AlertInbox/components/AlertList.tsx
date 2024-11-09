@@ -9,6 +9,7 @@ import { timestampToDate } from "@cbr/common/util/dates";
 import PriorityLevelChip from "components/PriorityLevelChip/PriorityLevelChip";
 import { compressedDataGridWidth } from "styles/DataGrid.styles";
 import { alertInboxStyles } from "../AlertInbox.styles";
+import { alertListStyles } from "./AlertList.styles";
 
 type AlertDetailProps = {
     selectAlert: number;
@@ -61,15 +62,7 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
         <Grid item xs={3} sx={alertInboxStyles.gridStyle}>
             <h1>{t("general.alerts")}</h1>
             <Divider variant="fullWidth" sx={alertInboxStyles.tableTopAndContentDividerStyle} />
-            <List
-                // todosd: move inline styles to external file?
-                sx={{
-                    width: "100%",
-                    maxWidth: 360,
-                    bgcolor: "background.paper",
-                    overflow: "auto",
-                }}
-            >
+            <List sx={alertListStyles.list}>
                 {sortAlert(alertData).map((alert) => {
                     return (
                         <div key={alert.id}>
@@ -77,12 +70,8 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
                                 primary={
                                     <div>
                                         <Typography
-                                            sx={{
-                                                display: "inline",
-                                                paddingRight: 1,
-                                                fontSize: 18,
-                                                fontWeight: getFontWeight(alert),
-                                            }}
+                                            sx={alertListStyles.alertSubject}
+                                            fontWeight={getFontWeight(alert)}
                                             component="span"
                                             variant="body2"
                                             color="text.primary"
@@ -91,11 +80,8 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
                                             {alert.subject}
                                         </Typography>
                                         <Typography
-                                            sx={{
-                                                display: "inline",
-                                                fontSize: 14,
-                                                fontWeight: getFontWeight(alert),
-                                            }}
+                                            sx={alertListStyles.alertInfoText}
+                                            fontWeight={getFontWeight(alert)}
                                             component="span"
                                             variant="body2"
                                             color="#01579b"
@@ -109,11 +95,8 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
                                     <div>
                                         {RenderBadge(alert.priority)}{" "}
                                         <Typography
-                                            sx={{
-                                                display: "inline",
-                                                fontSize: 14,
-                                                fontWeight: getFontWeight(alert),
-                                            }}
+                                            sx={alertListStyles.alertInfoText}
+                                            fontWeight={getFontWeight(alert)}
                                             component="span"
                                             variant="body2"
                                             color="#616161"

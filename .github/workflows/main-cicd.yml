@@ -13,7 +13,7 @@ env:
   HUB_TOKEN: "${{ secrets.HUB_TOKEN }}"
   HUB_USER: "${{ secrets.HUB_USER }}"
   GRAFANA_API_KEY: "${{ secrets.GRAFANA_API_KEY }}"
-  NPM_VERSION: 7.19.0
+  NPM_VERSION: 10.7.0
   CLONE_DEPTH: 50
   # Keep npm's cache out of home directory (mounted from host)
   # otherwise, NPM gives EACCES error trying to mkdir /github/home/.npm

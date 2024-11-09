@@ -236,11 +236,13 @@ const ClientList = () => {
                 pagination
                 initialState={{
                     sorting: {
-                        sortModel: [{
-                            field: "name",
-                            sort: "asc"
-                        }]
-                    }
+                        sortModel: [
+                            {
+                                field: "name",
+                                sort: "asc",
+                            },
+                        ],
+                    },
                 }}
             />
 

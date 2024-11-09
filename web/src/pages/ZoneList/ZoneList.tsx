@@ -105,11 +105,13 @@ const ZoneList = () => {
                     pagination
                     initialState={{
                         sorting: {
-                            sortModel: [{
-                                field: "zone",
-                                sort: "asc"
-                            }]
-                        }
+                            sortModel: [
+                                {
+                                    field: "zone",
+                                    sort: "asc",
+                                },
+                            ],
+                        },
                     }}
                 />
             </Box>

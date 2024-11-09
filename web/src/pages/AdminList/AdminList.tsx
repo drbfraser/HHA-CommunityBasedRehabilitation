@@ -253,11 +253,13 @@ const AdminList = () => {
                     pagination
                     initialState={{
                         sorting: {
-                            sortModel: [{
-                                field: "name",
-                                sort: "asc"
-                            }]
-                        }
+                            sortModel: [
+                                {
+                                    field: "name",
+                                    sort: "asc",
+                                },
+                            ],
+                        },
                     }}
                 />
             </Box>

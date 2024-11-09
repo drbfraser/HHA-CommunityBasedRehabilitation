@@ -29,7 +29,7 @@ jobs:
   build-common:
     runs-on: [self-hosted, docker]
     container:
-      image: node:14
+      image: node:18
     timeout-minutes: 60
     steps:
     - name: Checkout code into container
@@ -47,6 +47,7 @@ jobs:
     - name: Run TypeScript compiler
       run:  npx tsc
       working-directory: /isolated_build/repo/common
+    # todosd: reenable these tests
     # - name: Run tests on ./common/
     #   run:  npm run test-ci
     #   working-directory: /isolated_build/repo/common
@@ -56,6 +57,7 @@ jobs:
     container:
       # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
       # TODO: Update this version to support Android tools version 34?
+      # todosd: bump this as well?
       image: reactnativecommunity/react-native-android:6.2
     timeout-minutes: 60
     env:
@@ -171,7 +173,7 @@ jobs:
   build-web:
     runs-on: [self-hosted, docker]
     container:
-      image: node:14
+      image: node:18
     timeout-minutes: 60
     steps:
     - name: Checkout code into container

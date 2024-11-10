@@ -29,7 +29,8 @@ import { generateFormValue } from "./utils";
 // 3. array of checkboxes in current selected langauge
 
 interface IProps {
-    fieldName: string;
+    label: string;
+    formikField: string;
     formikProps: FormikProps<any>;
     /**
      *  The fields in the default lanugage (English).
@@ -48,7 +49,8 @@ interface IProps {
 }
 
 const ModalForm: FC<IProps> = ({
-    fieldName,
+    label,
+    formikField,
     formikProps,
     canonicalFields,
     localizedFields,
@@ -81,13 +83,12 @@ const ModalForm: FC<IProps> = ({
         setVisible(true);
     };
     const onClose = () => {
-        formikProps.setFieldTouched(fieldName);
-        formikProps.setFieldValue(fieldName, canonicalFormValue);
+        formikProps.setFieldTouched(formikField);
+        formikProps.setFieldValue(formikField, canonicalFormValue);
         setVisible(false);
     };
 
-    const label = clientFieldLabels[fieldName];
-    const hasError = shouldShowError(formikProps, fieldName);
+    const hasError = shouldShowError(formikProps, formikField);
     return (
         <>
             <Portal>
@@ -140,7 +141,7 @@ const ModalForm: FC<IProps> = ({
                 )}
             />
             {hasError && (
-                <HelperText type="error">{formikProps.errors[fieldName] as string}</HelperText>
+                <HelperText type="error">{formikProps.errors[formikField] as string}</HelperText>
             )}
         </>
     );

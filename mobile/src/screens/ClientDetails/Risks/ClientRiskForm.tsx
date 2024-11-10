@@ -17,6 +17,7 @@ import {
 import { SyncContext } from "../../../context/SyncContext/SyncContext";
 import { handleRiskSubmit } from "./ClientRiskFormHandler";
 import useStyles, { riskStyles } from "./ClientRisk.styles";
+import ModalForm from "../../../components/ModalForm/ModalForm";
 
 export interface ClientRiskFormProps {
     riskData: any;
@@ -142,7 +143,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 </View>
                             </RadioButton.Group>
 
-                            <TextInput
+                            {/* <TextInput
                                 style={styles.riskTextStyle}
                                 label={fieldLabels[FormField.requirement]}
                                 defaultValue={formikProps.values.requirement}
@@ -152,8 +153,21 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 mode={"outlined"}
                             />
                             <Text style={styles.formikErrorStyle}>
+                                {(() => {
+                                    console.log(fieldLabels);
+                                    return <></>;
+                                })()}
                                 {formikProps.errors.requirement}
-                            </Text>
+                            </Text> */}
+
+                            <ModalForm
+                                label={fieldLabels[FormField.requirement]}
+                                formikField={FormField.requirement}
+                                formikProps={formikProps}
+                                canonicalFields={["a"]}
+                                localizedFields={["b"]}
+                                hasFreeformText
+                            />
 
                             <TextInput
                                 style={styles.riskTextStyle}

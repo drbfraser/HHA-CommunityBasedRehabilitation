@@ -1,9 +1,10 @@
-import * as React from "react";
-import { Component, Dispatch, SetStateAction, useContext } from "react";
-import { View, TextInput as NativeText, Platform, ToastAndroid, AlertIOS } from "react-native";
-import { Button, Modal, Portal, TextInput, Text, Menu, RadioButton } from "react-native-paper";
-import { useState } from "react";
-import useStyles, { riskStyles } from "./ClientRisk.styles";
+import React, { useContext, useState } from "react";
+import { View, Platform, ToastAndroid, AlertIOS } from "react-native";
+import { Button, Modal, Portal, TextInput, Text, RadioButton } from "react-native-paper";
+import { useTranslation } from "react-i18next";
+import { Formik } from "formik";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
+
 import {
     fieldLabels,
     FormField,
@@ -13,11 +14,9 @@ import {
     RiskType,
     validationSchema,
 } from "@cbr/common";
-import { Formik } from "formik";
-import { handleRiskSubmit } from "./ClientRiskFormHandler";
-import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../../context/SyncContext/SyncContext";
-import { useTranslation } from "react-i18next";
+import { handleRiskSubmit } from "./ClientRiskFormHandler";
+import useStyles, { riskStyles } from "./ClientRisk.styles";
 
 export interface ClientRiskFormProps {
     riskData: any;
@@ -55,6 +54,25 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
         return riskFormProps;
     };
 
+    const headerText = (() => {
+        const riskType = props.riskData.risk_type;
+        switch (riskType) {
+            case RiskType.HEALTH:
+                return t("riskAttr.update", { context: "health" });
+            case RiskType.EDUCATION:
+                return t("riskAttr.update", { context: "education" });
+            case RiskType.SOCIAL:
+                return t("riskAttr.update", { context: "social" });
+            case RiskType.NUTRITION:
+                return t("riskAttr.update", { context: "nutrition" });
+            case RiskType.MENTAL:
+                return ""; // TODO: missing mental header text
+            default:
+                console.error("Unknown risk type:", riskType);
+                return "";
+        }
+    })();
+
     return (
         <View style={styles.riskModalStyle}>
             <Button
@@ -67,6 +85,9 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             >
                 {t("general.update")}
             </Button>
+
+            <Text>Helloooo</Text>
+
             <Formik
                 initialValues={getRiskFormInitialValues()}
                 onSubmit={(values) => {
@@ -84,42 +105,15 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 {(formikProps) => (
                     <Portal>
                         <Modal
-                            visible={showModal}
                             style={styles.modalStyle}
+                            visible={showModal}
                             onDismiss={() => {
                                 setShowModal(false);
                                 formikProps.resetForm();
                             }}
                         >
-                            {formikProps.values.risk_type === RiskType.HEALTH ? (
-                                <Text style={styles.riskHeaderStyle}>
-                                    {t("riskAttr.update", { context: "health" })}
-                                </Text>
-                            ) : (
-                                <></>
-                            )}
-                            {formikProps.values.risk_type === RiskType.EDUCATION ? (
-                                <Text style={styles.riskHeaderStyle}>
-                                    {t("riskAttr.update", { context: "education" })}
-                                </Text>
-                            ) : (
-                                <></>
-                            )}
-                            {formikProps.values.risk_type === RiskType.SOCIAL ? (
-                                <Text style={styles.riskHeaderStyle}>
-                                    {t("riskAttr.update", { context: "social" })}
-                                </Text>
-                            ) : (
-                                <></>
-                            )}
-                            {formikProps.values.risk_type === RiskType.NUTRITION ? (
-                                <Text style={styles.riskHeaderStyle}>
-                                    {t("riskAttr.update", { context: "nutrition" })}
-                                </Text>
-                            ) : (
-                                <></>
-                            )}
-                            {/* missing RiskTyPE.MENTAL */}
+                            <Text style={styles.riskHeaderStyle}>{headerText}</Text>
+
                             <RadioButton.Group
                                 onValueChange={(newValue) =>
                                     formikProps.setFieldValue(FormField.risk_level, newValue)
@@ -127,50 +121,24 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 value={formikProps.values.risk_level}
                             >
                                 <View style={styles.menuField}>
-                                    <View style={styles.radioIndividual}>
-                                        <Text
-                                            style={
-                                                riskStyles(riskLevels[RiskLevel.LOW].color)
-                                                    .riskRadioStyle
-                                            }
-                                        >
-                                            {t("riskLevelsAbbreviated.low")}
-                                        </Text>
-                                        <RadioButton value={RiskLevel.LOW} />
-                                    </View>
-                                    <View style={styles.radioIndividual}>
-                                        <Text
-                                            style={
-                                                riskStyles(riskLevels[RiskLevel.MEDIUM].color)
-                                                    .riskRadioStyle
-                                            }
-                                        >
-                                            {t("riskLevelsAbbreviated.medium")}
-                                        </Text>
-                                        <RadioButton value={RiskLevel.MEDIUM} />
-                                    </View>
-                                    <View style={styles.radioIndividual}>
-                                        <Text
-                                            style={
-                                                riskStyles(riskLevels[RiskLevel.HIGH].color)
-                                                    .riskRadioStyle
-                                            }
-                                        >
-                                            {t("riskLevelsAbbreviated.high")}
-                                        </Text>
-                                        <RadioButton value={RiskLevel.HIGH} />
-                                    </View>
-                                    <View style={styles.radioIndividual}>
-                                        <Text
-                                            style={
-                                                riskStyles(riskLevels[RiskLevel.CRITICAL].color)
-                                                    .riskRadioStyle
-                                            }
-                                        >
-                                            {t("riskLevelsAbbreviated.critical")}
-                                        </Text>
-                                        <RadioButton value={RiskLevel.CRITICAL} />
-                                    </View>
+                                    {[
+                                        [RiskLevel.LOW, t("riskLevelsAbbreviated.low")],
+                                        [RiskLevel.MEDIUM, t("riskLevelsAbbreviated.medium")],
+                                        [RiskLevel.HIGH, t("riskLevelsAbbreviated.high")],
+                                        [RiskLevel.CRITICAL, t("riskLevelsAbbreviated.critical")],
+                                    ].map(([level, abbreviation]) => (
+                                        <View style={styles.radioIndividual}>
+                                            <Text
+                                                style={
+                                                    riskStyles(riskLevels[level].color)
+                                                        .riskRadioStyle
+                                                }
+                                            >
+                                                {abbreviation}
+                                            </Text>
+                                            <RadioButton value={level} />
+                                        </View>
+                                    ))}
                                 </View>
                             </RadioButton.Group>
 
@@ -186,6 +154,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                             <Text style={styles.formikErrorStyle}>
                                 {formikProps.errors.requirement}
                             </Text>
+
                             <TextInput
                                 style={styles.riskTextStyle}
                                 label={fieldLabels[FormField.goal]}
@@ -197,9 +166,10 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 mode={"outlined"}
                             />
                             <Text style={styles.formikErrorStyle}>{formikProps.errors.goal}</Text>
+
                             <Button
-                                mode={"contained"}
                                 style={styles.submitButtonStyle}
+                                mode={"contained"}
                                 onPress={() => {
                                     if (formikProps.isValid) {
                                         formikProps.handleSubmit();

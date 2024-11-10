@@ -84,7 +84,7 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
             /> */}
 
             <ModalForm
-                field={`${props.riskPrefix}Requirements`}
+                fieldName={`${props.riskPrefix}Requirements`}
                 formikProps={props.formikProps}
                 canonicalFields={t("newVisit.socialRequirements", {
                     returnObjects: true,
@@ -95,7 +95,7 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
                 hasFreeformText
             />
             <ModalForm
-                field={`${props.riskPrefix}Goals`}
+                fieldName={`${props.riskPrefix}Goals`}
                 formikProps={props.formikProps}
                 canonicalFields={["Organize Events", "Make Friends", "Volunteer"]}
                 localizedFields={["Organize Events", "Make Friends", "Volunteer"]}

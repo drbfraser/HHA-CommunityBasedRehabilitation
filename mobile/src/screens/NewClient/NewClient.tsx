@@ -35,7 +35,11 @@ const riskMap: Map<RiskLevel, string> = new Map(
     Object.entries(riskLevels).map(([riskKey, riskLevel]) => [riskKey as RiskLevel, riskLevel.name])
 );
 
-const RiskForm = (props: {
+const RiskForm = ({
+    formikProps,
+    riskPrefix,
+    containerStyle,
+}: {
     formikProps: FormikProps<TClientValues>;
     riskPrefix: string;
     containerStyle?: ViewStyle | false;
@@ -44,25 +48,26 @@ const RiskForm = (props: {
     const styles = useStyles();
 
     const isFieldDisabled = useCallback(
-        () => props.formikProps.isSubmitting || !props.formikProps.values.interviewConsent,
-        [props.formikProps.isSubmitting, props.formikProps.values.interviewConsent]
+        () => formikProps.isSubmitting || !formikProps.values.interviewConsent,
+        [formikProps.isSubmitting, formikProps.values.interviewConsent]
     );
 
     return (
-        <View style={props.containerStyle}>
+        <View style={containerStyle}>
             <FormikExposedDropdownMenu
                 style={styles.field}
                 valuesType="map"
                 values={riskMap}
                 fieldLabels={clientFieldLabels}
-                field={`${props.riskPrefix}Risk`}
-                formikProps={props.formikProps}
+                field={`${riskPrefix}Risk`}
+                formikProps={formikProps}
                 mode="outlined"
                 disabled={isFieldDisabled()}
             />
             <ModalForm
-                fieldName={`${props.riskPrefix}Requirements`}
-                formikProps={props.formikProps}
+                label={clientFieldLabels[`${riskPrefix}Requirements`]}
+                formikField={`${riskPrefix}Requirements`}
+                formikProps={formikProps}
                 canonicalFields={t("newVisit.socialRequirements", {
                     returnObjects: true,
                     lng: "en",
@@ -72,8 +77,9 @@ const RiskForm = (props: {
                 hasFreeformText
             />
             <ModalForm
-                fieldName={`${props.riskPrefix}Goals`}
-                formikProps={props.formikProps}
+                label={clientFieldLabels[`${riskPrefix}Goals`]}
+                formikField={`${riskPrefix}Goals`}
+                formikProps={formikProps}
                 // TODO: replace with real values
                 canonicalFields={["Organize Events", "Make Friends", "Volunteer"]}
                 localizedFields={["Organize Events", "Make Friends", "Volunteer"]}

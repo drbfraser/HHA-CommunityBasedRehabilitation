@@ -19,7 +19,7 @@ import useStyles from "./ModalForm.styles";
 import { generateFormValue } from "./utils";
 
 interface IProps {
-    field: string;
+    fieldName: string;
     formikProps: FormikProps<any>;
     /**
      *  The fields in the default lanugage (English).
@@ -38,7 +38,7 @@ interface IProps {
 }
 
 const ModalForm: FC<IProps> = ({
-    field,
+    fieldName,
     formikProps,
     canonicalFields,
     localizedFields,
@@ -50,11 +50,11 @@ const ModalForm: FC<IProps> = ({
     const styles = useStyles();
     const [visible, setVisible] = useState(false);
     const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(
-        localizedFields.reduce((acc, label) => ({ ...acc, [label]: false }), {}) ?? {}
+        localizedFields.reduce((acc, label) => ({ ...acc, [label]: false }), {})
     );
     const [freeformText, setFreeformText] = useState("");
     const [canonicalFormValue, setCanonicalFormValue] = useState("");
-    const [translatedFormValue, setTranslatedFormValue] = useState("");
+    const [displayedFormValue, setTranslatedFormValue] = useState("");
 
     useEffect(() => {
         const fieldsInEnglish: Array<[string, boolean]> = Object.entries(checkedItems).map(
@@ -71,13 +71,13 @@ const ModalForm: FC<IProps> = ({
         setVisible(true);
     };
     const onClose = () => {
-        formikProps.setFieldTouched(field);
-        formikProps.setFieldValue(field, canonicalFormValue);
+        formikProps.setFieldTouched(fieldName);
+        formikProps.setFieldValue(fieldName, canonicalFormValue);
         setVisible(false);
     };
 
-    const label = clientFieldLabels[field];
-    const hasError = shouldShowError(formikProps, field);
+    const label = clientFieldLabels[fieldName];
+    const hasError = shouldShowError(formikProps, fieldName);
     return (
         <>
             <Portal>
@@ -118,19 +118,19 @@ const ModalForm: FC<IProps> = ({
                 mode="outlined"
                 disabled={disabled}
                 label={label}
-                value={translatedFormValue}
+                value={displayedFormValue}
                 error={hasError}
                 render={() => (
                     <TouchableRipple onPress={onOpen} style={styles.button}>
                         <>
-                            <Text style={styles.buttonText}>{translatedFormValue}</Text>
+                            <Text style={styles.buttonText}>{displayedFormValue}</Text>
                             <Icon name="edit" size={20} style={styles.editIcon} />
                         </>
                     </TouchableRipple>
                 )}
             />
             {hasError && (
-                <HelperText type="error">{formikProps.errors[field] as string}</HelperText>
+                <HelperText type="error">{formikProps.errors[fieldName] as string}</HelperText>
             )}
         </>
     );

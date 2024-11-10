@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView, View, ViewStyle } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Button, Card, Divider, TouchableRipple } from "react-native-paper";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
@@ -37,7 +37,11 @@ const riskMap: Map<RiskLevel, string> = new Map(
     Object.entries(riskLevels).map(([riskKey, riskLevel]) => [riskKey as RiskLevel, riskLevel.name])
 );
 
-const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: string }) => {
+const RiskForm = (props: {
+    formikProps: FormikProps<TClientValues>;
+    riskPrefix: string;
+    containerStyle?: ViewStyle | false;
+}) => {
     const { t } = useTranslation();
     const styles = useStyles();
     // const NUMBER_OF_LINES = 4;
@@ -48,7 +52,7 @@ const RiskForm = (props: { formikProps: FormikProps<TClientValues>; riskPrefix: 
     );
 
     return (
-        <View>
+        <View style={props.containerStyle}>
             <FormikExposedDropdownMenu
                 style={styles.field}
                 valuesType="map"
@@ -207,11 +211,12 @@ const NewClient = () => {
                                 disabled={!formikProps.values.interviewConsent}
                             />
                             <Divider style={styles.divider} />
-                            {Object.keys(RiskType).map((riskType) => (
+                            {Object.keys(RiskType).map((riskType, i) => (
                                 <RiskForm
                                     key={riskType}
                                     riskPrefix={riskType.toLowerCase()}
                                     formikProps={formikProps}
+                                    containerStyle={i !== 0 && styles.section}
                                 />
                             ))}
                             <View style={styles.submitButtonContainer}>

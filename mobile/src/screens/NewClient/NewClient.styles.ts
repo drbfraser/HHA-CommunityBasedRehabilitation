@@ -20,6 +20,9 @@ const useStyles = () =>
         field: {
             marginTop: 5,
         },
+        section: {
+            marginTop: 25,
+        },
         divider: {
             borderColor: themeColors.borderGray,
             borderBottomWidth: 1,

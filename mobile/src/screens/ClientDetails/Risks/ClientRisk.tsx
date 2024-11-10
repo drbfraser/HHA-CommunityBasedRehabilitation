@@ -33,7 +33,7 @@ export const ClientRisk = (props: riskProps) => {
     return (
         <View>
             <View key={risk.risk_type}>
-                <Divider></Divider>
+                <Divider />
                 <Card style={styles.riskCardStyle}>
                     <View style={styles.riskCardContentStyle}>
                         {risk.risk_type === RiskType.HEALTH ? (

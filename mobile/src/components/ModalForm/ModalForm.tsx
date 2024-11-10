@@ -18,6 +18,16 @@ import { shouldShowError } from "../../util/formikUtil";
 import useStyles from "./ModalForm.styles";
 import { generateFormValue } from "./utils";
 
+// encapsulate conversion between languages into modal form
+// database gives text in english and want to show Bari
+// take english strings and swap to Bari if possible
+// database will always store english
+//
+// new args:
+// 1. current value to populate with
+// 2. canonical array of fields in english
+// 3. array of checkboxes in current selected langauge
+
 interface IProps {
     fieldName: string;
     formikProps: FormikProps<any>;

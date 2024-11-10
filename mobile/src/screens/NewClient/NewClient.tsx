@@ -11,7 +11,6 @@ import {
     ClientField,
     clientFieldLabels,
     clientInitialValues,
-    IUser,
     newClientValidationSchema,
     RiskLevel,
     riskLevels,
@@ -21,17 +20,16 @@ import {
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
-import FormikTextInput from "../../components/FormikTextInput/FormikTextInput";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
+import ModalForm from "../../components/ModalForm/ModalForm";
 import defaultProfilePicture from "../../util/defaultProfilePicture";
 import { FieldError } from "../../util/formikUtil";
 import { AppStackNavProp } from "../../util/stackScreens";
-import { handleSubmit } from "./formHandler";
-import useStyles from "./NewClient.styles";
+import { checkUnsyncedChanges } from "../../util/syncHandler";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
-import { checkUnsyncedChanges } from "../../util/syncHandler";
-import ModalForm from "../../components/ModalForm/ModalForm";
+import { handleSubmit } from "./formHandler";
+import useStyles from "./NewClient.styles";
 
 const riskMap: Map<RiskLevel, string> = new Map(
     Object.entries(riskLevels).map(([riskKey, riskLevel]) => [riskKey as RiskLevel, riskLevel.name])
@@ -44,7 +42,6 @@ const RiskForm = (props: {
 }) => {
     const { t } = useTranslation();
     const styles = useStyles();
-    // const NUMBER_OF_LINES = 4;
 
     const isFieldDisabled = useCallback(
         () => props.formikProps.isSubmitting || !props.formikProps.values.interviewConsent,
@@ -63,30 +60,6 @@ const RiskForm = (props: {
                 mode="outlined"
                 disabled={isFieldDisabled()}
             />
-
-            {/* <FormikTextInput
-                style={styles.field}
-                multiline
-                numberOfLines={NUMBER_OF_LINES}
-                fieldLabels={clientFieldLabels}
-                field={`${props.riskPrefix}Requirements`}
-                formikProps={props.formikProps}
-                returnKeyType="next"
-                mode="outlined"
-                disabled={isFieldDisabled()}
-            />
-            <FormikTextInput
-                style={styles.field}
-                multiline
-                numberOfLines={NUMBER_OF_LINES}
-                fieldLabels={clientFieldLabels}
-                field={`${props.riskPrefix}Goals`}
-                formikProps={props.formikProps}
-                returnKeyType="next"
-                mode="outlined"
-                disabled={isFieldDisabled()}
-            /> */}
-
             <ModalForm
                 fieldName={`${props.riskPrefix}Requirements`}
                 formikProps={props.formikProps}
@@ -101,17 +74,9 @@ const RiskForm = (props: {
             <ModalForm
                 fieldName={`${props.riskPrefix}Goals`}
                 formikProps={props.formikProps}
+                // TODO: replace with real values
                 canonicalFields={["Organize Events", "Make Friends", "Volunteer"]}
                 localizedFields={["Organize Events", "Make Friends", "Volunteer"]}
-                // encapsulate conversion between languages into modal form
-                // database gives text in english and want to show Bari
-                // take english strings and swap to Bari if possible
-                // database will always store english
-                //
-                // new args:
-                // 1. current value to populate with
-                // 2. canonical array of fields in english
-                // 3. array of checkboxes in current selected langauge
                 disabled={isFieldDisabled()}
                 hasFreeformText
             />

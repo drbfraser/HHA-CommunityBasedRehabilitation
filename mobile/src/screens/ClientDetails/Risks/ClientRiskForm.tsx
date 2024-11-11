@@ -151,14 +151,14 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 multiline={true}
                                 textAlignVertical={"top"}
                                 mode={"outlined"}
-                            />
+                            /> */}
                             <Text style={styles.formikErrorStyle}>
                                 {(() => {
-                                    console.log(fieldLabels);
+                                    console.log(formikProps.values.requirement);
                                     return <></>;
                                 })()}
                                 {formikProps.errors.requirement}
-                            </Text> */}
+                            </Text>
 
                             <ModalForm
                                 label={fieldLabels[FormField.requirement]}

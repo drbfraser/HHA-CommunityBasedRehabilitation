@@ -9,3 +9,14 @@ export const generateFormValue = (fields: Array<[string, boolean]>, freeformText
     }
     return formValue;
 };
+
+export const parseInitialValues = (
+    rawText: string,
+    canonicalFields: string[]
+): [checkedItems: string[], otherText: string] => {
+    const items = rawText.split("\n");
+
+    const checkedItems = items.filter((item) => canonicalFields.includes(item));
+    const otherText = items.filter((item) => !canonicalFields.includes(item)).join("\n");
+    return [checkedItems, otherText];
+};

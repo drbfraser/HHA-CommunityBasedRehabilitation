@@ -9,6 +9,7 @@ import useStyles from "./ModalForm.styles";
 import { generateFormValue } from "./utils";
 import Modal from "./components/Modal";
 import ModalTrigger from "./components/ModalTrigger";
+import useFormValueGenerator from "./hooks/useFormValueGenerator";
 
 // encapsulate conversion between languages into modal form
 // database gives text in english and want to show Bari
@@ -59,18 +60,12 @@ const ModalForm: FC<IProps> = ({
         localizedFields.reduce((acc, label) => ({ ...acc, [label]: false }), {})
     );
     const [freeformText, setFreeformText] = useState("");
-    const [canonicalFormValue, setCanonicalFormValue] = useState("");
-    const [displayText, setDisplayText] = useState("");
 
-    useEffect(() => {
-        const fieldsInEnglish: Array<[string, boolean]> = Object.entries(checkedItems).map(
-            ([_, checked], i) => [canonicalFields[i], checked]
-        );
-        const translatedFields = Object.entries(checkedItems);
-
-        setCanonicalFormValue(generateFormValue(fieldsInEnglish, freeformText));
-        setDisplayText(generateFormValue(translatedFields, freeformText));
-    }, [checkedItems, freeformText]);
+    const [canonicalFormValue, displayedFormValue] = useFormValueGenerator(
+        checkedItems,
+        freeformText,
+        canonicalFields
+    );
 
     const onOpen = () => {
         if (disabled) return;
@@ -110,13 +105,13 @@ const ModalForm: FC<IProps> = ({
 
             <ModalTrigger
                 label={label}
-                displayText={displayText}
+                displayText={displayedFormValue}
                 hasError={hasError}
                 errorMsg={formikProps.errors[formikField] as string}
             >
                 <TouchableRipple onPress={onOpen} style={styles.button}>
                     <>
-                        <Text style={styles.buttonText}>{displayText}</Text>
+                        <Text style={styles.buttonText}>{displayedFormValue}</Text>
                         <Icon name="edit" size={20} style={styles.editIcon} />
                     </>
                 </TouchableRipple>

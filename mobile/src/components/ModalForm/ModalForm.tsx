@@ -1,15 +1,15 @@
-import React, { FC, useEffect, useState } from "react";
-import { TextInput, Text, HelperText, TouchableRipple } from "react-native-paper";
+import React, { FC, useState } from "react";
+import { TextInput, Text, TouchableRipple } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { FormikProps } from "formik";
 
 import TextCheckBox from "../TextCheckBox/TextCheckBox";
 import { shouldShowError } from "../../util/formikUtil";
 import useStyles from "./ModalForm.styles";
-import { generateFormValue } from "./utils";
 import Modal from "./components/Modal";
 import ModalTrigger from "./components/ModalTrigger";
 import useFormValueGenerator from "./hooks/useFormValueGenerator";
+import { initializeCheckedItems, initializeFreeformText } from "./utils";
 
 // encapsulate conversion between languages into modal form
 // database gives text in english and want to show Bari
@@ -37,6 +37,11 @@ interface IProps {
      * This array should have a 1-to-1 correspondence with the `canonicalFields` array.
      */
     localizedFields: string[];
+    /**
+     * Used to initialize the form with pre-populated values.
+     * The expected format is a string of items delimited by `",\n"`.
+     * Example: "See Friends,\nVolunteer,\nother text"
+     */
     defaultValue?: string;
     hasFreeformText?: boolean;
     disabled?: boolean;
@@ -57,9 +62,11 @@ const ModalForm: FC<IProps> = ({
     const styles = useStyles();
     const [visible, setVisible] = useState(false);
     const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(
-        localizedFields.reduce((acc, label) => ({ ...acc, [label]: false }), {})
+        initializeCheckedItems(defaultValue, canonicalFields, localizedFields)
     );
-    const [freeformText, setFreeformText] = useState("");
+    const [freeformText, setFreeformText] = useState(
+        initializeFreeformText(defaultValue, canonicalFields)
+    );
 
     const [canonicalFormValue, displayedFormValue] = useFormValueGenerator(
         checkedItems,
@@ -77,7 +84,6 @@ const ModalForm: FC<IProps> = ({
         setVisible(false);
     };
 
-    const hasError = shouldShowError(formikProps, formikField);
     return (
         <>
             <Modal label={label} visible={visible} onClose={onClose}>
@@ -106,7 +112,7 @@ const ModalForm: FC<IProps> = ({
             <ModalTrigger
                 label={label}
                 displayText={displayedFormValue}
-                hasError={hasError}
+                hasError={shouldShowError(formikProps, formikField)}
                 errorMsg={formikProps.errors[formikField] as string}
             >
                 <TouchableRipple onPress={onOpen} style={styles.button}>

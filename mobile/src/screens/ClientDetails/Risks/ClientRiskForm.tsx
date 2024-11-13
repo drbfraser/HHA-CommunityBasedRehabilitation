@@ -116,10 +116,10 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                             <Text style={styles.riskHeaderStyle}>{headerText}</Text>
 
                             <RadioButton.Group
+                                value={formikProps.values.risk_level}
                                 onValueChange={(newValue) =>
                                     formikProps.setFieldValue(FormField.risk_level, newValue)
                                 }
-                                value={formikProps.values.risk_level}
                             >
                                 <View style={styles.menuField}>
                                     {[
@@ -127,8 +127,8 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                         [RiskLevel.MEDIUM, t("riskLevelsAbbreviated.medium")],
                                         [RiskLevel.HIGH, t("riskLevelsAbbreviated.high")],
                                         [RiskLevel.CRITICAL, t("riskLevelsAbbreviated.critical")],
-                                    ].map(([level, abbreviation]) => (
-                                        <View style={styles.radioIndividual}>
+                                    ].map(([level, abbreviation], index) => (
+                                        <View key={index} style={styles.radioIndividual}>
                                             <Text
                                                 style={
                                                     riskStyles(riskLevels[level].color)
@@ -152,13 +152,12 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 textAlignVertical={"top"}
                                 mode={"outlined"}
                             /> */}
-                            <Text style={styles.formikErrorStyle}>
+                            {/* <Text style={styles.formikErrorStyle}>
                                 {(() => {
-                                    console.log(formikProps.values.requirement);
+                                    // console.log(formikProps.values.requirement);
                                     return <></>;
                                 })()}
-                                {formikProps.errors.requirement}
-                            </Text>
+                            </Text> */}
 
                             <ModalForm
                                 label={fieldLabels[FormField.requirement]}
@@ -166,6 +165,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 formikProps={formikProps}
                                 canonicalFields={["a"]}
                                 localizedFields={["b"]}
+                                defaultValue={formikProps.values.requirement}
                                 hasFreeformText
                             />
 

@@ -1,12 +1,11 @@
-import * as React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { View } from "react-native";
+import { useTranslation } from "react-i18next";
+import { Card, Divider, Text } from "react-native-paper";
+
 import { IRisk, riskLevels, RiskType } from "@cbr/common";
-import { Button, Card, Divider, Modal, Portal, Text } from "react-native-paper";
 import clientStyle, { riskStyles } from "./ClientRisk.styles";
 import { ClientRiskForm } from "./ClientRiskForm";
-import { Formik } from "formik";
-import { useTranslation } from "react-i18next";
 
 interface riskProps {
     clientRisks: IRisk[];
@@ -27,8 +26,28 @@ const getLatestRisks = (clientRisk: IRisk[], riskType: RiskType) => {
 
 export const ClientRisk = (props: riskProps) => {
     const styles = clientStyle();
-    const [risk, setRisk] = useState<any>(getLatestRisks(props.clientRisks, props.presentRiskType));
+    const [risk, setRisk] = useState<IRisk>(
+        getLatestRisks(props.clientRisks, props.presentRiskType)
+    );
     const { t } = useTranslation();
+
+    const getRiskTitle = (): string => {
+        switch (risk.risk_type) {
+            case RiskType.HEALTH:
+                return t("general.health");
+            case RiskType.EDUCATION:
+                return t("general.education");
+            case RiskType.SOCIAL:
+                return t("general.social");
+            case RiskType.NUTRITION:
+                return t("general.nutrition");
+            case RiskType.MENTAL:
+                return t("general.mental");
+            default:
+                console.error("Unknown Risk Type:", risk.risk_type);
+                return "";
+        }
+    };
 
     return (
         <View>
@@ -36,23 +55,14 @@ export const ClientRisk = (props: riskProps) => {
                 <Divider />
                 <Card style={styles.riskCardStyle}>
                     <View style={styles.riskCardContentStyle}>
-                        {risk.risk_type === RiskType.HEALTH ? (
-                            <Text style={styles.riskTitleStyle}>{t("general.health")}</Text>
-                        ) : risk.risk_type === RiskType.EDUCATION ? (
-                            <Text style={styles.riskTitleStyle}>{t("general.education")}</Text>
-                        ) : risk.risk_type === RiskType.SOCIAL ? (
-                            <Text style={styles.riskTitleStyle}>{t("general.social")}</Text>
-                        ) : risk.risk_type === RiskType.NUTRITION ? (
-                            <Text style={styles.riskTitleStyle}>{t("general.nutrition")}</Text>
-                        ) : (
-                            <Text style={styles.riskTitleStyle}>{t("general.mental")}</Text>
-                        )}
+                        <Text style={styles.riskTitleStyle}>{getRiskTitle()}</Text>
                         <Text
                             style={riskStyles(riskLevels[risk.risk_level].color).riskSubtitleStyle}
                         >
                             {riskLevels[risk.risk_level].name}
                         </Text>
                     </View>
+
                     <View>
                         <Text style={styles.riskHeaderStyle}>{t("general.requirements")}: </Text>
                         <Text style={styles.riskRequirementStyle}>{risk.requirement}</Text>
@@ -61,7 +71,8 @@ export const ClientRisk = (props: riskProps) => {
                         <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
                         <Text style={styles.riskRequirementStyle}>{risk.goal}</Text>
                     </View>
-                    <View style={styles.clientDetailsFinalView}></View>
+
+                    <View style={styles.clientDetailsFinalView} />
 
                     <View>
                         <ClientRiskForm
@@ -71,7 +82,7 @@ export const ClientRisk = (props: riskProps) => {
                         />
                     </View>
                 </Card>
-                <Divider></Divider>
+                <Divider />
             </View>
         </View>
     );

@@ -577,6 +577,7 @@
         "mental": "-Mental",
         "improvements": "-Improvements",
         "socialRequirements": ["-Organize an Event", "-Volunteer"],
+        "healthRequirements": ["-Improve Sleep Quality", "-Eat Healthy"],
         "outcomes": "-Outcomes",
         "description": "-Description",
         "outcome": "-Outcome",

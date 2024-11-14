@@ -574,6 +574,10 @@ interface Resources {
         "&Organize an Event",
         "&Volunteer"
       ],
+      "healthRequirements": [
+        "&Improve Sleep Quality",
+        "&Eat Healthy"
+      ],
       "nutrition": "&Nutrition",
       "mental": "&Mental",
       "improvements": "&Improvements",
@@ -1284,6 +1288,10 @@ interface Resources {
       "socialRequirements": [
         "-Organize an Event",
         "-Volunteer"
+      ],
+      "healthRequirements": [
+        "-Improve Sleep Quality",
+        "-Eat Healthy"
       ],
       "outcomes": "-Outcomes",
       "description": "-Description",

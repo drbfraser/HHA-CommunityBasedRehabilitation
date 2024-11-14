@@ -573,6 +573,7 @@
       "education": "&Education",
       "social": "&Social",
       "socialRequirements": ["&Organize an Event", "&Volunteer"],
+      "healthRequirements": ["&Improve Sleep Quality", "&Eat Healthy"],
       "nutrition": "&Nutrition",
       "mental": "&Mental",
       "improvements": "&Improvements",

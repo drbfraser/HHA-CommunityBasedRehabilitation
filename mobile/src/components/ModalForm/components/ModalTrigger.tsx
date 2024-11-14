@@ -1,6 +1,7 @@
 import React, { FC, ReactNode } from "react";
 import { HelperText, TextInput } from "react-native-paper";
 import useStyles from "../ModalForm.styles";
+import { View } from "react-native";
 
 interface IProps {
     label: string;
@@ -20,8 +21,9 @@ const ModalTrigger: FC<IProps> = ({
     disabled = false,
 }) => {
     return (
-        <>
+        <View>
             <TextInput
+                // style={{ overflow: "scroll" }}
                 mode="outlined"
                 disabled={disabled}
                 label={label}
@@ -30,7 +32,7 @@ const ModalTrigger: FC<IProps> = ({
                 render={() => children}
             />
             {hasError && <HelperText type="error">{errorMsg}</HelperText>}
-        </>
+        </View>
     );
 };
 

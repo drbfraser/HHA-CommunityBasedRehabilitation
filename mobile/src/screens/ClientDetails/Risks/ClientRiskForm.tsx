@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import { View, Platform, ToastAndroid, AlertIOS } from "react-native";
-import { Button, Modal, Portal, TextInput, Text, RadioButton } from "react-native-paper";
+import { View, Platform, ToastAndroid, AlertIOS, ScrollView } from "react-native";
+import { Button, Modal, Portal, Text, RadioButton } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { Formik } from "formik";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
@@ -55,7 +55,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
         return riskFormProps;
     };
 
-    const headerText = (() => {
+    const getHeaderText = () => {
         const riskType = props.riskData.risk_type;
         switch (riskType) {
             case RiskType.HEALTH:
@@ -72,7 +72,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 console.error("Unknown risk type:", riskType);
                 return "";
         }
-    })();
+    };
 
     return (
         <View style={styles.riskModalStyle}>
@@ -86,8 +86,6 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             >
                 {t("general.update")}
             </Button>
-
-            <Text>Helloooo</Text>
 
             <Formik
                 initialValues={getRiskFormInitialValues()}
@@ -106,95 +104,83 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 {(formikProps) => (
                     <Portal>
                         <Modal
-                            style={styles.modalStyle}
+                            contentContainerStyle={styles.modalStyle}
                             visible={showModal}
                             onDismiss={() => {
                                 setShowModal(false);
                                 formikProps.resetForm();
                             }}
                         >
-                            <Text style={styles.riskHeaderStyle}>{headerText}</Text>
+                            <ScrollView contentContainerStyle={styles.modalContentStyle}>
+                                <Text style={styles.riskHeaderStyle}>{getHeaderText()}</Text>
 
-                            <RadioButton.Group
-                                value={formikProps.values.risk_level}
-                                onValueChange={(newValue) =>
-                                    formikProps.setFieldValue(FormField.risk_level, newValue)
-                                }
-                            >
-                                <View style={styles.menuField}>
-                                    {[
-                                        [RiskLevel.LOW, t("riskLevelsAbbreviated.low")],
-                                        [RiskLevel.MEDIUM, t("riskLevelsAbbreviated.medium")],
-                                        [RiskLevel.HIGH, t("riskLevelsAbbreviated.high")],
-                                        [RiskLevel.CRITICAL, t("riskLevelsAbbreviated.critical")],
-                                    ].map(([level, abbreviation], index) => (
-                                        <View key={index} style={styles.radioIndividual}>
-                                            <Text
-                                                style={
-                                                    riskStyles(riskLevels[level].color)
-                                                        .riskRadioStyle
-                                                }
-                                            >
-                                                {abbreviation}
-                                            </Text>
-                                            <RadioButton value={level} />
-                                        </View>
-                                    ))}
-                                </View>
-                            </RadioButton.Group>
-
-                            {/* <TextInput
-                                style={styles.riskTextStyle}
-                                label={fieldLabels[FormField.requirement]}
-                                defaultValue={formikProps.values.requirement}
-                                onChangeText={formikProps.handleChange(FormField.requirement)}
-                                multiline={true}
-                                textAlignVertical={"top"}
-                                mode={"outlined"}
-                            /> */}
-                            {/* <Text style={styles.formikErrorStyle}>
-                                {(() => {
-                                    // console.log(formikProps.values.requirement);
-                                    return <></>;
-                                })()}
-                            </Text> */}
-
-                            <ModalForm
-                                label={fieldLabels[FormField.requirement]}
-                                formikField={FormField.requirement}
-                                formikProps={formikProps}
-                                canonicalFields={["a"]}
-                                localizedFields={["b"]}
-                                defaultValue={formikProps.values.requirement}
-                                hasFreeformText
-                            />
-
-                            <TextInput
-                                style={styles.riskTextStyle}
-                                label={fieldLabels[FormField.goal]}
-                                defaultValue={formikProps.values.goal}
-                                onChangeText={formikProps.handleChange(FormField.goal)}
-                                placeholder={FormField.goal}
-                                multiline={true}
-                                textAlignVertical={"top"}
-                                mode={"outlined"}
-                            />
-                            <Text style={styles.formikErrorStyle}>{formikProps.errors.goal}</Text>
-
-                            <Button
-                                style={styles.submitButtonStyle}
-                                mode={"contained"}
-                                onPress={() => {
-                                    if (formikProps.isValid) {
-                                        formikProps.handleSubmit();
-                                        setShowModal(false);
-                                    } else {
-                                        toastValidationError();
+                                <RadioButton.Group
+                                    value={formikProps.values.risk_level}
+                                    onValueChange={(newValue) =>
+                                        formikProps.setFieldValue(FormField.risk_level, newValue)
                                     }
-                                }}
-                            >
-                                {t("general.save")}
-                            </Button>
+                                >
+                                    <View style={styles.menuField}>
+                                        {[
+                                            [RiskLevel.LOW, t("riskLevelsAbbreviated.low")],
+                                            [RiskLevel.MEDIUM, t("riskLevelsAbbreviated.medium")],
+                                            [RiskLevel.HIGH, t("riskLevelsAbbreviated.high")],
+                                            [
+                                                RiskLevel.CRITICAL,
+                                                t("riskLevelsAbbreviated.critical"),
+                                            ],
+                                        ].map(([level, abbreviation], index) => (
+                                            <View key={index} style={styles.radioIndividual}>
+                                                <Text
+                                                    style={
+                                                        riskStyles(riskLevels[level].color)
+                                                            .riskRadioStyle
+                                                    }
+                                                >
+                                                    {abbreviation}
+                                                </Text>
+                                                <RadioButton value={level} />
+                                            </View>
+                                        ))}
+                                    </View>
+                                </RadioButton.Group>
+
+                                <ModalForm
+                                    style={styles.riskInputStyle}
+                                    label={fieldLabels[FormField.requirement]}
+                                    formikField={FormField.requirement}
+                                    formikProps={formikProps}
+                                    canonicalFields={["a", "z", "1"]}
+                                    localizedFields={["b", "x", "2"]}
+                                    defaultValue={formikProps.values.requirement}
+                                    hasFreeformText
+                                />
+                                <ModalForm
+                                    style={styles.riskInputStyle}
+                                    label={fieldLabels[FormField.goal]}
+                                    formikField={FormField.goal}
+                                    formikProps={formikProps}
+                                    canonicalFields={["c"]}
+                                    localizedFields={["d"]}
+                                    defaultValue={formikProps.values.goal}
+                                    hasFreeformText
+                                />
+
+                                <Button
+                                    style={styles.submitButtonStyle}
+                                    mode={"contained"}
+                                    onPress={() => {
+                                        if (formikProps.isValid) {
+                                            formikProps.handleSubmit();
+                                            setShowModal(false);
+                                        } else {
+                                            toastValidationError();
+                                        }
+                                    }}
+                                >
+                                    {t("general.save")}
+                                </Button>
+                            </ScrollView>
                         </Modal>
                     </Portal>
                 )}

@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { TextInput, Text, TouchableRipple } from "react-native-paper";
+import { TextInput, Text, TouchableRipple, HelperText } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { FormikProps } from "formik";
 
@@ -10,6 +10,7 @@ import Modal from "./components/Modal";
 import ModalTrigger from "./components/ModalTrigger";
 import useFormValueGenerator from "./hooks/useFormValueGenerator";
 import { initializeCheckedItems, initializeFreeformText } from "./utils";
+import { ScrollView, StyleProp, ViewStyle } from "react-native";
 
 // encapsulate conversion between languages into modal form
 // database gives text in english and want to show Bari
@@ -45,6 +46,7 @@ interface IProps {
     defaultValue?: string;
     hasFreeformText?: boolean;
     disabled?: boolean;
+    style?: StyleProp<ViewStyle>;
 }
 
 const ModalForm: FC<IProps> = ({
@@ -56,6 +58,7 @@ const ModalForm: FC<IProps> = ({
     defaultValue = "",
     hasFreeformText = false,
     disabled = false,
+    style: styleProp = {},
 }) => {
     console.assert(canonicalFields.length == localizedFields.length);
 
@@ -115,7 +118,7 @@ const ModalForm: FC<IProps> = ({
                 hasError={shouldShowError(formikProps, formikField)}
                 errorMsg={formikProps.errors[formikField] as string}
             >
-                <TouchableRipple onPress={onOpen} style={styles.button}>
+                <TouchableRipple onPress={onOpen} style={[styleProp, styles.button]}>
                     <>
                         <Text style={styles.buttonText}>{displayedFormValue}</Text>
                         <Icon name="edit" size={20} style={styles.editIcon} />

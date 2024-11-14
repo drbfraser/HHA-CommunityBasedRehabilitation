@@ -36,16 +36,9 @@ const useStyles = () =>
             //Add colour here
         },
         riskHeaderStyle: {
-            marginTop: 14,
-            marginBottom: 2,
-            marginLeft: 15,
-            marginRight: 15,
             fontSize: 20,
-            alignItems: "center",
-            alignContent: "center",
-            display: "flex",
-            justifyContent: "center",
             fontWeight: "bold",
+            alignSelf: "flex-start",
         },
         riskRequirementStyle: {
             fontSize: 16,
@@ -73,37 +66,21 @@ const useStyles = () =>
             borderRadius: 5,
         },
         modalStyle: {
-            height: 470,
+            padding: 25,
             marginHorizontal: 20,
-            marginTop: 100,
-            marginBottom: 100,
-            display: "flex",
-            backgroundColor: "white",
+
             borderRadius: 10,
-            alignContent: "center",
-            alignItems: "center",
+            backgroundColor: "white",
+
+            display: "flex",
+            flexDirection: "column",
+            gap: 20,
         },
-        riskTextStyle: {
-            minHeight: 100,
-            minWidth: 320,
-            maxHeight: 100,
-            maxWidth: 320,
-            borderBottomLeftRadius: 5,
-            borderBottomRightRadius: 5,
-            borderTopRightRadius: 5,
-            borderTopLeftRadius: 5,
-            borderRadius: 5,
-            padding: 10,
+        modalContentStyle: {
+            gap: 20,
         },
-        riskLevelTextStyle: {
-            alignContent: "flex-start",
+        riskInputStyle: {
             width: 320,
-            borderBottomLeftRadius: 5,
-            borderBottomRightRadius: 5,
-            borderTopRightRadius: 5,
-            borderTopLeftRadius: 5,
-            borderRadius: 5,
-            padding: 10,
         },
         riskModalStyle: {
             alignContent: "center",
@@ -113,23 +90,16 @@ const useStyles = () =>
         },
         menuField: {
             flexDirection: "row",
-            justifyContent: "center",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            width: "100%",
+            gap: 20,
         },
         radioIndividual: {
             alignItems: "center",
-            marginLeft: 10,
-            marginRight: 10,
-        },
-        formikErrorStyle: {
-            color: themeColors.errorRed,
-            justifyContent: "center",
-            alignItems: "center",
-            alignContent: "center",
-            display: "flex",
         },
         submitButtonStyle: {
-            marginLeft: 10,
-            marginRight: 10,
+            width: "100%",
         },
     });
 
@@ -142,7 +112,6 @@ export const riskStyles = (textColour: string) =>
             height: "auto",
             width: "auto",
             padding: 14,
-            marginTop: 14,
             fontSize: 18,
             alignItems: "center",
             justifyContent: "flex-end",
@@ -158,7 +127,6 @@ export const riskStyles = (textColour: string) =>
             height: 55,
             width: 55,
             padding: 14,
-            marginTop: 14,
             fontSize: 16,
             alignItems: "center",
             alignContent: "center",

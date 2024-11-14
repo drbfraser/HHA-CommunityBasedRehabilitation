@@ -158,12 +158,17 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     label={fieldLabels[FormField.requirement]}
                                     formikField={FormField.requirement}
                                     formikProps={formikProps}
-                                    canonicalFields={["a", "z", "1"]}
-                                    localizedFields={["b", "x", "2"]}
+                                    canonicalFields={t("newVisit.healthRequirements", {
+                                        returnObjects: true,
+                                        lng: "en",
+                                    })}
+                                    localizedFields={t("newVisit.healthRequirements", {
+                                        returnObjects: true,
+                                    })}
                                     defaultValue={formikProps.values.requirement}
                                     hasFreeformText
                                 />
-                                <ModalForm
+                                {/* <ModalForm
                                     style={styles.riskInputStyle}
                                     label={fieldLabels[FormField.goal]}
                                     formikField={FormField.goal}
@@ -172,7 +177,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     localizedFields={["d"]}
                                     defaultValue={formikProps.values.goal}
                                     hasFreeformText
-                                />
+                                /> */}
 
                                 <Button
                                     style={styles.submitButtonStyle}

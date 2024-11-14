@@ -15,8 +15,7 @@ const parseInitialValues = (
     canonicalFields: string[]
 ): [checkedItems: string[], otherText: string] => {
     const items = rawText.split(",\n");
-
-    console.log(items);
+    // console.log(items);
 
     const checkedItems = items.filter((item) => canonicalFields.includes(item));
     const otherText = items.filter((item) => !canonicalFields.includes(item)).join("\n");
@@ -29,6 +28,7 @@ export const initializeCheckedItems = (
     localizedFields: string[]
 ): { [key: string]: boolean } => {
     const [precheckedItems, _] = parseInitialValues(rawText, canonicalFields);
+
     console.log("prechecked:", precheckedItems);
     console.log("canonical:", canonicalFields);
     console.log("localized:", localizedFields);

@@ -6,12 +6,11 @@ import { Card, Divider, Text } from "react-native-paper";
 import { IRisk, riskLevels, RiskType } from "@cbr/common";
 import clientStyle, { riskStyles } from "./ClientRisk.styles";
 import { ClientRiskForm } from "./ClientRiskForm";
-
-interface riskProps {
-    clientRisks: IRisk[];
-    presentRiskType: RiskType;
-    clientArchived: boolean;
-}
+import {
+    generateFormValue,
+    initializeCheckedItems,
+    initializeFreeformText,
+} from "../../../components/ModalForm/utils";
 
 const getLatestRisks = (clientRisk: IRisk[], riskType: RiskType) => {
     // Get the latest Risk for each type and pass the values on so they can be displayed initially
@@ -23,6 +22,12 @@ const getLatestRisks = (clientRisk: IRisk[], riskType: RiskType) => {
     });
     return latestRisk;
 };
+
+interface riskProps {
+    clientRisks: IRisk[];
+    presentRiskType: RiskType;
+    clientArchived: boolean;
+}
 
 export const ClientRisk = (props: riskProps) => {
     const styles = clientStyle();
@@ -49,41 +54,76 @@ export const ClientRisk = (props: riskProps) => {
         }
     };
 
+    const getDisplayedRequirements = () => {
+        // can probably extract this mapping of translated arrays outside of this module
+        // so that other code that use the modal form component can use this
+        let translationKey;
+        switch (risk.risk_type) {
+            case RiskType.SOCIAL:
+                translationKey = "newVisit.socialRequirements";
+                break;
+            case RiskType.HEALTH:
+                translationKey = "newVisit.healthRequirements";
+                break;
+            case RiskType.MENTAL:
+                translationKey = "newVisit.healthRequirements";
+                break;
+            case RiskType.NUTRITION:
+                translationKey = "newVisit.healthRequirements";
+                break;
+            case RiskType.EDUCATION:
+                translationKey = "newVisit.healthRequirements";
+                break;
+        }
+
+        const translatedItems = Object.entries(
+            initializeCheckedItems(
+                risk.requirement,
+                t(translationKey, { returnObjects: true, lng: "en" }),
+                t(translationKey, { returnObjects: true })
+            )
+        );
+        const otherText = initializeFreeformText(
+            risk.requirement,
+            t(translationKey, { returnObjects: true, lng: "en" })
+        );
+
+        return generateFormValue(translatedItems, otherText);
+    };
+
     return (
-        <View>
-            <View key={risk.risk_type}>
-                <Divider />
-                <Card style={styles.riskCardStyle}>
-                    <View style={styles.riskCardContentStyle}>
-                        <Text style={styles.riskTitleStyle}>{getRiskTitle()}</Text>
-                        <Text
-                            style={riskStyles(riskLevels[risk.risk_level].color).riskSubtitleStyle}
-                        >
-                            {riskLevels[risk.risk_level].name}
-                        </Text>
-                    </View>
+        <View key={risk.risk_type}>
+            <Divider />
 
-                    <View>
-                        <Text style={styles.riskHeaderStyle}>{t("general.requirements")}: </Text>
-                        <Text style={styles.riskRequirementStyle}>{risk.requirement}</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
-                        <Text style={styles.riskRequirementStyle}>{risk.goal}</Text>
-                    </View>
+            <Card style={styles.riskCardStyle}>
+                <View style={styles.riskCardContentStyle}>
+                    <Text style={styles.riskTitleStyle}>{getRiskTitle()}</Text>
+                    <Text style={riskStyles(riskLevels[risk.risk_level].color).riskSubtitleStyle}>
+                        {riskLevels[risk.risk_level].name}
+                    </Text>
+                </View>
 
-                    <View style={styles.clientDetailsFinalView} />
+                <View>
+                    <Text style={styles.riskHeaderStyle}>{t("general.requirements")}: </Text>
+                    <Text style={styles.riskRequirementStyle}>{getDisplayedRequirements()}</Text>
+                </View>
+                <View>
+                    <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
+                    <Text style={styles.riskRequirementStyle}>{risk.goal}</Text>
+                </View>
 
-                    <View>
-                        <ClientRiskForm
-                            riskData={risk}
-                            setRisk={setRisk}
-                            clientArchived={props.clientArchived}
-                        />
-                    </View>
-                </Card>
-                <Divider />
-            </View>
+                <View style={styles.clientDetailsFinalView} />
+
+                <View>
+                    <ClientRiskForm
+                        riskData={risk}
+                        setRisk={setRisk}
+                        clientArchived={props.clientArchived}
+                    />
+                </View>
+            </Card>
+
+            <Divider />
         </View>
     );
 };

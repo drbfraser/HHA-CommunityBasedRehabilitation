@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { View, Platform, ToastAndroid, AlertIOS, ScrollView } from "react-native";
 import { Button, Modal, Portal, Text, RadioButton } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { Formik } from "formik";
+import { Formik, FormikProps } from "formik";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 
 import {
@@ -25,7 +25,7 @@ export interface ClientRiskFormProps {
     clientArchived: boolean;
 }
 
-export const toastValidationError = () => {
+const toastValidationError = () => {
     const msg = "Please check one or more fields.";
     if (Platform.OS === "android") {
         ToastAndroid.show(msg, ToastAndroid.SHORT);
@@ -37,9 +37,9 @@ export const toastValidationError = () => {
 export const ClientRiskForm = (props: ClientRiskFormProps) => {
     const styles = useStyles();
     const [showModal, setShowModal] = useState(false);
+    const { autoSync, cellularSync } = useContext(SyncContext);
     const database = useDatabase();
     const { t } = useTranslation();
-    const { autoSync, cellularSync } = useContext(SyncContext);
 
     const getRiskFormInitialValues = () => {
         const risk = props.riskData;
@@ -72,6 +72,19 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 console.error("Unknown risk type:", riskType);
                 return "";
         }
+    };
+
+    const onRiskLevelChange = (formikProps: FormikProps<IRisk>, value: string) => {
+        formikProps.setFieldValue(FormField.risk_level, value);
+    };
+
+    const onSave = (formikProps: FormikProps<IRisk>) => {
+        if (!formikProps.isValid) {
+            toastValidationError();
+            return;
+        }
+        formikProps.handleSubmit();
+        setShowModal(false);
     };
 
     return (
@@ -111,37 +124,32 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 formikProps.resetForm();
                             }}
                         >
+                            {/* Scroll view needed for modal to dynamically grow in height when textarea inputs being to take up more lines */}
                             <ScrollView contentContainerStyle={styles.modalContentStyle}>
                                 <Text style={styles.riskHeaderStyle}>{getHeaderText()}</Text>
 
                                 <RadioButton.Group
                                     value={formikProps.values.risk_level}
-                                    onValueChange={(newValue) =>
-                                        formikProps.setFieldValue(FormField.risk_level, newValue)
-                                    }
+                                    onValueChange={(value) => onRiskLevelChange(formikProps, value)}
                                 >
                                     <View style={styles.menuField}>
                                         {[
                                             [RiskLevel.LOW, t("riskLevelsAbbreviated.low")],
                                             [RiskLevel.MEDIUM, t("riskLevelsAbbreviated.medium")],
                                             [RiskLevel.HIGH, t("riskLevelsAbbreviated.high")],
-                                            [
-                                                RiskLevel.CRITICAL,
-                                                t("riskLevelsAbbreviated.critical"),
-                                            ],
-                                        ].map(([level, abbreviation], index) => (
-                                            <View key={index} style={styles.radioIndividual}>
-                                                <Text
-                                                    style={
-                                                        riskStyles(riskLevels[level].color)
-                                                            .riskRadioStyle
-                                                    }
-                                                >
-                                                    {abbreviation}
-                                                </Text>
-                                                <RadioButton value={level} />
-                                            </View>
-                                        ))}
+                                            // prettier-ignore
+                                            [RiskLevel.CRITICAL, t("riskLevelsAbbreviated.critical"),],
+                                        ].map(([level, abbreviation], index) => {
+                                            const style = riskStyles(
+                                                riskLevels[level].color
+                                            ).riskRadioStyle;
+                                            return (
+                                                <View key={index} style={styles.radioIndividual}>
+                                                    <Text style={style}>{abbreviation}</Text>
+                                                    <RadioButton value={level} />
+                                                </View>
+                                            );
+                                        })}
                                     </View>
                                 </RadioButton.Group>
 
@@ -169,14 +177,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 <Button
                                     style={styles.submitButtonStyle}
                                     mode={"contained"}
-                                    onPress={() => {
-                                        if (formikProps.isValid) {
-                                            formikProps.handleSubmit();
-                                            setShowModal(false);
-                                        } else {
-                                            toastValidationError();
-                                        }
-                                    }}
+                                    onPress={() => onSave(formikProps)}
                                 >
                                     {t("general.save")}
                                 </Button>

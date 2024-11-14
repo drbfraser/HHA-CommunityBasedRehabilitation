@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
+import { TextField } from "formik-mui";
 import * as Yup from "yup";
 import {
     Accordion,
@@ -15,10 +15,10 @@ import {
     DialogTitle,
     Typography,
 } from "@mui/material";
-import ScheduleIcon from "@material-ui/icons/Schedule";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import NearMeIcon from "@material-ui/icons/NearMe";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import NearMeIcon from "@mui/icons-material/NearMe";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {
     IReferral,
@@ -32,7 +32,7 @@ import {
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import TimelineEntry from "../Timeline/TimelineEntry";
-import { useStyles } from "./Entry.styles";
+import { entryStyles } from "./Entry.styles";
 import { Thumb } from "components/ReferralPhotoView/Thumb";
 
 interface IEntryProps {
@@ -44,7 +44,6 @@ interface IEntryProps {
 const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) => {
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
-    const styles = useStyles();
 
     const Summary = ({ clickable }: { clickable: boolean }) => {
         const ReasonChip = ({ label }: { label: string }) => (
@@ -55,14 +54,14 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
             <>
                 {referral.resolved ? (
                     <>
-                        <CheckCircleIcon fontSize="small" className={styles.completeIcon} />{" "}
+                        <CheckCircleIcon fontSize="small" sx={entryStyles.completeIcon} />{" "}
                         <Trans i18nKey="referralAttr.resolutionStatus_resolved_bold">
                             -<b>Referral</b> Resolved
                         </Trans>{" "}
                     </>
                 ) : (
                     <>
-                        <ScheduleIcon fontSize="small" className={styles.pendingIcon} />{" "}
+                        <ScheduleIcon fontSize="small" sx={entryStyles.pendingIcon} />{" "}
                         <Trans i18nKey="referralAttr.resolutionStatus_pending_bold">
                             -<b>Referral</b> Pending
                         </Trans>{" "}
@@ -114,7 +113,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                         <b>{t("general.resolve")}</b>
                     </Typography>
                 </AccordionSummary>
-                <AccordionDetails className={styles.resolveAccordion}>
+                <AccordionDetails sx={entryStyles.resolveAccordion}>
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
@@ -131,7 +130,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                             />
                             <br />
                             <br />
-                            <Button type="submit" variant="outlined" className={styles.resolveBtn}>
+                            <Button type="submit" variant="outlined" sx={entryStyles.resolveBtn}>
                                 {t("referralAttr.markResolved")}
                             </Button>
                         </Form>

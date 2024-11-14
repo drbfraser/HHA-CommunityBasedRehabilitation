@@ -1,8 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
-import { FormControl, MenuItem, Button, Grid } from "@material-ui/core";
+import { TextField } from "formik-mui";
+import { Box, FormControl, MenuItem, Grid, Button } from "@mui/material";
 
 import history from "@cbr/common/util/history";
 import { handleNewUserSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
@@ -15,10 +15,9 @@ import {
     adminUserInitialValues,
     newUserValidationSchema,
 } from "@cbr/common/forms/Admin/adminFields";
-import { useStyles } from "./styles";
+import { adminStyles } from "./Admin.styles";
 
 const AdminNew = () => {
-    const styles = useStyles();
     const zones = useZones();
     const { t } = useTranslation();
 
@@ -39,7 +38,7 @@ const AdminNew = () => {
             }}
         >
             {({ isSubmitting }) => (
-                <div className={styles.container}>
+                <Box sx={adminStyles.container}>
                     <Form>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>
@@ -145,7 +144,7 @@ const AdminNew = () => {
                         <br />
 
                         <div>
-                            <Grid container justify="flex-end" spacing={2}>
+                            <Grid container justifyContent="flex-end" spacing={2}>
                                 <Grid item>
                                     <Button
                                         color="primary"
@@ -170,7 +169,7 @@ const AdminNew = () => {
                             <br></br>
                         </div>
                     </Form>
-                </div>
+                </Box>
             )}
         </Formik>
     );

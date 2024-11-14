@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Typography } from "@material-ui/core";
-import { Tabs, Tab, Box } from "@mui/material";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
 
 import AdminList from "../AdminList/AdminList";
 import ZoneList from "../ZoneList/ZoneList";

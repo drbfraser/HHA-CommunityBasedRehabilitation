@@ -1,12 +1,9 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { SxProps, Theme } from "@mui/material";
 
-export const useStyles = makeStyles(
-    {
-        chip: {
-            "& .MuiChip-label": {
-                color: "white",
-            },
+export const priorityLevelChipStyles: Record<string, SxProps<Theme>> = {
+    chip: {
+        "& .MuiChip-label": {
+            color: "white",
         },
     },
-    { index: 1 }
-);
+};

@@ -1,18 +1,15 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { SxProps, Theme } from "@mui/material";
 
-export const useStyles = makeStyles(
-    {
-        visitLocationContainer: {
-            display: "flex",
-            flexWrap: "wrap",
-            flexDirection: "row",
-        },
-        visitLocation: {
-            flex: "1",
-            minWidth: "200px",
-            marginRight: "10px",
-            marginTop: "10px",
-        },
+export const newVisitStyles: Record<string, SxProps<Theme>> = {
+    visitLocationContainer: {
+        display: "flex",
+        flexWrap: "wrap",
+        flexDirection: "row",
     },
-    { index: 1 }
-);
+    visitLocation: {
+        flex: "1",
+        minWidth: "200px",
+        marginRight: "10px",
+        marginTop: "10px",
+    },
+};

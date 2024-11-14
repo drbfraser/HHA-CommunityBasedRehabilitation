@@ -1,14 +1,7 @@
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import {
-    DataGrid,
-    DensityTypes,
-    RowsProp,
-    GridOverlay,
-    ValueFormatterParams,
-} from "@material-ui/data-grid";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import {
     LinearProgress,
     IconButton,
@@ -17,20 +10,28 @@ import {
     MenuItem,
     Popover,
     Switch,
-} from "@material-ui/core";
-import { Cancel, MoreVert } from "@material-ui/icons";
-
+    Box,
+} from "@mui/material";
+import {
+    DataGrid,
+    GridDensityTypes,
+    GridRowsProp,
+    GridOverlay,
+    GridRenderCellParams,
+} from "@mui/x-data-grid";
+import { Cancel, MoreVert } from "@mui/icons-material";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import SearchBar from "components/SearchBar/SearchBar";
-import { useStyles } from "./AdminList.styles";
-import { useDataGridStyles } from "styles/DataGrid.styles";
-import { useSearchOptionsStyles } from "styles/SearchOptions.styles";
-import { useHideColumnsStyles } from "styles/HideColumns.styles";
+import { adminListStyles } from "./AdminList.styles";
+import { dataGridStyles } from "styles/DataGrid.styles";
+import { searchOptionsStyles } from "styles/SearchOptions.styles";
+import { hideColumnsStyles } from "styles/HideColumns.styles";
+
 import requestUserRows from "./requestUserRows";
 import { getClientListSearchOptions } from "../ClientList/searchOptions";
 import { t } from "i18next";
 
-const RenderText = (params: ValueFormatterParams) => (
+const RenderText: any = (params: GridRenderCellParams) => (
     <Typography variant={"body2"}>{params.value}</Typography>
 );
 const RenderLoadingOverlay = () => (
@@ -41,10 +42,9 @@ const RenderLoadingOverlay = () => (
     </GridOverlay>
 );
 const RenderNoRowsOverlay = () => {
-    const styles = useDataGridStyles();
     return (
-        <GridOverlay className={styles.noRows}>
-            <Cancel color="primary" className={styles.noRowsIcon} />
+        <GridOverlay sx={dataGridStyles.noRows}>
+            <Cancel color="primary" sx={dataGridStyles.noRowsIcon} />
             <Typography color="primary">{t("admin.noUsersFound")}</Typography>
         </GridOverlay>
     );
@@ -62,16 +62,12 @@ const AdminList = () => {
     const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
     const [isStatusHidden, setStatusHidden] = useState<boolean>(false);
     const [isUsernameHidden, setIsUsernameHidden] = useState<boolean>(false);
-    const [filteredRows, setFilteredRows] = useState<RowsProp>([]);
-    const [serverRows, setServerRows] = useState<RowsProp>([]);
+    const [filteredRows, setFilteredRows] = useState<GridRowsProp>([]);
+    const [serverRows, setServerRows] = useState<GridRowsProp>([]);
     const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
     const isOptionsOpen = Boolean(optionsAnchorEl);
 
     const zones = useZones();
-    const styles = useStyles();
-    const dataGridStyle = useDataGridStyles();
-    const searchOptionsStyle = useSearchOptionsStyles();
-    const hideColumnsStyle = useHideColumnsStyles();
     const history = useHistory();
 
     const onRowClick = (row: any) => {
@@ -160,14 +156,14 @@ const AdminList = () => {
     }, [searchValue, searchOption, serverRows, searchOptions.NAME, searchOptions.ZONE]);
 
     return (
-        <div className={styles.container}>
-            <div className={styles.topContainer}>
-                <IconButton onClick={onAdminAddClick} className={styles.icon}>
+        <Box sx={adminListStyles.container}>
+            <Box sx={adminListStyles.topContainer}>
+                <IconButton onClick={onAdminAddClick} sx={adminListStyles.icon} size="large">
                     <PersonAddIcon />
                 </IconButton>
-
-                <div className={searchOptionsStyle.searchOptions}>
+                <Box sx={searchOptionsStyles.searchOptions}>
                     <Select
+                        variant="standard"
                         color={"primary"}
                         value={searchOption}
                         onChange={(event) => {
@@ -181,12 +177,13 @@ const AdminList = () => {
                             </MenuItem>
                         ))}
                     </Select>
-                </div>
+                </Box>
 
                 {searchOption === searchOptions.ZONE.value ? (
                     <div>
                         <Select
-                            className={searchOptionsStyle.zoneOptions}
+                            variant="standard"
+                            sx={searchOptionsStyles.zoneOptions}
                             color={"primary"}
                             defaultValue={""}
                             onChange={(event) => setSearchValue(String(event.target.value))}
@@ -204,7 +201,11 @@ const AdminList = () => {
                         onChange={(e) => setSearchValue(e.target.value)}
                     />
                 )}
-                <IconButton className={hideColumnsStyle.optionsButton} onClick={onOptionsClick}>
+                <IconButton
+                    sx={hideColumnsStyles.optionsButton}
+                    onClick={onOptionsClick}
+                    size="large"
+                >
                     <MoreVert />
                 </IconButton>
                 <Popover
@@ -220,10 +221,10 @@ const AdminList = () => {
                         horizontal: "center",
                     }}
                 >
-                    <div className={hideColumnsStyle.optionsContainer}>
+                    <Box sx={hideColumnsStyles.optionsContainer}>
                         {adminColumns.map((column): JSX.Element => {
                             return (
-                                <div key={column.field} className={hideColumnsStyle.optionsRow}>
+                                <Box key={column.field} sx={hideColumnsStyles.optionsRow}>
                                     <Typography component={"span"} variant={"body2"}>
                                         {column.headerName}
                                     </Typography>
@@ -231,15 +232,15 @@ const AdminList = () => {
                                         checked={!column.hide}
                                         onClick={() => column.hideFunction(!column.hide)}
                                     />
-                                </div>
+                                </Box>
                             );
                         })}
-                    </div>
+                    </Box>
                 </Popover>
-            </div>
-            <div className={styles.dataGridWrapper}>
+            </Box>
+            <Box sx={adminListStyles.dataGridWrapper}>
                 <DataGrid
-                    className={dataGridStyle.datagrid}
+                    sx={dataGridStyles.datagrid}
                     loading={loading}
                     components={{
                         LoadingOverlay: RenderLoadingOverlay,
@@ -247,18 +248,22 @@ const AdminList = () => {
                     }}
                     rows={filteredRows}
                     columns={adminColumns}
-                    density={DensityTypes.Comfortable}
+                    density={GridDensityTypes.Comfortable}
                     onRowClick={onRowClick}
                     pagination
-                    sortModel={[
-                        {
-                            field: "name",
-                            sort: "asc",
+                    initialState={{
+                        sorting: {
+                            sortModel: [
+                                {
+                                    field: "name",
+                                    sort: "asc",
+                                },
+                            ],
                         },
-                    ]}
+                    }}
                 />
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
 

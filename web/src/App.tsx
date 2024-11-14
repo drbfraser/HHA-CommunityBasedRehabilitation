@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Typography from "@material-ui/core/Typography";
+import { Box, Typography } from "@mui/material";
 
 import history from "@cbr/common/util/history";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
@@ -13,13 +13,11 @@ import AlertOffline from "./components/Alerts/AlertOffline";
 import LanguagePicker from "components/LanguagePicker/LanguagePicker";
 import { defaultPagePath, pagesForUser } from "util/pages";
 import Login from "pages/Login/Login";
-import { useStyles } from "App.styles";
 import { useIsLoggedIn } from "./util/hooks/loginState";
-import { Box } from "@mui/material";
+import { appStyles } from "App.styles";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
-    const styles = useStyles();
     const [open, setOpen] = useState<boolean>(false);
     const [alert, setAlert] = useState<Partial<IAlert>>();
 
@@ -38,9 +36,9 @@ const App = () => {
         const { t } = useTranslation();
 
         return (
-            <div className={styles.container}>
+            <Box sx={appStyles.container}>
                 <SideNav />
-                <div className={styles.pageContainer}>
+                <Box sx={appStyles.pageContainer}>
                     <Switch>
                         {pagesForUser(user).map((page) => (
                             <Route key={page.path} exact={page.exact ?? true} path={page.path}>
@@ -56,20 +54,20 @@ const App = () => {
                                             alignItems: "center",
                                         }}
                                     >
-                                        <Typography variant="h1" className={styles.pageTitle}>
+                                        <Typography variant="h1" sx={appStyles.pageTitle}>
                                             {t(page.name)}
                                         </Typography>
                                         <LanguagePicker />
                                     </Box>
                                 </header>
-                                <main className={styles.pageContent}>
+                                <Box component="main" sx={appStyles.pageContent}>
                                     <page.Component />
-                                </main>
+                                </Box>
                             </Route>
                         ))}
                     </Switch>
-                </div>
-            </div>
+                </Box>
+            </Box>
         );
     };
 

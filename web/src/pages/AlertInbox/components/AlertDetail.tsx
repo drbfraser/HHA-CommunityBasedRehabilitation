@@ -1,28 +1,10 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import Grid from "@material-ui/core/Grid";
-import Divider from "@mui/material/Divider";
-import Button from "@mui/material/Button";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 
 import { IAlert } from "@cbr/common/util/alerts";
 import { handleUpdateAlertSubmit, handleDeleteAlert } from "@cbr/common/forms/Alert/alertHandler";
-
-const useStyles = makeStyles({
-    dividerStyle: {
-        backgroundColor: "grey",
-        height: "3px",
-    },
-    deleteButtonStyle: {
-        bottom: 0,
-        position: "absolute",
-    },
-    detailContainerStyle: {
-        position: "relative",
-        minHeight: "300px",
-    },
-});
+import { alertDetailStyles } from "./AlertDetail.styles";
 
 type IProps = {
     selectAlert: number;
@@ -32,7 +14,6 @@ type IProps = {
 
 const AlertDetail = ({ selectAlert, alertData, refreshAlert }: IProps) => {
     const { t } = useTranslation();
-    const style = useStyles();
 
     useEffect(() => {
         const updateAlertUnreadUsersList = async () => {
@@ -66,9 +47,9 @@ const AlertDetail = ({ selectAlert, alertData, refreshAlert }: IProps) => {
     });
 
     return (
-        <Grid item xs={9} className={style.detailContainerStyle}>
+        <Grid item xs={9} sx={alertDetailStyles.detailContainerStyle}>
             <h1>{t("general.details")}</h1>
-            <Divider variant="fullWidth" className={style.dividerStyle} />
+            <Divider variant="fullWidth" sx={alertDetailStyles.dividerStyle} />
 
             <h2>{selectedItem.length === 0 ? "" : selectedItem[0].subject}</h2>
             <Typography>
@@ -78,7 +59,7 @@ const AlertDetail = ({ selectAlert, alertData, refreshAlert }: IProps) => {
             </Typography>
 
             {selectedItem.length !== 0 && (
-                <div className={style.deleteButtonStyle}>
+                <Box sx={alertDetailStyles.deleteButtonStyle}>
                     <Button
                         variant="outlined"
                         color="error"
@@ -86,7 +67,7 @@ const AlertDetail = ({ selectAlert, alertData, refreshAlert }: IProps) => {
                     >
                         {t("general.delete")}
                     </Button>
-                </div>
+                </Box>
             )}
         </Grid>
     );

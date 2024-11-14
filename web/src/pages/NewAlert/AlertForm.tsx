@@ -1,12 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Button, FormControl, Grid, MenuItem } from "@mui/material";
 import { Field, Formik, Form } from "formik";
-import { TextField } from "formik-material-ui";
-import Grid from "@material-ui/core/Grid";
-import Button from "@mui/material/Button";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-
+import { TextField } from "formik-mui";
 import { priorities } from "@cbr/common/util/alerts";
 import {
     alertFieldLabels,
@@ -27,8 +23,8 @@ const AlertForm = () => {
         >
             {({ values, isSubmitting, resetForm, touched, setFieldValue }) => (
                 <Form>
-                    <Grid container justify="center" alignItems="flex-start">
-                        <Grid container direction="row" justify="flex-start" spacing={1}>
+                    <Grid container justifyContent="center" alignItems="flex-start">
+                        <Grid container direction="row" justifyContent="flex-start" spacing={1}>
                             <Grid item md={8} xs={8}>
                                 <Field
                                     component={TextField}
@@ -86,7 +82,7 @@ const AlertForm = () => {
                                         </Button>
                                     </Grid>
                                     <Grid item md={4} xs={8}>
-                                        <Grid container justify="flex-end">
+                                        <Grid container justifyContent="flex-end">
                                             {/* 
                                             // Save functionality is not yet implemented, therefore the save button is disabled
                                             <Button

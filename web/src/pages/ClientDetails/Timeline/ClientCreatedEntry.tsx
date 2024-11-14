@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import AddIcon from "@material-ui/icons/Add";
+import AddIcon from "@mui/icons-material/Add";
 import TimelineEntry from "./TimelineEntry";
 
 interface IProps {

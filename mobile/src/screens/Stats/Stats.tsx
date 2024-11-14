@@ -446,7 +446,6 @@ const Stats = () => {
                                         },
                                     ]}
                                 />
-
                                 <VictoryGroup offset={10} colorScale={"qualitative"}>
                                     <VictoryBar
                                         horizontal

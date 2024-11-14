@@ -1,63 +1,66 @@
-import { makeStyles } from "@material-ui/core/styles";
 import BackgroundImage from "./background.svg";
 import BackgroundImageMobile from "./backgroundMobile.svg";
+import { SxProps, Theme } from "@mui/material";
 
-export const useStyles = makeStyles(
-    {
-        container: {
-            height: "100%",
+export const loginStyles: Record<string, SxProps<Theme>> = {
+    container: {
+        height: "100%",
+        backgroundRepeat: "no-repeat",
+        backgroundImage: `url(${BackgroundImage})`,
+        backgroundSize: "100% auto",
 
-            backgroundRepeat: "no-repeat",
-            backgroundImage: `url(${BackgroundImage})`,
-            backgroundSize: "100% auto",
+        "@media (max-width: 600px)": {
+            backgroundImage: `url(${BackgroundImageMobile})`,
         },
-        logo: {
-            width: "100%",
-            display: "block",
-            paddingBottom: "2em",
-        },
-        formContainer: {
-            maxWidth: 350,
+    },
+    logo: {
+        display: "block",
+        width: "100%",
+        paddingBottom: "2em",
+    },
+    formContainer: {
+        maxWidth: "350px",
 
-            position: "absolute",
-            top: "15%",
-            right: "8%",
+        position: "absolute",
+        top: "15%",
+        right: "8%",
 
-            display: "flex",
-            flexDirection: "column",
+        display: "flex",
+        flexDirection: "column",
 
+        color: "white",
+
+        "& .MuiInputLabel-root, & .MuiInput-input, & .MuiSelect-icon": {
             color: "white",
-            "& .MuiInputLabel-root, & .MuiInput-input, & .MuiSelect-icon": {
+            "&.Mui-focused": {
                 color: "white",
                 "&.Mui-focused": {
                     color: "white",
                 },
             },
-            "& .MuiInput-underline, #language-picker-form .MuiInput-underline": {
-                "&:hover:before, &:before": {
-                    borderBottomColor: "white",
-                },
-            },
-            "& .MuiInput-underline:after": {
+        },
+        "& .MuiInput-underline, #language-picker-form .MuiInput-underline": {
+            "&:hover:before, &:before": {
                 borderBottomColor: "white",
             },
         },
-        loginForm: {
-            display: "flex",
-            flexDirection: "column",
-            gap: "2em",
+        "& .MuiInput-underline:after": {
+            borderBottomColor: "white",
         },
+        "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
+            borderBottomColor: "white",
+        },
+
         "@media (max-width: 600px)": {
-            container: {
-                backgroundImage: `url(${BackgroundImageMobile})`,
-            },
-            formContainer: {
-                margin: "0 auto",
-                top: "25%",
-                left: 0,
-                right: 0,
-            },
+            margin: "0 auto",
+            top: "25%",
+            left: 0,
+            right: 0,
         },
     },
-    { index: 1 }
-);
+    loginForm: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "2em",
+    } as React.CSSProperties,
+};

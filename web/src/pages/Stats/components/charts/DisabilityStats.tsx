@@ -1,8 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar } from "recharts";
-import { Typography } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
+import { Skeleton, Typography } from "@mui/material";
 
 import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import { IStats } from "@cbr/common/util/stats";
@@ -18,7 +17,7 @@ const DisabilityStats = ({ stats }: IProps) => {
     const disabilityToName = (id: number) => disabilities.get(id) ?? "Loading";
 
     if (!stats) {
-        return <Skeleton variant="rect" height={500} />;
+        return <Skeleton variant="rectangular" height={500} />;
     }
 
     return (

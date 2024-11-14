@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Grid from "@material-ui/core/Grid";
-
+import Grid from "@mui/material/Grid";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
 import { IUser } from "@cbr/common/util/users";
@@ -61,7 +60,7 @@ const AlertInbox = () => {
     };
 
     return (
-        <Grid container justify="center" alignItems="stretch" spacing={3}>
+        <Grid container justifyContent="center" alignItems="stretch" spacing={3}>
             <AlertList {...alertListProps} />
             <AlertDetail {...alertDetailProps} />
             {/* TODO: 

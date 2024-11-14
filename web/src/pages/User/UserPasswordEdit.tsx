@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
-import { Alert, Skeleton } from "@material-ui/lab";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+import { TextField } from "formik-mui";
+import { Alert, Box, Button, Grid, Skeleton } from "@mui/material";
 
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
@@ -19,13 +17,12 @@ import {
     handleSubmitChangePassword,
 } from "@cbr/common/forms/UserProfile/userProfileHandler";
 import history from "@cbr/common/util/history";
-import { useStyles } from "./styles";
+import { userStyles } from "./User.styles";
 
 const handleCancel = () => history.goBack();
 
 const UserPasswordEdit = () => {
     const { t } = useTranslation();
-    const styles = useStyles();
     const user = useCurrentUser();
     const [passwordChangeError, setPasswordChangeError] = useState<string | null>(null);
 
@@ -33,11 +30,11 @@ const UserPasswordEdit = () => {
         return <Alert severity="error">{t("alert.loadUserFailure")}</Alert>;
     }
     if (!user) {
-        return <Skeleton variant="rect" height={500} />;
+        return <Skeleton variant="rectangular" height={500} />;
     }
     return (
         <>
-            <div className={styles.container}>
+            <Box sx={userStyles.container}>
                 {passwordChangeError && (
                     <Alert onClose={() => setPasswordChangeError(null)} severity="error">
                         {passwordChangeError}
@@ -50,8 +47,7 @@ const UserPasswordEdit = () => {
 
                 <b>{t("general.username")}</b>
                 <p>{user.username}</p>
-            </div>
-
+            </Box>
             <Formik
                 initialValues={changePasswordInitialValues}
                 validationSchema={changePassValidationSchema}
@@ -64,10 +60,10 @@ const UserPasswordEdit = () => {
                 }}
             >
                 {({ isSubmitting }) => (
-                    <div className={styles.container}>
+                    <Box sx={userStyles.container}>
                         <Form>
                             <Grid container spacing={1}>
-                                <Grid item md={3} xs={12}>
+                                <Grid item md={4} xs={12}>
                                     <Field
                                         component={TextField}
                                         name={ChangePasswordField.oldPassword}
@@ -82,7 +78,7 @@ const UserPasswordEdit = () => {
                                         fullWidth
                                     />
                                 </Grid>
-                                <Grid item md={3} xs={12}>
+                                <Grid item md={4} xs={12}>
                                     <Grid>
                                         <Field
                                             component={TextField}
@@ -119,7 +115,7 @@ const UserPasswordEdit = () => {
 
                             <br />
 
-                            <Grid container direction="row" spacing={2} justify="flex-end">
+                            <Grid container direction="row" spacing={2} justifyContent="flex-end">
                                 <Grid item>
                                     <Button
                                         color="primary"
@@ -141,7 +137,7 @@ const UserPasswordEdit = () => {
                                 </Grid>
                             </Grid>
                         </Form>
-                    </div>
+                    </Box>
                 )}
             </Formik>
         </>

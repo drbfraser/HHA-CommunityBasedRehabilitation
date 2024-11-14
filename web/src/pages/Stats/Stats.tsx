@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Alert, Divider, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { Divider, Typography } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
 
 import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";

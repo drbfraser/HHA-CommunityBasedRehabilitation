@@ -2,10 +2,8 @@ import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import { Alert, Skeleton } from "@material-ui/lab";
+import { TextField } from "formik-mui";
+import { Alert, Box, Button, Grid, Skeleton } from "@mui/material";
 
 import { handleUpdatePassword } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
@@ -17,11 +15,10 @@ import {
     adminPasswordInitialValues,
     adminEditPasswordValidationSchema,
 } from "@cbr/common/forms/Admin/adminFields";
-import { useStyles } from "./styles";
+import { adminStyles } from "./Admin.styles";
 import { useUser } from "util/hooks/useUser";
 
 const AdminPasswordEdit = () => {
-    const styles = useStyles();
     const { userId } = useRouteMatch<IRouteParams>().params;
     const [user, loadingError] = useUser(userId);
     const { t } = useTranslation();
@@ -52,7 +49,7 @@ const AdminPasswordEdit = () => {
             }}
         >
             {({ isSubmitting }) => (
-                <div className={styles.container}>
+                <Box sx={adminStyles.container}>
                     <br />
                     <b>{t("general.id")}</b>
                     <p>{userId}</p>
@@ -88,14 +85,14 @@ const AdminPasswordEdit = () => {
                         </Grid>
                         <br />
 
-                        <Grid container direction="row" spacing={2} justify="flex-end">
+                        <Grid container direction="row" spacing={2} justifyContent="flex-end">
                             <Grid item>
                                 <Button
                                     color="primary"
                                     variant="contained"
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className={styles.btn}
+                                    sx={adminStyles.btn}
                                 >
                                     {t("general.save")}
                                 </Button>
@@ -106,11 +103,11 @@ const AdminPasswordEdit = () => {
                             </Grid>
                         </Grid>
                     </Form>
-                </div>
+                </Box>
             )}
         </Formik>
     ) : (
-        <Skeleton variant="rect" height={500} />
+        <Skeleton variant="rectangular" height={500} />
     );
 };
 

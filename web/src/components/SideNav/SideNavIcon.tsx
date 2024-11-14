@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Badge } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
-import Tooltip from "@material-ui/core/Tooltip";
+import { Alert, Badge, Box, SxProps, Theme, Tooltip } from "@mui/material";
 
 import { IAlert } from "@cbr/common/util/alerts";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
@@ -11,7 +9,7 @@ import { socket } from "@cbr/common/context/SocketIOContext";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { IPage, PageName } from "util/pages";
-import { useStyles } from "./SideNav.styles";
+import { sideNavStyles } from "./SideNav.styles";
 
 interface IProps {
     page: IPage;
@@ -19,13 +17,13 @@ interface IProps {
 }
 
 const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
-    const styles = useStyles();
     const { t } = useTranslation();
     const [unreadAlertsCount, setUnreadAlertsCount] = useState<number>(0);
     const [isUnreadAlertCountSet, setIsUnreadAlertCountSet] = useState<boolean>(false);
 
     // fix issue with findDOMNode in strict mode
-    const NoTransition = ({ children }: any) => children;
+    // todosd: any chance we still need this?
+    // const NoTransition = ({ children }: any) => children;
 
     socket.on("broadcastAlert", () => {
         fetchAlerts();
@@ -70,12 +68,25 @@ const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
                     title={t(name)}
                     placement="top"
                     arrow
-                    classes={{ tooltip: styles.tooltip }}
-                    TransitionComponent={NoTransition}
+                    componentsProps={{
+                        tooltip: {
+                            sx: sideNavStyles.tooltip as SxProps,
+                        },
+                    }}
+
+                    // todosd: this component does not appear to be needed with MUI 5/React 18
+                    // TransitionComponent={NoTransition}
                 >
-                    <div className={`${styles.icon} ${iconIsActive ? styles.active : ""}`}>
+                    <Box
+                        sx={
+                            {
+                                ...sideNavStyles.icon,
+                                ...(iconIsActive && sideNavStyles.active),
+                            } as SxProps<Theme>
+                        }
+                    >
                         {Icon && <Icon fontSize="large" />}
-                    </div>
+                    </Box>
                 </Tooltip>
             </Link>
         );
@@ -85,7 +96,7 @@ const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
         <Badge
             badgeContent={unreadAlertsCount}
             max={9}
-            className={styles.notificationBadge}
+            sx={sideNavStyles.notificationBadge}
             color="error"
             anchorOrigin={{
                 vertical: "top",

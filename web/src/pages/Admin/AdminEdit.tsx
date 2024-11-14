@@ -2,11 +2,8 @@ import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import { Alert, Skeleton } from "@material-ui/lab";
-import { FormControl, MenuItem } from "@material-ui/core";
+import { TextField } from "formik-mui";
+import { Alert, Box, Button, FormControl, Grid, MenuItem, Skeleton } from "@mui/material";
 
 import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
@@ -19,11 +16,10 @@ import {
     IRouteParams,
 } from "@cbr/common/forms/Admin/adminFields";
 import history from "@cbr/common/util/history";
-import { useStyles } from "./styles";
 import { useUser } from "util/hooks/useUser";
+import { adminStyles } from "./Admin.styles";
 
 const AdminEdit = () => {
-    const styles = useStyles();
     const { t } = useTranslation();
     const zones = useZones();
     const { userId } = useRouteMatch<IRouteParams>().params;
@@ -54,7 +50,7 @@ const AdminEdit = () => {
             }}
         >
             {({ values, setFieldValue, isSubmitting }) => (
-                <div className={styles.container}>
+                <Box sx={adminStyles.container}>
                     <b>{t("general.id")}</b>
                     <p>{userId}</p>
                     <b>{t("admin.username")}</b>
@@ -141,14 +137,16 @@ const AdminEdit = () => {
                             container
                             direction="row"
                             spacing={2}
-                            justify="space-between"
+                            justifyContent="space-between"
                             alignItems="center"
                         >
                             <Button
                                 variant="contained"
-                                className={
-                                    values.is_active ? styles["disableBtn"] : styles["activeBtn"]
-                                }
+                                sx={{
+                                    ...(values.is_active
+                                        ? adminStyles.disableBtn
+                                        : adminStyles.activeBtn),
+                                }}
                                 disabled={isSubmitting}
                                 onClick={() =>
                                     setFieldValue(AdminField.is_active, !values.is_active)
@@ -162,7 +160,7 @@ const AdminEdit = () => {
                                     variant="contained"
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className={styles.btn}
+                                    sx={adminStyles.btn}
                                 >
                                     {t("general.save")}
                                 </Button>
@@ -173,11 +171,11 @@ const AdminEdit = () => {
                             </Grid>
                         </Grid>
                     </Form>
-                </div>
+                </Box>
             )}
         </Formik>
     ) : (
-        <Skeleton variant="rect" height={500} />
+        <Skeleton variant="rectangular" height={500} />
     );
 };
 

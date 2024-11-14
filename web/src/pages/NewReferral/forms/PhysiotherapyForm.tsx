@@ -1,19 +1,18 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, FormikProps } from "formik";
-import { TextField } from "formik-material-ui";
-import { FormLabel, MenuItem } from "@material-ui/core";
+import { TextField } from "formik-mui";
+import { Box, FormLabel, MenuItem } from "@mui/material";
 
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";
-import { useStyles } from "../NewReferral.styles";
+import { newReferralStyles } from "../NewReferral.styles";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
 }
 
 const PhysiotherapyForm = (props: IFormProps) => {
-    const styles = useStyles();
     const { t } = useTranslation();
     const disabilities = useDisabilities(t);
 
@@ -22,7 +21,7 @@ const PhysiotherapyForm = (props: IFormProps) => {
             <FormLabel>{t("referral.whatCondition")}</FormLabel>
             <br />
             <br />
-            <div className={styles.fieldIndent}>
+            <Box sx={newReferralStyles.fieldIndent}>
                 <Field
                     component={TextField}
                     fullWidth
@@ -52,7 +51,7 @@ const PhysiotherapyForm = (props: IFormProps) => {
                         />
                     </div>
                 )}
-            </div>
+            </Box>
         </div>
     );
 };

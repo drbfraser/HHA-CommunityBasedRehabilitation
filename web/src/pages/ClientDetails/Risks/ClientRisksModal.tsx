@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
+import { TextField } from "formik-mui";
 import {
     Grid,
     Button,
@@ -11,7 +11,7 @@ import {
     DialogTitle,
     MenuItem,
     FormControl,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import { IRisk, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { fieldLabels, FormField, validationSchema } from "@cbr/common/forms/Risks/riskFormFields";

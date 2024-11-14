@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import {
+    Alert,
     Dialog,
     DialogTitle,
     DialogContent,
@@ -11,11 +12,11 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
+    Skeleton,
     Typography,
-} from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
-import { Skeleton, Alert } from "@material-ui/lab";
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import {
@@ -27,11 +28,11 @@ import {
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { RiskType } from "@cbr/common/util/risks";
 import { useZones } from "@cbr/common/util/hooks/zones";
-import { useStyles } from "./Entry.styles";
 import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import DataCard from "components/DataCard/DataCard";
 import { getTranslatedRiskName } from "util/risks";
 import TimelineEntry from "../Timeline/TimelineEntry";
+import { entryStyles } from "./Entry.styles";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -44,7 +45,6 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
     const [visit, setVisit] = useState<IVisit>();
     const [loadingError, setLoadingError] = useState(false);
     const zones = useZones();
-    const styles = useStyles();
 
     const onOpen = () => {
         setOpen(true);
@@ -89,7 +89,7 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
 
     const Details = () => {
         if (!visit) {
-            return <Skeleton variant="rect" height={200} />;
+            return <Skeleton variant="rectangular" height={200} />;
         }
 
         const DetailAccordion = ({ type }: { type: RiskType }) => {
@@ -120,7 +120,7 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
             }
 
             return (
-                <Accordion key={type} className={styles.impOutcomeAccordion}>
+                <Accordion key={type} sx={entryStyles.impOutcomeAccordion}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>
                             <b>{getTranslatedRiskName(t, type)}</b> ({titleDescArr.join(" & ")})

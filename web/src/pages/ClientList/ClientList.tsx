@@ -2,30 +2,32 @@ import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CSVLink } from "react-csv";
 import { useHistory } from "react-router-dom";
-import { LinearProgress, Typography, debounce, Button } from "@material-ui/core";
+import { LinearProgress, Typography, debounce, Button, Box } from "@mui/material";
 import {
-    CellParams,
-    CellValue,
-    ColParams,
+    GridColumnHeaderParams,
     DataGrid,
-    DensityTypes,
+    GridDensityTypes,
     GridOverlay,
-    RowParams,
-    RowsProp,
-    ValueFormatterParams,
-} from "@material-ui/data-grid";
-import { Cancel, FiberManualRecord } from "@material-ui/icons";
+    GridRowParams,
+    GridRowsProp,
+    GridSortCellParams,
+    GridRenderCellParams,
+} from "@mui/x-data-grid";
+import { Cancel, FiberManualRecord } from "@mui/icons-material";
 
 import { RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { SearchOption } from "@cbr/common/util/searchOptions";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import { getTranslatedRiskName, IRiskType, riskTypes } from "util/risks";
 import requestClientRows from "./requestClientRows";
-import { compressedDataGridWidth, useDataGridStyles } from "styles/DataGrid.styles";
-import { useStyles } from "./ClientList.styles";
+import { compressedDataGridWidth, dataGridStyles } from "styles/DataGrid.styles";
+import { clientListStyles } from "./ClientList.styles";
 import Toolbar from "./components/Toolbar";
 
-const RenderRiskHeader = (params: ColParams): JSX.Element => {
+// manually define this type, as GridCellValue deprecated in MUI 5
+type GridCellValue = string | number | boolean | object | Date | null | undefined;
+
+const RenderRiskHeader = (params: GridColumnHeaderParams): JSX.Element => {
     const { t } = useTranslation();
     const riskType: IRiskType = riskTypes[params.field];
 
@@ -40,18 +42,18 @@ const RenderRiskHeader = (params: ColParams): JSX.Element => {
     );
 };
 
-const RenderText = (params: ValueFormatterParams) => {
+const RenderText = (params: GridRenderCellParams) => {
     return (
         <Typography
             variant={"body2"}
             color={params.row.is_active ? "textPrimary" : "textSecondary"}
         >
-            {params.value}
+            {String(params.value)}
         </Typography>
     );
 };
 
-const RenderBadge = (params: ValueFormatterParams) => {
+const RenderBadge = (params: GridRenderCellParams) => {
     const risk: RiskLevel = Object(params.value);
 
     return window.innerWidth >= compressedDataGridWidth ? (
@@ -73,11 +75,10 @@ const RenderLoadingOverlay = () => {
 
 const RenderNoRowsOverlay = () => {
     const { t } = useTranslation();
-    const styles = useDataGridStyles();
 
     return (
-        <GridOverlay className={styles.noRows}>
-            <Cancel color="primary" className={styles.noRowsIcon} />
+        <GridOverlay sx={dataGridStyles.noRows}>
+            <Cancel color="primary" sx={dataGridStyles.noRowsIcon} />
             <Typography color="primary">{t("dashboard.noClients")}</Typography>
         </GridOverlay>
     );
@@ -95,11 +96,9 @@ const ClientList = () => {
     const [isMentalHidden, setMentalHidden] = useState<boolean>(false);
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchOption, setSearchOption] = useState<string>(SearchOption.NAME);
-    const [rows, setRows] = useState<RowsProp>([]);
+    const [rows, setRows] = useState<GridRowsProp>([]);
     const [archivedMode, setArchivedMode] = useState<boolean>(false);
 
-    const styles = useStyles();
-    const dataGridStyle = useDataGridStyles();
     const history = useHistory();
     const { t } = useTranslation();
 
@@ -133,7 +132,7 @@ const ClientList = () => {
         loadInitialData();
     }, []);
 
-    const onRowClick = (rowParams: RowParams) => history.push(`/client/${rowParams.row.id}`);
+    const onRowClick = (rowParams: GridRowParams) => history.push(`/client/${rowParams.row.id}`);
 
     const riskColumnStates: {
         [key: string]: { hide: boolean; hideFunction: (isHidden: boolean) => void };
@@ -160,8 +159,8 @@ const ClientList = () => {
         },
     };
 
-    const sortClientsById = (rows: RowsProp) => {
-        let sortById: RowsProp = rows.slice(0);
+    const sortClientsById = (rows: GridRowsProp) => {
+        let sortById = rows.slice(0);
 
         sortById.sort((a: any, b: any) => {
             return a.id - b.id;
@@ -194,10 +193,10 @@ const ClientList = () => {
             renderHeader: RenderRiskHeader,
             renderCell: RenderBadge,
             sortComparator: (
-                _v1: CellValue,
-                _v2: CellValue,
-                params1: CellParams,
-                params2: CellParams
+                _v1: GridCellValue,
+                _v2: GridCellValue,
+                params1: GridSortCellParams,
+                params2: GridSortCellParams
             ) => {
                 return (
                     riskLevels[String(params1.value)].level -
@@ -210,7 +209,7 @@ const ClientList = () => {
     ];
 
     return (
-        <div className={styles.root}>
+        <Box sx={clientListStyles.root}>
             <Toolbar
                 allClientsMode={allClientsMode}
                 archivedMode={archivedMode}
@@ -224,7 +223,7 @@ const ClientList = () => {
             />
 
             <DataGrid
-                className={dataGridStyle.datagrid}
+                sx={dataGridStyles.datagrid}
                 columns={columns}
                 rows={rows}
                 loading={loading}
@@ -232,29 +231,33 @@ const ClientList = () => {
                     LoadingOverlay: RenderLoadingOverlay,
                     NoRowsOverlay: RenderNoRowsOverlay,
                 }}
-                density={DensityTypes.Comfortable}
+                density={GridDensityTypes.Comfortable}
                 onRowClick={onRowClick}
                 pagination
-                sortModel={[
-                    {
-                        field: "name",
-                        sort: "asc",
+                initialState={{
+                    sorting: {
+                        sortModel: [
+                            {
+                                field: "name",
+                                sort: "asc",
+                            },
+                        ],
                     },
-                ]}
+                }}
             />
 
-            <div className={styles.downloadSVC}>
+            <Box sx={clientListStyles.downloadSVC}>
                 <CSVLink
                     filename="ClientList.csv"
                     data={sortClientsById(rows)}
-                    className={styles.downloadSVCLink}
+                    style={{ textDecoration: "none" }}
                 >
                     <Button variant="outlined" size="small">
                         {t("dashboard.csvExport")}
                     </Button>
                 </CSVLink>
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
 

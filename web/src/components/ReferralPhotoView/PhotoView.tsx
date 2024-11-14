@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FormLabel } from "@material-ui/core";
+import { FormLabel } from "@mui/material";
 import { helperImgCompress } from "./imgCompressHelper";
 
 interface Iprops {

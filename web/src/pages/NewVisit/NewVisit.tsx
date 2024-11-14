@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
 import {
+    Alert,
     Button,
     FormControl,
     FormLabel,
@@ -10,8 +11,7 @@ import {
     StepContent,
     StepLabel,
     Stepper,
-} from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+} from "@mui/material";
 import { FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 
 import {

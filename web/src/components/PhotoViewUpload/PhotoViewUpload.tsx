@@ -1,5 +1,6 @@
 import React, { Reducer, useEffect, useReducer, useRef, useState } from "react";
 import {
+    Box,
     Button,
     Card,
     CardContent,
@@ -8,15 +9,15 @@ import {
     DialogActions,
     DialogContent,
     LinearProgress,
-} from "@material-ui/core";
-import { useStyles } from "./PhotoViewUpload.styles";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-
+    SxProps,
+} from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-import useIsMounted from "react-is-mounted-hook";
+import { useIsMounted } from "util/hooks/useIsMounted";
 import { helperImgCompress } from "components/ReferralPhotoView/imgCompressHelper";
+import { photoViewUploadStyles } from "./PhotoViewUpload.styles";
 
 interface IProps {
     isEditing: boolean;
@@ -55,7 +56,6 @@ const imgSrcReducer: Reducer<string, TReducerAction> = (prevImgSrc, { newImgSrc 
 export const ProfilePicCard = (props: IProps) => {
     const isMounted = useIsMounted();
 
-    const styles = useStyles();
     const profilePicRef = useRef<HTMLInputElement | null>(null);
 
     const [isViewingPicture, setIsViewingPicture] = useState<boolean>(false);
@@ -102,12 +102,15 @@ export const ProfilePicCard = (props: IProps) => {
     }, [props.clientId, props.picture, props.isEditing]);
 
     const PictureModal = () => {
-        const styles = useStyles();
-
         return (
             <Dialog open={isViewingPicture} onClose={() => setIsViewingPicture(false)}>
                 <DialogContent>
-                    <img className={styles.pictureModal} src={imgSrcState} alt="user-profile-pic" />
+                    <Box
+                        component="img"
+                        sx={photoViewUploadStyles.pictureModal}
+                        src={imgSrcState}
+                        alt="user-profile-pic"
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -237,10 +240,13 @@ export const ProfilePicCard = (props: IProps) => {
     return (
         <>
             <Card
-                className={
+                sx={
                     !props.isEditing
-                        ? styles.profileImgContainer
-                        : `${styles.profileImgContainer} ${styles.profileUploadHover}`
+                        ? photoViewUploadStyles.profileImgContainer
+                        : ({
+                              ...photoViewUploadStyles.profileImgContainer,
+                              ...photoViewUploadStyles.profileUploadHover,
+                          } as SxProps)
                 }
             >
                 <CardContent
@@ -249,9 +255,14 @@ export const ProfilePicCard = (props: IProps) => {
                     }
                 >
                     {imgSrcState && (
-                        <img className={styles.profilePicture} src={imgSrcState} alt="user-icon" />
+                        <Box
+                            component="img"
+                            sx={photoViewUploadStyles.profilePicture}
+                            src={imgSrcState}
+                            alt="user-icon"
+                        />
                     )}
-                    <div className={styles.uploadIcon}>
+                    <Box id="uploadIcon" sx={photoViewUploadStyles.uploadIcon}>
                         <CloudUploadIcon />
                         <input
                             type="file"
@@ -260,7 +271,7 @@ export const ProfilePicCard = (props: IProps) => {
                             style={{ visibility: "hidden" }}
                             onChange={onSelectFile}
                         />
-                    </div>
+                    </Box>
                 </CardContent>
             </Card>
             <PictureModal />

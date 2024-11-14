@@ -1,19 +1,17 @@
 import React from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import EditIcon from "@material-ui/icons/Edit";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
-import { Button } from "@material-ui/core";
-import { Alert, Skeleton } from "@material-ui/lab";
+import EditIcon from "@mui/icons-material/Edit";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import { Alert, Box, Button, Skeleton } from "@mui/material";
 
 import { userRoles } from "@cbr/common/util/users";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { IRouteParams } from "@cbr/common/forms/Admin/adminFields";
-import { useStyles } from "./styles";
 import { useUser } from "util/hooks/useUser";
+import { adminStyles } from "./Admin.styles";
 
 const AdminView = () => {
-    const styles = useStyles();
     const history = useHistory();
     const zones = useZones();
     const { userId } = useRouteMatch<IRouteParams>().params;
@@ -24,7 +22,7 @@ const AdminView = () => {
     const handlePasswordEdit = () => history.push(`/admin/password/${userId}`);
 
     return (
-        <div className={styles.container}>
+        <Box sx={adminStyles.container}>
             {loadingError ? (
                 <Alert severity="error">
                     {t("alert.loadUserFailure")}
@@ -32,11 +30,11 @@ const AdminView = () => {
                 </Alert>
             ) : user ? (
                 <>
-                    <div className={styles.header}>
+                    <Box sx={adminStyles.header}>
                         <h1>
                             {user.first_name} {user.last_name}
                         </h1>
-                        <div className={styles.editButton}>
+                        <Box sx={adminStyles.editButton}>
                             <Button color="primary" onClick={handleEdit}>
                                 <EditIcon />
                                 {t("general.edit")}
@@ -45,8 +43,8 @@ const AdminView = () => {
                                 <LockOpenIcon />
                                 {t("login.changePassword")}
                             </Button>
-                        </div>
-                    </div>
+                        </Box>
+                    </Box>
                     <b>{t("admin.username")}</b>
                     <p>{user.username}</p>
 
@@ -66,9 +64,9 @@ const AdminView = () => {
                     <p> {user.is_active ? t("general.active") : t("general.disabled")} </p>
                 </>
             ) : (
-                <Skeleton variant="rect" height={500} />
+                <Skeleton variant="rectangular" height={500} />
             )}
-        </div>
+        </Box>
     );
 };
 

@@ -1,6 +1,6 @@
-import { Card, CardContent } from "@material-ui/core";
+import { Card, CardContent } from "@mui/material";
 import React from "react";
-import { useStyles } from "./DataCard.styles";
+import { dataCardStyles } from "./DataCard.styles";
 
 interface IDataCardProps {
     data: {
@@ -10,10 +10,8 @@ interface IDataCardProps {
 }
 
 const DataCard = ({ data }: IDataCardProps) => {
-    const styles = useStyles();
-
     return (
-        <Card className={styles.container}>
+        <Card sx={dataCardStyles.container}>
             <CardContent>
                 {data.map((d, i) => (
                     <p key={i}>

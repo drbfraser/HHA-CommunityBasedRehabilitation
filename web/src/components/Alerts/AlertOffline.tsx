@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Box, Snackbar } from "@material-ui/core";
-import { Alert, AlertTitle } from "@material-ui/lab";
+import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
 
 const AlertOffline = () => {
     const [isOffline, setIsOffline] = useState(false);

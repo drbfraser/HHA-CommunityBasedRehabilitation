@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Alert,
+    Button,
+    CardContent,
+    Card,
     Dialog,
     DialogTitle,
     DialogContent,
     DialogActions,
-    Button,
-    CardContent,
-    Card,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
+    Skeleton,
     Typography,
-} from "@material-ui/core";
-import { Skeleton, Alert } from "@material-ui/lab";
-import { Assignment } from "@material-ui/icons";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+} from "@mui/material";
+import { Assignment } from "@mui/icons-material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import { getSurveyInfo, ISurvey } from "@cbr/common/util/survey";
@@ -23,9 +24,9 @@ import {
     BaseSurveyFormField,
     baseFieldLabels,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
-import { useStyles } from "./Entry.styles";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import DataCard from "components/DataCard/DataCard";
+import { entryStyles } from "./Entry.styles";
 
 interface IEntryProps {
     survey: ISurvey;
@@ -40,7 +41,6 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
     const [open, setOpen] = useState(false);
     const [loadingError, setLoadingError] = useState(false);
     const { t } = useTranslation();
-    const styles = useStyles();
 
     const onOpen = () => setOpen(true);
     const onClose = () => {
@@ -52,7 +52,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
 
     const Details = () => {
         if (!survey) {
-            return <Skeleton variant="rect" height={200} />;
+            return <Skeleton variant="rectangular" height={200} />;
         }
 
         const DetailAccordion = ({ categoryName }: { categoryName: string }) => {
@@ -74,7 +74,7 @@ const BaseSurveyEntry = ({ survey, dateFormatter }: IEntryProps) => {
             console.log(fields);
 
             return (
-                <Accordion key={categoryName} className={styles.impOutcomeAccordion}>
+                <Accordion key={categoryName} sx={entryStyles.impOutcomeAccordion}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>
                             <b>{baseFieldLabels[categoryName as BaseSurveyFormField]}</b>

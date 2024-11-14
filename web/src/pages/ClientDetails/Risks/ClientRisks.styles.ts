@@ -1,15 +1,12 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { SxProps, Theme } from "@mui/material";
 
-export const useStyles = makeStyles(
-    {
-        riskCardButtonAndBadge: {
-            float: "right",
-        },
-        riskCardContainer: {
-            marginLeft: "10px",
-            marginRight: "10px",
-            width: "100%",
-        },
+export const clientRiskStyles: Record<string, SxProps<Theme>> = {
+    riskCardButtonAndBadge: {
+        float: "right",
     },
-    { index: 1 }
-);
+    riskCardContainer: {
+        marginLeft: "10px",
+        marginRight: "10px",
+        width: "100%",
+    },
+};

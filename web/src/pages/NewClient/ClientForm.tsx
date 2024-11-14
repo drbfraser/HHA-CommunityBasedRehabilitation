@@ -1,16 +1,17 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
-import { CheckboxWithLabel, TextField } from "formik-material-ui";
-import { useStyles } from "./ClientForm.styles";
-import Button from "@material-ui/core/Button";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import FormControl from "@material-ui/core/FormControl";
-import Grid from "@material-ui/core/Grid";
-import MenuItem from "@material-ui/core/MenuItem";
+import { CheckboxWithLabel, TextField } from "formik-mui";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Button,
+    FormControl,
+    Grid,
+    MenuItem,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
     clientFieldLabels,
     ClientField,
@@ -23,9 +24,9 @@ import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/di
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 import { handleNewWebClientSubmit, handleReset } from "@cbr/common/forms/Client/clientHandler";
+import { clientFormStyles } from "./ClientForm.styles";
 
 const ClientForm = () => {
-    const styles = useStyles();
     const zones = useZones();
     const { t } = useTranslation();
     const disabilities = useDisabilities(t);
@@ -37,10 +38,11 @@ const ClientForm = () => {
             onSubmit={handleNewWebClientSubmit}
         >
             {({ values, isSubmitting, resetForm, touched, setFieldValue }) => (
-                <Grid container direction="row" justify="flex-start" spacing={2}>
+                <Grid container direction="row" justifyContent="flex-start" spacing={2}>
                     <Grid item md={12} xs={12}>
                         <Field
                             component={CheckboxWithLabel}
+                            color="secondary"
                             type="checkbox"
                             name={ClientField.interviewConsent}
                             Label={{ label: clientFieldLabels[ClientField.interviewConsent] }}
@@ -138,6 +140,7 @@ const ClientForm = () => {
                                                     variant="outlined"
                                                     required
                                                     label={clientFieldLabels[ClientField.zone]}
+                                                    defaultValue=""
                                                     name={ClientField.zone}
                                                     autoComplete="off"
                                                 >
@@ -204,6 +207,7 @@ const ClientForm = () => {
                                             <Field
                                                 component={CheckboxWithLabel}
                                                 type="checkbox"
+                                                color="secondary"
                                                 name={ClientField.caregiverPresent}
                                                 Label={{
                                                     label: clientFieldLabels[
@@ -215,7 +219,7 @@ const ClientForm = () => {
                                         {values.caregiverPresent ? (
                                             <Grid item md={7} xs={12}>
                                                 <Accordion
-                                                    className={styles.caregiverAccordion}
+                                                    sx={clientFormStyles.caregiverAccordion}
                                                     defaultExpanded
                                                 >
                                                     <AccordionSummary
@@ -231,8 +235,8 @@ const ClientForm = () => {
                                                         >
                                                             <Grid item md={8} xs={12}>
                                                                 <Field
-                                                                    className={
-                                                                        styles.caregiverInputField
+                                                                    sx={
+                                                                        clientFormStyles.caregiverInputField
                                                                     }
                                                                     component={TextField}
                                                                     name={ClientField.caregiverName}
@@ -249,7 +253,10 @@ const ClientForm = () => {
                                                             </Grid>
                                                             <Grid item md={8} xs={12}>
                                                                 <Field
-                                                                    className={`${styles.caregiverInputField} ${styles.disabledTextField}`}
+                                                                    sx={{
+                                                                        ...clientFormStyles.caregiverInputField,
+                                                                        ...clientFormStyles.disabledTextField,
+                                                                    }}
                                                                     component={TextField}
                                                                     name={
                                                                         ClientField.caregiverEmail
@@ -267,8 +274,8 @@ const ClientForm = () => {
                                                             </Grid>
                                                             <Grid item md={8} xs={12}>
                                                                 <Field
-                                                                    className={
-                                                                        styles.caregiverInputField
+                                                                    sx={
+                                                                        clientFormStyles.caregiverInputField
                                                                     }
                                                                     component={TextField}
                                                                     name={
@@ -582,21 +589,21 @@ const ClientForm = () => {
                                             />
                                         </Grid>
                                         <br />
-
                                         <Grid
+                                            // todo: what is the purpose of this?  not displaying anything in either case
                                             item
                                             md={12}
                                             xs={12}
-                                            className={
+                                            sx={
                                                 !values.interviewConsent && touched.interviewConsent
-                                                    ? styles.checkboxError
-                                                    : ""
+                                                    ? clientFormStyles.checkboxError
+                                                    : {}
                                             }
                                         ></Grid>
                                     </Grid>
                                     <br />
                                     <br />
-                                    <Grid justify="flex-end" container spacing={2}>
+                                    <Grid justifyContent="flex-end" container spacing={2}>
                                         <Grid item>
                                             <Button
                                                 color="primary"

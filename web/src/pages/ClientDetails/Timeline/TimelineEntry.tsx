@@ -1,4 +1,7 @@
 import React from "react";
+import { Box, SvgIconTypeMap, SxProps } from "@mui/material";
+import BlankIcon from "@mui/material/SvgIcon";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 import {
     TimelineItem,
     TimelineOppositeContent,
@@ -6,11 +9,9 @@ import {
     TimelineConnector,
     TimelineDot,
     TimelineContent,
-} from "@material-ui/lab";
-import { useTimelineStyles } from "./timelines.styles";
-import BlankIcon from "@material-ui/core/SvgIcon";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core";
+} from "@mui/lab";
+
+import { timelineStyles } from "./Timeline.styles";
 
 interface IProps {
     date: string | JSX.Element;
@@ -21,31 +22,30 @@ interface IProps {
 }
 
 const TimelineEntry = ({ date, content, DotIcon, isBottomEntry, onClick }: IProps) => {
-    const timelineStyles = useTimelineStyles();
     const Icon = DotIcon ?? BlankIcon;
 
     return (
         <TimelineItem>
-            <TimelineOppositeContent className={timelineStyles.date}>
-                {date}
-            </TimelineOppositeContent>
+            <TimelineOppositeContent sx={timelineStyles.date}>{date}</TimelineOppositeContent>
             <TimelineSeparator>
                 <TimelineConnector />
                 <TimelineDot color="grey" variant="outlined">
                     <Icon color="primary" fontSize="small" />
                 </TimelineDot>
-                <TimelineConnector className={isBottomEntry ? timelineStyles.hidden : ""} />
+                <TimelineConnector sx={isBottomEntry ? timelineStyles.hidden : {}} />
             </TimelineSeparator>
             <TimelineContent>
-                <div
-                    className={
-                        timelineStyles.entry +
-                        (Boolean(onClick) ? ` ${timelineStyles.clickable}` : "")
+                <Box
+                    sx={
+                        {
+                            ...timelineStyles.entry,
+                            ...(Boolean(onClick) ? timelineStyles.clickable : {}),
+                        } as SxProps
                     }
                     onClick={onClick}
                 >
                     {content}
-                </div>
+                </Box>
             </TimelineContent>
         </TimelineItem>
     );

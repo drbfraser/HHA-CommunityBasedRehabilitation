@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
+import { TextField } from "formik-mui";
 
 export interface IDateRange {
     from: string;

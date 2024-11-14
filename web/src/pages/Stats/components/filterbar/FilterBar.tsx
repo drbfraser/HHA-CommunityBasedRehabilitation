@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Chip } from "@material-ui/core";
+import { Button, Chip } from "@mui/material";
 
 import { IUser } from "@cbr/common/util/users";
 import { IStats } from "@cbr/common/util/stats";

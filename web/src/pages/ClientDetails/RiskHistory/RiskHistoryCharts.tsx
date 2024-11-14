@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Grid, Typography } from "@material-ui/core";
+import { Box, Grid, Skeleton, Typography } from "@mui/material";
 import {
     LineChart,
     Line,
@@ -10,13 +10,12 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
-import Skeleton from "@material-ui/lab/Skeleton";
 
 import { IRisk, RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import { IClient } from "@cbr/common/util/clients";
-import { useStyles } from "./RiskHistory.styles";
 import { getTranslatedRiskChartName } from "util/risks";
+import { riskHistoryStyles } from "./RiskHistory.styles";
 
 interface IProps {
     client?: IClient;
@@ -79,7 +78,6 @@ const risksToChartData = (risks: IRisk[]) => {
 const RiskHistoryCharts = ({ client }: IProps) => {
     const [chartData, setChartData] = useState<IChartData>();
     const { t } = useTranslation();
-    const styles = useStyles();
     const chartHeight = 300;
 
     useEffect(() => {
@@ -92,39 +90,37 @@ const RiskHistoryCharts = ({ client }: IProps) => {
         const dateFormatter = getDateFormatterFromReference(client?.created_at);
 
         return (
-            <ResponsiveContainer
-                width="100%"
-                height={chartHeight}
-                className={styles.chartContainer}
-            >
-                <LineChart>
-                    <CartesianGrid strokeDasharray="6" vertical={false} />
-                    <XAxis
-                        dataKey="timestamp"
-                        type="number"
-                        domain={[data[0].timestamp, data.slice(-1)[0].timestamp]}
-                        tickFormatter={dateFormatter}
-                    />
-                    <YAxis
-                        type="category"
-                        domain={Object.keys(riskLevels)}
-                        tickFormatter={(level) => riskLevels[level].name}
-                        padding={{ top: 25, bottom: 25 }}
-                    />
-                    <Tooltip
-                        labelFormatter={dateFormatter}
-                        formatter={(level: RiskLevel) => riskLevels[level].name}
-                    />
-                    <Line
-                        type="stepAfter"
-                        name={getTranslatedRiskChartName(t, riskType)}
-                        data={data}
-                        dataKey="level"
-                        stroke={riskLevels[data.slice(-1)[0].level].color}
-                        strokeWidth={6}
-                    />
-                </LineChart>
-            </ResponsiveContainer>
+            <Box sx={riskHistoryStyles.chartContainer}>
+                <ResponsiveContainer width="100%" height={chartHeight}>
+                    <LineChart>
+                        <CartesianGrid strokeDasharray="6" vertical={false} />
+                        <XAxis
+                            dataKey="timestamp"
+                            type="number"
+                            domain={[data[0].timestamp, data.slice(-1)[0].timestamp]}
+                            tickFormatter={dateFormatter}
+                        />
+                        <YAxis
+                            type="category"
+                            domain={Object.keys(riskLevels)}
+                            tickFormatter={(level) => riskLevels[level].name}
+                            padding={{ top: 25, bottom: 25 }}
+                        />
+                        <Tooltip
+                            labelFormatter={dateFormatter}
+                            formatter={(level: RiskLevel) => riskLevels[level].name}
+                        />
+                        <Line
+                            type="stepAfter"
+                            name={getTranslatedRiskChartName(t, riskType)}
+                            data={data}
+                            dataKey="level"
+                            stroke={riskLevels[data.slice(-1)[0].level].color}
+                            strokeWidth={6}
+                        />
+                    </LineChart>
+                </ResponsiveContainer>
+            </Box>
         );
     };
 
@@ -141,17 +137,16 @@ const RiskHistoryCharts = ({ client }: IProps) => {
                 //(riskType!==RiskType.NUTRITION) ?
 
                 <Grid key={riskType} item md={4} xs={12}>
-                    <Typography variant="h5" className={styles.textCenter}>
+                    <Typography variant="h5" sx={riskHistoryStyles.textCenter}>
                         {getTranslatedRiskChartName(t, riskType)}
                     </Typography>
-
                     {chartData && chartData[riskType].length ? (
                         <RiskChart riskType={riskType} data={chartData[riskType]} />
                     ) : (
                         <Skeleton
-                            variant="rect"
+                            variant="rectangular"
                             height={chartHeight}
-                            className={styles.chartSkeleton}
+                            sx={riskHistoryStyles.chartSkeleton}
                         />
                     )}
                 </Grid>

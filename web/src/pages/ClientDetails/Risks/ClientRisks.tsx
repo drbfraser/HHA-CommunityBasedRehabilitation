@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Grid, Card, CardActions, CardContent, Typography, Button } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
+import {
+    Grid,
+    Card,
+    CardActions,
+    CardContent,
+    Typography,
+    Button,
+    Box,
+    Skeleton,
+} from "@mui/material";
 
 import { IRisk } from "@cbr/common/util/risks";
 import { IClient } from "@cbr/common/util/clients";
-import { useStyles } from "./ClientRisks.styles";
+import { clientRiskStyles } from "./ClientRisks.styles";
 import { getTranslatedRiskName, riskTypes } from "util/risks";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import ClientRisksModal from "./ClientRisksModal";
@@ -15,7 +23,6 @@ interface IProps {
 }
 
 const ClientRisks = ({ clientInfo }: IProps) => {
-    const styles = useStyles();
     const { t } = useTranslation();
 
     interface ICardProps {
@@ -37,16 +44,16 @@ const ClientRisks = ({ clientInfo }: IProps) => {
 
                 <Card variant="outlined">
                     <CardContent>
-                        <Grid container direction="row" justify="space-between">
+                        <Grid container direction="row" justifyContent="space-between">
                             <Grid item md={6}>
                                 <Typography variant="h5" component="h1">
                                     {getTranslatedRiskName(t, risk.risk_type)}
                                 </Typography>
                             </Grid>
                             <Grid item md={6}>
-                                <div className={styles.riskCardButtonAndBadge}>
+                                <Box sx={clientRiskStyles.riskCardButtonAndBadge}>
                                     <RiskLevelChip risk={risk.risk_level} />
-                                </div>
+                                </Box>
                             </Grid>
                         </Grid>
                         <br />
@@ -67,7 +74,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                         </Typography>
                     </CardContent>
 
-                    <CardActions className={styles.riskCardButtonAndBadge}>
+                    <CardActions sx={clientRiskStyles.riskCardButtonAndBadge}>
                         <Button
                             variant="outlined"
                             color="primary"
@@ -86,8 +93,8 @@ const ClientRisks = ({ clientInfo }: IProps) => {
     };
 
     return (
-        <div className={styles.riskCardContainer}>
-            <Grid container spacing={5} direction="row" justify="flex-start">
+        <Box sx={clientRiskStyles.riskCardContainer}>
+            <Grid container spacing={5} direction="row" justifyContent="flex-start">
                 {Object.keys(riskTypes).map((type) => {
                     const risk = clientInfo?.risks.find((r) => r.risk_type === type);
                     return (
@@ -95,13 +102,13 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                             {risk ? (
                                 <RiskCard risk={risk} />
                             ) : (
-                                <Skeleton variant="rect" height={300} />
+                                <Skeleton variant="rectangular" height={300} />
                             )}
                         </Grid>
                     );
                 })}
             </Grid>
-        </div>
+        </Box>
     );
 };
 

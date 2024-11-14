@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch } from "react-router-dom";
 import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import { Alert, Skeleton } from "@material-ui/lab";
+import { TextField } from "formik-mui";
+import { Alert, Box, Button, Grid, Skeleton } from "@mui/material";
 
 import { handleZoneEditSubmit } from "@cbr/common/forms/Zone/zoneFormsHandler";
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
@@ -20,7 +18,7 @@ import {
 import history from "@cbr/common/util/history";
 import { UserRole } from "@cbr/common/util/users";
 import ConfirmDeleteZone from "components/Dialogs/ConfirmDeleteZone";
-import { useStyles } from "./styles";
+import { zoneStyles } from "./Zone.styles";
 
 interface IResponseRow {
     id: number;
@@ -34,7 +32,6 @@ interface IResponseRow {
 }
 
 const ZoneEdit = () => {
-    const styles = useStyles();
     const { t } = useTranslation();
     const { zone_name } = useRouteMatch<IRouteParams>().params;
     const [zone, setZone] = useState<IZone>();
@@ -131,7 +128,7 @@ const ZoneEdit = () => {
                 }}
             >
                 {({ values, setFieldValue, isSubmitting }) => (
-                    <div className={styles.container}>
+                    <Box sx={zoneStyles.container}>
                         <br />
                         <b>{t("zone.zoneName")}</b>
                         <p>{zone.zone_name}</p>
@@ -153,7 +150,7 @@ const ZoneEdit = () => {
                                         variant="contained"
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className={styles.btn}
+                                        sx={zoneStyles.btn}
                                     >
                                         {t("general.save")}
                                     </Button>
@@ -169,7 +166,7 @@ const ZoneEdit = () => {
                                 <Grid item>
                                     <Button
                                         variant="contained"
-                                        className={styles.disableBtn}
+                                        sx={zoneStyles.disableBtn}
                                         onClick={() => handleDeleteZone(zone.id)}
                                     >
                                         {t("general.delete")}
@@ -177,12 +174,12 @@ const ZoneEdit = () => {
                                 </Grid>
                             </Grid>
                         </Form>
-                    </div>
+                    </Box>
                 )}
             </Formik>
         </div>
     ) : (
-        <Skeleton variant="rect" height={500} />
+        <Skeleton variant="rectangular" height={500} />
     );
 };
 

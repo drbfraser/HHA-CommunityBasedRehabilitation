@@ -1,7 +1,6 @@
 import React from "react";
-import { Box, Collapse, IconButton, Typography } from "@material-ui/core";
+import { Alert, Box, Collapse, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Alert } from "@material-ui/lab";
 
 const AlertNotification = (props: any) => {
     return (

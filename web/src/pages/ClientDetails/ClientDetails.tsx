@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Grid, Typography, Button } from "@material-ui/core";
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import { Alert, Skeleton } from "@material-ui/lab";
+import { Alert, Grid, Skeleton, Typography, Button } from "@mui/material";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IClient } from "@cbr/common/util/clients";
@@ -44,20 +43,19 @@ const ClientDetails = () => {
     }
 
     return (
-        <Grid container spacing={2} direction="row" justify="flex-start">
+        <Grid container spacing={2} direction="row" justifyContent="flex-start">
             <Grid item xs={12}>
                 {clientInfo ? (
                     <ClientInfoForm clientInfo={clientInfo} />
                 ) : (
-                    <Skeleton variant="rect" height={500} />
+                    <Skeleton variant="rectangular" height={500} />
                 )}
             </Grid>
 
             <Grid item xs={12}>
                 <hr />
             </Grid>
-
-            <Grid container justify="space-between" direction="row">
+            <Grid container justifyContent="space-between" direction="row">
                 <Grid item xs={6}>
                     <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
                         <b>{t("clientAttr.riskLevels")}</b>

@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation, Trans } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Card, CardContent, Grid, Typography } from "@material-ui/core";
-import { Cancel, CheckCircle, FiberManualRecord } from "@material-ui/icons";
-import { Alert } from "@material-ui/lab";
+import { Alert, Box, Card, CardContent, Grid, Typography } from "@mui/material";
+import { Cancel, CheckCircle, FiberManualRecord } from "@mui/icons-material";
 import {
     DataGrid,
-    ColParams,
-    CellValue,
-    CellParams,
-    RowParams,
-    DensityTypes,
-    ValueFormatterParams,
+    GridColumnHeaderParams,
+    GridRowParams,
+    GridDensityTypes,
     GridOverlay,
-    RowsProp,
-    RowData,
-} from "@material-ui/data-grid";
+    GridRowsProp,
+    GridRowModel,
+    GridSortCellParams,
+    GridRenderCellParams,
+} from "@mui/x-data-grid";
 
 import { clientPrioritySort, IClientSummary } from "@cbr/common/util/clients";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
@@ -27,15 +25,17 @@ import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { RiskLevel, IRiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { IRiskType, riskTypes } from "util/risks";
-import { useDataGridStyles } from "styles/DataGrid.styles";
+import { dataGridStyles } from "styles/DataGrid.styles";
+
+// manually define this type, as GridCellValue deprecated in MUI 5
+type GridCellValue = string | number | boolean | object | Date | null | undefined;
 
 const Dashboard = () => {
-    const dataGridStyle = useDataGridStyles();
     const history = useHistory();
     const { t } = useTranslation();
 
-    const [clients, setClients] = useState<RowData[]>([]);
-    const [referrals, setReferrals] = useState<RowsProp>([]);
+    const [clients, setClients] = useState<GridRowModel[]>([]);
+    const [referrals, setReferrals] = useState<GridRowsProp>([]);
     const zones = useZones();
     const [isPriorityClientsLoading, setPriorityClientsLoading] = useState<boolean>(true);
     const [referralsLoading, setReferralsLoading] = useState<boolean>(true);
@@ -52,7 +52,7 @@ const Dashboard = () => {
                     await apiFetch(Endpoint.CLIENTS, "?is_active=true")
                 ).json();
 
-                const priorityClients: RowsProp = tempClients
+                const priorityClients = tempClients
                     .sort(clientPrioritySort)
                     .slice(0, 5)
                     .map((row: IClientSummary) => {
@@ -83,7 +83,7 @@ const Dashboard = () => {
                     await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
                 ).json();
 
-                const outstandingReferrals: RowsProp = tempReferrals
+                const outstandingReferrals: GridRowsProp = tempReferrals
                     .sort(
                         (a: IOutstandingReferral, b: IOutstandingReferral) =>
                             a.date_referred - b.date_referred
@@ -144,7 +144,7 @@ const Dashboard = () => {
     }, [unreadAlertsCount]);
 
     /* TODO I have changed it with an existance check, need to reverse it when backend is ready */
-    const RenderBadge = (params: ValueFormatterParams) => {
+    const RenderBadge = (params: GridRenderCellParams) => {
         const risk: RiskLevel = Object(params.value);
         return (
             <FiberManualRecord
@@ -153,21 +153,21 @@ const Dashboard = () => {
         );
     };
 
-    const RenderText = (params: ValueFormatterParams) => (
-        <Typography variant={"body2"}>{params.value}</Typography>
+    const RenderText = (params: GridRenderCellParams) => (
+        <Typography variant={"body2"}>{String(params.value)}</Typography>
     );
     const riskComparator = (
-        v1: CellValue,
-        v2: CellValue,
-        params1: CellParams,
-        params2: CellParams
+        v1: GridCellValue,
+        v2: GridCellValue,
+        params1: GridSortCellParams,
+        params2: GridSortCellParams
     ) => {
         const risk1: IRiskLevel = riskLevels[String(params1.value)];
         const risk2: IRiskLevel = riskLevels[String(params2.value)];
         return risk1.level - risk2.level;
     };
 
-    const RenderRiskHeader = (params: ColParams): JSX.Element => {
+    const RenderRiskHeader = (params: GridColumnHeaderParams): JSX.Element => {
         const riskType: IRiskType = riskTypes[params.field];
         return (
             <div className="MuiDataGrid-colCellTitle">
@@ -177,20 +177,20 @@ const Dashboard = () => {
     };
 
     const RenderNoPriorityClientsOverlay = () => (
-        <GridOverlay className={dataGridStyle.noRows}>
-            <Cancel color="primary" className={dataGridStyle.noRowsIcon} />
+        <GridOverlay sx={dataGridStyles.noRows}>
+            <Cancel color="primary" sx={dataGridStyles.noRowsIcon} />
             <Typography color="primary">{t("dashboard.noPriorityClients")}</Typography>
         </GridOverlay>
     );
 
     const RenderNoOutstandingReferralsOverlay = () => (
-        <GridOverlay className={dataGridStyle.noRows}>
-            <CheckCircle color="primary" className={dataGridStyle.noRowsIcon} />
+        <GridOverlay sx={dataGridStyles.noRows}>
+            <CheckCircle color="primary" sx={dataGridStyles.noRowsIcon} />
             <Typography color="primary">{t("dashboard.noOutstandingReferrals")}</Typography>
         </GridOverlay>
     );
 
-    const RenderDate = (params: ValueFormatterParams) => {
+    const RenderDate = (params: GridRenderCellParams) => {
         const locale = navigator.language;
         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -203,13 +203,14 @@ const Dashboard = () => {
         );
     };
 
-    const RenderZone = (params: ValueFormatterParams) => (
+    const RenderZone = (params: GridRenderCellParams) => (
         <Typography variant={"body2"}>{zones ? zones.get(Number(params.value)) : ""}</Typography>
     );
 
-    const handleClientRowClick = (rowParams: RowParams) =>
+    const handleClientRowClick = (rowParams: GridRowParams) =>
         history.push(`/client/${rowParams.row.id}`);
-    const handleReferralRowClick = (rowParams: RowParams) =>
+
+    const handleReferralRowClick = (rowParams: GridRowParams) =>
         history.push(`/client/${rowParams.row.client_id}`);
 
     const priorityClientsColumns = [
@@ -268,7 +269,7 @@ const Dashboard = () => {
                 <Alert severity="info">
                     <Typography variant="body1">
                         <Trans i18nKey="dashboard.newInboxMessages" count={unreadAlertsCount}>
-                            -You have <b>{{ unreadAlertsCount }}</b> new message
+                            -You have <b>{unreadAlertsCount}</b> new message
                             {unreadAlertsCount > 1 && "s"} in your inbox
                         </Trans>
                     </Typography>
@@ -300,21 +301,21 @@ const Dashboard = () => {
                                 {t("dashboard.clientListPriority")}
                             </Typography>
                             <br />
-                            <div className={dataGridStyle.dashboardTables}>
+                            <Box sx={dataGridStyles.dashboardTables}>
                                 <DataGrid
-                                    className={`${dataGridStyle.datagrid}`}
+                                    sx={dataGridStyles.datagrid}
                                     rows={clients}
-                                    hideFooterPagination
+                                    hideFooter
                                     loading={isPriorityClientsLoading}
                                     columns={priorityClientsColumns}
                                     pageSize={5}
+                                    density={GridDensityTypes.Comfortable}
                                     onRowClick={handleClientRowClick}
-                                    density={DensityTypes.Comfortable}
                                     components={{
                                         NoRowsOverlay: RenderNoPriorityClientsOverlay,
                                     }}
                                 />
-                            </div>
+                            </Box>
                         </CardContent>
                     </Card>
                 </Grid>
@@ -325,20 +326,21 @@ const Dashboard = () => {
                                 {t("dashboard.clientListOutstandingRefs")}
                             </Typography>
                             <br />
-                            <div className={dataGridStyle.dashboardTables}>
+                            <Box sx={dataGridStyles.dashboardTables}>
                                 <DataGrid
-                                    className={`${dataGridStyle.datagrid}`}
+                                    sx={dataGridStyles.datagrid}
+                                    rowsPerPageOptions={[5, 25, 50]}
                                     rows={referrals}
                                     loading={referralsLoading}
                                     columns={outstandingReferralsColumns}
                                     pageSize={5}
-                                    density={DensityTypes.Comfortable}
+                                    density={GridDensityTypes.Comfortable}
                                     onRowClick={handleReferralRowClick}
                                     components={{
                                         NoRowsOverlay: RenderNoOutstandingReferralsOverlay,
                                     }}
                                 />
-                            </div>
+                            </Box>
                         </CardContent>
                     </Card>
                 </Grid>

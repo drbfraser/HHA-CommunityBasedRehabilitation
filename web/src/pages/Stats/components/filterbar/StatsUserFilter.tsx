@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+    Autocomplete,
     Button,
     Dialog,
     DialogActions,
@@ -9,7 +10,6 @@ import {
     TextField,
 } from "@mui/material";
 import { IUser } from "@cbr/common/util/users";
-import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
 
 interface IProps {
     open: boolean;
@@ -43,8 +43,9 @@ const StatsUserFilter = ({ open, onClose, users, user, setUser }: IProps) => {
                     value={selectedUser}
                     onChange={(_e, v) => setSelectedUser(v)}
                     getOptionLabel={renderUser}
-                    renderOption={renderUser}
-                    renderInput={(params: AutocompleteRenderInputParams) => (
+                    // NOTE: if issues, see Autocomplete changes from https://mui.com/material-ui/migration/v5-component-changes/
+                    // renderOption={renderUser}
+                    renderInput={(params) => (
                         <TextField
                             {...params}
                             fullWidth

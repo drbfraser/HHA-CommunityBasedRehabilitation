@@ -1,7 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { SvgIconTypeMap } from "@material-ui/core";
-import { MoreVert, ArrowDropDown } from "@material-ui/icons";
+import { Box, SvgIconTypeMap, SxProps } from "@mui/material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { MoreVert, ArrowDropDown } from "@mui/icons-material";
 import {
     TimelineOppositeContent,
     TimelineItem,
@@ -9,10 +10,9 @@ import {
     TimelineDot,
     TimelineConnector,
     TimelineContent,
-} from "@material-ui/lab";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
+} from "@mui/lab";
 
-import { useTimelineStyles } from "./timelines.styles";
+import { timelineStyles } from "./Timeline.styles";
 
 interface IProps {
     onClick?: () => void;
@@ -20,12 +20,11 @@ interface IProps {
 
 const ShowMoreEntry = ({ onClick }: IProps) => {
     const { t } = useTranslation();
-    const timelineStyles = useTimelineStyles();
     const Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> = MoreVert;
 
     return (
         <TimelineItem>
-            <TimelineOppositeContent className={timelineStyles.date} />
+            <TimelineOppositeContent sx={timelineStyles.date} />
             <TimelineSeparator>
                 <TimelineConnector />
                 <TimelineDot color="primary" variant="outlined">
@@ -34,14 +33,19 @@ const ShowMoreEntry = ({ onClick }: IProps) => {
                 <TimelineConnector className="" />
             </TimelineSeparator>
             <TimelineContent>
-                <div
-                    className={timelineStyles.showMore + ` ${timelineStyles.showMoreClickable}`}
+                <Box
+                    sx={
+                        {
+                            ...timelineStyles.showMore,
+                            ...timelineStyles.showMoreClickable,
+                        } as SxProps
+                    }
                     style={{ color: "white", fontWeight: 700 }}
                     onClick={onClick}
                 >
                     {`${t("general.showMore")} `}
                     {<ArrowDropDown style={{ marginBottom: "-7px" }} />}
-                </div>
+                </Box>
             </TimelineContent>
         </TimelineItem>
     );

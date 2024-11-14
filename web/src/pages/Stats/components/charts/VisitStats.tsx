@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, Typography } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { Grid, Link, Skeleton, Typography } from "@mui/material";
 import {
     BarChart,
     ResponsiveContainer,
@@ -112,7 +110,7 @@ const VisitStats = ({ stats }: IProps) => {
                         </BarChart>
                     </ResponsiveContainer>
                 ) : (
-                    <Skeleton variant="rect" height={400} />
+                    <Skeleton variant="rectangular" height={400} />
                 )}
             </Grid>
 
@@ -154,7 +152,7 @@ const VisitStats = ({ stats }: IProps) => {
                         </PieChart>
                     </ResponsiveContainer>
                 ) : (
-                    <Skeleton variant="rect" height={400} />
+                    <Skeleton variant="rectangular" height={400} />
                 )}
             </Grid>
         </Grid>

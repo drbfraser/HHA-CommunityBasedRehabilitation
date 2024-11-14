@@ -1,6 +1,6 @@
 import React from "react";
 import { Field, FormikProps } from "formik";
-import { CheckboxWithLabel, TextField } from "formik-material-ui";
+import { CheckboxWithLabel, TextField } from "formik-mui";
 
 import {
     visitFieldLabels,
@@ -39,6 +39,7 @@ const ImprovementField = (props: {
             <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
+                color="secondary"
                 name={`${fieldName}.${ImprovementFormField.enabled}`}
                 Label={{ label: props.provided }}
             />

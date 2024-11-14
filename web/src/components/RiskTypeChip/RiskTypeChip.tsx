@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import Chip, { ChipProps } from "@material-ui/core/Chip";
+import Chip, { ChipProps } from "@mui/material/Chip";
 import { RiskType } from "@cbr/common/util/risks";
 import { getTranslatedRiskName, riskTypes } from "util/risks";
 

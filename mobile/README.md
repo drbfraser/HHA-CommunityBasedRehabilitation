@@ -178,3 +178,9 @@ After the app is up and running the first time, after you make a change to the c
 -   When running Android (`npm run android`), if you get any of the following errors, they can sometimes be resolved by re-running the command (a few times?), or pressing 'r' or 'a' in the React-native window to reload the Android app:
     "The development server returned response error code: 500"...
 -   Error "Error: Unable to resolve module async-mutex from", try re-running `npm install` on mobile folder.
+
+# Updating dependencies workflow to minimize build errors
+
+-   When updating dependencies or changing branches, `npm run clean-rebuild` is recommended and should suffice. If
+    a more thorough clean is needed, `npm run clean-rebuild-full` will also re-install node_modules. Running `npm cache clean --force`
+    may be of help as well, although this should theoretically not be needed.

@@ -1,24 +1,36 @@
 import { themeColors } from "@cbr/common/util/colors";
-import { createMuiTheme } from "@material-ui/core";
+import { createTheme } from "@mui/material";
 
 export const mediaMobile = "@media (max-width: 800px)";
 
-export const themeMui = createMuiTheme({
-    overrides: {
+export const themeMui = createTheme({
+    components: {
         MuiCssBaseline: {
-            "@global": {
-                "html, body, #root": {
+            styleOverrides: {
+                html: {
                     height: "100%",
                 },
+                body: {
+                    height: "100%",
+
+                    // override default body font size to match material-ui 4 default
+                    // see: https://mui.com/material-ui/migration/v5-component-changes/ @Update body font size
+                    fontSize: "0.875rem",
+                    lineHeight: 1.43,
+                    letterSpacing: "0.01071em",
+                },
                 "#root": {
+                    height: "100%",
                     minHeight: "100%",
                 },
             },
         },
         MuiLink: {
-            root: {
-                color: themeColors.linkBlue,
-                textDecoration: "underline",
+            styleOverrides: {
+                root: {
+                    color: themeColors.linkBlue,
+                    textDecoration: "underline",
+                },
             },
         },
     },

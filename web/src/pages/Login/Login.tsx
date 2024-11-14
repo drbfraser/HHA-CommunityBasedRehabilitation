@@ -1,12 +1,12 @@
-import { Typography } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Alert from "@material-ui/lab/Alert";
+import { Box, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Alert from "@mui/material/Alert";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { doLogin } from "@cbr/common/util/auth";
-import { useStyles } from "./Login.styles";
+import { loginStyles } from "./Login.styles";
 import { loginState } from "../../util/hooks/loginState";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
 import LanguagePicker from "components/LanguagePicker/LanguagePicker";
@@ -23,7 +23,6 @@ interface ILoginStatusFailed {
 type LoginStatus = ILoginStatusFailed | IBaseLoginStatus;
 
 const Login = () => {
-    const styles = useStyles();
     const { t } = useTranslation();
 
     const [username, setUsername] = useState("");
@@ -72,10 +71,11 @@ const Login = () => {
     };
 
     return (
-        <div className={styles.container}>
-            <div className={styles.formContainer}>
-                <img
-                    className={styles.logo}
+        <Box sx={loginStyles.container}>
+            <Box sx={loginStyles.formContainer}>
+                <Box
+                    component="img"
+                    sx={loginStyles.logo}
                     src="/images/hha_logo_white.png"
                     alt="Hope Health Action"
                 />
@@ -84,19 +84,26 @@ const Login = () => {
                     {t("login.login")}
                 </Typography>
                 <LoginAlert />
-                <form className={styles.loginForm} onSubmit={(e) => handleLogin(e)}>
+                <form
+                    style={loginStyles.loginForm as React.CSSProperties}
+                    onSubmit={(e) => handleLogin(e)}
+                >
                     <TextField
                         label={t("general.username")}
+                        variant="standard"
                         fullWidth
                         inputProps={{ autoCapitalize: "off" }}
                         required
                         InputLabelProps={{ required: false }}
                         value={username}
+                        autoComplete="off"
                         onChange={(e) => setUsername(e.target.value)}
                     />
                     <TextField
                         label={t("general.password")}
+                        variant="standard"
                         type="password"
+                        autoComplete="off"
                         fullWidth
                         required
                         InputLabelProps={{ required: false }}
@@ -121,8 +128,8 @@ const Login = () => {
                         alignSelf: "flex-end",
                     }}
                 />
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
 

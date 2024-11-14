@@ -1,7 +1,7 @@
 import React from "react";
 import { I18nextProvider } from "react-i18next";
 import { createRoot } from "react-dom/client";
-import { CssBaseline, ThemeProvider } from "@material-ui/core";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { themeMui } from "theme.styles";
 
 import App from "./App";

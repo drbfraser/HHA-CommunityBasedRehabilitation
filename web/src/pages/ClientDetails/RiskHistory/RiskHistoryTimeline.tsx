@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
-import UpdateIcon from "@material-ui/icons/Update";
-import { Timeline } from "@material-ui/lab";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import { Timeline } from "@mui/lab";
+import UpdateIcon from "@mui/icons-material/Update";
 
 import { IClient } from "@cbr/common/util/clients";
 import { getDateFormatterFromReference, timestampToDateTime } from "@cbr/common/util/dates";
@@ -11,8 +11,8 @@ import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";
-import { useTimelineStyles } from "../Timeline/timelines.styles";
 import { translateRiskEntrySummary } from "./helper";
+import { timelineStyles } from "../Timeline/Timeline.styles";
 
 interface IProps {
     client?: IClient;
@@ -20,7 +20,6 @@ interface IProps {
 
 const RiskHistoryTimeline = ({ client }: IProps) => {
     const { t } = useTranslation();
-    const timelineStyles = useTimelineStyles();
     const dateFormatter = getDateFormatterFromReference(client?.created_at);
 
     interface IEntryProps {
@@ -79,7 +78,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
     };
 
     return (
-        <Timeline className={timelineStyles.timeline}>
+        <Timeline sx={timelineStyles.timeline}>
             {client ? (
                 <>
                     {client.risks

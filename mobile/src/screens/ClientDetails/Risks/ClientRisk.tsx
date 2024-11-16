@@ -4,13 +4,12 @@ import { useTranslation } from "react-i18next";
 import { Card, Divider, Text } from "react-native-paper";
 
 import { IRisk, riskLevels, RiskType } from "@cbr/common";
+import {
+    getModalFormGoalsDisplay,
+    getModalFormRequirementsDisplay,
+} from "../../../components/ModalForm/utils";
 import clientStyle, { riskStyles } from "./ClientRisk.styles";
 import { ClientRiskForm } from "./ClientRiskForm";
-import {
-    generateFormValue,
-    initializeCheckedItems,
-    initializeFreeformText,
-} from "../../../components/ModalForm/utils";
 
 const getLatestRisks = (clientRisk: IRisk[], riskType: RiskType) => {
     // Get the latest Risk for each type and pass the values on so they can be displayed initially
@@ -54,43 +53,6 @@ export const ClientRisk = (props: riskProps) => {
         }
     };
 
-    const getDisplayedRequirements = () => {
-        // can probably extract this mapping of translated arrays outside of this module
-        // so that other code that use the modal form component can use this
-        let translationKey;
-        switch (risk.risk_type) {
-            case RiskType.SOCIAL:
-                translationKey = "newVisit.socialRequirements";
-                break;
-            case RiskType.HEALTH:
-                translationKey = "newVisit.healthRequirements";
-                break;
-            case RiskType.MENTAL:
-                translationKey = "newVisit.healthRequirements";
-                break;
-            case RiskType.NUTRITION:
-                translationKey = "newVisit.healthRequirements";
-                break;
-            case RiskType.EDUCATION:
-                translationKey = "newVisit.healthRequirements";
-                break;
-        }
-
-        const translatedItems = Object.entries(
-            initializeCheckedItems(
-                risk.requirement,
-                t(translationKey, { returnObjects: true, lng: "en" }),
-                t(translationKey, { returnObjects: true })
-            )
-        );
-        const otherText = initializeFreeformText(
-            risk.requirement,
-            t(translationKey, { returnObjects: true, lng: "en" })
-        );
-
-        return generateFormValue(translatedItems, otherText);
-    };
-
     return (
         <View key={risk.risk_type}>
             <Divider />
@@ -105,11 +67,15 @@ export const ClientRisk = (props: riskProps) => {
 
                 <View>
                     <Text style={styles.riskHeaderStyle}>{t("general.requirements")}: </Text>
-                    <Text style={styles.riskRequirementStyle}>{getDisplayedRequirements()}</Text>
+                    <Text style={styles.riskRequirementStyle}>
+                        {getModalFormRequirementsDisplay(t, risk)}
+                    </Text>
                 </View>
                 <View>
                     <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
-                    <Text style={styles.riskRequirementStyle}>{risk.goal}</Text>
+                    <Text style={styles.riskRequirementStyle}>
+                        {getModalFormGoalsDisplay(t, risk)}
+                    </Text>
                 </View>
 
                 <View>

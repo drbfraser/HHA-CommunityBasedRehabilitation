@@ -173,8 +173,13 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     label={fieldLabels[FormField.goal]}
                                     formikField={FormField.goal}
                                     formikProps={formikProps}
-                                    canonicalFields={["c"]}
-                                    localizedFields={["d"]}
+                                    canonicalFields={t("newVisit.healthGoals", {
+                                        returnObjects: true,
+                                        lng: "en",
+                                    })}
+                                    localizedFields={t("newVisit.healthGoals", {
+                                        returnObjects: true,
+                                    })}
                                     defaultValue={formikProps.values.goal}
                                     hasFreeformText
                                 />

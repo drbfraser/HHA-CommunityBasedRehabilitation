@@ -168,7 +168,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     defaultValue={formikProps.values.requirement}
                                     hasFreeformText
                                 />
-                                {/* <ModalForm
+                                <ModalForm
                                     style={styles.riskInputStyle}
                                     label={fieldLabels[FormField.goal]}
                                     formikField={FormField.goal}
@@ -177,7 +177,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     localizedFields={["d"]}
                                     defaultValue={formikProps.values.goal}
                                     hasFreeformText
-                                /> */}
+                                />
 
                                 <Button
                                     style={styles.submitButtonStyle}

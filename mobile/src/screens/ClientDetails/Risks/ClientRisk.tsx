@@ -112,8 +112,6 @@ export const ClientRisk = (props: riskProps) => {
                     <Text style={styles.riskRequirementStyle}>{risk.goal}</Text>
                 </View>
 
-                <View style={styles.clientDetailsFinalView} />
-
                 <View>
                     <ClientRiskForm
                         riskData={risk}

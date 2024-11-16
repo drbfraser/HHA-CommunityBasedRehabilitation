@@ -75,6 +75,7 @@ const useStyles = () =>
             alignItems: "center",
         },
         submitButtonStyle: {
+            marginTop: 20,
             width: "100%",
         },
     });

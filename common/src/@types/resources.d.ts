@@ -578,6 +578,16 @@ interface Resources {
         "&Improve Sleep Quality",
         "&Eat Healthy"
       ],
+      "socialGoals": [
+        "&social goal 1",
+        "&social goal 2",
+        "&social goal 3"
+      ],
+      "healthGoals": [
+        "&health goal 1",
+        "&health goal 2",
+        "&health goal 3"
+      ],
       "nutrition": "&Nutrition",
       "mental": "&Mental",
       "improvements": "&Improvements",
@@ -1292,6 +1302,16 @@ interface Resources {
       "healthRequirements": [
         "-Improve Sleep Quality",
         "-Eat Healthy"
+      ],
+      "socialGoals": [
+        "-social goal 1",
+        "-social goal 2",
+        "-social goal 3"
+      ],
+      "healthGoals": [
+        "-health goal 1",
+        "-health goal 2",
+        "-health goal 3"
       ],
       "outcomes": "-Outcomes",
       "description": "-Description",

@@ -1,10 +1,4 @@
-import {
-    calls as mockedCalls,
-    get as mockGet,
-    MockResponseObject,
-    post as mockPost,
-    reset as resetMockedCalls,
-} from "fetch-mock";
+import fetchMock, { MockResponseObject } from "fetch-mock";
 import { Endpoint } from "../../src/util/endpoints";
 import { doLogin, doLogout, getAuthToken, isLoggedIn } from "../../src/util/auth";
 import jwt_decode from "jwt-decode";
@@ -19,6 +13,12 @@ import { testCommonConfig, testKeyValStorage } from "../testHelpers/testCommonCo
 import { addValidTokens, createFakeToken } from "../testHelpers/authTokenHelpers";
 import { commonConfiguration, reinitializeCommon } from "../../src/init";
 import { sleep } from "../../src/util/sleep";
+
+// todosd: temporary bindings to update fetch-mock usage - update these?
+const mockedCalls = fetchMock.calls.bind(fetchMock);
+const mockGet = fetchMock.get.bind(fetchMock);
+const mockPost = fetchMock.post.bind(fetchMock);
+const resetMockedCalls = fetchMock.reset.bind(fetchMock);
 
 const correctUsername = "user";
 const correctPassword = "password";

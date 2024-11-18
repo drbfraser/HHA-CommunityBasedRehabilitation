@@ -14,6 +14,7 @@ const unusedClientSummaryProps: Omit<
     full_name: "",
     zone: 0,
     user_id: 1,
+    // is_active: true, // todosd: remove?  context?
 };
 
 const createClientWithAllRisksAsGivenLevel = (riskLevel: RiskLevel): IClientSummary => {

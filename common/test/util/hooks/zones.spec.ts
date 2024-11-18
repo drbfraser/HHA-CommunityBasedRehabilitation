@@ -1,4 +1,5 @@
-import { get as mockGet, MockResponseObject, reset as resetFetchMocks } from "fetch-mock";
+// import { get as mockGet, MockResponseObject, reset as resetFetchMocks } from "fetch-mock";
+import fetchMock, { MockResponseObject } from "fetch-mock";
 import { Endpoint } from "../../../src/util/endpoints";
 import { renderHook } from "@testing-library/react-hooks";
 import { addValidTokens } from "../../testHelpers/authTokenHelpers";
@@ -6,6 +7,10 @@ import { fromNewCommonModule } from "../../testHelpers/testCommonConfiguration";
 import { getZones, IZone, TZoneMap, useZones } from "../../../src/util/hooks/zones";
 import { checkAuthHeader } from "../../testHelpers/mockServerHelpers";
 import { invalidateAllCachedAPIInternal } from "../../../src/util/hooks/cachedAPI";
+
+// todosd: temporary bindings to update fetch-mock usage - update these?
+const mockGet = fetchMock.get.bind(fetchMock);
+const resetFetchMocks = fetchMock.reset.bind(fetchMock);
 
 const testZoneMap: TZoneMap = new Map<number, string>([
     [0, "Zone #1"],

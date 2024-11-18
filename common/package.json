@@ -6,6 +6,8 @@
     },
     "scripts": {
         "test": "LANG=en-US jest",
+        "test-silent": "LANG=en-US jest --silent --detectOpenHandles",
+        "test-single": "LANG=en-US jest -t 'should load data from the mocked fetch' --detectOpenHandles",
         "test-ci": "LANG=en-US jest --ci --coverage --reporters=default --reporters=jest-junit",
         "i18n-interface": "i18next-resources-for-ts interface -i ./src/locales/ -o ./src/@types/resources.d.ts"
     },
@@ -21,7 +23,7 @@
     "devDependencies": {
         "@testing-library/react-hooks": "^7.0.1",
         "@types/fetch-mock": "^7.3.3",
-        "@types/jest": "^26.0.23",
+        "@types/jest": "^28.1.3",
         "@types/node": "^15.12.1",
         "@types/react": "^18.3.11",
         "base64url": "^3.0.1",

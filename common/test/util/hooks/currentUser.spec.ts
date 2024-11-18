@@ -1,9 +1,10 @@
-import {
-    calls as mockedCalls,
-    get as mockGet,
-    MockResponseObject,
-    reset as resetFetchMocks,
-} from "fetch-mock";
+// import {
+//     calls as mockedCalls,
+//     get as mockGet,
+//     MockResponseObject,
+//     reset as resetFetchMocks,
+// } from "fetch-mock";
+import fetchMock, { MockResponseObject } from "fetch-mock";
 import { APILoadError, Endpoint, TAPILoadError } from "../../../src/util/endpoints";
 import { renderHook } from "@testing-library/react-hooks";
 import { addValidTokens } from "../../testHelpers/authTokenHelpers";
@@ -13,8 +14,14 @@ import { IUser, UserRole } from "../../../src/util/users";
 import { getCurrentUser, useCurrentUser } from "../../../src/util/hooks/currentUser";
 import { invalidateAllCachedAPIInternal } from "../../../src/util/hooks/cachedAPI";
 
+// todosd: temporary bindings to update fetch-mock usage - update these?
+const mockedCalls = fetchMock.calls.bind(fetchMock);
+const mockGet = fetchMock.get.bind(fetchMock);
+const resetFetchMocks = fetchMock.reset.bind(fetchMock);
+
+
 const testUser: IUser = {
-    id: 1,
+    id: "1",
     username: "user",
     first_name: "John",
     last_name: "",

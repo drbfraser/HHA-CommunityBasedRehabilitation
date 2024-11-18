@@ -1,10 +1,11 @@
-import {
-    calls as mockedCalls,
-    get as mockGet,
-    MockResponseObject,
-    reset as resetFetchMocks,
-    resetBehavior as resetFetchMockBehavior,
-} from "fetch-mock";
+// import {
+//     calls as mockedCalls,
+//     get as mockGet,
+//     MockResponseObject,
+//     reset as resetFetchMocks,
+//     resetBehavior as resetFetchMockBehavior,
+// } from "fetch-mock";
+import fetchMock, { MockResponseObject } from "fetch-mock";
 import {
     APICacheData,
     invalidateAllCachedAPIInternal,
@@ -16,6 +17,12 @@ import { renderHook } from "@testing-library/react-hooks";
 import { sleep } from "../../../src/util/sleep";
 import { KeyValStorageProvider, reinitializeCommon } from "../../../src/init";
 import { testCommonConfig, testKeyValStorage } from "../../testHelpers/testCommonConfiguration";
+
+// todosd: temporary bindings to update fetch-mock usage - update these?
+const mockedCalls = fetchMock.calls.bind(fetchMock);
+const mockGet = fetchMock.get.bind(fetchMock);
+const resetFetchMocks = fetchMock.reset.bind(fetchMock);
+const resetFetchMockBehavior = fetchMock.resetBehavior.bind(fetchMock);
 
 interface ITestData {
     a: string;

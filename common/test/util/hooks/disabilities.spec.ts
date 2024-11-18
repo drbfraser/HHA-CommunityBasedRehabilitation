@@ -1,4 +1,5 @@
-import { get as mockGet, MockResponseObject, reset as resetFetchMocks } from "fetch-mock";
+// import { get as mockGet, MockResponseObject, reset as resetFetchMocks } from "fetch-mock";
+import fetchMock, { MockResponseObject } from "fetch-mock";
 import { Endpoint } from "../../../src/util/endpoints";
 import { renderHook } from "@testing-library/react-hooks";
 import {
@@ -7,11 +8,18 @@ import {
     IDisability,
     TDisabilityMap,
     useDisabilities,
+    useDisabilitiesTest,
 } from "../../../src/util/hooks/disabilities";
 import { addValidTokens } from "../../testHelpers/authTokenHelpers";
 import { fromNewCommonModule } from "../../testHelpers/testCommonConfiguration";
 import { checkAuthHeader } from "../../testHelpers/mockServerHelpers";
 import { invalidateAllCachedAPIInternal } from "../../../src/util/hooks/cachedAPI";
+import { TFunction } from "i18next";
+
+// todosd: temporary bindings to update fetch-mock usage - update these?
+const mockGet = fetchMock.get.bind(fetchMock);
+const resetFetchMocks = fetchMock.reset.bind(fetchMock);
+
 
 const ID_OF_OTHER_IN_TEST_DISABILITY_MAP = 4;
 
@@ -55,9 +63,15 @@ describe("disabilities.ts", () => {
         it("should load data from the mocked fetch", async () => {
             mockGetWithDefaultTestDisabilityMap();
 
+            // todosd: actual test with TFunction?
+            // const mockTFunction: TFunction = ((key: string) => {
+            //     return key;
+            // }) as TFunction;
+
             // TODO: Have a way to clear out the cache, because using Jest's isolateModules doesn't
             //  work well with testing these hooks with different local state.
-            const renderHookResult = renderHook(() => useDisabilities());
+            // const renderHookResult = renderHook(() => useDisabilities()); // todosd: remove or make work...
+            const renderHookResult = renderHook(() => useDisabilitiesTest());
             // The loading value is an empty map.
             expect(renderHookResult.result.current.size).toBe(0);
             await renderHookResult.waitForNextUpdate();

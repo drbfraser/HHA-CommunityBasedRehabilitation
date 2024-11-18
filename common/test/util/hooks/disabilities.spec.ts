@@ -8,6 +8,7 @@ import {
     IDisability,
     TDisabilityMap,
     useDisabilities,
+    useDisabilitiesTest,
 } from "../../../src/util/hooks/disabilities";
 import { addValidTokens } from "../../testHelpers/authTokenHelpers";
 import { fromNewCommonModule } from "../../testHelpers/testCommonConfiguration";
@@ -63,13 +64,14 @@ describe("disabilities.ts", () => {
             mockGetWithDefaultTestDisabilityMap();
 
             // todosd: actual test with TFunction?
-            const mockTFunction: TFunction = ((key: string) => {
-                return key;
-            }) as TFunction;
+            // const mockTFunction: TFunction = ((key: string) => {
+            //     return key;
+            // }) as TFunction;
 
             // TODO: Have a way to clear out the cache, because using Jest's isolateModules doesn't
             //  work well with testing these hooks with different local state.
-            const renderHookResult = renderHook(() => useDisabilities(mockTFunction));
+            // const renderHookResult = renderHook(() => useDisabilities()); // todosd: remove or make work...
+            const renderHookResult = renderHook(() => useDisabilitiesTest());
             // The loading value is an empty map.
             expect(renderHookResult.result.current.size).toBe(0);
             await renderHookResult.waitForNextUpdate();

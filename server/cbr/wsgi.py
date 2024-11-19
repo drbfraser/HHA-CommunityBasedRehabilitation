@@ -11,11 +11,11 @@ import eventlet  # concurrent networking library
 
 
 # replaces blocking function with async functions
-eventlet.monkey_patch(socket=True, select=True)
+eventlet.monkey_patch(socket=True, select=True, thread=True)
 
-import sys
+# import sys
 
-print("Import order after monkey_patch:", list(sys.modules.keys()))
+# print("Import order after monkey_patch:", list(sys.modules.keys()))
 
 import os
 
@@ -36,4 +36,5 @@ if DEBUG:
     # SocketIO requires a WSGI server to run. By default, when running in debug mode, there is no WSGI
     # server running. We don't want to run Gunicorn locally because it doesn't support hot reloading.
     LISTEN_PORT = int(os.environ.get("LISTEN_PORT"))
+    print("debug") # todosd
     eventlet.wsgi.server(eventlet.listen(("", LISTEN_PORT)), application)

@@ -11,7 +11,8 @@ import eventlet  # concurrent networking library
 
 
 # replaces blocking function with async functions
-eventlet.monkey_patch(socket=True, select=True, thread=True)
+# eventlet.monkey_patch(socket=True, select=True, thread=True)
+eventlet.monkey_patch(all=True)
 # eventlet.debug.hub_exceptions(True)
 
 import os

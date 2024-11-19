@@ -112,7 +112,11 @@ const ModalForm: FC<IProps> = ({
                 hasError={shouldShowError(formikProps, formikField)}
                 errorMsg={formikProps.errors[formikField] as string}
             >
-                <TouchableRipple onPress={onOpen} style={[styleProp, styles.button]}>
+                <TouchableRipple
+                    style={[styleProp, styles.button]}
+                    onPress={onOpen}
+                    disabled={disabled}
+                >
                     <>
                         <Text style={styles.buttonText}>{displayedFormValue}</Text>
                         <Icon name="edit" size={20} style={styles.editIcon} />

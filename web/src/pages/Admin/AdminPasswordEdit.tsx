@@ -1,9 +1,9 @@
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Field, Form, Formik } from "formik";
+import { Field, Formik } from "formik";
 import { TextField } from "formik-mui";
-import { Alert, Box, Button, Grid, Skeleton } from "@mui/material";
+import { Alert, Button, Grid, Skeleton } from "@mui/material";
 
 import { handleUpdatePassword } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
@@ -15,7 +15,7 @@ import {
     adminPasswordInitialValues,
     adminEditPasswordValidationSchema,
 } from "@cbr/common/forms/Admin/adminFields";
-import { adminStyles } from "./Admin.styles";
+import { adminStyles, Container, StyledForm } from "./Admin.styles";
 import { useUser } from "util/hooks/useUser";
 
 const AdminPasswordEdit = () => {
@@ -49,15 +49,14 @@ const AdminPasswordEdit = () => {
             }}
         >
             {({ isSubmitting }) => (
-                <Box sx={adminStyles.container}>
-                    <br />
+                <Container>
                     <b>{t("general.id")}</b>
                     <p>{userId}</p>
 
                     <b>{t("admin.username")}</b>
                     <p>{user.username}</p>
 
-                    <Form>
+                    <StyledForm>
                         <Grid container spacing={2}>
                             <Grid item md={7} xs={12}>
                                 <Field
@@ -81,9 +80,7 @@ const AdminPasswordEdit = () => {
                                     fullWidth
                                 />
                             </Grid>
-                            <br />
                         </Grid>
-                        <br />
 
                         <Grid container direction="row" spacing={2} justifyContent="flex-end">
                             <Grid item>
@@ -102,8 +99,8 @@ const AdminPasswordEdit = () => {
                                 </Button>
                             </Grid>
                         </Grid>
-                    </Form>
-                </Box>
+                    </StyledForm>
+                </Container>
             )}
         </Formik>
     ) : (

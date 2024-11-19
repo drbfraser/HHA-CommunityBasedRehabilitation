@@ -1,11 +1,13 @@
 import { IRisk, RiskType } from "@cbr/common";
 import { TFunction } from "i18next";
 
+const DELIMITER = ",\n";
+
 export const generateFormValue = (fields: Array<[string, boolean]>, freeformText: string) => {
     const formValue = fields
         .filter(([_, checked]) => checked)
         .map(([canonicalField, _]) => canonicalField)
-        .join(",\n");
+        .join(DELIMITER);
 
     if (freeformText) {
         return formValue ? formValue.concat(`,\n${freeformText}`) : freeformText;
@@ -21,7 +23,7 @@ const parseInitialValues = (
     rawText: string,
     canonicalFields: string[]
 ): [checkedItems: string[], otherText: string] => {
-    const items = rawText.split(",\n");
+    const items = rawText.split(DELIMITER);
 
     const checkedItems = items.filter((item) => canonicalFields.includes(item));
     const otherText = items.filter((item) => !canonicalFields.includes(item)).join("\n");
@@ -69,7 +71,7 @@ const getModalFormDisplay = (t: TFunction, translationFieldsKey: any, rawText: s
 
 /**
  * @Returns what a Modal Form component would display as its value to the user
- * if it is for requirements. E.g., health requirements, social requirements, etc..
+ * if it is for **requirements**. E.g., health requirements, social requirements, etc..
  */
 export const getModalFormRequirementsDisplay = (t: TFunction, risk: IRisk): string => {
     // can consider extracting this mapping of translated arrays outside of this module
@@ -98,7 +100,7 @@ export const getModalFormRequirementsDisplay = (t: TFunction, risk: IRisk): stri
 
 /**
  * @Returns what a Modal Form component would display as its value to the user
- * if it is for goals. E.g., health goals, social goals, etc..
+ * if it is for **goals**. E.g., health goals, social goals, etc..
  */
 export const getModalFormGoalsDisplay = (t: TFunction, risk: IRisk): string => {
     // can consider extracting this mapping of translated arrays outside of this module

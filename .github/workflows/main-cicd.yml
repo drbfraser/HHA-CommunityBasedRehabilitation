@@ -52,124 +52,125 @@ jobs:
     #   run:  npm run test-ci
     #   working-directory: /isolated_build/repo/common
 
-  build-mobile:
-    runs-on: [self-hosted, docker]
-    container:
-      # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
-      # TODO: Update this version to support Android tools version 34?
-      # image: reactnativecommunity/react-native-android:6.2
-      # todosd: bump this more?  for now, support for Node 18.20
-      image: reactnativecommunity/react-native-android:13.2.1
-    timeout-minutes: 60
-    env:
-      # Keep Gradle's settings file out of home directory (mounted from host)
-      GRADLE_USER_HOME: /isolated_build/.gradle
-    steps:
-    - name: Checkout code into container
-      uses: bfraser/cicd/actions/checkout@v1
-      with: 
-        path: /isolated_build/repo/
+    # todosd: reenable
+  # build-mobile:
+  #   runs-on: [self-hosted, docker]
+  #   container:
+  #     # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
+  #     # TODO: Update this version to support Android tools version 34?
+  #     # image: reactnativecommunity/react-native-android:6.2
+  #     # todosd: bump this more?  for now, support for Node 18.20
+  #     image: reactnativecommunity/react-native-android:13.2.1
+  #   timeout-minutes: 60
+  #   env:
+  #     # Keep Gradle's settings file out of home directory (mounted from host)
+  #     GRADLE_USER_HOME: /isolated_build/.gradle
+  #   steps:
+  #   - name: Checkout code into container
+  #     uses: bfraser/cicd/actions/checkout@v1
+  #     with: 
+  #       path: /isolated_build/repo/
 
-    - name: Build Date String
-      id:   date_str
-      run:  echo "::set-output name=stdout::$(date -u +%Y-%m-%d-%H%M%S%z)"
+  #   - name: Build Date String
+  #     id:   date_str
+  #     run:  echo "::set-output name=stdout::$(date -u +%Y-%m-%d-%H%M%S%z)"
 
-    - name: Setup Release Keystore for Play Store
-      run:  |
-        set -x  # echo commands names
-        mkdir -p $GRADLE_USER_HOME
-        echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_GRADLEPROP }}" > $GRADLE_USER_HOME/gradle.properties
-        echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_FILE_B64 }}" > ./cbr-upload-key.keystore.b64
-        base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
-        echo "Date String: ${{ steps.date_str.outputs.stdout }}"
-      working-directory: /isolated_build/repo/mobile/android/app
+  #   - name: Setup Release Keystore for Play Store
+  #     run:  |
+  #       set -x  # echo commands names
+  #       mkdir -p $GRADLE_USER_HOME
+  #       echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_GRADLEPROP }}" > $GRADLE_USER_HOME/gradle.properties
+  #       echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_FILE_B64 }}" > ./cbr-upload-key.keystore.b64
+  #       base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
+  #       echo "Date String: ${{ steps.date_str.outputs.stdout }}"
+  #     working-directory: /isolated_build/repo/mobile/android/app
 
-    - name: Install NPM version & Build Common
-      run:  |
-        set -x  # echo commands names
-        npm install -g npm@$NPM_VERSION
-        npm ci
-        npx tsc
-      working-directory: /isolated_build/repo/common
+  #   - name: Install NPM version & Build Common
+  #     run:  |
+  #       set -x  # echo commands names
+  #       npm install -g npm@$NPM_VERSION
+  #       npm ci
+  #       npx tsc
+  #     working-directory: /isolated_build/repo/common
 
-    - name: Prepair mobile build environment
-      run:  |
-        npm uninstall @cbr/common
-        COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
-        npm install $COMMON_PACK_NAME
-        npm ci
-        npx prettier --check .
-      working-directory: /isolated_build/repo/mobile
+  #   - name: Prepair mobile build environment
+  #     run:  |
+  #       npm uninstall @cbr/common
+  #       COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
+  #       npm install $COMMON_PACK_NAME
+  #       npm ci
+  #       npx prettier --check .
+  #     working-directory: /isolated_build/repo/mobile
 
-    - name: Build APK (Targeting Development Server)
-      run:  |
-        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        npm run build dev
-      working-directory: /isolated_build/repo/mobile
+  #   - name: Build APK (Targeting Development Server)
+  #     run:  |
+  #       rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+  #       npm run build dev
+  #     working-directory: /isolated_build/repo/mobile
 
-    # NOTE: Artifact upload disabled because builds from the CI/CD server seem
-    #       to not work. Specifically, creating a client on mobile and then
-    #       trying to sync results in a "Inalid Date" sync error.
-    #       Since these builds cannot be trusted, they are disabled.
-    #       Instead, the builds must be done locally.
-    # - uses: actions/upload-artifact@v3
-    #   with:
-    #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Dev.apk"
-    #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     retention-days: 60
-    #     if-no-files-found: error
+  #   # NOTE: Artifact upload disabled because builds from the CI/CD server seem
+  #   #       to not work. Specifically, creating a client on mobile and then
+  #   #       trying to sync results in a "Inalid Date" sync error.
+  #   #       Since these builds cannot be trusted, they are disabled.
+  #   #       Instead, the builds must be done locally.
+  #   # - uses: actions/upload-artifact@v3
+  #   #   with:
+  #   #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Dev.apk"
+  #   #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+  #   #     retention-days: 60
+  #   #     if-no-files-found: error
 
-    # TODO: Re-enable the building of the .AAB file for deployment.
-    # Removed just to speed up the CI/CD pipeline while we are not deploying to the Play Store.
-    # - name: Build AAB for Play Store (Targeting Production Server)
-    #   run:  |
-    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
-    #     npm run bundle prod
-    #   working-directory: /isolated_build/repo/mobile
-    # - uses: actions/upload-artifact@v3
-    #   with:
-    #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.aab"
-    #     path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
-    #     retention-days: 60
-    #     if-no-files-found: error
+  #   # TODO: Re-enable the building of the .AAB file for deployment.
+  #   # Removed just to speed up the CI/CD pipeline while we are not deploying to the Play Store.
+  #   # - name: Build AAB for Play Store (Targeting Production Server)
+  #   #   run:  |
+  #   #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
+  #   #     npm run bundle prod
+  #   #   working-directory: /isolated_build/repo/mobile
+  #   # - uses: actions/upload-artifact@v3
+  #   #   with:
+  #   #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.aab"
+  #   #     path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
+  #   #     retention-days: 60
+  #   #     if-no-files-found: error
   
-    # # Only build the APK targeting the development server because it can be retargeted to other servers.
-    # # (This saves about 10 minutes on the CI/CD build because the SFU GitHub server is very slow on upload)
-    # - name: Build APK (Targeting Local Server)
-    #   run:  |
-    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     npm run build local
-    #   working-directory: /isolated_build/repo/mobile
-    # - uses: actions/upload-artifact@v3
-    #   with:
-    #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Local.apk"
-    #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     retention-days: 60
-    #     if-no-files-found: error
+  #   # # Only build the APK targeting the development server because it can be retargeted to other servers.
+  #   # # (This saves about 10 minutes on the CI/CD build because the SFU GitHub server is very slow on upload)
+  #   # - name: Build APK (Targeting Local Server)
+  #   #   run:  |
+  #   #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+  #   #     npm run build local
+  #   #   working-directory: /isolated_build/repo/mobile
+  #   # - uses: actions/upload-artifact@v3
+  #   #   with:
+  #   #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Local.apk"
+  #   #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+  #   #     retention-days: 60
+  #   #     if-no-files-found: error
   
-    # - name: Build APK (Targeting Staging Server)
-    #   run:  |
-    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     npm run build staging
-    #   working-directory: /isolated_build/repo/mobile
-    # - uses: actions/upload-artifact@v3
-    #   with:
-    #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Staging.apk"
-    #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     retention-days: 60
-    #     if-no-files-found: error
+  #   # - name: Build APK (Targeting Staging Server)
+  #   #   run:  |
+  #   #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+  #   #     npm run build staging
+  #   #   working-directory: /isolated_build/repo/mobile
+  #   # - uses: actions/upload-artifact@v3
+  #   #   with:
+  #   #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Staging.apk"
+  #   #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+  #   #     retention-days: 60
+  #   #     if-no-files-found: error
 
-    # - name: Build APK (Targeting Production Server)
-    #   run:  |
-    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     npm run build prod
-    #   working-directory: /isolated_build/repo/mobile
-    # - uses: actions/upload-artifact@v3
-    #   with:
-    #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.apk"
-    #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     retention-days: 60
-    #     if-no-files-found: error
+  #   # - name: Build APK (Targeting Production Server)
+  #   #   run:  |
+  #   #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+  #   #     npm run build prod
+  #   #   working-directory: /isolated_build/repo/mobile
+  #   # - uses: actions/upload-artifact@v3
+  #   #   with:
+  #   #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.apk"
+  #   #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+  #   #     retention-days: 60
+  #   #     if-no-files-found: error
 
   build-web:
     runs-on: [self-hosted, docker]

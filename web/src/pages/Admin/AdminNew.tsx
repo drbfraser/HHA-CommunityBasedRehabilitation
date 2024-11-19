@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
-import { Box, FormControl, MenuItem, Grid, Button } from "@mui/material";
+import { Box, FormControl, MenuItem, Grid, Button, styled } from "@mui/material";
 
 import history from "@cbr/common/util/history";
 import { handleNewUserSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
@@ -15,7 +15,13 @@ import {
     adminUserInitialValues,
     newUserValidationSchema,
 } from "@cbr/common/forms/Admin/adminFields";
-import { adminStyles } from "./Admin.styles";
+
+const Container = styled(Box)({
+    padding: "1rem",
+    display: "flex",
+    flexDirection: "column",
+    gap: "2rem",
+});
 
 const AdminNew = () => {
     const zones = useZones();
@@ -38,8 +44,8 @@ const AdminNew = () => {
             }}
         >
             {({ isSubmitting }) => (
-                <Box sx={adminStyles.container}>
-                    <Form>
+                <Form>
+                    <Container>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>
                                 <Field
@@ -141,35 +147,27 @@ const AdminNew = () => {
                                 />
                             </Grid>
                         </Grid>
-                        <br />
 
-                        <div>
-                            <Grid container justifyContent="flex-end" spacing={2}>
-                                <Grid item>
-                                    <Button
-                                        color="primary"
-                                        variant="contained"
-                                        type="submit"
-                                        disabled={isSubmitting}
-                                    >
-                                        {t("general.create")}
-                                    </Button>
-                                </Grid>
-
-                                <Grid item>
-                                    <Button
-                                        color="primary"
-                                        variant="outlined"
-                                        onClick={history.goBack}
-                                    >
-                                        {t("general.cancel")}
-                                    </Button>
-                                </Grid>
+                        <Grid container justifyContent="flex-end" spacing={2}>
+                            <Grid item>
+                                <Button
+                                    color="primary"
+                                    variant="contained"
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                >
+                                    {t("general.create")}
+                                </Button>
                             </Grid>
-                            <br></br>
-                        </div>
-                    </Form>
-                </Box>
+
+                            <Grid item>
+                                <Button color="primary" variant="outlined" onClick={history.goBack}>
+                                    {t("general.cancel")}
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Container>
+                </Form>
             )}
         </Formik>
     );

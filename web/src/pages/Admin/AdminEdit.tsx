@@ -1,9 +1,9 @@
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Field, Form, Formik } from "formik";
+import { Field, Formik } from "formik";
 import { TextField } from "formik-mui";
-import { Alert, Box, Button, FormControl, Grid, MenuItem, Skeleton } from "@mui/material";
+import { Alert, Button, FormControl, Grid, MenuItem, Skeleton } from "@mui/material";
 
 import { handleUserEditSubmit } from "@cbr/common/forms/Admin/adminFormsHandler";
 import { APIFetchFailError } from "@cbr/common/util/endpoints";
@@ -17,7 +17,7 @@ import {
 } from "@cbr/common/forms/Admin/adminFields";
 import history from "@cbr/common/util/history";
 import { useUser } from "util/hooks/useUser";
-import { adminStyles } from "./Admin.styles";
+import { adminStyles, Container, StyledForm } from "./Admin.styles";
 
 const AdminEdit = () => {
     const { t } = useTranslation();
@@ -50,13 +50,13 @@ const AdminEdit = () => {
             }}
         >
             {({ values, setFieldValue, isSubmitting }) => (
-                <Box sx={adminStyles.container}>
+                <Container>
                     <b>{t("general.id")}</b>
                     <p>{userId}</p>
                     <b>{t("admin.username")}</b>
                     <p>{user.username}</p>
 
-                    <Form>
+                    <StyledForm>
                         <Grid container spacing={2}>
                             <Grid item md={6} xs={12}>
                                 <Field
@@ -127,11 +127,11 @@ const AdminEdit = () => {
                                 </FormControl>
                             </Grid>
                         </Grid>
-                        <br />
 
-                        <b>{t("admin.status")}</b>
-                        <p>{values.is_active ? t("general.active") : t("general.disabled")}</p>
-                        <br />
+                        <div>
+                            <b>{t("admin.status")}</b>
+                            <p>{values.is_active ? t("general.active") : t("general.disabled")}</p>
+                        </div>
 
                         <Grid
                             container
@@ -170,8 +170,8 @@ const AdminEdit = () => {
                                 </Button>
                             </Grid>
                         </Grid>
-                    </Form>
-                </Box>
+                    </StyledForm>
+                </Container>
             )}
         </Formik>
     ) : (

@@ -1,5 +1,6 @@
 import { themeColors } from "@cbr/common/util/colors";
-import { SxProps, Theme } from "@mui/material";
+import { Box, styled, SxProps, Theme } from "@mui/material";
+import { Form } from "formik";
 
 export const adminStyles: Record<string, SxProps<Theme>> = {
     container: {
@@ -27,3 +28,13 @@ export const adminStyles: Record<string, SxProps<Theme>> = {
         marginRight: "8px",
     },
 };
+
+export const Container = styled(Box)({
+    padding: "1rem",
+});
+
+export const StyledForm = styled(Form)({
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+});

@@ -9,7 +9,7 @@ interface IProps {
     children: ReactNode;
 }
 
-const Modal: FC<IProps> = ({ label, visible, onClose, children }) => {
+const ModalWindow: FC<IProps> = ({ label, visible, onClose, children }) => {
     const styles = useStyles();
 
     return (
@@ -30,4 +30,4 @@ const Modal: FC<IProps> = ({ label, visible, onClose, children }) => {
     );
 };
 
-export default Modal;
+export default ModalWindow;

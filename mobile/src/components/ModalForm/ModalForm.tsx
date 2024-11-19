@@ -1,46 +1,38 @@
 import React, { FC, useState } from "react";
-import { TextInput, Text, TouchableRipple, HelperText } from "react-native-paper";
+import { StyleProp, ViewStyle } from "react-native";
+import { TextInput, Text, TouchableRipple } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { FormikProps } from "formik";
 
-import TextCheckBox from "../TextCheckBox/TextCheckBox";
 import { shouldShowError } from "../../util/formikUtil";
+import TextCheckBox from "../TextCheckBox/TextCheckBox";
 import useStyles from "./ModalForm.styles";
-import Modal from "./components/Modal";
+import ModalWindow from "./components/ModalWindow";
 import ModalTrigger from "./components/ModalTrigger";
 import useFormValueGenerator from "./hooks/useFormValueGenerator";
 import { initializeCheckedItems, initializeFreeformText } from "./utils";
-import { ScrollView, StyleProp, ViewStyle } from "react-native";
-
-// encapsulate conversion between languages into modal form
-// database gives text in english and want to show Bari
-// take english strings and swap to Bari if possible
-// database will always store english
-//
-// new args:
-// 1. current value to populate with
-// 2. canonical array of fields in english
-// 3. array of checkboxes in current selected langauge
 
 interface IProps {
     label: string;
     formikField: string;
     formikProps: FormikProps<any>;
     /**
-     *  The fields in the default lanugage (English).
-     *  This is for for saving only English strings into the database.
-     *  This array should have a 1-to-1 correspondence with the `translatedFields` array.
+     *  The fields in the default lanugage (English),
+     *  for saving only English strings into the database.
+     *
+     *  This array should have a **1-to-1** correspondence with the `translatedFields` array.
      */
     canonicalFields: string[];
     /**
-     * The fields in the currently selected langauge.
-     * This is for displaying to the user.
-     * This array should have a 1-to-1 correspondence with the `canonicalFields` array.
+     * The fields in the currently selected langauge, for displaying to the user.
+     *
+     * This array should have a **1-to-1** correspondence with the `canonicalFields` array.
      */
     localizedFields: string[];
     /**
      * Used to initialize the form with pre-populated values.
      * The expected format is a string of items delimited by `",\n"`.
+     *
      * Example: "See Friends,\nVolunteer,\nother text"
      */
     defaultValue?: string;
@@ -89,7 +81,7 @@ const ModalForm: FC<IProps> = ({
 
     return (
         <>
-            <Modal label={label} visible={visible} onClose={onClose}>
+            <ModalWindow label={label} visible={visible} onClose={onClose}>
                 {localizedFields.map((label, index) => (
                     <TextCheckBox
                         key={index}
@@ -110,7 +102,7 @@ const ModalForm: FC<IProps> = ({
                         onChangeText={(text) => setFreeformText(text)}
                     />
                 )}
-            </Modal>
+            </ModalWindow>
 
             <ModalTrigger
                 label={label}

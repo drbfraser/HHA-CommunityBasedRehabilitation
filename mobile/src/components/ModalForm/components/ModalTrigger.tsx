@@ -23,7 +23,6 @@ const ModalTrigger: FC<IProps> = ({
     return (
         <View>
             <TextInput
-                // style={{ overflow: "scroll" }}
                 mode="outlined"
                 disabled={disabled}
                 label={label}

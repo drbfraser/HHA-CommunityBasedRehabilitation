@@ -67,8 +67,8 @@ export const ClientRisk = (props: riskProps) => {
 
                 <View>
                     {/* TODO: Remove after demo */}
-                    <Text>DEMO ONLY: underlying value = </Text>
-                    <Text>{risk.requirement}</Text>
+                    <Text style={{ color: "red" }}>DEMO ONLY: underlying value = </Text>
+                    <Text style={{ color: "red" }}>{risk.requirement}</Text>
 
                     <Text style={styles.riskHeaderStyle}>{t("general.requirements")}: </Text>
                     <Text style={styles.riskRequirementStyle}>
@@ -77,8 +77,8 @@ export const ClientRisk = (props: riskProps) => {
                 </View>
                 <View>
                     {/* TODO: Remove after demo */}
-                    <Text>DEMO ONLY: underlying value = </Text>
-                    <Text>{risk.goal}</Text>
+                    <Text style={{ color: "red" }}>DEMO ONLY: underlying value = </Text>
+                    <Text style={{ color: "red" }}>{risk.goal}</Text>
 
                     <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
                     <Text style={styles.riskRequirementStyle}>

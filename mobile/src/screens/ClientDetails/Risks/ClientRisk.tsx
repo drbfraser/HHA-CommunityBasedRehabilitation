@@ -66,12 +66,20 @@ export const ClientRisk = (props: riskProps) => {
                 </View>
 
                 <View>
+                    {/* TODO: Remove after demo */}
+                    <Text>DEMO ONLY: underlying value = </Text>
+                    <Text>{risk.requirement}</Text>
+
                     <Text style={styles.riskHeaderStyle}>{t("general.requirements")}: </Text>
                     <Text style={styles.riskRequirementStyle}>
                         {getModalFormRequirementsDisplay(t, risk)}
                     </Text>
                 </View>
                 <View>
+                    {/* TODO: Remove after demo */}
+                    <Text>DEMO ONLY: underlying value = </Text>
+                    <Text>{risk.goal}</Text>
+
                     <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
                     <Text style={styles.riskRequirementStyle}>
                         {getModalFormGoalsDisplay(t, risk)}

@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
 """
 
 import eventlet  # concurrent networking library
+
 # replaces blocking function with async functions
 eventlet.monkey_patch(socket=True, select=True)
 # eventlet.monkey_patch(all=True)

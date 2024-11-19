@@ -82,3 +82,41 @@ refreshArrays();
 i18n.on("languageChanged", () => {
     refreshArrays();
 });
+
+export const getRiskRequirementsTranslationKey = (riskType: RiskType): string => {
+    // TODO: Use real values for requirements. Current values are only placeholders
+    switch (riskType) {
+        case RiskType.SOCIAL:
+            return "newVisit.socialRequirements";
+        case RiskType.HEALTH:
+            return "newVisit.healthRequirements";
+        case RiskType.MENTAL:
+            return "newVisit.healthRequirements";
+        case RiskType.NUTRITION:
+            return "newVisit.healthRequirements";
+        case RiskType.EDUCATION:
+            return "newVisit.healthRequirements";
+        default:
+            console.error("unknown risk type:", riskType);
+            return "";
+    }
+};
+
+export const getRiskGoalsTranslationKey = (riskType: RiskType): string => {
+    // TODO: Use real values for requirements. Current values are only placeholders
+    switch (riskType) {
+        case RiskType.SOCIAL:
+            return "newVisit.socialGoals";
+        case RiskType.HEALTH:
+            return "newVisit.healthGoals";
+        case RiskType.MENTAL:
+            return "newVisit.healthGoals";
+        case RiskType.NUTRITION:
+            return "newVisit.healthGoals";
+        case RiskType.EDUCATION:
+            return "newVisit.healthGoals";
+        default:
+            console.error("unknown risk type:", riskType);
+            return "";
+    }
+};

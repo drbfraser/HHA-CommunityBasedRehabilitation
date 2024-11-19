@@ -1,4 +1,9 @@
-import { IRisk, RiskType } from "@cbr/common";
+import {
+    getRiskGoalsTranslationKey,
+    getRiskRequirementsTranslationKey,
+    IRisk,
+    RiskType,
+} from "@cbr/common";
 import { TFunction } from "i18next";
 
 const DELIMITER = ",\n";
@@ -74,27 +79,7 @@ const getModalFormDisplay = (t: TFunction, translationFieldsKey: any, rawText: s
  * if it is for **requirements**. E.g., health requirements, social requirements, etc..
  */
 export const getModalFormRequirementsDisplay = (t: TFunction, risk: IRisk): string => {
-    // can consider extracting this mapping of translated arrays outside of this module
-    // so that other code that use the modal form component can use this
-    let translatedRequirementsKey;
-    switch (risk.risk_type) {
-        case RiskType.SOCIAL:
-            translatedRequirementsKey = "newVisit.socialRequirements";
-            break;
-        case RiskType.HEALTH:
-            translatedRequirementsKey = "newVisit.healthRequirements";
-            break;
-        case RiskType.MENTAL:
-            translatedRequirementsKey = "newVisit.healthRequirements";
-            break;
-        case RiskType.NUTRITION:
-            translatedRequirementsKey = "newVisit.healthRequirements";
-            break;
-        case RiskType.EDUCATION:
-            translatedRequirementsKey = "newVisit.healthRequirements";
-            break;
-    }
-
+    const translatedRequirementsKey = getRiskRequirementsTranslationKey(risk.risk_type);
     return getModalFormDisplay(t, translatedRequirementsKey, risk.requirement);
 };
 
@@ -103,26 +88,6 @@ export const getModalFormRequirementsDisplay = (t: TFunction, risk: IRisk): stri
  * if it is for **goals**. E.g., health goals, social goals, etc..
  */
 export const getModalFormGoalsDisplay = (t: TFunction, risk: IRisk): string => {
-    // can consider extracting this mapping of translated arrays outside of this module
-    // so that other code that use the modal form component can use this
-    let translatedGoalsKey;
-    switch (risk.risk_type) {
-        case RiskType.SOCIAL:
-            translatedGoalsKey = "newVisit.socialGoals";
-            break;
-        case RiskType.HEALTH:
-            translatedGoalsKey = "newVisit.healthGoals";
-            break;
-        case RiskType.MENTAL:
-            translatedGoalsKey = "newVisit.healthGoals";
-            break;
-        case RiskType.NUTRITION:
-            translatedGoalsKey = "newVisit.healthGoals";
-            break;
-        case RiskType.EDUCATION:
-            translatedGoalsKey = "newVisit.healthGoals";
-            break;
-    }
-
+    const translatedGoalsKey = getRiskGoalsTranslationKey(risk.risk_type);
     return getModalFormDisplay(t, translatedGoalsKey, risk.goal);
 };

@@ -16,14 +16,26 @@ from django.core.wsgi import get_wsgi_application
 from cbr.settings import DEBUG
 from cbr.sockets import sio
 
-# define environment variable before monkey_patch
+# define environment variable (NOTE: was previously done before monkey_patch)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cbr.settings")
-
-# replaces blocking function with async functions
-eventlet.monkey_patch(socket=True, select=True)
 
 application = get_wsgi_application()
 application = socketio.WSGIApp(sio, application)
+
+# TEST
+import socket
+import select
+
+if eventlet.patcher.is_monkey_patched(socket):
+    print("socket is correctly monkey_patched")
+else:
+    print("socket is NOT correctly monkey_patched")
+
+if eventlet.patcher.is_monkey_patched(select):
+    print("select is correctly monkey_patched")
+else:
+    print("select is NOT correctly monkey_patched")
+# /TEST
 
 if DEBUG:
     # SocketIO requires a WSGI server to run. By default, when running in debug mode, there is no WSGI

@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
+
+import eventlet  # concurrent networking library
+
+# replaces blocking function with async functions - MUST be called before any other imports
+eventlet.monkey_patch(socket=True, select=True)
+
 import os
 import sys
 

@@ -14,6 +14,7 @@ import eventlet  # concurrent networking library
 eventlet.monkey_patch(socket=True, select=True)
 
 import sys
+
 print("Import order after monkey_patch:", list(sys.modules.keys()))
 
 import os
@@ -26,7 +27,6 @@ import eventlet.wsgi
 from django.core.wsgi import get_wsgi_application
 from cbr.settings import DEBUG
 from cbr.sockets import sio
-
 
 
 application = get_wsgi_application()

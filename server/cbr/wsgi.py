@@ -9,20 +9,25 @@ https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
 
 import eventlet  # concurrent networking library
 
+
 # replaces blocking function with async functions
 eventlet.monkey_patch(socket=True, select=True)
 
-import os
-import socketio
+import sys
+print("Import order after monkey_patch:", list(sys.modules.keys()))
 
+import os
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cbr.settings")
+
+import socketio
 import eventlet.wsgi
 
 from django.core.wsgi import get_wsgi_application
 from cbr.settings import DEBUG
 from cbr.sockets import sio
 
-# define environment variable before monkey_patch
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cbr.settings")
+
 
 application = get_wsgi_application()
 application = socketio.WSGIApp(sio, application)

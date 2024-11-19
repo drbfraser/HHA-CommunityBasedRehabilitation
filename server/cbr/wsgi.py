@@ -7,9 +7,14 @@ For more information on this file, see
 https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
 """
 
+import eventlet  # concurrent networking library
+
+# replaces blocking function with async functions
+eventlet.monkey_patch(socket=True, select=True)
+
 import os
 import socketio
-import eventlet  # concurrent networking library
+
 import eventlet.wsgi
 
 from django.core.wsgi import get_wsgi_application
@@ -18,9 +23,6 @@ from cbr.sockets import sio
 
 # define environment variable before monkey_patch
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cbr.settings")
-
-# replaces blocking function with async functions
-eventlet.monkey_patch(socket=True, select=True)
 
 application = get_wsgi_application()
 application = socketio.WSGIApp(sio, application)

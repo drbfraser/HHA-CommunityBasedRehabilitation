@@ -14,10 +14,6 @@ import eventlet  # concurrent networking library
 eventlet.monkey_patch(socket=True, select=True, thread=True)
 eventlet.debug.hub_exceptions(True)
 
-# import sys
-
-# print("Import order after monkey_patch:", list(sys.modules.keys()))
-
 import os
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cbr.settings")
@@ -37,5 +33,5 @@ if DEBUG:
     # SocketIO requires a WSGI server to run. By default, when running in debug mode, there is no WSGI
     # server running. We don't want to run Gunicorn locally because it doesn't support hot reloading.
     LISTEN_PORT = int(os.environ.get("LISTEN_PORT"))
-    print("debug") # todosd
+    print("debug")  # todosd
     eventlet.wsgi.server(eventlet.listen(("", LISTEN_PORT)), application)

@@ -1,3 +1,7 @@
+# todosd: remove
+import eventlet
+eventlet.monkey_patch(socket=True, select=True)
+
 from cbr_api.sql import getUnreadAlertListByUserId
 import socketio
 from cbr.settings import DEBUG, ALLOWED_HOSTS

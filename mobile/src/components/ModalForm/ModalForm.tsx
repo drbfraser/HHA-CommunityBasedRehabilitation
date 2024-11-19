@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react";
 import { StyleProp, ViewStyle } from "react-native";
+import { useTranslation } from "react-i18next";
 import { TextInput, Text, TouchableRipple } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { FormikProps } from "formik";
@@ -55,6 +56,7 @@ const ModalForm: FC<IProps> = ({
     console.assert(canonicalFields.length == localizedFields.length);
 
     const styles = useStyles();
+    const { t } = useTranslation();
     const [visible, setVisible] = useState(false);
     const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(
         initializeCheckedItems(defaultValue, canonicalFields, localizedFields)
@@ -97,7 +99,7 @@ const ModalForm: FC<IProps> = ({
                 {hasFreeformText && (
                     <TextInput
                         mode="outlined"
-                        label="Other"
+                        label={t("survey.other")}
                         value={freeformText}
                         onChangeText={(text) => setFreeformText(text)}
                     />

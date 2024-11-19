@@ -1,4 +1,5 @@
 import React, { FC, ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { Button, Dialog, Divider, Portal } from "react-native-paper";
 import useStyles from "../ModalForm.styles";
 
@@ -10,6 +11,7 @@ interface IProps {
 }
 
 const ModalWindow: FC<IProps> = ({ label, visible, onClose, children }) => {
+    const { t } = useTranslation();
     const styles = useStyles();
 
     return (
@@ -22,7 +24,7 @@ const ModalWindow: FC<IProps> = ({ label, visible, onClose, children }) => {
 
                 <Dialog.Actions>
                     <Button onPress={onClose} labelStyle={styles.closeButtonText}>
-                        Ok
+                        {t("general.ok")}
                     </Button>
                 </Dialog.Actions>
             </Dialog>

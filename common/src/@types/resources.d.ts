@@ -607,19 +607,19 @@ interface Resources {
       ],
       "PLACEHOLDER-mentalGoals": [
         "&Achieved",
-        "In progress",
+        "&In progress",
         "&Not Achieved",
         "&No goals"
       ],
       "PLACEHOLDER-healthGoals": [
         "&Achieved",
-        "In progress",
+        "&In progress",
         "&Not Achieved",
         "&No goals"
       ],
       "PLACEHOLDER-educationGoals": [
         "&Achieved",
-        "In progress",
+        "&In progress",
         "&Not Achieved",
         "&No goals"
       ],
@@ -1367,19 +1367,19 @@ interface Resources {
       ],
       "PLACEHOLDER-mentalGoals": [
         "-Achieved",
-        "In progress",
+        "-In progress",
         "-Not Achieved",
         "-No goals"
       ],
       "PLACEHOLDER-healthGoals": [
         "-Achieved",
-        "In progress",
+        "-In progress",
         "-Not Achieved",
         "-No goals"
       ],
       "PLACEHOLDER-educationGoals": [
         "-Achieved",
-        "In progress",
+        "-In progress",
         "-Not Achieved",
         "-No goals"
       ],

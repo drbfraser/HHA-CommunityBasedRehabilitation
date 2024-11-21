@@ -10,8 +10,8 @@ const useFormValueGenerator = (
     const [displayedFormValue, setDisplayText] = useState("");
 
     useEffect(() => {
-        const fieldsInEnglish: Array<[string, boolean]> = Object.entries(checkedItems).map(
-            ([_, checked], i) => [canonicalFields[i], checked]
+        const fieldsInEnglish: Array<[string, boolean]> = Object.values(checkedItems).map(
+            (isChecked, i) => [canonicalFields[i], isChecked]
         );
         const translatedFields = Object.entries(checkedItems);
 

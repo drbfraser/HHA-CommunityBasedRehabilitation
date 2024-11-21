@@ -15,7 +15,6 @@ const useStyles = () =>
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            // padding: 10,
             paddingHorizontal: 10,
         },
         buttonText: {

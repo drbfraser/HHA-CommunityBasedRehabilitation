@@ -1,9 +1,4 @@
-import {
-    getRiskGoalsTranslationKey,
-    getRiskRequirementsTranslationKey,
-    IRisk,
-    RiskType,
-} from "@cbr/common";
+import { getRiskGoalsTranslationKey, getRiskRequirementsTranslationKey, IRisk } from "@cbr/common";
 import { TFunction } from "i18next";
 
 const DELIMITER = ",\n";
@@ -11,7 +6,7 @@ const DELIMITER = ",\n";
 export const generateFormValue = (fields: Array<[string, boolean]>, freeformText: string) => {
     const formValue = fields
         .filter(([_, checked]) => checked)
-        .map(([canonicalField, _]) => canonicalField)
+        .map(([fieldName, _]) => fieldName)
         .join(DELIMITER);
 
     if (freeformText) {
@@ -21,8 +16,10 @@ export const generateFormValue = (fields: Array<[string, boolean]>, freeformText
 };
 
 /**
- * @returns what items have been checked and what the "other" text is,
- * based on the raw string passed in from the backend
+ * @param {string} rawText - Raw string passed in from the backend.
+ *  Assumed to be in the English language.
+ *
+ * @returns what items have been checked and what the "other" text is.
  */
 const parseInitialValues = (
     rawText: string,
@@ -35,6 +32,10 @@ const parseInitialValues = (
     return [checkedItems, otherText];
 };
 
+/**
+ * @param {string} rawText - Raw string passed in from the backend.
+ *  Assumed to be in the English language.
+ */
 export const initializeCheckedItems = (
     rawText: string,
     canonicalFields: string[],
@@ -76,7 +77,9 @@ const getModalFormDisplay = (t: TFunction, translationFieldsKey: any, rawText: s
 
 /**
  * @Returns what a Modal Form component would display as its value to the user
- * if it is for **requirements**. E.g., health requirements, social requirements, etc..
+ *  for risk **requirements**.
+ *
+ *  E.g., health requirements, social requirements, etc..
  */
 export const getModalFormRequirementsDisplay = (t: TFunction, risk: IRisk): string => {
     const translatedRequirementsKey = getRiskRequirementsTranslationKey(risk.risk_type);
@@ -85,7 +88,9 @@ export const getModalFormRequirementsDisplay = (t: TFunction, risk: IRisk): stri
 
 /**
  * @Returns what a Modal Form component would display as its value to the user
- * if it is for **goals**. E.g., health goals, social goals, etc..
+ *  for risk **goals**.
+ *
+ *  E.g., health goals, social goals, etc..
  */
 export const getModalFormGoalsDisplay = (t: TFunction, risk: IRisk): string => {
     const translatedGoalsKey = getRiskGoalsTranslationKey(risk.risk_type);

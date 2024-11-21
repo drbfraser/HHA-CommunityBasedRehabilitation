@@ -570,23 +570,58 @@ interface Resources {
       "health": "&Health",
       "education": "&Education",
       "social": "&Social",
-      "socialRequirements": [
-        "&Organize an Event",
-        "&Volunteer"
+      "PLACEHOLDER-socialRequirements": [
+        "&Improve connection with community",
+        "&Improve connection with family",
+        "&Be more social with others"
       ],
-      "healthRequirements": [
-        "&Improve Sleep Quality",
-        "&Eat Healthy"
+      "PLACEHOLDER-nutritionRequirements": [
+        "&Obtain additional food supplies",
+        "&Have a balanced diet"
       ],
-      "socialGoals": [
-        "&social goal 1",
-        "&social goal 2",
-        "&social goal 3"
+      "PLACEHOLDER-mentalRequirements": [
+        "&Recieve counselling",
+        "&Recieve medication"
       ],
-      "healthGoals": [
-        "&health goal 1",
-        "&health goal 2",
-        "&health goal 3"
+      "PLACEHOLDER-healthRequirements": [
+        "&Recieve medication",
+        "&Recieve wheelchair",
+        "&Recieve crutches",
+        "&Improve personal hygeine"
+      ],
+      "PLACEHOLDER-educationRequirements": [
+        "&Recieve technical training",
+        "&Enroll in a skills development course"
+      ],
+      "PLACEHOLDER-socialGoals": [
+        "&Achieved",
+        "&In progress",
+        "&Not Achieved",
+        "&No goals"
+      ],
+      "PLACEHOLDER-nutritionGoals": [
+        "&Achieved",
+        "&In progress",
+        "&Not Achieved",
+        "&No goals"
+      ],
+      "PLACEHOLDER-mentalGoals": [
+        "&Achieved",
+        "In progress",
+        "&Not Achieved",
+        "&No goals"
+      ],
+      "PLACEHOLDER-healthGoals": [
+        "&Achieved",
+        "In progress",
+        "&Not Achieved",
+        "&No goals"
+      ],
+      "PLACEHOLDER-educationGoals": [
+        "&Achieved",
+        "In progress",
+        "&Not Achieved",
+        "&No goals"
       ],
       "nutrition": "&Nutrition",
       "mental": "&Mental",
@@ -1295,23 +1330,58 @@ interface Resources {
       "nutrition": "-Nutrition",
       "mental": "-Mental",
       "improvements": "-Improvements",
-      "socialRequirements": [
-        "-Organize an Event",
-        "-Volunteer"
+      "PLACEHOLDER-socialRequirements": [
+        "-Improve connection with community",
+        "-Improve connection with family",
+        "-Be more social with others"
       ],
-      "healthRequirements": [
-        "-Improve Sleep Quality",
-        "-Eat Healthy"
+      "PLACEHOLDER-nutritionRequirements": [
+        "-Obtain additional food supplies",
+        "-Have a balanced diet"
       ],
-      "socialGoals": [
-        "-social goal 1",
-        "-social goal 2",
-        "-social goal 3"
+      "PLACEHOLDER-mentalRequirements": [
+        "-Recieve counselling",
+        "-Recieve medication"
       ],
-      "healthGoals": [
-        "-health goal 1",
-        "-health goal 2",
-        "-health goal 3"
+      "PLACEHOLDER-healthRequirements": [
+        "-Recieve medication",
+        "-Recieve wheelchair",
+        "-Recieve crutches",
+        "-Improve personal hygeine"
+      ],
+      "PLACEHOLDER-educationRequirements": [
+        "-Recieve technical training",
+        "-Enroll in a skills development course"
+      ],
+      "PLACEHOLDER-socialGoals": [
+        "-Achieved",
+        "-In progress",
+        "-Not Achieved",
+        "-No goals"
+      ],
+      "PLACEHOLDER-nutritionGoals": [
+        "-Achieved",
+        "-In progress",
+        "-Not Achieved",
+        "-No goals"
+      ],
+      "PLACEHOLDER-mentalGoals": [
+        "-Achieved",
+        "In progress",
+        "-Not Achieved",
+        "-No goals"
+      ],
+      "PLACEHOLDER-healthGoals": [
+        "-Achieved",
+        "In progress",
+        "-Not Achieved",
+        "-No goals"
+      ],
+      "PLACEHOLDER-educationGoals": [
+        "-Achieved",
+        "In progress",
+        "-Not Achieved",
+        "-No goals"
       ],
       "outcomes": "-Outcomes",
       "description": "-Description",

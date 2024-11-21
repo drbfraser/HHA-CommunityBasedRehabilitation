@@ -1,6 +1,5 @@
 import React, { FC, ReactNode } from "react";
 import { HelperText, TextInput } from "react-native-paper";
-import useStyles from "../ModalForm.styles";
 import { View } from "react-native";
 
 interface IProps {

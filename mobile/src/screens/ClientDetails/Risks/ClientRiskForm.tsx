@@ -8,6 +8,8 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import {
     fieldLabels,
     FormField,
+    getRiskGoalsTranslationKey,
+    getRiskRequirementsTranslationKey,
     IRisk,
     RiskLevel,
     riskLevels,
@@ -41,6 +43,8 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
     const database = useDatabase();
     const { t } = useTranslation();
 
+    const riskType: RiskType = props.riskData.risk_type;
+
     const getRiskFormInitialValues = () => {
         const risk = props.riskData;
         const riskFormProps: IRisk = {
@@ -56,7 +60,6 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
     };
 
     const getHeaderText = () => {
-        const riskType = props.riskData.risk_type;
         switch (riskType) {
             case RiskType.HEALTH:
                 return t("riskAttr.update", { context: "health" });
@@ -93,9 +96,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 mode="contained"
                 style={styles.modalUpdateButton}
                 disabled={!props.clientArchived}
-                onPress={() => {
-                    setShowModal(true);
-                }}
+                onPress={() => setShowModal(true)}
             >
                 {t("general.update")}
             </Button>
@@ -158,13 +159,17 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     label={fieldLabels[FormField.requirement]}
                                     formikField={FormField.requirement}
                                     formikProps={formikProps}
-                                    canonicalFields={t("newVisit.healthRequirements", {
-                                        returnObjects: true,
-                                        lng: "en",
-                                    })}
-                                    localizedFields={t("newVisit.healthRequirements", {
-                                        returnObjects: true,
-                                    })}
+                                    canonicalFields={
+                                        t(getRiskRequirementsTranslationKey(riskType), {
+                                            returnObjects: true,
+                                            lng: "en",
+                                        }) as string[]
+                                    }
+                                    localizedFields={
+                                        t(getRiskRequirementsTranslationKey(riskType), {
+                                            returnObjects: true,
+                                        }) as string[]
+                                    }
                                     defaultValue={formikProps.values.requirement}
                                     hasFreeformText
                                 />
@@ -173,13 +178,17 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     label={fieldLabels[FormField.goal]}
                                     formikField={FormField.goal}
                                     formikProps={formikProps}
-                                    canonicalFields={t("newVisit.healthGoals", {
-                                        returnObjects: true,
-                                        lng: "en",
-                                    })}
-                                    localizedFields={t("newVisit.healthGoals", {
-                                        returnObjects: true,
-                                    })}
+                                    canonicalFields={
+                                        t(getRiskGoalsTranslationKey(riskType), {
+                                            returnObjects: true,
+                                            lng: "en",
+                                        }) as string[]
+                                    }
+                                    localizedFields={
+                                        t(getRiskGoalsTranslationKey(riskType), {
+                                            returnObjects: true,
+                                        }) as string[]
+                                    }
                                     defaultValue={formikProps.values.goal}
                                     hasFreeformText
                                 />

@@ -83,40 +83,40 @@ i18n.on("languageChanged", () => {
     refreshArrays();
 });
 
-export const getRiskRequirementsTranslationKey = (riskType: RiskType): string => {
+export const getRiskRequirementsTranslationKey = (riskType: RiskType) => {
     // TODO: Use real values for requirements. Current values are only placeholders
     switch (riskType) {
         case RiskType.SOCIAL:
-            return "newVisit.socialRequirements";
+            return "newVisit.PLACEHOLDER-socialRequirements";
         case RiskType.HEALTH:
-            return "newVisit.healthRequirements";
+            return "newVisit.PLACEHOLDER-healthRequirements";
         case RiskType.MENTAL:
-            return "newVisit.healthRequirements";
+            return "newVisit.PLACEHOLDER-mentalRequirements";
         case RiskType.NUTRITION:
-            return "newVisit.healthRequirements";
+            return "newVisit.PLACEHOLDER-nutritionRequirements";
         case RiskType.EDUCATION:
-            return "newVisit.healthRequirements";
+            return "newVisit.PLACEHOLDER-educationRequirements";
         default:
             console.error("unknown risk type:", riskType);
-            return "";
+            return "general.unknown";
     }
 };
 
-export const getRiskGoalsTranslationKey = (riskType: RiskType): string => {
+export const getRiskGoalsTranslationKey = (riskType: RiskType) => {
     // TODO: Use real values for requirements. Current values are only placeholders
     switch (riskType) {
         case RiskType.SOCIAL:
-            return "newVisit.socialGoals";
+            return "newVisit.PLACEHOLDER-socialGoals";
         case RiskType.HEALTH:
-            return "newVisit.healthGoals";
+            return "newVisit.PLACEHOLDER-healthGoals";
         case RiskType.MENTAL:
-            return "newVisit.healthGoals";
+            return "newVisit.PLACEHOLDER-mentalGoals";
         case RiskType.NUTRITION:
-            return "newVisit.healthGoals";
+            return "newVisit.PLACEHOLDER-nutritionGoals";
         case RiskType.EDUCATION:
-            return "newVisit.healthGoals";
+            return "newVisit.PLACEHOLDER-educationGoals";
         default:
             console.error("unknown risk type:", riskType);
-            return "";
+            return "general.unknown";
     }
 };

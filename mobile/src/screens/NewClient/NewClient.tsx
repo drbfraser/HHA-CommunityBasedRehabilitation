@@ -11,6 +11,8 @@ import {
     ClientField,
     clientFieldLabels,
     clientInitialValues,
+    getRiskGoalsTranslationKey,
+    getRiskRequirementsTranslationKey,
     newClientValidationSchema,
     RiskLevel,
     riskLevels,
@@ -38,10 +40,12 @@ const riskMap: Map<RiskLevel, string> = new Map(
 const RiskForm = ({
     formikProps,
     riskPrefix,
+    riskType,
     containerStyle,
 }: {
     formikProps: FormikProps<TClientValues>;
     riskPrefix: string;
+    riskType: RiskType;
     containerStyle?: ViewStyle | false;
 }) => {
     const { t } = useTranslation();
@@ -68,11 +72,17 @@ const RiskForm = ({
                 label={clientFieldLabels[`${riskPrefix}Requirements`]}
                 formikField={`${riskPrefix}Requirements`}
                 formikProps={formikProps}
-                canonicalFields={t("newVisit.socialRequirements", {
-                    returnObjects: true,
-                    lng: "en",
-                })}
-                localizedFields={t("newVisit.socialRequirements", { returnObjects: true })}
+                canonicalFields={
+                    t(getRiskRequirementsTranslationKey(riskType), {
+                        returnObjects: true,
+                        lnh: "en",
+                    }) as string[]
+                }
+                localizedFields={
+                    t(getRiskRequirementsTranslationKey(riskType), {
+                        returnObjects: true,
+                    }) as string[]
+                }
                 disabled={isFieldDisabled()}
                 hasFreeformText
             />
@@ -80,9 +90,17 @@ const RiskForm = ({
                 label={clientFieldLabels[`${riskPrefix}Goals`]}
                 formikField={`${riskPrefix}Goals`}
                 formikProps={formikProps}
-                // TODO: replace with real values
-                canonicalFields={["Organize Events", "Make Friends", "Volunteer"]}
-                localizedFields={["Organize Events", "Make Friends", "Volunteer"]}
+                canonicalFields={
+                    t(getRiskGoalsTranslationKey(riskType), {
+                        returnObjects: true,
+                        lnh: "en",
+                    }) as string[]
+                }
+                localizedFields={
+                    t(getRiskGoalsTranslationKey(riskType), {
+                        returnObjects: true,
+                    }) as string[]
+                }
                 disabled={isFieldDisabled()}
                 hasFreeformText
             />
@@ -182,11 +200,12 @@ const NewClient = () => {
                                 disabled={!formikProps.values.interviewConsent}
                             />
                             <Divider style={styles.divider} />
-                            {Object.keys(RiskType).map((riskType, i) => (
+                            {Object.entries(RiskType).map(([key, val], i) => (
                                 <RiskForm
-                                    key={riskType}
-                                    riskPrefix={riskType.toLowerCase()}
+                                    key={key}
                                     formikProps={formikProps}
+                                    riskPrefix={key.toLowerCase()}
+                                    riskType={val}
                                     containerStyle={i !== 0 && styles.section}
                                 />
                             ))}

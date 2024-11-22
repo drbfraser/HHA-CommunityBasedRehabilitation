@@ -9,7 +9,7 @@ import {
     BaseSurveyFormField,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
 import { ChildNourish, childNourish, rateLevel } from "@cbr/common/util/survey";
-import { FieldIndent } from "components/StyledComponents/StyledComponents";
+import * as Styled from "components/StyledComponents/StyledComponents";
 
 const FoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
     const { t } = useTranslation();
@@ -52,7 +52,7 @@ const FoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                 />
 
                 {hasChildOrIsChild && (
-                    <FieldIndent>
+                    <Styled.FieldIndent>
                         <FormControl fullWidth variant="outlined" margin="normal">
                             <FormLabel>{t("survey.whatsNutritionStatus")}</FormLabel>
                             <Field
@@ -70,14 +70,14 @@ const FoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                                 ))}
                             </Field>
                             {childIsMalnourished && (
-                                <FieldIndent>
+                                <Styled.FieldIndent>
                                     <Alert sx={{ marginTop: "0.75em" }} severity="info">
                                         {t("survey.referralRequired")}
                                     </Alert>
-                                </FieldIndent>
+                                </Styled.FieldIndent>
                             )}
                         </FormControl>
-                    </FieldIndent>
+                    </Styled.FieldIndent>
                 )}
             </FormControl>
         </>

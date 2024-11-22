@@ -2,10 +2,15 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, FormikProps } from "formik";
 import { CheckboxWithLabel } from "formik-mui";
-import { Box, FormLabel } from "@mui/material";
+import { FormLabel, styled } from "@mui/material";
 
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";
-import { newReferralStyles } from "../NewReferral.styles";
+import { FieldIndent } from "components/StyledComponents/StyledComponents";
+
+const FieldContainer = styled(FieldIndent)({
+    display: "flex",
+    flexDirection: "column",
+});
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -15,10 +20,9 @@ const NutritionForm = (props: IFormProps) => {
     const { t } = useTranslation();
 
     return (
-        <div>
+        <>
             <FormLabel>{t("referral.whatDoesClientNeed")}?</FormLabel>
-            <br />
-            <Box sx={newReferralStyles.fieldIndent}>
+            <FieldContainer>
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
@@ -32,7 +36,6 @@ const NutritionForm = (props: IFormProps) => {
                         props.formikProps.handleChange(event);
                     }}
                 />
-                <br />
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
@@ -48,8 +51,8 @@ const NutritionForm = (props: IFormProps) => {
                         props.formikProps.handleChange(event);
                     }}
                 />
-            </Box>
-        </div>
+            </FieldContainer>
+        </>
     );
 };
 

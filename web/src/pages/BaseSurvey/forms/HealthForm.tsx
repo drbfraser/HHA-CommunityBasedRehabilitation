@@ -9,8 +9,8 @@ import {
     BaseSurveyFormField,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
 import { deviceTypes, rateLevel } from "@cbr/common/util/survey";
-import { FieldIndent } from "components/StyledComponents/StyledComponents";
-import { Container } from "../baseSurvey.style";
+import * as SharedStyled from "components/StyledComponents/StyledComponents";
+import * as Styled from "../baseSurvey.style";
 
 const CheckboxSection = styled("div")({
     display: "flex",
@@ -22,7 +22,7 @@ const HealthForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
     const { t } = useTranslation();
 
     return (
-        <Container sx={{ gap: "1.5em" }}>
+        <Styled.Container sx={{ gap: "1.5em" }}>
             <FormLabel>{t("survey.rateHealth")}</FormLabel>
 
             <FormControl fullWidth variant="outlined">
@@ -88,7 +88,7 @@ const HealthForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
             </CheckboxSection>
 
             {formikProps.values[BaseSurveyFormField.needDevice] && (
-                <FieldIndent>
+                <SharedStyled.FieldIndent>
                     <FormControl fullWidth variant="outlined">
                         <FormLabel sx={{ marginBottom: "1em" }}>
                             {t("survey.assistiveDeviceNeeds")}
@@ -108,7 +108,7 @@ const HealthForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                             ))}
                         </Field>
                     </FormControl>
-                </FieldIndent>
+                </SharedStyled.FieldIndent>
             )}
 
             <FormLabel>{t("survey.satisfiedWithHealthService")}</FormLabel>
@@ -128,7 +128,7 @@ const HealthForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                     ))}
                 </Field>
             </FormControl>
-        </Container>
+        </Styled.Container>
     );
 };
 

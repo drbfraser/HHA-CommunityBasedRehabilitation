@@ -1,19 +1,25 @@
 import React from "react";
 import { Field, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-mui";
-import { FormControl, FormLabel, MenuItem } from "@mui/material";
+import { FormControl, FormLabel, MenuItem, styled } from "@mui/material";
 
 import {
     baseFieldLabels,
     BaseSurveyFormField,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
 import { isSelfEmployed } from "@cbr/common/util/survey";
-import { FieldIndent } from "components/StyledComponents/StyledComponents";
-import { Container } from "../baseSurvey.style";
+import * as SharedStyled from "components/StyledComponents/StyledComponents";
+import * as Styled from "../baseSurvey.style";
+
+const AdditionalInfoContainer = styled(Styled.Container)({
+    gap: "1.5em",
+    paddingLeft: "9px",
+});
 
 const LivelihoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
+    const isWorking: boolean = formikProps.values[BaseSurveyFormField.isWorking];
     return (
-        <FieldIndent>
+        <SharedStyled.FieldIndent>
             <FormControl fullWidth variant="outlined">
                 <Field
                     component={CheckboxWithLabel}
@@ -24,8 +30,8 @@ const LivelihoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                 />
             </FormControl>
 
-            {formikProps.values[BaseSurveyFormField.isWorking] && (
-                <Container sx={{ gap: "1.5em", paddingLeft: "9px" }}>
+            {isWorking && (
+                <AdditionalInfoContainer>
                     <FormLabel>What do you do?</FormLabel>
                     <FormControl fullWidth variant="outlined">
                         <Field
@@ -62,7 +68,7 @@ const LivelihoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                             Label={{ label: baseFieldLabels[BaseSurveyFormField.meetFinanceNeeds] }}
                         />
                     </FormControl>
-                </Container>
+                </AdditionalInfoContainer>
             )}
 
             <FormControl fullWidth variant="outlined">
@@ -82,7 +88,7 @@ const LivelihoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.wantWork] }}
                 />
             </FormControl>
-        </FieldIndent>
+        </SharedStyled.FieldIndent>
     );
 };
 

@@ -2,11 +2,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, FormikProps } from "formik";
 import { TextField } from "formik-mui";
-import { Box, FormLabel, MenuItem } from "@mui/material";
+import { Box, FormControl, FormLabel, MenuItem } from "@mui/material";
 
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";
 import { newReferralStyles } from "../NewReferral.styles";
+import { FieldIndent } from "components/StyledComponents/StyledComponents";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -17,11 +18,11 @@ const PhysiotherapyForm = (props: IFormProps) => {
     const disabilities = useDisabilities(t);
 
     return (
-        <div>
+        <>
             <FormLabel>{t("referral.whatCondition")}</FormLabel>
             <br />
             <br />
-            <Box sx={newReferralStyles.fieldIndent}>
+            <FieldIndent>
                 <Field
                     component={TextField}
                     fullWidth
@@ -51,8 +52,8 @@ const PhysiotherapyForm = (props: IFormProps) => {
                         />
                     </div>
                 )}
-            </Box>
-        </div>
+            </FieldIndent>
+        </>
     );
 };
 

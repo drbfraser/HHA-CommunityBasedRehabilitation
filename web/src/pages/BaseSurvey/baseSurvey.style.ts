@@ -1,4 +1,4 @@
-import { SxProps, Theme } from "@mui/material";
+import { styled, SxProps, Theme } from "@mui/material";
 
 export const adminStyles: Record<string, SxProps<Theme>> = {
     fieldIndent: {
@@ -11,3 +11,17 @@ export const adminStyles: Record<string, SxProps<Theme>> = {
         verticalAlign: "sub",
     },
 };
+
+export const Container = styled("div")({
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.75em",
+});
+
+export const FieldIndent = styled("div")({
+    paddingLeft: "9px",
+});
+
+export const FieldDoubleIndent = styled("div")({
+    paddingLeft: "18px",
+});

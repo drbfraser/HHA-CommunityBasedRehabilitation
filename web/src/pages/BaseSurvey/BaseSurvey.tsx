@@ -44,41 +44,41 @@ const NewSurvey = () => {
     const { t } = useTranslation();
 
     const surveySteps: ISurvey[] = [
-        // {
-        //     label: "Health",
-        //     Form: (formikProps) => HealthForm(formikProps),
-        //     validationSchema: healthValidationSchema,
-        // },
-        // {
-        //     label: "Education (under 18)",
-        //     Form: (formikProps) => EducationForm(formikProps),
-        //     validationSchema: educationValidationSchema,
-        // },
-        // {
-        //     label: "Social",
-        //     Form: () => SocialForm(),
-        //     validationSchema: emptyValidationSchema,
-        // },
-        // {
-        //     label: "Livelihood (over 16)",
-        //     Form: (formikProps) => LivelihoodForm(formikProps),
-        //     validationSchema: livelihoodValidationSchema,
-        // },
         {
-            label: "Food and Nutrition",
+            label: t("general.health"),
+            Form: (formikProps) => HealthForm(formikProps),
+            validationSchema: healthValidationSchema,
+        },
+        {
+            label: t("survey.education"),
+            Form: (formikProps) => EducationForm(formikProps),
+            validationSchema: educationValidationSchema,
+        },
+        {
+            label: t("general.social"),
+            Form: () => SocialForm(),
+            validationSchema: emptyValidationSchema,
+        },
+        {
+            label: t("survey.livelihood"),
+            Form: (formikProps) => LivelihoodForm(formikProps),
+            validationSchema: livelihoodValidationSchema,
+        },
+        {
+            label: t("survey.foodAndNutrition"),
             Form: (formikProps) => FoodForm(formikProps),
             validationSchema: foodValidationSchema,
         },
-        // {
-        //     label: "Empowerment",
-        //     Form: (formikProps) => EmpowermentForm(formikProps),
-        //     validationSchema: empowermentValidationSchema,
-        // },
-        // {
-        //     label: "Shelter and Care",
-        //     Form: () => ShelterForm(),
-        //     validationSchema: emptyValidationSchema,
-        // },
+        {
+            label: t("baseSurveyFields.empowerment"),
+            Form: (formikProps) => EmpowermentForm(formikProps),
+            validationSchema: empowermentValidationSchema,
+        },
+        {
+            label: t("survey.shelterAndCare"),
+            Form: () => ShelterForm(),
+            validationSchema: emptyValidationSchema,
+        },
     ];
 
     const isFinalStep = step + 1 === surveyTypes.length && step !== 0;

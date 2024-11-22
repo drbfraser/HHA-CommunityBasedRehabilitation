@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Alert, Grid, Skeleton, Typography, Button } from "@mui/material";
+import { Alert, Grid, Skeleton, Typography, Button, styled } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
@@ -15,6 +15,10 @@ import ClientTimeline from "./ClientTimeline/ClientTimeline";
 interface IUrlParam {
     clientId: string;
 }
+
+const SectionHeader = styled(Typography)({
+    marginLeft: "20px",
+});
 
 const ClientDetails = () => {
     const { clientId } = useParams<IUrlParam>();
@@ -41,7 +45,6 @@ const ClientDetails = () => {
     if (loadingError) {
         return <Alert severity="error">{t("alert.loadClientFailure")}</Alert>;
     }
-
     return (
         <Grid container spacing={2} direction="row" justifyContent="flex-start">
             <Grid item xs={12}>
@@ -55,20 +58,18 @@ const ClientDetails = () => {
             <Grid item xs={12}>
                 <hr />
             </Grid>
+
             <Grid container justifyContent="space-between" direction="row">
                 <Grid item xs={6}>
-                    <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
+                    <SectionHeader variant="h5">
                         <b>{t("clientAttr.riskLevels")}</b>
-                    </Typography>
-                    <br />
+                    </SectionHeader>
                 </Grid>
                 <Grid item xs={6}>
                     <Button
                         size="small"
                         style={{ float: "right" }}
-                        onClick={() => {
-                            history.push(`/client/${clientId}/risks`);
-                        }}
+                        onClick={() => history.push(`/client/${clientId}/risks`)}
                     >
                         {t("clientAttr.seeRiskHistory")}
                         <ArrowForwardIcon fontSize="small" />
@@ -76,16 +77,18 @@ const ClientDetails = () => {
                 </Grid>
             </Grid>
 
-            <ClientRisks clientInfo={clientInfo} />
+            <Grid item xs={12}>
+                <ClientRisks clientInfo={clientInfo} />
+            </Grid>
 
             <Grid item xs={12}>
                 <hr />
             </Grid>
 
             <Grid item xs={6}>
-                <Typography style={{ marginLeft: "10px" }} variant="h5" component="h1">
+                <SectionHeader variant="h5">
                     <b>{t("clientAttr.visitsRefsSurveys")}</b>
-                </Typography>
+                </SectionHeader>
             </Grid>
             <Grid item xs={12}>
                 <ClientTimeline refreshClient={getClient} client={clientInfo} />

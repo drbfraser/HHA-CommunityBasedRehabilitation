@@ -7,7 +7,7 @@ import {
     baseFieldLabels,
     BaseSurveyFormField,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
-import { FieldIndent } from "../baseSurvey.style";
+import { FieldIndent } from "components/StyledComponents/StyledComponents";
 
 const EmpowermentForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
     return (

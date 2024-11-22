@@ -14,9 +14,13 @@ import { FieldIndent } from "../baseSurvey.style";
 const FoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
     const { t } = useTranslation();
 
+    const hasChildOrIsChild = formikProps.values[BaseSurveyFormField.isChild];
+    const childIsMalnourished =
+        formikProps.values[BaseSurveyFormField.childNourish] === ChildNourish.MALNOURISHED;
+
     return (
         <>
-            <FormLabel>Food security</FormLabel>
+            <FormLabel>{t("survey.foodSecurity")}</FormLabel>
             <FormControl fullWidth variant="outlined" margin="normal">
                 <Field
                     component={TextField}
@@ -47,7 +51,7 @@ const FoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.isChild] }}
                 />
 
-                {formikProps.values[BaseSurveyFormField.isChild] && (
+                {hasChildOrIsChild && (
                     <FieldIndent>
                         <FormControl fullWidth variant="outlined" margin="normal">
                             <FormLabel>{t("survey.whatsNutritionStatus")}</FormLabel>
@@ -65,11 +69,10 @@ const FoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                                     </MenuItem>
                                 ))}
                             </Field>
-                            {formikProps.values[BaseSurveyFormField.childNourish] ===
-                                ChildNourish.MALNOURISHED && (
+                            {childIsMalnourished && (
                                 <FieldIndent>
                                     <Alert sx={{ marginTop: "0.75em" }} severity="info">
-                                        A referral to the health center is required!
+                                        {t("survey.referralRequired")}
                                     </Alert>
                                 </FieldIndent>
                             )}

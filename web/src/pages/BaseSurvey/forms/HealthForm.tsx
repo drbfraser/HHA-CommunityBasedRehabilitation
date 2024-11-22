@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Field, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-mui";
 import { FormControl, FormLabel, MenuItem, styled } from "@mui/material";
@@ -17,9 +18,11 @@ const CheckboxSection = styled("div")({
 });
 
 const HealthForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
+    const { t } = useTranslation();
+
     return (
         <Container sx={{ gap: "1.5em" }}>
-            <FormLabel>Rate your general health</FormLabel>
+            <FormLabel>{t("survey.rateHealth")}</FormLabel>
 
             <FormControl fullWidth variant="outlined">
                 <Field
@@ -87,7 +90,7 @@ const HealthForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                 <FieldIndent>
                     <FormControl fullWidth variant="outlined">
                         <FormLabel sx={{ marginBottom: "1em" }}>
-                            What assistive device do you need?
+                            {t("survey.assistiveDeviceNeeds")}
                         </FormLabel>
                         <Field
                             select
@@ -107,7 +110,7 @@ const HealthForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                 </FieldIndent>
             )}
 
-            <FormLabel>Are you satisfied with the health services you receive?</FormLabel>
+            <FormLabel>{t("survey.satisfiedWithHealthService")}</FormLabel>
             <FormControl fullWidth variant="outlined">
                 <Field
                     select

@@ -9,13 +9,13 @@ import {
     BaseSurveyFormField,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
 import { grade, reasonNotSchool } from "@cbr/common/util/survey";
-import { Container, FieldDoubleIndent } from "../baseSurvey.style";
+import * as Styled from "../baseSurvey.style";
 
 const EducationForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
     const { t } = useTranslation();
 
     return (
-        <Container>
+        <Styled.Container>
             <Field
                 type="checkbox"
                 color="secondary"
@@ -24,7 +24,7 @@ const EducationForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                 component={CheckboxWithLabel}
             />
 
-            <FieldDoubleIndent>
+            <Styled.FieldDoubleIndent>
                 {formikProps.values[BaseSurveyFormField.goSchool] ? (
                     <>
                         <FormLabel>{t("survey.whatGrade")}</FormLabel>
@@ -75,7 +75,7 @@ const EducationForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                         </FormControl>
                     </>
                 )}
-            </FieldDoubleIndent>
+            </Styled.FieldDoubleIndent>
 
             <Field
                 type="checkbox"
@@ -84,7 +84,7 @@ const EducationForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                 Label={{ label: baseFieldLabels[BaseSurveyFormField.wantSchool] }}
                 component={CheckboxWithLabel}
             />
-        </Container>
+        </Styled.Container>
     );
 };
 

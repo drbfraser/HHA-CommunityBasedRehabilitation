@@ -7,12 +7,12 @@ import {
     baseFieldLabels,
     BaseSurveyFormField,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
-import { Container } from "../baseSurvey.style";
+import * as Styled from "../baseSurvey.style";
 
 const SocialForm = () => {
     return (
         <FormControl fullWidth variant="outlined">
-            <Container>
+            <Styled.Container>
                 <Field
                     component={CheckboxWithLabel}
                     type="checkbox"
@@ -48,7 +48,7 @@ const SocialForm = () => {
                     name={BaseSurveyFormField.disabiDiscrimination}
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.disabiDiscrimination] }}
                 />
-            </Container>
+            </Styled.Container>
         </FormControl>
     );
 };

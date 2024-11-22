@@ -7,7 +7,7 @@ import {
     baseFieldLabels,
     BaseSurveyFormField,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
-import { FieldIndent } from "components/StyledComponents/StyledComponents";
+import * as Styled from "components/StyledComponents/StyledComponents";
 
 const EmpowermentForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
     return (
@@ -20,7 +20,7 @@ const EmpowermentForm = ({ formikProps }: { formikProps: FormikProps<any> }) => 
                 Label={{ label: baseFieldLabels[BaseSurveyFormField.memOfOrgan] }}
             />
             {formikProps.values[BaseSurveyFormField.memOfOrgan] && (
-                <FieldIndent>
+                <Styled.FieldIndent>
                     <Field
                         component={TextField}
                         multiline
@@ -29,7 +29,7 @@ const EmpowermentForm = ({ formikProps }: { formikProps: FormikProps<any> }) => 
                         name={BaseSurveyFormField.organization}
                         fullWidth
                     />
-                </FieldIndent>
+                </Styled.FieldIndent>
             )}
 
             <FormControl fullWidth variant="outlined">

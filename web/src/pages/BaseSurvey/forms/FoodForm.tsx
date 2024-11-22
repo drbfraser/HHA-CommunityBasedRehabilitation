@@ -9,7 +9,7 @@ import {
     BaseSurveyFormField,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
 import { ChildNourish, childNourish, rateLevel } from "@cbr/common/util/survey";
-import { FieldIndent } from "../baseSurvey.style";
+import { FieldIndent } from "components/StyledComponents/StyledComponents";
 
 const FoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
     const { t } = useTranslation();

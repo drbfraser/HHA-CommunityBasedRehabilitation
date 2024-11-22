@@ -8,7 +8,8 @@ import {
     BaseSurveyFormField,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
 import { isSelfEmployed } from "@cbr/common/util/survey";
-import { Container, FieldIndent } from "../baseSurvey.style";
+import { FieldIndent } from "components/StyledComponents/StyledComponents";
+import { Container } from "../baseSurvey.style";
 
 const LivelihoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
     return (

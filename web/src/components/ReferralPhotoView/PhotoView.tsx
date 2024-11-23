@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FormLabel } from "@mui/material";
+import { FormLabel, styled } from "@mui/material";
 import { helperImgCompress } from "./imgCompressHelper";
+
+const Container = styled("div")({
+    display: "flex",
+    flexDirection: "column",
+});
 
 interface Iprops {
     onPictureChange: (newPictureURL: string) => void;
@@ -9,25 +14,16 @@ interface Iprops {
 
 export const PhotoView = (props: Iprops) => {
     const [thumb, setThumb] = useState<string | undefined>(undefined);
-    const [upload, setUpload] = useState<boolean>(false);
     const { t } = useTranslation();
 
     return (
-        <>
-            <br />
-            {thumb !== undefined ? (
-                <>
-                    <img alt="" src={thumb} width="200 px" />
-                    <br />
-                </>
+        <Container>
+            {thumb === undefined ? (
+                <FormLabel sx={{ display: "block" }}>
+                    {t("referral.attachWheelchairPhoto")}
+                </FormLabel>
             ) : (
-                <p />
-            )}
-
-            {upload === false ? (
-                <FormLabel>{t("referral.attachWheelchairPhoto")} </FormLabel>
-            ) : (
-                <p />
+                <img alt="" src={thumb} width="200 px" />
             )}
 
             <input
@@ -46,12 +42,11 @@ export const PhotoView = (props: Iprops) => {
                         const url = URL.createObjectURL(new Blob([image]));
                         setThumb(url);
                         props.onPictureChange(url);
-                        setUpload(true);
                     };
 
                     reader.readAsArrayBuffer(target_file);
                 }}
-            ></input>
-        </>
+            />
+        </Container>
     );
 };

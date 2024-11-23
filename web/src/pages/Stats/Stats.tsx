@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Divider, Typography } from "@mui/material";
+import { Alert, Divider, styled } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IStats } from "@cbr/common/util/stats";
 import { IUser } from "@cbr/common/util/users";
-import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import { DisabilityStats, FilterBar, ReferralStats, VisitStats } from "./components";
 import { blankDateRange, IDateRange } from "./components/filterbar/StatsDateFilter";
+
+const Container = styled("div")({
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+});
 
 const Stats = () => {
     const [dateRange, setDateRange] = useState(blankDateRange);
@@ -58,9 +63,8 @@ const Stats = () => {
     if (errorLoading) {
         return <Alert severity="error">{t("alert.loadStatsFailure")}</Alert>;
     }
-
     return (
-        <>
+        <Container>
             <FilterBar
                 user={user}
                 users={users}
@@ -69,55 +73,20 @@ const Stats = () => {
                 setDateRange={setDateRange}
                 setUser={setUser}
             />
-            <br />
             <Divider />
-            <br />
 
-            <Typography variant="h2" align="center">
-                {t("statistics.visits")}
-            </Typography>
             <VisitStats stats={stats} />
-            <br />
             <Divider />
-            <br />
 
-            <Typography variant="h2" align="center">
-                {t("statistics.referrals")}
-            </Typography>
             <ReferralStats stats={stats} />
-            <br />
             <Divider />
-            <br />
 
-            <div>
-                <Typography
-                    color={archiveMode ? "textSecondary" : "textPrimary"}
-                    component={"span"}
-                    variant={"body2"}
-                >
-                    {t("statistics.allClients")}
-                </Typography>
-                <IOSSwitch
-                    checked={archiveMode}
-                    onChange={(event) => setArchiveMode(event.target.checked)}
-                />
-                <Typography
-                    color={archiveMode ? "textPrimary" : "textSecondary"}
-                    component={"span"}
-                    variant={"body2"}
-                >
-                    {t("statistics.activeClients")}
-                </Typography>
-            </div>
-            <Typography variant="h2" align="center" display="block">
-                {t("statistics.disabilities")}
-            </Typography>
-            <Typography variant="body1" align="center">
-                {t("statistics.filtersDoNotApplyToDisabilities")}
-            </Typography>
-            <br />
-            <DisabilityStats stats={stats} />
-        </>
+            <DisabilityStats
+                archiveMode={archiveMode}
+                onArchiveModeChange={setArchiveMode}
+                stats={stats}
+            />
+        </Container>
     );
 };
 

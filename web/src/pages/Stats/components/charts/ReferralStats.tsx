@@ -54,13 +54,15 @@ const ReferralStats = ({ stats }: IProps) => {
     }));
 
     return (
-        <>
-            <Typography variant="body1" align="center">
+        <section>
+            <Typography variant="h2" align="center">
+                {t("statistics.referrals")}
+            </Typography>
+            <Typography variant="subtitle1" align="center">
                 <b>{t("statistics.totalUnresolved")}</b> {stats.referrals_unresolved.total}
                 <br />
                 <b>{t("statistics.totalResolved")}</b> {stats.referrals_resolved.total}
             </Typography>
-            <br />
 
             <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={data}>
@@ -80,7 +82,7 @@ const ReferralStats = ({ stats }: IProps) => {
                     />
                 </BarChart>
             </ResponsiveContainer>
-        </>
+        </section>
     );
 };
 

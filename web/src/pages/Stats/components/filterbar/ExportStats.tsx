@@ -72,9 +72,11 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>{t("statistics.export")}</DialogTitle>
+
             <DialogContent>
-                <Typography variant="body1">{t("statistics.filtersApplyToExports")}</Typography>
-                <br />
+                <Typography sx={{ marginBottom: "1em" }} variant="body1">
+                    {t("statistics.filtersApplyToExports")}
+                </Typography>
 
                 <Typography variant="body1">
                     <Trans i18nKey="statistics.downloadAsCSV">
@@ -86,6 +88,7 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
                     </Trans>
                 </Typography>
             </DialogContent>
+
             <DialogActions>
                 <Button onClick={onClose}>{t("general.close")}</Button>
             </DialogActions>

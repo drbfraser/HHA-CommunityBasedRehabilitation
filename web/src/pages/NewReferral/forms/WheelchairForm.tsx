@@ -2,96 +2,106 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, FormikProps } from "formik";
 import { CheckboxWithLabel, RadioGroup, TextField } from "formik-mui";
-import { Alert, Box, FormLabel, InputAdornment, Radio } from "@mui/material";
+import { Alert, FormLabel, InputAdornment, Radio, styled } from "@mui/material";
 
 import { wheelchairExperiences } from "@cbr/common/util/referrals";
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";
-import { newReferralStyles } from "../NewReferral.styles";
+import * as Styled from "../NewReferral.styles";
 import { PhotoView } from "components/ReferralPhotoView/PhotoView";
+
+const Container = styled("div")({
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.5em",
+});
 
 interface IFormProps {
     formikProps: FormikProps<any>;
 }
 
-const WheelchairForm = (props: IFormProps) => {
+const WheelchairForm = ({ formikProps }: IFormProps) => {
     const { t } = useTranslation();
 
     return (
-        <div>
-            <FormLabel>{t("referral.whatTypeOfWheelchair")}?</FormLabel>
-            <Field
-                component={RadioGroup}
-                name={ReferralFormField.wheelchairExperience}
-                label={referralFieldLabels[ReferralFormField.wheelchairExperience]}
-            >
-                {Object.entries(wheelchairExperiences).map(([value, name]) => (
-                    <label key={value}>
-                        <Field
-                            component={Radio}
-                            color="secondary"
-                            type="radio"
-                            name={ReferralFormField.wheelchairExperience}
-                            value={value}
-                        />
-                        {name}
-                    </label>
-                ))}
-            </Field>
-            <br />
-            <FormLabel>{t("referral.clientHipWidth")}?</FormLabel>
-            <br />
-            <Box sx={newReferralStyles.fieldIndent}>
+        <Container>
+            <div>
+                <FormLabel>{t("referral.whatTypeOfWheelchair")}?</FormLabel>
                 <Field
-                    sx={newReferralStyles.hipWidth}
-                    component={TextField}
-                    variant="standard"
-                    type="number"
-                    name={ReferralFormField.hipWidth}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">{t("referral.inches")}</InputAdornment>
-                        ),
-                    }}
-                />
-            </Box>
-            <br />
-            <FormLabel>{t("referral.wheelchairInformation")}</FormLabel>
-            <br />
-            <Box sx={newReferralStyles.fieldIndent}>
-                <Field
-                    component={CheckboxWithLabel}
-                    type="checkbox"
-                    name={ReferralFormField.wheelchairOwned}
-                    Label={{ label: referralFieldLabels[ReferralFormField.wheelchairOwned] }}
-                />
-                <br />
-                {props.formikProps.values[ReferralFormField.wheelchairOwned] && (
+                    component={RadioGroup}
+                    name={ReferralFormField.wheelchairExperience}
+                    label={referralFieldLabels[ReferralFormField.wheelchairExperience]}
+                >
+                    {Object.entries(wheelchairExperiences).map(([value, name]) => (
+                        <label key={value}>
+                            <Field
+                                component={Radio}
+                                color="secondary"
+                                type="radio"
+                                name={ReferralFormField.wheelchairExperience}
+                                value={value}
+                            />
+                            {name}
+                        </label>
+                    ))}
+                </Field>
+            </div>
+
+            <div>
+                <FormLabel>{t("referral.clientHipWidth")}?</FormLabel>
+                <Styled.FieldIndent>
+                    <Field
+                        sx={{ maxWidth: "160px" }}
+                        component={TextField}
+                        variant="standard"
+                        type="number"
+                        name={ReferralFormField.hipWidth}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    {t("referral.inches")}
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </Styled.FieldIndent>
+            </div>
+
+            <div>
+                <FormLabel>{t("referral.wheelchairInformation")}</FormLabel>
+                <Styled.FieldIndent sx={{ display: "flex", flexDirection: "column" }}>
                     <Field
                         component={CheckboxWithLabel}
                         type="checkbox"
-                        name={ReferralFormField.wheelchairRepairable}
-                        Label={{
-                            label: referralFieldLabels[ReferralFormField.wheelchairRepairable],
-                        }}
+                        name={ReferralFormField.wheelchairOwned}
+                        Label={{ label: referralFieldLabels[ReferralFormField.wheelchairOwned] }}
                     />
-                )}
-            </Box>
-            {props.formikProps.values[ReferralFormField.wheelchairOwned] &&
-                props.formikProps.values[ReferralFormField.wheelchairRepairable] && (
-                    <>
-                        <Alert severity="info">{t("referral.bringWheelchair")}</Alert>
-                        <br />
+                    {formikProps.values[ReferralFormField.wheelchairOwned] && (
+                        <Field
+                            component={CheckboxWithLabel}
+                            type="checkbox"
+                            name={ReferralFormField.wheelchairRepairable}
+                            Label={{
+                                label: referralFieldLabels[ReferralFormField.wheelchairRepairable],
+                            }}
+                        />
+                    )}
+                </Styled.FieldIndent>
+            </div>
+
+            {formikProps.values[ReferralFormField.wheelchairOwned] &&
+                formikProps.values[ReferralFormField.wheelchairRepairable] && (
+                    <div>
+                        <Alert sx={{ marginBottom: "1.5rem" }} severity="info">
+                            {t("referral.bringWheelchair")}
+                        </Alert>
                         <PhotoView
                             onPictureChange={(pictureURL) => {
-                                props.formikProps.setFieldValue(
-                                    ReferralFormField.picture,
-                                    pictureURL
-                                );
+                                formikProps.setFieldValue(ReferralFormField.picture, pictureURL);
                             }}
-                        ></PhotoView>
-                    </>
+                        />
+                    </div>
                 )}
-        </div>
+        </Container>
     );
 };
 

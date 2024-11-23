@@ -77,85 +77,97 @@ const VisitStats = ({ stats }: IProps) => {
     };
 
     return (
-        <Grid container spacing={3} style={{ minHeight: CHART_HEIGHT }}>
-            {/* Zones with visits */}
-            <Grid item xs={12} lg={7} xl={8}>
-                <Typography variant="h3">{t("statistics.byZone")}</Typography>
-                <Typography variant="body1">
-                    {Boolean(!stats || stats.visits.length)
-                        ? t("statistics.onlyZonesWithVisits")
-                        : t("statistics.noVisitsFound")}
-                </Typography>
-                <br />
+        <section>
+            <Typography variant="h2" align="center">
+                {t("statistics.visits")}
+            </Typography>
 
-                {stats ? (
-                    <ResponsiveContainer
-                        width="100%"
-                        height={stats.visits.length ? CHART_HEIGHT : 0}
-                    >
-                        <BarChart layout="vertical" data={stats.visits} onClick={handleChartClick}>
-                            <XAxis type="number" allowDecimals={false} />
-                            <YAxis
-                                type="category"
-                                dataKey="zone_id"
-                                width={150}
-                                tickFormatter={zoneToName}
-                            />
-                            <Tooltip labelFormatter={zoneToName} />
-                            <Bar
-                                dataKey="total"
-                                name={t("statistics.visits")}
-                                fill={themeColors.blueAccent}
-                            />
-                        </BarChart>
-                    </ResponsiveContainer>
-                ) : (
-                    <Skeleton variant="rectangular" height={400} />
-                )}
-            </Grid>
+            <Grid container spacing={3} style={{ minHeight: CHART_HEIGHT }}>
+                {/* Zones with visits */}
+                <Grid item xs={12} lg={7} xl={8}>
+                    <Typography variant="h3">{t("statistics.byZone")}</Typography>
+                    <Typography sx={{ marginBottom: "1em" }} variant="subtitle1">
+                        {Boolean(!stats || stats.visits.length)
+                            ? t("statistics.onlyZonesWithVisits")
+                            : t("statistics.noVisitsFound")}
+                    </Typography>
 
-            {/* Visits by Type */}
-            <Grid item xs={12} lg={5} xl={4}>
-                <Typography variant="h3">{t("statistics.byType")}</Typography>
-                <Typography variant="body1">
-                    {t("statistics.showingDataFor")}:{" "}
-                    <b>{zones.get(breakdownZoneId) ?? t("statistics.allZones")}</b>.<br />
-                    {Boolean(!breakdownZone) ? (
-                        t("statistics.clickForZoneSpecificData")
-                    ) : (
-                        <Link
-                            component="button"
-                            variant="body1"
-                            onClick={() => setBreakdownZoneId(0)}
+                    {stats ? (
+                        <ResponsiveContainer
+                            width="100%"
+                            height={stats.visits.length ? CHART_HEIGHT : 0}
                         >
-                            {t("statistics.viewAllZoneData")}
-                        </Link>
-                    )}
-                </Typography>
-
-                {stats ? (
-                    <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-                        <PieChart>
-                            <Pie
-                                data={breakdownData}
-                                dataKey="count"
-                                nameKey="label"
-                                label={(a) => a.label}
-                                labelLine={true}
-                                innerRadius={60}
+                            <BarChart
+                                layout="vertical"
+                                data={stats.visits}
+                                onClick={handleChartClick}
                             >
-                                {breakdownData.map((entry, i) => (
-                                    <Cell key={i} fill={entry.color} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                        </PieChart>
-                    </ResponsiveContainer>
-                ) : (
-                    <Skeleton variant="rectangular" height={400} />
-                )}
+                                <XAxis type="number" allowDecimals={false} />
+                                <YAxis
+                                    type="category"
+                                    dataKey="zone_id"
+                                    width={150}
+                                    tickFormatter={zoneToName}
+                                />
+                                <Tooltip labelFormatter={zoneToName} />
+                                <Bar
+                                    dataKey="total"
+                                    name={t("statistics.visits")}
+                                    fill={themeColors.blueAccent}
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    ) : (
+                        <Skeleton variant="rectangular" height={400} />
+                    )}
+                </Grid>
+
+                {/* Visits by Type */}
+                <Grid item xs={12} lg={5} xl={4}>
+                    <Typography variant="h3">{t("statistics.byType")}</Typography>
+                    <Typography variant="body1">
+                        {t("statistics.showingDataFor")}:{" "}
+                        <b>{zones.get(breakdownZoneId) ?? t("statistics.allZones")}</b>.
+                    </Typography>
+
+                    <Typography variant="body2">
+                        {Boolean(!breakdownZone) ? (
+                            t("statistics.clickForZoneSpecificData")
+                        ) : (
+                            <Link
+                                component="button"
+                                variant="body1"
+                                onClick={() => setBreakdownZoneId(0)}
+                            >
+                                {t("statistics.viewAllZoneData")}
+                            </Link>
+                        )}
+                    </Typography>
+
+                    {stats ? (
+                        <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
+                            <PieChart>
+                                <Pie
+                                    data={breakdownData}
+                                    dataKey="count"
+                                    nameKey="label"
+                                    label={(a) => a.label}
+                                    labelLine={true}
+                                    innerRadius={60}
+                                >
+                                    {breakdownData.map((entry, i) => (
+                                        <Cell key={i} fill={entry.color} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    ) : (
+                        <Skeleton variant="rectangular" height={400} />
+                    )}
+                </Grid>
             </Grid>
-        </Grid>
+        </section>
     );
 };
 

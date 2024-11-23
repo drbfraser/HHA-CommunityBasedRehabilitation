@@ -37,6 +37,7 @@ const StatsUserFilter = ({ open, onClose, users, user, setUser }: IProps) => {
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle>{t("statistics.filterByUser")}</DialogTitle>
+
             <DialogContent>
                 <Autocomplete
                     options={users}
@@ -55,9 +56,8 @@ const StatsUserFilter = ({ open, onClose, users, user, setUser }: IProps) => {
                         />
                     )}
                 />
-                <br />
-                <br />
             </DialogContent>
+
             <DialogActions>
                 <Button onClick={handleClear}>{t("general.clear")}</Button>
                 <Button color="primary" onClick={handleSubmit}>

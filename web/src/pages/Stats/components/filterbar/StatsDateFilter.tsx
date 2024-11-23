@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, styled } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 
@@ -13,6 +13,12 @@ export const blankDateRange: IDateRange = {
     from: "",
     to: "",
 };
+
+const StyledDialogContent = styled(DialogContent)({
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.5rem",
+});
 
 interface IProps {
     open: boolean;
@@ -36,32 +42,30 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>{t("statistics.filterByDate")}</DialogTitle>
+
             <Formik initialValues={range} onSubmit={handleSubmit}>
                 <Form>
-                    <DialogContent>
+                    <StyledDialogContent>
                         <Field
-                            component={TextField}
-                            label={t("general.from")}
-                            variant="outlined"
-                            type="date"
-                            required
-                            InputLabelProps={{ shrink: true }}
                             name="from"
-                        />
-                        <br />
-                        <br />
-                        <Field
-                            component={TextField}
-                            label={t("general.to")}
-                            variant="outlined"
+                            label={t("general.from")}
                             type="date"
+                            variant="outlined"
                             required
+                            component={TextField}
                             InputLabelProps={{ shrink: true }}
-                            name="to"
                         />
-                        <br />
-                        <br />
-                    </DialogContent>
+                        <Field
+                            name="to"
+                            label={t("general.to")}
+                            type="date"
+                            variant="outlined"
+                            required
+                            component={TextField}
+                            InputLabelProps={{ shrink: true }}
+                        />
+                    </StyledDialogContent>
+
                     <DialogActions>
                         <Button onClick={handleClear}>{t("general.clear")}</Button>
                         <Button color="primary" type="submit">

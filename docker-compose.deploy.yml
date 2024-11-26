@@ -63,6 +63,7 @@ services:
       - "443:443"
     volumes:
       - caddy_logs:/var/log
+      - caddy_data:/data
 
 volumes:
   cbr_postgres_data:
@@ -70,4 +71,5 @@ volumes:
   django_uploads:
   fluentbit_logs_db:
   caddy_logs:
+  caddy_data:
   fluentbit_logs_output:

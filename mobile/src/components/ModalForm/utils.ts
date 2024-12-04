@@ -1,4 +1,10 @@
-import { getRiskGoalsTranslationKey, getRiskRequirementsTranslationKey, IRisk } from "@cbr/common";
+import {
+    getRiskGoalsTranslationKey,
+    getRiskRequirementsTranslationKey,
+    IRisk,
+    RiskGoalOptions,
+    RiskRequirementOptions,
+} from "@cbr/common";
 import { TFunction } from "i18next";
 
 const DELIMITER = ",\n";
@@ -60,18 +66,6 @@ export const initializeFreeformText = (defaultValue: string, canonicalFields: st
     return otherText;
 };
 
-type RiskRequirementOptions =
-    | "newVisit.PLACEHOLDER-socialRequirements"
-    | "newVisit.PLACEHOLDER-nutritionRequirements"
-    | "newVisit.PLACEHOLDER-mentalRequirements"
-    | "newVisit.PLACEHOLDER-healthRequirements"
-    | "newVisit.PLACEHOLDER-educationRequirements";
-type RiskGoalOptions =
-    | "newVisit.PLACEHOLDER-socialGoals"
-    | "newVisit.PLACEHOLDER-nutritionGoals"
-    | "newVisit.PLACEHOLDER-mentalGoals"
-    | "newVisit.PLACEHOLDER-healthGoals"
-    | "newVisit.PLACEHOLDER-educationGoals";
 const getModalFormDisplay = (
     t: TFunction,
     translationFieldsKey: RiskRequirementOptions | RiskGoalOptions,

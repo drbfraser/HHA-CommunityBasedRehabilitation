@@ -69,7 +69,6 @@ const ModalForm: FC<IProps> = ({
     const [freeformText, setFreeformText] = useState(
         initializeFreeformText(defaultValue, canonicalFields)
     );
-
     const [canonicalFormValue, displayedFormValue] = useFormValueGenerator(
         checkedItems,
         freeformText,

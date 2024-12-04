@@ -19,6 +19,7 @@ const useStyles = () =>
         },
         buttonText: {
             fontSize: 16,
+            paddingVertical: 15,
         },
         editIcon: {
             alignSelf: "center",

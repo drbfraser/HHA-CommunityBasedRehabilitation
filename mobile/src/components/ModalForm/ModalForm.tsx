@@ -12,27 +12,16 @@ import ModalWindow from "./components/ModalWindow";
 import ModalTrigger from "./components/ModalTrigger";
 import useFormValueGenerator from "./hooks/useFormValueGenerator";
 import { initializeCheckedItems, initializeFreeformText } from "./utils";
-import { assert } from "console";
+import { RiskGoalOptions, RiskRequirementOptions } from "@cbr/common";
 
 interface IProps {
     label: string;
     formikField: string;
     formikProps: FormikProps<any>;
     /**
-     *  The fields in the default lanugage (English),
-     *  for saving only English strings into the database.
-     *
-     *  This array should have a **1-to-1** correspondence with the `translatedFields` array.
+     * The translation key of the array of values that will be used for the modal form's checkboxes
      */
-    // canonicalFieldsTransKey: string;
-    /**
-     * The fields in the currently selected langauge, for displaying to the user.
-     *
-     * This array should have a **1-to-1** correspondence with the `canonicalFields` array.
-     */
-    // localizedFieldsTransKey: string;
-
-    transKey: any;
+    transKey: RiskRequirementOptions | RiskGoalOptions;
     /**
      * Used to initialize the form with pre-populated values.
      * The expected format is a string of items delimited by `",\n"`.
@@ -56,13 +45,24 @@ const ModalForm: FC<IProps> = ({
     style: styleProp = {},
 }) => {
     const { t } = useTranslation();
+    const styles = useStyles();
+    const [visible, setVisible] = useState(false);
 
+    /**
+     *  The fields in the default lanugage (English),
+     *  for saving only English strings into the database.
+     *
+     *  This array should have a **1-to-1** correspondence with the `localizedFields` array.
+     */
     const canonicalFields: string[] = t(transKey, { returnObjects: true, lng: "en" });
+    /**
+     * The fields in the currently selected langauge, for displaying to the user.
+     *
+     * This array should have a **1-to-1** correspondence with the `canonicalFields` array.
+     */
     const localizedFields: string[] = t(transKey, { returnObjects: true });
     console.assert(canonicalFields.length == localizedFields.length);
 
-    const styles = useStyles();
-    const [visible, setVisible] = useState(false);
     const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(
         initializeCheckedItems(defaultValue, canonicalFields, localizedFields)
     );

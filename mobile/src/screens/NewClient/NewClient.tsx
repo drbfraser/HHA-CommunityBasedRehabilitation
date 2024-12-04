@@ -48,7 +48,6 @@ const RiskForm = ({
     riskType: RiskType;
     containerStyle?: ViewStyle | false;
 }) => {
-    const { t } = useTranslation();
     const styles = useStyles();
 
     const isFieldDisabled = useCallback(
@@ -72,37 +71,15 @@ const RiskForm = ({
                 label={clientFieldLabels[`${riskPrefix}Requirements`]}
                 formikField={`${riskPrefix}Requirements`}
                 formikProps={formikProps}
-                canonicalFields={
-                    t(getRiskRequirementsTranslationKey(riskType), {
-                        returnObjects: true,
-                        lng: "en",
-                    }) as string[]
-                }
-                localizedFields={
-                    t(getRiskRequirementsTranslationKey(riskType), {
-                        returnObjects: true,
-                    }) as string[]
-                }
+                transKey={getRiskRequirementsTranslationKey(riskType)}
                 disabled={isFieldDisabled()}
-                hasFreeformText
             />
             <ModalForm
                 label={clientFieldLabels[`${riskPrefix}Goals`]}
                 formikField={`${riskPrefix}Goals`}
                 formikProps={formikProps}
-                canonicalFields={
-                    t(getRiskGoalsTranslationKey(riskType), {
-                        returnObjects: true,
-                        lng: "en",
-                    }) as string[]
-                }
-                localizedFields={
-                    t(getRiskGoalsTranslationKey(riskType), {
-                        returnObjects: true,
-                    }) as string[]
-                }
+                transKey={getRiskGoalsTranslationKey(riskType)}
                 disabled={isFieldDisabled()}
-                hasFreeformText
             />
         </View>
     );

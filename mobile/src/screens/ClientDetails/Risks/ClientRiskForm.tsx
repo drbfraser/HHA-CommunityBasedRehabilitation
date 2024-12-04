@@ -159,38 +159,16 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     label={fieldLabels[FormField.requirement]}
                                     formikField={FormField.requirement}
                                     formikProps={formikProps}
-                                    canonicalFields={
-                                        t(getRiskRequirementsTranslationKey(riskType), {
-                                            returnObjects: true,
-                                            lng: "en",
-                                        }) as string[]
-                                    }
-                                    localizedFields={
-                                        t(getRiskRequirementsTranslationKey(riskType), {
-                                            returnObjects: true,
-                                        }) as string[]
-                                    }
+                                    transKey={getRiskRequirementsTranslationKey(riskType)}
                                     defaultValue={formikProps.values.requirement}
-                                    hasFreeformText
                                 />
                                 <ModalForm
                                     style={styles.riskInputStyle}
                                     label={fieldLabels[FormField.goal]}
                                     formikField={FormField.goal}
                                     formikProps={formikProps}
-                                    canonicalFields={
-                                        t(getRiskGoalsTranslationKey(riskType), {
-                                            returnObjects: true,
-                                            lng: "en",
-                                        }) as string[]
-                                    }
-                                    localizedFields={
-                                        t(getRiskGoalsTranslationKey(riskType), {
-                                            returnObjects: true,
-                                        }) as string[]
-                                    }
+                                    transKey={getRiskGoalsTranslationKey(riskType)}
                                     defaultValue={formikProps.values.goal}
-                                    hasFreeformText
                                 />
 
                                 <Button

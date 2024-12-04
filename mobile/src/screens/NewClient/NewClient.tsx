@@ -75,7 +75,7 @@ const RiskForm = ({
                 canonicalFields={
                     t(getRiskRequirementsTranslationKey(riskType), {
                         returnObjects: true,
-                        lnh: "en",
+                        lng: "en",
                     }) as string[]
                 }
                 localizedFields={
@@ -93,7 +93,7 @@ const RiskForm = ({
                 canonicalFields={
                     t(getRiskGoalsTranslationKey(riskType), {
                         returnObjects: true,
-                        lnh: "en",
+                        lng: "en",
                     }) as string[]
                 }
                 localizedFields={

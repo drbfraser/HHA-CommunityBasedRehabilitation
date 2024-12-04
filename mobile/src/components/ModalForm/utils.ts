@@ -60,7 +60,23 @@ export const initializeFreeformText = (defaultValue: string, canonicalFields: st
     return otherText;
 };
 
-const getModalFormDisplay = (t: TFunction, translationFieldsKey: any, rawText: string) => {
+type RiskRequirementOptions =
+    | "newVisit.PLACEHOLDER-socialRequirements"
+    | "newVisit.PLACEHOLDER-nutritionRequirements"
+    | "newVisit.PLACEHOLDER-mentalRequirements"
+    | "newVisit.PLACEHOLDER-healthRequirements"
+    | "newVisit.PLACEHOLDER-educationRequirements";
+type RiskGoalOptions =
+    | "newVisit.PLACEHOLDER-socialGoals"
+    | "newVisit.PLACEHOLDER-nutritionGoals"
+    | "newVisit.PLACEHOLDER-mentalGoals"
+    | "newVisit.PLACEHOLDER-healthGoals"
+    | "newVisit.PLACEHOLDER-educationGoals";
+const getModalFormDisplay = (
+    t: TFunction,
+    translationFieldsKey: RiskRequirementOptions | RiskGoalOptions,
+    rawText: string
+) => {
     const translatedItems = Object.entries(
         initializeCheckedItems(
             rawText,
@@ -83,6 +99,8 @@ const getModalFormDisplay = (t: TFunction, translationFieldsKey: any, rawText: s
  */
 export const getModalFormRequirementsDisplay = (t: TFunction, risk: IRisk): string => {
     const translatedRequirementsKey = getRiskRequirementsTranslationKey(risk.risk_type);
+    if (translatedRequirementsKey == "general.unknown") return "";
+
     return getModalFormDisplay(t, translatedRequirementsKey, risk.requirement);
 };
 
@@ -94,5 +112,7 @@ export const getModalFormRequirementsDisplay = (t: TFunction, risk: IRisk): stri
  */
 export const getModalFormGoalsDisplay = (t: TFunction, risk: IRisk): string => {
     const translatedGoalsKey = getRiskGoalsTranslationKey(risk.risk_type);
+    if (translatedGoalsKey == "general.unknown") return "";
+
     return getModalFormDisplay(t, translatedGoalsKey, risk.goal);
 };

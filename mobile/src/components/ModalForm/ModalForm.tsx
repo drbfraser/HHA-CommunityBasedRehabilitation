@@ -12,6 +12,7 @@ import ModalWindow from "./components/ModalWindow";
 import ModalTrigger from "./components/ModalTrigger";
 import useFormValueGenerator from "./hooks/useFormValueGenerator";
 import { initializeCheckedItems, initializeFreeformText } from "./utils";
+import { assert } from "console";
 
 interface IProps {
     label: string;
@@ -23,13 +24,15 @@ interface IProps {
      *
      *  This array should have a **1-to-1** correspondence with the `translatedFields` array.
      */
-    canonicalFields: string[];
+    // canonicalFieldsTransKey: string;
     /**
      * The fields in the currently selected langauge, for displaying to the user.
      *
      * This array should have a **1-to-1** correspondence with the `canonicalFields` array.
      */
-    localizedFields: string[];
+    // localizedFieldsTransKey: string;
+
+    transKey: any;
     /**
      * Used to initialize the form with pre-populated values.
      * The expected format is a string of items delimited by `",\n"`.
@@ -46,17 +49,19 @@ const ModalForm: FC<IProps> = ({
     label,
     formikField,
     formikProps,
-    canonicalFields,
-    localizedFields,
+    transKey,
     defaultValue = "",
-    hasFreeformText = false,
+    hasFreeformText = true,
     disabled = false,
     style: styleProp = {},
 }) => {
+    const { t } = useTranslation();
+
+    const canonicalFields: string[] = t(transKey, { returnObjects: true, lng: "en" });
+    const localizedFields: string[] = t(transKey, { returnObjects: true });
     console.assert(canonicalFields.length == localizedFields.length);
 
     const styles = useStyles();
-    const { t } = useTranslation();
     const [visible, setVisible] = useState(false);
     const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(
         initializeCheckedItems(defaultValue, canonicalFields, localizedFields)

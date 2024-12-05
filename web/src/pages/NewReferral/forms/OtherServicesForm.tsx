@@ -2,11 +2,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, FormikProps } from "formik";
 import { TextField } from "formik-mui";
-import { Box, FormLabel, MenuItem } from "@mui/material";
+import { FormLabel, MenuItem } from "@mui/material";
 
 import { otherServices, Impairments } from "@cbr/common/util/referrals";
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";
-import { FieldIndent, newReferralStyles } from "../NewReferral.styles";
 
 interface IFormProps {
     formikProps: FormikProps<any>;

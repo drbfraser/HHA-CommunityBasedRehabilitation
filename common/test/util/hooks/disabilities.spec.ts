@@ -1,4 +1,3 @@
-// import { get as mockGet, MockResponseObject, reset as resetFetchMocks } from "fetch-mock";
 import fetchMock, { MockResponseObject } from "fetch-mock";
 import { Endpoint } from "../../../src/util/endpoints";
 import { renderHook } from "@testing-library/react-hooks";
@@ -15,11 +14,6 @@ import { checkAuthHeader } from "../../testHelpers/mockServerHelpers";
 import { invalidateAllCachedAPIInternal } from "../../../src/util/hooks/cachedAPI";
 import { TFunction } from "i18next";
 
-// todosd: temporary bindings to update fetch-mock usage - update these?
-const mockGet = fetchMock.get.bind(fetchMock);
-const resetFetchMocks = fetchMock.reset.bind(fetchMock);
-
-
 const ID_OF_OTHER_IN_TEST_DISABILITY_MAP = 4;
 
 const testDisabilityMap: TDisabilityMap = new Map<number, string>([
@@ -31,7 +25,7 @@ const testDisabilityMap: TDisabilityMap = new Map<number, string>([
 ]);
 
 const mockGetWithDefaultTestDisabilityMap = () => {
-    mockGet(Endpoint.DISABILITIES, async (url, request): Promise<MockResponseObject> => {
+    fetchMock.get(Endpoint.DISABILITIES, async (url, request): Promise<MockResponseObject> => {
         const errorResponse = checkAuthHeader(request);
         if (errorResponse) {
             return errorResponse;
@@ -53,7 +47,7 @@ const mockGetWithDefaultTestDisabilityMap = () => {
 
 beforeEach(async () => {
     await invalidateAllCachedAPIInternal(true, true, false, false);
-    resetFetchMocks();
+    fetchMock.reset();
     await addValidTokens();
 });
 
@@ -94,7 +88,7 @@ describe("disabilities.ts", () => {
         });
 
         it("should use an empty map if the server returns an error", async () => {
-            mockGet(Endpoint.DISABILITIES, { status: 500 });
+            fetchMock.get(Endpoint.DISABILITIES, { status: 500 });
 
             const freshGetDisabilitiesFn = await fromNewCommonModule(async () => {
                 return import("../../../src/util/hooks/disabilities").then(

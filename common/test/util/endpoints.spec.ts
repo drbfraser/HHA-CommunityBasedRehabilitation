@@ -1,4 +1,3 @@
-// import { get as mockGet, reset as resetFetchMocks } from "fetch-mock";
 import fetchMock from "fetch-mock";
 import { apiFetch, APIFetchFailError, Endpoint } from "../../src/util/endpoints";
 import { addValidTokens } from "../testHelpers/authTokenHelpers";
@@ -6,12 +5,8 @@ import buildFormErrorInternal from "../../src/util/internal/buildFormError";
 import { reinitializeCommon } from "../../src/init";
 import { testCommonConfig } from "../testHelpers/testCommonConfiguration";
 
-// todosd: temporary bindings to update fetch-mock usage - update these?
-const mockGet = fetchMock.get.bind(fetchMock);
-const resetFetchMocks = fetchMock.reset.bind(fetchMock);
-
 beforeEach(async () => {
-    resetFetchMocks();
+    fetchMock.reset();
     await addValidTokens();
 });
 
@@ -19,7 +14,7 @@ describe("endpoints.ts", () => {
     describe("apiFetch", () => {
         it("should reject with APIFetchFailError on HTTP errors", async () => {
             const expectedErrorMessage = "No active account found with the given credentials";
-            mockGet(Endpoint.LOGIN, {
+            fetchMock.get(Endpoint.LOGIN, {
                 status: 401,
                 body: JSON.stringify({
                     detail: expectedErrorMessage,
@@ -49,7 +44,7 @@ describe("endpoints.ts", () => {
                 },
             });
 
-            mockGet(Endpoint.LOGIN, () => {
+            fetchMock.get(Endpoint.LOGIN, () => {
                 // simulate a network error from the fetch call
                 throw new TypeError("Network request failed");
             });

@@ -6,8 +6,6 @@
     },
     "scripts": {
         "test": "LANG=en-US jest",
-        "test-silent": "LANG=en-US jest --silent --detectOpenHandles",
-        "test-single": "LANG=en-US jest -t 'should load data from the mocked fetch' --detectOpenHandles",
         "test-ci": "LANG=en-US jest --ci --coverage --reporters=default --reporters=jest-junit",
         "i18n-interface": "i18next-resources-for-ts interface -i ./src/locales/ -o ./src/@types/resources.d.ts"
     },

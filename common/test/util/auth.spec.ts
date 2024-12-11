@@ -14,12 +14,6 @@ import { addValidTokens, createFakeToken } from "../testHelpers/authTokenHelpers
 import { commonConfiguration, reinitializeCommon } from "../../src/init";
 import { sleep } from "../../src/util/sleep";
 
-// todosd: temporary bindings to update fetch-mock usage - update these?
-const mockedCalls = fetchMock.calls.bind(fetchMock);
-const mockGet = fetchMock.get.bind(fetchMock);
-const mockPost = fetchMock.post.bind(fetchMock);
-const resetMockedCalls = fetchMock.reset.bind(fetchMock);
-
 const correctUsername = "user";
 const correctPassword = "password";
 
@@ -39,8 +33,8 @@ beforeEach(() => {
     delayRefreshEndpoint = false;
 
     // reset mocks and mock call history
-    resetMockedCalls();
-    mockPost(
+    fetchMock.reset();
+    fetchMock.post(
         Endpoint.LOGIN,
         async (url: string, opts: RequestInit): Promise<MockResponseObject> => {
             const { username, password } = JSON.parse(opts.body as string);
@@ -60,7 +54,7 @@ beforeEach(() => {
             }
         }
     );
-    mockPost(
+    fetchMock.post(
         Endpoint.LOGIN_REFRESH,
         async (url: string, opts: RequestInit): Promise<MockResponseObject> => {
             const { refresh } = JSON.parse(opts.body as string);
@@ -136,9 +130,9 @@ describe("auth.ts", () => {
             });
 
             // get rid of the default mock for this test module
-            resetMockedCalls();
+            fetchMock.reset();
 
-            mockPost(Endpoint.LOGIN, () => {
+            fetchMock.post(Endpoint.LOGIN, () => {
                 // simulate a network error from the fetch call
                 throw new TypeError("Network request failed");
             });
@@ -192,7 +186,7 @@ describe("auth.ts", () => {
         const testGetAuthTokenAutoRefreshFailure = async (spec: GetAuthTokenRefreshTestSpec) => {
             expect(spec.refreshErrorReason).not.toBe(RefreshErrorReason.NO_ERROR);
             expect(testKeyValStorage.size).toEqual(0);
-            expect(mockedCalls().length).toEqual(0);
+            expect(fetchMock.calls().length).toEqual(0);
             reinitializeCommon({
                 ...testCommonConfig,
                 shouldLogoutOnTokenRefreshFailure: spec.shouldLogoutOnTokenRefreshFailure,
@@ -214,7 +208,7 @@ describe("auth.ts", () => {
 
             const expectedCalls =
                 spec.refreshErrorReason == RefreshErrorReason.REFRESH_TOKEN_EXPIRED ? 0 : 1;
-            expect(mockedCalls().length).toEqual(expectedCalls);
+            expect(fetchMock.calls().length).toEqual(expectedCalls);
 
             expect(await isLoggedIn()).toBe(spec.expectLoggedIn);
 
@@ -306,7 +300,7 @@ describe("auth.ts", () => {
 
         it("doesn't refresh tokens when all tokens valid", async () => {
             expect(testKeyValStorage.size).toEqual(0);
-            expect(mockedCalls().length).toEqual(0);
+            expect(fetchMock.calls().length).toEqual(0);
 
             await addValidTokens();
 
@@ -314,12 +308,12 @@ describe("auth.ts", () => {
             expect(newAccessToken).not.toBeNull();
             expect(await getAccessToken()).toEqual(newAccessToken);
 
-            expect(mockedCalls().length).toEqual(0);
+            expect(fetchMock.calls().length).toEqual(0);
         });
 
         it("refreshes expired access token when we have valid refresh token", async () => {
             expect(testKeyValStorage.size).toEqual(0);
-            expect(mockedCalls().length).toEqual(0);
+            expect(fetchMock.calls().length).toEqual(0);
 
             await setAccessToken(createFakeToken("access", true));
             await setRefreshToken(createFakeToken("refresh", false));
@@ -331,26 +325,26 @@ describe("auth.ts", () => {
                 Date.now() / 1000
             );
 
-            expect(mockedCalls().length).toEqual(1);
-            const [endpoint] = mockedCalls()[0];
+            expect(fetchMock.calls().length).toEqual(1);
+            const [endpoint] = fetchMock.calls()[0];
             expect(endpoint).toMatch(RegExp(`^.*${Endpoint.LOGIN_REFRESH}$`));
         });
 
         it("fails to refreshes tokens when we have invalid refresh token", async () => {
             expect(testKeyValStorage.size).toEqual(0);
-            expect(mockedCalls().length).toEqual(0);
+            expect(fetchMock.calls().length).toEqual(0);
 
             await setAccessToken(createFakeToken("access", true));
             await setRefreshToken(createFakeToken("refresh", true));
 
             const newAccessToken = await getAuthToken();
             expect(newAccessToken).toBeNull();
-            expect(mockedCalls().length).toEqual(0);
+            expect(fetchMock.calls().length).toEqual(0);
         });
 
         it("doesn't excessively refresh tokens on multiple async API calls", async () => {
             expect(testKeyValStorage.size).toEqual(0);
-            expect(mockedCalls().length).toEqual(0);
+            expect(fetchMock.calls().length).toEqual(0);
             delayRefreshEndpoint = true;
 
             await setAccessToken(createFakeToken("access", true));
@@ -366,8 +360,8 @@ describe("auth.ts", () => {
             const allAccessTokens = await Promise.all(promises);
 
             // There should only be one network call to the refresh endpoint.
-            expect(mockedCalls().length).toEqual(1);
-            const [endpoint] = mockedCalls()[0];
+            expect(fetchMock.calls().length).toEqual(1);
+            const [endpoint] = fetchMock.calls()[0];
             expect(endpoint).toMatch(RegExp(`^.*${Endpoint.LOGIN_REFRESH}$`));
 
             // All of the API calls should be using the same access token.

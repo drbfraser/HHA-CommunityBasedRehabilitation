@@ -1,9 +1,3 @@
-// import {
-//     calls as mockedCalls,
-//     get as mockGet,
-//     MockResponseObject,
-//     reset as resetFetchMocks,
-// } from "fetch-mock";
 import fetchMock, { MockResponseObject } from "fetch-mock";
 import { APILoadError, Endpoint, TAPILoadError } from "../../../src/util/endpoints";
 import { renderHook } from "@testing-library/react-hooks";
@@ -13,12 +7,6 @@ import { checkAuthHeader } from "../../testHelpers/mockServerHelpers";
 import { IUser, UserRole } from "../../../src/util/users";
 import { getCurrentUser, useCurrentUser } from "../../../src/util/hooks/currentUser";
 import { invalidateAllCachedAPIInternal } from "../../../src/util/hooks/cachedAPI";
-
-// todosd: temporary bindings to update fetch-mock usage - update these?
-const mockedCalls = fetchMock.calls.bind(fetchMock);
-const mockGet = fetchMock.get.bind(fetchMock);
-const resetFetchMocks = fetchMock.reset.bind(fetchMock);
-
 
 const testUser: IUser = {
     id: "1",
@@ -32,7 +20,7 @@ const testUser: IUser = {
 };
 
 const mockGetWithDefaultUser = () => {
-    mockGet(Endpoint.USER_CURRENT, async (url, request): Promise<MockResponseObject> => {
+    fetchMock.get(Endpoint.USER_CURRENT, async (url, request): Promise<MockResponseObject> => {
         const errorResponse: MockResponseObject | null = checkAuthHeader(request);
         if (errorResponse) {
             return errorResponse;
@@ -47,7 +35,7 @@ const mockGetWithDefaultUser = () => {
 
 beforeEach(async () => {
     await invalidateAllCachedAPIInternal(true, true, false, false);
-    resetFetchMocks();
+    fetchMock.reset();
     await addValidTokens();
 });
 
@@ -75,15 +63,15 @@ describe("currentUser.ts", () => {
         it("should refetch if refresh is true", async () => {
             mockGetWithDefaultUser();
             expect(await getCurrentUser(false)).toEqual(testUser);
-            expect(mockedCalls().length).toBe(1);
+            expect(fetchMock.calls().length).toBe(1);
             expect(await getCurrentUser(false)).toEqual(testUser);
-            expect(mockedCalls().length).toBe(1);
+            expect(fetchMock.calls().length).toBe(1);
             expect(await getCurrentUser(true)).toEqual(testUser);
-            expect(mockedCalls().length).toBe(2);
+            expect(fetchMock.calls().length).toBe(2);
         });
 
         it("should use APILoadError if the server returns an error", async () => {
-            mockGet(Endpoint.USER_CURRENT, { status: 500 });
+            fetchMock.get(Endpoint.USER_CURRENT, { status: 500 });
 
             const freshGetCurrentUserFn = await fromNewCommonModule(async () =>
                 import("../../../src/util/hooks/currentUser").then(
@@ -97,7 +85,7 @@ describe("currentUser.ts", () => {
         const testCurrentUserEndpointReturningResponse = async (
             responseFromServer: any
         ): Promise<IUser> => {
-            mockGet(Endpoint.USER_CURRENT, async (url, request): Promise<MockResponseObject> => {
+            fetchMock.get(Endpoint.USER_CURRENT, async (url, request): Promise<MockResponseObject> => {
                 const errorResponse: MockResponseObject | null = checkAuthHeader(request);
                 if (errorResponse) {
                     return errorResponse;

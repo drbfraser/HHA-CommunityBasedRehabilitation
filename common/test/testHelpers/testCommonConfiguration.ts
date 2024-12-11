@@ -17,7 +17,7 @@ const mapStorageProvider: KeyValStorageProvider = {
 
 export const testCommonConfig: CommonConfiguration = {
     apiUrl: "",
-    // socketIOUrl: "", // todosd: remove?
+    socketIOUrl: "",
     keyValStorageProvider: mapStorageProvider,
     logoutCallback: async (): Promise<void> => {},
     shouldLogoutOnTokenRefreshFailure: false,

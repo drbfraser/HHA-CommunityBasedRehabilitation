@@ -57,6 +57,3 @@ export const useDisabilities = (t: TFunction) => {
 
     return translatedDisabilities;
 };
-
-// todosd: remove, or update common tests (disabilities.spec.ts)
-export const useDisabilitiesTest = cache.useCacheHook();

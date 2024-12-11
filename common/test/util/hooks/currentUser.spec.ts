@@ -85,17 +85,20 @@ describe("currentUser.ts", () => {
         const testCurrentUserEndpointReturningResponse = async (
             responseFromServer: any
         ): Promise<IUser> => {
-            fetchMock.get(Endpoint.USER_CURRENT, async (url, request): Promise<MockResponseObject> => {
-                const errorResponse: MockResponseObject | null = checkAuthHeader(request);
-                if (errorResponse) {
-                    return errorResponse;
-                }
+            fetchMock.get(
+                Endpoint.USER_CURRENT,
+                async (url, request): Promise<MockResponseObject> => {
+                    const errorResponse: MockResponseObject | null = checkAuthHeader(request);
+                    if (errorResponse) {
+                        return errorResponse;
+                    }
 
-                return {
-                    status: 200,
-                    body: JSON.stringify(responseFromServer),
-                };
-            });
+                    return {
+                        status: 200,
+                        body: JSON.stringify(responseFromServer),
+                    };
+                }
+            );
 
             const freshGetCurrentUserFn = await fromNewCommonModule(async () =>
                 import("../../../src/util/hooks/currentUser").then(

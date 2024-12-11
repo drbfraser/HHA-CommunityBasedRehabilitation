@@ -57,7 +57,7 @@ describe("disabilities.ts", () => {
             mockGetWithDefaultTestDisabilityMap();
 
             // Mock the i18n t function, which useDisabilities now expects.  Note that we are not testing the
-            // veracity of the translations themselves, but instead that the cachedAPI is functioning correctly 
+            // veracity of the translations themselves, but instead that the cachedAPI is functioning correctly
             const mockTFunction: TFunction = ((key: string) => {
                 return key;
             }) as TFunction;
@@ -76,7 +76,9 @@ describe("disabilities.ts", () => {
             // The loading value is an empty map.
             expect(renderHookResult.result.current.size).toBe(0);
             await renderHookResult.waitForNextUpdate();
-            expect(renderHookResult.result.current.entries()).toEqual(expectedTranslatedDisabilityMap.entries());
+            expect(renderHookResult.result.current.entries()).toEqual(
+                expectedTranslatedDisabilityMap.entries()
+            );
         });
     });
 

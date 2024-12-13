@@ -14,7 +14,7 @@ django-cleanup==5.2.0
 python-json-logger==2.0.4
 # Dependencies for SocketIO
 enum-compat==0.0.3
-eventlet==0.37.0
+eventlet==0.38.1
 greenlet==1.1.2
 python-engineio
 python-socketio

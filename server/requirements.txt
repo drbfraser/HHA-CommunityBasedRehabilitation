@@ -15,7 +15,7 @@ python-json-logger==2.0.4
 # Dependencies for SocketIO
 enum-compat==0.0.3
 eventlet==0.38.1
-greenlet==1.1.2
+greenlet==3.1.1
 python-engineio
 python-socketio
 six==1.10.0

@@ -9,3 +9,7 @@ export const Container = styled("div")({
 export const FieldDoubleIndent = styled("div")({
     paddingLeft: "18px",
 });
+
+export const FieldIndent = styled("div")({
+    paddingLeft: "9px",
+});

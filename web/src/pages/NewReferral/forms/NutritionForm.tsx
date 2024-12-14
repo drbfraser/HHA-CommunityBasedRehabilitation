@@ -5,9 +5,9 @@ import { CheckboxWithLabel } from "formik-mui";
 import { FormLabel, styled } from "@mui/material";
 
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";
-import { FieldIndent } from "components/StyledComponents/StyledComponents";
+import * as Styled from "../NewReferral.styles";
 
-const FieldContainer = styled(FieldIndent)({
+const FieldContainer = styled(Styled.FieldIndent)({
     display: "flex",
     flexDirection: "column",
 });

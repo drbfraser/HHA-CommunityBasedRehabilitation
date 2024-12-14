@@ -6,7 +6,7 @@ import { FormLabel, MenuItem } from "@mui/material";
 
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";
-import { FieldIndent } from "components/StyledComponents/StyledComponents";
+import * as Styled from "../NewReferral.styles";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -21,7 +21,7 @@ const PhysiotherapyForm = (props: IFormProps) => {
             <FormLabel>{t("referral.whatCondition")}</FormLabel>
             <br />
             <br />
-            <FieldIndent>
+            <Styled.FieldIndent>
                 <Field
                     component={TextField}
                     fullWidth
@@ -51,7 +51,7 @@ const PhysiotherapyForm = (props: IFormProps) => {
                         />
                     </div>
                 )}
-            </FieldIndent>
+            </Styled.FieldIndent>
         </>
     );
 };

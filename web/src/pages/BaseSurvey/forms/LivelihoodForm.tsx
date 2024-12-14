@@ -8,7 +8,6 @@ import {
     BaseSurveyFormField,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
 import { isSelfEmployed } from "@cbr/common/util/survey";
-import * as SharedStyled from "components/StyledComponents/StyledComponents";
 import * as Styled from "../baseSurvey.style";
 
 const AdditionalInfoContainer = styled(Styled.Container)({
@@ -19,7 +18,7 @@ const AdditionalInfoContainer = styled(Styled.Container)({
 const LivelihoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
     const isWorking: boolean = formikProps.values[BaseSurveyFormField.isWorking];
     return (
-        <SharedStyled.FieldIndent>
+        <Styled.FieldIndent>
             <FormControl fullWidth variant="outlined">
                 <Field
                     component={CheckboxWithLabel}
@@ -88,7 +87,7 @@ const LivelihoodForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                     Label={{ label: baseFieldLabels[BaseSurveyFormField.wantWork] }}
                 />
             </FormControl>
-        </SharedStyled.FieldIndent>
+        </Styled.FieldIndent>
     );
 };
 

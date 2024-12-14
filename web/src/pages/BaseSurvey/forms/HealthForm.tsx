@@ -9,7 +9,6 @@ import {
     BaseSurveyFormField,
 } from "@cbr/common/forms/BaseSurvey/baseSurveyFields";
 import { deviceTypes, rateLevel } from "@cbr/common/util/survey";
-import * as SharedStyled from "components/StyledComponents/StyledComponents";
 import * as Styled from "../baseSurvey.style";
 
 const CheckboxSection = styled("div")({
@@ -88,7 +87,7 @@ const HealthForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
             </CheckboxSection>
 
             {formikProps.values[BaseSurveyFormField.needDevice] && (
-                <SharedStyled.FieldIndent>
+                <Styled.FieldIndent>
                     <FormControl fullWidth variant="outlined">
                         <FormLabel sx={{ marginBottom: "1em" }}>
                             {t("survey.assistiveDeviceNeeds")}
@@ -108,7 +107,7 @@ const HealthForm = ({ formikProps }: { formikProps: FormikProps<any> }) => {
                             ))}
                         </Field>
                     </FormControl>
-                </SharedStyled.FieldIndent>
+                </Styled.FieldIndent>
             )}
 
             <FormLabel>{t("survey.satisfiedWithHealthService")}</FormLabel>

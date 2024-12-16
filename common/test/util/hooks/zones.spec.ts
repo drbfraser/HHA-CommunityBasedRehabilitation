@@ -1,4 +1,4 @@
-import { get as mockGet, MockResponseObject, reset as resetFetchMocks } from "fetch-mock";
+import fetchMock, { MockResponseObject } from "fetch-mock";
 import { Endpoint } from "../../../src/util/endpoints";
 import { renderHook } from "@testing-library/react-hooks";
 import { addValidTokens } from "../../testHelpers/authTokenHelpers";
@@ -16,7 +16,7 @@ const testZoneMap: TZoneMap = new Map<number, string>([
 ]);
 
 const mockGetWithDefaultZones = () => {
-    mockGet(Endpoint.ZONES, async (url, request): Promise<MockResponseObject> => {
+    fetchMock.get(Endpoint.ZONES, async (url, request): Promise<MockResponseObject> => {
         const errorResponse: MockResponseObject | null = checkAuthHeader(request);
         if (errorResponse) {
             return errorResponse;
@@ -40,7 +40,7 @@ const mockGetWithDefaultZones = () => {
 
 beforeEach(async () => {
     await invalidateAllCachedAPIInternal(true, true, false, false);
-    resetFetchMocks();
+    fetchMock.reset();
     await addValidTokens();
 });
 
@@ -67,7 +67,7 @@ describe("zones.ts", () => {
         });
 
         it("should use an empty map if the server returns an error", async () => {
-            mockGet(Endpoint.ZONES, { status: 500 });
+            fetchMock.get(Endpoint.ZONES, { status: 500 });
 
             const freshGetZonesFn = await fromNewCommonModule(async () =>
                 import("../../../src/util/hooks/zones").then((module) => {
@@ -79,7 +79,7 @@ describe("zones.ts", () => {
         });
 
         it("should not throw if the server returns different JSON schema", async () => {
-            mockGet(Endpoint.ZONES, async (url, request): Promise<MockResponseObject> => {
+            fetchMock.get(Endpoint.ZONES, async (url, request): Promise<MockResponseObject> => {
                 const errorResponse: MockResponseObject | null = checkAuthHeader(request);
                 if (errorResponse) {
                     return errorResponse;

@@ -11,8 +11,8 @@ import { IAPIToken } from "../../src/util/internal/tokens";
  * header passes. If not null, the response should be immediately returned.
  */
 export const checkAuthHeader = (request: MockRequest): MockResponseObject | null => {
-    const authorizationHeader = request.headers.hasOwnProperty("Authorization")
-        ? (request.headers["Authorization"] as string)
+    const authorizationHeader = request.headers?.hasOwnProperty("Authorization")
+        ? (request.headers["Authorization" as keyof HeadersInit] as string)
         : (request as Request).headers.get("Authorization");
 
     try {

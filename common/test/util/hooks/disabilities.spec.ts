@@ -1,4 +1,4 @@
-import { get as mockGet, MockResponseObject, reset as resetFetchMocks } from "fetch-mock";
+import fetchMock, { MockResponseObject } from "fetch-mock";
 import { Endpoint } from "../../../src/util/endpoints";
 import { renderHook } from "@testing-library/react-hooks";
 import {
@@ -12,19 +12,20 @@ import { addValidTokens } from "../../testHelpers/authTokenHelpers";
 import { fromNewCommonModule } from "../../testHelpers/testCommonConfiguration";
 import { checkAuthHeader } from "../../testHelpers/mockServerHelpers";
 import { invalidateAllCachedAPIInternal } from "../../../src/util/hooks/cachedAPI";
+import { TFunction } from "i18next";
 
 const ID_OF_OTHER_IN_TEST_DISABILITY_MAP = 4;
 
 const testDisabilityMap: TDisabilityMap = new Map<number, string>([
-    [0, "disability #1"],
-    [1, "disability #2"],
-    [2, "disability #3"],
+    [0, "amputee"],
+    [1, "polio"],
+    [2, "hydrocephalus"],
     [ID_OF_OTHER_IN_TEST_DISABILITY_MAP, "Other"],
-    [5, "disability #4"],
+    [5, "polio"],
 ]);
 
 const mockGetWithDefaultTestDisabilityMap = () => {
-    mockGet(Endpoint.DISABILITIES, async (url, request): Promise<MockResponseObject> => {
+    fetchMock.get(Endpoint.DISABILITIES, async (url, request): Promise<MockResponseObject> => {
         const errorResponse = checkAuthHeader(request);
         if (errorResponse) {
             return errorResponse;
@@ -46,7 +47,7 @@ const mockGetWithDefaultTestDisabilityMap = () => {
 
 beforeEach(async () => {
     await invalidateAllCachedAPIInternal(true, true, false, false);
-    resetFetchMocks();
+    fetchMock.reset();
     await addValidTokens();
 });
 
@@ -55,13 +56,29 @@ describe("disabilities.ts", () => {
         it("should load data from the mocked fetch", async () => {
             mockGetWithDefaultTestDisabilityMap();
 
+            // Mock the i18n t function, which useDisabilities now expects.  Note that we are not testing the
+            // veracity of the translations themselves, but instead that the cachedAPI is functioning correctly
+            const mockTFunction: TFunction = ((key: string) => {
+                return key;
+            }) as TFunction;
+
+            const expectedTranslatedDisabilityMap: TDisabilityMap = new Map<number, string>([
+                [0, "disabilities.amputee"],
+                [1, "disabilities.polio"],
+                [2, "disabilities.hydrocephalus"],
+                [ID_OF_OTHER_IN_TEST_DISABILITY_MAP, "disabilities.other"],
+                [5, "disabilities.polio"],
+            ]);
+
             // TODO: Have a way to clear out the cache, because using Jest's isolateModules doesn't
             //  work well with testing these hooks with different local state.
-            const renderHookResult = renderHook(() => useDisabilities());
+            const renderHookResult = renderHook(() => useDisabilities(mockTFunction));
             // The loading value is an empty map.
             expect(renderHookResult.result.current.size).toBe(0);
             await renderHookResult.waitForNextUpdate();
-            expect(renderHookResult.result.current.entries()).toEqual(testDisabilityMap.entries());
+            expect(renderHookResult.result.current.entries()).toEqual(
+                expectedTranslatedDisabilityMap.entries()
+            );
         });
     });
 
@@ -73,7 +90,7 @@ describe("disabilities.ts", () => {
         });
 
         it("should use an empty map if the server returns an error", async () => {
-            mockGet(Endpoint.DISABILITIES, { status: 500 });
+            fetchMock.get(Endpoint.DISABILITIES, { status: 500 });
 
             const freshGetDisabilitiesFn = await fromNewCommonModule(async () => {
                 return import("../../../src/util/hooks/disabilities").then(

@@ -1,10 +1,4 @@
-import {
-    calls as mockedCalls,
-    get as mockGet,
-    MockResponseObject,
-    reset as resetFetchMocks,
-    resetBehavior as resetFetchMockBehavior,
-} from "fetch-mock";
+import fetchMock, { MockResponseObject } from "fetch-mock";
 import {
     APICacheData,
     invalidateAllCachedAPIInternal,
@@ -68,7 +62,7 @@ const createTestCache = (key: string = TEST_CACHE_KEY, timeout?: number) => {
 };
 
 const mockSuccessGetWithDelayedResponse = (responseBody: any, delayMs: number = 10) => {
-    mockGet(TEST_FAKE_ENDPOINT, async (): Promise<MockResponseObject> => {
+    fetchMock.get(TEST_FAKE_ENDPOINT, async (): Promise<MockResponseObject> => {
         // to ensure loading value is always used
         await sleep(delayMs);
         return {
@@ -81,7 +75,7 @@ const mockSuccessGetWithDelayedResponse = (responseBody: any, delayMs: number = 
 beforeEach(async () => {
     await invalidateAllCachedAPIInternal(true, true, false, false);
     untrackAllCaches();
-    resetFetchMocks();
+    fetchMock.reset();
     await addValidTokens();
 });
 
@@ -98,7 +92,7 @@ describe("cachedAPI.ts", () => {
         beforeEach(() => {
             firstCache = createTestCache(TEST_CACHE_KEY);
             secondCache = createTestCache(TEST_CACHE2_KEY);
-            mockGet(TEST_FAKE_ENDPOINT, {
+            fetchMock.get(TEST_FAKE_ENDPOINT, {
                 status: 200,
                 body: JSON.stringify(expectedTestData),
             });
@@ -177,11 +171,11 @@ describe("cachedAPI.ts", () => {
             expect(await secondCache.getCachedValue()).toEqual(expectedTestData);
             expect(secondCache.promise).not.toBeUndefined();
 
-            expect(mockedCalls().length).toBe(2);
+            expect(fetchMock.calls().length).toBe(2);
 
             await invalidateAllCachedAPIInternal(true, false, true, true);
 
-            expect(mockedCalls().length).toBe(4);
+            expect(fetchMock.calls().length).toBe(4);
 
             expect(firstCache.value).toEqual(expectedTestData);
             expect(firstCache.promise).not.toBeUndefined();
@@ -260,7 +254,7 @@ describe("cachedAPI.ts", () => {
                 c: true,
                 d: ["a", "c", "d", "c"],
             };
-            mockGet(TEST_FAKE_ENDPOINT, {
+            fetchMock.get(TEST_FAKE_ENDPOINT, {
                 status: 200,
                 body: JSON.stringify(expectedTestData),
             });
@@ -289,7 +283,7 @@ describe("cachedAPI.ts", () => {
             reinitializeCommon({ ...testCommonConfig, useKeyValStorageForCachedAPIBackup: true });
             const cache = createTestCache();
             const expectedTestData: ITestData = { a: "A string", b: -10, c: true, d: ["a", "c"] };
-            mockGet(TEST_FAKE_ENDPOINT, async () => {
+            fetchMock.get(TEST_FAKE_ENDPOINT, async () => {
                 await sleep(75);
                 return {
                     status: 200,
@@ -327,7 +321,7 @@ describe("cachedAPI.ts", () => {
             } as ITestData;
 
             let slowResponse = true;
-            mockGet(TEST_FAKE_ENDPOINT, async () => {
+            fetchMock.get(TEST_FAKE_ENDPOINT, async () => {
                 if (slowResponse) {
                     await sleep(5000);
                 }
@@ -351,33 +345,33 @@ describe("cachedAPI.ts", () => {
                 d: ["a", "c", "d", "c"],
             };
 
-            mockGet(TEST_FAKE_ENDPOINT, {
+            fetchMock.get(TEST_FAKE_ENDPOINT, {
                 status: 200,
                 body: JSON.stringify(expectedTestData),
             });
 
             const cache = createTestCache();
             expect(await cache.getCachedValue(false)).toEqual(expectedTestData);
-            expect(mockedCalls().length).toBe(1);
+            expect(fetchMock.calls().length).toBe(1);
 
             // Make sure a subsequent call to getCachedValue with refreshValue false doesn't refetch.
-            resetFetchMockBehavior();
+            fetchMock.resetBehavior();
             const otherTestData: ITestData = {
                 a: "nt",
                 b: -2323,
                 c: false,
                 d: ["aaaaaaaaaaa"],
             };
-            mockGet(TEST_FAKE_ENDPOINT, {
+            fetchMock.get(TEST_FAKE_ENDPOINT, {
                 status: 200,
                 body: JSON.stringify(otherTestData),
             });
             expect(await cache.getCachedValue(false)).toEqual(expectedTestData);
-            expect(mockedCalls().length).toBe(1);
+            expect(fetchMock.calls().length).toBe(1);
 
             const newCacheInstance = createTestCache();
             expect(await newCacheInstance.getCachedValue(false)).toEqual(otherTestData);
-            expect(mockedCalls().length).toBe(2);
+            expect(fetchMock.calls().length).toBe(2);
         });
 
         it("should refetch and notify listeners if refreshValue is true", async () => {
@@ -388,7 +382,7 @@ describe("cachedAPI.ts", () => {
                 d: ["a", "c", "d", "c"],
             };
 
-            mockGet(TEST_FAKE_ENDPOINT, {
+            fetchMock.get(TEST_FAKE_ENDPOINT, {
                 status: 200,
                 body: JSON.stringify(expectedTestData),
             });
@@ -398,7 +392,7 @@ describe("cachedAPI.ts", () => {
             cache.addInvalidationListener(listener);
 
             expect(await cache.getCachedValue(false)).toEqual(expectedTestData);
-            expect(mockedCalls().length).toBe(1);
+            expect(fetchMock.calls().length).toBe(1);
             expect(listener).toBeCalledTimes(0);
 
             const newExpectedTestData: ITestData = {
@@ -408,24 +402,24 @@ describe("cachedAPI.ts", () => {
                 d: ["a", "c", "d", "c", "c", "d", "c"],
             };
 
-            resetFetchMockBehavior();
-            mockGet(TEST_FAKE_ENDPOINT, {
+            fetchMock.resetBehavior();
+            fetchMock.get(TEST_FAKE_ENDPOINT, {
                 status: 200,
                 body: JSON.stringify(newExpectedTestData),
             });
 
             expect(await cache.getCachedValue(true)).toEqual(newExpectedTestData);
-            expect(mockedCalls().length).toBe(2);
+            expect(fetchMock.calls().length).toBe(2);
             expect(listener).toBeCalledTimes(1);
 
             cache.removeInvalidationListener(listener);
             expect(await cache.getCachedValue(true)).toEqual(newExpectedTestData);
-            expect(mockedCalls().length).toBe(3);
+            expect(fetchMock.calls().length).toBe(3);
             expect(listener).toBeCalledTimes(1);
         });
 
         it("should give error value if server returns error", async () => {
-            mockGet(TEST_FAKE_ENDPOINT, { status: 500 });
+            fetchMock.get(TEST_FAKE_ENDPOINT, { status: 500 });
             const cache = createTestCache();
             expect(await cache.getCachedValue()).toBe(cache.errorValue);
         });
@@ -439,7 +433,7 @@ describe("cachedAPI.ts", () => {
                 d: ["AAAAAAAAA", 'CCCCCCCCCCCCCC"'],
             };
 
-            mockGet(TEST_FAKE_ENDPOINT, {
+            fetchMock.get(TEST_FAKE_ENDPOINT, {
                 status: 200,
                 body: JSON.stringify(expectedTestData),
             });
@@ -447,8 +441,8 @@ describe("cachedAPI.ts", () => {
             expect(await cache.getCachedValue()).toEqual(expectedTestData);
             await cache.invalidate(false, false, false, true);
 
-            resetFetchMockBehavior();
-            mockGet(TEST_FAKE_ENDPOINT, { status: 500 });
+            fetchMock.resetBehavior();
+            fetchMock.get(TEST_FAKE_ENDPOINT, { status: 500 });
 
             expect(await cache.getCachedValue()).toEqual(expectedTestData);
         });
@@ -459,7 +453,7 @@ describe("cachedAPI.ts", () => {
                 looselyTypedStuff: 1000,
             };
 
-            mockGet(TEST_FAKE_ENDPOINT, {
+            fetchMock.get(TEST_FAKE_ENDPOINT, {
                 status: 200,
                 body: JSON.stringify(wrongInterfaceData),
             });
@@ -472,7 +466,7 @@ describe("cachedAPI.ts", () => {
             reinitializeCommon({ ...testCommonConfig, useKeyValStorageForCachedAPIBackup: true });
             const cache = createTestCache();
 
-            mockGet(TEST_FAKE_ENDPOINT, { status: 500 });
+            fetchMock.get(TEST_FAKE_ENDPOINT, { status: 500 });
             expect(await cache.getCachedValue()).toEqual(cache.errorValue);
 
             const expectedTestData: ITestData = {
@@ -482,16 +476,16 @@ describe("cachedAPI.ts", () => {
                 d: ["a", "c", "d", "c"],
             };
 
-            resetFetchMockBehavior();
-            mockGet(TEST_FAKE_ENDPOINT, {
+            fetchMock.resetBehavior();
+            fetchMock.get(TEST_FAKE_ENDPOINT, {
                 status: 200,
                 body: JSON.stringify(expectedTestData),
             });
 
             expect(await cache.getCachedValue()).toEqual(expectedTestData);
 
-            resetFetchMockBehavior();
-            mockGet(TEST_FAKE_ENDPOINT, { status: 500 });
+            fetchMock.resetBehavior();
+            fetchMock.get(TEST_FAKE_ENDPOINT, { status: 500 });
             // Invalidate and also clear the in-memory value.
             await cache.invalidate(true, false, false, true);
             expect(await cache.getCachedValue()).toEqual(expectedTestData);
@@ -505,7 +499,7 @@ describe("cachedAPI.ts", () => {
                 c: true,
                 d: ["a", "c", "d", "c"],
             };
-            mockGet(TEST_FAKE_ENDPOINT, {
+            fetchMock.get(TEST_FAKE_ENDPOINT, {
                 status: 200,
                 body: JSON.stringify(expectedTestData),
             });
@@ -513,8 +507,8 @@ describe("cachedAPI.ts", () => {
             const cache = createTestCache();
             expect(await cache.getCachedValue()).toEqual(expectedTestData);
 
-            resetFetchMockBehavior();
-            mockGet(TEST_FAKE_ENDPOINT, { status: 500 });
+            fetchMock.resetBehavior();
+            fetchMock.get(TEST_FAKE_ENDPOINT, { status: 500 });
 
             // Invalidate and also clear the in-memory value.
             await cache.invalidate(true, false, false, true);
@@ -534,15 +528,15 @@ describe("cachedAPI.ts", () => {
                 c: true,
                 d: ["a", "c", "d", "c"],
             };
-            mockGet(TEST_FAKE_ENDPOINT, {
+            fetchMock.get(TEST_FAKE_ENDPOINT, {
                 status: 200,
                 body: JSON.stringify(expectedTestData),
             });
 
             expect(await cache.getCachedValue()).toEqual(expectedTestData);
 
-            resetFetchMockBehavior();
-            mockGet(TEST_FAKE_ENDPOINT, { status: 500 });
+            fetchMock.resetBehavior();
+            fetchMock.get(TEST_FAKE_ENDPOINT, { status: 500 });
 
             // Invalidate and also clear the in-memory value.
             await cache.invalidate(true, true);
@@ -558,7 +552,7 @@ describe("cachedAPI.ts", () => {
             const firstTestData: ITestData = { a: "A string", b: -10, c: true, d: ["a", "c"] };
             const secondTestData: ITestData = { a: "Another", b: 55, c: false, d: ["d"] };
             let testDataSwitch = 0;
-            mockGet(TEST_FAKE_ENDPOINT, async () => {
+            fetchMock.get(TEST_FAKE_ENDPOINT, async () => {
                 if (testDataSwitch === 0) {
                     await sleep(100);
                     return {
@@ -601,7 +595,7 @@ describe("cachedAPI.ts", () => {
                 d: ["a", "c", "d", "c"],
             };
 
-            mockGet(TEST_FAKE_ENDPOINT, async (): Promise<MockResponseObject> => {
+            fetchMock.get(TEST_FAKE_ENDPOINT, async (): Promise<MockResponseObject> => {
                 // to ensure loading value is always used
                 await sleep(10);
                 return {
@@ -627,7 +621,7 @@ describe("cachedAPI.ts", () => {
         });
 
         it("should use error value when server sends error", async () => {
-            mockGet(TEST_FAKE_ENDPOINT, async (): Promise<MockResponseObject> => {
+            fetchMock.get(TEST_FAKE_ENDPOINT, async (): Promise<MockResponseObject> => {
                 // to ensure loading value is always used
                 await sleep(10);
                 return { status: 500 };
@@ -663,7 +657,7 @@ describe("cachedAPI.ts", () => {
             const secondReactComponent = renderHook(() => useCache());
             expect(secondReactComponent.result.current).toEqual(firstTestDataValues);
 
-            resetFetchMockBehavior();
+            fetchMock.resetBehavior();
             const secondTestDataValues: ITestData = {
                 a: "New test data",
                 b: 11354545,
@@ -683,7 +677,7 @@ describe("cachedAPI.ts", () => {
             expect(firstReactComponent.result.current).toEqual(secondTestDataValues);
             expect(secondReactComponent.result.current).toEqual(secondTestDataValues);
 
-            resetFetchMockBehavior();
+            fetchMock.resetBehavior();
             mockSuccessGetWithDelayedResponse(firstTestDataValues);
 
             await invalidateAllCachedAPIInternal(true, false, false, true);

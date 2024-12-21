@@ -1,7 +1,7 @@
 import { clientPrioritySort, getZones, IOutstandingReferral } from "@cbr/common";
 import { IClientSummary } from "@cbr/common";
 import { riskLevels } from "@cbr/common";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import { ClientListRow } from "../ClientList/ClientListRequest";
 import { dbType } from "../../util/watermelonDatabase";
 import { Q } from "@nozbe/watermelondb";

@@ -26,7 +26,7 @@ import { hasUnsyncedChanges } from "@nozbe/watermelondb/sync";
 import { ISync } from "../screens/Sync/Sync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SyncSettings } from "../screens/Sync/PrefConstants";
-import { modelName } from "../models/constant";
+import { modelName } from "../model/constant";
 import { showGenericAlert } from "./genericAlert";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);

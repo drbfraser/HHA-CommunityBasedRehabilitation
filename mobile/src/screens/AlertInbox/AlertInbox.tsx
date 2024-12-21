@@ -5,7 +5,7 @@ import useStyles from "./AlertInbox.styles";
 import { APILoadError, getCurrentUser, IUser } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { themeColors } from "@cbr/common";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import { priorities, priorityLevels } from "@cbr/common/src/util/alerts";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useTranslation } from "react-i18next";

@@ -1,7 +1,7 @@
 import { IUser, TPasswordValues } from "@cbr/common";
 import { TAdminPasswordValues, TNewUserValues } from "@cbr/common/src/forms/Admin/adminFields";
 import { FormikHelpers } from "formik";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import { dbType } from "../../util/watermelonDatabase";
 import { AutoSyncDB } from "../../util/syncHandler";
 

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { Q } from "@nozbe/watermelondb";
 import { Text, View } from "react-native";
-import { modelName } from "../../models/constant";
-import { isSyncableModel } from "../../models/interfaces/SyncableModel";
+import { modelName } from "../../model/constant";
+import { isSyncableModel } from "../../model/interfaces/SyncableModel";
 import { useTranslation } from "react-i18next";
 
 export default function LocalChangeList() {

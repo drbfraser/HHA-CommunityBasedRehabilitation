@@ -16,7 +16,7 @@ import useStyles from "./Entry.styles";
 import { ScrollView, View } from "react-native";
 import DataCard from "../../../../components/DataCard/DataCard";
 import { database } from "../../../../util/watermelonDatabase";
-import { modelName } from "../../../../models/constant";
+import { modelName } from "../../../../model/constant";
 import { useTranslation } from "react-i18next";
 
 interface IEntryProps {

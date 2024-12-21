@@ -9,7 +9,7 @@ import { RootState } from "../../redux/index";
 import { clearSyncConflicts } from "../../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import {
     RejectedColumn,
     SyncConflict,

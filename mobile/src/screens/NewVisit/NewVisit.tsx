@@ -38,7 +38,7 @@ import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/Confir
 import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";

@@ -1,5 +1,5 @@
 import { IRisk } from "@cbr/common";
-import { modelName } from "../../../models/constant";
+import { modelName } from "../../../model/constant";
 import { dbType } from "../../../util/watermelonDatabase";
 import { addRisk } from "../../NewClient/formHandler";
 import { AutoSyncDB } from "../../../util/syncHandler";

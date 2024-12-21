@@ -1,6 +1,6 @@
 import { ReferralFormField, ReferralFormValues, referralHandleSubmit } from "@cbr/common";
 import { FormikHelpers } from "formik";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import { dbType } from "../../util/watermelonDatabase";
 import { AutoSyncDB } from "../../util/syncHandler";
 

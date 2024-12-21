@@ -4,7 +4,7 @@ import {
     BaseSurveyFormField,
 } from "@cbr/common/src/forms/BaseSurvey/baseSurveyFields";
 import { baseSurveyHandleSubmitForm } from "@cbr/common/src/forms/BaseSurvey/baseSurveyHandler";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import { dbType } from "../../util/watermelonDatabase";
 import { AutoSyncDB } from "../../util/syncHandler";
 

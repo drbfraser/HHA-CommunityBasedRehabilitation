@@ -1,7 +1,7 @@
 import { FormikHelpers } from "formik";
 import { TVisitFormValues } from "@cbr/common/src/forms/newVisit/visitFormFields";
 import { dbType } from "../../util/watermelonDatabase";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import { AutoSyncDB } from "../../util/syncHandler";
 
 export const handleSubmit = async (

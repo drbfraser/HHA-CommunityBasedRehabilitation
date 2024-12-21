@@ -25,7 +25,7 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
 import Alert from "../../components/Alert/Alert";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {

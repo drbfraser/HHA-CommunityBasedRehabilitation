@@ -7,7 +7,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Provider as StoreProvider } from "react-redux";
 import { io } from "socket.io-client/dist/socket.io";
-import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
+import DatabaseProvider from "@nozbe/watermelondb/react/DatabaseProvider";
 
 import {
     APILoadError,

@@ -10,7 +10,7 @@ import UserProfileContents from "../../components/UserProfileContents/UserProfil
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { resourceLimits } from "worker_threads";
 import { useIsFocused } from "@react-navigation/core";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import { useTranslation } from "react-i18next";
 
 interface ILoadError {

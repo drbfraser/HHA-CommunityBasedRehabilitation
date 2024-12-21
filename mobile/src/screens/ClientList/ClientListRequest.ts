@@ -11,7 +11,7 @@ import {
 } from "@cbr/common";
 import { dbType } from "../../util/watermelonDatabase";
 import { Q } from "@nozbe/watermelondb";
-import { modelName, tableKey } from "../../models/constant";
+import { modelName, tableKey } from "../../model/constant";
 
 export type ClientListRow = {
     id: string;

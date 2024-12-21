@@ -7,7 +7,7 @@ import {
     UserRole,
     userRoles,
 } from "@cbr/common";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import { dbType } from "../../util/watermelonDatabase";
 import i18n from "i18next";
 

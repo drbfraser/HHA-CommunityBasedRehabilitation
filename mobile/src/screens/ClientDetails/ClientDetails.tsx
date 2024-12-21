@@ -27,7 +27,7 @@ import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 import defaultProfilePicture from "../../util/defaultProfilePicture";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useTranslation } from "react-i18next";

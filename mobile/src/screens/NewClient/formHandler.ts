@@ -1,6 +1,6 @@
 import { TClientValues } from "@cbr/common";
 import { FormikHelpers } from "formik";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { dbType } from "../../util/watermelonDatabase";

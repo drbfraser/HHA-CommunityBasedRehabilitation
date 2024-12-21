@@ -27,7 +27,7 @@ import {
     VisitField,
 } from "@cbr/common";
 import { Q } from "@nozbe/watermelondb";
-import { modelName } from "../../models/constant";
+import { modelName } from "../../model/constant";
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";
 

@@ -35,8 +35,8 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
             const fetchedVisit: any = await database.get(modelName.visits).find(visitSummary.id);
             const iVisit: IVisit = {
                 id: fetchedVisit.id,
-                user_id: fetchedVisit.user_id, // Value in fetchVisit, but undefined in iVisit. Why?
-                client_id: fetchedVisit.client_id, // Value in fetchVisit, but undefined in iVisit. Why?
+                user_id: fetchedVisit.user_id, // TODO: Value in fetchVisit, but undefined in iVisit. Why?
+                client_id: fetchedVisit.client_id, // TODO: Value in fetchVisit, but undefined in iVisit. Why?
                 created_at: fetchedVisit.createdAt,
                 health_visit: fetchedVisit.health_visit,
                 educat_visit: fetchedVisit.educat_visit,

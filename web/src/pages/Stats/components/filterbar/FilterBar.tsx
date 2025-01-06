@@ -51,7 +51,7 @@ const FilterBar = ({ user, users, dateRange, stats, setDateRange, setUser }: IPr
                         {t("statistics.filterByUser")}
                     </Button>
                     <Button variant="outlined" onClick={() => setExportOpen(true)}>
-                        {t("general.csvExport")}
+                        {t("dashboard.csvExport")}
                     </Button>
                 </FilterButtons>
 

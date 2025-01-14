@@ -8,15 +8,22 @@ Follow this guide to install Docker: https://docs.docker.com/get-docker/
 
 - If on Windows 10 Home, you'll need to first [enable WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and then follow this guide: https://docs.docker.com/docker-for-windows/install-windows-home/
 
-Install NodeJS 14 LTS from here: https://nodejs.org/download/release/v14.19.3/
+Install NodeJS v.18.20.5
+
+- Download Node v.18.20.5 here: https://nodejs.org/download/release/v18.20.5/
+- Or if you have [NVM](https://github.com/nvm-sh/nvm?tab=readme-ov-file#about) installed already, use command: `nvm install v18.20.5` or `nvm install 18 --lts` to install the correct Node version, then `nvm use v18.20.5` to use it as the current Node version
+- Use `nvm current` to verify installation and setup was correctly set
+  - More information for [Windows](https://medium.com/@jamylam3/easily-switch-between-node-versions-using-node-version-manager-nvm-14619007ebef) and [Linux & Mac](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/) machines here
 
 Follow this guide to set up a proper environment for React Native v0.71.3: https://reactnative.dev/docs/environment-setup
+
+- For Apple Sillicon machines, when following the guide for the Android SDK Setup, ensure you are using `Android 11.0 ("R")` with `Android SDK Platform 30` and `Google APIs ARM 64 v8a System Image`
 
 Follow this guide to install an Android emulator which can be used to run the mobile app: https://developer.android.com/studio/run/emulator/
 
 Note that we are currently targeting API 30 (Android 11.0).  Pixel 6 is confirmed to work well.
 
-Install JDK 11 from here: https://jdk.java.net/java-se-ri/11
+Install JDK 17 from here: https://jdk.java.net/java-se-ri/17
 
 #### For Mac Users:
 - To run powershell scripts (.ps1 files), you can can follow the steps here: https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-macos?view=powershell-7.4 

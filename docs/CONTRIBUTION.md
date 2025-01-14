@@ -30,7 +30,7 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 3. Run `npm run android`
 
-**Note:** if `versionName` changes, go to `mobile/android/app/build.gradle` and change the value of `versionName` under `defaultConfig` AND change `VERSION_NAME` variable in `mobile/src/screens/Sync/Sync.tsx`
+**Note:** if `versionName` changes, go to `mobile/android/app/build.gradle` and change the value of `versionName` under `defaultConfig` AND change `VERSION_NAME` variable in `mobile/src/screens/Sync/Sync.tsx`. If you are experiencing any problems with building/running the mobile project, check out the [CBR Mobile Build / Run Directions](https://github.sfu.ca/bfraser/415-HHA-CBR/tree/main/mobile#readme) for more information.
 
 ### 3. Seed Some Data
 

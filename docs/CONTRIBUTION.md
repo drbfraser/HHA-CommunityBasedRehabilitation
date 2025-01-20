@@ -69,7 +69,7 @@ If an issue has not yet been filed in GitHub, make sure to create one and assign
 
 ### 1. Create New Branch
 
-1. Ensure you're on the `master` branch. If not, check it out using `git checkout master`
+1. Ensure you're on the `main` branch. If not, check it out using `git checkout main`
 2. Pull the latest changes using `git pull`
 3. Create a new branch with a short, descriptive name starting with the issue number. For example, `6-frontend-login-page`. You can create a branch using the command `git checkout -b [BRANCH_NAME]`
 

@@ -88,6 +88,7 @@ Once you are finished, take some time to clean up your code and make sure to tes
 ### 4. Format Code
 
 Prior to submitting a merge request make sure to format your code - it won't pass the CI/CD pipeline without it. Note that both of these commands end in a `.` - that's important!
+**Note**: If running `npx prettier --write .` appears to change all the files in the current directory, try running `npx prettier --write . --end-of-line crlf` instead. This issue is due to how different operating systems handle end of line characters. You most likely have to specifiy the end of line option if you are developing on a Windows machine.
 
 **Common:**
 

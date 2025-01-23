@@ -17,6 +17,8 @@ The CBR Mobile app uses the React Native framework along with [WatermelonDB](htt
 
 3. Set the JAVA_HOME environment variable
 
+    **Note**: The current version of Java being used is 17
+
     - Find the location of your installed version of the Java JDK. Likely something like `C:\Program Files\Java\jdk-11.0.5`
     - JDK 11.0.5 is known to work; JRE 8 is known not to.
     - Under Windows, goto Start > "Environment Variables" > Environment Variables > User variables for ... > add new entry for `JAVA_HOME`, and set to `C:\Program Files\Java\jdk-11.0.5` (or the like).
@@ -38,14 +40,14 @@ If you need to change the version of node/npm, then try:
    `$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash`
 2. Close and reopen shell
 3. Install needed node versions:  
-   `$ nvm install 14`
+   `$ nvm install 18.20.5`
 4. For each new shell you open, set the node (and hence also npm) version to use:  
-   `$ nvm use 14`
+   `$ nvm use 18.20.5`
 
 # Configure Node packages
 
 1. Select the version of node/npm to use if needed (may need to be done in each new prompt you open up)  
-   `$ nvm use 14`
+   `$ nvm use 18.20.5`
 2. Change to mobile folder:  
    `$ cd mobile/`
 3. Package up `common/` and force a re-install, overriding whatever SHA was in the `package-lock.json` file:  
@@ -77,6 +79,8 @@ After the app is up and running the first time, after you make a change to the c
 # Troubleshooting
 
 -   If running the app in a virtual device via Android Studio, note that `Logcat` (in the bottom left corner) can offer some very useful error messages than metro. This can greatly help with troubleshooting.
+
+    -   If the virtual device in Android Studio does not open, even when triggered manually, it may be possible that your machine does not have enough storage to run it
 
 -   After running `npm install` in the mobile/ folder, if you get an error for `EINTERGRITY` complaining about a SHA-512 mismatch, then it is likely that you need to re-run the `npm install cbr-common-1.0.0.tgz` command inside the mobile/ folder to trigger it updating the SHA-512 of our custom package building built on your machine.
 

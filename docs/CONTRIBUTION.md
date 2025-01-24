@@ -105,6 +105,8 @@ From within the `web` directory, run `npx prettier --write .`
 
 With the Django Docker container running, run `docker exec cbr_django python -m black .`
 
+**Note**: If running `npx prettier --write .` appears to change all the files in the current directory, try running `npx prettier --write . --end-of-line crlf` instead. This issue is due to how different operating systems handle end of line characters. You most likely have to specifiy the end of line option if you are developing on a Windows machine.
+
 ### 5. Submit a Merge Request
 
 First, make sure you've committed all changes and pushed your branch and then submit a merge request from within SFU's GitHub. If you've recently pushed your branch, on the merge requests page you'll see a blue "Create merge request" button.

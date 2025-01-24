@@ -70,7 +70,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             case RiskType.NUTRITION:
                 return t("riskAttr.update", { context: "nutrition" });
             case RiskType.MENTAL:
-                return ""; // TODO: missing mental header text
+                return t("riskAttr.update", { context: "mental" });
             default:
                 console.error("Unknown risk type:", riskType);
                 return "";

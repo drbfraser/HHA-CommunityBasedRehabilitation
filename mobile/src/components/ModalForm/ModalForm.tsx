@@ -54,13 +54,17 @@ const ModalForm: FC<IProps> = ({
      *
      *  This array should have a **1-to-1** correspondence with the `localizedFields` array.
      */
-    const canonicalFields: string[] = t(transKey, { returnObjects: true, lng: "en" });
+    // todo: this method of converting from JSON object to string[] could be cleaner
+    const canonicalFields: string[] = Object.values(
+        t(transKey, { returnObjects: true, lng: "en" })
+    );
     /**
      * The fields in the currently selected langauge, for displaying to the user.
      *
      * This array should have a **1-to-1** correspondence with the `canonicalFields` array.
      */
-    const localizedFields: string[] = t(transKey, { returnObjects: true });
+    // todo: this method of converting from JSON object to string[] could be cleaner
+    const localizedFields: string[] = Object.values(t(transKey, { returnObjects: true }));
     console.assert(canonicalFields.length == localizedFields.length);
 
     const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(

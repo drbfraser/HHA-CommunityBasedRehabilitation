@@ -7,7 +7,8 @@
     "scripts": {
         "test": "LANG=en-US jest",
         "test-ci": "LANG=en-US jest --ci --coverage --reporters=default --reporters=jest-junit",
-        "i18n-interface": "i18next-resources-for-ts interface -i ./src/locales/ -o ./src/@types/resources.d.ts"
+        "i18n-generate-ts-interface": "i18next-resources-for-ts interface -i ./src/locales/ -o ./src/@types/resources.d.ts",
+        "update-translations": "npx i18n-json-to-xlsx-converter --convert src/locales/Translations_CBR_main.xlsx && npm run i18n-generate-ts-interface"
     },
     "dependencies": {
         "@types/history": "^4.7.9",

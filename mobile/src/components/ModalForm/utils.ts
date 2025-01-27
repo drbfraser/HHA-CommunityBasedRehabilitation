@@ -74,13 +74,15 @@ const getModalFormDisplay = (
     const translatedItems = Object.entries(
         initializeCheckedItems(
             rawText,
-            t(translationFieldsKey, { returnObjects: true, lng: "en" }),
-            t(translationFieldsKey, { returnObjects: true })
+            // todo: this method of converting from JSON object to string[] could be cleaner
+            Object.values(t(translationFieldsKey, { returnObjects: true, lng: "en" })),
+            Object.values(t(translationFieldsKey, { returnObjects: true }))
         )
     );
     const otherText = initializeFreeformText(
         rawText,
-        t(translationFieldsKey, { returnObjects: true, lng: "en" })
+        // todo: this method of converting from JSON object to string[] could be cleaner
+        Object.values(t(translationFieldsKey, { returnObjects: true, lng: "en" }))
     );
     return generateFormValue(translatedItems, otherText);
 };

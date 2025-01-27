@@ -4,7 +4,8 @@ import { StyleSheet } from "react-native";
 const useStyles = () =>
     StyleSheet.create({
         container: {
-            flex: 1,
+            margin: 3,
+            justifyContent: "center",
         },
         item: {
             padding: 3,
@@ -13,38 +14,52 @@ const useStyles = () =>
             justifyContent: "center",
         },
         select: {
-            flex: 1,
+            flex: 0.75,
         },
         search: {
             flex: 1,
         },
-        columnBuilderButton: {
-            flex: 0.2,
-        },
+        // columnBuilderButton: {
+        //     flex: 0.2,
+        // },
         colonBuilderChecklist: {
             marginHorizontal: 40,
-            marginTop: 70,
-            marginBottom: 70,
+            marginVertical: 70,
+            // marginBottom: 70,
             display: "flex",
             backgroundColor: themeColors.white,
             borderRadius: 10,
             justifyContent: "center",
         },
-        switch: { flex: 0.2 },
-        switchButtonAndText: {
-            flexDirection: "row",
-            justifyContent: "flex-start",
+        switch: {
+            // flex: 0.2
         },
+        // not used anywhere
+        // switchButtonAndText: {
+        //     flexDirection: "row",
+        //     justifyContent: "flex-start",
+        // },
 
         row: {
+            //flexWrap: "wrap",
+            margin: 3,
+            padding: 4,
+            // paddingVertical: 3,
+            // paddingHorizontal: 5,
+            // marginHorizontal: 5,
             flexDirection: "row",
-            display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+        },
+
+        rowItem: {
+            flexDirection: "row",
+            alignItems: "center",
         },
         checkbox: {
-            flexDirection: "row",
-            marginLeft: 10,
+            // flexDirection: "row",
+            // marginLeft: 10,
         },
         column_id: {
             flex: 0.7,
@@ -67,12 +82,13 @@ const useStyles = () =>
         text: {
             flexShrink: 1,
         },
-        viewWrapText: {
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "flex-start",
-            padding: 5,
-        },
+        // not used anywhere
+        // viewWrapText: {
+        //     flex: 1,
+        //     alignItems: "center",
+        //     justifyContent: "flex-start",
+        //     padding: 5,
+        // },
     });
 
 export default useStyles;

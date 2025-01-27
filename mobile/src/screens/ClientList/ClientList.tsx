@@ -188,7 +188,6 @@ const ClientList = () => {
                         icon="dots-vertical"
                         color={themeColors.borderGray}
                         size={20}
-                        // style={styles.columnBuilderButton}
                         onPress={openColumnBuilderMenu}
                     />
                 </View>
@@ -220,23 +219,20 @@ const ClientList = () => {
                         </Modal>
                     </Portal>
                 </View>
-            </View>
-            <View style={styles.row}>
                 <View style={styles.rowItem}>
-                    <Text style={{}}>{t("dashboard.myClients")}</Text>
+                    <Text>{t("dashboard.myClients")}</Text>
                     <Switch
-                        style={{}}
                         trackColor={{ false: themeColors.white, true: themeColors.yellow }}
                         thumbColor={allClientsMode ? themeColors.white : themeColors.white}
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={setAllClientsMode}
                         value={allClientsMode}
                     />
-                    <Text style={{}}>{t("dashboard.allClients")}</Text>
+                    <Text>{t("dashboard.allClients")}</Text>
                 </View>
 
                 <View style={styles.rowItem}>
-                    <Text style={{}}>{t("general.filterBy")}</Text>
+                    <Text>{t("general.filterBy")}</Text>
                     <Picker
                         style={styles.select}
                         selectedValue={selectedSearchOption}
@@ -250,7 +246,7 @@ const ClientList = () => {
                     </Picker>
                 </View>
                 <View style={styles.rowItem}>
-                    <Text style={{}}>{t("dashboard.showArchived")}</Text>
+                    <Text>{t("dashboard.showArchived")}</Text>
                     <Checkbox
                         status={archivedMode ? "checked" : "unchecked"}
                         onPress={() => {

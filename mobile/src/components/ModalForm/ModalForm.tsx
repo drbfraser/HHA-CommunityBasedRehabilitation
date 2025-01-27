@@ -55,7 +55,9 @@ const ModalForm: FC<IProps> = ({
      *  This array should have a **1-to-1** correspondence with the `localizedFields` array.
      */
     // todo: this method of converting from JSON object to string[] could be cleaner
-    const canonicalFields: string[] = Object.values(t(transKey, { returnObjects: true, lng: "en" }));
+    const canonicalFields: string[] = Object.values(
+        t(transKey, { returnObjects: true, lng: "en" })
+    );
     /**
      * The fields in the currently selected langauge, for displaying to the user.
      *

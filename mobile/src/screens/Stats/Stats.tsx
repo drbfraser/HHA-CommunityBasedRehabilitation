@@ -258,51 +258,61 @@ const Stats = () => {
             {!loading ? (
                 <>
                     <View style={styles.btnRow}>
-                        <Button
-                            mode="contained"
-                            style={{
-                                backgroundColor: !showVisits ? "grey" : themeColors.blueBgDark,
-                            }}
-                            onPress={() => {
-                                if (!showVisits) {
-                                    setShowVisits(true);
-                                    setShowReferrals(false);
-                                    setShowDisabilites(false);
-                                }
-                            }}
-                        >
-                            {t("statistics.visits")}
-                        </Button>
-                        <Button
-                            mode="contained"
-                            style={{
-                                backgroundColor: !showReferrals ? "grey" : themeColors.blueBgDark,
-                            }}
-                            onPress={() => {
-                                if (!showReferrals) {
-                                    setShowVisits(false);
-                                    setShowReferrals(true);
-                                    setShowDisabilites(false);
-                                }
-                            }}
-                        >
-                            {t("statistics.referrals")}
-                        </Button>
-                        <Button
-                            mode="contained"
-                            style={{
-                                backgroundColor: !showDisabilites ? "grey" : themeColors.blueBgDark,
-                            }}
-                            onPress={() => {
-                                if (!showDisabilites) {
-                                    setShowVisits(false);
-                                    setShowReferrals(false);
-                                    setShowDisabilites(true);
-                                }
-                            }}
-                        >
-                            {t("statistics.disabilities")}
-                        </Button>
+                        <View style={styles.btnWrapper}>
+                            <Button
+                                mode="contained"
+                                style={{
+                                    backgroundColor: !showVisits ? "grey" : themeColors.blueBgDark,
+                                }}
+                                onPress={() => {
+                                    if (!showVisits) {
+                                        setShowVisits(true);
+                                        setShowReferrals(false);
+                                        setShowDisabilites(false);
+                                    }
+                                }}
+                            >
+                                {t("statistics.visits")}
+                            </Button>
+                        </View>
+                        <View style={styles.btnWrapper}>
+                            <Button
+                                mode="contained"
+                                style={{
+                                    backgroundColor: !showReferrals
+                                        ? "grey"
+                                        : themeColors.blueBgDark,
+                                }}
+                                onPress={() => {
+                                    if (!showReferrals) {
+                                        setShowVisits(false);
+                                        setShowReferrals(true);
+                                        setShowDisabilites(false);
+                                    }
+                                }}
+                            >
+                                {t("statistics.referrals")}
+                            </Button>
+                        </View>
+                        <View style={styles.btnWrapper}>
+                            <Button
+                                mode="contained"
+                                style={{
+                                    backgroundColor: !showDisabilites
+                                        ? "grey"
+                                        : themeColors.blueBgDark,
+                                }}
+                                onPress={() => {
+                                    if (!showDisabilites) {
+                                        setShowVisits(false);
+                                        setShowReferrals(false);
+                                        setShowDisabilites(true);
+                                    }
+                                }}
+                            >
+                                {t("statistics.disabilities")}
+                            </Button>
+                        </View>
                     </View>
                     {showVisits ? (
                         <>

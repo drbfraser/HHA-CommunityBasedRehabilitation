@@ -341,7 +341,7 @@ const Stats = () => {
                                 <VictoryPie
                                     data={graphicData}
                                     colorScale={graphicColor}
-                                    width={350}
+                                    width={500}
                                     height={250}
                                     animate={{ easing: "exp" }}
                                     innerRadius={30}

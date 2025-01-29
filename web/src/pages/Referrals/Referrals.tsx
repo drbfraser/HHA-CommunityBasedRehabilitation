@@ -1,243 +1,142 @@
-import React  from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-// import { CSVLink } from "react-csv";
-// import { LinearProgress, Typography, debounce, Button, Box } from "@mui/material";
-// import {
-//     GridColumnHeaderParams,
-//     DataGrid,
-//     GridDensityTypes,
-//     GridOverlay,
-//     GridRowParams,
-//     GridRowsProp,
-//     GridSortCellParams,
-//     GridRenderCellParams,
-// } from "@mui/x-data-grid";
-// import { Cancel, FiberManualRecord } from "@mui/icons-material";
-// import { clientListStyles } from "./Referrals.styles";
+import { useHistory } from "react-router-dom";
+import { Typography, Box, Alert } from "@mui/material";
+import {
+    DataGrid,
+    GridDensityTypes,
+    GridRowsProp,
+    GridRenderCellParams,
+    GridRowParams,
+} from "@mui/x-data-grid";
+import { Endpoint, apiFetch } from "@cbr/common/util/endpoints";
+import { IOutstandingReferral, otherServices } from "@cbr/common/util/referrals";
+import { dataGridStyles } from "styles/DataGrid.styles";
+import { timestampToDate } from "@cbr/common/util/dates";
 
-// manually define this type, as GridCellValue deprecated in MUI 5
-// type GridCellValue = string | number | boolean | object | Date | null | undefined;
-
-// const RenderRiskHeader = (params: GridColumnHeaderParams): JSX.Element => {
-//     const { t } = useTranslation();
-//     const riskType: IRiskType = riskTypes[params.field];
-
-//     return (
-//         <div className="MuiDataGrid-colCellTitle">
-//             {window.innerWidth >= compressedDataGridWidth ? (
-//                 getTranslatedRiskName(t, params.field as RiskType)
-//             ) : (
-//                 <riskType.Icon />
-//             )}
-//         </div>
-//     );
-// };
-
-// const RenderText = (params: GridRenderCellParams) => {
-//     return (
-//         <Typography
-//             variant={"body2"}
-//             color={params.row.is_active ? "textPrimary" : "textSecondary"}
-//         >
-//             {String(params.value)}
-//         </Typography>
-//     );
-// };
-
-// const RenderBadge = (params: GridRenderCellParams) => {
-//     const risk: RiskLevel = Object(params.value);
-
-//     return window.innerWidth >= compressedDataGridWidth ? (
-//         <RiskLevelChip clickable risk={risk} />
-//     ) : (
-//         <FiberManualRecord style={{ color: riskLevels[risk].color }} />
-//     );
-// };
-
-// const RenderLoadingOverlay = () => {
-//     return (
-//         <GridOverlay>
-//             <div style={{ position: "absolute", top: 0, width: "100%" }}>
-//                 <LinearProgress />
-//             </div>
-//         </GridOverlay>
-//     );
-// };
-
-// const RenderNoRowsOverlay = () => {
-//     const { t } = useTranslation();
-
-//     return (
-//         <GridOverlay sx={dataGridStyles.noRows}>
-//             <Cancel color="primary" sx={dataGridStyles.noRowsIcon} />
-//             <Typography color="primary">{t("dashboard.noClients")}</Typography>
-//         </GridOverlay>
-//     );
-// };
-
-const ClientList = () => {
-    // const [loading, setLoading] = useState<boolean>(true);
-
+const Referrals = () => {
+    const history = useHistory();
     const { t } = useTranslation();
 
-    // const initialDataLoaded = useRef(false);
+    const [pendingReferrals, setPendingReferrals] = useState<GridRowsProp>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [referralError, setReferralError] = useState<string>();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    // const requestClientRowsDebounced = useCallback(debounce(requestClientRows, 500), []);
-    // useEffect(() => {
-    //     if (!initialDataLoaded.current) {
-    //         return;
-    //     }
+    useEffect(() => {
+        const fetchReferrals = async () => {
+            setReferralError(undefined);
+            try {
+                const tempReferrals: IOutstandingReferral[] = await (
+                    await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
+                ).json();
 
-    //     requestClientRowsDebounced(
-    //         setRows,
-    //         setLoading,
-    //         searchValue,
-    //         searchOption,
-    //         allClientsMode,
-    //         archivedMode
-    //     );
-    // }, [searchValue, searchOption, allClientsMode, archivedMode, requestClientRowsDebounced]);
+                const referrals: GridRowsProp = tempReferrals
+                    .sort(
+                        (a: IOutstandingReferral, b: IOutstandingReferral) =>
+                            a.date_referred - b.date_referred
+                    )
+                    .map((row: IOutstandingReferral, i: Number) => {
+                        return {
+                            id: i,
+                            client_id: row.id,
+                            full_name: row.full_name,
+                            type: concatenateReferralType(row),
+                            date_referred: row.date_referred,
+                        };
+                    });
+                setPendingReferrals(referrals);
+            } catch (e) {
+                setReferralError(e instanceof Error ? e.message : `${e}`);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-    // useEffect(() => {
-    //     const loadInitialData = async () => {
-    //         setLoading(true);
-    //         await requestClientRows(setRows, setLoading, "", "", true, false);
-    //         setLoading(false);
-    //         initialDataLoaded.current = true;
-    //     };
+        const concatenateReferralType = (row: IOutstandingReferral) => {
+            const referralTypes = [];
+            if (row.wheelchair) referralTypes.push(t("referral.wheelchair"));
+            if (row.physiotherapy) referralTypes.push(t("referral.physiotherapy"));
+            if (row.hha_nutrition_and_agriculture_project)
+                referralTypes.push(t("referral.hhaNutritionAndAgricultureProjectAbbr"));
+            if (row.orthotic) referralTypes.push(t("referral.orthotic"));
+            if (row.prosthetic) referralTypes.push(t("referral.prosthetic"));
+            if (row.mental_health) referralTypes.push(t("referral.mentalHealth"));
+            if (row.services_other) referralTypes.push(otherServices[row.services_other]);
 
-    //     loadInitialData();
-    // }, []);
+            return referralTypes.join(", ");
+        };
 
-    // const onRowClick = (rowParams: GridRowParams) => history.push(`/client/${rowParams.row.id}`);
+        fetchReferrals();
+    }, [t]);
 
-    // const riskColumnStates: {
-    //     [key: string]: { hide: boolean; hideFunction: (isHidden: boolean) => void };
-    // } = {
-    //     [RiskType.HEALTH]: {
-    //         hide: isHealthHidden,
-    //         hideFunction: setHealthHidden,
-    //     },
-    //     [RiskType.EDUCATION]: {
-    //         hide: isEducationHidden,
-    //         hideFunction: setEducationHidden,
-    //     },
-    //     [RiskType.SOCIAL]: {
-    //         hide: isSocialHidden,
-    //         hideFunction: setSocialHidden,
-    //     },
-    //     [RiskType.NUTRITION]: {
-    //         hide: isNutritionHidden,
-    //         hideFunction: setNutritionHidden,
-    //     },
-    //     [RiskType.MENTAL]: {
-    //         hide: isMentalHidden,
-    //         hideFunction: setMentalHidden,
-    //     },
-    // };
+    const RenderText = (params: GridRenderCellParams) => (
+        <Typography variant={"body2"}>{String(params.value)}</Typography>
+    );
 
-    // const sortClientsById = (rows: GridRowsProp) => {
-    //     let sortById = rows.slice(0);
+    const RenderDate = (params: GridRenderCellParams) => {
+        const locale = navigator.language;
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    //     sortById.sort((a: any, b: any) => {
-    //         return a.id - b.id;
-    //     });
+        return (
+            <Typography variant="body2">
+                {Number(params.value) === 0
+                    ? t("dashboard.noVisits")
+                    : timestampToDate(Number(params.value), locale, timezone)}
+            </Typography>
+        );
+    };
 
-    //     return sortById;
-    // };
+    const handleReferralRowClick = (rowParams: GridRowParams) =>
+        history.push(`/client/${rowParams.row.client_id}`);
 
-    // const columns = [
-    //     {
-    //         field: "name",
-    //         headerName: t("general.name"),
-    //         flex: 1,
-    //         renderCell: RenderText,
-    //         hide: isNameHidden,
-    //         hideFunction: setNameHidden,
-    //     },
-    //     {
-    //         field: "zone",
-    //         headerName: t("general.zone"),
-    //         flex: 1,
-    //         renderCell: RenderText,
-    //         hide: isZoneHidden,
-    //         hideFunction: setZoneHidden,
-    //     },
-    //     ...Object.entries(riskTypes).map(([value]) => ({
-    //         field: value,
-    //         headerName: getTranslatedRiskName(t, value as RiskType),
-    //         flex: 0.7,
-    //         renderHeader: RenderRiskHeader,
-    //         renderCell: RenderBadge,
-    //         sortComparator: (
-    //             _v1: GridCellValue,
-    //             _v2: GridCellValue,
-    //             params1: GridSortCellParams,
-    //             params2: GridSortCellParams
-    //         ) => {
-    //             return (
-    //                 riskLevels[String(params1.value)].level -
-    //                 riskLevels[String(params2.value)].level
-    //             );
-    //         },
-    //         hide: riskColumnStates[value].hide,
-    //         hideFunction: riskColumnStates[value].hideFunction,
-    //     })),
-    // ];
-    
-    return <p>{t('login.test')}</p>
-    // return (
-    //     <Box sx={clientListStyles.root}>
-    //         <Toolbar
-    //             allClientsMode={allClientsMode}
-    //             archivedMode={archivedMode}
-    //             searchValue={searchValue}
-    //             searchOption={searchOption}
-    //             columns={columns}
-    //             onClientModeChange={setAllClientsMode}
-    //             onArchivedModeChange={setArchivedMode}
-    //             onSearchValueChange={setSearchValue}
-    //             onSearchOptionChange={setSearchOption}
-    //         />
+    const pendingReferralsColumns = [
+        {
+            field: "full_name",
+            headerName: t("general.name"),
+            flex: 0.7,
+            renderCell: RenderText,
+        },
+        {
+            field: "type",
+            headerName: t("general.type"),
+            flex: 2,
+            renderCell: RenderText,
+        },
+        {
+            field: "date_referred",
+            headerName: t("referralAttr.dateReferred"),
+            flex: 1,
+            renderCell: RenderDate,
+        },
+    ];
 
-    //         <DataGrid
-    //             sx={dataGridStyles.datagrid}
-    //             columns={columns}
-    //             rows={rows}
-    //             loading={loading}
-    //             components={{
-    //                 LoadingOverlay: RenderLoadingOverlay,
-    //                 NoRowsOverlay: RenderNoRowsOverlay,
-    //             }}
-    //             density={GridDensityTypes.Comfortable}
-    //             onRowClick={onRowClick}
-    //             pagination
-    //             initialState={{
-    //                 sorting: {
-    //                     sortModel: [
-    //                         {
-    //                             field: "name",
-    //                             sort: "asc",
-    //                         },
-    //                     ],
-    //                 },
-    //             }}
-    //         />
+    return (
+        <>
+            {referralError && (
+                <>
+                    <Alert severity="error">
+                        <Typography variant="body1">
+                            {t("alert.loadingReferralsError")}: {referralError}
+                        </Typography>
+                    </Alert>
+                </>
+            )}
+            <br />
 
-    //         <Box sx={clientListStyles.downloadSVC}>
-    //             <CSVLink
-    //                 filename="ClientList.csv"
-    //                 data={sortClientsById(rows)}
-    //                 style={{ textDecoration: "none" }}
-    //             >
-    //                 <Button variant="outlined" size="small">
-    //                     {t("dashboard.csvExport")}
-    //                 </Button>
-    //             </CSVLink>
-    //         </Box>
-    //     </Box>
-    // );
+            <Box sx={dataGridStyles.dashboardTables}>
+                <DataGrid
+                    sx={dataGridStyles.datagrid}
+                    rowsPerPageOptions={[5, 25, 50]}
+                    rows={pendingReferrals}
+                    loading={isLoading}
+                    columns={pendingReferralsColumns}
+                    pageSize={5}
+                    density={GridDensityTypes.Comfortable}
+                    onRowClick={handleReferralRowClick}
+                />
+            </Box>
+        </>
+    );
 };
 
-export default ClientList;
+export default Referrals;

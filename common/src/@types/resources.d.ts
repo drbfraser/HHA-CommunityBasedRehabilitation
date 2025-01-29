@@ -459,7 +459,8 @@ interface Resources {
       "wheelchairInformation": "&Wheelchair information",
       "whatDoesClientNeed": "&What does the client need?",
       "describeReferral": "&Please describe the referral",
-      "selectReferralServices": "&Select referral services"
+      "selectReferralServices": "&Select referral services",
+      "pending": "&Pending Referrals"
     },
     "risks": {
       "riskLevel": "Ngo' naron na gba da",
@@ -1219,7 +1220,8 @@ interface Resources {
       "wheelchairInformation": "Wheelchair information",
       "whatDoesClientNeed": "What does the client need?",
       "describeReferral": "Please describe the referral",
-      "selectReferralServices": "Select referral services"
+      "selectReferralServices": "Select referral services",
+      "pending": "Pending Referrals"
     },
     "risks": {
       "riskLevel": "Risk Level",

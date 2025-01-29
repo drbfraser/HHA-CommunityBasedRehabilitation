@@ -41,9 +41,7 @@ export enum PageName {
     CLIENTS = "screenNames.clientList",
     CLIENT_DETAILS = "clientAttr.clientDetails",
     CLIENT_RISK_HISTORY = "screenNames.clientRiskHistory",
-    // TODO: change this after new translations are added
-    // Should be: screenNames.referrals
-    REFERRALS = "screenNames.clientList",
+    REFERRALS = "referral.pending",
     NEW_VISIT = "screenNames.newVisit",
     NEW_SURVEY = "screenNames.newBaselineSurvey",
     NEW_REFERRAL = "screenNames.newReferral",

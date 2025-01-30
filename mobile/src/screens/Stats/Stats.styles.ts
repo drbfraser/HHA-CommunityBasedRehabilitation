@@ -12,17 +12,19 @@ const useStyles = () =>
             color: themeColors.blueAccent,
         },
         chartTitle: {
+            margin: 5,
             fontWeight: "bold",
             textAlign: "center",
             fontSize: 15,
         },
         graphStat: {
+            margin: 5,
             textAlign: "center",
             fontSize: 15,
         },
         filterBtn: {
+            marginTop: 15,
             alignSelf: "center",
-            width: 200,
             backgroundColor: themeColors.blueAccent,
         },
         row: {
@@ -32,11 +34,13 @@ const useStyles = () =>
             justifyContent: "center",
         },
         btnRow: {
-            padding: 10,
             flexDirection: "row",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
+            margin: 10,
+            flexWrap: "wrap",
+            justifyContent: "space-evenly",
+        },
+        btnWrapper: {
+            marginBottom: 10,
         },
         scrollViewStyles: {
             marginHorizontal: 5,

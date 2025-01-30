@@ -14,7 +14,7 @@ const useStyles = () =>
             justifyContent: "center",
         },
         select: {
-            flex: 0.4,
+            flex: 1,
         },
         search: {
             flex: 1,
@@ -36,6 +36,7 @@ const useStyles = () =>
             justifyContent: "space-between",
         },
         rowItem: {
+            paddingTop: 5,
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",

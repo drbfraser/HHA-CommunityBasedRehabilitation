@@ -460,7 +460,8 @@ interface Resources {
       "whatDoesClientNeed": "&What does the client need?",
       "describeReferral": "&Please describe the referral",
       "selectReferralServices": "&Select referral services",
-      "pending": "&Pending Referrals"
+      "pending": "&Pending Referrals",
+      "filterByType": "&Filter by Referral Types"
     },
     "risks": {
       "riskLevel": "Ngo' naron na gba da",
@@ -1221,7 +1222,8 @@ interface Resources {
       "whatDoesClientNeed": "What does the client need?",
       "describeReferral": "Please describe the referral",
       "selectReferralServices": "Select referral services",
-      "pending": "Pending Referrals"
+      "pending": "Pending Referrals",
+      "filterByType": "Filter by Referral Types"
     },
     "risks": {
       "riskLevel": "Risk Level",

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Typography, Box, Alert } from "@mui/material";
+import { Typography, Box, Alert, TextField } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
 import {
     DataGrid,
     GridDensityTypes,
@@ -23,12 +24,14 @@ const Referrals = () => {
     const zones = useZones();
 
     const [pendingReferrals, setPendingReferrals] = useState<GridRowsProp>([]);
+    const [filteredReferrals, setFilteredReferrals] = useState<GridRowsProp>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [referralError, setReferralError] = useState<string>();
 
     const [clients, setClients] = useState<GridRowModel[]>([]);
     const [clientsLoading, setClientsLoading] = useState<boolean>(true);
     const [clientError, setClientError] = useState<string>();
+    const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchClients = async () => {
@@ -51,6 +54,11 @@ const Referrals = () => {
                 setClientsLoading(false);
             }
         };
+
+        fetchClients();
+    }, []);
+
+    useEffect(() => {
         const fetchReferrals = async () => {
             setReferralError(undefined);
             try {
@@ -70,10 +78,11 @@ const Referrals = () => {
                             full_name: row.full_name,
                             type: concatenateReferralType(row),
                             date_referred: row.date_referred,
-                            zone: clients.find((client) => client.id === row.id)?.zone,
+                            zone: clients?.find((client) => client.id === row.id)?.zone,
                         };
                     });
                 setPendingReferrals(referrals);
+                setFilteredReferrals(referrals);
             } catch (e) {
                 setReferralError(e instanceof Error ? e.message : `${e}`);
             } finally {
@@ -95,9 +104,20 @@ const Referrals = () => {
             return referralTypes.join(", ");
         };
 
-        fetchClients();
         fetchReferrals();
     }, [t, clients]);
+
+    useEffect(() => {
+        if (selectedTypes.length === 0) {
+            setFilteredReferrals(pendingReferrals);
+        } else {
+            setFilteredReferrals(
+                pendingReferrals.filter((referral) =>
+                    selectedTypes.some((type) => referral.type.includes(type))
+                )
+            );
+        }
+    }, [selectedTypes, pendingReferrals]);
 
     const RenderText = (params: GridRenderCellParams) => (
         <Typography variant={"body2"}>{String(params.value)}</Typography>
@@ -168,11 +188,32 @@ const Referrals = () => {
             )}
             <br />
 
+            <Autocomplete
+                multiple
+                options={[
+                    t("referral.wheelchair"),
+                    t("referral.physiotherapy"),
+                    t("referral.hhaNutritionAndAgricultureProjectAbbr"),
+                    t("referral.orthotic"),
+                    t("referral.prosthetic"),
+                    t("referral.mentalHealth"),
+                    ...Object.values(otherServices),
+                ]}
+                renderInput={(params) => (
+                    <TextField {...params} label={t("referral.filterByType")} variant="outlined" />
+                )}
+                onChange={(_, values) => setSelectedTypes(values)}
+                sx={{ marginBottom: 1 }}
+            />
+            <Typography variant="body2" color="textSecondary">
+                Referrals that match at least one of the selected types will be displayed.
+            </Typography>
+
             <Box sx={dataGridStyles.dashboardTables}>
                 <DataGrid
                     sx={dataGridStyles.datagrid}
                     rowsPerPageOptions={[5, 25, 50]}
-                    rows={pendingReferrals}
+                    rows={filteredReferrals}
                     loading={isLoading || clientsLoading}
                     columns={pendingReferralsColumns}
                     pageSize={5}

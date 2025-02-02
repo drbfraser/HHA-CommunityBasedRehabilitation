@@ -8,21 +8,49 @@ import {
     GridRowsProp,
     GridRenderCellParams,
     GridRowParams,
+    GridRowModel,
 } from "@mui/x-data-grid";
 import { Endpoint, apiFetch } from "@cbr/common/util/endpoints";
 import { IOutstandingReferral, otherServices } from "@cbr/common/util/referrals";
 import { dataGridStyles } from "styles/DataGrid.styles";
 import { timestampToDate } from "@cbr/common/util/dates";
+import { IClientSummary } from "@cbr/common/util/clients";
+import { useZones } from "@cbr/common/util/hooks/zones";
 
 const Referrals = () => {
     const history = useHistory();
     const { t } = useTranslation();
+    const zones = useZones();
 
     const [pendingReferrals, setPendingReferrals] = useState<GridRowsProp>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [referralError, setReferralError] = useState<string>();
 
+    const [clients, setClients] = useState<GridRowModel[]>([]);
+    const [clientsLoading, setClientsLoading] = useState<boolean>(true);
+    const [clientError, setClientError] = useState<string>();
+
     useEffect(() => {
+        const fetchClients = async () => {
+            setClientError(undefined);
+            try {
+                const tempClients: IClientSummary[] = await (
+                    await apiFetch(Endpoint.CLIENTS, "?is_active=true")
+                ).json();
+
+                const priorityClients = tempClients.map((row: IClientSummary) => {
+                    return {
+                        id: row.id,
+                        zone: row.zone,
+                    };
+                });
+                setClients(priorityClients);
+            } catch (e) {
+                setClientError(e instanceof Error ? e.message : `${e}`);
+            } finally {
+                setClientsLoading(false);
+            }
+        };
         const fetchReferrals = async () => {
             setReferralError(undefined);
             try {
@@ -42,6 +70,7 @@ const Referrals = () => {
                             full_name: row.full_name,
                             type: concatenateReferralType(row),
                             date_referred: row.date_referred,
+                            zone: clients.find((client) => client.id === row.id)?.zone,
                         };
                     });
                 setPendingReferrals(referrals);
@@ -66,8 +95,9 @@ const Referrals = () => {
             return referralTypes.join(", ");
         };
 
+        fetchClients();
         fetchReferrals();
-    }, [t]);
+    }, [t, clients]);
 
     const RenderText = (params: GridRenderCellParams) => (
         <Typography variant={"body2"}>{String(params.value)}</Typography>
@@ -86,6 +116,10 @@ const Referrals = () => {
         );
     };
 
+    const RenderZone = (params: GridRenderCellParams) => (
+        <Typography variant={"body2"}>{zones ? zones.get(Number(params.value)) : ""}</Typography>
+    );
+
     const handleReferralRowClick = (rowParams: GridRowParams) =>
         history.push(`/client/${rowParams.row.client_id}`);
 
@@ -103,6 +137,12 @@ const Referrals = () => {
             renderCell: RenderText,
         },
         {
+            field: "zone",
+            headerName: t("general.zone"),
+            flex: 1.2,
+            renderCell: RenderZone,
+        },
+        {
             field: "date_referred",
             headerName: t("referralAttr.dateReferred"),
             flex: 1,
@@ -112,14 +152,19 @@ const Referrals = () => {
 
     return (
         <>
-            {referralError && (
-                <>
-                    <Alert severity="error">
+            {(clientError || referralError) && (
+                <Alert severity="error">
+                    {clientError && (
+                        <Typography variant="body1">
+                            {t("alert.loadingPriorityClientsError")}: {clientError}
+                        </Typography>
+                    )}
+                    {referralError && (
                         <Typography variant="body1">
                             {t("alert.loadingReferralsError")}: {referralError}
                         </Typography>
-                    </Alert>
-                </>
+                    )}
+                </Alert>
             )}
             <br />
 
@@ -128,7 +173,7 @@ const Referrals = () => {
                     sx={dataGridStyles.datagrid}
                     rowsPerPageOptions={[5, 25, 50]}
                     rows={pendingReferrals}
-                    loading={isLoading}
+                    loading={isLoading || clientsLoading}
                     columns={pendingReferralsColumns}
                     pageSize={5}
                     density={GridDensityTypes.Comfortable}

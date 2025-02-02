@@ -206,7 +206,7 @@ const Referrals = () => {
                 sx={{ marginBottom: 1 }}
             />
             <Typography variant="body2" color="textSecondary">
-                Referrals that match at least one of the selected types will be displayed
+                Referrals that match at least one of the selected types will be displayed.
             </Typography>
 
             <Box sx={dataGridStyles.dashboardTables}>

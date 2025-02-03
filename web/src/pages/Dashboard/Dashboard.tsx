@@ -332,12 +332,16 @@ const Dashboard = () => {
                                     rowsPerPageOptions={[5, 25, 50]}
                                     rows={referrals}
                                     loading={referralsLoading}
-                                    columns={outstandingReferralsColumns}
-                                    pageSize={5}
+                                    columns={outstandingReferralsColumns}                                    
                                     density={GridDensityTypes.Comfortable}
                                     onRowClick={handleReferralRowClick}
                                     components={{
                                         NoRowsOverlay: RenderNoOutstandingReferralsOverlay,
+                                    }}
+                                    initialState={{
+                                        pagination: {
+                                            pageSize: 5,
+                                        }
                                     }}
                                 />
                             </Box>

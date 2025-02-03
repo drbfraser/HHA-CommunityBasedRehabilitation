@@ -195,7 +195,9 @@ interface Resources {
       "previous": "&Previous",
       "no": "&No",
       "yes": "&Yes",
-      "filter": "&filter"
+      "filter": "&filter",
+      "dataGridLabelRowsPerPage": "&Rows per page:",
+      "dataGridLabelDisplayedRows": "&{{from}}–{{to}} of {{count}}"
     },
     "alert": {
       "generalFailure": "Lyanget a konda 'borik",
@@ -957,7 +959,9 @@ interface Resources {
       "previous": "Previous",
       "no": "No",
       "yes": "Yes",
-      "filter": "filter"
+      "filter": "filter",
+      "dataGridLabelRowsPerPage": "Rows per page:",
+      "dataGridLabelDisplayedRows": "{{from}}–{{to}} of {{count}}"
     },
     "alert": {
       "generalFailure": "Something went Wrong",

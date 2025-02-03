@@ -194,7 +194,9 @@
     "previous": "&Previous",
     "no": "&No",
     "yes": "&Yes",
-    "filter": "&filter"
+    "filter": "&filter",
+    "dataGridLabelRowsPerPage": "&Rows per page:",
+    "dataGridLabelDisplayedRows": "&{{from}}–{{to}} of {{count}}"
   },
   "alert": {
     "generalFailure": "Lyanget a konda 'borik",

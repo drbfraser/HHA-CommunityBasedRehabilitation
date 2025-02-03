@@ -458,7 +458,9 @@
     "wheelchairInformation": "Wheelchair information",
     "whatDoesClientNeed": "What does the client need?",
     "describeReferral": "Please describe the referral",
-    "selectReferralServices": "Select referral services"
+    "selectReferralServices": "Select referral services",
+    "pending": "Pending Referrals",
+    "filterByType": "Filter by Referral Types"
   },
   "risks": {
     "riskLevel": "Risk Level",

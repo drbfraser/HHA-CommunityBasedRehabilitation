@@ -161,31 +161,29 @@ const ClientList = () => {
     useEffect(() => {
         showSelectedColumn();
     }, [selectedColumn]);
-    console.log(zones);
-    () => {
-        Array.from(zones).map(([id, name]) => console.log(id, name));
-    };
-
-    const handleZonePickerValueChange = (itemValue) => {
-        console.log("SELECTED: ", itemValue);
-        setSearchQuery(itemValue);
-    };
     return (
         <View style={styles.container}>
             <View style={styles.row}>
                 <View style={styles.rowItem}>
                     {selectedSearchOption === SearchOption.ZONE ? (
-                        <Picker
-                            style={styles.select}
-                            selectedValue={searchQuery}
-                            onValueChange={handleZonePickerValueChange}
-                            // onValueChange={(itemValue, itemIndex) => setSearchQuery(itemValue)}
-                        >
-                            <Picker.Item label="None" value="1" />
-                            {Array.from(zones).map(([id, name]) => (
-                                <Picker.Item key={id} label={name} value={id} />
-                            ))}
-                        </Picker>
+                        <>
+                            <Text>{t("zone.zone")}</Text>
+                            <Picker
+                                style={styles.select}
+                                selectedValue={searchQuery}
+                                onValueChange={(itemValue, itemIndex) => {
+                                    setSearchQuery(itemValue);
+                                    if (itemValue === "viewAll") {
+                                        setSearchQuery("");
+                                    }
+                                }}
+                            >
+                                <Picker.Item label={t("statistics.viewAllZones")} value="viewAll" />
+                                {Array.from(zones).map(([id, name]) => (
+                                    <Picker.Item key={id} label={name} value={id} />
+                                ))}
+                            </Picker>
+                        </>
                     ) : (
                         <Searchbar
                             style={styles.search}

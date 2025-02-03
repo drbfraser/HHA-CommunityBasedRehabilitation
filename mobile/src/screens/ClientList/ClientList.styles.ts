@@ -18,6 +18,7 @@ const useStyles = () =>
         },
         search: {
             flex: 1,
+            marginBottom: 5,
         },
         colonBuilderChecklist: {
             marginHorizontal: 40,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
@@ -30,7 +30,10 @@ import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { timestampToDateTime } from "@cbr/common/util/dates";
 import { Thumb } from "components/ReferralPhotoView/Thumb";
 import TimelineEntry from "../Timeline/TimelineEntry";
+import { useHistory, useLocation } from "react-router-dom";
 import * as Styled from "./Entry.styles";
+
+const OPEN = "open";
 
 interface IEntryProps {
     referral: IReferral;
@@ -39,8 +42,25 @@ interface IEntryProps {
 }
 
 const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) => {
+    const location = useLocation();
+    const history = useHistory();
+
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        const query = new URLSearchParams(location.search);
+        setOpen(query.get(referral?.id.toString()) === OPEN);
+    }, [referral, location.search]);
+
+    const openModal = () => {
+        history.push(`${location.pathname}?${referral?.id.toString()}=${OPEN}`); // Add query param
+    };
+
+    const closeModal = () => {
+        setOpen(false);
+        history.push(location.pathname); // Remove query param
+    };
 
     const Summary = ({ clickable }: { clickable: boolean }) => {
         const ReasonChip = ({ label }: { label: string }) => (
@@ -148,10 +168,10 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                 date={dateFormatter(referral.date_referred)}
                 content={<Summary clickable={true} />}
                 DotIcon={NearMeIcon}
-                onClick={() => setOpen(true)}
+                onClick={openModal}
             />
 
-            <Dialog fullWidth maxWidth="sm" open={open} onClose={() => setOpen(false)}>
+            <Dialog fullWidth maxWidth="sm" open={open} onClose={closeModal}>
                 <DialogTitle>
                     <Summary clickable={false} />
                 </DialogTitle>
@@ -229,7 +249,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                 </Styled.ReferralDialogContent>
 
                 <DialogActions>
-                    <Button onClick={() => setOpen(false)} color="primary">
+                    <Button onClick={closeModal} color="primary">
                         {t("general.close")}
                     </Button>
                 </DialogActions>

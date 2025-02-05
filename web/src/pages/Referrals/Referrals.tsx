@@ -59,6 +59,20 @@ const Referrals = () => {
     }, []);
 
     useEffect(() => {
+        if (clients === undefined) return; // TODO: remove this when the backend provides the referral id
+
+        // // The IOutstandingReferral only contains client id, not the referral id.
+        // // We need to fetch the referral id from the client object.
+        // // This is a workaround until the backend provides the referral id.
+        // const getReferralId = (row: IOutstandingReferral) => {
+        //     const client = clients?.find((client) => client.id === row.id);
+        //     console.log(client);
+        //     const referral = client?.referrals?.find(
+        //         (r: any) => r.date_referred === row.date_referred
+        //     );
+        //     return referral?.id;
+        // };
+
         const fetchReferrals = async () => {
             setReferralError(undefined);
             try {
@@ -73,8 +87,8 @@ const Referrals = () => {
                     )
                     .map((row: IOutstandingReferral, i: Number) => {
                         return {
-                            id: i,
-                            client_id: row.id,
+                            id: i, // TODO: this should be row.id
+                            client_id: row.id, // TODO: this should row.client_id
                             full_name: row.full_name,
                             type: concatenateReferralType(row),
                             date_referred: row.date_referred,
@@ -141,7 +155,7 @@ const Referrals = () => {
     );
 
     const handleReferralRowClick = (rowParams: GridRowParams) =>
-        history.push(`/client/${rowParams.row.client_id}`);
+        history.push(`/client/${rowParams.row.client_id}?${rowParams.row.id}=open`);
 
     const pendingReferralsColumns = [
         {

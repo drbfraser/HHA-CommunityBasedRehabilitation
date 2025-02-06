@@ -145,9 +145,16 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                             const style = riskStyles(
                                                 riskLevels[level].color
                                             ).riskRadioStyle;
+                                            const textColour = riskStyles(
+                                                riskLevels[level].color
+                                            ).radioSubtitleText;
                                             return (
                                                 <View key={index} style={styles.radioIndividual}>
-                                                    <Text style={style}>{abbreviation}</Text>
+                                                    <View style={style}>
+                                                        <Text style={textColour}>
+                                                            {abbreviation}
+                                                        </Text>
+                                                    </View>
                                                     <RadioButton value={level} />
                                                 </View>
                                             );

@@ -1,4 +1,4 @@
-import { DefaultTheme } from "react-native-paper";
+import { MD2Theme, DefaultTheme } from "react-native-paper";
 import { themeColors } from "@cbr/common";
 import { Theme as NavigationTheme } from "@react-navigation/native";
 
@@ -20,15 +20,16 @@ declare global {
     }
 }
 
-const theme: ReactNativePaper.Theme & NavigationTheme = {
+const theme: MD2Theme & NavigationTheme = {
     ...DefaultTheme,
+    version: 2, // specify MD2 to preserve react-native-paper v4 theme
     colors: {
         ...DefaultTheme.colors,
         primary: themeColors.blueBgDark,
         onPrimary: themeColors.white,
         info: themeColors.infoBlue,
         accent: themeColors.yellow,
-        border: DefaultTheme.colors.text,
+        outline: DefaultTheme.colors.text,
         card: DefaultTheme.colors.surface,
     },
 };

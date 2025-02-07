@@ -88,9 +88,9 @@ const Dashboard = () => {
                         (a: IOutstandingReferral, b: IOutstandingReferral) =>
                             a.date_referred - b.date_referred
                     )
-                    .map((row: IOutstandingReferral, i: Number) => {
+                    .map((row: IOutstandingReferral) => {
                         return {
-                            id: i,
+                            id: row.referral_id,
                             client_id: row.id,
                             full_name: row.full_name,
                             type: concatenateReferralType(row),
@@ -211,7 +211,7 @@ const Dashboard = () => {
         history.push(`/client/${rowParams.row.id}`);
 
     const handleReferralRowClick = (rowParams: GridRowParams) =>
-        history.push(`/client/${rowParams.row.client_id}`);
+        history.push(`/client/${rowParams.row.client_id}?${rowParams.row.id}=open`);
 
     const priorityClientsColumns = [
         {

@@ -33,7 +33,8 @@ export interface IReferral {
 }
 
 export interface IOutstandingReferral {
-    id: number;
+    id: number; // This is the client id.
+    referral_id: number; // This field was added to this interface after the original snippet was written. Ideally, this field should be called id and the other id field should be called client_id, but this would require code change everywhere this interface is used.
     full_name: string;
     date_referred: number;
     wheelchair: boolean;

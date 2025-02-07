@@ -59,19 +59,7 @@ const Referrals = () => {
     }, []);
 
     useEffect(() => {
-        if (clients === undefined) return; // TODO: remove this when the backend provides the referral id
-
-        // // The IOutstandingReferral only contains client id, not the referral id.
-        // // We need to fetch the referral id from the client object.
-        // // This is a workaround until the backend provides the referral id.
-        // const getReferralId = (row: IOutstandingReferral) => {
-        //     const client = clients?.find((client) => client.id === row.id);
-        //     console.log(client);
-        //     const referral = client?.referrals?.find(
-        //         (r: any) => r.date_referred === row.date_referred
-        //     );
-        //     return referral?.id;
-        // };
+        if (clients === undefined) return;
 
         const fetchReferrals = async () => {
             setReferralError(undefined);
@@ -85,10 +73,10 @@ const Referrals = () => {
                         (a: IOutstandingReferral, b: IOutstandingReferral) =>
                             a.date_referred - b.date_referred
                     )
-                    .map((row: IOutstandingReferral, i: Number) => {
+                    .map((row: IOutstandingReferral) => {
                         return {
-                            id: i, // TODO: this should be row.id
-                            client_id: row.id, // TODO: this should row.client_id
+                            id: row.referral_id,
+                            client_id: row.id,
                             full_name: row.full_name,
                             type: concatenateReferralType(row),
                             date_referred: row.date_referred,

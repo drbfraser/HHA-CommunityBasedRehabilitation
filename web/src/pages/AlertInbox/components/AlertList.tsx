@@ -59,7 +59,7 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
         alert.unread_by_users.includes(userID) ? "bold" : "small";
 
     return (
-        <Grid item xs={3} sx={alertInboxStyles.gridStyle}>
+        <Grid item>
             <h1>{t("general.alerts")}</h1>
             <Divider variant="fullWidth" sx={alertInboxStyles.tableTopAndContentDividerStyle} />
             <List sx={alertListStyles.list}>
@@ -114,11 +114,7 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
                                 }}
                             />
 
-                            <Divider
-                                variant="fullWidth"
-                                component="li"
-                                sx={alertInboxStyles.dividerStyle}
-                            />
+                            <Divider variant="fullWidth" component="li" />
                         </div>
                     );
                 })}

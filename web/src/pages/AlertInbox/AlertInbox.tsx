@@ -6,6 +6,7 @@ import { IUser } from "@cbr/common/util/users";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IAlert } from "@cbr/common/util/alerts";
 import { AlertDetail, AlertList } from "./components";
+import { Divider } from "@mui/material";
 
 const AlertInbox = () => {
     const [selectedAlert, setSelectedAlert] = useState<number>(-1);
@@ -60,9 +61,13 @@ const AlertInbox = () => {
     };
 
     return (
-        <Grid container justifyContent="center" alignItems="stretch" spacing={3}>
-            <AlertList {...alertListProps} />
-            <AlertDetail {...alertDetailProps} />
+        <Grid container direction="row" alignItems="stretch" spacing={3} padding="3px">
+            <Grid item xs={3}>
+                <AlertList {...alertListProps} />
+            </Grid>
+            <Grid item xs={9}>
+                <AlertDetail {...alertDetailProps} />
+            </Grid>
             {/* TODO: 
               API call should be placed in this component, need to check how to pass those as props
             */}

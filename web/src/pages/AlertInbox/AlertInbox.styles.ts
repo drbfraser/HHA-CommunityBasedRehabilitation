@@ -10,11 +10,7 @@ export const alertInboxStyles: Record<string, SxProps<Theme>> = {
     listItemStyle: {
         padding: "3px",
     },
-    gridStyle: {
-        // border: "solid grey",
-    },
     tableTopAndContentDividerStyle: {
         backgroundColor: "grey",
-        // height: "3px",
     },
 };

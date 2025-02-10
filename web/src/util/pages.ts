@@ -41,7 +41,7 @@ export enum PageName {
     CLIENTS = "screenNames.clientList",
     CLIENT_DETAILS = "clientAttr.clientDetails",
     CLIENT_RISK_HISTORY = "screenNames.clientRiskHistory",
-    REFERRALS = "referral.pending",
+    REFERRALS = "statistics.referrals",
     NEW_VISIT = "screenNames.newVisit",
     NEW_SURVEY = "screenNames.newBaselineSurvey",
     NEW_REFERRAL = "screenNames.newReferral",

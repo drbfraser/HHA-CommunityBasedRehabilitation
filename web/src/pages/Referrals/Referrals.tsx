@@ -202,7 +202,7 @@ const Referrals = () => {
             },
             {
                 field: "resolved",
-                headerName: t("general.resolved"),
+                headerName: t("general.status"),
                 flex: 0.4,
                 renderCell: RenderStatus,
             },

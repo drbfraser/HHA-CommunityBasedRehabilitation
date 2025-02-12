@@ -242,7 +242,9 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                     {Boolean(referral.services_other.trim().length) && (
                         <div>
                             <b>{t("referralAttr.otherServiceRequired")}: </b>
-                            {otherServices[referral.services_other]}
+                            {otherServices[referral.services_other]
+                                ? otherServices[referral.services_other]
+                                : referral.services_other}
                         </div>
                     )}
                     {!referral.resolved && <ResolveForm />}

@@ -12,7 +12,7 @@ import {
     GridRowModel,
 } from "@mui/x-data-grid";
 import { Endpoint, apiFetch } from "@cbr/common/util/endpoints";
-import { IOutstandingReferral, otherServices } from "@cbr/common/util/referrals";
+import { IReferral, Impairments, otherServices } from "@cbr/common/util/referrals";
 import { dataGridStyles } from "styles/DataGrid.styles";
 import { timestampToDate } from "@cbr/common/util/dates";
 import { IClientSummary } from "@cbr/common/util/clients";
@@ -44,6 +44,7 @@ const Referrals = () => {
                 const priorityClients = tempClients.map((row: IClientSummary) => {
                     return {
                         id: row.id,
+                        full_name: row.full_name,
                         zone: row.zone,
                     };
                 });
@@ -64,25 +65,24 @@ const Referrals = () => {
         const fetchReferrals = async () => {
             setReferralError(undefined);
             try {
-                const tempReferrals: IOutstandingReferral[] = await (
-                    await apiFetch(Endpoint.REFERRALS_OUTSTANDING)
+                const tempReferrals: IReferral[] = await (
+                    await apiFetch(Endpoint.REFERRALS_ALL)
                 ).json();
 
                 const referrals: GridRowsProp = tempReferrals
-                    .sort(
-                        (a: IOutstandingReferral, b: IOutstandingReferral) =>
-                            a.date_referred - b.date_referred
-                    )
-                    .map((row: IOutstandingReferral) => {
+                    .sort((a: IReferral, b: IReferral) => a.date_referred - b.date_referred)
+                    .map((row: IReferral) => {
                         return {
-                            id: row.referral_id,
-                            client_id: row.id,
-                            full_name: row.full_name,
+                            id: row.id,
+                            client_id: row.client_id,
+                            full_name: clients?.find((client) => client.id === row.client_id)
+                                ?.full_name,
                             type: concatenateReferralType(row),
                             date_referred: row.date_referred,
-                            zone: clients?.find((client) => client.id === row.id)?.zone,
+                            zone: clients?.find((client) => client.id === row.client_id)?.zone,
                         };
                     });
+
                 setPendingReferrals(referrals);
                 setFilteredReferrals(referrals);
             } catch (e) {
@@ -92,7 +92,7 @@ const Referrals = () => {
             }
         };
 
-        const concatenateReferralType = (row: IOutstandingReferral) => {
+        const concatenateReferralType = (row: IReferral) => {
             const referralTypes = [];
             if (row.wheelchair) referralTypes.push(t("referral.wheelchair"));
             if (row.physiotherapy) referralTypes.push(t("referral.physiotherapy"));
@@ -101,7 +101,12 @@ const Referrals = () => {
             if (row.orthotic) referralTypes.push(t("referral.orthotic"));
             if (row.prosthetic) referralTypes.push(t("referral.prosthetic"));
             if (row.mental_health) referralTypes.push(t("referral.mentalHealth"));
-            if (row.services_other) referralTypes.push(otherServices[row.services_other]);
+            if (row.services_other) {
+                let service = otherServices[row.services_other];
+
+                if (!service) service = Impairments.OTHER;
+                referralTypes.push(service);
+            }
 
             return referralTypes.join(", ");
         };
@@ -214,13 +219,13 @@ const Referrals = () => {
             <Box sx={dataGridStyles.dashboardTables}>
                 <DataGrid
                     sx={dataGridStyles.datagrid}
-                    rowsPerPageOptions={[5, 25, 50]}
+                    rowsPerPageOptions={[10, 25, 50]}
                     rows={filteredReferrals}
                     loading={isLoading || clientsLoading}
                     columns={pendingReferralsColumns}
-                    pageSize={5}
                     density={GridDensityTypes.Comfortable}
                     onRowClick={handleReferralRowClick}
+                    initialState={{ pagination: { pageSize: 10 } }}
                 />
             </Box>
         </>

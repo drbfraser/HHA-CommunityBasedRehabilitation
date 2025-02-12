@@ -194,7 +194,10 @@
     "previous": "Previous",
     "no": "No",
     "yes": "Yes",
-    "filter": "filter"
+    "filter": "filter",
+    "dataGridLabelRowsPerPage": "Rows per page:",
+    "dataGridLabelDisplayedRows": "{{from}}–{{to}} of {{count}}",
+    "all": "All"
   },
   "alert": {
     "generalFailure": "Something went Wrong",
@@ -460,7 +463,8 @@
     "describeReferral": "Please describe the referral",
     "selectReferralServices": "Select referral services",
     "pending": "Pending Referrals",
-    "filterByType": "Filter by Referral Types"
+    "filterByType": "Filter by Referral Types",
+    "filterByStatus": "Filter by Status"
   },
   "risks": {
     "riskLevel": "Risk Level",

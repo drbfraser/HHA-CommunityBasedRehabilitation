@@ -19,7 +19,7 @@ import { clientPrioritySort, IClientSummary } from "@cbr/common/util/clients";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { timestampToDate } from "@cbr/common/util/dates";
-import { IOutstandingReferral, otherServices } from "@cbr/common/util/referrals";
+import { Impairments, IOutstandingReferral, otherServices } from "@cbr/common/util/referrals";
 import { IAlert } from "@cbr/common/util/alerts";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
@@ -114,7 +114,12 @@ const Dashboard = () => {
             if (row.orthotic) referralTypes.push(t("referral.orthotic"));
             if (row.prosthetic) referralTypes.push(t("referral.prosthetic"));
             if (row.mental_health) referralTypes.push(t("referral.mentalHealth"));
-            if (row.services_other) referralTypes.push(otherServices[row.services_other]);
+            if (row.services_other) {
+                let service = otherServices[row.services_other];
+
+                if (!service) service = Impairments.OTHER;
+                referralTypes.push(service);
+            }
 
             return referralTypes.join(", ");
         };
@@ -333,7 +338,7 @@ const Dashboard = () => {
                                     rows={referrals}
                                     loading={referralsLoading}
                                     columns={outstandingReferralsColumns}
-                                    pageSize={5}
+                                    initialState={{ pagination: { pageSize: 5 } }}
                                     density={GridDensityTypes.Comfortable}
                                     onRowClick={handleReferralRowClick}
                                     components={{

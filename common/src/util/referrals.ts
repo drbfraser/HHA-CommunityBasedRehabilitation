@@ -3,7 +3,7 @@ import i18n, { TFunction } from "i18next";
 export interface IReferral {
     id: number;
     user: number;
-    client: number;
+    client_id: number;
     date_referred: number;
     date_resolved: number;
     resolved: boolean;

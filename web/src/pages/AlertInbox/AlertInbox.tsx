@@ -80,6 +80,9 @@ const AlertInbox = () => {
             <Grid item xs>
                 <AlertDetail {...alertDetailProps} />
             </Grid>
+            {/* TODO: API call should be placed in this component, need to check how to pass those as props */}
+            {/* <AlertList alertListProps={alertListProps} alertData={alertData} />
+                <AlertDetail alertDetailProps={alertDetailProps} alertData={alertData} /> */}
         </Grid>
     );
 };

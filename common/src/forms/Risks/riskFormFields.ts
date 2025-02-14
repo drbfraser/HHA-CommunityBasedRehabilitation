@@ -7,6 +7,7 @@ export enum FormField {
     requirement = "requirement",
     goal = "goal",
     timestamp = "timestamp",
+    comments = "comments",
 }
 
 // On language change, recompute arrays of labels
@@ -15,7 +16,9 @@ const refreshArrays = () => {
     fieldLabels = {
         [FormField.risk_level]: i18n.t("risks.riskLevel"),
         [FormField.requirement]: i18n.t("risks.requirements"),
-        [FormField.goal]: i18n.t("risks.goals"),
+        [FormField.goal]: i18n.t("general.goal"),
+        // TODO: Need to add "Comments"
+        [FormField.comments]: "Comments",
     };
 };
 refreshArrays();

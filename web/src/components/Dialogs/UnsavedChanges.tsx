@@ -33,13 +33,17 @@ export default function UnsavedChanges({
     const { t } = useTranslation();
     const openDialog = open;
     const setOpenDialog = setOpen;
+    // TODO: Update with proper translations
     const dialogTitle = title ? title : "Unsaved Changes";
+
+    // TODO: Update with proper translations
     const dialogDescription = description
         ? description
-        : "You have unsaved changes. Do you want to Save the changes?";
+        : `You have unsaved changes. Do you want to Save the changes?`;
     const dialogSaveBtnMsg = saveBtnMsg ? saveBtnMsg : t("general.save");
     const dialogCancelBtnMsg = cancelBtnMsg ? cancelBtnMsg : t("general.cancel");
 
+    // Custom Close and Save Functions
     const handleClose = () => {
         if (onCancel) {
             onCancel();

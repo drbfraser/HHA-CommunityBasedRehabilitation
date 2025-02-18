@@ -67,7 +67,7 @@ const ClientRisksModal = (props: IModalProps) => {
                                 <Typography variant="subtitle1" fontWeight="bold">
                                     Goal Status:
                                 </Typography>
-                                <GoalStatusChip />
+                                {/* <GoalStatusChip /> */}
                                 <EditNoteTwoToneIcon color="disabled" fontSize="medium" />
                             </Stack>
                         </DialogTitle>

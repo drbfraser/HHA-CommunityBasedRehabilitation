@@ -1,5 +1,6 @@
 import { handleSubmit } from "@cbr/common/forms/Risks/riskFormFieldHandler";
-import { validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
+import { fieldLabels, FormField, validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
+import { RiskGoalOptions, RiskRequirementOptions } from "@cbr/common/types/translationKeys";
 import { IRisk, RiskType } from "@cbr/common/util/risks";
 import {
     Button,
@@ -7,26 +8,34 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Stack,
+    Grid,
+    RadioGroup,
     Typography,
 } from "@mui/material";
-import { Form, Formik } from "formik";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import { Field, Form, Formik } from "formik";
+import { TextField } from "formik-mui";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
+import { Label } from "recharts";
 
 interface IModalProps {
     risk: IRisk;
     setRisk: (risk: IRisk) => void;
     close: () => void;
+    transKey: RiskRequirementOptions | RiskGoalOptions;
 }
 
 export default function UpdateGoalStatus(props: IModalProps) {
     const { t } = useTranslation();
+
+    const canonicalFields: string[] = Object.values(
+        t(props.transKey, { returnObjects: true, lng: "en" })
+    );
+    const localizedFields: string[] = Object.values(t(props.transKey, { returnObjects: true }));
+    // console.assert(canonicalFields.length === localizedFields.length);
 
     const getDialogTitleText = (riskType: RiskType): string => {
         switch (riskType) {
@@ -67,34 +76,51 @@ export default function UpdateGoalStatus(props: IModalProps) {
                             </Stack> */}
                         </DialogTitle>
                         <DialogContent>
-                            <FormControl>
-                                <Typography variant="subtitle1" fontWeight="bold">
-                                    Update Goal Status
-                                </Typography>
-                                {/* <FormLabel>Gender</FormLabel> */}
-                                <RadioGroup
-                                    aria-labelledby="demo-radio-buttons-group-label"
-                                    defaultValue="female"
-                                    name="radio-buttons-group"
-                                >
-                                    <FormControlLabel
-                                        value="female"
-                                        control={<Radio />}
-                                        // TODO: Replace
-                                        label="In Progress"
-                                    />
-                                    <FormControlLabel
-                                        value="male"
-                                        control={<Radio />}
-                                        label="Goal Achieved"
-                                    />
-                                    <FormControlLabel
-                                        value="other"
-                                        control={<Radio />}
-                                        label="Cancel Goal"
-                                    />
-                                </RadioGroup>
-                            </FormControl>
+                            <Grid container direction="column" spacing={2}>
+                                <Grid item>
+                                    <Typography variant="subtitle1" fontWeight="bold">
+                                        Update Goal Status
+                                    </Typography>
+                                    <FormControl fullWidth variant="outlined">
+                                        <RadioGroup
+                                            aria-labelledby="demo-radio-buttons-group-label"
+                                            defaultValue="female"
+                                            name="radio-buttons-group"
+                                        >
+                                            {/* TODO: Update Value and figure out how to integrate with Formik  */}
+                                            {localizedFields.map((label, index) => (
+                                                <FormControlLabel
+                                                    value={label}
+                                                    control={<Radio />}
+                                                    label={label}
+                                                />
+                                            ))}
+                                        </RadioGroup>
+                                        {/* <Field
+                                    component={TextField}
+                                    input
+                                    required
+                                    variant="outlined"
+                                    // TODO: Update with Translation
+                                    label={t("referral.other")}
+                                    // name={FormField.risk_level}
+                                /> */}
+                                    </FormControl>
+                                    <Grid item>
+                                        <Field
+                                            component={TextField}
+                                            fullWidth
+                                            // multiline
+                                            // required
+                                            rows={1}
+                                            variant="outlined"
+                                            margin="dense"
+                                            label={fieldLabels[FormField.other]}
+                                            name={FormField.other}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
                         </DialogContent>
                         <DialogActions>
                             <Button

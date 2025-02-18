@@ -8,6 +8,7 @@ export enum FormField {
     goal = "goal",
     timestamp = "timestamp",
     comments = "comments",
+    other = "other",
 }
 
 // On language change, recompute arrays of labels
@@ -19,6 +20,7 @@ const refreshArrays = () => {
         [FormField.goal]: i18n.t("general.goal"),
         // TODO: Need to add "Comments"
         [FormField.comments]: "Comments",
+        [FormField.other]: i18n.t("referral.other"),
     };
 };
 refreshArrays();
@@ -31,4 +33,5 @@ export const validationSchema = () =>
         [FormField.risk_level]: Yup.string().label(fieldLabels[FormField.risk_level]).required(),
         [FormField.requirement]: Yup.string().label(fieldLabels[FormField.requirement]).required(),
         [FormField.goal]: Yup.string().label(fieldLabels[FormField.goal]).required(),
+        [FormField.other]: Yup.string().label(fieldLabels[FormField.other]).required(),
     });

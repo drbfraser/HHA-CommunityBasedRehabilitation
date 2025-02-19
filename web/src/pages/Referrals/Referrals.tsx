@@ -85,6 +85,7 @@ const Referrals = () => {
                 const tempReferrals: IReferral[] = await (
                     await apiFetch(Endpoint.REFERRALS_ALL)
                 ).json();
+
                 const formattedReferrals: GridRowsProp = tempReferrals.map((row) => ({
                     id: row.id,
                     client_id: row.client_id,
@@ -95,6 +96,7 @@ const Referrals = () => {
                     zone: clients.find((client) => client.id === row.client_id)?.zone || "",
                     resolved: row.resolved,
                 }));
+
                 setReferrals(formattedReferrals);
                 setFilteredReferrals(formattedReferrals.filter((r) => !r.resolved)); // Default: only pending referrals
             } catch (e) {
@@ -174,46 +176,38 @@ const Referrals = () => {
     const handleReferralRowClick = (rowParams: GridRowParams) =>
         history.push(`/client/${rowParams.row.client_id}?${rowParams.row.id}=open`);
 
-    const getColumns = () => {
-        const columns = [
-            {
-                field: "full_name",
-                headerName: t("general.name"),
-                flex: 0.7,
-                renderCell: RenderText,
-            },
-            {
-                field: "type",
-                headerName: t("general.type"),
-                flex: 2,
-                renderCell: RenderText,
-            },
-            {
-                field: "zone",
-                headerName: t("general.zone"),
-                flex: 1.2,
-                renderCell: RenderZone,
-            },
-            {
-                field: "date_referred",
-                headerName: t("referralAttr.dateReferred"),
-                flex: 1,
-                renderCell: RenderDate,
-            },
-            {
-                field: "resolved",
-                headerName: t("general.status"),
-                flex: 0.4,
-                renderCell: RenderStatus,
-            },
-        ];
-
-        if (filterStatus !== STATUS.ALL) {
-            return columns.slice(0, columns.length - 1);
-        }
-
-        return columns;
-    };
+    const referralColumns = [
+        {
+            field: "resolved",
+            headerName: t("general.status"),
+            flex: 0.4,
+            renderCell: RenderStatus,
+        },
+        {
+            field: "full_name",
+            headerName: t("general.name"),
+            flex: 0.7,
+            renderCell: RenderText,
+        },
+        {
+            field: "type",
+            headerName: t("general.type"),
+            flex: 2,
+            renderCell: RenderText,
+        },
+        {
+            field: "zone",
+            headerName: t("general.zone"),
+            flex: 1.2,
+            renderCell: RenderZone,
+        },
+        {
+            field: "date_referred",
+            headerName: t("referralAttr.dateReferred"),
+            flex: 1,
+            renderCell: RenderDate,
+        },
+    ];
 
     return (
         <>
@@ -275,7 +269,7 @@ const Referrals = () => {
                     rowsPerPageOptions={[10, 25, 50]}
                     rows={filteredReferrals}
                     loading={isLoading || clientsLoading}
-                    columns={getColumns()}
+                    columns={referralColumns}
                     density={GridDensityTypes.Comfortable}
                     onRowClick={handleReferralRowClick}
                     initialState={{ pagination: { pageSize: 10 } }}

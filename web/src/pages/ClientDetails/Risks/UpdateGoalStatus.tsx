@@ -19,7 +19,6 @@ import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-mui";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Label } from "recharts";
 
 interface IModalProps {
     risk: IRisk;
@@ -69,22 +68,18 @@ export default function UpdateGoalStatus(props: IModalProps) {
                     <Form>
                         <DialogTitle id="form-dialog-title">
                             {getDialogTitleText(props.risk.risk_type)}
-                            {/* <Stack direction="row" spacing={1}>
-                                <Typography variant="subtitle1" fontWeight="bold">
-                                    Update Goal Status
-                                </Typography>
-                            </Stack> */}
                         </DialogTitle>
                         <DialogContent>
-                            <Grid container direction="column" spacing={2}>
+                            <Grid container direction="column" spacing={1}>
                                 <Grid item>
                                     <Typography variant="subtitle1" fontWeight="bold">
                                         Update Goal Status
                                     </Typography>
+                                </Grid>
+                                <Grid item>
                                     <FormControl fullWidth variant="outlined">
                                         <RadioGroup
-                                            aria-labelledby="demo-radio-buttons-group-label"
-                                            defaultValue="female"
+                                            aria-labelledby="radio-buttons-goal-status"
                                             name="radio-buttons-group"
                                         >
                                             {/* TODO: Update Value and figure out how to integrate with Formik  */}
@@ -96,29 +91,18 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                                 />
                                             ))}
                                         </RadioGroup>
-                                        {/* <Field
-                                    component={TextField}
-                                    input
-                                    required
-                                    variant="outlined"
-                                    // TODO: Update with Translation
-                                    label={t("referral.other")}
-                                    // name={FormField.risk_level}
-                                /> */}
                                     </FormControl>
-                                    <Grid item>
-                                        <Field
-                                            component={TextField}
-                                            fullWidth
-                                            // multiline
-                                            // required
-                                            rows={1}
-                                            variant="outlined"
-                                            margin="dense"
-                                            label={fieldLabels[FormField.other]}
-                                            name={FormField.other}
-                                        />
-                                    </Grid>
+                                </Grid>
+                                <Grid item>
+                                    <Field
+                                        component={TextField}
+                                        fullWidth
+                                        required
+                                        variant="outlined"
+                                        margin="dense"
+                                        label="Goal Name"
+                                        name={FormField.goal}
+                                    />
                                 </Grid>
                             </Grid>
                         </DialogContent>

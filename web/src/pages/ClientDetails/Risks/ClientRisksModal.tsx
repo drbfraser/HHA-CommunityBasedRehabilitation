@@ -22,6 +22,7 @@ import { getRiskGoalsTranslationKey, IRisk, riskLevels, RiskType } from "@cbr/co
 import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
 import React, { useState } from "react";
 import UpdateGoalStatus from "./UpdateGoalStatus";
+import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
 
 interface IModalProps {
     risk: IRisk;
@@ -79,17 +80,22 @@ const ClientRisksModal = (props: IModalProps) => {
                         <Form>
                             <DialogTitle id="form-dialog-title">
                                 {getDialogTitleText(props.risk.risk_type)}
-                                <Stack direction="row" spacing={1}>
-                                    {/*TODO: Replace with Translation*/}
-                                    <Typography variant="subtitle1" fontWeight="bold">
-                                        Goal Status:
-                                    </Typography>
-                                    {/* <GoalStatusChip /> */}
-                                    <EditNoteTwoToneIcon color="disabled" fontSize="medium" />
-                                </Stack>
                             </DialogTitle>
                             <DialogContent>
-                                <Grid container direction="column" spacing={2}>
+                                <Grid container direction="column" spacing={3}>
+                                    <Grid item>
+                                        <Stack direction="row" spacing={1}>
+                                            {/*TODO: Replace with Translation*/}
+                                            <Typography variant="subtitle1" fontWeight="bold">
+                                                Goal Status:
+                                            </Typography>
+                                            <GoalStatusChip />
+                                            <EditNoteTwoToneIcon
+                                                color="disabled"
+                                                fontSize="medium"
+                                            />
+                                        </Stack>
+                                    </Grid>
                                     <Grid item>
                                         <FormControl fullWidth variant="outlined">
                                             <Field

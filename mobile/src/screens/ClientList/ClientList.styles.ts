@@ -4,7 +4,8 @@ import { StyleSheet } from "react-native";
 const useStyles = () =>
     StyleSheet.create({
         container: {
-            flex: 1,
+            margin: 5,
+            justifyContent: "center",
         },
         item: {
             padding: 3,
@@ -17,34 +18,29 @@ const useStyles = () =>
         },
         search: {
             flex: 1,
-        },
-        columnBuilderButton: {
-            flex: 0.2,
+            marginBottom: 5,
         },
         colonBuilderChecklist: {
             marginHorizontal: 40,
-            marginTop: 70,
-            marginBottom: 70,
+            marginVertical: 70,
             display: "flex",
             backgroundColor: themeColors.white,
             borderRadius: 10,
             justifyContent: "center",
         },
-        switch: { flex: 0.2 },
-        switchButtonAndText: {
-            flexDirection: "row",
-            justifyContent: "flex-start",
-        },
-
         row: {
+            margin: 3,
+            padding: 4,
             flexDirection: "row",
-            display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
         },
-        checkbox: {
+        rowItem: {
+            paddingTop: 5,
             flexDirection: "row",
-            marginLeft: 10,
+            alignItems: "center",
+            justifyContent: "space-between",
         },
         column_id: {
             flex: 0.7,
@@ -66,12 +62,6 @@ const useStyles = () =>
         },
         text: {
             flexShrink: 1,
-        },
-        viewWrapText: {
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "flex-start",
-            padding: 5,
         },
     });
 

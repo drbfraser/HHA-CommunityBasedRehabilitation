@@ -1,17 +1,15 @@
 import {
-    apiFetch,
     APILoadError,
-    Endpoint,
+    ClientField,
     getCurrentUser,
     getZones,
     IClientSummary,
-    SearchOption,
     riskLevels,
-    ClientField,
+    SearchOption,
 } from "@cbr/common";
-import { dbType } from "../../util/watermelonDatabase";
 import { Q } from "@nozbe/watermelondb";
 import { modelName, tableKey } from "../../models/constant";
+import { dbType } from "../../util/watermelonDatabase";
 
 export type ClientListRow = {
     id: string;
@@ -43,7 +41,7 @@ export const fetchClientsFromDB = async (
             query = query.extend(Q.where(ClientField.is_active, true));
         }
 
-        if (searchOption === SearchOption.NAME) {
+        if (searchOption === SearchOption.NAME || searchValue === "") {
             searchOption = "full_name";
         }
 

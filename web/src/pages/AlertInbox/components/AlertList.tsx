@@ -1,7 +1,7 @@
+import { FiberManualRecord } from "@mui/icons-material";
+import { Divider, Grid, List, ListItemText, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Divider, Grid, List, ListItemText, Typography } from "@mui/material";
-import { FiberManualRecord } from "@mui/icons-material";
 
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IAlert, PriorityLevel, priorityLevels } from "@cbr/common/util/alerts";
@@ -59,10 +59,10 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
         alert.unread_by_users.includes(userID) ? "bold" : "small";
 
     return (
-        <Grid item xs={3} sx={alertInboxStyles.gridStyle}>
+        <Grid item>
             <h1>{t("general.alerts")}</h1>
             <Divider variant="fullWidth" sx={alertInboxStyles.tableTopAndContentDividerStyle} />
-            <List sx={alertListStyles.list}>
+            <List>
                 {sortAlert(alertData).map((alert) => {
                     return (
                         <div key={alert.id}>
@@ -114,11 +114,7 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
                                 }}
                             />
 
-                            <Divider
-                                variant="fullWidth"
-                                component="li"
-                                sx={alertInboxStyles.dividerStyle}
-                            />
+                            <Divider variant="fullWidth" component="li" />
                         </div>
                     );
                 })}

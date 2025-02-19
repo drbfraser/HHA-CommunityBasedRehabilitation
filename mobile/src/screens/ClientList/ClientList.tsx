@@ -1,32 +1,29 @@
-import React, { useContext, useEffect } from "react";
-import { Text, View, Switch, StyleProp, ViewStyle } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { Modal, DataTable, IconButton, Portal } from "react-native-paper";
-import useStyles from "./ClientList.styles";
-import { ClientListRow, fetchClientsFromDB } from "./ClientListRequest";
-import { riskTypes } from "../../util/riskIcon";
-import { useState } from "react";
-import { Searchbar } from "react-native-paper";
-import { ScrollView } from "react-native-gesture-handler";
 import { SearchOption, themeColors, useZones } from "@cbr/common";
-const styles = useStyles();
+import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { Picker } from "@react-native-picker/picker";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { StackScreenName } from "../../util/StackScreenName";
-import { AppStackNavProp } from "../../util/stackScreens";
+import React, { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import CustomMultiPicker from "react-native-multiple-select-list";
+import { Checkbox, DataTable, IconButton, Modal, Portal, Searchbar } from "react-native-paper";
+import { WrappedText } from "../../components/WrappedText/WrappedText";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
 import {
-    SortOptions,
-    sortBy,
     arrowDirectionController,
     clientComparator,
+    sortBy,
+    SortOptions,
     TSortDirection,
 } from "../../util/listFunctions";
-import { WrappedText } from "../../components/WrappedText/WrappedText";
-import CustomMultiPicker from "react-native-multiple-select-list";
-import { useDatabase } from "@nozbe/watermelondb/hooks";
-import { SyncContext } from "../../context/SyncContext/SyncContext";
+import { riskTypes } from "../../util/riskIcon";
+import { StackScreenName } from "../../util/StackScreenName";
+import { AppStackNavProp } from "../../util/stackScreens";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
-import { Checkbox } from "react-native-paper";
-import { useTranslation } from "react-i18next";
+import useStyles from "./ClientList.styles";
+import { ClientListRow, fetchClientsFromDB } from "./ClientListRequest";
+const styles = useStyles();
 
 const ClientList = () => {
     const navigation = useNavigation<AppStackNavProp>();
@@ -167,90 +164,104 @@ const ClientList = () => {
     return (
         <View style={styles.container}>
             <View style={styles.row}>
-                {selectedSearchOption === SearchOption.ZONE ? (
+                <View style={styles.rowItem}>
+                    {selectedSearchOption === SearchOption.ZONE ? (
+                        <>
+                            <Text>{t("zone.zone")}</Text>
+                            <Picker
+                                style={styles.select}
+                                selectedValue={searchQuery}
+                                onValueChange={(itemValue, itemIndex) => {
+                                    setSearchQuery(itemValue);
+                                    if (itemValue === "viewAll") {
+                                        setSearchQuery("");
+                                    }
+                                }}
+                            >
+                                <Picker.Item label={t("statistics.viewAllZones")} value="viewAll" />
+                                {Array.from(zones).map(([id, name]) => (
+                                    <Picker.Item key={id} label={name} value={id} />
+                                ))}
+                            </Picker>
+                        </>
+                    ) : (
+                        <Searchbar
+                            style={styles.search}
+                            placeholder={t("general.search")}
+                            onChangeText={onChangeSearch}
+                            value={searchQuery}
+                        />
+                    )}
+                    <IconButton
+                        icon="dots-vertical"
+                        color={themeColors.borderGray}
+                        size={20}
+                        onPress={openColumnBuilderMenu}
+                    />
+                </View>
+                <View style={styles.rowItem}>
+                    <Portal>
+                        <Modal
+                            visible={showColumnBuilderMenu}
+                            onDismiss={closeColumnBuilderMenu}
+                            style={styles.colonBuilderChecklist}
+                        >
+                            <CustomMultiPicker
+                                options={columnList}
+                                multiple={true}
+                                placeholder={t("general.selectObject", {
+                                    object: "general.columns",
+                                })}
+                                placeholderTextColor={themeColors.blueBgLight}
+                                returnValue={"value"}
+                                callback={(label) => {
+                                    setSelectedColumn(label);
+                                    showSelectedColumn();
+                                }}
+                                rowBackgroundColor={themeColors.blueBgLight}
+                                iconSize={30}
+                                selectedIconName={"checkmark-circle"}
+                                unselectedIconName={"radio-button-off"}
+                                selected={selectedColumn.map(String)}
+                            />
+                        </Modal>
+                    </Portal>
+                </View>
+                <View style={styles.rowItem}>
+                    <Text>{t("dashboard.myClients")}</Text>
+                    <Switch
+                        trackColor={{ false: themeColors.white, true: themeColors.yellow }}
+                        thumbColor={allClientsMode ? themeColors.white : themeColors.white}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={setAllClientsMode}
+                        value={allClientsMode}
+                    />
+                    <Text>{t("dashboard.allClients")}</Text>
+                </View>
+
+                <View style={styles.rowItem}>
+                    <Text>{t("general.filterBy")}</Text>
                     <Picker
                         style={styles.select}
-                        selectedValue={searchQuery}
-                        onValueChange={(itemValue, itemIndex) => setSearchQuery(itemValue)}
+                        selectedValue={selectedSearchOption}
+                        onValueChange={(itemValue, itemIndex) => {
+                            setSearchOption(itemValue);
+                            setSearchQuery("");
+                        }}
                     >
-                        <Picker.Item label="N/A" value="" />
-                        {Array.from(zones).map(([id, name]) => (
-                            <Picker.Item key={id} label={name} value={id} />
-                        ))}
+                        <Picker.Item label={t("general.name")} value={SearchOption.NAME} />
+                        <Picker.Item label={t("general.zone")} value={SearchOption.ZONE} />
                     </Picker>
-                ) : (
-                    <Searchbar
-                        style={styles.search}
-                        placeholder={t("general.search")}
-                        onChangeText={onChangeSearch}
-                        value={searchQuery}
+                </View>
+                <View style={styles.rowItem}>
+                    <Text>{t("dashboard.showArchived")}</Text>
+                    <Checkbox
+                        status={archivedMode ? "checked" : "unchecked"}
+                        onPress={() => {
+                            setArchivedMode(!archivedMode);
+                        }}
                     />
-                )}
-                <IconButton
-                    icon="dots-vertical"
-                    color={themeColors.borderGray}
-                    size={20}
-                    style={styles.columnBuilderButton}
-                    onPress={openColumnBuilderMenu}
-                />
-                <Portal>
-                    <Modal
-                        visible={showColumnBuilderMenu}
-                        onDismiss={closeColumnBuilderMenu}
-                        style={styles.colonBuilderChecklist}
-                    >
-                        <CustomMultiPicker
-                            options={columnList}
-                            multiple={true}
-                            placeholder={t("general.selectObject", { object: "general.columns" })}
-                            placeholderTextColor={themeColors.blueBgLight}
-                            returnValue={"value"}
-                            callback={(label) => {
-                                setSelectedColumn(label);
-                                showSelectedColumn();
-                            }}
-                            rowBackgroundColor={themeColors.blueBgLight}
-                            iconSize={30}
-                            selectedIconName={"checkmark-circle"}
-                            unselectedIconName={"radio-button-off"}
-                            selected={selectedColumn.map(String)}
-                        />
-                    </Modal>
-                </Portal>
-            </View>
-            <View style={styles.row}>
-                <Text style={{ flex: 0.7, margin: 10 }}>{t("dashboard.myClients")}</Text>
-                <Switch
-                    style={styles.switch}
-                    trackColor={{ false: themeColors.white, true: themeColors.yellow }}
-                    thumbColor={allClientsMode ? themeColors.white : themeColors.white}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={setAllClientsMode}
-                    value={allClientsMode}
-                />
-                <Text style={styles.container}>{t("dashboard.allClients")}</Text>
-
-                <Text style={{ textAlign: "center", fontSize: 16 }}>{t("general.filterBy")}</Text>
-                <Picker
-                    style={styles.select}
-                    selectedValue={selectedSearchOption}
-                    onValueChange={(itemValue, itemIndex) => {
-                        setSearchOption(itemValue);
-                        setSearchQuery("");
-                    }}
-                >
-                    <Picker.Item label={t("general.name")} value={SearchOption.NAME} />
-                    <Picker.Item label={t("general.zone")} value={SearchOption.ZONE} />
-                </Picker>
-            </View>
-            <View style={styles.checkbox}>
-                <Text style={{ alignSelf: "center" }}>{t("dashboard.showArchived")}</Text>
-                <Checkbox
-                    status={archivedMode ? "checked" : "unchecked"}
-                    onPress={() => {
-                        setArchivedMode(!archivedMode);
-                    }}
-                />
+                </View>
             </View>
             <ScrollView>
                 <DataTable>

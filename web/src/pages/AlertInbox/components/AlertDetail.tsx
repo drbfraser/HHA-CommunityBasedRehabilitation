@@ -47,7 +47,7 @@ const AlertDetail = ({ selectAlert, alertData, refreshAlert }: IProps) => {
     });
 
     return (
-        <Grid item xs={9} sx={alertDetailStyles.detailContainerStyle}>
+        <Grid item sx={alertDetailStyles.detailContainerStyle}>
             <h1>{t("general.details")}</h1>
             <Divider variant="fullWidth" sx={alertDetailStyles.dividerStyle} />
 

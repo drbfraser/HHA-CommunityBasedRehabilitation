@@ -334,6 +334,17 @@ const Dashboard = () => {
                             <Box sx={dataGridStyles.dashboardTables}>
                                 <DataGrid
                                     sx={dataGridStyles.datagrid}
+                                    localeText={{
+                                        MuiTablePagination: {
+                                            labelDisplayedRows: ({ from, to, count }) =>
+                                                t("general.dataGridLabelDisplayedRows", {
+                                                    from,
+                                                    to,
+                                                    count,
+                                                }),
+                                            labelRowsPerPage: t("general.dataGridLabelRowsPerPage"),
+                                        },
+                                    }}
                                     rowsPerPageOptions={[5, 25, 50]}
                                     rows={referrals}
                                     loading={referralsLoading}

@@ -225,7 +225,7 @@ const ClientForm = () => {
                                                     <AccordionSummary
                                                         expandIcon={<ExpandMoreIcon />}
                                                     >
-                                                        Caregiver Details:
+                                                        {t("clientFields.caregiverDetails")}
                                                     </AccordionSummary>
                                                     <AccordionDetails>
                                                         <Grid

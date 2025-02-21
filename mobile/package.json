@@ -4,6 +4,7 @@
   },
   "scripts": {
     "start": "expo run:android",
+    "build": "expo prebuild --clean",
     "reset-project": "node ./scripts/reset-project.js",
     "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz",
     "test": "jest --watchAll",

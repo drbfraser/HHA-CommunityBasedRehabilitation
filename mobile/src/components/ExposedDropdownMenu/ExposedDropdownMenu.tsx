@@ -313,7 +313,7 @@ const ExposedDropdownMenu = (props: TDropdownMenuProps) => {
                                 }}
                                 disabled={props.disabled}
                                 onPress={openMenu}
-                                name={!isOpen ? "chevron-down" : "chevron-up"}
+                                icon={!isOpen ? "chevron-down" : "chevron-up"}
                             />
                         }
                     />

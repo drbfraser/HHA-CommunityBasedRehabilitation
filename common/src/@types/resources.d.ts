@@ -465,7 +465,8 @@ interface Resources {
       "selectReferralServices": "&Select referral services",
       "pending": "&Pending Referrals",
       "filterByType": "&Filter by Referral Types",
-      "filterByStatus": "&Filter by Status"
+      "filterByStatus": "&Filter by Status",
+      "filterByTypeDescription": "&Referrals that match at least one of the selected types will be displayed."
     },
     "risks": {
       "riskLevel": "Ngo' naron na gba da",
@@ -1231,7 +1232,8 @@ interface Resources {
       "selectReferralServices": "Select referral services",
       "pending": "Pending Referrals",
       "filterByType": "Filter by Referral Types",
-      "filterByStatus": "Filter by Status"
+      "filterByStatus": "Filter by Status",
+      "filterByTypeDescription": "Referrals that match at least one of the selected types will be displayed."
     },
     "risks": {
       "riskLevel": "Risk Level",

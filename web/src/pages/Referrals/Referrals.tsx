@@ -260,7 +260,7 @@ const Referrals = () => {
                 />
             </Box>
             <Typography variant="body2" color="textSecondary">
-                Referrals that match at least one of the selected types will be displayed.
+                {t("referral.filterByTypeDescription")}
             </Typography>
 
             <Box sx={dataGridStyles.dashboardTables}>

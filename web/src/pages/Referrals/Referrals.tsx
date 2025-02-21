@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import {
-    Typography,
-    Box,
-    Alert,
-    TextField,
-    MenuItem,
-    Select,
-    FormControl,
-    InputLabel,
-} from "@mui/material";
+import { Typography, Box, Alert, TextField, MenuItem } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import {
     DataGrid,
@@ -228,14 +219,17 @@ const Referrals = () => {
             <br />
 
             <Box sx={referralsStyles.filterContainer}>
-                <FormControl sx={referralsStyles.statusFilter}>
-                    <InputLabel>{t("referral.filterByStatus")}</InputLabel>
-                    <Select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                        <MenuItem value={STATUS.PENDING}>{t("general.pending")}</MenuItem>
-                        <MenuItem value={STATUS.RESOLVED}>{t("general.resolved")}</MenuItem>
-                        <MenuItem value={STATUS.ALL}>{t("general.all")}</MenuItem>
-                    </Select>
-                </FormControl>
+                <TextField
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                    select
+                    label={t("referral.filterByStatus")}
+                    sx={referralsStyles.statusFilter}
+                >
+                    <MenuItem value={STATUS.PENDING}>{t("general.pending")}</MenuItem>
+                    <MenuItem value={STATUS.RESOLVED}>{t("general.resolved")}</MenuItem>
+                    <MenuItem value={STATUS.ALL}>{t("general.all")}</MenuItem>
+                </TextField>
 
                 <Autocomplete
                     multiple

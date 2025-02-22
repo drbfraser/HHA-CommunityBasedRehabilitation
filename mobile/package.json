@@ -9,7 +9,9 @@
         "reset-project": "node ./scripts/reset-project.js",
         "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz",
         "test": "jest --watchAll",
-        "lint": "expo lint"
+        "lint": "expo lint",
+        "android": "expo run:android",
+        "ios": "expo run:ios"
     },
     "jest": {
         "preset": "jest-expo"

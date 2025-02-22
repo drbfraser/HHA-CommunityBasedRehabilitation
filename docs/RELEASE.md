@@ -8,7 +8,15 @@ Select the branch you wish to create an release APK for mobile CBR.
 
 #### 1.2: Configure Version Info
 
-Before releasing a new version of the app, you must ensure that you have updated the version information.
+Before releasing a new version of the app, you must ensure that you have updated the version information
+
+TODOSD: re-add build.js, with updates?
+
+TODOSD: remove prev, clarify new
+**Update the version Name and Code:**
+In `mobile/app.json`:
+- update expo.version to an appropriate new name (visible to user on Google Play store)
+- increment expo.android.versionCode to the next largest *integer* value. This is used by the Play store to uniquely track each uploaded version, and must be new for each uploaded bundle.
 
 **Update the `versionName`:**
 1. For Android project in `mobile/android/app/build.gradle` under the `defaultConfig` (visible to user on Google Play store)

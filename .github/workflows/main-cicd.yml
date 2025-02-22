@@ -94,7 +94,7 @@ jobs:
         npx tsc
       working-directory: /isolated_build/repo/common
 
-    - name: Prepair mobile build environment
+    - name: Prepare mobile build environment
       run:  |
         npm uninstall @cbr/common
         COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
@@ -103,11 +103,21 @@ jobs:
         npx prettier --check .
       working-directory: /isolated_build/repo/mobile
 
+    # TODOSD: build mobile here
+
+    # TODOSD: remove this, old
+    # - name: Build APK (Targeting Development Server)
+    #   run:  |
+    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+    #     npm run build dev
+    #   working-directory: /isolated_build/repo/mobile
+
     - name: Build APK (Targeting Development Server)
       run:  |
         rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        npm run build dev
+        npm run build
       working-directory: /isolated_build/repo/mobile
+
 
     # NOTE: Artifact upload disabled because builds from the CI/CD server seem
     #       to not work. Specifically, creating a client on mobile and then

@@ -143,6 +143,7 @@ const Dashboard = () => {
             <ScrollView>
                 <View style={styles.row}>
                     <Text style={styles.title}>{t("general.dashboard")}</Text>
+                    <Text style={styles.title}> 0.74</Text>
                 </View>
                 <View>
                     {unreadAlertsCount > 0 ? (

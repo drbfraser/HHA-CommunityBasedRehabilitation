@@ -1,16 +1,3 @@
-// {
-//     "compilerOptions": {
-//         "jsx": "react",
-//         "experimentalDecorators": true,
-//         "strict": true,
-//         "esModuleInterop": true,
-//         "noImplicitAny": false
-    // },
-//     "extends": "expo/tsconfig.base"
-// }
-// todosd: remove
-
-
 {
     "extends": "expo/tsconfig.base",
     "compilerOptions": {
@@ -20,16 +7,8 @@
         // "esModuleInterop": true, // todosd: test
         // "noImplicitAny": false,
         "paths": {
-            "@/*": [
-                "./*"
-            ]
+            "@/*": ["./*"]
         }
     },
-    "include": [
-        "**/*.ts",
-        "**/*.tsx",
-        ".expo/types/**/*.ts",
-        "expo-env.d.ts"
-    ]
+    "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }
-  

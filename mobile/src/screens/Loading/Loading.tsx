@@ -1,17 +1,18 @@
 import { Image, View } from "react-native";
-import React, { useContext } from "react";
-import { ActivityIndicator, Button, useTheme } from "react-native-paper";
+import React from "react";
+import { ActivityIndicator } from "react-native-paper";
 import useStyles from "./Loading.styles";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
+import { useAppTheme } from "@/src/util/theme.styles";
 
 interface LoadingProps {
     navigation: StackNavigationProp<StackParamList, StackScreenName.HOME>;
 }
 
 const Loading = (props: LoadingProps) => {
-    const theme = useTheme();
+    const theme = useAppTheme();
     const styles = useStyles();
     return (
         <View style={styles.container}>

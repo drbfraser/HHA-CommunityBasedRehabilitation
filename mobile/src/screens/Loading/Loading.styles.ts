@@ -1,8 +1,8 @@
+import { useAppTheme } from "@/src/util/theme.styles";
 import { StyleSheet } from "react-native";
-import { useTheme } from "react-native-paper";
 
 const useStyles = () => {
-    const theme = useTheme();
+    const theme = useAppTheme();
     return StyleSheet.create({
         container: {
             alignItems: "center",

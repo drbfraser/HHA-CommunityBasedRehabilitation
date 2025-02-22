@@ -44,7 +44,7 @@ const useStyles = () =>
     });
 export default useStyles;
 
-export const riskStyles = (textColour: string) =>
+export const riskRadioButtonStyles = (textColour: string) =>
     StyleSheet.create({
         riskRadioStyle: {
             fontWeight: "bold",

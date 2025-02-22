@@ -18,7 +18,7 @@ import {
 } from "@cbr/common";
 import ModalForm from "../../../components/ModalForm/ModalForm";
 import { SyncContext } from "../../../context/SyncContext/SyncContext";
-import useStyles, { riskStyles } from "./ClientRiskForm.styles";
+import useStyles, { riskRadioButtonStyles } from "./ClientRiskForm.styles";
 
 import { handleRiskSubmit } from "./ClientRiskFormHandler";
 
@@ -142,10 +142,10 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                             // prettier-ignore
                                             [RiskLevel.CRITICAL, t("riskLevelsAbbreviated.critical"),],
                                         ].map(([level, abbreviation], index) => {
-                                            const style = riskStyles(
+                                            const style = riskRadioButtonStyles(
                                                 riskLevels[level].color
                                             ).riskRadioStyle;
-                                            const textColour = riskStyles(
+                                            const textColour = riskRadioButtonStyles(
                                                 riskLevels[level].color
                                             ).radioSubtitleText;
                                             return (

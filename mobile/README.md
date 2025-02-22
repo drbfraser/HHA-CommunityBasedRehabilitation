@@ -78,7 +78,7 @@ After the app is up and running the first time, after you make a change to the c
 
 # Troubleshooting
 
-- TODOSD: clean up all this to update relevance
+-   TODOSD: clean up all this to update relevance
 
 -   You **MUST** be using a `development build` TODOSD: finish thought
 

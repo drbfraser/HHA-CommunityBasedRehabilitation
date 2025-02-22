@@ -19,6 +19,7 @@ import {
     invalidateAllCachedAPI,
     isLoggedIn,
     getI18nInstance,
+    themeColors,
 } from "@cbr/common";
 import theme from "./util/theme.styles";
 import globalStyle from "./app.styles";
@@ -35,6 +36,7 @@ import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
 import { store } from "./redux/store";
 import { I18nextProvider } from "react-i18next";
+import { StatusBar } from "react-native";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -223,6 +225,11 @@ export default function App() {
                 <StoreProvider store={store}>
                     <PaperProvider theme={theme}>
                         <NavigationContainer theme={theme}>
+                            <StatusBar
+                                backgroundColor={themeColors.statusBarBgGray}
+                                barStyle="light-content"
+                            />
+
                             <AuthContext.Provider value={authContext}>
                                 <SyncContext.Provider
                                     value={{

@@ -73,6 +73,9 @@ jobs:
       id:   date_str
       run:  echo "::set-output name=stdout::$(date -u +%Y-%m-%d-%H%M%S%z)"
 
+    - name: Create working directory
+      run:  mkdir /isolated_build/repo/mobile/android/app 
+
     - name: Setup Release Keystore for Play Store
       run:  |
         set -x  # echo commands names

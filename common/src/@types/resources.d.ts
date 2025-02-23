@@ -197,7 +197,8 @@ interface Resources {
       "yes": "&Yes",
       "filter": "&filter",
       "dataGridLabelRowsPerPage": "&Rows per page:",
-      "dataGridLabelDisplayedRows": "&{{from}}–{{to}} of {{count}}"
+      "dataGridLabelDisplayedRows": "&{{from}}–{{to}} of {{count}}",
+      "all": "&All"
     },
     "alert": {
       "generalFailure": "Lyanget a konda 'borik",
@@ -463,7 +464,9 @@ interface Resources {
       "describeReferral": "&Please describe the referral",
       "selectReferralServices": "&Select referral services",
       "pending": "&Pending Referrals",
-      "filterByType": "&Filter by Referral Types"
+      "filterByType": "&Filter by Referral Types",
+      "filterByStatus": "&Filter by Status",
+      "filterByTypeDescription": "&Referrals that match at least one of the selected types will be displayed."
     },
     "risks": {
       "riskLevel": "Ngo' naron na gba da",
@@ -961,7 +964,8 @@ interface Resources {
       "yes": "Yes",
       "filter": "filter",
       "dataGridLabelRowsPerPage": "Rows per page:",
-      "dataGridLabelDisplayedRows": "{{from}}–{{to}} of {{count}}"
+      "dataGridLabelDisplayedRows": "{{from}}–{{to}} of {{count}}",
+      "all": "All"
     },
     "alert": {
       "generalFailure": "Something went Wrong",
@@ -1227,7 +1231,9 @@ interface Resources {
       "describeReferral": "Please describe the referral",
       "selectReferralServices": "Select referral services",
       "pending": "Pending Referrals",
-      "filterByType": "Filter by Referral Types"
+      "filterByType": "Filter by Referral Types",
+      "filterByStatus": "Filter by Status",
+      "filterByTypeDescription": "Referrals that match at least one of the selected types will be displayed."
     },
     "risks": {
       "riskLevel": "Risk Level",

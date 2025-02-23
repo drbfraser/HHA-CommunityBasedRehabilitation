@@ -349,6 +349,11 @@ class ReferralOutstanding(generics.ListAPIView):
         return getOutstandingReferrals()
 
 
+class ReferralListALl(generics.ListAPIView):
+    queryset = models.Referral.objects.all()
+    serializer_class = serializers.DetailedReferralSerializer
+
+
 class AlertList(generics.ListCreateAPIView):
     queryset = models.Alert.objects.all()
 

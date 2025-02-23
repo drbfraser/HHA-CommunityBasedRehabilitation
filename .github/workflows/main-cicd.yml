@@ -116,7 +116,7 @@ jobs:
     - name: Build APK (Targeting Development Server)
       run:  |
         rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        sudo expo prebuild --clean        
+        sudo npm run build   
       working-directory: /isolated_build/repo/mobile
 
     # - name: Test working directory exists

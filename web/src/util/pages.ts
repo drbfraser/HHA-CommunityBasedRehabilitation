@@ -32,6 +32,8 @@ import { IUser, UserRole } from "@cbr/common/util/users";
 import { APILoadError, TAPILoadError } from "@cbr/common/util/endpoints";
 import UserChangePassword from "pages/User/UserPasswordEdit";
 import NewSurvey from "pages/BaseSurvey/BaseSurvey";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
+import Referrals from "pages/Referrals/Referrals";
 
 export enum PageName {
     DASHBOARD = "general.dashboard",
@@ -39,6 +41,7 @@ export enum PageName {
     CLIENTS = "screenNames.clientList",
     CLIENT_DETAILS = "clientAttr.clientDetails",
     CLIENT_RISK_HISTORY = "screenNames.clientRiskHistory",
+    REFERRALS = "statistics.referrals",
     NEW_VISIT = "screenNames.newVisit",
     NEW_SURVEY = "screenNames.newBaselineSurvey",
     NEW_REFERRAL = "screenNames.newReferral",
@@ -119,6 +122,13 @@ const pages: IPage[] = [
         name: PageName.NEW_REFERRAL,
         Component: NewReferral,
         showInNav: false,
+    },
+    {
+        path: "/referrals",
+        name: PageName.REFERRALS,
+        Component: Referrals,
+        showInNav: true,
+        Icon: WorkHistoryIcon,
     },
     {
         path: "/user",

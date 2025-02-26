@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View } from "react-native";
 import { useTranslation } from "react-i18next";
+import { View } from "react-native";
 import { Card, Divider, Text } from "react-native-paper";
 
 import { IRisk, riskLevels, RiskType } from "@cbr/common";
@@ -56,42 +56,37 @@ export const ClientRisk = (props: riskProps) => {
     return (
         <View key={risk.risk_type}>
             <Divider />
-
             <Card style={styles.riskCardStyle}>
                 <View style={styles.riskCardContentStyle}>
-                    <Text style={styles.riskTitleStyle}>{getRiskTitle()}</Text>
-                    <Text style={riskStyles(riskLevels[risk.risk_level].color).riskSubtitleStyle}>
-                        {riskLevels[risk.risk_level].name}
-                    </Text>
-                </View>
+                    <View style={styles.riskCardHeaderStyle}>
+                        <Text style={styles.riskTitleStyle}>{getRiskTitle()}</Text>
+                        <Text
+                            style={riskStyles(riskLevels[risk.risk_level].color).riskSubtitleStyle}
+                        >
+                            {riskLevels[risk.risk_level].name}
+                        </Text>
+                    </View>
 
-                <View>
-                    {/* TODO: Remove after demo */}
-                    {/* <Text style={{ color: "red" }}>DEMO ONLY: underlying value = </Text>
-                    <Text style={{ color: "red" }}>{risk.requirement}</Text> */}
+                    <View>
+                        <Text style={styles.riskHeaderStyle}>{t("general.requirements")}: </Text>
+                        <Text style={styles.riskRequirementStyle}>
+                            {getModalFormRequirementsDisplay(t, risk)}
+                        </Text>
+                    </View>
+                    <View>
+                        <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
+                        <Text style={styles.riskRequirementStyle}>
+                            {getModalFormGoalsDisplay(t, risk)}
+                        </Text>
+                    </View>
 
-                    <Text style={styles.riskHeaderStyle}>{t("general.requirements")}: </Text>
-                    <Text style={styles.riskRequirementStyle}>
-                        {getModalFormRequirementsDisplay(t, risk)}
-                    </Text>
-                </View>
-                <View>
-                    {/* TODO: Remove after demo */}
-                    {/* <Text style={{ color: "red" }}>DEMO ONLY: underlying value = </Text>
-                    <Text style={{ color: "red" }}>{risk.goal}</Text> */}
-
-                    <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
-                    <Text style={styles.riskRequirementStyle}>
-                        {getModalFormGoalsDisplay(t, risk)}
-                    </Text>
-                </View>
-
-                <View>
-                    <ClientRiskForm
-                        riskData={risk}
-                        setRisk={setRisk}
-                        clientArchived={props.clientArchived}
-                    />
+                    <View>
+                        <ClientRiskForm
+                            riskData={risk}
+                            setRisk={setRisk}
+                            clientArchived={props.clientArchived}
+                        />
+                    </View>
                 </View>
             </Card>
 

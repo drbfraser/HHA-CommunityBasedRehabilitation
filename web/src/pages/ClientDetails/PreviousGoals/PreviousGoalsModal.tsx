@@ -1,3 +1,6 @@
+import { RiskLevel } from "@cbr/common/util/risks";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import {
     Button,
     Dialog,
@@ -7,13 +10,14 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableContainer,
     TableHead,
     TablePagination,
     TableRow,
 } from "@mui/material";
+import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ParentTableContainer } from "./PreviousGoalsModal.styles";
 
 interface IModalProps {
     close: () => void;
@@ -22,8 +26,8 @@ const PreviousGoalsModal = (props: IModalProps) => {
     const sampleData = [
         {
             id: 1,
-            riskLevel: "Health",
-            area: "Bidi Bidi",
+            riskLevel: RiskLevel.CRITICAL,
+            area: "Health",
             goalDesc: "Textbooks1",
             startDate: "01/01/2024",
             achDate: "05/05/2024",
@@ -31,17 +35,17 @@ const PreviousGoalsModal = (props: IModalProps) => {
         },
         {
             id: 2,
-            riskLevel: "Health",
-            area: "Bidi Bidi",
-            goalDesc: "Textbooks2",
+            riskLevel: RiskLevel.MEDIUM,
+            area: "Health",
+            goalDesc: "super long",
             startDate: "01/01/2024",
             achDate: "05/05/2024",
-            status: "check",
+            status: "cancelled",
         },
         {
             id: 3,
-            riskLevel: "Health",
-            area: "Bidi Bidi",
+            riskLevel: RiskLevel.LOW,
+            area: "Health",
             goalDesc: "Textbooks3",
             startDate: "01/01/2024",
             achDate: "05/05/2024",
@@ -49,17 +53,17 @@ const PreviousGoalsModal = (props: IModalProps) => {
         },
         {
             id: 4,
-            riskLevel: "Health",
-            area: "Bidi Bidi",
+            riskLevel: RiskLevel.HIGH,
+            area: "Health",
             goalDesc: "Textbooks4",
             startDate: "01/01/2024",
             achDate: "05/05/2024",
-            status: "check",
+            status: "cancelled",
         },
         {
             id: 5,
-            riskLevel: "Health",
-            area: "Bidi Bidi",
+            riskLevel: RiskLevel.CRITICAL,
+            area: "Health",
             goalDesc: "Textbooks5",
             startDate: "01/01/2024",
             achDate: "05/05/2024",
@@ -67,8 +71,8 @@ const PreviousGoalsModal = (props: IModalProps) => {
         },
         {
             id: 6,
-            riskLevel: "Health",
-            area: "Bidi Bidi",
+            riskLevel: RiskLevel.HIGH,
+            area: "Health",
             goalDesc: "Textbooks6",
             startDate: "01/01/2024",
             achDate: "05/05/2024",
@@ -96,40 +100,50 @@ const PreviousGoalsModal = (props: IModalProps) => {
         [page, rowsPerPage, memoizedSampleData]
     );
 
+    const handleRowClick = (id: number) => {
+        console.log("create new modal here", id);
+    };
+
     return (
         <Dialog fullWidth maxWidth="lg" open={true} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Viewing Previous Goals</DialogTitle>
             <DialogContent>
-                <TableContainer>
+                <ParentTableContainer sx={{ height: 400 }}>
                     <Table>
                         <TableHead>
                             <TableRow>
                                 <TableCell>Risk Level</TableCell>
-                                <TableCell align="right">Area</TableCell>
-                                <TableCell align="right">Goal Description</TableCell>
-                                <TableCell align="right">Start Date</TableCell>
-                                <TableCell align="right">Achieved Date</TableCell>
-                                <TableCell align="right">Status</TableCell>
+                                <TableCell>Area</TableCell>
+                                <TableCell>Goal Description</TableCell>
+                                <TableCell>Start Date</TableCell>
+                                <TableCell>Achieved Date</TableCell>
+                                <TableCell>Status</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {visibleRows.map((data, index) => {
                                 return (
-                                    <TableRow key={data.id}>
+                                    <TableRow key={data.id} onClick={() => handleRowClick(data.id)}>
                                         <TableCell component="th" scope="row">
-                                            {data.riskLevel}
+                                            <RiskLevelChip risk={data.riskLevel} />
                                         </TableCell>
-                                        <TableCell align="right">{data.area}</TableCell>
-                                        <TableCell align="right">{data.goalDesc}</TableCell>
-                                        <TableCell align="right">{data.startDate}</TableCell>
-                                        <TableCell align="right">{data.achDate}</TableCell>
-                                        <TableCell align="right">{data.status}</TableCell>
+                                        <TableCell>{data.area}</TableCell>
+                                        <TableCell>{data.goalDesc}</TableCell>
+                                        <TableCell>{data.startDate}</TableCell>
+                                        <TableCell>{data.achDate}</TableCell>
+                                        <TableCell>
+                                            {data.status === "check" ? (
+                                                <CheckCircleOutlineIcon color="success" />
+                                            ) : (
+                                                <CancelOutlinedIcon color="error" />
+                                            )}
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}
                         </TableBody>
                     </Table>
-                </TableContainer>
+                </ParentTableContainer>
                 <TablePagination
                     rowsPerPageOptions={[]}
                     component="div"

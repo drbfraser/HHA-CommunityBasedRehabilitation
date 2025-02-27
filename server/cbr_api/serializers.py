@@ -405,6 +405,7 @@ class ReferralUpdateSerializer(serializers.ModelSerializer):
 
 class OutstandingReferralSerializer(serializers.Serializer):
     id = serializers.CharField()
+    referral_id = serializers.CharField()
     full_name = serializers.CharField()
     services_other = serializers.CharField()
     physiotherapy = serializers.BooleanField()

@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
-import { View, Platform, ToastAndroid, AlertIOS, ScrollView } from "react-native";
-import { Button, Modal, Portal, Text, RadioButton } from "react-native-paper";
-import { useTranslation } from "react-i18next";
-import { Formik, FormikProps } from "formik";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { Formik, FormikProps } from "formik";
+import React, { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { AlertIOS, Platform, ScrollView, ToastAndroid, View } from "react-native";
+import { Button, Modal, Portal, RadioButton, Text } from "react-native-paper";
 
 import {
     fieldLabels,
@@ -16,10 +16,11 @@ import {
     RiskType,
     validationSchema,
 } from "@cbr/common";
-import { SyncContext } from "../../../context/SyncContext/SyncContext";
-import { handleRiskSubmit } from "./ClientRiskFormHandler";
-import useStyles, { riskStyles } from "./ClientRisk.styles";
 import ModalForm from "../../../components/ModalForm/ModalForm";
+import { SyncContext } from "../../../context/SyncContext/SyncContext";
+import useStyles, { riskRadioButtonStyles } from "./ClientRiskForm.styles";
+
+import { handleRiskSubmit } from "./ClientRiskFormHandler";
 
 export interface ClientRiskFormProps {
     riskData: any;
@@ -141,12 +142,19 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                             // prettier-ignore
                                             [RiskLevel.CRITICAL, t("riskLevelsAbbreviated.critical"),],
                                         ].map(([level, abbreviation], index) => {
-                                            const style = riskStyles(
+                                            const style = riskRadioButtonStyles(
                                                 riskLevels[level].color
                                             ).riskRadioStyle;
+                                            const textColour = riskRadioButtonStyles(
+                                                riskLevels[level].color
+                                            ).radioSubtitleText;
                                             return (
                                                 <View key={index} style={styles.radioIndividual}>
-                                                    <Text style={style}>{abbreviation}</Text>
+                                                    <View style={style}>
+                                                        <Text style={textColour}>
+                                                            {abbreviation}
+                                                        </Text>
+                                                    </View>
                                                     <RadioButton value={level} />
                                                 </View>
                                             );

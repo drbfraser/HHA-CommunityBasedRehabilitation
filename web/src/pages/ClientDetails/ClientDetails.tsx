@@ -11,7 +11,7 @@ import { timestampToFormDate } from "@cbr/common/util/dates";
 import ClientInfoForm from "./ClientInfoForm";
 import ClientRisks from "./Risks/ClientRisks";
 import ClientTimeline from "./ClientTimeline/ClientTimeline";
-import PreviousGoalsModal from "./PreviousGoals/PreviousGoalsModal";
+import PreviousGoalsModal from "./PreviousGoals/PreviousGoalsModal/PreviousGoalsModal";
 
 interface IUrlParam {
     clientId: string;

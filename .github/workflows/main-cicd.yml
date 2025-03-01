@@ -142,10 +142,10 @@ jobs:
     #     ./gradlew assembleRelease
     #   working-directory: /isolated_build/repo/mobile/android
 
+     # todosd: need chmod +x ./gradlew?
     - name: Build AAB
       run:  |
         rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        chmod +x ./gradlew
         ./gradlew bundleRelease
       working-directory: /isolated_build/repo/mobile/android
 

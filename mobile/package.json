@@ -3,7 +3,7 @@
         "node": ">=18.20.4 <19"
     },
     "scripts": {
-        "start": "expo run:android --port 8088 --device",
+        "start": "expo run:android",
         "start-with-target": "expo run:android --port 8088 --device",
         "build": "expo prebuild --clean --platform android",
         "reset-project": "node ./scripts/reset-project.js",

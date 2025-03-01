@@ -113,10 +113,10 @@ jobs:
     #     npm run build dev
     #   working-directory: /isolated_build/repo/mobile
 
-    - name: Build APK (Targeting Development Server)
+    # todosd: remove need for sudo, clean up?
+    - name: Prebuild android folder
       run:  |
-        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        sudo npm run build   
+        sudo npm run build
       working-directory: /isolated_build/repo/mobile
 
     # - name: Test working directory exists
@@ -131,6 +131,16 @@ jobs:
         base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
         echo "Date String: ${{ steps.date_str.outputs.stdout }}"
       working-directory: /isolated_build/repo/mobile/android/app
+
+    # todosd: test assemble
+    # todo: rm -f needed here?
+    # todo: chmod needed?
+    - name: Build APK (Targeting Development Server)
+      run:  |
+        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+        chmod +x ./android/gradlew
+        ./gradlew assembleRelease
+      working-directory: /isolated_build/repo/mobile/android
 
     # NOTE: Artifact upload disabled because builds from the CI/CD server seem
     #       to not work. Specifically, creating a client on mobile and then

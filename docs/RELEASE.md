@@ -8,7 +8,9 @@ Select the branch you wish to create an release APK for mobile CBR.
 
 #### 1.2: Configure Version Info
 
-Before releasing a new version of the app, you must ensure that you have updated the version information.
+Before releasing a new version of the app, you must ensure that you have updated the version information
+
+TODOSD: this can now be changed in app.json, "versionCode" under "android".  todo: what was the last version number released?
 
 **Update the `versionName`:**
 1. For Android project in `mobile/android/app/build.gradle` under the `defaultConfig` (visible to user on Google Play store)

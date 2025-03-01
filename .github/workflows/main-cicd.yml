@@ -135,11 +135,18 @@ jobs:
     # todosd: test assemble
     # todo: rm -f needed here?
     # todo: chmod needed?
-    - name: Build APK (Targeting Development Server)
+    # - name: Build APK (Targeting Development Server)
+    #   run:  |
+    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+    #     chmod +x ./gradlew
+    #     ./gradlew assembleRelease
+    #   working-directory: /isolated_build/repo/mobile/android
+
+    - name: Build AAB
       run:  |
         rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
         chmod +x ./gradlew
-        ./gradlew assembleRelease
+        ./gradlew bundleRelease
       working-directory: /isolated_build/repo/mobile/android
 
     # NOTE: Artifact upload disabled because builds from the CI/CD server seem

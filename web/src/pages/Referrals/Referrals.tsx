@@ -86,10 +86,11 @@ const Referrals = () => {
                     date_referred: row.date_referred,
                     zone: clients.find((client) => client.id === row.client_id)?.zone || "",
                     resolved: row.resolved,
+                    details: getReferralDetails(row),
                 }));
 
                 setReferrals(formattedReferrals);
-                setFilteredReferrals(formattedReferrals.filter((r) => !r.resolved)); // Default: only pending referrals
+                setFilteredReferrals(formattedReferrals.filter((r) => !r.resolved));
             } catch (e) {
                 setReferralError(e instanceof Error ? e.message : `${e}`);
             } finally {
@@ -137,6 +138,17 @@ const Referrals = () => {
         setFilteredReferrals(filtered);
     }, [selectedTypes, filterStatus, referrals]);
 
+    const getReferralDetails = (row: IReferral) => {
+        if (row.wheelchair) {
+            return (
+                `Experience: ${row.wheelchair_experience} | Hip Width: ${row.hip_width}" | ` +
+                `Owned: ${row.wheelchair_owned ? "Yes" : "No"} | ` +
+                `Repairable: ${row.wheelchair_repairable ? "Yes" : "No"}`
+            );
+        }
+        return "";
+    };
+
     const RenderText = (params: GridRenderCellParams) => (
         <Typography variant={"body2"}>{String(params.value)}</Typography>
     );
@@ -183,20 +195,26 @@ const Referrals = () => {
         {
             field: "type",
             headerName: t("general.type"),
-            flex: 2,
+            flex: 1.2,
             renderCell: RenderText,
         },
         {
             field: "zone",
             headerName: t("general.zone"),
-            flex: 1.2,
+            flex: 0.7,
             renderCell: RenderZone,
         },
         {
             field: "date_referred",
             headerName: t("referralAttr.dateReferred"),
-            flex: 1,
+            flex: 0.5,
             renderCell: RenderDate,
+        },
+        {
+            field: "details",
+            headerName: t("general.details"),
+            flex: 2,
+            renderCell: RenderText,
         },
     ];
 

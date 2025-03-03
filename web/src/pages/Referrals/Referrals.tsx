@@ -86,7 +86,7 @@ const Referrals = () => {
                     date_referred: row.date_referred,
                     zone: clients.find((client) => client.id === row.client_id)?.zone || "",
                     resolved: row.resolved,
-                    details: getReferralDetails(row),
+                    details: generateDetails(row),
                 }));
 
                 setReferrals(formattedReferrals);
@@ -117,6 +117,35 @@ const Referrals = () => {
             return referralTypes.join(", ");
         };
 
+        const generateDetails = (row: IReferral) => {
+            const details = [];
+            if (row.wheelchair) {
+                details.push(`Experience: ${row.wheelchair_experience}`);
+                details.push(`Hip Width: ${row.hip_width} inches`);
+                details.push(`Wheelchair Owned: ${row.wheelchair_owned}`);
+                details.push(`Wheelchair Repairable: ${row.wheelchair_repairable}`);
+            }
+            if (row.physiotherapy) {
+                details.push(`Condition: ${row.condition}`);
+            }
+            if (row.prosthetic) {
+                details.push(`Prosthetic Injury Location: ${row.prosthetic_injury_location}`);
+            }
+            if (row.orthotic) {
+                details.push(`Orthotic Injury Location: ${row.orthotic_injury_location}`);
+            }
+            if (row.hha_nutrition_and_agriculture_project) {
+                details.push(`Emergency Food Aid: ${row.emergency_food_aid}`);
+                details.push(
+                    `Agriculture Livelihood Program Enrollment: ${row.agriculture_livelihood_program_enrollment}`
+                );
+            }
+            if (row.mental_health) {
+                details.push(`Mental Health Condition: ${row.mental_health_condition}`);
+            }
+            return details.join("\n");
+        };
+
         fetchReferrals();
     }, [t, clients]);
 
@@ -137,17 +166,6 @@ const Referrals = () => {
 
         setFilteredReferrals(filtered);
     }, [selectedTypes, filterStatus, referrals]);
-
-    const getReferralDetails = (row: IReferral) => {
-        if (row.wheelchair) {
-            return (
-                `Experience: ${row.wheelchair_experience} | Hip Width: ${row.hip_width}" | ` +
-                `Owned: ${row.wheelchair_owned ? "Yes" : "No"} | ` +
-                `Repairable: ${row.wheelchair_repairable ? "Yes" : "No"}`
-            );
-        }
-        return "";
-    };
 
     const RenderText = (params: GridRenderCellParams) => (
         <Typography variant={"body2"}>{String(params.value)}</Typography>

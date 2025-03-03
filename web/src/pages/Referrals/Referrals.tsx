@@ -120,30 +120,30 @@ const Referrals = () => {
         const generateDetails = (row: IReferral) => {
             const details = [];
             if (row.wheelchair) {
-                details.push(`Experience: ${row.wheelchair_experience}`);
-                details.push(`Hip Width: ${row.hip_width} inches`);
-                details.push(`Wheelchair Owned: ${row.wheelchair_owned}`);
-                details.push(`Wheelchair Repairable: ${row.wheelchair_repairable}`);
+                details.push(`Experience: ${row.wheelchair_experience} |`);
+                details.push(`Hip Width: ${row.hip_width} inches |`);
+                details.push(`Wheelchair Owned: ${row.wheelchair_owned} |`);
+                details.push(`Wheelchair Repairable: ${row.wheelchair_repairable}\n`);
             }
             if (row.physiotherapy) {
-                details.push(`Condition: ${row.condition}`);
+                details.push(`Condition: ${row.condition}\n`);
             }
             if (row.prosthetic) {
-                details.push(`Prosthetic Injury Location: ${row.prosthetic_injury_location}`);
+                details.push(`Prosthetic Injury Location: ${row.prosthetic_injury_location}\n`);
             }
             if (row.orthotic) {
-                details.push(`Orthotic Injury Location: ${row.orthotic_injury_location}`);
+                details.push(`Orthotic Injury Location: ${row.orthotic_injury_location}\n`);
             }
             if (row.hha_nutrition_and_agriculture_project) {
-                details.push(`Emergency Food Aid: ${row.emergency_food_aid}`);
+                details.push(`Emergency Food Aid: ${row.emergency_food_aid} |`);
                 details.push(
-                    `Agriculture Livelihood Program Enrollment: ${row.agriculture_livelihood_program_enrollment}`
+                    `Agriculture Livelihood Program Enrollment: ${row.agriculture_livelihood_program_enrollment}\n`
                 );
             }
             if (row.mental_health) {
-                details.push(`Mental Health Condition: ${row.mental_health_condition}`);
+                details.push(`Mental Health Condition: ${row.mental_health_condition}\n`);
             }
-            return details.join("\n");
+            return details.join(" ");
         };
 
         fetchReferrals();
@@ -168,7 +168,9 @@ const Referrals = () => {
     }, [selectedTypes, filterStatus, referrals]);
 
     const RenderText = (params: GridRenderCellParams) => (
-        <Typography variant={"body2"}>{String(params.value)}</Typography>
+        <Typography variant={"body2"} sx={referralsStyles.text}>
+            {String(params.value)}
+        </Typography>
     );
 
     const RenderDate = (params: GridRenderCellParams) => {

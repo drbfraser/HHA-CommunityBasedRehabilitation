@@ -18,6 +18,10 @@ export const referralsStyles: Record<string, SxProps<Theme>> = {
     typeFilter: {
         flexGrow: 1,
     },
+
+    text: {
+        whiteSpace: "pre-line",
+    },
 };
 
 export const CompleteIcon = styled(CheckCircleIcon)({

@@ -168,3 +168,38 @@ def getUnreadAlertListByUserId(user_id):
             "total"
         ]
         return unread_alerts_count
+
+
+def getNewClients(from_time, to_time):
+    from django.db import connection
+
+    print("______________")
+    print(from_time, to_time)
+    sql = """
+        SELECT zone_id,
+        COUNT(*) AS total,
+        COUNT(*) FILTER (WHERE gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(birth_date / 1000))) >= 18) AS female_adult_total,
+        COUNT(*) FILTER (WHERE gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(birth_date / 1000))) >= 18) AS male_adult_total,
+        COUNT(*) FILTER (WHERE gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(birth_date / 1000))) >= 18) AS female_child_total,
+        COUNT(*) FILTER (WHERE gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(birth_date / 1000))) >= 18) AS male_child_total
+        FROM cbr_api_client
+        """
+    with connection.cursor() as cursor:
+        if from_time is not None and to_time is not None:
+            sql += """WHERE created_at BETWEEN %s AND %s
+            GROUP BY zone_id
+            """
+
+            cursor.execute(
+                sql,
+                [str(from_time), str(to_time)],
+            )
+        else:
+            sql += """GROUP BY zone_id"""
+
+            cursor.execute(sql)
+
+        columns = [col[0] for col in cursor.description]
+        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        print(res)
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]

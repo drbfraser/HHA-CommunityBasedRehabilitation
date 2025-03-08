@@ -527,12 +527,32 @@ class AdminStatsDisabilitySerializer(serializers.Serializer):
     total = serializers.IntegerField()
 
 
+class AdminStatsNewClients(serializers.Serializer):
+    zone_id = serializers.IntegerField()
+    total = serializers.IntegerField()
+    female_adult_total = serializers.IntegerField()
+    male_adult_total = serializers.IntegerField()
+    female_child_total = serializers.IntegerField()
+    male_child_total = serializers.IntegerField()
+
+
+class AdminStatsFollowUpVisits(serializers.Serializer):
+    zone_id = serializers.IntegerField()
+    total = serializers.IntegerField()
+    female_adult_total = serializers.IntegerField()
+    male_adult_total = serializers.IntegerField()
+    female_child_total = serializers.IntegerField()
+    male_child_total = serializers.IntegerField()
+
+
 class AdminStatsSerializer(serializers.Serializer):
     disabilities = AdminStatsDisabilitySerializer(many=True, read_only=True)
     clients_with_disabilities = serializers.IntegerField()
     visits = AdminStatsVisitsSerializer(many=True, read_only=True)
     referrals_resolved = AdminStatsReferralSerializer(many=False, read_only=True)
     referrals_unresolved = AdminStatsReferralSerializer(many=False, read_only=True)
+    new_clients = AdminStatsNewClients(many=True, read_only=True)
+    follow_up_visits = AdminStatsFollowUpVisits(many=True, read_only=True)
 
 
 class ClientListSerializer(serializers.ModelSerializer):

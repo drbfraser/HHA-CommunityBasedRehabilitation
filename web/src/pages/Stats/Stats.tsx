@@ -6,7 +6,13 @@ import { timestampFromFormDate } from "@cbr/common/util/dates";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IStats } from "@cbr/common/util/stats";
 import { IUser } from "@cbr/common/util/users";
-import { DisabilityStats, FilterBar, ReferralStats, VisitStats } from "./components";
+import {
+    DisabilityStats,
+    FilterBar,
+    ReferralStats,
+    VisitStats,
+    NewClientsStats,
+} from "./components";
 import { blankDateRange, IDateRange } from "./components/filterbar/StatsDateFilter";
 
 const Container = styled("div")({
@@ -59,6 +65,7 @@ const Stats = () => {
             .then((stats) => setStats(stats))
             .catch(() => setErrorLoading(true));
     }, [dateRange, user, archiveMode]);
+    console.log(stats);
 
     if (errorLoading) {
         return <Alert severity="error">{t("alert.loadStatsFailure")}</Alert>;
@@ -76,6 +83,9 @@ const Stats = () => {
             <Divider />
 
             <VisitStats stats={stats} />
+            <Divider />
+
+            <NewClientsStats stats={stats} />
             <Divider />
 
             <ReferralStats stats={stats} />

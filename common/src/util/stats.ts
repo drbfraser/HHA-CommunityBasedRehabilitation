@@ -49,4 +49,5 @@ export interface IStats {
     referrals_unresolved: IStatsReferral;
     referrals_resolved: IStatsReferral;
     new_clients: IStatsNewClients[];
+    follow_up_visits: IStatsFollowUpVisits[];
 }

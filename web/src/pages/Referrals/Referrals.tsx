@@ -123,8 +123,8 @@ const Referrals = () => {
             if (row.wheelchair) {
                 details.push(`Experience: ${row.wheelchair_experience}`);
                 details.push(`Hip Width: ${row.hip_width} inches`);
-                details.push(`Wheelchair Owned: ${row.wheelchair_owned}`);
-                details.push(`Wheelchair Repairable: ${row.wheelchair_repairable}`);
+                details.push(`Wheelchair Owned: ${row.wheelchair_owned ? "✅" : "❌"}`);
+                details.push(`Wheelchair Repairable: ${row.wheelchair_repairable ? "✅" : "❌"}`);
             }
             if (row.physiotherapy) {
                 details.push(`Condition: ${row.condition}`);
@@ -136,9 +136,11 @@ const Referrals = () => {
                 details.push(`Orthotic Injury Location: ${row.orthotic_injury_location}`);
             }
             if (row.hha_nutrition_and_agriculture_project) {
-                details.push(`Emergency Food Aid: ${row.emergency_food_aid}`);
+                details.push(`Emergency Food Aid: ${row.emergency_food_aid ? "✅" : "❌"}`);
                 details.push(
-                    `Agriculture Livelihood Program Enrollment: ${row.agriculture_livelihood_program_enrollment}`
+                    `Agriculture Livelihood Program Enrollment: ${
+                        row.agriculture_livelihood_program_enrollment ? "✅" : "❌"
+                    }`
                 );
             }
             if (row.mental_health) {
@@ -176,17 +178,16 @@ const Referrals = () => {
         const lineCount = (text.match(/\n/g) || []).length + 1; // Count newlines to calculate lines
 
         return (
-            <Tooltip title={text} arrow>
+            <Tooltip title={<Box sx={referralsStyles.text}>{text}</Box>} arrow>
                 <Typography
                     variant="body2"
                     sx={{
-                        // ...referralsStyles.text,
-                        whiteSpace: "pre-wrap", // Ensures that \n is rendered
-                        maxHeight: lineCount > 3 ? "5em" : "auto", // Limit visible lines to 3
+                        whiteSpace: "pre-wrap",
+                        maxHeight: lineCount > 3 ? "5em" : "auto",
                         overflow: "hidden",
                         display: "-webkit-box",
                         WebkitBoxOrient: "vertical",
-                        WebkitLineClamp: 3, // This will show only 3 lines
+                        WebkitLineClamp: 3,
                     }}
                 >
                     {text}

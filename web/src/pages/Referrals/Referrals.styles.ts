@@ -21,6 +21,7 @@ export const referralsStyles: Record<string, SxProps<Theme>> = {
 
     text: {
         whiteSpace: "pre-line",
+        fontSize: "larger",
     },
 };
 

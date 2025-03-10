@@ -143,6 +143,9 @@ const Referrals = () => {
             if (row.mental_health) {
                 details.push(`Mental Health Condition: ${row.mental_health_condition}\n`);
             }
+            if (row.services_other) {
+                details.push(`Other: ${row.services_other}\n`);
+            }
             return details.join(" ");
         };
 
@@ -209,13 +212,13 @@ const Referrals = () => {
         {
             field: "full_name",
             headerName: t("general.name"),
-            flex: 0.7,
+            flex: 0.5,
             renderCell: RenderText,
         },
         {
             field: "type",
             headerName: t("general.type"),
-            flex: 1.2,
+            flex: 1,
             renderCell: RenderText,
         },
         {
@@ -227,7 +230,7 @@ const Referrals = () => {
         {
             field: "date_referred",
             headerName: t("referralAttr.dateReferred"),
-            flex: 0.5,
+            flex: 0.45,
             renderCell: RenderDate,
         },
         {
@@ -305,6 +308,7 @@ const Referrals = () => {
                     density={GridDensityTypes.Comfortable}
                     onRowClick={handleReferralRowClick}
                     initialState={{ pagination: { pageSize: 10 } }}
+                    getRowHeight={() => "auto"}
                 />
             </Box>
         </>

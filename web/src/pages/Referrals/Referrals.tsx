@@ -243,7 +243,7 @@ const Referrals = () => {
         {
             field: "resolved",
             headerName: t("general.status"),
-            flex: 0.4,
+            flex: 0.3,
             renderCell: RenderStatus,
         },
         {
@@ -261,7 +261,7 @@ const Referrals = () => {
         {
             field: "zone",
             headerName: t("general.zone"),
-            flex: 0.7,
+            flex: 0.65,
             renderCell: RenderZone,
         },
         {
@@ -273,7 +273,7 @@ const Referrals = () => {
         {
             field: "details",
             headerName: t("general.details"),
-            flex: 2,
+            flex: 0.9,
             renderCell: RenderText,
         },
     ];

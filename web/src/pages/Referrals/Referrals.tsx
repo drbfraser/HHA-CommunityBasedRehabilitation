@@ -18,6 +18,7 @@ import { timestampToDate } from "@cbr/common/util/dates";
 import { IClientSummary } from "@cbr/common/util/clients";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { CompleteIcon, PendingIcon, referralsStyles } from "./Referrals.styles";
+import Tooltip from "@mui/material/Tooltip";
 
 const STATUS = {
     PENDING: "pending",
@@ -120,33 +121,33 @@ const Referrals = () => {
         const generateDetails = (row: IReferral) => {
             const details = [];
             if (row.wheelchair) {
-                details.push(`Experience: ${row.wheelchair_experience} |`);
-                details.push(`Hip Width: ${row.hip_width} inches |`);
-                details.push(`Wheelchair Owned: ${row.wheelchair_owned} |`);
-                details.push(`Wheelchair Repairable: ${row.wheelchair_repairable}\n`);
+                details.push(`Experience: ${row.wheelchair_experience}`);
+                details.push(`Hip Width: ${row.hip_width} inches`);
+                details.push(`Wheelchair Owned: ${row.wheelchair_owned}`);
+                details.push(`Wheelchair Repairable: ${row.wheelchair_repairable}`);
             }
             if (row.physiotherapy) {
-                details.push(`Condition: ${row.condition}\n`);
+                details.push(`Condition: ${row.condition}`);
             }
             if (row.prosthetic) {
-                details.push(`Prosthetic Injury Location: ${row.prosthetic_injury_location}\n`);
+                details.push(`Prosthetic Injury Location: ${row.prosthetic_injury_location}`);
             }
             if (row.orthotic) {
-                details.push(`Orthotic Injury Location: ${row.orthotic_injury_location}\n`);
+                details.push(`Orthotic Injury Location: ${row.orthotic_injury_location}`);
             }
             if (row.hha_nutrition_and_agriculture_project) {
-                details.push(`Emergency Food Aid: ${row.emergency_food_aid} |`);
+                details.push(`Emergency Food Aid: ${row.emergency_food_aid}`);
                 details.push(
-                    `Agriculture Livelihood Program Enrollment: ${row.agriculture_livelihood_program_enrollment}\n`
+                    `Agriculture Livelihood Program Enrollment: ${row.agriculture_livelihood_program_enrollment}`
                 );
             }
             if (row.mental_health) {
-                details.push(`Mental Health Condition: ${row.mental_health_condition}\n`);
+                details.push(`Mental Health Condition: ${row.mental_health_condition}`);
             }
             if (row.services_other) {
-                details.push(`Other: ${row.services_other}\n`);
+                details.push(`Other: ${row.services_other}`);
             }
-            return details.join(" ");
+            return details.join("\n");
         };
 
         fetchReferrals();
@@ -170,11 +171,29 @@ const Referrals = () => {
         setFilteredReferrals(filtered);
     }, [selectedTypes, filterStatus, referrals]);
 
-    const RenderText = (params: GridRenderCellParams) => (
-        <Typography variant={"body2"} sx={referralsStyles.text}>
-            {String(params.value)}
-        </Typography>
-    );
+    const RenderText = (params: GridRenderCellParams) => {
+        const text = String(params.value);
+        const lineCount = (text.match(/\n/g) || []).length + 1; // Count newlines to calculate lines
+
+        return (
+            <Tooltip title={text} arrow>
+                <Typography
+                    variant="body2"
+                    sx={{
+                        // ...referralsStyles.text,
+                        whiteSpace: "pre-wrap", // Ensures that \n is rendered
+                        maxHeight: lineCount > 3 ? "5em" : "auto", // Limit visible lines to 3
+                        overflow: "hidden",
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 3, // This will show only 3 lines
+                    }}
+                >
+                    {text}
+                </Typography>
+            </Tooltip>
+        );
+    };
 
     const RenderDate = (params: GridRenderCellParams) => {
         const locale = navigator.language;
@@ -308,7 +327,6 @@ const Referrals = () => {
                     density={GridDensityTypes.Comfortable}
                     onRowClick={handleReferralRowClick}
                     initialState={{ pagination: { pageSize: 10 } }}
-                    getRowHeight={() => "auto"}
                 />
             </Box>
         </>

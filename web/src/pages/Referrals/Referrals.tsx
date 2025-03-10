@@ -24,6 +24,7 @@ import {
     referralsStyles,
 } from "./Referrals.styles";
 import Tooltip from "@mui/material/Tooltip";
+import InfoIcon from "@mui/icons-material/Info";
 
 const STATUS = {
     PENDING: "pending",
@@ -317,6 +318,11 @@ const Referrals = () => {
             <Typography variant="body2" color="textSecondary">
                 {t("referral.filterByTypeDescription")}
             </Typography>
+
+            <Box sx={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
+                <InfoIcon />
+                <Typography variant="body2">{t("referral.hoverDetails")}</Typography>
+            </Box>
 
             <Box sx={dataGridStyles.dashboardTables}>
                 <DataGrid

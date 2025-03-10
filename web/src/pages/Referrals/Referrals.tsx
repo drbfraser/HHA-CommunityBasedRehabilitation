@@ -17,7 +17,12 @@ import { dataGridStyles } from "styles/DataGrid.styles";
 import { timestampToDate } from "@cbr/common/util/dates";
 import { IClientSummary } from "@cbr/common/util/clients";
 import { useZones } from "@cbr/common/util/hooks/zones";
-import { CompleteIcon, PendingIcon, referralsStyles } from "./Referrals.styles";
+import {
+    CompleteIcon,
+    PendingIcon,
+    RenderTextTypography,
+    referralsStyles,
+} from "./Referrals.styles";
 import Tooltip from "@mui/material/Tooltip";
 
 const STATUS = {
@@ -178,20 +183,15 @@ const Referrals = () => {
         const lineCount = (text.match(/\n/g) || []).length + 1; // Count newlines to calculate lines
 
         return (
-            <Tooltip title={<Box sx={referralsStyles.text}>{text}</Box>} arrow>
-                <Typography
+            <Tooltip title={<Box sx={referralsStyles.tooltipText}>{text}</Box>} arrow>
+                <RenderTextTypography
                     variant="body2"
                     sx={{
-                        whiteSpace: "pre-wrap",
                         maxHeight: lineCount > 3 ? "5em" : "auto",
-                        overflow: "hidden",
-                        display: "-webkit-box",
-                        WebkitBoxOrient: "vertical",
-                        WebkitLineClamp: 3,
                     }}
                 >
                     {text}
-                </Typography>
+                </RenderTextTypography>
             </Tooltip>
         );
     };

@@ -1,6 +1,6 @@
 import { themeColors } from "@cbr/common/util/colors";
 import styled from "@emotion/styled";
-import { SxProps, Theme } from "@mui/material";
+import { SxProps, Theme, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 
@@ -19,11 +19,20 @@ export const referralsStyles: Record<string, SxProps<Theme>> = {
         flexGrow: 1,
     },
 
-    text: {
+    tooltipText: {
         whiteSpace: "pre-line",
         fontSize: "larger",
     },
 };
+
+export const RenderTextTypography = styled(Typography)({
+    whiteSpace: "pre-wrap",
+    maxHeight: "auto",
+    overflow: "hidden",
+    display: "-webkit-box",
+    WebkitBoxOrient: "vertical",
+    WebkitLineClamp: 3,
+});
 
 export const CompleteIcon = styled(CheckCircleIcon)({
     color: themeColors.riskGreen,

@@ -127,33 +127,49 @@ const Referrals = () => {
         const generateDetails = (row: IReferral) => {
             const details = [];
             if (row.wheelchair) {
-                details.push(`Experience: ${row.wheelchair_experience}`);
-                details.push(`Hip Width: ${row.hip_width} inches`);
-                details.push(`Wheelchair Owned: ${row.wheelchair_owned ? "✅" : "❌"}`);
-                details.push(`Wheelchair Repairable: ${row.wheelchair_repairable ? "✅" : "❌"}`);
+                details.push(`${t("referral.experience")}: ${row.wheelchair_experience}`);
+                details.push(`${t("referral.hipWidth")}: ${row.hip_width} ${t("referral.inches")}`);
+                details.push(
+                    `${t("referral.wheelchairOwned")}: ${row.wheelchair_owned ? "✅" : "❌"}`
+                );
+                details.push(
+                    `${t("referral.wheelchairRepairable")}: ${
+                        row.wheelchair_repairable ? "✅" : "❌"
+                    }`
+                );
             }
             if (row.physiotherapy) {
-                details.push(`Condition: ${row.condition}`);
+                details.push(`${t("referral.condition")}: ${row.condition}`);
             }
             if (row.prosthetic) {
-                details.push(`Prosthetic Injury Location: ${row.prosthetic_injury_location}`);
+                details.push(
+                    `${t("referral.prostheticInjuryLocation")}: ${row.prosthetic_injury_location}`
+                );
             }
             if (row.orthotic) {
-                details.push(`Orthotic Injury Location: ${row.orthotic_injury_location}`);
+                details.push(
+                    `${t("referral.orthoticInjuryLocation")}: ${row.orthotic_injury_location}`
+                );
             }
             if (row.hha_nutrition_and_agriculture_project) {
-                details.push(`Emergency Food Aid: ${row.emergency_food_aid ? "✅" : "❌"}`);
                 details.push(
-                    `Agriculture Livelihood Program Enrollment: ${
+                    `${t("referral.emergencyFoodAidRequired")}: ${
+                        row.emergency_food_aid ? "✅" : "❌"
+                    }`
+                );
+                details.push(
+                    `${t("referral.agricultureLivelihoodProgramEnrollment")}: ${
                         row.agriculture_livelihood_program_enrollment ? "✅" : "❌"
                     }`
                 );
             }
             if (row.mental_health) {
-                details.push(`Mental Health Condition: ${row.mental_health_condition}`);
+                details.push(
+                    `${t("referral.mentalHealthCondition")}: ${row.mental_health_condition}`
+                );
             }
             if (row.services_other) {
-                details.push(`Other: ${row.services_other}`);
+                details.push(`${t("referral.servicesOther")}: ${row.services_other}`);
             }
             return details.join("\n");
         };

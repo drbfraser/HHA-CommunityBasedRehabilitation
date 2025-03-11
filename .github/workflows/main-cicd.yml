@@ -102,16 +102,7 @@ jobs:
         npm install $COMMON_PACK_NAME
         npm ci
         npx prettier --check .
-      working-directory: /isolated_build/repo/mobile
-
-    # TODOSD: build mobile here
-
-    # TODOSD: remove this, old
-    # - name: Build APK (Targeting Development Server)
-    #   run:  |
-    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     npm run build dev
-    #   working-directory: /isolated_build/repo/mobile
+      working-directory: /isolated_build/repo/mobile    
 
     # todosd: remove need for sudo, clean up?
     - name: Prebuild android folder
@@ -132,6 +123,13 @@ jobs:
         echo "Date String: ${{ steps.date_str.outputs.stdout }}"
       working-directory: /isolated_build/repo/mobile/android/app
 
+        # TODOSD: remove this, old
+    - name: Build APK (Targeting Development Server)
+      run:  |
+        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+        npm run build dev
+      working-directory: /isolated_build/repo/mobile
+
     # todosd: test assemble
     # todo: rm -f needed here?
     # todo: chmod needed?
@@ -142,12 +140,14 @@ jobs:
     #     ./gradlew assembleRelease
     #   working-directory: /isolated_build/repo/mobile/android
 
+
+    # todosd: this was working, cleaner to use this than the build.js file?
      # todosd: need chmod +x ./gradlew?
-    - name: Build AAB
-      run:  |
-        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        ./gradlew bundleRelease
-      working-directory: /isolated_build/repo/mobile/android
+    # - name: Build AAB
+    #   run:  |
+    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+    #     ./gradlew bundleRelease
+    #   working-directory: /isolated_build/repo/mobile/android
 
     # NOTE: Artifact upload disabled because builds from the CI/CD server seem
     #       to not work. Specifically, creating a client on mobile and then

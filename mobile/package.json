@@ -5,7 +5,9 @@
     "scripts": {
         "start": "expo run:android",
         "start-with-target": "expo run:android --port 8088 --device",
-        "build": "expo prebuild --clean --platform android",
+        "prebuild": "expo prebuild --clean --platform android",
+        "build": "node build.js",
+        "bundle": "node build.js --bundle",
         "reset-project": "node ./scripts/reset-project.js",
         "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz",
         "test": "jest --watchAll",

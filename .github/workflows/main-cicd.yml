@@ -105,24 +105,26 @@ jobs:
       working-directory: /isolated_build/repo/mobile    
 
     # todosd: remove need for sudo, clean up?
-    - name: Prebuild android folder
-      run:  |
-        sudo npm run prebuild
-      working-directory: /isolated_build/repo/mobile
+    # - name: Prebuild android folder
+    #   run:  |
+    #     sudo npm run prebuild
+    #   working-directory: /isolated_build/repo/mobile
+
 
     # - name: Test working directory exists
     #   run: 
       
-    - name: Setup Release Keystore for Play Store
-      run:  |
-        set -x  # echo commands names
-        mkdir -p $GRADLE_USER_HOME
-        echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_GRADLEPROP }}" > $GRADLE_USER_HOME/gradle.properties
-        echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_FILE_B64 }}" > ./cbr-upload-key.keystore.b64
-        base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
-        echo "Date String: ${{ steps.date_str.outputs.stdout }}"
-      working-directory: /isolated_build/repo/mobile/android/app
+    # - name: Setup Release Keystore for Play Store
+    #   run:  |
+    #     set -x  # echo commands names
+    #     mkdir -p $GRADLE_USER_HOME
+    #     echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_GRADLEPROP }}" > $GRADLE_USER_HOME/gradle.properties
+    #     echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_FILE_B64 }}" > ./cbr-upload-key.keystore.b64
+    #     base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
+    #     echo "Date String: ${{ steps.date_str.outputs.stdout }}"
+    #   working-directory: /isolated_build/repo/mobile/android/app
 
+      
         # TODOSD: remove this, old
     - name: Build APK (Targeting Development Server)
       run:  |

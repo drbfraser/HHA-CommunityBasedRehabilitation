@@ -127,7 +127,7 @@ jobs:
     - name: Build APK (Targeting Development Server)
       run:  |
         rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        npm run build dev
+        sudo npm run build dev
       working-directory: /isolated_build/repo/mobile
 
     # todosd: test assemble

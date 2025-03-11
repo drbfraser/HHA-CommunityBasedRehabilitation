@@ -107,7 +107,7 @@ jobs:
     # todosd: remove need for sudo, clean up?
     - name: Prebuild android folder
       run:  |
-        sudo npm run build
+        sudo npm run prebuild
       working-directory: /isolated_build/repo/mobile
 
     # - name: Test working directory exists

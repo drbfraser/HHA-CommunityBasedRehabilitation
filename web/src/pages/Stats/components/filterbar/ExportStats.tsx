@@ -66,6 +66,67 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
             rows.push([disabilities.get(d.disability_id), d.total]);
         });
 
+        rows.push([""]);
+
+        zones.forEach((k, v) => {
+            rows.push([
+                `${k}`,
+                "Adult Male",
+                "Adult Female",
+                "Child Male",
+                "Child Female",
+                "Totals",
+            ]);
+            const femaleAdultTotalFollowUpVisits =
+                stats?.follow_up_visits.find((item) => item.zone_id === v)?.female_adult_total ?? 0;
+            const maleAdultTotalFollowUpVisits =
+                stats?.follow_up_visits.find((item) => item.zone_id === v)?.male_adult_total ?? 0;
+            const femaleChildTotalFollowUpVisits =
+                stats?.follow_up_visits.find((item) => item.zone_id === v)?.female_child_total ?? 0;
+            const maleChildTotalFollowUpVisits =
+                stats?.follow_up_visits.find((item) => item.zone_id === v)?.male_child_total ?? 0;
+
+            const totalFollowUpStats =
+                femaleAdultTotalFollowUpVisits +
+                maleAdultTotalFollowUpVisits +
+                femaleChildTotalFollowUpVisits +
+                maleChildTotalFollowUpVisits;
+
+            const femaleAdultTotalNewClients =
+                stats?.new_clients.find((item) => item.zone_id === v)?.female_adult_total ?? 0;
+            const maleAdultTotalNewClients =
+                stats?.new_clients.find((item) => item.zone_id === v)?.male_adult_total ?? 0;
+            const femaleChildTotalNewClients =
+                stats?.new_clients.find((item) => item.zone_id === v)?.female_child_total ?? 0;
+            const maleChildTotalNewClients =
+                stats?.new_clients.find((item) => item.zone_id === v)?.male_child_total ?? 0;
+
+            const totalNewClientStats =
+                femaleAdultTotalNewClients +
+                maleAdultTotalNewClients +
+                femaleChildTotalNewClients +
+                maleChildTotalNewClients;
+
+            rows.push([
+                "New Clients",
+                maleAdultTotalNewClients,
+                femaleAdultTotalNewClients,
+                maleChildTotalNewClients,
+                femaleChildTotalNewClients,
+                totalNewClientStats,
+            ]);
+
+            rows.push([
+                "Follow Up Vists",
+                maleAdultTotalFollowUpVisits,
+                femaleAdultTotalFollowUpVisits,
+                maleChildTotalFollowUpVisits,
+                femaleChildTotalFollowUpVisits,
+                totalFollowUpStats,
+            ]);
+
+            rows.push([""]);
+        });
         return rows;
     }, [open, stats, zones, disabilities]);
 

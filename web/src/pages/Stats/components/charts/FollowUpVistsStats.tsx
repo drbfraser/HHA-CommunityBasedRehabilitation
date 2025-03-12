@@ -23,7 +23,7 @@ interface IProps {
     stats?: IStats;
 }
 
-const NewClientsStats = ({ stats }: IProps) => {
+const FollowUpVistsStats = ({ stats }: IProps) => {
     const [totalFAdults, setTotalFAdults] = useState(0);
     const [totalMAdults, setTotalMAdults] = useState(0);
     const [totalFChild, setTotalFChild] = useState(0);
@@ -47,7 +47,7 @@ const NewClientsStats = ({ stats }: IProps) => {
             let fChild = 0;
             let mChild = 0;
 
-            stats.new_clients.forEach((item) => {
+            stats.follow_up_visits.forEach((item) => {
                 fAdults += item.female_adult_total ?? 0;
                 mAdults += item.male_adult_total ?? 0;
                 fChild += item.female_child_total ?? 0;
@@ -66,13 +66,13 @@ const NewClientsStats = ({ stats }: IProps) => {
 
     zones.forEach((k, v) => {
         const femaleAdultTotal =
-            stats?.new_clients.find((item) => item.zone_id === v)?.female_adult_total ?? 0;
+            stats?.follow_up_visits.find((item) => item.zone_id === v)?.female_adult_total ?? 0;
         const maleAdultTotal =
-            stats?.new_clients.find((item) => item.zone_id === v)?.male_adult_total ?? 0;
+            stats?.follow_up_visits.find((item) => item.zone_id === v)?.male_adult_total ?? 0;
         const femaleChildTotal =
-            stats?.new_clients.find((item) => item.zone_id === v)?.female_child_total ?? 0;
+            stats?.follow_up_visits.find((item) => item.zone_id === v)?.female_child_total ?? 0;
         const maleChildTotal =
-            stats?.new_clients.find((item) => item.zone_id === v)?.male_child_total ?? 0;
+            stats?.follow_up_visits.find((item) => item.zone_id === v)?.male_child_total ?? 0;
 
         adultData.push({
             label: k,
@@ -97,6 +97,7 @@ const NewClientsStats = ({ stats }: IProps) => {
                     component={"span"}
                     variant={"body2"}
                 >
+                    {/* TODO: Update with translations */}
                     All Children
                 </Typography>
                 <IOSSwitch checked={viewAdults} onChange={handleViewToggle} />
@@ -105,25 +106,26 @@ const NewClientsStats = ({ stats }: IProps) => {
                     component={"span"}
                     variant={"body2"}
                 >
+                    {/* TODO: Update with translations */}
                     All Adults
                 </Typography>
             </menu>
             <Typography variant="h2" align="center">
                 {/* TODO: Replace with Translation */}
-                New Clients
+                Follow Up Visits
             </Typography>
 
             {viewAdults ? (
                 <>
                     <Typography variant="subtitle1" align="center">
-                        <b>Total New Female Adult Clients:</b> {totalFAdults}
+                        <b>Total Followed Up Female Adult Clients:</b> {totalFAdults}
                         <br />
-                        <b>Total New Male Adult Clients:</b> {totalMAdults}
+                        <b>Total Followed Up Male Adult Clients:</b> {totalMAdults}
                     </Typography>
 
                     <ResponsiveContainer
                         width="100%"
-                        height={stats?.new_clients.length ? CHART_HEIGHT : 0}
+                        height={stats?.follow_up_visits.length ? CHART_HEIGHT : 0}
                     >
                         <BarChart data={adultData} layout="vertical">
                             <YAxis interval={0} dataKey="label" type="category" width={150} />
@@ -148,14 +150,15 @@ const NewClientsStats = ({ stats }: IProps) => {
             ) : (
                 <>
                     <Typography variant="subtitle1" align="center">
-                        <b>Total New Female Child Clients:</b> {totalFChild}
+                        {/* TODO: Update with translations */}
+                        <b>Total Followed Up Female Child Clients:</b> {totalFChild}
                         <br />
-                        <b>Total New Male Child Clients:</b> {totalMChild}
+                        <b>Total Followed Up Male Child Clients:</b> {totalMChild}
                     </Typography>
 
                     <ResponsiveContainer
                         width="100%"
-                        height={stats?.new_clients.length ? CHART_HEIGHT : 0}
+                        height={stats?.follow_up_visits.length ? CHART_HEIGHT : 0}
                     >
                         <BarChart data={childData} layout="vertical">
                             <YAxis interval={0} dataKey="label" type="category" width={150} />
@@ -182,4 +185,4 @@ const NewClientsStats = ({ stats }: IProps) => {
     );
 };
 
-export default NewClientsStats;
+export default FollowUpVistsStats;

@@ -100,7 +100,7 @@ class AdminStats(generics.RetrieveAPIView):
             "referrals_resolved": referral_stats["resolved"],
             "referrals_unresolved": referral_stats["unresolved"],
             "new_clients": getNewClients(from_time, to_time),
-            "follow_up": getFollowUpVisits(from_time, to_time),
+            "follow_up_visits": getFollowUpVisits(from_time, to_time),
         }
 
 

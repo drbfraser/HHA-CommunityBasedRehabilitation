@@ -245,16 +245,13 @@ def getTotalClientStats(from_time, to_time, option):
         """
     with connection.cursor() as cursor:
         if option == "follow_up":
-            sql += "JOIN cbr_api_visit AS v ON c.id = v.client_id_id"
+            sql += """JOIN cbr_api_visit AS v ON c.id = v.client_id_id
+            """
             if from_time is not None and to_time is not None:
                 sql += """WHERE v.created_at BETWEEN %s AND %s
                 GROUP BY c.zone_id HAVING COUNT(v.client_id_id) > 1
                 """
 
-                cursor.execute(
-                    sql,
-                    [str(from_time), str(to_time)],
-                )
             else:
                 sql += """
                 GROUP BY c.zone_id HAVING COUNT(v.client_id_id) > 1"""

@@ -12,6 +12,7 @@ import {
     ReferralStats,
     VisitStats,
     NewClientsStats,
+    FollowUpVistsStats,
 } from "./components";
 import { blankDateRange, IDateRange } from "./components/filterbar/StatsDateFilter";
 
@@ -65,7 +66,8 @@ const Stats = () => {
             .then((stats) => setStats(stats))
             .catch(() => setErrorLoading(true));
     }, [dateRange, user, archiveMode]);
-    console.log(stats);
+    console.log("RAHHH");
+    console.log(stats?.follow_up_visits);
 
     if (errorLoading) {
         return <Alert severity="error">{t("alert.loadStatsFailure")}</Alert>;
@@ -86,6 +88,9 @@ const Stats = () => {
             <Divider />
 
             <NewClientsStats stats={stats} />
+            <Divider />
+
+            <FollowUpVistsStats stats={stats} />
             <Divider />
 
             <ReferralStats stats={stats} />

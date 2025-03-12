@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Typography, Box, Alert, TextField, MenuItem } from "@mui/material";
+import {
+    Typography,
+    Box,
+    Alert,
+    TextField,
+    MenuItem,
+    IconButton,
+    Popover,
+    Switch,
+} from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import {
     DataGrid,
@@ -25,6 +34,8 @@ import {
 } from "./Referrals.styles";
 import Tooltip from "@mui/material/Tooltip";
 import InfoIcon from "@mui/icons-material/Info";
+import { hideColumnsStyles } from "styles/HideColumns.styles";
+import { MoreVert } from "@mui/icons-material";
 
 const STATUS = {
     PENDING: "pending",
@@ -47,6 +58,17 @@ const Referrals = () => {
     const [clientError, setClientError] = useState<string>();
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [filterStatus, setFilterStatus] = useState<string>(STATUS.PENDING);
+
+    // States for hiding columns
+    const [optionsAnchorEl, setOptionsAnchorEl] = useState<Element | null>(null);
+    const isOptionsOpen = Boolean(optionsAnchorEl);
+
+    const [isStatusHidden, setStatusHidden] = useState<boolean>(false);
+    const [isNameHidden, setNameHidden] = useState<boolean>(false);
+    const [isTypeHidden, setTypeHidden] = useState<boolean>(false);
+    const [isZoneHidden, setZoneHidden] = useState<boolean>(false);
+    const [isDateHidden, setDateHidden] = useState<boolean>(false);
+    const [isDetailsHidden, setDetailsHidden] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchClients = async () => {
@@ -195,6 +217,10 @@ const Referrals = () => {
         setFilteredReferrals(filtered);
     }, [selectedTypes, filterStatus, referrals]);
 
+    const onOptionsClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+        setOptionsAnchorEl(event.currentTarget);
+    const onOptionsClose = () => setOptionsAnchorEl(null);
+
     const RenderText = (params: GridRenderCellParams) => {
         const text = String(params.value);
         const lineCount = (text.match(/\n/g) || []).length + 1; // Count newlines to calculate lines
@@ -245,36 +271,48 @@ const Referrals = () => {
             headerName: t("general.status"),
             flex: 0.3,
             renderCell: RenderStatus,
+            hide: isStatusHidden,
+            hideFunction: setStatusHidden,
         },
         {
             field: "full_name",
             headerName: t("general.name"),
             flex: 0.5,
             renderCell: RenderText,
+            hide: isNameHidden,
+            hideFunction: setNameHidden,
         },
         {
             field: "type",
             headerName: t("general.type"),
             flex: 1,
             renderCell: RenderText,
+            hide: isTypeHidden,
+            hideFunction: setTypeHidden,
         },
         {
             field: "zone",
             headerName: t("general.zone"),
             flex: 0.65,
             renderCell: RenderZone,
+            hide: isZoneHidden,
+            hideFunction: setZoneHidden,
         },
         {
             field: "date_referred",
             headerName: t("referralAttr.dateReferred"),
             flex: 0.45,
             renderCell: RenderDate,
+            hide: isDateHidden,
+            hideFunction: setDateHidden,
         },
         {
             field: "details",
             headerName: t("general.details"),
             flex: 0.9,
             renderCell: RenderText,
+            hide: isDetailsHidden,
+            hideFunction: setDetailsHidden,
         },
     ];
 
@@ -330,6 +368,44 @@ const Referrals = () => {
                     onChange={(_, values) => setSelectedTypes(values)}
                     sx={referralsStyles.typeFilter}
                 />
+
+                <IconButton
+                    sx={hideColumnsStyles.optionsButton}
+                    onClick={onOptionsClick}
+                    size="large"
+                >
+                    <MoreVert />
+                </IconButton>
+                <Popover
+                    open={isOptionsOpen}
+                    anchorEl={optionsAnchorEl}
+                    onClose={onOptionsClose}
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                    }}
+                >
+                    <Box sx={hideColumnsStyles.optionsContainer}>
+                        {referralColumns.map((column: any): JSX.Element => {
+                            return (
+                                <Box key={column.field} sx={hideColumnsStyles.optionsRow}>
+                                    <Typography component={"span"} variant={"body2"}>
+                                        {column.headerName}
+                                    </Typography>
+                                    <Switch
+                                        color="secondary"
+                                        checked={!column.hide}
+                                        onClick={() => column.hideFunction(!column.hide)}
+                                    />
+                                </Box>
+                            );
+                        })}
+                    </Box>
+                </Popover>
             </Box>
             <Typography variant="body2" color="textSecondary">
                 {t("referral.filterByTypeDescription")}

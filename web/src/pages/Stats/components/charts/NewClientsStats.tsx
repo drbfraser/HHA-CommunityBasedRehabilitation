@@ -35,6 +35,7 @@ const NewClientsStats = ({ stats }: IProps) => {
     const { t } = useTranslation();
 
     const zones = useZones();
+    console.log(zones);
     const zoneToName = (id: number) => zones.get(id) ?? "";
     console.log(zones);
     const [breakdownZoneId, setBreakdownZoneId] = useState(0);
@@ -69,25 +70,31 @@ const NewClientsStats = ({ stats }: IProps) => {
     let adultData: { label: string; key: string; female: number; male: number }[] = [];
     let childData: { label: string; key: string; female: number; male: number }[] = [];
 
-    stats?.new_clients.forEach((zone) => {
-        let zoneLabel = zones.get(zone.zone_id);
-        // console.log(zoneLabel);
+    zones.forEach((k, v) => {
+        console.log(k, v);
+        const femaleAdultTotal =
+            stats?.new_clients.find((item) => item.zone_id === v)?.female_adult_total ?? 0;
+        const maleAdultTotal =
+            stats?.new_clients.find((item) => item.zone_id === v)?.male_adult_total ?? 0;
+        const femaleChildTotal =
+            stats?.new_clients.find((item) => item.zone_id === v)?.female_child_total ?? 0;
+        const maleChildTotal =
+            stats?.new_clients.find((item) => item.zone_id === v)?.male_child_total ?? 0;
+
         adultData.push({
-            label: zoneLabel ?? "",
-            key: `${zoneLabel}_adult_count`,
-            female: zone.female_adult_total ?? 0,
-            male: zone.male_adult_total ?? 0,
+            label: k,
+            key: `${k}_adult_count`,
+            female: femaleAdultTotal ?? 0,
+            male: maleAdultTotal ?? 0,
         });
 
         childData.push({
-            label: zoneLabel ?? "",
-            key: `${zoneLabel}_child_count`,
-            female: zone.female_child_total ?? 0,
-            male: zone.male_child_total ?? 0,
+            label: k,
+            key: `${k}_child_count`,
+            female: femaleChildTotal ?? 0,
+            male: maleChildTotal ?? 0,
         });
     });
-
-    // console.log(adultData);
 
     const handleChartClick = (e: any) => {
         if (!e || !Array.isArray(e.activePayload) || e.activePayload.length === 0) {
@@ -128,21 +135,26 @@ const NewClientsStats = ({ stats }: IProps) => {
                         <b>Total New Male Adult Clients:</b> {totalMAdults}
                     </Typography>
 
-                    <ResponsiveContainer width="100%" height={400}>
-                        <BarChart data={adultData}>
-                            <XAxis dataKey="label" />
-                            <YAxis allowDecimals={false} />
+                    <ResponsiveContainer
+                        width="100%"
+                        height={stats?.new_clients.length ? CHART_HEIGHT : 0}
+                    >
+                        <BarChart data={adultData} layout="vertical">
+                            <YAxis interval={0} dataKey="label" type="category" width={150} />
+                            <XAxis allowDecimals={false} />
                             <Tooltip />
                             <Legend />
                             <Bar
                                 dataKey="female"
                                 name={t("clientFields.female")}
                                 fill={themeColors.hhaPurple}
+                                barSize={100}
                             />
                             <Bar
                                 dataKey="male"
                                 name={t("clientFields.male")}
                                 fill={themeColors.hhaBlue}
+                                barSize={100}
                             />
                         </BarChart>
                     </ResponsiveContainer>
@@ -155,21 +167,26 @@ const NewClientsStats = ({ stats }: IProps) => {
                         <b>Total New Male Child Clients:</b> {totalMChild}
                     </Typography>
 
-                    <ResponsiveContainer width="100%" height={400}>
-                        <BarChart data={adultData}>
-                            <XAxis dataKey="label" />
-                            <YAxis allowDecimals={false} />
+                    <ResponsiveContainer
+                        width="100%"
+                        height={stats?.new_clients.length ? CHART_HEIGHT : 0}
+                    >
+                        <BarChart data={childData} layout="vertical">
+                            <YAxis interval={0} dataKey="label" type="category" width={150} />
+                            <XAxis allowDecimals={false} />
                             <Tooltip />
                             <Legend />
                             <Bar
                                 dataKey="female"
                                 name={t("clientFields.female")}
                                 fill={themeColors.hhaPurple}
+                                barSize={100}
                             />
                             <Bar
                                 dataKey="male"
                                 name={t("clientFields.male")}
                                 fill={themeColors.hhaBlue}
+                                barSize={100}
                             />
                         </BarChart>
                     </ResponsiveContainer>

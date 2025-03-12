@@ -158,21 +158,19 @@ const NewClientsStats = ({ stats }: IProps) => {
                         height={stats?.new_clients.length ? CHART_HEIGHT : 0}
                     >
                         <BarChart data={childData} layout="vertical">
-                            <YAxis interval={0} dataKey="label" type="category" width={150} />
-                            <XAxis allowDecimals={false} />
+                            <XAxis type="number" allowDecimals={false} />
+                            <YAxis dataKey="label" type="category" width={150} />
                             <Tooltip />
                             <Legend />
                             <Bar
                                 dataKey="female"
                                 name={t("clientFields.female")}
                                 fill={themeColors.hhaPurple}
-                                barSize={100}
                             />
                             <Bar
                                 dataKey="male"
                                 name={t("clientFields.male")}
                                 fill={themeColors.hhaBlue}
-                                barSize={100}
                             />
                         </BarChart>
                     </ResponsiveContainer>

@@ -128,21 +128,21 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
                         height={stats?.follow_up_visits.length ? CHART_HEIGHT : 0}
                     >
                         <BarChart data={adultData} layout="vertical">
-                            <YAxis interval={0} dataKey="label" type="category" width={150} />
-                            <XAxis allowDecimals={false} />
+                            <XAxis type="number" allowDecimals={false} />
+                            <YAxis dataKey="label" type="category" width={150} scale="band" />
                             <Tooltip />
                             <Legend />
                             <Bar
                                 dataKey="female"
                                 name={t("clientFields.female")}
                                 fill={themeColors.hhaPurple}
-                                barSize={100}
+                                barSize={30}
                             />
                             <Bar
                                 dataKey="male"
                                 name={t("clientFields.male")}
                                 fill={themeColors.hhaBlue}
-                                barSize={100}
+                                barSize={30}
                             />
                         </BarChart>
                     </ResponsiveContainer>
@@ -161,7 +161,7 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
                         height={stats?.follow_up_visits.length ? CHART_HEIGHT : 0}
                     >
                         <BarChart data={childData} layout="vertical">
-                            <YAxis interval={0} dataKey="label" type="category" width={150} />
+                            <YAxis dataKey="label" type="category" width={150} />
                             <XAxis allowDecimals={false} />
                             <Tooltip />
                             <Legend />

@@ -66,8 +66,6 @@ const Stats = () => {
             .then((stats) => setStats(stats))
             .catch(() => setErrorLoading(true));
     }, [dateRange, user, archiveMode]);
-    console.log("RAHHH");
-    console.log(stats?.follow_up_visits);
 
     if (errorLoading) {
         return <Alert severity="error">{t("alert.loadStatsFailure")}</Alert>;

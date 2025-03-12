@@ -27,11 +27,11 @@ export const referralsStyles: Record<string, SxProps<Theme>> = {
 
 export const RenderTextTypography = styled(Typography)({
     whiteSpace: "pre-wrap",
-    maxHeight: "auto",
     overflow: "hidden",
     display: "-webkit-box",
     WebkitBoxOrient: "vertical",
     WebkitLineClamp: 3,
+    width: "100%",
 });
 
 export const CompleteIcon = styled(CheckCircleIcon)({

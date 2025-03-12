@@ -182,27 +182,17 @@ def getUnreadAlertListByUserId(user_id):
 def getNewClients(from_time, to_time):
     from django.db import connection
 
-    sql = """
-        SELECT zone_id,
-        COUNT(*) AS total,
-        COUNT(*) FILTER (WHERE gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(birth_date / 1000))) >= 18) AS female_adult_total,
-        COUNT(*) FILTER (WHERE gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(birth_date / 1000))) >= 18) AS male_adult_total,
-        COUNT(*) FILTER (WHERE gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(birth_date / 1000))) >= 18) AS female_child_total,
-        COUNT(*) FILTER (WHERE gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(birth_date / 1000))) >= 18) AS male_child_total
-        FROM cbr_api_client
-        """
     with connection.cursor() as cursor:
         if from_time is not None and to_time is not None:
-            sql += """WHERE created_at BETWEEN %s AND %s
-            GROUP BY zone_id
-            """
+            sql = getTotalClientStats(from_time, to_time, "new_clients")
 
             cursor.execute(
                 sql,
                 [str(from_time), str(to_time)],
             )
+
         else:
-            sql += """GROUP BY zone_id"""
+            sql = getTotalClientStats(from_time, to_time, "new_clients")
 
             cursor.execute(sql)
 
@@ -223,6 +213,27 @@ def getNewClients(from_time, to_time):
 def getFollowUpVisits(from_time, to_time):
     from django.db import connection
 
+    with connection.cursor() as cursor:
+        if from_time is not None and to_time is not None:
+            sql = getTotalClientStats(from_time, to_time, "follow_up")
+
+            cursor.execute(
+                sql,
+                [str(from_time), str(to_time)],
+            )
+        else:
+            sql = getTotalClientStats(from_time, to_time, "follow_up")
+
+            cursor.execute(sql)
+
+        columns = [col[0] for col in cursor.description]
+        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        return res
+
+
+def getTotalClientStats(from_time, to_time, option):
+    from django.db import connection
+
     sql = """
         SELECT c.zone_id,
         COUNT(*) AS total,
@@ -231,24 +242,30 @@ def getFollowUpVisits(from_time, to_time):
         COUNT(*) FILTER (WHERE c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS female_child_total,
         COUNT(*) FILTER (WHERE c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS male_child_total
         FROM cbr_api_client AS c 
-        JOIN cbr_api_visit AS v ON c.id = v.client_id_id
         """
     with connection.cursor() as cursor:
-        if from_time is not None and to_time is not None:
-            sql += """WHERE v.created_at BETWEEN %s AND %s
-            GROUP BY c.zone_id HAVING COUNT(v.client_id_id) > 1
-            """
+        if option == "follow_up":
+            sql += "JOIN cbr_api_visit AS v ON c.id = v.client_id_id"
+            if from_time is not None and to_time is not None:
+                sql += """WHERE v.created_at BETWEEN %s AND %s
+                GROUP BY c.zone_id HAVING COUNT(v.client_id_id) > 1
+                """
 
-            cursor.execute(
-                sql,
-                [str(from_time), str(to_time)],
-            )
-        else:
-            sql += """GROUP BY c.zone_id HAVING COUNT(v.client_id_id) > 1"""
+                cursor.execute(
+                    sql,
+                    [str(from_time), str(to_time)],
+                )
+            else:
+                sql += """
+                GROUP BY c.zone_id HAVING COUNT(v.client_id_id) > 1"""
 
-            cursor.execute(sql)
+        elif option == "new_clients":
+            if from_time is not None and to_time is not None:
+                sql += """WHERE c.created_at BETWEEN %s AND %s
+                GROUP BY c.zone_id
+                """
+            else:
+                sql += """
+                GROUP BY c.zone_id"""
 
-        columns = [col[0] for col in cursor.description]
-        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        print(res)
-        return res
+    return sql

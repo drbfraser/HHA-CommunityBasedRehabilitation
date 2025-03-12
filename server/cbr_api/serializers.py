@@ -534,6 +534,7 @@ class AdminStatsNewClients(serializers.Serializer):
     male_adult_total = serializers.IntegerField()
     female_child_total = serializers.IntegerField()
     male_child_total = serializers.IntegerField()
+    hcr_type = serializers.CharField()
 
 
 class AdminStatsFollowUpVisits(serializers.Serializer):
@@ -543,6 +544,7 @@ class AdminStatsFollowUpVisits(serializers.Serializer):
     male_adult_total = serializers.IntegerField()
     female_child_total = serializers.IntegerField()
     male_child_total = serializers.IntegerField()
+    hcr_type = serializers.CharField()
 
 
 class AdminStatsSerializer(serializers.Serializer):
@@ -593,6 +595,7 @@ class ClientSyncSerializer(serializers.ModelSerializer):
             "updated_at",
             "zone",
             "village",
+            "hcr_type",
             "picture",
             "caregiver_present",
             "caregiver_name",
@@ -635,6 +638,7 @@ class editClientSyncSerializer(serializers.ModelSerializer):
             "updated_at",
             "zone",
             "village",
+            "hcr_type",
             "picture",
             "caregiver_present",
             "caregiver_name",
@@ -712,6 +716,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "latitude",
             "zone",
             "village",
+            "hcr_type",
             "picture",
             "caregiver_name",
             "caregiver_present",
@@ -806,6 +811,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "latitude",
             "zone",
             "village",
+            "hcr_type",
             "picture",
             "caregiver_name",
             "caregiver_present",

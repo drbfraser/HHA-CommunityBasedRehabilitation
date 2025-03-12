@@ -1,3 +1,5 @@
+import { HCRType } from "./clients";
+
 export interface IStatsDisability {
     disability_id: number;
     total: number;
@@ -31,6 +33,7 @@ export interface IStatsNewClients {
     male_adult_total: number;
     female_child_total: number;
     male_child_total: number;
+    hcr_type: string;
 }
 
 export interface IStatsFollowUpVisits {
@@ -40,6 +43,7 @@ export interface IStatsFollowUpVisits {
     male_adult_total: number;
     female_child_total: number;
     male_child_total: number;
+    hcr_type: string;
 }
 
 export interface IStats {

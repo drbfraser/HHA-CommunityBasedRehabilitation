@@ -1,22 +1,11 @@
+import { Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-    BarChart,
-    ResponsiveContainer,
-    XAxis,
-    YAxis,
-    Tooltip,
-    Bar,
-    Legend,
-    PieChart,
-    Pie,
-    Cell,
-} from "recharts";
-import { Grid, Link, Skeleton, Typography } from "@mui/material";
+import { Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-import { IStats, IStatsNewClients, IStatsReferral } from "@cbr/common/util/stats";
 import { themeColors } from "@cbr/common/util/colors";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import { IStats } from "@cbr/common/util/stats";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 
 interface IProps {
@@ -97,6 +86,7 @@ const NewClientsStats = ({ stats }: IProps) => {
                     component={"span"}
                     variant={"body2"}
                 >
+                    {/* TODO: Replace with Translation */}
                     All Children
                 </Typography>
                 <IOSSwitch checked={viewAdults} onChange={handleViewToggle} />
@@ -116,8 +106,10 @@ const NewClientsStats = ({ stats }: IProps) => {
             {viewAdults ? (
                 <>
                     <Typography variant="subtitle1" align="center">
+                        {/* TODO: Replace with Translation */}
                         <b>Total New Female Adult Clients:</b> {totalFAdults}
                         <br />
+                        {/* TODO: Replace with Translation */}
                         <b>Total New Male Adult Clients:</b> {totalMAdults}
                     </Typography>
 
@@ -148,8 +140,10 @@ const NewClientsStats = ({ stats }: IProps) => {
             ) : (
                 <>
                     <Typography variant="subtitle1" align="center">
+                        {/* TODO: Replace with Translation */}
                         <b>Total New Female Child Clients:</b> {totalFChild}
                         <br />
+                        {/* TODO: Replace with Translation */}
                         <b>Total New Male Child Clients:</b> {totalMChild}
                     </Typography>
 

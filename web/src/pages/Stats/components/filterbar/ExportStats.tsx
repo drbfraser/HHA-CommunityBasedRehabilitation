@@ -1,6 +1,3 @@
-import React, { useMemo } from "react";
-import { Trans, useTranslation } from "react-i18next";
-import { CSVLink } from "react-csv";
 import {
     Button,
     Dialog,
@@ -9,10 +6,13 @@ import {
     DialogTitle,
     Typography,
 } from "@mui/material";
+import React, { useMemo } from "react";
+import { CSVLink } from "react-csv";
+import { Trans, useTranslation } from "react-i18next";
 
-import { IStats, IStatsNewClients, IStatsFollowUpVisits } from "@cbr/common/util/stats";
-import { useZones } from "@cbr/common/util/hooks/zones";
 import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
+import { useZones } from "@cbr/common/util/hooks/zones";
+import { IStats, IStatsFollowUpVisits, IStatsNewClients } from "@cbr/common/util/stats";
 
 interface IProps {
     open: boolean;
@@ -68,6 +68,37 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
 
         rows.push([""]);
 
+        const categories = [
+            { label: "New Clients", key: "new_clients" },
+            { label: "Follow Up Visits", key: "follow_up_visits" },
+        ];
+
+        const groups = [
+            { label: "HC", key: "HC" },
+            { label: "R", key: "R" },
+            { label: "NA", key: "NA" },
+        ];
+
+        const calculateTotal = (
+            statsData: any,
+            category: string,
+            zoneId: number,
+            groupKey: string
+        ) => {
+            const data =
+                statsData?.[category]?.find(
+                    (item: IStatsFollowUpVisits | IStatsNewClients) =>
+                        item.zone_id === zoneId && item.hcr_type === groupKey
+                ) || {};
+
+            return {
+                maleAdult: data.male_adult_total ?? 0,
+                femaleAdult: data.female_adult_total ?? 0,
+                maleChild: data.male_child_total ?? 0,
+                femaleChild: data.female_child_total ?? 0,
+            };
+        };
+
         zones.forEach((k, v) => {
             rows.push([
                 `${k}`,
@@ -77,197 +108,46 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
                 "CHILD FEMALE",
                 "TOTALS",
             ]);
+            let runningTotal = 0;
+            const totals: Record<string, number> = {};
 
-            const getTotalByCategory = (category: string) => {
-                let categoryDataHC: IStatsFollowUpVisits | IStatsNewClients = {} as
-                    | IStatsFollowUpVisits
-                    | IStatsNewClients;
-                let categoryDataR: IStatsFollowUpVisits | IStatsNewClients = {} as
-                    | IStatsFollowUpVisits
-                    | IStatsNewClients;
-                let categoryDataNA: IStatsFollowUpVisits | IStatsNewClients = {} as
-                    | IStatsFollowUpVisits
-                    | IStatsNewClients;
+            categories.forEach(({ label, key: categoryKey }) => {
+                groups.forEach(({ label: groupLabel, key: groupKey }) => {
+                    const data = calculateTotal(stats, categoryKey, v, groupKey);
+                    const total =
+                        data.maleAdult + data.femaleAdult + data.maleChild + data.femaleChild;
+                    runningTotal += total;
 
-                // For simplicity sake this takes in a string as input
-                // For future implementation, this could be changed to use an ENUM or constant instead
-                if (category === "follow_up_visits") {
-                    categoryDataHC =
-                        stats?.[category]?.find(
-                            (item: IStatsFollowUpVisits) =>
-                                item.zone_id === v && item.hcr_type === "HC"
-                        ) || ({} as IStatsFollowUpVisits);
-                    categoryDataR =
-                        stats?.[category]?.find(
-                            (item: IStatsFollowUpVisits) =>
-                                item.zone_id === v && item.hcr_type === "R"
-                        ) || ({} as IStatsFollowUpVisits);
-                    categoryDataNA =
-                        stats?.[category]?.find(
-                            (item: IStatsFollowUpVisits) =>
-                                item.zone_id === v && item.hcr_type === "NA"
-                        ) || ({} as IStatsFollowUpVisits);
-                } else {
-                    categoryDataHC =
-                        stats?.new_clients.find(
-                            (item: IStatsNewClients) => item.zone_id === v && item.hcr_type === "HC"
-                        ) || ({} as IStatsNewClients);
-                    categoryDataR =
-                        stats?.new_clients.find(
-                            (item: IStatsNewClients) => item.zone_id === v && item.hcr_type === "R"
-                        ) || ({} as IStatsNewClients);
-                    categoryDataNA =
-                        stats?.new_clients.find(
-                            (item: IStatsNewClients) => item.zone_id === v && item.hcr_type === "NA"
-                        ) || ({} as IStatsNewClients);
-                }
+                    const demographics = [
+                        { key: "adult_male", value: data.maleAdult },
+                        { key: "adult_female", value: data.femaleAdult },
+                        { key: "child_male", value: data.maleChild },
+                        { key: "child_female", value: data.femaleChild },
+                    ];
 
-                return {
-                    femaleAdultHC: categoryDataHC.female_adult_total ?? 0,
-                    maleAdultHC: categoryDataHC.male_adult_total ?? 0,
-                    femaleChildHC: categoryDataHC.female_child_total ?? 0,
-                    maleChildHC: categoryDataHC.male_child_total ?? 0,
-                    femaleAdultR: categoryDataR.female_adult_total ?? 0,
-                    maleAdultR: categoryDataR.male_adult_total ?? 0,
-                    femaleChildR: categoryDataR.female_child_total ?? 0,
-                    maleChildR: categoryDataR.male_child_total ?? 0,
-                    femaleAdultNA: categoryDataNA.female_adult_total ?? 0,
-                    maleAdultNA: categoryDataNA.male_adult_total ?? 0,
-                    femaleChildNA: categoryDataNA.female_child_total ?? 0,
-                    maleChildNA: categoryDataNA.male_child_total ?? 0,
-                };
-            };
+                    demographics.forEach(({ key, value }) => {
+                        const totalKey = `${key}_${v}`;
+                        totals[totalKey] = (totals[totalKey] || 0) + value;
+                    });
 
-            const totalFollowUpStats = getTotalByCategory("follow_up_visits");
-            const totalNewClientStats = getTotalByCategory("new_clients");
+                    rows.push([
+                        `${label} (${groupLabel})`,
+                        data.maleAdult,
+                        data.femaleAdult,
+                        data.maleChild,
+                        data.femaleChild,
+                        total,
+                    ]);
+                });
+            });
 
-            // Stats for Host Communities
-            const totalFollowUpHC =
-                totalFollowUpStats.femaleAdultHC +
-                totalFollowUpStats.maleAdultHC +
-                totalFollowUpStats.femaleChildHC +
-                totalFollowUpStats.maleChildHC;
-
-            const totalNewClientsHC =
-                totalNewClientStats.femaleAdultHC +
-                totalNewClientStats.maleAdultHC +
-                totalNewClientStats.femaleChildHC +
-                totalNewClientStats.maleChildHC;
-
-            const totalHC = totalNewClientsHC + totalFollowUpHC;
-
-            rows.push([
-                "New Clients (HC)",
-                totalNewClientStats.maleAdultHC,
-                totalNewClientStats.femaleAdultHC,
-                totalNewClientStats.maleChildHC,
-                totalNewClientStats.femaleChildHC,
-                totalNewClientsHC ?? 0,
-            ]);
-
-            rows.push([
-                "Follow Up Visits (HC)",
-                totalFollowUpStats.maleAdultHC,
-                totalFollowUpStats.femaleAdultHC,
-                totalFollowUpStats.maleChildHC,
-                totalFollowUpStats.femaleChildHC,
-                totalFollowUpHC ?? 0,
-            ]);
-
-            // Stats for Refugees
-            const totalFollowUpR =
-                totalFollowUpStats.femaleAdultR +
-                totalFollowUpStats.maleAdultR +
-                totalFollowUpStats.femaleChildR +
-                totalFollowUpStats.maleChildR;
-
-            const totalNewClientsR =
-                totalNewClientStats.femaleAdultR +
-                totalNewClientStats.maleAdultR +
-                totalNewClientStats.femaleChildR +
-                totalNewClientStats.maleChildR;
-
-            const totalR = totalNewClientsR + totalFollowUpR;
-
-            rows.push([
-                "New Clients (R)",
-                totalNewClientStats.maleAdultR,
-                totalNewClientStats.femaleAdultR,
-                totalNewClientStats.maleChildR,
-                totalNewClientStats.femaleChildR,
-                totalNewClientsR ?? 0,
-            ]);
-
-            rows.push([
-                "Follow Up Visits (R)",
-                totalFollowUpStats.maleAdultR,
-                totalFollowUpStats.femaleAdultR,
-                totalFollowUpStats.maleChildR,
-                totalFollowUpStats.femaleChildR,
-                totalFollowUpR ?? 0,
-            ]);
-
-            // Stats for Not Set
-            const totalFollowUpNA =
-                totalFollowUpStats.femaleAdultNA +
-                totalFollowUpStats.maleAdultNA +
-                totalFollowUpStats.femaleChildNA +
-                totalFollowUpStats.maleChildNA;
-
-            const totalNewClientsNA =
-                totalNewClientStats.femaleAdultNA +
-                totalNewClientStats.maleAdultNA +
-                totalNewClientStats.femaleChildNA +
-                totalNewClientStats.maleChildNA;
-
-            const totalNA = totalNewClientsNA + totalFollowUpNA;
-
-            rows.push([
-                "New Clients (NA)",
-                totalNewClientStats.maleAdultNA,
-                totalNewClientStats.femaleAdultNA,
-                totalNewClientStats.maleChildNA,
-                totalNewClientStats.femaleChildNA,
-                totalNewClientsNA ?? 0,
-            ]);
-
-            rows.push([
-                "Follow Up Visits (NA)",
-                totalFollowUpStats.maleAdultNA,
-                totalFollowUpStats.femaleAdultNA,
-                totalFollowUpStats.maleChildNA,
-                totalFollowUpStats.femaleChildNA,
-                totalFollowUpNA ?? 0,
-            ]);
-
-            const total = totalHC + totalR + totalNA;
             rows.push([
                 "Total",
-                totalFollowUpStats.maleAdultHC +
-                    totalNewClientStats.maleAdultHC +
-                    totalFollowUpStats.maleAdultR +
-                    totalNewClientStats.maleAdultR +
-                    totalFollowUpStats.maleAdultNA +
-                    totalNewClientStats.maleAdultNA,
-                totalFollowUpStats.femaleAdultHC +
-                    totalNewClientStats.femaleAdultHC +
-                    totalFollowUpStats.femaleAdultR +
-                    totalNewClientStats.femaleAdultR +
-                    totalFollowUpStats.femaleAdultNA +
-                    totalNewClientStats.femaleAdultNA,
-                totalFollowUpStats.maleChildHC +
-                    totalNewClientStats.maleChildHC +
-                    totalFollowUpStats.maleChildR +
-                    totalNewClientStats.maleChildR +
-                    totalFollowUpStats.maleChildNA +
-                    totalNewClientStats.maleChildNA,
-                totalFollowUpStats.femaleChildHC +
-                    totalNewClientStats.femaleChildHC +
-                    totalFollowUpStats.femaleChildR +
-                    totalNewClientStats.femaleChildR +
-                    totalFollowUpStats.femaleChildNA +
-                    totalNewClientStats.femaleChildNA,
-                total ?? 0,
+                totals[`adult_male_${v}`],
+                totals[`adult_female_${v}`],
+                totals[`child_male_${v}`],
+                totals[`child_female_${v}`],
+                runningTotal,
             ]);
 
             rows.push([""]);

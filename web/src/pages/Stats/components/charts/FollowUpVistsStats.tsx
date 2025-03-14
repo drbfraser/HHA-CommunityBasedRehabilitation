@@ -1,22 +1,11 @@
+import { Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-    BarChart,
-    ResponsiveContainer,
-    XAxis,
-    YAxis,
-    Tooltip,
-    Bar,
-    Legend,
-    PieChart,
-    Pie,
-    Cell,
-} from "recharts";
-import { Grid, Link, Skeleton, Typography } from "@mui/material";
+import { Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-import { IStats, IStatsNewClients, IStatsReferral } from "@cbr/common/util/stats";
 import { themeColors } from "@cbr/common/util/colors";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import { IStats } from "@cbr/common/util/stats";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 
 interface IProps {
@@ -97,7 +86,7 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
                     component={"span"}
                     variant={"body2"}
                 >
-                    {/* TODO: Update with translations */}
+                    {/* TODO: Replace with Translation */}
                     All Children
                 </Typography>
                 <IOSSwitch checked={viewAdults} onChange={handleViewToggle} />
@@ -106,7 +95,7 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
                     component={"span"}
                     variant={"body2"}
                 >
-                    {/* TODO: Update with translations */}
+                    {/* TODO: Replace with Translation */}
                     All Adults
                 </Typography>
             </menu>
@@ -118,8 +107,10 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
             {viewAdults ? (
                 <>
                     <Typography variant="subtitle1" align="center">
+                        {/* TODO: Replace with Translation */}
                         <b>Total Followed Up Female Adult Clients:</b> {totalFAdults}
                         <br />
+                        {/* TODO: Replace with Translation */}
                         <b>Total Followed Up Male Adult Clients:</b> {totalMAdults}
                     </Typography>
 
@@ -129,7 +120,7 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
                     >
                         <BarChart data={adultData} layout="vertical">
                             <XAxis type="number" allowDecimals={false} />
-                            <YAxis dataKey="label" type="category" width={150} scale="band" />
+                            <YAxis dataKey="label" type="category" width={150} />
                             <Tooltip />
                             <Legend />
                             <Bar
@@ -150,9 +141,10 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
             ) : (
                 <>
                     <Typography variant="subtitle1" align="center">
-                        {/* TODO: Update with translations */}
+                        {/* TODO: Replace with Translation */}
                         <b>Total Followed Up Female Child Clients:</b> {totalFChild}
                         <br />
+                        {/* TODO: Replace with Translation */}
                         <b>Total Followed Up Male Child Clients:</b> {totalMChild}
                     </Typography>
 
@@ -169,13 +161,13 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
                                 dataKey="female"
                                 name={t("clientFields.female")}
                                 fill={themeColors.hhaPurple}
-                                barSize={100}
+                                barSize={30}
                             />
                             <Bar
                                 dataKey="male"
                                 name={t("clientFields.male")}
                                 fill={themeColors.hhaBlue}
-                                barSize={100}
+                                barSize={30}
                             />
                         </BarChart>
                     </ResponsiveContainer>

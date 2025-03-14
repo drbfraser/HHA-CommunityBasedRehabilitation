@@ -126,20 +126,20 @@ jobs:
 
       
         # TODOSD: remove this, old
-    # - name: Build APK (Targeting Development Server)
-    #   run:  |
-    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     sudo npm run build dev
-    #   working-directory: /isolated_build/repo/mobile
+    - name: Build APK (Targeting Development Server)
+      run:  |
+        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+        sudo npm run build dev
+      working-directory: /isolated_build/repo/mobile
 
     # todosd: test assemble
     # todo: rm -f needed here?
     # todo: chmod needed? -> chmod +x ./gradlew
-    - name: Build APK (Targeting Development Server)
-      run:  |
-        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        ./gradlew assembleRelease
-      working-directory: /isolated_build/repo/mobile/android
+    # - name: Build APK (Targeting Development Server)
+    #   run:  |
+    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+    #     ./gradlew assembleRelease
+    #   working-directory: /isolated_build/repo/mobile/android
 
 
     # todosd: this was working, cleaner to use this than the build.js file?

@@ -29,5 +29,5 @@ spawn(`${IS_WINDOWS ? "" : "./"}gradlew`, [gradleCommand], {
     env: { ...process.env, APP_ENV: target },
     cwd: path.join(__dirname, "android"),
     stdio: "inherit",
-    shell: true,
+    // shell: true,
 });

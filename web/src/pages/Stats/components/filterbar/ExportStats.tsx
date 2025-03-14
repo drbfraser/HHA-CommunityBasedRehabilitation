@@ -111,8 +111,8 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
             let runningTotal = 0;
             const totals: Record<string, number> = {};
 
-            categories.forEach(({ label, key: categoryKey }) => {
-                groups.forEach(({ label: groupLabel, key: groupKey }) => {
+            groups.forEach(({ label: groupLabel, key: groupKey }) => {
+                categories.forEach(({ label, key: categoryKey }) => {
                     const data = calculateTotal(stats, categoryKey, v, groupKey);
                     const total =
                         data.maleAdult + data.femaleAdult + data.maleChild + data.femaleChild;

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { View, Text, TouchableOpacity, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
-import { Button, Modal, Portal } from "react-native-paper";
+import { Button, IconButton, Modal, Portal } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { riskTypes } from "../../../util/riskIcon";
 import { IVisitSummary } from "../../../../../common/src/util/visits";
@@ -70,11 +70,12 @@ const Timeline = (props: ISummaryProps) => {
                     </Text>
                     <View style={styles.activityTypeView}>
                         <View style={styles.verticleLine}></View>
-                        <Button
+                        <IconButton
                             style={styles.logoButton}
                             icon={icon}
                             mode="outlined"
-                            compact={true}
+                            size={16}
+                            iconColor={themeColors.blueBgDark}
                         />
                         <View style={styles.verticleLine}></View>
                     </View>

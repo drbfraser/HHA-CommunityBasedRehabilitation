@@ -249,7 +249,7 @@ const VisitFocusForm = (
     return (
         <View>
             <Text style={styles.pickerQuestion}>{t("newVisit.whereVisit")} </Text>
-            <Text />
+            <View style={styles.verticalSpacer}></View>
             <TextInput
                 mode="outlined"
                 label={visitFieldLabels[VisitFormField.village]}

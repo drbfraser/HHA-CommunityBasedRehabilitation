@@ -9,6 +9,9 @@ const useStyles = () =>
             marginLeft: 15,
             marginRight: 15,
         },
+        verticalSpacer: {
+            marginTop: 20,
+        },
         nextButton: {
             position: "absolute",
             right: -50,

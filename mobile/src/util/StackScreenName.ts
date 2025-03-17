@@ -8,7 +8,7 @@ export enum StackScreenName {
     REFERRAL = "NewReferral",
     VISIT = "NewVisit",
     SYNC = "Sync",
-    ALERT_INBOX = "Alert Inbox",
+    ALERT_INBOX = "AlertInbox",
 }
 
 export enum NoAuthScreenName {

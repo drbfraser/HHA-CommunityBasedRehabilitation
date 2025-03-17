@@ -4,8 +4,8 @@
         "jsx": "react",
         "experimentalDecorators": true, // allow @nozbe/watermelondb/decorators
         "strict": true,
-        // "esModuleInterop": true, // todosd: test
-        // "noImplicitAny": false,
+        "esModuleInterop": true,
+        "noImplicitAny": false,
         "paths": {
             "@/*": ["./*"]
         }

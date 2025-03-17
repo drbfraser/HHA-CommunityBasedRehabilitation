@@ -411,11 +411,6 @@ const Referrals = () => {
                 {t("referral.filterByTypeDescription")}
             </Typography>
 
-            <Box sx={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "16px" }}>
-                <InfoIcon />
-                <Typography variant="body2">{t("referral.hoverDetails")}</Typography>
-            </Box>
-
             <Box sx={dataGridStyles.dashboardTables}>
                 <DataGrid
                     sx={dataGridStyles.datagrid}
@@ -427,6 +422,11 @@ const Referrals = () => {
                     onRowClick={handleReferralRowClick}
                     initialState={{ pagination: { pageSize: 10 } }}
                 />
+            </Box>
+
+            <Box sx={referralsStyles.hoverDetails}>
+                <InfoIcon />
+                <Typography variant="body2">{t("referral.hoverDetails")}</Typography>
             </Box>
         </>
     );

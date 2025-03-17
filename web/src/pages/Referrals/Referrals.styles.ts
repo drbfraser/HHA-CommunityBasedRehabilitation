@@ -23,6 +23,13 @@ export const referralsStyles: Record<string, SxProps<Theme>> = {
         whiteSpace: "pre-line",
         fontSize: "larger",
     },
+
+    hoverDetails: {
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        marginTop: "16px",
+    },
 };
 
 export const RenderTextTypography = styled(Typography)({

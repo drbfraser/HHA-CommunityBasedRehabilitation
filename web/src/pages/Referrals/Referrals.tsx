@@ -152,11 +152,11 @@ const Referrals = () => {
                 details.push(`${t("referral.experience")}: ${row.wheelchair_experience}`);
                 details.push(`${t("referral.hipWidth")}: ${row.hip_width} ${t("referral.inches")}`);
                 details.push(
-                    `${t("referral.wheelchairOwned")}: ${row.wheelchair_owned ? "✅" : "❌"}`
+                    `${t("referral.wheelchairOwned")}: ${row.wheelchair_owned ? "✔" : "✘"}`
                 );
                 details.push(
                     `${t("referral.wheelchairRepairable")}: ${
-                        row.wheelchair_repairable ? "✅" : "❌"
+                        row.wheelchair_repairable ? "✔" : "✘"
                     }`
                 );
             }
@@ -176,12 +176,12 @@ const Referrals = () => {
             if (row.hha_nutrition_and_agriculture_project) {
                 details.push(
                     `${t("referral.emergencyFoodAidRequired")}: ${
-                        row.emergency_food_aid ? "✅" : "❌"
+                        row.emergency_food_aid ? "✔" : "✘"
                     }`
                 );
                 details.push(
                     `${t("referral.agricultureLivelihoodProgramEnrollment")}: ${
-                        row.agriculture_livelihood_program_enrollment ? "✅" : "❌"
+                        row.agriculture_livelihood_program_enrollment ? "✔" : "✘"
                     }`
                 );
             }

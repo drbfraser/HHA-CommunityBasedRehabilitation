@@ -21,7 +21,7 @@ export const referralsStyles: Record<string, SxProps<Theme>> = {
 
     tooltipText: {
         whiteSpace: "pre-line",
-        fontSize: "larger",
+        fontSize: "large",
     },
 
     hoverDetails: {

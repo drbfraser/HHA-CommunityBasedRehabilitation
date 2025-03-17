@@ -169,47 +169,48 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         </Text>
                         {referral.resolved && (
                             <>
-                                <Text />
-                                <Text>
-                                    <Text style={styles.labelBold}>
-                                        {t("referralAttr.resolutionDate")}:{" "}
+                                <View style={{ marginTop: 20 }}>
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referralAttr.resolutionDate")}:{" "}
+                                        </Text>
+                                        {timestampToDateTime(referral.date_resolved)}
                                     </Text>
-                                    {timestampToDateTime(referral.date_resolved)}
-                                </Text>
-                                <Text>
-                                    <Text style={styles.labelBold}>{t("general.outcome")}: </Text>
-                                    {referral.outcome}
-                                </Text>
+                                    <Text>
+                                        <Text style={styles.labelBold}>{t("general.outcome")}: </Text>
+                                        {referral.outcome}
+                                    </Text>
+                                </View>
                             </>
                         )}
                         {referral.wheelchair && (
                             <>
-                                <Text />
-                                <Text>
-                                    <Text style={styles.labelBold}>
-                                        {t("referral.experience")}:{" "}
+                                <View style={{ marginTop: 20, marginBottom: 20 }}>
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referral.experience")}:{" "}
+                                        </Text>
+                                        {wheelchairExperiences[referral.wheelchair_experience]}
                                     </Text>
-                                    {wheelchairExperiences[referral.wheelchair_experience]}
-                                </Text>
-                                <Text>
-                                    <Text style={styles.labelBold}>{t("referral.hipWidth")}: </Text>
-                                    {referral.hip_width} inches
-                                </Text>
-                                <Text>
-                                    <Text style={styles.labelBold}>
-                                        {t("referral.ownership")}?{" "}
+                                    <Text>
+                                        <Text style={styles.labelBold}>{t("referral.hipWidth")}: </Text>
+                                        {referral.hip_width} inches
                                     </Text>
-                                    {referral.wheelchair_owned ? t("general.yes") : t("general.no")}
-                                </Text>
-                                <Text>
-                                    <Text style={styles.labelBold}>
-                                        {t("referral.repairability")}?{" "}
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referral.ownership")}?{" "}
+                                        </Text>
+                                        {referral.wheelchair_owned ? t("general.yes") : t("general.no")}
                                     </Text>
-                                    {referral.wheelchair_repairable
-                                        ? t("general.yes")
-                                        : t("general.no")}
-                                </Text>
-                                <Text />
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referral.repairability")}?{" "}
+                                        </Text>
+                                        {referral.wheelchair_repairable
+                                            ? t("general.yes")
+                                            : t("general.no")}
+                                    </Text>
+                                </View>
                                 {hasImage ? (
                                     <Card.Cover
                                         style={styles.referralCardImageStyle}
@@ -222,82 +223,87 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         )}
                         {referral.physiotherapy && (
                             <>
-                                <Text />
-                                <Text>
-                                    <Text style={styles.labelBold}>
-                                        {t("referralAttr.condition", { context: "physiotherapy" })}:{" "}
+                                <View style={{ marginTop: 20, marginBottom: 20 }}>
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referralAttr.condition", { context: "physiotherapy" })}:{" "}
+                                        </Text>
+                                        {referral.condition}
                                     </Text>
-                                    {referral.condition}
-                                </Text>
-                                <Text />
+                                </View>
                             </>
                         )}
                         {referral.prosthetic && (
                             <>
-                                <Text />
-                                <Text>
-                                    <Text style={styles.labelBold}>
-                                        {t("referralAttr.injuryLocation", {
-                                            context: "prosthetic",
-                                        })}
-                                        :{" "}
+                                <View style={{ marginTop: 20 }}>
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referralAttr.injuryLocation", {
+                                                context: "prosthetic",
+                                            })}
+                                            :{" "}
+                                        </Text>
+                                        {prostheticInjuryLocations[referral.prosthetic_injury_location]}
                                     </Text>
-                                    {prostheticInjuryLocations[referral.prosthetic_injury_location]}
-                                </Text>
+                                </View>
                             </>
                         )}
                         {referral.orthotic && (
                             <>
-                                <Text />
-                                <Text>
-                                    <Text style={styles.labelBold}>
-                                        {t("referralAttr.injuryLocation", { context: "orthotic" })}:{" "}
+                                <View style={{ marginTop: 20 }}>
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referralAttr.injuryLocation", { context: "orthotic" })}:{" "}
+                                        </Text>
+                                        {orthoticInjuryLocations[referral.orthotic_injury_location]}
                                     </Text>
-                                    {orthoticInjuryLocations[referral.orthotic_injury_location]}
-                                </Text>
+                                </View>
                             </>
                         )}
                         {referral.hha_nutrition_and_agriculture_project && (
                             <>
-                                <Text />
-                                <Text>
-                                    <Text style={styles.labelBold}>
-                                        {t("referral.emergencyFoodAidRequired")}?{" "}
+                                <View style={{ marginTop: 20 }}>
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referral.emergencyFoodAidRequired")}?{" "}
+                                        </Text>
+                                        {referral.emergency_food_aid
+                                            ? t("general.yes")
+                                            : t("general.no")}
                                     </Text>
-                                    {referral.emergency_food_aid
-                                        ? t("general.yes")
-                                        : t("general.no")}
-                                </Text>
-                                <Text>
-                                    <Text style={styles.labelBold}>
-                                        {t("referral.agricultureLivelihoodProgramEnrollment")}?{" "}
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referral.agricultureLivelihoodProgramEnrollment")}?{" "}
+                                        </Text>
+                                        {referral.agriculture_livelihood_program_enrollment
+                                            ? t("general.yes")
+                                            : t("general.no")}
                                     </Text>
-                                    {referral.agriculture_livelihood_program_enrollment
-                                        ? t("general.yes")
-                                        : t("general.no")}
-                                </Text>
+                                </View>
                             </>
                         )}
                         {referral.mental_health && (
                             <>
-                                <Text />
-                                <Text>
-                                    <Text style={styles.labelBold}>
-                                        {t("referralAttr.condition", { context: "mental" })}:{" "}
+                                <View style={{ marginTop: 20 }}>
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referralAttr.condition", { context: "mental" })}:{" "}
+                                        </Text>
+                                        <Text>{referral.mental_health_condition}</Text>
                                     </Text>
-                                    <Text>{referral.mental_health_condition}</Text>
-                                </Text>
+                                </View>
                             </>
                         )}
                         {Boolean(referral.services_other.trim().length) && (
                             <>
-                                <Text />
-                                <Text>
-                                    <Text style={styles.labelBold}>
-                                        {t("referralAttr.otherServiceRequired")}:{" "}
+                                <View style={{ marginTop: 20 }}>
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referralAttr.otherServiceRequired")}:{" "}
+                                        </Text>
+                                        {referral.services_other}
                                     </Text>
-                                    {referral.services_other}
-                                </Text>
+                                </View>
                             </>
                         )}
                         {!referral.resolved && <ResolveForm />}
@@ -306,7 +312,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         <Button
                             style={styles.closeBtn}
                             onPress={onClose}
-                            color={themeColors.blueBgDark}
+                            color={themeColors.blueBgDark} // todosd
                         >
                             {t("general.close")}
                         </Button>

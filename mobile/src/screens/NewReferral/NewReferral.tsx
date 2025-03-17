@@ -65,8 +65,7 @@ const ReferralServiceForm = (
         );
     };
     return (
-        <View>
-            <Text />
+        <View style={{ marginTop: 20 }}>
             <Text style={styles.question}>{t("referral.selectReferralServices")}</Text>
             {serviceTypes.map((serviceType) => (
                 <TextCheckBox

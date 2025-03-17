@@ -21,7 +21,16 @@ import {
     GridRowModel,
 } from "@mui/x-data-grid";
 import { Endpoint, apiFetch } from "@cbr/common/util/endpoints";
-import { IReferral, Impairments, otherServices } from "@cbr/common/util/referrals";
+import {
+    IReferral,
+    Impairments,
+    mentalHealthConditions,
+    orthoticInjuryLocations,
+    otherServices,
+    physiotherapyConditions,
+    prostheticInjuryLocations,
+    wheelchairExperiences,
+} from "@cbr/common/util/referrals";
 import { dataGridStyles } from "styles/DataGrid.styles";
 import { timestampToDate } from "@cbr/common/util/dates";
 import { IClientSummary } from "@cbr/common/util/clients";
@@ -149,7 +158,11 @@ const Referrals = () => {
         const generateDetails = (row: IReferral) => {
             const details = [];
             if (row.wheelchair) {
-                details.push(`${t("referral.experience")}: ${row.wheelchair_experience}`);
+                details.push(
+                    `${t("referral.experience")}: ${
+                        wheelchairExperiences[row.wheelchair_experience]
+                    }`
+                );
                 details.push(`${t("referral.hipWidth")}: ${row.hip_width} ${t("referral.inches")}`);
                 details.push(
                     `${t("referral.wheelchairOwned")}: ${row.wheelchair_owned ? "✔" : "✘"}`
@@ -161,16 +174,26 @@ const Referrals = () => {
                 );
             }
             if (row.physiotherapy) {
-                details.push(`${t("referral.condition")}: ${row.condition}`);
+                details.push(
+                    `${t("referral.condition")}: ${
+                        physiotherapyConditions(t)[row.condition]
+                            ? physiotherapyConditions(t)[row.condition]
+                            : row.condition
+                    }`
+                );
             }
             if (row.prosthetic) {
                 details.push(
-                    `${t("referral.prostheticInjuryLocation")}: ${row.prosthetic_injury_location}`
+                    `${t("referral.prostheticInjuryLocation")}: ${
+                        prostheticInjuryLocations[row.prosthetic_injury_location]
+                    }`
                 );
             }
             if (row.orthotic) {
                 details.push(
-                    `${t("referral.orthoticInjuryLocation")}: ${row.orthotic_injury_location}`
+                    `${t("referral.orthoticInjuryLocation")}: ${
+                        orthoticInjuryLocations[row.orthotic_injury_location]
+                    }`
                 );
             }
             if (row.hha_nutrition_and_agriculture_project) {
@@ -187,11 +210,21 @@ const Referrals = () => {
             }
             if (row.mental_health) {
                 details.push(
-                    `${t("referral.mentalHealthCondition")}: ${row.mental_health_condition}`
+                    `${t("referral.mentalHealthCondition")}: ${
+                        mentalHealthConditions[row.mental_health_condition]
+                            ? mentalHealthConditions[row.mental_health_condition]
+                            : row.mental_health_condition
+                    }`
                 );
             }
             if (row.services_other) {
-                details.push(`${t("referral.servicesOther")}: ${row.services_other}`);
+                details.push(
+                    `${t("referral.servicesOther")}: ${
+                        otherServices[row.services_other]
+                            ? otherServices[row.services_other]
+                            : row.services_other
+                    }`
+                );
             }
             return details.join("\n");
         };

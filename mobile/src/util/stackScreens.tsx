@@ -156,6 +156,7 @@ export type StackParamList = {
     };
     [StackScreenName.ADMIN_NEW]: undefined;
     [StackScreenName.SYNC]: undefined;
+    [StackScreenName.ALERT_INBOX]: undefined;
     [NoAuthScreenName.LOGIN]: undefined;
     [NoAuthScreenName.SWITCH_SERVER]: undefined;
 };

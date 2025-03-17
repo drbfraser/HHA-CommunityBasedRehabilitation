@@ -183,7 +183,7 @@ const UserList = () => {
                 </Picker>
                 <IconButton
                     icon="dots-vertical"
-                    color={themeColors.borderGray}
+                    iconColor={themeColors.borderGray}
                     size={20}
                     style={styles.columnBuilderButton}
                     onPress={openColumnBuilderMenu}

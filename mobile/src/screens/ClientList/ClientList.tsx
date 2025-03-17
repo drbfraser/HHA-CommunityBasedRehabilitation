@@ -194,7 +194,7 @@ const ClientList = () => {
                     )}
                     <IconButton
                         icon="dots-vertical"
-                        color={themeColors.borderGray}
+                        iconColor={themeColors.borderGray}
                         size={20}
                         onPress={openColumnBuilderMenu}
                     />

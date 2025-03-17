@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { themeColors } from "@cbr/common";
 
 const useStyles = () =>
     StyleSheet.create({
@@ -20,6 +21,8 @@ const useStyles = () =>
             height: 44,
             justifyContent: "center",
             borderRadius: 100,
+            borderWidth: 1,
+            borderColor: themeColors.borderGray
         },
         logoButtonDark: {
             width: 44,

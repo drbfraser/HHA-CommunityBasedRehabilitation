@@ -216,7 +216,7 @@ const UserList = () => {
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>
-                        <DataTable.Title style={styles.column_icon}>{}</DataTable.Title>
+                        <DataTable.Title style={styles.column_icon}>{""}</DataTable.Title>
                         <ShowTitle
                             label={t("admin.name")}
                             style={styles.column_name}

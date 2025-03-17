@@ -12,8 +12,7 @@ const OtherServicesForm = (props: IFormProps) => {
     const services = new Map(Object.entries(otherServices));
     const { t } = useTranslation();
     return (
-        <View>
-            <Text />
+        <View style={styles.formContainer}>
             <Text style={styles.question}>{t("referral.selectAnotherReferral")}</Text>
             <FormikExposedDropdownMenu
                 field={ReferralFormField.otherDescription}
@@ -25,8 +24,7 @@ const OtherServicesForm = (props: IFormProps) => {
                 mode="outlined"
             />
             {props.formikProps.values[ReferralFormField.otherDescription] === Impairments.OTHER && (
-                <View>
-                    <Text />
+                <View style={styles.formContainer}>
                     <Text style={styles.question}>{t("referral.describeReferral")}</Text>
                     <TextInput
                         mode="outlined"

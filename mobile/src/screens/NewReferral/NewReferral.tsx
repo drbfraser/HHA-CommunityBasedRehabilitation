@@ -40,7 +40,6 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { string } from "yup";
 import { useTranslation } from "react-i18next";
-import i18n from "i18next";
 
 interface INewReferralProps {
     clientID: number;
@@ -65,7 +64,7 @@ const ReferralServiceForm = (
         );
     };
     return (
-        <View style={{ marginTop: 20 }}>
+        <View style={styles.formContainer}>
             <Text style={styles.question}>{t("referral.selectReferralServices")}</Text>
             {serviceTypes.map((serviceType) => (
                 <TextCheckBox

@@ -312,7 +312,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         <Button
                             style={styles.closeBtn}
                             onPress={onClose}
-                            color={themeColors.blueBgDark} // todosd
+                            textColor={themeColors.blueBgDark}
                         >
                             {t("general.close")}
                         </Button>

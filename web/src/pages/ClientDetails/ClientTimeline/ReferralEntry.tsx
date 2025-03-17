@@ -207,7 +207,9 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                     {referral.physiotherapy && (
                         <div>
                             <b>{t("referralAttr.condition_physiotherapy")}:</b>{" "}
-                            {physiotherapyConditions(t)[referral.condition]}
+                            {physiotherapyConditions(t)[referral.condition]
+                                ? physiotherapyConditions(t)[referral.condition]
+                                : referral.condition}
                         </div>
                     )}
                     {referral.prosthetic && (

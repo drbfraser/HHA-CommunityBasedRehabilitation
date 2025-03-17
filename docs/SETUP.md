@@ -68,7 +68,7 @@ will be considered a development build.
 Note that changes to the `.env` file may not be applied if the environment variables are cached. To clear the cache and apply changes to `.env`, run the following:
 
 ```
-expo r -c // this is outdated now as we no longer use Expo...
+expo r -c // this is outdated now as we no longer use Expo... // todosd
 ```
 
 If you are going to be using an IP address, you will need to specify the port (8000) in the URL.
@@ -104,7 +104,7 @@ If you are going to be using an IP address, you will need to specify the port (8
 In the project directory, run `docker compose up`.
 
 Once both Django and Postgres are running, run `docker exec cbr_django python manage.py migrate` to apply database migrations.
-NOTE: also run `docker exec cbr_django python manage.py seeddatabase` todosd: clarify
+Once migrations have been applied, run `docker exec cbr_django python manage.py seeddatabase` to seed some data for development purposes if desired.
 
 ### 6. You're done!
 

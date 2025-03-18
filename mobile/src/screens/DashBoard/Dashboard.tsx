@@ -135,7 +135,7 @@ const Dashboard = () => {
     ]);
 
     const locale = NativeModules.I18nManager.localeIdentifier;
-    const timezone = Localization.timezone;
+    const timezone = Localization.timezone; // todo: resolve deprecated
 
     return (
         <SafeAreaView style={styles.container}>

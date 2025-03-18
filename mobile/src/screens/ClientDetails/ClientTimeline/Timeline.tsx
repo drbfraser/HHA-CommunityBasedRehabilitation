@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { View, Text, TouchableOpacity, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
-import { Button, IconButton, Modal, Portal } from "react-native-paper";
+import { IconButton, Modal, Portal } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { riskTypes } from "../../../util/riskIcon";
 import { IVisitSummary } from "../../../../../common/src/util/visits";
@@ -14,7 +14,6 @@ import VisitEntry from "./Entries/VisitEntry";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { useTranslation } from "react-i18next";
 
-import { useIsFocused } from "@react-navigation/native";
 interface ISummaryProps {
     activity: IActivity;
     refreshClient: () => void;
@@ -47,7 +46,7 @@ const Timeline = (props: ISummaryProps) => {
     const [icon, setIcon] = useState("");
 
     const locale = NativeModules.I18nManager.localeIdentifier;
-    const timezone = Localization.timezone;
+    const timezone = Localization.timezone; // todo: update deprecated
 
     const database = useDatabase();
 
@@ -65,7 +64,7 @@ const Timeline = (props: ISummaryProps) => {
         >
             <View>
                 <View style={styles.container}>
-                    <Text style={{ width: "25%" }}>
+                    <Text style={styles.dateText}>
                         {formatDate(new Date(props.activity.date), locale, timezone)}
                     </Text>
                     <View style={styles.activityTypeView}>
@@ -82,7 +81,7 @@ const Timeline = (props: ISummaryProps) => {
                     <View>
                         {props.activity.type === ActivityType.VISIT && props.activity.visit ? (
                             <View>
-                                <Text>
+                                <Text style={styles.textGray}>
                                     {zone} {t("visitAttr.visitVerb")}
                                 </Text>
                                 <View>

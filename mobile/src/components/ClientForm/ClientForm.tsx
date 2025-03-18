@@ -179,7 +179,7 @@ export const ClientForm = (props: IClientFormProps) => {
                         ? t("general.archive")
                         : t("general.dearchive")
                 }
-                //TODO translation
+                // TODOSD: translation
                 dialogContent={`Are you sure you want to ${
                     props.formikProps.values.is_active ? "archive" : "dearchive"
                 } ${props.formikProps.values.firstName} ${
@@ -354,6 +354,8 @@ export const ClientForm = (props: IClientFormProps) => {
                                     selectedIconName={"checkmark-circle"}
                                     unselectedIconName={"radio-button-off"}
                                     selected={props.formikProps.values.disability?.map(String)}
+                                    labelStyle={styles.textGray} // todosd: text not correctly rendering as gray
+                                    iconColor={themeColors.textGray}
                                 />
                             </KeyboardAwareScrollView>
                             <Button

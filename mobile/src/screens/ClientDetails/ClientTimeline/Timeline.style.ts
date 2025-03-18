@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { themeColors } from "@cbr/common";
+import theme from "@/src/util/theme.styles";
 
 const useStyles = () =>
     StyleSheet.create({
@@ -22,7 +23,7 @@ const useStyles = () =>
             justifyContent: "center",
             borderRadius: 100,
             borderWidth: 1,
-            borderColor: themeColors.borderGray
+            borderColor: themeColors.borderGray,
         },
         logoButtonDark: {
             width: 44,
@@ -59,10 +60,18 @@ const useStyles = () =>
             marginLeft: 10,
             marginEnd: 10,
             paddingLeft: 10,
+            color: themeColors.textGray,
         },
         subItemTextDark: {
             marginLeft: 40,
             fontWeight: "bold",
+        },
+        dateText: {
+            width: "25%",
+            color: themeColors.textGray,
+        },
+        textGray: {
+            color: themeColors.textGray,
         },
         dividerStyle: {
             borderBottomColor: "black",

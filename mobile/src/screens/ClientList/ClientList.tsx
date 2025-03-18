@@ -223,12 +223,14 @@ const ClientList = () => {
                                 selectedIconName={"checkmark-circle"}
                                 unselectedIconName={"radio-button-off"}
                                 selected={selectedColumn.map(String)}
+                                labelStyle={styles.textGray} // todosd: text not correctly rendering as gray
+                                iconColor={themeColors.textGray}
                             />
                         </Modal>
                     </Portal>
                 </View>
                 <View style={styles.rowItem}>
-                    <Text>{t("dashboard.myClients")}</Text>
+                    <Text style={styles.textGray}>{t("dashboard.myClients")}</Text>
                     <Switch
                         trackColor={{ false: themeColors.white, true: themeColors.yellow }}
                         thumbColor={allClientsMode ? themeColors.white : themeColors.white}
@@ -236,11 +238,11 @@ const ClientList = () => {
                         onValueChange={setAllClientsMode}
                         value={allClientsMode}
                     />
-                    <Text>{t("dashboard.allClients")}</Text>
+                    <Text style={styles.textGray}>{t("dashboard.allClients")}</Text>
                 </View>
 
                 <View style={styles.rowItem}>
-                    <Text>{t("general.filterBy")}</Text>
+                    <Text style={styles.textGray}>{t("general.filterBy")}</Text>
                     <Picker
                         style={styles.select}
                         selectedValue={selectedSearchOption}
@@ -254,7 +256,7 @@ const ClientList = () => {
                     </Picker>
                 </View>
                 <View style={styles.rowItem}>
-                    <Text>{t("dashboard.showArchived")}</Text>
+                    <Text style={styles.textGray}>{t("dashboard.showArchived")}</Text>
                     <Checkbox
                         status={archivedMode ? "checked" : "unchecked"}
                         onPress={() => {

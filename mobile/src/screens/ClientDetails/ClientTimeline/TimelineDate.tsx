@@ -1,4 +1,4 @@
-import { formatDate } from "@cbr/common";
+import { formatDate, themeColors } from "@cbr/common";
 import React from "react";
 import { View, Text, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
@@ -11,7 +11,7 @@ interface SummaryProps {
 }
 
 const locale = NativeModules.I18nManager.localeIdentifier;
-const timezone = Localization.timezone;
+const timezone = Localization.timezone; // todo: deprecated
 
 export const TimelineDate = (props: SummaryProps) => {
     const styles = useStyles();
@@ -19,7 +19,7 @@ export const TimelineDate = (props: SummaryProps) => {
 
     return (
         <View style={styles.container}>
-            <Text>{formatDate(props.date, locale, timezone)}</Text>
+            <Text style={styles.textGray}>{formatDate(props.date, locale, timezone)}</Text>
             <View style={styles.activityTypeView}>
                 <View style={styles.verticleLine} />
                 <IconButton
@@ -27,6 +27,7 @@ export const TimelineDate = (props: SummaryProps) => {
                     icon="account-plus"
                     mode="outlined"
                     size={16}
+                    iconColor={themeColors.blueBgDark}
                 />
                 <View style={styles.verticleLine} />
             </View>

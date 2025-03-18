@@ -177,28 +177,29 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
                                 {surveySteps.map((surveyStep, index) => (
                                     <ProgressStep
                                         key={index}
-                                        scrollViewProps={defaultScrollViewProps}
-                                        previousBtnTextStyle={styles.buttonTextStyle}
-                                        nextBtnTextStyle={styles.buttonTextStyle}
-                                        nextBtnStyle={styles.nextButton}
+                                        scrollViewProps={defaultScrollViewProps}                                        
                                         onNext={() => {
                                             nextStep(formikProps.values, formikProps);
-                                            console.log(step);
+                                            // console.log(step);
                                         }}
-                                        nextBtnDisabled={
+                                        buttonNextDisabled={
                                             formikProps.isSubmitting ||
                                             !formikProps.values.give_consent ||
                                             ((countObjectKeys(formikProps.errors) !== 0 ||
                                                 countObjectKeys(formikProps.touched) === 0) &&
                                                 !stepChecked[step])
                                         }
-                                        previousBtnDisabled={formikProps.isSubmitting}
+                                        buttonPreviousDisabled={formikProps.isSubmitting}
                                         onPrevious={prevStep}
-                                        previousBtnStyle={styles.prevButton}
                                         onSubmit={() => nextStep(formikProps.values, formikProps)}
-                                        previousBtnText={t("general.previous")}
-                                        nextBtnText={t("general.next")}
-                                        finishBtnText={t("general.submit")}
+                                        buttonPreviousText={t("general.previous")}
+                                        buttonNextText={t("general.next")}
+                                        buttonFinishText={t("general.submit")}
+                                        buttonFillColor={themeColors.blueBgDark}
+                                        buttonBorderColor={themeColors.blueBgDark}
+                                        buttonPreviousTextColor={themeColors.blueBgDark}
+                                        buttonHorizontalOffset={20}
+                                        
                                     >
                                         <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
                                         <Divider

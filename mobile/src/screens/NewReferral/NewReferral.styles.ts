@@ -1,13 +1,12 @@
+import { ScrollViewProps, StyleSheet } from "react-native";
 import { themeColors } from "@cbr/common";
-import { StyleSheet } from "react-native";
 
 const useStyles = () =>
     StyleSheet.create({
         container: {
             flex: 1,
             justifyContent: "center",
-            marginLeft: 30,
-            marginRight: 30,
+            marginHorizontal: 10,
         },
         formContainer: {
             marginTop: 20.
@@ -34,18 +33,6 @@ const useStyles = () =>
             alignItems: "center",
             backgroundColor: "#DDDDDD",
             padding: 10,
-        },
-        nextButton: {
-            position: "absolute",
-            right: -50,
-            bottom: -10,
-            padding: -1,
-        },
-        prevButton: {
-            position: "absolute",
-            left: -50,
-            bottom: -10,
-            padding: -1,
         },
         buttonTextStyle: {
             color: themeColors.blueBgDark,
@@ -88,10 +75,10 @@ export const progressStepsStyle = {
     labelFontSize: 3,
     activeLabelFontSize: 9,
     topOffset: 20,
-    marginBottom: 10,
+    marginBottom: 0,
 };
 
-export const defaultScrollViewProps = {
+export const defaultScrollViewProps: Partial<ScrollViewProps> = {
     keyboardShouldPersistTaps: "handled",
     contentContainerStyle: {
         flex: 2,

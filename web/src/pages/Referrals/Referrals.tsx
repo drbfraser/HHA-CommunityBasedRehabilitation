@@ -10,6 +10,7 @@ import {
     IconButton,
     Popover,
     Switch,
+    Tooltip,
 } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import {
@@ -41,10 +42,18 @@ import {
     RenderTextTypography,
     referralsStyles,
 } from "./Referrals.styles";
-import Tooltip from "@mui/material/Tooltip";
 import InfoIcon from "@mui/icons-material/Info";
 import { hideColumnsStyles } from "styles/HideColumns.styles";
 import { MoreVert } from "@mui/icons-material";
+
+interface IReferralColumn {
+    field: string;
+    headerName: string;
+    flex: number;
+    renderCell: (params: GridRenderCellParams) => JSX.Element;
+    hide: boolean;
+    hideFunction: (hidden: boolean) => void;
+}
 
 const STATUS = {
     PENDING: "pending",
@@ -298,7 +307,7 @@ const Referrals = () => {
     const handleReferralRowClick = (rowParams: GridRowParams) =>
         history.push(`/client/${rowParams.row.client_id}?${rowParams.row.id}=open`);
 
-    const referralColumns = [
+    const referralColumns: IReferralColumn[] = [
         {
             field: "resolved",
             headerName: t("general.status"),
@@ -423,7 +432,7 @@ const Referrals = () => {
                     }}
                 >
                     <Box sx={hideColumnsStyles.optionsContainer}>
-                        {referralColumns.map((column: any): JSX.Element => {
+                        {referralColumns.map((column: IReferralColumn): JSX.Element => {
                             return (
                                 <Box key={column.field} sx={hideColumnsStyles.optionsRow}>
                                     <Typography component={"span"} variant={"body2"}>

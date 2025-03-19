@@ -411,11 +411,7 @@ const Referrals = () => {
                     sx={referralsStyles.typeFilter}
                 />
 
-                <IconButton
-                    sx={hideColumnsStyles.optionsButton}
-                    onClick={onOptionsClick}
-                    size="large"
-                >
+                <IconButton onClick={onOptionsClick} size="large">
                     <MoreVert />
                 </IconButton>
                 <Popover

@@ -124,6 +124,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+        if (project.hasProperty('CBR_UPLOAD_STORE_FILE')) {
+            storeFile file(CBR_UPLOAD_STORE_FILE)
+            storePassword CBR_UPLOAD_STORE_PASSWORD
+            keyAlias CBR_UPLOAD_KEY_ALIAS
+            keyPassword CBR_UPLOAD_KEY_PASSWORD
+        }
+    }
     }
     buildTypes {
         debug {

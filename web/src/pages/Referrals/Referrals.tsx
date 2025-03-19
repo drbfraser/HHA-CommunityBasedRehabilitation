@@ -93,7 +93,7 @@ const Referrals = () => {
             setClientError(undefined);
             try {
                 const tempClients: IClientSummary[] = await (
-                    await apiFetch(Endpoint.CLIENTS, "?is_active=true")
+                    await apiFetch(Endpoint.CLIENTS)
                 ).json();
 
                 const priorityClients = tempClients.map((row: IClientSummary) => {

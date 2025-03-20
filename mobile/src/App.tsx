@@ -8,7 +8,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Provider as StoreProvider } from "react-redux";
 import { io } from "socket.io-client/dist/socket.io";
 import DatabaseProvider from "@nozbe/watermelondb/react/DatabaseProvider";
-import { useLogger } from "@react-navigation/devtools"; // todosd: remove
 
 import {
     APILoadError,
@@ -44,7 +43,7 @@ import { StatusBar } from "react-native";
 enableScreens();
 
 // todosd: type safe routes for React Navigation.  better place for this?
-// todosd: add all routes, using debugger
+// todosd: add all routes, using debugger and @react-navigation/devtools
 type RootStackParamList = {
     Home: undefined;
     Client: undefined;
@@ -249,16 +248,12 @@ export default function App() {
         [authState]
     );
 
-    // todosd: temp testing of React Navigation
-    const navigationRef = useNavigationContainerRef();
-    useLogger(navigationRef);
-
     return (
         <SafeAreaView style={styles.safeApp}>
             <I18nextProvider i18n={getI18nInstance()}>
                 <StoreProvider store={store}>
                     <PaperProvider theme={theme}>
-                        <NavigationContainer ref={navigationRef} theme={theme}>
+                        <NavigationContainer theme={theme}>
                             <StatusBar
                                 backgroundColor={themeColors.statusBarBgGray}
                                 barStyle="light-content"

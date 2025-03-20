@@ -438,7 +438,6 @@ const Stats = () => {
                                 animate={{ duration: 500 }}
                                 domainPadding={10}
                                 padding={{ left: 100, right: 50, bottom: 30, top: 30 }}
-                                // containerComponent={<VictoryZoomContainer />} // todosd: this causes a runtime error
                                 containerComponent={<VictoryContainer />}
                                 theme={VictoryTheme.material}
                             >

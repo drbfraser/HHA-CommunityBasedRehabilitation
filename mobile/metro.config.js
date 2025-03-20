@@ -1,23 +1,9 @@
-// const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
-
-// /**
-//  * Metro configuration
-//  * https://facebook.github.io/metro/docs/configuration
-//  *
-//  * @type {import('metro-config').MetroConfig}
-//  */
-// const config = {};
-
-// module.exports = mergeConfig(getDefaultConfig(__dirname), config);
-
 const { getDefaultConfig } = require("expo/metro-config");
 const path = require("path");
 
 // Find the project and workspace directories
 const projectRoot = __dirname;
-// This can be replaced with `find-yarn-workspace-root`
 const monorepoRoot = path.resolve(projectRoot, "../..");
-
 const config = getDefaultConfig(projectRoot);
 
 // 1. Watch all files within the monorepo

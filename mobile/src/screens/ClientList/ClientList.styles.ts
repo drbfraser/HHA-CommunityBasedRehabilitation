@@ -65,7 +65,7 @@ const useStyles = () =>
         },
         textGray: {
             color: themeColors.textGray,
-        }
+        },
     });
 
 export default useStyles;

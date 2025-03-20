@@ -9,7 +9,7 @@ const useStyles = () =>
             marginHorizontal: 10,
         },
         formContainer: {
-            marginTop: 20.
+            marginTop: 20,
         },
         imageContainer: {
             paddingHorizontal: 50,
@@ -51,7 +51,7 @@ const useStyles = () =>
             justifyContent: "space-between",
             paddingVertical: 8,
             paddingHorizontal: 16,
-        },        
+        },
         stepLabelText: { fontSize: 25, fontWeight: "bold" },
         picker: { height: 40, width: 250 },
         question: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },

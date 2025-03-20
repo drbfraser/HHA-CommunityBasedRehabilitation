@@ -4,7 +4,12 @@ import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import React, { useContext, useRef, useState } from "react";
 import { Button } from "react-native-paper";
-import { StyleSheet, TextInput as NativeTextInput, View, GestureResponderEvent } from "react-native";
+import {
+    StyleSheet,
+    TextInput as NativeTextInput,
+    View,
+    GestureResponderEvent,
+} from "react-native";
 import {
     AdminField,
     adminUserFieldLabels,
@@ -187,7 +192,11 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
                                             countObjectKeys(formikProps.touched) === 0
                                         }
                                         loading={formikProps.isSubmitting}
-                                        onPress={formikProps.handleSubmit as (e?: GestureResponderEvent) => void}
+                                        onPress={
+                                            formikProps.handleSubmit as (
+                                                e?: GestureResponderEvent
+                                            ) => void
+                                        }
                                         mode="contained"
                                     >
                                         {t("general.save")}

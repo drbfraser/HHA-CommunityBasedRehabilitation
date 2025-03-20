@@ -177,7 +177,7 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
                                 {surveySteps.map((surveyStep, index) => (
                                     <ProgressStep
                                         key={index}
-                                        scrollViewProps={defaultScrollViewProps}                                        
+                                        scrollViewProps={defaultScrollViewProps}
                                         onNext={() => {
                                             nextStep(formikProps.values, formikProps);
                                             // console.log(step);
@@ -199,7 +199,6 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
                                         buttonBorderColor={themeColors.blueBgDark}
                                         buttonPreviousTextColor={themeColors.blueBgDark}
                                         buttonHorizontalOffset={20}
-                                        
                                     >
                                         <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
                                         <Divider

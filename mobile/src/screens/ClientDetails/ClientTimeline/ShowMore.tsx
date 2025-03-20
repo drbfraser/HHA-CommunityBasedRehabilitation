@@ -25,11 +25,7 @@ const ShowMore = () => {
                 </View>
                 <View style={styles.subItem}>
                     <Text style={styles.subItemTextDark}>{t("general.showMore")}</Text>
-                    <IconButton
-                        style={styles.arrowButton}
-                        icon={"chevron-double-down"}
-                        size={16}
-                    />
+                    <IconButton style={styles.arrowButton} icon={"chevron-double-down"} size={16} />
                 </View>
             </View>
             <View style={styles.dividerStyle} />

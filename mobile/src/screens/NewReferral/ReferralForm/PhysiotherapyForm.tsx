@@ -30,16 +30,22 @@ const PhysiotherapyForm = (props: IFormProps) => {
             />
             {props.formikProps.values[ReferralFormField.condition] ===
                 getOtherDisabilityId(disabilities) && (
-                    <View style={styles.formContainer}>
-                        <TextInput
-                            mode="outlined"
-                            label={referralFieldLabels[ReferralFormField.conditionOther]}
-                            value={props.formikProps.values[ReferralFormField.conditionOther]}
-                            onChangeText={(value: string) => {
-                                props.formikProps.setFieldTouched(ReferralFormField.conditionOther, true);
-                                props.formikProps.setFieldValue(ReferralFormField.conditionOther, value);
-                            }}
-                        />
+                <View style={styles.formContainer}>
+                    <TextInput
+                        mode="outlined"
+                        label={referralFieldLabels[ReferralFormField.conditionOther]}
+                        value={props.formikProps.values[ReferralFormField.conditionOther]}
+                        onChangeText={(value: string) => {
+                            props.formikProps.setFieldTouched(
+                                ReferralFormField.conditionOther,
+                                true
+                            );
+                            props.formikProps.setFieldValue(
+                                ReferralFormField.conditionOther,
+                                value
+                            );
+                        }}
+                    />
                 </View>
             )}
         </View>

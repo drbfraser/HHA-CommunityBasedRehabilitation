@@ -177,7 +177,9 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                         {timestampToDateTime(referral.date_resolved)}
                                     </Text>
                                     <Text>
-                                        <Text style={styles.labelBold}>{t("general.outcome")}: </Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("general.outcome")}:{" "}
+                                        </Text>
                                         {referral.outcome}
                                     </Text>
                                 </View>
@@ -193,14 +195,18 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                         {wheelchairExperiences[referral.wheelchair_experience]}
                                     </Text>
                                     <Text>
-                                        <Text style={styles.labelBold}>{t("referral.hipWidth")}: </Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referral.hipWidth")}:{" "}
+                                        </Text>
                                         {referral.hip_width} inches
                                     </Text>
                                     <Text>
                                         <Text style={styles.labelBold}>
                                             {t("referral.ownership")}?{" "}
                                         </Text>
-                                        {referral.wheelchair_owned ? t("general.yes") : t("general.no")}
+                                        {referral.wheelchair_owned
+                                            ? t("general.yes")
+                                            : t("general.no")}
                                     </Text>
                                     <Text>
                                         <Text style={styles.labelBold}>
@@ -226,7 +232,10 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                 <View style={{ marginTop: 20, marginBottom: 20 }}>
                                     <Text>
                                         <Text style={styles.labelBold}>
-                                            {t("referralAttr.condition", { context: "physiotherapy" })}:{" "}
+                                            {t("referralAttr.condition", {
+                                                context: "physiotherapy",
+                                            })}
+                                            :{" "}
                                         </Text>
                                         {referral.condition}
                                     </Text>
@@ -243,7 +252,11 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                             })}
                                             :{" "}
                                         </Text>
-                                        {prostheticInjuryLocations[referral.prosthetic_injury_location]}
+                                        {
+                                            prostheticInjuryLocations[
+                                                referral.prosthetic_injury_location
+                                            ]
+                                        }
                                     </Text>
                                 </View>
                             </>
@@ -253,7 +266,10 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                 <View style={{ marginTop: 20 }}>
                                     <Text>
                                         <Text style={styles.labelBold}>
-                                            {t("referralAttr.injuryLocation", { context: "orthotic" })}:{" "}
+                                            {t("referralAttr.injuryLocation", {
+                                                context: "orthotic",
+                                            })}
+                                            :{" "}
                                         </Text>
                                         {orthoticInjuryLocations[referral.orthotic_injury_location]}
                                     </Text>

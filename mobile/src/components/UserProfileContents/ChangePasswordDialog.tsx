@@ -146,7 +146,11 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                         countObjectKeys(formikProps.touched) === 0
                                     }
                                     loading={formikProps.isSubmitting}
-                                    onPress={formikProps.handleSubmit as (e?: GestureResponderEvent) => void}
+                                    onPress={
+                                        formikProps.handleSubmit as (
+                                            e?: GestureResponderEvent
+                                        ) => void
+                                    }
                                 >
                                     {t("general.save")}
                                 </Button>
@@ -232,7 +236,11 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                         countObjectKeys(formikProps.touched) === 0
                                     }
                                     loading={formikProps.isSubmitting}
-                                    onPress={formikProps.handleSubmit as (e?: GestureResponderEvent) => void}
+                                    onPress={
+                                        formikProps.handleSubmit as (
+                                            e?: GestureResponderEvent
+                                        ) => void
+                                    }
                                 >
                                     {t("general.save")}
                                 </Button>

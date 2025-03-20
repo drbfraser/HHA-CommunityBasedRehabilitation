@@ -482,7 +482,9 @@ const NewVisit = (props: INewVisitProps) => {
                                             }
                                             buttonPreviousDisabled={formikProps.isSubmitting}
                                             onPrevious={() => prevStep(formikProps)}
-                                            onSubmit={() => nextStep(formikProps.values, formikProps)}
+                                            onSubmit={() =>
+                                                nextStep(formikProps.values, formikProps)
+                                            }
                                             buttonPreviousText={t("general.previous")}
                                             buttonNextText={t("general.next")}
                                             buttonFinishText={t("general.submit")}

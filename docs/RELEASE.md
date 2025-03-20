@@ -36,9 +36,11 @@ CBR_UPLOAD_KEY_PASSWORD=<key password>
 ```
 
 Under Windows, this will likely be `C:\Users\<your ID>\.gradle\gradle.properties`
+<!-- TODOSD: verify updating local `gradle.properties` also works  -->
 
 ### 3. Adding the release Signing Config
 
+<!-- TODOSD: automate and update -->
 If not done already, then within the project file `mobile/android/app/build.gradle`, add the following within `signingConfigs`
 
 ```
@@ -52,21 +54,31 @@ release {
 }
 ```
 
+Note that as we are using a managed workflow for Continuous Native Generation via Expo Prebuild (https://docs.expo.dev/workflow/continuous-native-generation/), any manual edits made to files within the `android` directory such as these will be overwritten when the project is rebuilt.
+
 ### 4. Create the Release APK or AAB
 
 #### Build an APK
+<!-- TODOSD: update after fixing build script -->
+In `mobile/`, to build an **APK file** suitable for local testing or directly installing onto an emulator/Android device, Edit `APP_ENV` in `mobile/.env` according to your desired target:
+- `local`: Target server your local computer.
+- `dev`: Target the dev server.
+- `staging`: Target the staging server.
+- `prod`: Target the production server.
 
-In `mobile/`, to build an **APK file** suitable for local testing or directly installing onto an emulator/Android device, run _one_ of the following commands based on what you want to build:
+Then, run `./gradlew assembleRelease` from within the `mobile/android` directory.
+<!-- run _one_ of the following commands based on what you want to build:
 - `npm run build local`: Target server your local computer.
 - `npm run build dev`: Target the dev server.
 - `npm run build staging`: Target the staging server.
-- `npm run build prod`: Target the production server.
+- `npm run build prod`: Target the production server. -->
 
 The generated .apk will be in `mobile/android/app/build/outputs/apk/release/app-release.apk`.
 
 #### Bundle an AAB
-In `mobile/`, to build an **AAB file** suitable for distribution to the Play store, change from "build" to "bundle". For example:
-- `npm run bundle prod`: Target the production server and build an AAB.
+<!-- TODOSD: update after fixing build script -->
+To build a signed **AAB file** suitable for distribution to the Play store, run `./gradlew bundleRelease` from within the `mobile/android` directory.
+<!-- - `npm run bundle prod`: Target the production server and build an AAB. -->
 
 The generated .aab will be in `mobile/android/app/build/outputs/bundle/release/app-release.aab`.
 
@@ -79,6 +91,9 @@ The generated .aab will be in `mobile/android/app/build/outputs/bundle/release/a
 
 The APK can be installed directly to a physical device or emulator; the AAB file must be uploaded to the Play store in ordered to be installed on a phone.
 
-Alternatively, you can use the command `react-native run-android --variant=release` in the `mobile/` directory and launch an emulator. You may need to uninstall any debug versions previously installed in the emulator to be able to install the release because the signing key will have changed.
+From within Android Studio, an APK may be loaded and profiled under file->`Profile or Debug APK`
+
+<!-- TODOSD: verify, update -->
+<!-- Alternatively, you can use the command `react-native run-android --variant=release` in the `mobile/` directory and launch an emulator. You may need to uninstall any debug versions previously installed in the emulator to be able to install the release because the signing key will have changed. -->
 
 You are done!

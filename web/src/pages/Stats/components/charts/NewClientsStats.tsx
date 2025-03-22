@@ -86,8 +86,7 @@ const NewClientsStats = ({ stats }: IProps) => {
                     component={"span"}
                     variant={"body2"}
                 >
-                    {/* TODO: Replace with Translation */}
-                    All Children
+                    {t("statistics.allChildren")}
                 </Typography>
                 <IOSSwitch checked={viewAdults} onChange={handleViewToggle} />
                 <Typography
@@ -95,22 +94,19 @@ const NewClientsStats = ({ stats }: IProps) => {
                     component={"span"}
                     variant={"body2"}
                 >
-                    All Adults
+                    {t("statistics.allAdults")}
                 </Typography>
             </menu>
             <Typography variant="h2" align="center">
-                {/* TODO: Replace with Translation */}
-                New Clients
+                {t("statistics.newClients")}
             </Typography>
 
             {viewAdults ? (
                 <>
                     <Typography variant="subtitle1" align="center">
-                        {/* TODO: Replace with Translation */}
-                        <b>Total New Female Adult Clients:</b> {totalFAdults}
+                        <b>{t("statistics.totalNewFAdult")}</b> {totalFAdults}
                         <br />
-                        {/* TODO: Replace with Translation */}
-                        <b>Total New Male Adult Clients:</b> {totalMAdults}
+                        <b>{t("statistics.totalNewMAdult")}</b> {totalMAdults}
                     </Typography>
 
                     <ResponsiveContainer
@@ -118,8 +114,8 @@ const NewClientsStats = ({ stats }: IProps) => {
                         height={stats?.new_clients.length ? CHART_HEIGHT : 0}
                     >
                         <BarChart data={adultData} layout="vertical">
-                            <YAxis interval={0} dataKey="label" type="category" width={150} />
-                            <XAxis allowDecimals={false} />
+                            <XAxis type="number" allowDecimals={false} />
+                            <YAxis dataKey="label" type="category" width={150} />
                             <Tooltip />
                             <Legend />
                             <Bar
@@ -140,11 +136,9 @@ const NewClientsStats = ({ stats }: IProps) => {
             ) : (
                 <>
                     <Typography variant="subtitle1" align="center">
-                        {/* TODO: Replace with Translation */}
-                        <b>Total New Female Child Clients:</b> {totalFChild}
+                        <b>{t("statistics.totalNewFChild")}</b> {totalFChild}
                         <br />
-                        {/* TODO: Replace with Translation */}
-                        <b>Total New Male Child Clients:</b> {totalMChild}
+                        <b>{t("statistics.totalNewMChild")}</b> {totalMChild}
                     </Typography>
 
                     <ResponsiveContainer

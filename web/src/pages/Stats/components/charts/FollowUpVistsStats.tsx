@@ -86,8 +86,7 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
                     component={"span"}
                     variant={"body2"}
                 >
-                    {/* TODO: Replace with Translation */}
-                    All Children
+                    {t("statistics.allChildren")}
                 </Typography>
                 <IOSSwitch checked={viewAdults} onChange={handleViewToggle} />
                 <Typography
@@ -95,23 +94,19 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
                     component={"span"}
                     variant={"body2"}
                 >
-                    {/* TODO: Replace with Translation */}
-                    All Adults
+                    {t("statistics.allAdults")}
                 </Typography>
             </menu>
             <Typography variant="h2" align="center">
-                {/* TODO: Replace with Translation */}
-                Follow Up Visits
+                {t("statistics.followUpVisits")}
             </Typography>
 
             {viewAdults ? (
                 <>
                     <Typography variant="subtitle1" align="center">
-                        {/* TODO: Replace with Translation */}
-                        <b>Total Followed Up Female Adult Clients:</b> {totalFAdults}
+                        <b>{t("statistics.totalFollowedUpFAdult")}</b> {totalFAdults}
                         <br />
-                        {/* TODO: Replace with Translation */}
-                        <b>Total Followed Up Male Adult Clients:</b> {totalMAdults}
+                        <b>{t("statistics.totalFollowedUpMAdult")}</b> {totalMAdults}
                     </Typography>
 
                     <ResponsiveContainer
@@ -141,11 +136,9 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
             ) : (
                 <>
                     <Typography variant="subtitle1" align="center">
-                        {/* TODO: Replace with Translation */}
-                        <b>Total Followed Up Female Child Clients:</b> {totalFChild}
+                        <b>{t("statistics.totalNewFChild")}</b> {totalFChild}
                         <br />
-                        {/* TODO: Replace with Translation */}
-                        <b>Total Followed Up Male Child Clients:</b> {totalMChild}
+                        <b>{t("statistics.totalNewMChild")}</b> {totalMChild}
                     </Typography>
 
                     <ResponsiveContainer
@@ -153,8 +146,8 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
                         height={stats?.follow_up_visits.length ? CHART_HEIGHT : 0}
                     >
                         <BarChart data={childData} layout="vertical">
+                            <XAxis type="number" allowDecimals={false} />
                             <YAxis dataKey="label" type="category" width={150} />
-                            <XAxis allowDecimals={false} />
                             <Tooltip />
                             <Legend />
                             <Bar

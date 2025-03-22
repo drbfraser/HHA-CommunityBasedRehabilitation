@@ -68,6 +68,7 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
 
         rows.push([""]);
 
+        // Follow Up Visits and New Clients
         const categories = [
             { label: "New Clients", key: "new_clients" },
             { label: "Follow Up Visits", key: "follow_up_visits" },

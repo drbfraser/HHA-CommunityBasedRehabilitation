@@ -466,7 +466,8 @@ interface Resources {
       "pending": "&Pending Referrals",
       "filterByType": "&Filter by Referral Types",
       "filterByStatus": "&Filter by Status",
-      "filterByTypeDescription": "&Referrals that match at least one of the selected types will be displayed."
+      "filterByTypeDescription": "&Referrals that match at least one of the selected types will be displayed.",
+      "hoverDetails": "&Hover over the details to see more information about each referral."
     },
     "risks": {
       "riskLevel": "Ngo' naron na gba da",
@@ -721,7 +722,19 @@ interface Resources {
       "allUsers": "&All Users",
       "dateRange": "&From {{start}} to {{end}}",
       "filterByDate": "&Filter by Date",
-      "filterByUser": "&Filter by User"
+      "filterByUser": "&Filter by User",
+      "totalFollowedUpFAdult": "&Total Followed Up Female Adult Clients:",
+      "totalFollowedUpMAdult": "&Total Followed Up Male Adult Clients:",
+      "totalFollowedUpFChild": "&Total Followed Up Female Child Clients:",
+      "totalFollowedUpMChild": "&Total Followed Up Male Child Clients:",
+      "followUpVisits": "&Follow Up Visits:",
+      "newClients": "&New Clients:",
+      "totalNewFAdult": "&Total New Female Adult Clients:",
+      "totalNewMAdult": "&Total New Male Adult Clients:",
+      "totalNewFChild": "&Total New Female Child Clients:",
+      "totalNewMChild": "&Total New Male Child Clients:",
+      "allChildren": "&All Children",
+      "allAdults": "&All Adults"
     },
     "sync": {
       "sureResetLocalDB": "A to'diri do mimindi nyogu tunda/ pedda/ tetenakinda 'bura'",
@@ -1233,7 +1246,8 @@ interface Resources {
       "pending": "Pending Referrals",
       "filterByType": "Filter by Referral Types",
       "filterByStatus": "Filter by Status",
-      "filterByTypeDescription": "Referrals that match at least one of the selected types will be displayed."
+      "filterByTypeDescription": "Referrals that match at least one of the selected types will be displayed.",
+      "hoverDetails": "Hover over the details to see more information about each referral."
     },
     "risks": {
       "riskLevel": "Risk Level",
@@ -1488,7 +1502,19 @@ interface Resources {
       "allUsers": "All Users",
       "dateRange": "From {{start}} to {{end}}",
       "filterByDate": "Filter by Date",
-      "filterByUser": "Filter by User"
+      "filterByUser": "Filter by User",
+      "totalFollowedUpFAdult": "Total Followed Up Female Adult Clients:",
+      "totalFollowedUpMAdult": "Total Followed Up Male Adult Clients:",
+      "totalFollowedUpFChild": "Total Followed Up Female Child Clients:",
+      "totalFollowedUpMChild": "Total Followed Up Male Child Clients:",
+      "followUpVisits": "Follow Up Visits:",
+      "newClients": "New Clients:",
+      "totalNewFAdult": "Total New Female Adult Clients:",
+      "totalNewMAdult": "Total New Male Adult Clients:",
+      "totalNewFChild": "Total New Female Child Clients:",
+      "totalNewMChild": "Total New Male Child Clients:",
+      "allChildren": "All Children",
+      "allAdults": "All Adults"
     },
     "sync": {
       "sureResetLocalDB": "Are you sure you want to reset local database",

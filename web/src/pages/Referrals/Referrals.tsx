@@ -101,6 +101,7 @@ const Referrals = () => {
                         id: row.id,
                         full_name: row.full_name,
                         zone: row.zone,
+                        is_active: row.is_active,
                     };
                 });
                 setClients(priorityClients);
@@ -124,7 +125,7 @@ const Referrals = () => {
                     await apiFetch(Endpoint.REFERRALS_ALL)
                 ).json();
 
-                const formattedReferrals: GridRowsProp = tempReferrals.map((row) => ({
+                let formattedReferrals: GridRowsProp = tempReferrals.map((row) => ({
                     id: row.id,
                     client_id: row.client_id,
                     full_name:
@@ -134,7 +135,11 @@ const Referrals = () => {
                     zone: clients.find((client) => client.id === row.client_id)?.zone || "",
                     resolved: row.resolved,
                     details: generateDetails(row),
+                    is_active: clients.find((client) => client.id === row.client_id)?.is_active,
                 }));
+
+                // Filter out inactive clients
+                formattedReferrals = formattedReferrals.filter((r) => r.is_active);
 
                 setReferrals(formattedReferrals);
                 setFilteredReferrals(formattedReferrals.filter((r) => !r.resolved));

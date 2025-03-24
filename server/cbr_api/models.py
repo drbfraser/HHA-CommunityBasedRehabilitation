@@ -243,6 +243,9 @@ class ClientRisk(models.Model):
         if self.start_date is None:
             self.start_date = self.timestamp
 
+        if self.goal != "No goal set":
+            self.goal_name = self.goal
+
         super().save(*args, **kwargs)
 
 

@@ -207,7 +207,9 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                     {referral.physiotherapy && (
                         <div>
                             <b>{t("referralAttr.condition_physiotherapy")}:</b>{" "}
-                            {physiotherapyConditions(t)[referral.condition]}
+                            {physiotherapyConditions(t)[referral.condition]
+                                ? physiotherapyConditions(t)[referral.condition]
+                                : referral.condition}
                         </div>
                     )}
                     {referral.prosthetic && (
@@ -236,7 +238,9 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                     {referral.mental_health && (
                         <div>
                             <b>{t("referralAttr.condition_mental")}: </b>
-                            {mentalHealthConditions[referral.mental_health_condition]}
+                            {mentalHealthConditions[referral.mental_health_condition]
+                                ? mentalHealthConditions[referral.mental_health_condition]
+                                : referral.mental_health_condition}
                         </div>
                     )}
                     {Boolean(referral.services_other.trim().length) && (

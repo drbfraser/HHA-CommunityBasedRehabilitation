@@ -34,6 +34,7 @@ export interface IClient {
     latitude: string;
     zone: number;
     village: string;
+    hcr_type: HCRType;
     picture: string;
     caregiver_present: boolean;
     caregiver_name: string;
@@ -44,6 +45,12 @@ export interface IClient {
     referrals: IReferral[];
     baseline_surveys: ISurvey[];
     is_active: boolean;
+}
+
+export enum HCRType {
+    HOST_COMMUNITY = "HC",
+    REFUGEE = "R",
+    NOT_SET = "NA",
 }
 
 export enum Gender {

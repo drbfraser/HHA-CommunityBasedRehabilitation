@@ -1,6 +1,3 @@
-import React, { useMemo } from "react";
-import { Trans, useTranslation } from "react-i18next";
-import { CSVLink } from "react-csv";
 import {
     Button,
     Dialog,
@@ -9,10 +6,13 @@ import {
     DialogTitle,
     Typography,
 } from "@mui/material";
+import React, { useMemo } from "react";
+import { CSVLink } from "react-csv";
+import { Trans, useTranslation } from "react-i18next";
 
-import { IStats } from "@cbr/common/util/stats";
-import { useZones } from "@cbr/common/util/hooks/zones";
 import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
+import { useZones } from "@cbr/common/util/hooks/zones";
+import { IStats, IStatsFollowUpVisits, IStatsNewClients } from "@cbr/common/util/stats";
 
 interface IProps {
     open: boolean;
@@ -66,6 +66,93 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
             rows.push([disabilities.get(d.disability_id), d.total]);
         });
 
+        rows.push([""]);
+
+        // Follow Up Visits and New Clients
+        const categories = [
+            { label: "New Clients", key: "new_clients" },
+            { label: "Follow Up Visits", key: "follow_up_visits" },
+        ];
+
+        const groups = [
+            { label: "HC", key: "HC" },
+            { label: "R", key: "R" },
+            { label: "NA", key: "NA" },
+        ];
+
+        const calculateTotal = (
+            statsData: any,
+            category: string,
+            zoneId: number,
+            groupKey: string
+        ) => {
+            const data =
+                statsData?.[category]?.find(
+                    (item: IStatsFollowUpVisits | IStatsNewClients) =>
+                        item.zone_id === zoneId && item.hcr_type === groupKey
+                ) || {};
+
+            return {
+                maleAdult: data.male_adult_total ?? 0,
+                femaleAdult: data.female_adult_total ?? 0,
+                maleChild: data.male_child_total ?? 0,
+                femaleChild: data.female_child_total ?? 0,
+            };
+        };
+
+        zones.forEach((k, v) => {
+            rows.push([
+                `${k}`,
+                "ADULT MALE",
+                "ADULT FEMALE",
+                "CHILD MALE",
+                "CHILD FEMALE",
+                "TOTALS",
+            ]);
+            let runningTotal = 0;
+            const totals: Record<string, number> = {};
+
+            groups.forEach(({ label: groupLabel, key: groupKey }) => {
+                categories.forEach(({ label, key: categoryKey }) => {
+                    const data = calculateTotal(stats, categoryKey, v, groupKey);
+                    const total =
+                        data.maleAdult + data.femaleAdult + data.maleChild + data.femaleChild;
+                    runningTotal += total;
+
+                    const demographics = [
+                        { key: "adult_male", value: data.maleAdult },
+                        { key: "adult_female", value: data.femaleAdult },
+                        { key: "child_male", value: data.maleChild },
+                        { key: "child_female", value: data.femaleChild },
+                    ];
+
+                    demographics.forEach(({ key, value }) => {
+                        const totalKey = `${key}_${v}`;
+                        totals[totalKey] = (totals[totalKey] || 0) + value;
+                    });
+
+                    rows.push([
+                        `${label} (${groupLabel})`,
+                        data.maleAdult,
+                        data.femaleAdult,
+                        data.maleChild,
+                        data.femaleChild,
+                        total,
+                    ]);
+                });
+            });
+
+            rows.push([
+                "Total",
+                totals[`adult_male_${v}`],
+                totals[`adult_female_${v}`],
+                totals[`child_male_${v}`],
+                totals[`child_female_${v}`],
+                runningTotal,
+            ]);
+
+            rows.push([""]);
+        });
         return rows;
     }, [open, stats, zones, disabilities]);
 

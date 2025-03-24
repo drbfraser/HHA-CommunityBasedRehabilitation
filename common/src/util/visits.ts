@@ -55,6 +55,9 @@ export enum OutcomeGoalMet {
     CANCELLED = "CAN",
     ONGOING = "GO",
     CONCLUDED = "CON",
+    // Added for data added before the Previous Goal tracking update
+    // This is not client facing
+    NOTSET = "NS",
 }
 
 // On language change, recompute arrays of labels

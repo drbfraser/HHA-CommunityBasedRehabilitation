@@ -7,6 +7,7 @@ import { IStats } from "@cbr/common/util/stats";
 import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
 import StatsUserFilter from "./StatsUserFilter";
 import ExportStats from "./ExportStats";
+import StatsDemographicFilter, { IAge, IGender } from "./StatsDemographicFilter";
 
 const FilterControls = styled("div")({
     display: "flex",
@@ -30,12 +31,28 @@ interface IProps {
     users: IUser[];
     dateRange: IDateRange;
     stats: IStats | undefined;
+    gender: IGender;
+    age: IAge;
     setDateRange: (dateRange: IDateRange) => void;
     setUser: (user: IUser | null) => void;
+    setGender: (gender: IGender) => void;
+    setAge: (age: IAge) => void;
 }
 
-const FilterBar = ({ user, users, dateRange, stats, setDateRange, setUser }: IProps) => {
+const FilterBar = ({
+    user,
+    users,
+    dateRange,
+    stats,
+    gender,
+    age,
+    setDateRange,
+    setUser,
+    setGender,
+    setAge,
+}: IProps) => {
     const [dateFilterOpen, setDateFilterOpen] = useState(false);
+    const [demographicOpen, setDemographicOpen] = useState(false);
     const [userFilterOpen, setUserFilterOpen] = useState(false);
     const [exportOpen, setExportOpen] = useState(false);
     const { t } = useTranslation();
@@ -44,6 +61,9 @@ const FilterBar = ({ user, users, dateRange, stats, setDateRange, setUser }: IPr
         <menu>
             <FilterControls>
                 <FilterButtons>
+                    <Button variant="outlined" onClick={() => setDemographicOpen(true)}>
+                        {t("statistics.filterByDemographic")}
+                    </Button>
                     <Button variant="outlined" onClick={() => setDateFilterOpen(true)}>
                         {t("statistics.filterByDate")}
                     </Button>
@@ -77,7 +97,14 @@ const FilterBar = ({ user, users, dateRange, stats, setDateRange, setUser }: IPr
                     )}
                 </FilterLabels>
             </FilterControls>
-
+            <StatsDemographicFilter
+                open={demographicOpen}
+                onClose={() => setDemographicOpen(false)}
+                gender={gender}
+                age={age}
+                setGender={setGender}
+                setAge={setAge}
+            />
             <StatsDateFilter
                 open={dateFilterOpen}
                 onClose={() => setDateFilterOpen(false)}

@@ -734,7 +734,11 @@ interface Resources {
       "totalNewFChild": "&Total New Female Child Clients:",
       "totalNewMChild": "&Total New Male Child Clients:",
       "allChildren": "&All Children",
-      "allAdults": "&All Adults"
+      "allAdults": "&All Adults",
+      "adult": "&Adult",
+      "child": "&Child",
+      "age": "&Age",
+      "filterByDemographic": "&Filter by Demographic"
     },
     "sync": {
       "sureResetLocalDB": "A to'diri do mimindi nyogu tunda/ pedda/ tetenakinda 'bura'",
@@ -1514,7 +1518,11 @@ interface Resources {
       "totalNewFChild": "Total New Female Child Clients:",
       "totalNewMChild": "Total New Male Child Clients:",
       "allChildren": "All Children",
-      "allAdults": "All Adults"
+      "allAdults": "All Adults",
+      "adult": "Adult",
+      "child": "Child",
+      "age": "Age",
+      "filterByDemographic": "Filter by Demographic"
     },
     "sync": {
       "sureResetLocalDB": "Are you sure you want to reset local database",

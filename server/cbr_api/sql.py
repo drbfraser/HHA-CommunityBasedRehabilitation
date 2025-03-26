@@ -9,7 +9,6 @@ def getDisabilityStats(is_active):
         COUNT(*) as total
         FROM cbr_api_client_disability
         """
-
     if is_active:
         sql += """ 
             WHERE cbr_api_client_disability.client_id = (
@@ -53,19 +52,21 @@ def getNumClientsWithDisabilities(is_active):
 
 
 def getVisitStats(user_id, from_time, to_time):
+    categories = [
+        "health_visit",
+        "educat_visit",
+        "social_visit",
+        "nutrit_visit",
+        "mental_visit",
+    ]
     sql = """
-        SELECT zone_id,
-        COUNT(*) as total,
-        COUNT(*) filter(where health_visit) as health_count,
-        COUNT(*) filter(where educat_visit) as educat_count,
-        COUNT(*) filter(where social_visit) as social_count,
-        COUNT(*) filter(where nutrit_visit) as nutrit_count,
-        COUNT(*) filter(where mental_visit) as mental_count
-        FROM cbr_api_visit
-    """
-
-    sql += getStatsWhere(user_id, "created_at", from_time, to_time)
-    sql += " GROUP BY zone_id ORDER BY zone_id"
+    SELECT v.zone_id, c.hcr_type,"""
+    sql += getFilteredStats(
+        "visit_stats", from_time, to_time, "v.", categories=categories
+    )
+    sql += getStatsWhere(user_id, "created_at", from_time, to_time, "v.")
+    sql += """
+    GROUP BY v.zone_id, c.hcr_type ORDER BY v.zone_id"""
 
     from django.db import connection
 
@@ -77,21 +78,23 @@ def getVisitStats(user_id, from_time, to_time):
 
 
 def getReferralStats(user_id, from_time, to_time):
-    sql = """
-        SELECT resolved,
-        COUNT(*) as total,
-        COUNT(*) filter(where wheelchair) as wheelchair_count,
-        COUNT(*) filter(where physiotherapy) as physiotherapy_count,
-        COUNT(*) filter(where prosthetic) as prosthetic_count,
-        COUNT(*) filter(where orthotic) as orthotic_count,
-        COUNT(*) filter(where hha_nutrition_and_agriculture_project) as nutrition_agriculture_count,
-        COUNT(*) filter(where mental_health) as mental_health_count,
-        COUNT(*) filter(where services_other != '') as other_count
-        FROM cbr_api_referral
-    """
+    categories = [
+        "wheelchair",
+        "physiotherapy",
+        "prosthetic",
+        "orthotic",
+        "hha_nutrition_and_agriculture_project",
+        "mental_health",
+    ]
 
-    sql += getStatsWhere(user_id, "date_referred", from_time, to_time)
-    sql += " GROUP BY resolved ORDER BY resolved DESC"
+    sql = """
+    SELECT r.resolved, c.zone_id, c.hcr_type,"""
+
+    sql += getFilteredStats(
+        "referral_stats", from_time, to_time, "r.", categories=categories
+    )
+    sql += getStatsWhere(user_id, "r.date_referred", from_time, to_time, "r.")
+    sql += "GROUP BY r.resolved, c.zone_id, c.hcr_type ORDER BY r.resolved DESC"
 
     from django.db import connection
 
@@ -109,13 +112,13 @@ def getReferralStats(user_id, from_time, to_time):
         return {"resolved": getOrEmpty(True), "unresolved": getOrEmpty(False)}
 
 
-def getStatsWhere(user_id, time_col, from_time, to_time):
+def getStatsWhere(user_id, time_col, from_time, to_time, alias):
     where = []
 
     if user_id is not None:
         # it seems that '_id' is automatically appended to the end of foreign key column names.
         # So user_id -> user_id_id
-        where.append(f"user_id_id='{user_id}'")
+        where.append(f"{alias}user_id_id='{user_id}'")
 
     if from_time is not None:
         where.append(f"{time_col}>={str(from_time)}")
@@ -173,18 +176,18 @@ def getUnreadAlertListByUserId(user_id):
 def getNewClients(from_time, to_time):
     from django.db import connection
 
+    sql = """
+    SELECT c.zone_id, c.hcr_type,"""
+    sql += getFilteredStats("new_clients", from_time, to_time, "c.")
+
     with connection.cursor() as cursor:
         if from_time is not None and to_time is not None:
-            sql = getTotalClientStats(from_time, to_time, "new_clients")
-
             cursor.execute(
                 sql,
                 [str(from_time), str(to_time)],
             )
 
         else:
-            sql = getTotalClientStats(from_time, to_time, "new_clients")
-
             cursor.execute(sql)
 
         columns = [col[0] for col in cursor.description]
@@ -195,35 +198,44 @@ def getNewClients(from_time, to_time):
 def getFollowUpVisits(from_time, to_time):
     from django.db import connection
 
+    sql = """
+    SELECT c.zone_id, c.hcr_type,"""
+    sql += getFilteredStats("follow_up", from_time, to_time, "c.")
+
     with connection.cursor() as cursor:
         if from_time is not None and to_time is not None:
-            sql = getTotalClientStats(from_time, to_time, "follow_up")
-
             cursor.execute(
                 sql,
                 [str(from_time), str(to_time)],
             )
-        else:
-            sql = getTotalClientStats(from_time, to_time, "follow_up")
 
+        else:
             cursor.execute(sql)
 
         columns = [col[0] for col in cursor.description]
         res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        print(res)
         return res
 
 
-def getTotalClientStats(from_time, to_time, option):
+def getFilteredStats(option, from_time, to_time, alias, categories=None):
     sql = """
-        SELECT c.zone_id,c.hcr_type,
-        COUNT(*) AS total,
-        COUNT(*) FILTER (WHERE c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS female_adult_total,
-        COUNT(*) FILTER (WHERE c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS male_adult_total,
-        COUNT(*) FILTER (WHERE c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS female_child_total,
-        COUNT(*) FILTER (WHERE c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS male_child_total
-        FROM cbr_api_client AS c
-        """
+    COUNT(*) AS total"""
+    if categories:
+        for category in categories:
+            sql += f""",
+    COUNT(*) FILTER (WHERE {alias}{category} AND c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS {category}_female_adult_total,
+    COUNT(*) FILTER (WHERE {alias}{category} AND c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS {category}_male_adult_total,
+    COUNT(*) FILTER (WHERE {alias}{category} AND c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS {category}_female_child_total,
+    COUNT(*) FILTER (WHERE {alias}{category} AND c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS {category}_male_child_total"""
+
+    else:
+        sql += """,
+    COUNT(*) FILTER (WHERE c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS female_adult_total,
+    COUNT(*) FILTER (WHERE c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS male_adult_total,
+    COUNT(*) FILTER (WHERE c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS female_child_total,
+    COUNT(*) FILTER (WHERE c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS male_child_total
+    FROM cbr_api_client AS c
+    """
 
     if option == "follow_up":
         sql += """JOIN cbr_api_visit AS v ON c.id = v.client_id_id
@@ -234,7 +246,8 @@ def getTotalClientStats(from_time, to_time, option):
             """
 
         else:
-            sql += """GROUP BY c.zone_id, c.hcr_type HAVING COUNT(v.client_id_id) > 1"""
+            sql += """
+            GROUP BY c.zone_id, c.hcr_type HAVING COUNT(v.client_id_id) > 1"""
 
     elif option == "new_clients":
         if from_time is not None and to_time is not None:
@@ -243,5 +256,20 @@ def getTotalClientStats(from_time, to_time, option):
             """
         else:
             sql += """GROUP BY c.zone_id, c.hcr_type"""
+
+    elif option == "referral_stats":
+        sql += """,
+    COUNT(*) FILTER (WHERE r.services_other != '' AND c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS other_female_adult_total,
+    COUNT(*) FILTER (WHERE r.services_other != '' AND c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS other_male_adult_total,
+    COUNT(*) FILTER (WHERE r.services_other != '' AND c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS other_female_child_total,
+    COUNT(*) FILTER (WHERE r.services_other != '' AND c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS other_male_child_total
+    FROM cbr_api_referral AS r 
+    JOIN cbr_api_client AS c ON r.client_id_id = c.id
+    """
+
+    elif option == "visit_stats":
+        sql += """
+    FROM cbr_api_visit as v
+    JOIN cbr_api_client AS c ON v.client_id_id = c.id"""
 
     return sql

@@ -53,7 +53,6 @@ interface IProps {
 
 const StatsDemographicFilter = ({ open, onClose, gender, age, setGender, setAge }: IProps) => {
     const { t } = useTranslation();
-
     const [selectedGender, setSelectedGender] = useState<IGender>(gender);
     const [selectedAge, setSelectedAge] = useState<IAge>(age);
 
@@ -63,47 +62,77 @@ const StatsDemographicFilter = ({ open, onClose, gender, age, setGender, setAge 
         onClose();
     };
 
-    const handleGender = () => {};
+    const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name } = event.target;
+        setSelectedGender((prevGender) => ({
+            ...prevGender,
+            [name]: !prevGender[name as keyof IGender],
+        }));
+    };
 
-    const handleAge = () => {};
+    const handleAgeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name } = event.target;
+        setSelectedAge((prevAge) => ({
+            ...prevAge,
+            [name]: !prevAge[name as keyof IAge],
+        }));
+    };
 
     const handleClear = () => {
-        setSelectedAge(clearedAgeConfigs);
         setSelectedGender(clearedGenderConfigs);
-        // onClose();
+        setSelectedAge(clearedAgeConfigs);
     };
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle>{t("statistics.filterByUser")}</DialogTitle>
-
             <DialogContent>
                 <FormGroup>
                     <Typography variant="subtitle1">{t("clientFields.gender")}</Typography>
                     <FormControlLabel
-                        control={<Checkbox />}
-                        checked={gender.female}
+                        control={
+                            <Checkbox
+                                name="female"
+                                checked={selectedGender.female}
+                                onChange={handleGenderChange}
+                            />
+                        }
                         label={t("clientFields.female")}
                     />
                     <FormControlLabel
-                        control={<Checkbox />}
-                        checked={gender.male}
+                        control={
+                            <Checkbox
+                                name="male"
+                                checked={selectedGender.male}
+                                onChange={handleGenderChange}
+                            />
+                        }
                         label={t("clientFields.male")}
                     />
+
                     <Typography variant="subtitle1">{t("statistics.age")}</Typography>
                     <FormControlLabel
-                        control={<Checkbox />}
-                        checked={age.child}
+                        control={
+                            <Checkbox
+                                name="child"
+                                checked={selectedAge.child}
+                                onChange={handleAgeChange}
+                            />
+                        }
                         label={t("statistics.child")}
                     />
                     <FormControlLabel
-                        control={<Checkbox />}
-                        checked={age.adult}
+                        control={
+                            <Checkbox
+                                name="adult"
+                                checked={selectedAge.adult}
+                                onChange={handleAgeChange}
+                            />
+                        }
                         label={t("statistics.adult")}
                     />
                 </FormGroup>
             </DialogContent>
-
             <DialogActions>
                 <Button onClick={handleClear}>{t("general.clear")}</Button>
                 <Button color="primary" onClick={handleSubmit}>

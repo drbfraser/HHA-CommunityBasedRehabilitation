@@ -1,32 +1,30 @@
 import { HCRType } from "./clients";
 
-export interface IStatsDisability {
+type DemographicTypes =
+    | "female_adult_total"
+    | "male_adult_total"
+    | "female_child_total"
+    | "male_child_total";
+
+type StatsVisitCategory = "health" | "educat" | "social" | "nutrit" | "mental";
+type StatsReferralCategory =
+    | "wheelchair"
+    | "physiotherapy"
+    | "prosthetic"
+    | "orthotic"
+    | "nutrition_agriculture"
+    | "mental_health"
+    | "other";
+
+type GenerateDemographicCategoryFields<T extends string> = {
+    [K in T as `${K}_${DemographicTypes}`]: number;
+};
+
+interface IBaseDisability {
     disability_id: number;
-    total: number;
 }
 
-export interface IStatsVisit {
-    zone_id: number;
-    total: number;
-    health_count: number;
-    educat_count: number;
-    social_count: number;
-    nutrit_count: number;
-    mental_count: number;
-}
-
-export interface IStatsReferral {
-    total: number;
-    wheelchair_count: number;
-    physiotherapy_count: number;
-    prosthetic_count: number;
-    orthotic_count: number;
-    nutrition_agriculture_count: number;
-    mental_health_count: number;
-    other_count: number;
-}
-
-export interface IStatsNewClients {
+interface IClientBreakdown {
     zone_id: number;
     total: number;
     female_adult_total: number;
@@ -36,15 +34,21 @@ export interface IStatsNewClients {
     hcr_type: string;
 }
 
-export interface IStatsFollowUpVisits {
+export interface IStatsVisit extends GenerateDemographicCategoryFields<StatsVisitCategory> {
     zone_id: number;
     total: number;
-    female_adult_total: number;
-    male_adult_total: number;
-    female_child_total: number;
-    male_child_total: number;
     hcr_type: string;
 }
+
+export interface IStatsReferral extends GenerateDemographicCategoryFields<StatsReferralCategory> {
+    zone_id: number;
+    total: number;
+    hcr_type: string;
+}
+
+export interface IStatsDisability extends IBaseDisability, IClientBreakdown {}
+export interface IStatsFollowUpVisits extends IClientBreakdown {}
+export interface IStatsNewClients extends IClientBreakdown {}
 
 export interface IStats {
     disabilities: IStatsDisability[];

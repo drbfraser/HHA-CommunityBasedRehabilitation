@@ -501,28 +501,9 @@ class SummaryVisitSerializer(serializers.ModelSerializer):
         ]
 
 
-# class AdminStatsReferralSerializer(serializers.Serializer):
-#     total = serializers.IntegerField()
-#     wheelchair_count_female_adult = serializers.IntegerField()
-#     wheelchair_count_male_adult = serializers.IntegerField()
-#     wheelchair_count_female_child = serializers.IntegerField()
-#     wheelchair_count_male_child = serializers.IntegerField()
-
-#     physiotherapy_count_female_adult = serializers.IntegerField()
-#     physiotherapy_count_male_adult = serializers.IntegerField()
-#     physiotherapy_count_female_child = serializers.IntegerField()
-#     physiotherapy_count_male_child = serializers.IntegerField()
-
-#     prosthetic_count = serializers.IntegerField()
-#     orthotic_count = serializers.IntegerField()
-#     nutrition_agriculture_count = serializers.IntegerField()
-#     mental_health_count = serializers.IntegerField()
-#     other_count = serializers.IntegerField()
-
-
 class ConfigStatsSerializer(serializers.Serializer):
     @classmethod
-    def create_serializer(cls, stat_types, class_name):
+    def create_serializer(cls, class_name, stat_types=None):
         demographics = [
             "female_adult_total",
             "male_adult_total",
@@ -536,44 +517,52 @@ class ConfigStatsSerializer(serializers.Serializer):
             "hcr_type": serializers.CharField(),
         }
 
-        for stat_type in stat_types:
+        if stat_types:
+            for stat_type in stat_types:
+                fields.update(
+                    {
+                        "total": serializers.IntegerField(),
+                        **{
+                            f"{stat_type}_{demo}": serializers.IntegerField()
+                            for demo in demographics
+                        },
+                    }
+                )
+
+        else:
             fields.update(
                 {
                     "total": serializers.IntegerField(),
-                    **{
-                        f"{stat_type}_count_{demo}": serializers.IntegerField()
-                        for demo in demographics
-                    },
+                    **{f"{demo}": serializers.IntegerField() for demo in demographics},
                 }
             )
 
-        return type(f"{class_name}Serializer", (serializers.Serializer,), fields)
+        return type(f"{class_name}", (serializers.Serializer,), fields)
 
-
-# class AdminStatsVisitsSerializer(serializers.Serializer):
-#     zone_id = serializers.IntegerField()
-#     total = serializers.IntegerField()
-#     health_count = serializers.IntegerField()
-#     educat_count = serializers.IntegerField()
-#     social_count = serializers.IntegerField()
-#     nutrit_count = serializers.IntegerField()
-#     mental_count = serializers.IntegerField()
 
 AdminStatsReferralSerializer = ConfigStatsSerializer.create_serializer(
+    "AdminStatsReferralSerializer",
     [
         "wheelchair",
         "physiotherapy",
         "prosthetic",
         "orthotic",
         "nutrition_agriculture",
-        "health",
+        "mental_health",
         "other",
     ],
-    "AdminStatsReferralSerializer",
 )
 
 AdminStatsVisitsSerializer = ConfigStatsSerializer.create_serializer(
-    ["health", "educat", "social", "nutrit", "mental"], "AdminStatsVisitsSerializer"
+    "AdminStatsVisitsSerializer", ["health", "educat", "social", "nutrit", "mental"]
+)
+
+AdminStatsNewClientsSerializer = ConfigStatsSerializer.create_serializer(
+    "AdminStatsNewClientsSerializer"
+)
+
+AdminStatsFollowUpVisitsSerializer = ConfigStatsSerializer.create_serializer(
+    "AdminStatsFollowUpVisitsSerializer"
 )
 
 
@@ -592,26 +581,12 @@ class AdminStatsDisabilitySerializer(ClientBreakdown):
     total = serializers.IntegerField()
 
 
-class AdminStatsNewClients(ClientBreakdown):
-    pass
-    # zone_id = serializers.IntegerField()
-    # total = serializers.IntegerField()
-    # female_adult_total = serializers.IntegerField()
-    # male_adult_total = serializers.IntegerField()
-    # female_child_total = serializers.IntegerField()
-    # male_child_total = serializers.IntegerField()
-    # hcr_type = serializers.CharField()
+# class AdminStatsNewClients(ClientBreakdown):
+#     pass
 
 
-class AdminStatsFollowUpVisits(serializers.Serializer):
-    pass
-    # zone_id = serializers.IntegerField()
-    # total = serializers.IntegerField()
-    # female_adult_total = serializers.IntegerField()
-    # male_adult_total = serializers.IntegerField()
-    # female_child_total = serializers.IntegerField()
-    # male_child_total = serializers.IntegerField()
-    # hcr_type = serializers.CharField()
+# class AdminStatsFollowUpVisits(serializers.Serializer):
+#     pass
 
 
 class AdminStatsSerializer(serializers.Serializer):
@@ -620,8 +595,8 @@ class AdminStatsSerializer(serializers.Serializer):
     visits = AdminStatsVisitsSerializer(many=True, read_only=True)
     referrals_resolved = AdminStatsReferralSerializer(many=False, read_only=True)
     referrals_unresolved = AdminStatsReferralSerializer(many=False, read_only=True)
-    new_clients = AdminStatsNewClients(many=True, read_only=True)
-    follow_up_visits = AdminStatsFollowUpVisits(many=True, read_only=True)
+    new_clients = AdminStatsNewClientsSerializer(many=True, read_only=True)
+    follow_up_visits = AdminStatsFollowUpVisitsSerializer(many=True, read_only=True)
 
 
 class ClientListSerializer(serializers.ModelSerializer):

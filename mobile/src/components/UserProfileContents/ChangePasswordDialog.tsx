@@ -1,7 +1,7 @@
 import { Button, Dialog } from "react-native-paper";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Formik, FormikProps } from "formik";
-import { TextInput as NativeTextInput } from "react-native";
+import { GestureResponderEvent, TextInput as NativeTextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
     adminEditPasswordValidationSchema,
@@ -146,7 +146,11 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                         countObjectKeys(formikProps.touched) === 0
                                     }
                                     loading={formikProps.isSubmitting}
-                                    onPress={formikProps.handleSubmit}
+                                    onPress={
+                                        formikProps.handleSubmit as (
+                                            e?: GestureResponderEvent
+                                        ) => void
+                                    }
                                 >
                                     {t("general.save")}
                                 </Button>
@@ -232,7 +236,11 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                         countObjectKeys(formikProps.touched) === 0
                                     }
                                     loading={formikProps.isSubmitting}
-                                    onPress={formikProps.handleSubmit}
+                                    onPress={
+                                        formikProps.handleSubmit as (
+                                            e?: GestureResponderEvent
+                                        ) => void
+                                    }
                                 >
                                     {t("general.save")}
                                 </Button>

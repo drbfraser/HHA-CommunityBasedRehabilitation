@@ -2,12 +2,12 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Provider as PaperProvider } from "react-native-paper";
 import { enableScreens } from "react-native-screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigationContainerRef } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Provider as StoreProvider } from "react-redux";
 import { io } from "socket.io-client/dist/socket.io";
-import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
+import DatabaseProvider from "@nozbe/watermelondb/react/DatabaseProvider";
 
 import {
     APILoadError,
@@ -19,6 +19,7 @@ import {
     invalidateAllCachedAPI,
     isLoggedIn,
     getI18nInstance,
+    themeColors,
 } from "@cbr/common";
 import theme from "./util/theme.styles";
 import globalStyle from "./app.styles";
@@ -35,12 +36,42 @@ import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
 import { store } from "./redux/store";
 import { I18nextProvider } from "react-i18next";
+import { StatusBar } from "react-native";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
 enableScreens();
 
-const Stack = createStackNavigator();
+// todosd: type safe routes for React Navigation.  better place for this?
+// todosd: add all routes, using debugger and @react-navigation/devtools
+type RootStackParamList = {
+    Home: undefined;
+    Client: undefined;
+    BaselineSurvey: undefined;
+    AdminView: undefined;
+    AdminEdit: undefined;
+    AdminNew: undefined;
+    NewReferral: undefined;
+    NewVisit: undefined;
+    Sync: undefined;
+    AlertInbox: undefined;
+    Login: undefined;
+    SwitchServer: undefined;
+    Loading: undefined; // todosd: verify, where is this used?
+    ClientDetails: { clientID: string };
+};
+
+// todosd: better place for this?
+// Specify a global type for our root navigator, to avoid the need for manual
+// annotations for `useNavigation` as per
+// https://reactnavigation.org/docs/6.x/typescript/#specifying-default-types-for-usenavigation-link-ref-etc
+declare global {
+    namespace ReactNavigation {
+        interface RootParamList extends RootStackParamList {}
+    }
+}
+
+const Stack = createStackNavigator<RootStackParamList>();
 const styles = globalStyle();
 
 /**
@@ -223,6 +254,11 @@ export default function App() {
                 <StoreProvider store={store}>
                     <PaperProvider theme={theme}>
                         <NavigationContainer theme={theme}>
+                            <StatusBar
+                                backgroundColor={themeColors.statusBarBgGray}
+                                barStyle="light-content"
+                            />
+
                             <AuthContext.Provider value={authContext}>
                                 <SyncContext.Provider
                                     value={{

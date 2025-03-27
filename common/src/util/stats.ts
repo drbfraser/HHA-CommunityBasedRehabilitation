@@ -6,8 +6,8 @@ type DemographicTypes =
     | "female_child_total"
     | "male_child_total";
 
-type StatsVisitCategory = "health" | "educat" | "social" | "nutrit" | "mental";
-type StatsReferralCategory =
+export type StatsVisitCategory = "health" | "educat" | "social" | "nutrit" | "mental";
+export type StatsReferralCategory =
     | "wheelchair"
     | "physiotherapy"
     | "prosthetic"

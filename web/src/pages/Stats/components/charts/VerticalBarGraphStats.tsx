@@ -31,7 +31,7 @@ interface IProps {
     totals: IDemographicTotals;
 }
 
-const HorizontalBarGraphStats = ({
+const VerticalBarGraphStats = ({
     title,
     subtitle,
     data,
@@ -40,8 +40,6 @@ const HorizontalBarGraphStats = ({
     subheadings,
     totals,
 }: IProps) => {
-    const CHART_HEIGHT = 400;
-
     const { t } = useTranslation();
 
     return (
@@ -85,39 +83,39 @@ const HorizontalBarGraphStats = ({
                 </Stack>
             </Box>
 
-            <ResponsiveContainer width="100%" height={data.length ? CHART_HEIGHT : 0}>
-                <BarChart data={data} layout="vertical">
-                    <XAxis type="number" allowDecimals={false} />
-                    <YAxis dataKey="label" type="category" width={150} />
+            <ResponsiveContainer width="100%" height={400}>
+                <BarChart data={data}>
+                    <XAxis dataKey="label" />
+                    <YAxis allowDecimals={false} />
                     <Tooltip />
                     <Legend />
                     <Bar
-                        dataKey="femaleAdult"
+                        dataKey="female_adult"
                         name={t("statistics.femaleAdult")}
                         fill={themeColors.hhaPurple}
                         hide={!gender.female || !age.adult}
-                        barSize={100}
+                        barSize={80}
                     />
                     <Bar
-                        dataKey="maleAdult"
+                        dataKey="male_adult"
                         name={t("statistics.maleAdult")}
                         fill={themeColors.hhaBlue}
                         hide={!gender.male || !age.adult}
-                        barSize={100}
+                        barSize={80}
                     />
                     <Bar
-                        dataKey="femaleChild"
+                        dataKey="female_child"
                         name={t("statistics.femaleChild")}
                         fill={themeColors.lilac}
                         hide={!gender.female || !age.child}
-                        barSize={100}
+                        barSize={80}
                     />
                     <Bar
-                        dataKey="maleChild"
+                        dataKey="male_child"
                         name={t("statistics.maleChild")}
                         fill={themeColors.pistachio}
                         hide={!gender.male || !age.child}
-                        barSize={100}
+                        barSize={80}
                     />
                 </BarChart>
             </ResponsiveContainer>
@@ -125,4 +123,4 @@ const HorizontalBarGraphStats = ({
     );
 };
 
-export default HorizontalBarGraphStats;
+export default VerticalBarGraphStats;

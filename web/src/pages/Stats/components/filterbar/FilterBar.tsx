@@ -6,8 +6,10 @@ import { IUser } from "@cbr/common/util/users";
 import { IStats } from "@cbr/common/util/stats";
 import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
 import StatsUserFilter from "./StatsUserFilter";
-import ExportStats from "./ExportStats";
+// import ExportStats from "./ExportStats";
 import StatsDemographicFilter, { IAge, IGender } from "./StatsDemographicFilter";
+import IOSSwitch from "components/IOSSwitch/IOSSwitch";
+import { Typography } from "@mui/material";
 
 const FilterControls = styled("div")({
     display: "flex",
@@ -37,6 +39,8 @@ interface IProps {
     setUser: (user: IUser | null) => void;
     setGender: (gender: IGender) => void;
     setAge: (age: IAge) => void;
+    archiveMode: boolean;
+    onArchiveModeChange: (val: boolean) => void;
 }
 
 const FilterBar = ({
@@ -50,6 +54,8 @@ const FilterBar = ({
     setUser,
     setGender,
     setAge,
+    archiveMode,
+    onArchiveModeChange,
 }: IProps) => {
     const [dateFilterOpen, setDateFilterOpen] = useState(false);
     const [demographicOpen, setDemographicOpen] = useState(false);
@@ -96,6 +102,28 @@ const FilterBar = ({
                         <Chip label={t("statistics.allUsers")} />
                     )}
                 </FilterLabels>
+                <FilterLabels>
+                    <menu>
+                        <Typography
+                            color={archiveMode ? "textSecondary" : "textPrimary"}
+                            component={"span"}
+                            variant={"body2"}
+                        >
+                            {t("statistics.allClients")}
+                        </Typography>
+                        <IOSSwitch
+                            checked={archiveMode}
+                            onChange={(event) => onArchiveModeChange(event.target.checked)}
+                        />
+                        <Typography
+                            color={archiveMode ? "textPrimary" : "textSecondary"}
+                            component={"span"}
+                            variant={"body2"}
+                        >
+                            {t("statistics.activeClients")}
+                        </Typography>
+                    </menu>
+                </FilterLabels>
             </FilterControls>
             <StatsDemographicFilter
                 open={demographicOpen}
@@ -118,7 +146,7 @@ const FilterBar = ({
                 user={user}
                 setUser={setUser}
             />
-            <ExportStats open={exportOpen} onClose={() => setExportOpen(false)} stats={stats} />
+            {/* <ExportStats open={exportOpen} onClose={() => setExportOpen(false)} stats={stats} /> */}
         </menu>
     );
 };

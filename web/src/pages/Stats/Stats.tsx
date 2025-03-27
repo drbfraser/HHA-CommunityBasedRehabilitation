@@ -30,11 +30,16 @@ const Stats = () => {
     const [dateRange, setDateRange] = useState(blankDateRange);
     const [users, setUsers] = useState<IUser[]>([]);
     const [user, setUser] = useState<IUser | null>(null);
+
+    // filtering the demographic will not call on the API
+    // It will return the demographic statistics by default
+    // This was done in order to prevent recalls for a large amount of data
     const [gender, setGender] = useState(defaultGenderConfigs);
     const [age, setAge] = useState(defaultAgeConfigs);
     const [stats, setStats] = useState<IStats>();
     const [errorLoading, setErrorLoading] = useState(false);
     const [archiveMode, setArchiveMode] = useState(false);
+
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -71,7 +76,7 @@ const Stats = () => {
             .then((resp) => resp.json())
             .then((stats) => setStats(stats))
             .catch(() => setErrorLoading(true));
-    }, [dateRange, user, archiveMode]);
+    }, [dateRange, user, archiveMode, gender, age]);
 
     if (errorLoading) {
         return <Alert severity="error">{t("alert.loadStatsFailure")}</Alert>;
@@ -89,26 +94,24 @@ const Stats = () => {
                 setUser={setUser}
                 setGender={setGender}
                 setAge={setAge}
-            />
-            <Divider />
-
-            <VisitStats stats={stats} />
-            <Divider />
-
-            <NewClientsStats stats={stats} />
-            <Divider />
-
-            <FollowUpVistsStats stats={stats} />
-            <Divider />
-
-            <ReferralStats stats={stats} />
-            <Divider />
-
-            <DisabilityStats
                 archiveMode={archiveMode}
                 onArchiveModeChange={setArchiveMode}
-                stats={stats}
             />
+            <Divider />
+
+            <VisitStats stats={stats} age={age} gender={gender} />
+            <Divider />
+
+            <NewClientsStats stats={stats} age={age} gender={gender} />
+            <Divider />
+
+            <FollowUpVistsStats stats={stats} age={age} gender={gender} />
+            <Divider />
+
+            <ReferralStats stats={stats} age={age} gender={gender} />
+            <Divider />
+
+            <DisabilityStats stats={stats} age={age} gender={gender} />
         </Container>
     );
 };

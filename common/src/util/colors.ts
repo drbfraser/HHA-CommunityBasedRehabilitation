@@ -17,4 +17,6 @@ export const themeColors = {
     infoBlue: "#2196f3",
     white: "#FFFFFF",
     borderGray: "#9E9E9E",
+    lilac: "#C3ACCE",
+    pistachio: "#A5CC6B",
 };

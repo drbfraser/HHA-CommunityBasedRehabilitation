@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Grid, Link, Skeleton, Typography } from "@mui/material";
 import {
@@ -16,158 +16,127 @@ import {
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { IStats, IStatsVisit } from "@cbr/common/util/stats";
 import { themeColors } from "@cbr/common/util/colors";
+import HorizontalBarGraphStats, { IDemographicTotals } from "./HorizontalBarGraphStats";
+import { StatsVisitCategory } from "@cbr/common/util/stats";
+import { ISubheadings } from "./HorizontalBarGraphStats";
+import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
 
 interface IProps {
     stats?: IStats;
+    age: IAge;
+    gender: IGender;
 }
 
-const VisitStats = ({ stats }: IProps) => {
-    const CHART_HEIGHT = 400;
+
+const visitsCategoryLabels = ["Health", "Education", "Social", "Nutrition", "Mental"];
+const visitCategories: StatsVisitCategory[] = ["health", "educat", "social", "nutrit", "mental"];
+
+const VisitStats = ({ stats, age, gender }: IProps) => {
+    const [totalFAdults, setTotalFAdults] = useState(0);
+    const [totalMAdults, setTotalMAdults] = useState(0);
+    const [totalFChild, setTotalFChild] = useState(0);
+    const [totalMChild, setTotalMChild] = useState(0);
+    const [totalData, setTotalData] = useState<
+        {
+            label: string;
+            key: string;
+            femaleAdult: number;
+            maleAdult: number;
+            femaleChild: number;
+            maleChild: number;
+        }[]
+    >([]);
+
     const { t } = useTranslation();
 
-    const zones = useZones();
-    const zoneToName = (id: number) => zones.get(id) ?? "";
-
-    const [breakdownZoneId, setBreakdownZoneId] = useState(0);
-    const breakdownZone = stats?.visits.find((v) => v.zone_id === breakdownZoneId);
+    const demographicTotalsRef = useRef<IDemographicTotals>({
+        female_adult: 0,
+        male_adult: 0,
+        female_child: 0,
+        male_child: 0,
+    });
 
     useEffect(() => {
-        setBreakdownZoneId(0);
+        if (stats) {
+            let fAdults = 0;
+            let mAdults = 0;
+            let fChild = 0;
+            let mChild = 0;
+
+            const processedTotalData = visitCategories.map((category, index) => {
+                const visitCategoryStats = {
+                    femaleAdult: stats.visits.reduce(
+                        (total, item) => total + (item[`${category}_female_adult_total`] ?? 0),
+                        0
+                    ),
+                    maleAdult: stats.visits.reduce(
+                        (total, item) => total + (item[`${category}_male_adult_total`] ?? 0),
+                        0
+                    ),
+                    femaleChild: stats.visits.reduce(
+                        (total, item) => total + (item[`${category}_female_child_total`] ?? 0),
+                        0
+                    ),
+                    maleChild: stats.visits.reduce(
+                        (total, item) => total + (item[`${category}_male_child_total`] ?? 0),
+                        0
+                    ),
+                    label: visitsCategoryLabels[index],
+                    key: category,
+                };
+
+                fAdults += visitCategoryStats.femaleAdult;
+                mAdults += visitCategoryStats.maleAdult;
+                fChild += visitCategoryStats.femaleChild;
+                mChild += visitCategoryStats.maleChild;
+
+                return visitCategoryStats;
+            });
+
+            setTotalData(processedTotalData);
+            setTotalFAdults(fAdults);
+            setTotalMAdults(mAdults);
+            setTotalFChild(fChild);
+            setTotalMChild(mChild);
+
+            demographicTotalsRef.current = {
+                female_adult: fAdults,
+                male_adult: mAdults,
+                female_child: fChild,
+                male_child: mChild,
+            };
+        }
     }, [stats]);
 
-    const getBreakdownCount = (key: keyof IStatsVisit): number => {
-        if (breakdownZone) {
-            return breakdownZone[key];
-        }
-        return stats?.visits.reduce((count, visit) => (count += visit[key]), 0) ?? 0;
-    };
-    const breakdownData = [
+    const subheadings: ISubheadings[] = [
         {
-            label: t("general.health"),
-            count: getBreakdownCount("health_count"),
-            color: themeColors.hhaGreen,
+            label: t("statistics.totalFChild"),
+            total: totalFChild,
         },
         {
-            label: t("general.education"),
-            count: getBreakdownCount("educat_count"),
-            color: themeColors.hhaPurple,
+            label: t("statistics.totalMChild"),
+            total: totalMChild,
         },
         {
-            label: t("general.social"),
-            count: getBreakdownCount("social_count"),
-            color: themeColors.hhaBlue,
+            label: t("statistics.totalFAdult"),
+            total: totalFAdults,
         },
         {
-            label: t("general.nutrition"),
-            count: getBreakdownCount("nutrit_count"),
-            color: themeColors.yellow,
+            label: t("statistics.totalMAdult"),
+            total: totalMAdults,
         },
-        {
-            label: t("general.mental"),
-            count: getBreakdownCount("mental_count"),
-            color: themeColors.bluePale,
-        },
-    ].filter((z) => z.count);
-
-    const handleChartClick = (e: any) => {
-        if (!e || !Array.isArray(e.activePayload) || e.activePayload.length === 0) {
-            return;
-        }
-        setBreakdownZoneId(e.activePayload[0].payload?.zone_id);
-    };
-
+    ];
     return (
-        <section>
-            <Typography variant="h2" align="center">
-                {t("statistics.visits")}
-            </Typography>
-
-            <Grid container spacing={3} style={{ minHeight: CHART_HEIGHT }}>
-                {/* Zones with visits */}
-                <Grid item xs={12} lg={7} xl={8}>
-                    <Typography variant="h3">{t("statistics.byZone")}</Typography>
-                    <Typography sx={{ marginBottom: "1em" }} variant="subtitle1">
-                        {Boolean(!stats || stats.visits.length)
-                            ? t("statistics.onlyZonesWithVisits")
-                            : t("statistics.noVisitsFound")}
-                    </Typography>
-
-                    {stats ? (
-                        <ResponsiveContainer
-                            width="100%"
-                            height={stats.visits.length ? CHART_HEIGHT : 0}
-                        >
-                            <BarChart
-                                layout="vertical"
-                                data={stats.visits}
-                                onClick={handleChartClick}
-                            >
-                                <XAxis type="number" allowDecimals={false} />
-                                <YAxis
-                                    type="category"
-                                    dataKey="zone_id"
-                                    width={150}
-                                    tickFormatter={zoneToName}
-                                />
-                                <Tooltip labelFormatter={zoneToName} />
-                                <Bar
-                                    dataKey="total"
-                                    name={t("statistics.visits")}
-                                    fill={themeColors.blueAccent}
-                                />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    ) : (
-                        <Skeleton variant="rectangular" height={400} />
-                    )}
-                </Grid>
-
-                {/* Visits by Type */}
-                <Grid item xs={12} lg={5} xl={4}>
-                    <Typography variant="h3">{t("statistics.byType")}</Typography>
-                    <Typography variant="body1">
-                        {t("statistics.showingDataFor")}:{" "}
-                        <b>{zones.get(breakdownZoneId) ?? t("statistics.allZones")}</b>.
-                    </Typography>
-
-                    <Typography variant="body2">
-                        {Boolean(!breakdownZone) ? (
-                            t("statistics.clickForZoneSpecificData")
-                        ) : (
-                            <Link
-                                component="button"
-                                variant="body1"
-                                onClick={() => setBreakdownZoneId(0)}
-                            >
-                                {t("statistics.viewAllZoneData")}
-                            </Link>
-                        )}
-                    </Typography>
-
-                    {stats ? (
-                        <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-                            <PieChart>
-                                <Pie
-                                    data={breakdownData}
-                                    dataKey="count"
-                                    nameKey="label"
-                                    label={(a) => a.label}
-                                    labelLine={true}
-                                    innerRadius={60}
-                                >
-                                    {breakdownData.map((entry, i) => (
-                                        <Cell key={i} fill={entry.color} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    ) : (
-                        <Skeleton variant="rectangular" height={400} />
-                    )}
-                </Grid>
-            </Grid>
-        </section>
+        <>
+            <HorizontalBarGraphStats
+                title={t("statistics.visits")}
+                data={totalData}
+                age={age}
+                gender={gender}
+                subheadings={subheadings}
+                totals={demographicTotalsRef.current}
+            />
+        </>
     );
 };
 

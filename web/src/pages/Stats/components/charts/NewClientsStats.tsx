@@ -10,6 +10,7 @@ import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
 import HorizontalBarGraphStats, { IDemographicTotals } from "./HorizontalBarGraphStats";
 import { ISubheadings } from "./HorizontalBarGraphStats";
+
 interface IProps {
     stats?: IStats;
     age: IAge;
@@ -21,17 +22,10 @@ const NewClientsStats = ({ stats, age, gender }: IProps) => {
     const [totalMAdults, setTotalMAdults] = useState(0);
     const [totalFChild, setTotalFChild] = useState(0);
     const [totalMChild, setTotalMChild] = useState(0);
-    const [viewAdults, setViewAdults] = useState(true);
-
-    const CHART_HEIGHT = 400;
 
     const { t } = useTranslation();
 
     const zones = useZones();
-
-    const handleViewToggle = () => {
-        setViewAdults((prev) => !prev);
-    };
 
     const demographicTotalsRef = useRef<IDemographicTotals>({
         female_adult: 0,
@@ -68,8 +62,6 @@ const NewClientsStats = ({ stats, age, gender }: IProps) => {
         }
     }, [stats]);
 
-    let adultData: { label: string; key: string; female: number; male: number }[] = [];
-    let childData: { label: string; key: string; female: number; male: number }[] = [];
     let totalData: {
         label: string;
         key: string;

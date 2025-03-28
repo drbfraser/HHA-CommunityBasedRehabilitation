@@ -363,7 +363,10 @@
     "caregiverDetails": "Caregiver Details",
     "chooseImageFrom": "Choose an Image from",
     "gallery": "Gallery",
-    "camera": "Camera"
+    "camera": "Camera",
+    "hcrType": "HCR Type",
+    "hostCommunity": "Host Community",
+    "refugee": "Refugee"
   },
   "referralAttr": {
     "dateReferred": "Date Referred",
@@ -733,7 +736,29 @@
     "totalNewFChild": "Total New Female Child Clients:",
     "totalNewMChild": "Total New Male Child Clients:",
     "allChildren": "All Children",
-    "allAdults": "All Adults"
+    "allAdults": "All Adults",
+    "adult": "Adult",
+    "child": "Child",
+    "age": "Age",
+    "filterByDemographic": "Filter by Demographic",
+    "femaleChild": "Female Child",
+    "maleChild": "Male Child",
+    "femaleAdult": "Female Adult",
+    "maleAdult": "Male Adult",
+    "totalFChild": "Total Female Children:",
+    "totalMChild": "Total Male Children:",
+    "totalFAdult": "Total Female Adults:",
+    "totalMAdult": "Total Male Adults:",
+    "totalFChildFollowUpVisits": "Total Female Children Follow Up Visits:",
+    "totalMChildFollowUpVisits": "Total Male Children Follow Up Visits:",
+    "totalFAdultFollowUpVisits": "Total Female Adult Follow Up Visits:",
+    "totalMAdultFollowUpVisits": "Total Male Adult Follow Up Visits:",
+    "selectAtLeastOne": "Select at least one Gender and Age option",
+    "warning": "Warning",
+    "totalDisFChild": "Total Female Children With Disabilities:",
+    "totalDisMChild": "Total Male Chidlren With Disabilities:",
+    "totalDisFAdult": "Total Female Adults With Disabilities:",
+    "totalDisMAdult": "Total Male Adults With Disabilities:"
   },
   "sync": {
     "sureResetLocalDB": "Are you sure you want to reset local database",

@@ -262,13 +262,19 @@ const ClientInfoForm = (props: IProps) => {
                                             name={ClientDetailsFields.hcr_type}
                                             autoComplete="off"
                                         >
-                                            {[HCRType.REFUGEE, HCRType.HOST_COMMUNITY].map(
-                                                (type) => (
-                                                    <MenuItem key={type} value={type}>
-                                                        {type}
-                                                    </MenuItem>
-                                                )
+                                            {/* Show current value if it is 'NA' but don't allow selecting it */}
+                                            {values[ClientDetailsFields.hcr_type] ===
+                                                HCRType.NOT_SET && (
+                                                <MenuItem value={HCRType.NOT_SET} disabled>
+                                                    {HCRType.NOT_SET}
+                                                </MenuItem>
                                             )}
+                                            <MenuItem value={HCRType.HOST_COMMUNITY}>
+                                                {t("clientFields.hostCommunity")}
+                                            </MenuItem>
+                                            <MenuItem value={HCRType.REFUGEE}>
+                                                {t("clientFields.refugee")}
+                                            </MenuItem>
                                         </Field>
                                     </FormControl>
                                 </Grid>

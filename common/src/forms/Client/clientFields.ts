@@ -1,6 +1,6 @@
 import { Validation } from "../../util/validations";
 import * as Yup from "yup";
-import { Gender, IClient } from "../../util/clients";
+import { Gender, HCRType, IClient } from "../../util/clients";
 import i18n from "i18next";
 
 export enum ClientField {
@@ -61,6 +61,7 @@ export enum ClientField {
     mental_timestamp = "mental_timestamp",
     last_visit_date = "last_visit_date",
     is_active = "is_active",
+    hcrType = "hcr_type",
 }
 
 export enum ClientDetailsFields {
@@ -136,6 +137,7 @@ const refreshArrays = () => {
         [ClientField.mentalRisk]: i18n.t("clientFields.mentalRisk"),
         [ClientField.mentalRequirements]: i18n.t("clientFields.mentalRequirements"),
         [ClientField.mentalGoals]: i18n.t("clientFields.mentalGoals"),
+        [ClientField.hcrType]: i18n.t("clientFields.hcrType"),
     };
 
     updateClientfieldLabels = {
@@ -153,6 +155,7 @@ const refreshArrays = () => {
         [ClientField.caregiver_email]: i18n.t("clientFields.caregiverEmail"),
         [ClientField.disability]: i18n.t("clientFields.disability"),
         [ClientField.other_disability]: i18n.t("clientFields.otherDisability"),
+        [ClientField.hcrType]: i18n.t("clientFields.hcrType"),
     };
 };
 refreshArrays();
@@ -194,6 +197,7 @@ export const clientInitialValues = {
     [ClientField.picture]: "",
     [ClientField.pictureChanged]: false,
     [ClientField.is_active]: true,
+    [ClientField.hcrType]: "" as HCRType,
 };
 
 export type TClientValues = typeof clientInitialValues;

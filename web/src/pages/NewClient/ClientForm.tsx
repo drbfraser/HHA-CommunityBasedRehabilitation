@@ -19,7 +19,7 @@ import {
     newClientValidationSchema,
 } from "@cbr/common/forms/Client/clientFields";
 import { riskLevels } from "@cbr/common/util/risks";
-import { genders } from "@cbr/common/util/clients";
+import { HCRType, genders } from "@cbr/common/util/clients";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
@@ -130,6 +130,27 @@ const ClientForm = () => {
                                                 fullWidth
                                                 autoComplete="off"
                                             />
+                                        </Grid>
+                                        <Grid item md={6} xs={12}>
+                                            <FormControl fullWidth variant="outlined">
+                                                <Field
+                                                    component={TextField}
+                                                    fullWidth
+                                                    select
+                                                    required
+                                                    variant="outlined"
+                                                    label={clientFieldLabels[ClientField.hcrType]}
+                                                    name={ClientField.hcrType}
+                                                    autoComplete="off"
+                                                >
+                                                    <MenuItem value={HCRType.HOST_COMMUNITY}>
+                                                        {t("clientFields.hostCommunity")}
+                                                    </MenuItem>
+                                                    <MenuItem value={HCRType.REFUGEE}>
+                                                        {t("clientFields.refugee")}
+                                                    </MenuItem>
+                                                </Field>
+                                            </FormControl>
                                         </Grid>
                                         <Grid item md={6} xs={12}>
                                             <FormControl fullWidth variant="outlined">

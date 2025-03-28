@@ -1,5 +1,5 @@
-import { themeColors } from "@cbr/common";
 import { Dimensions, StyleSheet } from "react-native";
+import { themeColors } from "@cbr/common";
 
 const windowHeight = Dimensions.get("window").height;
 
@@ -161,6 +161,7 @@ const useStyles = () =>
             fontSize: 32,
             justifyContent: "center",
             fontWeight: "bold",
+            color: themeColors.textGray,
         },
         riskSubtitleStyle: {
             marginTop: 14,
@@ -186,6 +187,7 @@ const useStyles = () =>
             marginTop: 14,
             marginBottom: 14,
             fontSize: 32,
+            color: themeColors.textGray,
         },
         archiveWarningStyle: {
             width: 250,
@@ -287,6 +289,9 @@ const useStyles = () =>
         errorText: {
             color: themeColors.errorRed,
             alignSelf: "center",
+        },
+        textGray: {
+            color: themeColors.textGray,
         },
         disabilityContainer: {
             flexDirection: "row",

@@ -18,8 +18,7 @@ const PhysiotherapyForm = (props: IFormProps) => {
     const disabilities = useDisabilities(t);
 
     return (
-        <View>
-            <Text />
+        <View style={styles.formContainer}>
             <Text style={styles.question}>{t("referral.whatCondition")}</Text>
             <FormikExposedDropdownMenu
                 field={ReferralFormField.condition}
@@ -29,18 +28,25 @@ const PhysiotherapyForm = (props: IFormProps) => {
                 fieldLabels={referralFieldLabels}
                 mode="outlined"
             />
-            <Text />
             {props.formikProps.values[ReferralFormField.condition] ===
                 getOtherDisabilityId(disabilities) && (
-                <TextInput
-                    mode="outlined"
-                    label={referralFieldLabels[ReferralFormField.conditionOther]}
-                    value={props.formikProps.values[ReferralFormField.conditionOther]}
-                    onChangeText={(value: string) => {
-                        props.formikProps.setFieldTouched(ReferralFormField.conditionOther, true);
-                        props.formikProps.setFieldValue(ReferralFormField.conditionOther, value);
-                    }}
-                />
+                <View style={styles.formContainer}>
+                    <TextInput
+                        mode="outlined"
+                        label={referralFieldLabels[ReferralFormField.conditionOther]}
+                        value={props.formikProps.values[ReferralFormField.conditionOther]}
+                        onChangeText={(value: string) => {
+                            props.formikProps.setFieldTouched(
+                                ReferralFormField.conditionOther,
+                                true
+                            );
+                            props.formikProps.setFieldValue(
+                                ReferralFormField.conditionOther,
+                                value
+                            );
+                        }}
+                    />
+                </View>
             )}
         </View>
     );

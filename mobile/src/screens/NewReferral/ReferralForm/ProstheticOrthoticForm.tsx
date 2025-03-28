@@ -14,8 +14,7 @@ const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormFiel
             : orthoticInjuryLocations;
     const styles = useStyles();
     return (
-        <View>
-            <Text />
+        <View style={styles.formContainer}>
             <Text style={styles.question}>{t("referral.whereIsInjury")}</Text>
             <List.Section>
                 <RadioButton.Group

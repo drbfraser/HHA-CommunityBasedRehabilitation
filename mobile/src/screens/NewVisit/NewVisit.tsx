@@ -249,7 +249,7 @@ const VisitFocusForm = (
     return (
         <View>
             <Text style={styles.pickerQuestion}>{t("newVisit.whereVisit")} </Text>
-            <Text />
+            <View style={styles.verticalSpacer}></View>
             <TextInput
                 mode="outlined"
                 label={visitFieldLabels[VisitFormField.village]}
@@ -456,20 +456,17 @@ const NewVisit = (props: INewVisitProps) => {
                                     onClose={() => setSaveError(undefined)}
                                 />
                             )}
-                            <ProgressSteps key={visitSteps} {...progressStepsStyle}>
+                            {/* todosd: steps not fully connected when 5 or fewer selected */}
+                            <ProgressSteps key={visitSteps.length} {...progressStepsStyle}>
                                 {visitSteps.map((surveyStep, index) => {
                                     return (
                                         <ProgressStep
                                             key={index}
                                             scrollViewProps={defaultScrollViewProps}
-                                            previousBtnTextStyle={styles.buttonTextStyle}
-                                            nextBtnTextStyle={styles.buttonTextStyle}
-                                            nextBtnStyle={styles.nextButton}
-                                            previousBtnStyle={styles.prevButton}
                                             onNext={() => {
                                                 nextStep(formikProps.values, formikProps);
                                             }}
-                                            nextBtnDisabled={
+                                            buttonNextDisabled={
                                                 formikProps.isSubmitting ||
                                                 enabledSteps.length === 0 ||
                                                 (enabledSteps[activeStep - 1] !== undefined &&
@@ -483,14 +480,18 @@ const NewVisit = (props: INewVisitProps) => {
                                                         : countObjectKeys(formikProps.errors) !==
                                                           0))
                                             }
-                                            previousBtnDisabled={formikProps.isSubmitting}
+                                            buttonPreviousDisabled={formikProps.isSubmitting}
                                             onPrevious={() => prevStep(formikProps)}
                                             onSubmit={() =>
                                                 nextStep(formikProps.values, formikProps)
                                             }
-                                            previousBtnText={t("general.previous")}
-                                            nextBtnText={t("general.next")}
-                                            finishBtnText={t("general.submit")}
+                                            buttonPreviousText={t("general.previous")}
+                                            buttonNextText={t("general.next")}
+                                            buttonFinishText={t("general.submit")}
+                                            buttonFillColor={themeColors.blueBgDark}
+                                            buttonBorderColor={themeColors.blueBgDark}
+                                            buttonPreviousTextColor={themeColors.blueBgDark}
+                                            buttonHorizontalOffset={20}
                                         >
                                             <Text style={styles.stepLabelText}>
                                                 {surveyStep.label}

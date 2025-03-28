@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { themeColors } from "@cbr/common";
 
 const useStyles = () =>
     StyleSheet.create({
@@ -22,6 +23,10 @@ const useStyles = () =>
             fontSize: 18,
             margin: 10,
             fontWeight: "bold",
+            color: themeColors.textGray,
+        },
+        textGray: {
+            color: themeColors.textGray,
         },
         selectTitle: {
             fontSize: 20,

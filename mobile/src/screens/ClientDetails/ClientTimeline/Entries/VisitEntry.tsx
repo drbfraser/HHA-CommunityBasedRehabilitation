@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-    apiFetch,
-    Endpoint,
     IVisit,
     themeColors,
     timestampToDateTime,

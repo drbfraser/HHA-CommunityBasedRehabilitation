@@ -11,8 +11,7 @@ const NutritionAgricultureForm = (props: IFormProps) => {
     const { t } = useTranslation();
 
     return (
-        <View>
-            <Text />
+        <View style={styles.formContainer}>
             <Text style={styles.question}>{t("referral.whatDoesClientNeed")}</Text>
             <List.Section>
                 <TextCheckBox

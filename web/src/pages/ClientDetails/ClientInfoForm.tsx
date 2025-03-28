@@ -263,9 +263,9 @@ const ClientInfoForm = (props: IProps) => {
                                             autoComplete="off"
                                         >
                                             {/* Show current value if it is 'NA' but don't allow selecting it */}
-                                            {values[ClientDetailsFields.hcr_type] ===
+                                            {props?.clientInfo[ClientDetailsFields.hcr_type] ===
                                                 HCRType.NOT_SET && (
-                                                <MenuItem value={HCRType.NOT_SET} disabled>
+                                                <MenuItem value={HCRType.NOT_SET}>
                                                     {HCRType.NOT_SET}
                                                 </MenuItem>
                                             )}

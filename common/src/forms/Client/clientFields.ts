@@ -80,6 +80,7 @@ export enum ClientDetailsFields {
     pictureChanged = "pictureChanged",
     other_disability = "other_disability",
     is_active = "is_active",
+    hcr_type = "hcr_type",
 }
 
 // TODO: START REMOVE

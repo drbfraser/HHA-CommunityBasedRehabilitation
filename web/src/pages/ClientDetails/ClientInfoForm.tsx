@@ -19,7 +19,7 @@ import {
     handleUpdateClientSubmit,
     handleArchiveConfirmation,
 } from "@cbr/common/forms/Client/clientHandler";
-import { genders, IClient } from "@cbr/common/util/clients";
+import { genders, HCRType, IClient } from "@cbr/common/util/clients";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import history from "@cbr/common/util/history";
@@ -240,6 +240,37 @@ const ClientInfoForm = (props: IProps) => {
                                         fullWidth
                                         autoComplete="off"
                                     />
+                                </Grid>
+                                <Grid item md={6} xs={12}>
+                                    <FormControl
+                                        fullWidth
+                                        variant="outlined"
+                                        sx={clientFormStyles.disabledTextField}
+                                    >
+                                        <Field
+                                            component={TextField}
+                                            fullWidth
+                                            select
+                                            disabled={!isEditing}
+                                            required
+                                            variant="outlined"
+                                            label={
+                                                updateClientfieldLabels[
+                                                    ClientDetailsFields.hcr_type
+                                                ]
+                                            }
+                                            name={ClientDetailsFields.hcr_type}
+                                            autoComplete="off"
+                                        >
+                                            {[HCRType.REFUGEE, HCRType.HOST_COMMUNITY].map(
+                                                (type) => (
+                                                    <MenuItem key={type} value={type}>
+                                                        {type}
+                                                    </MenuItem>
+                                                )
+                                            )}
+                                        </Field>
+                                    </FormControl>
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <FormControl fullWidth variant="outlined">

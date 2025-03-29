@@ -1,25 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Grid, Link, Skeleton, Typography } from "@mui/material";
-import {
-    BarChart,
-    ResponsiveContainer,
-    XAxis,
-    YAxis,
-    Tooltip,
-    Bar,
-    PieChart,
-    Pie,
-    Cell,
-} from "recharts";
 
-import { useZones } from "@cbr/common/util/hooks/zones";
-import { IStats, IStatsVisit } from "@cbr/common/util/stats";
 import { themeColors } from "@cbr/common/util/colors";
-import HorizontalBarGraphStats, { IDemographicTotals } from "./HorizontalBarGraphStats";
-import { StatsVisitCategory } from "@cbr/common/util/stats";
-import { ISubheadings } from "./HorizontalBarGraphStats";
+import { useZones } from "@cbr/common/util/hooks/zones";
+import { IStats, StatsVisitCategory } from "@cbr/common/util/stats";
+import { Grid, Link, Skeleton, Typography } from "@mui/material";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
+import HorizontalBarGraphStats, {
+    IDemographicTotals,
+    ISubheadings,
+} from "./HorizontalBarGraphStats";
 
 interface IProps {
     stats?: IStats;
@@ -27,6 +18,34 @@ interface IProps {
     gender: IGender;
 }
 
+interface ZoneTotals {
+    zone_id: number;
+    key?: string;
+    label?: string;
+    health?: number;
+    educat?: number;
+    social?: number;
+    nutrit?: number;
+    mental?: number;
+}
+
+interface TotalDemograhic {
+    label?: string;
+    femaleAdult?: number;
+    maleAdult?: number;
+    femaleChild?: number;
+    maleChild?: number;
+    zone_id?: number;
+    category?: StatsVisitCategory;
+}
+
+interface CategoryTotals {
+    mental: number;
+    nutrit: number;
+    social: number;
+    educat: number;
+    health: number;
+}
 
 const visitsCategoryLabels = ["Health", "Education", "Social", "Nutrition", "Mental"];
 const visitCategories: StatsVisitCategory[] = ["health", "educat", "social", "nutrit", "mental"];
@@ -36,18 +55,37 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
     const [totalMAdults, setTotalMAdults] = useState(0);
     const [totalFChild, setTotalFChild] = useState(0);
     const [totalMChild, setTotalMChild] = useState(0);
-    const [totalData, setTotalData] = useState<
-        {
-            label: string;
-            key: string;
-            femaleAdult: number;
-            maleAdult: number;
-            femaleChild: number;
-            maleChild: number;
-        }[]
-    >([]);
+    const [totalData, setTotalData] = useState<TotalDemograhic[]>([]);
+    const [totalCategory, setTotalCategory] = useState<CategoryTotals>({
+        mental: 0,
+        nutrit: 0,
+        social: 0,
+        educat: 0,
+        health: 0,
+    });
+
+    const [breakdownZoneId, setBreakdownZoneId] = useState(0);
+    const [totalPieData, setTotalPieData] = useState<ZoneTotals[]>([]);
+    const breakdownZone = totalPieData.find((d) => d.zone_id === breakdownZoneId);
+    const zones = useZones();
+    const zoneToName = useCallback((id: number) => zones.get(id) ?? "", [zones]);
+
+    useEffect(() => {
+        setBreakdownZoneId(0);
+    }, [stats]);
+
+    type BreakdownKey = keyof ZoneTotals | keyof CategoryTotals;
+
+    const getBreakdownCount = (key: BreakdownKey) => {
+        if (breakdownZone) {
+            return breakdownZone[key] ?? 0;
+        }
+
+        return totalCategory[key as keyof CategoryTotals] ?? 0;
+    };
 
     const { t } = useTranslation();
+    const CHART_HEIGHT = 400;
 
     const demographicTotalsRef = useRef<IDemographicTotals>({
         female_adult: 0,
@@ -63,37 +101,77 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
             let fChild = 0;
             let mChild = 0;
 
-            const processedTotalData = visitCategories.map((category, index) => {
-                const visitCategoryStats = {
-                    femaleAdult: stats.visits.reduce(
-                        (total, item) => total + (item[`${category}_female_adult_total`] ?? 0),
-                        0
-                    ),
-                    maleAdult: stats.visits.reduce(
-                        (total, item) => total + (item[`${category}_male_adult_total`] ?? 0),
-                        0
-                    ),
-                    femaleChild: stats.visits.reduce(
-                        (total, item) => total + (item[`${category}_female_child_total`] ?? 0),
-                        0
-                    ),
-                    maleChild: stats.visits.reduce(
-                        (total, item) => total + (item[`${category}_male_child_total`] ?? 0),
-                        0
-                    ),
-                    label: visitsCategoryLabels[index],
-                    key: category,
-                };
+            const { pieData, totalData, categoryTotals } = stats.visits.reduce(
+                (acc, v) => {
+                    const zoneTotals: ZoneTotals = {
+                        zone_id: v.zone_id,
+                        label: zoneToName(v.zone_id),
+                    };
 
-                fAdults += visitCategoryStats.femaleAdult;
-                mAdults += visitCategoryStats.maleAdult;
-                fChild += visitCategoryStats.femaleChild;
-                mChild += visitCategoryStats.maleChild;
+                    // Totals for the pie chart
+                    visitCategories.forEach((category, index) => {
+                        acc.categoryTotals[category] = acc.categoryTotals[category] || 0;
+                        const categoryTotal =
+                            (v[`${category}_female_adult_total`] ?? 0) +
+                            (v[`${category}_male_adult_total`] ?? 0) +
+                            (v[`${category}_female_child_total`] ?? 0) +
+                            (v[`${category}_male_child_total`] ?? 0);
 
-                return visitCategoryStats;
-            });
+                        zoneTotals[`${category}`] = categoryTotal;
+                        zoneTotals.key = visitsCategoryLabels[index];
 
-            setTotalData(processedTotalData);
+                        acc.categoryTotals[category] += categoryTotal;
+                    });
+
+                    const zoneDemographics: TotalDemograhic = {
+                        femaleAdult: 0,
+                        maleAdult: 0,
+                        femaleChild: 0,
+                        maleChild: 0,
+                        label: zoneToName(v.zone_id),
+                        zone_id: v.zone_id,
+                    };
+
+                    // Totals for the Regular Bar Graph
+                    visitCategories.forEach((category, index) => {
+                        zoneDemographics.femaleAdult =
+                            (zoneDemographics.femaleAdult ?? 0) +
+                            (v[`${category}_female_adult_total`] ?? 0);
+                        zoneDemographics.maleAdult =
+                            (zoneDemographics.maleAdult ?? 0) +
+                            (v[`${category}_male_adult_total`] ?? 0);
+                        zoneDemographics.femaleChild =
+                            (zoneDemographics.femaleChild ?? 0) +
+                            (v[`${category}_female_child_total`] ?? 0);
+                        zoneDemographics.maleChild =
+                            (zoneDemographics.maleChild ?? 0) +
+                            (v[`${category}_male_child_total`] ?? 0);
+                        zoneDemographics.category = category;
+
+                        if (!zoneDemographics.category) {
+                            zoneDemographics.category = category;
+                        }
+                    });
+
+                    acc.pieData.push(zoneTotals);
+                    acc.totalData.push(zoneDemographics);
+
+                    return acc;
+                },
+                {
+                    pieData: [],
+                    totalData: [],
+                    categoryTotals: { mental: 0, nutrit: 0, social: 0, educat: 0, health: 0 },
+                } as {
+                    pieData: ZoneTotals[];
+                    totalData: TotalDemograhic[];
+                    categoryTotals: CategoryTotals;
+                }
+            );
+
+            setTotalCategory(categoryTotals);
+            setTotalPieData(pieData);
+            setTotalData(totalData);
             setTotalFAdults(fAdults);
             setTotalMAdults(mAdults);
             setTotalFChild(fChild);
@@ -106,7 +184,7 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
                 male_child: mChild,
             };
         }
-    }, [stats]);
+    }, [stats, zoneToName]);
 
     const subheadings: ISubheadings[] = [
         {
@@ -126,6 +204,43 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
             total: totalMAdults,
         },
     ];
+
+    const breakdownData = [
+        {
+            label: t("general.health"),
+            count: getBreakdownCount("health"),
+            color: themeColors.hhaGreen,
+        },
+        {
+            label: t("general.education"),
+            count: getBreakdownCount("educat"),
+            color: themeColors.hhaPurple,
+        },
+        {
+            label: t("general.social"),
+            count: getBreakdownCount("social"),
+            color: themeColors.hhaBlue,
+        },
+        {
+            label: t("general.nutrition"),
+            count: getBreakdownCount("nutrit"),
+            color: themeColors.yellow,
+        },
+        {
+            label: t("general.mental"),
+            count: getBreakdownCount("mental"),
+            color: themeColors.bluePale,
+        },
+    ].filter((z) => z.count);
+
+    const handleChartClick = (e: any) => {
+        if (!e || !Array.isArray(e.activePayload) || e.activePayload.length === 0) {
+            return;
+        }
+
+        setBreakdownZoneId(e.activePayload[0].payload?.zone_id);
+    };
+
     return (
         <>
             <HorizontalBarGraphStats
@@ -135,7 +250,52 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
                 gender={gender}
                 subheadings={subheadings}
                 totals={demographicTotalsRef.current}
+                onBarClick={handleChartClick}
             />
+
+            <Grid item xs={12} lg={5} xl={4}>
+                <Typography variant="h3">{t("statistics.byType")}</Typography>
+                <Typography variant="body1">
+                    {t("statistics.showingDataFor")}:{" "}
+                    <b>{zones.get(breakdownZoneId) ?? t("statistics.allZones")}</b>.
+                </Typography>
+
+                <Typography variant="body2">
+                    {Boolean(!breakdownZone) ? (
+                        t("statistics.clickForZoneSpecificData")
+                    ) : (
+                        <Link
+                            component="button"
+                            variant="body1"
+                            onClick={() => setBreakdownZoneId(0)}
+                        >
+                            {t("statistics.viewAllZoneData")}
+                        </Link>
+                    )}
+                </Typography>
+
+                {stats ? (
+                    <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
+                        <PieChart>
+                            <Pie
+                                data={breakdownData}
+                                dataKey="count"
+                                nameKey="label"
+                                label={(a) => a.label}
+                                labelLine={true}
+                                innerRadius={60}
+                            >
+                                {breakdownData.map((entry, i) => (
+                                    <Cell key={i} fill={entry.color} />
+                                ))}
+                            </Pie>
+                            <Tooltip />
+                        </PieChart>
+                    </ResponsiveContainer>
+                ) : (
+                    <Skeleton variant="rectangular" height={400} />
+                )}
+            </Grid>
         </>
     );
 };

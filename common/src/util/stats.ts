@@ -1,6 +1,6 @@
 import { HCRType } from "./clients";
 
-type DemographicTypes =
+export type DemographicTypes =
     | "female_adult_total"
     | "male_adult_total"
     | "female_child_total"

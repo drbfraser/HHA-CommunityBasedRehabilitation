@@ -1,14 +1,12 @@
-import { Divider, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Typography } from "@mui/material";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { themeColors } from "@cbr/common/util/colors";
-import { useZones } from "@cbr/common/util/hooks/zones";
-import { IStats } from "@cbr/common/util/stats";
-import IOSSwitch from "components/IOSSwitch/IOSSwitch";
+import { Box, Stack } from "@mui/material";
 import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
-import { Stack, Box } from "@mui/material";
+
 export interface ISubheadings {
     label: string;
     total: number;
@@ -29,6 +27,7 @@ interface IProps {
     gender: IGender;
     subheadings?: ISubheadings[];
     totals: IDemographicTotals;
+    onBarClick?: (e: any) => void;
 }
 
 const HorizontalBarGraphStats = ({
@@ -39,6 +38,7 @@ const HorizontalBarGraphStats = ({
     gender,
     subheadings,
     totals,
+    onBarClick,
 }: IProps) => {
     const CHART_HEIGHT = 400;
 
@@ -53,7 +53,7 @@ const HorizontalBarGraphStats = ({
                 {subtitle}
             </Typography>
             <Box>
-                <Stack direction="row" spacing={4} justifyContent="center" alignItems="center">
+                <Stack direction="row" spacing={5} justifyContent="center" alignItems="center">
                     <Stack spacing={1} alignItems="center">
                         {gender.female && age.child && (
                             <Typography>
@@ -86,7 +86,7 @@ const HorizontalBarGraphStats = ({
             </Box>
 
             <ResponsiveContainer width="100%" height={data.length ? CHART_HEIGHT : 0}>
-                <BarChart data={data} layout="vertical">
+                <BarChart data={data} layout="vertical" onClick={onBarClick}>
                     <XAxis type="number" allowDecimals={false} />
                     <YAxis dataKey="label" type="category" width={150} />
                     <Tooltip />

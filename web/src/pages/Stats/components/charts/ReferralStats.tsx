@@ -1,13 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar, Legend } from "recharts";
-import { Skeleton, Typography } from "@mui/material";
 
-import { IStats, IStatsReferral } from "@cbr/common/util/stats";
-import { themeColors } from "@cbr/common/util/colors";
-import { useRef, useEffect, useState, useMemo } from "react";
-import HorizontalBarGraphStats, { IDemographicTotals } from "./HorizontalBarGraphStats";
-import { StatsReferralCategory } from "@cbr/common/util/stats";
+import { IStats, StatsReferralCategory } from "@cbr/common/util/stats";
+import { useEffect, useRef, useState } from "react";
+import { IDemographicTotals } from "./HorizontalBarGraphStats";
 import VerticalBarGraphStats from "./VerticalBarGraphStats";
 
 import { IAge, IGender } from "../filterbar/StatsDemographicFilter";

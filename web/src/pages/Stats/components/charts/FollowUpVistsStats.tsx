@@ -1,15 +1,13 @@
-import { Typography } from "@mui/material";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-import { themeColors } from "@cbr/common/util/colors";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { IStats } from "@cbr/common/util/stats";
-import IOSSwitch from "components/IOSSwitch/IOSSwitch";
-import { ISubheadings } from "./HorizontalBarGraphStats";
-import HorizontalBarGraphStats, { IDemographicTotals } from "./HorizontalBarGraphStats";
 import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
+import HorizontalBarGraphStats, {
+    IDemographicTotals,
+    ISubheadings,
+} from "./HorizontalBarGraphStats";
 
 interface IProps {
     stats?: IStats;

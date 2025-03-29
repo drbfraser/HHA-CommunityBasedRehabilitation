@@ -1,16 +1,14 @@
-import React from "react";
+import { Skeleton, styled } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar } from "recharts";
-import { Skeleton, styled, Typography } from "@mui/material";
-import { useState, useRef, useEffect } from "react";
 
 import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import { IStats } from "@cbr/common/util/stats";
-import { themeColors } from "@cbr/common/util/colors";
-import IOSSwitch from "components/IOSSwitch/IOSSwitch";
-import HorizontalBarGraphStats, { IDemographicTotals } from "./HorizontalBarGraphStats";
-import { ISubheadings } from "./HorizontalBarGraphStats";
 import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
+import HorizontalBarGraphStats, {
+    IDemographicTotals,
+    ISubheadings,
+} from "./HorizontalBarGraphStats";
 
 const ChartHeader = styled("section")({
     marginBottom: "1rem",
@@ -113,7 +111,6 @@ const DisabilityStats = ({ stats, age, gender }: IProps) => {
             total: totalMAdults,
         },
     ];
-
 
     if (!stats) {
         return <Skeleton variant="rectangular" height={500} />;

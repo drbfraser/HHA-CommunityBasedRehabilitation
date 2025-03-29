@@ -6,7 +6,7 @@ import { IUser } from "@cbr/common/util/users";
 import { IStats } from "@cbr/common/util/stats";
 import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
 import StatsUserFilter from "./StatsUserFilter";
-// import ExportStats from "./ExportStats";
+import ExportStats from "./ExportStats";
 import StatsDemographicFilter, { IAge, IGender } from "./StatsDemographicFilter";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import { Typography } from "@mui/material";
@@ -146,7 +146,13 @@ const FilterBar = ({
                 user={user}
                 setUser={setUser}
             />
-            {/* <ExportStats open={exportOpen} onClose={() => setExportOpen(false)} stats={stats} /> */}
+            <ExportStats
+                open={exportOpen}
+                onClose={() => setExportOpen(false)}
+                stats={stats}
+                age={age}
+                gender={gender}
+            />
         </menu>
     );
 };

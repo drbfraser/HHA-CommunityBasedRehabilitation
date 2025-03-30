@@ -581,14 +581,6 @@ class AdminStatsDisabilitySerializer(ClientBreakdown):
     total = serializers.IntegerField()
 
 
-# class AdminStatsNewClients(ClientBreakdown):
-#     pass
-
-
-# class AdminStatsFollowUpVisits(serializers.Serializer):
-#     pass
-
-
 class AdminStatsSerializer(serializers.Serializer):
     disabilities = AdminStatsDisabilitySerializer(many=True, read_only=True)
     clients_with_disabilities = serializers.IntegerField()

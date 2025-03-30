@@ -39,7 +39,7 @@ interface TotalDemograhic {
     category?: StatsVisitCategory;
 }
 
-interface CategoryTotals {
+export interface CategoryTotals {
     mental: number;
     nutrit: number;
     social: number;

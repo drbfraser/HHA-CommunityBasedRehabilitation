@@ -53,15 +53,6 @@ def getDisabilityStats(user_id, from_time, to_time, is_active):
     sql += getDemographicStats("disability_stats", is_active, "d.")
     sql += getStatsWhere(user_id, "c.created_at", from_time, to_time)
 
-    # if is_active:
-    #     sql += """
-    #         WHERE d.client_id = (
-    #             SELECT id
-    #             FROM cbr_api_client
-    #             WHERE d.client_id = cbr_api_client.id AND
-    #             cbr_api_client.is_active = True
-    #         ) """
-
     sql += "GROUP BY d.disability_id, c.hcr_type, c.zone_id ORDER BY d.disability_id"
 
     from django.db import connection
@@ -80,13 +71,6 @@ def getNumClientsWithDisabilities(user_id, from_time, to_time, is_active):
     sql += getDemographicStats("clients_with_disabilities", is_active, "d.")
     sql += getStatsWhere(user_id, "c.created_at", from_time, to_time)
 
-    # if is_active:
-    #     sql += """WHERE d.client_id = (
-    #             SELECT c.id
-    #             FROM cbr_api_client AS c
-    #             WHERE d.client_id = c.id AND
-    #             c.is_active = True
-    #     )"""
     from django.db import connection
 
     with connection.cursor() as cursor:
@@ -236,21 +220,16 @@ def getStatsWhere(user_id, time_col, from_time, to_time):
     args = 0
 
     if user_id is not None:
-        # it seems that '_id' is automatically appended to the end of foreign key column names.
-        # So user_id -> user_id_id
-        # where.append(f"{alias}user_id_id='{user_id}'")
         where += f"""c.user_id_id='{user_id}'"""
         args += 1
 
     if from_time is not None:
-        # where.append(f"{time_col}>={str(from_time)}")
         if args >= 1:
             where += """ AND """
         where += f"""{time_col}>={str(from_time)}"""
         args += 1
 
     if to_time is not None:
-        # where.append(f"{time_col}<={str(to_time)}")
         if args >= 1:
             where += """AND """
         where += f"""{time_col}<={str(to_time)}"""
@@ -259,7 +238,6 @@ def getStatsWhere(user_id, time_col, from_time, to_time):
     if args == 0:
         return ""
 
-    # return """WHERE """ + """ AND """.join(where)
     return where
 
 

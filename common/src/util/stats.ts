@@ -1,5 +1,3 @@
-import { HCRType } from "./clients";
-
 export type DemographicTypes =
     | "female_adult_total"
     | "male_adult_total"

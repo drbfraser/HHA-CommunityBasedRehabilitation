@@ -1,4 +1,4 @@
-import { Skeleton, styled } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,10 +9,6 @@ import HorizontalBarGraphStats, {
     IDemographicTotals,
     ISubheadings,
 } from "./HorizontalBarGraphStats";
-
-const ChartHeader = styled("section")({
-    marginBottom: "1rem",
-});
 
 interface IProps {
     stats?: IStats;
@@ -43,7 +39,7 @@ const DisabilityStats = ({ stats, age, gender }: IProps) => {
             let fChild = 0;
             let mChild = 0;
 
-            stats.new_clients.forEach((item) => {
+            stats.disabilities.forEach((item) => {
                 fAdults += item.female_adult_total ?? 0;
                 mAdults += item.male_adult_total ?? 0;
                 fChild += item.female_child_total ?? 0;

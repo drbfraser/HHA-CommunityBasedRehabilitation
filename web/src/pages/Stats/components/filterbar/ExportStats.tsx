@@ -12,15 +12,84 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import { useZones } from "@cbr/common/util/hooks/zones";
-import { IStats, IStatsFollowUpVisits, IStatsNewClients } from "@cbr/common/util/stats";
+import {
+    IStats,
+    IStatsDisability,
+    IStatsFollowUpVisits,
+    IStatsNewClients,
+    IStatsReferral,
+    IStatsVisit,
+    StatsReferralCategory,
+    StatsVisitCategory,
+} from "@cbr/common/util/stats";
+import { IDemographicTotals } from "../charts/HorizontalBarGraphStats";
+import { IAge, IGender } from "./StatsDemographicFilter";
 
 interface IProps {
     open: boolean;
     onClose: () => void;
     stats?: IStats;
+    age: IAge;
+    gender: IGender;
 }
 
-const ExportStats = ({ open, onClose, stats }: IProps) => {
+type StatsCategories =
+    | IStatsFollowUpVisits
+    | IStatsNewClients
+    | IStatsDisability
+    | IStatsReferral
+    | IStatsVisit;
+
+interface CategoryObject {
+    category: string;
+    demographicData: DemographicData;
+}
+
+interface DemographicData {
+    female_adult_total: number;
+    male_adult_total: number;
+    female_child_total: number;
+    male_child_total: number;
+    total?: number;
+}
+
+type VisitCategoryMapping = Record<string, string>;
+const visitCategoryMappings: VisitCategoryMapping = {
+    health: "Health",
+    educat: "Education",
+    mental: "Mental",
+    nutrit: "Nutrition",
+    social: "Social",
+};
+
+const dataCategories: StatsReferralCategory[] = [
+    "wheelchair",
+    "physiotherapy",
+    "prosthetic",
+    "orthotic",
+    "nutrition_agriculture",
+    "mental_health",
+    "other",
+];
+
+const categoryTitles: string[] = [
+    "Wheelchair",
+    "Physiotherapy",
+    "Prosthetic",
+    "Orthotic",
+    "Nutrition",
+    "Mental Health",
+    "Other",
+];
+
+const visitCategories: StatsVisitCategory[] = ["health", "educat", "social", "nutrit", "mental"];
+
+interface ILabelledDemographicTotals extends IDemographicTotals {
+    category: string;
+    total: number;
+}
+
+const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
     const zones = useZones();
     const { t } = useTranslation();
     const disabilities = useDisabilities(t);
@@ -32,43 +101,294 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
 
         const rows = [];
 
-        rows.push(["***VISITS***"]);
-        rows.push(["ZONE", "TOTAL VISITS", "HEALTH", "EDUCATION", "SOCIAL", "NUTRITION"]);
-        stats.visits.forEach((v) => {
-            rows.push([
-                zones.get(v.zone_id),
-                v.total,
-                v.health_count,
-                v.educat_count,
-                v.social_count,
-                v.nutrit_count,
-            ]);
-        });
-        rows.push([""]);
+        // VISTS Stats
+        const visitDataArray: Array<{
+            zone: string;
+            categories: CategoryObject[];
+            total: number;
+            totals: DemographicData;
+        }> = [];
 
-        const unres = stats.referrals_unresolved;
-        const res = stats.referrals_resolved;
+        const visitDemographicTotals: DemographicData = {
+            female_adult_total: 0,
+            male_adult_total: 0,
+            female_child_total: 0,
+            male_child_total: 0,
+        };
+
+        visitDemographicTotals.total = 0;
+
+        stats.visits.forEach((v) => {
+            const zone = zones.get(v.zone_id);
+            if (!zone) return;
+
+            const categoriesArray: CategoryObject[] = [];
+            visitDemographicTotals.female_adult_total = 0;
+            visitDemographicTotals.male_adult_total = 0;
+            visitDemographicTotals.female_child_total = 0;
+            visitDemographicTotals.male_child_total = 0;
+
+            const zoneTotal: DemographicData = {
+                female_adult_total: 0,
+                male_adult_total: 0,
+                female_child_total: 0,
+                male_child_total: 0,
+                total: 0,
+            };
+
+            let totalCount = 0;
+            visitCategories.forEach((cat) => {
+                const demoData: DemographicData = {
+                    female_adult_total: v[`${cat}_female_adult_total`] ?? 0,
+                    male_adult_total: v[`${cat}_male_child_total`] ?? 0,
+                    female_child_total: v[`${cat}_female_child_total`] ?? 0,
+                    male_child_total: v[`${cat}_male_child_total`] ?? 0,
+                };
+
+                demoData.total =
+                    demoData.female_adult_total +
+                    demoData.male_adult_total +
+                    demoData.female_child_total +
+                    demoData.male_child_total;
+
+                const catData: CategoryObject = {
+                    category: cat,
+                    demographicData: demoData,
+                };
+
+                categoriesArray.push(catData);
+
+                visitDemographicTotals.female_adult_total += demoData.female_adult_total;
+                visitDemographicTotals.male_adult_total += demoData.male_adult_total;
+                visitDemographicTotals.female_child_total += demoData.female_child_total;
+                visitDemographicTotals.male_child_total += demoData.male_child_total;
+                totalCount += demoData.total;
+            });
+
+            zoneTotal.female_adult_total = visitDemographicTotals.female_adult_total;
+            zoneTotal.male_adult_total = visitDemographicTotals.male_adult_total;
+            zoneTotal.female_child_total = visitDemographicTotals.female_child_total;
+            zoneTotal.male_child_total = visitDemographicTotals.male_child_total;
+
+            visitDataArray.push({
+                zone,
+                categories: categoriesArray,
+                totals: zoneTotal,
+                total: totalCount,
+            });
+        });
+
+        rows.push(["***VISITS***"]);
+        visitDataArray.forEach((v) => {
+            const row = [v.zone];
+
+            if (age.adult && gender.male) row.push("ADULT MALE");
+            if (age.adult && gender.female) row.push("ADULT FEMALE");
+            if (age.child && gender.male) row.push("CHILD MALE");
+            if (age.child && gender.female) row.push("CHILD FEMALE");
+            row.push("Total");
+
+            rows.push(row);
+
+            v.categories.forEach((c) => {
+                const dData = c.demographicData;
+
+                const dataRow = [visitCategoryMappings[c.category]];
+                if (age.adult && gender.male) dataRow.push(dData.male_adult_total.toString());
+                if (age.adult && gender.female) dataRow.push(dData.female_adult_total.toString());
+                if (age.child && gender.male) dataRow.push(dData.male_child_total.toString());
+                if (age.child && gender.female) dataRow.push(dData.female_child_total.toString());
+
+                dataRow.push(dData.total!.toString());
+                rows.push(dataRow);
+            });
+
+            const totalRow = ["Total"];
+
+            if (age.adult && gender.male) totalRow.push(v.totals.male_adult_total.toString());
+            if (age.adult && gender.female) totalRow.push(v.totals.female_adult_total.toString());
+            if (age.child && gender.male) totalRow.push(v.totals.male_child_total.toString());
+            if (age.child && gender.female) totalRow.push(v.totals.female_child_total.toString());
+
+            totalRow.push(v.total.toString());
+            rows.push(totalRow);
+
+            rows.push([""]);
+        });
 
         rows.push(["***REFERRALS***"]);
-        rows.push(["REASON", "UNRESOLVED COUNT", "RESOLVED COUNT"]);
-        rows.push(["TOTAL", unres.total, res.total]);
-        rows.push(["Wheelchair", unres.wheelchair_count, res.wheelchair_count]);
-        rows.push(["Physiotherapy", unres.physiotherapy_count, res.physiotherapy_count]);
-        rows.push(["Prosthetic", unres.prosthetic_count, res.prosthetic_count]);
-        rows.push(["Orthotic", unres.orthotic_count, res.orthotic_count]);
-        rows.push(["Other", unres.other_count, res.other_count]);
-        rows.push([""]);
+        let rFAdult = 0;
+        let rMAdult = 0;
+        let rFChild = 0;
+        let rMChild = 0;
+        let rTotal = 0;
 
-        rows.push(["***DISABILITIES***"]);
-        rows.push(["Clients with Disabilities", stats.clients_with_disabilities]);
-        rows.push(["DISABILITY", "COUNT"]);
-        stats.disabilities.forEach((d) => {
-            rows.push([disabilities.get(d.disability_id), d.total]);
+        let unFAdult = 0;
+        let unMAdult = 0;
+        let unFChild = 0;
+        let unMChild = 0;
+        let unTotal = 0;
+
+        const resolvedStats: ILabelledDemographicTotals[] = [];
+        const unresolvedStats: ILabelledDemographicTotals[] = [];
+
+        let i = 0;
+        dataCategories.forEach((category) => {
+            const resolvedCategoryStats = {
+                female_adult: stats.referrals_resolved[`${category}_female_adult_total`] as number,
+                male_adult: stats.referrals_resolved[`${category}_male_adult_total`] as number,
+                female_child: stats.referrals_resolved[`${category}_female_child_total`] as number,
+                male_child: stats.referrals_resolved[`${category}_male_child_total`] as number,
+                category: categoryTitles[i],
+                total: 0,
+            };
+            resolvedCategoryStats.total =
+                resolvedCategoryStats.female_adult +
+                resolvedCategoryStats.female_child +
+                resolvedCategoryStats.male_adult +
+                resolvedCategoryStats.male_child;
+
+            unTotal += resolvedCategoryStats.total;
+
+            const unresolvedCategoryStats = {
+                female_adult: stats.referrals_resolved[`${category}_female_adult_total`] as number,
+                male_adult: stats.referrals_resolved[`${category}_male_adult_total`] as number,
+                female_child: stats.referrals_resolved[`${category}_female_child_total`] as number,
+                male_child: stats.referrals_resolved[`${category}_male_child_total`] as number,
+                category: categoryTitles[i],
+                total: 0,
+            };
+
+            unresolvedCategoryStats.total =
+                unresolvedCategoryStats.female_adult +
+                unresolvedCategoryStats.female_child +
+                unresolvedCategoryStats.male_adult +
+                unresolvedCategoryStats.male_child;
+
+            rTotal += unresolvedCategoryStats.total;
+
+            resolvedStats.push(resolvedCategoryStats);
+            unresolvedStats.push(unresolvedCategoryStats);
+
+            rFAdult += resolvedCategoryStats.female_adult;
+            rMAdult += resolvedCategoryStats.male_adult;
+            rFChild += resolvedCategoryStats.female_child;
+            rMChild += resolvedCategoryStats.male_child;
+
+            unFAdult += unresolvedCategoryStats.female_adult;
+            unMAdult += unresolvedCategoryStats.male_adult;
+            unFChild += unresolvedCategoryStats.female_child;
+            unMChild += unresolvedCategoryStats.male_child;
+            i += 1;
         });
 
+        const resolvedRow = ["RESOLVED"];
+        if (age.adult && gender.male) resolvedRow.push("ADULT MALE");
+        if (age.adult && gender.female) resolvedRow.push("ADULT FEMALE");
+        if (age.child && gender.male) resolvedRow.push("CHILD MALE");
+        if (age.child && gender.female) resolvedRow.push("CHILD FEMALE");
+        resolvedRow.push("Total");
+        rows.push(resolvedRow);
+
+        resolvedStats.forEach((stat) => {
+            const dataRow = [stat.category];
+            if (age.adult && gender.male) dataRow.push(stat.male_adult.toString());
+            if (age.adult && gender.female) dataRow.push(stat.female_adult.toString());
+            if (age.child && gender.male) dataRow.push(stat.male_child.toString());
+            if (age.child && gender.female) dataRow.push(stat.female_child.toString());
+            dataRow.push(stat.total.toString());
+            rows.push(dataRow);
+        });
+
+        const resolvedTotals = ["Total"];
+        if (age.adult && gender.male) resolvedTotals.push(rMAdult.toString());
+        if (age.adult && gender.female) resolvedTotals.push(rFAdult.toString());
+        if (age.child && gender.male) resolvedTotals.push(rMChild.toString());
+        if (age.child && gender.female) resolvedTotals.push(rFChild.toString());
+        resolvedTotals.push(rTotal.toString());
+        rows.push(resolvedTotals);
+
+        rows.push([""]);
+        const unresolvedRow = ["UNRESOLVED"];
+        if (age.adult && gender.male) unresolvedRow.push("ADULT MALE");
+        if (age.adult && gender.female) unresolvedRow.push("ADULT FEMALE");
+        if (age.child && gender.male) unresolvedRow.push("CHILD MALE");
+        if (age.child && gender.female) unresolvedRow.push("CHILD FEMALE");
+        unresolvedRow.push("Total");
+        rows.push(unresolvedRow);
+
+        unresolvedStats.forEach((stat) => {
+            const dataRow = [stat.category];
+            if (age.adult && gender.male) dataRow.push(stat.male_adult.toString());
+            if (age.adult && gender.female) dataRow.push(stat.female_adult.toString());
+            if (age.child && gender.male) dataRow.push(stat.male_child.toString());
+            if (age.child && gender.female) dataRow.push(stat.female_child.toString());
+            dataRow.push(stat.total.toString());
+            rows.push(dataRow);
+        });
+
+        const unresolvedTotals = ["Total"];
+        if (age.adult && gender.male) unresolvedTotals.push(unMAdult.toString());
+        if (age.adult && gender.female) unresolvedTotals.push(unFAdult.toString());
+        if (age.child && gender.male) unresolvedTotals.push(unMChild.toString());
+        if (age.child && gender.female) unresolvedTotals.push(unFChild.toString());
+        unresolvedTotals.push(unTotal.toString());
+        rows.push(unresolvedTotals);
+
         rows.push([""]);
 
-        // Follow Up Visits and New Clients
+        // DISABILITIES
+        rows.push(["**DISABILITIES**"]);
+        const disabilityTitle = ["Type"];
+        if (age.adult && gender.male) disabilityTitle.push("ADULT MALE");
+        if (age.adult && gender.female) disabilityTitle.push("ADULT FEMALE");
+        if (age.child && gender.male) disabilityTitle.push("CHILD MALE");
+        if (age.child && gender.female) disabilityTitle.push("CHILD FEMALE");
+        disabilityTitle.push("Total");
+        rows.push(disabilityTitle);
+
+        let fATotal = 0;
+        let mATotal = 0;
+        let fCTotal = 0;
+        let mCTotal = 0;
+        let totals = 0;
+
+        disabilities.forEach((k, v) => {
+            const data = [k];
+            const femaleAdultTotal =
+                stats?.disabilities.find((item) => item.disability_id === v)?.female_adult_total ??
+                0;
+            const maleAdultTotal =
+                stats?.disabilities.find((item) => item.disability_id === v)?.male_adult_total ?? 0;
+            const femaleChildTotal =
+                stats?.disabilities.find((item) => item.disability_id === v)?.female_child_total ??
+                0;
+            const maleChildTotal =
+                stats?.disabilities.find((item) => item.disability_id === v)?.male_child_total ?? 0;
+
+            if (age.adult && gender.male) data.push(maleAdultTotal);
+            if (age.adult && gender.female) data.push(femaleAdultTotal);
+            if (age.child && gender.male) data.push(maleChildTotal);
+            if (age.child && gender.female) data.push(femaleChildTotal);
+
+            fATotal += femaleAdultTotal;
+            mATotal += maleAdultTotal;
+            fCTotal += femaleChildTotal;
+            mCTotal += maleChildTotal;
+
+            const tempTotals =
+                femaleAdultTotal + maleAdultTotal + femaleChildTotal + maleChildTotal;
+            totals += femaleAdultTotal + maleAdultTotal + femaleChildTotal + maleChildTotal;
+
+            data.push(tempTotals);
+            rows.push(data);
+        });
+
+        rows.push(["Total", mATotal, fATotal, mCTotal, fCTotal, totals]);
+        rows.push([""]);
+
+        // FOLLOW UP VISITS AND CLIENTS
+        rows.push(["**FOLLOW UP VISITS AND NEW CLIENTS**"]);
         const categories = [
             { label: "New Clients", key: "new_clients" },
             { label: "Follow Up Visits", key: "follow_up_visits" },
@@ -88,8 +408,7 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
         ) => {
             const data =
                 statsData?.[category]?.find(
-                    (item: IStatsFollowUpVisits | IStatsNewClients) =>
-                        item.zone_id === zoneId && item.hcr_type === groupKey
+                    (item: StatsCategories) => item.zone_id === zoneId && item.hcr_type === groupKey
                 ) || {};
 
             return {
@@ -107,7 +426,7 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
                 "ADULT FEMALE",
                 "CHILD MALE",
                 "CHILD FEMALE",
-                "TOTALS",
+                "Total",
             ]);
             let runningTotal = 0;
             const totals: Record<string, number> = {};
@@ -154,7 +473,7 @@ const ExportStats = ({ open, onClose, stats }: IProps) => {
             rows.push([""]);
         });
         return rows;
-    }, [open, stats, zones, disabilities]);
+    }, [open, stats, zones, disabilities, age, gender]);
 
     return (
         <Dialog open={open} onClose={onClose}>

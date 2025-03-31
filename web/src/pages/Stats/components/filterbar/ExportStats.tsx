@@ -384,7 +384,12 @@ const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
             rows.push(data);
         });
 
-        rows.push(["Total", mATotal, fATotal, mCTotal, fCTotal, totals]);
+        const totalDisabilityRow = ["Total"];
+        if (age.adult && gender.male) totalDisabilityRow.push(mATotal.toString());
+        if (age.adult && gender.female) totalDisabilityRow.push(fATotal.toString());
+        if (age.child && gender.male) totalDisabilityRow.push(mCTotal.toString());
+        if (age.child && gender.female) totalDisabilityRow.push(fCTotal.toString());
+        totalDisabilityRow.push(totals.toString());
         rows.push([""]);
 
         // FOLLOW UP VISITS AND CLIENTS
@@ -393,7 +398,6 @@ const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
             { label: "New Clients", key: "new_clients" },
             { label: "Follow Up Visits", key: "follow_up_visits" },
         ];
-
         const groups = [
             { label: "HC", key: "HC" },
             { label: "R", key: "R" },
@@ -410,7 +414,6 @@ const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
                 statsData?.[category]?.find(
                     (item: StatsCategories) => item.zone_id === zoneId && item.hcr_type === groupKey
                 ) || {};
-
             return {
                 maleAdult: data.male_adult_total ?? 0,
                 femaleAdult: data.female_adult_total ?? 0,
@@ -420,56 +423,67 @@ const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
         };
 
         zones.forEach((k, v) => {
-            rows.push([
-                `${k}`,
-                "ADULT MALE",
-                "ADULT FEMALE",
-                "CHILD MALE",
-                "CHILD FEMALE",
-                "Total",
-            ]);
+            const columnHeaders = [""];
+            if (age.adult && gender.male) columnHeaders.push("ADULT MALE");
+            if (age.adult && gender.female) columnHeaders.push("ADULT FEMALE");
+            if (age.child && gender.male) columnHeaders.push("CHILD MALE");
+            if (age.child && gender.female) columnHeaders.push("CHILD FEMALE");
+            columnHeaders.push("Total");
+
+            rows.push([k, ...columnHeaders.slice(1)]);
+
             let runningTotal = 0;
-            const totals: Record<string, number> = {};
+            const totals: Record<string, number> = {
+                adult_male_total: 0,
+                adult_female_total: 0,
+                child_male_total: 0,
+                child_female_total: 0,
+            };
 
             groups.forEach(({ label: groupLabel, key: groupKey }) => {
                 categories.forEach(({ label, key: categoryKey }) => {
                     const data = calculateTotal(stats, categoryKey, v, groupKey);
-                    const total =
-                        data.maleAdult + data.femaleAdult + data.maleChild + data.femaleChild;
-                    runningTotal += total;
 
-                    const demographics = [
-                        { key: "adult_male", value: data.maleAdult },
-                        { key: "adult_female", value: data.femaleAdult },
-                        { key: "child_male", value: data.maleChild },
-                        { key: "child_female", value: data.femaleChild },
-                    ];
+                    const rowData = [`${label} (${groupLabel})`];
 
-                    demographics.forEach(({ key, value }) => {
-                        const totalKey = `${key}_${v}`;
-                        totals[totalKey] = (totals[totalKey] || 0) + value;
-                    });
+                    if (age.adult && gender.male) {
+                        rowData.push(data.maleAdult);
+                        totals.adult_male_total += data.maleAdult;
+                    }
+                    if (age.adult && gender.female) {
+                        rowData.push(data.femaleAdult);
+                        totals.adult_female_total += data.femaleAdult;
+                    }
+                    if (age.child && gender.male) {
+                        rowData.push(data.maleChild);
+                        totals.child_male_total += data.maleChild;
+                    }
+                    if (age.child && gender.female) {
+                        rowData.push(data.femaleChild);
+                        totals.child_female_total += data.femaleChild;
+                    }
 
-                    rows.push([
-                        `${label} (${groupLabel})`,
-                        data.maleAdult,
-                        data.femaleAdult,
-                        data.maleChild,
-                        data.femaleChild,
-                        total,
-                    ]);
+                    const filteredTotal =
+                        (age.adult && gender.male ? data.maleAdult : 0) +
+                        (age.adult && gender.female ? data.femaleAdult : 0) +
+                        (age.child && gender.male ? data.maleChild : 0) +
+                        (age.child && gender.female ? data.femaleChild : 0);
+
+                    rowData.push(filteredTotal);
+                    runningTotal += filteredTotal;
+
+                    rows.push(rowData);
                 });
             });
 
-            rows.push([
-                "Total",
-                totals[`adult_male_${v}`],
-                totals[`adult_female_${v}`],
-                totals[`child_male_${v}`],
-                totals[`child_female_${v}`],
-                runningTotal,
-            ]);
+            const totalRow = ["Total"];
+            if (age.adult && gender.male) totalRow.push(totals.adult_male_total.toString());
+            if (age.adult && gender.female) totalRow.push(totals.adult_female_total.toString());
+            if (age.child && gender.male) totalRow.push(totals.child_male_total.toString());
+            if (age.child && gender.female) totalRow.push(totals.child_female_total.toString());
+            totalRow.push(runningTotal.toString());
 
+            rows.push(totalRow);
             rows.push([""]);
         });
         return rows;

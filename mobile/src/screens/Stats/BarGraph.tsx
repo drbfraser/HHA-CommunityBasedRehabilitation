@@ -3,6 +3,7 @@ import {
     VictoryAxis,
     VictoryBar,
     VictoryChart,
+    VictoryContainer,
     VictoryGroup,
     VictoryLegend,
     VictoryTheme,
@@ -25,7 +26,8 @@ const BarGraph = (graphProps: IProps) => {
         <VictoryChart
             animate={{ duration: 500 }}
             domainPadding={10}
-            padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
+            padding={{ left: 100, right: 50, bottom: 30, top: 30 }}
+            containerComponent={<VictoryContainer />}
             theme={VictoryTheme.material}
         >
             {graphProps.legend && (
@@ -37,22 +39,6 @@ const BarGraph = (graphProps: IProps) => {
                     data={graphProps.legend}
                 />
             )}
-            {/* <VictoryLegend
-                x={300}
-                y={0}
-                gutter={50}
-                style={{ title: { fontSize: 20 } }}
-                data={[
-                    {
-                        name: t("statistics.unresolved"),
-                        symbol: { fill: themeColors.riskRed },
-                    },
-                    {
-                        name: t("statistics.resolved"),
-                        symbol: { fill: themeColors.riskGreen },
-                    },
-                ]}
-            /> */}
             <VictoryAxis
                 style={{
                     axisLabel: { fontSize: 12 },
@@ -80,6 +66,7 @@ const BarGraph = (graphProps: IProps) => {
                             style={{ data: { fill: item.colour } }}
                             alignment="middle"
                             data={item.data}
+                            key={item.key}
                             events={[
                                 {
                                     target: "data",

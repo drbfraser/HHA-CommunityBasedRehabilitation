@@ -35,11 +35,14 @@ export type PieStat = {
 export type BarGraphData = {
     data: BarStat[];
     colour: string;
+    key: string;
 };
 
 export type LegendColours = {
     name: string;
-    symbol: string;
+    symbol: {
+        fill: string;
+    };
 };
 
 const Stats = () => {
@@ -104,6 +107,7 @@ const Stats = () => {
         const barGraphData: BarGraphData = {
             data: fetchVisitData,
             colour: themeColors.blueAccent,
+            key: "visit_stats",
         };
         const barGraphDataArray: BarGraphData[] = [barGraphData];
 
@@ -186,11 +190,13 @@ const Stats = () => {
         const resolvedData: BarGraphData = {
             data: fetchResovledReferralData,
             colour: themeColors.riskGreen,
+            key: "resolved_stats",
         };
 
         const unresolved: BarGraphData = {
             data: fetchUnResovledReferralData,
             colour: themeColors.riskRed,
+            key: "unresolved_stats",
         };
 
         const barGraphDataArray: BarGraphData[] = [resolvedData, unresolved];
@@ -198,11 +204,13 @@ const Stats = () => {
         const legendColours: LegendColours[] = [
             {
                 name: t("statistics.unresolved"),
-                symbol: themeColors.riskRed,
+                symbol: {
+                    fill: themeColors.riskRed,
+                },
             },
             {
                 name: t("statistics.resolved"),
-                symbol: themeColors.riskGreen,
+                symbol: { fill: themeColors.riskGreen },
             },
         ];
 
@@ -246,6 +254,7 @@ const Stats = () => {
         const barGraphData: BarGraphData = {
             data: fetchDisabilityData,
             colour: themeColors.blueAccent,
+            key: "disability_staats",
         };
         const barGraphDataArray: BarGraphData[] = [barGraphData];
 

@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { IUser } from "@cbr/common/util/users";
 import {
     Autocomplete,
     Button,
@@ -9,7 +8,8 @@ import {
     DialogTitle,
     TextField,
 } from "@mui/material";
-import { IUser } from "@cbr/common/util/users";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
     open: boolean;

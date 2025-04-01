@@ -74,7 +74,7 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                                 onChange={handleAccordianChange("byMonth")}
                             >
                                 <AccordionSummary expandIcon={<KeyboardArrowRightIcon />}>
-                                    <Typography>Monthly</Typography>
+                                    <Typography>{t("statistics.monthly")}</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -110,7 +110,7 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                                 onChange={handleAccordianChange("specific")}
                             >
                                 <AccordionSummary expandIcon={<KeyboardArrowRightIcon />}>
-                                    <Typography>Specific Date</Typography>
+                                    <Typography>{t("statistics.specificDate")}</Typography>
                                 </AccordionSummary>
 
                                 <StyledDialogContent>

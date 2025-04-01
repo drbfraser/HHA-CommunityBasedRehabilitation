@@ -364,7 +364,10 @@ interface Resources {
       "caregiverDetails": "&Caregiver Details",
       "chooseImageFrom": "&Choose an Image from",
       "gallery": "&Gallery",
-      "camera": "&Camera"
+      "camera": "&Camera",
+      "hcrType": "&HCR Type",
+      "hostCommunity": "&Host Community",
+      "refugee": "&Refugee"
     },
     "referralAttr": {
       "dateReferred": "&Date Referred",
@@ -756,7 +759,9 @@ interface Resources {
       "totalDisFChild": "&Total Female Children With Disabilities:",
       "totalDisMChild": "&Total Male Chidlren With Disabilities:",
       "totalDisFAdult": "&Total Female Adults With Disabilities:",
-      "totalDisMAdult": "&Total Male Adults With Disabilities:"
+      "totalDisMAdult": "&Total Male Adults With Disabilities:",
+      "specificDate": "&Specific Date",
+      "monthly": "&By Month"
     },
     "sync": {
       "sureResetLocalDB": "A to'diri do mimindi nyogu tunda/ pedda/ tetenakinda 'bura'",
@@ -1166,7 +1171,10 @@ interface Resources {
       "caregiverDetails": "Caregiver Details",
       "chooseImageFrom": "Choose an Image from",
       "gallery": "Gallery",
-      "camera": "Camera"
+      "camera": "Camera",
+      "hcrType": "HCR Type",
+      "hostCommunity": "Host Community",
+      "refugee": "Refugee"
     },
     "referralAttr": {
       "dateReferred": "Date Referred",
@@ -1558,7 +1566,9 @@ interface Resources {
       "totalDisFChild": "Total Female Children With Disabilities:",
       "totalDisMChild": "Total Male Chidlren With Disabilities:",
       "totalDisFAdult": "Total Female Adults With Disabilities:",
-      "totalDisMAdult": "Total Male Adults With Disabilities:"
+      "totalDisMAdult": "Total Male Adults With Disabilities:",
+      "specificDate": "Specific Date",
+      "monthly": "By Month"
     },
     "sync": {
       "sureResetLocalDB": "Are you sure you want to reset local database",

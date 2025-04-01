@@ -31,7 +31,7 @@ const Stats = () => {
     const [users, setUsers] = useState<IUser[]>([]);
     const [user, setUser] = useState<IUser | null>(null);
 
-    // filtering the demographic will not call on the API
+    // Filtering the demographic will not call on the API
     // It will return the demographic statistics by default
     // This was done in order to prevent recalls for a large amount of data
     const [gender, setGender] = useState(defaultGenderConfigs);

@@ -23,6 +23,7 @@ import {
     StatsVisitCategory,
 } from "@cbr/common/util/stats";
 import { IDemographicTotals } from "../charts/HorizontalBarGraphStats";
+import { IDateRange } from "./StatsDateFilter";
 import { IAge, IGender } from "./StatsDemographicFilter";
 
 interface IProps {
@@ -31,6 +32,7 @@ interface IProps {
     stats?: IStats;
     age: IAge;
     gender: IGender;
+    date: IDateRange;
 }
 
 type StatsCategories =
@@ -89,7 +91,7 @@ interface ILabelledDemographicTotals extends IDemographicTotals {
     total: number;
 }
 
-const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
+const ExportStats = ({ open, onClose, stats, age, gender, date }: IProps) => {
     const zones = useZones();
     const { t } = useTranslation();
     const disabilities = useDisabilities(t);
@@ -99,7 +101,26 @@ const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
             return "Data not ready";
         }
 
+        const demographicRows = (title?: string) => {
+            const row = [title];
+            if (age.adult && gender.male) row.push("ADULT MALE");
+            if (age.adult && gender.female) row.push("ADULT FEMALE");
+            if (age.child && gender.male) row.push("CHILD MALE");
+            if (age.child && gender.female) row.push("CHILD FEMALE");
+            row.push("Total");
+            return row;
+        };
+
         const rows = [];
+
+        // DATE range
+        if (date.from === "" && date.to === "") {
+            rows.push(["DATE RANGE: All Time"]);
+        } else {
+            rows.push(["DATE RANGE: ", date.from, date.to]);
+        }
+
+        rows.push([""]);
 
         // VISTS Stats
         const visitDataArray: Array<{
@@ -180,14 +201,7 @@ const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
 
         rows.push(["***VISITS***"]);
         visitDataArray.forEach((v) => {
-            const row = [v.zone];
-
-            if (age.adult && gender.male) row.push("ADULT MALE");
-            if (age.adult && gender.female) row.push("ADULT FEMALE");
-            if (age.child && gender.male) row.push("CHILD MALE");
-            if (age.child && gender.female) row.push("CHILD FEMALE");
-            row.push("Total");
-
+            const row = demographicRows(v.zone);
             rows.push(row);
 
             v.categories.forEach((c) => {
@@ -282,13 +296,8 @@ const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
             i += 1;
         });
 
-        const resolvedRow = ["RESOLVED"];
-        if (age.adult && gender.male) resolvedRow.push("ADULT MALE");
-        if (age.adult && gender.female) resolvedRow.push("ADULT FEMALE");
-        if (age.child && gender.male) resolvedRow.push("CHILD MALE");
-        if (age.child && gender.female) resolvedRow.push("CHILD FEMALE");
-        resolvedRow.push("Total");
-        rows.push(resolvedRow);
+        const resRows = demographicRows("RESOLVED");
+        rows.push(resRows);
 
         resolvedStats.forEach((stat) => {
             const dataRow = [stat.category];
@@ -309,13 +318,8 @@ const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
         rows.push(resolvedTotals);
 
         rows.push([""]);
-        const unresolvedRow = ["UNRESOLVED"];
-        if (age.adult && gender.male) unresolvedRow.push("ADULT MALE");
-        if (age.adult && gender.female) unresolvedRow.push("ADULT FEMALE");
-        if (age.child && gender.male) unresolvedRow.push("CHILD MALE");
-        if (age.child && gender.female) unresolvedRow.push("CHILD FEMALE");
-        unresolvedRow.push("Total");
-        rows.push(unresolvedRow);
+        const unRes = demographicRows("UNRESOLVED");
+        rows.push(unRes);
 
         unresolvedStats.forEach((stat) => {
             const dataRow = [stat.category];
@@ -339,12 +343,7 @@ const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
 
         // DISABILITIES
         rows.push(["**DISABILITIES**"]);
-        const disabilityTitle = ["Type"];
-        if (age.adult && gender.male) disabilityTitle.push("ADULT MALE");
-        if (age.adult && gender.female) disabilityTitle.push("ADULT FEMALE");
-        if (age.child && gender.male) disabilityTitle.push("CHILD MALE");
-        if (age.child && gender.female) disabilityTitle.push("CHILD FEMALE");
-        disabilityTitle.push("Total");
+        const disabilityTitle = demographicRows("Type");
         rows.push(disabilityTitle);
 
         let fATotal = 0;
@@ -423,14 +422,9 @@ const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
         };
 
         zones.forEach((k, v) => {
-            const columnHeaders = [""];
-            if (age.adult && gender.male) columnHeaders.push("ADULT MALE");
-            if (age.adult && gender.female) columnHeaders.push("ADULT FEMALE");
-            if (age.child && gender.male) columnHeaders.push("CHILD MALE");
-            if (age.child && gender.female) columnHeaders.push("CHILD FEMALE");
-            columnHeaders.push("Total");
+            const res = demographicRows("");
 
-            rows.push([k, ...columnHeaders.slice(1)]);
+            rows.push([k, ...res.slice(1)]);
 
             let runningTotal = 0;
             const totals: Record<string, number> = {
@@ -487,7 +481,7 @@ const ExportStats = ({ open, onClose, stats, age, gender }: IProps) => {
             rows.push([""]);
         });
         return rows;
-    }, [open, stats, zones, disabilities, age, gender]);
+    }, [open, stats, zones, disabilities, age, gender, date]);
 
     return (
         <Dialog open={open} onClose={onClose}>

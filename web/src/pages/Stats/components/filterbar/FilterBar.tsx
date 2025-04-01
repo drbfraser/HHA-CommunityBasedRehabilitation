@@ -1,15 +1,15 @@
+import { Button, Chip, styled } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Chip, styled } from "@mui/material";
 
-import { IUser } from "@cbr/common/util/users";
 import { IStats } from "@cbr/common/util/stats";
-import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
-import StatsUserFilter from "./StatsUserFilter";
-import ExportStats from "./ExportStats";
-import StatsDemographicFilter, { IAge, IGender } from "./StatsDemographicFilter";
-import IOSSwitch from "components/IOSSwitch/IOSSwitch";
+import { IUser } from "@cbr/common/util/users";
 import { Typography } from "@mui/material";
+import IOSSwitch from "components/IOSSwitch/IOSSwitch";
+import ExportStats from "./ExportStats";
+import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
+import StatsDemographicFilter, { IAge, IGender } from "./StatsDemographicFilter";
+import StatsUserFilter from "./StatsUserFilter";
 
 const FilterControls = styled("div")({
     display: "flex",
@@ -152,6 +152,7 @@ const FilterBar = ({
                 stats={stats}
                 age={age}
                 gender={gender}
+                date={dateRange}
             />
         </menu>
     );

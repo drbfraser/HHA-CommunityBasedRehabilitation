@@ -35,6 +35,7 @@ export enum ClientField {
     mentalGoals = "mentalGoals",
     picture = "picture",
     pictureChanged = "pictureChanged",
+    hcrType = "hcrType",
 
     // Required to match DB attributes to display client details in web app
     first_name = "first_name",
@@ -61,7 +62,7 @@ export enum ClientField {
     mental_timestamp = "mental_timestamp",
     last_visit_date = "last_visit_date",
     is_active = "is_active",
-    hcrType = "hcr_type",
+    hcr_type = "hcr_type",
 }
 
 export enum ClientDetailsFields {

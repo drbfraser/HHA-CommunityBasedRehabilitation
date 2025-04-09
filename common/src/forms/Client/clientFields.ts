@@ -156,7 +156,7 @@ const refreshArrays = () => {
         [ClientField.caregiver_email]: i18n.t("clientFields.caregiverEmail"),
         [ClientField.disability]: i18n.t("clientFields.disability"),
         [ClientField.other_disability]: i18n.t("clientFields.otherDisability"),
-        [ClientField.hcrType]: i18n.t("clientFields.hcrType"),
+        [ClientField.hcr_type]: i18n.t("clientFields.hcrType"),
     };
 };
 refreshArrays();

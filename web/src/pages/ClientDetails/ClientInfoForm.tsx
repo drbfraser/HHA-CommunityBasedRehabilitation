@@ -266,7 +266,7 @@ const ClientInfoForm = (props: IProps) => {
                                             {props?.clientInfo[ClientDetailsFields.hcr_type] ===
                                                 HCRType.NOT_SET && (
                                                 <MenuItem value={HCRType.NOT_SET}>
-                                                    {HCRType.NOT_SET}
+                                                    {t("clientFields.na")}
                                                 </MenuItem>
                                             )}
                                             <MenuItem value={HCRType.HOST_COMMUNITY}>

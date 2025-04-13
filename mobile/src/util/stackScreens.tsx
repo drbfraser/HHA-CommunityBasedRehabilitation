@@ -18,6 +18,7 @@ import Login from "../screens/Login/Login";
 import SwitchServer from "../screens/SwitchServer/SwitchServer";
 import AlertInbox from "../screens/AlertInbox/AlertInbox";
 import i18n from "i18next";
+import Referrals from "../screens/Referrals/Referrals";
 
 export const stackScreenProps: Record<
     StackScreenName | NoAuthScreenName,
@@ -25,6 +26,7 @@ export const stackScreenProps: Record<
 > = {
     [StackScreenName.HOME]: HomeScreen,
     [StackScreenName.CLIENT]: ClientDetails,
+    [StackScreenName.REFERRALS]: Referrals,
     [StackScreenName.ADMIN_VIEW]: AdminView,
     [StackScreenName.ADMIN_EDIT]: AdminEdit,
     [StackScreenName.ADMIN_NEW]: AdminNew,

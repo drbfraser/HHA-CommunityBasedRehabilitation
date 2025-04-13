@@ -11,6 +11,7 @@ import {
     ClientField,
     clientFieldLabels,
     genders,
+    hcrTypes,
     isThisExportingString,
     TClientValues,
     themeColors,
@@ -284,6 +285,16 @@ export const ClientForm = (props: IClientFormProps) => {
                 formikProps={props.formikProps}
                 valuesType="record-string"
                 values={genders}
+                mode="outlined"
+                disabled={isFieldDisabled()}
+            />
+            <FormikExposedDropdownMenu
+                style={styles.field}
+                field={ClientField.hcrType}
+                fieldLabels={clientFieldLabels}
+                formikProps={props.formikProps}
+                valuesType="record-string"
+                values={hcrTypes}
                 mode="outlined"
                 disabled={isFieldDisabled()}
             />

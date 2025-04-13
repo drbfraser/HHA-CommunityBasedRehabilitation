@@ -30,6 +30,7 @@ export const handleSubmit = async (
                 client.caregiver_phone = values.caregiverPhone;
                 client.caregiver_email = values.caregiverEmail;
                 client.is_active = values.is_active;
+                client.hcr_type = values.hcrType;
             });
         });
 

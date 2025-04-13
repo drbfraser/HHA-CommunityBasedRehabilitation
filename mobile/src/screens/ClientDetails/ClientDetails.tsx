@@ -109,6 +109,7 @@ const ClientDetails = (props: ClientProps) => {
                 disability: client.disability,
                 otherDisability: client.other_disability,
                 is_active: client.is_active,
+                hcrType: client.hcr_type,
             };
             return clientFormProps;
         } else {

@@ -18,13 +18,23 @@ import useStyles from "./Referrals.styles";
 import { BriefReferral, fetchReferrals } from "./ReferralsRequest";
 import Icon from "react-native-vector-icons/FontAwesome";
 
+const STATUS = {
+    PENDING: "pending",
+    RESOLVED: "resolved",
+    ALL: "all",
+};
+
 const Referrals = () => {
     const styles = useStyles();
     const database = useDatabase();
     const navigation = useNavigation();
     const { t } = useTranslation();
 
-    const [referralList, setReferralList] = useState<BriefReferral[]>([]);
+    const [referrals, setReferrals] = useState<BriefReferral[]>([]);
+    const [filteredReferrals, setFilteredReferrals] = useState<BriefReferral[]>([]);
+    const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+    const [filterStatus, setFilterStatus] = useState<string>(STATUS.PENDING);
+
     const [sortOption, setSortOption] = useState<string>(SortOptions.DATE);
     const [sortDirection, setSortDirection] = useState<TSortDirection>("None");
 
@@ -35,7 +45,7 @@ const Referrals = () => {
                 referralComparator(a, b, sortOption, sortDirection)
             );
         }
-        setReferralList(fetchedReferrals);
+        setReferrals(fetchedReferrals);
     };
 
     const handleSortBy = async (option: string) => {
@@ -89,38 +99,36 @@ const Referrals = () => {
                         </DataTable.Title>
                     </DataTable.Header>
 
-                    {referralList.map((item) => (
+                    {referrals.map((r) => (
                         <DataTable.Row
-                            key={item.id}
+                            key={r.id}
                             style={styles.item}
                             onPress={() =>
                                 navigation.navigate("ClientDetails", {
-                                    clientID: item.client_id,
+                                    clientID: r.client_id,
                                 })
                             }
                         >
                             <View style={styles.column_referral_status}>
                                 <Text>
                                     <Icon
-                                        name={item.resolved ? "check-circle" : "clock-o"}
+                                        name={r.resolved ? "check-circle" : "clock-o"}
                                         size={15}
                                         color={
-                                            item.resolved
-                                                ? themeColors.riskGreen
-                                                : themeColors.riskRed
+                                            r.resolved ? themeColors.riskGreen : themeColors.riskRed
                                         }
                                     />
                                 </Text>
                             </View>
                             <View style={styles.column_referral_name}>
-                                <Text>{item.full_name}</Text>
+                                <Text>{r.full_name}</Text>
                             </View>
                             <View style={styles.column_referral_type}>
-                                <Text>{item.type}</Text>
+                                <Text>{r.type}</Text>
                             </View>
                             <DataTable.Cell style={styles.column_referral_date}>
                                 <Text>
-                                    {timestampToDate(Number(item.date_referred), locale, timezone)}
+                                    {timestampToDate(Number(r.date_referred), locale, timezone)}
                                 </Text>
                             </DataTable.Cell>
                         </DataTable.Row>

@@ -31,7 +31,7 @@ const concatenateReferralType = (referral: IReferral) => {
         referralTypes.push(i18n.t("referral.hhaNutritionAndAgricultureProjectAbbr"));
     }
     if (referral.mental_health) {
-        referralTypes.push(i18n.t("referral.mental"));
+        referralTypes.push(i18n.t("referral.mentalHealth"));
     }
     if (referral.services_other) {
         referralTypes.push(referral.services_other);

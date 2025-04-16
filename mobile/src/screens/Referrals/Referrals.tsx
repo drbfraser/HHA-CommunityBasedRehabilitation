@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
-import { Card, DataTable } from "react-native-paper";
+import { Card, DataTable, Chip } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { useNavigation } from "@react-navigation/native";
@@ -34,6 +34,14 @@ const Referrals = () => {
     const [filteredReferrals, setFilteredReferrals] = useState<BriefReferral[]>([]);
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [filterStatus, setFilterStatus] = useState<string>(STATUS.PENDING);
+    const TYPES = [
+        t("referral.wheelchair"),
+        t("referral.physiotherapy"),
+        t("referral.hhaNutritionAndAgricultureProjectAbbr"),
+        t("referral.orthotic"),
+        t("referral.prosthetic"),
+        t("referral.mentalHealth"),
+    ];
 
     const [sortOption, setSortOption] = useState<string>(SortOptions.DATE);
     const [sortDirection, setSortDirection] = useState<TSortDirection>("None");
@@ -48,7 +56,7 @@ const Referrals = () => {
         setReferrals(fetchedReferrals);
     };
 
-    const handleSortBy = async (option: string) => {
+    const handleSortBy = (option: string) => {
         sortBy(option, sortOption, sortDirection, setSortOption, setSortDirection);
     };
 
@@ -57,16 +65,70 @@ const Referrals = () => {
     };
 
     useEffect(() => {
+        let filtered = referrals;
+
+        if (filterStatus !== STATUS.ALL) {
+            const resolved = filterStatus === STATUS.RESOLVED;
+            filtered = filtered.filter((r) => r.resolved === resolved);
+        }
+
+        if (selectedTypes.length > 0) {
+            filtered = filtered.filter((r) => selectedTypes.some((type) => r.type.includes(type)));
+        }
+
+        setFilteredReferrals(filtered);
+    }, [referrals, filterStatus, selectedTypes]);
+
+    useEffect(() => {
         getReferrals();
     }, [sortOption, sortDirection]);
 
+    const toggleType = (type: string) => {
+        setSelectedTypes((prev) =>
+            prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+        );
+    };
+
     const locale = NativeModules.I18nManager.localeIdentifier;
-    const timezone = Localization.timezone; // todo: resolve deprecated
+    const timezone = Localization.timezone;
 
     return (
         <ScrollView style={styles.container}>
             <Card>
                 <Card.Title title={t("statistics.referrals")} />
+
+                <View style={styles.filterView}>
+                    <Text style={styles.filterLabel}>{t("referral.filterByStatus")}:</Text>
+                    <View style={styles.filterContainer}>
+                        {Object.values(STATUS).map((status) => (
+                            <Chip
+                                key={status}
+                                selected={filterStatus === status}
+                                onPress={() => setFilterStatus(status)}
+                                style={styles.chip}
+                            >
+                                {status === STATUS.ALL && t("general.all")}
+                                {status === STATUS.PENDING && t("general.pending")}
+                                {status === STATUS.RESOLVED && t("general.resolved")}
+                            </Chip>
+                        ))}
+                    </View>
+
+                    <Text style={styles.filterLabel}>{t("referral.filterByType")}:</Text>
+                    <View style={styles.filterContainer}>
+                        {TYPES.map((type) => (
+                            <Chip
+                                key={type}
+                                selected={selectedTypes.includes(type)}
+                                onPress={() => toggleType(type)}
+                                style={styles.chip}
+                            >
+                                {type}
+                            </Chip>
+                        ))}
+                    </View>
+                </View>
+
                 <DataTable>
                     <DataTable.Header style={styles.item}>
                         <DataTable.Title
@@ -99,7 +161,7 @@ const Referrals = () => {
                         </DataTable.Title>
                     </DataTable.Header>
 
-                    {referrals.map((r) => (
+                    {filteredReferrals.map((r) => (
                         <DataTable.Row
                             key={r.id}
                             style={styles.item}

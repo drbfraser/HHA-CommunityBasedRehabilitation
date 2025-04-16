@@ -13,9 +13,10 @@ import {
     arrowDirectionController,
     TSortDirection,
 } from "../../util/listFunctions";
-import { timestampToDate } from "@cbr/common";
+import { themeColors, timestampToDate } from "@cbr/common";
 import useStyles from "./Referrals.styles";
 import { BriefReferral, fetchReferrals } from "./ReferralsRequest";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const Referrals = () => {
     const styles = useStyles();
@@ -99,7 +100,17 @@ const Referrals = () => {
                             }
                         >
                             <View style={styles.column_referral_status}>
-                                <Text>TEST</Text>
+                                <Text>
+                                    <Icon
+                                        name={item.resolved ? "check-circle" : "clock-o"}
+                                        size={15}
+                                        color={
+                                            item.resolved
+                                                ? themeColors.riskGreen
+                                                : themeColors.riskRed
+                                        }
+                                    />
+                                </Text>
                             </View>
                             <View style={styles.column_referral_name}>
                                 <Text>{item.full_name}</Text>

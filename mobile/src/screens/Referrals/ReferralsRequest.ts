@@ -2,7 +2,7 @@ import { IReferral } from "@cbr/common";
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
 import i18n from "i18next";
-import { Model } from "@nozbe/watermelondb";
+import Client from "@/src/models/Client";
 
 export type BriefReferral = {
     id: string;
@@ -46,24 +46,24 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
     try {
         const fetchedClients = await database.get(modelName.clients).query().fetch();
 
-        for (const client of fetchedClients) {
+        for (const clientData of fetchedClients) {
+            const client = clientData as Client;
+
             if (client.is_active) {
                 const referrals = await client.referrals.fetch();
 
-                if (referrals.length > 0) {
-                    referrals.forEach((referral) => {
-                        const r: BriefReferral = {
-                            id: referral.id,
-                            client_id: client.id,
-                            full_name: client.full_name,
-                            type: concatenateReferralType(referral),
-                            date_referred: referral.date_referred,
-                            resolved: referral.resolved,
-                        };
+                referrals.forEach((referral) => {
+                    const r: BriefReferral = {
+                        id: referral.id,
+                        client_id: client.id,
+                        full_name: client.full_name,
+                        type: concatenateReferralType(referral),
+                        date_referred: referral.date_referred,
+                        resolved: referral.resolved,
+                    };
 
-                        clientReferrals.push(r);
-                    });
-                }
+                    clientReferrals.push(r);
+                });
             }
         }
 

@@ -1,12 +1,8 @@
-import { clientPrioritySort, getZones, IOutstandingReferral } from "@cbr/common";
-import { IClientSummary } from "@cbr/common";
-import { riskLevels } from "@cbr/common";
+import { IReferral } from "@cbr/common";
 import { modelName } from "../../models/constant";
-import { ClientListRow } from "../ClientList/ClientListRequest";
 import { dbType } from "../../util/watermelonDatabase";
-import { Q } from "@nozbe/watermelondb";
-import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 import i18n from "i18next";
+import { Model } from "@nozbe/watermelondb";
 
 export type BriefReferral = {
     id: string;
@@ -14,9 +10,10 @@ export type BriefReferral = {
     full_name: string;
     type: string;
     date_referred: number;
+    resolved: boolean;
 };
 
-const concatenateReferralType = (referral: IOutstandingReferral) => {
+const concatenateReferralType = (referral: IReferral) => {
     const referralTypes: String[] = [];
     if (referral.orthotic) {
         referralTypes.push(i18n.t("referral.orthotic"));
@@ -44,43 +41,35 @@ const concatenateReferralType = (referral: IOutstandingReferral) => {
 };
 
 export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]> => {
-    let clientReferrals: Array<BriefReferral> = [];
-    let fetchReferrals;
+    const clientReferrals: BriefReferral[] = [];
 
-    await database
-        .get(modelName.clients)
-        .query()
-        .fetch()
-        .then((fetchedClients) => {
-            let clientCount = 0;
+    try {
+        const fetchedClients = await database.get(modelName.clients).query().fetch();
 
-            fetchReferrals = new Promise<void>((resolve) => {
-                fetchedClients.forEach(async (client) => {
-                    const referrals = await client.outstandingReferrals.fetch();
-                    if (referrals.length > 0) {
-                        referrals.forEach((referral) => {
-                            const currReferral: BriefReferral = {
-                                id: referral.id,
-                                client_id: client.id,
-                                full_name: client.full_name,
-                                type: concatenateReferralType(referral),
-                                date_referred: referral.date_referred,
-                            };
+        for (const client of fetchedClients) {
+            if (client.is_active) {
+                const referrals = await client.referrals.fetch();
 
-                            clientReferrals.push(currReferral);
-                        });
-                    }
+                if (referrals.length > 0) {
+                    referrals.forEach((referral) => {
+                        const r: BriefReferral = {
+                            id: referral.id,
+                            client_id: client.id,
+                            full_name: client.full_name,
+                            type: concatenateReferralType(referral),
+                            date_referred: referral.date_referred,
+                            resolved: referral.resolved,
+                        };
 
-                    clientCount++;
-                    if (clientCount == fetchedClients.length) {
-                        resolve();
-                    }
-                });
-            });
-        });
+                        clientReferrals.push(r);
+                    });
+                }
+            }
+        }
 
-    await fetchReferrals;
-    return clientReferrals
-        .sort((a: BriefReferral, b: BriefReferral) => b.date_referred - a.date_referred)
-        .slice(0, 5); /* Display 5 most recent outstanding referrals */
+        return clientReferrals.sort((a, b) => b.date_referred - a.date_referred);
+    } catch (error) {
+        console.error("Failed to fetch referrals:", error);
+        return [];
+    }
 };

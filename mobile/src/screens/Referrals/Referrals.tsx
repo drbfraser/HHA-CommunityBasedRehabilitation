@@ -99,7 +99,6 @@ const Referrals = () => {
                             }
                         >
                             <View style={styles.column_referral_status}>
-                                {/* <Text>{item.full_name}</Text> */}
                                 <Text>TEST</Text>
                             </View>
                             <View style={styles.column_referral_name}>

@@ -24,22 +24,22 @@ module.exports = function withAndroidSigningConfig(config) {
             }
         }`;
 
-  return withAppBuildGradle(config, (config) => {
-    config.modResults.contents = config.modResults.contents.replace(
-      /signingConfigs \{([\s\S]*?)\}/, // Modify existing signingConfigs without removing debug
-      (match) => {
-        if (/release \{/.test(match)) {
-          return match.replace(/release \{([\s\S]*?)\}/, signingConfig);
-        }
-        return match.trim() + signingConfig;
-      }
-    );
+    return withAppBuildGradle(config, (config) => {
+        config.modResults.contents = config.modResults.contents.replace(
+            /signingConfigs \{([\s\S]*?)\}/, // Modify existing signingConfigs without removing debug
+            (match) => {
+                if (/release \{/.test(match)) {
+                    return match.replace(/release \{([\s\S]*?)\}/, signingConfig);
+                }
+                return match.trim() + signingConfig;
+            }
+        );
 
-    config.modResults.contents = config.modResults.contents.replace(
-      /buildTypes \{([\s\S]*?)release \{([\s\S]*?)signingConfig signingConfigs\.debug/, // Ensure release config uses signingConfigs.release
-      `buildTypes { $1release { $2signingConfig signingConfigs.release`
-    );
+        config.modResults.contents = config.modResults.contents.replace(
+            /buildTypes \{([\s\S]*?)release \{([\s\S]*?)signingConfig signingConfigs\.debug/, // Ensure release config uses signingConfigs.release
+            `buildTypes { $1release { $2signingConfig signingConfigs.release`
+        );
 
-    return config;
-  });
+        return config;
+    });
 };

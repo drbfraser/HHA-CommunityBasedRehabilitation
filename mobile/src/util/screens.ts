@@ -37,7 +37,7 @@ export const screens: IScreen[] = [
     {
         name: "Referrals",
         Component: Referrals,
-        iconName: "server-network",
+        iconName: "briefcase-clock",
     },
     {
         name: "Sync",

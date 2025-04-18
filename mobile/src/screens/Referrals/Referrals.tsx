@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Text, View, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
 import { Card, DataTable, Chip } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import {
     SortOptions,
@@ -79,9 +79,11 @@ const Referrals = () => {
         setFilteredReferrals(filtered);
     }, [referrals, filterStatus, selectedTypes]);
 
-    useEffect(() => {
-        getReferrals();
-    }, [sortOption, sortDirection]);
+    useFocusEffect(
+        useCallback(() => {
+            getReferrals();
+        }, [sortOption, sortDirection])
+    );
 
     const toggleType = (type: string) => {
         setSelectedTypes((prev) =>

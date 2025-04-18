@@ -28,7 +28,8 @@
     "plugins": [
       "expo-router",
       "expo-build-properties",
-      "expo-localization"
+      "expo-localization",
+      "./plugins/withAndroidSigningConfig.ts"
     ],
     "experiments": {
       "typedRoutes": true

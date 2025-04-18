@@ -36,7 +36,7 @@ CBR_UPLOAD_KEY_PASSWORD=<key password>
 ```
 
 Under Windows, this will likely be `C:\Users\<your ID>\.gradle\gradle.properties`
-<!-- TODOSD: verify updating local `gradle.properties` also works  -->
+Under macOS, this will likely be `Users/<your ID>/.gradle/gradle.properties`
 
 ### 3. Adding the release Signing Config
 

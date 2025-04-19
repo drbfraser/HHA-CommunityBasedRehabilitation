@@ -29,9 +29,10 @@ const useStyles = () =>
         },
         row: {
             flexDirection: "row",
-            display: "flex",
+            flexWrap: "wrap",
             alignItems: "center",
             justifyContent: "center",
+            width: "100%",
         },
         btnRow: {
             flexDirection: "row",
@@ -59,7 +60,6 @@ const useStyles = () =>
             marginBottom: 14,
             fontSize: 32,
         },
-        switch: { flex: 0.2 },
     });
 
 export default useStyles;

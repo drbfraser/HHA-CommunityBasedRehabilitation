@@ -78,7 +78,7 @@ const Stats = () => {
     const [disabilityCount, setDisabilityCount] = useState<number>(0);
 
     const [visitGraphData, setVisitGraphData] = useState<BarGraphData[]>([]);
-    const [disabitiesGraphData, setDisabilitiesGraphData] = useState<BarGraphData[]>([]);
+    const [disabilitiesGraphData, setDisabilitiesGraphData] = useState<BarGraphData[]>([]);
     const [referralsGraphData, setReferralsGraphData] = useState<BarGraphData[]>([]);
     const [referralsGraphLegend, setReferralsGraphLegend] = useState<LegendColours[]>([]);
 
@@ -442,7 +442,6 @@ const Stats = () => {
                             <View style={styles.row}>
                                 <Text>{t("statistics.allClients")}</Text>
                                 <Switch
-                                    style={styles.switch}
                                     thumbColor={archiveMode ? themeColors.white : themeColors.white}
                                     onValueChange={setArchiveMode}
                                     value={archiveMode}
@@ -458,7 +457,7 @@ const Stats = () => {
                                 </Text>
                                 <Text>{disabilityCount}</Text>
                             </Text>
-                            <BarGraph barData={disabitiesGraphData} />
+                            <BarGraph barData={disabilitiesGraphData} />
                         </>
                     ) : (
                         <></>

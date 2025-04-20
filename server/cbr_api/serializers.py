@@ -521,7 +521,6 @@ class ConfigStatsSerializer(serializers.Serializer):
             for stat_type in stat_types:
                 fields.update(
                     {
-                        "total": serializers.IntegerField(),
                         **{
                             f"{stat_type}_{demo}": serializers.IntegerField()
                             for demo in demographics
@@ -532,7 +531,6 @@ class ConfigStatsSerializer(serializers.Serializer):
         else:
             fields.update(
                 {
-                    "total": serializers.IntegerField(),
                     **{f"{demo}": serializers.IntegerField() for demo in demographics},
                 }
             )

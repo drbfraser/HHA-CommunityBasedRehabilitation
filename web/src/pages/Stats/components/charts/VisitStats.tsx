@@ -9,6 +9,7 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
 import HorizontalBarGraphStats, {
     IDemographicTotals,
+    IHBarGraphStatsData,
     ISubheadings,
 } from "./HorizontalBarGraphStats";
 
@@ -29,16 +30,6 @@ interface ZoneTotals {
     mental?: number;
 }
 
-interface TotalDemograhic {
-    label?: string;
-    femaleAdult?: number;
-    maleAdult?: number;
-    femaleChild?: number;
-    maleChild?: number;
-    zone_id?: number;
-    category?: StatsVisitCategory;
-}
-
 export interface CategoryTotals {
     mental: number;
     nutrit: number;
@@ -55,7 +46,7 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
     const [totalMAdults, setTotalMAdults] = useState(0);
     const [totalFChild, setTotalFChild] = useState(0);
     const [totalMChild, setTotalMChild] = useState(0);
-    const [totalData, setTotalData] = useState<TotalDemograhic[]>([]);
+    const [totalData, setTotalData] = useState<IHBarGraphStatsData[]>([]);
     const [totalCategory, setTotalCategory] = useState<CategoryTotals>({
         mental: 0,
         nutrit: 0,
@@ -123,7 +114,7 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
                         acc.categoryTotals[category] += categoryTotal;
                     });
 
-                    const zoneDemographics: TotalDemograhic = {
+                    const zoneDemographics: IHBarGraphStatsData = {
                         femaleAdult: 0,
                         maleAdult: 0,
                         femaleChild: 0,
@@ -151,6 +142,11 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
                         if (!zoneDemographics.category) {
                             zoneDemographics.category = category;
                         }
+
+                        fAdults += v[`${category}_female_adult_total`] ?? 0;
+                        mAdults += v[`${category}_male_adult_total`] ?? 0;
+                        fChild += v[`${category}_female_child_total`] ?? 0;
+                        mChild += v[`${category}_female_child_total`] ?? 0;
                     });
 
                     acc.pieData.push(zoneTotals);
@@ -164,7 +160,7 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
                     categoryTotals: { mental: 0, nutrit: 0, social: 0, educat: 0, health: 0 },
                 } as {
                     pieData: ZoneTotals[];
-                    totalData: TotalDemograhic[];
+                    totalData: IHBarGraphStatsData[];
                     categoryTotals: CategoryTotals;
                 }
             );

@@ -6,6 +6,7 @@ import { IStats } from "@cbr/common/util/stats";
 import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
 import HorizontalBarGraphStats, {
     IDemographicTotals,
+    IHBarGraphStatsData,
     ISubheadings,
 } from "./HorizontalBarGraphStats";
 
@@ -60,14 +61,7 @@ const FollowUpVistsStats = ({ stats, age, gender }: IProps) => {
         }
     }, [stats]);
 
-    let totalData: {
-        label: string;
-        key: string;
-        femaleAdult: number;
-        maleAdult: number;
-        femaleChild: number;
-        maleChild: number;
-    }[] = [];
+    let totalData: IHBarGraphStatsData[] = [];
 
     zones.forEach((k, v) => {
         const femaleAdultTotal =

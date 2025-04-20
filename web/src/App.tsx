@@ -7,7 +7,7 @@ import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
 import { IAlert } from "@cbr/common/util/alerts";
 import history from "@cbr/common/util/history";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { appStyles } from "App.styles";
 import LanguagePicker from "components/LanguagePicker/LanguagePicker";
@@ -75,7 +75,7 @@ const App = () => {
 
     return (
         // LocalizationProvider was added for the MUI DatePicker in StatsDateFilter
-        <LocalizationProvider dateAdapter={AdapterMoment}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Router history={history}>
                 <AlertOffline />
                 {isLoggedIn !== undefined && (

@@ -1,4 +1,4 @@
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
     Accordion,
     AccordionDetails,
@@ -14,9 +14,9 @@ import {
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
 import { Field, Form, Formik } from "formik";
 import { TextField as FormikTextField } from "formik-mui";
-import moment from "moment";
 import React, { SyntheticEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -45,7 +45,7 @@ interface IProps {
 
 const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
     const { t } = useTranslation();
-    const [monthlyValue, setMonthlyValue] = useState<moment.Moment | null>(null);
+    const [monthlyValue, setMonthlyValue] = useState<dayjs.Dayjs | null>(null);
     const [accordianExpanded, setExpanded] = useState<string | false>("byMonth");
 
     const handleSubmit = (values: IDateRange) => {
@@ -73,7 +73,7 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                                 expanded={accordianExpanded === "byMonth"}
                                 onChange={handleAccordianChange("byMonth")}
                             >
-                                <AccordionSummary expandIcon={<KeyboardArrowRightIcon />}>
+                                <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}>
                                     <Typography>{t("statistics.monthly")}</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
@@ -109,7 +109,7 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                                 expanded={accordianExpanded === "specific"}
                                 onChange={handleAccordianChange("specific")}
                             >
-                                <AccordionSummary expandIcon={<KeyboardArrowRightIcon />}>
+                                <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}>
                                     <Typography>{t("statistics.specificDate")}</Typography>
                                 </AccordionSummary>
 
@@ -119,7 +119,7 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                                         label={t("general.from")}
                                         type="date"
                                         variant="outlined"
-                                        required
+                                        required={accordianExpanded === "specific"}
                                         component={FormikTextField}
                                         InputLabelProps={{ shrink: true }}
                                     />
@@ -128,7 +128,7 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                                         label={t("general.to")}
                                         type="date"
                                         variant="outlined"
-                                        required
+                                        required={accordianExpanded === "specific"}
                                         component={FormikTextField}
                                         InputLabelProps={{ shrink: true }}
                                     />

@@ -19,10 +19,21 @@ export interface IDemographicTotals {
     male_child: number;
 }
 
+export interface IHBarGraphStatsData {
+    label: string;
+    key?: string;
+    femaleAdult: number;
+    maleAdult: number;
+    femaleChild: number;
+    maleChild: number;
+    category?: string;
+    zone_id?: number;
+}
+
 interface IProps {
     title: string;
     subtitle?: string;
-    data: any[];
+    data: IHBarGraphStatsData[];
     age: IAge;
     gender: IGender;
     subheadings?: ISubheadings[];

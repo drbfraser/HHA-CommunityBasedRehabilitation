@@ -3,11 +3,9 @@ import { useTranslation } from "react-i18next";
 
 import { IStats, StatsReferralCategory } from "@cbr/common/util/stats";
 import { useEffect, useRef, useState } from "react";
-import { IDemographicTotals } from "./HorizontalBarGraphStats";
-import VerticalBarGraphStats from "./VerticalBarGraphStats";
-
 import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
-import { ISubheadings } from "./HorizontalBarGraphStats";
+import { IDemographicTotals, ISubheadings } from "./HorizontalBarGraphStats";
+import VerticalBarGraphStats, { IVBarGraphStatsData } from "./VerticalBarGraphStats";
 
 interface IProps {
     stats?: IStats;
@@ -67,13 +65,16 @@ const ReferralStats = ({ stats, gender, age }: IProps) => {
     const transformChartData = (dataArray: { [key: string]: any }[]) => {
         if (!dataArray?.[0]) return [];
 
-        return Object.values(dataArray[0]).map((item) => ({
-            label: item.label,
-            female_adult: item.female_adult,
-            male_adult: item.male_adult,
-            female_child: item.female_child,
-            male_child: item.male_child,
-        }));
+        return Object.values(dataArray[0]).map(
+            (item) =>
+                ({
+                    label: item.label,
+                    female_adult: item.female_adult,
+                    male_adult: item.male_adult,
+                    female_child: item.female_child,
+                    male_child: item.male_child,
+                } as IVBarGraphStatsData)
+        );
     };
 
     useEffect(() => {

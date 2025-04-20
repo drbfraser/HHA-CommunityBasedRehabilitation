@@ -11,21 +11,20 @@ Select the branch you wish to create an release APK for mobile CBR.
 Before releasing a new version of the app, you must ensure that you have updated the version information
 
 **Update the Version Name:**
-1. In `mobile/app.json`, update `expo.version` to a semantically appropriate new versionName (visible to users on the Google Play store)
-<!-- TODOSD: automate this flow -->
-2. For our UI in `mobile/src/screens/Sync/Sync.tsx`, change `VERSION_NAME` to match this new versionName (visible to users when using the app)
+In `mobile/app.json`, update `expo.version` to a semantically appropriate new versionName (visible to users on the Google Play store)
 
 **Update the `versionCode`:**
-1. In `mobile/app.json`, update `expo.android.versionCode` by incrementing to the next largest integer. This is used by the Play store to uniquely track each uploaded version, and must be new for each uploaded bundle.
+In `mobile/app.json`, update `expo.android.versionCode` by incrementing to the next largest integer. This is used by the Play store to uniquely track each uploaded version, and **must** be new for each uploaded bundle.
 
-Also, the API version number maintained in the mobile app must match that of the server. Ensure that `mobileApiVersion` in `mobile/src/util/syncHandler.ts` matches the version specified by `API_VERSION` in `server/cbr_api/util.py`. This will likely need to be updated only when a full DB wipe has occurred on the server and therefore requires the mobile client to also do a complete local database wipe before syncing with the server. Changing the major version number of the `API_VERSION` will cause the web client to wipe its database when syncing.
+**Update the API Version Number:**
+The API version number maintained in the mobile app must match that of the server. Ensure that `mobileApiVersion` in `mobile/src/util/syncHandler.ts` matches the version specified by `API_VERSION` in `server/cbr_api/util.py`. This will likely need to be updated only when a full DB wipe has occurred on the server and therefore requires the mobile client to also do a complete local database wipe before syncing with the server. Changing the major version number of the `API_VERSION` will cause the web client to wipe its database when syncing.
 
 #### 1.3: Ensure `android` Directory is Updated
 1. In `mobile/`, run `npm run prebuild` to ensure that the project is up to date.
 
 ### 2. Setup release Keystore
 
-The Google Drive folder for the project contains the keystore needed for signing `.aab` files for upload to the Google Play store (the Play store signs the files for release). Copy the file `cbr-upload-key.keystore` into `mobile/android/app/` (should be in the same level as the debug.keystore).
+The Google Drive folder for the project contains the keystore needed for signing `.aab` files for upload to the Google Play store (the Play store signs the files for release). Copy the file `cbr-upload-key.keystore` into `mobile/android/app/` (should be in the same level as the debug.keystore).  Please note that running `npm run prebuild` will **OVERWRITE** the keystore file.
 
 If you want to generate your own keystore instead of using the official project one for upload, following this guide to setup a release keystore: https://reactnative.dev/docs/signed-apk-android
 

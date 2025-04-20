@@ -17,6 +17,8 @@ import { clientRiskStyles } from "./ClientRisks.styles";
 import { getTranslatedRiskName, riskTypes } from "util/risks";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import ClientRisksModal from "./ClientRisksModal";
+import UpdateGoalStatus from "./UpdateGoalStatus";
+import { getRiskGoalsTranslationKey } from "@cbr/common/util/risks";
 
 interface IProps {
     clientInfo?: IClient;
@@ -28,6 +30,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
     interface ICardProps {
         risk: IRisk;
     }
+
     const RiskCard = (props: ICardProps) => {
         const [risk, setRisk] = useState(props.risk);
         const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,15 +62,9 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                         <br />
 
                         <Typography variant="subtitle2" component="h6">
-                            {t("risks.requirements")}:
-                        </Typography>
-                        <Typography variant="body2" component="p">
-                            {risk.requirement}
-                        </Typography>
-                        <br />
-
-                        <Typography variant="subtitle2" component="h6">
-                            {t("risks.goals")}:
+                            {/* TODO: Replace with Translation and need to add conditional rendering 
+                            depending on whether there is a goal or not */}
+                            Current Goal
                         </Typography>
                         <Typography variant="body2" component="p">
                             {risk.goal}

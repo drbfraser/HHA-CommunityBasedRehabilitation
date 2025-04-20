@@ -135,7 +135,7 @@ def getOutstandingReferrals():
     with connection.cursor() as cursor:
         cursor.execute(
             """
-            SELECT c.id, c.full_name, r.services_other, r.physiotherapy, r.wheelchair, r.prosthetic, r.orthotic, r.hha_nutrition_and_agriculture_project, r.date_referred, r.mental_health
+            SELECT c.id, c.full_name, r.services_other, r.physiotherapy, r.wheelchair, r.prosthetic, r.orthotic, r.hha_nutrition_and_agriculture_project, r.date_referred, r.mental_health, r.id as referral_id
             FROM cbr_api_referral as r
             INNER JOIN cbr_api_client as c
             ON c.id = r.client_id_id
@@ -168,3 +168,80 @@ def getUnreadAlertListByUserId(user_id):
             "total"
         ]
         return unread_alerts_count
+
+
+def getNewClients(from_time, to_time):
+    from django.db import connection
+
+    with connection.cursor() as cursor:
+        if from_time is not None and to_time is not None:
+            sql = getTotalClientStats(from_time, to_time, "new_clients")
+
+            cursor.execute(
+                sql,
+                [str(from_time), str(to_time)],
+            )
+
+        else:
+            sql = getTotalClientStats(from_time, to_time, "new_clients")
+
+            cursor.execute(sql)
+
+        columns = [col[0] for col in cursor.description]
+        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        return res
+
+
+def getFollowUpVisits(from_time, to_time):
+    from django.db import connection
+
+    with connection.cursor() as cursor:
+        if from_time is not None and to_time is not None:
+            sql = getTotalClientStats(from_time, to_time, "follow_up")
+
+            cursor.execute(
+                sql,
+                [str(from_time), str(to_time)],
+            )
+        else:
+            sql = getTotalClientStats(from_time, to_time, "follow_up")
+
+            cursor.execute(sql)
+
+        columns = [col[0] for col in cursor.description]
+        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        print(res)
+        return res
+
+
+def getTotalClientStats(from_time, to_time, option):
+    sql = """
+        SELECT c.zone_id,c.hcr_type,
+        COUNT(*) AS total,
+        COUNT(*) FILTER (WHERE c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS female_adult_total,
+        COUNT(*) FILTER (WHERE c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS male_adult_total,
+        COUNT(*) FILTER (WHERE c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS female_child_total,
+        COUNT(*) FILTER (WHERE c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS male_child_total
+        FROM cbr_api_client AS c
+        """
+
+    if option == "follow_up":
+        sql += """JOIN cbr_api_visit AS v ON c.id = v.client_id_id
+        """
+        if from_time is not None and to_time is not None:
+            sql += """WHERE v.created_at BETWEEN %s AND %s
+            GROUP BY c.zone_id, c.hcr_type HAVING COUNT(v.client_id_id) > 1
+            """
+
+        else:
+            sql += """GROUP BY c.zone_id, c.hcr_type HAVING COUNT(v.client_id_id) > 1"""
+
+    elif option == "new_clients":
+        if from_time is not None and to_time is not None:
+            sql += """WHERE c.created_at BETWEEN %s AND %s
+            GROUP BY c.zone_id, c.hcr_type
+            """
+        else:
+            sql += """GROUP BY c.zone_id, c.hcr_type"""
+
+    return sql

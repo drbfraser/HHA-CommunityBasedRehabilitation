@@ -19,7 +19,7 @@ import { clientPrioritySort, IClientSummary } from "@cbr/common/util/clients";
 import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { timestampToDate } from "@cbr/common/util/dates";
-import { IOutstandingReferral, otherServices } from "@cbr/common/util/referrals";
+import { Impairments, IOutstandingReferral, otherServices } from "@cbr/common/util/referrals";
 import { IAlert } from "@cbr/common/util/alerts";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
@@ -49,7 +49,7 @@ const Dashboard = () => {
             setClientError(undefined);
             try {
                 const tempClients: IClientSummary[] = await (
-                    await apiFetch(Endpoint.CLIENTS, "?is_active=true")
+                    await apiFetch(Endpoint.CLIENTS)
                 ).json();
 
                 const priorityClients = tempClients
@@ -88,16 +88,19 @@ const Dashboard = () => {
                         (a: IOutstandingReferral, b: IOutstandingReferral) =>
                             a.date_referred - b.date_referred
                     )
-                    .map((row: IOutstandingReferral, i: Number) => {
+                    .map((row: IOutstandingReferral) => {
                         return {
-                            id: i,
+                            id: row.referral_id,
                             client_id: row.id,
                             full_name: row.full_name,
                             type: concatenateReferralType(row),
                             date_referred: row.date_referred,
+                            is_active: clients.find((client) => client.id === row.id)?.is_active,
                         };
                     });
-                setReferrals(outstandingReferrals);
+
+                // Filter out inactive clients
+                setReferrals(outstandingReferrals.filter((row) => row.is_active));
             } catch (e) {
                 setReferralError(e instanceof Error ? e.message : `${e}`);
             } finally {
@@ -114,14 +117,19 @@ const Dashboard = () => {
             if (row.orthotic) referralTypes.push(t("referral.orthotic"));
             if (row.prosthetic) referralTypes.push(t("referral.prosthetic"));
             if (row.mental_health) referralTypes.push(t("referral.mentalHealth"));
-            if (row.services_other) referralTypes.push(otherServices[row.services_other]);
+            if (row.services_other) {
+                let service = otherServices[row.services_other];
+
+                if (!service) service = Impairments.OTHER;
+                referralTypes.push(service);
+            }
 
             return referralTypes.join(", ");
         };
 
         fetchClients();
         fetchReferrals();
-    }, [t]);
+    }, [t, clients]);
 
     useEffect(() => {
         const fetchAlerts = async () => {
@@ -211,7 +219,7 @@ const Dashboard = () => {
         history.push(`/client/${rowParams.row.id}`);
 
     const handleReferralRowClick = (rowParams: GridRowParams) =>
-        history.push(`/client/${rowParams.row.client_id}`);
+        history.push(`/client/${rowParams.row.client_id}?${rowParams.row.id}=open`);
 
     const priorityClientsColumns = [
         {
@@ -344,15 +352,11 @@ const Dashboard = () => {
                                     rows={referrals}
                                     loading={referralsLoading}
                                     columns={outstandingReferralsColumns}
+                                    initialState={{ pagination: { pageSize: 5 } }}
                                     density={GridDensityTypes.Comfortable}
                                     onRowClick={handleReferralRowClick}
                                     components={{
                                         NoRowsOverlay: RenderNoOutstandingReferralsOverlay,
-                                    }}
-                                    initialState={{
-                                        pagination: {
-                                            pageSize: 5,
-                                        },
                                     }}
                                 />
                             </Box>

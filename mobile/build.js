@@ -1,3 +1,12 @@
+/**
+ * TODOSD: these build scripts do not currently work properly in the CI Pipeline.
+ * In addition, they will currently also fail when manually making a release
+ * build (due to the android directory being automatically regenerated).
+ *
+ * Instead, use ./gradlew assembleRelease (to build an APK) or ./gradlew bundleRelease
+ * (to build an AAB) from within the android directory.  Be sure to update APP_ENV in
+ * mobile/.env according to your desired target (local, dev, staging, or prod).
+ */
 const process = require("process");
 const path = require("path");
 const { spawn } = require("child_process");

@@ -405,6 +405,7 @@ class ReferralUpdateSerializer(serializers.ModelSerializer):
 
 class OutstandingReferralSerializer(serializers.Serializer):
     id = serializers.CharField()
+    referral_id = serializers.CharField()
     full_name = serializers.CharField()
     services_other = serializers.CharField()
     physiotherapy = serializers.BooleanField()
@@ -526,12 +527,34 @@ class AdminStatsDisabilitySerializer(serializers.Serializer):
     total = serializers.IntegerField()
 
 
+class AdminStatsNewClients(serializers.Serializer):
+    zone_id = serializers.IntegerField()
+    total = serializers.IntegerField()
+    female_adult_total = serializers.IntegerField()
+    male_adult_total = serializers.IntegerField()
+    female_child_total = serializers.IntegerField()
+    male_child_total = serializers.IntegerField()
+    hcr_type = serializers.CharField()
+
+
+class AdminStatsFollowUpVisits(serializers.Serializer):
+    zone_id = serializers.IntegerField()
+    total = serializers.IntegerField()
+    female_adult_total = serializers.IntegerField()
+    male_adult_total = serializers.IntegerField()
+    female_child_total = serializers.IntegerField()
+    male_child_total = serializers.IntegerField()
+    hcr_type = serializers.CharField()
+
+
 class AdminStatsSerializer(serializers.Serializer):
     disabilities = AdminStatsDisabilitySerializer(many=True, read_only=True)
     clients_with_disabilities = serializers.IntegerField()
     visits = AdminStatsVisitsSerializer(many=True, read_only=True)
     referrals_resolved = AdminStatsReferralSerializer(many=False, read_only=True)
     referrals_unresolved = AdminStatsReferralSerializer(many=False, read_only=True)
+    new_clients = AdminStatsNewClients(many=True, read_only=True)
+    follow_up_visits = AdminStatsFollowUpVisits(many=True, read_only=True)
 
 
 class ClientListSerializer(serializers.ModelSerializer):
@@ -572,6 +595,7 @@ class ClientSyncSerializer(serializers.ModelSerializer):
             "updated_at",
             "zone",
             "village",
+            "hcr_type",
             "picture",
             "caregiver_present",
             "caregiver_name",
@@ -614,6 +638,7 @@ class editClientSyncSerializer(serializers.ModelSerializer):
             "updated_at",
             "zone",
             "village",
+            "hcr_type",
             "picture",
             "caregiver_present",
             "caregiver_name",
@@ -691,6 +716,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
             "latitude",
             "zone",
             "village",
+            "hcr_type",
             "picture",
             "caregiver_name",
             "caregiver_present",
@@ -785,6 +811,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "latitude",
             "zone",
             "village",
+            "hcr_type",
             "picture",
             "caregiver_name",
             "caregiver_present",

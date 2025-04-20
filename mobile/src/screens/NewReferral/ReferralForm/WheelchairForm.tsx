@@ -22,8 +22,7 @@ const WheelchairForm = (props: IFormProps) => {
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const { t } = useTranslation();
     return (
-        <View>
-            <Text />
+        <View style={styles.formContainer}>
             <Text style={styles.question}>{t("referral.whatTypeOfWheelchair")}</Text>
             <List.Section>
                 <RadioButton.Group

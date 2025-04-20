@@ -1,9 +1,8 @@
-import { formatDate, IReferral, ISurvey, themeColors, timestampToDate } from "@cbr/common";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import { formatDate, themeColors } from "@cbr/common";
+import React from "react";
 import { View, Text, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
-import { Button } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import useStyles from "./Timeline.style";
 import { useTranslation } from "react-i18next";
 
@@ -12,7 +11,7 @@ interface SummaryProps {
 }
 
 const locale = NativeModules.I18nManager.localeIdentifier;
-const timezone = Localization.timezone;
+const timezone = Localization.timezone; // todo: deprecated
 
 export const TimelineDate = (props: SummaryProps) => {
     const styles = useStyles();
@@ -20,14 +19,15 @@ export const TimelineDate = (props: SummaryProps) => {
 
     return (
         <View style={styles.container}>
-            <Text>{formatDate(props.date, locale, timezone)}</Text>
+            <Text style={styles.textGray}>{formatDate(props.date, locale, timezone)}</Text>
             <View style={styles.activityTypeView}>
                 <View style={styles.verticleLine} />
-                <Button
+                <IconButton
                     style={styles.logoButton}
                     icon="account-plus"
                     mode="outlined"
-                    compact={true}
+                    size={16}
+                    iconColor={themeColors.blueBgDark}
                 />
                 <View style={styles.verticleLine} />
             </View>

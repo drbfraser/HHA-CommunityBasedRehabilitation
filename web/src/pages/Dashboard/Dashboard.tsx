@@ -49,7 +49,7 @@ const Dashboard = () => {
             setClientError(undefined);
             try {
                 const tempClients: IClientSummary[] = await (
-                    await apiFetch(Endpoint.CLIENTS, "?is_active=true")
+                    await apiFetch(Endpoint.CLIENTS)
                 ).json();
 
                 const priorityClients = tempClients
@@ -95,9 +95,12 @@ const Dashboard = () => {
                             full_name: row.full_name,
                             type: concatenateReferralType(row),
                             date_referred: row.date_referred,
+                            is_active: clients.find((client) => client.id === row.id)?.is_active,
                         };
                     });
-                setReferrals(outstandingReferrals);
+
+                // Filter out inactive clients
+                setReferrals(outstandingReferrals.filter((row) => row.is_active));
             } catch (e) {
                 setReferralError(e instanceof Error ? e.message : `${e}`);
             } finally {
@@ -126,7 +129,7 @@ const Dashboard = () => {
 
         fetchClients();
         fetchReferrals();
-    }, [t]);
+    }, [t, clients]);
 
     useEffect(() => {
         const fetchAlerts = async () => {

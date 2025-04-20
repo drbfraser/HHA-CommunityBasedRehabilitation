@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { Button } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import useStyles from "./Timeline.style";
 import { useTranslation } from "react-i18next";
 
@@ -14,22 +14,18 @@ const ShowMore = () => {
                 <Text style={{ width: "25%" }}>{""}</Text>
                 <View style={styles.activityTypeView}>
                     <View style={styles.verticleLine}></View>
-                    <Button
+                    <IconButton
                         style={styles.logoButtonDark}
                         icon={"dots-vertical"}
-                        color={"white"}
+                        iconColor={"white"}
                         mode="outlined"
-                        compact={true}
+                        size={16}
                     />
                     <View style={styles.verticleLine}></View>
                 </View>
                 <View style={styles.subItem}>
                     <Text style={styles.subItemTextDark}>{t("general.showMore")}</Text>
-                    <Button
-                        style={styles.arrowButton}
-                        icon={"chevron-double-down"}
-                        compact={true}
-                    />
+                    <IconButton style={styles.arrowButton} icon={"chevron-double-down"} size={16} />
                 </View>
             </View>
             <View style={styles.dividerStyle} />

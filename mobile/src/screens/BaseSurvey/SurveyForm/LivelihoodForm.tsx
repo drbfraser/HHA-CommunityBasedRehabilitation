@@ -41,7 +41,6 @@ const LivelihoodForm = (props: IFormProps) => {
                     </HelperText>
 
                     <View>
-                        <Text />
                         <Text style={styles.pickerQuestion}>{t("survey.employmentStatus")}</Text>
 
                         <FormikExposedDropdownMenu

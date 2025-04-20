@@ -1,5 +1,5 @@
-import { themeColors } from "@cbr/common";
 import { StyleSheet } from "react-native";
+import { themeColors } from "@cbr/common";
 
 const useStyles = () =>
     StyleSheet.create({
@@ -40,6 +40,9 @@ const useStyles = () =>
         },
         text: {
             flexShrink: 1,
+        },
+        textGray: {
+            color: themeColors.textGray,
         },
         search: {
             flex: 2,

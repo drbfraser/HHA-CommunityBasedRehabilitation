@@ -17,8 +17,7 @@ const MentalHealthForm = (props: IFormProps) => {
     const mentalConditions = new Map(Object.entries(mentalHealthConditions));
     const { t } = useTranslation();
     return (
-        <View>
-            <Text />
+        <View style={styles.formContainer}>
             <Text style={styles.question}>{t("referral.selectMentalHealthReferral")}</Text>
             <FormikExposedDropdownMenu
                 field={ReferralFormField.mentalHealthCondition}
@@ -31,8 +30,7 @@ const MentalHealthForm = (props: IFormProps) => {
             />
             {props.formikProps.values[ReferralFormField.mentalHealthCondition] ===
                 MentalConditions.OTHER && (
-                <View>
-                    <Text />
+                <View style={styles.formContainer}>
                     <Text style={styles.question}>{t("referral.describeReferral")}</Text>
                     <TextInput
                         mode="outlined"

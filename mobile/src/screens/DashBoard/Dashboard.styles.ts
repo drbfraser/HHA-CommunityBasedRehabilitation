@@ -31,6 +31,7 @@ const useStyles = () =>
         },
         title: {
             fontSize: 30,
+            color: themeColors.textGray,
         },
         column_client_name: {
             flex: 0.6,

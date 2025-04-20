@@ -40,7 +40,6 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { string } from "yup";
 import { useTranslation } from "react-i18next";
-import i18n from "i18next";
 
 interface INewReferralProps {
     clientID: number;
@@ -65,8 +64,7 @@ const ReferralServiceForm = (
         );
     };
     return (
-        <View>
-            <Text />
+        <View style={styles.formContainer}>
             <Text style={styles.question}>{t("referral.selectReferralServices")}</Text>
             {serviceTypes.map((serviceType) => (
                 <TextCheckBox
@@ -250,18 +248,16 @@ const NewReferral = (props: INewReferralProps) => {
                                 />
                             )}
 
-                            <ProgressSteps key={referralSteps} {...progressStepsStyle}>
+                            {/* todosd: steps not fully connected when 5 or fewer selected */}
+                            <ProgressSteps key={referralSteps.length} {...progressStepsStyle}>
                                 {referralSteps.map((surveyStep, index) => (
                                     <ProgressStep
                                         key={index}
                                         scrollViewProps={defaultScrollViewProps}
-                                        previousBtnTextStyle={styles.buttonTextStyle}
-                                        nextBtnTextStyle={styles.buttonTextStyle}
-                                        nextBtnStyle={styles.nextButton}
                                         onNext={() => {
                                             nextStep(formikProps.values, formikProps);
                                         }}
-                                        nextBtnDisabled={
+                                        buttonNextDisabled={
                                             formikProps.isSubmitting ||
                                             enabledSteps.length === 0 ||
                                             (enabledSteps[activeStep - 1] !== undefined &&
@@ -272,13 +268,16 @@ const NewReferral = (props: INewReferralProps) => {
                                                       Object.keys(formikProps.touched).length === 0
                                                     : countObjectKeys(formikProps.errors) !== 0))
                                         }
-                                        previousBtnDisabled={formikProps.isSubmitting}
+                                        buttonPreviousDisabled={formikProps.isSubmitting}
                                         onPrevious={() => prevStep(formikProps)}
-                                        previousBtnStyle={styles.prevButton}
                                         onSubmit={() => nextStep(formikProps.values, formikProps)}
-                                        previousBtnText={t("general.previous")}
-                                        nextBtnText={t("general.next")}
-                                        finishBtnText={t("general.submit")}
+                                        buttonPreviousText={t("general.previous")}
+                                        buttonNextText={t("general.next")}
+                                        buttonFinishText={t("general.submit")}
+                                        buttonFillColor={themeColors.blueBgDark}
+                                        buttonBorderColor={themeColors.blueBgDark}
+                                        buttonPreviousTextColor={themeColors.blueBgDark}
+                                        buttonHorizontalOffset={20}
                                     >
                                         <Text style={styles.stepLabelText}>{surveyStep.label}</Text>
                                         <Divider

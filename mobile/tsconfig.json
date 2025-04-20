@@ -1,10 +1,14 @@
 {
+    "extends": "expo/tsconfig.base",
     "compilerOptions": {
         "jsx": "react",
-        "experimentalDecorators": true,
+        "experimentalDecorators": true, // allow @nozbe/watermelondb/decorators
         "strict": true,
         "esModuleInterop": true,
-        "noImplicitAny": false
+        "noImplicitAny": false,
+        "paths": {
+            "@/*": ["./*"]
+        }
     },
-    "extends": "expo/tsconfig.base"
+    "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

@@ -73,6 +73,29 @@ jobs:
       id:   date_str
       run:  echo "::set-output name=stdout::$(date -u +%Y-%m-%d-%H%M%S%z)"
 
+    - name: Install NPM version & Build Common
+      run:  |
+        set -x  # echo commands names
+        npm install -g npm@$NPM_VERSION
+        npm ci
+        npx tsc
+      working-directory: /isolated_build/repo/common
+
+    - name: Prepare mobile build environment
+      run:  |
+        npm uninstall @cbr/common
+        COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
+        npm install $COMMON_PACK_NAME
+        npm ci
+        npx prettier --check .
+      working-directory: /isolated_build/repo/mobile    
+
+    # todosd: remove need for sudo?
+    - name: Prebuild android folder
+      run:  |
+        sudo npm run prebuild
+      working-directory: /isolated_build/repo/mobile
+      
     - name: Setup Release Keystore for Play Store
       run:  |
         set -x  # echo commands names
@@ -82,30 +105,7 @@ jobs:
         base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
         echo "Date String: ${{ steps.date_str.outputs.stdout }}"
       working-directory: /isolated_build/repo/mobile/android/app
-
-    - name: Install NPM version & Build Common
-      run:  |
-        set -x  # echo commands names
-        npm install -g npm@$NPM_VERSION
-        npm ci
-        npx tsc
-      working-directory: /isolated_build/repo/common
-
-    - name: Prepair mobile build environment
-      run:  |
-        npm uninstall @cbr/common
-        COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
-        npm install $COMMON_PACK_NAME
-        npm ci
-        npx prettier --check .
-      working-directory: /isolated_build/repo/mobile
-
-    - name: Build APK (Targeting Development Server)
-      run:  |
-        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        npm run build dev
-      working-directory: /isolated_build/repo/mobile
-
+      
     # NOTE: Artifact upload disabled because builds from the CI/CD server seem
     #       to not work. Specifically, creating a client on mobile and then
     #       trying to sync results in a "Inalid Date" sync error.
@@ -118,26 +118,25 @@ jobs:
     #     retention-days: 60
     #     if-no-files-found: error
 
-    # TODO: Re-enable the building of the .AAB file for deployment.
-    # Removed just to speed up the CI/CD pipeline while we are not deploying to the Play Store.
-    # - name: Build AAB for Play Store (Targeting Production Server)
-    #   run:  |
-    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
-    #     npm run bundle prod
-    #   working-directory: /isolated_build/repo/mobile
-    # - uses: actions/upload-artifact@v3
-    #   with:
-    #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.aab"
-    #     path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
-    #     retention-days: 60
-    #     if-no-files-found: error
+
+    - name: Build AAB for Play Store (Targeting Production Server)
+      run:  |
+        rm -f /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
+        npm run build-aab prod
+      working-directory: /isolated_build/repo/mobile
+    - uses: actions/upload-artifact@v3
+      with:
+        name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.aab"
+        path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
+        retention-days: 60
+        if-no-files-found: error
   
     # # Only build the APK targeting the development server because it can be retargeted to other servers.
     # # (This saves about 10 minutes on the CI/CD build because the SFU GitHub server is very slow on upload)
     # - name: Build APK (Targeting Local Server)
     #   run:  |
     #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     npm run build local
+    #     npm run build-apk local
     #   working-directory: /isolated_build/repo/mobile
     # - uses: actions/upload-artifact@v3
     #   with:
@@ -149,7 +148,7 @@ jobs:
     # - name: Build APK (Targeting Staging Server)
     #   run:  |
     #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     npm run build staging
+    #     npm run build-apk staging
     #   working-directory: /isolated_build/repo/mobile
     # - uses: actions/upload-artifact@v3
     #   with:
@@ -161,7 +160,7 @@ jobs:
     # - name: Build APK (Targeting Production Server)
     #   run:  |
     #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     npm run build prod
+    #     npm run build-apk prod
     #   working-directory: /isolated_build/repo/mobile
     # - uses: actions/upload-artifact@v3
     #   with:
@@ -202,7 +201,6 @@ jobs:
         name: "${{ github.job }}"
         retention-days: 7
         path: /isolated_build/repo/web_build.tar.gz
-
 
   build-server:
     runs-on: [self-hosted, docker]
@@ -265,7 +263,7 @@ jobs:
           # However, as of July 2023, SFU's GitHub runner is v2.296.x, so using old syntax (which works on newer)
           # https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
           echo "::set-output name=tag::$IMAGE_TAG"
-
+            
   build-docker-publish-docker-images:
     needs: [build-common, build-web, build-server, export-image-tag]
     # needs: [export-image-tag]   # Used for faking and testing

@@ -3,19 +3,11 @@ import { Image, TextInput as NativeTextInput, useWindowDimensions, View } from "
 import useStyles from "./Login.styles";
 import LoginBackgroundSmall from "./LoginBackgroundSmall";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-    Button,
-    IconButton,
-    HelperText,
-    Text,
-    TextInput,
-    Title,
-    useTheme,
-} from "react-native-paper";
+import { Button, IconButton, HelperText, Text, TextInput, Title } from "react-native-paper";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import Alert from "../../components/Alert/Alert";
 import LoginBackground from "./LoginBackground";
-import { SMALL_WIDTH } from "../../util/theme.styles";
+import { SMALL_WIDTH, useAppTheme } from "../../util/theme.styles";
 import passwordTextInputProps from "../../components/PasswordTextInput/passwordTextInputProps";
 import { APIFetchFailError } from "@cbr/common";
 import { useNavigation } from "@react-navigation/core";
@@ -36,7 +28,7 @@ type LoginStatus = ILoginStatusFailed | IBaseLoginStatus;
 
 const Login = () => {
     const { t } = useTranslation();
-    const theme = useTheme();
+    const theme = useAppTheme();
     const styles = useStyles();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -185,7 +177,7 @@ const Login = () => {
                     </HelperText>
                 </View>
                 <Button
-                    color={theme.colors.accent}
+                    buttonColor={theme.colors.accent}
                     contentStyle={{ backgroundColor: theme.colors.accent }}
                     disabled={status.status === "submitting"}
                     loading={status.status === "submitting"}
@@ -197,7 +189,7 @@ const Login = () => {
                 {authState.state == "previouslyLoggedIn" ? (
                     <Button
                         style={styles.logoutButton}
-                        color={theme.colors.onPrimary}
+                        color={theme.colors.onPrimary} // todosd
                         disabled={status.status === "submitting"}
                         onPress={logout}
                         mode="text"
@@ -211,7 +203,7 @@ const Login = () => {
                 <View style={styles.settingsButtonContainer}>
                     <IconButton
                         icon="cog"
-                        color={theme.colors.onPrimary}
+                        iconColor={theme.colors.onPrimary}
                         onPress={() => navigation.navigate("SwitchServer")}
                     />
                 </View>

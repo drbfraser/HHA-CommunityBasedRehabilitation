@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StyleProp, View, ViewStyle } from "react-native";
 import { Text, IconButton, Portal, Modal, Button } from "react-native-paper";
-import useStyles from "./UserList.styles";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { useNavigation } from "@react-navigation/core";
@@ -28,6 +27,7 @@ import { checkUnsyncedChanges } from "../../util/syncHandler";
 import { Icon } from "react-native-elements";
 import LanguagePicker from "../../components/LanguagePicker/LanguagePicker";
 import { useTranslation } from "react-i18next";
+import useStyles from "./UserList.styles";
 
 const UserList = () => {
     const styles = useStyles();
@@ -183,7 +183,7 @@ const UserList = () => {
                 </Picker>
                 <IconButton
                     icon="dots-vertical"
-                    color={themeColors.borderGray}
+                    iconColor={themeColors.borderGray}
                     size={20}
                     style={styles.columnBuilderButton}
                     onPress={openColumnBuilderMenu}
@@ -209,6 +209,8 @@ const UserList = () => {
                             selectedIconName={"checkmark-circle"}
                             unselectedIconName={"radio-button-off"}
                             selected={selectedColumn.map(String)}
+                            labelStyle={styles.textGray} // todosd: text not correctly rendering as gray
+                            iconColor={themeColors.textGray}
                         />
                     </Modal>
                 </Portal>
@@ -216,7 +218,7 @@ const UserList = () => {
             <ScrollView>
                 <DataTable>
                     <DataTable.Header style={styles.item}>
-                        <DataTable.Title style={styles.column_icon}>{}</DataTable.Title>
+                        <DataTable.Title style={styles.column_icon}>{""}</DataTable.Title>
                         <ShowTitle
                             label={t("admin.name")}
                             style={styles.column_name}

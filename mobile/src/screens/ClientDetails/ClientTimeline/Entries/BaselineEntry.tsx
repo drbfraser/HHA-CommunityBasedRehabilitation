@@ -74,7 +74,6 @@ const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
                         </Text>
                     </Card.Content>
                 </Card>
-                <Text />
                 {Object.keys(surveyInfo).map((categoryName) => (
                     <DetailAccordion key={categoryName} categoryName={categoryName} />
                 ))}

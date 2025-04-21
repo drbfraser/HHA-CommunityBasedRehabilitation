@@ -11,6 +11,8 @@ const OtherServicesForm = (props: IFormProps) => {
     const styles = useStyles();
     const services = new Map(Object.entries(otherServices));
     const { t } = useTranslation();
+
+    const helperText = props.formikProps.errors[ReferralFormField.otherDescription];
     return (
         <View style={styles.formContainer}>
             <Text style={styles.question}>{t("referral.selectAnotherReferral")}</Text>
@@ -38,12 +40,8 @@ const OtherServicesForm = (props: IFormProps) => {
                         }}
                     />
 
-                    <HelperText
-                        style={styles.errorText}
-                        type="error"
-                        visible={!!props.formikProps.errors[ReferralFormField.otherDescription]}
-                    >
-                        {props.formikProps.errors[ReferralFormField.otherDescription]}
+                    <HelperText style={styles.errorText} type="error" visible={!!helperText}>
+                        {typeof helperText === "string" ? helperText : null}
                     </HelperText>
                 </View>
             )}

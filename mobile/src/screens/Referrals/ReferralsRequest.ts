@@ -9,35 +9,44 @@ export type BriefReferral = {
     client_id: string;
     full_name: string;
     type: string;
+    type_keys: string[];
     date_referred: number;
     resolved: boolean;
 };
 
-const concatenateReferralType = (referral: IReferral) => {
-    const referralTypes: String[] = [];
+const getReferralTypes = (referral: IReferral) => {
+    const keys: string[] = [];
+    const labels: string[] = [];
+
     if (referral.orthotic) {
-        referralTypes.push(i18n.t("referral.orthotic"));
+        keys.push("orthotic");
+        labels.push(i18n.t("referral.orthotic"));
     }
     if (referral.physiotherapy) {
-        referralTypes.push(i18n.t("referral.physiotherapy"));
+        keys.push("physiotherapy");
+        labels.push(i18n.t("referral.physiotherapy"));
     }
     if (referral.prosthetic) {
-        referralTypes.push(i18n.t("referral.prosthetic"));
+        keys.push("prosthetic");
+        labels.push(i18n.t("referral.prosthetic"));
     }
     if (referral.wheelchair) {
-        referralTypes.push(i18n.t("referral.wheelchair"));
+        keys.push("wheelchair");
+        labels.push(i18n.t("referral.wheelchair"));
     }
     if (referral.hha_nutrition_and_agriculture_project) {
-        referralTypes.push(i18n.t("referral.hhaNutritionAndAgricultureProjectAbbr"));
+        keys.push("hha_nutrition_and_agriculture_project");
+        labels.push(i18n.t("referral.hhaNutritionAndAgricultureProjectAbbr"));
     }
     if (referral.mental_health) {
-        referralTypes.push(i18n.t("referral.mentalHealth"));
+        keys.push("mental_health");
+        labels.push(i18n.t("referral.mentalHealth"));
     }
     if (referral.services_other) {
-        referralTypes.push(referral.services_other);
+        labels.push(referral.services_other);
     }
 
-    return referralTypes.join(", ");
+    return { type: labels.join(", "), type_keys: keys };
 };
 
 export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]> => {
@@ -53,11 +62,14 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
                 const referrals = await client.referrals.fetch();
 
                 referrals.forEach((referral) => {
+                    const { type, type_keys } = getReferralTypes(referral);
+
                     const r: BriefReferral = {
                         id: referral.id,
                         client_id: client.id,
                         full_name: client.full_name,
-                        type: concatenateReferralType(referral),
+                        type,
+                        type_keys,
                         date_referred: referral.date_referred,
                         resolved: referral.resolved,
                     };

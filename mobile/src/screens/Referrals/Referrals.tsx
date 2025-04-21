@@ -34,13 +34,17 @@ const Referrals = () => {
     const [filteredReferrals, setFilteredReferrals] = useState<BriefReferral[]>([]);
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [filterStatus, setFilterStatus] = useState<string>(STATUS.PENDING);
-    const TYPES = [
-        t("referral.wheelchair"),
-        t("referral.physiotherapy"),
-        t("referral.hhaNutritionAndAgricultureProjectAbbr"),
-        t("referral.orthotic"),
-        t("referral.prosthetic"),
-        t("referral.mentalHealth"),
+
+    const REFERRAL_TYPES = [
+        { key: "wheelchair", label: t("referral.wheelchair") },
+        { key: "physiotherapy", label: t("referral.physiotherapy") },
+        {
+            key: "hha_nutrition_and_agriculture_project",
+            label: t("referral.hhaNutritionAndAgricultureProjectAbbr"),
+        },
+        { key: "orthotic", label: t("referral.orthotic") },
+        { key: "prosthetic", label: t("referral.prosthetic") },
+        { key: "mental_health", label: t("referral.mentalHealth") },
     ];
 
     const [sortOption, setSortOption] = useState<string>(SortOptions.DATE);
@@ -73,7 +77,9 @@ const Referrals = () => {
         }
 
         if (selectedTypes.length > 0) {
-            filtered = filtered.filter((r) => selectedTypes.some((type) => r.type.includes(type)));
+            filtered = filtered.filter((r) =>
+                r.type_keys.some((key) => selectedTypes.includes(key))
+            );
         }
 
         setFilteredReferrals(filtered);
@@ -118,14 +124,14 @@ const Referrals = () => {
 
                     <Text style={styles.filterLabel}>{t("referral.filterByType")}:</Text>
                     <View style={styles.filterContainer}>
-                        {TYPES.map((type) => (
+                        {REFERRAL_TYPES.map(({ key, label }) => (
                             <Chip
-                                key={type}
-                                selected={selectedTypes.includes(type)}
-                                onPress={() => toggleType(type)}
+                                key={key}
+                                selected={selectedTypes.includes(key)}
+                                onPress={() => toggleType(key)}
                                 style={styles.chip}
                             >
-                                {type}
+                                {label}
                             </Chip>
                         ))}
                     </View>

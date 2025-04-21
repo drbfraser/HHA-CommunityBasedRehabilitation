@@ -1,11 +1,9 @@
-//LanguagePicker.tsx
-import useStyles from "./LanguagePicker.style";
-
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View, Text, Pressable } from "react-native";
 import { Button, Modal, Portal } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import useStyles from "./LanguagePicker.style";
 
 const LanguagePicker = () => {
     const styles = useStyles();
@@ -49,7 +47,7 @@ const LanguagePicker = () => {
             <Pressable onPress={() => setModalVisible(true)}>
                 <Text style={styles.displayText}>
                     <Text style={styles.selectedText}>{t("languagePicker.selectedLanguage")} </Text>
-                    <Text>{getLangName(i18n.language)}</Text>
+                    <Text style={styles.textGray}>{getLangName(i18n.language)}</Text>
                 </Text>
             </Pressable>
 

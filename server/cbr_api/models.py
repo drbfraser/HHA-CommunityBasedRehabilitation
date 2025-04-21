@@ -131,6 +131,11 @@ class Client(models.Model):
         MALE = "M", _("Male")
         FEMALE = "F", _("Female")
 
+    class HCRType(models.TextChoices):
+        HOST_COMMUNITY = "HC", _("Host Community")
+        REFUGEE = "R", _("Refugee")
+        NOT_SET = "NA", _("Not Set")
+
     id = models.CharField(primary_key=True, max_length=100)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -151,6 +156,9 @@ class Client(models.Model):
     latitude = models.DecimalField(max_digits=12, decimal_places=6)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     village = models.CharField(max_length=50)
+    hcr_type = models.CharField(
+        max_length=2, choices=HCRType.choices, default=HCRType.NOT_SET
+    )
     is_active = models.BooleanField(default=True)
 
     def rename_file(self, original_filename):

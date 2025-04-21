@@ -18,13 +18,14 @@ import useStyles from "./Sync.styles";
 import { SyncDatabaseTask } from "../../tasks/SyncDatabaseTask";
 import SyncUpdateAlert from "../../components/SyncUpdateAlert.tsx/SyncUpdateAlert";
 import { useTranslation } from "react-i18next";
+import * as Application from "expo-application";
 
 export interface ISync {
     lastPulledTime: number;
     remoteChanges: number;
     localChanges: number;
 }
-export const VERSION_NAME: string = "1.3.0";
+export const VERSION_NAME: string | null = Application.nativeApplicationVersion;
 
 const Sync = () => {
     const styles = useStyles();

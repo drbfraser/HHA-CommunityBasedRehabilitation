@@ -1,9 +1,8 @@
 import { StyleSheet, useWindowDimensions } from "react-native";
-import { useTheme } from "react-native-paper";
-import { SMALL_WIDTH } from "../../util/theme.styles";
+import { SMALL_WIDTH, useAppTheme } from "../../util/theme.styles";
 
 const useStyles = () => {
-    const theme = useTheme();
+    const theme = useAppTheme();
     const { width } = useWindowDimensions();
     return StyleSheet.create({
         container: {

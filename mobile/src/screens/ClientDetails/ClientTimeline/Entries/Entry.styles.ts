@@ -5,6 +5,7 @@ const useStyles = () =>
     StyleSheet.create({
         createdCard: {
             borderWidth: 1,
+            borderColor: themeColors.lightGray,
             shadowColor: themeColors.riskBlack,
             marginRight: 30,
             marginLeft: 10,

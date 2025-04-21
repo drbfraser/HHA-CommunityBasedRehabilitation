@@ -1,8 +1,9 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { View } from "react-native";
-import { Text, TouchableRipple, useTheme } from "react-native-paper";
+import { Text, TouchableRipple } from "react-native-paper";
 import React, { ComponentPropsWithRef } from "react";
 import useStyles from "./Alert.styles";
+import { useAppTheme } from "@/src/util/theme.styles";
 
 export type AlertSeverity = "info" | "error";
 
@@ -28,7 +29,7 @@ export type AlertProps = ComponentPropsWithRef<typeof View> & {
  * {@link https://material-ui.com/components/alert/ material-ui's simple Alert}.
  */
 const Alert = ({ severity, text, onClose, ...other }: AlertProps) => {
-    const theme: ReactNativePaper.Theme = useTheme();
+    const theme = useAppTheme();
     const iconName = severity == "error" ? "error" : "info";
     const color = severity == "error" ? theme.colors.error : theme.colors.info;
     const styles = useStyles(color);

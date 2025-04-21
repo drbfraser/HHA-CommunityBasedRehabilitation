@@ -88,7 +88,7 @@ const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
                 <Details />
             </Dialog.Content>
             <Dialog.Actions>
-                <Button onPress={onClose} color={themeColors.blueBgDark}>
+                <Button onPress={onClose} textColor={themeColors.blueBgDark}>
                     Close
                 </Button>
             </Dialog.Actions>

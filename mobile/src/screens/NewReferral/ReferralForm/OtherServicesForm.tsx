@@ -19,7 +19,6 @@ const OtherServicesForm = (props: IFormProps) => {
                 valuesType="map"
                 values={services}
                 formikProps={props.formikProps}
-                items={otherServices}
                 fieldLabels={referralFieldLabels}
                 mode="outlined"
             />

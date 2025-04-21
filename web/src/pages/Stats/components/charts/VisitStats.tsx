@@ -239,6 +239,10 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
 
     return (
         <>
+            <Typography variant="h3">{t("statistics.byZone")}</Typography>
+            {Boolean(!stats || stats.visits.length)
+                ? t("statistics.onlyZonesWithVisits")
+                : t("statistics.noVisitsFound")}
             <HorizontalBarGraphStats
                 title={t("statistics.visits")}
                 data={totalData}
@@ -270,7 +274,7 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
                     )}
                 </Typography>
 
-                {stats ? (
+                {Boolean(!stats || stats.visits.length) ? (
                     <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
                         <PieChart>
                             <Pie
@@ -289,7 +293,7 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
                         </PieChart>
                     </ResponsiveContainer>
                 ) : (
-                    <Skeleton variant="rectangular" height={400} />
+                    <Skeleton variant="rectangular" height={0} />
                 )}
             </Grid>
         </>

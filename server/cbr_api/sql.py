@@ -50,8 +50,8 @@ def getDisabilityStats(user_id, from_time, to_time, is_active):
     SELECT d.disability_id AS disability_id, c.hcr_type, c.zone_id,
     COUNT(*) AS total"""
 
-    sql += getDemographicStats("disability_stats", is_active, "d.")
-    sql += getStatsWhere(user_id, "c.created_at", from_time, to_time)
+    sql += demographicStatsBuilder("disability_stats", is_active, "d.")
+    sql += whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
 
     sql += "GROUP BY d.disability_id, c.hcr_type, c.zone_id ORDER BY d.disability_id"
 
@@ -68,8 +68,8 @@ def getNumClientsWithDisabilities(user_id, from_time, to_time, is_active):
     sql = """
     SELECT COUNT(DISTINCT d.client_id) as total"""
 
-    sql += getDemographicStats("clients_with_disabilities", is_active, "d.")
-    sql += getStatsWhere(user_id, "c.created_at", from_time, to_time)
+    sql += demographicStatsBuilder("clients_with_disabilities", is_active, "d.")
+    sql += whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
 
     from django.db import connection
 
@@ -94,7 +94,7 @@ def getVisitStats(user_id, from_time, to_time, is_active):
     SELECT v.zone_id, c.hcr_type,
     COUNT(*) AS total"""
 
-    sql += getDemographicStats(
+    sql += demographicStatsBuilder(
         "visit_stats",
         is_active,
         "v.",
@@ -102,7 +102,7 @@ def getVisitStats(user_id, from_time, to_time, is_active):
         category_names=category_names,
     )
 
-    sql += getStatsWhere(user_id, "v.created_at", from_time, to_time)
+    sql += whereStatsBuilder(user_id, "v.created_at", from_time, to_time)
 
     sql += """
     GROUP BY v.zone_id, c.hcr_type ORDER BY v.zone_id"""
@@ -139,14 +139,14 @@ def getReferralStats(user_id, from_time, to_time, is_active):
     SELECT r.resolved, c.zone_id, c.hcr_type,
     COUNT(*) AS total"""
 
-    sql += getDemographicStats(
+    sql += demographicStatsBuilder(
         "referral_stats",
         is_active,
         "r.",
         column_names=column_names,
         category_names=category_names,
     )
-    sql += getStatsWhere(user_id, "r.date_referred", from_time, to_time)
+    sql += whereStatsBuilder(user_id, "r.date_referred", from_time, to_time)
     sql += """
     GROUP BY r.resolved, c.zone_id, c.hcr_type ORDER BY r.resolved DESC"""
 
@@ -172,8 +172,8 @@ def getNewClients(user_id, from_time, to_time, is_active):
     sql = """
     SELECT c.zone_id, c.hcr_type,
     COUNT(*) AS total"""
-    sql += getDemographicStats("new_clients", is_active, "c.")
-    statsRes = getStatsWhere(user_id, "c.created_at", from_time, to_time)
+    sql += demographicStatsBuilder("new_clients", is_active, "c.")
+    statsRes = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
 
     if is_active:
         if len(statsRes) != 0:
@@ -200,8 +200,8 @@ def getFollowUpVisits(user_id, from_time, to_time, is_active):
     sql = """
     SELECT c.zone_id, c.hcr_type,
     COUNT (*) AS total"""
-    sql += getDemographicStats("follow_up", is_active, "c.")
-    sql += getStatsWhere(user_id, "c.created_at", from_time, to_time)
+    sql += demographicStatsBuilder("follow_up", is_active, "c.")
+    sql += whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
 
     sql += """
     GROUP BY c.zone_id, c.hcr_type HAVING COUNT(v.client_id_id) > 1"""
@@ -214,7 +214,7 @@ def getFollowUpVisits(user_id, from_time, to_time, is_active):
         return res
 
 
-def getStatsWhere(user_id, time_col, from_time, to_time):
+def whereStatsBuilder(user_id, time_col, from_time, to_time):
     where = """
     WHERE """
     args = 0
@@ -242,7 +242,7 @@ def getStatsWhere(user_id, time_col, from_time, to_time):
 
 
 # Gets the default demographic (age and gender) statistics
-def getDemographicStats(
+def demographicStatsBuilder(
     option,
     is_active,
     alias=None,

@@ -95,7 +95,6 @@ const HorizontalBarGraphStats = ({
                     </Stack>
                 </Stack>
             </Box>
-
             <ResponsiveContainer width="100%" height={data.length ? CHART_HEIGHT : 0}>
                 <BarChart data={data} layout="vertical" onClick={onBarClick}>
                     <XAxis type="number" allowDecimals={false} />

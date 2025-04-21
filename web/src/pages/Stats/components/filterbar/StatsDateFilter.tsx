@@ -11,7 +11,7 @@ import {
     styled,
     Typography,
 } from "@mui/material";
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
@@ -45,13 +45,13 @@ interface IProps {
 
 const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
     const { t } = useTranslation();
-    const [monthlyValue, setMonthlyValue] = useState<dayjs.Dayjs | null>(null);
     const [accordianExpanded, setExpanded] = useState<string | false>("byMonth");
 
     const handleSubmit = (values: IDateRange) => {
         setRange({ ...values });
         onClose();
     };
+
     const handleClear = () => {
         setRange({ ...blankDateRange });
         onClose();
@@ -65,8 +65,8 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>{t("statistics.filterByDate")}</DialogTitle>
-            <Formik initialValues={range} onSubmit={handleSubmit}>
-                {(formikProps) => (
+            <Formik initialValues={range} onSubmit={handleSubmit} enableReinitialize={true}>
+                {({ values, setFieldValue, resetForm }) => (
                     <Form>
                         <StyledDialogContent>
                             <Accordion
@@ -77,16 +77,14 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                                     <Typography>{t("statistics.monthly")}</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DatePicker
                                             disableFuture
                                             label="By Month"
                                             openTo="year"
                                             views={["year", "month"]}
-                                            value={monthlyValue}
+                                            value={values.from ? dayjs(values.from) : null}
                                             onChange={(newValue) => {
-                                                setMonthlyValue(newValue);
-
                                                 if (newValue) {
                                                     const start = newValue
                                                         .clone()
@@ -96,8 +94,11 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                                                         .clone()
                                                         .endOf("month")
                                                         .format("YYYY-MM-DD");
-                                                    formikProps.setFieldValue("from", start);
-                                                    formikProps.setFieldValue("to", end);
+                                                    setFieldValue("from", start);
+                                                    setFieldValue("to", end);
+                                                } else {
+                                                    setFieldValue("from", "");
+                                                    setFieldValue("to", "");
                                                 }
                                             }}
                                             slotProps={{ textField: { fullWidth: true } }}
@@ -136,7 +137,14 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                             </Accordion>
                         </StyledDialogContent>
                         <DialogActions>
-                            <Button onClick={handleClear}>{t("general.clear")}</Button>
+                            <Button
+                                onClick={() => {
+                                    resetForm({ values: blankDateRange });
+                                    handleClear();
+                                }}
+                            >
+                                {t("general.clear")}
+                            </Button>
                             <Button color="primary" type="submit">
                                 {t("general.filter")}
                             </Button>

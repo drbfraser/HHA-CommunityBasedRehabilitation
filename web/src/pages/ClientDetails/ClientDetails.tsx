@@ -86,7 +86,6 @@ const ClientDetails = () => {
                 </Grid>
                 <Grid item xs={2}>
                     <Button
-                        // sx={clientFormStyles.sideFormButton}
                         color="primary"
                         variant="contained"
                         fullWidth

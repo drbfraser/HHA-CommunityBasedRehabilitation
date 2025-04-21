@@ -34,7 +34,6 @@ export default function UpdateGoalStatus(props: IModalProps) {
         t(props.transKey, { returnObjects: true, lng: "en" })
     );
     const localizedFields: string[] = Object.values(t(props.transKey, { returnObjects: true }));
-    // console.assert(canonicalFields.length === localizedFields.length);
 
     const getDialogTitleText = (riskType: RiskType): string => {
         switch (riskType) {

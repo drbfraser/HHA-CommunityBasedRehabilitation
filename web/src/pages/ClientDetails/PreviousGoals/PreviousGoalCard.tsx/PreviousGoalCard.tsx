@@ -15,6 +15,7 @@ import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { FormControl } from "@mui/material";
+import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
 
 // TODO: Replace with IRisk once changes are made
 interface ITempRisk {
@@ -70,8 +71,8 @@ const PreviousGoalCard = (props: IModalProps) => {
                     {/* TODO: Replace with Translation */}
                     <Typography variant="subtitle1">
                         <b>Goal Status:</b> {props.risk.goal_status}
-                        {/* TODO: Uncomment when 577 is Pulled into Main */}
-                        {/* <GoalStatusChip /> */}
+                        {/* TODO: Update with status logic */}
+                        <GoalStatusChip />
                     </Typography>
                     <Typography variant="subtitle1">
                         <b>Type:</b> {getDialogTitleText(props.risk.risk_type)}

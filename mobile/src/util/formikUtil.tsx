@@ -30,10 +30,15 @@ export const areFormikComponentPropsEqual = <Field extends string>(
     );
 };
 
-export const FieldError = (props: { formikProps: FormikProps<any>; field: string }) => (
-    <>
-        {shouldShowError(props.formikProps, props.field) ? (
-            <HelperText type="error">{props.formikProps.errors[props.field]}</HelperText>
-        ) : null}
-    </>
-);
+export const FieldError = (props: { formikProps: FormikProps<any>; field: string }) => {
+    const error = props.formikProps.errors[props.field];
+    const isErrorString = typeof error === "string";
+
+    return (
+        <>
+            {shouldShowError(props.formikProps, props.field) && isErrorString ? (
+                <HelperText type="error">{error}</HelperText>
+            ) : null}
+        </>
+    );
+};

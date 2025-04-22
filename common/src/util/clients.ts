@@ -71,10 +71,15 @@ export enum SortOptions {
 
 // On language change, recompute arrays of labels
 export let genders: { [key: string]: string } = {};
+export let hcrTypes: { [key: string]: string } = {};
 const refreshArrays = () => {
     genders = {
         [Gender.FEMALE]: i18n.t("clientFields.female"),
         [Gender.MALE]: i18n.t("clientFields.male"),
+    };
+    hcrTypes = {
+        [HCRType.HOST_COMMUNITY]: i18n.t("clientFields.hostCommunity"),
+        [HCRType.REFUGEE]: i18n.t("clientFields.refugee"),
     };
 };
 refreshArrays();

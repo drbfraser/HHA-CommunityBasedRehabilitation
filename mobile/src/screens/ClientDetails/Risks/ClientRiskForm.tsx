@@ -2,7 +2,7 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { Formik, FormikProps } from "formik";
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AlertIOS, Platform, ScrollView, ToastAndroid, View } from "react-native";
+import { Alert, Platform, ScrollView, ToastAndroid, View } from "react-native";
 import { Button, Modal, Portal, RadioButton, Text } from "react-native-paper";
 
 import {
@@ -33,7 +33,7 @@ const toastValidationError = () => {
     if (Platform.OS === "android") {
         ToastAndroid.show(msg, ToastAndroid.SHORT);
     } else {
-        AlertIOS.alert(msg);
+        Alert.alert(msg);
     }
 };
 

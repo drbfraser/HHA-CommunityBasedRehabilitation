@@ -109,3 +109,14 @@ Once migrations have been applied, run `docker exec cbr_django python manage.py 
 ### 6. You're done!
 
 For instructions to run locally and contribute, see the [contribution guide](CONTRIBUTION.md).
+
+
+# Translation Notes
+
+1. Risk Level Abbreviations (riskLevelsAbbreviated) have been translated as follows:
+- LO = GK (Gwon kak)
+- ME = KD (Kiden)
+- HI = GK (Gwon ki)
+- CR = YDP (Yöŋit Duma Parik)
+
+We should ensure that these are clear to the Bari users of the app, and draw attention to the fact the LO and HI share the same translated abbreviation - we may want to change this going forward for clarity.

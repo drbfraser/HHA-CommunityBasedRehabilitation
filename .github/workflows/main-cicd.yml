@@ -105,20 +105,7 @@ jobs:
         base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
         echo "Date String: ${{ steps.date_str.outputs.stdout }}"
       working-directory: /isolated_build/repo/mobile/android/app
-
-    # - name: Build APK (Targeting Development Server)
-    #   run:  |
-    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     sudo npm run build dev
-    #   working-directory: /isolated_build/repo/mobile
-
-    # todosd: update mobile/.env to target prod
-    - name: Build APK (Targeting Development Server)
-      run:  |
-        rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-        ./gradlew assembleRelease
-      working-directory: /isolated_build/repo/mobile/android
-
+      
     # NOTE: Artifact upload disabled because builds from the CI/CD server seem
     #       to not work. Specifically, creating a client on mobile and then
     #       trying to sync results in a "Inalid Date" sync error.
@@ -131,26 +118,25 @@ jobs:
     #     retention-days: 60
     #     if-no-files-found: error
 
-    # TODO: Re-enable the building of the .AAB file for deployment.
-    # Removed just to speed up the CI/CD pipeline while we are not deploying to the Play Store.
-    # - name: Build AAB for Play Store (Targeting Production Server)
-    #   run:  |
-    #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
-    #     npm run bundle prod
-    #   working-directory: /isolated_build/repo/mobile
-    # - uses: actions/upload-artifact@v3
-    #   with:
-    #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.aab"
-    #     path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
-    #     retention-days: 60
-    #     if-no-files-found: error
+
+    - name: Build AAB for Play Store (Targeting Production Server)
+      run:  |
+        rm -f /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
+        npm run build-aab prod
+      working-directory: /isolated_build/repo/mobile
+    - uses: actions/upload-artifact@v3
+      with:
+        name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.aab"
+        path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
+        retention-days: 60
+        if-no-files-found: error
   
     # # Only build the APK targeting the development server because it can be retargeted to other servers.
     # # (This saves about 10 minutes on the CI/CD build because the SFU GitHub server is very slow on upload)
     # - name: Build APK (Targeting Local Server)
     #   run:  |
     #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     npm run build local
+    #     npm run build-apk local
     #   working-directory: /isolated_build/repo/mobile
     # - uses: actions/upload-artifact@v3
     #   with:
@@ -162,7 +148,7 @@ jobs:
     # - name: Build APK (Targeting Staging Server)
     #   run:  |
     #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     npm run build staging
+    #     npm run build-apk staging
     #   working-directory: /isolated_build/repo/mobile
     # - uses: actions/upload-artifact@v3
     #   with:
@@ -174,7 +160,7 @@ jobs:
     # - name: Build APK (Targeting Production Server)
     #   run:  |
     #     rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-    #     npm run build prod
+    #     npm run build-apk prod
     #   working-directory: /isolated_build/repo/mobile
     # - uses: actions/upload-artifact@v3
     #   with:

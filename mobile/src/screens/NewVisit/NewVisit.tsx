@@ -91,8 +91,7 @@ const ImprovementField = (props: {
     // get Formik error values
     const path = `${VisitFormField.improvements}.${props.visitType}[${props.index}].${ImprovementFormField.description}`;
     const errorMessage = getIn(props.formikProps.errors, path);
-    // todosd: improve UX by not initially displaying errors?
-    // const isTouched = getIn(props.formikProps.touched, path);
+    // todo: improve UX by not initially displaying errors?
 
     return (
         <View>

@@ -88,12 +88,15 @@ jobs:
         npm install $COMMON_PACK_NAME
         npm ci
         npx prettier --check .
-      working-directory: /isolated_build/repo/mobile    
+      working-directory: /isolated_build/repo/mobile
+    
+    - name: Run TypeScript type check
+      run: npx tsc --noEmit
+      working-directory: /isolated_build/repo/mobile
 
     # todosd: remove need for sudo?
     - name: Prebuild android folder
-      run:  |
-        sudo npm run prebuild
+      run: sudo npm run prebuild
       working-directory: /isolated_build/repo/mobile
       
     - name: Setup Release Keystore for Play Store
@@ -179,22 +182,32 @@ jobs:
       uses: bfraser/cicd/actions/checkout@v1
       with: 
         path: /isolated_build/repo/
+
     - name: Install NPM
       run:  npm install -g npm@$NPM_VERSION
+
     - name: Build common
       run:  npm ci
       working-directory: /isolated_build/repo/common
+
     - name: Build web
       run:  npm ci
       working-directory: /isolated_build/repo/web
+
     - name: Check code formatting
       run:  npx prettier --check .
       working-directory: /isolated_build/repo/web
+
+    - name: Run TypeScript type check
+      run:  npx tsc --noEmit
+      working-directory: /isolated_build/repo/web
+
     - name: Compress files
       run:  |
         GENERATE_SOURCEMAP=false npm run build
         cd build && tar -czvf ../../web_build.tar.gz .
       working-directory: /isolated_build/repo/web
+
     - uses: actions/upload-artifact@v3
       if: success()
       with:

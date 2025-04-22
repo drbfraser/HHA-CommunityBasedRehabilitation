@@ -29,7 +29,7 @@ const useStyles = () =>
         stepLabelText: { fontSize: 25, fontWeight: "bold" },
         picker: { height: 55, width: "100%", flexGrow: 1 },
         pickerQuestion: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
-        errorText: { color: themeColors.errorRed, paddingLeft: 15 },
+        errorText: { color: themeColors.helperTextRed, paddingLeft: 12 },
     });
 
 export const progressStepsStyle = {

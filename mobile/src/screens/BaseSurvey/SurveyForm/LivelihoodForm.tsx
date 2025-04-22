@@ -11,6 +11,7 @@ const LivelihoodForm = (props: IFormProps) => {
     const styles = useStyles();
     const { t } = useTranslation();
 
+    const helperText = props.formikProps.errors[BaseSurveyFormField.job];
     return (
         <View>
             <TextCheckBox
@@ -26,18 +27,14 @@ const LivelihoodForm = (props: IFormProps) => {
                     <Text style={styles.pickerQuestion}>{t("survey.occupationStatus")}</Text>
                     <TextInput
                         mode="outlined"
-                        label={BaseSurveyFormField.job}
+                        label={baseFieldLabels[BaseSurveyFormField.job]}
                         value={props.formikProps.values[BaseSurveyFormField.job]}
                         onChangeText={(value) =>
                             props.formikProps.setFieldValue(BaseSurveyFormField.job, value)
                         }
                     />
-                    <HelperText
-                        style={styles.errorText}
-                        type="error"
-                        visible={!!props.formikProps.errors[BaseSurveyFormField.job]}
-                    >
-                        {props.formikProps.errors[BaseSurveyFormField.job]}
+                    <HelperText style={styles.errorText} type="error" visible={!!helperText}>
+                        {typeof helperText === "string" ? helperText : null}
                     </HelperText>
 
                     <View>

@@ -82,7 +82,9 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
         });
 
         const handleSubmit = async (values: typeof initialValues) => {
-            const referralToUpdate = await database.get<Referral>("referrals").find(referral.id.toString());
+            const referralToUpdate = await database
+                .get<Referral>("referrals")
+                .find(referral.id.toString());
             await referralToUpdate
                 .updateReferral(values[OutcomeField.outcome])
                 .then(() => handleUpdate())

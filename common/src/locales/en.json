@@ -202,7 +202,7 @@
   "alert": {
     "generalFailure": "Something went Wrong",
     "DeleteAlertWithSubject": "Delete Alert with Subject: {{subject}}",
-    "messageAlert": "You have {{count}} new messages in your inbox.",
+    "messageAlert": "You have {{numMessages}} new messages in your inbox.",
     "unauthorizedArchive": "You are not authorized to archive/dearchive clients. Please ask an administrator",
     "actionFailure": "Encountered an error while trying to {{action}} the {{object}}!",
     "unsyncedFailure": "The following changes could not be synced with the server because they have been modified by another user since your last sync. \n \n If you would like to keep your version, you'll need to make the following changes again:",

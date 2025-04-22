@@ -203,7 +203,7 @@ interface Resources {
     "alert": {
       "generalFailure": "Lyanget a konda 'borik",
       "DeleteAlertWithSubject": "Sene/ siyara kuwe na kulya {{subject}}",
-      "messageAlert": "Do a nyu' {{count}} longiyo lo luduk kulo konuk yi su'de ni",
+      "messageAlert": "Do a nyu' {{numMessages}} longiyo lo luduk kulo konuk yi su'de ni",
       "unauthorizedArchive": "&You are not authorized to archive/dearchive clients. Please ask an administrator",
       "actionFailure": "Nan pujo lyanget yi dingit nagong nan morju {{action}} na {{object}}",
       "unsyncedFailure": "Kine gayeresi' na kekebbu kine gbe nyobulo tune' yi pirit na geleng ko (kamononit lo, Kawuyunit lo) kogbon koko a kee' toworayi ka'de' ko lele' katokitayinit 'duddo yi dingit na tomorundi do yi pirit nageleng na.  KO do mindi 'de'ya nagong a nenut na miindi do a 'moke kine gayeresi na kekebu kine nene' dang",
@@ -1017,7 +1017,7 @@ interface Resources {
     "alert": {
       "generalFailure": "Something went Wrong",
       "DeleteAlertWithSubject": "Delete Alert with Subject: {{subject}}",
-      "messageAlert": "You have {{count}} new messages in your inbox.",
+      "messageAlert": "You have {{numMessages}} new messages in your inbox.",
       "unauthorizedArchive": "You are not authorized to archive/dearchive clients. Please ask an administrator",
       "actionFailure": "Encountered an error while trying to {{action}} the {{object}}!",
       "unsyncedFailure": "The following changes could not be synced with the server because they have been modified by another user since your last sync. \n \n If you would like to keep your version, you'll need to make the following changes again:",

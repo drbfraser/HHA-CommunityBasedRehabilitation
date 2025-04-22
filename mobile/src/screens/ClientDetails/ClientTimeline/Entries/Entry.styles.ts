@@ -10,7 +10,7 @@ const useStyles = () =>
             marginRight: 30,
             marginLeft: 10,
             padding: 1,
-            marginBottom: 15,
+            marginBottom: 36,
         },
         labelBold: { fontWeight: "bold" },
         referralBoard: {

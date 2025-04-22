@@ -90,7 +90,9 @@ const BaseFormikExposedDropdownMenu = <T extends string>(props: TFormikMenuProps
                 disabled={dropdownProps.disabled || formikProps.isSubmitting}
                 blurOnSubmit={false}
             />
-            {isError ? <HelperText type="error">{formikProps.errors[field]}</HelperText> : null}
+            {isError && typeof formikProps.errors[field] === "string" ? (
+                <HelperText type="error">{formikProps.errors[field]}</HelperText>
+            ) : null}
         </>
     );
 };

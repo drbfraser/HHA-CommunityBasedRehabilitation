@@ -19,6 +19,7 @@ import {
 import { objectFromMap } from "../../util/ObjectFromMap";
 import { useDisabilities } from "@cbr/common/src/util/hooks/disabilities";
 import { useTranslation } from "react-i18next";
+import Client from "@/src/models/Client";
 
 const ConflictDialog = () => {
     const styles = useStyles();
@@ -45,7 +46,7 @@ const ConflictDialog = () => {
                 if (!clients.get(id)?.name) {
                     /* We may need to retrieve client name for referral conflicts
                    since that is not stored in the local referral table */
-                    const client = await database.get(modelName.clients).find(id);
+                    const client = await database.get<Client>(modelName.clients).find(id);
                     clients.get(id)!.name = client.full_name;
                 }
 
@@ -58,7 +59,7 @@ const ConflictDialog = () => {
                 /* Get actual disability names rather than numerical array */
                 if (disabilities) {
                     let disabilitiesArr: Array<string> = disabilities.rejChange
-                        .substr(1, disabilities.rejChange.length - 2)
+                        .substr(1, disabilities.rejChange.length - 2) // todo: deprecated
                         .split(",");
                     disabilities.rejChange = disabilitiesArr
                         .map((disability) => {

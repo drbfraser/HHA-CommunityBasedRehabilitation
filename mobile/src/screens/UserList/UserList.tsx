@@ -4,7 +4,7 @@ import { Text, IconButton, Portal, Modal, Button } from "react-native-paper";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { useNavigation } from "@react-navigation/core";
-import { SearchOption, themeColors, useCurrentUser, useZones } from "@cbr/common";
+import { IUser, SearchOption, themeColors, useCurrentUser, useZones } from "@cbr/common";
 import { StackScreenName } from "../../util/StackScreenName";
 import { Picker } from "@react-native-picker/picker";
 import { Searchbar } from "react-native-paper";
@@ -256,7 +256,7 @@ const UserList = () => {
                                 }}
                             >
                                 <View style={styles.column_icon}>
-                                    {item.id == currentUser!.id ? (
+                                    {item.id == (currentUser as IUser)!.id ? (
                                         <Icon type="font-awesome-5" name="user-circle" />
                                     ) : (
                                         <></>

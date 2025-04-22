@@ -3,12 +3,12 @@ import { TextInput } from "react-native";
 
 const passwordTextInputProps: Pick<
     ComponentPropsWithRef<typeof TextInput>,
-    "secureTextEntry" | "autoCapitalize" | "autoCorrect" | "autoCompleteType" | "textContentType"
+    "secureTextEntry" | "autoCapitalize" | "autoCorrect" | "autoComplete" | "textContentType"
 > = {
     secureTextEntry: true,
     autoCapitalize: "none",
     autoCorrect: false,
-    autoCompleteType: "password",
+    autoComplete: "password",
     textContentType: "password",
 };
 

@@ -1,7 +1,6 @@
-import React, { memo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Keyboard, StyleSheet, TouchableOpacity } from "react-native";
-import { Menu, TextInput } from "react-native-paper";
-import { TextInputProps } from "react-native-paper/lib/typescript/components/TextInput/TextInput";
+import { Menu, TextInput, TextInputProps } from "react-native-paper";
 import useStyles from "./ExposedDropdownMenu.styles";
 import { countObjectKeys } from "@cbr/common";
 import { color } from "react-native-elements/dist/helpers";

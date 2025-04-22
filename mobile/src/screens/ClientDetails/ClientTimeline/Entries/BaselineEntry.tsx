@@ -22,7 +22,7 @@ type TSurveyForm = {
     [key: string]: ISurveyCategory;
 };
 
-type ISurveyCategory = { [key: string]: string | boolean | undefined };
+type ISurveyCategory = { [key: string]: string | number | boolean | undefined };
 
 const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
     const styles = useStyles();
@@ -74,7 +74,6 @@ const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
                         </Text>
                     </Card.Content>
                 </Card>
-                <Text />
                 {Object.keys(surveyInfo).map((categoryName) => (
                     <DetailAccordion key={categoryName} categoryName={categoryName} />
                 ))}
@@ -88,7 +87,7 @@ const BaseSurveyEntry = ({ survey, close }: IEntryProps) => {
                 <Details />
             </Dialog.Content>
             <Dialog.Actions>
-                <Button onPress={onClose} color={themeColors.blueBgDark}>
+                <Button onPress={onClose} textColor={themeColors.blueBgDark}>
                     Close
                 </Button>
             </Dialog.Actions>

@@ -604,6 +604,7 @@ class ClientListSerializer(serializers.ModelSerializer):
             "last_visit_date",
             "user_id",
             "is_active",
+            "hcr_type",
         ]
 
 

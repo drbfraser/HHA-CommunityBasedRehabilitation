@@ -50,6 +50,7 @@ const clientConflictFields = new Set([
     ClientField.educat_risk_level,
     ClientField.first_name,
     ClientField.gender,
+    ClientField.hcr_type,
     ClientField.health_risk_level,
     ClientField.last_name,
     ClientField.other_disability,

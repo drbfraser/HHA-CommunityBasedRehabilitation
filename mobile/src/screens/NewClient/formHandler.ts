@@ -58,6 +58,7 @@ const handleNewMobileClientSubmit = async (
                 client.mental_risk_level = values.mentalRisk;
                 client.last_visit_date = 0;
                 client.is_active = true;
+                client.hcr_type = values.hcrType;
             });
             addRisk(
                 newClient,

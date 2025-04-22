@@ -52,6 +52,7 @@ export const handleNewWebClientSubmit = async (
         latitude: 0.0,
         zone: values.zone,
         village: values.village,
+        hcr_type: values.hcrType,
         caregiver_present: values.caregiverPresent,
         caregiver_name: values.caregiverName,
         caregiver_phone: values.caregiverPhone,
@@ -133,6 +134,7 @@ export const handleUpdateClientSubmit = async (
                 ? values.other_disability
                 : "",
             is_active: values.is_active,
+            hcr_type: values.hcr_type,
         };
 
         const formData = objectToFormData(updatedValues);

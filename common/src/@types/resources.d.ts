@@ -367,7 +367,8 @@ interface Resources {
       "camera": "&Camera",
       "hcrType": "&HCR Type",
       "hostCommunity": "&Host Community",
-      "refugee": "&Refugee"
+      "refugee": "&Refugee",
+      "na": "&NA"
     },
     "referralAttr": {
       "dateReferred": "&Date Referred",
@@ -1174,7 +1175,8 @@ interface Resources {
       "camera": "Camera",
       "hcrType": "HCR Type",
       "hostCommunity": "Host Community",
-      "refugee": "Refugee"
+      "refugee": "Refugee",
+      "na": "NA"
     },
     "referralAttr": {
       "dateReferred": "Date Referred",

@@ -1,33 +1,37 @@
-import { Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-import { themeColors } from "@cbr/common/util/colors";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { IStats } from "@cbr/common/util/stats";
-import IOSSwitch from "components/IOSSwitch/IOSSwitch";
+import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
+import HorizontalBarGraphStats, {
+    IDemographicTotals,
+    IHBarGraphStatsData,
+    ISubheadings,
+} from "./HorizontalBarGraphStats";
 
 interface IProps {
     stats?: IStats;
+    age: IAge;
+    gender: IGender;
 }
 
-const FollowUpVistsStats = ({ stats }: IProps) => {
+const FollowUpVistsStats = ({ stats, age, gender }: IProps) => {
     const [totalFAdults, setTotalFAdults] = useState(0);
     const [totalMAdults, setTotalMAdults] = useState(0);
     const [totalFChild, setTotalFChild] = useState(0);
     const [totalMChild, setTotalMChild] = useState(0);
-    const [viewAdults, setViewAdults] = useState(true);
-
-    const CHART_HEIGHT = 400;
 
     const { t } = useTranslation();
 
     const zones = useZones();
 
-    const handleViewToggle = () => {
-        setViewAdults((prev) => !prev);
-    };
+    const demographicTotalsRef = useRef<IDemographicTotals>({
+        female_adult: 0,
+        male_adult: 0,
+        female_child: 0,
+        male_child: 0,
+    });
 
     useEffect(() => {
         if (stats) {
@@ -47,11 +51,17 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
             setTotalMAdults(mAdults);
             setTotalFChild(fChild);
             setTotalMChild(mChild);
+
+            demographicTotalsRef.current = {
+                female_adult: fAdults,
+                male_adult: mAdults,
+                female_child: fChild,
+                male_child: mChild,
+            };
         }
     }, [stats]);
 
-    let adultData: { label: string; key: string; female: number; male: number }[] = [];
-    let childData: { label: string; key: string; female: number; male: number }[] = [];
+    let totalData: IHBarGraphStatsData[] = [];
 
     zones.forEach((k, v) => {
         const femaleAdultTotal =
@@ -63,110 +73,46 @@ const FollowUpVistsStats = ({ stats }: IProps) => {
         const maleChildTotal =
             stats?.follow_up_visits.find((item) => item.zone_id === v)?.male_child_total ?? 0;
 
-        adultData.push({
+        totalData.push({
             label: k,
-            key: `${k}_adult_count`,
-            female: femaleAdultTotal ?? 0,
-            male: maleAdultTotal ?? 0,
-        });
-
-        childData.push({
-            label: k,
-            key: `${k}_child_count`,
-            female: femaleChildTotal ?? 0,
-            male: maleChildTotal ?? 0,
+            key: `${k}_total_count`,
+            femaleAdult: femaleAdultTotal,
+            maleAdult: maleAdultTotal,
+            femaleChild: femaleChildTotal,
+            maleChild: maleChildTotal,
         });
     });
 
+    const subheadings: ISubheadings[] = [
+        {
+            label: t("statistics.totalFChildFollowUpVisits"),
+            total: totalFChild,
+        },
+        {
+            label: t("statistics.totalMChildFollowUpVisits"),
+            total: totalMChild,
+        },
+        {
+            label: t("statistics.totalFAdultFollowUpVisits"),
+            total: totalFAdults,
+        },
+        {
+            label: t("statistics.totalMAdultFollowUpVisits"),
+            total: totalMAdults,
+        },
+    ];
+
     return (
-        <section>
-            <menu>
-                <Typography
-                    color={viewAdults ? "textSecondary" : "textPrimary"}
-                    component={"span"}
-                    variant={"body2"}
-                >
-                    {t("statistics.allChildren")}
-                </Typography>
-                <IOSSwitch checked={viewAdults} onChange={handleViewToggle} />
-                <Typography
-                    color={viewAdults ? "textPrimary" : "textSecondary"}
-                    component={"span"}
-                    variant={"body2"}
-                >
-                    {t("statistics.allAdults")}
-                </Typography>
-            </menu>
-            <Typography variant="h2" align="center">
-                {t("statistics.followUpVisits")}
-            </Typography>
-
-            {viewAdults ? (
-                <>
-                    <Typography variant="subtitle1" align="center">
-                        <b>{t("statistics.totalFollowedUpFAdult")}</b> {totalFAdults}
-                        <br />
-                        <b>{t("statistics.totalFollowedUpMAdult")}</b> {totalMAdults}
-                    </Typography>
-
-                    <ResponsiveContainer
-                        width="100%"
-                        height={stats?.follow_up_visits.length ? CHART_HEIGHT : 0}
-                    >
-                        <BarChart data={adultData} layout="vertical">
-                            <XAxis type="number" allowDecimals={false} />
-                            <YAxis dataKey="label" type="category" width={150} />
-                            <Tooltip />
-                            <Legend />
-                            <Bar
-                                dataKey="female"
-                                name={t("clientFields.female")}
-                                fill={themeColors.hhaPurple}
-                                barSize={30}
-                            />
-                            <Bar
-                                dataKey="male"
-                                name={t("clientFields.male")}
-                                fill={themeColors.hhaBlue}
-                                barSize={30}
-                            />
-                        </BarChart>
-                    </ResponsiveContainer>
-                </>
-            ) : (
-                <>
-                    <Typography variant="subtitle1" align="center">
-                        <b>{t("statistics.totalNewFChild")}</b> {totalFChild}
-                        <br />
-                        <b>{t("statistics.totalNewMChild")}</b> {totalMChild}
-                    </Typography>
-
-                    <ResponsiveContainer
-                        width="100%"
-                        height={stats?.follow_up_visits.length ? CHART_HEIGHT : 0}
-                    >
-                        <BarChart data={childData} layout="vertical">
-                            <XAxis type="number" allowDecimals={false} />
-                            <YAxis dataKey="label" type="category" width={150} />
-                            <Tooltip />
-                            <Legend />
-                            <Bar
-                                dataKey="female"
-                                name={t("clientFields.female")}
-                                fill={themeColors.hhaPurple}
-                                barSize={30}
-                            />
-                            <Bar
-                                dataKey="male"
-                                name={t("clientFields.male")}
-                                fill={themeColors.hhaBlue}
-                                barSize={30}
-                            />
-                        </BarChart>
-                    </ResponsiveContainer>
-                </>
-            )}
-        </section>
+        <>
+            <HorizontalBarGraphStats
+                title={t("statistics.followUpVisits")}
+                data={totalData}
+                age={age}
+                gender={gender}
+                subheadings={subheadings}
+                totals={demographicTotalsRef.current}
+            />
+        </>
     );
 };
 

@@ -20,4 +20,6 @@ export const themeColors = {
     statusBarBgGray: "#757575",
     textGray: "#767676",
     lightGray: "#BEBEBE",
+    lilac: "#C3ACCE",
+    pistachio: "#A5CC6B",
 };

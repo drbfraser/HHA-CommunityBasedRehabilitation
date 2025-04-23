@@ -7,6 +7,7 @@ import UserList from "../screens/UserList/UserList";
 import Dashboard from "../screens/DashBoard/Dashboard";
 import NewClient from "../screens/NewClient/NewClient";
 import { TabModal } from "../components/TabModal/TabModal";
+import Referrals from "../screens/Referrals/Referrals";
 
 export interface IScreen {
     name: string;
@@ -32,6 +33,11 @@ export const screens: IScreen[] = [
         name: "Client List",
         Component: ClientList,
         iconName: "format-list-bulleted",
+    },
+    {
+        name: "Referrals",
+        Component: Referrals,
+        iconName: "briefcase-clock",
     },
     {
         name: "Sync",

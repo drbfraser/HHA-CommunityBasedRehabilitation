@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Icon, IconProps, withBadge } from "react-native-elements";
 import { SyncModalIcon } from "./ModalIcon";
 import { useTranslation } from "react-i18next";
+import { Text } from "react-native";
 
 interface IHomeScreenProps {
     navigation: StackNavigationProp<StackParamList, StackScreenName.HOME>;
@@ -81,7 +82,17 @@ const HomeScreen = (props: IHomeScreenProps) => {
                                     }
                                 },
                             })}
-                            options={{ tabBarIcon: screen.iconName, tabBarBadge: screen.iconBadge }}
+                            // TODO: The current approach to change font size is not ideal. We should use a custom tab bar.
+                            options={{
+                                tabBarIcon: screen.iconName,
+                                tabBarBadge: screen.iconBadge,
+                                tabBarLabel:
+                                    screen.name === "Dashboard" ? (
+                                        <Text style={{ fontSize: 11 }}>Dashboard</Text>
+                                    ) : (
+                                        (undefined as any)
+                                    ),
+                            }}
                         />
                     ))}
                 </Tab.Navigator>

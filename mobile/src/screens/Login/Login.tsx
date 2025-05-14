@@ -189,7 +189,7 @@ const Login = () => {
                 {authState.state == "previouslyLoggedIn" ? (
                     <Button
                         style={styles.logoutButton}
-                        color={theme.colors.onPrimary} // todosd
+                        buttonColor={theme.colors.onPrimary}
                         disabled={status.status === "submitting"}
                         onPress={logout}
                         mode="text"

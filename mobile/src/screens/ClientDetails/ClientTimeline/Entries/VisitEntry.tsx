@@ -117,7 +117,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                     key={type}
                     theme={{ colors: { background: themeColors.blueBgLight } }}
                     title={riskTypes[type].name}
-                    {...titleDescArr.join(" & ")}
+                    description={titleDescArr.join(" & ")}
                 >
                     {improvements.length > 0 && <DataCard data={improvements} />}
                     {outcomes.length > 0 && <DataCard data={outcomes} />}

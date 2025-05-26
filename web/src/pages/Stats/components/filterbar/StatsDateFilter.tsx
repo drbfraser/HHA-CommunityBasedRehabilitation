@@ -132,6 +132,9 @@ const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
                                         required={accordianExpanded === "specific"}
                                         component={FormikTextField}
                                         InputLabelProps={{ shrink: true }}
+                                        inputProps={{
+                                            min: values.from || undefined,
+                                        }}
                                     />
                                 </StyledDialogContent>
                             </Accordion>

@@ -52,10 +52,12 @@ export type TAppRouteProp<ScreenName extends keyof StackParamList> = RouteProp<
 >;
 
 // On language change, recompute arrays of labels
-export let stackScreenOptions: {
-    [K in keyof StackParamList]?: TStackNavigationOptions<StackParamList, K>;
-} &
-    Record<NoAuthScreenName, StackNavigationOptions> = {} as any;
+export let stackScreenOptions: Partial<
+    Record<
+        StackScreenName | NoAuthScreenName,
+        TStackNavigationOptions<StackParamList, keyof StackParamList>
+    >
+> = {};
 const refreshArrays = () => {
     stackScreenOptions = {
         [StackScreenName.HOME]: {
@@ -157,6 +159,7 @@ export type StackParamList = {
         user: IUser;
     };
     [StackScreenName.ADMIN_NEW]: undefined;
+    [StackScreenName.REFERRALS]: undefined;
     [StackScreenName.SYNC]: undefined;
     [StackScreenName.ALERT_INBOX]: undefined;
     [NoAuthScreenName.LOGIN]: undefined;

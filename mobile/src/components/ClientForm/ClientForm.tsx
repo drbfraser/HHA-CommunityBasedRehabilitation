@@ -86,11 +86,12 @@ export const ClientForm = (props: IClientFormProps) => {
 
     //Show current HCRType value if it is 'NA' but don't allow selecting it in the dropdown
     const selectedHcrType = props.formikProps.values[ClientField.hcrType];
-    const filteredHcrTypes = selectedHcrType === HCRType.NOT_SET
-    ? hcrTypes
-    : Object.fromEntries(
-        Object.entries(hcrTypes).filter(([key]) => key !== HCRType.NOT_SET)
-      );
+    const filteredHcrTypes =
+        selectedHcrType === HCRType.NOT_SET
+            ? hcrTypes
+            : Object.fromEntries(
+                  Object.entries(hcrTypes).filter(([key]) => key !== HCRType.NOT_SET)
+              );
 
     const isFieldDisabled = useCallback(
         () => props.formikProps.isSubmitting || fieldsDisabled || props.disabled,

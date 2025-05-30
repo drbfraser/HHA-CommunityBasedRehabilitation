@@ -12,7 +12,6 @@ import {
     clientFieldLabels,
     genders,
     hcrTypes,
-    isThisExportingString,
     TClientValues,
     themeColors,
     timestampFromFormDate,

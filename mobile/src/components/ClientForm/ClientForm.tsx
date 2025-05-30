@@ -4,7 +4,6 @@ import { useZones } from "@cbr/common/src/util/hooks/zones";
 import { useDisabilities, getOtherDisabilityId } from "@cbr/common/src/util/hooks/disabilities";
 import { View, Platform, Alert } from "react-native";
 import { Button, Portal, Modal, Text } from "react-native-paper";
-import useStyles from "../../screens/ClientDetails/ClientDetails.styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import {
@@ -34,6 +33,7 @@ import FormikExposedDropdownMenu from "../ExposedDropdownMenu/FormikExposedDropd
 import TextCheckBox from "../TextCheckBox/TextCheckBox";
 import { showValidationErrorToast } from "../../util/validationToast";
 import { useTranslation } from "react-i18next";
+import useStyles from "./ClientForm.styles";
 
 export interface IClientFormProps {
     isNewClient: boolean;

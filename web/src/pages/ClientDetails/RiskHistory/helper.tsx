@@ -1,6 +1,7 @@
 import React from "react";
 import { Trans } from "react-i18next";
 import { RiskType } from "@cbr/common/util/risks";
+import { OutcomeGoalMet } from "@cbr/common/util/visits";
 
 export const translateRiskEntrySummary = (riskType: RiskType, isInitial: boolean) => {
     const setOrChanged = isInitial ? "Set" : "Changed";
@@ -41,3 +42,41 @@ export const translateRiskEntrySummary = (riskType: RiskType, isInitial: boolean
             return <></>;
     }
 };
+
+export const translateGoalStatus = (riskType: RiskType) => {
+    switch (riskType) {
+        case RiskType.HEALTH:
+            return (
+                <Trans i18nKey={"risks.healthGoalSet"}>
+                    -<b>Health</b> goal status set to
+                </Trans>
+            );
+        case RiskType.EDUCATION:
+            return (
+                <Trans i18nKey={"risks.healthGoalSet"}>
+                    -<b>Education</b> goal status set to
+                </Trans>
+            );
+        case RiskType.MENTAL:
+            return (
+                <Trans i18nKey={"risks.healthGoalSet"}>
+                    -<b>Mental health</b> goal status set to
+                </Trans>
+            );
+        case RiskType.NUTRITION:
+            return (
+                <Trans i18nKey={"risks.healthGoalSet"}>
+                    -<b>Nutrition</b> goal status set to
+                </Trans>
+            );
+        case RiskType.SOCIAL:
+            return (
+                <Trans i18nKey={"risks.healthGoalSet"}>
+                    -<b>Social</b> goal status set to
+                </Trans>
+            );
+        default:
+            console.error(`unknown risktype: ${riskType}`);
+            return <></>;
+    }
+}

@@ -5,12 +5,9 @@ import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
 import { FieldArray, Formik, FormikHelpers, FormikProps, getIn } from "formik";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import {
-    apiFetch,
     APIFetchFailError,
     countObjectKeys,
-    Endpoint,
     GoalStatus,
-    IClient,
     ImprovementFormField,
     initialValidationSchema,
     IRisk,
@@ -18,7 +15,6 @@ import {
     provisionals,
     themeColors,
     TZoneMap,
-    useCurrentUser,
     useZones,
     visitFieldLabels,
     VisitFormField,
@@ -321,10 +317,10 @@ const NewVisit = (props: INewVisitProps) => {
     const authContext = useContext(AuthContext);
     const user =
         authContext.authState.state === "loggedIn" ? authContext.authState.currentUser : null;
-    const [loadingError, setLoadingError] = useState(false);
+    const [, setLoadingError] = useState(false);
     const styles = useStyles();
     const zones = useZones();
-    const [submissionError, setSubmissionError] = useState(false);
+    const [, setSubmissionError] = useState(false);
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<VisitFormField[]>([]);
     const [checkedSteps, setCheckedSteps] = useState<VisitFormField[]>([]);
@@ -463,6 +459,9 @@ const NewVisit = (props: INewVisitProps) => {
                             {/* todosd: steps not fully connected when 5 or fewer selected */}
                             <ProgressSteps key={visitSteps.length} {...progressStepsStyle}>
                                 {visitSteps.map((surveyStep, index) => {
+                                    const isCurrentStepActive = activeStep === index;
+                                    const hasErrors = countObjectKeys(formikProps.errors) !== 0;
+
                                     return (
                                         <ProgressStep
                                             key={index}
@@ -472,22 +471,16 @@ const NewVisit = (props: INewVisitProps) => {
                                             }}
                                             buttonNextDisabled={
                                                 formikProps.isSubmitting ||
-                                                enabledSteps.length === 0 ||
-                                                (enabledSteps[activeStep - 1] !== undefined &&
-                                                    (!checkedSteps.includes(
-                                                        enabledSteps[activeStep - 1]
-                                                    )
-                                                        ? countObjectKeys(formikProps.errors) !==
-                                                              0 ||
-                                                          Object.keys(formikProps.touched)
-                                                              .length === 0
-                                                        : countObjectKeys(formikProps.errors) !==
-                                                          0))
+                                                (isCurrentStepActive &&
+                                                    (hasErrors ||
+                                                        (activeStep === 0 &&
+                                                            enabledSteps.length === 0)))
                                             }
                                             buttonPreviousDisabled={formikProps.isSubmitting}
                                             buttonFinishDisabled={
                                                 formikProps.isSubmitting ||
-                                                countObjectKeys(formikProps.errors) !== 0
+                                                hasErrors ||
+                                                (activeStep === 0 && enabledSteps.length === 0)
                                             }
                                             onPrevious={() => prevStep(formikProps)}
                                             onSubmit={() =>
@@ -495,7 +488,11 @@ const NewVisit = (props: INewVisitProps) => {
                                             }
                                             buttonPreviousText={t("general.previous")}
                                             buttonNextText={t("general.next")}
-                                            buttonFinishText={t("general.submit")}
+                                            buttonFinishText={
+                                                activeStep === 0
+                                                    ? t("general.next")
+                                                    : t("general.submit")
+                                            }
                                             buttonFillColor={themeColors.blueBgDark}
                                             buttonBorderColor={themeColors.blueBgDark}
                                             buttonPreviousTextColor={themeColors.blueBgDark}

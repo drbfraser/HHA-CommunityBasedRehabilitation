@@ -95,15 +95,15 @@ const refreshArrays = () => {
 
     goalStatuses = {
         [OutcomeGoalMet.CANCELLED]: {
-            name: i18n.t("newVisit.PLACEHOLDER-socialGoals.2"),
+            name: i18n.t("risks.goalCancelled"),
             color: themeColors.goalRed,
         },
         [OutcomeGoalMet.ONGOING]: {
-            name: i18n.t("newVisit.PLACEHOLDER-socialGoals.1"),
+            name: i18n.t("risks.goalInProgress"),
             color: themeColors.goalBlue,
         },
         [OutcomeGoalMet.CONCLUDED]: {
-            name: i18n.t("newVisit.PLACEHOLDER-socialGoals.0"),
+            name: i18n.t("risks.goalAchieved"),
             color: themeColors.goalGreen,
         },
     };

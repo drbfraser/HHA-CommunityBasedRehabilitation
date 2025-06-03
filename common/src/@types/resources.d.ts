@@ -497,7 +497,10 @@ interface Resources {
       "nutritionSet": "&<1>Nutrition</1> risk set to",
       "nutritionChanged": "&<1>Nutrition</1> risk changed to",
       "mentalSet": "&<1>Mental health</1> risk set to",
-      "mentalChanged": "&<1>Mental health</1> risk changed to"
+      "mentalChanged": "&<1>Mental health</1> risk changed to",
+      "goalAchieved": "&Achieved",
+      "goalInProgress": "&In progress",
+      "goalCancelled": "&Cancelled"
     },
     "riskLevelsAbbreviated": {
       "low": "&LO",
@@ -1282,7 +1285,10 @@ interface Resources {
       "nutritionSet": "<1>Nutrition</1> risk set to",
       "nutritionChanged": "<1>Nutrition</1> risk changed to",
       "mentalSet": "<1>Mental health</1> risk set to",
-      "mentalChanged": "<1>Mental health</1> risk changed to"
+      "mentalChanged": "<1>Mental health</1> risk changed to",
+      "goalAchieved": "Achieved",
+      "goalInProgress": "In progress",
+      "goalCancelled": "Cancelled"
     },
     "riskLevelsAbbreviated": {
       "low": "LO",

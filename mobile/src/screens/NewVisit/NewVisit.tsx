@@ -91,7 +91,6 @@ const ImprovementField = (props: {
     // get Formik error values
     const path = `${VisitFormField.improvements}.${props.visitType}[${props.index}].${ImprovementFormField.description}`;
     const errorMessage = getIn(props.formikProps.errors, path);
-    // todo: improve UX by not initially displaying errors?
 
     return (
         <View>
@@ -271,7 +270,7 @@ const VisitFocusForm = (
                 fieldLabels={visitFieldLabels}
                 mode="outlined"
             />
-
+            <View style={styles.verticalSpacer}></View>
             <Text style={styles.pickerQuestion}>{t("newVisit.selectReasons")} </Text>
             {visitTypes.map((visitType) => (
                 <TextCheckBox

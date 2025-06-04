@@ -33,7 +33,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
         const Summary = ({ clickable }: { clickable?: boolean }) => {
             return (
                 <>
-                    {translateRiskEntrySummary(risk.risk_type, isInitial)}
+                    {translateRiskEntrySummary(risk.risk_type, isInitial)}{" "}
                     <RiskLevelChip risk={risk.risk_level} clickable={clickable ?? false} />
                 </>
             );

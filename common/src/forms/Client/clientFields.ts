@@ -85,9 +85,6 @@ export enum ClientDetailsFields {
     hcr_type = "hcr_type",
 }
 
-// TODO: START REMOVE
-export const isThisExportingString = "Is this exporting? (3)";
-
 // Write a function that returns the current language
 export const getCurrentLanguage = () => {
     return i18n.language;

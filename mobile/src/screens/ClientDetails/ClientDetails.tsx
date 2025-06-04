@@ -13,7 +13,7 @@ import {
     IRisk,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
-import { Alert, Text, View, NativeModules } from "react-native";
+import { Alert, Text, View } from "react-native";
 import { IActivity, ActivityType } from "./ClientTimeline/Timeline";
 import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";

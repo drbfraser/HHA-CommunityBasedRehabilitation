@@ -78,6 +78,7 @@ const refreshArrays = () => {
         [Gender.MALE]: i18n.t("clientFields.male"),
     };
     hcrTypes = {
+        [HCRType.NOT_SET]: i18n.t("clientFields.na"),
         [HCRType.HOST_COMMUNITY]: i18n.t("clientFields.hostCommunity"),
         [HCRType.REFUGEE]: i18n.t("clientFields.refugee"),
     };

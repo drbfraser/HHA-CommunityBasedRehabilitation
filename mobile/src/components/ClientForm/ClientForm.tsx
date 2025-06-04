@@ -11,6 +11,7 @@ import {
     clientFieldLabels,
     genders,
     hcrTypes,
+    HCRType,
     TClientValues,
     themeColors,
     timestampFromFormDate,
@@ -82,6 +83,15 @@ export const ClientForm = (props: IClientFormProps) => {
     const showDatepicker = () => {
         setDatePickerVisible(true);
     };
+
+    //Show current HCRType value if it is 'NA' but don't allow selecting it in the dropdown
+    const selectedHcrType = props.formikProps.values[ClientField.hcrType];
+    const filteredHcrTypes =
+        selectedHcrType === HCRType.NOT_SET
+            ? hcrTypes
+            : Object.fromEntries(
+                  Object.entries(hcrTypes).filter(([key]) => key !== HCRType.NOT_SET)
+              );
 
     const isFieldDisabled = useCallback(
         () => props.formikProps.isSubmitting || fieldsDisabled || props.disabled,
@@ -293,7 +303,7 @@ export const ClientForm = (props: IClientFormProps) => {
                 fieldLabels={clientFieldLabels}
                 formikProps={props.formikProps}
                 valuesType="record-string"
-                values={hcrTypes}
+                values={filteredHcrTypes}
                 mode="outlined"
                 disabled={isFieldDisabled()}
             />

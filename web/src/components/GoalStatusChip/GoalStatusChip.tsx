@@ -1,13 +1,7 @@
-import { Chip, ChipProps } from "@mui/material";
-import { OutcomeGoalMet } from "@cbr/common/util/visits";
+import { Chip } from "@mui/material";
 import React from "react";
 
-interface GoalChipProps extends ChipProps {
-    goalStatus: OutcomeGoalMet;
-}
-
-export default function GoalStatusChip(props: GoalChipProps) {
-    // taken from front end branch as of now
+export default function GoalStatusChip() {
     return (
         <Chip
             // TODO: Change Label

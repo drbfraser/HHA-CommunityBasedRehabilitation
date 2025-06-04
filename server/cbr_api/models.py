@@ -16,6 +16,13 @@ from cbr_api.validators import FileSizeValidator
 from cbr_api.util import current_milli_time
 
 
+class GoalOutcomes(models.TextChoices):
+    CANCELLED = "CAN", _("Cancelled")
+    ONGOING = "GO", _("Ongoing")
+    CONCLUDED = "CON", _("Concluded")
+    NOT_SET = "NS", _("Not Set")
+
+
 class Zone(models.Model):
     zone_name = models.CharField(max_length=50, unique=True)
 
@@ -220,12 +227,34 @@ class ClientRisk(models.Model):
     client_id = models.ForeignKey(
         Client, related_name="risks", on_delete=models.CASCADE
     )
+
     timestamp = models.BigIntegerField()
+    start_date = models.BigIntegerField(default=0)
+    end_date = models.BigIntegerField(default=0)
+
     server_created_at = models.BigIntegerField(default=0)
     risk_type = RiskType.getField()
     risk_level = RiskLevel.getField()
     requirement = models.TextField(default="No requirement set")
+
+    # SHOULD REMOVE AFTER CORRECT MIGRATIONS HAVE BEEN MADE
     goal = models.TextField(default="No goal set")
+
+    # Changed from goal -> goal_name
+    goal_name = models.TextField(default="No goal set")
+    goal_status = models.CharField(
+        max_length=3, choices=GoalOutcomes.choices, default=GoalOutcomes.NOT_SET
+    )
+
+    # Assigning the Default value for the start_date to be whatever the timestamp was
+    def save(self, *args, **kwargs):
+        if self.start_date is None:
+            self.start_date = self.timestamp
+
+        if self.goal != "No goal set":
+            self.goal_name = self.goal
+
+        super().save(*args, **kwargs)
 
 
 class Visit(models.Model):
@@ -353,17 +382,17 @@ class Referral(models.Model):
 
 
 class Outcome(models.Model):
-    class Goal(models.TextChoices):
-        CANCELLED = "CAN", _("Cancelled")
-        ONGOING = "GO", _("Ongoing")
-        CONCLUDED = "CON", _("Concluded")
+    # class Goal(models.TextChoices):
+    #     CANCELLED = "CAN", _("Cancelled")
+    #     ONGOING = "GO", _("Ongoing")
+    #     CONCLUDED = "CON", _("Concluded")
 
     id = models.CharField(primary_key=True, max_length=100)
     visit_id = models.ForeignKey(
         Visit, related_name="outcomes", on_delete=models.CASCADE
     )
     risk_type = RiskType.getField()
-    goal_met = models.CharField(max_length=3, choices=Goal.choices)
+    goal_met = models.CharField(max_length=3, choices=GoalOutcomes.choices)
     outcome = models.TextField(blank=True)
     created_at = models.BigIntegerField(default=current_milli_time)
     server_created_at = models.BigIntegerField(default=current_milli_time)

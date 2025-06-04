@@ -170,6 +170,10 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
             "risk_level",
             "requirement",
             "goal",
+            "goal_name",
+            "goal_status",
+            "start_date",
+            "end_date",
         ]
 
         read_only_fields = ["id", "client_id", "timestamp", "risk_type"]
@@ -186,6 +190,10 @@ class NormalRiskSerializer(serializers.ModelSerializer):
             "risk_level",
             "requirement",
             "goal",
+            "goal_name",
+            "goal_status",
+            "start_date",
+            "end_date",
         ]
 
         read_only_fields = ["id", "timestamp"]
@@ -234,6 +242,10 @@ class ClientRiskSerializer(serializers.ModelSerializer):
             "risk_level",
             "requirement",
             "goal",
+            "goal_name",
+            "goal_status",
+            "start_date",
+            "end_date",
         ]
 
 

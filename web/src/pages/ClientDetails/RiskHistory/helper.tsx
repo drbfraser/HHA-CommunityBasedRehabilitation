@@ -1,6 +1,7 @@
 import React from "react";
 import { Trans } from "react-i18next";
 import { RiskType } from "@cbr/common/util/risks";
+import { OutcomeGoalMet } from "@cbr/common/util/visits";
 
 export const translateRiskEntrySummary = (riskType: RiskType, isInitial: boolean) => {
     const setOrChanged = isInitial ? "Set" : "Changed";

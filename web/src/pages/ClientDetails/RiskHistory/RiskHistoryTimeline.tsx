@@ -13,6 +13,7 @@ import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import { translateRiskEntrySummary } from "./helper";
 import { timelineStyles } from "../Timeline/Timeline.styles";
+import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
 
 interface IProps {
     client?: IClient;

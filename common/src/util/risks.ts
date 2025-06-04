@@ -1,5 +1,6 @@
 import { themeColors } from "./colors";
 import i18n from "i18next";
+import { OutcomeGoalMet } from "./visits";
 export interface IRisk {
     id: string;
     client_id: string;
@@ -7,7 +8,14 @@ export interface IRisk {
     risk_type: RiskType;
     risk_level: RiskLevel;
     requirement: string;
+
+    // replace with goal_name after
     goal: string;
+
+    start_date: number;
+    end_date: number;
+    goal_name: string;
+    goal_status: OutcomeGoalMet;
 }
 
 export enum RiskType {

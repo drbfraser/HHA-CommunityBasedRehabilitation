@@ -87,6 +87,7 @@ const ImprovementField = (props: {
     // get Formik error values
     const path = `${VisitFormField.improvements}.${props.visitType}[${props.index}].${ImprovementFormField.description}`;
     const errorMessage = getIn(props.formikProps.errors, path);
+    const touched = getIn(props.formikProps.touched, path);
 
     return (
         <View>
@@ -104,13 +105,13 @@ const ImprovementField = (props: {
                     <TextInput
                         mode="outlined"
                         key={`${props.provided}${ImprovementFormField.description}`}
-                        label={visitFieldLabels[ImprovementFormField.description]}
+                        label={visitFieldLabels[ImprovementFormField.description] + "*"}
                         value={
                             props.formikProps.values[VisitFormField.improvements][props.visitType][
                                 props.index
                             ][ImprovementFormField.description]
                         }
-                        error={!!errorMessage}
+                        error={!!errorMessage && !!touched}
                         onChangeText={(value) => {
                             props.formikProps.setFieldTouched(
                                 `${fieldName}.${ImprovementFormField.description}`,
@@ -122,8 +123,18 @@ const ImprovementField = (props: {
                                 value
                             );
                         }}
+                        onBlur={() => {
+                            props.formikProps.setFieldTouched(
+                                `${fieldName}.${ImprovementFormField.description}`,
+                                true
+                            );
+                        }}
                     />
-                    <HelperText style={styles.errorText} type="error" visible={!!errorMessage}>
+                    <HelperText
+                        style={styles.errorText}
+                        type="error"
+                        visible={!!errorMessage && !!touched}
+                    >
                         {errorMessage}
                     </HelperText>
                 </>
@@ -144,6 +155,7 @@ const OutcomeField = (props: {
     // get Formik error values
     const path = `${fieldName}.${OutcomeFormField.outcome}`;
     const errorMessage = getIn(props.formikProps.errors, path);
+    const touched = getIn(props.formikProps.touched, path);
 
     return (
         <View>
@@ -178,13 +190,13 @@ const OutcomeField = (props: {
                 <Text style={styles.pickerQuestion}>{t("newVisit.outcomeOfGoal")}</Text>
                 <TextInput
                     mode="outlined"
-                    label={visitFieldLabels[OutcomeFormField.outcome]}
+                    label={visitFieldLabels[OutcomeFormField.outcome] + "*"}
                     value={
                         props.formikProps.values[VisitFormField.outcomes][props.visitType][
                             OutcomeFormField.outcome
                         ]
                     }
-                    error={!!errorMessage}
+                    error={!!errorMessage && !!touched}
                     onChangeText={(value) => {
                         props.formikProps.setFieldTouched(
                             `${fieldName}.${OutcomeFormField.outcome}`,
@@ -196,7 +208,11 @@ const OutcomeField = (props: {
                         );
                     }}
                 />
-                <HelperText style={styles.errorText} type="error" visible={!!errorMessage}>
+                <HelperText
+                    style={styles.errorText}
+                    type="error"
+                    visible={!!errorMessage && !!touched}
+                >
                     {errorMessage}
                 </HelperText>
             </View>
@@ -242,7 +258,7 @@ const VisitFocusForm = (
             <View style={styles.verticalSpacer}></View>
             <TextInput
                 mode="outlined"
-                label={visitFieldLabels[VisitFormField.village]}
+                label={visitFieldLabels[VisitFormField.village] + "*"}
                 value={formikProps.values[VisitFormField.village]}
                 onChangeText={(value) => formikProps.setFieldValue(VisitFormField.village, value)}
                 error={!!formikProps.errors[VisitFormField.village]}
@@ -260,6 +276,7 @@ const VisitFocusForm = (
 
             <FormikExposedDropdownMenu
                 field={VisitFormField.zone}
+                placeholder={visitFieldLabels[VisitFormField.zone] + "*"}
                 valuesType="map"
                 values={zones}
                 formikProps={formikProps}
@@ -267,7 +284,7 @@ const VisitFocusForm = (
                 mode="outlined"
             />
             <View style={styles.verticalSpacer}></View>
-            <Text style={styles.pickerQuestion}>{t("newVisit.selectReasons")} </Text>
+            <Text style={styles.pickerQuestion}>{t("newVisit.selectReasons") + "*"} </Text>
             {visitTypes.map((visitType) => (
                 <TextCheckBox
                     key={visitType}

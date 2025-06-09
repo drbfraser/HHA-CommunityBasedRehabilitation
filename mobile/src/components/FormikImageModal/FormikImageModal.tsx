@@ -83,11 +83,11 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                 });
 
                 if (!image.canceled) {
-                    const fileInfo = await getFileInfo(image.uri);
+                    const fileInfo = await getFileInfo(image.assets[0].uri);
                     let uri;
-                    if (fileInfo.size && fileInfo.size >= MAX_FILE_SIZE) {
+                    if (fileInfo.exists && fileInfo.size && fileInfo.size >= MAX_FILE_SIZE) {
                         const resizedUri = await manipulateAsync(
-                            `data:image/jpeg;base64,${image.base64}`,
+                            `data:image/jpeg;base64,${image.assets[0].base64}`,
                             [{ resize: { width: 300 } }],
                             {
                                 compress: 0.7,
@@ -96,7 +96,7 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                         );
                         uri = `data:image/jpeg;base64,${resizedUri.base64}`;
                     } else {
-                        uri = `data:image/jpeg;base64,${image.base64}`;
+                        uri = `data:image/jpeg;base64,${image.assets[0].base64}`;
                     }
 
                     props.onPictureChange(uri);

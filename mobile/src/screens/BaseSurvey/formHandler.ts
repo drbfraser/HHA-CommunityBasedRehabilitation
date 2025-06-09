@@ -18,11 +18,13 @@ export const handleSubmit = async (
     const source = "mobile";
     helpers.setSubmitting(true);
 
-    const surveyInfo = await baseSurveyHandleSubmitForm(values, source);
+    const surveyInfo = (await baseSurveyHandleSubmitForm(values, source)) as typeof surveyInfo;
+
     await database.write(async () => {
         const client = await database
             .get(modelName.clients)
             .find(values[BaseSurveyFormField.client_id].toString());
+
         await database.get(modelName.surveys).create((survey: any) => {
             delete surveyInfo.client_id; /* We want to set this relation ourselves */
 

@@ -1,4 +1,4 @@
-import { clientPrioritySort, getZones, IOutstandingReferral } from "@cbr/common";
+import { clientPrioritySort, getZones } from "@cbr/common";
 import { IClientSummary } from "@cbr/common";
 import { riskLevels } from "@cbr/common";
 import { modelName } from "../../models/constant";
@@ -7,6 +7,8 @@ import { dbType } from "../../util/watermelonDatabase";
 import { Q } from "@nozbe/watermelondb";
 import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 import i18n from "i18next";
+import Client from "@/src/models/Client";
+import Referral from "@/src/models/Referral";
 
 export type BriefReferral = {
     id: string;
@@ -16,7 +18,7 @@ export type BriefReferral = {
     date_referred: number;
 };
 
-const concatenateReferralType = (referral: IOutstandingReferral) => {
+const concatenateReferralType = (referral: Referral) => {
     const referralTypes: String[] = [];
     if (referral.orthotic) {
         referralTypes.push(i18n.t("referral.orthotic"));
@@ -74,7 +76,7 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
     let fetchReferrals;
 
     await database
-        .get(modelName.clients)
+        .get<Client>(modelName.clients)
         .query()
         .fetch()
         .then((fetchedClients) => {
@@ -82,7 +84,7 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
 
             fetchReferrals = new Promise<void>((resolve) => {
                 fetchedClients.forEach(async (client) => {
-                    const referrals = await client.outstandingReferrals.fetch();
+                    const referrals = (await client.outstandingReferrals.fetch()) as Referral[];
                     if (referrals.length > 0) {
                         referrals.forEach((referral) => {
                             const currReferral: BriefReferral = {

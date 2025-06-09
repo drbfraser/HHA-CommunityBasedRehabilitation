@@ -1,6 +1,6 @@
 import { Validation } from "../../util/validations";
 import * as Yup from "yup";
-import { Gender, IClient } from "../../util/clients";
+import { Gender, HCRType, IClient } from "../../util/clients";
 import i18n from "i18next";
 
 export enum ClientField {
@@ -35,6 +35,7 @@ export enum ClientField {
     mentalGoals = "mentalGoals",
     picture = "picture",
     pictureChanged = "pictureChanged",
+    hcrType = "hcrType",
 
     // Required to match DB attributes to display client details in web app
     first_name = "first_name",
@@ -61,6 +62,7 @@ export enum ClientField {
     mental_timestamp = "mental_timestamp",
     last_visit_date = "last_visit_date",
     is_active = "is_active",
+    hcr_type = "hcr_type",
 }
 
 export enum ClientDetailsFields {
@@ -80,10 +82,8 @@ export enum ClientDetailsFields {
     pictureChanged = "pictureChanged",
     other_disability = "other_disability",
     is_active = "is_active",
+    hcr_type = "hcr_type",
 }
-
-// TODO: START REMOVE
-export const isThisExportingString = "Is this exporting? (3)";
 
 // Write a function that returns the current language
 export const getCurrentLanguage = () => {
@@ -135,6 +135,7 @@ const refreshArrays = () => {
         [ClientField.mentalRisk]: i18n.t("clientFields.mentalRisk"),
         [ClientField.mentalRequirements]: i18n.t("clientFields.mentalRequirements"),
         [ClientField.mentalGoals]: i18n.t("clientFields.mentalGoals"),
+        [ClientField.hcrType]: i18n.t("clientFields.hcrType"),
     };
 
     updateClientfieldLabels = {
@@ -152,6 +153,7 @@ const refreshArrays = () => {
         [ClientField.caregiver_email]: i18n.t("clientFields.caregiverEmail"),
         [ClientField.disability]: i18n.t("clientFields.disability"),
         [ClientField.other_disability]: i18n.t("clientFields.otherDisability"),
+        [ClientField.hcr_type]: i18n.t("clientFields.hcrType"),
     };
 };
 refreshArrays();
@@ -193,6 +195,7 @@ export const clientInitialValues = {
     [ClientField.picture]: "",
     [ClientField.pictureChanged]: false,
     [ClientField.is_active]: true,
+    [ClientField.hcrType]: "" as HCRType,
 };
 
 export type TClientValues = typeof clientInitialValues;

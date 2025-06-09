@@ -17,6 +17,7 @@ class ClientFilter(django_filters.FilterSet):
             "mental_risk_level",
             "user_id",
             "is_active",
+            "hcr_type",
         ]
         filter_overrides = {
             django.db.models.CharField: {

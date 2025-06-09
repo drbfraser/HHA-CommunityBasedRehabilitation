@@ -18,6 +18,7 @@ import Login from "../screens/Login/Login";
 import SwitchServer from "../screens/SwitchServer/SwitchServer";
 import AlertInbox from "../screens/AlertInbox/AlertInbox";
 import i18n from "i18next";
+import Referrals from "../screens/Referrals/Referrals";
 
 export const stackScreenProps: Record<
     StackScreenName | NoAuthScreenName,
@@ -25,6 +26,7 @@ export const stackScreenProps: Record<
 > = {
     [StackScreenName.HOME]: HomeScreen,
     [StackScreenName.CLIENT]: ClientDetails,
+    [StackScreenName.REFERRALS]: Referrals,
     [StackScreenName.ADMIN_VIEW]: AdminView,
     [StackScreenName.ADMIN_EDIT]: AdminEdit,
     [StackScreenName.ADMIN_NEW]: AdminNew,
@@ -44,15 +46,17 @@ type TStackNavigationOptions<ParamList extends ParamListBase, RouteName extends 
           navigation: any;
       }) => StackNavigationOptions);
 
-export type TAppRouteProp<ScreenName extends StackScreenName> = RouteProp<
+export type TAppRouteProp<ScreenName extends keyof StackParamList> = RouteProp<
     StackParamList,
     ScreenName
 >;
 
 // On language change, recompute arrays of labels
-export let stackScreenOptions: Record<
-    StackScreenName | NoAuthScreenName,
-    TStackNavigationOptions<StackParamList, StackScreenName | NoAuthScreenName>
+export let stackScreenOptions: Partial<
+    Record<
+        StackScreenName | NoAuthScreenName,
+        TStackNavigationOptions<StackParamList, keyof StackParamList>
+    >
 > = {};
 const refreshArrays = () => {
     stackScreenOptions = {
@@ -155,6 +159,7 @@ export type StackParamList = {
         user: IUser;
     };
     [StackScreenName.ADMIN_NEW]: undefined;
+    [StackScreenName.REFERRALS]: undefined;
     [StackScreenName.SYNC]: undefined;
     [StackScreenName.ALERT_INBOX]: undefined;
     [NoAuthScreenName.LOGIN]: undefined;

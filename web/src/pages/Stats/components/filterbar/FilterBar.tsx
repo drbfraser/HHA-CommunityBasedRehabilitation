@@ -1,12 +1,15 @@
+import { Button, Chip, styled } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Chip, styled } from "@mui/material";
 
-import { IUser } from "@cbr/common/util/users";
 import { IStats } from "@cbr/common/util/stats";
-import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
-import StatsUserFilter from "./StatsUserFilter";
+import { IUser } from "@cbr/common/util/users";
+import { Typography } from "@mui/material";
+import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import ExportStats from "./ExportStats";
+import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
+import StatsDemographicFilter, { IAge, IGender } from "./StatsDemographicFilter";
+import StatsUserFilter from "./StatsUserFilter";
 
 const FilterControls = styled("div")({
     display: "flex",
@@ -30,12 +33,32 @@ interface IProps {
     users: IUser[];
     dateRange: IDateRange;
     stats: IStats | undefined;
+    gender: IGender;
+    age: IAge;
     setDateRange: (dateRange: IDateRange) => void;
     setUser: (user: IUser | null) => void;
+    setGender: (gender: IGender) => void;
+    setAge: (age: IAge) => void;
+    archiveMode: boolean;
+    onArchiveModeChange: (val: boolean) => void;
 }
 
-const FilterBar = ({ user, users, dateRange, stats, setDateRange, setUser }: IProps) => {
+const FilterBar = ({
+    user,
+    users,
+    dateRange,
+    stats,
+    gender,
+    age,
+    setDateRange,
+    setUser,
+    setGender,
+    setAge,
+    archiveMode,
+    onArchiveModeChange,
+}: IProps) => {
     const [dateFilterOpen, setDateFilterOpen] = useState(false);
+    const [demographicOpen, setDemographicOpen] = useState(false);
     const [userFilterOpen, setUserFilterOpen] = useState(false);
     const [exportOpen, setExportOpen] = useState(false);
     const { t } = useTranslation();
@@ -44,6 +67,9 @@ const FilterBar = ({ user, users, dateRange, stats, setDateRange, setUser }: IPr
         <menu>
             <FilterControls>
                 <FilterButtons>
+                    <Button variant="outlined" onClick={() => setDemographicOpen(true)}>
+                        {t("statistics.filterByDemographic")}
+                    </Button>
                     <Button variant="outlined" onClick={() => setDateFilterOpen(true)}>
                         {t("statistics.filterByDate")}
                     </Button>
@@ -76,8 +102,37 @@ const FilterBar = ({ user, users, dateRange, stats, setDateRange, setUser }: IPr
                         <Chip label={t("statistics.allUsers")} />
                     )}
                 </FilterLabels>
+                <FilterLabels>
+                    <menu>
+                        <Typography
+                            color={archiveMode ? "textSecondary" : "textPrimary"}
+                            component={"span"}
+                            variant={"body2"}
+                        >
+                            {t("statistics.allClients")}
+                        </Typography>
+                        <IOSSwitch
+                            checked={archiveMode}
+                            onChange={(event) => onArchiveModeChange(event.target.checked)}
+                        />
+                        <Typography
+                            color={archiveMode ? "textPrimary" : "textSecondary"}
+                            component={"span"}
+                            variant={"body2"}
+                        >
+                            {t("statistics.activeClients")}
+                        </Typography>
+                    </menu>
+                </FilterLabels>
             </FilterControls>
-
+            <StatsDemographicFilter
+                open={demographicOpen}
+                onClose={() => setDemographicOpen(false)}
+                gender={gender}
+                age={age}
+                setGender={setGender}
+                setAge={setAge}
+            />
             <StatsDateFilter
                 open={dateFilterOpen}
                 onClose={() => setDateFilterOpen(false)}
@@ -91,7 +146,14 @@ const FilterBar = ({ user, users, dateRange, stats, setDateRange, setUser }: IPr
                 user={user}
                 setUser={setUser}
             />
-            <ExportStats open={exportOpen} onClose={() => setExportOpen(false)} stats={stats} />
+            <ExportStats
+                open={exportOpen}
+                onClose={() => setExportOpen(false)}
+                stats={stats}
+                age={age}
+                gender={gender}
+                date={dateRange}
+            />
         </menu>
     );
 };

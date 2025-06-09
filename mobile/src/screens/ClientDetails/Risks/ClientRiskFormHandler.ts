@@ -4,6 +4,7 @@ import { dbType } from "../../../util/watermelonDatabase";
 import { addRisk } from "../../NewClient/formHandler";
 import { AutoSyncDB } from "../../../util/syncHandler";
 import i18n from "i18next";
+import Client from "@/src/models/Client";
 
 const wasChangeMade = (values: IRisk, initialValues: IRisk) => {
     const keysToCheck = ["risk_level", "requirement", "goal"] as (keyof IRisk)[];
@@ -28,7 +29,7 @@ export const handleRiskSubmit = async (
 
     try {
         let risk;
-        const client = await database.get(modelName.clients).find(values.client_id);
+        const client = await database.get<Client>(modelName.clients).find(values.client_id);
         const currentTime = new Date().getTime();
         await database.write(async () => {
             risk = await addRisk(

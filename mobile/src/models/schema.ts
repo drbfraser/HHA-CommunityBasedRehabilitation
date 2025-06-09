@@ -39,6 +39,7 @@ export default appSchema({
                 { name: ClientField.full_name, type: "string" },
                 { name: ClientField.birth_date, type: "number" },
                 { name: ClientField.gender, type: "string" },
+                { name: ClientField.hcr_type, type: "string", isOptional: true },
                 { name: ClientField.phone_number, type: "string", isOptional: true },
                 { name: ClientField.disability, type: "string" },
                 { name: ClientField.other_disability, type: "string", isOptional: true },

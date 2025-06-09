@@ -74,9 +74,9 @@ const Sync = () => {
         const len = logger.logs.length;
         if (len != 0) {
             let newStats: ISync = {
-                lastPulledTime: logger.logs[len - 1].newLastPulledAt,
-                remoteChanges: logger.logs[len - 1].remoteChangeCount,
-                localChanges: logger.logs[len - 1].localChangeCount,
+                lastPulledTime: logger.logs[len - 1].newLastPulledAt ?? 0,
+                remoteChanges: logger.logs[len - 1].remoteChangeCount ?? 0,
+                localChanges: logger.logs[len - 1].localChangeCount ?? 0,
             };
             setStats(newStats);
         }

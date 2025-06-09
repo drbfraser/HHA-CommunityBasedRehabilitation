@@ -10,13 +10,17 @@ interface GoalChipProps extends ChipProps {
 export default function GoalStatusChip(props: GoalChipProps) {
     const goalStatus = goalStatuses[props.goalStatus];
 
-    return (
-        <Chip
-            label={goalStatus ? goalStatus.name : "In Progress"}
-            style={{ backgroundColor: goalStatus ? goalStatus.color : "primary" }}
-            size="small"
-            variant="filled"
-            sx={goalStatusChipStyles.chip}
-        />
-    );
-}
+    import { Chip } from "@mui/material";
+    import React from "react";
+
+    export default function GoalStatusChip() {
+        return (
+            <Chip
+                label={goalStatus ? goalStatus.name : "In Progress"}
+                style={{ backgroundColor: goalStatus ? goalStatus.color : "primary" }}
+                size="small"
+                variant="filled"
+                sx={goalStatusChipStyles.chip}
+            />
+        );
+    }

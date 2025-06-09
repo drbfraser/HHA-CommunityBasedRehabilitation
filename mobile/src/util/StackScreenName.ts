@@ -1,6 +1,7 @@
 export enum StackScreenName {
     HOME = "Home",
     CLIENT = "ClientDetails",
+    REFERRALS = "Referrals",
     BASE_SURVEY = "BaselineSurvey",
     ADMIN_VIEW = "AdminView",
     ADMIN_EDIT = "AdminEdit",

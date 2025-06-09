@@ -7,6 +7,7 @@ export const themeColors = {
     yellowDark: "#F0AA50",
     errorRed: "#F44336",
     riskRed: "#EF5350",
+    helperTextRed: "#AE233D",
     riskGreen: "#81C784",
     riskYellow: "#F0AA50",
     riskBlack: "#424242",
@@ -23,4 +24,6 @@ export const themeColors = {
     statusBarBgGray: "#757575",
     textGray: "#767676",
     lightGray: "#BEBEBE",
+    lilac: "#C3ACCE",
+    pistachio: "#A5CC6B",
 };

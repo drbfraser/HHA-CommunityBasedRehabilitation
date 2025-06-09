@@ -89,7 +89,8 @@ export const clientComparator = (
     let result = 0;
     switch (sortOption) {
         case SortOptions.ID: {
-            result = a.id - b.id;
+            // lexicographic sorting of UUID
+            result = a.id.localeCompare(b.id);
             break;
         }
         case SortOptions.NAME: {
@@ -161,7 +162,8 @@ export const userComparator = (
     let result = 0;
     switch (sortOption) {
         case SortOptions.ID: {
-            result = a.id - b.id;
+            // lexicographic sorting of UUID
+            result = a.id.localeCompare(b.id);
             break;
         }
         case SortOptions.NAME: {

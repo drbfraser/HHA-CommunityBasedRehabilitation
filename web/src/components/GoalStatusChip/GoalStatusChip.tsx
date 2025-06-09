@@ -8,14 +8,11 @@ interface GoalChipProps extends ChipProps {
 }
 
 export default function GoalStatusChip(props: GoalChipProps) {
-    // taken from front end branch as of now
     const goalStatus = goalStatuses[props.goalStatus];
 
     return (
         <Chip
-            // TODO: Change Label
             label={goalStatus ? goalStatus.name : "In Progress"}
-            // TODO: Change colour depending on label type
             style={{ backgroundColor: goalStatus ? goalStatus.color : "primary" }}
             size="small"
             variant="filled"

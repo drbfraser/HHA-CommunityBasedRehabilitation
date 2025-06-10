@@ -33,5 +33,5 @@ export const validationSchema = () =>
         [FormField.risk_level]: Yup.string().label(fieldLabels[FormField.risk_level]).required(),
         [FormField.requirement]: Yup.string().label(fieldLabels[FormField.requirement]).required(),
         [FormField.goal]: Yup.string().label(fieldLabels[FormField.goal]).required(),
-        [FormField.other]: Yup.string().label(fieldLabels[FormField.other]).required(),
+        //[FormField.other]: Yup.string().label(fieldLabels[FormField.other]).required(),
     });

@@ -15,7 +15,7 @@ import {
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FieldProps } from "formik";
 import { TextField } from "formik-mui";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -29,11 +29,20 @@ interface IModalProps {
 
 export default function UpdateGoalStatus(props: IModalProps) {
     const { t } = useTranslation();
+    // TODO: Update translations file to replace placeholders
+    const goalStatusOptions = [
+        { value: "GO", label: t("newVisit.PLACEHOLDER-healthGoals.1") },
+        { value: "CON", label: t("newVisit.PLACEHOLDER-healthGoals.0") },
+        { value: "CAN", label: t("newVisit.PLACEHOLDER-healthGoals.2") },
+        { value: "NS", label: t("newVisit.PLACEHOLDER-healthGoals.3") },
+    ];
 
+    /* TODO: Add back in if we need to use canonical/localized fields
     const canonicalFields: string[] = Object.values(
         t(props.transKey, { returnObjects: true, lng: "en" })
     );
     const localizedFields: string[] = Object.values(t(props.transKey, { returnObjects: true }));
+    */
 
     const getDialogTitleText = (riskType: RiskType): string => {
         switch (riskType) {
@@ -56,9 +65,11 @@ export default function UpdateGoalStatus(props: IModalProps) {
     return (
         <Formik
             onSubmit={(values) => {
+                console.log(values);
                 handleSubmit(values, props.risk, props.setRisk);
                 props.close();
             }}
+            enableReinitialize
             initialValues={props.risk}
             validationSchema={validationSchema}
         >
@@ -72,24 +83,26 @@ export default function UpdateGoalStatus(props: IModalProps) {
                             <Grid container direction="column" spacing={1}>
                                 <Grid item>
                                     <Typography variant="subtitle1" fontWeight="bold">
+                                        {/* TODO: Add Translation */}
                                         Update Goal Status
                                     </Typography>
                                 </Grid>
                                 <Grid item>
                                     <FormControl fullWidth variant="outlined">
-                                        <RadioGroup
-                                            aria-labelledby="radio-buttons-goal-status"
-                                            name="radio-buttons-group"
-                                        >
-                                            {/* TODO: Update Value and figure out how to integrate with Formik  */}
-                                            {localizedFields.map((label, index) => (
-                                                <FormControlLabel
-                                                    value={label}
-                                                    control={<Radio />}
-                                                    label={label}
-                                                />
-                                            ))}
-                                        </RadioGroup>
+                                        <Field name="goal_status">
+                                            {({ field }: FieldProps) => (
+                                                <RadioGroup {...field}>
+                                                    {goalStatusOptions.map((label, index) => (
+                                                        <FormControlLabel
+                                                            key={index}
+                                                            value={label.value}
+                                                            control={<Radio />}
+                                                            label={label.label}
+                                                        />
+                                                    ))}
+                                                </RadioGroup>
+                                            )}
+                                        </Field>
                                     </FormControl>
                                 </Grid>
                                 <Grid item>
@@ -99,6 +112,7 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                         required
                                         variant="outlined"
                                         margin="dense"
+                                        // TODO: Add translation for "goal name"
                                         label="Goal Name"
                                         name={FormField.goal}
                                     />
@@ -120,7 +134,7 @@ export default function UpdateGoalStatus(props: IModalProps) {
                             <Button
                                 color="success"
                                 variant="outlined"
-                                type="reset"
+                                type="submit"
                                 disabled={isSubmitting}
                             >
                                 {t("general.save")}

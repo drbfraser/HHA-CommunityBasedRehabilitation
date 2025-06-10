@@ -72,6 +72,7 @@ const ClientRisksModal = (props: IModalProps) => {
                     handleSubmit(values, props.risk, props.setRisk);
                     props.close();
                 }}
+                enableReinitialize
                 initialValues={props.risk}
                 validationSchema={validationSchema}
             >

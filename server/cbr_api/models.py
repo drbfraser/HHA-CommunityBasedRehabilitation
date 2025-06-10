@@ -221,6 +221,12 @@ class Client(models.Model):
             if old_file_path != self.picture.path:
                 os.remove(old_file_path)
 
+class RiskChangeType(models.TextChoices):
+    INITIAL = "INIT", "Initial"
+    RISK_LEVEL = "RL", "Risk Level Change"
+    GOAL_STATUS = "GS", "Goal Status Change"
+    OTHER = "OTH", "Other"
+
 
 class ClientRisk(models.Model):
     id = models.CharField(primary_key=True, max_length=100)

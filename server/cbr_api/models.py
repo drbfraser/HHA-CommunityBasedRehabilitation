@@ -1,6 +1,5 @@
 import os
 import time
-import json
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
@@ -221,6 +220,7 @@ class Client(models.Model):
             if old_file_path != self.picture.path:
                 os.remove(old_file_path)
 
+
 class RiskChangeType(models.TextChoices):
     INITIAL = "INIT", "Initial"
     RISK_LEVEL = "RL", "Risk Level Change"
@@ -251,6 +251,20 @@ class ClientRisk(models.Model):
     goal_status = models.CharField(
         max_length=3, choices=GoalOutcomes.choices, default=GoalOutcomes.NOT_SET
     )
+    # identifies how this risk object was created
+    change_type = models.CharField(
+        max_length=5,
+        choices=RiskChangeType.choices,
+        default=RiskChangeType.INITIAL,
+    )
+
+    # improves query performance for lookups by client_id and risk_type 
+    class Meta:
+        indexes = [
+            models.Index(fields=['client_id', 'risk_type', '-timestamp']),
+        ]
+
+
 
     # Assigning the Default value for the start_date to be whatever the timestamp was
     def save(self, *args, **kwargs):

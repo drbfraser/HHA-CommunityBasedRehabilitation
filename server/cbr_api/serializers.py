@@ -1,5 +1,4 @@
 from curses.ascii import isdigit
-import datetime
 import imghdr
 import os
 import time
@@ -19,11 +18,10 @@ from cbr_api.util import (
     create_generic_data,
     create_update_delete_alert_data,
 )
-from cbr import settings
 import logging
 
-logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger(__name__)
+
 
 
 # create and list
@@ -194,6 +192,7 @@ class NormalRiskSerializer(serializers.ModelSerializer):
             "goal_status",
             "start_date",
             "end_date",
+            "change_type",
         ]
 
         read_only_fields = ["id", "timestamp"]
@@ -204,26 +203,33 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         validated_data["server_created_at"] = current_time
         validated_data["id"] = uuid.uuid4()
         risk = models.ClientRisk.objects.create(**validated_data)
+        risk_type = validated_data["risk_type"]
+        risk_level = validated_data["risk_level"]
+        client = validated_data["client_id"]
+        
+        # find the previous risk record for the same client and risk type
+        previous_risk = models.ClientRisk.objects.filter(
+            client_id=client, risk_type=risk_type,
+        ).order_by("-timestamp").first()
+
+        logger.info("Previous risk: %s", previous_risk)
+
         risk.save()
 
-        type = validated_data["risk_type"]
-        level = validated_data["risk_level"]
-        client = validated_data["client_id"]
-
-        if type == models.RiskType.HEALTH:
-            client.health_risk_level = level
+        if risk_type == models.RiskType.HEALTH:
+            client.health_risk_level = risk_level
             client.health_timestamp = current_time
-        elif type == models.RiskType.SOCIAL:
-            client.social_risk_level = level
+        elif risk_type == models.RiskType.SOCIAL:
+            client.social_risk_level = risk_level
             client.social_timestamp = current_time
-        elif type == models.RiskType.EDUCAT:
-            client.educat_risk_level = level
+        elif risk_type == models.RiskType.EDUCAT:
+            client.educat_risk_level = risk_level
             client.educat_timestamp = current_time
-        elif type == models.RiskType.NUTRIT:
-            client.nutrit_risk_level = level
+        elif risk_type == models.RiskType.NUTRIT:
+            client.nutrit_risk_level = risk_level
             client.nutrit_timestamp = current_time
-        elif type == models.RiskType.MENTAL:
-            client.mental_risk_level = level
+        elif risk_type == models.RiskType.MENTAL:
+            client.mental_risk_level = risk_level
             client.mental_timestamp = current_time
         client.updated_at = current_time
         client.save()

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Divider, HelperText, Text, TextInput } from "react-native-paper";
 import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
-import { FieldArray, Formik, FormikHelpers, FormikProps, getIn } from "formik";
+import { FieldArray, Formik, FormikHelpers, FormikProps } from "formik";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import {
     apiFetch,
@@ -88,11 +88,6 @@ const ImprovementField = (props: {
         }
     });
 
-    // get Formik error values
-    const path = `${VisitFormField.improvements}.${props.visitType}[${props.index}].${ImprovementFormField.description}`;
-    const errorMessage = getIn(props.formikProps.errors, path);
-    // todo: improve UX by not initially displaying errors?
-
     return (
         <View>
             <TextCheckBox
@@ -115,7 +110,6 @@ const ImprovementField = (props: {
                                 props.index
                             ][ImprovementFormField.description]
                         }
-                        error={!!errorMessage}
                         onChangeText={(value) => {
                             props.formikProps.setFieldTouched(
                                 `${fieldName}.${ImprovementFormField.description}`,
@@ -128,8 +122,20 @@ const ImprovementField = (props: {
                             );
                         }}
                     />
-                    <HelperText style={styles.errorText} type="error" visible={!!errorMessage}>
-                        {errorMessage}
+                    <HelperText
+                        style={styles.errorText}
+                        type="error"
+                        visible={
+                            !!props.formikProps.errors[
+                                `${fieldName}.${ImprovementFormField.description}`
+                            ]
+                        }
+                    >
+                        {
+                            props.formikProps.errors[
+                                `${fieldName}.${ImprovementFormField.description}`
+                            ]
+                        }
                     </HelperText>
                 </>
             )}
@@ -145,10 +151,6 @@ const OutcomeField = (props: {
     const fieldName = `${VisitFormField.outcomes}.${props.visitType}`;
     const styles = useStyles();
     const { t } = useTranslation();
-
-    // get Formik error values
-    const path = `${fieldName}.${OutcomeFormField.outcome}`;
-    const errorMessage = getIn(props.formikProps.errors, path);
 
     return (
         <View>
@@ -189,7 +191,6 @@ const OutcomeField = (props: {
                             OutcomeFormField.outcome
                         ]
                     }
-                    error={!!errorMessage}
                     onChangeText={(value) => {
                         props.formikProps.setFieldTouched(
                             `${fieldName}.${OutcomeFormField.outcome}`,
@@ -201,8 +202,12 @@ const OutcomeField = (props: {
                         );
                     }}
                 />
-                <HelperText style={styles.errorText} type="error" visible={!!errorMessage}>
-                    {errorMessage}
+                <HelperText
+                    style={styles.errorText}
+                    type="error"
+                    visible={!!props.formikProps.errors[`${fieldName}.${OutcomeFormField.outcome}`]}
+                >
+                    {props.formikProps.errors[`${fieldName}.${OutcomeFormField.outcome}`]}
                 </HelperText>
             </View>
         </View>
@@ -250,7 +255,6 @@ const VisitFocusForm = (
                 label={visitFieldLabels[VisitFormField.village]}
                 value={formikProps.values[VisitFormField.village]}
                 onChangeText={(value) => formikProps.setFieldValue(VisitFormField.village, value)}
-                error={!!formikProps.errors[VisitFormField.village]}
             />
 
             <HelperText
@@ -258,9 +262,7 @@ const VisitFocusForm = (
                 type="error"
                 visible={!!formikProps.errors[VisitFormField.village]}
             >
-                {typeof formikProps.errors[VisitFormField.village] === "string"
-                    ? formikProps.errors[VisitFormField.village]
-                    : ""}
+                {formikProps.errors[VisitFormField.village]}
             </HelperText>
 
             <FormikExposedDropdownMenu
@@ -271,6 +273,14 @@ const VisitFocusForm = (
                 fieldLabels={visitFieldLabels}
                 mode="outlined"
             />
+
+            <HelperText
+                style={styles.errorText}
+                type="error"
+                visible={!!formikProps.errors[VisitFormField.zone]}
+            >
+                {formikProps.errors[VisitFormField.zone]}
+            </HelperText>
 
             <Text style={styles.pickerQuestion}>{t("newVisit.selectReasons")} </Text>
             {visitTypes.map((visitType) => (
@@ -389,22 +399,7 @@ const NewVisit = (props: INewVisitProps) => {
 
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
-    const nextStep = async (values: any, helpers: FormikHelpers<any>) => {
-        const errors = await helpers.validateForm();
-        const hasErrors = Object.keys(errors).length > 0;
-
-        // validate form (should be unneeded in current setup, as 'Submit' button is disabled if form has errors)
-        if (hasErrors) {
-            helpers.setTouched(
-                Object.keys(errors).reduce((acc, key) => {
-                    acc[key] = true;
-                    return acc;
-                }, {} as Record<string, boolean>)
-            );
-            helpers.setSubmitting(false);
-            return;
-        }
-
+    const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
             setSaveError(undefined);
             handleSubmit(values, helpers, user!.id, database, autoSync, cellularSync)
@@ -486,10 +481,6 @@ const NewVisit = (props: INewVisitProps) => {
                                                           0))
                                             }
                                             buttonPreviousDisabled={formikProps.isSubmitting}
-                                            buttonFinishDisabled={
-                                                formikProps.isSubmitting ||
-                                                countObjectKeys(formikProps.errors) !== 0
-                                            }
                                             onPrevious={() => prevStep(formikProps)}
                                             onSubmit={() =>
                                                 nextStep(formikProps.values, formikProps)

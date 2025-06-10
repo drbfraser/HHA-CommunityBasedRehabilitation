@@ -147,7 +147,7 @@ const SwitchServer = () => {
                             blurOnSubmit={false}
                             autoCapitalize="none"
                             autoCorrect={false}
-                            autoComplete="off"
+                            autoCompleteType="off"
                             textContentType="URL"
                             returnKeyType="next"
                             onSubmitEditing={() => switchServer(selectedServer)}

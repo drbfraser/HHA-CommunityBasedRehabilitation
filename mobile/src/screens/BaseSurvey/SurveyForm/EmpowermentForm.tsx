@@ -7,8 +7,6 @@ import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
 
 const EmpowermentForm = (props: IFormProps) => {
     const styles = useStyles();
-
-    const helperText = props.formikProps.errors[BaseSurveyFormField.organization];
     return (
         <View>
             <TextCheckBox
@@ -22,7 +20,7 @@ const EmpowermentForm = (props: IFormProps) => {
                 <>
                     <TextInput
                         mode="outlined"
-                        label={baseFieldLabels[BaseSurveyFormField.organization]}
+                        label={BaseSurveyFormField.organization}
                         onChangeText={(value) => {
                             props.formikProps.setFieldTouched(
                                 BaseSurveyFormField.organization,
@@ -34,8 +32,12 @@ const EmpowermentForm = (props: IFormProps) => {
                             );
                         }}
                     />
-                    <HelperText style={styles.errorText} type="error" visible={!!helperText}>
-                        {typeof helperText === "string" ? helperText : null}
+                    <HelperText
+                        style={styles.errorText}
+                        type="error"
+                        visible={!!props.formikProps.errors[BaseSurveyFormField.organization]}
+                    >
+                        {props.formikProps.errors[BaseSurveyFormField.organization]}
                     </HelperText>
                 </>
             )}

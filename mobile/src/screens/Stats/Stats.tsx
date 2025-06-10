@@ -1,6 +1,24 @@
+import React, { useEffect, useState } from "react";
+import { ScrollView, View } from "react-native";
+import { Button, Divider, Switch, Text } from "react-native-paper";
+import useStyles from "./Stats.styles";
+import { useIsFocused } from "@react-navigation/core";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
+import {
+    VictoryBar,
+    VictoryChart,
+    VictoryTheme,
+    VictoryZoomContainer,
+    VictoryAxis,
+    VictoryPie,
+    VictoryGroup,
+    VictoryLegend,
+    VictoryContainer,
+} from "victory-native";
 import {
     ClientField,
     ReferralField,
+    referralFieldLabels,
     ReferralFormField,
     referralStatsChartLabels,
     serviceTypes,
@@ -10,17 +28,9 @@ import {
     VisitField,
 } from "@cbr/common";
 import { Q } from "@nozbe/watermelondb";
-import { useDatabase } from "@nozbe/watermelondb/hooks";
-import { useIsFocused } from "@react-navigation/core";
-import i18n from "i18next";
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { ScrollView, View } from "react-native";
-import { Button, Divider, Switch, Text } from "react-native-paper";
-import { VictoryPie } from "victory-native";
 import { modelName } from "../../models/constant";
-import BarGraph from "./BarGraph";
-import useStyles from "./Stats.styles";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 
 export type BarStat = {
     name: string;
@@ -30,19 +40,6 @@ export type BarStat = {
 export type PieStat = {
     x: string;
     y: number;
-};
-
-export type BarGraphData = {
-    data: BarStat[];
-    colour: string;
-    key: string;
-};
-
-export type LegendColours = {
-    name: string;
-    symbol: {
-        fill: string;
-    };
 };
 
 const Stats = () => {
@@ -66,6 +63,7 @@ const Stats = () => {
 
     const allZone = i18n.t("statistics.allZones");
     const [zoneOption, setZoneOption] = useState<string>(allZone);
+    const [visitData, setVisitData] = useState(fetchVisitData);
     const [visitCount, setVisitCount] = useState<number>(0);
     const [graphicData, setGraphicData] = useState<any>([
         { x: "", y: 0 },
@@ -75,12 +73,11 @@ const Stats = () => {
 
     const [resolvedCount, setResolvedCount] = useState<number>(0);
     const [unresolvedCount, setUnresolvedCount] = useState<number>(0);
-    const [disabilityCount, setDisabilityCount] = useState<number>(0);
+    const [unresolvedRef, setUnresolvedRef] = useState(fetchUnResovledReferralData);
+    const [resolvedRef, setResolvedRef] = useState(fetchResovledReferralData);
 
-    const [visitGraphData, setVisitGraphData] = useState<BarGraphData[]>([]);
-    const [disabilitiesGraphData, setDisabilitiesGraphData] = useState<BarGraphData[]>([]);
-    const [referralsGraphData, setReferralsGraphData] = useState<BarGraphData[]>([]);
-    const [referralsGraphLegend, setReferralsGraphLegend] = useState<LegendColours[]>([]);
+    const [disabilityData, setDisabilityData] = useState(fetchDisabilityData);
+    const [disabilityCount, setDisabilityCount] = useState<number>(0);
 
     const graphicColor = [
         themeColors.hhaGreen,
@@ -103,16 +100,8 @@ const Stats = () => {
                 fetchVisitData.push(record);
             }
         }
-
-        const barGraphData: BarGraphData = {
-            data: fetchVisitData,
-            colour: themeColors.blueAccent,
-            key: "visit_stats",
-        };
-        const barGraphDataArray: BarGraphData[] = [barGraphData];
-
-        setVisitGraphData(barGraphDataArray);
         setVisitCount(sum);
+        setVisitData(fetchVisitData);
     };
 
     const RiskStats = async (zoneCode?: number) => {
@@ -174,7 +163,6 @@ const Stats = () => {
                 name: referralStatsChartLabels[type],
                 count: count,
             };
-
             if (resolved) {
                 fetchResovledReferralData.push(record);
             } else {
@@ -183,38 +171,11 @@ const Stats = () => {
         }
         if (resolved) {
             setResolvedCount(sum);
+            setResolvedRef(fetchResovledReferralData);
         } else {
             setUnresolvedCount(sum);
+            setUnresolvedRef(fetchUnResovledReferralData);
         }
-
-        const resolvedData: BarGraphData = {
-            data: fetchResovledReferralData,
-            colour: themeColors.riskGreen,
-            key: "resolved_stats",
-        };
-
-        const unresolved: BarGraphData = {
-            data: fetchUnResovledReferralData,
-            colour: themeColors.riskRed,
-            key: "unresolved_stats",
-        };
-
-        const barGraphDataArray: BarGraphData[] = [resolvedData, unresolved];
-        setReferralsGraphData(barGraphDataArray);
-        const legendColours: LegendColours[] = [
-            {
-                name: t("statistics.unresolved"),
-                symbol: {
-                    fill: themeColors.riskRed,
-                },
-            },
-            {
-                name: t("statistics.resolved"),
-                symbol: { fill: themeColors.riskGreen },
-            },
-        ];
-
-        setReferralsGraphLegend(legendColours);
     };
 
     const DisabilityStat = async () => {
@@ -250,16 +211,8 @@ const Stats = () => {
             clientCount = clientCount.extend(Q.where(ClientField.is_active, true));
         }
         const result: number = await clientCount.fetchCount();
-
-        const barGraphData: BarGraphData = {
-            data: fetchDisabilityData,
-            colour: themeColors.blueAccent,
-            key: "disability_staats",
-        };
-        const barGraphDataArray: BarGraphData[] = [barGraphData];
-
-        setDisabilitiesGraphData(barGraphDataArray);
         setDisabilityCount(result);
+        setDisabilityData(fetchDisabilityData);
     };
 
     const filterVisitByZone = async (zone?: string) => {
@@ -409,7 +362,57 @@ const Stats = () => {
                             ) : (
                                 <></>
                             )}
-                            <BarGraph barData={visitGraphData} onBarPress={filterVisitByZone} />
+                            <VictoryChart
+                                animate={{ duration: 500 }}
+                                domainPadding={10}
+                                padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
+                                theme={VictoryTheme.material}
+                            >
+                                <VictoryAxis
+                                    style={{
+                                        axisLabel: { fontSize: 12 },
+                                        tickLabels: {
+                                            fontSize: 12,
+                                        },
+                                        grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                                    }}
+                                    dependentAxis
+                                />
+                                <VictoryAxis
+                                    style={{
+                                        axisLabel: { fontSize: 10 },
+                                        tickLabels: {
+                                            fontSize: 10,
+                                        },
+                                    }}
+                                />
+                                <VictoryBar
+                                    horizontal
+                                    barRatio={0.8}
+                                    style={{ data: { fill: themeColors.blueAccent } }}
+                                    alignment="middle"
+                                    data={visitData}
+                                    events={[
+                                        {
+                                            target: "data",
+                                            eventHandlers: {
+                                                onPressIn: () => {
+                                                    return [
+                                                        {
+                                                            target: "data",
+                                                            mutation: (props) => {
+                                                                filterVisitByZone(props.datum.name);
+                                                            },
+                                                        },
+                                                    ];
+                                                },
+                                            },
+                                        },
+                                    ]}
+                                    x="name"
+                                    y="count"
+                                />
+                            </VictoryChart>
                         </>
                     ) : (
                         <></>
@@ -431,7 +434,48 @@ const Stats = () => {
                                 </Text>
                                 <Text>{resolvedCount}</Text>
                             </Text>
-                            <BarGraph barData={referralsGraphData} legend={referralsGraphLegend} />
+                            <VictoryChart
+                                animate={{ duration: 500 }}
+                                domainPadding={10}
+                                padding={{ left: 100, right: 50, bottom: 30, top: 30 }}
+                                containerComponent={<VictoryContainer />}
+                                theme={VictoryTheme.material}
+                            >
+                                <VictoryLegend
+                                    x={300}
+                                    y={0}
+                                    gutter={50}
+                                    style={{ title: { fontSize: 20 } }}
+                                    data={[
+                                        {
+                                            name: t("statistics.unresolved"),
+                                            symbol: { fill: themeColors.riskRed },
+                                        },
+                                        {
+                                            name: t("statistics.resolved"),
+                                            symbol: { fill: themeColors.riskGreen },
+                                        },
+                                    ]}
+                                />
+                                <VictoryGroup offset={10} colorScale={"qualitative"}>
+                                    <VictoryBar
+                                        horizontal
+                                        barRatio={0.5}
+                                        style={{ data: { fill: themeColors.riskRed } }}
+                                        data={unresolvedRef}
+                                        x="name"
+                                        y="count"
+                                    />
+                                    <VictoryBar
+                                        horizontal
+                                        barRatio={0.5}
+                                        style={{ data: { fill: themeColors.riskGreen } }}
+                                        data={resolvedRef}
+                                        x="name"
+                                        y="count"
+                                    />
+                                </VictoryGroup>
+                            </VictoryChart>
                         </>
                     ) : (
                         <></>
@@ -442,6 +486,7 @@ const Stats = () => {
                             <View style={styles.row}>
                                 <Text>{t("statistics.allClients")}</Text>
                                 <Switch
+                                    style={styles.switch}
                                     thumbColor={archiveMode ? themeColors.white : themeColors.white}
                                     onValueChange={setArchiveMode}
                                     value={archiveMode}
@@ -457,7 +502,41 @@ const Stats = () => {
                                 </Text>
                                 <Text>{disabilityCount}</Text>
                             </Text>
-                            <BarGraph barData={disabilitiesGraphData} />
+                            <VictoryChart
+                                animate={{ duration: 500 }}
+                                domainPadding={10}
+                                padding={{ left: 120, right: 50, bottom: 30, top: 30 }}
+                                containerComponent={<VictoryZoomContainer />}
+                                theme={VictoryTheme.material}
+                            >
+                                <VictoryAxis
+                                    style={{
+                                        axisLabel: { fontSize: 12 },
+                                        tickLabels: {
+                                            fontSize: 12,
+                                        },
+                                        grid: { stroke: "#B3E5FC", strokeWidth: 0.25 },
+                                    }}
+                                    dependentAxis
+                                />
+                                <VictoryAxis
+                                    style={{
+                                        axisLabel: { fontSize: 10 },
+                                        tickLabels: {
+                                            fontSize: 10,
+                                        },
+                                    }}
+                                />
+                                <VictoryBar
+                                    horizontal
+                                    barRatio={0.8}
+                                    style={{ data: { fill: themeColors.blueAccent } }}
+                                    alignment="middle"
+                                    data={disabilityData}
+                                    x="name"
+                                    y="count"
+                                />
+                            </VictoryChart>
                         </>
                     ) : (
                         <></>

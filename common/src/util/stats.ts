@@ -1,28 +1,32 @@
-export type DemographicTypes =
-    | "female_adult_total"
-    | "male_adult_total"
-    | "female_child_total"
-    | "male_child_total";
+import { HCRType } from "./clients";
 
-export type StatsVisitCategory = "health" | "educat" | "social" | "nutrit" | "mental";
-export type StatsReferralCategory =
-    | "wheelchair"
-    | "physiotherapy"
-    | "prosthetic"
-    | "orthotic"
-    | "nutrition_agriculture"
-    | "mental_health"
-    | "other";
-
-type GenerateDemographicCategoryFields<T extends string> = {
-    [K in T as `${K}_${DemographicTypes}`]: number;
-};
-
-interface IBaseDisability {
+export interface IStatsDisability {
     disability_id: number;
+    total: number;
 }
 
-interface IClientBreakdown {
+export interface IStatsVisit {
+    zone_id: number;
+    total: number;
+    health_count: number;
+    educat_count: number;
+    social_count: number;
+    nutrit_count: number;
+    mental_count: number;
+}
+
+export interface IStatsReferral {
+    total: number;
+    wheelchair_count: number;
+    physiotherapy_count: number;
+    prosthetic_count: number;
+    orthotic_count: number;
+    nutrition_agriculture_count: number;
+    mental_health_count: number;
+    other_count: number;
+}
+
+export interface IStatsNewClients {
     zone_id: number;
     total: number;
     female_adult_total: number;
@@ -32,21 +36,15 @@ interface IClientBreakdown {
     hcr_type: string;
 }
 
-export interface IStatsVisit extends GenerateDemographicCategoryFields<StatsVisitCategory> {
+export interface IStatsFollowUpVisits {
     zone_id: number;
     total: number;
+    female_adult_total: number;
+    male_adult_total: number;
+    female_child_total: number;
+    male_child_total: number;
     hcr_type: string;
 }
-
-export interface IStatsReferral extends GenerateDemographicCategoryFields<StatsReferralCategory> {
-    zone_id: number;
-    total: number;
-    hcr_type: string;
-}
-
-export interface IStatsDisability extends IBaseDisability, IClientBreakdown {}
-export interface IStatsFollowUpVisits extends IClientBreakdown {}
-export interface IStatsNewClients extends IClientBreakdown {}
 
 export interface IStats {
     disabilities: IStatsDisability[];

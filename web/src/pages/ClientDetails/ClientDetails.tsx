@@ -11,7 +11,6 @@ import { timestampToFormDate } from "@cbr/common/util/dates";
 import ClientInfoForm from "./ClientInfoForm";
 import ClientRisks from "./Risks/ClientRisks";
 import ClientTimeline from "./ClientTimeline/ClientTimeline";
-import PreviousGoalsModal from "./PreviousGoals/PreviousGoalsModal/PreviousGoalsModal";
 
 interface IUrlParam {
     clientId: string;
@@ -27,11 +26,6 @@ const ClientDetails = () => {
     const [loadingError, setLoadingError] = useState(false);
     const history = useHistory();
     const { t } = useTranslation();
-    const [isPrevGoalsOpen, setPrevGoalsOpen] = useState(false);
-
-    const handlePrevGoalsClick = () => {
-        setPrevGoalsOpen((prevGoalsOpen) => !prevGoalsOpen);
-    };
 
     const getClient = useCallback(() => {
         apiFetch(Endpoint.CLIENT, clientId)
@@ -52,68 +46,54 @@ const ClientDetails = () => {
         return <Alert severity="error">{t("alert.loadClientFailure")}</Alert>;
     }
     return (
-        <>
-            {isPrevGoalsOpen && <PreviousGoalsModal close={handlePrevGoalsClick} />}
-            <Grid container spacing={2} direction="row" justifyContent="flex-start">
-                <Grid item xs={12}>
-                    {clientInfo ? (
-                        <ClientInfoForm clientInfo={clientInfo} />
-                    ) : (
-                        <Skeleton variant="rectangular" height={500} />
-                    )}
-                </Grid>
+        <Grid container spacing={2} direction="row" justifyContent="flex-start">
+            <Grid item xs={12}>
+                {clientInfo ? (
+                    <ClientInfoForm clientInfo={clientInfo} />
+                ) : (
+                    <Skeleton variant="rectangular" height={500} />
+                )}
+            </Grid>
 
-                <Grid item xs={12}>
-                    <hr />
-                </Grid>
+            <Grid item xs={12}>
+                <hr />
+            </Grid>
 
-                <Grid container justifyContent="space-between" direction="row">
-                    <Grid item xs={6}>
-                        <SectionHeader variant="h5">
-                            <b>{t("clientAttr.riskLevels")}</b>
-                        </SectionHeader>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Button
-                            size="small"
-                            style={{ float: "right" }}
-                            onClick={() => history.push(`/client/${clientId}/risks`)}
-                        >
-                            {t("clientAttr.seeRiskHistory")}
-                            <ArrowForwardIcon fontSize="small" />
-                        </Button>
-                    </Grid>
-                </Grid>
-                <Grid item xs={2}>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        fullWidth
-                        onClick={handlePrevGoalsClick}
-                    >
-                        {/* TODO: Replace with Translation */}
-                        View Previous Goals
-                    </Button>
-                </Grid>
-
-                <Grid item xs={12}>
-                    <ClientRisks clientInfo={clientInfo} />
-                </Grid>
-
-                <Grid item xs={12}>
-                    <hr />
-                </Grid>
-
+            <Grid container justifyContent="space-between" direction="row">
                 <Grid item xs={6}>
                     <SectionHeader variant="h5">
-                        <b>{t("clientAttr.visitsRefsSurveys")}</b>
+                        <b>{t("clientAttr.riskLevels")}</b>
                     </SectionHeader>
                 </Grid>
-                <Grid item xs={12}>
-                    <ClientTimeline refreshClient={getClient} client={clientInfo} />
+                <Grid item xs={6}>
+                    <Button
+                        size="small"
+                        style={{ float: "right" }}
+                        onClick={() => history.push(`/client/${clientId}/risks`)}
+                    >
+                        {t("clientAttr.seeRiskHistory")}
+                        <ArrowForwardIcon fontSize="small" />
+                    </Button>
                 </Grid>
             </Grid>
-        </>
+
+            <Grid item xs={12}>
+                <ClientRisks clientInfo={clientInfo} />
+            </Grid>
+
+            <Grid item xs={12}>
+                <hr />
+            </Grid>
+
+            <Grid item xs={6}>
+                <SectionHeader variant="h5">
+                    <b>{t("clientAttr.visitsRefsSurveys")}</b>
+                </SectionHeader>
+            </Grid>
+            <Grid item xs={12}>
+                <ClientTimeline refreshClient={getClient} client={clientInfo} />
+            </Grid>
+        </Grid>
     );
 };
 

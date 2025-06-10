@@ -1,225 +1,87 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar, Legend } from "recharts";
+import { Skeleton, Typography } from "@mui/material";
 
-import { IStats, StatsReferralCategory } from "@cbr/common/util/stats";
-import { useEffect, useRef, useState } from "react";
-import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
-import { IDemographicTotals, ISubheadings } from "./HorizontalBarGraphStats";
-import VerticalBarGraphStats, { IVBarGraphStatsData } from "./VerticalBarGraphStats";
+import { IStats, IStatsReferral } from "@cbr/common/util/stats";
+import { themeColors } from "@cbr/common/util/colors";
 
 interface IProps {
     stats?: IStats;
-    gender: IGender;
-    age: IAge;
 }
 
-interface ILabelledDemographicTotals extends IDemographicTotals {
-    label: string;
-}
-
-const dataCategories: StatsReferralCategory[] = [
-    "wheelchair",
-    "physiotherapy",
-    "prosthetic",
-    "orthotic",
-    "nutrition_agriculture",
-    "mental_health",
-    "other",
-];
-
-const categoryTitles: string[] = [
-    "Wheelchair",
-    "Physiotherapy",
-    "Prosthetic",
-    "Orthotic",
-    "Nutrition",
-    "Mental Health",
-    "Other",
-];
-
-const ReferralStats = ({ stats, gender, age }: IProps) => {
+const ReferralStats = ({ stats }: IProps) => {
     const { t } = useTranslation();
 
-    const resolvedDemographicTotalsRef = useRef<IDemographicTotals>({
-        female_adult: 0,
-        male_adult: 0,
-        female_child: 0,
-        male_child: 0,
-    });
+    if (!stats) {
+        return <Skeleton variant="rectangular" height={400} />;
+    }
 
-    const unresolvedDemographicTotalsRef = useRef<IDemographicTotals>({
-        female_adult: 0,
-        male_adult: 0,
-        female_child: 0,
-        male_child: 0,
-    });
-
-    const [resolvedResultArray, setResolvedResultArray] = useState<
-        { [key: string]: IDemographicTotals }[]
-    >([]);
-
-    const [unResolvedResultArray, setUnResolvedResultArray] = useState<
-        { [key: string]: IDemographicTotals }[]
-    >([]);
-
-    const transformChartData = (dataArray: { [key: string]: any }[]) => {
-        if (!dataArray?.[0]) return [];
-
-        return Object.values(dataArray[0]).map(
-            (item) =>
-                ({
-                    label: item.label,
-                    female_adult: item.female_adult,
-                    male_adult: item.male_adult,
-                    female_child: item.female_child,
-                    male_child: item.male_child,
-                } as IVBarGraphStatsData)
-        );
-    };
-
-    useEffect(() => {
-        if (stats) {
-            const resolvedStats: { [key: string]: ILabelledDemographicTotals } = {};
-            const unresolvedStats: { [key: string]: ILabelledDemographicTotals } = {};
-
-            let rFAdult = 0;
-            let rMAdult = 0;
-            let rFChild = 0;
-            let rMChild = 0;
-
-            let unFAdult = 0;
-            let unMAdult = 0;
-            let unFChild = 0;
-            let unMChild = 0;
-
-            let i = 0;
-
-            dataCategories.forEach((category) => {
-                const resolvedCategoryStats = {
-                    female_adult: stats.referrals_resolved[
-                        `${category}_female_adult_total`
-                    ] as number,
-                    male_adult: stats.referrals_resolved[`${category}_male_adult_total`] as number,
-                    female_child: stats.referrals_resolved[
-                        `${category}_female_child_total`
-                    ] as number,
-                    male_child: stats.referrals_resolved[`${category}_male_child_total`] as number,
-                    label: categoryTitles[i],
-                };
-
-                resolvedStats[category] = resolvedCategoryStats;
-
-                rFAdult += resolvedCategoryStats.female_adult;
-                rMAdult += resolvedCategoryStats.male_adult;
-                rFChild += resolvedCategoryStats.female_child;
-                rMChild += resolvedCategoryStats.male_child;
-                i += 1;
-            });
-
-            setResolvedResultArray([resolvedStats]);
-
-            resolvedDemographicTotalsRef.current = {
-                female_adult: rFAdult,
-                male_adult: rMAdult,
-                female_child: rFChild,
-                male_child: rMChild,
-            };
-
-            i = 0;
-            dataCategories.forEach((category) => {
-                const unresolvedCategoryStats = {
-                    female_adult: stats.referrals_unresolved[
-                        `${category}_female_adult_total`
-                    ] as number,
-                    male_adult: stats.referrals_unresolved[
-                        `${category}_male_adult_total`
-                    ] as number,
-                    female_child: stats.referrals_unresolved[
-                        `${category}_female_child_total`
-                    ] as number,
-                    male_child: stats.referrals_unresolved[
-                        `${category}_male_child_total`
-                    ] as number,
-                    label: categoryTitles[i],
-                };
-
-                unresolvedStats[category] = unresolvedCategoryStats;
-
-                unFAdult += unresolvedCategoryStats.female_adult;
-                unMAdult += unresolvedCategoryStats.male_adult;
-                unFChild += unresolvedCategoryStats.female_child;
-                unMChild += unresolvedCategoryStats.male_child;
-                i += 1;
-            });
-
-            setUnResolvedResultArray([unresolvedStats]);
-
-            unresolvedDemographicTotalsRef.current = {
-                female_adult: unFAdult,
-                male_adult: unMAdult,
-                female_child: unFChild,
-                male_child: unMChild,
-            };
-        }
-    }, [stats]);
-
-    const resolvedSubheadings: ISubheadings[] = [
+    const dataLabels = [
         {
-            label: t("statistics.totalFChild"),
-            total: resolvedDemographicTotalsRef.current.female_child,
+            label: t("general.wheelchair"),
+            key: "wheelchair_count",
         },
         {
-            label: t("statistics.totalMChild"),
-            total: resolvedDemographicTotalsRef.current.male_child,
+            label: t("general.physiotherapy"),
+            key: "physiotherapy_count",
         },
         {
-            label: t("statistics.totalFAdult"),
-            total: resolvedDemographicTotalsRef.current.female_adult,
+            label: t("general.prosthetic"),
+            key: "prosthetic_count",
         },
         {
-            label: t("statistics.totalMAdult"),
-            total: resolvedDemographicTotalsRef.current.male_adult,
+            label: t("general.orthotic"),
+            key: "orthotic_count",
+        },
+        {
+            label: t("referral.hhaNutritionAndAgricultureProjectAbbr"),
+            key: "nutrition_agriculture_count",
+        },
+        {
+            label: t("general.mentalHealth"),
+            key: "mental_health_count",
+        },
+        {
+            label: t("disabilities.other"),
+            key: "other_count",
         },
     ];
-
-    const unResolvedSubheadings: ISubheadings[] = [
-        {
-            label: t("statistics.totalFChild"),
-            total: unresolvedDemographicTotalsRef.current.female_child,
-        },
-        {
-            label: t("statistics.totalMChild"),
-            total: unresolvedDemographicTotalsRef.current.male_child,
-        },
-        {
-            label: t("statistics.totalFAdult"),
-            total: unresolvedDemographicTotalsRef.current.female_adult,
-        },
-        {
-            label: t("statistics.totalMAdult"),
-            total: unresolvedDemographicTotalsRef.current.male_adult,
-        },
-    ];
+    const data = dataLabels.map((d) => ({
+        label: d.label,
+        resolved: stats.referrals_resolved[d.key as keyof IStatsReferral],
+        unresolved: stats.referrals_unresolved[d.key as keyof IStatsReferral],
+    }));
 
     return (
         <section>
-            <VerticalBarGraphStats
-                title={t("statistics.unresolved")}
-                data={transformChartData(unResolvedResultArray)}
-                age={age}
-                gender={gender}
-                subheadings={unResolvedSubheadings}
-                totals={unresolvedDemographicTotalsRef.current}
-            />
+            <Typography variant="h2" align="center">
+                {t("statistics.referrals")}
+            </Typography>
+            <Typography variant="subtitle1" align="center">
+                <b>{t("statistics.totalUnresolved")}</b> {stats.referrals_unresolved.total}
+                <br />
+                <b>{t("statistics.totalResolved")}</b> {stats.referrals_resolved.total}
+            </Typography>
 
-            <VerticalBarGraphStats
-                title={t("statistics.resolved")}
-                data={transformChartData(resolvedResultArray)}
-                age={age}
-                gender={gender}
-                subheadings={resolvedSubheadings}
-                totals={resolvedDemographicTotalsRef.current}
-            />
+            <ResponsiveContainer width="100%" height={400}>
+                <BarChart data={data}>
+                    <XAxis dataKey="label" />
+                    <YAxis allowDecimals={false} />
+                    <Tooltip />
+                    <Legend />
+                    <Bar
+                        dataKey="unresolved"
+                        name={t("statistics.unresolved")}
+                        fill={themeColors.riskRed}
+                    />
+                    <Bar
+                        dataKey="resolved"
+                        name={t("statistics.resolved")}
+                        fill={themeColors.hhaGreen}
+                    />
+                </BarChart>
+            </ResponsiveContainer>
         </section>
     );
 };

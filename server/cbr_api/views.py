@@ -91,20 +91,16 @@ class AdminStats(generics.RetrieveAPIView):
         to_time = get_int_or_none("to")
         is_active = get_boolean_or_none("is_active")
 
-        referral_stats = getReferralStats(user_id, from_time, to_time, is_active)
+        referral_stats = getReferralStats(user_id, from_time, to_time)
 
         return {
-            "disabilities": getDisabilityStats(user_id, from_time, to_time, is_active),
-            "clients_with_disabilities": getNumClientsWithDisabilities(
-                user_id, from_time, to_time, is_active
-            ),
-            "visits": getVisitStats(user_id, from_time, to_time, is_active),
+            "disabilities": getDisabilityStats(is_active),
+            "clients_with_disabilities": getNumClientsWithDisabilities(is_active),
+            "visits": getVisitStats(user_id, from_time, to_time),
             "referrals_resolved": referral_stats["resolved"],
             "referrals_unresolved": referral_stats["unresolved"],
-            "new_clients": getNewClients(user_id, from_time, to_time, is_active),
-            "follow_up_visits": getFollowUpVisits(
-                user_id, from_time, to_time, is_active
-            ),
+            "new_clients": getNewClients(from_time, to_time),
+            "follow_up_visits": getFollowUpVisits(from_time, to_time),
         }
 
 

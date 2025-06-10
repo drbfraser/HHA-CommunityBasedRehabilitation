@@ -76,13 +76,6 @@ const Dashboard = () => {
                 setPriorityClientsLoading(false);
             }
         };
-
-        fetchClients();
-    }, []);
-
-    useEffect(() => {
-        if (!clients.length) return;
-
         const fetchReferrals = async () => {
             setReferralError(undefined);
             try {
@@ -134,6 +127,7 @@ const Dashboard = () => {
             return referralTypes.join(", ");
         };
 
+        fetchClients();
         fetchReferrals();
     }, [t, clients]);
 

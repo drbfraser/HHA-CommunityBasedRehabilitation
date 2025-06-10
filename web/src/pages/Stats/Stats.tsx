@@ -1,5 +1,5 @@
-import { Alert, Divider, styled } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { Alert, Divider, styled } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { timestampFromFormDate } from "@cbr/common/util/dates";
@@ -9,16 +9,12 @@ import { IUser } from "@cbr/common/util/users";
 import {
     DisabilityStats,
     FilterBar,
-    FollowUpVistsStats,
-    NewClientsStats,
     ReferralStats,
     VisitStats,
+    NewClientsStats,
+    FollowUpVistsStats,
 } from "./components";
 import { blankDateRange, IDateRange } from "./components/filterbar/StatsDateFilter";
-import {
-    defaultAgeConfigs,
-    defaultGenderConfigs,
-} from "./components/filterbar/StatsDemographicFilter";
 
 const Container = styled("div")({
     display: "flex",
@@ -30,15 +26,9 @@ const Stats = () => {
     const [dateRange, setDateRange] = useState(blankDateRange);
     const [users, setUsers] = useState<IUser[]>([]);
     const [user, setUser] = useState<IUser | null>(null);
-
-    // Filtering the demographic will not call on the API
-    // It will return the demographic statistics by default. This was done in order to prevent recalls for a large amount of data
-    const [gender, setGender] = useState(defaultGenderConfigs);
-    const [age, setAge] = useState(defaultAgeConfigs);
     const [stats, setStats] = useState<IStats>();
     const [errorLoading, setErrorLoading] = useState(false);
     const [archiveMode, setArchiveMode] = useState(false);
-
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -75,7 +65,7 @@ const Stats = () => {
             .then((resp) => resp.json())
             .then((stats) => setStats(stats))
             .catch(() => setErrorLoading(true));
-    }, [dateRange, user, archiveMode, gender, age]);
+    }, [dateRange, user, archiveMode]);
 
     if (errorLoading) {
         return <Alert severity="error">{t("alert.loadStatsFailure")}</Alert>;
@@ -85,32 +75,30 @@ const Stats = () => {
             <FilterBar
                 user={user}
                 users={users}
-                age={age}
-                gender={gender}
                 dateRange={dateRange}
                 stats={stats}
                 setDateRange={setDateRange}
                 setUser={setUser}
-                setGender={setGender}
-                setAge={setAge}
-                archiveMode={archiveMode}
-                onArchiveModeChange={setArchiveMode}
             />
             <Divider />
 
-            <VisitStats stats={stats} age={age} gender={gender} />
+            <VisitStats stats={stats} />
             <Divider />
 
-            <NewClientsStats stats={stats} age={age} gender={gender} />
+            <NewClientsStats stats={stats} />
             <Divider />
 
-            <FollowUpVistsStats stats={stats} age={age} gender={gender} />
+            <FollowUpVistsStats stats={stats} />
             <Divider />
 
-            <ReferralStats stats={stats} age={age} gender={gender} />
+            <ReferralStats stats={stats} />
             <Divider />
 
-            <DisabilityStats stats={stats} age={age} gender={gender} />
+            <DisabilityStats
+                archiveMode={archiveMode}
+                onArchiveModeChange={setArchiveMode}
+                stats={stats}
+            />
         </Container>
     );
 };

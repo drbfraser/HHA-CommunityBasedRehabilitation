@@ -1,11 +1,13 @@
+import { FormikProps } from "formik";
 import React, { forwardRef, memo } from "react";
-import { TextInput as NativeTextInput } from "react-native";
-import { HelperText, TextInput, TextInputProps } from "react-native-paper";
+import { TextInput as NativeTextInput, TextInputProps as NativeTextInputProps } from "react-native";
+import { HelperText, TextInput } from "react-native-paper";
 import {
     areFormikComponentPropsEqual,
     TFormikComponentProps,
     shouldShowError,
 } from "../../util/formikUtil";
+import { TextInputProps } from "react-native-paper/lib/typescript/components/TextInput/TextInput";
 
 export type FormikTextInputProps<Field extends string> = Omit<TextInputProps, "theme"> &
     TFormikComponentProps<Field> & {
@@ -48,13 +50,7 @@ const BaseFormikTextInput = forwardRef<NativeTextInput, FormikTextInputProps<str
                     blurOnSubmit={false}
                     {...other}
                 />
-                {isError ? (
-                    <HelperText type="error">
-                        {typeof formikProps.errors[field] === "string"
-                            ? formikProps.errors[field]
-                            : ""}
-                    </HelperText>
-                ) : null}
+                {isError ? <HelperText type="error">{formikProps.errors[field]}</HelperText> : null}
             </>
         );
     }

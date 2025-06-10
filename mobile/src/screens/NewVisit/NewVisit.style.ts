@@ -30,7 +30,7 @@ const useStyles = () =>
             marginTop: 5,
         },
         errorAlert: { marginVertical: 10 },
-        errorText: { color: themeColors.helperTextRed, paddingLeft: 12 },
+        errorText: { color: themeColors.errorRed, paddingLeft: 15 },
     });
 
 export const progressStepsStyle = {

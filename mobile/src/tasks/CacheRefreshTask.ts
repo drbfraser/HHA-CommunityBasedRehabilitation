@@ -50,17 +50,17 @@ export namespace CacheRefreshTask {
                 );
                 netInfoUnsubscribeFunction = NetInfo.addEventListener(netInfoEventListener);
             }
-            return BackgroundFetch.BackgroundFetchResult.Failed;
+            return BackgroundFetch.Result.Failed;
         }
 
         return refreshMutex.runExclusive(() => {
             return refreshCachesLocked().then((cacheRefreshSuccess) => {
                 if (cacheRefreshSuccess) {
                     console.log(`${TASK_TAG}: Task success`);
-                    return BackgroundFetch.BackgroundFetchResult.NewData;
+                    return BackgroundFetch.Result.NewData;
                 } else {
                     console.log(`${TASK_TAG}: Task failed`);
-                    return BackgroundFetch.BackgroundFetchResult.Failed;
+                    return BackgroundFetch.Result.Failed;
                 }
             });
         });

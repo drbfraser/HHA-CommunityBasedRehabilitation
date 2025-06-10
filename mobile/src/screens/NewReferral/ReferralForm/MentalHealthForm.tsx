@@ -24,6 +24,7 @@ const MentalHealthForm = (props: IFormProps) => {
                 valuesType="map"
                 values={mentalConditions}
                 formikProps={props.formikProps}
+                items={mentalHealthConditions}
                 fieldLabels={referralFieldLabels}
                 mode="outlined"
             />

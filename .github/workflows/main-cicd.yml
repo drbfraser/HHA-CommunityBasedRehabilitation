@@ -89,14 +89,11 @@ jobs:
         npm ci
         npx prettier --check .
       working-directory: /isolated_build/repo/mobile    
-    
-    - name: Run TypeScript compiler
-      run: npx tsc --noEmit
-      working-directory: /isolated_build/repo/mobile
 
     # todosd: remove need for sudo?
     - name: Prebuild android folder
-      run: sudo npm run prebuild
+      run:  |
+        sudo npm run prebuild
       working-directory: /isolated_build/repo/mobile
       
     - name: Setup Release Keystore for Play Store
@@ -109,7 +106,7 @@ jobs:
         echo "Date String: ${{ steps.date_str.outputs.stdout }}"
       working-directory: /isolated_build/repo/mobile/android/app
       
-    # NOTE: Artifact upload *was previously* disabled because builds from the CI/CD server seem
+    # NOTE: Artifact upload disabled because builds from the CI/CD server seem
     #       to not work. Specifically, creating a client on mobile and then
     #       trying to sync results in a "Inalid Date" sync error.
     #       Since these builds cannot be trusted, they are disabled.

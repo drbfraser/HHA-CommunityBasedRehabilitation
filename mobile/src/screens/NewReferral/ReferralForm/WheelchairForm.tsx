@@ -21,9 +21,6 @@ const WheelchairForm = (props: IFormProps) => {
     const styles = useStyles();
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const { t } = useTranslation();
-
-    const helperText = props.formikProps.errors[ReferralFormField.hipWidth];
-
     return (
         <View style={styles.formContainer}>
             <Text style={styles.question}>{t("referral.whatTypeOfWheelchair")}</Text>
@@ -60,8 +57,12 @@ const WheelchairForm = (props: IFormProps) => {
                 <Text>{t("referral.inches")}</Text>
             </View>
 
-            <HelperText style={styles.errorText} type="error" visible={!!helperText}>
-                {typeof helperText === "string" ? helperText : null}
+            <HelperText
+                style={styles.errorText}
+                type="error"
+                visible={!!props.formikProps.errors[ReferralFormField.hipWidth]}
+            >
+                {props.formikProps.errors[ReferralFormField.hipWidth]}
             </HelperText>
             <Text style={styles.question}>{t("referral.wheelchairInformation")}</Text>
             <TextCheckBox

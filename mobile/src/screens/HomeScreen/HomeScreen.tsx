@@ -6,17 +6,18 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { StackNavigationProp } from "@react-navigation/stack";
 import useStyles from "./HomeScreen.style";
+import { themeColors } from "@cbr/common/src/util/colors";
 import { IUser, TAPILoadError, APILoadError, useZones } from "@cbr/common";
 import { screens } from "../../util/screens";
 import { StackScreenName } from "../../util/StackScreenName";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { TabModal } from "../../components/TabModal/TabModal";
+import { checkUnsyncedChanges } from "../../util/syncHandler";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useNavigation } from "@react-navigation/native";
-import { Icon, IconProps, withBadge } from "react-native-elements";
+import { Icon, withBadge } from "react-native-elements";
 import { SyncModalIcon } from "./ModalIcon";
 import { useTranslation } from "react-i18next";
-import { Text } from "react-native";
 
 interface IHomeScreenProps {
     navigation: StackNavigationProp<StackParamList, StackScreenName.HOME>;
@@ -24,7 +25,7 @@ interface IHomeScreenProps {
 
 const SyncIcon = () => {
     const syncAlert = useContext(SyncContext);
-    const BadgedIcon = withBadge("")(Icon) as React.ComponentType<IconProps>;
+    const BadgedIcon = withBadge("")(Icon);
     if (syncAlert.unSyncedChanges) {
         return <BadgedIcon type="material-community" name={SyncModalIcon.syncIcon} color="white" />;
     }
@@ -82,17 +83,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
                                     }
                                 },
                             })}
-                            // TODO: The current approach to change font size is not ideal. We should use a custom tab bar.
-                            options={{
-                                tabBarIcon: screen.iconName,
-                                tabBarBadge: screen.iconBadge,
-                                tabBarLabel:
-                                    screen.name === "Dashboard" ? (
-                                        <Text style={{ fontSize: 11 }}>Dashboard</Text>
-                                    ) : (
-                                        (undefined as any)
-                                    ),
-                            }}
+                            options={{ tabBarIcon: screen.iconName, tabBarBadge: screen.iconBadge }}
                         />
                     ))}
                 </Tab.Navigator>

@@ -19,7 +19,7 @@ import {
     handleUpdateClientSubmit,
     handleArchiveConfirmation,
 } from "@cbr/common/forms/Client/clientHandler";
-import { genders, HCRType, IClient } from "@cbr/common/util/clients";
+import { genders, IClient } from "@cbr/common/util/clients";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import history from "@cbr/common/util/history";
@@ -240,43 +240,6 @@ const ClientInfoForm = (props: IProps) => {
                                         fullWidth
                                         autoComplete="off"
                                     />
-                                </Grid>
-                                <Grid item md={6} xs={12}>
-                                    <FormControl
-                                        fullWidth
-                                        variant="outlined"
-                                        sx={clientFormStyles.disabledTextField}
-                                    >
-                                        <Field
-                                            component={TextField}
-                                            fullWidth
-                                            select
-                                            disabled={!isEditing}
-                                            required
-                                            variant="outlined"
-                                            label={
-                                                updateClientfieldLabels[
-                                                    ClientDetailsFields.hcr_type
-                                                ]
-                                            }
-                                            name={ClientDetailsFields.hcr_type}
-                                            autoComplete="off"
-                                        >
-                                            {/* Show current value if it is 'NA' but don't allow selecting it in the dropdown*/}
-                                            {props?.clientInfo[ClientDetailsFields.hcr_type] ===
-                                                HCRType.NOT_SET && (
-                                                <MenuItem value={HCRType.NOT_SET}>
-                                                    {t("clientFields.na")}
-                                                </MenuItem>
-                                            )}
-                                            <MenuItem value={HCRType.HOST_COMMUNITY}>
-                                                {t("clientFields.hostCommunity")}
-                                            </MenuItem>
-                                            <MenuItem value={HCRType.REFUGEE}>
-                                                {t("clientFields.refugee")}
-                                            </MenuItem>
-                                        </Field>
-                                    </FormControl>
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <FormControl fullWidth variant="outlined">

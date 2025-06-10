@@ -48,7 +48,6 @@ type RootStackParamList = {
     Home: undefined;
     Client: undefined;
     BaselineSurvey: undefined;
-    Referrals: undefined;
     AdminView: undefined;
     AdminEdit: undefined;
     AdminNew: undefined;

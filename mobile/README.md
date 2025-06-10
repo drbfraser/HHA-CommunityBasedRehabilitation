@@ -129,8 +129,6 @@ After the app is up and running the first time, after you make a change to the c
     then enter this command in your terminal while running docker backend:
     `docker exec cbr_django python manage.py migrate`
 
-    In some cases, this error may persist. One possible symptom is the Android emulator failing to connect to Docker — indicated by the absence of Docker logs when launching the mobile app and attempting to log in. The solution to this issue is currently unknown, but it has been observed to resolve itself after several attempts across different days.
-
 -   If Android app fails to load with message "Unable to load Script. Make sure you're either running Metro (...) or that your bundle `index.android.bundle` is packaged correctly for release", then try re-running the `npm run android` command. (Seems to happen when the React Native terminal does not stay open.)
 
 -   If when building the Android app you get an error stating something like:
@@ -209,7 +207,6 @@ After the app is up and running the first time, after you make a change to the c
 -   When running Android (`npm run android`), if you get any of the following errors, they can sometimes be resolved by re-running the command (a few times?), or pressing 'r' or 'a' in the React-native window to reload the Android app:
     "The development server returned response error code: 500"...
 -   Error "Error: Unable to resolve module async-mutex from", try re-running `npm install` on mobile folder.
--   Error "Plugin [id: 'org.gradle.toolchains.foojay-resolver-convention', version: '0.5.0'] was not found. " could be due to gradle HTTP proxy issues. Make sure to double check and remove or disable proxy settings in `~/.gradle/gradle.properties` if you no longer need them.
 
 # Updating dependencies workflow to minimize build errors
 

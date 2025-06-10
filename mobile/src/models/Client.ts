@@ -36,7 +36,6 @@ export default class Client extends Model implements SyncableModel {
     @text(ClientField.full_name) full_name;
     @date(ClientField.birth_date) birth_date;
     @field(ClientField.gender) gender;
-    @field(ClientField.hcr_type) hcr_type;
     @text(ClientField.phone_number) phone_number;
     @json(ClientField.disability, sanitizeDisability) disability;
     @text(ClientField.other_disability) other_disability;

@@ -74,10 +74,6 @@ const AdminView = ({
         }
     }, [isFocused]);
 
-    // ensure that currentUser is not of type "APILoadError"
-    const isSelf =
-        !!user && !!currentUser && typeof currentUser !== "string" && user.id == currentUser!.id;
-
     return !user || error ? (
         <View style={styles.loadingContainer}>
             {error ? (
@@ -101,7 +97,11 @@ const AdminView = ({
         </View>
     ) : (
         <>
-            <UserProfileContents user={user} isSelf={isSelf} database={database} />
+            <UserProfileContents
+                user={user}
+                isSelf={user.id == currentUser!.id ? true : false}
+                database={database}
+            />
             <Snackbar
                 visible={isUserChangeSnackbarVisible}
                 duration={4000}

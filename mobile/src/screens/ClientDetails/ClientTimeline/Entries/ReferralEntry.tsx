@@ -19,7 +19,6 @@ import { dbType } from "../../../../util/watermelonDatabase";
 import { AutoSyncDB } from "../../../../util/syncHandler";
 import { SyncContext } from "../../../../context/SyncContext/SyncContext";
 import { useTranslation } from "react-i18next";
-import Referral from "@/src/models/Referral";
 
 interface IEntryProps {
     referral: IReferral;
@@ -82,9 +81,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
         });
 
         const handleSubmit = async (values: typeof initialValues) => {
-            const referralToUpdate = await database
-                .get<Referral>("referrals")
-                .find(referral.id.toString());
+            const referralToUpdate = await database.get("referrals").find(referral.id.toString());
             await referralToUpdate
                 .updateReferral(values[OutcomeField.outcome])
                 .then(() => handleUpdate())

@@ -11,7 +11,7 @@ import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";
-import { translateRiskEntrySummary } from "./helper";
+import { translateGoalStatus, translateRiskEntrySummary } from "./helper";
 import { timelineStyles } from "../Timeline/Timeline.styles";
 import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
 
@@ -32,12 +32,22 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
         const [expanded, setExpanded] = useState(false);
 
         const Summary = ({ clickable }: { clickable?: boolean }) => {
-            return (
-                <>
-                    {translateRiskEntrySummary(risk.risk_type, isInitial)}{" "}
-                    <RiskLevelChip risk={risk.risk_level} clickable={clickable ?? false} />
-                </>
-            );
+            if (risk.start_date === 0) {
+                return (
+                    <>
+                        {translateRiskEntrySummary(risk.risk_type, isInitial)}
+                        <RiskLevelChip risk={risk.risk_level} clickable={clickable ?? false} />
+                    </>
+                );
+            }
+            else {
+                return (
+                    <>
+                        {translateGoalStatus(risk.risk_type)}
+                        <GoalStatusChip goalStatus={risk.goal_status} />
+                    </>
+                )
+            }
         };
 
         return (

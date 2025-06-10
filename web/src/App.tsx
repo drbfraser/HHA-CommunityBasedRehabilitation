@@ -1,22 +1,20 @@
-import { Box, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Box, Typography } from "@mui/material";
 
-import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
-import { IAlert } from "@cbr/common/util/alerts";
 import history from "@cbr/common/util/history";
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { appStyles } from "App.styles";
-import LanguagePicker from "components/LanguagePicker/LanguagePicker";
-import Login from "pages/Login/Login";
-import { defaultPagePath, pagesForUser } from "util/pages";
+import { IAlert } from "@cbr/common/util/alerts";
+import { socket, SocketContext } from "@cbr/common/context/SocketIOContext";
+import SideNav from "./components/SideNav/SideNav";
 import AlertNotification from "./components/Alerts/AlertNotification";
 import AlertOffline from "./components/Alerts/AlertOffline";
-import SideNav from "./components/SideNav/SideNav";
+import LanguagePicker from "components/LanguagePicker/LanguagePicker";
+import { defaultPagePath, pagesForUser } from "util/pages";
+import Login from "pages/Login/Login";
 import { useIsLoggedIn } from "./util/hooks/loginState";
+import { appStyles } from "App.styles";
 
 const App = () => {
     const isLoggedIn = useIsLoggedIn();
@@ -74,24 +72,21 @@ const App = () => {
     };
 
     return (
-        // LocalizationProvider was added for the MUI DatePicker in StatsDateFilter
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Router history={history}>
-                <AlertOffline />
-                {isLoggedIn !== undefined && (
-                    <SocketContext.Provider value={socket}>
-                        <Switch>
-                            <Route exact path="/">
-                                {!isLoggedIn ? <Login /> : <Redirect to={defaultPagePath} />}
-                            </Route>
-                            <Route path="/">
-                                {isLoggedIn ? <PrivateRoutes /> : <Redirect to="/" />}
-                            </Route>
-                        </Switch>
-                    </SocketContext.Provider>
-                )}
-            </Router>
-        </LocalizationProvider>
+        <Router history={history}>
+            <AlertOffline />
+            {isLoggedIn !== undefined && (
+                <SocketContext.Provider value={socket}>
+                    <Switch>
+                        <Route exact path="/">
+                            {!isLoggedIn ? <Login /> : <Redirect to={defaultPagePath} />}
+                        </Route>
+                        <Route path="/">
+                            {isLoggedIn ? <PrivateRoutes /> : <Redirect to="/" />}
+                        </Route>
+                    </Switch>
+                </SocketContext.Provider>
+            )}
+        </Router>
     );
 };
 

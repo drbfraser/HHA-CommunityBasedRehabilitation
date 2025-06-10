@@ -372,7 +372,9 @@ const Stats = () => {
                             <Text style={styles.graphStat}>
                                 <Text>{t("statistics.showingDataFor")} </Text>
                                 <Text style={{ fontWeight: "bold" }}>
-                                    {zoneOption === ALL_ZONE_KEY ? t("statistics.allZones") : zoneOption}
+                                    {zoneOption === ALL_ZONE_KEY
+                                        ? t("statistics.allZones")
+                                        : zoneOption}
                                 </Text>
                             </Text>
                             {zoneOption !== ALL_ZONE_KEY ? (

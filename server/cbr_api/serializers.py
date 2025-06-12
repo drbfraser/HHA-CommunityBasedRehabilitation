@@ -23,7 +23,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-
 # create and list
 
 
@@ -199,23 +198,43 @@ class NormalRiskSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         current_time = current_milli_time()
-        validated_data["timestamp"] = current_time
-        validated_data["server_created_at"] = current_time
-        validated_data["id"] = uuid.uuid4()
-        risk = models.ClientRisk.objects.create(**validated_data)
         risk_type = validated_data["risk_type"]
         risk_level = validated_data["risk_level"]
         client = validated_data["client_id"]
-        
-        # find the previous risk record for the same client and risk type
-        previous_risk = models.ClientRisk.objects.filter(
-            client_id=client, risk_type=risk_type,
-        ).order_by("-timestamp").first()
+        goal_status = validated_data.get("goal_status")
 
-        logger.info("Previous risk: %s", previous_risk)
+        # find the previous risk record for the same client and risk type
+        previous_risk = (
+            models.ClientRisk.objects.filter(
+                client_id=client,
+                risk_type=risk_type,
+                timestamp__lt=current_time,
+            )
+            .order_by("-timestamp")
+            .first()
+        )
+
+        # decide change_type based on previous risk
+        if not previous_risk:
+            change_type = models.RiskChangeType.INITIAL
+        elif previous_risk.risk_level != risk_level:
+            change_type = models.RiskChangeType.RISK_LEVEL
+        elif goal_status and (previous_risk.goal_status != goal_status):
+            change_type = models.RiskChangeType.GOAL_STATUS
+        else:
+            change_type = models.RiskChangeType.OTHER
+
+        # create the risk object with the change_type
+        validated_data["timestamp"] = current_time
+        validated_data["server_created_at"] = current_time
+        validated_data["id"] = uuid.uuid4()
+        validated_data["change_type"] = change_type
+
+        risk = models.ClientRisk.objects.create(**validated_data)
 
         risk.save()
 
+        # update the client risk level and timestamp based on risk type
         if risk_type == models.RiskType.HEALTH:
             client.health_risk_level = risk_level
             client.health_timestamp = current_time

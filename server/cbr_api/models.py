@@ -258,13 +258,11 @@ class ClientRisk(models.Model):
         default=RiskChangeType.INITIAL,
     )
 
-    # improves query performance for lookups by client_id and risk_type 
+    # improves query performance for lookups by client_id and risk_type
     class Meta:
         indexes = [
-            models.Index(fields=['client_id', 'risk_type', '-timestamp']),
+            models.Index(fields=["client_id", "risk_type", "timestamp"]),
         ]
-
-
 
     # Assigning the Default value for the start_date to be whatever the timestamp was
     def save(self, *args, **kwargs):

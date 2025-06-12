@@ -3,10 +3,40 @@
 from django.db import migrations
 
 
+def update_change_types(apps, schema_editor):
+    ClientRisk = apps.get_model('cbr_api', 'ClientRisk')
+
+    risks = ClientRisk.objects.all().order_by('client_id', 'risk_type', 'timestamp')
+    previous_risks = {}
+
+    for risk in risks:
+        key = (risk.client_id_id, risk.risk_type)
+
+        previous_risk = previous_risks.get(key)
+
+        if not previous_risk:
+            risk.change_type = 'INIT'
+        elif risk.risk_level != previous_risk.risk_level:
+            risk.change_type = 'RL'
+        elif risk.goal_status != previous_risk.goal_status:
+            risk.change_type = 'GS'
+        else:
+            risk.change_type = 'OTH'
+
+        risk.save()
+        previous_risks[key] = risk
+
+# to safely reverse the migration, we will set all change types to 'INITIAL'
+def reverse_update_change_types(apps, schema_editor):
+    ClientRisk = apps.get_model("cbr_api", "ClientRisk")
+    ClientRisk.objects.all().update(change_type="INIT")
+
 class Migration(migrations.Migration):
 
     dependencies = [
         ("cbr_api", "0063_clientrisk_cbr_api_cli_client__bef25f_idx"),
     ]
 
-    operations = []
+    operations = [
+        migrations.RunPython(update_change_types, reverse_update_change_types),
+    ]

@@ -196,24 +196,17 @@ class NormalRiskSerializer(serializers.ModelSerializer):
 
         read_only_fields = ["id", "timestamp"]
 
-    def create(self, validated_data):
-        current_time = current_milli_time()
-        risk_type = validated_data["risk_type"]
-        risk_level = validated_data["risk_level"]
-        client = validated_data["client_id"]
-        goal_status = validated_data.get("goal_status")
-
+    def get_change_type(self, filter_params, goal_status, risk_level):
         # find the previous risk record for the same client and risk type
         previous_risk = (
             models.ClientRisk.objects.filter(
-                client_id=client,
-                risk_type=risk_type,
-                timestamp__lt=current_time,
+                client_id=filter_params["client"],
+                risk_type=filter_params["risk_type"],
+                timestamp__lt=filter_params["current_time"],
             )
             .order_by("-timestamp")
             .first()
         )
-
         # decide change_type based on previous risk
         if not previous_risk:
             change_type = models.RiskChangeType.INITIAL
@@ -224,6 +217,20 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         else:
             change_type = models.RiskChangeType.OTHER
 
+        return change_type
+
+    def create(self, validated_data):
+        current_time = current_milli_time()
+        risk_type = validated_data["risk_type"]
+        risk_level = validated_data["risk_level"]
+        client = validated_data["client_id"]
+        goal_status = validated_data.get("goal_status")
+
+        filter_params = dict(
+            client=client, risk_type=risk_type, current_time=current_time
+        )
+        change_type = self.get_change_type(filter_params, goal_status, risk_level)
+
         # create the risk object with the change_type
         validated_data["timestamp"] = current_time
         validated_data["server_created_at"] = current_time
@@ -231,7 +238,6 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         validated_data["change_type"] = change_type
 
         risk = models.ClientRisk.objects.create(**validated_data)
-
         risk.save()
 
         # update the client risk level and timestamp based on risk type

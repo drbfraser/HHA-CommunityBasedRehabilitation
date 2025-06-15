@@ -171,6 +171,7 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
             "goal_status",
             "start_date",
             "end_date",
+            "change_type",
         ]
 
         read_only_fields = ["id", "client_id", "timestamp", "risk_type"]

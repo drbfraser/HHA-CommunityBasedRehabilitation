@@ -96,10 +96,12 @@ const ClientRisksModal = (props: IModalProps) => {
                                             >
                                                 <GoalStatusChip />
                                             </Box>
-                                            <EditNoteTwoToneIcon
-                                                color="disabled"
-                                                fontSize="medium"
-                                            />
+                                            <Box
+                                                onClick={handleEditGoalsClick}
+                                                sx={{ cursor: 'pointer', display: 'inline-flex' }}
+                                            >
+                                                <EditNoteTwoToneIcon color="action" fontSize="medium" />
+                                            </Box>
                                         </Stack>
                                     </Grid>
                                     <Grid item>

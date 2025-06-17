@@ -38,11 +38,19 @@ const ClientRisks = ({ clientInfo }: IProps) => {
         return (
             <>
                 {isModalOpen && (
-                    <ClientRisksModal
-                        risk={risk}
-                        setRisk={setRisk}
-                        close={() => setIsModalOpen(false)}
-                    />
+                    risk.goal_status === OutcomeGoalMet.ONGOING ? (
+                        <ClientRisksModal
+                            risk={risk}
+                            setRisk={setRisk}
+                            close={() => setIsModalOpen(false)}
+                        />
+                    ) : (
+                        <ClientRisksModal
+                            risk={risk}
+                            setRisk={setRisk}
+                            close={() => setIsModalOpen(false)}
+                        />
+                    )
                 )}
 
                 <Card variant="outlined">
@@ -81,7 +89,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                                 setIsModalOpen(true);
                             }}
                         >
-                            {t("general.update")}
+                            {risk.goal_status === OutcomeGoalMet.ONGOING ? t("general.update") : "Create New Goal"}
                         </Button>
                     </CardActions>
                 </Card>

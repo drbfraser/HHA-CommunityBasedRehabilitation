@@ -1,5 +1,6 @@
 import {
     Button,
+    Box,
     Dialog,
     DialogActions,
     DialogContent,
@@ -89,7 +90,12 @@ const ClientRisksModal = (props: IModalProps) => {
                                             <Typography variant="subtitle1" fontWeight="bold">
                                                 Goal Status:
                                             </Typography>
-                                            <GoalStatusChip />
+                                            <Box
+                                                onClick={handleEditGoalsClick}
+                                                sx={{ cursor: 'pointer', display: 'inline-flex' }}
+                                            >
+                                                <GoalStatusChip />
+                                            </Box>
                                             <EditNoteTwoToneIcon
                                                 color="disabled"
                                                 fontSize="medium"

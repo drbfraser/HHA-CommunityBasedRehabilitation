@@ -65,7 +65,8 @@ const Stats = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     const allZone = i18n.t("statistics.allZones");
-    const [zoneOption, setZoneOption] = useState<string>(allZone);
+    const ALL_ZONE_KEY = "all_zone_key";
+    const [zoneOption, setZoneOption] = useState<string>(ALL_ZONE_KEY);
     const [visitCount, setVisitCount] = useState<number>(0);
     const [graphicData, setGraphicData] = useState<any>([
         { x: "", y: 0 },
@@ -276,7 +277,7 @@ const Stats = () => {
             });
         } else {
             RiskStats().then(() => {
-                setZoneOption(allZone);
+                setZoneOption(ALL_ZONE_KEY);
                 setGraphicData(pieData);
             });
         }
@@ -370,9 +371,13 @@ const Stats = () => {
                             <Text style={styles.chartTitle}>{t("statistics.byType")}</Text>
                             <Text style={styles.graphStat}>
                                 <Text>{t("statistics.showingDataFor")} </Text>
-                                <Text style={{ fontWeight: "bold" }}>{zoneOption}</Text>
+                                <Text style={{ fontWeight: "bold" }}>
+                                    {zoneOption === ALL_ZONE_KEY
+                                        ? t("statistics.allZones")
+                                        : zoneOption}
+                                </Text>
                             </Text>
-                            {zoneOption !== allZone ? (
+                            {zoneOption !== ALL_ZONE_KEY ? (
                                 <Button
                                     style={styles.filterBtn}
                                     mode="contained"

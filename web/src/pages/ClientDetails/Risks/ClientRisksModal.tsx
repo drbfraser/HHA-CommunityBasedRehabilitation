@@ -1,5 +1,6 @@
 import {
     Button,
+    Box,
     Dialog,
     DialogActions,
     DialogContent,
@@ -90,11 +91,21 @@ const ClientRisksModal = (props: IModalProps) => {
                                             <Typography variant="subtitle1" fontWeight="bold">
                                                 Goal Status:
                                             </Typography>
-                                            <GoalStatusChip />
-                                            <EditNoteTwoToneIcon
-                                                color="disabled"
-                                                fontSize="medium"
-                                            />
+                                            <Box
+                                                onClick={handleEditGoalsClick}
+                                                sx={{ cursor: "pointer", display: "inline-flex" }}
+                                            >
+                                                <GoalStatusChip />
+                                            </Box>
+                                            <Box
+                                                onClick={handleEditGoalsClick}
+                                                sx={{ cursor: "pointer", display: "inline-flex" }}
+                                            >
+                                                <EditNoteTwoToneIcon
+                                                    color="action"
+                                                    fontSize="medium"
+                                                />
+                                            </Box>
                                         </Stack>
                                     </Grid>
                                     <Grid item>

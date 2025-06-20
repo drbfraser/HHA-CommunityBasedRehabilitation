@@ -5,6 +5,7 @@ import { TextField } from "formik-mui";
 import {
     Grid,
     Button,
+    Box,
     Dialog,
     DialogContent,
     DialogActions,
@@ -45,24 +46,76 @@ const ClientRisksModal = (props: IModalProps) => {
     };
 
     return (
-        <Formik
-            onSubmit={(values) => {
-                handleSubmit(values, props.risk, props.setRisk);
-                props.close();
-            }}
-            initialValues={props.risk}
-            validationSchema={validationSchema}
-        >
-            {({ isSubmitting }) => (
-                <Dialog fullWidth open={true} aria-labelledby="form-dialog-title">
-                    <Form>
-                        <DialogTitle id="form-dialog-title">
-                            {getDialogTitleText(props.risk.risk_type)}
-                        </DialogTitle>
-                        <DialogContent>
-                            <Grid container direction="column" spacing={2}>
-                                <Grid item>
-                                    <FormControl fullWidth variant="outlined">
+        <>
+            {openEditGoals && (
+                <UpdateGoalStatus
+                    risk={props.risk}
+                    setRisk={props.setRisk}
+                    close={() => handleEditGoalsClick()}
+                    transKey={getRiskGoalsTranslationKey(props.risk.risk_type)}
+                />
+            )}
+
+            <Formik
+                onSubmit={(values) => {
+                    handleSubmit(values, props.risk, props.setRisk);
+                    props.close();
+                }}
+                initialValues={props.risk}
+                validationSchema={validationSchema}
+            >
+                {({ isSubmitting }) => (
+                    <Dialog fullWidth open={true} aria-labelledby="form-dialog-title">
+                        <Form>
+                            <DialogTitle id="form-dialog-title">
+                                {getDialogTitleText(props.risk.risk_type)}
+                            </DialogTitle>
+                            <DialogContent>
+                                <Grid container direction="column" spacing={3}>
+                                    <Grid item>
+                                        <Stack direction="row" spacing={1}>
+                                            {/*TODO: Replace with Translation*/}
+                                            <Typography variant="subtitle1" fontWeight="bold">
+                                                Goal Status:
+                                            </Typography>
+                                            <Box
+                                                onClick={handleEditGoalsClick}
+                                                sx={{ cursor: "pointer", display: "inline-flex" }}
+                                            >
+                                                <GoalStatusChip />
+                                            </Box>
+                                            <Box
+                                                onClick={handleEditGoalsClick}
+                                                sx={{ cursor: "pointer", display: "inline-flex" }}
+                                            >
+                                                <EditNoteTwoToneIcon
+                                                    color="action"
+                                                    fontSize="medium"
+                                                />
+                                            </Box>
+                                        </Stack>
+                                    </Grid>
+                                    <Grid item>
+                                        <FormControl fullWidth variant="outlined">
+                                            <Field
+                                                component={TextField}
+                                                select
+                                                required
+                                                variant="outlined"
+                                                label={fieldLabels[FormField.risk_level]}
+                                                name={FormField.risk_level}
+                                            >
+                                                {Object.entries(riskLevels).map(
+                                                    ([value, { name }]) => (
+                                                        <MenuItem key={value} value={value}>
+                                                            {name}
+                                                        </MenuItem>
+                                                    )
+                                                )}
+                                            </Field>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item>
                                         <Field
                                             component={TextField}
                                             select

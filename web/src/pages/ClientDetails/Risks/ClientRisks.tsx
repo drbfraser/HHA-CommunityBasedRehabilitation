@@ -37,21 +37,15 @@ const ClientRisks = ({ clientInfo }: IProps) => {
 
         return (
             <>
-                {isModalOpen && (
-                    risk.goal_status === OutcomeGoalMet.ONGOING ? (
-                        <ClientRisksModal
-                            risk={risk}
-                            setRisk={setRisk}
-                            close={() => setIsModalOpen(false)}
-                        />
-                    ) : (
-                        <ClientRisksModal
-                            risk={risk}
-                            setRisk={setRisk}
-                            close={() => setIsModalOpen(false)}
-                        />
-                    )
-                )}
+                {isModalOpen &&
+
+                    <ClientRisksModal
+                        risk={risk}
+                        setRisk={setRisk}
+                        close={() => setIsModalOpen(false)}
+                        newGoal={risk.goal_status !== OutcomeGoalMet.ONGOING}
+                    />
+                }
 
                 <Card variant="outlined">
                     <CardContent>
@@ -62,9 +56,9 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                                 </Typography>
                             </Grid>
                             <Grid item md={6}>
-                                <Box sx={clientRiskStyles.riskCardButtonAndBadge}>
+                                {risk.goal_status === OutcomeGoalMet.ONGOING ? (<Box sx={clientRiskStyles.riskCardButtonAndBadge}>
                                     <RiskLevelChip risk={risk.risk_level} />
-                                </Box>
+                                </Box>) : ""}
                             </Grid>
                         </Grid>
                         <br />
@@ -72,7 +66,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                         {risk.goal_status === OutcomeGoalMet.ONGOING ? (
                             <>
                                 <Typography variant="subtitle2" component="h6">Current Goal</Typography>
-                                <Typography variant="body2" component="p">{risk.goal}</Typography>
+                                <Typography variant="body2" component="p">{risk.goal_name}</Typography>
                             </>
                         ) : (
                             <Typography variant="body2" component="p">No current goal set</Typography>

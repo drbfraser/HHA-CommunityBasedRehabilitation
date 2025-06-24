@@ -13,10 +13,10 @@ import {
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FormikProps } from "formik";
 import { TextField } from "formik-mui";
 import { useTranslation } from "react-i18next";
-
+import { RiskLevel } from "@cbr/common/util/risks";
 import { handleSubmit } from "@cbr/common/forms/Risks/riskFormFieldHandler";
 import { fieldLabels, FormField, validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
 import { getRiskGoalsTranslationKey, IRisk, riskLevels, RiskType } from "@cbr/common/util/risks";
@@ -24,36 +24,71 @@ import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
 import React, { useState } from "react";
 import UpdateGoalStatus from "./UpdateGoalStatus";
 import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
+import { OutcomeGoalMet } from "@cbr/common/util/visits";
 
 interface IModalProps {
     risk: IRisk;
     setRisk: (risk: IRisk) => void;
     close: () => void;
+    newGoal: boolean;
 }
 
 const ClientRisksModal = (props: IModalProps) => {
     const { t } = useTranslation();
-    const [openEditGoals, setOpenEditGoals] = useState<Boolean>(false);
+    const [openEditGoals, setOpenEditGoals] = useState<boolean>(false);
+    const [editedRisk, setEditedRisk] = useState<IRisk>(() => {
+        if (props.newGoal) {
+            return {
+                ...props.risk,
+                goal_name: "",
+                requirement: "",
+                goal_status: OutcomeGoalMet.ONGOING,
+                comments: RiskLevel.LOW,
+                risk_level: RiskLevel.LOW,
+            };
+        }
+        return props.risk;
+    });
+
 
     const handleEditGoalsClick = () => {
-        setOpenEditGoals((prevOpen) => !prevOpen);
+        setOpenEditGoals((prevOpen: boolean) => !prevOpen);
     };
 
     const getDialogTitleText = (riskType: RiskType): string => {
-        switch (riskType) {
-            case RiskType.HEALTH:
-                return t("riskAttr.update_health");
-            case RiskType.EDUCATION:
-                return t("riskAttr.update_education");
-            case RiskType.SOCIAL:
-                return t("riskAttr.update_social");
-            case RiskType.NUTRITION:
-                return t("riskAttr.update_nutrition");
-            case RiskType.MENTAL:
-                return t("riskAttr.update_mental");
-            default:
-                console.error("Unknown risk type.");
-                return "";
+        if (!props.newGoal) {
+            switch (riskType) {
+                case RiskType.HEALTH:
+                    return t("riskAttr.update_health");
+                case RiskType.EDUCATION:
+                    return t("riskAttr.update_education");
+                case RiskType.SOCIAL:
+                    return t("riskAttr.update_social");
+                case RiskType.NUTRITION:
+                    return t("riskAttr.update_nutrition");
+                case RiskType.MENTAL:
+                    return t("riskAttr.update_mental");
+                default:
+                    console.error("Unknown risk type.");
+                    return "";
+            }
+        }
+        else {
+            switch (riskType) {
+                case RiskType.HEALTH:
+                    return "Create Health Risk";
+                case RiskType.EDUCATION:
+                    return "Create Education Risk";
+                case RiskType.SOCIAL:
+                    return "Create Social Risk";
+                case RiskType.NUTRITION:
+                    return "Create Nutrition Risk";
+                case RiskType.MENTAL:
+                    return "Create Mental Risk";
+                default:
+                    console.error("Unknown risk type.");
+                    return "";
+            }
         }
     };
 
@@ -61,8 +96,8 @@ const ClientRisksModal = (props: IModalProps) => {
         <>
             {openEditGoals && (
                 <UpdateGoalStatus
-                    risk={props.risk}
-                    setRisk={props.setRisk}
+                    risk={editedRisk}
+                    setRisk={setEditedRisk}
                     close={() => handleEditGoalsClick()}
                     transKey={getRiskGoalsTranslationKey(props.risk.risk_type)}
                 />
@@ -74,10 +109,10 @@ const ClientRisksModal = (props: IModalProps) => {
                     props.close();
                 }}
                 enableReinitialize
-                initialValues={props.risk}
+                initialValues={editedRisk}
                 validationSchema={validationSchema}
             >
-                {({ isSubmitting }) => (
+                {({ isSubmitting }: FormikProps<IRisk>) => (
                     <Dialog fullWidth open={true} aria-labelledby="form-dialog-title">
                         <Form>
                             <DialogTitle id="form-dialog-title">
@@ -137,36 +172,22 @@ const ClientRisksModal = (props: IModalProps) => {
                                             rows={4}
                                             variant="outlined"
                                             margin="dense"
-                                            label={fieldLabels[FormField.requirement]}
-                                            name={FormField.requirement}
+                                            label={fieldLabels[FormField.goal_name]}
+                                            name={FormField.goal_name}
                                         />
                                     </Grid>
                                     <Grid item>
-                                        <FormControl fullWidth variant="outlined">
-                                            <MuiTextField
-                                                fullWidth
-                                                id="input-with-icon-textfield"
-                                                label={fieldLabels[FormField.goal]}
-                                                onClick={handleEditGoalsClick}
-                                                InputProps={{
-                                                    readOnly: true,
-                                                    startAdornment: (
-                                                        <InputAdornment position="start">
-                                                            {props.risk.goal}
-                                                        </InputAdornment>
-                                                    ),
-                                                    endAdornment: (
-                                                        <InputAdornment position="end">
-                                                            <EditNoteTwoToneIcon
-                                                                color="disabled"
-                                                                fontSize="medium"
-                                                            />
-                                                        </InputAdornment>
-                                                    ),
-                                                }}
-                                                variant="outlined"
-                                            />
-                                        </FormControl>
+                                        <Field
+                                            component={TextField}
+                                            fullWidth
+                                            multiline
+                                            required
+                                            rows={4}
+                                            variant="outlined"
+                                            margin="dense"
+                                            label={fieldLabels[FormField.requirement]}
+                                            name={FormField.requirement}
+                                        />
                                     </Grid>
                                     <Grid item>
                                         <FormControl fullWidth variant="outlined">
@@ -193,13 +214,14 @@ const ClientRisksModal = (props: IModalProps) => {
                             </DialogContent>
                             <DialogActions>
                                 <Button
-                                    color="primary"
+                                    color={props.newGoal ? "success" : "primary"}
                                     variant="contained"
                                     type="submit"
                                     disabled={isSubmitting}
                                 >
-                                    {t("general.update")}
+                                    {props.newGoal ? "Create" : t("general.update")}
                                 </Button>
+
                                 <Button
                                     variant="outlined"
                                     color="primary"

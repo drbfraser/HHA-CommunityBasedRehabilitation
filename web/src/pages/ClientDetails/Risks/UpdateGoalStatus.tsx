@@ -67,7 +67,6 @@ export default function UpdateGoalStatus(props: IModalProps) {
             }}
             enableReinitialize
             initialValues={props.risk}
-            validationSchema={validationSchema}
         >
             {({ isSubmitting }: FormikProps<IRisk>) => (
                 <Dialog fullWidth open={true} aria-labelledby="form-dialog-title">

@@ -16,6 +16,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { FormControl } from "@mui/material";
 import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
+import { OutcomeGoalMet } from "@cbr/common/util/visits";
 
 // TODO: Replace with IRisk once changes are made
 interface ITempRisk {
@@ -72,7 +73,7 @@ const PreviousGoalCard = (props: IModalProps) => {
                     <Typography variant="subtitle1">
                         <b>Goal Status:</b> {props.risk.goal_status}
                         {/* TODO: Update with status logic */}
-                        <GoalStatusChip />
+                        <GoalStatusChip goalStatus={OutcomeGoalMet.ONGOING} />
                     </Typography>
                     <Typography variant="subtitle1">
                         <b>Type:</b> {getDialogTitleText(props.risk.risk_type)}

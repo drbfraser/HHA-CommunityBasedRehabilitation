@@ -210,15 +210,19 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         )
         # decide change_type based on previous risk
         if not previous_risk:
-            change_type = models.RiskChangeType.INITIAL
-        elif previous_risk.risk_level != risk_level:
-            change_type = models.RiskChangeType.RISK_LEVEL
-        elif goal_status and (previous_risk.goal_status != goal_status):
-            change_type = models.RiskChangeType.GOAL_STATUS
-        else:
-            change_type = models.RiskChangeType.OTHER
+            return models.RiskChangeType.INITIAL
 
-        return change_type
+        changed_risk_level = previous_risk.risk_level != risk_level
+        changed_goal_status = goal_status and (previous_risk.goal_status != goal_status)
+
+        if changed_risk_level and changed_goal_status:
+            return models.RiskChangeType.BOTH
+        elif changed_risk_level:
+            return models.RiskChangeType.RISK_LEVEL
+        elif changed_goal_status:
+            return models.RiskChangeType.GOAL_STATUS
+        else:
+            return models.RiskChangeType.OTHER
 
     def create(self, validated_data):
         current_time = current_milli_time()

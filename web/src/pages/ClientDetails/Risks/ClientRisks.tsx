@@ -24,7 +24,6 @@ interface IProps {
 }
 
 const ClientRisks = ({ clientInfo }: IProps) => {
-    console.log(clientInfo?.risks);
     const { t } = useTranslation();
 
     interface ICardProps {
@@ -37,21 +36,12 @@ const ClientRisks = ({ clientInfo }: IProps) => {
 
         return (
             <>
-                {isModalOpen && (
-                    risk.goal_status === OutcomeGoalMet.ONGOING ? (
-                        <ClientRisksModal
-                            risk={risk}
-                            setRisk={setRisk}
-                            close={() => setIsModalOpen(false)}
-                        />
-                    ) : (
-                        <ClientRisksModal
-                            risk={risk}
-                            setRisk={setRisk}
-                            close={() => setIsModalOpen(false)}
-                        />
-                    )
-                )}
+                {isModalOpen &&
+                    <ClientRisksModal
+                        risk={risk}
+                        setRisk={setRisk}
+                        close={() => setIsModalOpen(false)}
+                    />}
 
                 <Card variant="outlined">
                     <CardContent>

@@ -65,7 +65,6 @@ export default function UpdateGoalStatus(props: IModalProps) {
     return (
         <Formik
             onSubmit={(values) => {
-                console.log(values);
                 handleSubmit(values, props.risk, props.setRisk);
                 props.close();
             }}

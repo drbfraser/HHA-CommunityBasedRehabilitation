@@ -33,7 +33,6 @@ export const handleSubmit = async (
     initialValues: IRisk,
     setRisk: (risk: IRisk) => void
 ) => {
-    console.log(values);
     if (!wasChangeMade(values, initialValues)) return;
     const updatedRisk = JSON.stringify({
         client_id: values.client_id,

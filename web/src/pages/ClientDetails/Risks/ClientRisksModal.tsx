@@ -169,7 +169,7 @@ const ClientRisksModal = (props: IModalProps) => {
                                             fullWidth
                                             multiline
                                             required
-                                            rows={4}
+                                            rows={1}
                                             variant="outlined"
                                             margin="dense"
                                             label={fieldLabels[FormField.goal_name]}

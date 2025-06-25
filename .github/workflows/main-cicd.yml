@@ -236,9 +236,6 @@ jobs:
       - name: Make migrations
         run: python manage.py makemigrations --check
         working-directory: /isolated_build/repo/server
-      - name: 'Run Django Test Suite'
-        run: python manage.py test --verbosity=2 --no-input
-        working-directory: /isolated_build/repo/server
 
   test-server:
     # This job needs the server to be built first

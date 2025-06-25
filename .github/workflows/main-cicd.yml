@@ -240,6 +240,33 @@ jobs:
         run: python manage.py test --verbosity=2 --no-input
         working-directory: /isolated_build/repo/server
 
+  test-server:
+    # This job needs the server to be built first
+    needs: [build-server]
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.9.1-buster
+    services:
+      test_postgres:
+        image: postgres:13.1-alpine
+    env:
+      POSTGRES_DB: cbr
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_HOST: test_postgres
+      SECRET_KEY: test
+    steps:
+      - name: Checkout server code into container
+        uses: bfraser/cicd/actions/checkout@v1
+        with:
+          path: /isolated_build/repo/
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+        working-directory: /isolated_build/repo/server
+      - name: Run Django Test Suite
+        run: python manage.py test --verbosity=2 --no-input
+        working-directory: /isolated_build/repo/server
+
   # ----------------------------------------------------------------------------
   # Publish to DockerHub
   # ----------------------------------------------------------------------------

@@ -240,9 +240,8 @@ jobs:
   test-server:
     # This job needs the server to be built first
     needs: [build-server]
-    runs-on: ubuntu-latest
-    container:
-      image: python:3.9.1-buster
+    runs-on: [self-hosted, docker]
+    timeout-minutes: 60
     services:
       test_postgres:
         image: postgres:13.1-alpine
@@ -257,6 +256,10 @@ jobs:
         uses: bfraser/cicd/actions/checkout@v1
         with:
           path: /isolated_build/repo/
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
       - name: Install dependencies
         run: pip install -r requirements.txt
         working-directory: /isolated_build/repo/server

@@ -1,7 +1,7 @@
 name: Debug Test Server
 on:
   push:
-    branches: [your-branch-name] # Only your branch
+    branches: [639-django-integration-tests] # Only your branch
   workflow_dispatch: # Allows manual triggering
 
 jobs:

@@ -95,7 +95,9 @@ const ClientRisksModal = (props: IModalProps) => {
                                                 onClick={handleEditGoalsClick}
                                                 sx={{ cursor: "pointer", display: "inline-flex" }}
                                             >
-                                                <GoalStatusChip goalStatus={props.risk.goal_status} />
+                                                <GoalStatusChip
+                                                    goalStatus={props.risk.goal_status}
+                                                />
                                             </Box>
                                             <Box
                                                 onClick={handleEditGoalsClick}

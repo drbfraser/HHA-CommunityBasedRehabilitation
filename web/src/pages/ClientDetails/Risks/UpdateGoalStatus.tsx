@@ -1,4 +1,3 @@
-import { validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
 import { RiskGoalOptions, RiskRequirementOptions } from "@cbr/common/types/translationKeys";
 import { IRisk, RiskType } from "@cbr/common/util/risks";
 import {

@@ -136,7 +136,7 @@ const ClientRisksModal = (props: IModalProps) => {
                                                         display: "inline-flex",
                                                     }}
                                                 >
-                                                    <GoalStatusChip />
+                                                    <GoalStatusChip goalStatus={editedRisk.goal_status} />
                                                 </Box>
                                                 <Box
                                                     onClick={handleEditGoalsClick}

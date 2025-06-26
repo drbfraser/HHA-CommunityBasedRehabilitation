@@ -24,7 +24,6 @@ interface IProps {
 }
 
 const ClientRisks = ({ clientInfo }: IProps) => {
-    console.log(clientInfo?.risks);
     const { t } = useTranslation();
 
     interface ICardProps {

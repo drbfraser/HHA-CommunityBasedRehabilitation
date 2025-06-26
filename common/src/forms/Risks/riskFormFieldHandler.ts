@@ -18,7 +18,7 @@ const updateRisk = async (updatedRisk: string) => {
 };
 
 const wasChangeMade = (values: IRisk, initialValues: IRisk) => {
-    const keysToCheck = ["risk_level", "requirement", "goal"] as (keyof IRisk)[];
+    const keysToCheck = ["risk_level", "requirement", "goal", "goal_status"] as (keyof IRisk)[];
 
     for (let key of keysToCheck) {
         if (String(values[key]).trim() !== String(initialValues[key]).trim()) {
@@ -39,6 +39,7 @@ export const handleSubmit = async (
         risk_type: values.risk_type,
         risk_level: values.risk_level,
         goal: values.goal,
+        goal_status: values.goal_status,
         requirement: values.requirement,
     });
     try {

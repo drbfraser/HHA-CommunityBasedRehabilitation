@@ -73,6 +73,7 @@ const ClientRisksModal = (props: IModalProps) => {
                     handleSubmit(values, props.risk, props.setRisk);
                     props.close();
                 }}
+                enableReinitialize
                 initialValues={props.risk}
                 validationSchema={validationSchema}
             >
@@ -94,7 +95,9 @@ const ClientRisksModal = (props: IModalProps) => {
                                                 onClick={handleEditGoalsClick}
                                                 sx={{ cursor: "pointer", display: "inline-flex" }}
                                             >
-                                                <GoalStatusChip />
+                                                <GoalStatusChip
+                                                    goalStatus={props.risk.goal_status}
+                                                />
                                             </Box>
                                             <Box
                                                 onClick={handleEditGoalsClick}

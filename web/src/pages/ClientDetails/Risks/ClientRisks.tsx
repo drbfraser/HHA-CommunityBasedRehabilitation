@@ -17,8 +17,6 @@ import { clientRiskStyles } from "./ClientRisks.styles";
 import { getTranslatedRiskName, riskTypes } from "util/risks";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import ClientRisksModal from "./ClientRisksModal";
-import UpdateGoalStatus from "./UpdateGoalStatus";
-import { getRiskGoalsTranslationKey } from "@cbr/common/util/risks";
 
 interface IProps {
     clientInfo?: IClient;

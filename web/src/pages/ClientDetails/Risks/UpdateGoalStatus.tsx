@@ -1,5 +1,5 @@
 import { handleSubmit } from "@cbr/common/forms/Risks/riskFormFieldHandler";
-import { fieldLabels, FormField, validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
+import { FormField, validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
 import { RiskGoalOptions, RiskRequirementOptions } from "@cbr/common/types/translationKeys";
 import { IRisk, RiskType } from "@cbr/common/util/risks";
 import {

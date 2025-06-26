@@ -112,131 +112,116 @@ const ClientRisksModal = (props: IModalProps) => {
                 initialValues={editedRisk}
                 validationSchema={validationSchema}
             >
-                {({ isSubmitting }: FormikProps<IRisk>) => (
-                    <Dialog fullWidth open={true} aria-labelledby="form-dialog-title">
-                        <Form>
-                            <DialogTitle id="form-dialog-title">
-                                {getDialogTitleText(props.risk.risk_type)}
-                            </DialogTitle>
-                            <DialogContent>
-                                <Grid container direction="column" spacing={3}>
-                                    <Grid item>
-                                        <Stack direction="row" spacing={1}>
-                                            {/*TODO: Replace with Translation*/}
-                                            <Typography variant="subtitle1" fontWeight="bold">
-                                                Goal Status:
-                                            </Typography>
-                                            <Box
-                                                onClick={handleEditGoalsClick}
-                                                sx={{ cursor: "pointer", display: "inline-flex" }}
-                                            >
-                                                <GoalStatusChip />
-                                            </Box>
-                                            <Box
-                                                onClick={handleEditGoalsClick}
-                                                sx={{ cursor: "pointer", display: "inline-flex" }}
-                                            >
-                                                <EditNoteTwoToneIcon
-                                                    color="action"
-                                                    fontSize="medium"
-                                                />
-                                            </Box>
-                                        </Stack>
-                                    </Grid>
-                                    <Grid item>
-                                        <FormControl fullWidth variant="outlined">
+                {({ isSubmitting, values }: FormikProps<IRisk>) => {
+                    const handleEditGoalsClick = () => {
+                        setEditedRisk(values);
+                        setOpenEditGoals(true);
+                    };
+                    return (
+                        <Dialog fullWidth open={true} aria-labelledby="form-dialog-title">
+                            <Form>
+                                <DialogTitle id="form-dialog-title">
+                                    {getDialogTitleText(props.risk.risk_type)}
+                                </DialogTitle>
+                                <DialogContent>
+                                    <Grid container direction="column" spacing={3}>
+                                        <Grid item>
+                                            <Stack direction="row" spacing={1}>
+                                                {/*TODO: Replace with Translation*/}
+                                                <Typography variant="subtitle1" fontWeight="bold">
+                                                    Goal Status:
+                                                </Typography>
+                                                <Box
+                                                    onClick={handleEditGoalsClick}
+                                                    sx={{ cursor: "pointer", display: "inline-flex" }}
+                                                >
+                                                    <GoalStatusChip />
+                                                </Box>
+                                                <Box
+                                                    onClick={handleEditGoalsClick}
+                                                    sx={{ cursor: "pointer", display: "inline-flex" }}
+                                                >
+                                                    <EditNoteTwoToneIcon
+                                                        color="action"
+                                                        fontSize="medium"
+                                                    />
+                                                </Box>
+                                            </Stack>
+                                        </Grid>
+                                        <Grid item>
+                                            <FormControl fullWidth variant="outlined">
+                                                <Field
+                                                    component={TextField}
+                                                    select
+                                                    required
+                                                    variant="outlined"
+                                                    label={fieldLabels[FormField.risk_level]}
+                                                    name={FormField.risk_level}
+                                                >
+                                                    {Object.entries(riskLevels).map(
+                                                        ([value, { name }]) => (
+                                                            <MenuItem key={value} value={value}>
+                                                                {name}
+                                                            </MenuItem>
+                                                        )
+                                                    )}
+                                                </Field>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item>
                                             <Field
                                                 component={TextField}
-                                                select
+                                                fullWidth
+                                                multiline
                                                 required
+                                                rows={1}
                                                 variant="outlined"
-                                                label={fieldLabels[FormField.risk_level]}
-                                                name={FormField.risk_level}
-                                            >
-                                                {Object.entries(riskLevels).map(
-                                                    ([value, { name }]) => (
-                                                        <MenuItem key={value} value={value}>
-                                                            {name}
-                                                        </MenuItem>
-                                                    )
-                                                )}
-                                            </Field>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item>
-                                        <Field
-                                            component={TextField}
-                                            fullWidth
-                                            multiline
-                                            required
-                                            rows={1}
-                                            variant="outlined"
-                                            margin="dense"
-                                            label={fieldLabels[FormField.goal_name]}
-                                            name={FormField.goal_name}
-                                        />
-                                    </Grid>
-                                    <Grid item>
-                                        <Field
-                                            component={TextField}
-                                            fullWidth
-                                            multiline
-                                            required
-                                            rows={4}
-                                            variant="outlined"
-                                            margin="dense"
-                                            label={fieldLabels[FormField.requirement]}
-                                            name={FormField.requirement}
-                                        />
-                                    </Grid>
-                                    <Grid item>
-                                        <FormControl fullWidth variant="outlined">
+                                                margin="dense"
+                                                label={fieldLabels[FormField.goal_name]}
+                                                name={FormField.goal_name}
+                                            />
+                                        </Grid>
+                                        <Grid item>
                                             <Field
                                                 component={TextField}
-                                                select
+                                                fullWidth
+                                                multiline
                                                 required
+                                                rows={4}
                                                 variant="outlined"
-                                                label={fieldLabels[FormField.comments]}
-                                                name={FormField.risk_level}
-                                            >
-                                                {/* TODO: Update with List from Carol  */}
-                                                {Object.entries(riskLevels).map(
-                                                    ([value, { name }]) => (
-                                                        <MenuItem key={value} value={value}>
-                                                            {name}
-                                                        </MenuItem>
-                                                    )
-                                                )}
-                                            </Field>
-                                        </FormControl>
+                                                margin="dense"
+                                                label={fieldLabels[FormField.requirement]}
+                                                name={FormField.requirement}
+                                            />
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button
-                                    color={props.newGoal ? "success" : "primary"}
-                                    variant="contained"
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                >
-                                    {props.newGoal ? "Create" : t("general.update")}
-                                </Button>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button
+                                        color={props.newGoal ? "success" : "primary"}
+                                        variant="contained"
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                    >
+                                        {props.newGoal ? "Create" : t("general.update")}
+                                    </Button>
 
-                                <Button
-                                    variant="outlined"
-                                    color="primary"
-                                    type="reset"
-                                    disabled={isSubmitting}
-                                    onClick={() => {
-                                        props.close();
-                                    }}
-                                >
-                                    {t("general.cancel")}
-                                </Button>
-                            </DialogActions>
-                        </Form>
-                    </Dialog>
-                )}
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        type="reset"
+                                        disabled={isSubmitting}
+                                        onClick={() => {
+                                            props.close();
+                                        }}
+                                    >
+                                        {t("general.cancel")}
+                                    </Button>
+                                </DialogActions>
+                            </Form>
+                        </Dialog>
+                    );
+                }}
             </Formik>
         </>
     );

@@ -104,6 +104,14 @@ export default function UpdateGoalStatus(props: IModalProps) {
                         </DialogContent>
                         <DialogActions>
                             <Button
+                                color="success"
+                                variant="outlined"
+                                type="submit"
+                                disabled={isSubmitting}
+                            >
+                                {t("general.save")}
+                            </Button>
+                            <Button
                                 variant="outlined"
                                 color="primary"
                                 type="reset"
@@ -113,14 +121,6 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                 }}
                             >
                                 {t("general.goBack")}
-                            </Button>
-                            <Button
-                                color="success"
-                                variant="outlined"
-                                type="submit"
-                                disabled={isSubmitting}
-                            >
-                                {t("general.save")}
                             </Button>
                         </DialogActions>
                     </Form>

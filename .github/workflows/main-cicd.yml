@@ -247,13 +247,17 @@ jobs:
     services:
       test_postgres:
         image: postgres:13.1-alpine
+        env:
+          POSTGRES_DB: cbr
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
     env:
+      DOMAIN: example.com
       POSTGRES_DB: cbr
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
       POSTGRES_HOST: test_postgres
       SECRET_KEY: test
-      DOMAIN: example.com
     steps:
       - name: Checkout server code into container
         uses: bfraser/cicd/actions/checkout@v1

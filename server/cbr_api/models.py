@@ -225,6 +225,7 @@ class RiskChangeType(models.TextChoices):
     INITIAL = "INIT", "Initial"
     RISK_LEVEL = "RL", "Risk Level Change"
     GOAL_STATUS = "GS", "Goal Status Change"
+    BOTH = "BOTH", "Both Risk Level and Goal Status Change"
     OTHER = "OTH", "Other"
 
 

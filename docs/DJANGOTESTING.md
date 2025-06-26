@@ -1,26 +1,32 @@
 ## **Django Integration Testing Guidelines**
 
-## 1. Build‑Server Job & Django Integration Testing
+## 1. Test-Server Job & Django Integration Testing
 
-We run our full Django integration tests as the **final step** in the existing `build-server` job in **.github/workflows/maincicd.yml**. By placing tests last, we ensure a **fail‑fast** pipeline:
+We run our full Django integration tests as the **test-server** job in **.github/workflows/maincicd.yml**. This job is picked up by a runner _only if the build-server job succeeds first_, ensuring a **fail‑fast** pipeline:
 
 **How it works:**
 
-1. **Checkout**: clone the repo into `/isolated_build/repo/`
-2. **Install dependencies**: `pip install -r requirements.txt`
-3. **Code style**: `python -m black --check .`
-4. **System checks**: `python manage.py check`
-5. **Migration checks**: `python manage.py makemigrations --check`
-6. **Run Django Test Suite**:
+1. Won’t start until the build-server job has completed successfully.
 
-   ```bash
-   python manage.py test --verbosity=2 --no-input
-   ```
+2. Runs on SFU GitHub server with Docker installed.
 
-   - `--verbosity=2`: prints each test’s name and result (`OK`/`FAIL`).
-   - `--no-input`: disables any interactive prompts, ideal for CI.
+3. All steps execute inside a Python 3.9.1-buster container on the server.
 
-If **any** of steps 1–5 exit non‑zero, the job stops immediately, saving CI time by skipping the test suite.
+4. Spins up a Postgres 13 sibling container named test_postgres.
+
+5. Points Django at that Postgres service (POSTGRES_HOST=test_postgres, etc.) and sets a dummy SECRET_KEY.
+
+6. Clones repo into **/isolated_build/repo/** on the container and installs dependencies using **requirements.txt**.
+
+7. Runs `python manage.py test --verbosity=2 --no-input` inside **/isolated_build/repo/server**, which:
+
+   - Creates a temporary test database on test_postgres.
+   - Applies all migrations.
+   - Runs every `test\_**.py` file in **tests/\*\***.
+
+8. Tears down the test DB when finished.
+
+If the **build-server** job fails first, the test-server job never runs to save pipeline resources.
 
 ---
 
@@ -32,7 +38,7 @@ Each Django app gets its own **tests/** package, with subfolders by test type. F
 cbr_api/
 └── tests/
     ├── __init__.py
-    ├── helpers.py         # classes and functions to use across many tests
+    ├── helpers.py # classes and functions to use across many tests
     ├── models/
     │   ├── __init__.py
     │   ├── test_client_model.py
@@ -93,7 +99,7 @@ Whenever developers introduce or modify functionality, they must add or update t
   docker exec cbr_django python manage.py test
   ```
 
-- **CI**: the `build-server` job in **maincicd.yml** automatically runs `python manage.py test ...` in an isolated container on pushes to `main`, enforcing that no backend changes break existing functionality.
+- **CI**: the `test-server` job in **maincicd.yml** automatically runs `python manage.py test ...` in an isolated container on pushes to `main`, enforcing that no backend changes break existing functionality.
 
 ---
 

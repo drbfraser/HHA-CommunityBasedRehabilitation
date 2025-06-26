@@ -1,7 +1,6 @@
-import { RiskLevel, RiskType } from "@cbr/common/util/risks";
-import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { RiskType } from "@cbr/common/util/risks";
 import {
+    Alert,
     Button,
     Dialog,
     DialogActions,
@@ -15,86 +14,51 @@ import {
     TableRow,
 } from "@mui/material";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ParentTableContainer } from "./PreviousGoalsModal.styles";
 import PreviousGoalCard from "../PreviousGoalCard.tsx/PreviousGoalCard";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { IRisk } from "@cbr/common/util/risks";
+import { timestampToFormDate } from "@cbr/common/util/dates";
+import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
 
 interface IModalProps {
+    clientId: string;
     close: () => void;
 }
 
-// TODO: Replace with IRisk once changes are made
-interface ITempRisk {
-    id: number;
-    risk_level: RiskLevel;
-    risk_type: RiskType;
-    goal: string;
-    timestamp: string;
-    end_date: string;
-    // maybe use an ENUM here instead?
-    goal_status: string;
-}
-
 // TODO: Need to take in the current user ID
-const PreviousGoalsModal = (props: IModalProps, clientId?: string) => {
-    //TODO: Make API call in here to get the current users previous goals
-    const sampleData: ITempRisk[] = [
-        {
-            id: 1,
-            risk_level: RiskLevel.CRITICAL,
-            risk_type: RiskType.HEALTH,
-            goal: "Textbooks1",
-            timestamp: "01/01/2024",
-            end_date: "05/05/2024",
-            goal_status: "Achieved",
-        },
-        {
-            id: 2,
-            risk_level: RiskLevel.MEDIUM,
-            risk_type: RiskType.SOCIAL,
-            goal: "super long",
-            timestamp: "01/01/2024",
-            end_date: "05/05/2024",
-            goal_status: "Cancelled",
-        },
-        {
-            id: 3,
-            risk_level: RiskLevel.LOW,
-            risk_type: RiskType.MENTAL,
-            goal: "Textbooks3",
-            timestamp: "01/01/2024",
-            end_date: "05/05/2024",
-            goal_status: "Achieved",
-        },
-        {
-            id: 4,
-            risk_level: RiskLevel.HIGH,
-            risk_type: RiskType.EDUCATION,
-            goal: "Textbooks4",
-            timestamp: "01/01/2024",
-            end_date: "05/05/2024",
-            goal_status: "Cancelled",
-        },
-        {
-            id: 5,
-            risk_level: RiskLevel.CRITICAL,
-            risk_type: RiskType.EDUCATION,
-            goal: "Textbooks5",
-            timestamp: "01/01/2024",
-            end_date: "05/05/2024",
-            goal_status: "Achieved",
-        },
-        {
-            id: 6,
-            risk_level: RiskLevel.HIGH,
-            risk_type: RiskType.SOCIAL,
-            goal: "Textbooks6",
-            timestamp: "01/01/2024",
-            end_date: "05/05/2024",
-            goal_status: "Achieved",
-        },
-    ];
+const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
+
+    const [goals, setGoals] = useState<IRisk[]>([]);
+
+    const [isPrevGoalOpen, setPrevGoalOpen] = useState(false);
+    const [prevGoalInfo, setPrevGoalInfo] = useState<IRisk | null>(null);
+    const [loadingError, setLoadingError] = useState(false);
+
+    // Table Configs
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    const getPreviousGoals = useCallback(() => {
+        apiFetch(Endpoint.RISKS, `?client_id=${clientId}`)
+            .then((resp) => resp.json())
+            .then((data: IRisk[]) => {
+                console.log("Fetched previous goals:", data);
+                console.log("clientId", clientId);
+                setGoals(data);
+            })
+            .catch((err) => {
+                setLoadingError(true)
+                console.error("Failed to load previous goals", err);
+            })
+    }, [clientId]);
+
+    useEffect(() => {
+        getPreviousGoals();
+    }, [getPreviousGoals]);
+
     const { t } = useTranslation();
     const getDialogTitleText = (riskType: RiskType): string => {
         switch (riskType) {
@@ -114,22 +78,6 @@ const PreviousGoalsModal = (props: IModalProps, clientId?: string) => {
         }
     };
 
-    const defaultUserData: ITempRisk = {
-        id: 1,
-        risk_level: RiskLevel.CRITICAL,
-        risk_type: RiskType.HEALTH,
-        goal: "Textbooks1",
-        timestamp: "01/01/2024",
-        end_date: "05/05/2024",
-        goal_status: "check",
-    };
-    const [isPrevGoalOpen, setPrevGoalOpen] = useState(false);
-    const [prevGoalInfo, setPrevGoalInfo] = useState<ITempRisk>(defaultUserData);
-
-    // Table Configs
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
-
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
@@ -140,14 +88,14 @@ const PreviousGoalsModal = (props: IModalProps, clientId?: string) => {
     };
 
     // TODO: To be used when we make the initial GET for the data, prevents it from having to be loaded again
-    const memoizedSampleData = useMemo(() => [...sampleData], []);
+    const memoizedSampleData = useMemo(() => [...goals], [goals]);
 
     const visibleRows = useMemo(
         () => [...memoizedSampleData].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
         [page, rowsPerPage, memoizedSampleData]
     );
 
-    const handleRowClick = (data: ITempRisk) => {
+    const handleRowClick = (data: IRisk) => {
         setPrevGoalInfo(data);
         setPrevGoalOpen(true);
     };
@@ -156,6 +104,10 @@ const PreviousGoalsModal = (props: IModalProps, clientId?: string) => {
         setPrevGoalOpen(false);
     };
 
+    if (loadingError) {
+            // TODO: add loading error for loading risks
+            return <Alert severity="error">{t("alert.loadClientFailure")}</Alert>;
+        }
     return (
         <>
             <Dialog fullWidth maxWidth="lg" open={true} aria-labelledby="form-dialog-title">
@@ -186,15 +138,11 @@ const PreviousGoalsModal = (props: IModalProps, clientId?: string) => {
                                             <TableCell>
                                                 {getDialogTitleText(data.risk_type)}
                                             </TableCell>
-                                            <TableCell>{data.goal}</TableCell>
-                                            <TableCell>{data.timestamp}</TableCell>
-                                            <TableCell>{data.end_date}</TableCell>
+                                            <TableCell>{data.goal_name}</TableCell>
+                                            <TableCell>{timestampToFormDate(data.timestamp, true)}</TableCell>
+                                            <TableCell>{timestampToFormDate(data.end_date, true)}</TableCell>
                                             <TableCell>
-                                                {data.goal_status === "Achieved" ? (
-                                                    <CheckCircleOutlineIcon color="success" />
-                                                ) : (
-                                                    <CancelOutlinedIcon color="error" />
-                                                )}
+                                                <GoalStatusChip/>
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -205,7 +153,7 @@ const PreviousGoalsModal = (props: IModalProps, clientId?: string) => {
                     <TablePagination
                         rowsPerPageOptions={[]}
                         component="div"
-                        count={sampleData.length}
+                        count={goals.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
@@ -218,17 +166,19 @@ const PreviousGoalsModal = (props: IModalProps, clientId?: string) => {
                         color="primary"
                         type="reset"
                         onClick={() => {
-                            props.close();
+                            close();
                         }}
                     >
                         {t("general.goBack")}
                     </Button>
                 </DialogActions>
-                <PreviousGoalCard
-                    open={isPrevGoalOpen}
-                    risk={prevGoalInfo}
-                    close={openPrevGoalModal}
-                />
+                {prevGoalInfo && (
+                    <PreviousGoalCard
+                        open={isPrevGoalOpen}
+                        risk={prevGoalInfo}
+                        close={openPrevGoalModal}
+                    />
+                )}
             </Dialog>
         </>
     );

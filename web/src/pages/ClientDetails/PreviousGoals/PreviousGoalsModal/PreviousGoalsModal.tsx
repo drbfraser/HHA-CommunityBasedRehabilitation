@@ -30,7 +30,6 @@ interface IModalProps {
 
 // TODO: Need to take in the current user ID
 const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
-
     const [goals, setGoals] = useState<IRisk[]>([]);
 
     const [isPrevGoalOpen, setPrevGoalOpen] = useState(false);
@@ -50,9 +49,9 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
                 setGoals(data);
             })
             .catch((err) => {
-                setLoadingError(true)
+                setLoadingError(true);
                 console.error("Failed to load previous goals", err);
-            })
+            });
     }, [clientId]);
 
     useEffect(() => {
@@ -105,9 +104,9 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
     };
 
     if (loadingError) {
-            // TODO: add loading error for loading risks
-            return <Alert severity="error">{t("alert.loadClientFailure")}</Alert>;
-        }
+        // TODO: add loading error for loading risks
+        return <Alert severity="error">{t("alert.loadClientFailure")}</Alert>;
+    }
     return (
         <>
             <Dialog fullWidth maxWidth="lg" open={true} aria-labelledby="form-dialog-title">
@@ -139,10 +138,14 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
                                                 {getDialogTitleText(data.risk_type)}
                                             </TableCell>
                                             <TableCell>{data.goal_name}</TableCell>
-                                            <TableCell>{timestampToFormDate(data.timestamp, true)}</TableCell>
-                                            <TableCell>{timestampToFormDate(data.end_date, true)}</TableCell>
                                             <TableCell>
-                                                <GoalStatusChip/>
+                                                {timestampToFormDate(data.timestamp, true)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {timestampToFormDate(data.end_date, true)}
+                                            </TableCell>
+                                            <TableCell>
+                                                <GoalStatusChip />
                                             </TableCell>
                                         </TableRow>
                                     );

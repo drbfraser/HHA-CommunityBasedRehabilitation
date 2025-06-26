@@ -50,7 +50,6 @@ const ClientRisksModal = (props: IModalProps) => {
         return props.risk;
     });
 
-
     const handleEditGoalsClick = () => {
         setOpenEditGoals((prevOpen: boolean) => !prevOpen);
     };
@@ -72,8 +71,7 @@ const ClientRisksModal = (props: IModalProps) => {
                     console.error("Unknown risk type.");
                     return "";
             }
-        }
-        else {
+        } else {
             switch (riskType) {
                 case RiskType.HEALTH:
                     return "Create Health Risk";
@@ -133,13 +131,19 @@ const ClientRisksModal = (props: IModalProps) => {
                                                 </Typography>
                                                 <Box
                                                     onClick={handleEditGoalsClick}
-                                                    sx={{ cursor: "pointer", display: "inline-flex" }}
+                                                    sx={{
+                                                        cursor: "pointer",
+                                                        display: "inline-flex",
+                                                    }}
                                                 >
                                                     <GoalStatusChip />
                                                 </Box>
                                                 <Box
                                                     onClick={handleEditGoalsClick}
-                                                    sx={{ cursor: "pointer", display: "inline-flex" }}
+                                                    sx={{
+                                                        cursor: "pointer",
+                                                        display: "inline-flex",
+                                                    }}
                                                 >
                                                     <EditNoteTwoToneIcon
                                                         color="action"

@@ -37,15 +37,14 @@ const ClientRisks = ({ clientInfo }: IProps) => {
 
         return (
             <>
-                {isModalOpen &&
-
+                {isModalOpen && (
                     <ClientRisksModal
                         risk={risk}
                         setRisk={setRisk}
                         close={() => setIsModalOpen(false)}
                         newGoal={risk.goal_status !== OutcomeGoalMet.ONGOING}
                     />
-                }
+                )}
 
                 <Card variant="outlined">
                     <CardContent>
@@ -56,20 +55,30 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                                 </Typography>
                             </Grid>
                             <Grid item md={6}>
-                                {risk.goal_status === OutcomeGoalMet.ONGOING ? (<Box sx={clientRiskStyles.riskCardButtonAndBadge}>
-                                    <RiskLevelChip risk={risk.risk_level} />
-                                </Box>) : ""}
+                                {risk.goal_status === OutcomeGoalMet.ONGOING ? (
+                                    <Box sx={clientRiskStyles.riskCardButtonAndBadge}>
+                                        <RiskLevelChip risk={risk.risk_level} />
+                                    </Box>
+                                ) : (
+                                    ""
+                                )}
                             </Grid>
                         </Grid>
                         <br />
 
                         {risk.goal_status === OutcomeGoalMet.ONGOING ? (
                             <>
-                                <Typography variant="subtitle2" component="h6">Current Goal</Typography>
-                                <Typography variant="body2" component="p">{risk.goal_name}</Typography>
+                                <Typography variant="subtitle2" component="h6">
+                                    Current Goal
+                                </Typography>
+                                <Typography variant="body2" component="p">
+                                    {risk.goal_name}
+                                </Typography>
                             </>
                         ) : (
-                            <Typography variant="body2" component="p">No current goal set</Typography>
+                            <Typography variant="body2" component="p">
+                                No current goal set
+                            </Typography>
                         )}
                     </CardContent>
 
@@ -83,15 +92,15 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                                 setIsModalOpen(true);
                             }}
                         >
-                            {risk.goal_status === OutcomeGoalMet.ONGOING ? t("general.update") : "Create New Goal"}
+                            {risk.goal_status === OutcomeGoalMet.ONGOING
+                                ? t("general.update")
+                                : "Create New Goal"}
                         </Button>
                     </CardActions>
                 </Card>
             </>
         );
     };
-
-
 
     return (
         <Box sx={clientRiskStyles.riskCardContainer}>

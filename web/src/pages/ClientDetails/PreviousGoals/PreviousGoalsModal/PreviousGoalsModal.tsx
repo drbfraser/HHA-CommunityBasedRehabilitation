@@ -44,9 +44,12 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
         apiFetch(Endpoint.RISKS, `?client_id=${clientId}`)
             .then((resp) => resp.json())
             .then((data: IRisk[]) => {
-                console.log("Fetched previous goals:", data);
+                const filteredGoals = data.filter(
+                (goal) => goal.goal_status === "CAN" || goal.goal_status === "CON"
+                );
+                console.log("Fetched previous goals:", filteredGoals);
                 console.log("clientId", clientId);
-                setGoals(data);
+                setGoals(filteredGoals);
             })
             .catch((err) => {
                 setLoadingError(true);
@@ -145,7 +148,7 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
                                                 {timestampToFormDate(data.end_date, true)}
                                             </TableCell>
                                             <TableCell>
-                                                <GoalStatusChip />
+                                                <GoalStatusChip goalStatus={data.goal_status} />
                                             </TableCell>
                                         </TableRow>
                                     );

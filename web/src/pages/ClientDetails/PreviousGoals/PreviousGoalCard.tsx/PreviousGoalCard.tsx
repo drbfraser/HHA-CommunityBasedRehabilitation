@@ -61,7 +61,7 @@ const PreviousGoalCard = (props: IModalProps) => {
                 <Stack direction="column" spacing={1} sx={{ mb: 3 }}>
                     {/* TODO: Replace with Translation */}
                     <Typography variant="subtitle1">
-                        <b>Goal Status: </b> <GoalStatusChip />
+                        <b>Goal Status: </b> <GoalStatusChip goalStatus={props.risk.goal_status}/>
                     </Typography>
                     <Typography variant="subtitle1">
                         <b>Type:</b> {getDialogTitleText(props.risk.risk_type)}

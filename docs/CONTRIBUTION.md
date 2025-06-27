@@ -85,6 +85,8 @@ If you make changes to any of the database models, you'll need to create a migra
 
 Once you are finished, take some time to clean up your code and make sure to test your changes thoroughly. This will help keep our code base clean and avoid any unexpected bugs.
 
+If your issue involves server updates i.e model, view, or serializer updates/changes, please take a look at the [Django Integration Testing docs](DJANGOTESTING.md). You will learn how to keep our backend test coverage as high as possible.
+
 ### 4. Format Code
 
 Prior to submitting a merge request make sure to format your code - it won't pass the CI/CD pipeline without it. Note that both of these commands end in a `.` - that's important!

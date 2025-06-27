@@ -17,6 +17,7 @@ import { clientRiskStyles } from "./ClientRisks.styles";
 import { getTranslatedRiskName, riskTypes } from "util/risks";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import ClientRisksModal from "./ClientRisksModal";
+import { OutcomeGoalMet } from "@cbr/common/util/visits";
 
 interface IProps {
     clientInfo?: IClient;
@@ -40,6 +41,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                         risk={risk}
                         setRisk={setRisk}
                         close={() => setIsModalOpen(false)}
+                        newGoal={risk.goal_status !== OutcomeGoalMet.ONGOING}
                     />
                 )}
 
@@ -52,21 +54,31 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                                 </Typography>
                             </Grid>
                             <Grid item md={6}>
-                                <Box sx={clientRiskStyles.riskCardButtonAndBadge}>
-                                    <RiskLevelChip risk={risk.risk_level} />
-                                </Box>
+                                {risk.goal_status === OutcomeGoalMet.ONGOING ? (
+                                    <Box sx={clientRiskStyles.riskCardButtonAndBadge}>
+                                        <RiskLevelChip risk={risk.risk_level} />
+                                    </Box>
+                                ) : (
+                                    ""
+                                )}
                             </Grid>
                         </Grid>
                         <br />
 
-                        <Typography variant="subtitle2" component="h6">
-                            {/* TODO: Replace with Translation and need to add conditional rendering 
-                            depending on whether there is a goal or not */}
-                            Current Goal
-                        </Typography>
-                        <Typography variant="body2" component="p">
-                            {risk.goal}
-                        </Typography>
+                        {risk.goal_status === OutcomeGoalMet.ONGOING ? (
+                            <>
+                                <Typography variant="subtitle2" component="h6">
+                                    Current Goal
+                                </Typography>
+                                <Typography variant="body2" component="p">
+                                    {risk.goal_name}
+                                </Typography>
+                            </>
+                        ) : (
+                            <Typography variant="body2" component="p">
+                                No current goal set
+                            </Typography>
+                        )}
                     </CardContent>
 
                     <CardActions sx={clientRiskStyles.riskCardButtonAndBadge}>
@@ -79,7 +91,9 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                                 setIsModalOpen(true);
                             }}
                         >
-                            {t("general.update")}
+                            {risk.goal_status === OutcomeGoalMet.ONGOING
+                                ? t("general.update")
+                                : "Create New Goal"}
                         </Button>
                     </CardActions>
                 </Card>
@@ -91,7 +105,11 @@ const ClientRisks = ({ clientInfo }: IProps) => {
         <Box sx={clientRiskStyles.riskCardContainer}>
             <Grid container spacing={5} direction="row" justifyContent="flex-start">
                 {Object.keys(riskTypes).map((type) => {
-                    const risk = clientInfo?.risks.find((r) => r.risk_type === type);
+                    const matchingRisks = clientInfo?.risks
+                        .filter((r) => r.risk_type === type)
+                        .sort((a, b) => b.timestamp - a.timestamp);
+
+                    const risk = matchingRisks?.[0];
                     return (
                         <Grid item md={4} xs={12} key={type}>
                             {risk ? (

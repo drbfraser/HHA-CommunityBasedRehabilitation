@@ -1,5 +1,3 @@
-import { handleSubmit } from "@cbr/common/forms/Risks/riskFormFieldHandler";
-import { fieldLabels, FormField, validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
 import { RiskGoalOptions, RiskRequirementOptions } from "@cbr/common/types/translationKeys";
 import { IRisk, RiskType } from "@cbr/common/util/risks";
 import {
@@ -15,8 +13,7 @@ import {
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import { Field, Form, Formik, FieldProps } from "formik";
-import { TextField } from "formik-mui";
+import { Field, Form, Formik, FieldProps, FormikProps } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -34,7 +31,6 @@ export default function UpdateGoalStatus(props: IModalProps) {
         { value: "GO", label: t("newVisit.PLACEHOLDER-healthGoals.1") },
         { value: "CON", label: t("newVisit.PLACEHOLDER-healthGoals.0") },
         { value: "CAN", label: t("newVisit.PLACEHOLDER-healthGoals.2") },
-        { value: "NS", label: t("newVisit.PLACEHOLDER-healthGoals.3") },
     ];
 
     /* TODO: Add back in if we need to use canonical/localized fields
@@ -65,14 +61,13 @@ export default function UpdateGoalStatus(props: IModalProps) {
     return (
         <Formik
             onSubmit={(values) => {
-                handleSubmit(values, props.risk, props.setRisk);
+                props.setRisk(values);
                 props.close();
             }}
             enableReinitialize
             initialValues={props.risk}
-            validationSchema={validationSchema}
         >
-            {({ isSubmitting }) => (
+            {({ isSubmitting }: FormikProps<IRisk>) => (
                 <Dialog fullWidth open={true} aria-labelledby="form-dialog-title">
                     <Form>
                         <DialogTitle id="form-dialog-title">
@@ -104,21 +99,17 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                         </Field>
                                     </FormControl>
                                 </Grid>
-                                <Grid item>
-                                    <Field
-                                        component={TextField}
-                                        fullWidth
-                                        required
-                                        variant="outlined"
-                                        margin="dense"
-                                        // TODO: Add translation for "goal name"
-                                        label="Goal Name"
-                                        name={FormField.goal}
-                                    />
-                                </Grid>
                             </Grid>
                         </DialogContent>
                         <DialogActions>
+                            <Button
+                                color="success"
+                                variant="outlined"
+                                type="submit"
+                                disabled={isSubmitting}
+                            >
+                                {t("general.save")}
+                            </Button>
                             <Button
                                 variant="outlined"
                                 color="primary"
@@ -129,14 +120,6 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                 }}
                             >
                                 {t("general.goBack")}
-                            </Button>
-                            <Button
-                                color="success"
-                                variant="outlined"
-                                type="submit"
-                                disabled={isSubmitting}
-                            >
-                                {t("general.save")}
                             </Button>
                         </DialogActions>
                     </Form>

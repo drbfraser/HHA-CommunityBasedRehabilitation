@@ -140,7 +140,7 @@ const PreviousGoalsModal = (props: IModalProps, clientId?: string) => {
     };
 
     // TODO: To be used when we make the initial GET for the data, prevents it from having to be loaded again
-    const memoizedSampleData = useMemo(() => [...sampleData], []);
+    const memoizedSampleData = useMemo(() => [...sampleData], [sampleData]);
 
     const visibleRows = useMemo(
         () => [...memoizedSampleData].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),

@@ -11,7 +11,6 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { FormControl } from "@mui/material";

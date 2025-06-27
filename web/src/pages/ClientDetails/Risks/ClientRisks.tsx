@@ -41,6 +41,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                         risk={risk}
                         setRisk={setRisk}
                         close={() => setIsModalOpen(false)}
+                        newGoal={risk.goal_status !== OutcomeGoalMet.ONGOING}
                     />
                 )}
 
@@ -53,9 +54,13 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                                 </Typography>
                             </Grid>
                             <Grid item md={6}>
-                                <Box sx={clientRiskStyles.riskCardButtonAndBadge}>
-                                    <RiskLevelChip risk={risk.risk_level} />
-                                </Box>
+                                {risk.goal_status === OutcomeGoalMet.ONGOING ? (
+                                    <Box sx={clientRiskStyles.riskCardButtonAndBadge}>
+                                        <RiskLevelChip risk={risk.risk_level} />
+                                    </Box>
+                                ) : (
+                                    ""
+                                )}
                             </Grid>
                         </Grid>
                         <br />
@@ -66,7 +71,7 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                                     Current Goal
                                 </Typography>
                                 <Typography variant="body2" component="p">
-                                    {risk.goal}
+                                    {risk.goal_name}
                                 </Typography>
                             </>
                         ) : (

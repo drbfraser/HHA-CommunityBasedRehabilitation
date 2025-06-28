@@ -53,7 +53,9 @@ const ClientDetails = () => {
     }
     return (
         <>
-            {isPrevGoalsOpen && <PreviousGoalsModal close={handlePrevGoalsClick} />}
+            {isPrevGoalsOpen && (
+                <PreviousGoalsModal clientId={clientId} close={handlePrevGoalsClick} />
+            )}
             <Grid container spacing={2} direction="row" justifyContent="flex-start">
                 <Grid item xs={12}>
                     {clientInfo ? (

@@ -1,5 +1,5 @@
 import { fieldLabels, FormField } from "@cbr/common/forms/Risks/riskFormFields";
-import { RiskLevel, RiskType } from "@cbr/common/util/risks";
+import { RiskType } from "@cbr/common/util/risks";
 import {
     Button,
     Dialog,
@@ -15,23 +15,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { FormControl } from "@mui/material";
 import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
+import { IRisk } from "@cbr/common/util/risks";
 import { OutcomeGoalMet } from "@cbr/common/util/visits";
-
-// TODO: Replace with IRisk once changes are made
-interface ITempRisk {
-    id: number;
-    risk_level: RiskLevel;
-    risk_type: RiskType;
-    goal: string;
-    timestamp: string;
-    end_date: string;
-    // maybe use an ENUM here instead?
-    goal_status: string;
-}
+import { timestampToFormDate } from "@cbr/common/util/dates";
 
 interface IModalProps {
-    // TODO: Switch from ITempRisk
-    risk: ITempRisk;
+    risk: IRisk;
     close: () => void;
     open: boolean;
 }
@@ -67,34 +56,36 @@ const PreviousGoalCard = (props: IModalProps) => {
             <DialogTitle id="form-dialog-title">
                 {/* TODO: Change with Translation */}
                 Viewing Previous Goal
-                <Stack direction="column" spacing={1}>
+            </DialogTitle>
+            <DialogContent>
+                <Stack direction="column" spacing={1} sx={{ mb: 3 }}>
                     {/* TODO: Replace with Translation */}
                     <Typography variant="subtitle1">
-                        <b>Goal Status:</b> {props.risk.goal_status}
-                        {/* TODO: Update with status logic */}
-                        <GoalStatusChip goalStatus={OutcomeGoalMet.ONGOING} />
+                        <b>Goal Status: </b> <GoalStatusChip goalStatus={props.risk.goal_status} />
                     </Typography>
                     <Typography variant="subtitle1">
                         <b>Type:</b> {getDialogTitleText(props.risk.risk_type)}
                     </Typography>
                     <Typography variant="subtitle1">
-                        <b>Start Date:</b> {props.risk.timestamp}
+                        <b>Start Date:</b> {timestampToFormDate(props.risk.timestamp, true)}
                     </Typography>
                     <Typography variant="subtitle1">
-                        <b>End Date:</b> {props.risk.end_date}
+                        <b>End Date:</b> {timestampToFormDate(props.risk.end_date, true)}
                     </Typography>
                 </Stack>
-            </DialogTitle>
-            <DialogContent>
                 <Grid container direction="column" spacing={2}>
                     <Grid item>
                         <FormControl fullWidth variant="outlined">
                             <TextField
-                                id="outlined-read-only-input"
+                                id="risk-level-readonly"
                                 label={fieldLabels[FormField.risk_level]}
-                                defaultValue="need to update"
+                                defaultValue={props.risk.risk_level}
                                 InputProps={{
                                     readOnly: true,
+                                }}
+                                sx={{
+                                    pointerEvents: "none",
+                                    cursor: "default",
                                 }}
                             />
                         </FormControl>
@@ -102,11 +93,15 @@ const PreviousGoalCard = (props: IModalProps) => {
                     <Grid item>
                         <FormControl fullWidth variant="outlined">
                             <TextField
-                                id="outlined-read-only-input"
+                                id="requirement-readonly"
                                 label={fieldLabels[FormField.requirement]}
-                                defaultValue="need to be updated"
+                                defaultValue={props.risk.requirement}
                                 InputProps={{
                                     readOnly: true,
+                                }}
+                                sx={{
+                                    pointerEvents: "none",
+                                    cursor: "default",
                                 }}
                             />
                         </FormControl>
@@ -114,36 +109,49 @@ const PreviousGoalCard = (props: IModalProps) => {
                     <Grid item>
                         <FormControl fullWidth variant="outlined">
                             <TextField
-                                id="outlined-read-only-input"
+                                id="goal-name-readonly"
+                                label={fieldLabels[FormField.goal_name]}
+                                defaultValue={props.risk.goal_name}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                sx={{
+                                    pointerEvents: "none",
+                                    cursor: "default",
+                                }}
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item>
+                        <FormControl fullWidth variant="outlined">
+                            <TextField
+                                id="comment-readonly"
                                 label="Comments"
-                                defaultValue="need to be updated "
+                                defaultValue={props.risk.risk_level}
+                                variant="outlined"
                                 InputProps={{
                                     readOnly: true,
+                                }}
+                                sx={{
+                                    pointerEvents: "none",
+                                    cursor: "default",
                                 }}
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item>
-                        <FormControl fullWidth variant="outlined">
-                            <TextField
-                                id="outlined-read-only-input"
-                                label={fieldLabels[FormField.goal]}
-                                defaultValue={props.risk.goal}
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                            />
-                        </FormControl>
-                    </Grid>
-                    {props.risk.goal_status === "Cancelled" && (
+                    {props.risk.goal_status === OutcomeGoalMet.CANCELLED && (
                         <Grid item>
                             <FormControl fullWidth variant="outlined">
                                 <TextField
-                                    id="outlined-read-only-input"
+                                    id="cancellation-reason-readonly"
                                     label="Cancellation Reason"
-                                    defaultValue="need to be updated"
+                                    defaultValue="Need to be updated" // TODO: Update after `comments` field is added
                                     InputProps={{
                                         readOnly: true,
+                                    }}
+                                    sx={{
+                                    pointerEvents: "none",
+                                    cursor: "default",
                                     }}
                                 />
                             </FormControl>

@@ -115,6 +115,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                     );
                 }}
                 validationSchema={validationSchema}
+                enableReinitialize={true}
             >
                 {(formikProps) => (
                     <Portal>

@@ -5,12 +5,9 @@ import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
 import { FieldArray, Formik, FormikHelpers, FormikProps, getIn } from "formik";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import {
-    apiFetch,
     APIFetchFailError,
     countObjectKeys,
-    Endpoint,
     GoalStatus,
-    IClient,
     ImprovementFormField,
     initialValidationSchema,
     IRisk,
@@ -18,7 +15,6 @@ import {
     provisionals,
     themeColors,
     TZoneMap,
-    useCurrentUser,
     useZones,
     visitFieldLabels,
     VisitFormField,
@@ -91,7 +87,7 @@ const ImprovementField = (props: {
     // get Formik error values
     const path = `${VisitFormField.improvements}.${props.visitType}[${props.index}].${ImprovementFormField.description}`;
     const errorMessage = getIn(props.formikProps.errors, path);
-    // todo: improve UX by not initially displaying errors?
+    const touched = getIn(props.formikProps.touched, path);
 
     return (
         <View>
@@ -109,13 +105,13 @@ const ImprovementField = (props: {
                     <TextInput
                         mode="outlined"
                         key={`${props.provided}${ImprovementFormField.description}`}
-                        label={visitFieldLabels[ImprovementFormField.description]}
+                        label={visitFieldLabels[ImprovementFormField.description] + "*"}
                         value={
                             props.formikProps.values[VisitFormField.improvements][props.visitType][
                                 props.index
                             ][ImprovementFormField.description]
                         }
-                        error={!!errorMessage}
+                        error={!!errorMessage && !!touched}
                         onChangeText={(value) => {
                             props.formikProps.setFieldTouched(
                                 `${fieldName}.${ImprovementFormField.description}`,
@@ -127,8 +123,18 @@ const ImprovementField = (props: {
                                 value
                             );
                         }}
+                        onBlur={() => {
+                            props.formikProps.setFieldTouched(
+                                `${fieldName}.${ImprovementFormField.description}`,
+                                true
+                            );
+                        }}
                     />
-                    <HelperText style={styles.errorText} type="error" visible={!!errorMessage}>
+                    <HelperText
+                        style={styles.errorText}
+                        type="error"
+                        visible={!!errorMessage && !!touched}
+                    >
                         {errorMessage}
                     </HelperText>
                 </>
@@ -149,6 +155,7 @@ const OutcomeField = (props: {
     // get Formik error values
     const path = `${fieldName}.${OutcomeFormField.outcome}`;
     const errorMessage = getIn(props.formikProps.errors, path);
+    const touched = getIn(props.formikProps.touched, path);
 
     return (
         <View>
@@ -183,13 +190,13 @@ const OutcomeField = (props: {
                 <Text style={styles.pickerQuestion}>{t("newVisit.outcomeOfGoal")}</Text>
                 <TextInput
                     mode="outlined"
-                    label={visitFieldLabels[OutcomeFormField.outcome]}
+                    label={visitFieldLabels[OutcomeFormField.outcome] + "*"}
                     value={
                         props.formikProps.values[VisitFormField.outcomes][props.visitType][
                             OutcomeFormField.outcome
                         ]
                     }
-                    error={!!errorMessage}
+                    error={!!errorMessage && !!touched}
                     onChangeText={(value) => {
                         props.formikProps.setFieldTouched(
                             `${fieldName}.${OutcomeFormField.outcome}`,
@@ -201,7 +208,11 @@ const OutcomeField = (props: {
                         );
                     }}
                 />
-                <HelperText style={styles.errorText} type="error" visible={!!errorMessage}>
+                <HelperText
+                    style={styles.errorText}
+                    type="error"
+                    visible={!!errorMessage && !!touched}
+                >
                     {errorMessage}
                 </HelperText>
             </View>
@@ -247,7 +258,7 @@ const VisitFocusForm = (
             <View style={styles.verticalSpacer}></View>
             <TextInput
                 mode="outlined"
-                label={visitFieldLabels[VisitFormField.village]}
+                label={visitFieldLabels[VisitFormField.village] + "*"}
                 value={formikProps.values[VisitFormField.village]}
                 onChangeText={(value) => formikProps.setFieldValue(VisitFormField.village, value)}
                 error={!!formikProps.errors[VisitFormField.village]}
@@ -265,14 +276,15 @@ const VisitFocusForm = (
 
             <FormikExposedDropdownMenu
                 field={VisitFormField.zone}
+                placeholder={visitFieldLabels[VisitFormField.zone] + "*"}
                 valuesType="map"
                 values={zones}
                 formikProps={formikProps}
                 fieldLabels={visitFieldLabels}
                 mode="outlined"
             />
-
-            <Text style={styles.pickerQuestion}>{t("newVisit.selectReasons")} </Text>
+            <View style={styles.verticalSpacer}></View>
+            <Text style={styles.pickerQuestion}>{t("newVisit.selectReasons") + "*"} </Text>
             {visitTypes.map((visitType) => (
                 <TextCheckBox
                     key={visitType}
@@ -322,10 +334,10 @@ const NewVisit = (props: INewVisitProps) => {
     const authContext = useContext(AuthContext);
     const user =
         authContext.authState.state === "loggedIn" ? authContext.authState.currentUser : null;
-    const [loadingError, setLoadingError] = useState(false);
+    const [, setLoadingError] = useState(false);
     const styles = useStyles();
     const zones = useZones();
-    const [submissionError, setSubmissionError] = useState(false);
+    const [, setSubmissionError] = useState(false);
     const [activeStep, setActiveStep] = useState<number>(0);
     const [enabledSteps, setEnabledSteps] = useState<VisitFormField[]>([]);
     const [checkedSteps, setCheckedSteps] = useState<VisitFormField[]>([]);
@@ -464,6 +476,9 @@ const NewVisit = (props: INewVisitProps) => {
                             {/* todosd: steps not fully connected when 5 or fewer selected */}
                             <ProgressSteps key={visitSteps.length} {...progressStepsStyle}>
                                 {visitSteps.map((surveyStep, index) => {
+                                    const isCurrentStepActive = activeStep === index;
+                                    const hasErrors = countObjectKeys(formikProps.errors) !== 0;
+
                                     return (
                                         <ProgressStep
                                             key={index}
@@ -473,22 +488,16 @@ const NewVisit = (props: INewVisitProps) => {
                                             }}
                                             buttonNextDisabled={
                                                 formikProps.isSubmitting ||
-                                                enabledSteps.length === 0 ||
-                                                (enabledSteps[activeStep - 1] !== undefined &&
-                                                    (!checkedSteps.includes(
-                                                        enabledSteps[activeStep - 1]
-                                                    )
-                                                        ? countObjectKeys(formikProps.errors) !==
-                                                              0 ||
-                                                          Object.keys(formikProps.touched)
-                                                              .length === 0
-                                                        : countObjectKeys(formikProps.errors) !==
-                                                          0))
+                                                (isCurrentStepActive &&
+                                                    (hasErrors ||
+                                                        (activeStep === 0 &&
+                                                            enabledSteps.length === 0)))
                                             }
                                             buttonPreviousDisabled={formikProps.isSubmitting}
                                             buttonFinishDisabled={
                                                 formikProps.isSubmitting ||
-                                                countObjectKeys(formikProps.errors) !== 0
+                                                hasErrors ||
+                                                (activeStep === 0 && enabledSteps.length === 0)
                                             }
                                             onPrevious={() => prevStep(formikProps)}
                                             onSubmit={() =>
@@ -496,7 +505,11 @@ const NewVisit = (props: INewVisitProps) => {
                                             }
                                             buttonPreviousText={t("general.previous")}
                                             buttonNextText={t("general.next")}
-                                            buttonFinishText={t("general.submit")}
+                                            buttonFinishText={
+                                                activeStep === 0
+                                                    ? t("general.next")
+                                                    : t("general.submit")
+                                            }
                                             buttonFillColor={themeColors.blueBgDark}
                                             buttonBorderColor={themeColors.blueBgDark}
                                             buttonPreviousTextColor={themeColors.blueBgDark}

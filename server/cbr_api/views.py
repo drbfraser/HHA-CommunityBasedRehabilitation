@@ -269,7 +269,7 @@ class RiskList(generics.ListCreateAPIView):
         if client_id:
             queryset = queryset.filter(client_id=client_id)
         return queryset
-    
+
 
 class RiskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.ClientRisk.objects.all()

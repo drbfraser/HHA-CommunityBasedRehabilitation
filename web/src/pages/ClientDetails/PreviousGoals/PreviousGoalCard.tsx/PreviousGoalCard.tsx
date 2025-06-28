@@ -83,29 +83,25 @@ const PreviousGoalCard = (props: IModalProps) => {
                                 InputProps={{
                                     readOnly: true,
                                 }}
+                                sx={{
+                                    pointerEvents: "none",
+                                    cursor: "default",
+                                }}
                             />
                         </FormControl>
                     </Grid>
                     <Grid item>
                         <FormControl fullWidth variant="outlined">
                             <TextField
-                                id="outlined-read-only-input"
+                                id="requirement-readonly"
                                 label={fieldLabels[FormField.requirement]}
                                 defaultValue={props.risk.requirement}
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item>
-                        <FormControl fullWidth variant="outlined">
-                            <TextField
-                                id="outlined-read-only-input"
-                                label={fieldLabels[FormField.goal]}
-                                defaultValue={props.risk.goal}
-                                InputProps={{
-                                    readOnly: true,
+                                sx={{
+                                    pointerEvents: "none",
+                                    cursor: "default",
                                 }}
                             />
                         </FormControl>
@@ -113,11 +109,32 @@ const PreviousGoalCard = (props: IModalProps) => {
                     <Grid item>
                         <FormControl fullWidth variant="outlined">
                             <TextField
-                                id="outlined-read-only-input"
-                                label="Comments"
-                                defaultValue={props.risk.risk_level}
+                                id="goal-name-readonly"
+                                label={fieldLabels[FormField.goal_name]}
+                                defaultValue={props.risk.goal_name}
                                 InputProps={{
                                     readOnly: true,
+                                }}
+                                sx={{
+                                    pointerEvents: "none",
+                                    cursor: "default",
+                                }}
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item>
+                        <FormControl fullWidth variant="outlined">
+                            <TextField
+                                id="comment-readonly"
+                                label="Comments"
+                                defaultValue={props.risk.risk_level}
+                                variant="outlined"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                sx={{
+                                    pointerEvents: "none",
+                                    cursor: "default",
                                 }}
                             />
                         </FormControl>
@@ -126,11 +143,15 @@ const PreviousGoalCard = (props: IModalProps) => {
                         <Grid item>
                             <FormControl fullWidth variant="outlined">
                                 <TextField
-                                    id="outlined-read-only-input"
+                                    id="cancellation-reason-readonly"
                                     label="Cancellation Reason"
-                                    defaultValue="need to be updated"
+                                    defaultValue="Need to be updated" // TODO: Update after `comments` field is added
                                     InputProps={{
                                         readOnly: true,
+                                    }}
+                                    sx={{
+                                    pointerEvents: "none",
+                                    cursor: "default",
                                     }}
                                 />
                             </FormControl>

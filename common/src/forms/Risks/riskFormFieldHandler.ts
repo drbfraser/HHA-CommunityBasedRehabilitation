@@ -18,7 +18,13 @@ const updateRisk = async (updatedRisk: string) => {
 };
 
 const wasChangeMade = (values: IRisk, initialValues: IRisk) => {
-    const keysToCheck = ["risk_level", "requirement", "goal", "goal_status", "goal_name"] as (keyof IRisk)[];
+    const keysToCheck = [
+        "risk_level",
+        "requirement",
+        "goal",
+        "goal_status",
+        "goal_name",
+    ] as (keyof IRisk)[];
 
     for (let key of keysToCheck) {
         if (String(values[key]).trim() !== String(initialValues[key]).trim()) {

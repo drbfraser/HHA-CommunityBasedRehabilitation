@@ -150,8 +150,8 @@ const PreviousGoalCard = (props: IModalProps) => {
                                         readOnly: true,
                                     }}
                                     sx={{
-                                    pointerEvents: "none",
-                                    cursor: "default",
+                                        pointerEvents: "none",
+                                        cursor: "default",
                                     }}
                                 />
                             </FormControl>

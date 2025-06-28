@@ -45,10 +45,8 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
             .then((resp) => resp.json())
             .then((data: IRisk[]) => {
                 const filteredGoals = data.filter(
-                (goal) => goal.goal_status === "CAN" || goal.goal_status === "CON"
+                    (goal) => goal.goal_status === "CAN" || goal.goal_status === "CON"
                 );
-                console.log("Fetched previous goals:", filteredGoals);
-                console.log("clientId", clientId);
                 setGoals(filteredGoals);
             })
             .catch((err) => {
@@ -89,12 +87,11 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
         setPage(0);
     };
 
-    // TODO: To be used when we make the initial GET for the data, prevents it from having to be loaded again
-    const memoizedSampleData = useMemo(() => [...goals], [goals]);
+    const memoizedData = useMemo(() => [...goals], [goals]);
 
     const visibleRows = useMemo(
-        () => [...memoizedSampleData].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-        [page, rowsPerPage, memoizedSampleData]
+        () => [...memoizedData].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+        [page, rowsPerPage, memoizedData]
     );
 
     const handleRowClick = (data: IRisk) => {
@@ -107,9 +104,10 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
     };
 
     if (loadingError) {
-        // TODO: add loading error for loading risks
+        // TODO: Add loading error for loadRiskFailure instead of loadClientFailure
         return <Alert severity="error">{t("alert.loadClientFailure")}</Alert>;
     }
+
     return (
         <>
             <Dialog fullWidth maxWidth="lg" open={true} aria-labelledby="form-dialog-title">

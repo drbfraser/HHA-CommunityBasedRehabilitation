@@ -145,7 +145,7 @@ const PreviousGoalCard = (props: IModalProps) => {
                                 <TextField
                                     id="cancellation-reason-readonly"
                                     label="Cancellation Reason"
-                                    defaultValue="Need to be updated" // TODO: Update after `comments` field is added
+                                    defaultValue={props.risk.cancellation_reason}
                                     InputProps={{
                                         readOnly: true,
                                     }}

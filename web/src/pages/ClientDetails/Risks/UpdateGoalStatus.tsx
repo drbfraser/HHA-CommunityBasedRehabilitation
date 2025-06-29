@@ -13,7 +13,8 @@ import {
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import { Field, Form, Formik, FieldProps, FormikProps } from "formik";
+import { Field, Form, Formik, FieldProps, FormikProps, useFormikContext } from "formik";
+import { TextField } from "formik-mui";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -28,9 +29,9 @@ export default function UpdateGoalStatus(props: IModalProps) {
     const { t } = useTranslation();
     // TODO: Update translations file to replace placeholders
     const goalStatusOptions = [
-        { value: "GO", label: t("newVisit.PLACEHOLDER-healthGoals.1") },
-        { value: "CON", label: t("newVisit.PLACEHOLDER-healthGoals.0") },
-        { value: "CAN", label: t("newVisit.PLACEHOLDER-healthGoals.2") },
+        { value: "GO", label: t("newVisit.ongoing") },
+        { value: "CON", label: t("newVisit.concluded") },
+        { value: "CAN", label: t("newVisit.cancelled") },
     ];
 
     /* TODO: Add back in if we need to use canonical/localized fields
@@ -67,64 +68,85 @@ export default function UpdateGoalStatus(props: IModalProps) {
             enableReinitialize
             initialValues={props.risk}
         >
-            {({ isSubmitting }: FormikProps<IRisk>) => (
-                <Dialog fullWidth open={true} aria-labelledby="form-dialog-title">
-                    <Form>
-                        <DialogTitle id="form-dialog-title">
-                            {getDialogTitleText(props.risk.risk_type)}
-                        </DialogTitle>
-                        <DialogContent>
-                            <Grid container direction="column" spacing={1}>
-                                <Grid item>
-                                    <Typography variant="subtitle1" fontWeight="bold">
-                                        {/* TODO: Add Translation */}
-                                        Update Goal Status
-                                    </Typography>
-                                </Grid>
-                                <Grid item>
-                                    <FormControl fullWidth variant="outlined">
-                                        <Field name="goal_status">
-                                            {({ field }: FieldProps) => (
-                                                <RadioGroup {...field}>
-                                                    {goalStatusOptions.map((label, index) => (
-                                                        <FormControlLabel
-                                                            key={index}
-                                                            value={label.value}
-                                                            control={<Radio />}
-                                                            label={label.label}
-                                                        />
-                                                    ))}
-                                                </RadioGroup>
+            {({ isSubmitting, values }: FormikProps<IRisk>) => {
+
+                return (
+                    <Dialog fullWidth open={true} aria-labelledby="form-dialog-title">
+                        <Form>
+                            <DialogTitle id="form-dialog-title">
+                                {getDialogTitleText(props.risk.risk_type)}
+                            </DialogTitle>
+                            <DialogContent>
+                                <Grid container direction="column" spacing={1}>
+                                    <Grid item>
+                                        <Typography variant="subtitle1" fontWeight="bold">
+                                            {/* TODO: Add Translation */}
+                                            Update Goal Status
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item>
+                                        <FormControl fullWidth variant="outlined">
+                                            <Field name="goal_status">
+                                                {({ field }: FieldProps) => (
+                                                    <>
+                                                        <RadioGroup {...field}>
+                                                            {goalStatusOptions.map((label, index) => (
+                                                                <FormControlLabel
+                                                                    key={index}
+                                                                    value={label.value}
+                                                                    control={<Radio />}
+                                                                    label={label.label}
+                                                                />
+                                                            ))}
+                                                        </RadioGroup>
+                                                    </>
+
+                                                )}
+                                            </Field>
+                                            {values.goal_status === "CAN" && (
+                                                <Grid item>
+                                                    <Field
+                                                        component={TextField}
+                                                        fullWidth
+                                                        multiline
+                                                        required
+                                                        rows={1}
+                                                        variant="outlined"
+                                                        margin="dense"
+                                                        label="Cancellation Reason"
+                                                        name="cancellation_reason"
+                                                    />
+                                                </Grid>
                                             )}
-                                        </Field>
-                                    </FormControl>
+                                        </FormControl>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button
-                                color="success"
-                                variant="outlined"
-                                type="submit"
-                                disabled={isSubmitting}
-                            >
-                                {t("general.save")}
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                type="reset"
-                                disabled={isSubmitting}
-                                onClick={() => {
-                                    props.close();
-                                }}
-                            >
-                                {t("general.goBack")}
-                            </Button>
-                        </DialogActions>
-                    </Form>
-                </Dialog>
-            )}
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    color="success"
+                                    variant="outlined"
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                >
+                                    {t("general.save")}
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    color="primary"
+                                    type="reset"
+                                    disabled={isSubmitting}
+                                    onClick={() => {
+                                        props.close();
+                                    }}
+                                >
+                                    {t("general.goBack")}
+                                </Button>
+                            </DialogActions>
+                        </Form>
+                    </Dialog>
+                )
+            }}
         </Formik>
     );
 }

@@ -259,6 +259,8 @@ class ClientRisk(models.Model):
         default=RiskChangeType.INITIAL,
     )
 
+    cancellation_reason = models.TextField(blank=True, default="")
+
     # improves query performance for lookups by client_id and risk_type
     class Meta:
         indexes = [

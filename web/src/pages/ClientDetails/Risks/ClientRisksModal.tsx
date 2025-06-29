@@ -41,6 +41,7 @@ const ClientRisksModal = (props: IModalProps) => {
                 goal_name: "",
                 requirement: "",
                 goal_status: OutcomeGoalMet.ONGOING,
+                cancellation_reason: "",
                 comments: RiskLevel.LOW,
                 risk_level: RiskLevel.LOW,
             };
@@ -101,6 +102,7 @@ const ClientRisksModal = (props: IModalProps) => {
 
             <Formik
                 onSubmit={(values) => {
+                    console.log(values);
                     handleSubmit(values, props.risk, props.setRisk);
                     props.close();
                 }}

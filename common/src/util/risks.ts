@@ -16,6 +16,7 @@ export interface IRisk {
     end_date: number;
     goal_name: string;
     goal_status: OutcomeGoalMet;
+    cancellation_reason: string;
 }
 
 export enum RiskType {

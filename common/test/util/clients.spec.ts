@@ -1,13 +1,19 @@
 import { clientPrioritySort, IClientSummary } from "../../src/util/clients";
 import { RiskLevel } from "../../src/util/risks";
+import { OutcomeGoalMet } from "../../src/util/visits";
 
 const unusedClientSummaryProps: Omit<
     IClientSummary,
     | "health_risk_level"
+    | "health_goal_status"
     | "educat_risk_level"
+    | "educat_goal_status"
     | "social_risk_level"
+    | "social_goal_status"
     | "nutrit_risk_level"
+    | "nutrit_goal_status"
     | "mental_risk_level"
+    | "mental_goal_status"
     | "last_visit_date"
 > = {
     id: 0,
@@ -21,10 +27,15 @@ const createClientWithAllRisksAsGivenLevel = (riskLevel: RiskLevel): IClientSumm
     return {
         ...unusedClientSummaryProps,
         health_risk_level: riskLevel,
+        health_goal_status: OutcomeGoalMet.ONGOING,
         educat_risk_level: riskLevel,
+        educat_goal_status: OutcomeGoalMet.ONGOING,
         social_risk_level: riskLevel,
+        social_goal_status: OutcomeGoalMet.ONGOING,
         nutrit_risk_level: RiskLevel.LOW,
+        nutrit_goal_status: OutcomeGoalMet.ONGOING,
         mental_risk_level: RiskLevel.LOW,
+        mental_goal_status: OutcomeGoalMet.ONGOING,
         last_visit_date: 0,
     };
 };
@@ -32,10 +43,15 @@ const createPossibleClientsWithASingleExtremeRisk = (riskLevel: RiskLevel): ICli
     const clientWithAllLowRisks: IClientSummary = {
         ...unusedClientSummaryProps,
         health_risk_level: RiskLevel.LOW,
+        health_goal_status: OutcomeGoalMet.NOTSET,
         educat_risk_level: RiskLevel.LOW,
+        educat_goal_status: OutcomeGoalMet.NOTSET,
         social_risk_level: RiskLevel.LOW,
+        social_goal_status: OutcomeGoalMet.NOTSET,
         nutrit_risk_level: RiskLevel.LOW,
+        nutrit_goal_status: OutcomeGoalMet.NOTSET,
         mental_risk_level: RiskLevel.LOW,
+        mental_goal_status: OutcomeGoalMet.NOTSET,
         last_visit_date: 0,
     };
     return [

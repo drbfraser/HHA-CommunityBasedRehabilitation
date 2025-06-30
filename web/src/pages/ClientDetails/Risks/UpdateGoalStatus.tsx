@@ -13,7 +13,7 @@ import {
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import { Field, Form, Formik, FieldProps, FormikProps, useFormikContext } from "formik";
+import { Field, Form, Formik, FieldProps, FormikProps, } from "formik";
 import { TextField } from "formik-mui";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -69,7 +69,6 @@ export default function UpdateGoalStatus(props: IModalProps) {
             initialValues={props.risk}
         >
             {({ isSubmitting, values }: FormikProps<IRisk>) => {
-
                 return (
                     <Dialog fullWidth open={true} aria-labelledby="form-dialog-title">
                         <Form>
@@ -90,17 +89,18 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                                 {({ field }: FieldProps) => (
                                                     <>
                                                         <RadioGroup {...field}>
-                                                            {goalStatusOptions.map((label, index) => (
-                                                                <FormControlLabel
-                                                                    key={index}
-                                                                    value={label.value}
-                                                                    control={<Radio />}
-                                                                    label={label.label}
-                                                                />
-                                                            ))}
+                                                            {goalStatusOptions.map(
+                                                                (label, index) => (
+                                                                    <FormControlLabel
+                                                                        key={index}
+                                                                        value={label.value}
+                                                                        control={<Radio />}
+                                                                        label={label.label}
+                                                                    />
+                                                                )
+                                                            )}
                                                         </RadioGroup>
                                                     </>
-
                                                 )}
                                             </Field>
                                             {values.goal_status === "CAN" && (
@@ -145,7 +145,7 @@ export default function UpdateGoalStatus(props: IModalProps) {
                             </DialogActions>
                         </Form>
                     </Dialog>
-                )
+                );
             }}
         </Formik>
     );

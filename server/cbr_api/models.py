@@ -188,14 +188,29 @@ class Client(models.Model):
 
     # summary data to make queries more reasonable
     health_risk_level = RiskLevel.getField()
+    health_goal_status = models.CharField(
+        max_length=3, choices=GoalOutcomes.choices, default=GoalOutcomes.NOT_SET
+    )
     health_timestamp = models.BigIntegerField(default=0)
     social_risk_level = RiskLevel.getField()
+    social_goal_status = models.CharField(
+        max_length=3, choices=GoalOutcomes.choices, default=GoalOutcomes.NOT_SET
+    )
     social_timestamp = models.BigIntegerField(default=0)
     educat_risk_level = RiskLevel.getField()
+    educat_goal_status = models.CharField(
+        max_length=3, choices=GoalOutcomes.choices, default=GoalOutcomes.NOT_SET
+    )
     educat_timestamp = models.BigIntegerField(default=0)
     nutrit_risk_level = RiskLevel.getField()
+    nutrit_goal_status = models.CharField(
+        max_length=3, choices=GoalOutcomes.choices, default=GoalOutcomes.NOT_SET
+    )
     nutrit_timestamp = models.BigIntegerField(default=0)
     mental_risk_level = RiskLevel.getField()
+    mental_goal_status = models.CharField(
+        max_length=3, choices=GoalOutcomes.choices, default=GoalOutcomes.NOT_SET
+    )
     mental_timestamp = models.BigIntegerField(default=0)
     last_visit_date = models.BigIntegerField(default=0)
 

@@ -1,7 +1,8 @@
 import React from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FormLabel, MenuItem, Typography } from "@mui/material";
-import { Field } from "formik";
+import { useField, Field, useFormikContext } from "formik";
 import { TextField } from "formik-mui";
 
 import {
@@ -12,17 +13,25 @@ import {
     getVisitGoalLabel,
     getVisitGoalStatusLabel,
 } from "@cbr/common/forms/newVisit/visitFormFields";
-import { IRisk } from "@cbr/common/util/risks";
+import { IRisk, RiskType } from "@cbr/common/util/risks";
 
 const OutcomeField = ({ visitType, risks }: { visitType: VisitFormField; risks: IRisk[] }) => {
     const { t } = useTranslation();
     const fieldName = `${VisitFormField.outcomes}.${visitType}`;
+    const { setFieldValue } = useFormikContext<any>();
+    const matchingRisk = risks.find((risk) => risk.risk_type === (visitType as unknown as RiskType));
+
+    useEffect(() => {
+    if (matchingRisk?.goal_status) {
+        setFieldValue(`${fieldName}.${OutcomeFormField.goalStatus}`, matchingRisk.goal_status);
+    }
+    }, [matchingRisk, fieldName, setFieldValue]);
 
     return (
         <div>
             <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
             <Typography variant={"body1"}>
-                {risks.find((r) => r.risk_type === (visitType as string))?.goal}
+                {matchingRisk?.goal_name}
             </Typography>
             <br />
 

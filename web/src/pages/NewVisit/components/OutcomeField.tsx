@@ -19,20 +19,20 @@ const OutcomeField = ({ visitType, risks }: { visitType: VisitFormField; risks: 
     const { t } = useTranslation();
     const fieldName = `${VisitFormField.outcomes}.${visitType}`;
     const { setFieldValue } = useFormikContext<any>();
-    const matchingRisk = risks.find((risk) => risk.risk_type === (visitType as unknown as RiskType));
+    const matchingRisk = risks.find(
+        (risk) => risk.risk_type === (visitType as unknown as RiskType)
+    );
 
     useEffect(() => {
-    if (matchingRisk?.goal_status) {
-        setFieldValue(`${fieldName}.${OutcomeFormField.goalStatus}`, matchingRisk.goal_status);
-    }
+        if (matchingRisk?.goal_status) {
+            setFieldValue(`${fieldName}.${OutcomeFormField.goalStatus}`, matchingRisk.goal_status);
+        }
     }, [matchingRisk, fieldName, setFieldValue]);
 
     return (
         <div>
             <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
-            <Typography variant={"body1"}>
-                {matchingRisk?.goal_name}
-            </Typography>
+            <Typography variant={"body1"}>{matchingRisk?.goal_name}</Typography>
             <br />
 
             <FormLabel focused={false}>{getVisitGoalStatusLabel(t, visitType)}</FormLabel>

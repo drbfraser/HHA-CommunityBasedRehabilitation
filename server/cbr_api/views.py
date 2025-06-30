@@ -263,6 +263,13 @@ class RiskList(generics.ListCreateAPIView):
     queryset = models.ClientRisk.objects.all()
     serializer_class = serializers.NormalRiskSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        client_id = self.request.query_params.get("client_id")
+        if client_id:
+            queryset = queryset.filter(client_id=client_id)
+        return queryset
+
 
 class RiskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.ClientRisk.objects.all()

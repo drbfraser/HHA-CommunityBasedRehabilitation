@@ -1,5 +1,4 @@
 from curses.ascii import isdigit
-import datetime
 import imghdr
 import os
 import time
@@ -19,10 +18,8 @@ from cbr_api.util import (
     create_generic_data,
     create_update_delete_alert_data,
 )
-from cbr import settings
 import logging
 
-logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger(__name__)
 
 
@@ -170,6 +167,11 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
             "risk_level",
             "requirement",
             "goal",
+            "goal_name",
+            "goal_status",
+            "start_date",
+            "end_date",
+            "change_type",
         ]
 
         read_only_fields = ["id", "client_id", "timestamp", "risk_type"]
@@ -186,36 +188,78 @@ class NormalRiskSerializer(serializers.ModelSerializer):
             "risk_level",
             "requirement",
             "goal",
+            "goal_name",
+            "goal_status",
+            "start_date",
+            "end_date",
+            "change_type",
         ]
 
         read_only_fields = ["id", "timestamp"]
 
+    def get_change_type(self, filter_params, goal_status, risk_level):
+        # find the previous risk record for the same client and risk type
+        previous_risk = (
+            models.ClientRisk.objects.filter(
+                client_id=filter_params["client"],
+                risk_type=filter_params["risk_type"],
+                timestamp__lt=filter_params["current_time"],
+            )
+            .order_by("-timestamp")
+            .first()
+        )
+        # decide change_type based on previous risk
+        if not previous_risk:
+            return models.RiskChangeType.INITIAL
+
+        changed_risk_level = previous_risk.risk_level != risk_level
+        changed_goal_status = goal_status and (previous_risk.goal_status != goal_status)
+
+        if changed_risk_level and changed_goal_status:
+            return models.RiskChangeType.BOTH
+        elif changed_risk_level:
+            return models.RiskChangeType.RISK_LEVEL
+        elif changed_goal_status:
+            return models.RiskChangeType.GOAL_STATUS
+        else:
+            return models.RiskChangeType.OTHER
+
     def create(self, validated_data):
         current_time = current_milli_time()
+        risk_type = validated_data["risk_type"]
+        risk_level = validated_data["risk_level"]
+        client = validated_data["client_id"]
+        goal_status = validated_data.get("goal_status")
+
+        filter_params = dict(
+            client=client, risk_type=risk_type, current_time=current_time
+        )
+        change_type = self.get_change_type(filter_params, goal_status, risk_level)
+
+        # create the risk object with the change_type
         validated_data["timestamp"] = current_time
         validated_data["server_created_at"] = current_time
         validated_data["id"] = uuid.uuid4()
+        validated_data["change_type"] = change_type
+
         risk = models.ClientRisk.objects.create(**validated_data)
         risk.save()
 
-        type = validated_data["risk_type"]
-        level = validated_data["risk_level"]
-        client = validated_data["client_id"]
-
-        if type == models.RiskType.HEALTH:
-            client.health_risk_level = level
+        # update the client risk level and timestamp based on risk type
+        if risk_type == models.RiskType.HEALTH:
+            client.health_risk_level = risk_level
             client.health_timestamp = current_time
-        elif type == models.RiskType.SOCIAL:
-            client.social_risk_level = level
+        elif risk_type == models.RiskType.SOCIAL:
+            client.social_risk_level = risk_level
             client.social_timestamp = current_time
-        elif type == models.RiskType.EDUCAT:
-            client.educat_risk_level = level
+        elif risk_type == models.RiskType.EDUCAT:
+            client.educat_risk_level = risk_level
             client.educat_timestamp = current_time
-        elif type == models.RiskType.NUTRIT:
-            client.nutrit_risk_level = level
+        elif risk_type == models.RiskType.NUTRIT:
+            client.nutrit_risk_level = risk_level
             client.nutrit_timestamp = current_time
-        elif type == models.RiskType.MENTAL:
-            client.mental_risk_level = level
+        elif risk_type == models.RiskType.MENTAL:
+            client.mental_risk_level = risk_level
             client.mental_timestamp = current_time
         client.updated_at = current_time
         client.save()
@@ -234,6 +278,10 @@ class ClientRiskSerializer(serializers.ModelSerializer):
             "risk_level",
             "requirement",
             "goal",
+            "goal_name",
+            "goal_status",
+            "start_date",
+            "end_date",
         ]
 
 

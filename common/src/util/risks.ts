@@ -1,5 +1,6 @@
 import { themeColors } from "./colors";
 import i18n from "i18next";
+import { OutcomeGoalMet } from "./visits";
 export interface IRisk {
     id: string;
     client_id: string;
@@ -7,7 +8,14 @@ export interface IRisk {
     risk_type: RiskType;
     risk_level: RiskLevel;
     requirement: string;
+
+    // replace with goal_name after
     goal: string;
+
+    start_date: number;
+    end_date: number;
+    goal_name: string;
+    goal_status: OutcomeGoalMet;
 }
 
 export enum RiskType {
@@ -33,9 +41,16 @@ export interface IRiskLevel {
 export interface IRiskType {
     name: string;
 }
+
+export interface IGoalStatus {
+    name: string;
+    color: string;
+}
+
 // On language change, recompute arrays of labels
 export let riskLevels: { [key: string]: IRiskLevel } = {};
 export let riskTypes: { [key: string]: IRiskType } = {};
+export let goalStatuses: { [key: string]: IGoalStatus } = {};
 const refreshArrays = () => {
     riskLevels = {
         [RiskLevel.LOW]: {
@@ -75,6 +90,25 @@ const refreshArrays = () => {
         },
         [RiskType.MENTAL]: {
             name: i18n.t("risks.mental"),
+        },
+    };
+
+    goalStatuses = {
+        [OutcomeGoalMet.CANCELLED]: {
+            name: i18n.t("newVisit.PLACEHOLDER-socialGoals.2"),
+            color: themeColors.goalRed,
+        },
+        [OutcomeGoalMet.ONGOING]: {
+            name: i18n.t("newVisit.PLACEHOLDER-socialGoals.1"),
+            color: themeColors.goalBlue,
+        },
+        [OutcomeGoalMet.CONCLUDED]: {
+            name: i18n.t("newVisit.PLACEHOLDER-socialGoals.0"),
+            color: themeColors.goalGreen,
+        },
+        [OutcomeGoalMet.NOTSET]: {
+            name: i18n.t("newVisit.PLACEHOLDER-socialGoals.3"),
+            color: themeColors.goalBlue,
         },
     };
 };

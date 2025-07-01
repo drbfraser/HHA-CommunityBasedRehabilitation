@@ -223,6 +223,20 @@ class NormalRiskSerializer(serializers.ModelSerializer):
             return models.RiskChangeType.GOAL_STATUS
         else:
             return models.RiskChangeType.OTHER
+    
+    def update_client_risk_goal_status(self, client, risk_type, goal_status):
+        if goal_status:
+            if risk_type == models.RiskType.HEALTH:
+                client.health_goal_status = goal_status
+            elif risk_type == models.RiskType.SOCIAL:
+                client.social_goal_status = goal_status
+            elif risk_type == models.RiskType.EDUCAT:
+                client.educat_goal_status = goal_status
+            elif risk_type == models.RiskType.NUTRIT:
+                client.nutrit_goal_status = goal_status
+            elif risk_type == models.RiskType.MENTAL:
+                client.mental_goal_status = goal_status
+        return
 
     def create(self, validated_data):
         current_time = current_milli_time()
@@ -245,7 +259,9 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         risk = models.ClientRisk.objects.create(**validated_data)
         risk.save()
 
-        # update the client risk level and timestamp based on risk type
+        # update the client goal status, risk level, and timestamp based on risk type
+        self.update_client_risk_goal_status(client, risk_type, goal_status)
+        
         if risk_type == models.RiskType.HEALTH:
             client.health_risk_level = risk_level
             client.health_timestamp = current_time

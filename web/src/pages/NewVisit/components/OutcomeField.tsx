@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FormLabel, MenuItem, Typography } from "@mui/material";
-import { useField, Field, useFormikContext } from "formik";
+import { Field, useFormikContext } from "formik";
 import { TextField } from "formik-mui";
 
 import {

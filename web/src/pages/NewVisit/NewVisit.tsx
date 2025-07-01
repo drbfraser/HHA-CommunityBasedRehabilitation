@@ -22,20 +22,29 @@ import {
     initialValidationSchema,
     visitTypeValidationSchema,
 } from "@cbr/common/forms/newVisit/visitFormFields";
-import { IRisk } from "@cbr/common/util/risks";
+import { IRisk, RiskType } from "@cbr/common/util/risks";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IClient } from "@cbr/common/util/clients";
 import { TZoneMap, useZones } from "@cbr/common/util/hooks/zones";
 import { handleSubmit } from "./formHandler";
 import GoBackButton from "components/GoBackButton/GoBackButton";
 import { ImprovementField, OutcomeField, VisitReasonStep } from "./components";
+import { OutcomeGoalMet } from "@cbr/common/util/visits";
 
 interface IStepProps {
     formikProps: FormikProps<any>;
+    setRisk: (risk: IRisk) => void;
+    setIsModalOpen: (val: boolean) => void;
 }
 
 const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) => {
-    return ({ formikProps }: IStepProps) => {
+
+    return ({ formikProps, setRisk, setIsModalOpen }: IStepProps) => {
+
+        const matchingRisk = risks.find(
+        (risk) => risk.risk_type === (visitType as unknown as RiskType)
+        );
+
         return (
             <FormControl>
                 <FormLabel focused={false}>{t("newVisit.selectImprovement")}</FormLabel>
@@ -54,7 +63,16 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                     }
                 />
                 <br />
-                <OutcomeField visitType={visitType} risks={risks} />
+                {matchingRisk && (
+                    <OutcomeField
+                        risk={matchingRisk}
+                        setRisk={setRisk}
+                        close={() => setIsModalOpen(false)}
+                        newGoal={matchingRisk.goal_status !== OutcomeGoalMet.ONGOING}
+                        visitType={visitType}
+                        risks={risks}
+                    />
+                    )}
             </FormControl>
         );
     };
@@ -119,6 +137,8 @@ const NewVisit = () => {
         setActiveStep(activeStep - 1);
     };
 
+    const [, setRisk] = useState<IRisk | undefined>(undefined);
+    const [, setIsModalOpen] = useState<boolean>(false);
     return loadingError ? (
         <Alert severity="error">{t("alert.loadClientFailure")}</Alert>
     ) : (
@@ -141,7 +161,11 @@ const NewVisit = () => {
                             <Step key={index}>
                                 <StepLabel>{visitStep.label}</StepLabel>
                                 <StepContent>
-                                    <visitStep.Form formikProps={formikProps} />
+                                    <visitStep.Form
+                                        formikProps={formikProps}
+                                        setRisk={setRisk}
+                                        setIsModalOpen={setIsModalOpen}
+                                    />
                                     <br />
                                     <br />
                                     {activeStep !== 0 && (

@@ -29,6 +29,21 @@ import { dataGridStyles } from "styles/DataGrid.styles";
 
 // manually define this type, as GridCellValue deprecated in MUI 5
 type GridCellValue = string | number | boolean | object | Date | null | undefined;
+type PriorityClient = Omit<
+    IClientSummary,
+    | "health_risk_level"
+    | "educat_risk_level"
+    | "social_risk_level"
+    | "nutrit_risk_level"
+    | "mental_risk_level"
+    | "user_id"
+> & {
+    HEALTH: RiskLevel;
+    EDUCAT: RiskLevel;
+    SOCIAL: RiskLevel;
+    NUTRIT: RiskLevel;
+    MENTAL: RiskLevel;
+};
 
 const Dashboard = () => {
     const history = useHistory();
@@ -55,16 +70,21 @@ const Dashboard = () => {
                 const priorityClients = tempClients
                     .sort(clientPrioritySort)
                     .slice(0, 5)
-                    .map((row: IClientSummary) => {
+                    .map((row: IClientSummary): PriorityClient => {
                         return {
                             id: row.id,
                             full_name: row.full_name,
                             zone: row.zone,
-                            [RiskType.HEALTH]: row.health_risk_level,
-                            [RiskType.EDUCATION]: row.educat_risk_level,
-                            [RiskType.SOCIAL]: row.social_risk_level,
-                            [RiskType.NUTRITION]: row.nutrit_risk_level,
-                            [RiskType.MENTAL]: row.mental_risk_level,
+                            [RiskType.HEALTH]: row.health_risk_level as RiskLevel,
+                            health_goal_status: row.health_goal_status,
+                            [RiskType.EDUCATION]: row.educat_risk_level as RiskLevel,
+                            educat_goal_status: row.educat_goal_status,
+                            [RiskType.SOCIAL]: row.social_risk_level as RiskLevel,
+                            social_goal_status: row.social_goal_status,
+                            [RiskType.NUTRITION]: row.nutrit_risk_level as RiskLevel,
+                            nutrit_goal_status: row.nutrit_goal_status,
+                            [RiskType.MENTAL]: row.mental_risk_level as RiskLevel,
+                            mental_goal_status: row.mental_goal_status,
                             last_visit_date: row.last_visit_date,
                             is_active: row.is_active,
                         };
@@ -157,7 +177,6 @@ const Dashboard = () => {
         fetchAlerts();
     }, [unreadAlertsCount]);
 
-    /* TODO I have changed it with an existance check, need to reverse it when backend is ready */
     const RenderBadge = (params: GridRenderCellParams) => {
         const risk: RiskLevel = Object(params.value);
         return (

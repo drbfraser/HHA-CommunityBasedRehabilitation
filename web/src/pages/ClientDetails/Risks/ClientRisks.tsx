@@ -21,9 +21,10 @@ import { OutcomeGoalMet } from "@cbr/common/util/visits";
 
 interface IProps {
     clientInfo?: IClient;
+    refreshClient?: () => void;
 }
 
-const ClientRisks = ({ clientInfo }: IProps) => {
+const ClientRisks = ({ clientInfo, refreshClient }: IProps) => {
     const { t } = useTranslation();
 
     interface ICardProps {
@@ -39,7 +40,10 @@ const ClientRisks = ({ clientInfo }: IProps) => {
                 {isModalOpen && (
                     <ClientRisksModal
                         risk={risk}
-                        setRisk={setRisk}
+                        setRisk={(newRisk) => {
+                            setRisk(newRisk);
+                            refreshClient?.();
+                        }}
                         close={() => setIsModalOpen(false)}
                         newGoal={risk.goal_status !== OutcomeGoalMet.ONGOING}
                     />

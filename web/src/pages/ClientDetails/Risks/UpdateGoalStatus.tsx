@@ -30,7 +30,7 @@ export default function UpdateGoalStatus(props: IModalProps) {
     // TODO: Update translations file to replace placeholders
     const goalStatusOptions = [
         { value: "GO", label: t("newVisit.ongoing") },
-        { value: "CON", label: t("newVisit.concluded") },
+        { value: "CON", label: t("newVisit.PLACEHOLDER-socialGoals.0") },
         { value: "CAN", label: t("newVisit.cancelled") },
     ];
 

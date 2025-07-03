@@ -34,6 +34,7 @@ import { ImprovementField, OutcomeField, VisitReasonStep } from "./components";
 import { OutcomeGoalMet } from "@cbr/common/util/visits";
 import ClientRisksModal from "../../pages/ClientDetails/Risks/ClientRisksModal";
 import PreviousGoalsModal from "../../pages/ClientDetails/PreviousGoals/PreviousGoalsModal/PreviousGoalsModal";
+import GoalField from "./components/GoalField";
 
 interface IStepProps {
     formikProps: FormikProps<any>;
@@ -109,7 +110,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                     </>
                 ) : matchingRisk ? (
                     <>
-                        <OutcomeField
+                        <GoalField
                             risk={matchingRisk}
                             setRisk={setRisk}
                             close={() => setIsModalOpen(false)}
@@ -128,6 +129,10 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                         </Button>
                     </>
                 ) : null}
+                <br />
+                {matchingRisk && <OutcomeField
+                            visitType={visitType}
+                />}
             </FormControl>
         );
     };
@@ -273,7 +278,7 @@ const NewVisit = () => {
                                 setIsModalOpen(false);
                             }}
                             close={() => setIsModalOpen(false)}
-                            newGoal={selectedRisk.goal_status === OutcomeGoalMet.NOTSET}
+                            newGoal={selectedRisk.goal_status !== OutcomeGoalMet.ONGOING}
                         />
                     )}
                     {selectedRisk && isPreviousGoalsModalOpen && (

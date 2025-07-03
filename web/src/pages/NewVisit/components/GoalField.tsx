@@ -83,7 +83,6 @@ const GoalField = (props: IModalProps) => {
             </Grid>
             <br />
             <div>
-                {/* <FormLabel focused={false}>{t("newVisit.outcomeOfGoal")}</FormLabel> */}
                 <FormLabel focused={false}>
                     {getVisitGoalRequirementLabel(t, props.visitType)}
                 </FormLabel>

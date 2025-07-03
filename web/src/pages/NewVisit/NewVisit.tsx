@@ -68,7 +68,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                     }
                 />
                 <br />
-                {matchingRisk && matchingRisk.goal_status == OutcomeGoalMet.NOTSET  ? (
+                {matchingRisk && matchingRisk.goal_status === OutcomeGoalMet.NOTSET  ? (
                     <>
                     <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
                     <Typography variant={"body1"}>{matchingRisk?.goal_name}</Typography>

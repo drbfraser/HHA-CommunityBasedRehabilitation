@@ -4,9 +4,7 @@ import { useTranslation } from "react-i18next";
 import { FormLabel, Typography, Grid } from "@mui/material";
 import { useFormikContext } from "formik";
 import {
-    visitFieldLabels,
     VisitFormField,
-    OutcomeFormField,
     getVisitGoalLabel,
     getVisitGoalStatusLabel,
     getVisitGoalRequirementLabel,

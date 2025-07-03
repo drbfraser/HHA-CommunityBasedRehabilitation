@@ -25,7 +25,7 @@ interface IModalProps {
     risks: IRisk[];
 }
 
-const OutcomeField = (props : IModalProps) => {
+const OutcomeField = (props: IModalProps) => {
     const { t } = useTranslation();
     const fieldName = `${VisitFormField.outcomes}.${props.visitType}`;
     const { setFieldValue } = useFormikContext<any>();
@@ -39,18 +39,18 @@ const OutcomeField = (props : IModalProps) => {
     };
 
     const [editedRisk, setEditedRisk] = useState<IRisk>(() => {
-            if (props.newGoal) {
-                return {
-                    ...props.risk,
-                    goal_name: "",
-                    requirement: "",
-                    goal_status: OutcomeGoalMet.ONGOING,
-                    comments: RiskLevel.LOW,
-                    risk_level: RiskLevel.LOW,
-                };
-            }
-            return props.risk;
-        });
+        if (props.newGoal) {
+            return {
+                ...props.risk,
+                goal_name: "",
+                requirement: "",
+                goal_status: OutcomeGoalMet.ONGOING,
+                comments: RiskLevel.LOW,
+                risk_level: RiskLevel.LOW,
+            };
+        }
+        return props.risk;
+    });
 
     useEffect(() => {
         if (matchingRisk?.goal_status) {
@@ -60,15 +60,15 @@ const OutcomeField = (props : IModalProps) => {
 
     return (
         <>
-        {openEditGoals && (
-                        <UpdateGoalStatus
-                            risk={editedRisk}
-                            setRisk={setEditedRisk}
-                            close={() => handleEditGoalsClick()}
-                            transKey={getRiskGoalsTranslationKey(props.risk.risk_type)}
-                        />
-                    )}
-        
+            {openEditGoals && (
+                <UpdateGoalStatus
+                    risk={editedRisk}
+                    setRisk={setEditedRisk}
+                    close={() => handleEditGoalsClick()}
+                    transKey={getRiskGoalsTranslationKey(props.risk.risk_type)}
+                />
+            )}
+
             <FormLabel focused={false}>{getVisitGoalLabel(t, props.visitType)}</FormLabel>
             <Typography variant={"body1"}>{matchingRisk?.goal_name}</Typography>
             <br />
@@ -77,21 +77,21 @@ const OutcomeField = (props : IModalProps) => {
             <Grid container direction="column" spacing={3}>
                 <Grid item>
                     <Stack direction="row" spacing={1}>
-                        <GoalStatusChip
-                            goalStatus={editedRisk.goal_status}
-                        />
+                        <GoalStatusChip goalStatus={editedRisk.goal_status} />
                     </Stack>
                 </Grid>
-            </Grid>                                              
+            </Grid>
             <br />
             <div>
                 {/* <FormLabel focused={false}>{t("newVisit.outcomeOfGoal")}</FormLabel> */}
-                <FormLabel focused={false}>{getVisitGoalRequirementLabel(t, props.visitType)}</FormLabel>
+                <FormLabel focused={false}>
+                    {getVisitGoalRequirementLabel(t, props.visitType)}
+                </FormLabel>
                 <Typography variant={"body1"}>{matchingRisk?.requirement}</Typography>
                 <br />
             </div>
-            </>
-);
+        </>
+    );
 };
 
 export default OutcomeField;

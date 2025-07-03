@@ -7,6 +7,7 @@ import {
     Button,
     FormControl,
     FormLabel,
+    Typography,
     Step,
     StepContent,
     StepLabel,
@@ -21,6 +22,7 @@ import {
     provisionals,
     initialValidationSchema,
     visitTypeValidationSchema,
+    getVisitGoalLabel,
 } from "@cbr/common/forms/newVisit/visitFormFields";
 import { IRisk, RiskType } from "@cbr/common/util/risks";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
@@ -30,16 +32,19 @@ import { handleSubmit } from "./formHandler";
 import GoBackButton from "components/GoBackButton/GoBackButton";
 import { ImprovementField, OutcomeField, VisitReasonStep } from "./components";
 import { OutcomeGoalMet } from "@cbr/common/util/visits";
+import ClientRisksModal from "../../pages/ClientDetails/Risks/ClientRisksModal";
+import PreviousGoalsModal from "../../pages/ClientDetails/PreviousGoals/PreviousGoalsModal/PreviousGoalsModal";
 
 interface IStepProps {
     formikProps: FormikProps<any>;
     setRisk: (risk: IRisk) => void;
     setIsModalOpen: (val: boolean) => void;
+    setIsPreviousGoalsModalOpen: (val: boolean) => void;
 }
 
 const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) => {
 
-    return ({ formikProps, setRisk, setIsModalOpen }: IStepProps) => {
+    return ({ formikProps, setRisk, setIsModalOpen, setIsPreviousGoalsModalOpen }: IStepProps) => {
 
         const matchingRisk = risks.find(
         (risk) => risk.risk_type === (visitType as unknown as RiskType)
@@ -63,16 +68,70 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                     }
                 />
                 <br />
-                {matchingRisk && (
-                    <OutcomeField
-                        risk={matchingRisk}
-                        setRisk={setRisk}
-                        close={() => setIsModalOpen(false)}
-                        newGoal={matchingRisk.goal_status !== OutcomeGoalMet.ONGOING}
-                        visitType={visitType}
-                        risks={risks}
-                    />
-                    )}
+                {matchingRisk && matchingRisk.goal_status == OutcomeGoalMet.NOTSET  ? (
+                    <>
+                    <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
+                    <Typography variant={"body1"}>{matchingRisk?.goal_name}</Typography>
+                    <br />
+                    <Button
+                        variant="outlined"
+                        onClick={() => {
+                            setRisk(matchingRisk);
+                            setIsModalOpen(true);
+                        }}
+                    >
+                        Create New Goal
+                    </Button>
+                    </>
+                                ) : matchingRisk &&
+    (matchingRisk.goal_status === OutcomeGoalMet.CONCLUDED ||
+      matchingRisk.goal_status === OutcomeGoalMet.CANCELLED) ? (
+    <>
+      <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
+      <Typography variant="body1">No current ongoing goals</Typography>
+      <br />
+      <Button
+        variant="outlined"
+        onClick={() => {
+          setRisk(matchingRisk);
+          setIsModalOpen(true);
+        }}
+      >
+        Create New Goal
+      </Button>
+      <Button
+        variant="outlined"
+        onClick={() => {
+          setRisk(matchingRisk);
+          setIsPreviousGoalsModalOpen(true);
+        }}
+      >
+        View Previous Goals
+      </Button>
+    </>
+  )
+                                
+                                : matchingRisk ? (
+            <>
+            <OutcomeField
+                risk={matchingRisk}
+                setRisk={setRisk}
+                close={() => setIsModalOpen(false)}
+                newGoal={false}
+                visitType={visitType}
+                risks={risks}
+            />
+            <Button
+                        variant="outlined"
+                        onClick={() => {
+                            setRisk(matchingRisk);
+                            setIsModalOpen(true);
+                        }}
+                    >
+                        Update Goal
+                    </Button>
+                    </>
+            ) : null}
             </FormControl>
         );
     };
@@ -137,8 +196,11 @@ const NewVisit = () => {
         setActiveStep(activeStep - 1);
     };
 
-    const [, setRisk] = useState<IRisk | undefined>(undefined);
-    const [, setIsModalOpen] = useState<boolean>(false);
+    const [selectedRisk, setSelectedRisk] = useState<IRisk | undefined>(undefined);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+    const [isPreviousGoalsModalOpen, setIsPreviousGoalsModalOpen] = useState<boolean>(false);
+
     return loadingError ? (
         <Alert severity="error">{t("alert.loadClientFailure")}</Alert>
     ) : (
@@ -148,6 +210,7 @@ const NewVisit = () => {
             onSubmit={nextStep}
         >
             {(formikProps) => (
+                <>
                 <Form>
                     {submissionError && (
                         <Alert onClose={() => setSubmissionError(undefined)} severity="error">
@@ -163,8 +226,9 @@ const NewVisit = () => {
                                 <StepContent>
                                     <visitStep.Form
                                         formikProps={formikProps}
-                                        setRisk={setRisk}
+                                        setRisk={setSelectedRisk}
                                         setIsModalOpen={setIsModalOpen}
+                                        setIsPreviousGoalsModalOpen={setIsPreviousGoalsModalOpen}
                                     />
                                     <br />
                                     <br />
@@ -201,7 +265,27 @@ const NewVisit = () => {
                         ))}
                     </Stepper>
                 </Form>
+             {selectedRisk && isModalOpen && (
+            <ClientRisksModal
+                risk={selectedRisk}
+                setRisk={(updatedRisk) => {
+                    setRisks((prev) =>
+                        prev.map((r) => (r.id === updatedRisk.id ? updatedRisk : r))
+                    );
+                    setIsModalOpen(false);
+                }}
+                close={() => setIsModalOpen(false)}
+                newGoal={selectedRisk.goal_status === OutcomeGoalMet.NOTSET}
+            />
             )}
+            {selectedRisk && isPreviousGoalsModalOpen && (
+            <PreviousGoalsModal
+                clientId = {clientId}
+                close={() => setIsPreviousGoalsModalOpen(false)}
+            />
+            )}
+            </>
+    )}
         </Formik>
     );
 };

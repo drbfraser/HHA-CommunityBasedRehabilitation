@@ -1,19 +1,18 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Box, FormLabel, Typography, Grid } from "@mui/material";
-import { Field, useFormikContext } from "formik";
-import { TextField } from "formik-mui";
+import { FormLabel, Typography, Grid } from "@mui/material";
+import { useFormikContext } from "formik";
 import {
     visitFieldLabels,
     VisitFormField,
     OutcomeFormField,
     getVisitGoalLabel,
     getVisitGoalStatusLabel,
+    getVisitGoalRequirementLabel,
 } from "@cbr/common/forms/newVisit/visitFormFields";
 import { getRiskGoalsTranslationKey, IRisk, RiskType } from "@cbr/common/util/risks";
-import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
-import UpdateGoalStatus from "/Users/buimaikhanh/Downloads/415-HHA-CBR/web/src/pages/ClientDetails/Risks/UpdateGoalStatus";
+import UpdateGoalStatus from "../../../pages/ClientDetails/Risks/UpdateGoalStatus";
 import { RiskLevel } from "@cbr/common/util/risks";
 import { OutcomeGoalMet } from "@cbr/common/util/visits";
 import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
@@ -77,50 +76,20 @@ const OutcomeField = (props : IModalProps) => {
             <br />
 
             <FormLabel focused={false}>{getVisitGoalStatusLabel(t, props.visitType)}</FormLabel>
-            <br />
             <Grid container direction="column" spacing={3}>
                 <Grid item>
                     <Stack direction="row" spacing={1}>
-                        <Box
-                            onClick={handleEditGoalsClick}
-                                sx={{
-                                cursor: "pointer",
-                                display: "inline-flex",
-                            }}
-                        >
                         <GoalStatusChip
                             goalStatus={editedRisk.goal_status}
                         />
-                        </Box>
-                        <Box
-                            onClick={handleEditGoalsClick}
-                            sx={{
-                                cursor: "pointer",
-                                display: "inline-flex",
-                            }}
-                        >
-                        <EditNoteTwoToneIcon
-                            color="action"
-                            fontSize="medium"
-                        />
-                        </Box>
                     </Stack>
                 </Grid>
             </Grid>                                              
             <br />
-            <br />
             <div>
-                <FormLabel focused={false}>{t("newVisit.outcomeOfGoal")}</FormLabel>
-                <Field
-                    type="text"
-                    component={TextField}
-                    variant="outlined"
-                    name={`${fieldName}.${OutcomeFormField.outcome}`}
-                    label={visitFieldLabels[OutcomeFormField.outcome]}
-                    required
-                    fullWidth
-                    multiline
-                />
+                {/* <FormLabel focused={false}>{t("newVisit.outcomeOfGoal")}</FormLabel> */}
+                <FormLabel focused={false}>{getVisitGoalRequirementLabel(t, props.visitType)}</FormLabel>
+                <Typography variant={"body1"}>{matchingRisk?.requirement}</Typography>
                 <br />
             </div>
             </>

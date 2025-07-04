@@ -97,3 +97,29 @@ class NormalRiskSerializerTests(TestCase):
         self.assertEqual(risk.goal_status, GoalOutcomes.NOT_SET)
         # change_type should be "RL" for risk level changes
         self.assertEqual(risk.change_type, RiskChangeType.RISK_LEVEL)
+    
+    def test_both_update(self):
+        # when both risk level and goal status are updated
+        ClientRisk.objects.create(
+            id=uuid.uuid4(),
+            client_id=self.client,
+            risk_type=RiskType.HEALTH,
+            risk_level=RiskLevel.LOW,
+            timestamp=1,
+            server_created_at=1,
+        )
+        data = {
+            "client_id": self.client.id,
+            "risk_type": RiskType.HEALTH,
+            "risk_level": RiskLevel.MEDIUM,
+            "goal_status": GoalOutcomes.ONGOING,
+        }
+        serializer = NormalRiskSerializer(data=data)
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        risk = serializer.save()
+
+        self.client.refresh_from_db()
+        # client's health risk level should be "ME" since there is an active goal
+        self.assertEqual(self.client.health_risk_level, RiskLevel.MEDIUM)
+        self.assertEqual(risk.goal_status, GoalOutcomes.ONGOING)
+        self.assertEqual(risk.change_type, RiskChangeType.BOTH)

@@ -31,6 +31,7 @@ export enum RiskLevel {
     MEDIUM = "ME",
     HIGH = "HI",
     CRITICAL = "CR",
+    NOT_ACTIVE = "NA",
 }
 
 export interface IRiskLevel {
@@ -52,7 +53,14 @@ export let riskLevels: { [key: string]: IRiskLevel } = {};
 export let riskTypes: { [key: string]: IRiskType } = {};
 export let goalStatuses: { [key: string]: IGoalStatus } = {};
 const refreshArrays = () => {
+    // low = 1, med = 2, high = 7, critical = 22
     riskLevels = {
+        [RiskLevel.NOT_ACTIVE]: {
+            level: 0,
+            // TODO: need translation for this
+            name: "Not Active",
+            color: themeColors.borderGray,
+        },
         [RiskLevel.LOW]: {
             level: 0,
             name: i18n.t("risks.low"),

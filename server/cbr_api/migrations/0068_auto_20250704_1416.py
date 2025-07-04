@@ -38,5 +38,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(update_client_risk_levels),
+        migrations.RunPython(update_client_risk_levels, reverse_code=migrations.RunPython.noop),
     ]

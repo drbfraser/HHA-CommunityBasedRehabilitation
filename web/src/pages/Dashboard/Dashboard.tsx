@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation, Trans } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Alert, Box, Card, CardContent, Grid, Typography } from "@mui/material";
-import { Cancel, CheckCircle, FiberManualRecord } from "@mui/icons-material";
+import { Cancel, CheckCircle, FiberManualRecord, RadioButtonUnchecked } from "@mui/icons-material";
 import {
     DataGrid,
     GridColumnHeaderParams,
@@ -76,15 +76,10 @@ const Dashboard = () => {
                             full_name: row.full_name,
                             zone: row.zone,
                             [RiskType.HEALTH]: row.health_risk_level as RiskLevel,
-                            health_goal_status: row.health_goal_status,
                             [RiskType.EDUCATION]: row.educat_risk_level as RiskLevel,
-                            educat_goal_status: row.educat_goal_status,
                             [RiskType.SOCIAL]: row.social_risk_level as RiskLevel,
-                            social_goal_status: row.social_goal_status,
                             [RiskType.NUTRITION]: row.nutrit_risk_level as RiskLevel,
-                            nutrit_goal_status: row.nutrit_goal_status,
                             [RiskType.MENTAL]: row.mental_risk_level as RiskLevel,
-                            mental_goal_status: row.mental_goal_status,
                             last_visit_date: row.last_visit_date,
                             is_active: row.is_active,
                         };
@@ -179,6 +174,10 @@ const Dashboard = () => {
 
     const RenderBadge = (params: GridRenderCellParams) => {
         const risk: RiskLevel = Object(params.value);
+        if (String(risk) === RiskLevel.NOT_ACTIVE) {
+            return <RadioButtonUnchecked />;
+        }
+
         return (
             <FiberManualRecord
                 style={{ color: riskLevels[risk] ? riskLevels[risk].color : "red" }}

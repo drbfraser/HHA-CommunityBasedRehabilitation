@@ -9,15 +9,10 @@ export interface IClientSummary {
     full_name: string;
     zone: number;
     health_risk_level: string;
-    health_goal_status: string;
     educat_risk_level: string;
-    educat_goal_status: string;
     social_risk_level: string;
-    social_goal_status: string;
     nutrit_risk_level: string;
-    nutrit_goal_status: string;
     mental_risk_level: string;
-    mental_goal_status: string;
     last_visit_date: number;
     user_id: number;
     is_active: boolean;

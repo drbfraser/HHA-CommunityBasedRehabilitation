@@ -3,9 +3,10 @@
 from django.db import migrations
 from cbr_api.models import RiskLevel, RiskType, GoalOutcomes
 
+
 def update_client_risk_levels(apps, schema_editor):
-    Client = apps.get_model('cbr_api', 'Client')
-    ClientRisk = apps.get_model('cbr_api', 'ClientRisk')
+    Client = apps.get_model("cbr_api", "Client")
+    ClientRisk = apps.get_model("cbr_api", "ClientRisk")
 
     # Define which goal_statuses mean "active"
     ACTIVE_GOAL_STATUSES = [GoalOutcomes.ONGOING]
@@ -31,6 +32,7 @@ def update_client_risk_levels(apps, schema_editor):
                 setattr(client, field, INACTIVE_RISK_LEVEL)
         client.save()
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -38,5 +40,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(update_client_risk_levels, reverse_code=migrations.RunPython.noop),
+        migrations.RunPython(
+            update_client_risk_levels, reverse_code=migrations.RunPython.noop
+        ),
     ]

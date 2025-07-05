@@ -97,7 +97,7 @@ class NormalRiskSerializerTests(TestCase):
         self.assertEqual(risk.goal_status, GoalOutcomes.NOT_SET)
         # change_type should be "RL" for risk level changes
         self.assertEqual(risk.change_type, RiskChangeType.RISK_LEVEL)
-    
+
     def test_both_update(self):
         # when both risk level and goal status are updated
         ClientRisk.objects.create(

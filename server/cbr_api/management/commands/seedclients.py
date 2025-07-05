@@ -69,7 +69,7 @@ class Command(BaseCommand):
                 risk_level=level,
                 requirement=random.choice(requirements),
                 goal_name=random.choice(goals),
-                goal_status=models.GoalOutcomes.ONGOING
+                goal_status=models.GoalOutcomes.ONGOING,
             )
             client.risks.add(risk)
 

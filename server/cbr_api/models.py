@@ -119,7 +119,7 @@ class RiskLevel(models.TextChoices):
 
     @staticmethod
     def getField():
-        return models.CharField(max_length=2, choices=RiskLevel.choices, default="LO")
+        return models.CharField(max_length=2, choices=RiskLevel.choices, default=RiskLevel.NOT_ACTIVE)
 
 
 client_picture_upload_dir = "images/clients"

@@ -162,13 +162,16 @@ const ClientRisksModal = (props: IModalProps) => {
                                                     label={fieldLabels[FormField.risk_level]}
                                                     name={FormField.risk_level}
                                                 >
-                                                    {Object.entries(riskLevels).map(
-                                                        ([value, { name }]) => (
+                                                    {Object.entries(riskLevels)
+                                                        .filter(
+                                                            ([_, { isDropDownOption }]) =>
+                                                                isDropDownOption
+                                                        )
+                                                        .map(([value, { name }]) => (
                                                             <MenuItem key={value} value={value}>
                                                                 {name}
                                                             </MenuItem>
-                                                        )
-                                                    )}
+                                                        ))}
                                                 </Field>
                                             </FormControl>
                                         </Grid>

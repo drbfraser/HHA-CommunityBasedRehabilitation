@@ -15,7 +15,12 @@ export const addRisk = async (client: any, database: dbType, type, level, req, g
         risk.risk_level = level;
         risk.requirement = req;
         risk.goal = goal;
+        // TODO: update fields to use goal_name and inlude goal_status
+        risk.goal_name = goal || "No goal set";
+        risk.goal_status = "NS";
         risk.timestamp = time;
+        risk.start_date = time;
+        risk.end_date = 0;
     });
     return risk;
 };

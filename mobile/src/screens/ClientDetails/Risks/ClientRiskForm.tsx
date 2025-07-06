@@ -56,6 +56,10 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             risk_level: risk.risk_level,
             requirement: risk.requirement,
             goal: risk.goal,
+            goal_name: risk.goal_name || risk.goal || "No goal set",
+            goal_status: risk.goal_status || "NS",
+            start_date: risk.start_date || risk.timestamp || 0,
+            end_date: risk.end_date || 0,
         };
         return riskFormProps;
     };

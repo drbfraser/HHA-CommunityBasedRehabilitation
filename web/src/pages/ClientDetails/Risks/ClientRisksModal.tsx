@@ -41,6 +41,7 @@ const ClientRisksModal = (props: IModalProps) => {
                 goal_name: "",
                 requirement: "",
                 goal_status: OutcomeGoalMet.ONGOING,
+                cancellation_reason: "",
                 comments: RiskLevel.LOW,
                 risk_level: RiskLevel.LOW,
             };

@@ -24,6 +24,7 @@ const wasChangeMade = (values: IRisk, initialValues: IRisk) => {
         "goal",
         "goal_status",
         "goal_name",
+        "cancellation_reason",
     ] as (keyof IRisk)[];
 
     for (let key of keysToCheck) {
@@ -48,6 +49,7 @@ export const handleSubmit = async (
         goal: values.goal_name,
         goal_status: values.goal_status,
         requirement: values.requirement,
+        cancellation_reason: values.cancellation_reason,
     });
     try {
         const risk = await updateRisk(updatedRisk);

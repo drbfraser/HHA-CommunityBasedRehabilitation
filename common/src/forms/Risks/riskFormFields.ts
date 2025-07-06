@@ -7,6 +7,8 @@ export enum FormField {
     requirement = "requirement",
     goal = "goal",
     goal_name = "goal_name",
+    goal_status = "goal_status",
+    cancellation_reason = "cancellation_reason",
     timestamp = "timestamp",
     comments = "comments",
     other = "other",
@@ -19,6 +21,8 @@ const refreshArrays = () => {
         [FormField.risk_level]: i18n.t("risks.riskLevel"),
         [FormField.requirement]: i18n.t("risks.requirements"),
         [FormField.goal_name]: i18n.t("general.goal"),
+        [FormField.goal_status]: "Goal Status",
+        [FormField.cancellation_reason]: i18n.t("risks.cancelReason"),
         // TODO: Need to add "Comments"
         [FormField.comments]: "Comments",
         [FormField.other]: i18n.t("referral.other"),

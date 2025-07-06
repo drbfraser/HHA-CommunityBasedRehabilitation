@@ -1,5 +1,6 @@
 import { RiskGoalOptions, RiskRequirementOptions } from "@cbr/common/types/translationKeys";
 import { IRisk, RiskType } from "@cbr/common/util/risks";
+import { OutcomeGoalMet } from "@cbr/common/util/visits";
 import {
     Button,
     Dialog,
@@ -103,7 +104,7 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                                     </>
                                                 )}
                                             </Field>
-                                            {values.goal_status === "CAN" && (
+                                            {values.goal_status === OutcomeGoalMet.CANCELLED && (
                                                 <Grid item>
                                                     <Field
                                                         component={TextField}

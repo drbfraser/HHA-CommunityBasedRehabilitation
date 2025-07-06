@@ -102,7 +102,6 @@ const ClientRisksModal = (props: IModalProps) => {
 
             <Formik
                 onSubmit={(values) => {
-                    console.log(values);
                     handleSubmit(values, props.risk, props.setRisk);
                     props.close();
                 }}

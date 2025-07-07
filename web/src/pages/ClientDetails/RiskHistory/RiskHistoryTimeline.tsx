@@ -14,6 +14,7 @@ import TimelineEntry from "../Timeline/TimelineEntry";
 import { translateGoalEntrySummary, translateRiskEntrySummary } from "./helper";
 import { timelineStyles } from "../Timeline/Timeline.styles";
 import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
+import { OutcomeGoalMet } from "@cbr/common/util/visits";
 
 interface IProps {
     client?: IClient;
@@ -48,8 +49,8 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
         const renderDialog = () => (
             <Dialog fullWidth maxWidth="sm" open={expanded} onClose={() => setExpanded(false)}>
                 <DialogTitle>
-                    {risk.change_type === RiskChangeType.BOTH ||
-                    risk.change_type === RiskChangeType.INITIAL ? (
+                    {(risk.change_type === RiskChangeType.BOTH && risk.goal_status !== OutcomeGoalMet.NOTSET) ||
+                        (risk.change_type === RiskChangeType.INITIAL && risk.goal_status !== OutcomeGoalMet.NOTSET) ? (
                         <>
                             <div style={{ marginBottom: 4 }}>
                                 <RiskSummary />
@@ -95,8 +96,8 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
         );
 
         if (
-            risk.change_type === RiskChangeType.BOTH ||
-            risk.change_type === RiskChangeType.INITIAL
+            (risk.change_type === RiskChangeType.BOTH && risk.goal_status !== OutcomeGoalMet.NOTSET) ||
+            (risk.change_type === RiskChangeType.INITIAL && risk.goal_status !== OutcomeGoalMet.NOTSET)
         ) {
             return (
                 <>
@@ -109,7 +110,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
                     {renderDialog()}
                 </>
             );
-        } else if (risk.change_type === RiskChangeType.RISK_LEVEL) {
+        } else if (risk.change_type === RiskChangeType.RISK_LEVEL || risk.goal_status === OutcomeGoalMet.NOTSET) {
             return (
                 <>
                     <TimelineEntry

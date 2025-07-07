@@ -13,7 +13,7 @@ import { appSchema, tableSchema } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 
 export default appSchema({
-    version: 6,
+    version: 7,
     tables: [
         tableSchema({
             name: modelName.users,
@@ -81,6 +81,7 @@ export default appSchema({
                 { name: FormField.timestamp, type: "number" },
                 { name: "start_date", type: "number" },
                 { name: "end_date", type: "number" },
+                { name: "cancellation_reason", type: "string" }
             ],
         }),
         tableSchema({

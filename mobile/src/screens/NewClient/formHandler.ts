@@ -1,4 +1,4 @@
-import { TClientValues } from "@cbr/common";
+import { OutcomeGoalMet, TClientValues } from "@cbr/common";
 import { FormikHelpers } from "formik";
 import { modelName } from "../../models/constant";
 import { StackScreenName } from "../../util/StackScreenName";
@@ -17,7 +17,7 @@ export const addRisk = async (client: any, database: dbType, type, level, req, g
         risk.goal = goal;
         // TODO: update fields to use goal_name and inlude goal_status
         risk.goal_name = goal || "No goal set";
-        risk.goal_status = "NS";
+        risk.goal_status = OutcomeGoalMet.NOTSET;
         risk.timestamp = time;
         risk.start_date = time;
         risk.end_date = 0;

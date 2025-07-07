@@ -99,7 +99,7 @@ const ClientDetails = () => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <ClientRisks clientInfo={clientInfo} />
+                    <ClientRisks clientInfo={clientInfo} refreshClient={getClient} />
                 </Grid>
 
                 <Grid item xs={12}>

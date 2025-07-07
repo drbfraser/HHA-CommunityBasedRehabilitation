@@ -16,6 +16,7 @@ export interface IRisk {
     end_date: number;
     goal_name: string;
     goal_status: OutcomeGoalMet;
+    cancellation_reason: string;
 }
 
 export enum RiskType {
@@ -95,11 +96,11 @@ const refreshArrays = () => {
 
     goalStatuses = {
         [OutcomeGoalMet.CANCELLED]: {
-            name: i18n.t("newVisit.PLACEHOLDER-socialGoals.2"),
+            name: i18n.t("newVisit.cancelled"),
             color: themeColors.goalRed,
         },
         [OutcomeGoalMet.ONGOING]: {
-            name: i18n.t("newVisit.PLACEHOLDER-socialGoals.1"),
+            name: i18n.t("newVisit.ongoing"),
             color: themeColors.goalBlue,
         },
         [OutcomeGoalMet.CONCLUDED]: {

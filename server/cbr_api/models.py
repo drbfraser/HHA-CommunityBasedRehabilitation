@@ -259,6 +259,8 @@ class ClientRisk(models.Model):
         default=RiskChangeType.INITIAL,
     )
 
+    cancellation_reason = models.TextField(blank=True, default="")
+
     # improves query performance for lookups by client_id and risk_type
     class Meta:
         indexes = [
@@ -267,11 +269,14 @@ class ClientRisk(models.Model):
 
     # Assigning the Default value for the start_date to be whatever the timestamp was
     def save(self, *args, **kwargs):
-        if self.start_date is None:
+        if self.start_date is None or self.start_date == 0:
             self.start_date = self.timestamp
 
         if self.goal != "No goal set":
             self.goal_name = self.goal
+
+        if self.goal_status in [GoalOutcomes.CANCELLED, GoalOutcomes.CONCLUDED]:
+            self.end_date = int(time.time() * 1000)
 
         super().save(*args, **kwargs)
 

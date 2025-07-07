@@ -169,6 +169,7 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
             "goal",
             "goal_name",
             "goal_status",
+            "cancellation_reason",
             "start_date",
             "end_date",
             "change_type",
@@ -190,6 +191,7 @@ class NormalRiskSerializer(serializers.ModelSerializer):
             "goal",
             "goal_name",
             "goal_status",
+            "cancellation_reason",
             "start_date",
             "end_date",
             "change_type",
@@ -280,6 +282,7 @@ class ClientRiskSerializer(serializers.ModelSerializer):
             "goal",
             "goal_name",
             "goal_status",
+            "cancellation_reason",
             "start_date",
             "end_date",
         ]

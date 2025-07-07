@@ -11,9 +11,7 @@ export default schemaMigrations({
             steps: [
                 addColumns({
                     table: modelName.risks,
-                    columns: [
-                        { name: "cancellation_reason", type: "string" },
-                    ],
+                    columns: [{ name: "cancellation_reason", type: "string" }],
                 }),
             ],
         },

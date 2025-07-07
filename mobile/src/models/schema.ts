@@ -81,7 +81,7 @@ export default appSchema({
                 { name: FormField.timestamp, type: "number" },
                 { name: "start_date", type: "number" },
                 { name: "end_date", type: "number" },
-                { name: "cancellation_reason", type: "string" }
+                { name: "cancellation_reason", type: "string" },
             ],
         }),
         tableSchema({

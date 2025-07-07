@@ -1,29 +1,17 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Button,
-} from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import { Timeline } from "@mui/lab";
 import UpdateIcon from "@mui/icons-material/Update";
 
 import { IClient } from "@cbr/common/util/clients";
-import {
-    getDateFormatterFromReference,
-    timestampToDateTime,
-} from "@cbr/common/util/dates";
+import { getDateFormatterFromReference, timestampToDateTime } from "@cbr/common/util/dates";
 import { IRisk, RiskChangeType } from "@cbr/common/util/risks";
 import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 import ClientCreatedEntry from "../Timeline/ClientCreatedEntry";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
 import TimelineEntry from "../Timeline/TimelineEntry";
-import {
-    translateGoalEntrySummary,
-    translateRiskEntrySummary,
-} from "./helper";
+import { translateGoalEntrySummary, translateRiskEntrySummary } from "./helper";
 import { timelineStyles } from "../Timeline/Timeline.styles";
 import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
 
@@ -58,14 +46,10 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
         );
 
         const renderDialog = () => (
-            <Dialog
-                fullWidth
-                maxWidth="sm"
-                open={expanded}
-                onClose={() => setExpanded(false)}
-            >
+            <Dialog fullWidth maxWidth="sm" open={expanded} onClose={() => setExpanded(false)}>
                 <DialogTitle>
-                    {(risk.change_type === RiskChangeType.BOTH || risk.change_type === RiskChangeType.INITIAL) ? (
+                    {risk.change_type === RiskChangeType.BOTH ||
+                    risk.change_type === RiskChangeType.INITIAL ? (
                         <>
                             <div style={{ marginBottom: 4 }}>
                                 <RiskSummary />
@@ -110,7 +94,10 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
             </>
         );
 
-        if (risk.change_type === RiskChangeType.BOTH || risk.change_type === RiskChangeType.INITIAL) {
+        if (
+            risk.change_type === RiskChangeType.BOTH ||
+            risk.change_type === RiskChangeType.INITIAL
+        ) {
             return (
                 <>
                     <TimelineEntry

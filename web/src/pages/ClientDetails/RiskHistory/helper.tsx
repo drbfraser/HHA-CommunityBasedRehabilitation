@@ -43,7 +43,6 @@ export const translateRiskEntrySummary = (riskType: RiskType, isInitial: boolean
 };
 
 export const translateGoalEntrySummary = (riskType: RiskType) => {
-
     switch (riskType) {
         case RiskType.HEALTH:
             return (

@@ -7,6 +7,21 @@ import { mobileGenericField, modelName, tableKey } from "./constant";
 export default schemaMigrations({
     migrations: [
         {
+            toVersion: 6,
+            steps: [
+              addColumns({
+                table: modelName.risks,
+                columns: [
+                  { name: "goal_name", type: "string" },
+                  { name: "goal_status", type: "string" },
+                  { name: "start_date", type: "number" },
+                  { name: "end_date", type: "number" },
+                ],
+              }),
+            ],
+          },
+          
+        {
             toVersion: 5,
             steps: [
                 addColumns({

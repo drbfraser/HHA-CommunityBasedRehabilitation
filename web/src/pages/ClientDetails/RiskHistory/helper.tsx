@@ -41,3 +41,41 @@ export const translateRiskEntrySummary = (riskType: RiskType, isInitial: boolean
             return <></>;
     }
 };
+
+export const translateGoalEntrySummary = (riskType: RiskType) => {
+    switch (riskType) {
+        case RiskType.HEALTH:
+            return (
+                <Trans>
+                    <b>Health</b> goal status set to
+                </Trans>
+            );
+        case RiskType.EDUCATION:
+            return (
+                <Trans>
+                    <b>Education</b> goal status set to
+                </Trans>
+            );
+        case RiskType.MENTAL:
+            return (
+                <Trans>
+                    <b>Mental health</b> goal status set to
+                </Trans>
+            );
+        case RiskType.NUTRITION:
+            return (
+                <Trans>
+                    <b>Nutrition</b> goal status set to
+                </Trans>
+            );
+        case RiskType.SOCIAL:
+            return (
+                <Trans>
+                    <b>Social</b> goal status set to
+                </Trans>
+            );
+        default:
+            console.error(`unknown risktype: ${riskType}`);
+            return <></>;
+    }
+};

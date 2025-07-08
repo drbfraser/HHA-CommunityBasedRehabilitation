@@ -17,6 +17,7 @@ export interface IRisk {
     goal_name: string;
     goal_status: OutcomeGoalMet;
     cancellation_reason: string;
+    change_type: RiskChangeType;
 }
 
 export enum RiskType {
@@ -33,6 +34,14 @@ export enum RiskLevel {
     HIGH = "HI",
     CRITICAL = "CR",
     NOT_ACTIVE = "NA",
+}
+
+export enum RiskChangeType {
+    INITIAL = "INIT",
+    RISK_LEVEL = "RL",
+    GOAL_STATUS = "GS",
+    BOTH = "BOTH",
+    OTHER = "OTH",
 }
 
 export interface IRiskLevel {

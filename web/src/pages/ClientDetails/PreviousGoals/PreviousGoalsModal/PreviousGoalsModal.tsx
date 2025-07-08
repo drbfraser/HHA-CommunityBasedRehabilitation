@@ -46,7 +46,9 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
             .then((resp) => resp.json())
             .then((data: IRisk[]) => {
                 const filteredGoals = data.filter(
-                    (goal) => goal.goal_status === OutcomeGoalMet.CANCELLED || goal.goal_status === OutcomeGoalMet.CONCLUDED
+                    (goal) =>
+                        goal.goal_status === OutcomeGoalMet.CANCELLED ||
+                        goal.goal_status === OutcomeGoalMet.CONCLUDED
                 );
                 setGoals(filteredGoals);
             })

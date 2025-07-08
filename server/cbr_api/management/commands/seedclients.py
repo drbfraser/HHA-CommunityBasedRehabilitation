@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
 from cbr_api import models
-import time
 import random
 import uuid
 
@@ -69,7 +68,8 @@ class Command(BaseCommand):
                 risk_type=type,
                 risk_level=level,
                 requirement=random.choice(requirements),
-                goal=random.choice(goals),
+                goal_name=random.choice(goals),
+                goal_status=models.GoalOutcomes.ONGOING,
             )
             client.risks.add(risk)
 

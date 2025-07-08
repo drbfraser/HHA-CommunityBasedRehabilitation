@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation, Trans } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Alert, Box, Card, CardContent, Grid, Typography } from "@mui/material";
-import { Cancel, CheckCircle, FiberManualRecord } from "@mui/icons-material";
+import { Cancel, CheckCircle, FiberManualRecord, RadioButtonUnchecked } from "@mui/icons-material";
 import {
     DataGrid,
     GridColumnHeaderParams,
@@ -29,6 +29,21 @@ import { dataGridStyles } from "styles/DataGrid.styles";
 
 // manually define this type, as GridCellValue deprecated in MUI 5
 type GridCellValue = string | number | boolean | object | Date | null | undefined;
+type PriorityClient = Omit<
+    IClientSummary,
+    | "health_risk_level"
+    | "educat_risk_level"
+    | "social_risk_level"
+    | "nutrit_risk_level"
+    | "mental_risk_level"
+    | "user_id"
+> & {
+    HEALTH: RiskLevel;
+    EDUCAT: RiskLevel;
+    SOCIAL: RiskLevel;
+    NUTRIT: RiskLevel;
+    MENTAL: RiskLevel;
+};
 
 const Dashboard = () => {
     const history = useHistory();
@@ -55,16 +70,16 @@ const Dashboard = () => {
                 const priorityClients = tempClients
                     .sort(clientPrioritySort)
                     .slice(0, 5)
-                    .map((row: IClientSummary) => {
+                    .map((row: IClientSummary): PriorityClient => {
                         return {
                             id: row.id,
                             full_name: row.full_name,
                             zone: row.zone,
-                            [RiskType.HEALTH]: row.health_risk_level,
-                            [RiskType.EDUCATION]: row.educat_risk_level,
-                            [RiskType.SOCIAL]: row.social_risk_level,
-                            [RiskType.NUTRITION]: row.nutrit_risk_level,
-                            [RiskType.MENTAL]: row.mental_risk_level,
+                            [RiskType.HEALTH]: row.health_risk_level as RiskLevel,
+                            [RiskType.EDUCATION]: row.educat_risk_level as RiskLevel,
+                            [RiskType.SOCIAL]: row.social_risk_level as RiskLevel,
+                            [RiskType.NUTRITION]: row.nutrit_risk_level as RiskLevel,
+                            [RiskType.MENTAL]: row.mental_risk_level as RiskLevel,
                             last_visit_date: row.last_visit_date,
                             is_active: row.is_active,
                         };
@@ -157,9 +172,12 @@ const Dashboard = () => {
         fetchAlerts();
     }, [unreadAlertsCount]);
 
-    /* TODO I have changed it with an existance check, need to reverse it when backend is ready */
     const RenderBadge = (params: GridRenderCellParams) => {
         const risk: RiskLevel = Object(params.value);
+        if (String(risk) === RiskLevel.NOT_ACTIVE) {
+            return <RadioButtonUnchecked />;
+        }
+
         return (
             <FiberManualRecord
                 style={{ color: riskLevels[risk] ? riskLevels[risk].color : "red" }}

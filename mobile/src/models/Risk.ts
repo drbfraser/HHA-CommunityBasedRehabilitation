@@ -1,6 +1,6 @@
 import { FormField } from "@cbr/common/src/forms/Risks/riskFormFields";
 import { Model } from "@nozbe/watermelondb";
-import { date, text, relation } from "@nozbe/watermelondb/decorators";
+import { date, text, relation, field } from "@nozbe/watermelondb/decorators";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 import Client from "./Client";
 import { SyncableModel } from "./interfaces/SyncableModel";
@@ -15,8 +15,14 @@ export default class Risk extends Model implements SyncableModel {
     @text(FormField.risk_level) risk_level;
     @text(FormField.requirement) requirement;
     @text(FormField.goal) goal;
+    @text(FormField.goal_name) goal_name;
+    @text("goal_status") goal_status;
+    @text("cancellation_reason") cancellation_reason;
+    @text("change_type") change_type;
 
     @date(FormField.timestamp) timestamp;
+    @field("start_date") start_date;
+    @field("end_date") end_date;
 
     @relation(modelName.clients, tableKey.client_id) client;
 

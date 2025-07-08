@@ -25,7 +25,6 @@ export const handleRiskSubmit = async (
     autoSync: boolean,
     cellularSync: boolean
 ) => {
-    console.log(values);
     if (!wasChangeMade(values, initialValues)) return;
 
     try {

@@ -13,7 +13,7 @@ import { appSchema, tableSchema } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 
 export default appSchema({
-    version: 7,
+    version: 8,
     tables: [
         tableSchema({
             name: modelName.users,

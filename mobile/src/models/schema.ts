@@ -82,6 +82,7 @@ export default appSchema({
                 { name: "start_date", type: "number" },
                 { name: "end_date", type: "number" },
                 { name: "cancellation_reason", type: "string" },
+                { name: "change_type", type: "string" }
             ],
         }),
         tableSchema({

@@ -57,11 +57,13 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             risk_level: risk.risk_level,
             requirement: risk.requirement,
             goal: risk.goal,
+            // TODO: update the following accordingly
             goal_name: risk.goal_name || risk.goal || "No goal set",
             goal_status: risk.goal_status || OutcomeGoalMet.NOTSET,
             start_date: risk.start_date || risk.timestamp || 0,
             end_date: risk.end_date || 0,
             cancellation_reason: risk.cancellation_reason || "",
+            change_type: risk.change_type || "",
         };
         return riskFormProps;
     };

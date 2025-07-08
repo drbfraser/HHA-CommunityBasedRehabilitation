@@ -18,6 +18,7 @@ export default class Risk extends Model implements SyncableModel {
     @text(FormField.goal_name) goal_name;
     @text("goal_status") goal_status;
     @text("cancellation_reason") cancellation_reason;
+    @text("change_type") change_type;
 
     @date(FormField.timestamp) timestamp;
     @field("start_date") start_date;

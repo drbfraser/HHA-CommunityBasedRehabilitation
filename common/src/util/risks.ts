@@ -17,6 +17,7 @@ export interface IRisk {
     goal_name: string;
     goal_status: OutcomeGoalMet;
     cancellation_reason: string;
+    change_type: RiskChangeType;
 }
 
 export enum RiskType {
@@ -32,12 +33,22 @@ export enum RiskLevel {
     MEDIUM = "ME",
     HIGH = "HI",
     CRITICAL = "CR",
+    NOT_ACTIVE = "NA",
+}
+
+export enum RiskChangeType {
+    INITIAL = "INIT",
+    RISK_LEVEL = "RL",
+    GOAL_STATUS = "GS",
+    BOTH = "BOTH",
+    OTHER = "OTH",
 }
 
 export interface IRiskLevel {
     name: string;
     color: string;
     level: number;
+    isDropDownOption: boolean;
 }
 export interface IRiskType {
     name: string;
@@ -54,25 +65,36 @@ export let riskTypes: { [key: string]: IRiskType } = {};
 export let goalStatuses: { [key: string]: IGoalStatus } = {};
 const refreshArrays = () => {
     riskLevels = {
-        [RiskLevel.LOW]: {
+        [RiskLevel.NOT_ACTIVE]: {
             level: 0,
+            // TODO: need translation for this
+            name: "Not Active",
+            color: themeColors.borderGray,
+            isDropDownOption: false,
+        },
+        [RiskLevel.LOW]: {
+            level: 1,
             name: i18n.t("risks.low"),
             color: themeColors.riskGreen,
+            isDropDownOption: true,
         },
         [RiskLevel.MEDIUM]: {
-            level: 1,
+            level: 2,
             name: i18n.t("risks.medium"),
             color: themeColors.riskYellow,
+            isDropDownOption: true,
         },
         [RiskLevel.HIGH]: {
-            level: 4, // 1 high > 3 mediums, as specified by customer
+            level: 7, // 1 high > 3 mediums, as specified by customer
             name: i18n.t("risks.high"),
             color: themeColors.riskRed,
+            isDropDownOption: true,
         },
         [RiskLevel.CRITICAL]: {
-            level: 13, // 1 critical > 3 highs, as specified by customer
+            level: 22, // 1 critical > 3 highs, as specified by customer
             name: i18n.t("risks.critical"),
             color: themeColors.riskBlack,
+            isDropDownOption: true,
         },
     };
 

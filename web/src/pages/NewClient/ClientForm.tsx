@@ -338,13 +338,16 @@ const ClientForm = () => {
                                                     name={ClientField.healthRisk}
                                                     autoComplete="off"
                                                 >
-                                                    {Object.entries(riskLevels).map(
-                                                        ([value, { name }]) => (
+                                                    {Object.entries(riskLevels)
+                                                        .filter(
+                                                            ([_, { isDropDownOption }]) =>
+                                                                isDropDownOption
+                                                        )
+                                                        .map(([value, { name }]) => (
                                                             <MenuItem key={value} value={value}>
                                                                 {name}
                                                             </MenuItem>
-                                                        )
-                                                    )}
+                                                        ))}
                                                 </Field>
                                             </FormControl>
                                         </Grid>
@@ -394,13 +397,16 @@ const ClientForm = () => {
                                                     name={ClientField.educationRisk}
                                                     autoComplete="off"
                                                 >
-                                                    {Object.entries(riskLevels).map(
-                                                        ([value, { name }]) => (
+                                                    {Object.entries(riskLevels)
+                                                        .filter(
+                                                            ([_, { isDropDownOption }]) =>
+                                                                isDropDownOption
+                                                        )
+                                                        .map(([value, { name }]) => (
                                                             <MenuItem key={value} value={value}>
                                                                 {name}
                                                             </MenuItem>
-                                                        )
-                                                    )}
+                                                        ))}
                                                 </Field>
                                             </FormControl>
                                         </Grid>
@@ -452,13 +458,16 @@ const ClientForm = () => {
                                                     name={ClientField.socialRisk}
                                                     autoComplete="off"
                                                 >
-                                                    {Object.entries(riskLevels).map(
-                                                        ([value, { name }]) => (
+                                                    {Object.entries(riskLevels)
+                                                        .filter(
+                                                            ([_, { isDropDownOption }]) =>
+                                                                isDropDownOption
+                                                        )
+                                                        .map(([value, { name }]) => (
                                                             <MenuItem key={value} value={value}>
                                                                 {name}
                                                             </MenuItem>
-                                                        )
-                                                    )}
+                                                        ))}
                                                 </Field>
                                             </FormControl>
                                         </Grid>
@@ -508,13 +517,16 @@ const ClientForm = () => {
                                                     name={ClientField.nutritionRisk}
                                                     autoComplete="off"
                                                 >
-                                                    {Object.entries(riskLevels).map(
-                                                        ([value, { name }]) => (
+                                                    {Object.entries(riskLevels)
+                                                        .filter(
+                                                            ([_, { isDropDownOption }]) =>
+                                                                isDropDownOption
+                                                        )
+                                                        .map(([value, { name }]) => (
                                                             <MenuItem key={value} value={value}>
                                                                 {name}
                                                             </MenuItem>
-                                                        )
-                                                    )}
+                                                        ))}
                                                 </Field>
                                             </FormControl>
                                         </Grid>
@@ -567,13 +579,16 @@ const ClientForm = () => {
                                                     name={ClientField.mentalRisk}
                                                     autoComplete="off"
                                                 >
-                                                    {Object.entries(riskLevels).map(
-                                                        ([value, { name }]) => (
+                                                    {Object.entries(riskLevels)
+                                                        .filter(
+                                                            ([_, { isDropDownOption }]) =>
+                                                                isDropDownOption
+                                                        )
+                                                        .map(([value, { name }]) => (
                                                             <MenuItem key={value} value={value}>
                                                                 {name}
                                                             </MenuItem>
-                                                        )
-                                                    )}
+                                                        ))}
                                                 </Field>
                                             </FormControl>
                                         </Grid>

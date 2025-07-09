@@ -87,7 +87,6 @@ const GoalField = (props: IModalProps) => {
                     {getVisitGoalRequirementLabel(t, props.visitType)}
                 </FormLabel>
                 <Typography variant={"body1"}>{matchingRisk?.requirement}</Typography>
-                <br />
             </div>
         </>
     );

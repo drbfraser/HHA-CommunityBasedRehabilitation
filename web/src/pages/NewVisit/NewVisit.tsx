@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
@@ -66,7 +66,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                         ))
                     }
                 />
-                <br />
+                <Typography component="div"><br /></Typography>
                 {matchingRisk && matchingRisk.goal_status === OutcomeGoalMet.NOTSET ? (
                     <>
                         <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
@@ -129,7 +129,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                         </Button>
                     </>
                 ) : null}
-                <br />
+                <Typography component="div"><br /></Typography>
                 {matchingRisk && <OutcomeField
                             visitType={visitType}
                 />}
@@ -165,27 +165,9 @@ const NewVisit = () => {
             });
     }, [clientId]);
 
-    const getRisks = useCallback(async (): Promise<IRisk[]> => {
-    try {
-        const resp = await apiFetch(Endpoint.RISKS, `?id=${clientId}`);
-        const data: IRisk[] = await resp.json();
-        setRisks(data);
-        return data;
-    } catch (err) {
-        setLoadingError(true);
-        console.error("Failed to load risks", err);
-        return [];
-    }
-    }, [clientId]);
-
-    useEffect(() => {
-            getRisks();
-        }, [getRisks]);
-    
-
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
 
-    const visitSteps = useMemo(() => [
+    const visitSteps = [
         {
             label: "Visit Focus",
             Form: visitReasonStepCallBack(setEnabledSteps, zones),
@@ -196,7 +178,7 @@ const NewVisit = () => {
             Form: VisitTypeStep(visitType, risks, t),
             validationSchema: visitTypeValidationSchema(visitType),
         })),
-    ], [enabledSteps, risks, t, zones]);
+    ];
 
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
@@ -289,14 +271,10 @@ const NewVisit = () => {
                     {selectedRisk && isModalOpen && (
                         <ClientRisksModal
                             risk={selectedRisk}
-                            setRisk={async (updatedRisk) => {
-                                const refreshed = await getRisks(); // await returns fresh data
-
-                                const refreshedRisk = refreshed.find((r) => r.id === updatedRisk.id);
-                                if (refreshedRisk) {
-                                    console.log("Refreshed risks after modal close:", refreshedRisk);
-                                    setSelectedRisk(refreshedRisk);
-                                }
+                            setRisk={(updatedRisk) => {
+                                setRisks((prev) =>
+                                    prev.map((r) => (r.id === updatedRisk.id ? updatedRisk : r))
+                                );
                                 setIsModalOpen(false);
                             }}
                             close={() => setIsModalOpen(false)}

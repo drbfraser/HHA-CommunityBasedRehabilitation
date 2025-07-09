@@ -31,3 +31,27 @@ class ClientModelTests(TestCase):
         self.assertEqual(new_client.zone, self.zone)
         self.assertTrue(new_client.is_active)
         self.assertEqual(new_client.hcr_type, Client.HCRType.NOT_SET)
+        self.assertEqual(new_client.created_at, 0)
+
+    def test_client_gender_choices(self):
+        male_client = create_client(
+            self.super_user,
+            "John",
+            "Doe",
+            Client.Gender.MALE,
+            "604-555-1234",
+            self.zone,
+        )
+        female_client = create_client(
+            self.super_user,
+            "Jane",
+            "Doe",
+            Client.Gender.FEMALE,
+            "604-555-5678",
+            self.zone,
+        )
+
+        self.assertEqual(male_client.gender, Client.Gender.MALE)
+        self.assertNotEqual(male_client.gender, Client.Gender.FEMALE)
+        self.assertEqual(female_client.gender, Client.Gender.FEMALE)
+        self.assertNotEqual(female_client.gender, Client.Gender.MALE)

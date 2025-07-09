@@ -71,7 +71,6 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                     <>
                         <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
                         <Typography variant={"body1"}>{matchingRisk?.goal_name}</Typography>
-                        <br />
                         <Button
                             variant="outlined"
                             onClick={() => {
@@ -88,7 +87,6 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                     <>
                         <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
                         <Typography variant="body1">No current ongoing goals</Typography>
-                        <br />
                         <Button
                             variant="outlined"
                             onClick={() => {

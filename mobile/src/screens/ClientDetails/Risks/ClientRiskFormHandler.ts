@@ -31,6 +31,7 @@ export const handleRiskSubmit = async (
         let risk;
         const client = await database.get<Client>(modelName.clients).find(values.client_id);
         const currentTime = new Date().getTime();
+        console.log("test");
         await database.write(async () => {
             risk = await addRisk(
                 client,
@@ -42,12 +43,12 @@ export const handleRiskSubmit = async (
                 currentTime
             );
         });
-
+        console.log("test2");
         await client.updateRisk(values.risk_type, values.risk_level, currentTime);
         setRisk(risk);
-
         AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {
+        console.error("Risk submission failed:", e);
         alert(i18n.t("riskAttr.updateFailureAlert"));
     }
 };

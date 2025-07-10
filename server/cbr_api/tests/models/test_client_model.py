@@ -1,3 +1,4 @@
+from unittest.mock import patch
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from cbr_api.models import Client, Disability, RiskLevel, UserCBR, Zone
@@ -175,3 +176,27 @@ class ClientModelTests(TestCase):
         # Client creates the client instance but does not save it, so we need to call full_clean to validate
         with self.assertRaises(ValidationError):
             client.full_clean()  # This should raise a validation error due to max length constraints
+
+    @patch("os.path.splitext")
+    @patch("cbr_api.models.get_random_string")
+    def test_rename_file_method_with_primary_key(
+        self, mock_get_random_string, mock_splitext
+    ):
+        client = create_client(
+            id="FILE001",
+            user=self.super_user,
+            first="Frank",
+            last="Castle",
+            gender=Client.Gender.MALE,
+            contact="604-555-1515",
+            zone=self.zone,
+        )
+
+        mock_splitext.return_value = ("original", ".jpg")
+        result = client.rename_file("original.jpg")
+        expected_file_name = "client-FILE001.jpg"
+
+        self.assertTrue(result.endswith(expected_file_name))
+        # random string only called if client has not primary key
+        mock_get_random_string.assert_not_called()
+        mock_splitext.assert_called_once_with("original.jpg")

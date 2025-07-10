@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 from cbr_api.models import Client, Disability, RiskLevel, UserCBR, Zone
 from cbr_api.tests.helpers import create_client
 
@@ -135,6 +136,7 @@ class ClientModelTests(TestCase):
             mental_risk_level=RiskLevel.HIGH,
             educat_risk_level=RiskLevel.MEDIUM,
         )
+
         self.assertEqual(client.health_risk_level, RiskLevel.HIGH)
         self.assertEqual(client.social_risk_level, RiskLevel.MEDIUM)
         self.assertEqual(client.nutrit_risk_level, RiskLevel.LOW)
@@ -146,3 +148,30 @@ class ClientModelTests(TestCase):
         self.assertEqual(client.nutrit_timestamp, 0)
         self.assertEqual(client.mental_timestamp, 0)
         self.assertEqual(client.last_visit_date, 0)
+
+    def test_client_str_field_max_lengths(self):
+        long_name = "A" * 51  # Max length for first_name and last_name is 50
+        long_full_name = "B" * 102  # Max length for full_name is 101
+        long_phone = "C" * 51  # Max length for phone_number is 50
+        long_village = "D" * 51  # Max length for village is 50
+        long_disability = "E" * 101  # Max length for other_disability is 100
+
+        client = Client(
+            user_id=self.super_user,
+            first_name=long_name,
+            last_name=long_name,
+            full_name=long_full_name,
+            other_disability=long_disability,
+            gender=Client.Gender.MALE,
+            phone_number=long_phone,
+            zone=self.zone,
+            village=long_village,
+            created_at=0,
+            birth_date=0,
+            longitude=0.0,
+            latitude=0.0,
+        )
+
+        # Client creates the client instance but does not save it, so we need to call full_clean to validate
+        with self.assertRaises(ValidationError):
+            client.full_clean()  # This should raise a validation error due to max length constraints

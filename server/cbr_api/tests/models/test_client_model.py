@@ -104,3 +104,19 @@ class ClientModelTests(TestCase):
         self.assertEqual(client.caregiver_name, "Jane Doe")
         self.assertEqual(client.caregiver_phone, "604-555-5678")
         self.assertEqual(client.caregiver_email, "jane@example.com")
+
+    def test_client_many_to_many_disability_relationship(self):
+        client = create_client(
+            user=self.super_user,
+            first="David",
+            last="Johnson",
+            gender=Client.Gender.MALE,
+            contact="604-555-1313",
+            zone=self.zone,
+        )
+        physical_disability = Disability.objects.create(disability_type="Physical")
+        client.disability.add(self.disability, physical_disability)
+
+        self.assertEqual(client.disability.count(), 2)
+        self.assertIn(self.disability, client.disability.all())
+        self.assertIn(physical_disability, client.disability.all())

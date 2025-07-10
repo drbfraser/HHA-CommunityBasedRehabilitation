@@ -1,5 +1,5 @@
 from django.test import TestCase
-from cbr_api.models import UserCBR, Zone
+from cbr_api.models import Client, UserCBR, Zone
 from cbr_api.tests.helpers import create_client
 
 
@@ -20,10 +20,20 @@ class UserCBRModelTests(TestCase):
 
     def test_phone_number_fields_and_defaults(self):
         jane = create_client(
-            self.super_user, "Jane", "Smith", "F", "604-555-7676", self.zone
+            user=self.super_user,
+            first="Jane",
+            last="Smith",
+            gender=Client.Gender.FEMALE,
+            contact="604-555-7676",
+            zone=self.zone,
         )
         john = create_client(
-            self.super_user, "John", "Smith", "M", "604-555-4242", self.zone
+            user=self.super_user,
+            first="John",
+            last="Smith",
+            gender=Client.Gender.MALE,
+            contact="604-555-4242",
+            zone=self.zone,
         )
 
         self.assertEqual(jane.phone_number, "604-555-7676")

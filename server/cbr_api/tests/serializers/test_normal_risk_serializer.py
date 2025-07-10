@@ -1,5 +1,6 @@
 from django.test import TestCase
 from cbr_api.models import (
+    Client,
     UserCBR,
     Zone,
     ClientRisk,
@@ -23,7 +24,12 @@ class NormalRiskSerializerTests(TestCase):
             zone=self.zone,
         )
         self.client = create_client(
-            self.super_user, "Jane", "Smith", "F", "604-555-7676", self.zone
+            user=self.super_user,
+            first="Jane",
+            last="Smith",
+            gender=Client.Gender.FEMALE,
+            contact="604-555-7676",
+            zone=self.zone,
         )
 
     def test_goal_status_update(self):

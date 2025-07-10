@@ -81,3 +81,26 @@ class ClientModelTests(TestCase):
         self.assertNotEqual(host_community_client.hcr_type, Client.HCRType.REFUGEE)
         self.assertEqual(refugee_client.hcr_type, Client.HCRType.REFUGEE)
         self.assertNotEqual(refugee_client.hcr_type, Client.HCRType.HOST_COMMUNITY)
+
+    def test_client_optional_fields(self):
+        client = create_client(
+            user=self.super_user,
+            first="Charlie",
+            last="Brown",
+            full_name="Charlie Brown",
+            gender=Client.Gender.MALE,
+            contact="604-555-1212",
+            zone=self.zone,
+            other_disability="Visual Impairment",
+            caregiver_present=True,
+            caregiver_name="Jane Doe",
+            caregiver_phone="604-555-5678",
+            caregiver_email="jane@example.com",
+        )
+
+        self.assertEqual(client.full_name, "Charlie Brown")
+        self.assertEqual(client.other_disability, "Visual Impairment")
+        self.assertTrue(client.caregiver_present)
+        self.assertEqual(client.caregiver_name, "Jane Doe")
+        self.assertEqual(client.caregiver_phone, "604-555-5678")
+        self.assertEqual(client.caregiver_email, "jane@example.com")

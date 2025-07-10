@@ -1,5 +1,5 @@
 from django.test import TestCase
-from cbr_api.models import Client, Disability, UserCBR, Zone
+from cbr_api.models import Client, Disability, RiskLevel, UserCBR, Zone
 from cbr_api.tests.helpers import create_client
 
 
@@ -120,3 +120,29 @@ class ClientModelTests(TestCase):
         self.assertEqual(client.disability.count(), 2)
         self.assertIn(self.disability, client.disability.all())
         self.assertIn(physical_disability, client.disability.all())
+
+    def test_client_risk_level_fields(self):
+        client = create_client(
+            user=self.super_user,
+            first="Eve",
+            last="Adams",
+            gender=Client.Gender.FEMALE,
+            contact="604-555-1414",
+            zone=self.zone,
+            health_risk_level=RiskLevel.HIGH,
+            social_risk_level=RiskLevel.MEDIUM,
+            nutrit_risk_level=RiskLevel.LOW,
+            mental_risk_level=RiskLevel.HIGH,
+            educat_risk_level=RiskLevel.MEDIUM,
+        )
+        self.assertEqual(client.health_risk_level, RiskLevel.HIGH)
+        self.assertEqual(client.social_risk_level, RiskLevel.MEDIUM)
+        self.assertEqual(client.nutrit_risk_level, RiskLevel.LOW)
+        self.assertEqual(client.mental_risk_level, RiskLevel.HIGH)
+        self.assertEqual(client.educat_risk_level, RiskLevel.MEDIUM)
+        self.assertEqual(client.health_timestamp, 0)
+        self.assertEqual(client.social_timestamp, 0)
+        self.assertEqual(client.educat_timestamp, 0)
+        self.assertEqual(client.nutrit_timestamp, 0)
+        self.assertEqual(client.mental_timestamp, 0)
+        self.assertEqual(client.last_visit_date, 0)

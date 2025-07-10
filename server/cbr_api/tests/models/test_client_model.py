@@ -200,3 +200,27 @@ class ClientModelTests(TestCase):
         # random string only called if client has not primary key
         mock_get_random_string.assert_not_called()
         mock_splitext.assert_called_once_with("original.jpg")
+
+    @patch("os.path.splitext")
+    @patch("cbr_api.models.get_random_string")
+    def test_rename_file_without_primary_key(self, mock_random_string, mock_splitext):
+        mock_splitext.return_value = ("original", ".jpg")
+        mock_random_string.return_value = "ABC123DEF4"
+
+        client = client = Client(
+            user_id=self.super_user,
+            first_name="John",
+            last_name="Doe",
+            gender=Client.Gender.MALE,
+            phone_number="604-555-1234",
+            zone=self.zone,
+            created_at=0,
+            birth_date=0,
+            longitude=0.0,
+            latitude=0.0,
+        )
+
+        result = client.rename_file("original.jpg")
+
+        self.assertTrue(result.endswith("temp-ABC123DEF4-original.jpg"))
+        mock_random_string.assert_called_once_with(10)

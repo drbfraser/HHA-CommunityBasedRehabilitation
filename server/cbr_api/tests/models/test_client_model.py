@@ -55,3 +55,28 @@ class ClientModelTests(TestCase):
         self.assertNotEqual(male_client.gender, Client.Gender.FEMALE)
         self.assertEqual(female_client.gender, Client.Gender.FEMALE)
         self.assertNotEqual(female_client.gender, Client.Gender.MALE)
+
+    def test_hcr_type_choices(self):
+        host_community_client = create_client(
+            self.super_user,
+            "Alice",
+            "Smith",
+            Client.Gender.FEMALE,
+            "604-555-7890",
+            self.zone,
+            Client.HCRType.HOST_COMMUNITY,
+        )
+        refugee_client = create_client(
+            self.super_user,
+            "Bob",
+            "Smith",
+            Client.Gender.MALE,
+            "604-555-1011",
+            self.zone,
+            Client.HCRType.REFUGEE,
+        )
+
+        self.assertEqual(host_community_client.hcr_type, Client.HCRType.HOST_COMMUNITY)
+        self.assertNotEqual(host_community_client.hcr_type, Client.HCRType.REFUGEE)
+        self.assertEqual(refugee_client.hcr_type, Client.HCRType.REFUGEE)
+        self.assertNotEqual(refugee_client.hcr_type, Client.HCRType.HOST_COMMUNITY)

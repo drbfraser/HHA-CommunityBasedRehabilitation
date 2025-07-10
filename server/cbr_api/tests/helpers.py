@@ -1,8 +1,10 @@
-from cbr_api.models import Client, UserCBR, Zone
+from cbr_api.models import Client
 import uuid
 
 
-def create_client(user, first, last, gender, contact, zone):
+def create_client(
+    user, first, last, gender, contact, zone, hcr_type=Client.HCRType.NOT_SET
+):
     return Client.objects.create(
         id=uuid.uuid4(),
         user_id=user,
@@ -16,4 +18,5 @@ def create_client(user, first, last, gender, contact, zone):
         longitude=0.0,
         latitude=0.0,
         village="",
+        hcr_type=hcr_type,
     )

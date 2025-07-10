@@ -24,6 +24,7 @@ class ClientModelTests(TestCase):
             self.zone,
         )
         self.assertIsNotNone(new_client.id)
+        self.assertEqual(new_client.user_id, self.super_user)
         self.assertEqual(new_client.first_name, "John")
         self.assertEqual(new_client.last_name, "Doe")
         self.assertEqual(new_client.gender, Client.Gender.MALE)

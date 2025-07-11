@@ -1,6 +1,8 @@
+import tempfile
 from unittest.mock import patch
-from django.test import TestCase,  override_settings
+from django.test import TestCase, override_settings
 from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import SimpleUploadedFile
 from cbr_api.models import Client, Disability, RiskLevel, UserCBR, Zone
 from cbr_api.tests.helpers import create_client
 
@@ -242,3 +244,37 @@ class ClientModelTests(TestCase):
             self.zone.delete()  # Should raise an error due to foreign key constraint
 
     @override_settings(MEDIA_ROOT=tempfile.gettempdir())
+    def test_client_picture_upload(self):
+        test_image = SimpleUploadedFile(
+            name="test_image.jpg",
+            content=b"fake image content",
+            content_type="image/jpeg",
+        )
+        client = create_client(
+            user=self.super_user,
+            first="Hank",
+            last="Pym",
+            gender=Client.Gender.MALE,
+            contact="604-555-1717",
+            zone=self.zone,
+            picture=test_image,
+        )
+
+        self.assertIsNotNone(client.picture)
+        self.assertTrue(client.picture.name)
+        self.assertTrue(client.picture.name.endswith(f"client-{client.id}.jpg"))
+
+    def test_client_active_status_toggle(self):
+        client = create_client(
+            user=self.super_user,
+            first="Ivy",
+            last="League",
+            gender=Client.Gender.FEMALE,
+            contact="604-555-1818",
+            zone=self.zone,
+        )
+
+        self.assertTrue(client.is_active)
+        client.is_active = False
+        client.save()
+        self.assertFalse(client.is_active)

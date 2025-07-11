@@ -277,4 +277,5 @@ class ClientModelTests(TestCase):
         self.assertTrue(client.is_active)
         client.is_active = False
         client.save()
+        client.refresh_from_db()
         self.assertFalse(client.is_active)

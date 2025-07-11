@@ -1,5 +1,5 @@
 from unittest.mock import patch
-from django.test import TestCase
+from django.test import TestCase,  override_settings
 from django.core.exceptions import ValidationError
 from cbr_api.models import Client, Disability, RiskLevel, UserCBR, Zone
 from cbr_api.tests.helpers import create_client
@@ -224,3 +224,21 @@ class ClientModelTests(TestCase):
 
         self.assertTrue(result.endswith("temp-ABC123DEF4-original.jpg"))
         mock_random_string.assert_called_once_with(10)
+
+    def test_client_cascade_protection(self):
+        client = create_client(
+            user=self.super_user,
+            first="Grace",
+            last="Hopper",
+            gender=Client.Gender.FEMALE,
+            contact="604-555-1616",
+            zone=self.zone,
+        )
+
+        with self.assertRaises(Exception):
+            self.super_user.delete()  # Should raise an error due to foreign key constraint
+
+        with self.assertRaises(Exception):
+            self.zone.delete()  # Should raise an error due to foreign key constraint
+
+    @override_settings(MEDIA_ROOT=tempfile.gettempdir())

@@ -189,7 +189,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 />
                                 <ModalForm
                                     style={styles.riskInputStyle}
-                                    label={fieldLabels[FormField.goal]}
+                                    label={fieldLabels[FormField.goal_name]}
                                     formikField={FormField.goal}
                                     formikProps={formikProps}
                                     transKey={getRiskGoalsTranslationKey(riskType)}

@@ -13,8 +13,11 @@ export default function GoalStatusChip(props: GoalChipProps) {
     return (
         <Chip
             title={goalStatus ? goalStatus.name : i18n.t("newVisit.PLACEHOLDER-socialGoals.1")}
-            buttonStyle={{ backgroundColor: goalStatus ? goalStatus.color : "primary", borderRadius: 0 }}
-            containerStyle={{borderRadius: 0}}
+            buttonStyle={{
+                backgroundColor: goalStatus ? goalStatus.color : "primary",
+                borderRadius: 0,
+            }}
+            containerStyle={{ borderRadius: 0 }}
             type="solid"
         />
     );

@@ -146,7 +146,6 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     <GoalStatusChip goalStatus={formikProps.values.goal_status} />
                                 </View>
 
-
                                 <RadioButton.Group
                                     value={formikProps.values.risk_level}
                                     onValueChange={(value) => onRiskLevelChange(formikProps, value)}

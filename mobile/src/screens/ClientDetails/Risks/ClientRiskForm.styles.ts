@@ -42,15 +42,15 @@ const useStyles = () =>
             marginTop: 20,
         },
         goalStatusContainer: {
-            flexDirection: "row", 
-            alignItems: "center", 
-            marginBottom: 8
+            flexDirection: "row",
+            alignItems: "center",
+            marginBottom: 8,
         },
         goalStatusText: {
             fontWeight: "bold",
             marginRight: 8,
-            fontSize: 16
-        }
+            fontSize: 16,
+        },
     });
 export default useStyles;
 

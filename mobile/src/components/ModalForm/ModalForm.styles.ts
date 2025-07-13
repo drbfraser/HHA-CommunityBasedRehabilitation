@@ -23,7 +23,7 @@ const useStyles = () =>
         },
         editIcon: {
             alignSelf: "center",
-            marginRight: 16
+            marginRight: 16,
         },
         closeButtonText: {
             fontSize: 16,

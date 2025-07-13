@@ -22,6 +22,7 @@ import { SyncContext } from "../../../context/SyncContext/SyncContext";
 import useStyles, { riskRadioButtonStyles } from "./ClientRiskForm.styles";
 
 import { handleRiskSubmit } from "./ClientRiskFormHandler";
+import GoalStatusChip from "@/src/components/GoalStatusChip/GoalStatusChip";
 
 export interface ClientRiskFormProps {
     riskData: any;
@@ -138,6 +139,13 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                             {/* Scroll view needed for modal to dynamically grow in height when textarea inputs being to take up more lines */}
                             <ScrollView contentContainerStyle={styles.modalContentStyle}>
                                 <Text style={styles.riskHeaderStyle}>{getHeaderText()}</Text>
+
+                                <View style={styles.goalStatusContainer}>
+                                    <Text style={styles.goalStatusText}>Goal Status:</Text>
+                                    {/* TODO: turn this into pressable and open goal status modal when that issue is completed */}
+                                    <GoalStatusChip goalStatus={formikProps.values.goal_status} />
+                                </View>
+
 
                                 <RadioButton.Group
                                     value={formikProps.values.risk_level}

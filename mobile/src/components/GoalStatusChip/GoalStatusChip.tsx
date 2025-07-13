@@ -19,7 +19,7 @@ export default function GoalStatusChip(props: GoalChipProps) {
                 borderRadius: 0,
                 paddingVertical: 2,
                 paddingHorizontal: 6,
-                height: 28, 
+                height: 28,
             }}
             containerStyle={{
                 borderRadius: 0,

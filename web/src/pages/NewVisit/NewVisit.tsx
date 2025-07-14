@@ -12,7 +12,7 @@ import {
     StepContent,
     StepLabel,
     Stepper,
-    Stack
+    Stack,
 } from "@mui/material";
 import { FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 
@@ -67,7 +67,9 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                         ))
                     }
                 />
-                <Typography component="div"><br /></Typography>
+                <Typography component="div">
+                    <br />
+                </Typography>
                 {matchingRisk && matchingRisk.goal_status === OutcomeGoalMet.NOTSET ? (
                     <>
                         <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
@@ -89,26 +91,26 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                         <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
                         <Typography variant="body1">No current ongoing goals</Typography>
                         <Stack direction="row" spacing={2} mt={1}>
-                        <Button
-                            variant="outlined"
-                            size="medium"
-                            onClick={() => {
-                                setRisk(matchingRisk);
-                                setIsPreviousGoalsModalOpen(true);
-                            }}
-                        >
-                            View Previous Goals
-                        </Button>
-                        <Button
-                            variant="contained"
-                            size="medium"
-                            onClick={() => {
-                                setRisk(matchingRisk);
-                                setIsModalOpen(true);
-                            }}
-                        >
-                            Create New Goal
-                        </Button>
+                            <Button
+                                variant="outlined"
+                                size="medium"
+                                onClick={() => {
+                                    setRisk(matchingRisk);
+                                    setIsPreviousGoalsModalOpen(true);
+                                }}
+                            >
+                                View Previous Goals
+                            </Button>
+                            <Button
+                                variant="contained"
+                                size="medium"
+                                onClick={() => {
+                                    setRisk(matchingRisk);
+                                    setIsModalOpen(true);
+                                }}
+                            >
+                                Create New Goal
+                            </Button>
                         </Stack>
                     </>
                 ) : matchingRisk ? (
@@ -122,22 +124,22 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                             risks={risks}
                         />
                         <Stack direction="row" spacing={2} mt={1}>
-                        <Button
-                            variant="contained"
-                            onClick={() => {
-                                setRisk(matchingRisk);
-                                setIsModalOpen(true);
-                            }}
-                        >
-                            Update Goal
-                        </Button>
+                            <Button
+                                variant="contained"
+                                onClick={() => {
+                                    setRisk(matchingRisk);
+                                    setIsModalOpen(true);
+                                }}
+                            >
+                                Update Goal
+                            </Button>
                         </Stack>
                     </>
                 ) : null}
-                <Typography component="div"><br /></Typography>
-                {matchingRisk && <OutcomeField
-                            visitType={visitType}
-                />}
+                <Typography component="div">
+                    <br />
+                </Typography>
+                {matchingRisk && <OutcomeField visitType={visitType} />}
             </FormControl>
         );
     };

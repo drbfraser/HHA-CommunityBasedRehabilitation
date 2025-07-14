@@ -18,19 +18,19 @@ const OutcomeField = (props: IModalProps) => {
     const fieldName = `${VisitFormField.outcomes}.${props.visitType}`;
 
     return (
-            <div>
+        <div>
             <FormLabel focused={false}>{t("newVisit.outcomeOfGoal")}</FormLabel>
-                <Field
-                    type="text"
-                    component={TextField}
-                    variant="outlined"
-                    name={`${fieldName}.${OutcomeFormField.outcome}`}
-                    label={visitFieldLabels[OutcomeFormField.outcome]}
-                    required
-                    fullWidth
-                    multiline
-                />
-            </div>
+            <Field
+                type="text"
+                component={TextField}
+                variant="outlined"
+                name={`${fieldName}.${OutcomeFormField.outcome}`}
+                label={visitFieldLabels[OutcomeFormField.outcome]}
+                required
+                fullWidth
+                multiline
+            />
+        </div>
     );
 };
 

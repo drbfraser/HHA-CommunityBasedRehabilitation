@@ -183,9 +183,9 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     onClose={closeGoalStatusModal}
                                 >
                                     <RadioButton.Group
-                                        onValueChange={(value) =>
-                                            formikProps.setFieldValue(FormField.goal_status, value)
-                                        }
+                                        onValueChange={(value) => {
+                                            formikProps.setFieldValue(FormField.goal_status, value);
+                                        }}
                                         value={formikProps.values.goal_status}
                                     >
                                         {goalStatusOptions.map((option, index) => (
@@ -251,21 +251,24 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     </View>
                                 </RadioButton.Group>
 
-                                <ModalForm
-                                    style={styles.riskInputStyle}
+                                <TextInput
+                                    mode="outlined"
                                     label={fieldLabels[FormField.requirement]}
-                                    formikField={FormField.requirement}
-                                    formikProps={formikProps}
-                                    transKey={getRiskRequirementsTranslationKey(riskType)}
-                                    defaultValue={formikProps.values.requirement}
-                                />
-                                <ModalForm
+                                    value={formikProps.values.requirement}
+                                    onChangeText={formikProps.handleChange(FormField.requirement)}
+                                    onBlur={() =>
+                                        formikProps.setFieldTouched(FormField.requirement)
+                                    }
                                     style={styles.riskInputStyle}
+                                />
+
+                                <TextInput
+                                    mode="outlined"
                                     label={fieldLabels[FormField.goal_name]}
-                                    formikField={FormField.goal}
-                                    formikProps={formikProps}
-                                    transKey={getRiskGoalsTranslationKey(riskType)}
-                                    defaultValue={formikProps.values.goal}
+                                    value={formikProps.values.goal}
+                                    onChangeText={formikProps.handleChange(FormField.goal)}
+                                    onBlur={() => formikProps.setFieldTouched(FormField.goal)}
+                                    style={styles.riskInputStyle}
                                 />
 
                                 <Button

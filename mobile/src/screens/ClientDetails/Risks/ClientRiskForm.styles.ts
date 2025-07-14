@@ -54,6 +54,9 @@ const useStyles = () =>
         cancellationReasonInput: {
             marginTop: 10,
         },
+        goalStatusRadioGroup: {
+            margin: 10,
+        },
     });
 export default useStyles;
 

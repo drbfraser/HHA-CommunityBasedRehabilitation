@@ -24,6 +24,7 @@ import useStyles, { riskRadioButtonStyles } from "./ClientRiskForm.styles";
 import { handleRiskSubmit } from "./ClientRiskFormHandler";
 import GoalStatusChip from "@/src/components/GoalStatusChip/GoalStatusChip";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import ModalWindow from "../../../components/ModalForm/components/ModalWindow";
 
 export interface ClientRiskFormProps {
     riskData: any;
@@ -43,6 +44,9 @@ const toastValidationError = () => {
 export const ClientRiskForm = (props: ClientRiskFormProps) => {
     const styles = useStyles();
     const [showModal, setShowModal] = useState(false);
+    const [showGoalStatusModal, setShowGoalStatusModal] = useState(false);
+    const openGoalStatusModal = () => setShowGoalStatusModal(true);
+    const closeGoalStatusModal = () => setShowGoalStatusModal(false);
     const { autoSync, cellularSync } = useContext(SyncContext);
     const database = useDatabase();
     const { t } = useTranslation();
@@ -143,7 +147,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
 
                                 <View style={styles.goalStatusContainer}>
                                     <Text style={styles.goalStatusText}>Goal Status:</Text>
-                                    <TouchableRipple>
+                                    <TouchableRipple onPress={openGoalStatusModal}>
                                         <View
                                             style={{ flexDirection: "row", alignItems: "center" }}
                                         >
@@ -158,6 +162,14 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                         </View>
                                     </TouchableRipple>
                                 </View>
+
+                                <ModalWindow
+                                    label={"Update Goal Status"}
+                                    visible={showGoalStatusModal}
+                                    onClose={closeGoalStatusModal}
+                                >
+                                    <Text>hello</Text>
+                                </ModalWindow>
 
                                 <RadioButton.Group
                                     value={formikProps.values.risk_level}

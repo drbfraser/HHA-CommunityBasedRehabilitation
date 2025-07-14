@@ -113,7 +113,6 @@ const HomeScreen = (props: IHomeScreenProps) => {
                     >
                         {t("general.sync")}
                     </Button>
-
                     <Button
                         mode="contained"
                         icon={SyncModalIcon.alert}

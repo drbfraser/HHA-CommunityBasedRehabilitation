@@ -168,7 +168,7 @@ class Client(models.Model):
         file_root, file_ext = os.path.splitext(original_filename)
         new_filename = (
             f"client-{self.pk}{file_ext}"
-            if self.pk is not None
+            if self.pk
             else f"temp-{get_random_string(10)}-{file_root}{file_ext}"
         )
         return os.path.join(client_picture_upload_dir, new_filename)

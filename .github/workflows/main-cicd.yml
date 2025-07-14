@@ -14,7 +14,7 @@ env:
   HUB_USER: '${{ secrets.HUB_USER }}'
   GRAFANA_API_KEY: '${{ secrets.GRAFANA_API_KEY }}'
   NPM_VERSION: 10.7.0
-  CLONE_DEPTH: 50
+  CLONE_DEPTH: 100
   # Keep npm's cache out of home directory (mounted from host)
   # otherwise, NPM gives EACCES error trying to mkdir /github/home/.npm
   # Using the /isolated_build/ folder (inside the container) keeps permissions straight

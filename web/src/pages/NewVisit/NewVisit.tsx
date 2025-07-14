@@ -270,9 +270,7 @@ const NewVisit = () => {
                         <ClientRisksModal
                             risk={selectedRisk}
                             setRisk={(updatedRisk) => {
-                                setRisks((prev) =>
-                                    prev.map((r) => (r.id === updatedRisk.id ? updatedRisk : r))
-                                );
+                                setRisks((prevRisks) => [updatedRisk, ...prevRisks]);
                                 setIsModalOpen(false);
                             }}
                             close={() => setIsModalOpen(false)}

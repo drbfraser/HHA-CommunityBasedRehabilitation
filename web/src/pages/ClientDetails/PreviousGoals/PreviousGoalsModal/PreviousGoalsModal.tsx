@@ -57,7 +57,7 @@ const PreviousGoalsModal = ({ clientId, riskType, close }: IModalProps) => {
                 setLoadingError(true);
                 console.error("Failed to load previous goals", err);
             });
-    }, [clientId]);
+    }, [clientId, riskType]);
 
     useEffect(() => {
         getPreviousGoals();

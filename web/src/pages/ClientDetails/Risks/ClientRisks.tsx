@@ -79,9 +79,14 @@ const ClientRisks = ({ clientInfo, refreshClient }: IProps) => {
                                 </Typography>
                             </>
                         ) : (
+                            <>
+                            <Typography variant="subtitle2" component="h6">
+                                    Current Goal
+                            </Typography>
                             <Typography variant="body2" component="p">
                                 No current goal set
                             </Typography>
+                            </>
                         )}
                     </CardContent>
 

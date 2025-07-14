@@ -81,7 +81,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                 setIsModalOpen(true);
                             }}
                         >
-                            Create New Goal
+                            Create New {visitFieldLabels[visitType]} Goal
                         </Button>
                     </>
                 ) : matchingRisk &&
@@ -109,7 +109,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                     setIsModalOpen(true);
                                 }}
                             >
-                                Create New Goal
+                                Create New {visitFieldLabels[visitType]} Goal
                             </Button>
                         </Stack>
                     </>
@@ -131,7 +131,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                     setIsModalOpen(true);
                                 }}
                             >
-                                Update Goal
+                                Update {visitFieldLabels[visitType]} Goal
                             </Button>
                         </Stack>
                     </>

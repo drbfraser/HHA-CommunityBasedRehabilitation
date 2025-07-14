@@ -10,7 +10,6 @@ interface RiskChipProps extends ChipProps {
 const RiskLevelChip = (props: RiskChipProps) => {
     const riskLevel = riskLevels[props.risk];
 
-    /* TODO I have changed it with an existance check, need to reverse it when backend is ready */
     return (
         <Chip
             sx={riskLevelChipStyles.chip}

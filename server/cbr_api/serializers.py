@@ -169,6 +169,7 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
             "goal",
             "goal_name",
             "goal_status",
+            "cancellation_reason",
             "start_date",
             "end_date",
             "change_type",
@@ -178,6 +179,12 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
 
 
 class NormalRiskSerializer(serializers.ModelSerializer):
+    NO_ACTIVE_GOAL_STATUSES = [
+        models.GoalOutcomes.CONCLUDED,
+        models.GoalOutcomes.NOT_SET,
+        models.GoalOutcomes.CANCELLED,
+    ]
+
     class Meta:
         model = models.ClientRisk
         fields = [
@@ -190,6 +197,7 @@ class NormalRiskSerializer(serializers.ModelSerializer):
             "goal",
             "goal_name",
             "goal_status",
+            "cancellation_reason",
             "start_date",
             "end_date",
             "change_type",
@@ -197,9 +205,9 @@ class NormalRiskSerializer(serializers.ModelSerializer):
 
         read_only_fields = ["id", "timestamp"]
 
-    def get_change_type(self, filter_params, goal_status, risk_level):
+    def get_previous_risk(self, filter_params):
         # find the previous risk record for the same client and risk type
-        previous_risk = (
+        return (
             models.ClientRisk.objects.filter(
                 client_id=filter_params["client"],
                 risk_type=filter_params["risk_type"],
@@ -208,6 +216,32 @@ class NormalRiskSerializer(serializers.ModelSerializer):
             .order_by("-timestamp")
             .first()
         )
+
+    def determine_effective_goal_status(
+        self, provided_goal_status, change_type, client, risk_type
+    ):
+        if provided_goal_status is not None:
+            return provided_goal_status
+
+        # if goal status is not provided and initial risk object, set to "NS"
+        if change_type == models.RiskChangeType.INITIAL:
+            return models.GoalOutcomes.NOT_SET
+
+        # for non-initial updates without goal_status, preserve the previous goal_status
+        filter_params = dict(
+            client=client,
+            risk_type=risk_type,
+            current_time=current_milli_time(),
+        )
+        previous_risk = self.get_previous_risk(filter_params)
+        if previous_risk:
+            return previous_risk.goal_status
+
+        # fallback (shouldn't happen, but just in case)
+        return models.GoalOutcomes.NOT_SET
+
+    def get_change_type(self, filter_params, goal_status, risk_level):
+        previous_risk = self.get_previous_risk(filter_params)
         # decide change_type based on previous risk
         if not previous_risk:
             return models.RiskChangeType.INITIAL
@@ -224,27 +258,15 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         else:
             return models.RiskChangeType.OTHER
 
-    def create(self, validated_data):
-        current_time = current_milli_time()
-        risk_type = validated_data["risk_type"]
-        risk_level = validated_data["risk_level"]
-        client = validated_data["client_id"]
-        goal_status = validated_data.get("goal_status")
+    def determine_client_risk_level(self, goal_status, original_risk_level):
+        # if risk update is for starting a new goal or a risk level change, keep the original risk level
+        if goal_status in self.NO_ACTIVE_GOAL_STATUSES:
+            return models.RiskLevel.NOT_ACTIVE
+        return original_risk_level
 
-        filter_params = dict(
-            client=client, risk_type=risk_type, current_time=current_time
-        )
-        change_type = self.get_change_type(filter_params, goal_status, risk_level)
-
-        # create the risk object with the change_type
-        validated_data["timestamp"] = current_time
-        validated_data["server_created_at"] = current_time
-        validated_data["id"] = uuid.uuid4()
-        validated_data["change_type"] = change_type
-
-        risk = models.ClientRisk.objects.create(**validated_data)
-        risk.save()
-
+    def update_client_risk_level_and_timestamp(
+        self, client, risk_type, risk_level, current_time
+    ):
         # update the client risk level and timestamp based on risk type
         if risk_type == models.RiskType.HEALTH:
             client.health_risk_level = risk_level
@@ -261,6 +283,44 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         elif risk_type == models.RiskType.MENTAL:
             client.mental_risk_level = risk_level
             client.mental_timestamp = current_time
+
+    def create(self, validated_data):
+        current_time = current_milli_time()
+        risk_type = validated_data["risk_type"]
+        risk_level = validated_data["risk_level"]
+        client = validated_data["client_id"]
+        goal_status = validated_data.get("goal_status")
+
+        filter_params = dict(
+            client=client, risk_type=risk_type, current_time=current_time
+        )
+        change_type = self.get_change_type(filter_params, goal_status, risk_level)
+
+        # effective goal_status for this risk record to use for updating client risk level
+        effective_goal_status = self.determine_effective_goal_status(
+            goal_status, change_type, client, risk_type
+        )
+
+        # create the risk object with the change_type
+        validated_data["timestamp"] = current_time
+        validated_data["server_created_at"] = current_time
+        validated_data["id"] = uuid.uuid4()
+        validated_data["change_type"] = change_type
+
+        risk = models.ClientRisk.objects.create(**validated_data)
+        risk.save()
+
+        # determine what the client's risk level should be based on goal status
+        client_risk_level = self.determine_client_risk_level(
+            effective_goal_status, risk_level
+        )
+
+        # update the client risk level and timestamp
+        self.update_client_risk_level_and_timestamp(
+            client, risk_type, client_risk_level, current_time
+        )
+
+        # update client's general updated_at timestamp
         client.updated_at = current_time
         client.save()
 
@@ -280,6 +340,7 @@ class ClientRiskSerializer(serializers.ModelSerializer):
             "goal",
             "goal_name",
             "goal_status",
+            "cancellation_reason",
             "start_date",
             "end_date",
         ]

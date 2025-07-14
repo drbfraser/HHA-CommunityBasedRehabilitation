@@ -1,5 +1,6 @@
 import { clientPrioritySort, IClientSummary } from "../../src/util/clients";
 import { RiskLevel } from "../../src/util/risks";
+import { OutcomeGoalMet } from "../../src/util/visits";
 
 const unusedClientSummaryProps: Omit<
     IClientSummary,

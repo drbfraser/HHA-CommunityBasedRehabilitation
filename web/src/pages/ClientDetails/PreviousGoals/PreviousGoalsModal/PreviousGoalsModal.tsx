@@ -22,6 +22,7 @@ import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IRisk } from "@cbr/common/util/risks";
 import { timestampToFormDate } from "@cbr/common/util/dates";
 import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
+import { OutcomeGoalMet } from "@cbr/common/util/visits";
 
 interface IModalProps {
     clientId: string;
@@ -45,7 +46,9 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
             .then((resp) => resp.json())
             .then((data: IRisk[]) => {
                 const filteredGoals = data.filter(
-                    (goal) => goal.goal_status === "CAN" || goal.goal_status === "CON"
+                    (goal) =>
+                        goal.goal_status === OutcomeGoalMet.CANCELLED ||
+                        goal.goal_status === OutcomeGoalMet.CONCLUDED
                 );
                 setGoals(filteredGoals);
             })

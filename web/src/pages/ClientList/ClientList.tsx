@@ -13,7 +13,7 @@ import {
     GridSortCellParams,
     GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { Cancel, FiberManualRecord } from "@mui/icons-material";
+import { Cancel, FiberManualRecord, RadioButtonUnchecked } from "@mui/icons-material";
 
 import { RiskLevel, riskLevels, RiskType } from "@cbr/common/util/risks";
 import { SearchOption } from "@cbr/common/util/searchOptions";
@@ -58,6 +58,8 @@ const RenderBadge = (params: GridRenderCellParams) => {
 
     return window.innerWidth >= compressedDataGridWidth ? (
         <RiskLevelChip clickable risk={risk} />
+    ) : String(risk) === RiskLevel.NOT_ACTIVE ? (
+        <RadioButtonUnchecked />
     ) : (
         <FiberManualRecord style={{ color: riskLevels[risk].color }} />
     );

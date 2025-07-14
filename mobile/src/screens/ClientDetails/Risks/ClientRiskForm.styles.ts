@@ -51,6 +51,9 @@ const useStyles = () =>
             marginRight: 8,
             fontSize: 16,
         },
+        cancellationReasonInput: {
+            marginTop: 10,
+        },
     });
 export default useStyles;
 

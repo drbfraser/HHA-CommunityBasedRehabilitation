@@ -205,6 +205,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     {formikProps.values.goal_status ===
                                         OutcomeGoalMet.CANCELLED && (
                                         <TextInput
+                                            style={styles.cancellationReasonInput}
                                             mode="outlined"
                                             label={fieldLabels[FormField.cancellation_reason]}
                                             value={formikProps.values.cancellation_reason}

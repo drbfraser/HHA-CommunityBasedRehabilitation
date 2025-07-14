@@ -51,6 +51,12 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
     const database = useDatabase();
     const { t } = useTranslation();
 
+    const goalStatusOptions = [
+        { value: "GO", label: t("newVisit.ongoing") },
+        { value: "CON", label: t("newVisit.PLACEHOLDER-socialGoals.0") },
+        { value: "CAN", label: t("newVisit.cancelled") },
+    ];
+
     const riskType: RiskType = props.riskData.risk_type;
 
     const getRiskFormInitialValues = () => {
@@ -168,7 +174,37 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     visible={showGoalStatusModal}
                                     onClose={closeGoalStatusModal}
                                 >
-                                    <Text>hello</Text>
+                                    <RadioButton.Group
+                                        onValueChange={(value) =>
+                                            formikProps.setFieldValue(FormField.goal_status, value)
+                                        }
+                                        value={formikProps.values.goal_status}
+                                    >
+                                        {goalStatusOptions.map((option, index) => (
+                                            <View
+                                                key={index}
+                                                style={{
+                                                    flexDirection: "row",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                <RadioButton value={option.value} />
+                                                <Text>{option.label}</Text>
+                                            </View>
+                                        ))}
+                                    </RadioButton.Group>
+
+                                    {formikProps.values.goal_status ===
+                                        OutcomeGoalMet.CANCELLED && (
+                                        <ModalForm
+                                            style={styles.riskInputStyle}
+                                            label={fieldLabels[FormField.cancellation_reason]}
+                                            formikField={FormField.cancellation_reason}
+                                            formikProps={formikProps}
+                                            transKey={getRiskRequirementsTranslationKey(riskType)}
+                                            defaultValue={formikProps.values.cancellation_reason}
+                                        />
+                                    )}
                                 </ModalWindow>
 
                                 <RadioButton.Group

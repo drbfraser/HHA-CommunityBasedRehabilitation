@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FormLabel, Typography, Grid } from "@mui/material";
+import { Box, FormLabel, Typography, Grid } from "@mui/material";
 import { useFormikContext } from "formik";
 import {
     VisitFormField,
@@ -71,7 +71,7 @@ const GoalField = (props: IModalProps) => {
 
             <FormLabel focused={false}>{getVisitGoalLabel(t, props.visitType)}</FormLabel>
             <Typography variant={"body1"}>{matchingRisk?.goal_name}</Typography>
-            <br />
+            <Box mt={1} />
 
             <FormLabel focused={false}>{getVisitGoalStatusLabel(t, props.visitType)}</FormLabel>
             <Grid container direction="column" spacing={3}>
@@ -81,7 +81,8 @@ const GoalField = (props: IModalProps) => {
                     </Stack>
                 </Grid>
             </Grid>
-            <br />
+            <Box mt={1} />
+
             <div>
                 <FormLabel focused={false}>
                     {getVisitGoalRequirementLabel(t, props.visitType)}

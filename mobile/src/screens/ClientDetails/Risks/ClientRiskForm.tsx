@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Alert, Platform, ScrollView, ToastAndroid, View } from "react-native";
 import {
     Button,
+    HelperText,
     Modal,
     Portal,
     RadioButton,
@@ -16,8 +17,6 @@ import {
 import {
     fieldLabels,
     FormField,
-    getRiskGoalsTranslationKey,
-    getRiskRequirementsTranslationKey,
     IRisk,
     OutcomeGoalMet,
     RiskLevel,
@@ -25,7 +24,6 @@ import {
     RiskType,
     validationSchema,
 } from "@cbr/common";
-import ModalForm from "../../../components/ModalForm/ModalForm";
 import { SyncContext } from "../../../context/SyncContext/SyncContext";
 import useStyles, { riskRadioButtonStyles } from "./ClientRiskForm.styles";
 
@@ -259,17 +257,51 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     onBlur={() =>
                                         formikProps.setFieldTouched(FormField.requirement)
                                     }
+                                    error={
+                                        !!(
+                                            formikProps.touched.requirement &&
+                                            formikProps.errors.requirement
+                                        )
+                                    }
                                     style={styles.riskInputStyle}
                                 />
+                                <HelperText
+                                    type="error"
+                                    visible={
+                                        !!(
+                                            formikProps.touched.requirement &&
+                                            formikProps.errors.requirement
+                                        )
+                                    }
+                                >
+                                    {formikProps.errors.requirement as string}
+                                </HelperText>
 
                                 <TextInput
                                     mode="outlined"
                                     label={fieldLabels[FormField.goal_name]}
-                                    value={formikProps.values.goal}
-                                    onChangeText={formikProps.handleChange(FormField.goal)}
-                                    onBlur={() => formikProps.setFieldTouched(FormField.goal)}
+                                    value={formikProps.values.goal_name}
+                                    onChangeText={formikProps.handleChange(FormField.goal_name)}
+                                    onBlur={() => formikProps.setFieldTouched(FormField.goal_name)}
+                                    error={
+                                        !!(
+                                            formikProps.touched.goal_name &&
+                                            formikProps.errors.goal_name
+                                        )
+                                    }
                                     style={styles.riskInputStyle}
                                 />
+                                <HelperText
+                                    type="error"
+                                    visible={
+                                        !!(
+                                            formikProps.touched.goal_name &&
+                                            formikProps.errors.goal_name
+                                        )
+                                    }
+                                >
+                                    {formikProps.errors.goal_name as string}
+                                </HelperText>
 
                                 <Button
                                     style={styles.submitButtonStyle}

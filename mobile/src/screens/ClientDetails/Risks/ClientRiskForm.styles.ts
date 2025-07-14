@@ -15,7 +15,7 @@ const useStyles = () =>
             flexDirection: "column",
         },
         modalContentStyle: {
-            gap: 20,
+            gap: 10,
         },
         riskInputStyle: {
             width: 320,
@@ -31,6 +31,7 @@ const useStyles = () =>
             fontWeight: "bold",
         },
         menuField: {
+            marginVertical: 10,
             flexDirection: "row",
             justifyContent: "space-evenly",
             gap: 20,
@@ -44,7 +45,7 @@ const useStyles = () =>
         goalStatusContainer: {
             flexDirection: "row",
             alignItems: "center",
-            marginBottom: 8,
+            marginVertical: 8,
         },
         goalStatusText: {
             fontWeight: "bold",

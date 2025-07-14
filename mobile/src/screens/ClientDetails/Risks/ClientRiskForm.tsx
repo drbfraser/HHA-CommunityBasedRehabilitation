@@ -3,7 +3,15 @@ import { Formik, FormikProps } from "formik";
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Platform, ScrollView, ToastAndroid, View } from "react-native";
-import { Button, Modal, Portal, RadioButton, Text, TouchableRipple } from "react-native-paper";
+import {
+    Button,
+    Modal,
+    Portal,
+    RadioButton,
+    Text,
+    TextInput,
+    TouchableRipple,
+} from "react-native-paper";
 
 import {
     fieldLabels,
@@ -196,13 +204,16 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
 
                                     {formikProps.values.goal_status ===
                                         OutcomeGoalMet.CANCELLED && (
-                                        <ModalForm
-                                            style={styles.riskInputStyle}
+                                        <TextInput
+                                            mode="outlined"
                                             label={fieldLabels[FormField.cancellation_reason]}
-                                            formikField={FormField.cancellation_reason}
-                                            formikProps={formikProps}
-                                            transKey={getRiskRequirementsTranslationKey(riskType)}
-                                            defaultValue={formikProps.values.cancellation_reason}
+                                            value={formikProps.values.cancellation_reason}
+                                            onChangeText={(text) =>
+                                                formikProps.setFieldValue(
+                                                    FormField.cancellation_reason,
+                                                    text
+                                                )
+                                            }
                                         />
                                     )}
                                 </ModalWindow>

@@ -48,7 +48,7 @@ const PreviousGoalsModal = ({ clientId, riskType, close }: IModalProps) => {
                 const filteredGoals = data.filter(
                     (goal) =>
                         (goal.goal_status === OutcomeGoalMet.CANCELLED ||
-                        goal.goal_status === OutcomeGoalMet.CONCLUDED) &&
+                            goal.goal_status === OutcomeGoalMet.CONCLUDED) &&
                         (!riskType || goal.risk_type === riskType)
                 );
                 setGoals(filteredGoals);

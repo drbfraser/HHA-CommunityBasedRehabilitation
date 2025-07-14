@@ -3,7 +3,7 @@ import { Formik, FormikProps } from "formik";
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Platform, ScrollView, ToastAndroid, View } from "react-native";
-import { Button, Modal, Portal, RadioButton, Text } from "react-native-paper";
+import { Button, Modal, Portal, RadioButton, Text, TouchableRipple } from "react-native-paper";
 
 import {
     fieldLabels,
@@ -23,6 +23,7 @@ import useStyles, { riskRadioButtonStyles } from "./ClientRiskForm.styles";
 
 import { handleRiskSubmit } from "./ClientRiskFormHandler";
 import GoalStatusChip from "@/src/components/GoalStatusChip/GoalStatusChip";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 export interface ClientRiskFormProps {
     riskData: any;
@@ -142,8 +143,20 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
 
                                 <View style={styles.goalStatusContainer}>
                                     <Text style={styles.goalStatusText}>Goal Status:</Text>
-                                    {/* TODO: turn this into pressable and open goal status modal when that issue is completed */}
-                                    <GoalStatusChip goalStatus={formikProps.values.goal_status} />
+                                    <TouchableRipple>
+                                        <View
+                                            style={{ flexDirection: "row", alignItems: "center" }}
+                                        >
+                                            <GoalStatusChip
+                                                goalStatus={formikProps.values.goal_status}
+                                            />
+                                            <Icon
+                                                name="edit-note"
+                                                size={20}
+                                                style={{ marginLeft: 8 }}
+                                            />
+                                        </View>
+                                    </TouchableRipple>
                                 </View>
 
                                 <RadioButton.Group

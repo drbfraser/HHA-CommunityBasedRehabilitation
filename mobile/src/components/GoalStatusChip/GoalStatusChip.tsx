@@ -16,7 +16,7 @@ export default function GoalStatusChip(props: GoalChipProps) {
             type="solid"
             buttonStyle={{
                 backgroundColor: goalStatus ? goalStatus.color : "primary",
-                borderRadius: 0,
+                borderRadius: 2.5,
                 paddingVertical: 2,
                 paddingHorizontal: 6,
                 height: 24,

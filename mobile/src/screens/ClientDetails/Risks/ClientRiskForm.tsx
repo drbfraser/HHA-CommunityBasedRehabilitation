@@ -22,6 +22,7 @@ import { SyncContext } from "../../../context/SyncContext/SyncContext";
 import useStyles, { riskRadioButtonStyles } from "./ClientRiskForm.styles";
 
 import { handleRiskSubmit } from "./ClientRiskFormHandler";
+import GoalStatusChip from "@/src/components/GoalStatusChip/GoalStatusChip";
 
 export interface ClientRiskFormProps {
     riskData: any;
@@ -139,6 +140,12 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                             <ScrollView contentContainerStyle={styles.modalContentStyle}>
                                 <Text style={styles.riskHeaderStyle}>{getHeaderText()}</Text>
 
+                                <View style={styles.goalStatusContainer}>
+                                    <Text style={styles.goalStatusText}>Goal Status:</Text>
+                                    {/* TODO: turn this into pressable and open goal status modal when that issue is completed */}
+                                    <GoalStatusChip goalStatus={formikProps.values.goal_status} />
+                                </View>
+
                                 <RadioButton.Group
                                     value={formikProps.values.risk_level}
                                     onValueChange={(value) => onRiskLevelChange(formikProps, value)}
@@ -181,7 +188,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                 />
                                 <ModalForm
                                     style={styles.riskInputStyle}
-                                    label={fieldLabels[FormField.goal]}
+                                    label={fieldLabels[FormField.goal_name]}
                                     formikField={FormField.goal}
                                     formikProps={formikProps}
                                     transKey={getRiskGoalsTranslationKey(riskType)}

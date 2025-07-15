@@ -16,6 +16,7 @@ import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import { IClient } from "@cbr/common/util/clients";
 import { getTranslatedRiskChartName } from "util/risks";
 import { riskHistoryStyles } from "./RiskHistory.styles";
+import { OutcomeGoalMet } from "@cbr/common/util/visits";
 
 interface IProps {
     client?: IClient;
@@ -32,6 +33,7 @@ interface IChartData {
 interface IDataPoint {
     timestamp: number;
     level: RiskLevel;
+    goal_status: OutcomeGoalMet;
 }
 
 const risksToChartData = (risks: IRisk[]) => {
@@ -43,37 +45,36 @@ const risksToChartData = (risks: IRisk[]) => {
         [RiskType.MENTAL]: [],
     };
 
+    // sort risks by timestamp
     risks.sort((a, b) => a.timestamp - b.timestamp);
 
+    // populate chart data
     risks.forEach((risk) => {
-        // TODO: REMOVE when working on visit
-        // if(risk.risk_type!==RiskType.NUTRITION) {
-        dataObj[risk.risk_type].push({
+        const array = dataObj[risk.risk_type];
+        array.push({
             timestamp: risk.timestamp,
             level: risk.risk_level,
+            goal_status: risk.goal_status,
         });
-        //}
     });
 
-    // add data for the current time
-    [RiskType.HEALTH, RiskType.EDUCATION, RiskType.SOCIAL, RiskType.NUTRITION].forEach(
-        (riskType) => {
-            // TODO: REMOVE when working on visit
-            // if(riskType!==RiskType.NUTRITION) {
-            const riskArray = dataObj[riskType];
+    // add point for each risk type at today
+    Object.keys(dataObj).forEach((key) => {
+        const riskType = key as RiskType;
+        const array = dataObj[riskType];
 
-            if (riskArray.length) {
-                riskArray.push({
-                    timestamp: Date.now(),
-                    level: riskArray[riskArray.length - 1].level,
-                });
-            }
-            //}
+        if (array.length > 0) {
+            array.push({
+                timestamp: Date.now(),
+                level: array[array.length - 1].level,
+                goal_status: array[array.length - 1].goal_status
+            });
         }
-    );
+    });
 
     return dataObj;
 };
+
 
 const RiskHistoryCharts = ({ client }: IProps) => {
     const [chartData, setChartData] = useState<IChartData>();
@@ -89,6 +90,29 @@ const RiskHistoryCharts = ({ client }: IProps) => {
     const RiskChart = ({ riskType, data }: { riskType: RiskType; data: IDataPoint[] }) => {
         const dateFormatter = getDateFormatterFromReference(client?.created_at);
 
+        const segments: IDataPoint[][] = [];
+        let currentSegment: IDataPoint[] = [];
+
+        for (let i = 0; i < data.length; i++) {
+            const risk = data[i];
+
+            if (risk.goal_status === OutcomeGoalMet.ONGOING) {
+                currentSegment.push(risk);
+            } else {
+                // push point on end (concluded/cancelled)
+                if (currentSegment.length > 0) {
+                    currentSegment.push(risk);
+                    segments.push([...currentSegment]);
+                    currentSegment = [];
+                }
+            }
+        }
+
+        // end case if current goal still ongoing
+        if (currentSegment.length > 0) {
+            segments.push(currentSegment);
+        }
+
         return (
             <Box sx={riskHistoryStyles.chartContainer}>
                 <ResponsiveContainer width="100%" height={chartHeight}>
@@ -97,7 +121,10 @@ const RiskHistoryCharts = ({ client }: IProps) => {
                         <XAxis
                             dataKey="timestamp"
                             type="number"
-                            domain={[data[0].timestamp, data.slice(-1)[0].timestamp]}
+                            domain={[
+                                data[0].timestamp,
+                                Date.now(),
+                            ]}
                             tickFormatter={dateFormatter}
                         />
                         <YAxis
@@ -110,19 +137,24 @@ const RiskHistoryCharts = ({ client }: IProps) => {
                             labelFormatter={dateFormatter}
                             formatter={(level: RiskLevel) => riskLevels[level].name}
                         />
-                        <Line
-                            type="stepAfter"
-                            name={getTranslatedRiskChartName(t, riskType)}
-                            data={data}
-                            dataKey="level"
-                            stroke={riskLevels[data.slice(-1)[0].level].color}
-                            strokeWidth={6}
-                        />
+                        {segments.map((segment, index) => (
+                            <Line
+                                key={index}
+                                type="stepAfter"
+                                name={getTranslatedRiskChartName(t, riskType)}
+                                data={segment}
+                                dataKey="level"
+                                stroke={riskLevels[segment[segment.length - 1].level].color}
+                                strokeWidth={6}
+                                isAnimationActive={false}
+                            />
+                        ))}
                     </LineChart>
                 </ResponsiveContainer>
             </Box>
         );
     };
+
 
     return (
         <Grid container>

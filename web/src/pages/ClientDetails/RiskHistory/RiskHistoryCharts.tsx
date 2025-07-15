@@ -67,14 +67,13 @@ const risksToChartData = (risks: IRisk[]) => {
             array.push({
                 timestamp: Date.now(),
                 level: array[array.length - 1].level,
-                goal_status: array[array.length - 1].goal_status
+                goal_status: array[array.length - 1].goal_status,
             });
         }
     });
 
     return dataObj;
 };
-
 
 const RiskHistoryCharts = ({ client }: IProps) => {
     const [chartData, setChartData] = useState<IChartData>();
@@ -121,10 +120,7 @@ const RiskHistoryCharts = ({ client }: IProps) => {
                         <XAxis
                             dataKey="timestamp"
                             type="number"
-                            domain={[
-                                data[0].timestamp,
-                                Date.now(),
-                            ]}
+                            domain={[data[0].timestamp, Date.now()]}
                             tickFormatter={dateFormatter}
                         />
                         <YAxis
@@ -154,7 +150,6 @@ const RiskHistoryCharts = ({ client }: IProps) => {
             </Box>
         );
     };
-
 
     return (
         <Grid container>

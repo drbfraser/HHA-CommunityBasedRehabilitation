@@ -8,19 +8,28 @@ import { AutoSyncDB } from "../../util/syncHandler";
 
 // TODO: profile picture does not upload correctly to server
 
-export const addRisk = async (client: any, database: dbType, type, level, req, goal, time) => {
+export const addRisk = async (
+    client: any,
+    database: dbType,
+    type,
+    level,
+    req,
+    goalName,
+    goalStatus,
+    cancellationReason,
+    time
+) => {
     const risk = await database.get(modelName.risks).create((risk: any) => {
         risk.client.set(client);
         risk.risk_type = type;
         risk.risk_level = level;
         risk.requirement = req;
-        risk.goal = goal;
-        // TODO: update fields to use goal_name and inlude goal_status
-        risk.goal_name = goal || "No goal set";
-        risk.goal_status = OutcomeGoalMet.NOTSET;
+        risk.goal = goalName;
+        risk.goal_name = goalName;
+        risk.goal_status = goalStatus;
+        risk.cancellation_reason = cancellationReason || "";
         risk.timestamp = time;
         risk.start_date = time;
-        risk.end_date = 0;
     });
     return risk;
 };
@@ -33,6 +42,9 @@ const handleNewMobileClientSubmit = async (
     autoSync: boolean,
     cellularSync: boolean
 ) => {
+    enum CancellationReason {
+        NONE = "None",
+    }
     try {
         let newClient;
         const currentUser = await database.get(modelName.users).find(userID);
@@ -72,6 +84,8 @@ const handleNewMobileClientSubmit = async (
                 values.healthRisk,
                 values.healthRequirements,
                 values.healthGoals,
+                OutcomeGoalMet.NOTSET,
+                CancellationReason.NONE,
                 newClient.createdAt
             );
             addRisk(
@@ -81,6 +95,8 @@ const handleNewMobileClientSubmit = async (
                 values.socialRisk,
                 values.socialRequirements,
                 values.socialGoals,
+                OutcomeGoalMet.NOTSET,
+                CancellationReason.NONE,
                 newClient.createdAt
             );
             addRisk(
@@ -90,6 +106,8 @@ const handleNewMobileClientSubmit = async (
                 values.educationRisk,
                 values.educationRequirements,
                 values.educationGoals,
+                OutcomeGoalMet.NOTSET,
+                CancellationReason.NONE,
                 newClient.createdAt
             );
             addRisk(
@@ -99,6 +117,8 @@ const handleNewMobileClientSubmit = async (
                 values.nutritionRisk,
                 values.nutritionRequirements,
                 values.nutritionGoals,
+                OutcomeGoalMet.NOTSET,
+                CancellationReason.NONE,
                 newClient.createdAt
             );
             addRisk(
@@ -108,6 +128,8 @@ const handleNewMobileClientSubmit = async (
                 values.mentalRisk,
                 values.mentalRequirements,
                 values.mentalGoals,
+                OutcomeGoalMet.NOTSET,
+                CancellationReason.NONE,
                 newClient.createdAt
             );
         });

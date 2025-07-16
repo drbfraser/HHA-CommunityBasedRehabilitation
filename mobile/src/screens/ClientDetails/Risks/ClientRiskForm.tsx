@@ -130,7 +130,6 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             <Formik
                 initialValues={getRiskFormInitialValues()}
                 onSubmit={(values) => {
-                    console.log("REQUEST BODY:\n", JSON.stringify(values, null, 2));
                     handleRiskSubmit(
                         values,
                         props.riskData,

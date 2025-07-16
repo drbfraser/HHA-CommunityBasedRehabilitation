@@ -52,7 +52,6 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
     const [showModal, setShowModal] = useState(false);
     const [showGoalStatusModal, setShowGoalStatusModal] = useState(false);
     const openGoalStatusModal = () => setShowGoalStatusModal(true);
-    const closeGoalStatusModal = () => setShowGoalStatusModal(false);
     const { autoSync, cellularSync } = useContext(SyncContext);
     const database = useDatabase();
     const { t } = useTranslation();
@@ -131,6 +130,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             <Formik
                 initialValues={getRiskFormInitialValues()}
                 onSubmit={(values) => {
+                    console.log("REQUEST BODY:\n", JSON.stringify(values, null, 2));
                     handleRiskSubmit(
                         values,
                         props.riskData,
@@ -143,177 +143,236 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 validationSchema={validationSchema}
                 enableReinitialize={true}
             >
-                {(formikProps) => (
-                    <Portal>
-                        <Modal
-                            contentContainerStyle={styles.modalStyle}
-                            visible={showModal}
-                            onDismiss={() => {
-                                setShowModal(false);
-                                formikProps.resetForm();
-                            }}
-                        >
-                            {/* Scroll view needed for modal to dynamically grow in height when textarea inputs being to take up more lines */}
-                            <ScrollView contentContainerStyle={styles.modalContentStyle}>
-                                <Text style={styles.riskHeaderStyle}>{getHeaderText()}</Text>
+                {(formikProps) => {
+                    const handleGoalStatusModalClose = async () => {
+                        formikProps.setFieldTouched(FormField.cancellation_reason, true);
+                        const errors = await formikProps.validateForm();
+                        if (
+                            formikProps.values.goal_status === OutcomeGoalMet.CANCELLED &&
+                            errors.cancellation_reason
+                        ) {
+                            return; // do NOT close the update goal status modal if there are validation errors
+                        }
+                        setShowGoalStatusModal(false);
+                    };
+                    return (
+                        <Portal>
+                            <Modal
+                                contentContainerStyle={styles.modalStyle}
+                                visible={showModal}
+                                onDismiss={() => {
+                                    setShowModal(false);
+                                    formikProps.resetForm();
+                                }}
+                            >
+                                {/* Scroll view needed for modal to dynamically grow in height when textarea inputs being to take up more lines */}
+                                <ScrollView contentContainerStyle={styles.modalContentStyle}>
+                                    <Text style={styles.riskHeaderStyle}>{getHeaderText()}</Text>
 
-                                <View style={styles.goalStatusContainer}>
-                                    <Text style={styles.goalStatusText}>Goal Status:</Text>
-                                    <TouchableRipple onPress={openGoalStatusModal}>
-                                        <View
-                                            style={{ flexDirection: "row", alignItems: "center" }}
-                                        >
-                                            <GoalStatusChip
-                                                goalStatus={formikProps.values.goal_status}
-                                            />
-                                            <Icon
-                                                name="edit-note"
-                                                size={20}
-                                                style={{ marginLeft: 8 }}
-                                            />
-                                        </View>
-                                    </TouchableRipple>
-                                </View>
-
-                                <ModalWindow
-                                    label={"Update Goal Status"}
-                                    visible={showGoalStatusModal}
-                                    onClose={closeGoalStatusModal}
-                                >
-                                    <RadioButton.Group
-                                        onValueChange={(value) => {
-                                            formikProps.setFieldValue(FormField.goal_status, value);
-                                        }}
-                                        value={formikProps.values.goal_status}
-                                    >
-                                        {goalStatusOptions.map((option, index) => (
+                                    <View style={styles.goalStatusContainer}>
+                                        <Text style={styles.goalStatusText}>Goal Status:</Text>
+                                        <TouchableRipple onPress={openGoalStatusModal}>
                                             <View
-                                                key={index}
                                                 style={{
                                                     flexDirection: "row",
                                                     alignItems: "center",
                                                 }}
                                             >
-                                                <RadioButton value={option.value} />
-                                                <Text>{option.label}</Text>
+                                                <GoalStatusChip
+                                                    goalStatus={formikProps.values.goal_status}
+                                                />
+                                                <Icon
+                                                    name="edit-note"
+                                                    size={20}
+                                                    style={{ marginLeft: 8 }}
+                                                />
                                             </View>
-                                        ))}
+                                        </TouchableRipple>
+                                    </View>
+
+                                    <ModalWindow
+                                        label={"Update Goal Status"}
+                                        visible={showGoalStatusModal}
+                                        onClose={handleGoalStatusModalClose}
+                                    >
+                                        <RadioButton.Group
+                                            onValueChange={(value) => {
+                                                formikProps.setFieldValue(
+                                                    FormField.goal_status,
+                                                    value
+                                                );
+                                            }}
+                                            value={formikProps.values.goal_status}
+                                        >
+                                            {goalStatusOptions.map((option, index) => (
+                                                <View
+                                                    key={index}
+                                                    style={{
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                    }}
+                                                >
+                                                    <RadioButton value={option.value} />
+                                                    <Text>{option.label}</Text>
+                                                </View>
+                                            ))}
+                                        </RadioButton.Group>
+
+                                        {formikProps.values.goal_status ===
+                                            OutcomeGoalMet.CANCELLED && (
+                                            <>
+                                                <TextInput
+                                                    mode="outlined"
+                                                    label={
+                                                        fieldLabels[FormField.cancellation_reason]
+                                                    }
+                                                    value={formikProps.values.cancellation_reason}
+                                                    onChangeText={formikProps.handleChange(
+                                                        FormField.cancellation_reason
+                                                    )}
+                                                    onBlur={() =>
+                                                        formikProps.setFieldTouched(
+                                                            FormField.cancellation_reason
+                                                        )
+                                                    }
+                                                    error={
+                                                        !!(
+                                                            formikProps.touched
+                                                                .cancellation_reason &&
+                                                            formikProps.errors.cancellation_reason
+                                                        )
+                                                    }
+                                                    style={styles.cancellationReasonInput}
+                                                />
+                                                <HelperText
+                                                    type="error"
+                                                    visible={
+                                                        !!(
+                                                            formikProps.touched
+                                                                .cancellation_reason &&
+                                                            formikProps.errors.cancellation_reason
+                                                        )
+                                                    }
+                                                >
+                                                    {
+                                                        formikProps.errors
+                                                            .cancellation_reason as string
+                                                    }
+                                                </HelperText>
+                                            </>
+                                        )}
+                                    </ModalWindow>
+
+                                    <RadioButton.Group
+                                        value={formikProps.values.risk_level}
+                                        onValueChange={(value) =>
+                                            onRiskLevelChange(formikProps, value)
+                                        }
+                                    >
+                                        <View style={styles.menuField}>
+                                            {[
+                                                [RiskLevel.LOW, t("riskLevelsAbbreviated.low")],
+                                                [
+                                                    RiskLevel.MEDIUM,
+                                                    t("riskLevelsAbbreviated.medium"),
+                                                ],
+                                                [RiskLevel.HIGH, t("riskLevelsAbbreviated.high")],
+                                                // prettier-ignore
+                                                [RiskLevel.CRITICAL, t("riskLevelsAbbreviated.critical"),],
+                                            ].map(([level, abbreviation], index) => {
+                                                const style = riskRadioButtonStyles(
+                                                    riskLevels[level].color
+                                                ).riskRadioStyle;
+                                                const textColour = riskRadioButtonStyles(
+                                                    riskLevels[level].color
+                                                ).radioSubtitleText;
+                                                return (
+                                                    <View
+                                                        key={index}
+                                                        style={styles.radioIndividual}
+                                                    >
+                                                        <View style={style}>
+                                                            <Text style={textColour}>
+                                                                {abbreviation}
+                                                            </Text>
+                                                        </View>
+                                                        <RadioButton value={level} />
+                                                    </View>
+                                                );
+                                            })}
+                                        </View>
                                     </RadioButton.Group>
 
-                                    {formikProps.values.goal_status ===
-                                        OutcomeGoalMet.CANCELLED && (
-                                        <TextInput
-                                            style={styles.cancellationReasonInput}
-                                            mode="outlined"
-                                            label={fieldLabels[FormField.cancellation_reason]}
-                                            value={formikProps.values.cancellation_reason}
-                                            onChangeText={(text) =>
-                                                formikProps.setFieldValue(
-                                                    FormField.cancellation_reason,
-                                                    text
-                                                )
-                                            }
-                                        />
-                                    )}
-                                </ModalWindow>
+                                    <TextInput
+                                        mode="outlined"
+                                        label={fieldLabels[FormField.requirement]}
+                                        value={formikProps.values.requirement}
+                                        onChangeText={formikProps.handleChange(
+                                            FormField.requirement
+                                        )}
+                                        onBlur={() =>
+                                            formikProps.setFieldTouched(FormField.requirement)
+                                        }
+                                        error={
+                                            !!(
+                                                formikProps.touched.requirement &&
+                                                formikProps.errors.requirement
+                                            )
+                                        }
+                                        style={styles.riskInputStyle}
+                                    />
+                                    <HelperText
+                                        type="error"
+                                        visible={
+                                            !!(
+                                                formikProps.touched.requirement &&
+                                                formikProps.errors.requirement
+                                            )
+                                        }
+                                    >
+                                        {formikProps.errors.requirement as string}
+                                    </HelperText>
 
-                                <RadioButton.Group
-                                    value={formikProps.values.risk_level}
-                                    onValueChange={(value) => onRiskLevelChange(formikProps, value)}
-                                >
-                                    <View style={styles.menuField}>
-                                        {[
-                                            [RiskLevel.LOW, t("riskLevelsAbbreviated.low")],
-                                            [RiskLevel.MEDIUM, t("riskLevelsAbbreviated.medium")],
-                                            [RiskLevel.HIGH, t("riskLevelsAbbreviated.high")],
-                                            // prettier-ignore
-                                            [RiskLevel.CRITICAL, t("riskLevelsAbbreviated.critical"),],
-                                        ].map(([level, abbreviation], index) => {
-                                            const style = riskRadioButtonStyles(
-                                                riskLevels[level].color
-                                            ).riskRadioStyle;
-                                            const textColour = riskRadioButtonStyles(
-                                                riskLevels[level].color
-                                            ).radioSubtitleText;
-                                            return (
-                                                <View key={index} style={styles.radioIndividual}>
-                                                    <View style={style}>
-                                                        <Text style={textColour}>
-                                                            {abbreviation}
-                                                        </Text>
-                                                    </View>
-                                                    <RadioButton value={level} />
-                                                </View>
-                                            );
-                                        })}
-                                    </View>
-                                </RadioButton.Group>
+                                    <TextInput
+                                        mode="outlined"
+                                        label={fieldLabels[FormField.goal_name]}
+                                        value={formikProps.values.goal_name}
+                                        onChangeText={formikProps.handleChange(FormField.goal_name)}
+                                        onBlur={() =>
+                                            formikProps.setFieldTouched(FormField.goal_name)
+                                        }
+                                        error={
+                                            !!(
+                                                formikProps.touched.goal_name &&
+                                                formikProps.errors.goal_name
+                                            )
+                                        }
+                                        style={styles.riskInputStyle}
+                                    />
+                                    <HelperText
+                                        type="error"
+                                        visible={
+                                            !!(
+                                                formikProps.touched.goal_name &&
+                                                formikProps.errors.goal_name
+                                            )
+                                        }
+                                    >
+                                        {formikProps.errors.goal_name as string}
+                                    </HelperText>
 
-                                <TextInput
-                                    mode="outlined"
-                                    label={fieldLabels[FormField.requirement]}
-                                    value={formikProps.values.requirement}
-                                    onChangeText={formikProps.handleChange(FormField.requirement)}
-                                    onBlur={() =>
-                                        formikProps.setFieldTouched(FormField.requirement)
-                                    }
-                                    error={
-                                        !!(
-                                            formikProps.touched.requirement &&
-                                            formikProps.errors.requirement
-                                        )
-                                    }
-                                    style={styles.riskInputStyle}
-                                />
-                                <HelperText
-                                    type="error"
-                                    visible={
-                                        !!(
-                                            formikProps.touched.requirement &&
-                                            formikProps.errors.requirement
-                                        )
-                                    }
-                                >
-                                    {formikProps.errors.requirement as string}
-                                </HelperText>
-
-                                <TextInput
-                                    mode="outlined"
-                                    label={fieldLabels[FormField.goal_name]}
-                                    value={formikProps.values.goal_name}
-                                    onChangeText={formikProps.handleChange(FormField.goal_name)}
-                                    onBlur={() => formikProps.setFieldTouched(FormField.goal_name)}
-                                    error={
-                                        !!(
-                                            formikProps.touched.goal_name &&
-                                            formikProps.errors.goal_name
-                                        )
-                                    }
-                                    style={styles.riskInputStyle}
-                                />
-                                <HelperText
-                                    type="error"
-                                    visible={
-                                        !!(
-                                            formikProps.touched.goal_name &&
-                                            formikProps.errors.goal_name
-                                        )
-                                    }
-                                >
-                                    {formikProps.errors.goal_name as string}
-                                </HelperText>
-
-                                <Button
-                                    style={styles.submitButtonStyle}
-                                    mode={"contained"}
-                                    onPress={() => onSave(formikProps)}
-                                >
-                                    {t("general.save")}
-                                </Button>
-                            </ScrollView>
-                        </Modal>
-                    </Portal>
-                )}
+                                    <Button
+                                        style={styles.submitButtonStyle}
+                                        mode={"contained"}
+                                        onPress={() => onSave(formikProps)}
+                                    >
+                                        {t("general.save")}
+                                    </Button>
+                                </ScrollView>
+                            </Modal>
+                        </Portal>
+                    );
+                }}
             </Formik>
         </View>
     );

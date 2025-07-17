@@ -1,5 +1,5 @@
 import { useDatabase } from "@nozbe/watermelondb/hooks";
-import { Formik, FormikProps } from "formik";
+import { Formik, FormikProps, getIn } from "formik";
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Platform, ScrollView, ToastAndroid, View } from "react-native";
@@ -45,6 +45,37 @@ const toastValidationError = () => {
     } else {
         Alert.alert(msg);
     }
+};
+
+// reusable text input component for risk form
+interface FormikTextInputProps {
+    formikProps: FormikProps<IRisk>;
+    field: FormField;
+    label: string;
+    style?: any;
+}
+
+const FormikTextInput: React.FC<FormikTextInputProps> = ({ formikProps, field, label, style }) => {
+    const value = getIn(formikProps.values, field);
+    const errorMsg = getIn(formikProps.errors, field);
+    const touched = getIn(formikProps.touched, field);
+    const showError = !!(touched && errorMsg);
+    return (
+        <>
+            <TextInput
+                mode="outlined"
+                label={label}
+                value={value}
+                onChangeText={formikProps.handleChange(field)}
+                onBlur={() => formikProps.setFieldTouched(field)}
+                error={showError}
+                style={style}
+            />
+            <HelperText type="error" visible={showError}>
+                {errorMsg as string}
+            </HelperText>
+        </>
+    );
 };
 
 export const ClientRiskForm = (props: ClientRiskFormProps) => {
@@ -218,46 +249,12 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
 
                                         {formikProps.values.goal_status ===
                                             OutcomeGoalMet.CANCELLED && (
-                                            <>
-                                                <TextInput
-                                                    mode="outlined"
-                                                    label={
-                                                        fieldLabels[FormField.cancellation_reason]
-                                                    }
-                                                    value={formikProps.values.cancellation_reason}
-                                                    onChangeText={formikProps.handleChange(
-                                                        FormField.cancellation_reason
-                                                    )}
-                                                    onBlur={() =>
-                                                        formikProps.setFieldTouched(
-                                                            FormField.cancellation_reason
-                                                        )
-                                                    }
-                                                    error={
-                                                        !!(
-                                                            formikProps.touched
-                                                                .cancellation_reason &&
-                                                            formikProps.errors.cancellation_reason
-                                                        )
-                                                    }
-                                                    style={styles.cancellationReasonInput}
-                                                />
-                                                <HelperText
-                                                    type="error"
-                                                    visible={
-                                                        !!(
-                                                            formikProps.touched
-                                                                .cancellation_reason &&
-                                                            formikProps.errors.cancellation_reason
-                                                        )
-                                                    }
-                                                >
-                                                    {
-                                                        formikProps.errors
-                                                            .cancellation_reason as string
-                                                    }
-                                                </HelperText>
-                                            </>
+                                            <FormikTextInput
+                                                formikProps={formikProps}
+                                                field={FormField.cancellation_reason}
+                                                label={fieldLabels[FormField.cancellation_reason]}
+                                                style={styles.cancellationReasonInput}
+                                            />
                                         )}
                                     </ModalWindow>
 
@@ -301,63 +298,19 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                         </View>
                                     </RadioButton.Group>
 
-                                    <TextInput
-                                        mode="outlined"
+                                    <FormikTextInput
+                                        formikProps={formikProps}
+                                        field={FormField.requirement}
                                         label={fieldLabels[FormField.requirement]}
-                                        value={formikProps.values.requirement}
-                                        onChangeText={formikProps.handleChange(
-                                            FormField.requirement
-                                        )}
-                                        onBlur={() =>
-                                            formikProps.setFieldTouched(FormField.requirement)
-                                        }
-                                        error={
-                                            !!(
-                                                formikProps.touched.requirement &&
-                                                formikProps.errors.requirement
-                                            )
-                                        }
                                         style={styles.riskInputStyle}
                                     />
-                                    <HelperText
-                                        type="error"
-                                        visible={
-                                            !!(
-                                                formikProps.touched.requirement &&
-                                                formikProps.errors.requirement
-                                            )
-                                        }
-                                    >
-                                        {formikProps.errors.requirement as string}
-                                    </HelperText>
 
-                                    <TextInput
-                                        mode="outlined"
+                                    <FormikTextInput
+                                        formikProps={formikProps}
+                                        field={FormField.goal_name}
                                         label={fieldLabels[FormField.goal_name]}
-                                        value={formikProps.values.goal_name}
-                                        onChangeText={formikProps.handleChange(FormField.goal_name)}
-                                        onBlur={() =>
-                                            formikProps.setFieldTouched(FormField.goal_name)
-                                        }
-                                        error={
-                                            !!(
-                                                formikProps.touched.goal_name &&
-                                                formikProps.errors.goal_name
-                                            )
-                                        }
                                         style={styles.riskInputStyle}
                                     />
-                                    <HelperText
-                                        type="error"
-                                        visible={
-                                            !!(
-                                                formikProps.touched.goal_name &&
-                                                formikProps.errors.goal_name
-                                            )
-                                        }
-                                    >
-                                        {formikProps.errors.goal_name as string}
-                                    </HelperText>
 
                                     <Button
                                         style={styles.submitButtonStyle}

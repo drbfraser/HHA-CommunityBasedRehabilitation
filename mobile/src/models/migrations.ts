@@ -7,38 +7,53 @@ import { mobileGenericField, modelName, tableKey } from "./constant";
 export default schemaMigrations({
     migrations: [
         {
-            toVersion: 8,
+            toVersion: 2,
             steps: [
                 addColumns({
-                    table: modelName.risks,
-                    columns: [{ name: "change_type", type: "string" }],
+                    table: modelName.clients,
+                    columns: [{ name: ClientField.is_active, type: "boolean" }],
                 }),
             ],
         },
         {
-            toVersion: 7,
+            toVersion: 3,
             steps: [
-                addColumns({
-                    table: modelName.risks,
-                    columns: [{ name: "cancellation_reason", type: "string" }],
-                }),
-            ],
-        },
-        {
-            toVersion: 6,
-            steps: [
-                addColumns({
-                    table: modelName.risks,
+                createTable({
+                    name: modelName.alert,
                     columns: [
-                        { name: "goal_name", type: "string" },
-                        { name: "goal_status", type: "string" },
-                        { name: "start_date", type: "number" },
-                        { name: "end_date", type: "number" },
+                        { name: alertField.subject, type: "string" },
+                        { name: alertField.priority, type: "string" },
+                        { name: alertField.alert_message, type: "string" },
+                        { name: alertField.unread_by_users, type: "string" },
+                        { name: alertField.created_by_user, type: "string" },
+                        { name: "created_date", type: "number" },
+                        { name: mobileGenericField.updated_at, type: "number" },
                     ],
                 }),
             ],
         },
-
+        {
+            toVersion: 4,
+            steps: [
+                addColumns({
+                    table: modelName.referrals,
+                    columns: [
+                        {
+                            name: ReferralField.hha_nutrition_and_agriculture_project,
+                            type: "boolean",
+                        },
+                        {
+                            name: ReferralField.emergency_food_aid,
+                            type: "boolean",
+                        },
+                        {
+                            name: ReferralField.agriculture_livelihood_program_enrollment,
+                            type: "boolean",
+                        },
+                    ],
+                }),
+            ],
+        },
         {
             toVersion: 5,
             steps: [
@@ -93,50 +108,34 @@ export default schemaMigrations({
             ],
         },
         {
-            toVersion: 4,
+            toVersion: 6,
             steps: [
                 addColumns({
-                    table: modelName.referrals,
+                    table: modelName.risks,
                     columns: [
-                        {
-                            name: ReferralField.hha_nutrition_and_agriculture_project,
-                            type: "boolean",
-                        },
-                        {
-                            name: ReferralField.emergency_food_aid,
-                            type: "boolean",
-                        },
-                        {
-                            name: ReferralField.agriculture_livelihood_program_enrollment,
-                            type: "boolean",
-                        },
+                        { name: "goal_name", type: "string" },
+                        { name: "goal_status", type: "string" },
+                        { name: "start_date", type: "number" },
+                        { name: "end_date", type: "number" },
                     ],
                 }),
             ],
         },
         {
-            toVersion: 3,
+            toVersion: 7,
             steps: [
-                createTable({
-                    name: modelName.alert,
-                    columns: [
-                        { name: alertField.subject, type: "string" },
-                        { name: alertField.priority, type: "string" },
-                        { name: alertField.alert_message, type: "string" },
-                        { name: alertField.unread_by_users, type: "string" },
-                        { name: alertField.created_by_user, type: "string" },
-                        { name: "created_date", type: "number" },
-                        { name: mobileGenericField.updated_at, type: "number" },
-                    ],
+                addColumns({
+                    table: modelName.risks,
+                    columns: [{ name: "cancellation_reason", type: "string" }],
                 }),
             ],
         },
         {
-            toVersion: 2,
+            toVersion: 8,
             steps: [
                 addColumns({
-                    table: modelName.clients,
-                    columns: [{ name: ClientField.is_active, type: "boolean" }],
+                    table: modelName.risks,
+                    columns: [{ name: "change_type", type: "string" }],
                 }),
             ],
         },

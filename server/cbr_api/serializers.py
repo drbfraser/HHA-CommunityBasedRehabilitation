@@ -343,6 +343,7 @@ class ClientRiskSerializer(serializers.ModelSerializer):
             "cancellation_reason",
             "start_date",
             "end_date",
+            "change_type",
         ]
 
 

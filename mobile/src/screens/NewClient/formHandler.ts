@@ -77,65 +77,65 @@ const handleNewMobileClientSubmit = async (
                 client.is_active = true;
                 client.hcr_type = values.hcrType;
             });
-            addRisk(
+            await addRisk(
                 newClient,
                 database,
                 "HEALTH",
                 values.healthRisk,
                 values.healthRequirements,
                 values.healthGoals,
-                OutcomeGoalMet.NOTSET,
+                OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt
             );
-            addRisk(
+            await addRisk(
                 newClient,
                 database,
                 "SOCIAL",
                 values.socialRisk,
                 values.socialRequirements,
                 values.socialGoals,
-                OutcomeGoalMet.NOTSET,
+                OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt
             );
-            addRisk(
+            await addRisk(
                 newClient,
                 database,
                 "EDUCAT",
                 values.educationRisk,
                 values.educationRequirements,
                 values.educationGoals,
-                OutcomeGoalMet.NOTSET,
+                OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt
             );
-            addRisk(
+            await addRisk(
                 newClient,
                 database,
                 "NUTRIT",
                 values.nutritionRisk,
                 values.nutritionRequirements,
                 values.nutritionGoals,
-                OutcomeGoalMet.NOTSET,
+                OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt
             );
-            addRisk(
+            await addRisk(
                 newClient,
                 database,
                 "MENTAL",
                 values.mentalRisk,
                 values.mentalRequirements,
                 values.mentalGoals,
-                OutcomeGoalMet.NOTSET,
+                OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt
             );
         });
         await newClient.newRiskTime();
 
-        AutoSyncDB(database, autoSync, cellularSync);
+        await AutoSyncDB(database, autoSync, cellularSync);
 
         return newClient.id;
     } catch (e) {

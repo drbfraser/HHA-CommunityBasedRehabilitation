@@ -175,7 +175,7 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
             "change_type",
         ]
 
-        read_only_fields = ["id", "client_id", "timestamp", "risk_type"]
+        read_only_fields = ["id", "client_id", "timestamp", "risk_type", "change_type"]
 
 
 class NormalRiskSerializer(serializers.ModelSerializer):
@@ -203,7 +203,7 @@ class NormalRiskSerializer(serializers.ModelSerializer):
             "change_type",
         ]
 
-        read_only_fields = ["id", "timestamp"]
+        read_only_fields = ["id", "timestamp", "change_type"]
 
     def get_previous_risk(self, filter_params):
         # find the previous risk record for the same client and risk type
@@ -345,6 +345,7 @@ class ClientRiskSerializer(serializers.ModelSerializer):
             "end_date",
             "change_type",
         ]
+        read_only_fields = ["change_type"]
 
 
 class ImprovementSerializer(serializers.ModelSerializer):

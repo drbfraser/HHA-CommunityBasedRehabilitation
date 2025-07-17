@@ -52,6 +52,7 @@ export const handleRiskSubmit = async (
         });
         await client.updateRisk(values.risk_type, values.risk_level, currentTime);
         setRisk(risk);
+        console.log("Risk updated successfully:", risk);
         AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {
         console.error("Risk submission failed:", e);

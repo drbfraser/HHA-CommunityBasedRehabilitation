@@ -27,7 +27,7 @@ export const addRisk = async (
         risk.goal = goalName;
         risk.goal_name = goalName;
         risk.goal_status = goalStatus;
-        risk.cancellation_reason = cancellationReason || "";
+        risk.cancellation_reason = cancellationReason;
         risk.timestamp = time;
         risk.start_date = time;
     });

@@ -5,7 +5,6 @@ from rest_framework_simplejwt.views import (
 )
 
 from cbr_api import views
-from downloadview.object import AuthenticatedObjectDownloadView
 
 urlpatterns = [
     path("login", TokenObtainPairView.as_view(), name="token-obtain-pair"),

@@ -96,7 +96,7 @@ Whenever developers introduce or modify functionality, they must add or update t
 - **Locally** (inside Docker):
 
   ```bash
-  docker exec cbr_django python manage.py test
+  docker exec cbr_django python manage.py test --verbosity=2 --no-input
   ```
 
 - **CI**: the `test-server` job in **maincicd.yml** automatically runs `python manage.py test ...` in an isolated container on pushes to `main`, enforcing that no backend changes break existing functionality.

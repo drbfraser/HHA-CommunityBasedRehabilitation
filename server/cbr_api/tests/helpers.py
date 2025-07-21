@@ -7,7 +7,7 @@ from cbr_api.models import (
     UserCBR,
     Zone,
 )
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 import uuid
 
 
@@ -48,22 +48,20 @@ def create_client(
 class RiskViewsTestCase(APITestCase):
     def setUp(self):
         self.zone = Zone.objects.create(zone_name="Test Zone")
-        self.user = UserCBR.objects.create(
+        self.user = UserCBR.objects.create_user(
             username="root",
             password="root",
             is_superuser=True,
-            zone=self.zone,
+            zone=self.zone.id,
         )
         self.client = create_client(
             user=self.user,
             first="John",
             last="Doe",
             contact="1234567890",
-            zone="Zone A",
+            zone=self.zone,
             gender=Client.Gender.MALE,
         )
-
-        self.client_api.force_authenticate(user=self.user)
 
         # test risks for view tests
         self.risk1 = ClientRisk.objects.create(
@@ -84,3 +82,6 @@ class RiskViewsTestCase(APITestCase):
             timestamp=1641081600,  # 2022-01-02
             server_created_at=1641081600,
         )
+        # for requests
+        self.client_api = APIClient()
+        self.client_api.force_authenticate(user=self.user)

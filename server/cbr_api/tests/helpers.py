@@ -69,6 +69,7 @@ class RiskViewsTestCase(APITestCase):
             client_id=self.client,
             risk_type=RiskType.HEALTH,
             risk_level=RiskLevel.LOW,
+            goal_name="Health Check",
             goal_status=GoalOutcomes.ONGOING,
             timestamp=1640995200,  # 2022-01-01
             server_created_at=1640995200,
@@ -78,7 +79,8 @@ class RiskViewsTestCase(APITestCase):
             client_id=self.client,
             risk_type=RiskType.EDUCAT,
             risk_level=RiskLevel.MEDIUM,
-            goal_status=GoalOutcomes.NOT_SET,
+            goal_name="Education Support",
+            goal_status=GoalOutcomes.CANCELLED,
             timestamp=1641081600,  # 2022-01-02
             server_created_at=1641081600,
         )

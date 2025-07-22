@@ -7,7 +7,13 @@ import i18n from "i18next";
 import Client from "@/src/models/Client";
 
 const wasChangeMade = (values: IRisk, initialValues: IRisk) => {
-    const keysToCheck = ["risk_level", "requirement", "goal"] as (keyof IRisk)[];
+    const keysToCheck = [
+        "risk_level",
+        "requirement",
+        "goal_name",
+        "goal_status",
+        "cancellation_reason",
+    ] as (keyof IRisk)[];
 
     for (let key of keysToCheck) {
         if (String(values[key]).trim() !== String(initialValues[key]).trim()) {
@@ -31,7 +37,6 @@ export const handleRiskSubmit = async (
         let risk;
         const client = await database.get<Client>(modelName.clients).find(values.client_id);
         const currentTime = new Date().getTime();
-        console.log("test");
         await database.write(async () => {
             risk = await addRisk(
                 client,
@@ -39,11 +44,12 @@ export const handleRiskSubmit = async (
                 values.risk_type,
                 values.risk_level,
                 values.requirement,
-                values.goal,
+                values.goal_name,
+                values.goal_status,
+                values.cancellation_reason,
                 currentTime
             );
         });
-        console.log("test2");
         await client.updateRisk(values.risk_type, values.risk_level, currentTime);
         setRisk(risk);
         AutoSyncDB(database, autoSync, cellularSync);

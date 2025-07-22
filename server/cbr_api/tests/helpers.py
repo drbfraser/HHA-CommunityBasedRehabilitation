@@ -51,7 +51,6 @@ class RiskViewsTestCase(APITestCase):
         self.user = UserCBR.objects.create_user(
             username="root",
             password="root",
-            is_superuser=True,
             zone=self.zone.id,
         )
         self.client = create_client(

@@ -1,6 +1,15 @@
 from django.urls import reverse
-from cbr_api.tests.helpers import RiskViewsTestCase
-from cbr_api.models import ClientRisk, GoalOutcomes, RiskLevel, RiskType
+from rest_framework.test import APIClient
+from cbr_api.tests.helpers import RiskViewsTestCase, create_client
+from cbr_api.models import (
+    Client,
+    ClientRisk,
+    GoalOutcomes,
+    RiskLevel,
+    RiskType,
+    UserCBR,
+    Zone,
+)
 
 
 class RiskListViewTests(RiskViewsTestCase):
@@ -90,3 +99,34 @@ class RiskListViewTests(RiskViewsTestCase):
 
         self.assertEqual(unauthenticated_get_response.status_code, 401)
         self.assertEqual(unauthenticated_post_response.status_code, 401)
+
+    def test_user_can_access_own_zone_risks(self):
+        other_zone = Zone.objects.create(zone_name="Other Zone")
+        other_user = UserCBR.objects.create_user(
+            username="otheruser",
+            password="otherpass123",
+            zone=other_zone.id,
+        )
+        other_client = create_client(
+            user=other_user,
+            first="Jane",
+            last="Smith",
+            contact="6045551718",
+            zone=other_zone,
+            gender=Client.Gender.FEMALE,
+        )
+        other_client_api = APIClient()
+        other_client_api.force_authenticate(user=other_user)
+
+        url = reverse("risk-list")
+        response = self.client_api.get(url, {"client_id": self.client.id})
+        # user defined in helpers.py only sees their two risks for their client
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 2)
+
+        other_client_response = other_client_api.get(
+            url, {"client_id": other_client.id}
+        )
+        # other user defined in in this testcase sees no risks because their client has none
+        self.assertEqual(other_client_response.status_code, 200)
+        self.assertEqual(len(other_client_response.data), 0)

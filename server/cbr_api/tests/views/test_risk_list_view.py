@@ -80,3 +80,13 @@ class RiskListViewTests(RiskViewsTestCase):
         self.assertEqual(created_risk.risk_level, RiskLevel.MEDIUM)
         self.assertEqual(created_risk.goal_name, "Education Support")
         self.assertEqual(created_risk.goal_status, GoalOutcomes.ONGOING)
+
+    def test_unauthenticated_access_denied(self):
+        url = reverse("risk-list")
+        self.client_api.force_authenticate(user=None)  # unauthenticates
+
+        unauthenticated_get_response = self.client_api.get(url)
+        unauthenticated_post_response = self.client_api.post(url, {})
+
+        self.assertEqual(unauthenticated_get_response.status_code, 401)
+        self.assertEqual(unauthenticated_post_response.status_code, 401)

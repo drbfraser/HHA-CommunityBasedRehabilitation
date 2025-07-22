@@ -130,3 +130,9 @@ class RiskListViewTests(RiskViewsTestCase):
         # other user defined in in this testcase sees no risks because their client has none
         self.assertEqual(other_client_response.status_code, 200)
         self.assertEqual(len(other_client_response.data), 0)
+
+    def test_empty_post_data(self):
+        url = reverse("risk-list")
+        response = self.client_api.post(url, {}, format="json")
+
+        self.assertEqual(response.status_code, 400)

@@ -181,9 +181,12 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                     };
                     const handleGoalStatusModalClose = async () => {
                         formikProps.setFieldTouched(FormField.cancellation_reason, true);
-                        const errors = await formikProps.validateForm();
+                        const errors = await formikProps.validateForm({
+                            ...formikProps.values,
+                            [FormField.goal_status]: pendingGoalStatus,
+                        });
                         if (
-                            formikProps.values.goal_status === OutcomeGoalMet.CANCELLED &&
+                            pendingGoalStatus === OutcomeGoalMet.CANCELLED &&
                             errors.cancellation_reason
                         ) {
                             return; // do NOT close the update goal status modal if there are validation errors
@@ -252,8 +255,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                             ))}
                                         </RadioButton.Group>
 
-                                        {formikProps.values.goal_status ===
-                                            OutcomeGoalMet.CANCELLED && (
+                                        {pendingGoalStatus === OutcomeGoalMet.CANCELLED && (
                                             <FormikTextInput
                                                 formikProps={formikProps}
                                                 field={FormField.cancellation_reason}

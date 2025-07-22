@@ -17,7 +17,12 @@ const ModalWindow: FC<IProps> = ({ label, visible, onClose, children, isDismissa
 
     return (
         <Portal>
-            <Dialog visible={visible} dismissable={isDismissable} style={styles.modal}>
+            <Dialog
+                visible={visible}
+                dismissable={isDismissable}
+                onDismiss={onClose}
+                style={styles.modal}
+            >
                 <Dialog.Title>{label}</Dialog.Title>
                 <Divider />
 

@@ -82,7 +82,9 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
     const styles = useStyles();
     const [showModal, setShowModal] = useState(false);
     const [showGoalStatusModal, setShowGoalStatusModal] = useState(false);
-    const openGoalStatusModal = () => setShowGoalStatusModal(true);
+    const [pendingGoalStatus, setPendingGoalStatus] = useState<OutcomeGoalMet>(
+        props.riskData.goal_status as OutcomeGoalMet
+    );
     const { autoSync, cellularSync } = useContext(SyncContext);
     const database = useDatabase();
     const { t } = useTranslation();
@@ -173,6 +175,10 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 enableReinitialize={true}
             >
                 {(formikProps) => {
+                    const openGoalStatusModal = () => {
+                        setPendingGoalStatus(formikProps.values.goal_status);
+                        setShowGoalStatusModal(true);
+                    };
                     const handleGoalStatusModalClose = async () => {
                         formikProps.setFieldTouched(FormField.cancellation_reason, true);
                         const errors = await formikProps.validateForm();
@@ -182,6 +188,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                         ) {
                             return; // do NOT close the update goal status modal if there are validation errors
                         }
+                        formikProps.setFieldValue(FormField.goal_status, pendingGoalStatus);
                         setShowGoalStatusModal(false);
                     };
                     return (
@@ -226,13 +233,10 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                         isDismissable={true}
                                     >
                                         <RadioButton.Group
-                                            onValueChange={(value) => {
-                                                formikProps.setFieldValue(
-                                                    FormField.goal_status,
-                                                    value
-                                                );
-                                            }}
-                                            value={formikProps.values.goal_status}
+                                            value={pendingGoalStatus}
+                                            onValueChange={(value) =>
+                                                setPendingGoalStatus(value as OutcomeGoalMet)
+                                            }
                                         >
                                             {goalStatusOptions.map((option, index) => (
                                                 <View

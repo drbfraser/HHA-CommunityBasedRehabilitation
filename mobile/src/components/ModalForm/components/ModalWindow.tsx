@@ -9,9 +9,17 @@ interface IProps {
     onClose: () => void;
     children: ReactNode;
     isDismissable?: boolean;
+    onDismiss?: () => void;
 }
 
-const ModalWindow: FC<IProps> = ({ label, visible, onClose, children, isDismissable = false }) => {
+const ModalWindow: FC<IProps> = ({
+    label,
+    visible,
+    onClose,
+    children,
+    isDismissable = false,
+    onDismiss = onClose,
+}) => {
     const { t } = useTranslation();
     const styles = useStyles();
 
@@ -20,7 +28,7 @@ const ModalWindow: FC<IProps> = ({ label, visible, onClose, children, isDismissa
             <Dialog
                 visible={visible}
                 dismissable={isDismissable}
-                onDismiss={onClose}
+                onDismiss={onDismiss}
                 style={styles.modal}
             >
                 <Dialog.Title>{label}</Dialog.Title>

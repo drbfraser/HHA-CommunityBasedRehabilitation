@@ -234,6 +234,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                         visible={showGoalStatusModal}
                                         onClose={handleGoalStatusModalClose}
                                         isDismissable={true}
+                                        onDismiss={() => setShowGoalStatusModal(false)}
                                     >
                                         <RadioButton.Group
                                             value={pendingGoalStatus}

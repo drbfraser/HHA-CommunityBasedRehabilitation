@@ -218,8 +218,10 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                                 }}
                                             >
                                                 <View pointerEvents="none">
-      <GoalStatusChip goalStatus={formikProps.values.goal_status} />
-    </View>
+                                                    <GoalStatusChip
+                                                        goalStatus={formikProps.values.goal_status}
+                                                    />
+                                                </View>
                                                 <Icon
                                                     name="edit-note"
                                                     size={20}

@@ -31,7 +31,10 @@ export const addRisk = async (
         risk.cancellation_reason = cancellationReason;
         risk.timestamp = time;
         risk.start_date = startDate;
-        risk.end_date = goalStatus === OutcomeGoalMet.CANCELLED || goalStatus === OutcomeGoalMet.CONCLUDED ? time : null;
+        risk.end_date =
+            goalStatus === OutcomeGoalMet.CANCELLED || goalStatus === OutcomeGoalMet.CONCLUDED
+                ? time
+                : null;
     });
     return risk;
 };

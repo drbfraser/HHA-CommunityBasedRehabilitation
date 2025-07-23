@@ -55,7 +55,7 @@ export const handleRiskSubmit = async (
                 values.goal_status,
                 values.cancellation_reason,
                 currentTime,
-                actual_start_date,
+                actual_start_date
             );
         });
         await client.updateRisk(values.risk_type, values.risk_level, currentTime);

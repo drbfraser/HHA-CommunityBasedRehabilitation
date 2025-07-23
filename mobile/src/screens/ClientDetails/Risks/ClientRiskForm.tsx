@@ -115,11 +115,9 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 end_date: risk.end_date,
                 cancellation_reason: risk.cancellation_reason,
                 change_type: risk.change_type,
-            }; 
+            };
             return riskFormProps;
-        }
-
-        else {
+        } else {
             const riskFormProps: IRisk = {
                 id: "",
                 client_id: risk.client.id,
@@ -134,7 +132,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 end_date: 0,
                 cancellation_reason: "",
                 change_type: RiskChangeType.INITIAL,
-            }; 
+            };
             return riskFormProps;
         }
     };
@@ -178,8 +176,9 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 disabled={!props.clientArchived}
                 onPress={() => setShowModal(true)}
             >
-                {props.riskData.goal_status === OutcomeGoalMet.ONGOING ? t("general.update") :
-                "Create new goal"}
+                {props.riskData.goal_status === OutcomeGoalMet.ONGOING
+                    ? t("general.update")
+                    : "Create new goal"}
             </Button>
 
             <Formik

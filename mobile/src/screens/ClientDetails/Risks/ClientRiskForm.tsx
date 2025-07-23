@@ -160,6 +160,11 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
     };
 
     const onSave = async (formikProps: FormikProps<IRisk>) => {
+        formikProps.setTouched({
+            requirement: true,
+            goal_name: true,
+        });
+
         const errors = await formikProps.validateForm();
 
         if (Object.keys(errors).length > 0) {

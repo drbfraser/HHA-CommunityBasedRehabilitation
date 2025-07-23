@@ -19,6 +19,7 @@ import {
     FormField,
     IRisk,
     OutcomeGoalMet,
+    RiskChangeType,
     RiskLevel,
     riskLevels,
     RiskType,
@@ -99,22 +100,43 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
 
     const getRiskFormInitialValues = () => {
         const risk = props.riskData;
-        const riskFormProps: IRisk = {
-            id: risk.id,
-            client_id: risk.client.id,
-            timestamp: risk.timestamp,
-            risk_type: risk.risk_type,
-            risk_level: risk.risk_level,
-            requirement: risk.requirement,
-            goal: risk.goal,
-            goal_name: risk.goal_name,
-            goal_status: risk.goal_status,
-            start_date: risk.start_date,
-            end_date: risk.end_date,
-            cancellation_reason: risk.cancellation_reason,
-            change_type: risk.change_type,
-        };
-        return riskFormProps;
+        if (risk.goal_status === OutcomeGoalMet.ONGOING) {
+            const riskFormProps: IRisk = {
+                id: risk.id,
+                client_id: risk.client.id,
+                timestamp: risk.timestamp,
+                risk_type: risk.risk_type,
+                risk_level: risk.risk_level,
+                requirement: risk.requirement,
+                goal: risk.goal,
+                goal_name: risk.goal_name,
+                goal_status: risk.goal_status,
+                start_date: risk.start_date,
+                end_date: risk.end_date,
+                cancellation_reason: risk.cancellation_reason,
+                change_type: risk.change_type,
+            }; 
+            return riskFormProps;
+        }
+
+        else {
+            const riskFormProps: IRisk = {
+                id: "",
+                client_id: risk.client.id,
+                timestamp: risk.timestamp,
+                risk_type: risk.risk_type,
+                risk_level: RiskLevel.LOW,
+                requirement: "",
+                goal: "",
+                goal_name: "",
+                goal_status: OutcomeGoalMet.ONGOING,
+                start_date: risk.start_date,
+                end_date: 0,
+                cancellation_reason: "",
+                change_type: RiskChangeType.INITIAL,
+            }; 
+            return riskFormProps;
+        }
     };
 
     const getHeaderText = () => {
@@ -156,7 +178,8 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 disabled={!props.clientArchived}
                 onPress={() => setShowModal(true)}
             >
-                {t("general.update")}
+                {props.riskData.goal_status === OutcomeGoalMet.ONGOING ? t("general.update") :
+                "Create new goal"}
             </Button>
 
             <Formik

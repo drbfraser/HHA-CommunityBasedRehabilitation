@@ -11,3 +11,9 @@ class RiskDetailViewTests(RiskViewsTestCase):
         self.assertEqual(response.data["id"], str(self.risk1.id))
         self.assertEqual(response.data["risk_type"], self.risk1.risk_type)
         self.assertEqual(response.data["risk_level"], self.risk1.risk_level)
+
+    def test_get_nonexistent_risk(self):
+        url = reverse("risk-detail", kwargs={"pk": 1234})  # PK does not exist
+        response = self.client_api.get(url)
+
+        self.assertEqual(response.status_code, 404)

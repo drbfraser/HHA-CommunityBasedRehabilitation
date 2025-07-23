@@ -17,7 +17,8 @@ export const addRisk = async (
     goalName,
     goalStatus,
     cancellationReason,
-    time
+    time,
+    startDate
 ) => {
     const risk = await database.get(modelName.risks).create((risk: any) => {
         risk.client.set(client);
@@ -29,7 +30,8 @@ export const addRisk = async (
         risk.goal_status = goalStatus;
         risk.cancellation_reason = cancellationReason;
         risk.timestamp = time;
-        risk.start_date = time;
+        risk.start_date = startDate;
+        risk.end_date = goalStatus === OutcomeGoalMet.CANCELLED || goalStatus === OutcomeGoalMet.CONCLUDED ? time : null;
     });
     return risk;
 };
@@ -86,6 +88,7 @@ const handleNewMobileClientSubmit = async (
                 values.healthGoals,
                 OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
+                newClient.createdAt,
                 newClient.createdAt
             );
             await addRisk(
@@ -97,6 +100,7 @@ const handleNewMobileClientSubmit = async (
                 values.socialGoals,
                 OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
+                newClient.createdAt,
                 newClient.createdAt
             );
             await addRisk(
@@ -108,6 +112,7 @@ const handleNewMobileClientSubmit = async (
                 values.educationGoals,
                 OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
+                newClient.createdAt,
                 newClient.createdAt
             );
             await addRisk(
@@ -119,6 +124,7 @@ const handleNewMobileClientSubmit = async (
                 values.nutritionGoals,
                 OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
+                newClient.createdAt,
                 newClient.createdAt
             );
             await addRisk(
@@ -130,6 +136,7 @@ const handleNewMobileClientSubmit = async (
                 values.mentalGoals,
                 OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
+                newClient.createdAt,
                 newClient.createdAt
             );
         });

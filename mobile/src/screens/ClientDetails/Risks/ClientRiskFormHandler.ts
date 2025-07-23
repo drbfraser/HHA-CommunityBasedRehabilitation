@@ -1,4 +1,4 @@
-import { IRisk } from "@cbr/common";
+import { IRisk, OutcomeGoalMet } from "@cbr/common";
 import { modelName } from "../../../models/constant";
 import { dbType } from "../../../util/watermelonDatabase";
 import { addRisk } from "../../NewClient/formHandler";
@@ -38,6 +38,13 @@ export const handleRiskSubmit = async (
         const client = await database.get<Client>(modelName.clients).find(values.client_id);
         const currentTime = new Date().getTime();
         await database.write(async () => {
+            const existingRisks = await client.risks.fetch();
+            const previous = existingRisks
+                .filter((r) => r.risk_type === values.risk_type)
+                .sort((a, b) => b.timestamp - a.timestamp)[0];
+            const isPreviousActive = previous && previous.goal_status === OutcomeGoalMet.ONGOING;
+            const actual_start_date = isPreviousActive ? previous.start_date : currentTime;
+
             risk = await addRisk(
                 client,
                 database,
@@ -47,7 +54,8 @@ export const handleRiskSubmit = async (
                 values.goal_name,
                 values.goal_status,
                 values.cancellation_reason,
-                currentTime
+                currentTime,
+                actual_start_date,
             );
         });
         await client.updateRisk(values.risk_type, values.risk_level, currentTime);

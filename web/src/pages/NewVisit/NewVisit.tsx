@@ -99,7 +99,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                     setIsPreviousGoalsModalOpen(true);
                                 }}
                             >
-                                View Previous {visitFieldLabels[visitType]} Goals
+                                View Previous Goals
                             </Button>
                             <Button
                                 variant="contained"
@@ -289,7 +289,6 @@ const NewVisit = () => {
                     {selectedRisk && isPreviousGoalsModalOpen && (
                         <PreviousGoalsModal
                             clientId={clientId}
-                            riskType={selectedRisk.risk_type}
                             close={() => setIsPreviousGoalsModalOpen(false)}
                         />
                     )}

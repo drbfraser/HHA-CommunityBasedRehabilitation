@@ -144,23 +144,6 @@ export const getVisitGoalStatusLabel = (t: TFunction, visitType: string): string
     }
 };
 
-export const getVisitGoalRequirementLabel = (t: TFunction, visitType: string): string => {
-    const goalRequirementLabels: { [key: string]: string } = {
-        [VisitFormField.health]: t("newVisit.clientHealthGoalRequirement"),
-        [VisitFormField.education]: t("newVisit.clientEducationGoalRequirement"),
-        [VisitFormField.social]: t("newVisit.clientSocialGoalRequirement"),
-        [VisitFormField.nutrition]: t("newVisit.clientNutritionGoalRequirement"),
-        [VisitFormField.mental]: t("newVisit.clientMentalHealthGoalRequirement"),
-    };
-
-    if (visitType in goalRequirementLabels) {
-        return goalRequirementLabels[visitType];
-    } else {
-        console.error("Unknown translation key:", visitType);
-        return "";
-    }
-};
-
 export const visitInitialValues = {
     [VisitFormField.client_id]: "",
     [VisitFormField.village]: "",

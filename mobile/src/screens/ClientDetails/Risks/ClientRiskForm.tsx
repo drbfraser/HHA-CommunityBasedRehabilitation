@@ -159,12 +159,19 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
         formikProps.setFieldValue(FormField.risk_level, value);
     };
 
-    const onSave = (formikProps: FormikProps<IRisk>) => {
-        if (!formikProps.isValid) {
+    const onSave = async (formikProps: FormikProps<IRisk>) => {
+        formikProps.setTouched({
+            requirement: true,
+            goal_name: true,
+        });
+
+        const errors = await formikProps.validateForm();
+
+        if (Object.keys(errors).length > 0) {
             toastValidationError();
             return;
         }
-        formikProps.handleSubmit();
+        await formikProps.submitForm();
         setShowModal(false);
     };
 

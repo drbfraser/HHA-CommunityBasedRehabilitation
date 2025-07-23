@@ -1437,11 +1437,6 @@ interface Resources {
       "clientSocialGoalStatus": "Client's Social Goal Status",
       "clientNutritionGoalStatus": "Client's Nutrition Goal Status",
       "clientMentalHealthGoalStatus": "Client's Mental Health Goal Status",
-      "clientHealthGoalRequirement": "Client's Health Goal Requirements",
-      "clientEducationGoalRequirement": "Client's Education Goal Requirements",
-      "clientSocialGoalRequirement": "Client's Social Goal Requirements",
-      "clientNutritionGoalRequirement": "Client's Nutrition Goal Requirements",
-      "clientMentalHealthGoalRequirement": "Client's Mental Health Goal Requirements",
       "PLACEHOLDER-socialRequirements": {
         "0": "Improve connection with community",
         "1": "Improve connection with family",

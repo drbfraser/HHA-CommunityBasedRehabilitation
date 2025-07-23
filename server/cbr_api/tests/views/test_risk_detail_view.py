@@ -29,7 +29,6 @@ class RiskDetailViewTests(RiskViewsTestCase):
         }
 
         response = self.client_api.put(url, data, format="json")
-        print(response.data)
 
         self.assertEqual(response.status_code, 200)
         # Verify the risk was updated
@@ -53,10 +52,32 @@ class RiskDetailViewTests(RiskViewsTestCase):
         self.assertEqual(self.risk1.risk_level, original_level)
 
     def test_delete_risk(self):
-        url = reverse("risk-detail", kwargs={"pk": self.risk1.id})
-        response = self.client_api.delete(url)
+        fake_id_url = reverse("risk-detail", kwargs={"pk": 1234})
+        response = self.client_api.delete(fake_id_url)
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(ClientRisk.objects.count(), 2)  # No risks should be deleted
+
+        valid_id_url = reverse("risk-detail", kwargs={"pk": self.risk1.id})
+        response = self.client_api.delete(valid_id_url)
 
         self.assertEqual(response.status_code, 204)
         # Verify the risk was deleted
         self.assertFalse(ClientRisk.objects.filter(id=self.risk1.id).exists())
         self.assertEqual(ClientRisk.objects.count(), 1)  # Only risk2 should remain
+
+    def test_unauthenticated_access_denied(self):
+        self.client_api.force_authenticate(user=None)
+        url = reverse("risk-detail", kwargs={"pk": self.risk1.id})
+
+        response = self.client_api.get(url)
+        self.assertEqual(response.status_code, 401)
+
+        response = self.client_api.put(url, {})
+        self.assertEqual(response.status_code, 401)
+
+        response = self.client_api.patch(url, {})
+        self.assertEqual(response.status_code, 401)
+
+        response = self.client_api.delete(url)
+        self.assertEqual(response.status_code, 401)

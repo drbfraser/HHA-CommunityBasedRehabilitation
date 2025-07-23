@@ -26,11 +26,10 @@ import { OutcomeGoalMet } from "@cbr/common/util/visits";
 
 interface IModalProps {
     clientId: string;
-    riskType?: RiskType;
     close: () => void;
 }
 
-const PreviousGoalsModal = ({ clientId, riskType, close }: IModalProps) => {
+const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
     const [goals, setGoals] = useState<IRisk[]>([]);
 
     const [isPrevGoalOpen, setPrevGoalOpen] = useState(false);
@@ -47,9 +46,8 @@ const PreviousGoalsModal = ({ clientId, riskType, close }: IModalProps) => {
             .then((data: IRisk[]) => {
                 const filteredGoals = data.filter(
                     (goal) =>
-                        (goal.goal_status === OutcomeGoalMet.CANCELLED ||
-                            goal.goal_status === OutcomeGoalMet.CONCLUDED) &&
-                        (!riskType || goal.risk_type === riskType)
+                        goal.goal_status === OutcomeGoalMet.CANCELLED ||
+                        goal.goal_status === OutcomeGoalMet.CONCLUDED
                 );
                 setGoals(filteredGoals);
             })
@@ -57,7 +55,7 @@ const PreviousGoalsModal = ({ clientId, riskType, close }: IModalProps) => {
                 setLoadingError(true);
                 console.error("Failed to load previous goals", err);
             });
-    }, [clientId, riskType]);
+    }, [clientId]);
 
     useEffect(() => {
         getPreviousGoals();

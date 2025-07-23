@@ -474,6 +474,8 @@ const NewVisit = (props: INewVisitProps) => {
                                 />
                             )}
                             {/* todosd: steps not fully connected when 5 or fewer selected */}
+                            {/* Issue #602: The key forces ProgressSteps to re-render when visitSteps change, which causes the fields to flicker, 
+                            however, forced re-rendering is needed because ProgressSteps doesn't handle dynamic step changes well */}
                             <ProgressSteps key={visitSteps.length} {...progressStepsStyle}>
                                 {visitSteps.map((surveyStep, index) => {
                                     const isCurrentStepActive = activeStep === index;

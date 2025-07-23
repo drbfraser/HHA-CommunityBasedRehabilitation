@@ -1,5 +1,6 @@
 from django.urls import reverse
 from cbr_api.tests.helpers import RiskViewsTestCase
+from cbr_api.models import GoalOutcomes, RiskLevel, RiskType
 
 
 class RiskDetailViewTests(RiskViewsTestCase):
@@ -17,3 +18,21 @@ class RiskDetailViewTests(RiskViewsTestCase):
         response = self.client_api.get(url)
 
         self.assertEqual(response.status_code, 404)
+
+    def test_update_risk_full(self):
+        url = reverse("risk-detail", kwargs={"pk": self.risk1.id})
+        data = {
+            "client_id": self.client.id,
+            "risk_type": RiskType.HEALTH,
+            "risk_level": RiskLevel.HIGH,
+            "goal_status": GoalOutcomes.CONCLUDED,
+        }
+
+        response = self.client_api.put(url, data, format="json")
+        print(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        # Verify the risk was updated
+        self.risk1.refresh_from_db()
+        self.assertEqual(self.risk1.risk_level, RiskLevel.HIGH)
+        self.assertEqual(self.risk1.goal_status, GoalOutcomes.CONCLUDED)

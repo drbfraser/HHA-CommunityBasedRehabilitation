@@ -5,6 +5,7 @@ from cbr_api.models import (
     Client,
     ClientRisk,
     GoalOutcomes,
+    RiskChangeType,
     RiskLevel,
     RiskType,
     UserCBR,
@@ -89,6 +90,8 @@ class RiskListViewTests(RiskViewsTestCase):
         self.assertEqual(created_risk.risk_level, RiskLevel.MEDIUM)
         self.assertEqual(created_risk.goal_name, "Education Support")
         self.assertEqual(created_risk.goal_status, GoalOutcomes.ONGOING)
+        # in helpers.py the first educ risk had a goal status = cancelled, now we updated it
+        self.assertEqual(created_risk.change_type, RiskChangeType.GOAL_STATUS)
 
     def test_unauthenticated_access_denied(self):
         url = reverse("risk-list")

@@ -1,6 +1,6 @@
 from django.urls import reverse
 from cbr_api.tests.helpers import RiskViewsTestCase
-from cbr_api.models import GoalOutcomes, RiskLevel, RiskType
+from cbr_api.models import ClientRisk, GoalOutcomes, RiskLevel, RiskType
 
 
 class RiskDetailViewTests(RiskViewsTestCase):
@@ -36,3 +36,27 @@ class RiskDetailViewTests(RiskViewsTestCase):
         self.risk1.refresh_from_db()
         self.assertEqual(self.risk1.risk_level, RiskLevel.HIGH)
         self.assertEqual(self.risk1.goal_status, GoalOutcomes.CONCLUDED)
+
+    def test_update_risk_with_invalid_data(self):
+        url = reverse("risk-detail", kwargs={"pk": self.risk1.id})
+        data = {
+            "risk_type": RiskType.HEALTH,
+            "risk_level": "INVALID_LEVEL",
+        }
+
+        response = self.client_api.patch(url, data, format="json")
+
+        self.assertEqual(response.status_code, 400)
+        # Verify risk was not changed
+        original_level = self.risk1.risk_level
+        self.risk1.refresh_from_db()
+        self.assertEqual(self.risk1.risk_level, original_level)
+
+    def test_delete_risk(self):
+        url = reverse("risk-detail", kwargs={"pk": self.risk1.id})
+        response = self.client_api.delete(url)
+
+        self.assertEqual(response.status_code, 204)
+        # Verify the risk was deleted
+        self.assertFalse(ClientRisk.objects.filter(id=self.risk1.id).exists())
+        self.assertEqual(ClientRisk.objects.count(), 1)  # Only risk2 should remain

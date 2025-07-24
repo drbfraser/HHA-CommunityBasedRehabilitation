@@ -96,7 +96,7 @@ Whenever developers introduce or modify functionality, they must add or update t
 - **Locally** (inside Docker):
 
   ```bash
-  docker exec cbr_django python manage.py test
+  docker exec cbr_django python manage.py test --verbosity=2 --no-input
   ```
 
 - **CI**: the `test-server` job in **maincicd.yml** automatically runs `python manage.py test ...` in an isolated container on pushes to `main`, enforcing that no backend changes break existing functionality.
@@ -105,6 +105,6 @@ Whenever developers introduce or modify functionality, they must add or update t
 
 ## 5. References
 
-- Django REST Framework testing guide: [https://www.django-rest-framework.org/api-guide/testing/](https://www.django-rest-framework.org/api-guide/testing/)
+- Django REST Framework testing guide (recommended): [https://www.django-rest-framework.org/api-guide/testing/](https://www.django-rest-framework.org/api-guide/testing/)
 - NetNinja Django testing series: [https://youtu.be/OfiCALrGE14?si=EJ0Uw5AdNSVikHpa](https://youtu.be/OfiCALrGE14?si=EJ0Uw5AdNSVikHpa)
 - Django Rest Framework API testing overview: [https://youtu.be/sRluxnmZ-H8?si=OkpXTJTAPz2MFNLe](https://youtu.be/sRluxnmZ-H8?si=OkpXTJTAPz2MFNLe)

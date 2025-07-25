@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { Card, Divider, Text } from "react-native-paper";
 
-import { IRisk, riskLevels, RiskType } from "@cbr/common";
+import { IRisk, OutcomeGoalMet, riskLevels, RiskType } from "@cbr/common";
 import {
     getModalFormGoalsDisplay,
     getModalFormRequirementsDisplay,
@@ -60,25 +60,40 @@ export const ClientRisk = (props: riskProps) => {
                 <View style={styles.riskCardContentStyle}>
                     <View style={styles.riskCardHeaderStyle}>
                         <Text style={styles.riskTitleStyle}>{getRiskTitle()}</Text>
-                        <Text
-                            style={riskStyles(riskLevels[risk.risk_level].color).riskSubtitleStyle}
-                        >
-                            {riskLevels[risk.risk_level].name}
-                        </Text>
+                        {risk.goal_status === OutcomeGoalMet.ONGOING ? (
+                            <Text
+                                style={
+                                    riskStyles(riskLevels[risk.risk_level].color).riskSubtitleStyle
+                                }
+                            >
+                                {riskLevels[risk.risk_level].name}
+                            </Text>
+                        ) : (
+                            ""
+                        )}
                     </View>
-
-                    <View>
-                        <Text style={styles.riskHeaderStyle}>{t("general.requirements")}: </Text>
-                        <Text style={styles.riskRequirementStyle}>
-                            {getModalFormRequirementsDisplay(t, risk)}
-                        </Text>
-                    </View>
-                    <View>
-                        <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
-                        <Text style={styles.riskRequirementStyle}>
-                            {getModalFormGoalsDisplay(t, risk)}
-                        </Text>
-                    </View>
+                    {risk.goal_status === OutcomeGoalMet.ONGOING ? (
+                        <>
+                            <View>
+                                <Text style={styles.riskHeaderStyle}>
+                                    {t("general.requirements")}:{" "}
+                                </Text>
+                                <Text style={styles.riskRequirementStyle}>
+                                    {getModalFormRequirementsDisplay(t, risk)}
+                                </Text>
+                            </View>
+                            <View>
+                                <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
+                                <Text style={styles.riskRequirementStyle}>
+                                    {getModalFormGoalsDisplay(t, risk)}
+                                </Text>
+                            </View>
+                        </>
+                    ) : (
+                        <View>
+                            <Text>No current goal set</Text>
+                        </View>
+                    )}
 
                     <View>
                         <ClientRiskForm

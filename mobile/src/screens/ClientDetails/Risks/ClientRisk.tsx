@@ -91,7 +91,7 @@ export const ClientRisk = (props: riskProps) => {
                         </>
                     ) : (
                         <View>
-                            <Text>No current goal set</Text>
+                            <Text style={styles.riskRequirementStyle}>No current goal set</Text>
                         </View>
                     )}
 

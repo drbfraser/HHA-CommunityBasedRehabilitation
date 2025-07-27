@@ -53,10 +53,7 @@ const PreviousGoalCard = (props: IModalProps) => {
             onClose={props.close}
             ria-labelledby="form-dialog-title"
         >
-            <DialogTitle id="form-dialog-title">
-                {/* TODO: Change with Translation Viewing previous goal */}
-                {t("goals.viewingPreviousGoals")}
-            </DialogTitle>
+            <DialogTitle id="form-dialog-title">{t("goals.viewingPreviousGoals")}</DialogTitle>
             <DialogContent>
                 <Stack direction="column" spacing={1} sx={{ mb: 3 }}>
                     <Typography variant="subtitle1">

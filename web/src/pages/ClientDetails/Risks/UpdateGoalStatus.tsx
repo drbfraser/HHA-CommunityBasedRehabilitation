@@ -28,19 +28,11 @@ interface IModalProps {
 
 export default function UpdateGoalStatus(props: IModalProps) {
     const { t } = useTranslation();
-    // TODO: Update translations file to replace placeholders
     const goalStatusOptions = [
         { value: "GO", label: t("newVisit.ongoing") },
-        { value: "CON", label: t("newVisit.PLACEHOLDER-socialGoals.0") },
+        { value: "CON", label: t("newVisit.concluded") },
         { value: "CAN", label: t("newVisit.cancelled") },
     ];
-
-    /* TODO: Add back in if we need to use canonical/localized fields
-    const canonicalFields: string[] = Object.values(
-        t(props.transKey, { returnObjects: true, lng: "en" })
-    );
-    const localizedFields: string[] = Object.values(t(props.transKey, { returnObjects: true }));
-    */
 
     const getDialogTitleText = (riskType: RiskType): string => {
         switch (riskType) {

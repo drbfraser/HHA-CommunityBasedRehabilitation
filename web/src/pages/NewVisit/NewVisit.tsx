@@ -81,7 +81,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                 setIsModalOpen(true);
                             }}
                         >
-                            Create New {visitFieldLabels[visitType]} Goal
+                            {t("goals.createNew")} {visitFieldLabels[visitType]} {t("general.goal")}
                         </Button>
                     </>
                 ) : matchingRisk &&
@@ -99,7 +99,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                     setIsPreviousGoalsModalOpen(true);
                                 }}
                             >
-                                View Previous Goals
+                                {t("goals.previousGoals")}
                             </Button>
                             <Button
                                 variant="contained"
@@ -109,7 +109,8 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                     setIsModalOpen(true);
                                 }}
                             >
-                                Create New {visitFieldLabels[visitType]} Goal
+                                {t("goals.createNew")} {visitFieldLabels[visitType]}{" "}
+                                {t("general.goal")}
                             </Button>
                         </Stack>
                     </>
@@ -131,7 +132,8 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                     setIsModalOpen(true);
                                 }}
                             >
-                                Update {visitFieldLabels[visitType]} Goal
+                                {t("general.update")} {visitFieldLabels[visitType]}{" "}
+                                {t("general.goal")}
                             </Button>
                         </Stack>
                     </>

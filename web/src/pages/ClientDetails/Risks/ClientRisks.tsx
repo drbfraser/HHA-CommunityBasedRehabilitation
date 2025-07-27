@@ -101,7 +101,7 @@ const ClientRisks = ({ clientInfo, refreshClient }: IProps) => {
                         >
                             {risk.goal_status === OutcomeGoalMet.ONGOING
                                 ? t("general.update")
-                                : "Create New Goal"}
+                                : t("goals.createNewGoal")}
                         </Button>
                     </CardActions>
                 </Card>

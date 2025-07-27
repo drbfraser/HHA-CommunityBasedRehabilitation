@@ -89,7 +89,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                       matchingRisk.goal_status === OutcomeGoalMet.CANCELLED) ? (
                     <>
                         <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
-                        <Typography variant="body1">No current ongoing goals</Typography>
+                        <Typography variant="body1">{t("goals.noCurrentOngoingGoals")}</Typography>
                         <Stack direction="row" spacing={2} mt={1}>
                             <Button
                                 variant="outlined"

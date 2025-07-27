@@ -93,8 +93,7 @@ const ClientDetails = () => {
                         fullWidth
                         onClick={handlePrevGoalsClick}
                     >
-                        {/* TODO: Replace with Translation */}
-                        View Previous Goals
+                        {t("goals.previousGoals")}
                     </Button>
                 </Grid>
 

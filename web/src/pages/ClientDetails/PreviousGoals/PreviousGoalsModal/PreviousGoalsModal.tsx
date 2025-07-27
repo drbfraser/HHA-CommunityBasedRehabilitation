@@ -113,7 +113,7 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
     return (
         <>
             <Dialog fullWidth maxWidth="lg" open={true} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Viewing Previous Goals</DialogTitle>
+                <DialogTitle id="form-dialog-title">{t("goals.viewingPreviousGoals")}</DialogTitle>
                 <DialogContent>
                     <ParentTableContainer>
                         <Table>

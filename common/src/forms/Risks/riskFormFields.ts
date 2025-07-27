@@ -21,10 +21,9 @@ const refreshArrays = () => {
         [FormField.risk_level]: i18n.t("risks.riskLevel"),
         [FormField.requirement]: i18n.t("risks.requirements"),
         [FormField.goal_name]: i18n.t("general.goal"),
-        [FormField.goal_status]: "Goal Status",
+        [FormField.goal_status]: i18n.t("goals.goalStatus"),
         [FormField.cancellation_reason]: i18n.t("risks.cancelReason"),
-        // TODO: Need to add "Comments"
-        [FormField.comments]: "Comments",
+        [FormField.comments]: i18n.t("risks.comments"),
         [FormField.other]: i18n.t("referral.other"),
     };
 };

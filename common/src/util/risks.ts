@@ -67,8 +67,7 @@ const refreshArrays = () => {
     riskLevels = {
         [RiskLevel.NOT_ACTIVE]: {
             level: 0,
-            // TODO: need translation for this
-            name: "Not Active",
+            name: i18n.t("goals.notActive"),
             color: themeColors.borderGray,
             isDropDownOption: false,
         },

@@ -160,13 +160,13 @@ const OutcomeField = (props: {
     return (
         <View>
             <Text style={styles.pickerQuestion}>
-                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal
+                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("general.goal")}
             </Text>
             <Text style={styles.normalInput}>
                 {props.risks.find((r) => r.risk_type === (props.visitType as string))?.goal}
             </Text>
             <Text style={styles.pickerQuestion}>
-                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal Status
+                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("goals.goalStatus")}
             </Text>
 
             <FormikExposedDropdownMenu

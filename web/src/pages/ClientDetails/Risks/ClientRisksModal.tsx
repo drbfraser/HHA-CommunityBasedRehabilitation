@@ -124,9 +124,8 @@ const ClientRisksModal = (props: IModalProps) => {
                                     <Grid container direction="column" spacing={3}>
                                         <Grid item>
                                             <Stack direction="row" spacing={1}>
-                                                {/*TODO: Replace with Translation*/}
                                                 <Typography variant="subtitle1" fontWeight="bold">
-                                                    Goal Status:
+                                                    {t("goals.goalStatus")}:
                                                 </Typography>
                                                 <Box
                                                     onClick={handleEditGoalsClick}

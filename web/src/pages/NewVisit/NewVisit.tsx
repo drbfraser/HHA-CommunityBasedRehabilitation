@@ -176,12 +176,12 @@ const NewVisit = () => {
 
     const visitSteps = [
         {
-            label: "Visit Focus",
+            label: `${visitFieldLabels[VisitFormField.visit_focus]}`,
             Form: visitReasonStepCallBack(setEnabledSteps, zones),
             validationSchema: initialValidationSchema,
         },
         ...enabledSteps.map((visitType) => ({
-            label: `${visitFieldLabels[visitType]} Visit`,
+            label: `${visitFieldLabels[visitType]} ${t("newVisit.visit")}`,
             Form: VisitTypeStep(visitType, risks, t),
             validationSchema: visitTypeValidationSchema(visitType),
         })),

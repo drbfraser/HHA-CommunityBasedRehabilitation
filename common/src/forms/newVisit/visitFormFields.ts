@@ -21,6 +21,7 @@ export enum GoalStatus {
 
 export enum VisitFormField {
     client_id = "client",
+    visit_focus = "visit_focus",
     village = "village",
     zone = "zone",
     health = "HEALTH",
@@ -53,6 +54,7 @@ export let provisionals: { [key: string]: string[] };
 const refreshArrays = () => {
     visitFieldLabels = {
         [VisitFormField.client_id]: i18n.t("newVisit.client"),
+        [VisitFormField.visit_focus]: i18n.t("goals.visitFocus"),
         [VisitFormField.village]: i18n.t("newVisit.village"),
         [VisitFormField.zone]: i18n.t("newVisit.zone"),
         [VisitFormField.health]: i18n.t("newVisit.health"),

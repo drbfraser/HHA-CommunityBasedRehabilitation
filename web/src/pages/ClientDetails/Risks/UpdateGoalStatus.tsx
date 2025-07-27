@@ -80,8 +80,7 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                 <Grid container direction="column" spacing={1}>
                                     <Grid item>
                                         <Typography variant="subtitle1" fontWeight="bold">
-                                            {/* TODO: Add Translation */}
-                                            Update Goal Status
+                                            {t("goals.updateGoalStatus")}
                                         </Typography>
                                     </Grid>
                                     <Grid item>

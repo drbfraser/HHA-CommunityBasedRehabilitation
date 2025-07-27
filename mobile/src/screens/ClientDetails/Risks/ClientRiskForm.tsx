@@ -232,7 +232,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                     </View>
 
                                     <ModalWindow
-                                        label={"Update Goal Status"}
+                                        label={fieldLabels[FormField.update_goal_status]}
                                         visible={showGoalStatusModal}
                                         onClose={handleGoalStatusModalClose}
                                         isDismissable={true}

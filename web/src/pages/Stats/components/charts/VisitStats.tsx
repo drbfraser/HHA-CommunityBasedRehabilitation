@@ -146,7 +146,7 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
                         fAdults += v[`${category}_female_adult_total`] ?? 0;
                         mAdults += v[`${category}_male_adult_total`] ?? 0;
                         fChild += v[`${category}_female_child_total`] ?? 0;
-                        mChild += v[`${category}_female_child_total`] ?? 0;
+                        mChild += v[`${category}_male_child_total`] ?? 0;
                     });
 
                     acc.pieData.push(zoneTotals);

@@ -34,7 +34,7 @@ export const addRisk = async (
         risk.end_date =
             goalStatus === OutcomeGoalMet.CANCELLED || goalStatus === OutcomeGoalMet.CONCLUDED
                 ? time
-                : null;
+                : 0;
     });
     return risk;
 };

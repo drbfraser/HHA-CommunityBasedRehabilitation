@@ -43,7 +43,7 @@ export const handleRiskSubmit = async (
                 .filter((r) => r.risk_type === values.risk_type)
                 .sort((a, b) => b.timestamp - a.timestamp)[0];
             const isPreviousActive = previous && previous.goal_status === OutcomeGoalMet.ONGOING;
-            const actual_start_date = isPreviousActive ? previous.start_date : currentTime;
+            const actualStartDate = isPreviousActive ? previous.start_date : currentTime;
 
             risk = await addRisk(
                 client,
@@ -55,7 +55,7 @@ export const handleRiskSubmit = async (
                 values.goal_status,
                 values.cancellation_reason,
                 currentTime,
-                actual_start_date
+                actualStartDate
             );
         });
         await client.updateRisk(values.risk_type, values.risk_level, currentTime);

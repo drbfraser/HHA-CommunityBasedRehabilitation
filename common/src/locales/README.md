@@ -2,11 +2,19 @@
 
 This folder contains the translations files for all projects (`common`, `mobile` and `web`).
 
+### NOTE: please do _NOT_ directly edit the .json files, as they are generated automatically.
+
 ## Updating Translations
 
-1. Update `Translations_CBR_main.xlsx` as needed, both online (our current working directory for translations is [here](https://drive.google.com/drive/u/0/folders/18smmZ4-sSGmFQ1XZ3qQtTXE1T4L3R7PD) in the Google dive) as well as in `common/src/locales`. The simplest workflow for this is to update the online spreadsheet, and then download it to replace the current document in the `locales` folder. Note that this filename **must** be exact.
+1. Update `Translations_CBR_main.xlsx`, found [here](https://drive.google.com/drive/u/0/folders/18smmZ4-sSGmFQ1XZ3qQtTXE1T4L3R7PD) in the Google drive. Then, download this file and replace `Translations_CBR_main.xlsx` in `common/src/locales` with it. Note that this filename **must** be exact.
 
-Please also note that the `_COPIED_WARNING` in row 2 of this `xlsx` file does not apply to this file itself, but instead to the `json` files that will be automatically created from it by `update-translations`.
+When adding a new translation, please add it to the _end_ of this spreadsheet. In general, translations are color-coded as follows:
+
+-   green: translation has been completed
+-   orange: translation has been requested from HHA, but not yet delivered
+-   red: translation has some issues that require attention
+
+Translations must have a unique key. Whenever possible, name your translation such that it will be logically grouped with like translations. Before adding a new translation, please check if there is an existing translation that could suit your needs. Also, note that the `_COPIED_WARNING` in row 2 of this `xlsx` file does not apply to this file itself, but instead to the `json` files that will be automatically created from it by `update-translations`.
 
 2. Run `npm run update-translations` from the root of `common`. This process makes use of [this](https://github.com/ofcyln/i18n-json-to-xlsx-converter) tool, which may also be manually used to generate individual translation files from xlsx files or vice versa (`npx i18n-json-to-xlsx-converter --convert excelFileFromGoogleDrive.xlsx`)
 
@@ -19,8 +27,7 @@ Please also note that the `_COPIED_WARNING` in row 2 of this `xlsx` file does no
 
 ## Conventions for missing/problematic translations
 
--   Following with the conventions implicitly set by HHA, several bari translations are marked as `??`. This indicates that HHA was not able to translate the provided english string, or perhaps had outstanding questions for us. Bari 'translations' that are just english text beginning with `&` are **NEW** translation needs that must be requested from HHA.
--   Any english text that is **NOT** prefixed with an `&` in the current bari translation should be seen as an error, reflecting a need for a new translation.
+-   Following with the conventions implicitly set by HHA, several bari translations are marked as `??`. This indicates that HHA was not able to translate the provided english string, or perhaps had outstanding questions for us. Bari 'translations' that are just english text beginning with `&` are **NEW** translation needs that must be requested from HHA. The `&` symbol allows us to clearly see placeholder text when switching to the Bari language.
 
 ## Rationale for Centralized Translation Files
 

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Text, View, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
-import { Card, DataTable, Button } from "react-native-paper";
+import { Card, DataTable } from "react-native-paper";
 import useStyles from "./Dashboard.styles";
 import { BriefReferral, fetchAllClientsFromDB, fetchReferrals } from "./DashboardRequest";
 import { riskTypes } from "../../util/riskIcon";
@@ -40,7 +40,7 @@ const Dashboard = () => {
 
     const isFocused = useIsFocused();
     const database = useDatabase();
-    const { setUnSyncedChanges, screenRefresh, setScreenRefresh } = useContext(SyncContext);
+    const { setUnSyncedChanges, screenRefresh } = useContext(SyncContext);
 
     const { t } = useTranslation();
 

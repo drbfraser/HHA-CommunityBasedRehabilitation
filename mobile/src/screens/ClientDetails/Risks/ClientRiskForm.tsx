@@ -35,7 +35,6 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             <ClientRiskFormModal
                 riskData={props.riskData}
                 setRisk={props.setRisk}
-                clientArchived={props.clientArchived}
                 showModal={showModal}
                 setShowModal={setShowModal}
                 riskType={props.riskData.risk_type}

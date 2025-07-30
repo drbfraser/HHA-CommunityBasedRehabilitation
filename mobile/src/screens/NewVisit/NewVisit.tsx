@@ -279,9 +279,8 @@ const OutcomeField = (props: {
                     riskData={currentRisk}
                     setRisk={(updated) => {
                         setCurrentRisk(updated);
-                        updateRiskInArray(updated); // ✅ reflect in array
+                        updateRiskInArray(updated);
                     }}
-                    clientArchived={true} // or pass your actual value here
                     riskType={currentRisk.risk_type}
                     showModal={showRiskModal}
                     setShowModal={setShowRiskModal}

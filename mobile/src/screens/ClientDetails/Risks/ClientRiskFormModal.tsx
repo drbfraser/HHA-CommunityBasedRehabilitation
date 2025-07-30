@@ -39,7 +39,6 @@ interface ClientRiskFormModalProps {
     riskType: RiskType;
     riskData: any; // ideally typed better
     setRisk: (risk: any) => void;
-    clientArchived: boolean;
 }
 
 // reusable text input component for risk form

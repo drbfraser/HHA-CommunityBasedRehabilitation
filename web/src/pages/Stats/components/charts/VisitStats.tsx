@@ -91,80 +91,72 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
             let mAdults = 0;
             let fChild = 0;
             let mChild = 0;
-
-            const { pieData, totalData, categoryTotals } = stats.visits.reduce(
+    
+            const { pieData, categoryTotals } = stats.visits.reduce(
                 (acc, v) => {
                     const zoneTotals: ZoneTotals = {
                         zone_id: v.zone_id,
                         label: zoneToName(v.zone_id),
                     };
-
-                    // Totals for the pie chart
+    
                     visitCategories.forEach((category, index) => {
                         acc.categoryTotals[category] = acc.categoryTotals[category] || 0;
+    
                         const categoryTotal =
                             (v[`${category}_female_adult_total`] ?? 0) +
                             (v[`${category}_male_adult_total`] ?? 0) +
                             (v[`${category}_female_child_total`] ?? 0) +
                             (v[`${category}_male_child_total`] ?? 0);
-
+    
                         zoneTotals[`${category}`] = categoryTotal;
                         zoneTotals.key = visitsCategoryLabels[index];
-
+    
                         acc.categoryTotals[category] += categoryTotal;
                     });
-
-                    const zoneDemographics: IHBarGraphStatsData = {
-                        femaleAdult: 0,
-                        maleAdult: 0,
-                        femaleChild: 0,
-                        maleChild: 0,
-                        label: zoneToName(v.zone_id),
-                        zone_id: v.zone_id,
-                    };
-
-                    // Totals for the Regular Bar Graph
-                    visitCategories.forEach((category, index) => {
-                        zoneDemographics.femaleAdult =
-                            (zoneDemographics.femaleAdult ?? 0) +
-                            (v[`${category}_female_adult_total`] ?? 0);
-                        zoneDemographics.maleAdult =
-                            (zoneDemographics.maleAdult ?? 0) +
-                            (v[`${category}_male_adult_total`] ?? 0);
-                        zoneDemographics.femaleChild =
-                            (zoneDemographics.femaleChild ?? 0) +
-                            (v[`${category}_female_child_total`] ?? 0);
-                        zoneDemographics.maleChild =
-                            (zoneDemographics.maleChild ?? 0) +
-                            (v[`${category}_male_child_total`] ?? 0);
-                        zoneDemographics.category = category;
-
-                        if (!zoneDemographics.category) {
-                            zoneDemographics.category = category;
-                        }
-
-                        fAdults += v[`${category}_female_adult_total`] ?? 0;
-                        mAdults += v[`${category}_male_adult_total`] ?? 0;
-                        fChild += v[`${category}_female_child_total`] ?? 0;
-                        mChild += v[`${category}_male_child_total`] ?? 0;
-                    });
-
+    
                     acc.pieData.push(zoneTotals);
-                    acc.totalData.push(zoneDemographics);
-
                     return acc;
                 },
                 {
                     pieData: [],
-                    totalData: [],
                     categoryTotals: { mental: 0, nutrit: 0, social: 0, educat: 0, health: 0 },
                 } as {
                     pieData: ZoneTotals[];
-                    totalData: IHBarGraphStatsData[];
                     categoryTotals: CategoryTotals;
                 }
             );
-
+    
+            // Aggregate bar graph data by zone
+            const zoneMap: Record<number, IHBarGraphStatsData> = {};
+    
+            stats.visits.forEach((v) => {
+                const id = v.zone_id;
+                if (!zoneMap[id]) {
+                    zoneMap[id] = {
+                        femaleAdult: 0,
+                        maleAdult: 0,
+                        femaleChild: 0,
+                        maleChild: 0,
+                        label: zoneToName(id),
+                        zone_id: id,
+                    };
+                }
+    
+                visitCategories.forEach((category) => {
+                    zoneMap[id].femaleAdult += v[`${category}_female_adult_total`] ?? 0;
+                    zoneMap[id].maleAdult += v[`${category}_male_adult_total`] ?? 0;
+                    zoneMap[id].femaleChild += v[`${category}_female_child_total`] ?? 0;
+                    zoneMap[id].maleChild += v[`${category}_male_child_total`] ?? 0;
+    
+                    fAdults += v[`${category}_female_adult_total`] ?? 0;
+                    mAdults += v[`${category}_male_adult_total`] ?? 0;
+                    fChild += v[`${category}_female_child_total`] ?? 0;
+                    mChild += v[`${category}_male_child_total`] ?? 0;
+                });
+            });
+    
+            const totalData = Object.values(zoneMap);
+    
             setTotalCategory(categoryTotals);
             setTotalPieData(pieData);
             setTotalData(totalData);
@@ -172,7 +164,7 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
             setTotalMAdults(mAdults);
             setTotalFChild(fChild);
             setTotalMChild(mChild);
-
+    
             demographicTotalsRef.current = {
                 female_adult: fAdults,
                 male_adult: mAdults,
@@ -181,7 +173,8 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
             };
         }
     }, [stats, zoneToName]);
-
+    
+    
     const subheadings: ISubheadings[] = [
         {
             label: t("statistics.totalFChild"),

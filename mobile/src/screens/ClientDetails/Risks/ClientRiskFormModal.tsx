@@ -189,11 +189,11 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
             enableReinitialize={true}
         >
             {(formikProps) => {
-                const openGSModal = () => {
+                const openGoalStatusModal = () => {
                     setPendingGoalStatus(formikProps.values.goal_status);
                     setShowGoalStatusModal(true);
                 };
-                const closeGSModal = async () => {
+                const handleGoalStatusModalClose = async () => {
                     formikProps.setFieldTouched(FormField.cancellation_reason, true);
                     const errors = await formikProps.validateForm({
                         ...formikProps.values,
@@ -203,7 +203,7 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                         pendingGoalStatus === OutcomeGoalMet.CANCELLED &&
                         errors.cancellation_reason
                     ) {
-                        return;
+                        return; // do NOT close the update goal status modal if there are validation errors
                     }
                     formikProps.setFieldValue(FormField.goal_status, pendingGoalStatus);
                     setShowGoalStatusModal(false);
@@ -224,7 +224,7 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
 
                                 <View style={styles.goalStatusContainer}>
                                     <Text style={styles.goalStatusText}>Goal Status:</Text>
-                                    <TouchableRipple onPress={openGSModal}>
+                                    <TouchableRipple onPress={openGoalStatusModal}>
                                         <View
                                             style={{
                                                 flexDirection: "row",
@@ -245,7 +245,7 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
 
                                 <UpdateGoalStatusModal
                                     visible={showGoalStatusModal}
-                                    onClose={closeGSModal}
+                                    onClose={handleGoalStatusModalClose}
                                     onDismiss={() => setShowGoalStatusModal(false)}
                                     pendingGoalStatus={pendingGoalStatus}
                                     setPendingGoalStatus={setPendingGoalStatus}

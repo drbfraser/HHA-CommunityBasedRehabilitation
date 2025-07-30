@@ -8,6 +8,7 @@ import { OutcomeGoalMet, FormField, fieldLabels } from "@cbr/common";
 import { FormikTextInput } from "./ClientRiskFormModal"; // import your shared component
 import type { FormikProps } from "formik";
 import type { IRisk } from "@cbr/common";
+import useStyles from "./ClientRiskForm.styles";
 
 interface UpdateGoalStatusModalProps {
     visible: boolean;
@@ -27,6 +28,7 @@ const UpdateGoalStatusModal: React.FC<UpdateGoalStatusModalProps> = ({
     formik,
 }) => {
     const { t } = useTranslation();
+    const styles = useStyles();
 
     const goalStatusOptions = [
         { value: OutcomeGoalMet.ONGOING, label: t("newVisit.ongoing") },
@@ -46,8 +48,8 @@ const UpdateGoalStatusModal: React.FC<UpdateGoalStatusModalProps> = ({
                 value={pendingGoalStatus}
                 onValueChange={(value) => setPendingGoalStatus(value as OutcomeGoalMet)}
             >
-                {goalStatusOptions.map((option) => (
-                    <View key={option.value} style={{ flexDirection: "row", alignItems: "center" }}>
+                {goalStatusOptions.map((option, index) => (
+                    <View key={index} style={{ flexDirection: "row", alignItems: "center" }}>
                         <RadioButton value={option.value} />
                         <Text>{option.label}</Text>
                     </View>
@@ -59,7 +61,7 @@ const UpdateGoalStatusModal: React.FC<UpdateGoalStatusModalProps> = ({
                     formikProps={formik}
                     field={FormField.cancellation_reason}
                     label={fieldLabels[FormField.cancellation_reason]}
-                    style={{ marginTop: 16 }}
+                    style={styles.cancellationReasonInput}
                 />
             )}
         </ModalWindow>

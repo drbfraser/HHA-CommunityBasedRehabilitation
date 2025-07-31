@@ -69,7 +69,7 @@ const refreshArrays = () => {
             level: 0,
             // TODO: need translation for this
             name: "Not Active",
-            color: themeColors.borderGray,
+            color: themeColors.noRiskBlack,
             isDropDownOption: false,
         },
         [RiskLevel.LOW]: {

@@ -1,4 +1,5 @@
-import { themeColors } from "@cbr/common";
+import { color } from "react-native-elements/dist/helpers";
+import { riskLevels, themeColors } from "@cbr/common";
 import { nextTick } from "process";
 import { ClientListRow } from "../screens/ClientList/ClientListRequest";
 import { BriefReferral } from "../screens/DashBoard/DashboardRequest";
@@ -69,12 +70,11 @@ export const arrowDirectionController = (
 
     return undefined;
 };
-const mapColorWithLevel = new Map([
-    [themeColors.riskGreen, 0],
-    [themeColors.riskYellow, 1],
-    [themeColors.riskRed, 4],
-    [themeColors.riskBlack, 13],
-]);
+
+const riskColorsAndLevels: [string, number][] = Object.values(riskLevels).map(
+    ({ color, level }) => [color, level]
+);
+const mapColorWithLevel = new Map(riskColorsAndLevels);
 
 export const getLevelByColor = (color: string) => {
     return mapColorWithLevel.get(color) || 0;

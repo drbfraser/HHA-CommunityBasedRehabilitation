@@ -77,7 +77,7 @@ const riskColorsAndLevels: [string, number][] = Object.values(riskLevels).map(
 const mapColorWithLevel = new Map(riskColorsAndLevels);
 
 export const getLevelByColor = (color: string) => {
-    return mapColorWithLevel.get(color) || 0;
+    return mapColorWithLevel.get(color) || -1;
 };
 
 export const clientComparator = (

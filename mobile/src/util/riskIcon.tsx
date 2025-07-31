@@ -40,6 +40,11 @@ const refreshArrays = () => {
             name: "Circle",
             Icon: (color: string) => riskIcon("circle", color),
         },
+        // for not active risk levels
+        CIRCLE_OUTLINE: {
+            name: "Circle Outline",
+            Icon: (color: string) => riskIcon("circle-outline", color),
+        },
     };
 };
 refreshArrays();

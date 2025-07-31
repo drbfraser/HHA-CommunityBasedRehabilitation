@@ -43,7 +43,7 @@ const refreshArrays = () => {
         // for not active risk levels
         CIRCLE_OUTLINE: {
             name: "Circle Outline",
-            Icon: (color: string) => riskIcon("circle-outline", color),
+            Icon: (color: string) => riskIcon("checkbox-blank-circle-outline", color),
         },
     };
 };

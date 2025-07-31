@@ -189,7 +189,7 @@ const OutcomeField = (props: {
             {matchingRisk && matchingRisk.goal_status === OutcomeGoalMet.NOTSET ? (
                 <>
                     <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("general.goal")}
                     </Text>
                     <Text style={styles.normalInput}>{matchingRisk?.goal_name}</Text>
                     <Button
@@ -198,7 +198,7 @@ const OutcomeField = (props: {
                         }}
                         mode={"contained"}
                     >
-                        Create New {visitFieldLabels[props.visitType]} Goal
+                        {t("goals.createNew")} {visitFieldLabels[props.visitType]} {t("general.goal")}
                     </Button>
                 </>
             ) : matchingRisk &&
@@ -206,22 +206,22 @@ const OutcomeField = (props: {
                   matchingRisk.goal_status === OutcomeGoalMet.CANCELLED) ? (
                 <>
                     <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("general.goal")}
                     </Text>
-                    <Text style={styles.normalInput}>No current ongoing goals</Text>
+                    <Text style={styles.normalInput}>{t("goals.noCurrentOngoingGoals")}</Text>
                     <Button
                         onPress={() => {
                             openRiskModal(matchingRisk);
                         }}
                         mode={"contained"}
                     >
-                        Create New {visitFieldLabels[props.visitType]} Goal
+                        {t("goals.createNew")} {visitFieldLabels[props.visitType]} {t("general.goal")}
                     </Button>
                 </>
             ) : matchingRisk ? (
                 <>
                     <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Risk Level
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("clientAttr.riskLevels")}
                     </Text>
                     <Text
                         style={
@@ -231,11 +231,11 @@ const OutcomeField = (props: {
                         {riskLevels[matchingRisk?.risk_level].name}
                     </Text>
                     <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}  {t("general.goal")}
                     </Text>
                     <Text style={styles.normalInput}>{matchingRisk?.goal_name}</Text>
                     <View style={clientRiskStyles.goalStatusContainer}>
-                        <Text style={clientRiskStyles.goalStatusText}>Goal Status:</Text>
+                        <Text style={clientRiskStyles.goalStatusText}>{t("goals.goalStatus")}:</Text>
                         <TouchableRipple>
                             <View
                                 style={{
@@ -248,8 +248,8 @@ const OutcomeField = (props: {
                         </TouchableRipple>
                     </View>
                     <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal
-                        Requirements
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("general.goal")}
+                        {t("risks.requirements")}
                     </Text>
                     <Text style={styles.normalInput}>{matchingRisk?.requirement}</Text>
                     <Button
@@ -258,7 +258,7 @@ const OutcomeField = (props: {
                         }}
                         mode={"contained"}
                     >
-                        Update {visitFieldLabels[props.visitType]} Goal
+                        {t("general.update")} {visitFieldLabels[props.visitType]} {t("general.goal")}
                     </Button>
                 </>
             ) : null}

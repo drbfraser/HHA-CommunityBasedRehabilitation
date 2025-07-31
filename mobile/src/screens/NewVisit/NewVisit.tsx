@@ -221,7 +221,7 @@ const OutcomeField = (props: {
             ) : matchingRisk ? (
                 <>
                     <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("clientAttr.riskLevels")}
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("risks.riskLevel")}
                     </Text>
                     <Text
                         style={

@@ -1,6 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Button, Divider, HelperText, Text, TextInput, TouchableRipple } from "react-native-paper";
+import {
+    Button,
+    Divider,
+    HelperText,
+    Text,
+    TextInput,
+    TouchableRipple,
+} from "react-native-paper";
 import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
 import { FieldArray, Formik, FormikHelpers, FormikProps, getIn } from "formik";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
@@ -14,6 +21,7 @@ import {
     OutcomeFormField,
     OutcomeGoalMet,
     provisionals,
+    riskLevels,
     themeColors,
     TZoneMap,
     useZones,
@@ -42,6 +50,7 @@ import { useTranslation } from "react-i18next";
 import i18n from "i18next";
 import GoalStatusChip from "@/src/components/GoalStatusChip/GoalStatusChip";
 import { ClientRiskFormModal } from "../ClientDetails/Risks/ClientRiskFormModal";
+import { riskStyles } from "../ClientDetails/Risks/ClientRisk.styles";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -211,6 +220,16 @@ const OutcomeField = (props: {
                 </>
             ) : matchingRisk ? (
                 <>
+                    <Text style={styles.pickerQuestion}>
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Risk Level
+                    </Text>
+                    <Text
+                        style={
+                            riskStyles(riskLevels[matchingRisk?.risk_level].color).riskSubtitleStyle
+                        }
+                    >
+                        {riskLevels[matchingRisk?.risk_level].name}
+                    </Text>
                     <Text style={styles.pickerQuestion}>
                         {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal
                     </Text>

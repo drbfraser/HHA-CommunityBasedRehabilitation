@@ -72,8 +72,7 @@ const GoalField = (props: IModalProps) => {
                 />
             )}
             <FormLabel focused={false}>
-                {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
-                {t("risks.riskLevel")}
+                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("risks.riskLevel")}
             </FormLabel>
             {matchingRisk && (
                 <Box sx={clientRiskStyles.riskCardButtonAndBadge}>

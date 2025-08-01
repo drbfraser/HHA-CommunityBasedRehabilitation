@@ -1,13 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
-import {
-    Button,
-    Divider,
-    HelperText,
-    Text,
-    TextInput,
-    TouchableRipple,
-} from "react-native-paper";
+import { Button, Divider, HelperText, Text, TextInput, TouchableRipple } from "react-native-paper";
 import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
 import { FieldArray, Formik, FormikHelpers, FormikProps, getIn } from "formik";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
@@ -189,7 +182,8 @@ const OutcomeField = (props: {
             {matchingRisk && matchingRisk.goal_status === OutcomeGoalMet.NOTSET ? (
                 <>
                     <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("general.goal")}
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
                     </Text>
                     <Text style={styles.normalInput}>{matchingRisk?.goal_name}</Text>
                     <Button
@@ -198,7 +192,8 @@ const OutcomeField = (props: {
                         }}
                         mode={"contained"}
                     >
-                        {t("goals.createNew")} {visitFieldLabels[props.visitType]} {t("general.goal")}
+                        {t("goals.createNew")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
                     </Button>
                 </>
             ) : matchingRisk &&
@@ -206,7 +201,8 @@ const OutcomeField = (props: {
                   matchingRisk.goal_status === OutcomeGoalMet.CANCELLED) ? (
                 <>
                     <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("general.goal")}
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
                     </Text>
                     <Text style={styles.normalInput}>{t("goals.noCurrentOngoingGoals")}</Text>
                     <Button
@@ -215,13 +211,15 @@ const OutcomeField = (props: {
                         }}
                         mode={"contained"}
                     >
-                        {t("goals.createNew")} {visitFieldLabels[props.visitType]} {t("general.goal")}
+                        {t("goals.createNew")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
                     </Button>
                 </>
             ) : matchingRisk ? (
                 <>
                     <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("risks.riskLevel")}
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("risks.riskLevel")}
                     </Text>
                     <Text
                         style={
@@ -231,11 +229,14 @@ const OutcomeField = (props: {
                         {riskLevels[matchingRisk?.risk_level].name}
                     </Text>
                     <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}  {t("general.goal")}
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
                     </Text>
                     <Text style={styles.normalInput}>{matchingRisk?.goal_name}</Text>
                     <View style={clientRiskStyles.goalStatusContainer}>
-                        <Text style={clientRiskStyles.goalStatusText}>{t("goals.goalStatus")}:</Text>
+                        <Text style={clientRiskStyles.goalStatusText}>
+                            {t("goals.goalStatus")}:
+                        </Text>
                         <TouchableRipple>
                             <View
                                 style={{
@@ -248,7 +249,8 @@ const OutcomeField = (props: {
                         </TouchableRipple>
                     </View>
                     <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("general.goal")}
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
                         {t("risks.requirements")}
                     </Text>
                     <Text style={styles.normalInput}>{matchingRisk?.requirement}</Text>
@@ -258,7 +260,8 @@ const OutcomeField = (props: {
                         }}
                         mode={"contained"}
                     >
-                        {t("general.update")} {visitFieldLabels[props.visitType]} {t("general.goal")}
+                        {t("general.update")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
                     </Button>
                 </>
             ) : null}

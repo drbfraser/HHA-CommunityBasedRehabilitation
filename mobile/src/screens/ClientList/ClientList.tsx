@@ -141,6 +141,11 @@ const ClientList = () => {
         });
     };
 
+    const renderRiskIcon = (levelColor) => {
+        if (levelColor !== themeColors.noRiskBlack) return riskTypes.CIRCLE.Icon(levelColor);
+        return riskTypes.CIRCLE_OUTLINE.Icon(levelColor);
+    };
+
     useEffect(() => {
         if (isFocused) {
             newClientGet();
@@ -343,35 +348,35 @@ const ClientList = () => {
 
                                 {showHealthColumn ? (
                                     <DataTable.Cell style={styles.columnIcons}>
-                                        {riskTypes.CIRCLE.Icon(item.HealthLevel)}
+                                        {renderRiskIcon(item.HealthLevel)}
                                     </DataTable.Cell>
                                 ) : (
                                     <View></View>
                                 )}
                                 {showEducationColumn ? (
                                     <DataTable.Cell style={styles.columnIcons}>
-                                        {riskTypes.CIRCLE.Icon(item.EducationLevel)}
+                                        {renderRiskIcon(item.EducationLevel)}
                                     </DataTable.Cell>
                                 ) : (
                                     <View></View>
                                 )}
                                 {showSocialColumn ? (
                                     <DataTable.Cell style={styles.columnIcons}>
-                                        {riskTypes.CIRCLE.Icon(item.SocialLevel)}
+                                        {renderRiskIcon(item.SocialLevel)}
                                     </DataTable.Cell>
                                 ) : (
                                     <View></View>
                                 )}
                                 {showNutritionColumn ? (
                                     <DataTable.Cell style={styles.columnIcons}>
-                                        {riskTypes.CIRCLE.Icon(item.NutritionLevel)}
+                                        {renderRiskIcon(item.NutritionLevel)}
                                     </DataTable.Cell>
                                 ) : (
                                     <View></View>
                                 )}
                                 {ShowMentalColumn ? (
                                     <DataTable.Cell style={styles.columnIcons}>
-                                        {riskTypes.CIRCLE.Icon(item.MentalLevel)}
+                                        {renderRiskIcon(item.MentalLevel)}
                                     </DataTable.Cell>
                                 ) : (
                                     <View></View>

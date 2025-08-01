@@ -13,7 +13,6 @@ import {
     StepLabel,
     Stepper,
     Stack,
-    Box,
 } from "@mui/material";
 import { FieldArray, Form, Formik, FormikHelpers, FormikProps } from "formik";
 
@@ -37,8 +36,6 @@ import { OutcomeGoalMet } from "@cbr/common/util/visits";
 import ClientRisksModal from "../../pages/ClientDetails/Risks/ClientRisksModal";
 import PreviousGoalsModal from "../../pages/ClientDetails/PreviousGoals/PreviousGoalsModal/PreviousGoalsModal";
 import GoalField from "./components/GoalField";
-import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
-import { clientRiskStyles } from "pages/ClientDetails/Risks/ClientRisks.styles";
 
 interface IStepProps {
     formikProps: FormikProps<any>;

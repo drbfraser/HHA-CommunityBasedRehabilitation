@@ -119,12 +119,12 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Risk Level</TableCell>
-                                    <TableCell>Area</TableCell>
-                                    <TableCell>Goal Description</TableCell>
-                                    <TableCell>Start Date</TableCell>
-                                    <TableCell>Achieved Date</TableCell>
-                                    <TableCell>Status</TableCell>
+                                    <TableCell>{t("risks.riskLevel")}</TableCell>
+                                    <TableCell>{t("risks.area")}</TableCell>
+                                    <TableCell>{t("risks.goalDescription")}</TableCell>
+                                    <TableCell>{t("general.startDate")}</TableCell>
+                                    <TableCell>{t("general.endDate")}</TableCell>
+                                    <TableCell>{t("general.status")}</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>

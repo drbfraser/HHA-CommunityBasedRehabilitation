@@ -246,9 +246,11 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                                                     alignItems: "center",
                                                 }}
                                             >
-                                                <GoalStatusChip
-                                                    goalStatus={formikProps.values.goal_status}
-                                                />
+                                                <View pointerEvents="none">
+                                                    <GoalStatusChip
+                                                        goalStatus={formikProps.values.goal_status}
+                                                    />
+                                                </View>
                                                 <Icon
                                                     name="edit-note"
                                                     size={20}
@@ -337,15 +339,15 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
 
                                     <FormikTextInput
                                         formikProps={formikProps}
-                                        field={FormField.requirement}
-                                        label={fieldLabels[FormField.requirement]}
+                                        field={FormField.goal_name}
+                                        label={fieldLabels[FormField.goal_name]}
                                         style={styles.riskInputStyle}
                                     />
 
                                     <FormikTextInput
                                         formikProps={formikProps}
-                                        field={FormField.goal_name}
-                                        label={fieldLabels[FormField.goal_name]}
+                                        field={FormField.requirement}
+                                        label={fieldLabels[FormField.requirement]}
                                         style={styles.riskInputStyle}
                                     />
 

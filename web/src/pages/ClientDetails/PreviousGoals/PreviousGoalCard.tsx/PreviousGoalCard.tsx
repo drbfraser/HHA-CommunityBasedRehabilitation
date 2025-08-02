@@ -67,7 +67,7 @@ const PreviousGoalCard = (props: IModalProps) => {
                         <b>Type:</b> {getDialogTitleText(props.risk.risk_type)}
                     </Typography>
                     <Typography variant="subtitle1">
-                        <b>Start Date:</b> {timestampToFormDate(props.risk.timestamp, true)}
+                        <b>Start Date:</b> {timestampToFormDate(props.risk.start_date, true)}
                     </Typography>
                     <Typography variant="subtitle1">
                         <b>End Date:</b> {timestampToFormDate(props.risk.end_date, true)}

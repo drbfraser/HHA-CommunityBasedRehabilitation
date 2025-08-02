@@ -142,7 +142,7 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
                                             </TableCell>
                                             <TableCell>{data.goal_name}</TableCell>
                                             <TableCell>
-                                                {timestampToFormDate(data.timestamp, true)}
+                                                {timestampToFormDate(data.start_date, true)}
                                             </TableCell>
                                             <TableCell>
                                                 {timestampToFormDate(data.end_date, true)}

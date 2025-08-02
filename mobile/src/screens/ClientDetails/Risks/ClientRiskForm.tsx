@@ -185,7 +185,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
             >
                 {props.riskData.goal_status === OutcomeGoalMet.ONGOING
                     ? t("general.update")
-                    : "Create new goal"}
+                    : t("goals.createNewGoal")}
             </Button>
 
             <Formik

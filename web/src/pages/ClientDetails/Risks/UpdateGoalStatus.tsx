@@ -105,7 +105,7 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                                         rows={1}
                                                         variant="outlined"
                                                         margin="dense"
-                                                        label="Cancellation Reason"
+                                                        label={t("risks.cancelReason")}
                                                         name="cancellation_reason"
                                                     />
                                                 </Grid>

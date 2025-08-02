@@ -75,17 +75,17 @@ export const ClientRisk = (props: riskProps) => {
                     {risk.goal_status === OutcomeGoalMet.ONGOING ? (
                         <>
                             <View>
+                                <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
+                                <Text style={styles.riskRequirementStyle}>
+                                    {getModalFormGoalsDisplay(t, risk)}
+                                </Text>
+                            </View>
+                            <View>
                                 <Text style={styles.riskHeaderStyle}>
                                     {t("general.requirements")}:{" "}
                                 </Text>
                                 <Text style={styles.riskRequirementStyle}>
                                     {getModalFormRequirementsDisplay(t, risk)}
-                                </Text>
-                            </View>
-                            <View>
-                                <Text style={styles.riskHeaderStyle}>{t("general.goals")}: </Text>
-                                <Text style={styles.riskRequirementStyle}>
-                                    {getModalFormGoalsDisplay(t, risk)}
                                 </Text>
                             </View>
                         </>

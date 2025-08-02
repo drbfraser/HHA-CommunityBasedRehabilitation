@@ -250,8 +250,7 @@ const OutcomeField = (props: {
                     </View>
                     <Text style={styles.pickerQuestion}>
                         {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
-                        {t("general.goal")}
-                        {t("risks.requirements")}
+                        {t("general.goal")} {t("risks.requirements")}
                     </Text>
                     <Text style={styles.normalInput}>{matchingRisk?.requirement}</Text>
                     <Button

@@ -44,10 +44,10 @@ export interface IStatsReferral extends GenerateDemographicCategoryFields<StatsR
     hcr_type: string;
 }
 
-export interface IStatsDisability extends IBaseDisability, IClientBreakdown { }
-export interface IStatsFollowUpVisits extends IClientBreakdown { }
-export interface IStatsNewClients extends IClientBreakdown { }
-export interface IStatsDischargedClients extends IClientBreakdown { }
+export interface IStatsDisability extends IBaseDisability, IClientBreakdown {}
+export interface IStatsFollowUpVisits extends IClientBreakdown {}
+export interface IStatsNewClients extends IClientBreakdown {}
+export interface IStatsDischargedClients extends IClientBreakdown {}
 
 export interface IStats {
     disabilities: IStatsDisability[];

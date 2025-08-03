@@ -213,6 +213,7 @@ def getFollowUpVisits(user_id, from_time, to_time, is_active):
         res = [dict(zip(columns, row)) for row in cursor.fetchall()]
         return res
 
+
 def getDischargedClients(user_id, from_time, to_time, is_active):
     from django.db import connection
 

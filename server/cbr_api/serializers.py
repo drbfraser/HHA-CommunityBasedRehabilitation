@@ -701,7 +701,9 @@ class AdminStatsSerializer(serializers.Serializer):
     referrals_resolved = AdminStatsReferralSerializer(many=False, read_only=True)
     referrals_unresolved = AdminStatsReferralSerializer(many=False, read_only=True)
     new_clients = AdminStatsNewClientsSerializer(many=True, read_only=True)
-    discharged_clients = AdminStatsDischargedClientsSerializer(many=True, read_only=True)
+    discharged_clients = AdminStatsDischargedClientsSerializer(
+        many=True, read_only=True
+    )
     follow_up_visits = AdminStatsFollowUpVisitsSerializer(many=True, read_only=True)
 
 

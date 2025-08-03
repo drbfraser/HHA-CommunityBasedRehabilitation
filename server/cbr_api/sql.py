@@ -228,7 +228,9 @@ def getDischargedClients(user_id, from_time, to_time, is_active):
         SELECT client_id_id
         FROM latest_risks
         GROUP BY client_id_id
-        HAVING BOOL_AND(goal_status IN ('CON', 'CAN'))
+        HAVING 
+            BOOL_OR(goal_status IN ('CON', 'CAN')) AND
+            NOT BOOL_OR(goal_status = 'GO')
     )
     SELECT 
         c.zone_id,

@@ -213,6 +213,52 @@ def getFollowUpVisits(user_id, from_time, to_time, is_active):
         res = [dict(zip(columns, row)) for row in cursor.fetchall()]
         return res
 
+def getDischargedClients(user_id, from_time, to_time, is_active):
+    from django.db import connection
+
+    sql = """
+    WITH latest_risks AS (
+        SELECT DISTINCT ON (client_id_id, risk_type)
+            client_id_id,
+            goal_status
+        FROM cbr_api_clientrisk
+        ORDER BY client_id_id, risk_type, timestamp DESC
+    ),
+    discharged_clients AS (
+        SELECT client_id_id
+        FROM latest_risks
+        GROUP BY client_id_id
+        HAVING BOOL_AND(goal_status IN ('CON', 'CAN'))
+    )
+    SELECT 
+        c.zone_id,
+        c.hcr_type,
+        COUNT(*) AS total
+    """
+    sql += demographicStatsBuilder("new_clients", is_active, alias="")
+
+    sql += """
+    JOIN discharged_clients d ON c.id = d.client_id_id
+    """
+
+    statsRes = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
+
+    if is_active:
+        if statsRes:
+            statsRes += " AND c.is_active = True"
+        else:
+            statsRes = "WHERE c.is_active = True"
+
+    sql += "\n" + statsRes
+    sql += "\nGROUP BY c.zone_id, c.hcr_type"
+
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        columns = [col[0] for col in cursor.description]
+        result = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+    return result
+
 
 def whereStatsBuilder(user_id, time_col, from_time, to_time):
     where = """

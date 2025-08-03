@@ -38,7 +38,7 @@ const UpdateGoalStatusModal: React.FC<UpdateGoalStatusModalProps> = ({
 
     return (
         <ModalWindow
-            label={"Update Goal Status"}
+            label={fieldLabels[FormField.update_goal_status]}
             visible={visible}
             onClose={onClose}
             isDismissable

@@ -1,5 +1,5 @@
 import { handleSubmit } from "@cbr/common/forms/Risks/riskFormFieldHandler";
-import { fieldLabels, FormField, validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
+import { validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
 import { IRisk, RiskType } from "@cbr/common/util/risks";
 import {
     Button,
@@ -12,7 +12,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { Field, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -58,16 +58,14 @@ export default function CancelRisk(props: IModalProps) {
                         <DialogTitle id="form-dialog-title">
                             {getDialogTitleText(props.risk.risk_type)}
                             <Stack direction="row" spacing={1}>
-                                {/*TODO: Replace with Translation*/}
                                 <Typography variant="subtitle1" fontWeight="bold">
-                                    Cancelling Goal:
+                                    {t("general.cancel")} {t("general.goal")}
                                 </Typography>
                             </Stack>
                         </DialogTitle>
                         <DialogContent>
                             <Typography variant="subtitle1" fontWeight="bold">
-                                {/*TODO: Replace with Translation*/}
-                                Cancel Reason:
+                                {t("risks.cancelReason")}
                             </Typography>
                             <FormControl fullWidth variant="outlined">
                                 <TextField fullWidth placeholder="Duplicate Goal" />

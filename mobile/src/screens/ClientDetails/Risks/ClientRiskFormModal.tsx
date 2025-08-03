@@ -223,7 +223,9 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                                 <Text style={styles.riskHeaderStyle}>{getHeaderText()}</Text>
 
                                 <View style={styles.goalStatusContainer}>
-                                    <Text style={styles.goalStatusText}>Goal Status:</Text>
+                                    <Text style={styles.goalStatusText}>
+                                        {t("goals.goalStatus")}:
+                                    </Text>
                                     <TouchableRipple onPress={openGoalStatusModal}>
                                         <View
                                             style={{

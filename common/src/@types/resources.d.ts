@@ -1668,7 +1668,7 @@ interface Resources {
       "currentGoal": "Current goal",
       "previousGoals": "View previous goals",
       "viewingPreviousGoals": "Viewing previous goals",
-      "goalStatus": "Goal status",
+      "goalStatus": "Goal Status",
       "unsavedChangesWarning": "You have unsaved changes. Do you want to save the changes?",
       "unsavedChanges": "Unsaved changes",
       "updateGoalStatus": "Update goal status",

@@ -49,5 +49,6 @@ export const riskStyles = (textColour: string) =>
             borderColor: textColour,
             borderRadius: 5,
             borderWidth: 1,
+            alignSelf: "flex-start",
         },
     });

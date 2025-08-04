@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import i18n from "i18next";
+import { OutcomeGoalMet } from "../../util/visits";
 
 export enum FormField {
     risk_type = "risk_type",
@@ -39,5 +40,12 @@ export const validationSchema = () =>
         [FormField.risk_level]: Yup.string().label(fieldLabels[FormField.risk_level]).required(),
         [FormField.requirement]: Yup.string().label(fieldLabels[FormField.requirement]).required(),
         [FormField.goal_name]: Yup.string().label(fieldLabels[FormField.goal_name]).required(),
-        //[FormField.other]: Yup.string().label(fieldLabels[FormField.other]).required(),
+        [FormField.goal_status]: Yup.string().label(fieldLabels[FormField.goal_status]).required(),
+        [FormField.cancellation_reason]: Yup.string()
+            .label(fieldLabels[FormField.cancellation_reason])
+            .when(FormField.goal_status, {
+                is: (val: string) => val === OutcomeGoalMet.CANCELLED,
+                then: Yup.string().required(),
+                otherwise: Yup.string().notRequired(),
+            }),
     });

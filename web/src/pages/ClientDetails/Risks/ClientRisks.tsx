@@ -25,8 +25,6 @@ interface IProps {
 }
 
 const ClientRisks = ({ clientInfo, refreshClient }: IProps) => {
-    const { t } = useTranslation();
-
     interface ICardProps {
         risk: IRisk;
     }
@@ -34,6 +32,7 @@ const ClientRisks = ({ clientInfo, refreshClient }: IProps) => {
     const RiskCard = (props: ICardProps) => {
         const [risk, setRisk] = useState(props.risk);
         const [isModalOpen, setIsModalOpen] = useState(false);
+        const { t } = useTranslation();
 
         return (
             <>
@@ -72,7 +71,7 @@ const ClientRisks = ({ clientInfo, refreshClient }: IProps) => {
                         {risk.goal_status === OutcomeGoalMet.ONGOING ? (
                             <>
                                 <Typography variant="subtitle2" component="h6">
-                                    Current Goal
+                                    {t("goals.currentGoal")}
                                 </Typography>
                                 <Typography variant="body2" component="p">
                                     {risk.goal_name}
@@ -81,10 +80,10 @@ const ClientRisks = ({ clientInfo, refreshClient }: IProps) => {
                         ) : (
                             <>
                                 <Typography variant="subtitle2" component="h6">
-                                    Current Goal
+                                    {t("goals.currentGoal")}
                                 </Typography>
                                 <Typography variant="body2" component="p">
-                                    No current goal set
+                                    {t("goals.noCurrentGoalSet")}
                                 </Typography>
                             </>
                         )}
@@ -102,7 +101,7 @@ const ClientRisks = ({ clientInfo, refreshClient }: IProps) => {
                         >
                             {risk.goal_status === OutcomeGoalMet.ONGOING
                                 ? t("general.update")
-                                : "Create New Goal"}
+                                : t("goals.createNewGoal")}
                         </Button>
                     </CardActions>
                 </Card>

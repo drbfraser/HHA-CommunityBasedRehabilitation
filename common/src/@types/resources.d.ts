@@ -837,7 +837,12 @@ interface Resources {
       "createNewGoal": "&Create new goal",
       "createNew": "&Create new",
       "viewPrevious": "&View previous",
-      "noCurrentOngoingGoals": "&No current ongoing goals"
+      "noCurrentOngoingGoals": "&No current ongoing goals",
+      "healthSet": "&<1>Health</1> goal status set to",
+      "educationSet": "&<1>Education</1> goal status set to",
+      "socialSet": "&<1>Social</1> goal status set to",
+      "nutritionSet": "&<1>Nutrition</1> goal status set to",
+      "mentalSet": "&<1>Mental Health</1> goal status set to"
     }
   },
   "en": {
@@ -1668,7 +1673,7 @@ interface Resources {
       "currentGoal": "Current goal",
       "previousGoals": "View previous goals",
       "viewingPreviousGoals": "Viewing previous goals",
-      "goalStatus": "Goal status",
+      "goalStatus": "Goal Status",
       "unsavedChangesWarning": "You have unsaved changes. Do you want to save the changes?",
       "unsavedChanges": "Unsaved changes",
       "updateGoalStatus": "Update goal status",
@@ -1678,7 +1683,12 @@ interface Resources {
       "createNewGoal": "Create new goal",
       "createNew": "Create new",
       "viewPrevious": "View previous",
-      "noCurrentOngoingGoals": "No current ongoing goals"
+      "noCurrentOngoingGoals": "No current ongoing goals",
+      "healthSet": "<1>Health</1> goal status set to",
+      "educationSet": "<1>Education</1> goal status set to",
+      "socialSet": "<1>Social</1> goal status set to",
+      "nutritionSet": "<1>Nutrition</1> goal status set to",
+      "mentalSet": "<1>Mental Health</1> goal status set to"
     }
   }
 }

@@ -81,7 +81,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                 setIsModalOpen(true);
                             }}
                         >
-                            Create New {visitFieldLabels[visitType]} Goal
+                            {t("goals.createNew")} {visitFieldLabels[visitType]} {t("general.goal")}
                         </Button>
                     </>
                 ) : matchingRisk &&
@@ -89,7 +89,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                       matchingRisk.goal_status === OutcomeGoalMet.CANCELLED) ? (
                     <>
                         <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
-                        <Typography variant="body1">No current ongoing goals</Typography>
+                        <Typography variant="body1">{t("goals.noCurrentOngoingGoals")}</Typography>
                         <Stack direction="row" spacing={2} mt={1}>
                             <Button
                                 variant="outlined"
@@ -99,7 +99,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                     setIsPreviousGoalsModalOpen(true);
                                 }}
                             >
-                                View Previous Goals
+                                {t("goals.previousGoals")}
                             </Button>
                             <Button
                                 variant="contained"
@@ -109,7 +109,8 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                     setIsModalOpen(true);
                                 }}
                             >
-                                Create New {visitFieldLabels[visitType]} Goal
+                                {t("goals.createNew")} {visitFieldLabels[visitType]}{" "}
+                                {t("general.goal")}
                             </Button>
                         </Stack>
                     </>
@@ -131,7 +132,8 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                     setIsModalOpen(true);
                                 }}
                             >
-                                Update {visitFieldLabels[visitType]} Goal
+                                {t("general.update")} {visitFieldLabels[visitType]}{" "}
+                                {t("general.goal")}
                             </Button>
                         </Stack>
                     </>
@@ -176,12 +178,12 @@ const NewVisit = () => {
 
     const visitSteps = [
         {
-            label: "Visit Focus",
+            label: `${visitFieldLabels[VisitFormField.visit_focus]}`,
             Form: visitReasonStepCallBack(setEnabledSteps, zones),
             validationSchema: initialValidationSchema,
         },
         ...enabledSteps.map((visitType) => ({
-            label: `${visitFieldLabels[visitType]} Visit`,
+            label: `${visitFieldLabels[visitType]} ${t("newVisit.visit")}`,
             Form: VisitTypeStep(visitType, risks, t),
             validationSchema: visitTypeValidationSchema(visitType),
         })),

@@ -108,8 +108,7 @@ const NewSurvey = () => {
                 <Form>
                     {submissionError && (
                         <Alert onClose={() => setSubmissionError(undefined)} severity="error">
-                            {/* TODO: add translation for this... */}
-                            Error occurred when submitting the survey: {submissionError}
+                            {t("survey.errorOccurred")}: {submissionError}
                         </Alert>
                     )}
                     <Box sx={{ marginBottom: "1.5em" }}>

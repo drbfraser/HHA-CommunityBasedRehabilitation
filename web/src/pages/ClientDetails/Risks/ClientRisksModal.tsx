@@ -53,6 +53,13 @@ const ClientRisksModal = (props: IModalProps) => {
         setOpenEditGoals((prevOpen: boolean) => !prevOpen);
     };
 
+    const capitalizeFirstLetter = (str: string): string => {
+        if (typeof str !== "string" || str.length === 0) {
+            return str;
+        }
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    };
+
     const getDialogTitleText = (riskType: RiskType): string => {
         if (!props.newGoal) {
             switch (riskType) {
@@ -73,15 +80,25 @@ const ClientRisksModal = (props: IModalProps) => {
         } else {
             switch (riskType) {
                 case RiskType.HEALTH:
-                    return "Create Health Risk";
+                    return `${capitalizeFirstLetter(t("general.create"))} ${t(
+                        "clientFields.healthRisk"
+                    )}`;
                 case RiskType.EDUCATION:
-                    return "Create Education Risk";
+                    return `${capitalizeFirstLetter(t("general.create"))} ${t(
+                        "clientFields.educationRisk"
+                    )}`;
                 case RiskType.SOCIAL:
-                    return "Create Social Risk";
+                    return `${capitalizeFirstLetter(t("general.create"))} ${t(
+                        "clientFields.socialRisk"
+                    )}`;
                 case RiskType.NUTRITION:
-                    return "Create Nutrition Risk";
+                    return `${capitalizeFirstLetter(t("general.create"))} ${t(
+                        "clientFields.nutritionRisk"
+                    )}`;
                 case RiskType.MENTAL:
-                    return "Create Mental Risk";
+                    return `${capitalizeFirstLetter(t("general.create"))} ${t(
+                        "clientFields.mentalRisk"
+                    )}`;
                 default:
                     console.error("Unknown risk type.");
                     return "";
@@ -124,9 +141,8 @@ const ClientRisksModal = (props: IModalProps) => {
                                     <Grid container direction="column" spacing={3}>
                                         <Grid item>
                                             <Stack direction="row" spacing={1}>
-                                                {/*TODO: Replace with Translation*/}
                                                 <Typography variant="subtitle1" fontWeight="bold">
-                                                    Goal Status:
+                                                    {t("goals.goalStatus")}:
                                                 </Typography>
                                                 <Box
                                                     onClick={handleEditGoalsClick}
@@ -211,7 +227,7 @@ const ClientRisksModal = (props: IModalProps) => {
                                         type="submit"
                                         disabled={isSubmitting}
                                     >
-                                        {props.newGoal ? "Create" : t("general.update")}
+                                        {props.newGoal ? t("general.create") : t("general.update")}
                                     </Button>
 
                                     <Button

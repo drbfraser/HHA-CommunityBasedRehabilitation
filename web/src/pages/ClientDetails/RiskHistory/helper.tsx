@@ -46,32 +46,32 @@ export const translateGoalEntrySummary = (riskType: RiskType) => {
     switch (riskType) {
         case RiskType.HEALTH:
             return (
-                <Trans>
-                    <b>Health</b> goal status set to
+                <Trans i18nKey="goals.healthSet">
+                    <b>Health</b>
                 </Trans>
             );
         case RiskType.EDUCATION:
             return (
-                <Trans>
-                    <b>Education</b> goal status set to
+                <Trans i18nKey="goals.educationSet">
+                    <b>Education</b>
                 </Trans>
             );
         case RiskType.MENTAL:
             return (
-                <Trans>
-                    <b>Mental health</b> goal status set to
+                <Trans i18nKey="goals.mentalSet">
+                    <b>Mental health</b>
                 </Trans>
             );
         case RiskType.NUTRITION:
             return (
-                <Trans>
-                    <b>Nutrition</b> goal status set to
+                <Trans i18nKey="goals.nutritionSet">
+                    <b>Nutrition</b>
                 </Trans>
             );
         case RiskType.SOCIAL:
             return (
-                <Trans>
-                    <b>Social</b> goal status set to
+                <Trans i18nKey="goals.socialSet">
+                    <b>Social</b>
                 </Trans>
             );
         default:

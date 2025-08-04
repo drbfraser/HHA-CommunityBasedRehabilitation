@@ -53,24 +53,23 @@ const PreviousGoalCard = (props: IModalProps) => {
             onClose={props.close}
             ria-labelledby="form-dialog-title"
         >
-            <DialogTitle id="form-dialog-title">
-                {/* TODO: Change with Translation */}
-                Viewing Previous Goal
-            </DialogTitle>
+            <DialogTitle id="form-dialog-title">{t("goals.viewingPreviousGoals")}</DialogTitle>
             <DialogContent>
                 <Stack direction="column" spacing={1} sx={{ mb: 3 }}>
-                    {/* TODO: Replace with Translation */}
                     <Typography variant="subtitle1">
-                        <b>Goal Status: </b> <GoalStatusChip goalStatus={props.risk.goal_status} />
+                        <b>{t("goals.goalStatus")}: </b>{" "}
+                        <GoalStatusChip goalStatus={props.risk.goal_status} />
                     </Typography>
                     <Typography variant="subtitle1">
-                        <b>Type:</b> {getDialogTitleText(props.risk.risk_type)}
+                        <b>{t("general.type")}:</b> {getDialogTitleText(props.risk.risk_type)}
                     </Typography>
                     <Typography variant="subtitle1">
-                        <b>Start Date:</b> {timestampToFormDate(props.risk.timestamp, true)}
+                        <b>{t("general.startDate")}:</b>{" "}
+                        {timestampToFormDate(props.risk.timestamp, true)}
                     </Typography>
                     <Typography variant="subtitle1">
-                        <b>End Date:</b> {timestampToFormDate(props.risk.end_date, true)}
+                        <b>{t("general.endDate")}:</b>{" "}
+                        {timestampToFormDate(props.risk.end_date, true)}
                     </Typography>
                 </Stack>
                 <Grid container direction="column" spacing={2}>
@@ -126,7 +125,7 @@ const PreviousGoalCard = (props: IModalProps) => {
                         <FormControl fullWidth variant="outlined">
                             <TextField
                                 id="comment-readonly"
-                                label="Comments"
+                                label={fieldLabels[FormField.comments]}
                                 defaultValue={props.risk.risk_level}
                                 variant="outlined"
                                 InputProps={{
@@ -144,7 +143,7 @@ const PreviousGoalCard = (props: IModalProps) => {
                             <FormControl fullWidth variant="outlined">
                                 <TextField
                                     id="cancellation-reason-readonly"
-                                    label="Cancellation Reason"
+                                    label={fieldLabels[FormField.cancellation_reason]}
                                     defaultValue={props.risk.cancellation_reason}
                                     InputProps={{
                                         readOnly: true,

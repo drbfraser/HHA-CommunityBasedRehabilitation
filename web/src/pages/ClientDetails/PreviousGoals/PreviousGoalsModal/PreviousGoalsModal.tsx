@@ -113,18 +113,18 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
     return (
         <>
             <Dialog fullWidth maxWidth="lg" open={true} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Viewing Previous Goals</DialogTitle>
+                <DialogTitle id="form-dialog-title">{t("goals.viewingPreviousGoals")}</DialogTitle>
                 <DialogContent>
                     <ParentTableContainer>
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Risk Level</TableCell>
-                                    <TableCell>Area</TableCell>
-                                    <TableCell>Goal Description</TableCell>
-                                    <TableCell>Start Date</TableCell>
-                                    <TableCell>Achieved Date</TableCell>
-                                    <TableCell>Status</TableCell>
+                                    <TableCell>{t("risks.riskLevel")}</TableCell>
+                                    <TableCell>{t("risks.area")}</TableCell>
+                                    <TableCell>{t("risks.goalDescription")}</TableCell>
+                                    <TableCell>{t("general.startDate")}</TableCell>
+                                    <TableCell>{t("general.endDate")}</TableCell>
+                                    <TableCell>{t("general.status")}</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -142,7 +142,7 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
                                             </TableCell>
                                             <TableCell>{data.goal_name}</TableCell>
                                             <TableCell>
-                                                {timestampToFormDate(data.timestamp, true)}
+                                                {timestampToFormDate(data.start_date, true)}
                                             </TableCell>
                                             <TableCell>
                                                 {timestampToFormDate(data.end_date, true)}

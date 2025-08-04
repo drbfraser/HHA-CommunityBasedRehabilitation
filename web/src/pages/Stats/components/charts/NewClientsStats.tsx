@@ -65,13 +65,23 @@ const NewClientsStats = ({ stats, age, gender }: IProps) => {
 
     zones.forEach((k, v) => {
         const femaleAdultTotal =
-            stats?.new_clients.find((item) => item.zone_id === v)?.female_adult_total ?? 0;
+            stats?.new_clients
+                .filter((item) => item.zone_id === v)
+                .reduce((sum, item) => sum + (item.female_adult_total ?? 0), 0) ?? 0;
+
         const maleAdultTotal =
-            stats?.new_clients.find((item) => item.zone_id === v)?.male_adult_total ?? 0;
+            stats?.new_clients
+                .filter((item) => item.zone_id === v)
+                .reduce((sum, item) => sum + (item.male_adult_total ?? 0), 0) ?? 0;
+
         const femaleChildTotal =
-            stats?.new_clients.find((item) => item.zone_id === v)?.female_child_total ?? 0;
+            stats?.new_clients
+                .filter((item) => item.zone_id === v)
+                .reduce((sum, item) => sum + (item.female_child_total ?? 0), 0) ?? 0;
         const maleChildTotal =
-            stats?.new_clients.find((item) => item.zone_id === v)?.male_child_total ?? 0;
+            stats?.new_clients
+                .filter((item) => item.zone_id === v)
+                .reduce((sum, item) => sum + (item.male_child_total ?? 0), 0) ?? 0;
 
         totalData.push({
             label: k,

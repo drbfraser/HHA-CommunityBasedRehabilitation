@@ -1,4 +1,4 @@
-import { IRisk, OutcomeGoalMet } from "@cbr/common";
+import { GoalStatus, IRisk, OutcomeGoalMet, RiskLevel } from "@cbr/common";
 import { modelName } from "../../../models/constant";
 import { dbType } from "../../../util/watermelonDatabase";
 import { addRisk } from "../../NewClient/formHandler";
@@ -37,6 +37,14 @@ export const handleRiskSubmit = async (
         let risk;
         const client = await database.get<Client>(modelName.clients).find(values.client_id);
         const currentTime = new Date().getTime();
+
+        let finalRiskLevelForClient = values.risk_level;
+        const goalCompleted =
+            values.goal_status === OutcomeGoalMet.CONCLUDED ||
+            values.goal_status === OutcomeGoalMet.CANCELLED;
+
+        if (goalCompleted) finalRiskLevelForClient = RiskLevel.NOT_ACTIVE;
+
         await database.write(async () => {
             const existingRisks = await client.risks.fetch();
             const previous = existingRisks
@@ -58,7 +66,7 @@ export const handleRiskSubmit = async (
                 actualStartDate
             );
         });
-        await client.updateRisk(values.risk_type, values.risk_level, currentTime);
+        await client.updateRisk(values.risk_type, finalRiskLevelForClient, currentTime);
         setRisk(risk);
         AutoSyncDB(database, autoSync, cellularSync);
     } catch (e) {

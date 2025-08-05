@@ -34,7 +34,9 @@ import { handleSubmit } from "./formHandler";
 import useStyles from "./NewClient.styles";
 
 const riskMap: Map<RiskLevel, string> = new Map(
-    Object.entries(riskLevels).map(([riskKey, riskLevel]) => [riskKey as RiskLevel, riskLevel.name])
+    Object.entries(riskLevels)
+        .filter(([_, riskLevel]) => riskLevel.isDropDownOption)
+        .map(([riskKey, riskLevel]) => [riskKey as RiskLevel, riskLevel.name])
 );
 
 const RiskForm = ({

@@ -86,3 +86,55 @@ class RiskViewsTestCase(APITestCase):
         # for requests
         self.client_api = APIClient()
         self.client_api.force_authenticate(user=self.user)
+
+
+# helper function to get valid client creation data in test_client_create_serializer.py
+def get_valid_client_data(self, zone):
+    return {
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "birth_date": 19900101,
+        "gender": Client.Gender.FEMALE,
+        "phone_number": "604-555-9876",
+        "disability": [1, 2],
+        "other_disability": "Custom disability description",
+        "longitude": -123.1207,
+        "latitude": 49.2827,
+        "zone": zone,
+        "village": "Test Village",
+        "hcr_type": Client.HCRType.HOST_COMMUNITY,
+        "caregiver_name": "John Smith",
+        "caregiver_present": True,
+        "caregiver_phone": "604-555-1111",
+        "caregiver_email": "caregiver@example.com",
+        "health_risk": {
+            "risk_level": RiskLevel.HIGH,
+            "requirement": "Medical attention needed",
+            "goal": "Improve health status",
+            "goal_status": GoalOutcomes.ONGOING,
+        },
+        "social_risk": {
+            "risk_level": RiskLevel.MEDIUM,
+            "requirement": "Social support needed",
+            "goal": "Build social connections",
+            "goal_status": GoalOutcomes.NOT_SET,
+        },
+        "educat_risk": {
+            "risk_level": RiskLevel.LOW,
+            "requirement": "Educational support",
+            "goal": "Complete primary education",
+            "goal_status": GoalOutcomes.ONGOING,
+        },
+        "nutrit_risk": {
+            "risk_level": RiskLevel.MEDIUM,
+            "requirement": "Nutritional support",
+            "goal": "Improve nutrition",
+            "goal_status": GoalOutcomes.NOT_SET,
+        },
+        "mental_risk": {
+            "risk_level": RiskLevel.LOW,
+            "requirement": "Mental health support",
+            "goal": "Improve mental wellbeing",
+            "goal_status": GoalOutcomes.CONCLUDED,
+        },
+    }

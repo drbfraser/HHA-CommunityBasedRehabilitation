@@ -131,3 +131,13 @@ class ClientCreateSerializerTests(TestCase):
 
         for field in expected_errors:
             self.assertIn(field, serializer.errors)
+
+    def test_invalid_risk_data_prevents_client_creation(self):
+        data = get_valid_client_data(self.zone)
+        data['health_risk']['risk_level'] = 'INVALID_LEVEL'
+        
+        context = {'request': type('MockRequest', (), {'user': self.user})()}
+        serializer = ClientCreateSerializer(data=data, context=context)
+        
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('health_risk', serializer.errors)

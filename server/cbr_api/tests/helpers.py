@@ -113,31 +113,31 @@ def get_valid_client_data(zone):
         "health_risk": {
             "risk_level": RiskLevel.HIGH,
             "requirement": "Medical attention needed",
-            "goal": "Improve health status",
+            "goal_name": "Improve health status",
             "goal_status": GoalOutcomes.ONGOING,
         },
         "social_risk": {
             "risk_level": RiskLevel.MEDIUM,
             "requirement": "Social support needed",
-            "goal": "Build social connections",
+            "goal_name": "Build social connections",
             "goal_status": GoalOutcomes.NOT_SET,
         },
         "educat_risk": {
             "risk_level": RiskLevel.LOW,
             "requirement": "Educational support",
-            "goal": "Complete primary education",
+            "goal_name": "Complete primary education",
             "goal_status": GoalOutcomes.ONGOING,
         },
         "nutrit_risk": {
             "risk_level": RiskLevel.MEDIUM,
             "requirement": "Nutritional support",
-            "goal": "Improve nutrition",
+            "goal_name": "Improve nutrition",
             "goal_status": GoalOutcomes.NOT_SET,
         },
         "mental_risk": {
             "risk_level": RiskLevel.LOW,
             "requirement": "Mental health support",
-            "goal": "Improve mental wellbeing",
+            "goal_name": "Improve mental wellbeing",
             "goal_status": GoalOutcomes.CONCLUDED,
         },
     }

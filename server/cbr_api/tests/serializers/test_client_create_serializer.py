@@ -102,3 +102,32 @@ class ClientCreateSerializerTests(TestCase):
         self.assertEqual(mental_risk.requirement, "Mental health support")
         self.assertEqual(mental_risk.goal_name, "Improve mental wellbeing")
         self.assertEqual(mental_risk.goal_status, GoalOutcomes.CONCLUDED)
+
+    def test_create_client_missing_required_fields(self):
+        data = {
+            "first_name": "Jane",
+            # Missing last_name and risk data
+        }
+
+        serializer = ClientCreateSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+
+        # Should have errors for missing fields
+        expected_errors = [
+            "last_name",
+            "birth_date",
+            "gender",
+            "disability",
+            "longitude",
+            "latitude",
+            "zone",
+            "village",
+            "health_risk",
+            "social_risk",
+            "educat_risk",
+            "nutrit_risk",
+            "mental_risk",
+        ]
+
+        for field in expected_errors:
+            self.assertIn(field, serializer.errors)

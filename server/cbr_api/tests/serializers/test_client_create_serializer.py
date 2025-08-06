@@ -141,3 +141,35 @@ class ClientCreateSerializerTests(TestCase):
         
         self.assertFalse(serializer.is_valid())
         self.assertIn('health_risk', serializer.errors)
+
+    def test_minimal_risk_data(self):
+        data = {
+            "first_name": "John",
+            "last_name": "Doe",
+            "birth_date": 19850615,
+            "gender": Client.Gender.MALE,
+            "disability": get_valid_client_data(self.zone)["disability"],
+            "longitude": -123.1207,
+            "latitude": 49.2827,
+            "zone": self.zone.id,
+            "village": "Test Village",
+            "health_risk": {"risk_level": RiskLevel.LOW},
+            "social_risk": {"risk_level": RiskLevel.MEDIUM},
+            "educat_risk": {"risk_level": RiskLevel.HIGH},
+            "nutrit_risk": {"risk_level": RiskLevel.LOW},
+            "mental_risk": {"risk_level": RiskLevel.MEDIUM},
+        }
+        
+        context = {'request': type('MockRequest', (), {'user': self.user})()}
+        serializer = ClientCreateSerializer(data=data, context=context)
+        
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        client = serializer.save()
+        
+        self.assertEqual(client.first_name, "John")
+        self.assertEqual(client.last_name, "Doe")
+        self.assertEqual(client.full_name, "John Doe")
+        self.assertEqual(client.hcr_type, Client.HCRType.NOT_SET)
+        
+        risks = ClientRisk.objects.filter(client_id=client)
+        self.assertEqual(risks.count(), 5)

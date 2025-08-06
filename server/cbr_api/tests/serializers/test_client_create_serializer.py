@@ -134,13 +134,13 @@ class ClientCreateSerializerTests(TestCase):
 
     def test_invalid_risk_data_prevents_client_creation(self):
         data = get_valid_client_data(self.zone)
-        data['health_risk']['risk_level'] = 'INVALID_LEVEL'
-        
-        context = {'request': type('MockRequest', (), {'user': self.user})()}
+        data["health_risk"]["risk_level"] = "INVALID_LEVEL"
+
+        context = {"request": type("MockRequest", (), {"user": self.user})()}
         serializer = ClientCreateSerializer(data=data, context=context)
-        
+
         self.assertFalse(serializer.is_valid())
-        self.assertIn('health_risk', serializer.errors)
+        self.assertIn("health_risk", serializer.errors)
 
     def test_minimal_risk_data(self):
         data = {
@@ -159,17 +159,50 @@ class ClientCreateSerializerTests(TestCase):
             "nutrit_risk": {"risk_level": RiskLevel.LOW},
             "mental_risk": {"risk_level": RiskLevel.MEDIUM},
         }
-        
-        context = {'request': type('MockRequest', (), {'user': self.user})()}
+
+        context = {"request": type("MockRequest", (), {"user": self.user})()}
         serializer = ClientCreateSerializer(data=data, context=context)
-        
+
         self.assertTrue(serializer.is_valid(), serializer.errors)
         client = serializer.save()
-        
+
         self.assertEqual(client.first_name, "John")
         self.assertEqual(client.last_name, "Doe")
         self.assertEqual(client.full_name, "John Doe")
         self.assertEqual(client.hcr_type, Client.HCRType.NOT_SET)
-        
+
         risks = ClientRisk.objects.filter(client_id=client)
         self.assertEqual(risks.count(), 5)
+
+    def test_read_only_fields_ignored(self):
+        data = get_valid_client_data(self.zone)
+        # all fields below should be ignored as they are read only
+        data.update(
+            {
+                "id": "test-id-123",
+                "user_id": 99999,
+                "created_at": 999999,
+                "updated_at": 888888,
+                "server_created_at": 777777,
+                "full_name": "Should Be Ignored",
+                "is_active": False,
+            }
+        )
+
+        context = {"request": type("MockRequest", (), {"user": self.user})()}
+        serializer = ClientCreateSerializer(data=data, context=context)
+
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        client = serializer.save()
+
+        # Read-only fields should be set by the serializer, not from input/users
+        self.assertNotEqual(client.id, "test-id-123")
+        self.assertNotEqual(client.user_id, 99999)
+        self.assertEqual(client.user_id, self.user)
+        self.assertNotEqual(client.created_at, 99999)
+        self.assertNotEqual(client.updated_at, 888888)
+        self.assertNotEqual(client.server_created_at, 777777)
+        self.assertNotEqual(client.full_name, "Should Be Ignored")
+        self.assertEqual(client.full_name, "Jane Smith")
+        # is_active should default to True regardless of input
+        self.assertTrue(client.is_active)

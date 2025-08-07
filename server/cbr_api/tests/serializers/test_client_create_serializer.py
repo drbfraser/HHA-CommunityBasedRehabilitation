@@ -351,3 +351,37 @@ class ClientCreateSerializerTests(TestCase):
         self.assertEqual(mental_risk.risk_level, RiskLevel.HIGH)
         self.assertEqual(mental_risk.goal_name, "No goal set")
         self.assertEqual(mental_risk.goal_status, GoalOutcomes.NOT_SET)
+
+    def test_optional_caregiver_fields(self):
+        # Test with full caregiver info from helper
+        data_with_caregiver = get_valid_client_data(self.zone, self.d1, self.d2)
+
+        context = {"request": type("MockRequest", (), {"user": self.user})()}
+        serializer = ClientCreateSerializer(data=data_with_caregiver, context=context)
+
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        client_with_caregiver = serializer.save()
+
+        self.assertEqual(client_with_caregiver.caregiver_name, "John Smith")
+        self.assertTrue(client_with_caregiver.caregiver_present)
+
+        # Test without caregiver info
+        data_without_caregiver = get_valid_client_data(self.zone, self.d1, self.d2)
+        del data_without_caregiver["caregiver_name"]
+        del data_without_caregiver["caregiver_present"]
+        del data_without_caregiver["caregiver_phone"]
+        del data_without_caregiver["caregiver_email"]
+
+        serializer2 = ClientCreateSerializer(
+            data=data_without_caregiver, context=context
+        )
+        self.assertTrue(serializer2.is_valid(), serializer2.errors)
+        client_without_caregiver = serializer2.save()
+
+        # Verify default values for caregiver fields
+        self.assertEqual(
+            client_without_caregiver.caregiver_name, ""
+        )  # blank=True means empty string
+        self.assertFalse(client_without_caregiver.caregiver_present)  # default=False
+        self.assertEqual(client_without_caregiver.caregiver_phone, "")
+        self.assertEqual(client_without_caregiver.caregiver_email, "")

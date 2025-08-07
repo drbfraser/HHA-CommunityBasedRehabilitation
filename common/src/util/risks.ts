@@ -68,7 +68,7 @@ const refreshArrays = () => {
         [RiskLevel.NOT_ACTIVE]: {
             level: 0,
             name: i18n.t("goals.notActive"),
-            color: themeColors.borderGray,
+            color: themeColors.noRiskBlack,
             isDropDownOption: false,
         },
         [RiskLevel.LOW]: {

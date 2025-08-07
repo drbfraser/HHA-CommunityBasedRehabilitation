@@ -206,3 +206,19 @@ class ClientCreateSerializerTests(TestCase):
         self.assertEqual(client.full_name, "Jane Smith")
         # is_active should default to True regardless of input
         self.assertTrue(client.is_active)
+
+    def test_invalid_gender(self):
+        data = get_valid_client_data(self.zone)
+        data["gender"] = "INVALID_GENDER"
+
+        serializer = ClientCreateSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("gender", serializer.errors)
+
+    def test_invalid_zone(self):
+        data = get_valid_client_data(self.zone)
+        data["zone"] = 99999  # Non-existent zone
+
+        serializer = ClientCreateSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("zone", serializer.errors)

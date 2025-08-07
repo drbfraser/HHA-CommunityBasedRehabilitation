@@ -274,3 +274,15 @@ class ClientCreateSerializerTests(TestCase):
         for risk in risks:
             self.assertEqual(risk.timestamp, 1640995200000)
             self.assertEqual(risk.server_created_at, 1640995200000)
+
+    def test_no_context_raises_error(self):
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
+
+        serializer = ClientCreateSerializer(
+            data=data
+        )  # deliberately did not pass in context
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+
+        # Should raise an error when trying to save without context
+        with self.assertRaises(KeyError):
+            serializer.save()

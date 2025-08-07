@@ -3,6 +3,7 @@ from unittest.mock import patch
 from cbr_api.models import (
     Client,
     ClientRisk,
+    Disability,
     GoalOutcomes,
     RiskLevel,
     RiskType,
@@ -21,12 +22,14 @@ class ClientCreateSerializerTests(TestCase):
             password="testpass123",
             zone=self.zone,
         )
+        self.d1 = Disability.objects.create(disability_type="Amputee")
+        self.d2 = Disability.objects.create(disability_type="Special Needs")
 
     @patch("cbr_api.serializers.current_milli_time")
     def test_create_client_with_all_risks(self, mock_time):
         mock_time.return_value = 1640995200000
 
-        data = get_valid_client_data(self.zone)
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
         context = {"request": type("MockRequest", (), {"user": self.user})()}
 
         serializer = ClientCreateSerializer(data=data, context=context)
@@ -133,7 +136,7 @@ class ClientCreateSerializerTests(TestCase):
             self.assertIn(field, serializer.errors)
 
     def test_invalid_risk_data_prevents_client_creation(self):
-        data = get_valid_client_data(self.zone)
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
         data["health_risk"]["risk_level"] = "INVALID_LEVEL"
 
         context = {"request": type("MockRequest", (), {"user": self.user})()}
@@ -148,7 +151,9 @@ class ClientCreateSerializerTests(TestCase):
             "last_name": "Doe",
             "birth_date": 19850615,
             "gender": Client.Gender.MALE,
-            "disability": get_valid_client_data(self.zone)["disability"],
+            "disability": get_valid_client_data(self.zone, self.d1, self.d2)[
+                "disability"
+            ],
             "longitude": -123.1207,
             "latitude": 49.2827,
             "zone": self.zone.id,
@@ -175,7 +180,7 @@ class ClientCreateSerializerTests(TestCase):
         self.assertEqual(risks.count(), 5)
 
     def test_read_only_fields_ignored(self):
-        data = get_valid_client_data(self.zone)
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
         # all fields below should be ignored as they are read only
         data.update(
             {
@@ -208,7 +213,7 @@ class ClientCreateSerializerTests(TestCase):
         self.assertTrue(client.is_active)
 
     def test_invalid_gender(self):
-        data = get_valid_client_data(self.zone)
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
         data["gender"] = "INVALID_GENDER"
 
         serializer = ClientCreateSerializer(data=data)
@@ -216,9 +221,56 @@ class ClientCreateSerializerTests(TestCase):
         self.assertIn("gender", serializer.errors)
 
     def test_invalid_zone(self):
-        data = get_valid_client_data(self.zone)
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
         data["zone"] = 99999  # Non-existent zone
 
         serializer = ClientCreateSerializer(data=data)
         self.assertFalse(serializer.is_valid())
         self.assertIn("zone", serializer.errors)
+
+    def test_invalid_hcr_type(self):
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
+        data["hcr_type"] = "INVALID_TYPE"
+
+        serializer = ClientCreateSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("hcr_type", serializer.errors)
+
+    def test_valid_hcr_types(self):
+        valid_types = [
+            Client.HCRType.HOST_COMMUNITY,
+            Client.HCRType.REFUGEE,
+            Client.HCRType.NOT_SET,
+        ]
+
+        for hcr_type in valid_types:
+            data = get_valid_client_data(self.zone, self.d1, self.d2)
+            data["hcr_type"] = hcr_type
+
+            context = {"request": type("MockRequest", (), {"user": self.user})()}
+            serializer = ClientCreateSerializer(data=data, context=context)
+
+            self.assertTrue(
+                serializer.is_valid(),
+                f"HCR type {hcr_type} should be valid: {serializer.errors}",
+            )
+            client = serializer.save()
+            self.assertEqual(client.hcr_type, hcr_type)
+
+    @patch("cbr_api.serializers.current_milli_time")
+    def test_risk_timestamps_match_client_timestamps(self, mock_time):
+        mock_time.return_value = 1640995200000
+
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
+        context = {"request": type("MockRequest", (), {"user": self.user})()}
+
+        serializer = ClientCreateSerializer(data=data, context=context)
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        client = serializer.save()
+
+        self.assertEqual(client.created_at, 1640995200000)
+        # All risk records should have the same timestamp as client timestamps
+        risks = ClientRisk.objects.filter(client_id=client)
+        for risk in risks:
+            self.assertEqual(risk.timestamp, 1640995200000)
+            self.assertEqual(risk.server_created_at, 1640995200000)

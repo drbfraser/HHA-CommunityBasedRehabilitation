@@ -90,9 +90,7 @@ class RiskViewsTestCase(APITestCase):
 
 
 # helper function to get valid client creation data in test_client_create_serializer.py
-def get_valid_client_data(zone):
-    d1 = Disability.objects.create(disability_type="Amputee")
-    d2 = Disability.objects.create(disability_type="Special Needs")
+def get_valid_client_data(zone, d1, d2):
     return {
         "first_name": "Jane",
         "last_name": "Smith",

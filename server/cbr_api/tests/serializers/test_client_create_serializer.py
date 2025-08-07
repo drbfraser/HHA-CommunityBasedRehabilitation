@@ -286,3 +286,68 @@ class ClientCreateSerializerTests(TestCase):
         # Should raise an error when trying to save without context
         with self.assertRaises(KeyError):
             serializer.save()
+
+    @patch("cbr_api.serializers.current_milli_time")
+    def test_different_risk_goal_statuses(self, mock_time):
+        mock_time.return_value = 1640995200000
+
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
+        data.update(
+            {
+                "health_risk": {
+                    "risk_level": RiskLevel.HIGH,
+                    "goal_name": "Daily Exercise",
+                    "goal_status": GoalOutcomes.ONGOING,
+                },
+                "social_risk": {
+                    "risk_level": RiskLevel.MEDIUM,
+                    "goal_name": "Family time",
+                    "goal_status": GoalOutcomes.CONCLUDED,
+                },
+                "educat_risk": {
+                    "risk_level": RiskLevel.LOW,
+                    "goal_name": "Graduating Grade 6",
+                    "goal_status": GoalOutcomes.CANCELLED,
+                },
+                "nutrit_risk": {
+                    "risk_level": RiskLevel.MEDIUM,
+                },
+                "mental_risk": {
+                    "risk_level": RiskLevel.HIGH,
+                },
+            }
+        )
+
+        context = {"request": type("MockRequest", (), {"user": self.user})()}
+        serializer = ClientCreateSerializer(data=data, context=context)
+
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        client = serializer.save()
+
+        # Verify each risk has the correct goal status
+        risks = ClientRisk.objects.filter(client_id=client)
+
+        health_risk = risks.get(risk_type=RiskType.HEALTH)
+        self.assertEqual(health_risk.risk_level, RiskLevel.HIGH)
+        self.assertEqual(health_risk.goal_name, "Daily Exercise")
+        self.assertEqual(health_risk.goal_status, GoalOutcomes.ONGOING)
+
+        social_risk = risks.get(risk_type=RiskType.SOCIAL)
+        self.assertEqual(social_risk.risk_level, RiskLevel.MEDIUM)
+        self.assertEqual(social_risk.goal_name, "Family time")
+        self.assertEqual(social_risk.goal_status, GoalOutcomes.CONCLUDED)
+
+        educat_risk = risks.get(risk_type=RiskType.EDUCAT)
+        self.assertEqual(educat_risk.risk_level, RiskLevel.LOW)
+        self.assertEqual(educat_risk.goal_name, "Graduating Grade 6")
+        self.assertEqual(educat_risk.goal_status, GoalOutcomes.CANCELLED)
+
+        nutrit_risk = risks.get(risk_type=RiskType.NUTRIT)
+        self.assertEqual(nutrit_risk.risk_level, RiskLevel.MEDIUM)
+        self.assertEqual(nutrit_risk.goal_name, "No goal set")
+        self.assertEqual(nutrit_risk.goal_status, GoalOutcomes.NOT_SET)
+
+        mental_risk = risks.get(risk_type=RiskType.MENTAL)
+        self.assertEqual(mental_risk.risk_level, RiskLevel.HIGH)
+        self.assertEqual(mental_risk.goal_name, "No goal set")
+        self.assertEqual(mental_risk.goal_status, GoalOutcomes.NOT_SET)

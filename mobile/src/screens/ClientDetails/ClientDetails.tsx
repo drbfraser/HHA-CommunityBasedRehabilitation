@@ -242,7 +242,9 @@ const ClientDetails = (props: ClientProps) => {
                                             disabled={!formikProps.values.is_active}
                                             onPress={() => {
                                                 navigation.navigate(StackScreenName.REFERRAL, {
-                                                    clientID: `${client?.first_name ?? ""} ${client?.last_name ?? ""}`, // show first name and last name instead of ID
+                                                    clientID: `${client?.first_name ?? ""} ${
+                                                        client?.last_name ?? ""
+                                                    }`, // show first name and last name instead of ID
                                                 });
                                             }}
                                         >
@@ -254,7 +256,9 @@ const ClientDetails = (props: ClientProps) => {
                                             disabled={!formikProps.values.is_active}
                                             onPress={() => {
                                                 navigation.navigate(StackScreenName.BASE_SURVEY, {
-                                                    clientID: `${client?.first_name ?? ""} ${client?.last_name ?? ""}`,
+                                                    clientID: `${client?.first_name ?? ""} ${
+                                                        client?.last_name ?? ""
+                                                    }`,
                                                 });
                                             }}
                                         >
@@ -266,7 +270,9 @@ const ClientDetails = (props: ClientProps) => {
                                             disabled={!formikProps.values.is_active}
                                             onPress={() => {
                                                 navigation.navigate(StackScreenName.VISIT, {
-                                                    clientID: `${client?.first_name ?? ""} ${client?.last_name ?? ""}`
+                                                    clientID: `${client?.first_name ?? ""} ${
+                                                        client?.last_name ?? ""
+                                                    }`,
                                                 });
                                             }}
                                         >
@@ -287,7 +293,9 @@ const ClientDetails = (props: ClientProps) => {
                                     <Divider />
                                     <ClientForm
                                         clientId={client?.id}
-                                        clientName={`${client?.first_name ?? ""} ${client?.last_name ?? ""}`}
+                                        clientName={`${client?.first_name ?? ""} ${
+                                            client?.last_name ?? ""
+                                        }`}
                                         formikProps={formikProps}
                                         isNewClient={false}
                                         touchDisable={(touched) => {

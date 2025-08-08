@@ -241,10 +241,12 @@ const ClientDetails = (props: ClientProps) => {
                                             style={styles.clientButtons}
                                             disabled={!formikProps.values.is_active}
                                             onPress={() => {
+                                                // Note: show first name and last name instead of ID,
+                                                // further work can be done to add an extra param to each StackScreenName (stackScreens.tsx) for better clarification
                                                 navigation.navigate(StackScreenName.REFERRAL, {
                                                     clientID: `${client?.first_name ?? ""} ${
                                                         client?.last_name ?? ""
-                                                    }`, // show first name and last name instead of ID
+                                                    }`,
                                                 });
                                             }}
                                         >

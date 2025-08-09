@@ -411,17 +411,33 @@ class ClientCreateSerializerTests(TestCase):
 
     def test_decimal_precision_for_coordinates(self):
         data = get_valid_client_data(self.zone, self.d1, self.d2)
-        data.update({
-            "longitude": -123.123456,  # 6 decimal places (within max_digits=12, decimal_places=6)
-            "latitude": 49.123456,
-        })
-        
-        context = {'request': type('MockRequest', (), {'user': self.user})()}
+        data.update(
+            {
+                "longitude": -123.123456,  # 6 decimal places (within max_digits=12, decimal_places=6)
+                "latitude": 49.123456,
+            }
+        )
+
+        context = {"request": type("MockRequest", (), {"user": self.user})()}
         serializer = ClientCreateSerializer(data=data, context=context)
-        
+
         self.assertTrue(serializer.is_valid(), serializer.errors)
         client = serializer.save()
-        
+
         # Verify coordinates are stored with proper precision (as floats not rounded or integers)
         self.assertEqual(float(client.longitude), -123.123456)
         self.assertEqual(float(client.latitude), 49.123456)
+
+    def test_caregiver_present_default_false(self):
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
+        # Don't include caregiver_present in data
+        del data["caregiver_present"]
+
+        context = {"request": type("MockRequest", (), {"user": self.user})()}
+        serializer = ClientCreateSerializer(data=data, context=context)
+
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        client = serializer.save()
+
+        # Should default to False
+        self.assertFalse(client.caregiver_present)

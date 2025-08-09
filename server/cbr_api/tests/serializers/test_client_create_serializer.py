@@ -385,3 +385,43 @@ class ClientCreateSerializerTests(TestCase):
         self.assertFalse(client_without_caregiver.caregiver_present)  # default=False
         self.assertEqual(client_without_caregiver.caregiver_phone, "")
         self.assertEqual(client_without_caregiver.caregiver_email, "")
+
+    def test_required_location_fields(self):
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
+
+        # Test missing longitude
+        del data["longitude"]
+        serializer = ClientCreateSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("longitude", serializer.errors)
+
+        # Reset and test missing latitude
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
+        del data["latitude"]
+        serializer = ClientCreateSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("latitude", serializer.errors)
+
+        # Reset and test missing village
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
+        del data["village"]
+        serializer = ClientCreateSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("village", serializer.errors)
+
+    def test_decimal_precision_for_coordinates(self):
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
+        data.update({
+            "longitude": -123.123456,  # 6 decimal places (within max_digits=12, decimal_places=6)
+            "latitude": 49.123456,
+        })
+        
+        context = {'request': type('MockRequest', (), {'user': self.user})()}
+        serializer = ClientCreateSerializer(data=data, context=context)
+        
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        client = serializer.save()
+        
+        # Verify coordinates are stored with proper precision (as floats not rounded or integers)
+        self.assertEqual(float(client.longitude), -123.123456)
+        self.assertEqual(float(client.latitude), 49.123456)

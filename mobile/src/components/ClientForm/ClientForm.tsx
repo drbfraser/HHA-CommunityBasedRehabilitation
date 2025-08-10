@@ -40,6 +40,7 @@ export interface IClientFormProps {
     isNewClient: boolean;
     formikProps: FormikProps<TClientValues>;
     clientId?: string;
+    clientName?: string;
     disabled?: boolean;
     touchDisable?: (editPressed: boolean) => void;
     resetImage?: () => void;
@@ -138,8 +139,8 @@ export const ClientForm = (props: IClientFormProps) => {
             ? t("clientAttr.viewClient")
             : t("clientAttr.editClient");
 
-        const subtitle = props.clientId
-            ? `${t("screenNames.clientID")}: ${props.clientId}`
+        const subtitle = props.clientName
+            ? `${t("general.client")} ${t("general.name")}: ${props.clientName}`
             : undefined;
 
         navigation.setOptions({ header: DefaultHeader(title, subtitle) });

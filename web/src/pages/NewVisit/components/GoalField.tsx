@@ -8,6 +8,7 @@ import {
     getVisitGoalLabel,
     getVisitGoalStatusLabel,
     getVisitGoalRequirementLabel,
+    visitFieldLabels,
 } from "@cbr/common/forms/newVisit/visitFormFields";
 import { getRiskGoalsTranslationKey, IRisk, RiskType } from "@cbr/common/util/risks";
 import UpdateGoalStatus from "../../../pages/ClientDetails/Risks/UpdateGoalStatus";
@@ -15,6 +16,8 @@ import { RiskLevel } from "@cbr/common/util/risks";
 import { OutcomeGoalMet } from "@cbr/common/util/visits";
 import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
 import Stack from "@mui/material/Stack";
+import { clientRiskStyles } from "pages/ClientDetails/Risks/ClientRisks.styles";
+import RiskLevelChip from "components/RiskLevelChip/RiskLevelChip";
 
 interface IModalProps {
     risk: IRisk;
@@ -68,6 +71,15 @@ const GoalField = (props: IModalProps) => {
                     transKey={getRiskGoalsTranslationKey(props.risk.risk_type)}
                 />
             )}
+            <FormLabel focused={false}>
+                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("risks.riskLevel")}
+            </FormLabel>
+            {matchingRisk && (
+                <Box sx={clientRiskStyles.riskCardButtonAndBadge}>
+                    <RiskLevelChip risk={matchingRisk.risk_level} />
+                </Box>
+            )}
+            <Box mt={1} />
 
             <FormLabel focused={false}>{getVisitGoalLabel(t, props.visitType)}</FormLabel>
             <Typography variant={"body1"}>{matchingRisk?.goal_name}</Typography>

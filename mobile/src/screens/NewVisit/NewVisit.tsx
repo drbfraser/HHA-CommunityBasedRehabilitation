@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Divider, HelperText, Text, TextInput } from "react-native-paper";
+import { Button, Divider, HelperText, Text, TextInput, TouchableRipple } from "react-native-paper";
 import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
 import { FieldArray, Formik, FormikHelpers, FormikProps, getIn } from "formik";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
@@ -12,7 +12,9 @@ import {
     initialValidationSchema,
     IRisk,
     OutcomeFormField,
+    OutcomeGoalMet,
     provisionals,
+    riskLevels,
     themeColors,
     TZoneMap,
     useZones,
@@ -29,6 +31,7 @@ import { RouteProp } from "@react-navigation/native";
 import { handleSubmit } from "./formHandler";
 
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewVisit.style";
+import useClientRiskStyles from "../ClientDetails/Risks/ClientRiskForm.styles";
 import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
@@ -38,6 +41,9 @@ import { modelName } from "../../models/constant";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";
+import GoalStatusChip from "@/src/components/GoalStatusChip/GoalStatusChip";
+import { ClientRiskFormModal } from "../ClientDetails/Risks/ClientRiskFormModal";
+import { riskStyles } from "../ClientDetails/Risks/ClientRisk.styles";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -147,44 +153,117 @@ const OutcomeField = (props: {
     visitType: VisitFormField;
     risks: IRisk[];
     formikProps: FormikProps<any>;
+    setRisks: React.Dispatch<React.SetStateAction<IRisk[]>>;
 }) => {
     const fieldName = `${VisitFormField.outcomes}.${props.visitType}`;
     const styles = useStyles();
+    const clientRiskStyles = useClientRiskStyles();
     const { t } = useTranslation();
 
     // get Formik error values
     const path = `${fieldName}.${OutcomeFormField.outcome}`;
     const errorMessage = getIn(props.formikProps.errors, path);
     const touched = getIn(props.formikProps.touched, path);
+    const matchingRisk = props.risks.find((r) => r.risk_type === (props.visitType as string));
+
+    const [showRiskModal, setShowRiskModal] = useState(false);
+    const [currentRisk, setCurrentRisk] = useState<IRisk | null>(null);
+
+    const openRiskModal = (risk: IRisk) => {
+        setCurrentRisk(risk);
+        setShowRiskModal(true);
+    };
+    const updateRiskInArray = (updatedRisk: IRisk) => {
+        props.setRisks((prevRisks) => [updatedRisk, ...prevRisks]);
+    };
 
     return (
         <View>
-            <Text style={styles.pickerQuestion}>
-                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal
-            </Text>
-            <Text style={styles.normalInput}>
-                {props.risks.find((r) => r.risk_type === (props.visitType as string))?.goal}
-            </Text>
-            <Text style={styles.pickerQuestion}>
-                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} Goal Status
-            </Text>
-
-            <FormikExposedDropdownMenu
-                field={`${fieldName}.${OutcomeFormField.goalStatus}`}
-                valuesType="record-string"
-                values={Object.values(GoalStatus).reduce((accumulator, currentGoalStatus) => {
-                    accumulator[currentGoalStatus] = visitFieldLabels[currentGoalStatus];
-                    return accumulator;
-                }, {})}
-                currentValueOverride={
-                    props.formikProps.values[VisitFormField.outcomes][props.visitType][
-                        OutcomeFormField.goalStatus
-                    ]
-                }
-                formikProps={props.formikProps}
-                fieldLabels={visitFieldLabels}
-                mode="outlined"
-            />
+            {matchingRisk && matchingRisk.goal_status === OutcomeGoalMet.NOTSET ? (
+                <>
+                    <Text style={styles.pickerQuestion}>
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
+                    </Text>
+                    <Text style={styles.normalInput}>{matchingRisk?.goal_name}</Text>
+                    <Button
+                        onPress={() => {
+                            openRiskModal(matchingRisk);
+                        }}
+                        mode={"contained"}
+                    >
+                        {t("goals.createNew")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
+                    </Button>
+                </>
+            ) : matchingRisk &&
+              (matchingRisk.goal_status === OutcomeGoalMet.CONCLUDED ||
+                  matchingRisk.goal_status === OutcomeGoalMet.CANCELLED) ? (
+                <>
+                    <Text style={styles.pickerQuestion}>
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
+                    </Text>
+                    <Text style={styles.normalInput}>{t("goals.noCurrentOngoingGoals")}</Text>
+                    <Button
+                        onPress={() => {
+                            openRiskModal(matchingRisk);
+                        }}
+                        mode={"contained"}
+                    >
+                        {t("goals.createNew")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
+                    </Button>
+                </>
+            ) : matchingRisk ? (
+                <>
+                    <Text style={styles.pickerQuestion}>
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("risks.riskLevel")}
+                    </Text>
+                    <Text
+                        style={
+                            riskStyles(riskLevels[matchingRisk?.risk_level].color).riskSubtitleStyle
+                        }
+                    >
+                        {riskLevels[matchingRisk?.risk_level].name}
+                    </Text>
+                    <Text style={styles.pickerQuestion}>
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
+                    </Text>
+                    <Text style={styles.normalInput}>{matchingRisk?.goal_name}</Text>
+                    <View style={clientRiskStyles.goalStatusContainer}>
+                        <Text style={clientRiskStyles.goalStatusText}>
+                            {t("goals.goalStatus")}:
+                        </Text>
+                        <TouchableRipple>
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <GoalStatusChip goalStatus={matchingRisk.goal_status} />
+                            </View>
+                        </TouchableRipple>
+                    </View>
+                    <Text style={styles.pickerQuestion}>
+                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")} {t("risks.requirements")}
+                    </Text>
+                    <Text style={styles.normalInput}>{matchingRisk?.requirement}</Text>
+                    <Button
+                        onPress={() => {
+                            openRiskModal(matchingRisk);
+                        }}
+                        mode={"contained"}
+                    >
+                        {t("general.update")} {visitFieldLabels[props.visitType]}{" "}
+                        {t("general.goal")}
+                    </Button>
+                </>
+            ) : null}
 
             <View>
                 <Text style={styles.pickerQuestion}>{t("newVisit.outcomeOfGoal")}</Text>
@@ -216,6 +295,18 @@ const OutcomeField = (props: {
                     {errorMessage}
                 </HelperText>
             </View>
+            {currentRisk && (
+                <ClientRiskFormModal
+                    riskData={currentRisk}
+                    setRisk={(updated) => {
+                        setCurrentRisk(updated);
+                        updateRiskInArray(updated);
+                    }}
+                    riskType={currentRisk.risk_type}
+                    showModal={showRiskModal}
+                    setShowModal={setShowRiskModal}
+                />
+            )}
         </View>
     );
 };
@@ -300,7 +391,11 @@ const VisitFocusForm = (
     );
 };
 
-const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[]) => {
+const VisitTypeStep = (
+    visitType: VisitFormField,
+    risks: IRisk[],
+    setRisks: React.Dispatch<React.SetStateAction<IRisk[]>>
+) => {
     const styles = useStyles();
     // Note: Not using the useTranslation hook here because it causes a crash:
     //     "Render Error -- Cannot read the property 'length' of undefined"
@@ -324,7 +419,12 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[]) => {
                     }
                 />
 
-                <OutcomeField visitType={visitType} risks={risks} formikProps={formikProps} />
+                <OutcomeField
+                    visitType={visitType}
+                    risks={risks}
+                    formikProps={formikProps}
+                    setRisks={setRisks}
+                />
             </View>
         );
     };
@@ -378,7 +478,7 @@ const NewVisit = (props: INewVisitProps) => {
         },
         ...enabledSteps.map((visitType) => ({
             label: `${visitFieldLabels[visitType]} ${t("newVisit.visit")}`,
-            Form: VisitTypeStep(visitType, risks),
+            Form: VisitTypeStep(visitType, risks, setRisks),
             validationSchema: visitTypeValidationSchema(visitType),
         })),
     ];

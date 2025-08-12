@@ -66,8 +66,8 @@ const refreshArrays = () => {
         [StackScreenName.CLIENT]: ({ route, navigation }) => ({
             headerShown: true,
             header: DefaultHeader(
-                i18n.t("screenNames.viewClient"),
-                `${i18n.t("screenNames.clientID")}{i18n.t("screenNames.clientID")}: ${
+                i18n.t("clientAttr.viewClient"),
+                `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
                     (route as TAppRouteProp<StackScreenName.CLIENT>).params.clientID
                 }`
             ),
@@ -88,7 +88,7 @@ const refreshArrays = () => {
             headerShown: true,
             header: DefaultHeader(
                 i18n.t("screenNames.newVisit"),
-                `${i18n.t("screenNames.clientID")}: ${
+                `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
                     (route as TAppRouteProp<StackScreenName.VISIT>).params.clientID
                 }`
             ),
@@ -97,7 +97,7 @@ const refreshArrays = () => {
             headerShown: true,
             header: DefaultHeader(
                 i18n.t("screenNames.newReferral"),
-                `${i18n.t("screenNames.clientID")}: ${
+                `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
                     (route as TAppRouteProp<StackScreenName.REFERRAL>).params.clientID
                 }`
             ),
@@ -106,7 +106,7 @@ const refreshArrays = () => {
             headerShown: true,
             header: DefaultHeader(
                 i18n.t("screenNames.newBaselineSurvey"),
-                `${i18n.t("screenNames.clientID")}: ${
+                `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
                     (route as TAppRouteProp<StackScreenName.BASE_SURVEY>).params.clientID
                 }`
             ),

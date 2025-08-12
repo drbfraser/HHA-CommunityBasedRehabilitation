@@ -1,13 +1,13 @@
 import React, { useContext, useEffect } from "react";
 import { Text, View, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
-import { Card, DataTable, Button } from "react-native-paper";
+import { Card, DataTable } from "react-native-paper";
 import useStyles from "./Dashboard.styles";
 import { BriefReferral, fetchAllClientsFromDB, fetchReferrals } from "./DashboardRequest";
 import { riskTypes } from "../../util/riskIcon";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { APILoadError, getCurrentUser, IUser, timestampToDate } from "@cbr/common";
+import { APILoadError, getCurrentUser, IUser, themeColors, timestampToDate } from "@cbr/common";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ClientListRow } from "../ClientList/ClientListRequest";
@@ -40,7 +40,7 @@ const Dashboard = () => {
 
     const isFocused = useIsFocused();
     const database = useDatabase();
-    const { setUnSyncedChanges, screenRefresh, setScreenRefresh } = useContext(SyncContext);
+    const { setUnSyncedChanges, screenRefresh } = useContext(SyncContext);
 
     const { t } = useTranslation();
 
@@ -80,6 +80,12 @@ const Dashboard = () => {
     const [clientList, setClientList] = useState<ClientListRow[]>([]);
     const [referralList, setReferralList] = useState<BriefReferral[]>([]);
     const navigation = useNavigation();
+
+    const renderRiskIcon = (levelColor) => {
+        if (levelColor !== themeColors.noRiskBlack) return riskTypes.CIRCLE.Icon(levelColor);
+        return riskTypes.CIRCLE_OUTLINE.Icon(levelColor);
+    };
+
     const getNewClient = async () => {
         var fetchedClientList = await fetchAllClientsFromDB(database);
         if (clientSortDirection !== "None") {
@@ -236,19 +242,19 @@ const Dashboard = () => {
                                                 <WrappedText text={item.zone} />
                                             </View>
                                             <DataTable.Cell style={styles.column_client_icon}>
-                                                {riskTypes.CIRCLE.Icon(item.HealthLevel)}
+                                                {renderRiskIcon(item.HealthLevel)}
                                             </DataTable.Cell>
                                             <DataTable.Cell style={styles.column_client_icon}>
-                                                {riskTypes.CIRCLE.Icon(item.EducationLevel)}
+                                                {renderRiskIcon(item.EducationLevel)}
                                             </DataTable.Cell>
                                             <DataTable.Cell style={styles.column_client_icon}>
-                                                {riskTypes.CIRCLE.Icon(item.SocialLevel)}
+                                                {renderRiskIcon(item.SocialLevel)}
                                             </DataTable.Cell>
                                             <DataTable.Cell style={styles.column_client_icon}>
-                                                {riskTypes.CIRCLE.Icon(item.NutritionLevel)}
+                                                {renderRiskIcon(item.NutritionLevel)}
                                             </DataTable.Cell>
                                             <DataTable.Cell style={styles.column_client_icon}>
-                                                {riskTypes.CIRCLE.Icon(item.MentalLevel)}
+                                                {renderRiskIcon(item.MentalLevel)}
                                             </DataTable.Cell>
                                             <DataTable.Cell
                                                 style={styles.column_client_Last_visit_date}

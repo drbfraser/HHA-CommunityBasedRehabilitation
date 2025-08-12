@@ -28,19 +28,11 @@ interface IModalProps {
 
 export default function UpdateGoalStatus(props: IModalProps) {
     const { t } = useTranslation();
-    // TODO: Update translations file to replace placeholders
     const goalStatusOptions = [
         { value: "GO", label: t("newVisit.ongoing") },
-        { value: "CON", label: t("newVisit.PLACEHOLDER-socialGoals.0") },
+        { value: "CON", label: t("newVisit.concluded") },
         { value: "CAN", label: t("newVisit.cancelled") },
     ];
-
-    /* TODO: Add back in if we need to use canonical/localized fields
-    const canonicalFields: string[] = Object.values(
-        t(props.transKey, { returnObjects: true, lng: "en" })
-    );
-    const localizedFields: string[] = Object.values(t(props.transKey, { returnObjects: true }));
-    */
 
     const getDialogTitleText = (riskType: RiskType): string => {
         switch (riskType) {
@@ -80,8 +72,7 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                 <Grid container direction="column" spacing={1}>
                                     <Grid item>
                                         <Typography variant="subtitle1" fontWeight="bold">
-                                            {/* TODO: Add Translation */}
-                                            Update Goal Status
+                                            {t("goals.updateGoalStatus")}
                                         </Typography>
                                     </Grid>
                                     <Grid item>
@@ -114,7 +105,7 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                                         rows={1}
                                                         variant="outlined"
                                                         margin="dense"
-                                                        label="Cancellation Reason"
+                                                        label={t("risks.cancelReason")}
                                                         name="cancellation_reason"
                                                     />
                                                 </Grid>

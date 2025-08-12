@@ -40,6 +40,7 @@ export interface IClientFormProps {
     isNewClient: boolean;
     formikProps: FormikProps<TClientValues>;
     clientId?: string;
+    clientName?: string;
     disabled?: boolean;
     touchDisable?: (editPressed: boolean) => void;
     resetImage?: () => void;
@@ -138,8 +139,8 @@ export const ClientForm = (props: IClientFormProps) => {
             ? t("clientAttr.viewClient")
             : t("clientAttr.editClient");
 
-        const subtitle = props.clientId
-            ? `${t("screenNames.clientID")}: ${props.clientId}`
+        const subtitle = props.clientName
+            ? `${t("general.client")} ${t("general.name")}: ${props.clientName}`
             : undefined;
 
         navigation.setOptions({ header: DefaultHeader(title, subtitle) });
@@ -189,12 +190,14 @@ export const ClientForm = (props: IClientFormProps) => {
                         ? t("general.archive")
                         : t("general.dearchive")
                 }
-                // TODOSD: translation
-                dialogContent={`Are you sure you want to ${
-                    props.formikProps.values.is_active ? "archive" : "dearchive"
-                } ${props.formikProps.values.firstName} ${
-                    props.formikProps.values.lastName
-                }? You cannot edit clients while they are archived`}
+                dialogContent={t("clientFields.sureToArchiveClient", {
+                    action: props.formikProps.values.is_active
+                        ? t("clientFields.archive")
+                        : t("clientFields.dearchive"),
+                    first_name: props.formikProps.values.firstName,
+                    last_name: props.formikProps.values.lastName,
+                    client_active_error: t("clientFields.cannotEditArchived"),
+                })}
             />
             <FormikTextInput
                 style={styles.field}

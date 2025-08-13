@@ -4,6 +4,7 @@ from django.contrib import admin
 # Register your models here.
 from cbr_api.models import UserCBR
 
+
 # Customize interface below if needed
 @admin.register(UserCBR)
 class UserCBRManager(admin.ModelAdmin):

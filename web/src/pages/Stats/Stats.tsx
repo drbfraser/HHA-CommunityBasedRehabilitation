@@ -19,6 +19,7 @@ import {
     defaultAgeConfigs,
     defaultGenderConfigs,
 } from "./components/filterbar/StatsDemographicFilter";
+import DischargedClientsStats from "./components/charts/DischargedClientsStats";
 
 const Container = styled("div")({
     display: "flex",
@@ -102,6 +103,9 @@ const Stats = () => {
             <Divider />
 
             <NewClientsStats stats={stats} age={age} gender={gender} />
+            <Divider />
+
+            <DischargedClientsStats stats={stats} age={age} gender={gender} />
             <Divider />
 
             <FollowUpVistsStats stats={stats} age={age} gender={gender} />

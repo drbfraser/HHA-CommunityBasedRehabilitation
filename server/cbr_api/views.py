@@ -22,6 +22,7 @@ from cbr_api.sql import (
     getOutstandingReferrals,
     getNewClients,
     getFollowUpVisits,
+    getDischargedClients,
 )
 from cbr_api.util import client_picture_last_modified_datetime, client_image_etag
 from downloadview.object import AuthenticatedObjectDownloadView
@@ -102,6 +103,9 @@ class AdminStats(generics.RetrieveAPIView):
             "referrals_resolved": referral_stats["resolved"],
             "referrals_unresolved": referral_stats["unresolved"],
             "new_clients": getNewClients(user_id, from_time, to_time, is_active),
+            "discharged_clients": getDischargedClients(
+                user_id, from_time, to_time, is_active
+            ),
             "follow_up_visits": getFollowUpVisits(
                 user_id, from_time, to_time, is_active
             ),

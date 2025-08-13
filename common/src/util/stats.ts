@@ -47,6 +47,7 @@ export interface IStatsReferral extends GenerateDemographicCategoryFields<StatsR
 export interface IStatsDisability extends IBaseDisability, IClientBreakdown {}
 export interface IStatsFollowUpVisits extends IClientBreakdown {}
 export interface IStatsNewClients extends IClientBreakdown {}
+export interface IStatsDischargedClients extends IClientBreakdown {}
 
 export interface IStats {
     disabilities: IStatsDisability[];
@@ -55,5 +56,6 @@ export interface IStats {
     referrals_unresolved: IStatsReferral;
     referrals_resolved: IStatsReferral;
     new_clients: IStatsNewClients[];
+    discharged_clients: IStatsDischargedClients[];
     follow_up_visits: IStatsFollowUpVisits[];
 }

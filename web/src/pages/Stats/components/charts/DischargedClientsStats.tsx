@@ -1,8 +1,5 @@
-import { Skeleton } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-
-import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
+import { useZones } from "@cbr/common/util/hooks/zones";
 import { IStats } from "@cbr/common/util/stats";
 import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
 import HorizontalBarGraphStats, {
@@ -17,14 +14,13 @@ interface IProps {
     gender: IGender;
 }
 
-const DisabilityStats = ({ stats, age, gender }: IProps) => {
-    const { t } = useTranslation();
-    const disabilities = useDisabilities(t);
-
+const DischargedClientsStats = ({ stats, age, gender }: IProps) => {
     const [totalFAdults, setTotalFAdults] = useState(0);
     const [totalMAdults, setTotalMAdults] = useState(0);
     const [totalFChild, setTotalFChild] = useState(0);
     const [totalMChild, setTotalMChild] = useState(0);
+
+    const zones = useZones();
 
     const demographicTotalsRef = useRef<IDemographicTotals>({
         female_adult: 0,
@@ -40,7 +36,7 @@ const DisabilityStats = ({ stats, age, gender }: IProps) => {
             let fChild = 0;
             let mChild = 0;
 
-            stats.disabilities.forEach((item) => {
+            stats.discharged_clients.forEach((item) => {
                 fAdults += item.female_adult_total ?? 0;
                 mAdults += item.male_adult_total ?? 0;
                 fChild += item.female_child_total ?? 0;
@@ -63,15 +59,26 @@ const DisabilityStats = ({ stats, age, gender }: IProps) => {
 
     let totalData: IHBarGraphStatsData[] = [];
 
-    disabilities.forEach((k, v) => {
+    zones.forEach((k, v) => {
         const femaleAdultTotal =
-            stats?.disabilities.find((item) => item.disability_id === v)?.female_adult_total ?? 0;
+            stats?.discharged_clients
+                .filter((item) => item.zone_id === v)
+                .reduce((sum, item) => sum + (item.female_adult_total ?? 0), 0) ?? 0;
+
         const maleAdultTotal =
-            stats?.disabilities.find((item) => item.disability_id === v)?.male_adult_total ?? 0;
+            stats?.discharged_clients
+                .filter((item) => item.zone_id === v)
+                .reduce((sum, item) => sum + (item.male_adult_total ?? 0), 0) ?? 0;
+
         const femaleChildTotal =
-            stats?.disabilities.find((item) => item.disability_id === v)?.female_child_total ?? 0;
+            stats?.discharged_clients
+                .filter((item) => item.zone_id === v)
+                .reduce((sum, item) => sum + (item.female_child_total ?? 0), 0) ?? 0;
+
         const maleChildTotal =
-            stats?.disabilities.find((item) => item.disability_id === v)?.male_child_total ?? 0;
+            stats?.discharged_clients
+                .filter((item) => item.zone_id === v)
+                .reduce((sum, item) => sum + (item.male_child_total ?? 0), 0) ?? 0;
 
         totalData.push({
             label: k,
@@ -85,39 +92,33 @@ const DisabilityStats = ({ stats, age, gender }: IProps) => {
 
     const subheadings: ISubheadings[] = [
         {
-            label: t("statistics.totalDisFChild"),
+            label: "Total Female Children Discharged",
             total: totalFChild,
         },
         {
-            label: t("statistics.totalDisMChild"),
+            label: "Total Male Children Discharged",
             total: totalMChild,
         },
         {
-            label: t("statistics.totalDisFAdult"),
+            label: "Total Female Adults Discharged",
             total: totalFAdults,
         },
         {
-            label: t("statistics.totalDisMAdult"),
+            label: "Total Male Adults Discharged",
             total: totalMAdults,
         },
     ];
 
-    if (!stats) {
-        return <Skeleton variant="rectangular" height={400} />;
-    }
-
     return (
-        <>
-            <HorizontalBarGraphStats
-                title={t("statistics.disabilities")}
-                data={totalData}
-                age={age}
-                gender={gender}
-                subheadings={subheadings}
-                totals={demographicTotalsRef.current}
-            />
-        </>
+        <HorizontalBarGraphStats
+            title="Discharged Clients"
+            data={totalData}
+            age={age}
+            gender={gender}
+            subheadings={subheadings}
+            totals={demographicTotalsRef.current}
+        />
     );
 };
 
-export default DisabilityStats;
+export default DischargedClientsStats;

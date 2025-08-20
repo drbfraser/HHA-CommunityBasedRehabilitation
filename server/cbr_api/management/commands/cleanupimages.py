@@ -22,7 +22,7 @@ class Command(BaseCommand):
         # Find pictures that have no clients associated with them.
         all_client_image_files = []
         images_dir = os.path.join(settings.MEDIA_ROOT, models.client_picture_upload_dir)
-        for (dir_path, dir_names, filenames) in os.walk(images_dir):
+        for dir_path, dir_names, filenames in os.walk(images_dir):
             all_client_image_files.extend(filenames)
 
         orphaned_image_paths = []

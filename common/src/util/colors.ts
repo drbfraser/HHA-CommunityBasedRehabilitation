@@ -11,7 +11,7 @@ export const themeColors = {
     riskGreen: "#81C784",
     riskYellow: "#F0AA50",
     riskBlack: "#424242",
-    noRiskBlack: "#000000",
+    noRiskGrey: "#9E9E9E",
     goalGreen: "#00cc00",
     goalBlue: "#3d85c6",
     goalRed: "#cc0000",

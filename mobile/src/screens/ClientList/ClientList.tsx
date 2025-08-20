@@ -142,7 +142,7 @@ const ClientList = () => {
     };
 
     const renderRiskIcon = (levelColor) => {
-        if (levelColor !== themeColors.noRiskBlack) return riskTypes.CIRCLE.Icon(levelColor);
+        if (levelColor !== themeColors.noRiskGrey) return riskTypes.CIRCLE.Icon(levelColor);
         return riskTypes.CIRCLE_OUTLINE.Icon(levelColor);
     };
 

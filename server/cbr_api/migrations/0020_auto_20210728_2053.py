@@ -64,7 +64,7 @@ def move_client_images(app_registry, schema_editor):
 
     # Delete any leftover files. This will also delete orphaned files not connected to any client.
     old_images_dir = os.path.join(settings.MEDIA_ROOT, "images")
-    for (dir_path, dir_names, filenames) in os.walk(old_images_dir):
+    for dir_path, dir_names, filenames in os.walk(old_images_dir):
         for file in filenames:
             path_to_delete: str = os.path.join(dir_path, file)
 

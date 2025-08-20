@@ -71,7 +71,14 @@ const ClientRisks = ({ clientInfo, refreshClient }: IProps) => {
                         {risk.goal_status === OutcomeGoalMet.ONGOING ? (
                             <>
                                 <Typography variant="subtitle2" component="h6">
-                                    {t("goals.currentGoal")}
+                                    {t("general.requirements")}:
+                                </Typography>
+                                <Typography variant="body2" component="p">
+                                    {risk.requirement}
+                                </Typography>
+                                <br />
+                                <Typography variant="subtitle2" component="h6">
+                                    {t("general.goals")}:
                                 </Typography>
                                 <Typography variant="body2" component="p">
                                     {risk.goal_name}

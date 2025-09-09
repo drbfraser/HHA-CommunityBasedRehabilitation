@@ -4,7 +4,12 @@ import { FormControl, FormGroup, FormLabel, MenuItem } from "@mui/material";
 import { Field, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-mui";
 
-import { visitFieldLabels, VisitFormField } from "@cbr/common/forms/newVisit/visitFormFields";
+import {
+    visitFieldLabels,
+    VisitFormField,
+    ImprovementFormField,
+    provisionals,
+} from "@cbr/common/forms/newVisit/visitFormFields";
 import { TZoneMap } from "@cbr/common/util/hooks/zones";
 import { newVisitStyles } from "../NewVisit.styles";
 
@@ -24,7 +29,6 @@ const VisitReasonStep = (
     const { t } = useTranslation();
 
     const onCheckboxChange = (checked: boolean, visitType: VisitFormField) => {
-        // keep enabled steps in sync with checkboxes
         setEnabledSteps(
             visitTypes.filter(
                 (type) =>
@@ -33,7 +37,19 @@ const VisitReasonStep = (
             )
         );
 
-        if (!checked) {
+        if (checked) {
+            const providedList: string[] = provisionals[visitType] ?? [];
+            const seeded = providedList.map((provided, idx) => ({
+                [ImprovementFormField.id]: `tmp-${visitType}-${idx}`,
+                [ImprovementFormField.enabled]: false,
+                [ImprovementFormField.riskType]: visitType,
+                [ImprovementFormField.provided]: provided,
+                [ImprovementFormField.description]: "",
+            }));
+
+            formikProps.setFieldValue(`${VisitFormField.improvements}.${visitType}`, seeded);
+        } else {
+            // Clear on uncheck so nothing stale is submitted
             formikProps.setFieldValue(`${VisitFormField.improvements}.${visitType}`, []);
         }
     };

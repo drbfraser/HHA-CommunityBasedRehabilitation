@@ -33,13 +33,6 @@ export enum VisitFormField {
     improvements = "improvements",
 }
 
-export enum OutcomeFormField {
-    id = "id",
-    riskType = "risk_type",
-    outcome = "outcome",
-    goalStatus = "goal_met",
-}
-
 export enum ImprovementFormField {
     id = "id",
     enabled = "enabled",
@@ -64,7 +57,6 @@ const refreshArrays = () => {
         [VisitFormField.mental]: i18n.t("newVisit.mental"),
         [VisitFormField.improvements]: i18n.t("newVisit.improvements"),
         [ImprovementFormField.description]: i18n.t("newVisit.description"),
-        [OutcomeFormField.outcome]: i18n.t("newVisit.outcome"),
         [GoalStatus.cancelled]: i18n.t("newVisit.cancelled"),
         [GoalStatus.ongoing]: i18n.t("newVisit.ongoing"),
         [GoalStatus.concluded]: i18n.t("newVisit.concluded"),

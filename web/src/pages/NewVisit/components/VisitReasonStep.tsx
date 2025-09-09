@@ -4,12 +4,7 @@ import { FormControl, FormGroup, FormLabel, MenuItem } from "@mui/material";
 import { Field, FormikProps } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-mui";
 
-import {
-    visitFieldLabels,
-    VisitFormField,
-    OutcomeFormField,
-    GoalStatus,
-} from "@cbr/common/forms/newVisit/visitFormFields";
+import { visitFieldLabels, VisitFormField } from "@cbr/common/forms/newVisit/visitFormFields";
 import { TZoneMap } from "@cbr/common/util/hooks/zones";
 import { newVisitStyles } from "../NewVisit.styles";
 
@@ -28,8 +23,8 @@ const VisitReasonStep = (
 ) => {
     const { t } = useTranslation();
 
-    const onCheckboxChange = (checked: boolean, visitType: string) => {
-        // We can't fully rely on formikProps.values[type] here because it might not be updated yet
+    const onCheckboxChange = (checked: boolean, visitType: VisitFormField) => {
+        // keep enabled steps in sync with checkboxes
         setEnabledSteps(
             visitTypes.filter(
                 (type) =>
@@ -38,17 +33,11 @@ const VisitReasonStep = (
             )
         );
 
-        if (checked) {
-            formikProps.setFieldValue(`${VisitFormField.outcomes}.${visitType}`, {
-                [OutcomeFormField.id]: "tmp",
-                [OutcomeFormField.riskType]: visitType,
-                [OutcomeFormField.goalStatus]: GoalStatus.ongoing,
-                [OutcomeFormField.outcome]: "",
-            });
-        } else {
-            formikProps.setFieldValue(`${VisitFormField.outcomes}.${visitType}`, undefined);
+        if (!checked) {
+            formikProps.setFieldValue(`${VisitFormField.improvements}.${visitType}`, []);
         }
     };
+
     return (
         <>
             <FormLabel focused={false}>{t("newVisit.whereVisit")}</FormLabel>

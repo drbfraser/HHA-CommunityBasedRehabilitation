@@ -531,7 +531,9 @@ class OutstandingReferralSerializer(serializers.Serializer):
 class DetailedVisitSerializer(serializers.ModelSerializer):
     print("---- CREATE is called 1 ----")
     improvements = ImprovementSerializer(many=True)
-    outcomes = OutcomeSerializer(many=True)
+    outcomes = OutcomeSerializer(
+        many=True, required=False, default=list, write_only=True
+    )
 
     class Meta:
         model = models.Visit
@@ -559,8 +561,17 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         print("---- CREATE is called 2 ----")
         current_time = current_milli_time()
 
-        improvement_dataset = validated_data.pop("improvements")
-        outcome_dataset = validated_data.pop("outcomes")
+        improvement_dataset = validated_data.pop("improvements", [])
+        outcome_dataset = validated_data.pop("outcomes", [])
+        # handle legacy outcome data by converting them to improvement records
+        for o in outcome_dataset:
+            improvement_dataset.append(
+                {
+                    "risk_type": o.get("risk_type"),
+                    "provided": "legacy_outcome",
+                    "desc": o.get("outcome", ""),
+                }
+            )
 
         validated_data["id"] = uuid.uuid4()
         validated_data["user_id"] = self.context["request"].user
@@ -580,14 +591,6 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             improvement_data["server_created_at"] = current_time
             improvement = models.Improvement.objects.create(**improvement_data)
             improvement.save()
-
-        for outcome_data in outcome_dataset:
-            outcome_data["id"] = uuid.uuid4()
-            outcome_data["visit_id"] = visit
-            outcome_data["created_at"] = current_time
-            outcome_data["server_created_at"] = current_time
-            outcome = models.Outcome.objects.create(**outcome_data)
-            outcome.save()
 
         return visit
 

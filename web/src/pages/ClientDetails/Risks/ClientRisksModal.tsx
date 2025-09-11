@@ -32,14 +32,21 @@ interface IModalProps {
 }
 
 const ClientRisksModal = (props: IModalProps) => {
+    const goalOptions = riskDropdownOptions[riskTypeKeyMap[props.risk.risk_type]]?.goal || {};
+    const firstGoalOption = Object.values(goalOptions)[0] || "";
+
+    const requirementOptions =
+        riskDropdownOptions[riskTypeKeyMap[props.risk.risk_type]]?.requirement || {};
+    const firstRequirementOption = Object.values(requirementOptions)[0] || "";
+
     const { t } = useTranslation();
     const [openEditGoals, setOpenEditGoals] = useState<boolean>(false);
     const [editedRisk, setEditedRisk] = useState<IRisk>(() => {
         if (props.newGoal) {
             return {
                 ...props.risk,
-                goal_name: "",
-                requirement: "",
+                goal_name: firstGoalOption,
+                requirement: firstRequirementOption,
                 goal_status: OutcomeGoalMet.ONGOING,
                 cancellation_reason: "",
                 comments: RiskLevel.LOW,
@@ -197,16 +204,36 @@ const ClientRisksModal = (props: IModalProps) => {
                                             <ModalDropdown
                                                 name={FormField.requirement}
                                                 label={fieldLabels[FormField.requirement]}
-                                                options={riskDropdownOptions[riskTypeKeyMap[props.risk.risk_type]]?.requirement || {}}
-                                                isCustom={!Object.values(riskDropdownOptions[riskTypeKeyMap[props.risk.risk_type]].requirement).includes(props.risk.requirement)}
+                                                options={
+                                                    riskDropdownOptions[
+                                                        riskTypeKeyMap[props.risk.risk_type]
+                                                    ]?.requirement || {}
+                                                }
+                                                isCustom={
+                                                    !Object.values(
+                                                        riskDropdownOptions[
+                                                            riskTypeKeyMap[props.risk.risk_type]
+                                                        ].requirement
+                                                    ).includes(props.risk.requirement)
+                                                }
                                             />
                                         </Grid>
                                         <Grid item>
                                             <ModalDropdown
                                                 name={FormField.goal_name}
                                                 label={fieldLabels[FormField.goal_name]}
-                                                options={riskDropdownOptions[riskTypeKeyMap[props.risk.risk_type]]?.goal || {}}
-                                                isCustom={!Object.values(riskDropdownOptions[riskTypeKeyMap[props.risk.risk_type]].goal).includes(props.risk.goal_name)}
+                                                options={
+                                                    riskDropdownOptions[
+                                                        riskTypeKeyMap[props.risk.risk_type]
+                                                    ]?.goal || {}
+                                                }
+                                                isCustom={
+                                                    !Object.values(
+                                                        riskDropdownOptions[
+                                                            riskTypeKeyMap[props.risk.risk_type]
+                                                        ].goal
+                                                    ).includes(props.risk.goal_name)
+                                                }
                                             />
                                         </Grid>
                                     </Grid>

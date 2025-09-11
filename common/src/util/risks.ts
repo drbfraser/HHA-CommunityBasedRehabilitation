@@ -64,6 +64,7 @@ export let riskLevels: { [key: string]: IRiskLevel } = {};
 export let riskTypes: { [key: string]: IRiskType } = {};
 export let goalStatuses: { [key: string]: IGoalStatus } = {};
 export let riskDropdownOptions: { [key: string]: { requirement: { [key: string]: string }, goal: { [key: string]: string } } } = {};
+export let cancellationOptions: { [key: string]: string } = {};
 
 const refreshArrays = () => {
     riskLevels = {
@@ -137,6 +138,15 @@ const refreshArrays = () => {
     };
 
     // TODO: replace all of these below with translations once we have them
+
+    cancellationOptions = {
+        dead: "Patient has died",
+        moved: "Patient has moved away",
+        circumstances: "Patient's circumstances have changed",
+        abandoned: "Patient has abandoned this goal",
+        unwilling: "Patient is no longer willing to work with us",
+    };
+
     riskDropdownOptions = {
         health: {
             requirement: {

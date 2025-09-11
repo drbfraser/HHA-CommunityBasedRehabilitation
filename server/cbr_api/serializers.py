@@ -529,7 +529,6 @@ class OutstandingReferralSerializer(serializers.Serializer):
 
 
 class DetailedVisitSerializer(serializers.ModelSerializer):
-    print("---- CREATE is called 1 ----")
     improvements = ImprovementSerializer(many=True)
     outcomes = OutcomeSerializer(
         many=True, required=False, default=list, write_only=True
@@ -558,7 +557,6 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "user_id", "created_at"]
 
     def create(self, validated_data):
-        print("---- CREATE is called 2 ----")
         current_time = current_milli_time()
 
         improvement_dataset = validated_data.pop("improvements", [])

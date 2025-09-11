@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Button, Divider, HelperText, Text, TextInput, TouchableRipple } from "react-native-paper";
+import { Divider, HelperText, Text, TextInput } from "react-native-paper";
 import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
 import { FieldArray, Formik, FormikHelpers, FormikProps, getIn } from "formik";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
@@ -11,10 +11,7 @@ import {
     ImprovementFormField,
     initialValidationSchema,
     IRisk,
-    OutcomeFormField,
-    OutcomeGoalMet,
     provisionals,
-    riskLevels,
     themeColors,
     TZoneMap,
     useZones,
@@ -31,7 +28,6 @@ import { RouteProp } from "@react-navigation/native";
 import { handleSubmit } from "./formHandler";
 
 import useStyles, { defaultScrollViewProps, progressStepsStyle } from "./NewVisit.style";
-import useClientRiskStyles from "../ClientDetails/Risks/ClientRiskForm.styles";
 import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
@@ -41,9 +37,6 @@ import { modelName } from "../../models/constant";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";
-import GoalStatusChip from "@/src/components/GoalStatusChip/GoalStatusChip";
-import { ClientRiskFormModal } from "../ClientDetails/Risks/ClientRiskFormModal";
-import { riskStyles } from "../ClientDetails/Risks/ClientRisk.styles";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -149,168 +142,6 @@ const ImprovementField = (props: {
     );
 };
 
-const OutcomeField = (props: {
-    visitType: VisitFormField;
-    risks: IRisk[];
-    formikProps: FormikProps<any>;
-    setRisks: React.Dispatch<React.SetStateAction<IRisk[]>>;
-}) => {
-    const fieldName = `${VisitFormField.outcomes}.${props.visitType}`;
-    const styles = useStyles();
-    const clientRiskStyles = useClientRiskStyles();
-    const { t } = useTranslation();
-
-    // get Formik error values
-    const path = `${fieldName}.${OutcomeFormField.outcome}`;
-    const errorMessage = getIn(props.formikProps.errors, path);
-    const touched = getIn(props.formikProps.touched, path);
-    const matchingRisk = props.risks.find((r) => r.risk_type === (props.visitType as string));
-
-    const [showRiskModal, setShowRiskModal] = useState(false);
-    const [currentRisk, setCurrentRisk] = useState<IRisk | null>(null);
-
-    const openRiskModal = (risk: IRisk) => {
-        setCurrentRisk(risk);
-        setShowRiskModal(true);
-    };
-    const updateRiskInArray = (updatedRisk: IRisk) => {
-        props.setRisks((prevRisks) => [updatedRisk, ...prevRisks]);
-    };
-
-    return (
-        <View>
-            {matchingRisk && matchingRisk.goal_status === OutcomeGoalMet.NOTSET ? (
-                <>
-                    <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
-                        {t("general.goal")}
-                    </Text>
-                    <Text style={styles.normalInput}>{matchingRisk?.goal_name}</Text>
-                    <Button
-                        onPress={() => {
-                            openRiskModal(matchingRisk);
-                        }}
-                        mode={"contained"}
-                    >
-                        {t("goals.createNew")} {visitFieldLabels[props.visitType]}{" "}
-                        {t("general.goal")}
-                    </Button>
-                </>
-            ) : matchingRisk &&
-              (matchingRisk.goal_status === OutcomeGoalMet.CONCLUDED ||
-                  matchingRisk.goal_status === OutcomeGoalMet.CANCELLED) ? (
-                <>
-                    <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
-                        {t("general.goal")}
-                    </Text>
-                    <Text style={styles.normalInput}>{t("goals.noCurrentOngoingGoals")}</Text>
-                    <Button
-                        onPress={() => {
-                            openRiskModal(matchingRisk);
-                        }}
-                        mode={"contained"}
-                    >
-                        {t("goals.createNew")} {visitFieldLabels[props.visitType]}{" "}
-                        {t("general.goal")}
-                    </Button>
-                </>
-            ) : matchingRisk ? (
-                <>
-                    <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
-                        {t("risks.riskLevel")}
-                    </Text>
-                    <Text
-                        style={
-                            riskStyles(riskLevels[matchingRisk?.risk_level].color).riskSubtitleStyle
-                        }
-                    >
-                        {riskLevels[matchingRisk?.risk_level].name}
-                    </Text>
-                    <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
-                        {t("general.goal")}
-                    </Text>
-                    <Text style={styles.normalInput}>{matchingRisk?.goal_name}</Text>
-                    <View style={clientRiskStyles.goalStatusContainer}>
-                        <Text style={clientRiskStyles.goalStatusText}>
-                            {t("goals.goalStatus")}:
-                        </Text>
-                        <TouchableRipple>
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <GoalStatusChip goalStatus={matchingRisk.goal_status} />
-                            </View>
-                        </TouchableRipple>
-                    </View>
-                    <Text style={styles.pickerQuestion}>
-                        {t("newVisit.clients")} {visitFieldLabels[props.visitType]}{" "}
-                        {t("general.goal")} {t("risks.requirements")}
-                    </Text>
-                    <Text style={styles.normalInput}>{matchingRisk?.requirement}</Text>
-                    <Button
-                        onPress={() => {
-                            openRiskModal(matchingRisk);
-                        }}
-                        mode={"contained"}
-                    >
-                        {t("general.update")} {visitFieldLabels[props.visitType]}{" "}
-                        {t("general.goal")}
-                    </Button>
-                </>
-            ) : null}
-
-            <View>
-                <Text style={styles.pickerQuestion}>{t("newVisit.outcomeOfGoal")}</Text>
-                <TextInput
-                    mode="outlined"
-                    label={visitFieldLabels[OutcomeFormField.outcome] + "*"}
-                    value={
-                        props.formikProps.values[VisitFormField.outcomes][props.visitType][
-                            OutcomeFormField.outcome
-                        ]
-                    }
-                    error={!!errorMessage && !!touched}
-                    onChangeText={(value) => {
-                        props.formikProps.setFieldTouched(
-                            `${fieldName}.${OutcomeFormField.outcome}`,
-                            true
-                        );
-                        props.formikProps.setFieldValue(
-                            `${fieldName}.${OutcomeFormField.outcome}`,
-                            value
-                        );
-                    }}
-                />
-                <HelperText
-                    style={styles.errorText}
-                    type="error"
-                    visible={!!errorMessage && !!touched}
-                >
-                    {errorMessage}
-                </HelperText>
-            </View>
-            {currentRisk && (
-                <ClientRiskFormModal
-                    riskData={currentRisk}
-                    setRisk={(updated) => {
-                        setCurrentRisk(updated);
-                        updateRiskInArray(updated);
-                    }}
-                    riskType={currentRisk.risk_type}
-                    showModal={showRiskModal}
-                    setShowModal={setShowRiskModal}
-                />
-            )}
-        </View>
-    );
-};
-
 const visitReasonStepCallBack =
     (setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>, zones: TZoneMap) =>
     ({ formikProps }: IFormProps) =>
@@ -324,7 +155,7 @@ const VisitFocusForm = (
     const { t } = useTranslation();
     const styles = useStyles();
 
-    const onCheckboxChange = (checked: boolean, visitType: string) => {
+    const onCheckboxChange = (checked: boolean, visitType: VisitFormField) => {
         setEnabledSteps(
             visitTypes.filter(
                 (type) =>
@@ -334,15 +165,26 @@ const VisitFocusForm = (
         );
 
         if (checked) {
-            formikProps.setFieldValue(`${VisitFormField.outcomes}.${visitType}`, {
-                [OutcomeFormField.riskType]: visitType,
-                [OutcomeFormField.goalStatus]: GoalStatus.ongoing,
-                [OutcomeFormField.outcome]: "",
-            });
+            // Seed improvements for this visit type from provisionals (string list)
+            const providedList: string[] = provisionals[visitType] ?? [];
+            const seeded = providedList.map((provided) => ({
+                [ImprovementFormField.enabled]: false,
+                [ImprovementFormField.description]: "",
+                [ImprovementFormField.riskType]: visitType,
+                [ImprovementFormField.provided]: provided,
+            }));
+
+            // Ensure the parent object exists, then set the array
+            if (!formikProps.values[VisitFormField.improvements]) {
+                formikProps.setFieldValue(VisitFormField.improvements, {});
+            }
+            formikProps.setFieldValue(`${VisitFormField.improvements}.${visitType}`, seeded);
         } else {
-            formikProps.setFieldValue(`${VisitFormField.outcomes}.${visitType}`, undefined);
+            // Clear on uncheck to avoid stale payload
+            formikProps.setFieldValue(`${VisitFormField.improvements}.${visitType}`, []);
         }
     };
+
     return (
         <View>
             <Text style={styles.pickerQuestion}>{t("newVisit.whereVisit")} </Text>

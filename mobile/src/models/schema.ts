@@ -1,7 +1,6 @@
 import {
     AdminField,
     ImprovementFormField,
-    OutcomeFormField,
     VisitField,
     BaseSurveyField,
     ReferralField,
@@ -191,9 +190,9 @@ export default appSchema({
             name: modelName.outcomes,
             columns: [
                 { name: tableKey.visit_id, type: "string", isIndexed: true },
-                { name: OutcomeFormField.riskType, type: "string" },
-                { name: OutcomeFormField.goalStatus, type: "string" },
-                { name: OutcomeFormField.outcome, type: "string" },
+                { name: "risk_type", type: "string" }, // was OutcomeFormField.riskType
+                { name: "goal_status", type: "string" }, // was OutcomeFormField.goalStatus
+                { name: "outcome", type: "string" }, // was OutcomeFormField.outcome
             ],
         }),
         tableSchema({

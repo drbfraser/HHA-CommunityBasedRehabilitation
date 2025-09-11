@@ -7,7 +7,6 @@ import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import {
     APIFetchFailError,
     countObjectKeys,
-    GoalStatus,
     ImprovementFormField,
     initialValidationSchema,
     IRisk,
@@ -63,10 +62,10 @@ const ImprovementField = (props: {
     index: number;
 }) => {
     const fieldName = `${VisitFormField.improvements}.${props.visitType}.${props.index}`;
-    const isImprovementEnabled =
-        props.formikProps.values[VisitFormField.improvements][props.visitType][props.index]?.[
-            ImprovementFormField.enabled
-        ] === true;
+    const section =
+        props.formikProps.values?.[VisitFormField.improvements]?.[props.visitType] ?? [];
+    const item = section[props.index];
+    const isImprovementEnabled = item?.[ImprovementFormField.enabled] === true;
     const styles = useStyles();
     useEffect(() => {
         if (
@@ -259,13 +258,6 @@ const VisitTypeStep = (
                             />
                         ))
                     }
-                />
-
-                <OutcomeField
-                    visitType={visitType}
-                    risks={risks}
-                    formikProps={formikProps}
-                    setRisks={setRisks}
                 />
             </View>
         );

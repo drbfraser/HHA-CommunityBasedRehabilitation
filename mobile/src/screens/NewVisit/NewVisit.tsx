@@ -353,6 +353,7 @@ const NewVisit = (props: INewVisitProps) => {
 
         if (isFinalStep) {
             setSaveError(undefined);
+            console.log("submitting visit, client id:", values[VisitFormField.client_id]);
             handleSubmit(values, helpers, user!.id, database, autoSync, cellularSync)
                 .then(() => {
                     setHasSubmitted(true);
@@ -369,9 +370,6 @@ const NewVisit = (props: INewVisitProps) => {
                 });
             setCheckedSteps([]);
         } else {
-            if (activeStep === 0) {
-                helpers.setFieldValue(`${[VisitFormField.client_id]}`, `${clientId}`);
-            }
             if (!checkedSteps.includes(enabledSteps[activeStep - 1])) {
                 checkedSteps.push(enabledSteps[activeStep - 1]);
             }
@@ -391,7 +389,7 @@ const NewVisit = (props: INewVisitProps) => {
                 dialogContent={t("newVisit.discardNewVisit")}
             />
             <Formik
-                initialValues={visitInitialValues}
+                initialValues={{ ...visitInitialValues, [VisitFormField.client_id]: clientId }}
                 validationSchema={visitSteps[activeStep].validationSchema}
                 onSubmit={nextStep}
                 enableReinitialize

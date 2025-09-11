@@ -1,5 +1,5 @@
 import { FormikHelpers } from "formik";
-import { TVisitFormValues } from "@cbr/common/src/forms/newVisit/visitFormFields";
+import { TVisitFormValues, VisitFormField } from "@cbr/common/src/forms/newVisit/visitFormFields";
 import { dbType } from "../../util/watermelonDatabase";
 import { modelName } from "../../models/constant";
 import { AutoSyncDB } from "../../util/syncHandler";
@@ -19,7 +19,10 @@ export const handleSubmit = async (
     helpers.setSubmitting(true);
     try {
         const currentUser = await database.get(modelName.users).find(userID);
-        const currentClient: any = await database.get(modelName.clients).find(values.client);
+        console.log("client id", values[VisitFormField.client_id]);
+        const currentClient: any = await database
+            .get(modelName.clients)
+            .find(values[VisitFormField.client_id]);
 
         let visit: any;
 

@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
 
     # Update this dependency to the latest migration in cbr_api
     dependencies = [
-        ("cbr_api", "00xx_previous_migration_name"),
+        ("cbr_api", "0070_merge_20250707_2016"),
     ]
 
     # If you expect very large tables and want partial commits per batch, you can set:

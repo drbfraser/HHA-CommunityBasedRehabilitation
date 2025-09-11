@@ -529,10 +529,8 @@ class OutstandingReferralSerializer(serializers.Serializer):
 
 
 class DetailedVisitSerializer(serializers.ModelSerializer):
-    improvements = ImprovementSerializer(many=True)
-    outcomes = OutcomeSerializer(
-        many=True, required=False, default=list, write_only=True
-    )
+    # Make improvements optional if you want to allow visits with none
+    improvements = ImprovementSerializer(many=True, required=False, default=list)
 
     class Meta:
         model = models.Visit
@@ -551,44 +549,46 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             "zone",
             "village",
             "improvements",
-            "outcomes",
         ]
-
         read_only_fields = ["id", "user_id", "created_at"]
+
+    def validate(self, attrs):
+        # Helpful error if an old client still sends `outcomes`
+        if "outcomes" in getattr(self, "initial_data", {}):
+            raise serializers.ValidationError(
+                {
+                    "outcomes": "This API no longer accepts 'outcomes'. Use 'improvements' instead."
+                }
+            )
+        return super().validate(attrs)
 
     def create(self, validated_data):
         current_time = current_milli_time()
+        imps = validated_data.pop("improvements", [])
 
-        improvement_dataset = validated_data.pop("improvements", [])
-        outcome_dataset = validated_data.pop("outcomes", [])
-        # handle legacy outcome data by converting them to improvement records
-        for o in outcome_dataset:
-            improvement_dataset.append(
-                {
-                    "risk_type": o.get("risk_type"),
-                    "provided": "legacy_outcome",
-                    "desc": o.get("outcome", ""),
-                }
-            )
+        visit = models.Visit.objects.create(
+            id=uuid.uuid4(),
+            user_id=self.context["request"].user,
+            created_at=current_time,
+            server_created_at=current_time,
+            **validated_data,
+        )
 
-        validated_data["id"] = uuid.uuid4()
-        validated_data["user_id"] = self.context["request"].user
-        validated_data["created_at"] = current_time
-        validated_data["server_created_at"] = current_time
-        visit = models.Visit.objects.create(**validated_data)
-        visit.save()
-
-        client = validated_data["client_id"]
-        client.last_visit_date = current_time
-        client.save()
-
-        for improvement_data in improvement_dataset:
-            improvement_data["id"] = uuid.uuid4()
-            improvement_data["visit_id"] = visit
-            improvement_data["created_at"] = current_time
-            improvement_data["server_created_at"] = current_time
-            improvement = models.Improvement.objects.create(**improvement_data)
-            improvement.save()
+        if imps:
+            to_create = []
+            for imp in imps:
+                to_create.append(
+                    models.Improvement(
+                        id=str(uuid.uuid4()),
+                        visit_id=visit,
+                        risk_type=imp["risk_type"],
+                        provided=imp["provided"],
+                        desc=imp.get("desc", ""),
+                        created_at=current_time,
+                        server_created_at=current_time,
+                    )
+                )
+            models.Improvement.objects.bulk_create(to_create)
 
         return visit
 

@@ -4,6 +4,7 @@ from django.db import migrations
 # that will display best in your UI (e.g., "Outcome" or "legacy_outcome" or "Other").
 PROVIDED_LABEL_FOR_LEGACY = "Outcome"  # <= 50 chars (fits Improvement.provided)
 
+
 def forwards(apps, schema_editor):
     Outcome = apps.get_model("cbr_api", "Outcome")
     Improvement = apps.get_model("cbr_api", "Improvement")
@@ -50,11 +51,13 @@ def forwards(apps, schema_editor):
             to_create, ignore_conflicts=True
         )
 
+
 def backwards(apps, schema_editor):
     # Delete only the improvements we created (those with our deterministic id prefix)
     Improvement = apps.get_model("cbr_api", "Improvement")
     db_alias = schema_editor.connection.alias
     Improvement.objects.using(db_alias).filter(id__startswith="migr_").delete()
+
 
 class Migration(migrations.Migration):
 

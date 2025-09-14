@@ -19,12 +19,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 
 import { timestampToDateTime } from "@cbr/common/util/dates";
-import {
-    getTranslatedImprovementName,
-    IVisit,
-    IVisitSummary,
-    outcomeGoalMets,
-} from "@cbr/common/util/visits";
+import { getTranslatedImprovementName, IVisit, IVisitSummary } from "@cbr/common/util/visits";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { RiskType } from "@cbr/common/util/risks";
 import { useZones } from "@cbr/common/util/hooks/zones";

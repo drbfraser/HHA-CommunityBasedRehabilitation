@@ -408,23 +408,6 @@ class Referral(models.Model):
     services_other = models.CharField(max_length=100, blank=True)
 
 
-class Outcome(models.Model):
-    # class Goal(models.TextChoices):
-    #     CANCELLED = "CAN", _("Cancelled")
-    #     ONGOING = "GO", _("Ongoing")
-    #     CONCLUDED = "CON", _("Concluded")
-
-    id = models.CharField(primary_key=True, max_length=100)
-    visit_id = models.ForeignKey(
-        Visit, related_name="outcomes", on_delete=models.CASCADE
-    )
-    risk_type = RiskType.getField()
-    goal_met = models.CharField(max_length=3, choices=GoalOutcomes.choices)
-    outcome = models.TextField(blank=True)
-    created_at = models.BigIntegerField(default=current_milli_time)
-    server_created_at = models.BigIntegerField(default=current_milli_time)
-
-
 class Improvement(models.Model):
     id = models.CharField(primary_key=True, max_length=100)
     visit_id = models.ForeignKey(

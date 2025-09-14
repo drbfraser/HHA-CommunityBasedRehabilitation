@@ -425,7 +425,6 @@ def sync(request):
         reply.changes["referrals"] = get_model_changes(request, models.Referral)
         reply.changes["surveys"] = get_model_changes(request, models.BaselineSurvey)
         reply.changes["visits"] = get_model_changes(request, models.Visit)
-        reply.changes["outcomes"] = get_model_changes(request, models.Outcome)
         reply.changes["improvements"] = get_model_changes(request, models.Improvement)
         reply.changes["alert"] = get_model_changes(request, models.Alert)
         serialized = serializers.pullResponseSerializer(reply)
@@ -492,14 +491,13 @@ def sync(request):
         else:
             validation_fail(visit_serializer)
 
-        outcome_improvment_serializer = serializers.pushOutcomeImprovementSerializer(
-            data=request.data,
-            context={"sync_time": sync_time},
+        improvements_serializer = serializers.pushImprovementsSerializer(
+            data=request.data, context={"sync_time": sync_time}
         )
-        if outcome_improvment_serializer.is_valid():
-            outcome_improvment_serializer.save()
+        if improvements_serializer.is_valid():
+            improvements_serializer.save()
         else:
-            validation_fail(outcome_improvment_serializer)
+            validation_fail(improvements_serializer)
 
         destringify_unread_users(request.data)
         string_of_id_to_dictionary(request.data, "alert")

@@ -362,34 +362,6 @@ class ImprovementSyncSerializer(serializers.ModelSerializer):
         fields = ["id", "visit_id", "risk_type", "provided", "desc", "created_at"]
 
 
-class OutcomeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Outcome
-        fields = [
-            "id",
-            "visit_id",
-            "risk_type",
-            "goal_met",
-            "outcome",
-            "created_at",
-        ]
-
-        read_only_fields = ["visit_id", "created_at"]
-
-
-class OutcomeSyncSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Outcome
-        fields = [
-            "id",
-            "visit_id",
-            "risk_type",
-            "goal_met",
-            "outcome",
-            "created_at",
-        ]
-
-
 class UpdateReferralSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Referral
@@ -1112,16 +1084,23 @@ class multiVisitSerializer(serializers.Serializer):
     deleted = SummaryVisitSerializer(many=True)
 
 
-class multiOutcomeSerializer(serializers.Serializer):
-    created = OutcomeSyncSerializer(many=True)
-    updated = OutcomeSyncSerializer(many=True)
-    deleted = OutcomeSyncSerializer(many=True)
-
-
-class multiImprovSerializer(serializers.Serializer):
+class multiImprovementSerializer(serializers.Serializer):
     created = ImprovementSyncSerializer(many=True)
     updated = ImprovementSyncSerializer(many=True)
     deleted = ImprovementSyncSerializer(many=True)
+
+
+class pushImprovementsSerializer(serializers.Serializer):
+    improvements = multiImprovementSerializer()
+
+    def create(self, validated_data):
+        create_generic_data(
+            "improvements",
+            models.Improvement,
+            validated_data,
+            self.context.get("sync_time"),
+        )
+        return self
 
 
 class multiReferralSerializer(serializers.Serializer):
@@ -1144,8 +1123,7 @@ class tableSerializer(serializers.Serializer):
     referrals = multiReferralSerializer()
     surveys = multiBaselineSurveySerializer()
     visits = multiVisitSerializer()
-    outcomes = multiOutcomeSerializer()
-    improvements = multiImprovSerializer()
+    improvements = multiImprovementSerializer()
     alert = multiAlertSerializer()
 
 
@@ -1186,23 +1164,6 @@ class pushVisitSerializer(serializers.Serializer):
     def create(self, validated_data):
         create_generic_data(
             "visits", models.Visit, validated_data, self.context.get("sync_time")
-        )
-        return self
-
-
-class pushOutcomeImprovementSerializer(serializers.Serializer):
-    outcomes = multiOutcomeSerializer()
-    improvements = multiImprovSerializer()
-
-    def create(self, validated_data):
-        create_generic_data(
-            "outcomes", models.Outcome, validated_data, self.context.get("sync_time")
-        )
-        create_generic_data(
-            "improvements",
-            models.Improvement,
-            validated_data,
-            self.context.get("sync_time"),
         )
         return self
 

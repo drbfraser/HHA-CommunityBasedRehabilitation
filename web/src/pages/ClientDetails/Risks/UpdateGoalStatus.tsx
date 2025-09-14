@@ -18,6 +18,7 @@ import { Field, Form, Formik, FieldProps, FormikProps } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import ModalDropdown from "./ModalDropdown";
+import { validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
 
 interface IModalProps {
     risk: IRisk;
@@ -61,10 +62,11 @@ export default function UpdateGoalStatus(props: IModalProps) {
             enableReinitialize
             initialValues={{
                 ...props.risk,
-                cancellation_reason: props.risk.cancellation_reason || cancellationOptions.dead,
+                cancellation_reason: "",
             }}
+            validationSchema={validationSchema}
         >
-            {({ isSubmitting, values }: FormikProps<IRisk>) => {
+            {({ isSubmitting, values, errors, touched }: FormikProps<IRisk>) => {
                 return (
                     <Dialog fullWidth open={true} aria-labelledby="form-dialog-title">
                         <Form>
@@ -107,8 +109,10 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                                         isCustom={
                                                             !Object.values(
                                                                 cancellationOptions
-                                                            ).includes(values.cancellation_reason)
+                                                            ).includes(values.cancellation_reason) && values.cancellation_reason !== ""
                                                         }
+                                                        error={errors.cancellation_reason}
+                                                        touched={touched.cancellation_reason}
                                                     />
                                                 </Grid>
                                             )}

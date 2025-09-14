@@ -32,21 +32,14 @@ interface IModalProps {
 }
 
 const ClientRisksModal = (props: IModalProps) => {
-    const goalOptions = riskDropdownOptions[riskTypeKeyMap[props.risk.risk_type]]?.goal || {};
-    const firstGoalOption = Object.values(goalOptions)[0] || "";
-
-    const requirementOptions =
-        riskDropdownOptions[riskTypeKeyMap[props.risk.risk_type]]?.requirement || {};
-    const firstRequirementOption = Object.values(requirementOptions)[0] || "";
-
     const { t } = useTranslation();
     const [openEditGoals, setOpenEditGoals] = useState<boolean>(false);
     const [editedRisk, setEditedRisk] = useState<IRisk>(() => {
         if (props.newGoal) {
             return {
                 ...props.risk,
-                goal_name: firstGoalOption,
-                requirement: firstRequirementOption,
+                goal_name: "",
+                requirement: "",
                 goal_status: OutcomeGoalMet.ONGOING,
                 cancellation_reason: "",
                 comments: RiskLevel.LOW,
@@ -134,7 +127,7 @@ const ClientRisksModal = (props: IModalProps) => {
                 initialValues={editedRisk}
                 validationSchema={validationSchema}
             >
-                {({ isSubmitting, values }: FormikProps<IRisk>) => {
+                {({ isSubmitting, values, errors, touched }: FormikProps<IRisk>) => {
                     const handleEditGoalsClick = () => {
                         setEditedRisk(values);
                         setOpenEditGoals(true);
@@ -214,8 +207,10 @@ const ClientRisksModal = (props: IModalProps) => {
                                                         riskDropdownOptions[
                                                             riskTypeKeyMap[props.risk.risk_type]
                                                         ].requirement
-                                                    ).includes(props.risk.requirement)
+                                                    ).includes(editedRisk.requirement) && editedRisk.requirement !== ""
                                                 }
+                                                error={errors.requirement}
+                                                touched={touched.requirement}
                                             />
                                         </Grid>
                                         <Grid item>
@@ -232,8 +227,10 @@ const ClientRisksModal = (props: IModalProps) => {
                                                         riskDropdownOptions[
                                                             riskTypeKeyMap[props.risk.risk_type]
                                                         ].goal
-                                                    ).includes(props.risk.goal_name)
+                                                    ).includes(editedRisk.goal_name) && editedRisk.goal_name !== ""
                                                 }
+                                                error={errors.goal_name}
+                                                touched={touched.goal_name}
                                             />
                                         </Grid>
                                     </Grid>

@@ -7,9 +7,11 @@ interface IModalDropdownProps {
     label: string;
     options: Record<string, string>;
     isCustom: boolean;
+    error?: string | false;
+    touched?: boolean;
 }
 
-const ModalDropdown = ({ name, label, options, isCustom }: IModalDropdownProps) => {
+const ModalDropdown = ({ name, label, options, isCustom, error, touched }: IModalDropdownProps) => {
     const [showOther, setShowOther] = useState(isCustom);
 
     return (
@@ -33,6 +35,8 @@ const ModalDropdown = ({ name, label, options, isCustom }: IModalDropdownProps) 
                                 form.setFieldValue(name, val);
                             }
                         }}
+                        error={!showOther && Boolean(error && touched)}
+                        helperText={!showOther && touched && error}
                     >
                         {Object.entries(options).map(([key, value]) => (
                             <MenuItem key={key} value={value}>
@@ -51,6 +55,8 @@ const ModalDropdown = ({ name, label, options, isCustom }: IModalDropdownProps) 
                             label=""
                             value={field.value || ""}
                             onChange={(e) => form.setFieldValue(name, e.target.value)}
+                            error={Boolean(error && touched)}
+                            helperText={touched && error}
                         />
                     )}
                 </>

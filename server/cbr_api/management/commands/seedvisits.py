@@ -1,14 +1,12 @@
 import uuid
 from django.core.management.base import BaseCommand
 from cbr_api import models
-import time
 import random
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        results = ["CAN", "GO", "CON"]
-        outcomes = [
+        outcomes_texts = [
             "Full Recovery",
             "Partial Recovery",
             "No Improvement",
@@ -42,18 +40,18 @@ class Command(BaseCommand):
                 desc="Provided the client with additional services and assistance to improve their health, social, educational, mental and nutritional conditions.",
             )
 
-        def createOutcome(self, visit, type, date):
-            return models.Outcome.objects.create(
+        def create_outcome_as_improvement(self, visit, type, date):
+            return models.Improvement.objects.create(
                 id=uuid.uuid4(),
                 visit_id=visit,
                 risk_type=type,
                 created_at=date,
                 server_created_at=date,
-                goal_met=random.choice(results),
-                outcome=random.choice(outcomes),
+                provided="Outcome",
+                desc=random.choice(outcomes_texts),
             )
 
-        def createVisit(self, health, social, educat, nutrit, mental, type, village):
+        def create_visit(self, health, social, educat, nutrit, mental, type, village):
             client = random.choice(clients)
 
             date_visited = random.randint(
@@ -80,8 +78,8 @@ class Command(BaseCommand):
                 nutrit_visit=nutrit,
                 mental_visit=mental,
             )
-            visit.improvements.add(createImprovement(self, visit, type, date_visited))
-            visit.outcomes.add(createOutcome(self, visit, type, date_visited))
+            createImprovement(self, visit, type, date_visited)
+            create_outcome_as_improvement(self, visit, type, date_visited)
             return visit
 
         if models.Visit.objects.all().count() > 0:
@@ -112,22 +110,22 @@ class Command(BaseCommand):
             )
             return
 
-        createVisit(self, True, False, False, False, False, "HEALTH", "#1")
-        createVisit(self, False, True, False, False, False, "SOCIAL", "#2")
-        createVisit(self, False, False, True, False, False, "EDUCAT", "#3")
-        createVisit(self, False, False, False, True, False, "NUTRIT", "#4")
-        createVisit(self, False, False, False, False, True, "MENTAL", "#5")
+        create_visit(self, True, False, False, False, False, "HEALTH", "#1")
+        create_visit(self, False, True, False, False, False, "SOCIAL", "#2")
+        create_visit(self, False, False, True, False, False, "EDUCAT", "#3")
+        create_visit(self, False, False, False, True, False, "NUTRIT", "#4")
+        create_visit(self, False, False, False, False, True, "MENTAL", "#5")
 
-        createVisit(self, True, False, False, False, False, "HEALTH", "#6")
-        createVisit(self, False, True, False, False, False, "SOCIAL", "#7")
-        createVisit(self, False, False, True, False, False, "EDUCAT", "#8")
-        createVisit(self, False, False, False, True, False, "NUTRIT", "#9")
-        createVisit(self, False, False, False, False, True, "MENTAL", "#1")
+        create_visit(self, True, False, False, False, False, "HEALTH", "#6")
+        create_visit(self, False, True, False, False, False, "SOCIAL", "#7")
+        create_visit(self, False, False, True, False, False, "EDUCAT", "#8")
+        create_visit(self, False, False, False, True, False, "NUTRIT", "#9")
+        create_visit(self, False, False, False, False, True, "MENTAL", "#1")
 
-        createVisit(self, True, False, False, False, False, "HEALTH", "#2")
-        createVisit(self, False, True, False, False, False, "SOCIAL", "#3")
-        createVisit(self, False, False, True, False, False, "EDUCAT", "#4")
-        createVisit(self, False, False, False, True, False, "NUTRIT", "#5")
-        createVisit(self, False, False, False, False, True, "MENTAL", "#6")
+        create_visit(self, True, False, False, False, False, "HEALTH", "#2")
+        create_visit(self, False, True, False, False, False, "SOCIAL", "#3")
+        create_visit(self, False, False, True, False, False, "EDUCAT", "#4")
+        create_visit(self, False, False, False, True, False, "NUTRIT", "#5")
+        create_visit(self, False, False, False, False, True, "MENTAL", "#6")
 
         self.stdout.write(self.style.SUCCESS("Visits successfully created!"))

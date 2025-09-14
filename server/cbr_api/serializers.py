@@ -552,16 +552,6 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id", "user_id", "created_at"]
 
-    def validate(self, attrs):
-        # Helpful error if an old client still sends `outcomes`
-        if "outcomes" in getattr(self, "initial_data", {}):
-            raise serializers.ValidationError(
-                {
-                    "outcomes": "This API no longer accepts 'outcomes'. Use 'improvements' instead."
-                }
-            )
-        return super().validate(attrs)
-
     def create(self, validated_data):
         current_time = current_milli_time()
         imps = validated_data.pop("improvements", [])

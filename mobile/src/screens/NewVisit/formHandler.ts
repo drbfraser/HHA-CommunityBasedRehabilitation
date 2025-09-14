@@ -1,25 +1,30 @@
 import { FormikHelpers } from "formik";
-import { TVisitFormValues, VisitFormField } from "@cbr/common/src/forms/newVisit/visitFormFields";
+import {
+    ImprovementFormField,
+    TVisitFormValues,
+    VisitFormField,
+} from "@cbr/common/src/forms/newVisit/visitFormFields";
 import { dbType } from "../../util/watermelonDatabase";
 import { modelName } from "../../models/constant";
 import { AutoSyncDB } from "../../util/syncHandler";
-
-type RiskCode = "HEALTH" | "EDUCAT" | "SOCIAL" | "NUTRIT" | "MENTAL";
-
-const RISK_TYPES: RiskCode[] = ["HEALTH", "EDUCAT", "SOCIAL", "NUTRIT", "MENTAL"];
+import { Q } from "@nozbe/watermelondb";
 
 export const handleSubmit = async (
     values: TVisitFormValues,
     helpers: FormikHelpers<TVisitFormValues>,
-    userID: string,
+    userUsername: string,
     database: dbType,
     autoSync: boolean,
     cellularSync: boolean
 ) => {
     helpers.setSubmitting(true);
     try {
-        const currentUser = await database.get(modelName.users).find(userID);
-        console.log("client id", values[VisitFormField.client_id]);
+        const currentUser = await database
+            .get(modelName.users)
+            .query(Q.where("username", userUsername))
+            .fetch()
+            .then((users) => users[0]);
+        if (!currentUser) throw new Error("Current user not found: " + userUsername);
         const currentClient: any = await database
             .get(modelName.clients)
             .find(values[VisitFormField.client_id]);
@@ -48,29 +53,21 @@ export const handleSubmit = async (
 
         // 3) Persist enabled improvements only (no outcomes)
         //    values.improvements.<RISK> is an array of { enabled, provided, desc, risk_type }
-        type Improvement = {
-            enabled: boolean;
-            provided?: string;
-            description?: string;
-            risk_type?: RiskCode;
-        };
-
+        const RISK_TYPES = ["HEALTH", "EDUCAT", "SOCIAL", "NUTRIT", "MENTAL"] as const;
         for (const risk of RISK_TYPES) {
-            const enabledForRisk = Array.isArray(values.improvements?.[risk])
-                ? (values.improvements[risk] as Improvement[]).filter(
-                      (imp) => imp?.enabled === true
-                  )
-                : [];
+            const arr = values.improvements?.[risk] as Array<{ [key: string]: any }> | undefined;
+            if (!Array.isArray(arr)) continue;
 
-            if (!enabledForRisk.length) continue;
+            const enabledOnly = arr.filter((imp) => imp?.[ImprovementFormField.enabled] === true);
 
             await database.write(async () => {
-                for (const imp of enabledForRisk) {
+                for (const imp of enabledOnly) {
                     await database.get(modelName.improvements).create((rec: any) => {
                         rec.visit.set(visit);
-                        rec.risk_type = risk; // matches backend enum values
-                        rec.provided = imp.provided ?? ""; // <= 50 chars in backend
-                        rec.desc = imp.description ?? ""; // mobile uses "description" in the form
+                        rec.risk_type = risk;
+                        rec.provided = imp?.[ImprovementFormField.provided] ?? imp?.provided ?? "";
+                        rec.desc =
+                            imp?.[ImprovementFormField.description] /* "desc" */ ?? imp?.desc ?? "";
                     });
                 }
             });

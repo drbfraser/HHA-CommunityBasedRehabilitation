@@ -353,8 +353,7 @@ const NewVisit = (props: INewVisitProps) => {
 
         if (isFinalStep) {
             setSaveError(undefined);
-            console.log("submitting visit, client id:", values[VisitFormField.client_id]);
-            handleSubmit(values, helpers, user!.id, database, autoSync, cellularSync)
+            handleSubmit(values, helpers, user!.username, database, autoSync, cellularSync)
                 .then(() => {
                     setHasSubmitted(true);
                     props.navigation.navigate(StackScreenName.CLIENT, {

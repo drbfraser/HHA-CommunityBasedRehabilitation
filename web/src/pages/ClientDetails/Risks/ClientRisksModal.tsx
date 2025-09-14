@@ -119,7 +119,6 @@ const ClientRisksModal = (props: IModalProps) => {
 
             <Formik
                 onSubmit={(values) => {
-                    console.log("values", values);
                     handleSubmit(values, props.risk, props.setRisk);
                     props.close();
                 }}
@@ -207,7 +206,8 @@ const ClientRisksModal = (props: IModalProps) => {
                                                         riskDropdownOptions[
                                                             riskTypeKeyMap[props.risk.risk_type]
                                                         ].requirement
-                                                    ).includes(editedRisk.requirement) && editedRisk.requirement !== ""
+                                                    ).includes(editedRisk.requirement) &&
+                                                    editedRisk.requirement !== ""
                                                 }
                                                 error={errors.requirement}
                                                 touched={touched.requirement}
@@ -227,7 +227,8 @@ const ClientRisksModal = (props: IModalProps) => {
                                                         riskDropdownOptions[
                                                             riskTypeKeyMap[props.risk.risk_type]
                                                         ].goal
-                                                    ).includes(editedRisk.goal_name) && editedRisk.goal_name !== ""
+                                                    ).includes(editedRisk.goal_name) &&
+                                                    editedRisk.goal_name !== ""
                                                 }
                                                 error={errors.goal_name}
                                                 touched={touched.goal_name}

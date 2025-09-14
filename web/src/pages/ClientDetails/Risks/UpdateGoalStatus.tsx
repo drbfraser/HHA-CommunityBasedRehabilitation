@@ -109,7 +109,9 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                                         isCustom={
                                                             !Object.values(
                                                                 cancellationOptions
-                                                            ).includes(values.cancellation_reason) && values.cancellation_reason !== ""
+                                                            ).includes(
+                                                                values.cancellation_reason
+                                                            ) && values.cancellation_reason !== ""
                                                         }
                                                         error={errors.cancellation_reason}
                                                         touched={touched.cancellation_reason}

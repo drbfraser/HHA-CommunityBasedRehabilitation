@@ -25,7 +25,7 @@ const WheelchairForm = ({ formikProps }: IFormProps) => {
     return (
         <Container>
             <div>
-                <FormLabel>{t("referral.whatTypeOfWheelchair")}?</FormLabel>
+                <FormLabel>{t("referral.whatTypeOfWheelchair")}</FormLabel>
                 <Field
                     component={RadioGroup}
                     name={ReferralFormField.wheelchairExperience}
@@ -47,7 +47,7 @@ const WheelchairForm = ({ formikProps }: IFormProps) => {
             </div>
 
             <div>
-                <FormLabel>{t("referral.clientHipWidth")}?</FormLabel>
+                <FormLabel>{t("referral.clientHipWidth")}</FormLabel>
                 <Styled.FieldIndent>
                     <Field
                         sx={{ maxWidth: "160px" }}

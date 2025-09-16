@@ -21,7 +21,7 @@ const ProstheticOrthoticForm = (props: IFormProps, serviceType: ReferralFormFiel
 
     return (
         <div>
-            <FormLabel>{t("referral.whereIsInjury")}?</FormLabel>
+            <FormLabel>{t("referral.whereIsInjury")}</FormLabel>
             <Field
                 component={RadioGroup}
                 name={`${serviceType}_injury_location`}

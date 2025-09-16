@@ -21,7 +21,7 @@ const NutritionForm = (props: IFormProps) => {
 
     return (
         <>
-            <FormLabel>{t("referral.whatDoesClientNeed")}?</FormLabel>
+            <FormLabel>{t("referral.whatDoesClientNeed")}</FormLabel>
             <FieldContainer>
                 <Field
                     component={CheckboxWithLabel}

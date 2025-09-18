@@ -7,8 +7,8 @@ import { CheckboxWithLabel, TextField } from "formik-mui";
 import {
     visitFieldLabels,
     VisitFormField,
-    OutcomeFormField,
-    GoalStatus,
+    ImprovementFormField,
+    provisionals,
 } from "@cbr/common/forms/newVisit/visitFormFields";
 import { TZoneMap } from "@cbr/common/util/hooks/zones";
 import { newVisitStyles } from "../NewVisit.styles";
@@ -28,8 +28,7 @@ const VisitReasonStep = (
 ) => {
     const { t } = useTranslation();
 
-    const onCheckboxChange = (checked: boolean, visitType: string) => {
-        // We can't fully rely on formikProps.values[type] here because it might not be updated yet
+    const onCheckboxChange = (checked: boolean, visitType: VisitFormField) => {
         setEnabledSteps(
             visitTypes.filter(
                 (type) =>
@@ -39,16 +38,22 @@ const VisitReasonStep = (
         );
 
         if (checked) {
-            formikProps.setFieldValue(`${VisitFormField.outcomes}.${visitType}`, {
-                [OutcomeFormField.id]: "tmp",
-                [OutcomeFormField.riskType]: visitType,
-                [OutcomeFormField.goalStatus]: GoalStatus.ongoing,
-                [OutcomeFormField.outcome]: "",
-            });
+            const providedList: string[] = provisionals[visitType] ?? [];
+            const seeded = providedList.map((provided, idx) => ({
+                [ImprovementFormField.id]: `tmp-${visitType}-${idx}`,
+                [ImprovementFormField.enabled]: false,
+                [ImprovementFormField.riskType]: visitType,
+                [ImprovementFormField.provided]: provided,
+                [ImprovementFormField.description]: "",
+            }));
+
+            formikProps.setFieldValue(`${VisitFormField.improvements}.${visitType}`, seeded);
         } else {
-            formikProps.setFieldValue(`${VisitFormField.outcomes}.${visitType}`, undefined);
+            // Clear on uncheck so nothing stale is submitted
+            formikProps.setFieldValue(`${VisitFormField.improvements}.${visitType}`, []);
         }
     };
+
     return (
         <>
             <FormLabel focused={false}>{t("newVisit.whereVisit")}</FormLabel>

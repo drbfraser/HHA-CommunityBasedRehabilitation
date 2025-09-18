@@ -32,7 +32,6 @@ export interface IVisit {
     zone: number;
     village: number;
     improvements: IVisitImprovement[];
-    outcomes: IVisitOutcome[];
 }
 
 export interface IVisitImprovement {
@@ -41,14 +40,6 @@ export interface IVisitImprovement {
     risk_type: RiskType;
     provided: string;
     desc: string;
-}
-
-export interface IVisitOutcome {
-    id: string;
-    visit_id: string;
-    risk_type: RiskType;
-    goal_met: OutcomeGoalMet;
-    outcome: string;
 }
 
 export enum OutcomeGoalMet {

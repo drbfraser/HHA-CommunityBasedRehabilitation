@@ -362,34 +362,6 @@ class ImprovementSyncSerializer(serializers.ModelSerializer):
         fields = ["id", "visit_id", "risk_type", "provided", "desc", "created_at"]
 
 
-class OutcomeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Outcome
-        fields = [
-            "id",
-            "visit_id",
-            "risk_type",
-            "goal_met",
-            "outcome",
-            "created_at",
-        ]
-
-        read_only_fields = ["visit_id", "created_at"]
-
-
-class OutcomeSyncSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Outcome
-        fields = [
-            "id",
-            "visit_id",
-            "risk_type",
-            "goal_met",
-            "outcome",
-            "created_at",
-        ]
-
-
 class UpdateReferralSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Referral
@@ -529,9 +501,8 @@ class OutstandingReferralSerializer(serializers.Serializer):
 
 
 class DetailedVisitSerializer(serializers.ModelSerializer):
-    print("---- CREATE is called 1 ----")
-    improvements = ImprovementSerializer(many=True)
-    outcomes = OutcomeSerializer(many=True)
+    # Make improvements optional if you want to allow visits with none
+    improvements = ImprovementSerializer(many=True, required=False, default=list)
 
     class Meta:
         model = models.Visit
@@ -550,44 +521,36 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             "zone",
             "village",
             "improvements",
-            "outcomes",
         ]
-
         read_only_fields = ["id", "user_id", "created_at"]
 
     def create(self, validated_data):
-        print("---- CREATE is called 2 ----")
         current_time = current_milli_time()
+        imps = validated_data.pop("improvements", [])
 
-        improvement_dataset = validated_data.pop("improvements")
-        outcome_dataset = validated_data.pop("outcomes")
+        visit = models.Visit.objects.create(
+            id=uuid.uuid4(),
+            user_id=self.context["request"].user,
+            created_at=current_time,
+            server_created_at=current_time,
+            **validated_data,
+        )
 
-        validated_data["id"] = uuid.uuid4()
-        validated_data["user_id"] = self.context["request"].user
-        validated_data["created_at"] = current_time
-        validated_data["server_created_at"] = current_time
-        visit = models.Visit.objects.create(**validated_data)
-        visit.save()
-
-        client = validated_data["client_id"]
-        client.last_visit_date = current_time
-        client.save()
-
-        for improvement_data in improvement_dataset:
-            improvement_data["id"] = uuid.uuid4()
-            improvement_data["visit_id"] = visit
-            improvement_data["created_at"] = current_time
-            improvement_data["server_created_at"] = current_time
-            improvement = models.Improvement.objects.create(**improvement_data)
-            improvement.save()
-
-        for outcome_data in outcome_dataset:
-            outcome_data["id"] = uuid.uuid4()
-            outcome_data["visit_id"] = visit
-            outcome_data["created_at"] = current_time
-            outcome_data["server_created_at"] = current_time
-            outcome = models.Outcome.objects.create(**outcome_data)
-            outcome.save()
+        if imps:
+            to_create = []
+            for imp in imps:
+                to_create.append(
+                    models.Improvement(
+                        id=str(uuid.uuid4()),
+                        visit_id=visit,
+                        risk_type=imp["risk_type"],
+                        provided=imp["provided"],
+                        desc=imp.get("desc", ""),
+                        created_at=current_time,
+                        server_created_at=current_time,
+                    )
+                )
+            models.Improvement.objects.bulk_create(to_create)
 
         return visit
 
@@ -1121,16 +1084,23 @@ class multiVisitSerializer(serializers.Serializer):
     deleted = SummaryVisitSerializer(many=True)
 
 
-class multiOutcomeSerializer(serializers.Serializer):
-    created = OutcomeSyncSerializer(many=True)
-    updated = OutcomeSyncSerializer(many=True)
-    deleted = OutcomeSyncSerializer(many=True)
-
-
-class multiImprovSerializer(serializers.Serializer):
+class multiImprovementSerializer(serializers.Serializer):
     created = ImprovementSyncSerializer(many=True)
     updated = ImprovementSyncSerializer(many=True)
     deleted = ImprovementSyncSerializer(many=True)
+
+
+class pushImprovementsSerializer(serializers.Serializer):
+    improvements = multiImprovementSerializer()
+
+    def create(self, validated_data):
+        create_generic_data(
+            "improvements",
+            models.Improvement,
+            validated_data,
+            self.context.get("sync_time"),
+        )
+        return self
 
 
 class multiReferralSerializer(serializers.Serializer):
@@ -1153,8 +1123,7 @@ class tableSerializer(serializers.Serializer):
     referrals = multiReferralSerializer()
     surveys = multiBaselineSurveySerializer()
     visits = multiVisitSerializer()
-    outcomes = multiOutcomeSerializer()
-    improvements = multiImprovSerializer()
+    improvements = multiImprovementSerializer()
     alert = multiAlertSerializer()
 
 
@@ -1195,23 +1164,6 @@ class pushVisitSerializer(serializers.Serializer):
     def create(self, validated_data):
         create_generic_data(
             "visits", models.Visit, validated_data, self.context.get("sync_time")
-        )
-        return self
-
-
-class pushOutcomeImprovementSerializer(serializers.Serializer):
-    outcomes = multiOutcomeSerializer()
-    improvements = multiImprovSerializer()
-
-    def create(self, validated_data):
-        create_generic_data(
-            "outcomes", models.Outcome, validated_data, self.context.get("sync_time")
-        )
-        create_generic_data(
-            "improvements",
-            models.Improvement,
-            validated_data,
-            self.context.get("sync_time"),
         )
         return self
 

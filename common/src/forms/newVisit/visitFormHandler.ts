@@ -1,5 +1,4 @@
 import { ImprovementFormField, TVisitFormValues } from "./visitFormFields";
-import { FormikHelpers } from "formik";
 import { VisitFormField } from "./visitFormFields";
 import { apiFetch, Endpoint } from "../../util/endpoints";
 
@@ -37,9 +36,6 @@ export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
                 (improvement) =>
                     improvement !== undefined && improvement[ImprovementFormField.enabled]
             ),
-        outcomes: Object.values(values[VisitFormField.outcomes]).filter(
-            (outcome) => outcome !== undefined
-        ),
     });
 
     return await addVisit(newVisit);

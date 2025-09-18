@@ -33,13 +33,6 @@ export enum VisitFormField {
     improvements = "improvements",
 }
 
-export enum OutcomeFormField {
-    id = "id",
-    riskType = "risk_type",
-    outcome = "outcome",
-    goalStatus = "goal_met",
-}
-
 export enum ImprovementFormField {
     id = "id",
     enabled = "enabled",
@@ -63,9 +56,7 @@ const refreshArrays = () => {
         [VisitFormField.nutrition]: i18n.t("newVisit.nutrition"),
         [VisitFormField.mental]: i18n.t("newVisit.mental"),
         [VisitFormField.improvements]: i18n.t("newVisit.improvements"),
-        [VisitFormField.outcomes]: i18n.t("newVisit.outcomes"),
         [ImprovementFormField.description]: i18n.t("newVisit.description"),
-        [OutcomeFormField.outcome]: i18n.t("newVisit.outcome"),
         [GoalStatus.cancelled]: i18n.t("newVisit.cancelled"),
         [GoalStatus.ongoing]: i18n.t("newVisit.ongoing"),
         [GoalStatus.concluded]: i18n.t("newVisit.concluded"),
@@ -172,13 +163,6 @@ export const visitInitialValues = {
     [VisitFormField.social]: false,
     [VisitFormField.nutrition]: false,
     [VisitFormField.mental]: false,
-    [VisitFormField.outcomes]: {
-        [VisitFormField.health]: undefined,
-        [VisitFormField.education]: undefined,
-        [VisitFormField.social]: undefined,
-        [VisitFormField.nutrition]: undefined,
-        [VisitFormField.mental]: undefined,
-    },
     [VisitFormField.improvements]: {
         [VisitFormField.health]: [],
         [VisitFormField.education]: [],
@@ -218,12 +202,5 @@ export const visitTypeValidationSchema = (visitType: VisitFormField) =>
                     ),
                 })
             ),
-        }),
-        [VisitFormField.outcomes]: Yup.object().shape({
-            [visitType]: Yup.object().shape({
-                [OutcomeFormField.outcome]: Yup.string()
-                    .label(visitFieldLabels[OutcomeFormField.outcome])
-                    .required(),
-            }),
         }),
     });

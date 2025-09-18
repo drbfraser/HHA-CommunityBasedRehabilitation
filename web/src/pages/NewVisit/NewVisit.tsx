@@ -31,7 +31,7 @@ import { IClient } from "@cbr/common/util/clients";
 import { TZoneMap, useZones } from "@cbr/common/util/hooks/zones";
 import { handleSubmit } from "./formHandler";
 import GoBackButton from "components/GoBackButton/GoBackButton";
-import { ImprovementField, OutcomeField, VisitReasonStep } from "./components";
+import { ImprovementField, VisitReasonStep } from "./components";
 import { OutcomeGoalMet } from "@cbr/common/util/visits";
 import ClientRisksModal from "../../pages/ClientDetails/Risks/ClientRisksModal";
 import PreviousGoalsModal from "../../pages/ClientDetails/PreviousGoals/PreviousGoalsModal/PreviousGoalsModal";
@@ -141,7 +141,6 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                 <Typography component="div">
                     <br />
                 </Typography>
-                {matchingRisk && <OutcomeField visitType={visitType} />}
             </FormControl>
         );
     };

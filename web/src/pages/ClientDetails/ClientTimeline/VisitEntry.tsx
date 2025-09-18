@@ -19,12 +19,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 
 import { timestampToDateTime } from "@cbr/common/util/dates";
-import {
-    getTranslatedImprovementName,
-    IVisit,
-    IVisitSummary,
-    outcomeGoalMets,
-} from "@cbr/common/util/visits";
+import { getTranslatedImprovementName, IVisit, IVisitSummary } from "@cbr/common/util/visits";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { RiskType } from "@cbr/common/util/risks";
 import { useZones } from "@cbr/common/util/hooks/zones";
@@ -93,44 +88,26 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
         }
 
         const DetailAccordion = ({ type }: { type: RiskType }) => {
-            const improvements = visit.improvements
+            const improvements = (visit?.improvements ?? [])
                 .filter(({ risk_type }) => risk_type === type)
                 .map(({ provided, desc }) => ({
                     title: getTranslatedImprovementName(t, provided),
                     desc,
                 }));
 
-            const outcomes = visit.outcomes
-                .filter(({ risk_type }) => risk_type === type)
-                .map(({ goal_met, outcome }) => ({
-                    title: outcomeGoalMets[goal_met].name,
-                    desc: outcome,
-                }));
-
-            if (!improvements.length && !outcomes.length) {
+            if (!improvements.length) {
                 return <React.Fragment key={type} />;
-            }
-
-            const titleDescArr = [];
-            if (improvements.length) {
-                titleDescArr.push(t("newVisit.improvements"));
-            }
-            if (outcomes.length) {
-                titleDescArr.push(t("newVisit.outcomes"));
             }
 
             return (
                 <Accordion key={type} sx={entryStyles.impOutcomeAccordion}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>
-                            <b>{getTranslatedRiskName(t, type)}</b> ({titleDescArr.join(" & ")})
+                            <b>{getTranslatedRiskName(t, type)}</b> ({t("newVisit.improvements")})
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <div>
-                            {improvements.length > 0 && <DataCard data={improvements} />}
-                            {outcomes.length > 0 && <DataCard data={outcomes} />}
-                        </div>
+                        <DataCard data={improvements} />
                     </AccordionDetails>
                 </Accordion>
             );

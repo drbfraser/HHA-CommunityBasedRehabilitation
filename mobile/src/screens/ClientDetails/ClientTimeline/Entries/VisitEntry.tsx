@@ -4,7 +4,6 @@ import {
     themeColors,
     timestampToDateTime,
     IVisitSummary,
-    outcomeGoalMets,
     useZones,
     RiskType,
 } from "@cbr/common";
@@ -24,7 +23,6 @@ interface IEntryProps {
 
 const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
     const [visit, setVisit] = useState<IVisit>();
-    const [visitOutcomes, setVisitOutcome] = useState<any>();
     const [visitImprovements, setVisitImprovement] = useState<any>();
     const { t } = useTranslation();
 
@@ -46,11 +44,8 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 zone: fetchedVisit.zone,
                 village: fetchedVisit.village,
                 improvements: [],
-                outcomes: [],
             };
-            const fetchedOutcome = await fetchedVisit.outcomes.fetch();
             const fetchedImprov = await fetchedVisit.improvements.fetch();
-            setVisitOutcome(fetchedOutcome);
             setVisitImprovement(fetchedImprov);
             setVisit(iVisit);
         }
@@ -59,14 +54,12 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
         onOpen();
     }, []);
 
-    const [loadingError, setLoadingError] = useState(false);
+    const [, setLoadingError] = useState(false);
 
     const zones = useZones();
     const styles = useStyles();
 
-    const onClose = () => {
-        close();
-    };
+    const onClose = () => close();
 
     const zone = zones.get(visitSummary.zone) ?? "Unknown";
 
@@ -91,25 +84,8 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                     desc: i.desc,
                 }));
 
-            const outcomes = visitOutcomes
-                .filter((o) => o.risk_type === type)
-                .map((o) => ({
-                    title: outcomeGoalMets[o.goal_met].name,
-                    desc: o.outcome,
-                }));
-
-            if (!improvements.length && !outcomes.length) {
+            if (!improvements.length) {
                 return <React.Fragment key={type} />;
-            }
-
-            let titleDescArr: string[] = [];
-
-            if (improvements.length) {
-                titleDescArr.push("Improvements");
-            }
-
-            if (outcomes.length) {
-                titleDescArr.push("Outcomes");
             }
 
             return (
@@ -117,10 +93,9 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                     key={type}
                     theme={{ colors: { background: themeColors.blueBgLight } }}
                     title={riskTypes[type].name}
-                    description={titleDescArr.join(" & ")}
+                    description={t("newVisit.improvements")}
                 >
-                    {improvements.length > 0 && <DataCard data={improvements} />}
-                    {outcomes.length > 0 && <DataCard data={outcomes} />}
+                    <DataCard data={improvements} />
                 </List.Accordion>
             );
         };

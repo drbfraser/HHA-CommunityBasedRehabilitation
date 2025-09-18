@@ -140,18 +140,19 @@ def get_valid_client_data(zone, d1, d2):
         },
     }
 
+
 # these static methods are used in test_detailed_visit_serializer.py
 class DetailedVisitSerializerTestsHelper:
     @staticmethod
     def mock_request(user):
         return type("MockRequest", (), {"user": user})()
-    
+
     @staticmethod
-    def base_visit_payload(client, zone_name="Zone A", village="Village X"):
+    def base_visit_payload(client_id, zone):
         # Provide the minimum valid visit payload for your model.
         # Toggle the *_visit flags as your model requires (booleans).
         return {
-            "client_id": str(client.id) if hasattr(client, "id") else client,  # DRF usually accepts pk
+            "client_id": client_id, # DRF usually accepts pk
             "health_visit": True,
             "educat_visit": False,
             "social_visit": False,
@@ -159,8 +160,8 @@ class DetailedVisitSerializerTestsHelper:
             "mental_visit": False,
             "longitude": 12.34,
             "latitude": 56.78,
-            "zone": zone_name,
-            "village": village,
+            "zone": zone,
+            "village": "village x",
             # improvements intentionally omitted in some tests
         }
 
